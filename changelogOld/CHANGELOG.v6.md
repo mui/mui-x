@@ -68,7 +68,7 @@ Same changes as in `@mui/x-data-grid@6.19.10`.
 
 Same changes as in `@mui/x-data-grid-pro@6.19.10`.
 
-### Core
+### Internal
 
 - [core] Update the docs release source branch (#12685) @LukasTy
 
@@ -110,7 +110,7 @@ No changes.
 - [docs] Add a recipe for the `checkboxSelectionVisibleOnly` prop (#12667) @michelengelen
 - [docs] Explain the use of `_action: 'delete'` in `processRowUpdate` (#12673) @michelengelen
 
-### Core
+### Internal
 
 - [core] Use Circle CI context (#12607) @cherniavskii
 
@@ -259,7 +259,7 @@ Same changes as in `@mui/x-date-pickers@6.19.5`.
 - [docs] Add more illustrations to the Overview page (#12041) @danilo-leal
 - [docs] Avoid use of shorthand (#12009) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Fix CI @oliviertassinari
 - [core] Fix docs link check (#12137) @LukasTy
@@ -813,7 +813,7 @@ Same changes as in `@mui/x-date-pickers@6.18.1`.
 - [docs] Fix charts docs as stable (#10888) @alexfauquette
 - [docs] Document how to hide the legend (#10954) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Adds new alpha version to version select on the docs (#10944) @michelengelen
 - [core] Fix GitHub title tag consistency @oliviertassinari
@@ -875,7 +875,7 @@ Same changes as in `@mui/x-date-pickers@6.18.0`.
 - [docs] Add demo about how to use charts margin (#10886) @alexfauquette
 - [docs] Improve custom field input demos readability (#10559) @LukasTy
 
-### Core
+### Internal
 
 - [core] Generate `slot` API descriptions based on `slots` or `components` (#10879) @LukasTy
 
@@ -1005,7 +1005,7 @@ Same changes as in `@mui/x-date-pickers@6.16.3`, plus:
 - [docs] Improve meta description @oliviertassinari
 - [docs] Make overview demo work in codesandbox (#10661) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Update React renovate group with `@types` (#10723) @LukasTy
 - [core] Update `styled-components` (#10733) @LukasTy
@@ -1106,7 +1106,7 @@ This comes with some breaking changes.
 - [docs] Avoid Pickers playground error due to empty views (#10654) @LukasTy
 - [docs] Fix DataGrid[Pro/Premium] reference links (#10620) @michelengelen
 
-### Core
+### Internal
 
 - [core] Bump monorepo (#10619) @alexfauquette
 - [core] Update `no-response` workflow (#10491) @MBilalShafi
@@ -1169,7 +1169,7 @@ Same changes as in `@mui/x-date-pickers@6.16.1`, plus:
 - [docs] Add "What's new" page listing all release announcements (#9727) @joserodolfofreitas
 - [docs] Update RTL Support section of the grid localization docs (#10561) @MBilalShafi
 
-### Core
+### Internal
 
 - [core] Fix casing consistency with legal and marketing content @oliviertassinari
 - [core] Revert the link in the priority support ticket description (#10517) @michelengelen
@@ -1247,7 +1247,7 @@ Same changes as in `@mui/x-date-pickers@6.16.0`.
 - [docs] Fix mobile scrollbar column resize (#10455) @oliviertassinari
 - [docs] Fix usage of `GridRenderCellParams` interface (#10435) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Fix typo in header Data Grid quick filter @oliviertassinari
 - [core] Group D3 renovate PRs (#10480) @flaviendelangle
@@ -1329,7 +1329,7 @@ Same changes as in `@mui/x-date-pickers@6.15.0`.
 - [docs] Polish typescript ref usage (#10359) @oliviertassinari
 - [docs] Improve charts tooltip wording (#10406) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Cleanup GitHub issues template (#10372) @romgrk
 - [core] Fix Circle CI OOM (#10385) @romgrk
@@ -1413,7 +1413,7 @@ Same changes as in `@mui/x-date-pickers@6.14.0`.
 - [docs] Keep installation readme simple @oliviertassinari
 - [docs] Make each component feel more standalone @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add types extension for clarity @oliviertassinari
 - [core] Set logo height to fix layout shift in GitHub @oliviertassinari
@@ -1491,7 +1491,7 @@ Same changes as in `@mui/x-date-pickers@6.13.0`, plus:
 - [docs] Polish page for SEO (#10216) @oliviertassinari
 - [docs] Use `Base UI` `Portal` for the quick filter recipe (#10188) @DanailH
 
-### Core
+### Internal
 
 - [core] Finish migration to GA4 @oliviertassinari
 - [core] Fix yarn docs:create-playground script @oliviertassinari
@@ -1552,7 +1552,7 @@ Same changes as in `@mui/x-date-pickers@6.12.1`.
 - [docs] Precise expired license key condition (#10165) @oliviertassinari
 - [docs] Reorganize the page menu (#10139) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Update babel configs (#9713) @romgrk
 - [test] Disable false positive e2e test on webkit (#10187) @LukasTy
@@ -1615,7 +1615,7 @@ Same changes as in `@mui/x-date-pickers@6.12.0`.
 - [docs] Fix typo in quick filter @oliviertassinari
 - [docs] Fix typo in the timezone page (#10073) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Bump monorepo (#10129) @LukasTy
 - [core] Document a bit `useLazyRef` @oliviertassinari
@@ -1674,7 +1674,7 @@ Same changes as in `@mui/x-date-pickers@6.11.2`.
 - [docs] Fix en-US changelog @oliviertassinari
 - [docs] Update column types (#10040) @romgrk
 
-### Core
+### Internal
 
 - [core] Remove unnecessary Box (#9831) @oliviertassinari
 - [core] Set GitHub Action top level permission @oliviertassinari
@@ -1737,7 +1737,7 @@ Same changes as in `@mui/x-date-pickers@6.11.1`.
 
 - [docs] Clarify the `shouldDisableClock` migration code options (#9920) @LukasTy
 
-### Core
+### Internal
 
 - [core] Port GitHub workflow for ensuring triage label is present (#9924) @DanailH
 - [docs-infra] Fix the import samples in Api pages (#9898) @alexfauquette
@@ -1820,7 +1820,7 @@ Same changes as in `@mui/x-date-pickers@6.11.0`.
 - [docs] Get ready for next docs-infra change @oliviertassinari
 - [docs] Improve the slots documentation `Recommended usage` section (#9892) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Fix font loading issue dev-mode (#9843) @oliviertassinari
 - [core] Fix pipeline (#9894) @LukasTy
@@ -1890,7 +1890,7 @@ Same changes as in `@mui/x-date-pickers@6.10.2`.
 - [docs] New component API page and side nav design (#9187) @alexfauquette
 - [docs] Update overview page with up to date information about the plans (#9512) @joserodolfofreitas
 
-### Core
+### Internal
 
 - [core] Use PR charts version in preview (#9787) @alexfauquette
 - [license] Allow overriding the license on specific parts of the page (#9717) @Janpot
@@ -1962,7 +1962,7 @@ Same changes as in `@mui/x-date-pickers@6.10.1`.
 - [docs] Localization progress, polish (#9672) @oliviertassinari
 - [docs] Normalize the WIP items (#9671) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add `validate` command (#9714) @romgrk
 - [changelog] Update generator to new format @oliviertassinari
@@ -2019,7 +2019,7 @@ Same changes as in `@mui/x-date-pickers@6.10.0`.
 - [docs] Add slot components usage alert (#9660) @LukasTy
 - [docs] Fix casing Cell selection @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Disambiguate ESLint plugin name @oliviertassinari
 - [core] Update priority support issue template and prompt (#9574) @DanailH
@@ -2094,7 +2094,7 @@ Same changes as in `@mui/x-date-pickers@6.9.2`.
 - [docs] New page: Components lifecycle (#8372) @flaviendelangle
 - [docs] Remove outdated header tag @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Fix typo in priority support @oliviertassinari
 - [core] Remove mention of Crowdin @oliviertassinari
@@ -2166,7 +2166,7 @@ Same changes as in `@mui/x-date-pickers@6.9.1`.
 - [docs] Display plan icon in ToC (#9490) @cherniavskii
 - [docs] Remove "product" markdown header (#9517) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add `edit-mode` to priority support action (#9483) @DanailH
 - [core] Fix priority support prompt action (#9472) @DanailH
@@ -2248,7 +2248,7 @@ Same changes as in `@mui/x-date-pickers@6.9.0`.
 - [docs] Sync h1 with sidenav link (#9252) @oliviertassinari
 - [docs] Use the mui-x Stack Overflow tag (#9352) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add PR template and update the contributions guide (#9329) @DanailH
 - [core] Bump monorepo (#9420) @LukasTy
@@ -2318,7 +2318,7 @@ Same changes as in `@mui/x-date-pickers@6.8.0`.
 - [docs] Improve and reorganize sections on editing page (#8431) @joserodolfofreitas
 - [docs] Add clipboard paste to popular features demo (#9029) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Polish event name (#9336) @oliviertassinari
 - [core] Re-enable `Argos` CI step (#9301) @LukasTy
@@ -2409,7 +2409,7 @@ Same changes as in `@mui/x-date-pickers@6.7.0`, plus:
 - [docs] Fix overview page typo (#9230) @LukasTy
 - [docs] Fix version redirect (#9273) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Temporarily remove the Argos upload on the regression testing (#9267) @flaviendelangle
 - [charts] Add clip-path to avoid charts overflow (#9012) @alexfauquette
@@ -2479,7 +2479,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [docs] Fix tree data children lazy-loading demo (#8840) @yaredtsy
 - [docs] Improve filtering docs discoverability (#9074) @MBilalShafi
 
-### Core
+### Internal
 
 - [core] Allow string literals as keys in `localesText` (#9045) @MBilalShafi
 - [core] Fix `randomInt` producing values exceeding `max` value (#9086) @cherniavskii
@@ -2540,7 +2540,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Fix docs using wrong service worker (#9030) @cherniavskii
 - [docs] Remove prop-types from JS demos (#9008) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Add assertion about checkbox rerenders (#8974) @oliviertassinari
 - [core] Allow selecting a section by type in field tests (#9009) @flaviendelangle
@@ -2598,7 +2598,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [docs] Fix typo in clipboard docs (#8971) @MBilalShafi
 - [docs] Reduce list of dependencies in CodeSandbox/StackBlitz demos (#8535) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Improve testing of the adapters (#8789) @flaviendelangle
 - [core] Update license key for tests (#8917) @LukasTy
@@ -2642,7 +2642,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [docs] Update demo to support agregation on popular feature cell (#8617) @BalaM314
 - [docs] Clarify what `<path>` is (#8764) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Do not include playground pages in `yarn typescript` script (#8822) @cherniavskii
 - [core] Limit `typescript:ci` step memory limit (#8796) @LukasTy
@@ -2715,7 +2715,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [docs] Use community version of Data Grid for column grouping demo (#7346) @ASchwad
 - [docs] Use new `slots` / `slotProps` props in the pickers migration guide (#8341) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Cleanup picker tests (#8652) @flaviendelangle
 - [core] Use `adapter.lib` instead of `adapterName` in `describeAdapters` (#8779) @flaviendelangle
@@ -2764,7 +2764,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Improve section title in Getting Started page (#8648) @flaviendelangle
 - [docs] Inform about input format modification (#8458) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Fix release date (#8618) @flaviendelangle
 - [core] Upgrade monorepo (#8668) @MBilalShafi
@@ -2816,7 +2816,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Fix "Custom day rendering" demo alignment (#8541) @LukasTy
 - [docs] Fix **below** typo (#8576) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Optimize `renovate` rules (#8575) @LukasTy
 - [core] Upgrade monorepo (#8578) @cherniavskii
@@ -2872,7 +2872,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [docs] Fix 404 links (#8454) @alexfauquette
 - [docs] Fix broken API reference link (#8460) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Avoid 301 links (#8383) @oliviertassinari
 - [core] Fix the l10n helper by using danger instead of actions (#8512) @alexfauquette
@@ -2937,7 +2937,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Remove `label` from demos where it reduces clarity (#8416) @LukasTy
 - [docs] Update slots' references in Data Grid migration guide (#8159) @MBilalShafi
 
-### Core
+### Internal
 
 - [charts] Work on typing (#8421) @flaviendelangle
 
@@ -2988,7 +2988,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [docs] Update shortcuts page to use slotProps (#8288) @dcorb
 - [docs] Explain the `shouldDisableTime` migration in more depth (#8348) @LukasTy
 
-### Core
+### Internal
 
 - [core] Remove unused `visx` chart package (#8259) @LukasTy
 - [core] Upgrade monorepo (#8331) @cherniavskii
@@ -3043,7 +3043,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Change **What's new** page url to point to announcement blog post (#8186) @joserodolfofreitas
 - [docs] Resolve 301 in changelog @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Regen api docs (#8220) @flaviendelangle
 - [core] Remove duplicated `/` (#8223) @alexfauquette
@@ -3082,7 +3082,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Improve link from npm to docs (#8141) @oliviertassinari
 - [docs] Remove test sections (#8177) @m4theushw
 
-### Core
+### Internal
 
 - [core] Upgrade monorepo (#8162) @m4theushw
 
@@ -3176,7 +3176,7 @@ It can be overridden by specifying `ampmInClock` prop.
 - [docs] Update the DataGrid demo to leverage the latest features (#7863) @joserodolfofreitas
 - [docs] Update migration guide for stable release (#8092) @joserodolfofreitas
 
-### Core
+### Internal
 
 - [core] Add modified docs page links in the PR (#7848) @alexfauquette
 - [core] Add test on value timezone (#7867) @alexfauquette
@@ -3235,7 +3235,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [docs] Fix a few scroll issues on mobile (#7900) @oliviertassinari
 - [docs] Fix inconsistency in the Data Grid migration guide (#7963) @MBilalShafi
 
-### Core
+### Internal
 
 - [core] Fix `moment` locale on adapter tests (#8020) @flaviendelangle
 - [test] Support all adapters on the field tests about the formats (#7996) @flaviendelangle
@@ -3283,7 +3283,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Improve Data Grid migration guide (#7861) @MBilalShafi
 - [docs] Update `LocalizationProvider` `dateAdapter` with a link to the doc (#7872) @LukasTy
 
-### Core
+### Internal
 
 - [core] Run editing field tests on all major adapters (#7868) @flaviendelangle
 
@@ -3341,7 +3341,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [docs] Remove no longer relevant range shortcuts section (#7840) @LukasTy
 - [docs] Use `@next` tag in grid and pickers installation instructions (#7814) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Remove `tslint` package leftovers (#7841) @LukasTy
 - [test] Use `createDescribes` for `describeValue` and `describeValidation` (#7866) @flaviendelangle
@@ -3392,7 +3392,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [docs] Polish pickers migration docs (#7737) @LukasTy
 - [docs] Rename `next` translation docs and remove duplicates with `-next` (#7729) @LukasTy
 
-### Core
+### Internal
 
 - [core] Fix l10n data file (#7804) @flaviendelangle
 - [core] Fix Next.js warning (#7754) @oliviertassinari
@@ -3459,7 +3459,7 @@ We'd like to offer a big thanks to the 17 contributors who made this release pos
 - [docs] Fix 404 links to picker API page @oliviertassinari
 - [docs] Update `DemoContainer` `components` prop using a codemod (#7574) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Fix `innerslotProps` typo (#7697) @LukasTy
 - [core] Upgrade monorepo (#7676) @cherniavskii
@@ -3670,7 +3670,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Remove "Flex layout" docs section and demo (#7477) @cherniavskii
 - [docs] Rework the pickers "Getting Started" page (#7140) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Add missing `status: needs triage` label on RFC @oliviertassinari
 - [core] Add release documentation step detailing `x-codemod` package tag change (#7617) @LukasTy
@@ -3825,7 +3825,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Update the migration guide with the breaking changes between the legacy and the new pickers (#7345) @flaviendelangle
 - [docs] Use new pickers on "Custom components" demos (#7194) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Handle selection edge case (#7350) @oliviertassinari
 - [core] Improve license message @oliviertassinari
@@ -3901,7 +3901,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Redirect translated pages (#7341) @cherniavskii
 - [docs] Reorganize v6 pickers migration guide (#7257) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Apply ESLint rule for React component @oliviertassinari
 - [core] Apply title capitalization convention @oliviertassinari
@@ -4041,7 +4041,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] New page for `DateCalendar` (#7053) @flaviendelangle
 - [docs] Split selection docs (#7213) @m4theushw
 
-### Core
+### Internal
 
 - [core] Fix API demos callout spacing @oliviertassinari
 
@@ -4113,7 +4113,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [docs] Fix errors and warning in demos (#7209) @LukasTy
 - [docs] Use `DemoContainer` and `DemoItem` on every picker demo (#7149) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Fix broken test (#7179) @flaviendelangle
 
@@ -4221,7 +4221,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [docs] Fix API page ad space regression (#7051) @oliviertassinari
 - [docs] Update localization doc to use existing locale (#7102) @LukasTy
 
-### Core
+### Internal
 
 - [core] Add codemod to move l10n translation (#7027) @alexfauquette
 - [core] Add notes to remove the legacy pickers internals (#7133) @flaviendelangle
@@ -4317,7 +4317,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Update API links from clock-picker to time-clock (#6993) @alexfauquette
 - [docs] Use new pickers on the validation page (#7047) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Remove useless type casting in field hooks (#7045) @flaviendelangle
 - [test] Sync `test:unit` with monorepo (#6907) @oliviertassinari
@@ -4387,7 +4387,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [docs] Fix toggle button bug in demos in Custom Components page (#6913) @01zulfi
 - [docs] Remove partial Portuguese and Chinese translations of the pickers pages (#6893) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Cleanup `describeValidation` (#6942) @flaviendelangle
 - [core] Group renovate GitHub Action dependency updates @oliviertassinari
@@ -4456,7 +4456,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [docs] Remove default prop and improve format (#6781) @oliviertassinari
 - [docs] Sync prism-okaidia.css with source (#6820) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Convert scripts to ESM (#6789) @LukasTy
 - [core] Feedback on branch protection @oliviertassinari
@@ -4501,7 +4501,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 - [docs] Add missing Pro header suffix (#6775) @oliviertassinari
 - [docs] Upgrade to Next.js 13 (#6790) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Add OSSF Scorecard action (#6760) @oliviertassinari
 - [core] Fix Pinned-Dependencies @oliviertassinari
@@ -4556,7 +4556,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [pickers] New `StaticDatePicker` component (#6708) @flaviendelangle
 - [pickers] Rename `inputFormat` prop to `format` on the new pickers (#6722) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Fix `typescript:ci` failures (#6705) @LukasTy
 - [core] Fixes for upcoming ESLint upgrade (#6667) @Janpot
@@ -4667,7 +4667,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Mark Data Grid column group as available (#6660) @alexfauquette
 - [docs] Fix double space @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Fix duplicate CodeQL build @oliviertassinari
 - [core] Fix spreading on validation page (#6624) @flaviendelangle
@@ -4796,7 +4796,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Fix broken links on field pages (#6501) @flaviendelangle
 - [docs] Improve markdownlint (#6518) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Run CodeQL only on schedule @oliviertassinari
 - [core] Fix trailing spaces and git diff format (#6523) @oliviertassinari
@@ -5004,7 +5004,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] New page for the pickers: Validation (#6064) @flaviendelangle
 - [docs] Organize migration pages (#6480) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Add CodeQL workflow (#6387) @DanailH
 - [core] Add missing breaking change to the changelog (#6471) @flaviendelangle
@@ -5086,7 +5086,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Use components instead of demos for `SelectorsDocs` (#6103) @flaviendelangle
 - [license] Add new license status 'Out of scope' (#5260) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Speedup of yarn install in the CI (#6395) @oliviertassinari
 - [test] Remove redundant test clean-ups (#6377) @oliviertassinari
@@ -5216,7 +5216,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Pass model change callbacks in controlled grid editing demos (#6296) @cherniavskii
 - [docs] Update the CodeSandbox to use the `next` branch (#6275) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Fix typing error (#6291) @flaviendelangle
 - [core] Fix typo in the state updater of `useField` (#6311) @flaviendelangle
@@ -5395,7 +5395,7 @@ You can find more information about the new api, including how to set those tran
 - [docs] Improve Upgrade plan docs (#6018) @oliviertassinari
 - [docs] Link the OpenSSF Best Practices card (#6171) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add `v5.17.3` changelog to next branch (#6250) @flaviendelangle
 - [core] Add link to the security page on the `README` (#6073) @oliviertassinari
