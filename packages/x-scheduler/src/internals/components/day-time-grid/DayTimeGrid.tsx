@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
@@ -38,7 +39,6 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
 })(({ theme }) => ({
   '--fixed-cell-width': 'var(--EventCalendar-size-fixedCellWidth)',
   '--hour-height': `${HOUR_HEIGHT}px`,
-  '--has-scroll': 1,
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -384,14 +384,18 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     [adapter, days, now],
   );
 
-  useIsoLayoutEffect(() => {
+  const updateHasScroll = React.useCallback(() => {
     const body = bodyRef.current;
     const allDayHeader = allDayHeaderWrapperRef.current;
     if (!body || !allDayHeader) {
       return;
     }
     setHasScroll(body.scrollHeight > body.clientHeight);
-  }, [occurrencesMap]);
+  }, []);
+
+  useIsoLayoutEffect(updateHasScroll, [occurrencesMap, updateHasScroll]);
+
+  useResizeObserver(bodyRef, updateHasScroll);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 

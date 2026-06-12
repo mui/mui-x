@@ -653,7 +653,9 @@ export class SchedulerStore<
 
     if (copiedEvent.action === 'cut') {
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
-      return this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      const result = this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      this.set('copiedEvent', null);
+      return result;
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
