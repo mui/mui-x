@@ -90,7 +90,13 @@ function useDisposableProduction<T extends Disposable>(factory: () => T): T {
   const ref = React.useRef<Mounted<T> | typeof UNINITIALIZED>(UNINITIALIZED);
   if (ref.current === UNINITIALIZED) {
     const inst = factory() as Mounted<T>;
-    const cleanup = () => inst[disposeSymbol]();
+    const cleanup = () => {
+      inst[disposeSymbol]();
+      // Reset so a fiber-preserving remount (e.g. `<Activity>` reveal, which
+      // re-renders before re-running effects) rebuilds a fresh instance instead
+      // of reusing the disposed one.
+      ref.current = UNINITIALIZED;
+    };
     inst[MOUNT] = () => cleanup;
     ref.current = inst;
   }
@@ -138,6 +144,10 @@ function useDisposableDevelopment<T extends Disposable>(factory: () => T): T {
         }
         state.disposed = true;
         inst[disposeSymbol]();
+        // Reset so a fiber-preserving remount (e.g. `<Activity>` reveal, which
+        // re-renders before re-running effects) rebuilds a fresh instance
+        // instead of reusing the disposed one.
+        ref.current = UNINITIALIZED;
       };
     };
     ref.current = inst;
