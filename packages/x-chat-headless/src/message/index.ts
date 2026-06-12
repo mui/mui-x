@@ -1,4 +1,5 @@
 export { MessageRoot } from './MessageRoot';
+export { MessageContextProvider, useMessageContext } from './internals/MessageContext';
 export { MessageAvatar } from './MessageAvatar';
 export { MessageAuthorLabel } from './MessageAuthorLabel';
 export { MessageContent } from './MessageContent';

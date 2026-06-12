@@ -19,9 +19,21 @@
   ],
   "classes": [
     {
+      "key": "bubble",
+      "className": "MuiChatStreamingIndicator-bubble",
+      "description": "Styles applied to the waiting-phase typing bubble.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiChatStreamingIndicator-root",
-      "description": "Styles applied to the root element.",
+      "description": "Styles applied to the root element (the dots).",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiChatStreamingIndicator-row",
+      "description": "Styles applied to the waiting-phase assistant row wrapper.",
       "isGlobal": false
     }
   ],

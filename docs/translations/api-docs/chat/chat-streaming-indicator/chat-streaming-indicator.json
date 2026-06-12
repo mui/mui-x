@@ -11,5 +11,18 @@
       "description": "<p>Controls when the indicator renders.</p>\n<ul>\n<li><code>&#39;auto&#39;</code> – shown only in assistant-backed conversations (auto-detected).</li>\n<li><code>true</code> – always shown while a response is in flight.</li>\n<li><code>false</code> – never shown.</li>\n</ul>\n"
     }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+  "classDescriptions": {
+    "bubble": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the waiting-phase typing bubble"
+    },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element (the dots)"
+    },
+    "row": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the waiting-phase assistant row wrapper"
+    }
+  }
 }

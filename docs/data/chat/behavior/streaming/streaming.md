@@ -125,8 +125,8 @@ Higher values reduce mutation frequency at the cost of perceived latency.
 While a response is in flight, the Chat component shows animated dots so the user knows the assistant is working.
 The indicator covers two phases:
 
-1. **Waiting** — after the user sends a message and before the `start` chunk arrives, the dots render as a trailing row below the last message.
-2. **Streaming** — once the assistant message exists with `status: 'streaming'`, the dots move inside the assistant bubble, below the streamed content, and disappear when the stream finishes.
+1. **Waiting** — after the user sends a message and before the `start` chunk arrives, the indicator renders as an incoming assistant row below the last message: the assistant's avatar (when resolvable from `members` or the conversation's `participants`) next to a typing bubble holding the dots.
+2. **Streaming** — once the assistant message exists with `status: 'streaming'`, the dots move inside the real assistant bubble, below the streamed content, and disappear when the stream finishes.
 
 {{"demo": "ChatStreamingIndicatorDemo.js", "bg": "inline", "defaultCodeOpen": false}}
 

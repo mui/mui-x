@@ -208,6 +208,7 @@ export {
   MessageAuthorLabel,
   MessageAvatar,
   MessageContent,
+  MessageContextProvider,
   MessageError,
   MessageMeta,
   MessageRoot,
@@ -220,6 +221,7 @@ export {
   createSourceDocumentPartRenderer,
   createSourceUrlPartRenderer,
   createToolPartRenderer,
+  useMessageContext,
 } from './message';
 export { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
 export { MessageGroup, createTimeWindowGroupKey } from './message-group';

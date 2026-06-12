@@ -1,12 +1,10 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { SxProps, Theme } from '@mui/system';
-import { useChatVariant } from '@mui/x-chat-headless';
 import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
 import { ChatDateDivider } from '../ChatMessage/ChatDateDivider';
 import { ChatUnreadMarker } from '../ChatIndicators/ChatUnreadMarker';
-import { ChatStreamingIndicator } from '../ChatIndicators/ChatStreamingIndicator';
+import { ChatStreamingIndicatorRow } from '../ChatIndicators/ChatStreamingIndicatorRow';
 import { useChatSlots } from '../internals/ChatSlotsContext';
 import { resolveSlotProps } from '../internals/mergeSlotProps';
 import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
@@ -219,61 +217,37 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
       />
       {/*
         Mounted only on the last row so a single store subscriber exists per
-        list (and the variant/alignment work is paid once, not per row). The
-        component self-suppresses outside the waiting phase (e.g. while the
+        list (and the avatar/bubble chrome work is paid once, not per row).
+        The row self-suppresses outside the waiting phase (e.g. while the
         in-bubble indicator takes over, or in non-assistant chats under 'auto').
+        A custom slot replaces the whole presentation (no built-in chrome);
+        the default renders an incoming assistant row — avatar + typing bubble.
       */}
-      {showStreamingIndicator && isLastRow && (
-        <TrailingStreamingIndicatorRow
-          component={(slots.streamingIndicator ?? ChatStreamingIndicator) as React.ElementType}
-          mode={streamingIndicatorMode}
-          messageId={id}
-          index={index}
-          items={items}
-          hasAvatar={slots.messageAvatar !== null}
-          slotProps={slotProps.streamingIndicator}
-        />
-      )}
+      {showStreamingIndicator &&
+        isLastRow &&
+        (slots.streamingIndicator ? (
+          React.createElement(slots.streamingIndicator as React.ElementType, {
+            mode: streamingIndicatorMode,
+            message: null,
+            messageId: id,
+            index,
+            items,
+            ...resolveSlotProps(slotProps.streamingIndicator ?? {}, {
+              messageId: id,
+              index,
+              items,
+            }),
+          })
+        ) : (
+          <ChatStreamingIndicatorRow
+            mode={streamingIndicatorMode}
+            messageId={id}
+            index={index}
+            items={items}
+            hasAvatar={slots.messageAvatar !== null}
+            slotProps={slotProps.streamingIndicator}
+          />
+        ))}
     </React.Fragment>
   );
 });
-
-/**
- * Waiting-phase trailing row, rendered only on the last message row. Aligns
- * the dots with the message content lane: the message grid indents content by
- * `paddingInline + avatar track + column gap` (see `ChatMessageStyled`), which
- * collapses when the avatar slot is nulled.
- */
-function TrailingStreamingIndicatorRow(props: {
-  component: React.ElementType;
-  mode: boolean | 'auto';
-  messageId: string;
-  index?: number;
-  items?: string[];
-  hasAvatar: boolean;
-  slotProps?: ChatBoxSlotProps['streamingIndicator'];
-}) {
-  const { component: Component, mode, messageId, index, items, hasAvatar, slotProps } = props;
-  const variant = useChatVariant();
-  const waitingRowSx = React.useMemo<SxProps<Theme>>(
-    () => (theme: Theme) => ({
-      paddingInlineStart: hasAvatar
-        ? `calc(${theme.spacing(2)} + ${variant === 'compact' ? '28px' : '36px'} + ${theme.spacing(variant === 'compact' ? 1 : 0.5)})`
-        : theme.spacing(2),
-      paddingInlineEnd: theme.spacing(2),
-    }),
-    [hasAvatar, variant],
-  );
-
-  return (
-    <Component
-      mode={mode}
-      message={null}
-      messageId={messageId}
-      index={index}
-      items={items}
-      sx={waitingRowSx}
-      {...resolveSlotProps(slotProps ?? {}, { messageId, index, items })}
-    />
-  );
-}

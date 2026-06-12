@@ -98,6 +98,8 @@ export default chatApiPages;
       'ChatBox/ChatBoxContent.tsx',
       // Default row builder shared by ChatBox and ChatMessageList, not part of the public API.
       'ChatMessageList/DefaultMessageItem.tsx',
+      // Default waiting-phase presentation of the streaming indicator, not exported from the package index.
+      'ChatIndicators/ChatStreamingIndicatorRow.tsx',
       // Internal default icon components, not intended as public API.
       'icons/DefaultAttachIcon.tsx',
       'icons/DefaultCloseIcon.tsx',

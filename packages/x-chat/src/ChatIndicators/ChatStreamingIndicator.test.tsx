@@ -239,6 +239,88 @@ describe('ChatStreamingIndicator', () => {
     await act(async () => end());
   });
 
+  it('presents the waiting phase as an assistant row with a typing bubble', async () => {
+    const { adapter } = createControllableAdapter();
+    render(
+      <ChatBox adapter={adapter} initialMessages={agentMessages}>
+        <SendButton />
+      </ChatBox>,
+    );
+
+    fireEvent.click(screen.getByText('send'));
+
+    await waitFor(() => {
+      expect(document.querySelector('.MuiChatStreamingIndicator-row')).not.to.equal(null);
+    });
+    const bubble = document.querySelector('.MuiChatStreamingIndicator-bubble');
+    expect(bubble).not.to.equal(null);
+    expect(bubble!.contains(queryIndicator())).to.equal(true);
+  });
+
+  it('shows the assistant avatar in the waiting row when one is resolvable', async () => {
+    const { adapter } = createControllableAdapter();
+    render(
+      <ChatBox
+        adapter={adapter}
+        initialMessages={agentMessages}
+        members={[
+          { id: 'me', role: 'user' as const },
+          { id: 'bot', role: 'assistant' as const, avatarUrl: 'https://example.com/bot.png' },
+        ]}
+      >
+        <SendButton />
+      </ChatBox>,
+    );
+
+    fireEvent.click(screen.getByText('send'));
+
+    await waitFor(() => {
+      expect(document.querySelector('.MuiChatStreamingIndicator-row')).not.to.equal(null);
+    });
+    const avatarImage = document.querySelector(
+      '.MuiChatStreamingIndicator-row img[src="https://example.com/bot.png"]',
+    );
+    expect(avatarImage).not.to.equal(null);
+  });
+
+  it('omits the avatar from the waiting row when none is resolvable', async () => {
+    const { adapter } = createControllableAdapter();
+    render(
+      <ChatBox adapter={adapter} initialMessages={agentMessages}>
+        <SendButton />
+      </ChatBox>,
+    );
+
+    fireEvent.click(screen.getByText('send'));
+
+    await waitFor(() => {
+      expect(document.querySelector('.MuiChatStreamingIndicator-row')).not.to.equal(null);
+    });
+    expect(document.querySelector('.MuiChatStreamingIndicator-row img')).to.equal(null);
+  });
+
+  it('removes the waiting row chrome once the assistant message starts streaming', async () => {
+    const { adapter, emit } = createControllableAdapter();
+    render(
+      <ChatBox adapter={adapter} streamFlushInterval={0} initialMessages={agentMessages}>
+        <SendButton />
+      </ChatBox>,
+    );
+
+    fireEvent.click(screen.getByText('send'));
+
+    await waitFor(() => {
+      expect(document.querySelector('.MuiChatStreamingIndicator-row')).not.to.equal(null);
+    });
+
+    emit({ type: 'start', messageId: 'a2' });
+
+    await waitFor(() => {
+      expect(queryIndicator()).to.have.attribute('data-phase', 'streaming');
+    });
+    expect(document.querySelector('.MuiChatStreamingIndicator-row')).to.equal(null);
+  });
+
   it('renders a custom slot component instead of the default dots', async () => {
     const { adapter } = createControllableAdapter();
     function CustomIndicator(props: { mode?: boolean | 'auto' }) {
@@ -259,5 +341,7 @@ describe('ChatStreamingIndicator', () => {
     await waitFor(() => {
       expect(screen.getByTestId('custom-indicator')).to.have.attribute('data-mode', 'auto');
     });
+    // The custom slot replaces the whole presentation — no built-in chrome.
+    expect(document.querySelector('.MuiChatStreamingIndicator-row')).to.equal(null);
   });
 });
