@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -141,6 +142,76 @@ export function PreviousTrustData({
         );
       })}
     </g>
+  );
+}
+
+interface TrustLegendProps {
+  currentColor: string;
+  previousColor: string;
+}
+
+function LegendSwatch({ type, color }: { type: string; color: string }) {
+  let swatch: React.ReactNode;
+  switch (type) {
+    case 'line':
+      swatch = <Box sx={{ width: 15, height: 4, borderRadius: 1, bgcolor: color }} />;
+      break;
+    case 'up':
+      swatch = (
+        <Box
+          sx={{
+            width: 0,
+            height: 0,
+            borderLeft: '6px solid transparent',
+            borderRight: '6px solid transparent',
+            borderBottom: `10px solid ${color}`,
+          }}
+        />
+      );
+      break;
+    case 'down':
+      swatch = (
+        <Box
+          sx={{
+            width: 0,
+            height: 0,
+            borderLeft: '6px solid transparent',
+            borderRight: '6px solid transparent',
+            borderTop: `10px solid ${color}`,
+          }}
+        />
+      );
+      break;
+    default:
+      swatch = <Box sx={{ width: 13, height: 13, borderRadius: 1, bgcolor: color }} />;
+  }
+
+  return (
+    <Box sx={{ width: 16, display: 'flex', justifyContent: 'center' }}>{swatch}</Box>
+  );
+}
+
+/** HTML legend positioned over the empty top-left corner of the chart. */
+export function TrustLegend({ currentColor, previousColor }: TrustLegendProps) {
+  const items = [
+    { type: 'square', color: currentColor, label: '2025 trust' },
+    { type: 'line', color: previousColor, label: '2013 trust' },
+    { type: 'up', color: currentColor, label: 'Trust increased' },
+    { type: 'down', color: previousColor, label: 'Trust fell' },
+  ];
+
+  return (
+    <Stack
+      spacing={0.75}
+      sx={{ position: 'absolute', top: 8, left: 8, pointerEvents: 'none' }}
+    >
+      {items.map((item) => (
+        <Stack key={item.label} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <LegendSwatch type={item.type} color={item.color} />
+          <Typography variant="caption">{item.label}</Typography>
+        </Stack>
+      ))}
+    </Stack>
   );
 }
 
