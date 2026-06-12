@@ -39,7 +39,6 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
 })(({ theme }) => ({
   '--fixed-cell-width': 'var(--EventCalendar-size-fixedCellWidth)',
   '--hour-height': `${HOUR_HEIGHT}px`,
-  '--has-scroll': 1,
   width: '100%',
   height: '100%',
   display: 'flex',
