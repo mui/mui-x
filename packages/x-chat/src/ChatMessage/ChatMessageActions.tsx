@@ -19,7 +19,7 @@ const ChatMessageActionsStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Actions',
   overridesResolver: (_, styles) => styles.actions,
-})<{ ownerState?: { role?: string } }>(({ theme, ownerState }) => ({
+})<{ ownerState?: { role?: string; isOwnMessage?: boolean } }>(({ theme, ownerState }) => ({
   gridArea: 'actions',
   display: 'inline-flex',
   alignItems: 'center',
@@ -34,7 +34,7 @@ const ChatMessageActionsStyled = styled('div', {
   '.MuiChatMessage-root:hover &, .MuiChatMessage-root:focus-within &': {
     opacity: 1,
   },
-  ...(ownerState?.role === 'user' && {
+  ...(ownerState?.isOwnMessage && {
     justifySelf: 'end',
   }),
   backgroundColor: (theme.vars || theme).palette.background.paper,

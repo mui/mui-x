@@ -21,26 +21,28 @@ const ChatMessageMetaStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Meta',
   overridesResolver: (_, styles) => styles.meta,
-})<{ ownerState?: { role?: string; variant?: string } }>(({ theme, ownerState }) => ({
-  gridArea: 'meta',
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-  fontSize: theme.typography.caption.fontSize,
-  color: (theme.vars || theme).palette.text.disabled,
-  lineHeight: 1.4,
-  minHeight: '1.2em',
-  // Compact: always right-align status + timestamp regardless of role.
-  // Align to the top of the grid row so it stays at the top when content wraps.
-  // Default: only right-align for user messages.
-  ...((ownerState?.variant === 'compact' || ownerState?.role === 'user') && {
-    justifyContent: 'flex-end',
+})<{ ownerState?: { role?: string; variant?: string; isOwnMessage?: boolean } }>(
+  ({ theme, ownerState }) => ({
+    gridArea: 'meta',
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    fontSize: theme.typography.caption.fontSize,
+    color: (theme.vars || theme).palette.text.disabled,
+    lineHeight: 1.4,
+    minHeight: '1.2em',
+    // Compact: always right-align status + timestamp regardless of ownership.
+    // Align to the top of the grid row so it stays at the top when content wraps.
+    // Default: only right-align for own messages.
+    ...((ownerState?.variant === 'compact' || ownerState?.isOwnMessage) && {
+      justifyContent: 'flex-end',
+    }),
+    ...(ownerState?.variant === 'compact' && {
+      alignSelf: 'start',
+      whiteSpace: 'nowrap',
+    }),
   }),
-  ...(ownerState?.variant === 'compact' && {
-    alignSelf: 'start',
-    whiteSpace: 'nowrap',
-  }),
-}));
+);
 
 const ChatMessageStatusStyled = styled('span', {
   name: 'MuiChatMessage',

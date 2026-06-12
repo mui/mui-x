@@ -6,6 +6,8 @@ import { SxProps, Theme } from '@mui/system';
 import {
   MessageListRoot,
   type MessageListRootProps,
+  type MessageListRootSlots,
+  type MessageListRootSlotProps,
   type MessageListRootHandle,
   useChatDensity,
 } from '@mui/x-chat-headless';
@@ -14,10 +16,33 @@ import {
   useChatMessageListUtilityClasses,
   type ChatMessageListClasses,
 } from './chatMessageListClasses';
+import {
+  DefaultMessageItem,
+  type ChatMessageRowSlots,
+  type ChatMessageRowSlotProps,
+} from './DefaultMessageItem';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageList');
 
-export interface ChatMessageListProps extends MessageListRootProps {
+export interface ChatMessageListSlots extends MessageListRootSlots, Partial<ChatMessageRowSlots> {}
+
+export interface ChatMessageListSlotProps
+  extends MessageListRootSlotProps, ChatMessageRowSlotProps {}
+
+export interface ChatMessageListProps extends Omit<
+  MessageListRootProps,
+  'renderItem' | 'slots' | 'slotProps'
+> {
+  /**
+   * Render a custom row for each message. When omitted, the default row used by
+   * `ChatBox` is rendered (group → message → avatar → content, with conditional
+   * inline meta, external meta in compact variant, and message actions slot).
+   * Provide a function to fully replace the row; use slot overrides to tweak
+   * individual sub-components without losing the default chrome.
+   */
+  renderItem?: MessageListRootProps['renderItem'];
+  slots?: Partial<ChatMessageListSlots>;
+  slotProps?: ChatMessageListSlotProps;
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatMessageListClasses>;
@@ -67,38 +92,114 @@ const ChatMessageListContentStyled = styled('div', {
   };
 });
 
+// The row renderer wants the nested `messagesList` and `message` families.
+// Everything else on `slots` belongs to `MessageListRoot` (list-level).
+const ROW_SLOT_KEYS: ReadonlyArray<keyof ChatMessageRowSlots> = ['messagesList', 'message'];
+
 const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListProps>(
   function ChatMessageList(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageList' });
-    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
+    const {
+      renderItem: renderItemProp,
+      slots,
+      slotProps,
+      className,
+      classes: classesProp,
+      sx,
+      ...other
+    } = props;
     const classes = useChatMessageListUtilityClasses(classesProp);
     const density = useChatDensity();
+
+    // Partition slots/slotProps: row-level keys go to the default renderer,
+    // list-level keys go to MessageListRoot. Row-level entries are extracted
+    // even when a custom renderItem is provided so they don't get forwarded to
+    // MessageListRoot — which would reject unknown slot keys at runtime.
+    const { rowSlots, listSlots } = React.useMemo(() => {
+      const row: Partial<ChatMessageRowSlots> = {};
+      const list: Partial<MessageListRootSlots> = {};
+      if (slots) {
+        for (const key of Object.keys(slots) as Array<keyof ChatMessageListSlots>) {
+          if ((ROW_SLOT_KEYS as ReadonlyArray<string>).includes(key)) {
+            (row as any)[key] = slots[key];
+          } else {
+            (list as any)[key] = slots[key];
+          }
+        }
+      }
+      return { rowSlots: row, listSlots: list };
+    }, [slots]);
+
+    const { rowSlotProps, listSlotProps } = React.useMemo(() => {
+      const row: ChatMessageRowSlotProps = {};
+      const list: MessageListRootSlotProps = {};
+      if (slotProps) {
+        for (const key of Object.keys(slotProps) as Array<keyof ChatMessageListSlotProps>) {
+          if ((ROW_SLOT_KEYS as ReadonlyArray<string>).includes(key)) {
+            (row as any)[key] = slotProps[key];
+          } else {
+            (list as any)[key] = slotProps[key];
+          }
+        }
+      }
+      return { rowSlotProps: row, listSlotProps: list };
+    }, [slotProps]);
+
+    // Keep the default renderer stable; read latest slot overrides and the resolved
+    // `items` from refs so updates don't churn the virtualized list. `items` is read
+    // without destructuring so it still flows to MessageListRoot via `...other`.
+    const rowSlotsRef = React.useRef(rowSlots);
+    const rowSlotPropsRef = React.useRef(rowSlotProps);
+    const itemsRef = React.useRef<string[] | undefined>(undefined);
+    rowSlotsRef.current = rowSlots;
+    rowSlotPropsRef.current = rowSlotProps;
+    itemsRef.current = (other as { items?: string[] }).items;
+
+    // Forward `index` (rendered-list relative) and the rendered `items` so the group
+    // computes grouping against the rendered list — otherwise a custom `items` subset
+    // would regroup against the full conversation and drop avatars/author labels.
+    const defaultRenderItem = React.useCallback(
+      ({ id, index }: { id: string; index: number }) => (
+        <DefaultMessageItem
+          key={id}
+          id={id}
+          index={index}
+          items={itemsRef.current}
+          slots={rowSlotsRef.current}
+          slotProps={rowSlotPropsRef.current}
+        />
+      ),
+      [],
+    );
+
+    const renderItem = renderItemProp ?? defaultRenderItem;
 
     return (
       <MessageListRoot
         ref={ref}
         {...other}
+        renderItem={renderItem}
         slots={{
-          messageList: slots?.messageList ?? ChatMessageListStyled,
-          messageListScroller: slots?.messageListScroller ?? ChatMessageListScrollerStyled,
-          messageListContent: slots?.messageListContent ?? ChatMessageListContentStyled,
-          ...slots,
+          messageList: listSlots.messageList ?? ChatMessageListStyled,
+          messageListScroller: listSlots.messageListScroller ?? ChatMessageListScrollerStyled,
+          messageListContent: listSlots.messageListContent ?? ChatMessageListContentStyled,
+          ...listSlots,
         }}
         slotProps={{
-          ...slotProps,
+          ...listSlotProps,
           messageList: {
             className: clsx(classes.root, className),
             sx,
-            ...slotProps?.messageList,
+            ...listSlotProps?.messageList,
           } as any,
           messageListScroller: {
             className: classes.scroller,
-            ...slotProps?.messageListScroller,
+            ...listSlotProps?.messageListScroller,
           } as any,
           messageListContent: {
             className: classes.content,
             ownerState: { density },
-            ...slotProps?.messageListContent,
+            ...listSlotProps?.messageListContent,
           } as any,
         }}
       />
@@ -136,7 +237,14 @@ ChatMessageList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string),
   onReachTop: PropTypes.func,
   overlay: PropTypes.node,
-  renderItem: PropTypes.func.isRequired,
+  /**
+   * Render a custom row for each message. When omitted, the default row used by
+   * `ChatBox` is rendered (group → message → avatar → content, with conditional
+   * inline meta, external meta in compact variant, and message actions slot).
+   * Provide a function to fully replace the row; use slot overrides to tweak
+   * individual sub-components without losing the default chrome.
+   */
+  renderItem: PropTypes.func,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
   sx: PropTypes.oneOfType([

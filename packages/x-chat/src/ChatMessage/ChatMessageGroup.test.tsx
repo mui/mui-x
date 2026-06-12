@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import { ChatRoot, type ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
+import { ChatMessageGroup } from './ChatMessageGroup';
 
 const { render } = createRenderer();
 
@@ -70,5 +71,94 @@ describe('ChatMessageGroup', () => {
     const groups = document.querySelectorAll('.MuiChatMessage-group');
     // One group per author run
     expect(groups.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('renders the author label via the default authorName slot', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        members={[{ id: 'alice', displayName: 'Alice Author' }]}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            status: 'sent',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi' }],
+          },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.body.textContent).toContain('Alice Author');
+  });
+
+  it('overrides the author label via slots.message.authorName', () => {
+    function CustomLabel(props: { children?: React.ReactNode }) {
+      return <span data-testid="custom-author-name">[{props.children}]</span>;
+    }
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        members={[{ id: 'alice', displayName: 'Alice' }]}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            status: 'sent',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi' }],
+          },
+        ]}
+      >
+        <ChatMessageGroup messageId="m1" slots={{ message: { authorName: CustomLabel } }} />
+      </ChatRoot>,
+    );
+
+    expect(document.querySelector('[data-testid="custom-author-name"]')?.textContent).toBe(
+      '[Alice]',
+    );
+  });
+
+  it('hides the author label when slots.message.authorName is null', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        members={[{ id: 'alice', displayName: 'Alice Hidden' }]}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            status: 'sent',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi' }],
+          },
+        ]}
+      >
+        <ChatMessageGroup messageId="m1" slots={{ message: { authorName: null } }} />
+      </ChatRoot>,
+    );
+
+    expect(document.body.textContent).not.toContain('Alice Hidden');
+  });
+
+  it('forwards slots.message.root to ChatMessage instead of replacing the row', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Body text' }] }]}
+      >
+        <ChatMessageGroup messageId="m1" slots={{ message: { root: 'section' } }} />
+      </ChatRoot>,
+    );
+
+    // The message body still renders — the root slot only swaps the root element,
+    // it must not replace the whole ChatMessage row.
+    expect(screen.getByText('Body text')).not.toBe(null);
+    // …and the custom element is applied as the message root.
+    expect(document.querySelector('section.MuiChatMessage-root')).not.toBe(null);
   });
 });

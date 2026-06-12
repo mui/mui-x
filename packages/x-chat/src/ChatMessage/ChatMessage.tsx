@@ -3,17 +3,76 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import { useMessage } from '@mui/x-chat-headless';
-import { MessageRoot, type MessageRootProps } from '@mui/x-chat-headless';
+import {
+  MessageRoot,
+  type MessageRootProps,
+  useChatVariant,
+  useMessage,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { ChatMessageError, type ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
+import { ChatMessageAvatar, type ChatMessageAvatarProps } from './ChatMessageAvatar';
+import { ChatMessageContent, type ChatMessageContentProps } from './ChatMessageContent';
+import { ChatMessageMeta, type ChatMessageMetaProps } from './ChatMessageMeta';
+import { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
+import { ChatMessageActions, type ChatMessageActionsProps } from './ChatMessageActions';
 
 const useThemeProps = createUseThemeProps('MuiChatMessage');
 
-export interface ChatMessageProps extends MessageRootProps {
+export interface ChatMessageSlots {
+  /** The styled root element. */
+  root: React.ElementType;
+  /**
+   * The avatar component. Pass `null` to hide it and collapse the avatar grid track.
+   * Function form receives the message context and may return `null` for per-message hiding,
+   * but the grid track is only dropped when the slot itself is `null`.
+   */
+  avatar: React.ElementType | null;
+  /** The bubble component that renders message content. */
+  content: React.ElementType;
+  /**
+   * The external meta component (compact variant). Pass `null` to hide it.
+   */
+  meta: React.ElementType | null;
+  /**
+   * The inline meta component (default variant; rendered inside the bubble). Pass `null` to hide it.
+   */
+  inlineMeta: React.ElementType | null;
+  /** The error component rendered under the bubble when status === 'error'. */
+  error: React.ElementType;
+  /**
+   * The actions component, rendered under the bubble.
+   * Receives `{ messageId }` as props.
+   * Pass `null` (or omit) to hide actions entirely.
+   */
+  actions: React.ElementType | null;
+  /**
+   * The author-name label. Rendered by the surrounding `ChatMessageGroup`
+   * (default variant: above the bubble; compact variant: inside the message
+   * grid). Forwarded through `slots.message.authorName` from `ChatBox`. Pass
+   * `null` to hide.
+   */
+  authorName: React.ElementType | null;
+}
+
+export interface ChatMessageSlotProps {
+  root?: any;
+  avatar?: Partial<ChatMessageAvatarProps>;
+  content?: Partial<ChatMessageContentProps>;
+  meta?: Partial<ChatMessageMetaProps>;
+  inlineMeta?: Record<string, unknown>;
+  error?: Partial<ChatMessageErrorProps>;
+  actions?: Partial<ChatMessageActionsProps>;
+  authorName?: Record<string, unknown>;
+}
+
+export interface ChatMessageProps extends Omit<MessageRootProps, 'slots' | 'slotProps'> {
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatMessageClasses>;
+  slots?: Partial<ChatMessageSlots>;
+  slotProps?: ChatMessageSlotProps;
 }
 
 const ChatMessageStyled = styled('div', {
@@ -30,10 +89,11 @@ const ChatMessageStyled = styled('div', {
     isGrouped?: boolean;
     variant?: string;
     density?: string;
+    isOwnMessage?: boolean;
   };
 }>(({ theme, ownerState }) => {
   const isCompact = ownerState?.variant === 'compact';
-  const isUser = ownerState?.role === 'user';
+  const isOwnMessage = ownerState?.isOwnMessage ?? false;
   const densityPaddingBlock: Record<string, string> = {
     compact: theme.spacing(0.25),
     standard: theme.spacing(1),
@@ -56,18 +116,23 @@ const ChatMessageStyled = styled('div', {
       fontFamily: theme.typography.fontFamily,
       ...(isGrouped
         ? {
-            // Grouped: no avatar/authorName rows — content + meta on the same row.
-            // Meta (✓ 10:55) sits top-right, aligned to the start of the content.
-            gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
-            gridTemplateAreas: '". content meta"',
-          }
-        : {
-            // First in group: avatar spans authorName + content rows.
-            // Meta (✓ 10:55) sits top-right on the same row as the author name.
             gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
             gridTemplateRows: 'auto auto',
-            gridTemplateAreas: '"avatar authorName meta" "avatar content ."',
+            gridTemplateAreas: '". content meta" ". error ."',
+          }
+        : {
+            gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
+            gridTemplateRows: 'auto auto auto',
+            gridTemplateAreas: '"avatar authorName meta" "avatar content ." ". error ."',
           }),
+      // Avatar-less layout: collapse the reserved avatar grid track so the bubble
+      // and meta lane reclaim the row. Applies to both grouped and first-in-group.
+      '&.MuiChatMessage-noAvatar': {
+        gridTemplateColumns: '1fr auto',
+        gridTemplateAreas: isGrouped
+          ? '"content meta" "error ."'
+          : '"authorName meta" "content ." "error ."',
+      },
     };
   }
 
@@ -79,8 +144,10 @@ const ChatMessageStyled = styled('div', {
   return {
     display: 'grid',
     gridTemplateColumns: isGrouped ? 'var(--MuiChatMessage-avatarSize) 1fr' : 'auto 1fr',
-    gridTemplateRows: 'auto auto',
-    gridTemplateAreas: isGrouped ? '". content" ". actions"' : '"avatar content" ". actions"',
+    gridTemplateRows: 'auto auto auto',
+    gridTemplateAreas: isGrouped
+      ? '". content" ". error" ". actions"'
+      : '"avatar content" ". error" ". actions"',
     columnGap: theme.spacing(0.5),
     width: '100%',
     boxSizing: 'border-box',
@@ -95,21 +162,42 @@ const ChatMessageStyled = styled('div', {
       paddingBlockEnd: theme.spacing(0.25),
     },
     fontFamily: theme.typography.fontFamily,
-    ...(isUser && {
+    ...(isOwnMessage && {
       gridTemplateColumns: isGrouped ? '1fr var(--MuiChatMessage-avatarSize)' : '1fr auto',
-      gridTemplateAreas: isGrouped ? '"content ." "actions ."' : '"content avatar" "actions ."',
+      gridTemplateAreas: isGrouped
+        ? '"content ." "error ." "actions ."'
+        : '"content avatar" "error ." "actions ."',
       paddingInlineStart: `calc(${theme.spacing(2)} + var(--MuiChatMessage-avatarSize))`,
       paddingInlineEnd: theme.spacing(2),
     }),
+    // Avatar-less layout: collapse the reserved avatar column and drop the phantom
+    // padding so the bubble fills the full content lane on both sides.
+    '&.MuiChatMessage-noAvatar': {
+      gridTemplateColumns: '1fr',
+      gridTemplateAreas: '"content" "error" "actions"',
+      paddingInlineStart: theme.spacing(2),
+      paddingInlineEnd: theme.spacing(2),
+    },
   };
 });
 
 const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
   function ChatMessage(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessage' });
-    const { slots, slotProps, className, classes: classesProp, sx, messageId, ...other } = props;
+    const {
+      slots,
+      slotProps,
+      className,
+      classes: classesProp,
+      sx,
+      messageId,
+      children,
+      ...other
+    } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
     const message = useMessage(messageId);
+    const variant = useChatVariant();
+    const isCompact = variant === 'compact';
 
     const stateClasses = clsx(
       message?.role === 'user' && classes.roleUser,
@@ -118,6 +206,61 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
       message?.status === 'error' && classes.error,
     );
 
+    // Slot resolution: `null` means "hide and adjust layout"; `undefined` means "use default".
+    const AvatarSlot = slots?.avatar;
+    const hasAvatar = AvatarSlot !== null;
+
+    // The error surface is resolved through the `error` slot in both branches so custom
+    // message composition via `children` can still customize (or keep consistent) the
+    // error rendering, matching the slot-driven path below.
+    const ErrorComp = (slots?.error ?? ChatMessageError) as typeof ChatMessageError;
+
+    // Build the inner tree from slots when no `children` were passed (slot-driven).
+    // When `children` are provided, render them as-is for backward compatibility.
+    let innerTree: React.ReactNode;
+    if (children !== undefined) {
+      innerTree = (
+        <React.Fragment>
+          {children}
+          <ErrorComp {...(slotProps?.error ?? {})} />
+        </React.Fragment>
+      );
+    } else {
+      const ContentComp = (slots?.content ?? ChatMessageContent) as typeof ChatMessageContent;
+      const MetaSlot = slots?.meta;
+      const InlineMetaSlot = slots?.inlineMeta;
+      const ActionsSlot = slots?.actions;
+      const AvatarComp = (AvatarSlot ?? ChatMessageAvatar) as typeof ChatMessageAvatar;
+
+      const isStreaming = message?.status === 'streaming';
+      const hasMeta =
+        Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
+      const InlineMetaComp = (InlineMetaSlot ??
+        ChatMessageInlineMeta) as typeof ChatMessageInlineMeta;
+      const inlineMeta =
+        !isCompact && !isStreaming && hasMeta && InlineMetaSlot !== null
+          ? React.createElement(InlineMetaComp, slotProps?.inlineMeta ?? {})
+          : undefined;
+
+      const MetaComp = (MetaSlot ?? ChatMessageMeta) as typeof ChatMessageMeta;
+      const externalMeta =
+        isCompact && MetaSlot !== null ? <MetaComp {...(slotProps?.meta ?? {})} /> : null;
+
+      innerTree = (
+        <React.Fragment>
+          {hasAvatar && <AvatarComp {...(slotProps?.avatar ?? {})} />}
+          <ContentComp afterContent={inlineMeta} {...(slotProps?.content ?? {})} />
+          {externalMeta}
+          <ErrorComp {...(slotProps?.error ?? {})} />
+          {ActionsSlot && (
+            <ChatMessageActions {...(slotProps?.actions ?? {})}>
+              <ActionsSlot messageId={messageId} />
+            </ChatMessageActions>
+          )}
+        </React.Fragment>
+      );
+    }
+
     return (
       <MessageRoot
         ref={ref}
@@ -125,17 +268,17 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
         {...other}
         slots={{
           root: slots?.root ?? ChatMessageStyled,
-          ...slots,
         }}
         slotProps={{
-          ...slotProps,
           root: {
-            className: clsx(classes.root, stateClasses, className),
+            className: clsx(classes.root, stateClasses, !hasAvatar && classes.noAvatar, className),
             sx,
             ...slotProps?.root,
           } as any,
         }}
-      />
+      >
+        {innerTree}
+      </MessageRoot>
     );
   },
 );
