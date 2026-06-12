@@ -176,8 +176,6 @@ The demo below isolates the message surface with only the provider, an active co
 
 Each slot inside the `ChatMessage` row has its own playground—iterate on a single surface at a time.
 
-Jump to: [Avatar](#avatar) · [Author label](#author-label) · [Content](#content) · [Meta](#meta) · [Inline meta](#inline-meta)
-
 #### Avatar
 
 The author avatar slot—falls back to initials when no `avatarUrl` is set.

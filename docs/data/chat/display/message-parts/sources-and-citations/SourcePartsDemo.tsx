@@ -38,7 +38,7 @@ const messages: ChatMessage[] = [
     parts: [
       {
         type: 'text',
-        text: 'According to the documentation [^1], use the partProps slot overrides. The theming guide covers the resolution order:',
+        text: 'According to the documentation [1], use the partProps slot overrides. The theming guide covers the resolution order:',
       },
       {
         type: 'source-url',
