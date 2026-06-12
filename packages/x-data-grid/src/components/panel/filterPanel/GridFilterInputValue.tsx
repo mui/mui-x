@@ -14,6 +14,8 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldP
 
 export type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
+const LOADING_ICON_DELAY_MS = 500;
+
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
     item,
@@ -32,30 +34,38 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const textFieldProps = slotProps?.root;
 
   const filterTimeout = useTimeout();
+  const loadingIconTimeout = useTimeout();
   const [filterValueState, setFilterValueState] = React.useState<string | undefined>(
     sanitizeFilterItemValue(item.value),
   );
-  const [applying, setIsApplying] = React.useState(false);
+  const [showLoadingIcon, setShowLoadingIcon] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
+
+  const itemRef = React.useRef(item);
+  itemRef.current = item;
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = sanitizeFilterItemValue(event.target.value);
 
       setFilterValueState(value);
-      setIsApplying(true);
+      setShowLoadingIcon(false);
+      loadingIconTimeout.start(LOADING_ICON_DELAY_MS, () => {
+        setShowLoadingIcon(true);
+      });
       filterTimeout.start(rootProps.filterDebounceMs, () => {
         const newItem = {
-          ...item,
+          ...itemRef.current,
           value: type === 'number' && !Number.isNaN(Number(value)) ? Number(value) : value,
           fromInput: id!,
         };
         applyValue(newItem);
-        setIsApplying(false);
+        setShowLoadingIcon(false);
+        loadingIconTimeout.clear();
       });
     },
-    [filterTimeout, rootProps.filterDebounceMs, item, type, id, applyValue],
+    [filterTimeout, loadingIconTimeout, rootProps.filterDebounceMs, type, id, applyValue],
   );
 
   React.useEffect(() => {
@@ -78,7 +88,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         slotProps={{
           ...textFieldProps?.slotProps,
           input: {
-            endAdornment: applying ? (
+            endAdornment: showLoadingIcon ? (
               <rootProps.slots.loadIcon fontSize="small" color="action" />
             ) : null,
             ...textFieldProps?.slotProps?.input,
