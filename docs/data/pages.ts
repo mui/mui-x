@@ -16,6 +16,10 @@ const schedulerPages: MuiPage[] = [
       { pathname: '/x/react-scheduler', title: 'Overview' },
       { pathname: '/x/react-scheduler/quickstart' },
       {
+        pathname: '/x/react-scheduler/event-timeline-vs-gantt',
+        title: 'Event Timeline vs Gantt chart',
+      },
+      {
         pathname: 'https://forms.gle/Ksbc91D3PcMiiK5x9',
         title: 'Share your feedback',
         icon: CampaignIcon,
