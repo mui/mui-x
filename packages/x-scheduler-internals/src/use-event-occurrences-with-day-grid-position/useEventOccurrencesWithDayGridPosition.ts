@@ -18,20 +18,22 @@ export function useEventOccurrencesWithDayGridPosition(
   const adapter = useAdapterContext();
 
   return React.useMemo(() => {
-    const indexLookup: {
-      [dayKey: string]: {
-        occurrencesIndex: { [occurrenceKey: string]: number };
-        usedIndexes: Set<number>;
+    const dayListSize = days.length;
+    const usedIndexesByDay: Set<number>[] = [];
+    const activeSegments: {
+      [occurrenceKey: string]: {
+        position: useEventOccurrencesWithDayGridPosition.EventOccurrencePosition;
+        startDayIndex: number;
       };
     } = {};
-    const dayListSize = days.length;
 
     const processedDays = days.map((day, dayIndex) => {
-      indexLookup[day.key] = { occurrencesIndex: {}, usedIndexes: new Set() };
+      const usedIndexes = new Set<number>();
+      usedIndexesByDay.push(usedIndexes);
+
       const needsPosition: SchedulerEventOccurrence[] = [];
       const withoutPosition: SchedulerEventOccurrence[] = [];
 
-      // 1. Split occurrences into withPosition and withoutPosition
       for (const occurrence of occurrencesMap.get(day.key) ?? []) {
         const hasPosition = shouldAddPosition ? shouldAddPosition(occurrence) : true;
         if (hasPosition) {
@@ -41,59 +43,50 @@ export function useEventOccurrencesWithDayGridPosition(
         }
       }
 
-      // 2. Sort the withPosition occurrences by start and end date
       const sortedNeedsPosition = sortEventOccurrences(needsPosition);
 
-      // 3. Assign position to each occurrence
       const withPosition: useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition[] = [];
       for (const occurrence of sortedNeedsPosition) {
+        let smallestAvailableIndex = 1;
+        while (usedIndexes.has(smallestAvailableIndex)) {
+          smallestAvailableIndex += 1;
+        }
+
+        const active = activeSegments[occurrence.key];
         let position: useEventOccurrencesWithDayGridPosition.EventOccurrencePosition;
 
-        const occurrenceIndexInPreviousDay =
-          dayIndex === 0
-            ? null
-            : indexLookup[days[dayIndex - 1].key].occurrencesIndex[occurrence.key];
-
-        // If the event is present in the previous day, we keep the same index
-        if (occurrenceIndexInPreviousDay != null) {
-          position = { index: occurrenceIndexInPreviousDay, daySpan: 1, isInvisible: true };
-        }
-        // Otherwise, we find the smallest available index
-        else {
-          const usedIndexes = indexLookup[day.key].usedIndexes;
-          let i = 1;
-          while (usedIndexes.has(i)) {
-            i += 1;
+        if (active != null && active.position.index <= smallestAvailableIndex) {
+          // The current row is still the best one available: continue the existing bar.
+          position = { index: active.position.index, daySpan: 1, isInvisible: true };
+        } else {
+          if (active != null) {
+            // A lower row opened up: stop the previous bar segment right before today,
+            // so it no longer overlaps with the new, compacted segment we're about to draw.
+            active.position.daySpan = dayIndex - active.startDayIndex;
           }
-
           const durationInDays =
             adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1;
           position = {
-            index: i,
-            daySpan: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end
+            index: smallestAvailableIndex,
+            daySpan: Math.min(durationInDays, dayListSize - dayIndex),
           };
+          activeSegments[occurrence.key] = { position, startDayIndex: dayIndex };
         }
 
-        indexLookup[day.key].occurrencesIndex[occurrence.key] = position.index;
-        indexLookup[day.key].usedIndexes.add(position.index);
+        usedIndexes.add(position.index);
         withPosition.push({ ...occurrence, position });
       }
 
-      // Sort the occurrences by their index to make sure they are in the order they should be rendered in.
       withPosition.sort((a, b) => a.position.index - b.position.index);
 
-      return {
-        ...day,
-        withPosition,
-        withoutPosition,
-      };
+      return { ...day, withPosition, withoutPosition };
     });
 
-    const usedIndexes = Object.values(indexLookup).flatMap((day) => Array.from(day.usedIndexes));
+    const usedIndexesFlat = usedIndexesByDay.flatMap((set) => Array.from(set));
 
     return {
       days: processedDays,
-      maxIndex: usedIndexes.length === 0 ? 1 : Math.max(...usedIndexes),
+      maxIndex: usedIndexesFlat.length === 0 ? 1 : Math.max(...usedIndexesFlat),
     };
   }, [adapter, days, occurrencesMap, shouldAddPosition]);
 }
