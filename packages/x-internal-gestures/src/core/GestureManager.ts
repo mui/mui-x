@@ -194,9 +194,22 @@ export class GestureManager<
 
   public addGestures(gestures: Gesture<GestureName>[]): void {
     gestures.forEach((gesture) => {
-      if (!this.gestureTemplates.has(gesture.name)) {
-        this.addGestureTemplate(gesture);
-      }
+      this.addGestureTemplate(gesture);
+    });
+  }
+
+  /**
+   * Removes gesture templates added with `addGestures()`, unregistering them
+   * from any element they are still registered on.
+   *
+   * @param gestureNames - The names of the gestures to remove
+   */
+  public removeGestures(gestureNames: string[]): void {
+    gestureNames.forEach((gestureName) => {
+      this.elementGestureMap.forEach((_, element) => {
+        this.unregisterElement(gestureName, element);
+      });
+      this.gestureTemplates.delete(gestureName);
     });
   }
 

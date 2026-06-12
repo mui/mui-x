@@ -19,7 +19,7 @@ export const useRegisterZoomGestures = ({
   instance,
 }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'instance'>) => {
   React.useEffect(() => {
-    instance.registerGestures([
+    return instance.registerGestures([
       new PanGesture({
         name: 'zoomPan',
         threshold: 0,

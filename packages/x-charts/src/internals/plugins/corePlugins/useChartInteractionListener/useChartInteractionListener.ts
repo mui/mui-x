@@ -144,16 +144,19 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       const svg = chartsLayerContainerRef.current;
       const gestureManager = gestureManagerRef.current;
       if (!gestureManager || !svg) {
-        return;
+        return () => {};
       }
 
+      const gestureNames = gestures.map((gesture) => gesture.name);
       gestureManager.addGestures(gestures);
       gestureManager.registerElement(
-        gestures.map((gesture) => gesture.name) as Parameters<
-          GestureManagerTyped['registerElement']
-        >[0],
+        gestureNames as Parameters<GestureManagerTyped['registerElement']>[0],
         svg,
       );
+
+      return () => {
+        gestureManager.removeGestures(gestureNames);
+      };
     },
     [chartsLayerContainerRef, gestureManagerRef],
   );

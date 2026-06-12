@@ -137,7 +137,7 @@ export interface UseChartInteractionListenerParameters {}
 
 export interface UseChartInteractionListenerState {}
 
-export type RegisterGestures = (gestures: Gesture<string>[]) => void;
+export type RegisterGestures = (gestures: Gesture<string>[]) => () => void;
 
 export interface UseChartInteractionListenerInstance {
   /**
