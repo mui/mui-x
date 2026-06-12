@@ -17,7 +17,7 @@ describe('shouldUpdateOccurrencePlaceholder', () => {
     ...overrides,
   });
 
-  it('returns false when both placeholders are null', () => {
+  it('should return false when both placeholders are null', () => {
     expect(shouldUpdateOccurrencePlaceholder(adapter, null, null)).to.equal(false);
   });
 
