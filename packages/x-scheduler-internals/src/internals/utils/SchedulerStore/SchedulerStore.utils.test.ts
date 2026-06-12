@@ -32,7 +32,7 @@ describe('shouldUpdateOccurrencePlaceholder', () => {
     ).to.equal(false);
   });
 
-  it('returns true when the start changes', () => {
+  it('should return true when the start changes', () => {
     const previous = createPlaceholder();
     const next = createPlaceholder({ start: adapter.date('2025-07-03T11:00:00Z', 'UTC') });
     expect(shouldUpdateOccurrencePlaceholder(adapter, previous, next)).to.equal(true);
