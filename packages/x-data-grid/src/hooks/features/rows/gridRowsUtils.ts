@@ -137,7 +137,7 @@ export const getTopLevelRowCount = ({
 
   return Math.max(
     rowCountProp,
-    rootGroupNode.children.length + (rootGroupNode.footerId == null ? 0 : 1),
+    rootGroupNode.children.length + (rootGroupNode?.footerId == null ? 0 : 1),
   );
 };
 
@@ -226,7 +226,7 @@ export const getTreeNodeDescendants = (
   directChildrenOnly?: boolean,
 ) => {
   const node = tree[parentId];
-  if (node.type !== 'group') {
+  if (node?.type !== 'group') {
     return [];
   }
 
