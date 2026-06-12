@@ -158,6 +158,8 @@ DataGridProRaw.propTypes = {
    */
   checkboxColDef: PropTypes.shape({
     align: PropTypes.oneOf(['center', 'left', 'right']),
+    autosizeMaxWidth: PropTypes.number,
+    autosizeMinWidth: PropTypes.number,
     cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     colSpan: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
     description: PropTypes.string,

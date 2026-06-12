@@ -20,7 +20,7 @@
     "dataSource": {
       "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
     },
-    "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
+    "dateLocale": { "type": { "name": "any" }, "default": "enUS (English)" },
     "defaultPreferences": {
       "type": {
         "name": "shape",
