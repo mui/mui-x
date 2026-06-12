@@ -1,4 +1,9 @@
 import { Store } from '@mui/x-internals/store';
+import {
+  DisposableStack,
+  disposeSymbol,
+  unwrapSuppressedErrors,
+} from '@mui/x-internals/disposable';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
@@ -40,13 +45,15 @@ export class MinimalTreeViewStore<
 
   private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
 
-  private eventManager = new EventManager();
+  protected readonly disposables = new DisposableStack();
+
+  private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
 
   public instanceName: string;
 
   public parameters: Parameters;
 
-  public timeoutManager = new TimeoutManager();
+  public timeoutManager = this.disposables.use(new TimeoutManager());
 
   public itemPluginManager = new TreeViewItemPluginManager<this>();
 
@@ -172,6 +179,22 @@ export class MinimalTreeViewStore<
    */
   public disposeEffect = () => {
     return this.timeoutManager.clearAll;
+  };
+
+  [disposeSymbol](): void {
+    if (this.disposables.disposed) {
+      return;
+    }
+    try {
+      this.disposables.dispose();
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          'MUI X Tree View: error while disposing the store.',
+          ...unwrapSuppressedErrors(error),
+        );
+      }
+    }
   };
 
   /**
