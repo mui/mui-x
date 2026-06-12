@@ -46,7 +46,11 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     focusedCell?.rowIndex === 0 &&
     focusedCell?.columnIndex === index;
 
-  const { getCursorPositionInElementMs, ref: dropTargetRef } = useTimeDropTarget({
+  const {
+    getCursorPositionInElementMs,
+    getDateAtPointer,
+    ref: dropTargetRef,
+  } = useTimeDropTarget({
     start,
     end,
     addPropertiesToDroppedEvent,
@@ -125,8 +129,9 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       index,
       hasFocus,
       getCursorPositionInElementMs,
+      getDateAtPointer,
     }),
-    [start, end, index, hasFocus, getCursorPositionInElementMs],
+    [start, end, index, hasFocus, getCursorPositionInElementMs, getDateAtPointer],
   );
 
   const keyboardProps = {

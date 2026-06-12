@@ -68,7 +68,7 @@ const DayNumberCell = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'AgendaViewDayNumberCell',
 })(({ theme }) => ({
-  fontSize: theme.typography.h6.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-agendaDayNumber)',
   fontWeight: theme.typography.fontWeightMedium,
   lineHeight: 1,
   minWidth: '4ch',

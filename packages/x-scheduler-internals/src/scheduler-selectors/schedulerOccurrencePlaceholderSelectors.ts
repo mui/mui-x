@@ -5,6 +5,12 @@ import { isInternalDragOrResizePlaceholder } from '../internals/utils/drag-utils
 export const schedulerOccurrencePlaceholderSelectors = {
   value: createSelector((state: State) => state.occurrencePlaceholder),
   isDefined: createSelector((state: State) => state.occurrencePlaceholder !== null),
+  /**
+   * Returns `true` while a new event is being created (a `creation` placeholder is active).
+   * Selecting this boolean (instead of the placeholder object) avoids re-rendering on every
+   * placeholder mutation, e.g. each move of a creation-placeholder resize.
+   */
+  isCreating: createSelector((state: State) => state.occurrencePlaceholder?.type === 'creation'),
   actionForOccurrence: createSelector((state: State, occurrenceKey: string) => {
     const placeholder = state.occurrencePlaceholder;
     if (

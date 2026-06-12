@@ -18,6 +18,7 @@ describe('useCalendarGridDateFromPositionInTimeColumn', () => {
           const y = 'clientY' in input ? input.clientY : 0;
           return y * 60_000;
         },
+        getDateAtPointer: () => null,
       }),
       [],
     );

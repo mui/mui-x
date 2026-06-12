@@ -135,7 +135,7 @@ const DayGridEventTitle = styled('p', {
 })(({ theme }) => ({
   margin: 0,
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle)',
   lineHeight: 1.43,
   flexGrow: 1,
   '[data-variant="filled"] &': {

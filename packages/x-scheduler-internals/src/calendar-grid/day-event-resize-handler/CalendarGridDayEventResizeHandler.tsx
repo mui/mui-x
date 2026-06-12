@@ -4,10 +4,17 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
+import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
 import { useCalendarGridDayEventContext } from '../day-event/CalendarGridDayEventContext';
 import type { CalendarGridDayEvent } from '../day-event/CalendarGridDayEvent';
 import { SchedulerEventSide } from '../../models';
 
+// Touch readiness (not yet implemented): the day grid can gain a pointer-based touch resize the
+// same way the time grid did, without changing the core. Add an `interaction` prop and, when it is
+// `'pointer'`, call `useEventPointerResizeHandler` with: a *horizontal* `getDateAtPointer` resolver
+// supplied by the day row/column (mapping `clientX` → a precision-rounded date), `surfaceType:
+// 'day-grid'`, and a `getResizeSession` built from this handler's shared drag data. The gesture
+// mechanics, min-duration clamp (`clampResizedEventEdge`) and placeholder commit are already shared.
 export const CalendarGridDayEventResizeHandler = React.forwardRef(
   function CalendarGridDayEventResizeHandler(
     componentProps: CalendarGridDayEventResizeHandler.Props,
@@ -37,10 +44,16 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
       side,
     }));
 
-    const { state, enabled } = useEventResizeHandler({
+    const enabled = isResizeHandlerEnabled({
+      side,
+      doesEventStartBeforeCollectionStart: contextValue.doesEventStartBeforeCollectionStart,
+      doesEventEndAfterCollectionEnd: contextValue.doesEventEndAfterCollectionEnd,
+    });
+
+    const { state } = useEventResizeHandler({
       ref,
       side,
-      contextValue,
+      enabled,
       getDragData,
     });
 

@@ -6,10 +6,17 @@ import type { useDraggableEvent } from '../../internals/utils/useDraggableEvent'
 export interface CalendarGridTimeEventContext extends useDraggableEvent.ContextValue {
   /**
    * Gets the drag data shared by the CalendarGrid.TimeEvent and CalendarGrid.TimeEventResizeHandler parts.
-   * @param {{ clientY: number }} input The input object provided by the drag and drop library for the current event.
+   * @param {{ clientY: number }} [input] The pointer position, used to compute the grab offset
+   * (`initialCursorPositionInEventMs`). Omit it when that offset isn't needed (the pointer-based
+   * resize), to skip the layout measurement.
    * @returns {CalendarGridTimeEvent.SharedDragData} The shared drag data.
    */
-  getSharedDragData: (input: { clientY: number }) => CalendarGridTimeEvent.SharedDragData;
+  getSharedDragData: (input?: { clientY: number }) => CalendarGridTimeEvent.SharedDragData;
+  /**
+   * Called when a drag (move or resize) is about to start. Returning `false` aborts the attempt.
+   * Defaults to always allowing the drag when not provided.
+   */
+  canDrag?: () => boolean;
 }
 
 export const CalendarGridTimeEventContext = React.createContext<

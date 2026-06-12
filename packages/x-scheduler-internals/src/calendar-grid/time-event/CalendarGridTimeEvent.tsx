@@ -35,6 +35,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     renderDragPreview,
     id: idProp,
     isDraggable = false,
+    canDrag,
     nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -65,7 +66,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   // Feature hooks
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
-      const offsetBeforeColumnStart = Math.max(adapter.getTime(columnStart) - start.timestamp, 0);
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
       const originalOccurrence = generateOccurrenceFromEvent({
@@ -76,14 +76,21 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         end,
       });
 
-      const offsetInsideColumn = getCursorPositionInElementMs({ input, elementRef: ref });
+      // The pointer-based resize maps the pointer straight to a date and never reads the grab
+      // offset, so it calls this without an `input` — skipping the layout-reading cursor
+      // measurement (a `getBoundingClientRect`) that only the native drag/resize needs.
+      const initialCursorPositionInEventMs = input
+        ? Math.max(adapter.getTime(columnStart) - start.timestamp, 0) +
+          getCursorPositionInElementMs({ input, elementRef: ref })
+        : 0;
+
       return {
         eventId,
         occurrenceKey,
         originalOccurrence,
         start: start.value,
         end: end.value,
-        initialCursorPositionInEventMs: offsetBeforeColumnStart + offsetInsideColumn,
+        initialCursorPositionInEventMs,
       };
     },
   );
@@ -104,6 +111,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     occurrenceKey,
     eventId,
     isDraggable,
+    canDrag,
     renderDragPreview,
     getDragData,
     collectionStart: columnStart,
@@ -126,8 +134,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
-    () => ({ ...draggableEventContextValue, getSharedDragData }),
-    [draggableEventContextValue, getSharedDragData],
+    () => ({ ...draggableEventContextValue, getSharedDragData, canDrag }),
+    [draggableEventContextValue, getSharedDragData, canDrag],
   );
 
   const element = useRenderElement('div', componentProps, {

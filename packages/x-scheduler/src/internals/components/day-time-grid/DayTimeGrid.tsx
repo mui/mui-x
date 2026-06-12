@@ -24,8 +24,8 @@ import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
+import { EVENT_CALENDAR_CONTAINER_NAME } from '../../constants/responsiveTypography';
 
-const FIXED_CELL_WIDTH = 68;
 const HOUR_HEIGHT = 46;
 const HOURS_IN_DAY = 24;
 
@@ -33,7 +33,7 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridContainer',
 })(({ theme }) => ({
-  '--fixed-cell-width': `${FIXED_CELL_WIDTH}px`,
+  '--fixed-cell-width': 'var(--EventCalendar-size-fixedCellWidth)',
   '--hour-height': `${HOUR_HEIGHT}px`,
   '--has-scroll': 1,
   width: '100%',
@@ -138,7 +138,7 @@ const DayTimeGridAllDayEventsHeaderCell = styled('div', {
 })(({ theme }) => ({
   gridColumn: '1',
   gridRow: '1',
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-timeText)',
   fontStyle: 'italic',
   padding: theme.spacing(1),
   textAlign: 'end',
@@ -233,7 +233,7 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridHeaderDayNumber',
 })(({ theme }) => ({
-  fontSize: theme.typography.h5.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-dayNumber)',
   lineHeight: 1,
   width: 46,
   height: 46,
@@ -250,6 +250,10 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   },
   '[data-current] button:hover &': {
     backgroundColor: (theme.vars || theme).palette.primary.dark,
+  },
+  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
+    width: 32,
+    height: 32,
   },
 }));
 
@@ -305,7 +309,7 @@ const DayTimeGridTimeAxisText = styled('time', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridTimeAxisText',
 })(({ theme }) => ({
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-timeText)',
   lineHeight: 'calc(100% / 24)',
   color: (theme.vars || theme).palette.text.secondary,
   whiteSpace: 'nowrap',
@@ -336,6 +340,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
+  const scrollRootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   // Selector hooks
@@ -473,11 +478,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <div className={classes.dayTimeGridScrollablePlaceholder} />
       </DayTimeGridAllDayEventsGrid>
 
-      <DayTimeGridRoot className={classes.dayTimeGrid}>
+      <DayTimeGridRoot className={classes.dayTimeGrid} ref={scrollRootRef}>
         <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
           <DayTimeGridScrollableContent
             className={classes.dayTimeGridScrollableContent}
-            as={CalendarGrid.TimeScrollableContent}
+            scrollableRef={scrollRootRef}
           >
             <DayTimeGridTimeAxis className={classes.dayTimeGridTimeAxis} aria-hidden="true">
               {Array.from({ length: 24 }, (_, hour) => (
