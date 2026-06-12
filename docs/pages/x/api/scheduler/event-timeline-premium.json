@@ -64,7 +64,6 @@
     },
     "localeText": { "type": { "name": "object" } },
     "onEventsChange": { "type": { "name": "func" } },
-    "onPreferencesChange": { "type": { "name": "func" } },
     "onPresetChange": { "type": { "name": "func" } },
     "onVisibleDateChange": { "type": { "name": "func" } },
     "onVisibleResourcesChange": { "type": { "name": "func" } },

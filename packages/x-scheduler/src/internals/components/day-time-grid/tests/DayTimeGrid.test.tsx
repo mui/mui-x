@@ -16,9 +16,10 @@ describe.skipIf(isJSDOM)('<DayTimeGrid /> scroll gutter', () => {
   }
 
   it('should recompute the scroll gutter when the container resizes without a re-render', async () => {
-    // Tall enough that the time grid body (24 * 46px) does not overflow.
+    // Let the host fit its content so the time grid body does not overflow,
+    // regardless of how tall the header renders.
     render(
-      <div data-testid="host" style={{ height: 1500 }}>
+      <div data-testid="host" style={{ height: 'fit-content' }}>
         <EventCalendarProvider events={[]} resources={[]}>
           <EventDialogProvider>
             <WeekView />
