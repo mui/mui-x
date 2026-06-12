@@ -33,6 +33,10 @@ const WEEKDAYS: SchedulerWeekday[] = [
   'saturday',
 ];
 
+export const getWeekdayToken = (adapter, value) => {
+  return WEEKDAYS[adapter.getDayOfWeek(value)];
+};
+
 export type EndsSelection = 'never' | 'after' | 'until';
 
 export function computeRange(
@@ -103,7 +107,7 @@ export function getRecurrenceLabel(
     case 'DAILY':
       return localeText.recurrenceDailyPresetLabel;
     case 'WEEKLY': {
-      const weekday = WEEKDAYS[adapter.toJsDate(start.value).getDay()];
+      const weekday = getWeekdayToken(adapter, start.value);
       const weekdayName = adapter.format(start.value, 'weekday');
       return localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName });
     }

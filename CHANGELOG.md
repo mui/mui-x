@@ -251,7 +251,6 @@ names accordingly:
 - [scheduler] Implement timeline virtualization (#22339) @romgrk
 - [scheduler] Split scheduler overview (#22453) @joserodolfofreitas
 - [scheduler] Unify `EventSkeleton` and `ErrorContainer` between `EventCalendar` and `EventTimeline` (#22676) @noraleonte
-- [scheduler] Add stable weekday token to `recurrenceWeeklyPresetLabel` localization API (#22705) @mustafajw07
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
