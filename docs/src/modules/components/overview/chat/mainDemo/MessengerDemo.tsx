@@ -634,6 +634,7 @@ export default function MessengerDemo() {
       activeConversationId={activeConversationId}
       conversations={filteredConversations}
       messages={messages}
+      features={{ conversationList: true }}
       slots={{
         conversationList: MessengerConversationSidebar,
       }}

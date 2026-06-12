@@ -78,9 +78,6 @@ export default function CustomEmptyState() {
         sx={{
           height: 500,
           width: '100%',
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
           display: 'flex',
           flexDirection: 'column',
         }}

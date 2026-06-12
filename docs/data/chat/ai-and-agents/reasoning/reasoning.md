@@ -8,13 +8,14 @@ components: ChatMessageContent
 
 # Chat - Reasoning
 
-<p class="description">Display the LLM's chain-of-thought or thinking trace using <code>ChatReasoningMessagePart</code> and the reasoning stream chunks.</p>
+<p class="description">Display chain-of-thought reasoning traces from LLMs alongside streamed chat responses.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Many large language models expose a "thinking" or "reasoning" trace alongside their final response. The Chat component supports streaming and displaying this reasoning content through dedicated chunk types and a specialized message part.
+Many large language models expose a "thinking" or "reasoning" trace alongside their final response.
+The Chat component supports streaming and displaying this reasoning content through dedicated chunk types and a specialized message part.
 
-## `ChatReasoningMessagePart`
+## Reasoning part structure
 
 When reasoning chunks arrive during streaming, the runtime creates a `ChatReasoningMessagePart` on the assistant message:
 
@@ -26,11 +27,11 @@ interface ChatReasoningMessagePart {
 }
 ```
 
-| Field   | Type                    | Description                                   |
-| :------ | :---------------------- | :-------------------------------------------- |
-| `type`  | `'reasoning'`           | Identifies this as a reasoning part           |
-| `text`  | `string`                | The accumulated reasoning text                |
-| `state` | `'streaming' \| 'done'` | Whether the reasoning is still being streamed |
+| Field   | Type            | Description                         |                                               |
+| :------ | :-------------- | :---------------------------------- | :-------------------------------------------- |
+| `type`  | `'reasoning'`   | Identifies this as a reasoning part |                                               |
+| `text`  | `string`        | The accumulated reasoning text      |                                               |
+| `state` | `'streaming' \  | 'done'`                             | Whether the reasoning is still being streamed |
 
 The `state` field transitions from `'streaming'` while deltas are arriving to `'done'` once the reasoning section is complete.
 
@@ -94,7 +95,8 @@ const adapter: ChatAdapter = {
 
 ## Displaying reasoning in a collapsible section
 
-Reasoning content is typically displayed in a collapsible section above the main response text. Register a custom renderer for reasoning parts to control the presentation:
+Reasoning content typically appears in a collapsible section above the main response text.
+Register a custom renderer for reasoning parts to control the presentation:
 
 ```tsx
 import Accordion from '@mui/material/Accordion';
@@ -125,7 +127,7 @@ const renderers: ChatPartRendererMap = {
 </ChatProvider>;
 ```
 
-## Show/hide configuration
+## Showing and hiding reasoning
 
 Control whether reasoning is visible to the user by filtering parts in your renderer. You can use a prop, a context value, or application state to toggle visibility:
 
@@ -155,7 +157,8 @@ const renderers: ChatPartRendererMap = {
 
 ## Reasoning alongside tool calls
 
-Reasoning chunks can appear before, between, or after tool invocations in the same stream. The runtime handles interleaving correctly — each chunk type creates its own message part in the order it arrives:
+Reasoning chunks can appear before, between, or after tool invocations in the same stream.
+The runtime handles interleaving correctly—each chunk type creates its own message part in the order it arrives:
 
 ```tsx
 // Stream order:
@@ -166,10 +169,10 @@ Reasoning chunks can appear before, between, or after tool invocations in the sa
 // 5. text-start -> text-delta -> text-end                 (final answer)
 ```
 
-This produces a message with five parts in order: reasoning, tool, reasoning, tool (updated), text.
+The resulting message has five parts in order: reasoning, tool, reasoning, tool (updated), text.
 
 ## See also
 
-- [Tool Calling](/x/react-chat/ai-and-agents/tool-calling/) for the tool invocation lifecycle.
-- [Step Tracking](/x/react-chat/ai-and-agents/step-tracking/) for multi-step agent progress tracking.
-- [Streaming](/x/react-chat/behavior/streaming/) for the full chunk protocol reference including reasoning chunks.
+- [Tool calling](/x/react-chat/ai-and-agents/tool-calling/) for details on the tool invocation lifecycle.
+- [Step tracking](/x/react-chat/ai-and-agents/step-tracking/) for details on multi-step agent progress.
+- [Streaming](/x/react-chat/behavior/streaming/) for the full chunk protocol reference, including reasoning chunks.

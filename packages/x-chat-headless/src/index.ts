@@ -141,7 +141,8 @@ export { ChatStreamError } from './stream/ChatStreamError';
 
 // Headless component exports (structural primitives without styling)
 // Using direct re-exports so the API docs builder can resolve component symbols correctly.
-export { ChatLayout, ChatRoot, useChatLocaleText } from './chat';
+export { ChatLayout, ChatRoot, markChatLayoutPane, useChatLocaleText } from './chat';
+export type { ChatLayoutPaneKind } from './chat';
 export {
   ConversationHeader,
   ConversationHeaderActions,

@@ -8,11 +8,20 @@ components: ChatConversationList
 
 # Chat - Conversation List
 
-<p class="description">Render a sidebar that lists all available conversations, supports switching between them, and is fully customizable through slots and theme overrides.</p>
+<p class="description">Render a sidebar that lists all conversations and lets users switch between them.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
+The conversation list is the sidebar that shows all available conversations and lets users switch between them.
+`@mui/x-chat` ships `ChatConversationList`, a single component with styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
+
+## Interactive playground
+
+Toggle the list variant, conversation count, and unread badges:
+
+{{"demo": "ChatConversationListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The example below shows a complete two-pane inbox using controlled state:
 
 {{"demo": "../../material/examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
@@ -32,7 +41,7 @@ ChatConversationList              <- scrolling listbox (role="listbox")
     unreadBadge                   <- count badge (primary.main background)
 ```
 
-All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually — instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
+All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually—instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
 
 ## Slot reference
 
@@ -55,7 +64,9 @@ Because the Material UI layer fills all slot defaults at instantiation, overrid
 
 ## Switching conversations
 
-The conversation list is rendered automatically when `ChatBox` is provided with more than one conversation. Clicking a row calls `onActiveConversationChange` with the conversation ID. Use controlled state to manage the active conversation:
+The conversation list is rendered when `ChatBox` is given `features={{ conversationList: true }}`.
+Clicking a row calls `onActiveConversationChange` with the conversation ID.
+Use controlled state to manage the active conversation:
 
 ```tsx
 const [activeConversationId, setActiveConversationId] = React.useState('thread-a');
@@ -64,12 +75,13 @@ const [activeConversationId, setActiveConversationId] = React.useState('thread-a
   activeConversationId={activeConversationId}
   onActiveConversationChange={(nextId) => setActiveConversationId(nextId)}
   conversations={conversations}
+  features={{ conversationList: true }}
 />;
 ```
 
-If only one conversation is provided, `ChatBox` renders the thread pane directly without a sidebar.
+If you omit that feature flag, `ChatBox` renders the thread pane directly without a sidebar.
 
-## ownerState and how state flows
+## Reading row state through ownerState
 
 The item and all its sub-slots receive an `ownerState` prop that carries the current row's interaction state alongside the full conversation object.
 
@@ -82,16 +94,18 @@ The item and all its sub-slots receive an `ownerState` prop that carries the cur
 | `focused`      | `boolean`          | This row currently has keyboard focus  |
 | `conversation` | `ChatConversation` | The full conversation data object      |
 
-The `selected` flag drives the row background (`palette.action.selected`). The `unread` flag drives bold title typography. The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
+The `selected` flag drives the row background (`palette.action.selected`).
+The `unread` flag drives bold title typography.
+The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
 
 Because the full `conversation` object is included, custom slot components can directly read fields such as `conversation.title`, `conversation.metadata`, `conversation.unreadCount`, and `conversation.lastMessageAt` without additional selectors.
 
 ### Root ownerState
 
-| Field                  | Type                  | Description                        |
-| :--------------------- | :-------------------- | :--------------------------------- |
-| `conversationCount`    | `number`              | Total number of conversations      |
-| `activeConversationId` | `string \| undefined` | Currently selected conversation ID |
+| Field                  | Type       | Description                   |                                    |
+| :--------------------- | :--------- | :---------------------------- | :--------------------------------- |
+| `conversationCount`    | `number`   | Total number of conversations |                                    |
+| `activeConversationId` | `string \  | undefined`                    | Currently selected conversation ID |
 
 ## Overriding the avatar
 
@@ -138,7 +152,7 @@ The `ownerState` prop arrives directly on the component because the Material UI
 
 ## Overriding the item content layout
 
-Replace `itemContent` when you want to change the structural layout of the title and preview region — for example to add a participant count or an icon:
+Replace `itemContent` when you want to change the structural layout of the title and preview region—for example, to add a participant count or an icon:
 
 ```tsx
 import { ChatConversationList } from '@mui/x-chat';
@@ -398,7 +412,7 @@ const theme = createTheme({
 });
 ```
 
-Theme overrides apply globally across your application and are the lowest-friction option when you only need visual adjustments.
+Theme overrides apply globally across the application and are the lowest-friction option when only visual adjustments are needed.
 
 ## Controlling the list width
 
@@ -434,6 +448,6 @@ Pass `aria-label` to the root through `slotProps`:
 
 ## See also
 
-- [Conversation Header](/x/react-chat/multi-conversation/conversation-header/) for the header bar that accompanies the active thread.
-- [Multi-conversation demo](/x/react-chat/demos/team-messaging/) for a two-pane inbox layout using controlled state.
-- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing conversation updates through subscriptions.
+- [Conversation header](/x/react-chat/multi-conversation/conversation-header/) for details on the header bar that accompanies the active thread.
+- [Multi-conversation example](/x/react-chat/material/examples/multi-conversation/) for a two-pane inbox layout using controlled state.
+- [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing conversation updates through subscriptions.

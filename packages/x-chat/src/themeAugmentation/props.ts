@@ -2,6 +2,7 @@ import { type ChatCodeBlockProps } from '../ChatCodeBlock/ChatCodeBlock';
 import { type ChatConfirmationProps } from '../ChatConfirmation/ChatConfirmation';
 import { type ChatBoxProps } from '../ChatBox/ChatBox.types';
 import { type ChatMessageProps } from '../ChatMessage/ChatMessage';
+import { type ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
 import { type ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
 import { type ChatConversationProps } from '../ChatConversation/ChatConversation';
 import { type ChatComposerProps } from '../ChatComposer/ChatComposer';
@@ -19,6 +20,7 @@ export interface ChatComponentsPropsList {
   MuiChatConfirmation: ChatConfirmationProps;
   MuiChatBox: ChatBoxProps<any>;
   MuiChatMessage: ChatMessageProps;
+  MuiChatMessageError: ChatMessageErrorProps;
   MuiChatMessageList: ChatMessageListProps;
   MuiChatConversation: ChatConversationProps;
   MuiChatComposer: ChatComposerProps;

@@ -1,20 +1,20 @@
 ---
 productId: x-chat
-title: Text & Markdown
+title: Text and markdown
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Text & Markdown
+# Chat - Text and markdown
 
-<p class="description">Render plain text and markdown content in chat messages using the <code>ChatTextMessagePart</code> type and the built-in markdown renderer.</p>
+<p class="description">Render plain text and markdown content in chat messages with the built-in renderer.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Text parts are the most common message part type. Every message with written content — whether from a human user or an AI assistant — uses one or more `text` parts to carry that content.
+Text parts are the most common message part. Every message with written content—whether from a human user or an AI assistant—uses one or more `text` parts to carry that content.
 
-## The text part data model
+## Text part structure
 
 A text part is represented by the `ChatTextMessagePart` interface:
 
@@ -26,7 +26,8 @@ interface ChatTextMessagePart {
 }
 ```
 
-A message can contain multiple text parts alongside other part types (files, sources, tool calls). The `parts` array on `ChatMessage` holds them all:
+A message can contain multiple text parts alongside other part types (files, sources, tool calls).
+The `parts` array on `ChatMessage` holds them all:
 
 ```ts
 const message: ChatMessage = {
@@ -47,7 +48,7 @@ const message: ChatMessage = {
 
 ## Markdown rendering
 
-When using `ChatBox` with the Material UI layer (`@mui/x-chat`), text parts are rendered through a built-in markdown parser that converts common markdown syntax into React elements. This happens automatically — no configuration is needed.
+When using `ChatBox` with the Material UI layer (`@mui/x-chat`), text parts are rendered through a built-in markdown parser that converts common markdown syntax into React elements. This happens automatically—no configuration is needed.
 
 The built-in parser supports:
 
@@ -68,7 +69,7 @@ Override the markdown renderer through `partProps.text.renderText` on `ChatMessa
 <ChatBox
   adapter={adapter}
   slotProps={{
-    messageContent: {
+    content: {
       partProps: {
         text: {
           renderText: (text) => <MyCustomMarkdownRenderer content={text} />,
@@ -91,7 +92,8 @@ Text parts support incremental delivery through the streaming protocol. The stre
 | `text-delta` | Appends a string fragment       |
 | `text-end`   | Marks the text part as complete |
 
-While tokens are arriving, the part's `state` field is `'streaming'`. Once the `text-end` chunk arrives, `state` transitions to `'done'`.
+While tokens are arriving, the part's `state` field is `'streaming'`.
+Once the `text-end` chunk arrives, `state` transitions to `'done'`, as shown below:
 
 ```ts
 // During streaming
@@ -118,5 +120,5 @@ The message list auto-scrolls to follow new streaming content as long as the use
 
 ## See also
 
-- [Code Blocks](/x/react-chat/display/message-parts/code-blocks/) for syntax-highlighted code fence rendering
-- [Message Appearance](/x/react-chat/display/message-appearance/) for visual presentation of the message list
+- See [Code blocks](/x/react-chat/display/message-parts/code-blocks/) for details on syntax-highlighted code fence rendering.
+- See [Message appearance](/x/react-chat/display/message-appearance/) for details on the visual presentation of the message list.

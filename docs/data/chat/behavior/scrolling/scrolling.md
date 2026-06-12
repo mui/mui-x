@@ -8,11 +8,18 @@ components: ChatMessageList, ChatScrollToBottomAffordance
 
 # Chat - Scrolling
 
-<p class="description">Auto-scroll behavior, scroll-to-bottom affordance, imperative scroll API, and history loading on scroll-up.</p>
+<p class="description">Keep new messages visible with auto-scroll, scroll-to-bottom affordance, and on-demand history loading.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The message list automatically manages scroll position so that new messages and streaming content stay visible without user intervention, while still allowing the user to read earlier messages undisturbed.
+## Interactive playground
+
+Try the scroll-to-bottom affordance live—long thread with toggleable indicator:
+
+{{"demo": "ChatScrollToBottomAffordancePlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The message list automatically manages scroll position so new messages and streaming content stay visible without user intervention.
+Users can still scroll up to read earlier messages without losing their place.
 
 ## Auto-scrolling
 
@@ -22,12 +29,12 @@ The message list automatically scrolls to the bottom when:
 - New messages arrive from the assistant while the user is near the bottom.
 - Streaming content grows (token-by-token updates).
 
-The auto-scroll behavior is gated by a **buffer** — if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
+The auto-scroll behavior is gated by a **buffer**—if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
 
 ### Configuration
 
 Control auto-scrolling through the `features` prop on `ChatBox`.
-The default buffer is **150 px**.
+The default buffer is `150px`, as shown below:
 
 ```tsx
 {
@@ -41,12 +48,12 @@ The default buffer is **150 px**.
 <ChatBox adapter={adapter} features={{ autoScroll: false }} />;
 ```
 
-When auto-scroll is disabled, the user can still scroll to the bottom manually using the scroll-to-bottom affordance button.
+When auto-scroll is disabled, users can still scroll to the bottom manually using the scroll-to-bottom affordance.
 
 {{"demo": "../../material/message-list/AutoScrollConfig.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 :::info
-Scrolling to the bottom when the **user** sends a message is always active regardless of the `autoScroll` setting.
+Scrolling to the bottom when the user sends a message is always active, regardless of the `autoScroll` setting.
 :::
 
 ## Scroll-to-bottom affordance
@@ -63,7 +70,7 @@ Disable it with:
 
 The affordance also supports an unseen-message count badge and an `aria-label` that includes the unseen count when present.
 
-## Imperative scrolling
+## Scrolling programmatically with a ref
 
 The `ChatMessageList` component exposes a ref handle for programmatic scroll control:
 
@@ -79,7 +86,7 @@ listRef.current?.scrollToBottom({ behavior: 'smooth' });
 <ChatMessageList ref={listRef} />;
 ```
 
-## `MessageListContext`
+## Accessing scroll state from child components
 
 Child components inside the message list can access scroll state via context:
 
@@ -104,7 +111,7 @@ function CustomScrollIndicator() {
 | `unseenMessageCount` | `number`             | Messages added since the user scrolled away  |
 | `scrollToBottom`     | `(options?) => void` | Scroll to the latest message                 |
 
-## History loading
+## Loading message history
 
 When the user scrolls to the top of the message list, older messages are loaded automatically via the adapter's `listMessages` method.
 The message list preserves the current scroll position during prepend so the user doesn't lose their place.
@@ -133,6 +140,6 @@ await loadMoreHistory();
 
 ## See also
 
-- [Message list](/x/react-chat/basics/messages/) for the full component reference including date dividers, grouping, and density.
-- [Streaming](/x/react-chat/behavior/streaming/) for how auto-scroll follows streaming content.
-- [Adapter](/x/react-chat/backend/adapters/) for the `listMessages` method that powers history loading.
+- [Message list](/x/react-chat/basics/messages/) for details on date dividers, grouping, and density.
+- [Streaming](/x/react-chat/behavior/streaming/) for details on how auto-scroll follows streaming content.
+- [Adapter](/x/react-chat/backend/adapters/) for details on the `listMessages` method that powers history loading.

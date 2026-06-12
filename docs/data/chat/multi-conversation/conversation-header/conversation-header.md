@@ -1,18 +1,24 @@
 ---
 productId: x-chat
-title: Conversation Header
+title: Conversation header
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatConversation, ChatConversationHeader, ChatConversationTitle, ChatConversationSubtitle, ChatConversationHeaderActions, ChatConversationHeaderInfo
 ---
 
-# Chat - Conversation Header
+# Chat - Conversation header
 
 <p class="description">Display the active conversation's title, subtitle, participants, and action buttons using the themed header components.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 `ChatConversationHeader` is a `<header>` element with divider styling. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
+
+## Interactive playground
+
+Configure the title, subtitle, and trailing actions of `ChatConversationHeader`—every slot (`ChatConversationHeaderInfo`, `ChatConversationTitle`, `ChatConversationSubtitle`, `ChatConversationHeaderActions`) is exercised in this single demo.
+
+{{"demo": "ChatConversationHeaderPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ```tsx
 import {
@@ -36,23 +42,23 @@ ChatConversation                    <- thread shell, derives the active conversa
 
 The header sits at the top of the thread pane and provides the visual identity of the active conversation.
 
-## ownerState and how state flows
+## How conversation state flows
 
 `ChatConversation` owns the conversation-level `ownerState`, and the header subcomponents inherit that same state through the slot system.
 
-### Conversation ownerState
+### Conversation state fields
 
-| Field             | Type                       | Description                                  |
-| :---------------- | :------------------------- | :------------------------------------------- |
-| `conversationId`  | `string \| undefined`      | Currently selected conversation ID           |
-| `conversation`    | `ChatConversation \| null` | Full active conversation object, when loaded |
-| `hasConversation` | `boolean`                  | Whether the thread currently has a selection |
+| Field             | Type                 | Description                                  |                                              |
+| :---------------- | :------------------- | :------------------------------------------- | :------------------------------------------- |
+| `conversationId`  | `string \            | undefined`                                   | Currently selected conversation ID           |
+| `conversation`    | `ChatConversation \  | null`                                        | Full active conversation object, when loaded |
+| `hasConversation` | `boolean`            | Whether the thread currently has a selection |                                              |
 
-The `hasConversation` flag is particularly useful for hiding action buttons or showing a placeholder when no conversation is active. `ChatConversationHeader`, `ChatConversationTitle`, `ChatConversationSubtitle`, and `ChatConversationHeaderActions` all receive this same conversation-level state.
+Use the `hasConversation` flag to hide action buttons or show a placeholder when no conversation is active. `ChatConversationHeader`, `ChatConversationTitle`, `ChatConversationSubtitle`, and `ChatConversationHeaderActions` all receive this same conversation-level state.
 
-## Title and subtitle
+## Setting the title and subtitle
 
-`ChatConversationTitle` renders the conversation name from `conversation.title`. `ChatConversationSubtitle` renders the secondary line from `conversation.subtitle`, which can include participant names, a presence indicator, or any descriptive text.
+`ChatConversationTitle` renders the conversation name from `conversationTitle`. `ChatConversationSubtitle` renders the secondary line from `conversationSubtitle`, which can include participant names, a presence indicator, or any descriptive text.
 
 The `ChatConversation` type provides these fields:
 
@@ -90,7 +96,7 @@ const ParticipantSubtitle = React.forwardRef(function ParticipantSubtitle(
 });
 ```
 
-## Action buttons
+## Customizing the action area
 
 `ChatConversationHeaderActions` renders an action area on the right side of the header. Replace it to add archive, mute, or context menu buttons:
 
@@ -143,9 +149,10 @@ Pass `CustomHeader` through `ChatBox`'s `slots.conversationHeader` prop:
 <ChatBox slots={{ conversationHeader: CustomHeader }} />
 ```
 
-## Using ownerState in a custom title
+## Customizing the title with conversation state
 
-The `ownerState` prop received by slot components carries the full conversation context. This makes it straightforward to render dynamic content derived from the active conversation:
+The `ownerState` prop received by slot components carries the full conversation context.
+Use it to render dynamic content derived from the active conversation:
 
 ```tsx
 import { ChatConversationTitle } from '@mui/x-chat';
@@ -170,9 +177,9 @@ function CustomConversationTitle(props) {
 }
 ```
 
-## Full recomposition
+## Recomposing the header from scratch
 
-When you need to insert additional content inside the header — for example a typing indicator or a custom divider — assemble the header from individual Material UI components directly:
+When you need to insert additional content inside the header—for example, a typing indicator or a custom divider—assemble the header from individual Material UI components directly:
 
 ```tsx
 import {
@@ -201,6 +208,6 @@ function CustomThread() {
 
 ## See also
 
-- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that lists conversations.
-- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for live updates to conversation metadata displayed in the header.
+- [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that lists conversations.
+- [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/) for live updates to conversation metadata displayed in the header.
 - [Layout](/x/react-chat/basics/layout/) for the full thread anatomy including message list and composer.

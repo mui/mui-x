@@ -8,13 +8,13 @@ components: ChatBox
 
 # Chat - Quickstart
 
-<p class="description">Install the MUI X Chat package and start building your React chat interface.</p>
+<p class="description">Install the Chat package and start building React chat interfaces.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Installation
 
-Install the package using your preferred package manager:
+Install the Chat package that best suits your needs—Community:
 
 <codeblock storageKey="package-manager">
 
@@ -37,7 +37,7 @@ yarn add @mui/x-chat
 #### Material UI
 
 The Chat package has a peer dependency on `@mui/material`.
-If it is not already in your project, install it now:
+If you're not already using it, install it now:
 
 <codeblock storageKey="package-manager">
 
@@ -68,42 +68,27 @@ yarn add @mui/material @emotion/react @emotion/styled
 },
 ```
 
-## Rendering a ChatBox
+## Rendering a Chat
+
+### Import the component
 
 Import `ChatBox` and wire it to an adapter.
-The adapter implements `sendMessage` and returns a streaming response:
+The adapter implements `sendMessage` and returns the assistant's reply.
 
-```tsx
-import { ChatBox } from '@mui/x-chat';
+### Render the component
 
-const adapter = {
-  async sendMessage({ message, signal }) {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      body: JSON.stringify({ message }),
-      signal,
-    });
-    return res.body; // ReadableStream<ChatMessageChunk>
-  },
-};
+The example below uses the built-in `createEchoAdapter` so it works directly in the docs.
+In your app, replace it with an adapter that calls your API.
 
-export default function App() {
-  return (
-    <ChatBox
-      adapter={adapter}
-      initialConversations={[{ id: 'main', title: 'Assistant' }]}
-      initialActiveConversationId="main"
-      sx={{ height: 500 }}
-    />
-  );
-}
-```
+{{"demo": "RenderChatBox.js", "defaultCodeOpen": true, "bg": "inline"}}
 
-`ChatBox` renders a full chat surface — conversation list, thread header, message log, and composer — in a single component.
+`ChatBox` renders a full chat surface—thread header, message log, and composer—in a single component.
+Enable the built-in conversation list explicitly with `features={{ conversationList: true }}` when you want an inbox-style layout.
 All visual styles are derived from your active Material UI theme.
 
-Only `adapter` is required — it must implement `sendMessage`.
-`initialConversations` and `initialActiveConversationId` are optional conveniences that pre-populate the conversation list on first render.
+Only `adapter` is required—it must implement `sendMessage`.
+`initialConversations` and `initialActiveConversationId` are optional conveniences that pre-populate chat state on first render.
+If `features={{ conversationList: true }}` is enabled, the same data also feeds the built-in conversation list.
 Every other prop is optional.
 
 ## Theme integration
@@ -118,7 +103,7 @@ No additional configuration is needed.
 - `palette.divider` is used for borders and separators
 
 Wrapping `ChatBox` in a `ThemeProvider` with custom values is enough to retheme the entire surface.
-See [Custom theme](/x/react-chat/customization/styling/) for a working demo.
+See [Styling—Theme component overrides](/x/react-chat/customization/styling/#theme-component-overrides) for details.
 
 ## TypeScript theme augmentation
 
@@ -154,9 +139,6 @@ Throughout the documentation, Pro- and Premium-only features are denoted with th
 
 All documentation for Community components and features also applies to their Pro and Premium counterparts.
 
-## Next steps
+## API
 
-- [ChatBox](/x/react-chat/basics/chatbox/) — learn about the ChatBox component, its props, and architecture
-- [Customization](/x/react-chat/customization/styling/) — theme overrides, sx, slots, and CSS class names
-- [Demos](/x/react-chat/demos/ai-assistant/) — end-to-end patterns
-- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) — structural composition primitives and slot overrides
+- [`ChatBox`](/x/api/chat/chat-box/)
