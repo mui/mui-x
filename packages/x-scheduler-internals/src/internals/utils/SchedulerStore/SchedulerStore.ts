@@ -222,7 +222,10 @@ export class SchedulerStore<
         ),
       );
     }
-    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
+    // Recompute "now" only when the display timezone changes; the minute timer maintains it otherwise.
+    if (newSchedulerState.displayTimezone !== this.state.displayTimezone) {
+      newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
+    }
 
     if (
       parameters.resources !== this.parameters.resources ||
@@ -653,7 +656,9 @@ export class SchedulerStore<
 
     if (copiedEvent.action === 'cut') {
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
-      return this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      const result = this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      this.set('copiedEvent', null);
+      return result;
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;

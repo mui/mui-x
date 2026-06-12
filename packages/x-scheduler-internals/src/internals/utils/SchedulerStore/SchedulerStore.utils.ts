@@ -1,4 +1,5 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import { generateId } from '@base-ui/utils/generateId';
 import { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
 import {
   SchedulerProcessedEvent,
@@ -33,12 +34,20 @@ export function shouldUpdateOccurrencePlaceholder(
   const untypedPrevious = previous as Record<string, any>;
   const untypedNext = next as Record<string, any>;
 
+  // Compare keys present in `next`.
   for (const key in untypedNext) {
     if (key === 'start' || key === 'end') {
       if (!adapter.isEqual(untypedNext[key], untypedPrevious[key])) {
         return true;
       }
     } else if (!Object.is(untypedNext[key], untypedPrevious[key])) {
+      return true;
+    }
+  }
+
+  // Catch keys present in `previous` but removed from `next` (e.g. `isHidden`).
+  for (const key in untypedPrevious) {
+    if (!(key in untypedNext)) {
       return true;
     }
   }
@@ -172,7 +181,7 @@ export function createEventModel<TEvent extends object>(
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   adapter: Adapter,
 ) {
-  const id = crypto.randomUUID();
+  const id = generateId('event');
 
   const formatNewDate = (value: string | TemporalSupportedObject): string => {
     if (typeof value === 'string') {
