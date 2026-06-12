@@ -43,7 +43,9 @@
       "deprecated": true,
       "deprecationInfo": "Use <code>disableHitArea</code> instead."
     },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ progressiveRendering?: bool }" }
+    },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -133,7 +135,10 @@
       }
     },
     "renderer": {
-      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "type": {
+        "name": "enum",
+        "description": "'svg-batch'<br>&#124;&nbsp;'svg-progressive'<br>&#124;&nbsp;'svg-single'"
+      },
       "default": "'svg-single'"
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },

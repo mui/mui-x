@@ -10,6 +10,7 @@ import {
   LineHighlightPlot,
   LinePlot,
   MarkPlot,
+  FocusedLineMark,
 } from '@mui/x-charts/LineChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -121,6 +122,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
+          <FocusedLineMark />
           <ChartsAxis {...chartsAxisProps} />
           <ChartsZoomSlider />
           <g data-drawing-container>
