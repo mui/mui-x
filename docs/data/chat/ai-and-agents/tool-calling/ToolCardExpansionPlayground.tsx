@@ -23,6 +23,24 @@ import {
 } from 'docs/src/modules/components/chat-playground/controls';
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
+// The docs compile every demo in one TS project, so the `ChatToolDefinitionMap`
+// augmentation from the type-augmentation example is global. Register the `write`
+// tool here so its typed input/output line up with that registry.
+declare module '@mui/x-chat-headless/types' {
+  interface ChatToolDefinitionMap {
+    write: {
+      input: {
+        path: string;
+        contents: string;
+      };
+      output: {
+        bytesWritten: number;
+        ok: boolean;
+      };
+    };
+  }
+}
+
 const conversation: ChatConversation = {
   id: 'tool-expansion-playground',
   title: 'Tool card expansion',

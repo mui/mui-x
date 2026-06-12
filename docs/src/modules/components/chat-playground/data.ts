@@ -88,7 +88,7 @@ export const conversations: ChatConversation[] = [
     id: 'styling-questions',
     title: 'Styling questions',
     subtitle: 'How do I theme MuiChatComposer?',
-    participants: [users.alice, users.assistant],
+    participants: [users.me, users.assistant],
     readState: 'unread',
     unreadCount: 3,
     lastMessageAt: '2026-05-03T09:30:00.000Z',
@@ -119,7 +119,7 @@ export const initialThreads: Record<string, ChatMessage[]> = {
       id: 'sq-1',
       conversationId: 'styling-questions',
       role: 'user',
-      author: users.alice,
+      author: users.me,
       createdAt: '2026-05-03T09:25:00.000Z',
       status: 'read',
       parts: [

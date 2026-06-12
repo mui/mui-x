@@ -18,7 +18,7 @@ Use this adapter when your backend speaks the AI SDK's UI Message Stream; for pr
 
 ## Demo
 
-The demo below talks to a live MUI documentation assistant served at `https://backend.mui.com/public/docs-assistant/chat`.
+The demo below talks to a live MUI documentation assistant served using AI SDK.
 Ask it anything about Material UI or MUI X—it streams text and reasoning back through the adapter.
 
 {{"demo": "MuiDocsAssistantDemo.js", "defaultCodeOpen": true, "bg": "inline"}}
