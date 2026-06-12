@@ -38,7 +38,7 @@ describe('shouldUpdateOccurrencePlaceholder', () => {
     expect(shouldUpdateOccurrencePlaceholder(adapter, previous, next)).to.equal(true);
   });
 
-  it('returns true when a non-date field changes', () => {
+  it('should return true when a non-date field changes', () => {
     const previous = createPlaceholder();
     const next = createPlaceholder({ resourceId: 'resource-1' });
     expect(shouldUpdateOccurrencePlaceholder(adapter, previous, next)).to.equal(true);
