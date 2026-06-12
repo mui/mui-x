@@ -200,7 +200,7 @@ export async function processStream<Cursor = string>(
 
     if (!didStartMessage) {
       didStartMessage = true;
-      store.setStreaming(true);
+      store.setStreaming(true, options.conversationId);
       store.setError(null);
 
       if (targetMessageId) {
@@ -294,7 +294,11 @@ export async function processStream<Cursor = string>(
 
     switch (chunk.type) {
       case 'start':
-        targetMessageId = chunk.messageId;
+        // A backend-supplied id wins; otherwise keep any pre-bound target
+        // (the runtime mints a unique fallback id per run, and reconnect passes
+        // the resumed message's id). Clobbering with an absent id here is what
+        // let two ids-less responses merge into one assistant message.
+        targetMessageId = chunk.messageId ?? targetMessageId;
         startAuthor = chunk.author;
         ensureAssistantMessage();
         return;

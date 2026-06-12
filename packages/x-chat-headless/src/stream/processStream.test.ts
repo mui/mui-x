@@ -184,6 +184,50 @@ describe('processStream', () => {
     expect(onFinish.mock.calls[0][0].isError).toBe(true);
   });
 
+  it('binds to options.messageId when the start chunk omits a messageId', async () => {
+    const store = new ChatStore();
+
+    const result = await processStream(
+      store,
+      // `start`/`finish` without a messageId — the type requires one, but a
+      // loosely-typed adapter or JSON-parsed wire chunk can drop it at runtime.
+      createStream([
+        { type: 'start' },
+        { type: 'text-start', id: 'text-1' },
+        { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+        { type: 'text-end', id: 'text-1' },
+        { type: 'finish', finishReason: 'stop' },
+      ] as unknown as ChatMessageChunk[]),
+      { conversationId: 'c1', messageId: 'fallback-1' },
+    );
+
+    expect(result.messageId).toBe('fallback-1');
+    expect(store.state.messagesById['fallback-1'].parts).toEqual([
+      { type: 'text', text: 'Hello', state: 'done' },
+    ]);
+    expect(store.state.messagesById['fallback-1'].status).toBe('sent');
+  });
+
+  it('lets a start chunk messageId override the options.messageId fallback', async () => {
+    const store = new ChatStore();
+
+    const result = await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'from-backend' },
+        { type: 'text-start', id: 'text-1' },
+        { type: 'text-delta', id: 'text-1', delta: 'Hi' },
+        { type: 'text-end', id: 'text-1' },
+        { type: 'finish', messageId: 'from-backend', finishReason: 'stop' },
+      ]),
+      { conversationId: 'c1', messageId: 'fallback-1' },
+    );
+
+    expect(result.messageId).toBe('from-backend');
+    expect(store.state.messagesById['from-backend']).toBeDefined();
+    expect(store.state.messagesById['fallback-1']).toBeUndefined();
+  });
+
   it('merges registered tool chunks into a persistent tool part and calls onToolCall', async () => {
     const store = new ChatStore();
     const onToolCall = vi.fn();

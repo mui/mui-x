@@ -68,6 +68,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     stream: Awaited<ReturnType<ChatAdapter<Cursor>['sendMessage']>>,
     conversationId: string | undefined,
     abortController: AbortController,
+    fallbackMessageId: string,
   ): Promise<ProcessStreamResult> {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
@@ -78,6 +79,12 @@ export function createSendMessageActions<Cursor = string>(params: {
       onToolCall: runtimeRef.current.onToolCall,
       onFinish: shouldDeferFinish ? undefined : runtimeRef.current.onFinish,
       onData: runtimeRef.current.onData,
+      // Unique-per-run fallback the stream binds to when the adapter omits a
+      // `messageId` on `start`. A backend-supplied id still overrides it (see
+      // processStream's `start` handler), so this only fills the gap — but it
+      // guarantees each run targets a distinct assistant message even when the
+      // adapter mints no id, instead of all such runs colliding on one id.
+      messageId: fallbackMessageId,
     };
     const emitDeferredFinish = async (result: ProcessStreamResult) => {
       if (!shouldDeferFinish || !runtimeRef.current.onFinish) {
@@ -107,7 +114,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
 
     try {
-      store.setStreaming(true);
+      store.setStreaming(true, conversationId);
       const reconnectStream = await adapter.reconnectToStream({
         conversationId,
         messageId: result.messageId,
@@ -186,7 +193,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
     isSending = true;
     store.addMessage(nextMessage);
-    store.setStreaming(true);
+    store.setStreaming(true, conversationId);
     store.setError(null);
     store.clearMessageError(nextMessage.id);
 
@@ -199,6 +206,10 @@ export function createSendMessageActions<Cursor = string>(params: {
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
 
+    // Unique fallback id for this run; used only when the adapter's `start`
+    // chunk carries no `messageId` of its own.
+    const fallbackMessageId = createLocalId();
+
     try {
       const stream = await runtimeRef.current.adapter.sendMessage({
         conversationId,
@@ -208,7 +219,12 @@ export function createSendMessageActions<Cursor = string>(params: {
         signal: abortController.signal,
       });
 
-      const result = await processStreamWithReconnect(stream, conversationId, abortController);
+      const result = await processStreamWithReconnect(
+        stream,
+        conversationId,
+        abortController,
+        fallbackMessageId,
+      );
 
       let status: 'cancelled' | 'error' | 'sent';
       if (result.status === 'cancelled') {
@@ -388,11 +404,15 @@ export function createSendMessageActions<Cursor = string>(params: {
     );
     pruneAttachmentsByMessageIds(store.state.messageIds);
 
-    store.setStreaming(true);
+    store.setStreaming(true, conversationId);
     store.setError(null);
 
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
+
+    // Fresh fallback id: the prior assistant run was just removed above, so a
+    // regenerated reply with no adapter-supplied id targets a new message.
+    const fallbackMessageId = createLocalId();
 
     try {
       const stream = await adapter.regenerate({
@@ -403,7 +423,12 @@ export function createSendMessageActions<Cursor = string>(params: {
         signal: abortController.signal,
       });
 
-      const result = await processStreamWithReconnect(stream, conversationId, abortController);
+      const result = await processStreamWithReconnect(
+        stream,
+        conversationId,
+        abortController,
+        fallbackMessageId,
+      );
 
       if (result.messageId) {
         assistantMessageIdByUserMessageIdRef.current.set(anchorUserMessageId, result.messageId);

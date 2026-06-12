@@ -108,6 +108,52 @@ describe('createSendMessageActions', () => {
       const userMsg = Object.values(store.state.messagesById).find((m) => m.role === 'user');
       expect(userMsg!.conversationId).toBe('c-active');
     });
+
+    it('gives each id-less response its own assistant message across sequential sends', async () => {
+      // Regression: an adapter whose `start`/`finish` chunks carry no
+      // `messageId` (e.g. the Vercel AI SDK's bare `{ type: 'start' }`) must
+      // not have its replies collapse into a single assistant bubble. The
+      // runtime mints a unique fallback id per run, so reply 2 lands on a fresh
+      // message instead of appending to reply 1.
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockImplementation(() =>
+          // `start`/`finish` without a messageId, like the Vercel AI SDK's bare
+          // `{ type: 'start' }`. The type requires one; runtime streams can omit it.
+          createStream([
+            { type: 'start' },
+            { type: 'text-start', id: 't' },
+            { type: 'text-delta', id: 't', delta: 'reply' },
+            { type: 'text-end', id: 't' },
+            { type: 'finish', finishReason: 'stop' },
+          ] as unknown as ChatMessageChunk[]),
+        ),
+      });
+
+      const { sendMessage } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await sendMessage({ conversationId: 'c1', parts: [{ type: 'text', text: '1' }] });
+      await sendMessage({ conversationId: 'c1', parts: [{ type: 'text', text: '2' }] });
+
+      const assistantMessages = store.state.messageIds
+        .map((id) => store.state.messagesById[id])
+        .filter((m) => m.role === 'assistant');
+
+      expect(assistantMessages).toHaveLength(2);
+      expect(assistantMessages[0].id).not.toBe(assistantMessages[1].id);
+      // Each assistant message holds exactly its own reply — no merged parts.
+      assistantMessages.forEach((m) => {
+        expect(m.parts).toEqual([{ type: 'text', text: 'reply', state: 'done' }]);
+      });
+    });
   });
 
   describe('sendExistingMessage (via sendMessage)', () => {
@@ -927,9 +973,7 @@ describe('createSendMessageActions', () => {
       // Stream a start (partial output) then close without a terminal chunk,
       // with no reconnect support → processStream reports an error.
       const adapter = createAdapter({
-        regenerate: vi
-          .fn()
-          .mockResolvedValue(createStream([{ type: 'start', messageId: 'a2' }])),
+        regenerate: vi.fn().mockResolvedValue(createStream([{ type: 'start', messageId: 'a2' }])),
       });
 
       const { regenerate } = createSendMessageActions({
