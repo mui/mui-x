@@ -39,3 +39,20 @@ export function setQuery(next: string): void {
   query = next;
   emit();
 }
+
+/**
+ * The filter input and the gallery live in separate React roots, so the
+ * "Clear search" button in the empty state can't focus the input through React.
+ * The input registers its DOM node here; the empty state calls `focusInput`
+ * after clearing so keyboard and screen-reader focus returns to the field
+ * instead of being dropped when the empty state unmounts.
+ */
+let inputElement: HTMLInputElement | null = null;
+
+export function registerInput(element: HTMLInputElement | null): void {
+  inputElement = element;
+}
+
+export function focusInput(): void {
+  inputElement?.focus();
+}

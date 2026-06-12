@@ -4,7 +4,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import { getServerSnapshot, getSnapshot, setQuery, subscribe } from './galleryFilterStore';
+import {
+  getServerSnapshot,
+  getSnapshot,
+  registerInput,
+  setQuery,
+  subscribe,
+} from './galleryFilterStore';
 
 /**
  * Single outlined text input that drives the all-components gallery filter.
@@ -21,6 +27,7 @@ export default function ChatGalleryFilter() {
       size="small"
       fullWidth
       variant="outlined"
+      inputRef={registerInput}
       sx={{ mt: 1, mb: 1, maxWidth: 360 }}
       slotProps={{
         input: {

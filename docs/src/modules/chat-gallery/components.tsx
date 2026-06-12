@@ -372,6 +372,55 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
   },
 ];
 
-export function entriesForSection(sectionId: ChatGallerySectionId): ChatGalleryEntry[] {
-  return CHAT_GALLERY.filter((entry) => entry.sectionId === sectionId);
+export interface ChatGallerySection {
+  /** Matches `ChatGalleryEntry.sectionId`. */
+  id: ChatGallerySectionId;
+  /** Heading rendered above the section grid; its slug doubles as the anchor id. */
+  title: string;
+  /** Intro line under the heading. Backtick spans render as inline code. */
+  description: string;
 }
+
+/**
+ * Section order and copy for the all-components gallery. Previously these lived
+ * as `##` headings in `all-components.md`, but the gallery now owns them so an
+ * empty section (after filtering) can hide its heading and description too.
+ */
+export const CHAT_GALLERY_SECTIONS: ChatGallerySection[] = [
+  {
+    id: 'full-surfaces',
+    title: 'Full surfaces',
+    description:
+      'Reach for these when you want a working chat with minimal wiring—`ChatBox` is the batteries-included entry point, while `ChatConversation` is for when you bring your own shell:',
+  },
+  {
+    id: 'layout-and-navigation',
+    title: 'Layout and navigation',
+    description:
+      'The shell around messages: conversation chrome, header slots (info, title, subtitle, actions), and the inbox-style conversation list for multi-conversation apps:',
+  },
+  {
+    id: 'messages',
+    title: 'Messages',
+    description:
+      'The message stack from list to group to message, plus the slots inside each bubble; reach for a slot when restyling a single part instead of replacing the whole message:',
+  },
+  {
+    id: 'composer',
+    title: 'Composer',
+    description:
+      'Build the prompt form from a label, text area, attachment controls, toolbar, send button, and helper text—swap any slot to restyle one part without rebuilding the form:',
+  },
+  {
+    id: 'states',
+    title: 'States',
+    description:
+      'Transient runtime affordances—use these when the conversation is loading, someone is typing, or the user has scrolled away: suggestions, typing indicators, unread markers, loading skeletons, date dividers, and scroll affordances:',
+  },
+  {
+    id: 'ai-and-rich-content',
+    title: 'AI and rich content',
+    description:
+      'Presentational renderers for AI output—citations, code blocks, approval prompts, and other building blocks you can drop into custom message content without tying them to the runtime:',
+  },
+];

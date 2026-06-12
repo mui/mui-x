@@ -21,38 +21,4 @@ Each card carries a role chip:
 
 {{"component": "modules/chat-gallery/ChatGalleryFilter.tsx"}}
 
-## Full surfaces
-
-Reach for these when you want a working chat with minimal wiring—`ChatBox` is the batteries-included entry point, while `ChatConversation` is for when you bring your own shell:
-
-{{"component": "modules/chat-gallery/ChatFullSurfacesComponents.tsx"}}
-
-## Layout and navigation
-
-The shell around messages: conversation chrome, header slots (info, title, subtitle, actions), and the inbox-style conversation list for multi-conversation apps:
-
-{{"component": "modules/chat-gallery/ChatLayoutComponents.tsx"}}
-
-## Messages
-
-The message stack from list to group to message, plus the slots inside each bubble; reach for a slot when restyling a single part instead of replacing the whole message:
-
-{{"component": "modules/chat-gallery/ChatMessageComponents.tsx"}}
-
-## Composer
-
-Build the prompt form from a label, text area, attachment controls, toolbar, send button, and helper text—swap any slot to restyle one part without rebuilding the form:
-
-{{"component": "modules/chat-gallery/ChatComposerComponents.tsx"}}
-
-## States
-
-Transient runtime affordances—use these when the conversation is loading, someone is typing, or the user has scrolled away: suggestions, typing indicators, unread markers, loading skeletons, date dividers, and scroll affordances:
-
-{{"component": "modules/chat-gallery/ChatStateComponents.tsx"}}
-
-## AI and rich content
-
-Presentational renderers for AI output—citations, code blocks, approval prompts, and other building blocks you can drop into custom message content without tying them to the runtime:
-
-{{"component": "modules/chat-gallery/ChatAiContentComponents.tsx"}}
+{{"component": "modules/chat-gallery/ChatGallery.tsx"}}
