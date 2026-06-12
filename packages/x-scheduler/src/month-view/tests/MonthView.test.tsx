@@ -188,6 +188,62 @@ describe('<MonthView />', () => {
     });
   });
 
+  describe('"more events" popover close handler', () => {
+    function renderCalendar() {
+      return render(
+        <EventCalendarProvider events={manyEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    it('should close the popover when the event dialog it opened is closed', async () => {
+      const { user } = renderCalendar();
+
+      const moreButton = await screen.findByRole('button', { name: /more/i });
+      await user.click(moreButton);
+      const popover = await screen.findByRole('presentation');
+
+      await user.click(within(popover).getAllByRole('button')[0]);
+      const dialog = await screen.findByRole('dialog');
+      expect(document.body.contains(popover)).to.equal(true);
+
+      await user.click(within(dialog).getByRole('button', { name: 'Close' }));
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+    });
+
+    it('should not leak close listeners when the popover is reopened', async () => {
+      const warn = spy(console, 'warn');
+
+      try {
+        const { user } = renderCalendar();
+
+        // EventManager warns past 20 listeners, so reopen enough times to cross it.
+        /* eslint-disable no-await-in-loop */
+        for (let i = 0; i < 22; i += 1) {
+          const moreButton = await screen.findByRole('button', { name: /more/i });
+          await user.click(moreButton);
+          await screen.findByRole('presentation');
+          await user.keyboard('{Escape}');
+          await waitFor(() => {
+            expect(screen.queryByRole('presentation')).to.equal(null);
+          });
+        }
+        /* eslint-enable no-await-in-loop */
+
+        const leaked = warn.getCalls().some((call) => /memory leak/i.test(String(call.args[0])));
+        expect(leaked).to.equal(false);
+      } finally {
+        warn.restore();
+      }
+    }, 30000);
+  });
+
   describe('All day events', () => {
     const allDayEvents = [
       EventBuilder.new()
