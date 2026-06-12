@@ -4,4 +4,5 @@ export * from './ChartsToolbarZoomOutTrigger';
 export * from './ChartsToolbarRangeButtonTrigger';
 export * from './ChartsToolbarPrintExportTrigger';
 export * from './ChartsToolbarImageExportTrigger';
+export * from './ChartsToolbarSvgExportTrigger';
 export type { ChartsToolbarProSlots, ChartsToolbarProSlotProps } from './Toolbar.types';

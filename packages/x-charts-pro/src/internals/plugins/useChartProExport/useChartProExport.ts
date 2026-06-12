@@ -1,10 +1,12 @@
 import { type ChartPlugin } from '@mui/x-charts/internals';
 import { printChart } from './print';
 import { exportImage } from './exportImage';
-import {
-  type ChartImageExportOptions,
-  type ChartPrintExportOptions,
-  type UseChartProExportSignature,
+import { exportSvg } from './exportSvg';
+import type {
+  ChartSvgExportOptions,
+  ChartImageExportOptions,
+  ChartPrintExportOptions,
+  UseChartProExportSignature,
 } from './useChartProExport.types';
 
 function waitForAnimationFrame() {
@@ -59,14 +61,35 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ ins
     }
   };
 
+  const exportAsSvg = async (options?: ChartSvgExportOptions) => {
+    const chartRoot = chartRootRef.current;
+    const svg = chartsLayerContainerRef.current;
+
+    if (chartRoot && svg) {
+      const enableAnimation = instance.disableAnimation();
+
+      try {
+        // Wait for animation frame to ensure the animation finished
+        await waitForAnimationFrame();
+        await exportSvg(chartRoot, svg, options);
+      } catch (error) {
+        console.error('MUI X Charts: Error exporting chart as SVG:', error);
+      } finally {
+        enableAnimation();
+      }
+    }
+  };
+
   return {
     publicAPI: {
       exportAsPrint,
       exportAsImage,
+      exportAsSvg,
     },
     instance: {
       exportAsPrint,
       exportAsImage,
+      exportAsSvg,
     },
   };
 };

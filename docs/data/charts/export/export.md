@@ -1,14 +1,14 @@
 ---
 title: Charts - Export
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro, SankeyChart
+components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro, SankeyChart, ChartsToolbarSvgExportTrigger
 ---
 
 # Charts - Export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Let users export a chart as an image or in PDF format.</p>
 
-Charts can be exported as images, or as PDFs using the browser's native print dialog.
+Charts can be exported as images, as SVG files, or as PDFs using the browser's native print dialog.
 The exporting feature is available for the following charts:
 
 - `LineChartPro`
@@ -61,23 +61,25 @@ yarn add rasterizehtml
 
 ## Export options
 
-Export behavior can be modified with [print](/x/api/charts/chart-print-export-options/) and [image export](/x/api/charts/chart-image-export-options/) options.
+Export behavior can be modified with [print](/x/api/charts/chart-print-export-options/), [image export](/x/api/charts/chart-image-export-options/), and [SVG export](/x/api/charts/chart-svg-export-options/) options.
 These options can be passed to the built-in toolbar using `slotProps.toolbar`, and are then automatically displayed.
 
 You can customize their respective behaviors by passing an options object to `slotProps.toolbar`, or to the export trigger itself if you're using a custom toolbar:
 
 ```tsx
 // Default toolbar:
-<BarChartPro slotProps={{ toolbar: { printOptions, imageExportOptions } }} />
+<BarChartPro slotProps={{ toolbar: { printOptions, imageExportOptions, svgExportOptions } }} />
 
 // Custom trigger:
 <ChartsToolbarImageExportTrigger options={imageExportOptions} />
 <ChartsToolbarPrintExportTrigger options={printExportOptions} />
+<ChartsToolbarSvgExportTrigger options={svgExportOptions} />
 ```
 
 ### Export formats
 
-To disable the print export, set the `disableToolbarButton` property to `true`.
+To disable the print export, set the `disableToolbarButton` property to `true` on `printOptions`.
+The SVG export can be disabled the same way through `svgExportOptions`.
 
 You can customize image export formats by providing an array of objects to the `imageExportOptions` property.
 These objects must contain the `type` property which specifies the image format.
@@ -95,8 +97,8 @@ The name of the exported file has been customized to resemble the chart's title.
 
 To add custom styles or modify the chart's appearance before exporting, use the `onBeforeExport` callback.
 
-When exporting, the chart is first rendered into an iframe and then exported as an image or PDF.
-The `onBeforeExport` callback gives you access to the iframe before the export process starts.
+For image and PDF export, `onBeforeExport` receives the iframe the chart is rendered into before the export process starts.
+SVG export serializes an SVG document, so its `onBeforeExport` receives the `<svg>` element to be exported instead.
 
 For example, you can add the title and caption to the exported chart as shown below:
 
@@ -177,3 +179,25 @@ apiRef.current?.exportAsImage({ pixelRatio: 3 });
 ```
 
 {{"demo": "ExportChartAsImage.js"}}
+
+### Export as SVG
+
+The `apiRef` prop also exposes the `exportAsSvg()` method to export the chart as a standalone SVG file.
+Unlike image export, this requires no extra dependency.
+
+The output is vector-based, so it stays crisp at any size and remains editable in design tools such as Figma.
+Series rendered to a canvas (for example, the WebGL renderer) cannot be vectorized and are embedded as a raster image inside the SVG, while the rest of the chart (axes, labels, legend) stays vector.
+
+```tsx
+apiRef.current?.exportAsSvg({ fileName: 'my-chart' });
+```
+
+{{"demo": "ExportChartAsSvg.js"}}
+
+:::info
+The chart is always exported in light mode, regardless of the color scheme of the page it is rendered in.
+:::
+
+:::warning
+Styles served from a cross-origin stylesheet cannot be read for security reasons and are omitted from the exported SVG, the same way they are for image export.
+:::

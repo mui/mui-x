@@ -26,6 +26,10 @@ export interface ChartsLocaleText {
    */
   toolbarExportPrint: string;
   /**
+   * Text for the SVG export button in the toolbar's export menu.
+   */
+  toolbarExportSvg: string;
+  /**
    * Text for an "Export as {image type}" button in the toolbar's export menu.
    * The only format supported in all browsers is 'image/png'.
    *

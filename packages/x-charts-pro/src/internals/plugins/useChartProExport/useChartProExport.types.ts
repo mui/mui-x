@@ -70,6 +70,22 @@ export interface ChartImageExportOptions extends ChartExportOptions {
   pixelRatio?: number;
 }
 
+/**
+ * The options to apply on the SVG export.
+ * @demos
+ *   - [SVG export](https://mui.com/x/react-charts/export/#export-as-svg)
+ */
+export interface ChartSvgExportOptions extends Omit<ChartExportOptions, 'onBeforeExport'> {
+  /**
+   * Callback function that is called before the export is triggered.
+   * It receives the SVG element to be exported, so it can be modified before serialization
+   * (such as adding elements, updating styles, removing elements, etc.).
+   * @param {SVGElement} svg The SVG element to be exported.
+   * @returns {Promise<void> | void} A promise or void. If a promise is returned, the export will wait for it to resolve before proceeding.
+   */
+  onBeforeExport?: (svg: SVGElement) => Promise<void> | void;
+}
+
 export interface UseChartProExportPublicApi {
   /**
    * Opens the browser's print dialog, which can be used to print the chart or export it as PDF.
@@ -85,6 +101,7 @@ export interface UseChartProExportPublicApi {
    * @returns {void}
    */
   exportAsImage: (options?: ChartImageExportOptions) => void;
+  exportAsSvg: (options?: ChartSvgExportOptions) => void;
 }
 
 export interface UseChartProExportInstance extends UseChartProExportPublicApi {}

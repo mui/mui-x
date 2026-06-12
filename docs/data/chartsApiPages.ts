@@ -189,6 +189,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-svg-export-trigger',
+    title: 'ChartsToolbarSvgExportTrigger',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-toolbar-zoom-in-trigger',
     title: 'ChartsToolbarZoomInTrigger',
     plan: 'pro',
