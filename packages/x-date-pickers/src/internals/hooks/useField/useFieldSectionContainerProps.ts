@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { UseFieldStateReturnValue } from './useFieldState';
-import { UseFieldInternalProps } from './useField.types';
+import { type UseFieldStateReturnValue } from './useFieldState';
+import { type UseFieldInternalProps } from './useField.types';
 
 /**
  * Generate the props to pass to the container element of each section of the field.

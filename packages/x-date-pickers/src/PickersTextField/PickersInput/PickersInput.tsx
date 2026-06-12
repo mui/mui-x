@@ -8,11 +8,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersInputClasses,
   getPickersInputUtilityClass,
-  PickersInputClasses,
+  type PickersInputClasses,
 } from './pickersInputClasses';
-import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
+import { PickersInputBase, type PickersInputBaseProps } from '../PickersInputBase';
 import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import { type PickerTextFieldOwnerState } from '../../models/fields';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersInputProps extends PickersInputBaseProps {

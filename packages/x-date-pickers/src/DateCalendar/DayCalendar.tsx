@@ -7,30 +7,30 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
-import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickerDay, PickerDayOwnerStateBase, PickerDayProps } from '../PickerDay';
-import { ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
+import { type DefaultizedProps, type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { PickerDay, type PickerDayOwnerStateBase, type PickerDayProps } from '../PickerDay';
+import { type ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
-import { PickerOnChangeFn } from '../internals/hooks/useViews';
+import { type PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   PickersSlideTransition,
-  SlideDirection,
-  SlideTransitionProps,
+  type SlideDirection,
+  type SlideTransitionProps,
 } from './PickersSlideTransition';
 import {
-  BaseDateValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
+  type BaseDateValidationProps,
+  type DayValidationProps,
+  type MonthValidationProps,
+  type YearValidationProps,
 } from '../internals/models/validation';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
-import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { PickerValidDate, TimezoneProps } from '../models';
-import { DateCalendarClasses } from './dateCalendarClasses';
-import { FormProps } from '../internals/models/formProps';
+import { type DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
+import { type PickerValidDate, type TimezoneProps } from '../models';
+import { type DateCalendarClasses } from './dateCalendarClasses';
+import { type FormProps } from '../internals/models/formProps';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
 
 export interface DayCalendarSlots {

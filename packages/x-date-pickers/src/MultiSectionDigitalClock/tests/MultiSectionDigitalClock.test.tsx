@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   MultiSectionDigitalClock,
-  MultiSectionDigitalClockProps,
+  type MultiSectionDigitalClockProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import {
   createPickerRenderer,

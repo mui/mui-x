@@ -1,16 +1,16 @@
-import { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import {
-  UseMobilePickerSlots,
-  ExportedUseMobilePickerSlotProps,
-  MobileOnlyPickerProps,
+  type UseMobilePickerSlots,
+  type ExportedUseMobilePickerSlotProps,
+  type MobileOnlyPickerProps,
 } from '../internals/hooks/useMobilePicker';
 import {
-  BaseTimePickerProps,
-  BaseTimePickerSlots,
-  BaseTimePickerSlotProps,
+  type BaseTimePickerProps,
+  type BaseTimePickerSlots,
+  type BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
-import { TimeView } from '../models';
-import { TimeViewWithMeridiem } from '../internals/models';
+import { type TimeView } from '../models';
+import { type TimeViewWithMeridiem } from '../internals/models';
 
 export interface MobileTimePickerSlots
   extends BaseTimePickerSlots, MakeOptional<UseMobilePickerSlots, 'field'> {}

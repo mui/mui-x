@@ -1,7 +1,7 @@
-import { DateTime, Settings } from 'luxon';
+import { type DateTime, Settings } from 'luxon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import { type AdapterFormats } from '@mui/x-date-pickers/models';
 import {
   cleanText,
   createPickerRenderer,

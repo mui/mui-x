@@ -5,12 +5,16 @@ import {
   getCleanedSelectedContent,
   createPickerRenderer,
   expectFieldValue,
-  AdapterName,
+  type AdapterName,
 } from 'test/utils/pickers';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
-import { FieldSectionType, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import {
+  type FieldSectionType,
+  type MuiPickersAdapter,
+  type PickerValidDate,
+} from '@mui/x-date-pickers/models';
 import {
   getDateSectionConfigFromFormatToken,
   cleanLeadingZeros,

@@ -5,11 +5,11 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
-import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
+import { type MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateDateTime } from '../validation';
-import { PickerOwnerState } from '../models';
+import { type PickerOwnerState } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import {
@@ -17,8 +17,8 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import { type PickerViewRendererLookup } from '../internals/hooks/usePicker';
+import { type DateOrTimeViewWithMeridiem, type PickerValue } from '../internals/models';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
 import {
   multiSectionDigitalClockClasses,
@@ -26,7 +26,7 @@ import {
 } from '../MultiSectionDigitalClock';
 import { mergeSx } from '../internals/utils/utils';
 import { digitalClockClasses } from '../DigitalClock';
-import { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
+import { type PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
 import { EXPORTED_TIME_VIEWS } from '../internals/utils/time-utils';
 import { DATE_VIEWS } from '../internals/utils/date-utils';
 

@@ -5,14 +5,14 @@ import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   PickerPopper,
-  DateOrTimeViewWithMeridiem,
+  type DateOrTimeViewWithMeridiem,
   PickerProvider,
-  PickerRangeValue,
+  type PickerRangeValue,
   extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import {
-  UseDesktopRangePickerParams,
-  UseDesktopRangePickerProps,
+  type UseDesktopRangePickerParams,
+  type UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';

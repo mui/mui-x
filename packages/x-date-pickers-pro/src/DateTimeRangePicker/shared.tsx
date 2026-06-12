@@ -1,48 +1,54 @@
-import * as React from 'react';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import type * as React from 'react';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
-import { LocalizedComponent } from '@mui/x-date-pickers/locales';
+import { type LocalizedComponent } from '@mui/x-date-pickers/locales';
 import {
-  BasePickerInputProps,
-  PickerViewRendererLookup,
-  BaseClockProps,
-  DigitalTimePickerProps,
+  type BasePickerInputProps,
+  type PickerViewRendererLookup,
+  type BaseClockProps,
+  type DigitalTimePickerProps,
   applyDefaultViewProps,
-  TimeViewWithMeridiem,
+  type TimeViewWithMeridiem,
   resolveTimeViewsResponse,
-  UseViewsOptions,
-  DateOrTimeViewWithMeridiem,
-  PickerRangeValue,
+  type UseViewsOptions,
+  type DateOrTimeViewWithMeridiem,
+  type PickerRangeValue,
   useApplyDefaultValuesToDateTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
-import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
+import { type TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import {
-  MultiSectionDigitalClockSlots,
-  MultiSectionDigitalClockSlotProps,
+  type DigitalClockSlots,
+  type DigitalClockSlotProps,
+} from '@mui/x-date-pickers/DigitalClock';
+import {
+  type MultiSectionDigitalClockSlots,
+  type MultiSectionDigitalClockSlotProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { DateTimeRangeValidationError } from '../models';
-import { DateTimeRangePickerView, DateTimeRangePickerViewExternal } from '../internals/models';
+import { type DateTimeRangeValidationError } from '../models';
 import {
-  DateRangeCalendarSlots,
-  DateRangeCalendarSlotProps,
-  ExportedDateRangeCalendarProps,
+  type DateTimeRangePickerView,
+  type DateTimeRangePickerViewExternal,
+} from '../internals/models';
+import {
+  type DateRangeCalendarSlots,
+  type DateRangeCalendarSlotProps,
+  type ExportedDateRangeCalendarProps,
 } from '../DateRangeCalendar';
 import {
   DateTimeRangePickerToolbar,
-  DateTimeRangePickerToolbarProps,
-  ExportedDateTimeRangePickerToolbarProps,
+  type DateTimeRangePickerToolbarProps,
+  type ExportedDateTimeRangePickerToolbarProps,
 } from './DateTimeRangePickerToolbar';
-import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
+import { type DateRangeViewRendererProps } from '../dateRangeViewRenderers';
 import {
   DateTimeRangePickerTabs,
-  DateTimeRangePickerTabsProps,
-  ExportedDateTimeRangePickerTabsProps,
+  type DateTimeRangePickerTabsProps,
+  type ExportedDateTimeRangePickerTabsProps,
 } from './DateTimeRangePickerTabs';
 import {
-  ExportedValidateDateTimeRangeProps,
-  ValidateDateTimeRangePropsToDefault,
+  type ExportedValidateDateTimeRangeProps,
+  type ValidateDateTimeRangePropsToDefault,
 } from '../validation/validateDateTimeRange';
 
 export interface BaseDateTimeRangePickerSlots

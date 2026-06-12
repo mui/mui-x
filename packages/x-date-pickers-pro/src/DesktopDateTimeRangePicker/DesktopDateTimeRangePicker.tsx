@@ -7,14 +7,14 @@ import Divider from '@mui/material/Divider';
 import {
   isDatePickerView,
   isInternalTimeView,
-  PickerViewRenderer,
+  type PickerViewRenderer,
   resolveDateTimeFormat,
-  PickerRangeValue,
-  PickerViewRendererLookup,
-  PickerRendererInterceptorProps,
+  type PickerRangeValue,
+  type PickerViewRendererLookup,
+  type PickerRendererInterceptorProps,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import { type PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -27,17 +27,17 @@ import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
-import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
+import { type DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateTimeRange } from '../validation';
-import { DateTimeRangePickerView } from '../internals/models';
+import { type DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
-import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+import { type PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 import { resolveReferenceDate } from '../internals/utils/date-range-manager';
 
 const STEPS: PickerRangeStep[] = [

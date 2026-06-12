@@ -2,9 +2,13 @@
 import * as React from 'react';
 import {
   PickerActionsContext,
-  PickerActionsContextValue,
+  type PickerActionsContextValue,
 } from '../internals/components/PickerProvider';
-import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValue } from '../internals/models';
+import {
+  type DateOrTimeViewWithMeridiem,
+  type PickerValidValue,
+  type PickerValue,
+} from '../internals/models';
 
 /**
  * Returns a subset of the context passed by the Picker wrapping the current component.

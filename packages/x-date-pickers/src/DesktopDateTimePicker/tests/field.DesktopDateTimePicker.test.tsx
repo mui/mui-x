@@ -1,7 +1,7 @@
 import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
 import {
   DesktopDateTimePicker,
-  DesktopDateTimePickerProps,
+  type DesktopDateTimePickerProps,
 } from '@mui/x-date-pickers/DesktopDateTimePicker';
 
 describe('<DesktopDateTimePicker /> - Field', () => {

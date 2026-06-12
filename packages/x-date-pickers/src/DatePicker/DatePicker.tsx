@@ -6,7 +6,7 @@ import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { DesktopDatePicker } from '../DesktopDatePicker';
 import { MobileDatePicker } from '../MobileDatePicker';
-import { DatePickerProps } from './DatePicker.types';
+import { type DatePickerProps } from './DatePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type DatePickerComponent = ((

@@ -4,8 +4,8 @@ import { fireEvent, screen, act, within, waitFor } from '@mui/internal-test-util
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { type DateRange } from '@mui/x-date-pickers-pro/models';
+import { type PickerValidDate } from '@mui/x-date-pickers/models';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import {
   createPickerRenderer,

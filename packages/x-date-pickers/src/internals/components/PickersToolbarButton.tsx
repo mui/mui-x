@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import Button, { ButtonProps } from '@mui/material/Button';
+import Button, { type ButtonProps } from '@mui/material/Button';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { TypographyProps } from '@mui/material/Typography';
+import { type TypographyProps } from '@mui/material/Typography';
 import { PickersToolbarText } from './PickersToolbarText';
-import { ExtendMui } from '../models/helpers';
+import { type ExtendMui } from '../models/helpers';
 import { getPickersToolbarUtilityClass } from './pickersToolbarClasses';
-import { PickersToolbarButtonClasses } from './pickersToolbarButtonClasses';
+import { type PickersToolbarButtonClasses } from './pickersToolbarButtonClasses';
 
 export interface PickersToolbarButtonProps extends ExtendMui<ButtonProps, 'value' | 'variant'> {
   align?: TypographyProps['align'];

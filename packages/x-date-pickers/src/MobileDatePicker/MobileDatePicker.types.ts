@@ -1,13 +1,13 @@
-import { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import {
-  UseMobilePickerSlots,
-  MobileOnlyPickerProps,
-  ExportedUseMobilePickerSlotProps,
+  type UseMobilePickerSlots,
+  type MobileOnlyPickerProps,
+  type ExportedUseMobilePickerSlotProps,
 } from '../internals/hooks/useMobilePicker';
 import {
-  BaseDatePickerProps,
-  BaseDatePickerSlots,
-  BaseDatePickerSlotProps,
+  type BaseDatePickerProps,
+  type BaseDatePickerSlots,
+  type BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
 
 export interface MobileDatePickerSlots

@@ -4,11 +4,11 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import {
-  ClockNumberClasses,
+  type ClockNumberClasses,
   getClockNumberUtilityClass,
   clockNumberClasses,
 } from './clockNumberClasses';
-import { PickerOwnerState } from '../models/pickers';
+import { type PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> {

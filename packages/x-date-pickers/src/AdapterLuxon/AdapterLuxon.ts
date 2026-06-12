@@ -1,11 +1,11 @@
 import { DateTime, Info } from 'luxon';
 import {
-  AdapterFormats,
-  AdapterOptions,
-  DateBuilderReturnType,
-  FieldFormatTokenMap,
-  MuiPickersAdapter,
-  PickersTimezone,
+  type AdapterFormats,
+  type AdapterOptions,
+  type DateBuilderReturnType,
+  type FieldFormatTokenMap,
+  type MuiPickersAdapter,
+  type PickersTimezone,
 } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {

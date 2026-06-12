@@ -1,4 +1,4 @@
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { type PickerValidDate } from '@mui/x-date-pickers/models';
 
 /**
  * Props used to validate a day value in range pickers.

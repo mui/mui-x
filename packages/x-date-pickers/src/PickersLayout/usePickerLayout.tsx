@@ -4,11 +4,15 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useRtl } from '@mui/system/RtlProvider';
 import { PickersActionBar } from '../PickersActionBar';
-import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
-import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
-import { PickersShortcuts, PickersShortcutsProps } from '../PickersShortcuts';
-import { BaseToolbarProps } from '../internals/models/props/toolbar';
-import { PickerValidValue } from '../internals/models';
+import {
+  type PickerLayoutOwnerState,
+  type PickersLayoutProps,
+  type SubComponents,
+} from './PickersLayout.types';
+import { getPickersLayoutUtilityClass, type PickersLayoutClasses } from './pickersLayoutClasses';
+import { PickersShortcuts, type PickersShortcutsProps } from '../PickersShortcuts';
+import { type BaseToolbarProps } from '../internals/models/props/toolbar';
+import { type PickerValidValue } from '../internals/models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { usePickerContext } from '../hooks';
 

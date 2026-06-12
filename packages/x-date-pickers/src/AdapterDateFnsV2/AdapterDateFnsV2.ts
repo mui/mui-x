@@ -49,7 +49,7 @@ import defaultLocale from 'date-fns/locale/en-US/index.js';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import longFormatters from 'date-fns/_lib/format/longFormatters/index.js';
 /* v8 ignore end */
-import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
+import { type AdapterFormats, type AdapterOptions, type MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 declare module '@mui/x-date-pickers/models' {

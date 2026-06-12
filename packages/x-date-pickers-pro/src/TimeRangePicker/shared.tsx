@@ -1,40 +1,43 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
-import { TimeStepOptions, TimeView } from '@mui/x-date-pickers/models';
+import { type DefaultizedProps } from '@mui/x-internals/types';
+import { type LocalizedComponent, type PickersInputLocaleText } from '@mui/x-date-pickers/locales';
+import { type TimeStepOptions, type TimeView } from '@mui/x-date-pickers/models';
 import {
-  BasePickerInputProps,
-  PickerViewRendererLookup,
-  BaseTimeValidationProps,
-  BaseClockProps,
-  ExportedBaseClockProps,
-  TimeViewWithMeridiem,
+  type BasePickerInputProps,
+  type PickerViewRendererLookup,
+  type BaseTimeValidationProps,
+  type BaseClockProps,
+  type ExportedBaseClockProps,
+  type TimeViewWithMeridiem,
   applyDefaultViewProps,
   resolveTimeViewsResponse,
-  UseViewsOptions,
-  PickerRangeValue,
-  PickerValue,
+  type UseViewsOptions,
+  type PickerRangeValue,
+  type PickerValue,
   useApplyDefaultValuesToTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { TimeClockSlots, TimeClockSlotProps } from '@mui/x-date-pickers/TimeClock';
-import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
+import { type TimeClockSlots, type TimeClockSlotProps } from '@mui/x-date-pickers/TimeClock';
 import {
-  MultiSectionDigitalClockSlots,
-  MultiSectionDigitalClockSlotProps,
+  type DigitalClockSlots,
+  type DigitalClockSlotProps,
+} from '@mui/x-date-pickers/DigitalClock';
+import {
+  type MultiSectionDigitalClockSlots,
+  type MultiSectionDigitalClockSlotProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
+import { type TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import {
   TimeRangePickerToolbar,
-  TimeRangePickerToolbarProps,
-  ExportedTimeRangePickerToolbarProps,
+  type TimeRangePickerToolbarProps,
+  type ExportedTimeRangePickerToolbarProps,
 } from './TimeRangePickerToolbar';
-import { TimeRangeValidationError } from '../models';
+import { type TimeRangeValidationError } from '../models';
 import {
-  ExportedTimeRangePickerTabsProps,
+  type ExportedTimeRangePickerTabsProps,
   TimeRangePickerTabs,
-  TimeRangePickerTabsProps,
+  type TimeRangePickerTabsProps,
 } from './TimeRangePickerTabs';
 
 export interface BaseTimeRangePickerSlots

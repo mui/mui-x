@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TimeView } from '../models';
-import { StaticTimePickerProps } from './StaticTimePicker.types';
-import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import { type TimeView } from '../models';
+import { type StaticTimePickerProps } from './StaticTimePicker.types';
+import { type TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';

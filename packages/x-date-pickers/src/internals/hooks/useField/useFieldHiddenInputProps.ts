@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PickerAnyManager } from '../../models/manager';
-import { UseFieldStateReturnValue } from './useFieldState';
+import { type PickerAnyManager } from '../../models/manager';
+import { type UseFieldStateReturnValue } from './useFieldState';
 
 /**
  * Generate the props to pass to the hidden input element of the field.

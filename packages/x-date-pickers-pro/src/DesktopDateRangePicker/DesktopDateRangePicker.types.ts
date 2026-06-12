@@ -1,13 +1,13 @@
-import { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import {
-  UseDesktopRangePickerSlots,
-  UseDesktopRangePickerSlotProps,
-  DesktopRangeOnlyPickerProps,
+  type UseDesktopRangePickerSlots,
+  type UseDesktopRangePickerSlotProps,
+  type DesktopRangeOnlyPickerProps,
 } from '../internals/hooks/useDesktopRangePicker';
 import {
-  BaseDateRangePickerProps,
-  BaseDateRangePickerSlots,
-  BaseDateRangePickerSlotProps,
+  type BaseDateRangePickerProps,
+  type BaseDateRangePickerSlots,
+  type BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
 export interface DesktopDateRangePickerSlots

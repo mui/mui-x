@@ -1,8 +1,8 @@
-import moment, { Moment } from 'moment';
+import moment, { type Moment } from 'moment';
 import momentTZ from 'moment-timezone';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
+import { type AdapterFormats, type PickerValidDate } from '@mui/x-date-pickers/models';
 import { spy } from 'sinon';
 import {
   createPickerRenderer,

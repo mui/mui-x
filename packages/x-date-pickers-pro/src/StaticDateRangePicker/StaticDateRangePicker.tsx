@@ -1,9 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerRangeValue, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import {
+  type PickerRangeValue,
+  type PickerViewRendererLookup,
+} from '@mui/x-date-pickers/internals';
 import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
-import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
+import { type StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';

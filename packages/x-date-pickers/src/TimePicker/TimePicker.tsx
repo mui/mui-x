@@ -5,8 +5,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { DesktopTimePicker } from '../DesktopTimePicker';
-import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
-import { TimePickerProps } from './TimePicker.types';
+import { MobileTimePicker, type MobileTimePickerProps } from '../MobileTimePicker';
+import { type TimePickerProps } from './TimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type TimePickerComponent = ((

@@ -1,13 +1,13 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import {
-  PickerSelectionState,
-  PickerViewRenderer,
-  TimeViewWithMeridiem,
-  BaseClockProps,
-  PickerRangeValue,
-  PickerViewsRendererProps,
+  type PickerSelectionState,
+  type PickerViewRenderer,
+  type TimeViewWithMeridiem,
+  type BaseClockProps,
+  type PickerRangeValue,
+  type PickerViewsRendererProps,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { type PickerValidDate } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { isRangeValid } from '../internals/utils/date-utils';
 import { calculateRangeChange, resolveReferenceDate } from '../internals/utils/date-range-manager';

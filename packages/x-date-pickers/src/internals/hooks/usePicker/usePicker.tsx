@@ -5,28 +5,28 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import {
-  PickerViewsRendererProps,
-  UsePickerParameters,
-  UsePickerProps,
-  UsePickerReturnValue,
+  type PickerViewsRendererProps,
+  type UsePickerParameters,
+  type UsePickerProps,
+  type UsePickerReturnValue,
 } from './usePicker.types';
 import {
-  DateOrTimeViewWithMeridiem,
-  PickerRangeValue,
-  PickerValidValue,
-  PickerValue,
+  type DateOrTimeViewWithMeridiem,
+  type PickerRangeValue,
+  type PickerValidValue,
+  type PickerValue,
 } from '../../models';
 import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 import { useReduceAnimations } from '../useReduceAnimations';
-import { FieldRef, InferError, PickerOwnerState } from '../../../models';
+import { type FieldRef, type InferError, type PickerOwnerState } from '../../../models';
 import {
-  PickerActionsContextValue,
-  PickerContextValue,
-  PickerPrivateContextValue,
+  type PickerActionsContextValue,
+  type PickerContextValue,
+  type PickerPrivateContextValue,
 } from '../../components/PickerProvider';
 import { isTimeView } from '../../utils/time-utils';
 import { useViews } from '../useViews';
-import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
+import { type PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
 import { useOrientation } from './hooks/useOrientation';
 import { useValueAndOpenStates } from './hooks/useValueAndOpenStates';
 import type { PickersActionBarAction } from '../../../PickersActionBar';

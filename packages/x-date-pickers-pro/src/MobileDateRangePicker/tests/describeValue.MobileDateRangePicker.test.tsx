@@ -1,6 +1,9 @@
 import { screen } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
-import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import {
+  type PickerNonNullableRangeValue,
+  type PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
   createPickerRenderer,

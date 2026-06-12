@@ -9,7 +9,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
-  MultiSectionDigitalClockSectionClasses,
+  type MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
 } from './multiSectionDigitalClockSectionClasses';
 import type {
@@ -22,10 +22,10 @@ import {
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '../internals/constants/dimensions';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
-import { FormProps } from '../internals/models/formProps';
-import { PickerOwnerState } from '../models/pickers';
+import { type FormProps } from '../internals/models/formProps';
+import { type PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
+import { type MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;

@@ -2,21 +2,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
+import { styled, useThemeProps, type CSSInterpolation } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { MuiEvent } from '@mui/x-internals/types';
+import { type MuiEvent } from '@mui/x-internals/types';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import {
   pickerDayClasses,
-  PickerDayClassKey,
+  type PickerDayClassKey,
   getPickerDayUtilityClass,
-  PickerDayClasses,
+  type PickerDayClasses,
 } from './pickerDayClasses';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { PickerDayOwnerState, PickerDayProps } from './PickerDay.types';
+import { type PickerDayOwnerState, type PickerDayProps } from './PickerDay.types';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
 
 const useUtilityClasses = (

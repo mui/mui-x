@@ -15,16 +15,21 @@ import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import {
   getMultiSectionDigitalClockUtilityClass,
-  MultiSectionDigitalClockClasses,
+  type MultiSectionDigitalClockClasses,
 } from './multiSectionDigitalClockClasses';
 import { MultiSectionDigitalClockSection } from './MultiSectionDigitalClockSection';
 import {
-  MultiSectionDigitalClockProps,
-  MultiSectionDigitalClockViewProps,
+  type MultiSectionDigitalClockProps,
+  type MultiSectionDigitalClockViewProps,
 } from './MultiSectionDigitalClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
-import { PickerOwnerState, PickerValidDate, TimeStepOptions, TimeView } from '../models';
-import { TimeViewWithMeridiem } from '../internals/models';
+import {
+  type PickerOwnerState,
+  type PickerValidDate,
+  type TimeStepOptions,
+  type TimeView,
+} from '../models';
+import { type TimeViewWithMeridiem } from '../internals/models';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';

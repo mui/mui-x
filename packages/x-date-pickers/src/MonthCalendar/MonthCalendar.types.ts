@@ -1,11 +1,14 @@
-import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { MonthCalendarClasses } from './monthCalendarClasses';
-import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
-import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
-import { FormProps } from '../internals/models/formProps';
+import type * as React from 'react';
+import { type SxProps } from '@mui/system';
+import { type Theme } from '@mui/material/styles';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type MonthCalendarClasses } from './monthCalendarClasses';
+import {
+  type BaseDateValidationProps,
+  type MonthValidationProps,
+} from '../internals/models/validation';
+import { type PickerOwnerState, type PickerValidDate, type TimezoneProps } from '../models';
+import { type FormProps } from '../internals/models/formProps';
 
 export interface MonthButtonOwnerState extends PickerOwnerState {
   isMonthSelected: boolean;

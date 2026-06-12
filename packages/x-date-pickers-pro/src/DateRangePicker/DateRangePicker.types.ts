@@ -1,15 +1,15 @@
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/internals';
+import { type BaseSingleInputFieldProps } from '@mui/x-date-pickers/internals';
 import {
-  DesktopDateRangePickerProps,
-  DesktopDateRangePickerSlots,
-  DesktopDateRangePickerSlotProps,
+  type DesktopDateRangePickerProps,
+  type DesktopDateRangePickerSlots,
+  type DesktopDateRangePickerSlotProps,
 } from '../DesktopDateRangePicker';
 import {
-  MobileDateRangePickerProps,
-  MobileDateRangePickerSlots,
-  MobileDateRangePickerSlotProps,
+  type MobileDateRangePickerProps,
+  type MobileDateRangePickerSlots,
+  type MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
-import { ValidateDateRangeProps } from '../validation';
+import { type ValidateDateRangeProps } from '../validation';
 
 export interface DateRangePickerSlots
   extends DesktopDateRangePickerSlots, MobileDateRangePickerSlots {}

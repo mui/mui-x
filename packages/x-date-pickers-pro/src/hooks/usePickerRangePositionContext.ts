@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
+import { type UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 
 export const PickerRangePositionContext = React.createContext<UseRangePositionResponse | null>(
   null,

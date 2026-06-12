@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { DateTime } from 'luxon';
+import { type DateTime } from 'luxon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';

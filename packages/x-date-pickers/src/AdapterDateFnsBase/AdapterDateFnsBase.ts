@@ -1,10 +1,10 @@
-import { MakeRequired } from '@mui/x-internals/types';
+import { type MakeRequired } from '@mui/x-internals/types';
 import {
-  AdapterFormats,
-  AdapterOptions,
-  DateBuilderReturnType,
-  FieldFormatTokenMap,
-  MuiPickersAdapter,
+  type AdapterFormats,
+  type AdapterOptions,
+  type DateBuilderReturnType,
+  type FieldFormatTokenMap,
+  type MuiPickersAdapter,
 } from '../models';
 
 type DateFnsLocaleBase = {

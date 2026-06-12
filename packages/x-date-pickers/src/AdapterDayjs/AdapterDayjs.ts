@@ -1,5 +1,5 @@
 /* v8 ignore start */
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 // dayjs has no exports field defined
 // See https://github.com/iamkun/dayjs/issues/2562
 /* eslint-disable import/extensions */
@@ -12,12 +12,12 @@ import advancedFormatPlugin from 'dayjs/plugin/advancedFormat.js';
 /* eslint-enable import/extensions */
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  FieldFormatTokenMap,
-  MuiPickersAdapter,
-  AdapterFormats,
-  AdapterOptions,
-  PickersTimezone,
-  DateBuilderReturnType,
+  type FieldFormatTokenMap,
+  type MuiPickersAdapter,
+  type AdapterFormats,
+  type AdapterOptions,
+  type PickersTimezone,
+  type DateBuilderReturnType,
 } from '../models';
 
 dayjs.extend(localizedFormatPlugin);

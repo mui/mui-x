@@ -9,15 +9,15 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
 import {
-  PickersArrowSwitcherOwnerState,
-  PickersArrowSwitcherProps,
+  type PickersArrowSwitcherOwnerState,
+  type PickersArrowSwitcherProps,
 } from './PickersArrowSwitcher.types';
 import {
   getPickersArrowSwitcherUtilityClass,
-  PickersArrowSwitcherClasses,
+  type PickersArrowSwitcherClasses,
 } from './pickersArrowSwitcherClasses';
 import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
-import { PickerOwnerState } from '../../../models';
+import { type PickerOwnerState } from '../../../models';
 
 const PickersArrowSwitcherRoot = styled('div', {
   name: 'MuiPickersArrowSwitcher',

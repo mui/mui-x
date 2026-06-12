@@ -1,21 +1,25 @@
 'use client';
 import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import { type SxProps } from '@mui/system';
+import { type Theme } from '@mui/material/styles';
 
-import { PickerChangeImportance, PickerOwnerState, PickersTimezone } from '../../models';
-import { PickersInputLocaleText } from '../../locales';
+import {
+  type PickerChangeImportance,
+  type PickerOwnerState,
+  type PickersTimezone,
+} from '../../models';
+import { type PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 import {
-  DateOrTimeViewWithMeridiem,
-  PickerOrientation,
-  PickerValidValue,
-  PickerVariant,
+  type DateOrTimeViewWithMeridiem,
+  type PickerOrientation,
+  type PickerValidValue,
+  type PickerVariant,
 } from '../models';
 import { IsValidValueContext } from '../../hooks/useIsValidValue';
 import {
   PickerFieldPrivateContext,
-  PickerFieldPrivateContextValue,
+  type PickerFieldPrivateContextValue,
 } from '../hooks/useNullableFieldPrivateContext';
 import { PickerContext } from '../../hooks/usePickerContext';
 import type { PickersShortcutsItemContext } from '../../PickersShortcuts';

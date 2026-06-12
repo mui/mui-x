@@ -9,25 +9,32 @@ import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
-import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
+import {
+  type BaseToolbarProps,
+  type ExportedBaseToolbarProps,
+} from '../internals/models/props/toolbar';
 import {
   dateTimePickerToolbarClasses,
-  DateTimePickerToolbarClasses,
+  type DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
-import { DateOrTimeViewWithMeridiem, PickerValue, PickerVariant } from '../internals/models';
+import {
+  type DateOrTimeViewWithMeridiem,
+  type PickerValue,
+  type PickerVariant,
+} from '../internals/models';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
-import { AdapterFormats, DateTimeValidationError } from '../models';
+import { type AdapterFormats, type DateTimeValidationError } from '../models';
 import { usePickerContext } from '../hooks/usePickerContext';
 import {
-  PickerToolbarOwnerState,
+  type PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
-import { SetValueActionOptions } from '../internals/components/PickerProvider';
+import { type SetValueActionOptions } from '../internals/components/PickerProvider';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**

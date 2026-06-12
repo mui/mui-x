@@ -1,4 +1,4 @@
-import { PickerValidDate } from '../../models';
+import { type PickerValidDate } from '../../models';
 
 export interface PickerDayOwnerState {
   day: PickerValidDate;

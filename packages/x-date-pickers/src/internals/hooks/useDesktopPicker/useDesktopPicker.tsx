@@ -1,9 +1,9 @@
 import useSlotProps from '@mui/utils/useSlotProps';
 import { PickerPopper } from '../../components/PickerPopper/PickerPopper';
-import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
+import { type UseDesktopPickerParams, type UseDesktopPickerProps } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import { type DateOrTimeViewWithMeridiem, type PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 import { extractRootForwardedProps } from '../../utils/utils';

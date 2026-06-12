@@ -8,10 +8,10 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   PickersToolbar,
   PickersToolbarButton,
-  BaseToolbarProps,
-  ExportedBaseToolbarProps,
-  PickerRangeValue,
-  PickerToolbarOwnerState,
+  type BaseToolbarProps,
+  type ExportedBaseToolbarProps,
+  type PickerRangeValue,
+  type PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -19,9 +19,9 @@ import {
   usePickerContext,
   usePickerTranslations,
 } from '@mui/x-date-pickers/hooks';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { type PickerValidDate } from '@mui/x-date-pickers/models';
 import {
-  DateRangePickerToolbarClasses,
+  type DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
 } from './dateRangePickerToolbarClasses';
 import { usePickerRangePositionContext } from '../hooks';

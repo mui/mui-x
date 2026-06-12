@@ -1,9 +1,9 @@
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { type PickerValidDate } from '@mui/x-date-pickers/models';
 import {
-  ExportedPickersCalendarHeaderProps,
-  PickersCalendarHeaderProps,
-  PickersCalendarHeaderSlots,
-  PickersCalendarHeaderSlotProps,
+  type ExportedPickersCalendarHeaderProps,
+  type PickersCalendarHeaderProps,
+  type PickersCalendarHeaderSlots,
+  type PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
 
 export interface PickersRangeCalendarHeaderSlots extends PickersCalendarHeaderSlots {}

@@ -1,22 +1,22 @@
-import { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import {
-  UseDesktopPickerSlots,
-  ExportedUseDesktopPickerSlotProps,
-  DesktopOnlyPickerProps,
+  type UseDesktopPickerSlots,
+  type ExportedUseDesktopPickerSlotProps,
+  type DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
-  BaseTimePickerProps,
-  BaseTimePickerSlots,
-  BaseTimePickerSlotProps,
+  type BaseTimePickerProps,
+  type BaseTimePickerSlots,
+  type BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
-import { TimeViewWithMeridiem } from '../internals/models';
-import { DigitalTimePickerProps } from '../internals/models/props/time';
-import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
+import { type TimeViewWithMeridiem } from '../internals/models';
+import { type DigitalTimePickerProps } from '../internals/models/props/time';
+import { type DigitalClockSlots, type DigitalClockSlotProps } from '../DigitalClock';
 import {
-  MultiSectionDigitalClockSlots,
-  MultiSectionDigitalClockSlotProps,
+  type MultiSectionDigitalClockSlots,
+  type MultiSectionDigitalClockSlotProps,
 } from '../MultiSectionDigitalClock';
-import { TimeView } from '../models';
+import { type TimeView } from '../models';
 
 export interface DesktopTimePickerSlots
   extends

@@ -1,6 +1,6 @@
 'use client';
 import { useField } from '@mui/x-date-pickers/internals';
-import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
+import { type UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useDateTimeRangeManager } from '../managers';
 
 export const useSingleInputDateTimeRangeField = <

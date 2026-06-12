@@ -1,30 +1,30 @@
 import type * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import { type SxProps } from '@mui/system';
+import { type Theme } from '@mui/material/styles';
 import {
-  InferError,
-  OnErrorProps,
-  PickerChangeHandlerContext,
-  PickerOwnerState,
-  PickerValidDate,
-  PickerValueType,
-  TimezoneProps,
+  type InferError,
+  type OnErrorProps,
+  type PickerChangeHandlerContext,
+  type PickerOwnerState,
+  type PickerValidDate,
+  type PickerValueType,
+  type TimezoneProps,
 } from '../../../models';
 import {
-  DateOrTimeViewWithMeridiem,
-  FormProps,
-  PickerOrientation,
-  PickerRangeValue,
-  PickerValidValue,
-  PickerValueManager,
-  PickerVariant,
+  type DateOrTimeViewWithMeridiem,
+  type FormProps,
+  type PickerOrientation,
+  type PickerRangeValue,
+  type PickerValidValue,
+  type PickerValueManager,
+  type PickerVariant,
 } from '../../models';
-import { Validator } from '../../../validation';
-import { UseViewsOptions } from '../useViews';
-import { PickerProviderProps } from '../../components/PickerProvider';
-import { PickersInputLocaleText } from '../../../locales';
-import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
-import { CreateStepNavigationReturnValue } from '../../utils/createStepNavigation';
+import { type Validator } from '../../../validation';
+import { type UseViewsOptions } from '../useViews';
+import { type PickerProviderProps } from '../../components/PickerProvider';
+import { type PickersInputLocaleText } from '../../../locales';
+import { type PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
+import { type CreateStepNavigationReturnValue } from '../../utils/createStepNavigation';
 
 /**
  * Props common to all Picker headless implementations.

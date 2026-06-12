@@ -1,7 +1,7 @@
-import { PickerDayOwnerState, PickerDayProps } from '@mui/x-date-pickers/PickerDay';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { MuiEvent } from '@mui/x-internals/types';
-import { DateRangePickerDayClasses } from './dateRangePickerDayClasses';
+import { type PickerDayOwnerState, type PickerDayProps } from '@mui/x-date-pickers/PickerDay';
+import { type PickerValidDate } from '@mui/x-date-pickers/models';
+import { type MuiEvent } from '@mui/x-internals/types';
+import { type DateRangePickerDayClasses } from './dateRangePickerDayClasses';
 
 export interface DateRangePickerDayProps extends Omit<PickerDayProps, 'classes'> {
   /**

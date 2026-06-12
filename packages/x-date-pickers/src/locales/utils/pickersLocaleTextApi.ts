@@ -1,5 +1,5 @@
-import { TimeViewWithMeridiem } from '../../internals/models';
-import { DateView, TimeView, FieldSectionContentType } from '../../models';
+import { type TimeViewWithMeridiem } from '../../internals/models';
+import { type DateView, type TimeView, type FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
   /**

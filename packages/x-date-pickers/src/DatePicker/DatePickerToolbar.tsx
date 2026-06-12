@@ -7,18 +7,21 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { usePickerAdapter, usePickerContext, usePickerTranslations } from '../hooks';
-import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
-  DatePickerToolbarClasses,
+  type BaseToolbarProps,
+  type ExportedBaseToolbarProps,
+} from '../internals/models/props/toolbar';
+import {
+  type DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 import {
-  PickerToolbarOwnerState,
+  type PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
-import { DateView } from '../models/views';
-import { PickerValue } from '../internals/models';
+import { type DateView } from '../models/views';
+import { type PickerValue } from '../internals/models';
 
 export interface DatePickerToolbarProps extends BaseToolbarProps, ExportedDatePickerToolbarProps {}
 

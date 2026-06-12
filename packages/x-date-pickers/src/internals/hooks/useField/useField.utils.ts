@@ -1,24 +1,24 @@
 import {
-  FieldSectionsValueBoundaries,
-  SectionNeighbors,
-  SectionOrdering,
-  FieldSectionValueBoundaries,
-  FieldParsedSelectedSections,
+  type FieldSectionsValueBoundaries,
+  type SectionNeighbors,
+  type SectionOrdering,
+  type FieldSectionValueBoundaries,
+  type FieldParsedSelectedSections,
 } from './useField.types';
 import {
-  FieldSectionType,
-  FieldSection,
-  MuiPickersAdapter,
-  FieldSectionContentType,
-  PickersTimezone,
-  PickerValidDate,
-  FieldSelectedSections,
-  PickerValueType,
-  InferFieldSection,
+  type FieldSectionType,
+  type FieldSection,
+  type MuiPickersAdapter,
+  type FieldSectionContentType,
+  type PickersTimezone,
+  type PickerValidDate,
+  type FieldSelectedSections,
+  type PickerValueType,
+  type InferFieldSection,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
 import { convertToMeridiem } from '../../utils/time-utils';
-import { PickerValidValue } from '../../models';
+import { type PickerValidValue } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = (
   adapter: MuiPickersAdapter,

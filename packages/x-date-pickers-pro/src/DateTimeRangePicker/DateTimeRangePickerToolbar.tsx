@@ -5,12 +5,12 @@ import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import {
-  BaseToolbarProps,
-  ExportedBaseToolbarProps,
-  DateOrTimeViewWithMeridiem,
-  PickerRangeValue,
+  type BaseToolbarProps,
+  type ExportedBaseToolbarProps,
+  type DateOrTimeViewWithMeridiem,
+  type PickerRangeValue,
   useToolbarOwnerState,
-  PickerToolbarOwnerState,
+  type PickerToolbarOwnerState,
   DateTimePickerToolbarOverrideContext,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -18,10 +18,10 @@ import {
   usePickerContext,
   usePickerTranslations,
 } from '@mui/x-date-pickers/hooks';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { type PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePicker';
 import {
-  DateTimeRangePickerToolbarClasses,
+  type DateTimeRangePickerToolbarClasses,
   getDateTimeRangePickerToolbarUtilityClass,
 } from './dateTimeRangePickerToolbarClasses';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';

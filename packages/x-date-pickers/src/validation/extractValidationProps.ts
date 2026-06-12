@@ -1,11 +1,11 @@
 import {
-  BaseDateValidationProps,
-  BaseTimeValidationProps,
-  DateTimeValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  TimeValidationProps,
-  YearValidationProps,
+  type BaseDateValidationProps,
+  type BaseTimeValidationProps,
+  type DateTimeValidationProps,
+  type DayValidationProps,
+  type MonthValidationProps,
+  type TimeValidationProps,
+  type YearValidationProps,
 } from '../internals/models/validation';
 
 export const DATE_VALIDATION_PROP_NAMES: (

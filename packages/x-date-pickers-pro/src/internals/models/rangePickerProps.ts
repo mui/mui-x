@@ -1,14 +1,14 @@
 import {
-  BasePickerProps,
-  DateOrTimeViewWithMeridiem,
-  PickerRangeValue,
-  UsePickerNonStaticProps,
-  UsePickerParameters,
-  UsePickerProps,
+  type BasePickerProps,
+  type DateOrTimeViewWithMeridiem,
+  type PickerRangeValue,
+  type UsePickerNonStaticProps,
+  type UsePickerParameters,
+  type UsePickerProps,
 } from '@mui/x-date-pickers/internals';
-import * as React from 'react';
-import { UseRangePositionProps } from '../hooks/useRangePosition';
-import { PickerRangeStep } from '../utils/createRangePickerStepNavigation';
+import type * as React from 'react';
+import { type UseRangePositionProps } from '../hooks/useRangePosition';
+import { type PickerRangeStep } from '../utils/createRangePickerStepNavigation';
 
 /**
  * Props common to all range non-static pickers.

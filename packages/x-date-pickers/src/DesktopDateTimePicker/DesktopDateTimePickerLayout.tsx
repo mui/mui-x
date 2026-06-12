@@ -5,13 +5,13 @@ import clsx from 'clsx';
 import Divider from '@mui/material/Divider';
 import {
   PickersLayoutContentWrapper,
-  PickersLayoutProps,
+  type PickersLayoutProps,
   PickersLayoutRoot,
   pickersLayoutClasses,
   usePickerLayout,
 } from '../PickersLayout';
 import { usePickerContext } from '../hooks/usePickerContext';
-import { PickerValidValue } from '../internals/models';
+import { type PickerValidValue } from '../internals/models';
 
 type DesktopDateTimePickerLayoutComponent = (<TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue> & React.RefAttributes<HTMLDivElement>,

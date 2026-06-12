@@ -1,7 +1,7 @@
 import {
-  DateTimeValidationError,
-  DateValidationError,
-  TimeValidationError,
+  type DateTimeValidationError,
+  type DateValidationError,
+  type TimeValidationError,
 } from '@mui/x-date-pickers/models';
 
 type RangeValidation<ItemError extends string | null> = [

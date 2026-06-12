@@ -3,27 +3,27 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import Grow from '@mui/material/Grow';
 import Fade from '@mui/material/Fade';
-import MuiPaper, { PaperProps as MuiPaperProps, PaperProps } from '@mui/material/Paper';
+import MuiPaper, { type PaperProps as MuiPaperProps, type PaperProps } from '@mui/material/Paper';
 import MuiPopper, {
-  PopperProps as MuiPopperProps,
-  PopperPlacementType,
-  PopperProps,
+  type PopperProps as MuiPopperProps,
+  type PopperPlacementType,
+  type PopperProps,
 } from '@mui/material/Popper';
 import BaseFocusTrap, {
-  TrapFocusProps as MuiTrapFocusProps,
+  type TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
+import { type MuiEvent, type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { isElementInteractive } from '../../utils/isElementInteractive';
-import { getPickerPopperUtilityClass, PickerPopperClasses } from './pickerPopperClasses';
+import { getPickerPopperUtilityClass, type PickerPopperClasses } from './pickerPopperClasses';
 import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
 import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
-import { PickerOwnerState } from '../../../models';
+import { type PickerOwnerState } from '../../../models';
 import { usePickerContext } from '../../../hooks';
 
 export interface PickerPopperOwnerState extends PickerOwnerState {
