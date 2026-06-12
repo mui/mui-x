@@ -164,7 +164,7 @@ const DefaultComposerContent = React.memo(function DefaultComposerContent({
 
 // @ts-expect-error React.memo typing doesn't include propTypes
 
-DefaultComposerContent.propTypes = {
+DefaultComposerContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -207,7 +207,7 @@ const CompactComposerContent = React.memo(function CompactComposerContent({
 
 // @ts-expect-error React.memo typing doesn't include propTypes
 
-CompactComposerContent.propTypes = {
+CompactComposerContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -283,7 +283,7 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
   },
 );
 
-ChatComposer.propTypes = {
+ChatComposer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

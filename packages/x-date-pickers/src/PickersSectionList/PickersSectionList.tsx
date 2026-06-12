@@ -262,7 +262,7 @@ const PickersSectionList = React.forwardRef(function PickersSectionList(
   );
 }) as PickersSectionListComponent;
 
-PickersSectionList.propTypes = {
+PickersSectionList.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

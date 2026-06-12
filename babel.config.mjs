@@ -10,6 +10,52 @@ const dirname = path.dirname(filename);
 const errorCodesPath = path.resolve(dirname, './docs/public/static/error-codes.json');
 
 /**
+ * `babel-plugin-transform-react-remove-prop-types` only wraps the `propTypes` of components
+ * it can detect (functions returning JSX). Components returning portals, arrays, or the
+ * result of a render callback (e.g. the pickers' `renderPicker()`) are not detected, and
+ * their `propTypes` would ship in production bundles.
+ * This plugin wraps any remaining top-level `Component.propTypes = {...}` assignment in the
+ * same `process.env.NODE_ENV !== "production"` guard, so bundlers can strip them.
+ *
+ * @type {babel.PluginObj | (babel: { types: typeof import('@babel/types') }) => babel.PluginObj}
+ */
+function wrapRemainingPropTypesPlugin({ types: t }) {
+  return {
+    name: 'wrap-remaining-prop-types',
+    visitor: {
+      ExpressionStatement(nodePath) {
+        const expr = nodePath.node.expression;
+        if (
+          !t.isProgram(nodePath.parent) ||
+          !t.isAssignmentExpression(expr, { operator: '=' }) ||
+          !t.isMemberExpression(expr.left) ||
+          !t.isIdentifier(expr.left.property, { name: 'propTypes' }) ||
+          !t.isIdentifier(expr.left.object)
+        ) {
+          return;
+        }
+        nodePath.replaceWith(
+          t.expressionStatement(
+            t.conditionalExpression(
+              t.binaryExpression(
+                '!==',
+                t.memberExpression(
+                  t.memberExpression(t.identifier('process'), t.identifier('env')),
+                  t.identifier('NODE_ENV'),
+                ),
+                t.stringLiteral('production'),
+              ),
+              expr,
+              t.unaryExpression('void', t.numericLiteral(0)),
+            ),
+          ),
+        );
+      },
+    },
+  };
+}
+
+/**
  * @typedef {import('@babel/core')} babel
  */
 
@@ -34,6 +80,7 @@ export default function getBabelConfig(api) {
     removePropTypesPlugin[1].mode = 'unsafe-wrap';
     removePropTypesPlugin[1].ignoreFilenames ??= [];
     removePropTypesPlugin[1].ignoreFilenames.push('DataGrid.tsx', 'DataGridPro.tsx');
+    baseConfig.plugins.push(wrapRemainingPropTypesPlugin);
   }
   const displayNamePlugin = baseConfig.plugins.find(
     (p) => p[2] === '@mui/internal-babel-plugin-display-name',
