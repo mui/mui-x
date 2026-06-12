@@ -1,4 +1,5 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import { generateId } from '@base-ui/utils/generateId';
 import { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
 import {
   SchedulerProcessedEvent,
@@ -180,7 +181,7 @@ export function createEventModel<TEvent extends object>(
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   adapter: Adapter,
 ) {
-  const id = crypto.randomUUID();
+  const id = generateId('event');
 
   const formatNewDate = (value: string | TemporalSupportedObject): string => {
     if (typeof value === 'string') {
