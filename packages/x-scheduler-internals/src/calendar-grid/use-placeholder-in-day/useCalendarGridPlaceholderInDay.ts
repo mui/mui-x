@@ -19,6 +19,28 @@ export function useCalendarGridPlaceholderInDay(
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
 
+  const findAvailableIndex = React.useCallback(
+    (excludeKey?: string): number => {
+      let positionIndex = 1;
+      const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
+      if (targetDay) {
+        const usedIndexes = new Set(
+          targetDay.withPosition
+            .filter((occ) => occ.key !== excludeKey)
+            .map((occ) => occ.position.index),
+        );
+        while (usedIndexes.has(positionIndex)) {
+          positionIndex += 1;
+        }
+      }
+      if (maxEvents != null && positionIndex > maxEvents) {
+        positionIndex = maxEvents;
+      }
+      return positionIndex;
+    },
+    [adapter, day, maxEvents, row.days],
+  );
+
   const rawPlaceholder = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell,
@@ -54,13 +76,9 @@ export function useCalendarGridPlaceholderInDay(
         ...sharedProperties,
         title: '',
         allDay: true,
-        displayTimezone: {
-          start: startProcessed,
-          end: endProcessed,
-          timezone,
-        },
+        displayTimezone: { start: startProcessed, end: endProcessed, timezone },
         position: {
-          index: 1,
+          index: findAvailableIndex(),
           daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
@@ -74,13 +92,9 @@ export function useCalendarGridPlaceholderInDay(
       return {
         ...sharedProperties,
         title: rawPlaceholder.eventData.title ?? '',
-        displayTimezone: {
-          start: startProcessed,
-          end: endProcessed,
-          timezone,
-        },
+        displayTimezone: { start: startProcessed, end: endProcessed, timezone },
         position: {
-          index: 1,
+          index: findAvailableIndex(),
           daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
@@ -111,9 +125,19 @@ export function useCalendarGridPlaceholderInDay(
       end: processDate(rawPlaceholder.end, adapter),
       displayTimezone: { ...originalEvent!.displayTimezone },
       position: {
-        index: positionIndex,
+        index: findAvailableIndex(rawPlaceholder.occurrenceKey),
         daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
       },
     };
-  }, [adapter, day, maxEvents, originalEvent, originalEventId, rawPlaceholder, row.days, rowEnd]);
+  }, [
+    adapter,
+    day,
+    maxEvents,
+    originalEvent,
+    originalEventId,
+    rawPlaceholder,
+    row.days,
+    rowEnd,
+    findAvailableIndex,
+  ]);
 }
