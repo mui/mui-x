@@ -3,7 +3,6 @@ import * as React from 'react';
 import { type ChartPlugin } from '@mui/x-charts/internals';
 import {
   PanGesture,
-  PinchGesture,
   PressAndDragGesture,
   TapAndDragGesture,
   TapGesture,
@@ -25,10 +24,6 @@ export const useRegisterZoomGestures = ({
         name: 'zoomPan',
         threshold: 0,
         preventIf: ['zoomTapAndDrag', 'zoomPressAndDrag'],
-      }),
-      new PinchGesture({
-        name: 'zoomPinch',
-        threshold: 5,
       }),
       new TurnWheelGesture({
         name: 'zoomTurnWheel',
