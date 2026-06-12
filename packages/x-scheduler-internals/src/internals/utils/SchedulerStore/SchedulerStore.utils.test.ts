@@ -21,7 +21,7 @@ describe('shouldUpdateOccurrencePlaceholder', () => {
     expect(shouldUpdateOccurrencePlaceholder(adapter, null, null)).to.equal(false);
   });
 
-  it('returns true when switching between null and a placeholder', () => {
+  it('should return true when switching between null and a placeholder', () => {
     expect(shouldUpdateOccurrencePlaceholder(adapter, null, createPlaceholder())).to.equal(true);
     expect(shouldUpdateOccurrencePlaceholder(adapter, createPlaceholder(), null)).to.equal(true);
   });
