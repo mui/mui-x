@@ -33,7 +33,7 @@ const WEEKDAYS: SchedulerWeekday[] = [
   'saturday',
 ];
 
-export const getWeekdayToken = (adapter, value) => {
+export const getWeekdayToken = (adapter: Adapter, value: TemporalSupportedObject) => {
   return WEEKDAYS[adapter.getDayOfWeek(value)];
 };
 
