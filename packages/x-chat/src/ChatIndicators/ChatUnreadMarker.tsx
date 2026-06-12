@@ -2,8 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { SxProps, Theme } from '@mui/system';
 import { UnreadMarker, type UnreadMarkerProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatUnreadMarkerUtilityClasses,
   type ChatUnreadMarkerClasses,
@@ -13,6 +15,7 @@ const useThemeProps = createUseThemeProps('MuiChatUnreadMarker');
 
 export interface ChatUnreadMarkerProps extends UnreadMarkerProps {
   className?: string;
+  sx?: SxProps<Theme>;
   classes?: Partial<ChatUnreadMarkerClasses>;
 }
 
@@ -42,7 +45,7 @@ const ChatUnreadMarkerLabelStyled = styled('div', {
 const ChatUnreadMarker = React.forwardRef<HTMLDivElement, ChatUnreadMarkerProps>(
   function ChatUnreadMarker(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatUnreadMarker' });
-    const { slots, slotProps, className, classes: classesProp, ...other } = props;
+    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatUnreadMarkerUtilityClasses(classesProp);
 
     return (
@@ -50,20 +53,25 @@ const ChatUnreadMarker = React.forwardRef<HTMLDivElement, ChatUnreadMarkerProps>
         ref={ref}
         {...other}
         slots={{
+          ...slots,
           root: slots?.root ?? ChatUnreadMarkerStyled,
           label: slots?.label ?? ChatUnreadMarkerLabelStyled,
-          ...slots,
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(classes.root, className),
-            ...(slotProps?.root as object),
-          } as any,
-          label: {
-            className: classes.label,
-            ...(slotProps?.label as object),
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(classes.root, className),
+              sx,
+            },
+            slotProps?.root,
+          ) as any,
+          label: mergeSlotProps(
+            {
+              className: classes.label,
+            },
+            slotProps?.label,
+          ) as any,
         }}
       />
     );
@@ -83,6 +91,11 @@ ChatUnreadMarker.propTypes = {
   messageId: PropTypes.string.isRequired,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatUnreadMarker };

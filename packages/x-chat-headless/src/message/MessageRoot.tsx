@@ -24,6 +24,14 @@ export interface MessageRootProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   isGrouped?: boolean;
   slots?: Partial<MessageRootSlots>;
   slotProps?: MessageRootSlotProps;
+  /**
+   * @ignore
+   * Internal: the compact group author label injected by the headless
+   * `MessageGroup` for the Material `ChatMessage` to place in its CSS grid.
+   * `MessageRoot` renders the consumer's own composition and owns its layout,
+   * so it deliberately drops this prop instead of forwarding it to the DOM.
+   */
+  groupAuthorName?: React.ReactNode;
 }
 
 type MessageRootComponent = ((
@@ -34,7 +42,20 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
   props: MessageRootProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { messageId, isGrouped = false, slots, slotProps, children, ...other } = props;
+  const {
+    messageId,
+    isGrouped = false,
+    slots,
+    slotProps,
+    children,
+    groupAuthorName,
+    ...other
+  } = props;
+  // Dropped on purpose: `groupAuthorName` is a private MessageGroup→ChatMessage
+  // channel. A headless `MessageRoot` composition owns its own layout, so we must
+  // not forward this non-DOM prop to the root element (it would otherwise leak as
+  // an unknown DOM attribute). Pulling it out of `...other` is the whole point.
+  void groupAuthorName;
   const message = useMessage(messageId);
   const resolvedAuthor = useMessageAuthor(messageId);
   const variant = useChatVariant();

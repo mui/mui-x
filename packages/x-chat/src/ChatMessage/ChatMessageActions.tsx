@@ -5,21 +5,21 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { MessageActions, type MessageActionsProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageActions');
 
 export interface ChatMessageActionsProps extends MessageActionsProps {
   className?: string;
   sx?: SxProps<Theme>;
-  classes?: Partial<ChatMessageClasses>;
 }
 
 const ChatMessageActionsStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Actions',
   overridesResolver: (_, styles) => styles.actions,
-})<{ ownerState?: { role?: string } }>(({ theme, ownerState }) => ({
+})<{ ownerState?: { role?: string; isOwnMessage?: boolean } }>(({ theme, ownerState }) => ({
   gridArea: 'actions',
   display: 'inline-flex',
   alignItems: 'center',
@@ -34,7 +34,7 @@ const ChatMessageActionsStyled = styled('div', {
   '.MuiChatMessage-root:hover &, .MuiChatMessage-root:focus-within &': {
     opacity: 1,
   },
-  ...(ownerState?.role === 'user' && {
+  ...(ownerState?.isOwnMessage && {
     justifySelf: 'end',
   }),
   backgroundColor: (theme.vars || theme).palette.background.paper,
@@ -52,24 +52,36 @@ const ChatMessageActionsStyled = styled('div', {
 const ChatMessageActions = React.forwardRef<HTMLDivElement, ChatMessageActionsProps>(
   function ChatMessageActions(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageActions' });
-    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    // Drop a JS/theme-injected `classes` (not a prop on this sub-part — it shares
+    // the `MuiChatMessage-*` namespace) so it can't leak onto the DOM via `...other`.
+    const {
+      slots,
+      slotProps,
+      className,
+      sx,
+      classes: classesProp,
+      ...other
+    } = props as ChatMessageActionsProps & { classes?: unknown };
+    void classesProp;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     return (
       <MessageActions
         ref={ref}
         {...other}
         slots={{
-          actions: slots?.actions ?? ChatMessageActionsStyled,
           ...slots,
+          actions: slots?.actions ?? ChatMessageActionsStyled,
         }}
         slotProps={{
           ...slotProps,
-          actions: {
-            className: clsx(classes.actions, className),
-            sx,
-            ...(slotProps?.actions as object),
-          } as any,
+          actions: mergeSlotProps(
+            {
+              className: clsx(classes.actions, className),
+              sx,
+            },
+            slotProps?.actions,
+          ) as any,
         }}
       />
     );
@@ -81,7 +93,6 @@ ChatMessageActions.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   className: PropTypes.string,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
