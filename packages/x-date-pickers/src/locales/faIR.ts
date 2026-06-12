@@ -2,11 +2,11 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-const timeViews: Record<TimeViewWithMeridiem, string> = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'ساعت‌ها',
   minutes: 'دقیقه‌ها',
   seconds: 'ثانیه‌ها',
-  meridiem: 'بعد از ظهر',
+  meridiem: 'نیم‌روز',
 };
 
 const faIRPickers: Partial<PickersLocaleText> = {
@@ -26,36 +26,36 @@ const faIRPickers: Partial<PickersLocaleText> = {
   start: 'شروع',
   end: 'پایان',
   startDate: 'تاریخ شروع',
-  startTime: 'ساعت شروع',
+  startTime: 'زمان شروع',
   endDate: 'تاریخ پایان',
-  endTime: 'ساعت پایان',
+  endTime: 'زمان پایان',
 
   // Action bar
   cancelButtonLabel: 'لغو',
   clearButtonLabel: 'پاک کردن',
-  okButtonLabel: 'اوکی',
+  okButtonLabel: 'تایید',
   todayButtonLabel: 'امروز',
   nextStepButtonLabel: 'آینده',
 
   // Toolbar titles
   datePickerToolbarTitle: 'تاریخ را انتخاب کنید',
-  dateTimePickerToolbarTitle: 'تاریخ و ساعت را انتخاب کنید',
-  timePickerToolbarTitle: 'ساعت را انتخاب کنید',
-  dateRangePickerToolbarTitle: 'محدوده تاریخ را انتخاب کنید',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  dateTimePickerToolbarTitle: 'تاریخ و زمان را انتخاب کنید',
+  timePickerToolbarTitle: 'زمان را انتخاب کنید',
+  dateRangePickerToolbarTitle: 'بازه تاریخی را انتخاب کنید',
+  timeRangePickerToolbarTitle: 'بازه زمانی را انتخاب کنید',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
-    ` را انتخاب کنید ${timeViews[view]}. ${!formattedTime ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${formattedTime} می باشد`}`,
-  hoursClockNumberText: (hours) => `${hours} ساعت‌ها`,
-  minutesClockNumberText: (minutes) => `${minutes} دقیقه‌ها`,
-  secondsClockNumberText: (seconds) => `${seconds} ثانیه‌ها`,
+    `انتخاب ${views[view]}. ${!formattedTime ? 'زمانی انتخاب نشده است' : `زمان انتخاب شده ${formattedTime} است`}`,
+  hoursClockNumberText: (hours) => `${hours} ساعت`,
+  minutesClockNumberText: (minutes) => `${minutes} دقیقه`,
+  secondsClockNumberText: (seconds) => `${seconds} ثانیه`,
 
   // Digital clock labels
-  selectViewText: (view) => ` را انتخاب کنید ${timeViews[view]}`,
+  selectViewText: (view) => `انتخاب ${views[view]}`,
 
   // Calendar labels
-  calendarWeekNumberHeaderLabel: 'عدد هفته',
+  calendarWeekNumberHeaderLabel: 'شماره هفته',
   calendarWeekNumberHeaderText: '#',
   calendarWeekNumberAriaLabelText: (weekNumber) => `هفته ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
@@ -63,18 +63,21 @@ const faIRPickers: Partial<PickersLocaleText> = {
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate
-      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${formattedDate} می‌باشد`
+      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${formattedDate} است`
       : 'تاریخ را انتخاب کنید',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime
-      ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${formattedTime} می‌باشد`
-      : 'ساعت را انتخاب کنید',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
-  fieldClearLabel: 'پاک کردن مقدار',
+      ? `زمان را انتخاب کنید، زمان انتخاب شده ${formattedTime} است`
+      : 'زمان را انتخاب کنید',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+    ? `بازه را انتخاب کنید، بازه زمانی انتخاب شده ${formattedRange} است`
+    : 'بازه را انتخاب کنید',
+  fieldClearLabel: 'پاک کردن',
 
   // Table labels
-  timeTableLabel: 'انتخاب تاریخ',
-  dateTableLabel: 'انتخاب ساعت',
+  timeTableLabel: 'انتخاب زمان',
+  dateTableLabel: 'انتخاب تاریخ',
 
   // Field section placeholders
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
