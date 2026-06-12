@@ -45,6 +45,7 @@ import type {
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
+import type { GridFormulaFunctionDefinition } from '../hooks/features/formula/gridFormulaInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -130,6 +131,17 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
+  /**
+   * If `true`, the formula evaluation is disabled: `=` cell values render as raw strings.
+   * @default false
+   */
+  disableFormulas: boolean;
+  /**
+   * Functions available to formulas, keyed by name.
+   * The prop replaces the built-in set: spread `GRID_FORMULA_FUNCTIONS` to extend it.
+   * @default GRID_FORMULA_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
+   */
+  formulaFunctions: Record<string, GridFormulaFunctionDefinition>;
   /**
    * If `true`, the clipboard paste is disabled.
    * @default false

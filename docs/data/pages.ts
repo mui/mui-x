@@ -251,6 +251,7 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
+          { pathname: '/x/react-data-grid/formulas', plan: 'premium', newFeature: true },
           {
             pathname: '/x/react-data-grid/pivoting-group',
             title: 'Pivoting',

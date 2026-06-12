@@ -1,0 +1,5 @@
+<DataGridPremium
+  rows={rows}
+  columns={columns}
+  initialState={{ aggregation: { model: { total: 'sum' } } }}
+/>

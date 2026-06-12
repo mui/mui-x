@@ -117,6 +117,9 @@
     "disableEval": {
       "description": "If <code>true</code>, <code>eval()</code> is not used for performance optimization."
     },
+    "disableFormulas": {
+      "description": "If <code>true</code>, the formula evaluation is disabled: <code>=</code> cell values render as raw strings."
+    },
     "disableMultipleColumnsFiltering": {
       "description": "If <code>true</code>, filtering with multiple columns is disabled."
     },
@@ -151,6 +154,9 @@
       "description": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side."
     },
     "filterModel": { "description": "Set the filter model of the Data Grid." },
+    "formulaFunctions": {
+      "description": "Functions available to formulas, keyed by name. The prop replaces the built-in set: spread <code>GRID_FORMULA_FUNCTIONS</code> to extend it."
+    },
     "getAggregationPosition": {
       "description": "Determines the position of an aggregated value.",
       "typeDescriptions": {

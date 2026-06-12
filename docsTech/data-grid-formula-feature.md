@@ -105,21 +105,42 @@ for error results; value results flow through the formatter normally.
 **D10. Re-render + filtering patches in `DataGridPremium.tsx`.** Extend the premium
 `useCellAggregationResult` config hook to also subscribe to `gridCellFormulaResultSelector` (this is
 what re-renders formula cells after each pass). Patch `useFilterValueGetter` to consult the formula
-lookup first (quick filter inherits).
+lookup first (quick filter inherits). _Amended during I2:_ no community-package change is needed —
+`getCellParamsForRow` falls back to `getRowValue`/`getRowFormattedValue` (the overlay) whenever the
+forced value is `undefined`, so the premium hook only adds a subscription and keeps returning the
+aggregation result unchanged.
 
 **D11. Invalidation.** Cache keeps `lastRowIdToModelLookup` (row-object **references**) +
-`trackedValues` (last resolved value per non-formula dependency cell). On `rowsSet`: reference-diff
+`trackedValues` (last resolved value per non-formula dependency cell) + `dependentsByRowId`
+(reverse index added during I2: row additions/removals dirty every formula referencing any cell of
+that row — this is what lets a `#REF!` to a missing row recover when the row appears). On
+`rowsSet`: reference-diff
 new lookup vs snapshot → changed/added/removed ids; per changed row, rescan formula-enabled fields
 for source changes and compare tracked dependency cells; dirty + transitive closure via
 `dependents`/`rangeDependentsByField`; Kahn recompute; update snapshots; **one `setState`**
 (copy-on-write) + publish `formulaEvaluationEnd: { changedCells }`. The same pipeline covers editing
-commits, `updateRows`, paste, undo/redo. Other triggers: `columnsChange`, `props.formulaFunctions`
-change (all dirty), `reevaluateFormulas()` (full rebuild). Initial evaluation in
+commits, `updateRows`, paste, undo/redo. Other triggers: `columnsChange` — guarded by **two**
+equality checks (the `allowFormulas` field set, and a `field → valueGetter` signature of the whole
+columns lookup, because `#REF!` for unknown fields and raw reads through `valueGetter` make results
+depend on every column definition); `props.formulaFunctions` change (compared **per definition**,
+not by record identity — inline props change identity every parent render); `reevaluateFormulas()`
+(full rebuild). A pass that only removes rows still reports their formula cells as changed —
+otherwise the lookup entries would survive and mask a later row reusing the same id. Initial
+evaluation in
 `formulaStateInitializer` registered **after** `rowsStateInitializer` (`caches.rows` is populated
 synchronously at init — no first-paint flash of `=` strings). All passes synchronous in handlers;
 dirty flushes once per loop.
 
-**D12. Editing.** `hydrateColumns` pipe processor wraps `allowFormulas` columns:
+**D12. Editing.** `hydrateColumns` pipe processor wraps `allowFormulas` columns. The wrapped
+property set is **deliberately disjoint from aggregation's** (`renderCell`/`renderHeader`): two
+features stacking wrappers on the same property cannot unwrap cleanly (the identity check skips a
+wrapper that has another one on top, accumulating layers on every `hydrateColumns` pass). The
+error-tooltip `renderCell` wrap drafted for I2 was therefore dropped — error codes display through
+`getRowFormattedValue`; tooltip/a11y polish lands in I5 through a non-`renderCell` mechanism.
+Typing `=` as the first character on a **plain** cell opens the formula text editor (recorded from
+the `cellEditStart` keyboard event) — without this there is no way to enter a formula in a number
+column, whose default editor rejects the character. `lastCellEditStart` is consumed on editor
+mount and cleared on `cellEditStop`, so it cannot go stale and corrupt a later programmatic edit.
 
 - `renderEditCell` → `GridFormulaEditCell`: seeds the edit state with the **source** via
   `setEditCellValue({ id, field, value: source, unstable_skipValueParser: true })` unless the edit
@@ -129,8 +150,11 @@ dirty flushes once per loop.
 - `valueSetter` → formula sources write `{ ...row, [field]: source }` directly; **equality guard**:
   if the incoming value equals the current evaluated result and stored `row[field]` is a formula →
   return the row unchanged (data-loss protection on paths that bypass the custom editor).
-- `preProcessEditCellProps` → attach `validateCellFormula` metadata for editor hints; **never set
-  `error: true`** for formula syntax (permissive commit).
+- `preProcessEditCellProps` → **only wrapped when the column defines its own processor** (amended
+  during I2: adding a processor unconditionally puts an async `isProcessingProps` gate on every
+  commit, which blocks Enter pressed right after a keystroke). The wrap forces **`error: false`**
+  for formula values (permissive commit). No validation metadata is attached — editor hints use
+  `validateCellFormula()` directly (I5).
 - `pastedValueParser` → `=`-strings become formulas.
   `getCellFormula(id, field)` reads the **raw** row value — never the overlay.
 
@@ -170,6 +194,11 @@ NOT, IFERROR, ISBLANK, CONCAT/CONCATENATE, LEN, UPPER, LOWER, TRIM, LEFT, RIGHT.
 **D17. Performance.** Intern parsed ASTs by source string (one parse per distinct formula).
 Reference-based row diffing. One `setState` per pass, copy-on-write lookup. No lazy evaluation
 (sort/filter/aggregation pull eagerly). Benchmark and document limits at 100k formula cells.
+_Measured during I2_ (evaluation layer, M-series laptop, jsdom vitest): 100k rows × 1 formula
+column (`=price * quantity`) — full pass ≈ 390 ms, single-cell edit diff pass ≈ 10 ms (dominated
+by the O(rows) reference compare). The jsdom harness itself cannot render 100k rows (OOM with or
+without formulas), so the numbers are for `computeFullFormulaPass`/`computeRowsDiffFormulaPass`
+with a stubbed `apiRef`.
 
 **D18. Ecosystem semantics (v1).** Clipboard copy: evaluated value. Paste: `=`-strings into
 `allowFormulas` columns become formulas; stable refs paste unadjusted. CSV/Excel export: evaluated
@@ -177,7 +206,17 @@ values; `escapeFormulas: true` default retained. Undo/redo: free (raw row replay
 keys from evaluated values. Tree data: works on data rows. `dataSource`: warn + disable. Errors
 render as code strings; error results sort/filter as code strings. Only error codes are
 user-visible strings (locale-neutral) — no `GridLocaleText` additions in v1. Formula bar: out of
-scope; `getCellFormula` + `cellFocusIn` make it userland-buildable.
+scope; `getCellFormula` + `cellFocusIn` make it userland-buildable. _Amended during I2:_ row
+grouping on a formula column groups by **raw source values** for now — the grouping tree is built
+inside the rows state computation, before the formula pass runs in the same cascade, so
+evaluated-value group keys need the post-pass re-application machinery that I3 builds for position
+contexts (documented limitation on the docs page; deferred to I3). Same class of limitation, also
+documented: **row spanning** compares raw row values, so identical formula sources span as one
+cell. Known editing trade-offs accepted in I2 (revisit in I5): converting an escaped literal
+`'=x` to the live formula `=x` by deleting the apostrophe is silently undone by the escape
+guard (workaround: clear the cell first or use `setCellFormula`); a formula whose result equals
+the empty string cannot be cleared through the editor (the equality guard reads the commit as
+unchanged).
 
 **D19. Registration order in `useDataGridPremiumComponent.tsx`.** Pipe processor
 `useGridFormulaPreProcessors` after `useGridAggregationPreProcessors`; `formulaStateInitializer`

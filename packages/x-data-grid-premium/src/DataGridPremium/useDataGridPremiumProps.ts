@@ -16,6 +16,7 @@ import type {
 } from '../models/dataGridPremiumProps';
 import type { GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
+import { GRID_FORMULA_FUNCTIONS } from '../hooks/features/formula/gridFormulaUtils';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
 import { defaultGetPivotDerivedColumns } from '../hooks/features/pivoting/utils';
 import { defaultGetAggregationPosition } from '../hooks/features/aggregation/gridAggregationUtils';
@@ -53,6 +54,8 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   rowGroupingColumnMode: 'single',
   aggregationFunctions: GRID_AGGREGATION_FUNCTIONS,
   aggregationRowsScope: 'filtered',
+  disableFormulas: false,
+  formulaFunctions: GRID_FORMULA_FUNCTIONS,
   getAggregationPosition: defaultGetAggregationPosition,
   cellSelectionFillHandle: false,
   disableClipboardPaste: false,
@@ -97,7 +100,7 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
       ...(themedProps.dataSource
-        ? { aggregationFunctions: {} }
+        ? { aggregationFunctions: {}, formulaFunctions: {} }
         : { getPivotDerivedColumns: defaultGetPivotDerivedColumns }),
       ...themedProps,
       localeText,
