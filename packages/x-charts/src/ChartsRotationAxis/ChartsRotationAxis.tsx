@@ -25,6 +25,7 @@ export function ChartsRotationAxis(props: ChartsRotationAxisProps) {
   const {
     disableLine,
     disableTicks,
+    disableTickLabel,
     position = 'outside',
     tickLabelPosition = position === 'outside' ? 'after' : 'before',
     tickPosition = position === 'outside' ? 'after' : 'before',
@@ -123,17 +124,19 @@ export function ChartsRotationAxis(props: ChartsRotationAxisProps) {
                 className={classes.tick}
               />
             )}
-            <text
-              x={labelX}
-              y={labelY}
-              fill={stroke}
-              fontSize={12}
-              className={classes.tickLabel}
-              pointerEvents="none"
-              {...getLabelTextAnchors(labelDx, labelDy, tickLabelPosition)}
-            >
-              {formattedValue}
-            </text>
+            {!disableTickLabel && (
+              <text
+                x={labelX}
+                y={labelY}
+                fill={stroke}
+                fontSize={12}
+                className={classes.tickLabel}
+                pointerEvents="none"
+                {...getLabelTextAnchors(labelDx, labelDy, tickLabelPosition)}
+              >
+                {formattedValue}
+              </text>
+            )}
           </g>
         );
       })}

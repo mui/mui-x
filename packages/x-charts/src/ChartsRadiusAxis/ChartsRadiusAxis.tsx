@@ -49,6 +49,7 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
     position = 'start',
     disableLine,
     disableTicks,
+    disableTickLabel,
     tickLabelPosition: tickLabelPositionProp = 'auto',
     tickPosition = position === 'start' ? 'before' : 'after',
     tickSize = 6,
@@ -146,17 +147,19 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
                 className={classes.tick}
               />
             )}
-            <text
-              x={labelX}
-              y={labelY}
-              fill={stroke}
-              fontSize={12}
-              className={classes.tickLabel}
-              pointerEvents="none"
-              {...getLabelTextAnchors(dx, dy, tickLabelPosition)}
-            >
-              {formattedValue}
-            </text>
+            {!disableTickLabel && (
+              <text
+                x={labelX}
+                y={labelY}
+                fill={stroke}
+                fontSize={12}
+                className={classes.tickLabel}
+                pointerEvents="none"
+                {...getLabelTextAnchors(dx, dy, tickLabelPosition)}
+              >
+                {formattedValue}
+              </text>
+            )}
           </g>
         );
       })}
