@@ -1,10 +1,7 @@
 {
   "props": {},
   "name": "MessageListRoot",
-  "imports": [
-    "import { MessageListRoot } from '@mui/x-chat/headless';",
-    "import { MessageListRoot } from '@mui/x-chat/headless';"
-  ],
+  "imports": ["import { MessageListRoot } from '@mui/x-chat/headless';"],
   "slots": [
     { "name": "messageList", "description": "", "class": null },
     { "name": "messageListScroller", "description": "", "class": null },

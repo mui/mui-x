@@ -39,8 +39,8 @@ const ChatComposerLabel = React.forwardRef<HTMLLabelElement, ChatComposerLabelPr
         ref={ref}
         {...other}
         slots={{
-          label: slots?.label ?? ChatComposerLabelStyled,
           ...slots,
+          label: slots?.label ?? ChatComposerLabelStyled,
         }}
         slotProps={{
           ...slotProps,

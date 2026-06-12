@@ -5,13 +5,14 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import {
   ComposerAttachmentList,
-  useComposerContext,
+  useChatComposer,
   type ComposerAttachmentListProps,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 import DefaultCloseIcon from '../icons/DefaultCloseIcon';
 import DefaultFileIcon from '../icons/DefaultFileIcon';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerAttachmentList');
 
@@ -122,7 +123,9 @@ const AttachmentFileIconWrapper = styled('span', {
 }));
 
 function DefaultAttachmentListContent() {
-  const composer = useComposerContext();
+  // Read directly from the store so the list renders even outside a `ChatComposer` —
+  // useful for custom layouts and isolated previews. `ChatProvider` is still required.
+  const composer = useChatComposer();
 
   return (
     <React.Fragment>
@@ -162,16 +165,18 @@ const ChatComposerAttachmentList = React.forwardRef<
       ref={ref}
       {...other}
       slots={{
-        attachmentList: slots?.attachmentList ?? ChatComposerAttachmentListStyled,
         ...slots,
+        attachmentList: slots?.attachmentList ?? ChatComposerAttachmentListStyled,
       }}
       slotProps={{
         ...slotProps,
-        attachmentList: {
-          className: clsx(classes.attachmentList, className),
-          sx,
-          ...(slotProps?.attachmentList as object),
-        } as any,
+        attachmentList: mergeSlotProps(
+          {
+            className: clsx(classes.attachmentList, className),
+            sx,
+          },
+          slotProps?.attachmentList,
+        ) as any,
       }}
     >
       {children ?? <DefaultAttachmentListContent />}

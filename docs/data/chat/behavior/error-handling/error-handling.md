@@ -3,7 +3,7 @@ productId: x-chat
 title: Error Handling
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatBox, MessageError
+components: ChatBox, ChatMessageError, MessageError
 ---
 
 # Chat - Error Handling

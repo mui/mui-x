@@ -70,7 +70,6 @@ const ChatComposerStyled = styled('form', {
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
-  zIndex: 1,
   gap: theme.spacing(0.5),
   padding: theme.spacing(1, 1.5),
   border: '1px solid',
@@ -260,8 +259,8 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
         {...other}
         attachmentConfig={attachmentConfig}
         slots={{
-          root: slots?.root ?? ChatComposerStyled,
           ...slots,
+          root: slots?.root ?? ChatComposerStyled,
         }}
         slotProps={{
           ...slotProps,
