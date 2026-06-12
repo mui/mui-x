@@ -200,6 +200,10 @@ export interface TemporalAdapter {
    */
   startOfWeek(value: TemporalSupportedObject): TemporalSupportedObject;
   /**
+   * Checks if the given date is a weekend (Saturday or Sunday).
+   */
+  isWeekend(value: TemporalSupportedObject): boolean;
+  /**
    * Returns the start of the day for the given date.
    */
   startOfDay(value: TemporalSupportedObject): TemporalSupportedObject;

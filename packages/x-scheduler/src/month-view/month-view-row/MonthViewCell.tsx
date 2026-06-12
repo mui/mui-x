@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
@@ -229,7 +228,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       aria-labelledby={ariaLabelledBy}
       data-current={isToday || undefined}
       data-other-month={!isCurrentMonth || undefined}
-      data-weekend={isWeekend(adapter, day.value) || undefined}
+      data-weekend={adapter.isWeekend(day.value) || undefined}
       lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >

@@ -5,7 +5,6 @@ import { useStore } from '@base-ui/utils/store';
 import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
@@ -96,7 +95,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       end={end}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
-      data-weekend={isWeekend(adapter, day.value) || undefined}
+      data-weekend={adapter.isWeekend(day.value) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer

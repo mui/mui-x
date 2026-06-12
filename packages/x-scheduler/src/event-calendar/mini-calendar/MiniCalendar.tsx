@@ -6,7 +6,6 @@ import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
@@ -249,7 +248,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               aria-label={adapter.formatByString(day.value, adapter.formats.weekday)}
               aria-colindex={dayIndex + 1}
               className={classes.miniCalendarWeekdayCell}
-              data-weekend={isWeekend(adapter, day.value) || undefined}
+              data-weekend={adapter.isWeekend(day.value) || undefined}
             >
               {adapter.formatByString(day.value, adapter.formats.weekday1Letter)}
             </MiniCalendarWeekdayCell>
