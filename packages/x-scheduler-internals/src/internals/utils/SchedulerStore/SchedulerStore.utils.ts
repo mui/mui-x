@@ -1,4 +1,5 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import { generateId } from '@base-ui/utils/generateId';
 import { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
 import {
   SchedulerProcessedEvent,
@@ -17,7 +18,6 @@ import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import { dateToEventString } from '../date-utils';
-import { createLocalId } from '../createLocalId';
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
@@ -173,7 +173,7 @@ export function createEventModel<TEvent extends object>(
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   adapter: Adapter,
 ) {
-  const id = createLocalId();
+  const id = generateId('event');
 
   const formatNewDate = (value: string | TemporalSupportedObject): string => {
     if (typeof value === 'string') {

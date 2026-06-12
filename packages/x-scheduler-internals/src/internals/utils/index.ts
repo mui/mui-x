@@ -14,4 +14,3 @@ export * from './useInitializeApiRef';
 export * from './useEventCreation';
 export * from './useKeyboardEventCreation';
 export * from './getNavigationTarget';
-export * from './createLocalId';
