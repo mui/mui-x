@@ -44,81 +44,8 @@ export interface ChartsWrapperOwnerState extends Pick<
   'hideLegend' | 'legendDirection' | 'legendPosition'
 > {}
 
-const getJustifyItems = (position: Position | undefined) => {
-  if (position?.horizontal === 'start') {
-    return 'start';
-  }
-  if (position?.horizontal === 'end') {
-    return 'end';
-  }
-  return 'center';
-};
-
-const getAlignItems = (position: Position | undefined) => {
-  if (position?.vertical === 'top') {
-    return 'flex-start';
-  }
-  if (position?.vertical === 'bottom') {
-    return 'flex-end';
-  }
-  return 'center';
-};
-
-const getGridTemplateAreas = (
-  hideLegend: boolean | undefined,
-  direction: Direction | undefined,
-  position: Position | undefined,
-) => {
-  if (hideLegend) {
-    return `"chart"`;
-  }
-  if (direction === 'vertical') {
-    if (position?.horizontal === 'start') {
-      return `"legend chart"`;
-    }
-    return `"chart legend"`;
-  }
-
-  if (position?.vertical === 'bottom') {
-    return `"chart"
-            "legend"`;
-  }
-  return `"legend"
-          "chart"`;
-};
-
-const getTemplateColumns = (
-  hideLegend: boolean = false,
-  direction: Direction = 'horizontal',
-  horizontalPosition: Position['horizontal'] = 'end',
-  width: number | undefined = undefined,
-) => {
-  const drawingAreaColumn = width ? 'auto' : '1fr';
-  if (direction === 'horizontal') {
-    return drawingAreaColumn;
-  }
-
-  if (hideLegend) {
-    return drawingAreaColumn;
-  }
-  return horizontalPosition === 'start' ? `auto ${drawingAreaColumn}` : `${drawingAreaColumn} auto`;
-};
-
-const getTemplateRows = (
-  hideLegend: boolean = false,
-  direction: Direction = 'horizontal',
-  verticalPosition: Position['vertical'] = 'top',
-) => {
-  const drawingAreaRow = '1fr';
-  if (direction === 'vertical') {
-    return drawingAreaRow;
-  }
-
-  if (hideLegend) {
-    return drawingAreaRow;
-  }
-  return verticalPosition === 'bottom' ? `${drawingAreaRow} auto` : `auto ${drawingAreaRow}`;
-};
+const JUSTIFY_ITEMS: Record<string, string> = { start: 'start', end: 'end' };
+const ALIGN_ITEMS: Record<string, string> = { top: 'flex-start', bottom: 'flex-end' };
 
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
@@ -129,23 +56,56 @@ const Root = styled('div', {
   ownerState,
   width,
 }) => {
-  const gridTemplateColumns = getTemplateColumns(
-    ownerState.hideLegend,
-    ownerState.legendDirection,
-    ownerState.legendPosition?.horizontal,
-    width,
-  );
-  const gridTemplateRows = getTemplateRows(
-    ownerState.hideLegend,
-    ownerState.legendDirection,
-    ownerState.legendPosition?.vertical,
-  );
-  const gridTemplateAreas = getGridTemplateAreas(
-    ownerState.hideLegend,
-    ownerState.legendDirection,
-    ownerState.legendPosition,
-  );
+  const { hideLegend, legendDirection: direction, legendPosition: position } = ownerState;
+  const drawingCol = width ? 'auto' : '1fr';
+  const vertical = direction === 'vertical';
+
+  let areas: string;
+  let rows: string;
+  let columns: string;
+  let twoColumns = false;
+
+  if (hideLegend) {
+    areas = '"chart"';
+    rows = '1fr';
+    columns = drawingCol;
+  } else if (vertical) {
+    rows = '1fr';
+    twoColumns = true;
+    if (position?.horizontal === 'start') {
+      areas = '"legend chart"';
+      columns = `auto ${drawingCol}`;
+    } else {
+      areas = '"chart legend"';
+      columns = `${drawingCol} auto`;
+    }
+  } else if (position?.vertical === 'bottom') {
+    areas = '"chart" "legend"';
+    rows = '1fr auto';
+    columns = drawingCol;
+  } else {
+    areas = '"legend" "chart"';
+    rows = 'auto 1fr';
+    columns = drawingCol;
+  }
+
   return {
+    flex: 1,
+    display: 'grid',
+    gridTemplateAreas: areas,
+    gridTemplateRows: rows,
+    gridTemplateColumns: columns,
+    justifyContent: 'safe center',
+    justifyItems: JUSTIFY_ITEMS[position?.horizontal ?? ''] ?? 'center',
+    alignItems: ALIGN_ITEMS[position?.vertical ?? ''] ?? 'center',
+    [`&:has(.${chartsToolbarClasses.root})`]: {
+      gridTemplateRows: `auto ${rows}`,
+      gridTemplateAreas: `${twoColumns ? '"toolbar toolbar"' : '"toolbar"'} ${areas}`,
+    },
+    [`& .${chartsToolbarClasses.root}`]: {
+      gridArea: 'toolbar',
+      justifySelf: 'center',
+    },
     variants: [
       {
         props: { extendVertically: true },
@@ -155,27 +115,6 @@ const Root = styled('div', {
         },
       },
     ],
-    flex: 1,
-    display: 'grid',
-    gridTemplateColumns,
-    gridTemplateRows,
-    gridTemplateAreas,
-    [`&:has(.${chartsToolbarClasses.root})`]: {
-      // Add a row for toolbar if there is one.
-      gridTemplateRows: `auto ${gridTemplateRows}`,
-      gridTemplateAreas: `"${gridTemplateColumns
-        .split(' ')
-        .map(() => 'toolbar')
-        .join(' ')}"
-        ${gridTemplateAreas}`,
-    },
-    [`& .${chartsToolbarClasses.root}`]: {
-      gridArea: 'toolbar',
-      justifySelf: 'center',
-    },
-    justifyContent: 'safe center',
-    justifyItems: getJustifyItems(ownerState.legendPosition),
-    alignItems: getAlignItems(ownerState.legendPosition),
   };
 });
 
