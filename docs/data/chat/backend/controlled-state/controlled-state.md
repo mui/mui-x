@@ -1,21 +1,21 @@
 ---
 productId: x-chat
-title: Controlled State
+title: Controlled state
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Controlled State
+# Chat - Controlled state
 
-<p class="description">Own messages, conversations, active conversation, and composer value externally using the controlled/uncontrolled pattern on <code>ChatProvider</code>.</p>
+<p class="description">Manage messages, conversations, and composer state externally using the controlled and uncontrolled patterns.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Every chat component reads its data — messages, conversations, composer state, streaming status — from a shared store provided by `ChatProvider`.
+Every chat component reads its data—messages, conversations, composer state, streaming status—from a shared store provided by `ChatProvider`.
 `ChatBox` renders a `ChatProvider` internally, so in the simplest case you never interact with the provider directly.
 
-When you need more control — sharing state with components outside `ChatBox`, controlling the message list externally, or mounting multiple independent chat instances — you work with `ChatProvider` explicitly.
+When you need more control—sharing state with components outside `ChatBox`, controlling the message list externally, or mounting multiple independent chat instances—you work with `ChatProvider` explicitly.
 
 ## Controlled and uncontrolled state
 
@@ -86,7 +86,8 @@ For example, control the active conversation while letting messages be managed i
 ```
 
 :::info
-Start with `initial*` (uncontrolled) props during prototyping, then switch to controlled props when you need to sync with external state. You can switch modes at any time without changing the runtime model.
+Start with `initial*` (uncontrolled) props during prototyping, then switch to controlled props when you need to sync with external state.
+Switch modes at any time without changing the runtime model.
 :::
 
 ## State model reference
@@ -115,7 +116,8 @@ function App() {
 ```
 
 :::warning
-`ChatBox` always creates its own internal `ChatProvider`. If you need to share state with external components, wrap them in a single `ChatProvider` and use the individual themed components (`ChatMessageList`, `ChatComposer`, etc.) instead of `ChatBox`.
+`ChatBox` always creates its own internal `ChatProvider`.
+If you need to share state with external components, wrap them in a single `ChatProvider` and use the individual themed components (`ChatMessageList`, `ChatComposer`, and so on) instead of `ChatBox`.
 :::
 
 ## Syncing with a global state manager
@@ -142,42 +144,45 @@ function App() {
 }
 ```
 
-The runtime still streams, normalizes, and derives selectors — you just own the source of truth.
+The runtime still streams, normalizes, and derives selectors—you own the source of truth.
 
 ## Multiple independent instances
 
 Each `ChatProvider` creates an isolated store.
-To render multiple independent chat surfaces, use separate `ChatBox` instances — each one creates its own provider internally.
+To render multiple independent chat surfaces, use separate `ChatBox` instances—each one creates its own provider internally.
 
 ## Provider props reference
 
-| Prop                          | Type                                            | Description                                             |
-| :---------------------------- | :---------------------------------------------- | :------------------------------------------------------ |
-| `adapter`                     | `ChatAdapter`                                   | **Required.** The backend adapter                       |
-| `messages`                    | `ChatMessage[]`                                 | Controlled messages                                     |
-| `initialMessages`             | `ChatMessage[]`                                 | Initial messages (uncontrolled)                         |
-| `onMessagesChange`            | `(messages) => void`                            | Called when messages change                             |
-| `conversations`               | `ChatConversation[]`                            | Controlled conversations                                |
-| `initialConversations`        | `ChatConversation[]`                            | Initial conversations (uncontrolled)                    |
-| `onConversationsChange`       | `(conversations) => void`                       | Called when conversations change                        |
-| `activeConversationId`        | `string`                                        | Controlled active conversation                          |
-| `initialActiveConversationId` | `string`                                        | Initial active conversation (uncontrolled)              |
-| `onActiveConversationChange`  | `(conversationId: string \| undefined) => void` | Called when active conversation changes                 |
-| `composerValue`               | `string`                                        | Controlled composer text                                |
-| `initialComposerValue`        | `string`                                        | Initial composer text (uncontrolled)                    |
-| `onComposerValueChange`       | `(value) => void`                               | Called when composer value changes                      |
-| `members`                     | `ChatUser[]`                                    | Participant metadata (avatars, names, roles)            |
-| `currentUser`                 | `ChatUser`                                      | The current user object                                 |
-| `onToolCall`                  | `ChatOnToolCall`                                | Handler for tool call messages                          |
-| `onFinish`                    | `ChatOnFinish`                                  | Called when a response finishes streaming               |
-| `onData`                      | `ChatOnData`                                    | Called for each streaming chunk                         |
-| `onError`                     | `(error) => void`                               | Called on adapter errors                                |
-| `streamFlushInterval`         | `number`                                        | Batching interval for streaming deltas (default: 16 ms) |
-| `storeClass`                  | `ChatStoreConstructor`                          | Custom store class (default: ChatStore)                 |
-| `partRenderers`               | `ChatPartRendererMap`                           | Custom message part renderers                           |
+| Prop                          | Type                                            | Description                                              |
+| :---------------------------- | :---------------------------------------------- | :------------------------------------------------------- |
+| `adapter`                     | `ChatAdapter`                                   | **Required.** The backend adapter                        |
+| `messages`                    | `ChatMessage[]`                                 | Controlled messages                                      |
+| `initialMessages`             | `ChatMessage[]`                                 | Initial messages (uncontrolled)                          |
+| `onMessagesChange`            | `(messages) => void`                            | Called when messages change                              |
+| `conversations`               | `ChatConversation[]`                            | Controlled conversations                                 |
+| `initialConversations`        | `ChatConversation[]`                            | Initial conversations (uncontrolled)                     |
+| `onConversationsChange`       | `(conversations) => void`                       | Called when conversations change                         |
+| `activeConversationId`        | `string`                                        | Controlled active conversation                           |
+| `initialActiveConversationId` | `string`                                        | Initial active conversation (uncontrolled)               |
+| `onActiveConversationChange`  | `(conversationId: string \| undefined) => void` | Called when active conversation changes                  |
+| `composerValue`               | `string`                                        | Controlled composer text                                 |
+| `initialComposerValue`        | `string`                                        | Initial composer text (uncontrolled)                     |
+| `onComposerValueChange`       | `(value) => void`                               | Called when composer value changes                       |
+| `members`                     | `ChatUser[]`                                    | Known participants for sender fallback and author lookup |
+| `currentUser`                 | `ChatUser`                                      | Explicit local sender and author match                   |
+| `getMessageAuthorId`          | `(message) => string \| undefined`              | Maps a message to the author id used for member lookup   |
+| `getMessageAuthorDisplayName` | `(message) => string \| undefined`              | Maps a message to a display name override                |
+| `getMessageAuthorAvatarUrl`   | `(message) => string \| undefined`              | Maps a message to an avatar URL override                 |
+| `onToolCall`                  | `ChatOnToolCall`                                | Handler for tool call messages                           |
+| `onFinish`                    | `ChatOnFinish`                                  | Called when a response finishes streaming                |
+| `onData`                      | `ChatOnData`                                    | Called for each streaming chunk                          |
+| `onError`                     | `(error) => void`                               | Called on adapter errors                                 |
+| `streamFlushInterval`         | `number`                                        | Batching interval for streaming deltas (default: 16 ms)  |
+| `storeClass`                  | `ChatStoreConstructor`                          | Custom store class (default: ChatStore)                  |
+| `partRenderers`               | `ChatPartRendererMap`                           | Custom message part renderers                            |
 
 ## See also
 
-- [Adapters](/x/react-chat/backend/adapters/) for the backend adapter interface.
-- [Hooks Reference](/x/react-chat/resources/hooks/) for reading state from the store.
-- [Events & Callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.
+- [Adapters](/x/react-chat/backend/adapters/) for details on the backend adapter interface.
+- [Hooks reference](/x/react-chat/resources/hooks/) for reading state from the store.
+- [Events and callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.

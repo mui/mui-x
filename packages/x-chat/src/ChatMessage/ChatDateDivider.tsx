@@ -2,15 +2,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { SxProps, Theme } from '@mui/system';
 import { MessageListDateDivider, type MessageListDateDividerProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatDateDivider');
 
 export interface ChatDateDividerProps extends MessageListDateDividerProps {
   className?: string;
-  classes?: Partial<ChatMessageClasses>;
+  sx?: SxProps<Theme>;
 }
 
 const ChatDateDividerStyled = styled('div', {
@@ -49,25 +51,38 @@ const ChatDateDividerLabelStyled = styled('div', {
 const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerProps>(
   function ChatDateDivider(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatDateDivider' });
-    const { slots, slotProps, className, classes: classesProp, ...other } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    // Drop a JS/theme-injected `classes` (not a prop on this sub-part — it shares
+    // the `MuiChatMessage-*` namespace) so it can't leak onto the DOM via `...other`.
+    const {
+      slots,
+      slotProps,
+      className,
+      sx,
+      classes: classesProp,
+      ...other
+    } = props as ChatDateDividerProps & { classes?: unknown };
+    void classesProp;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     return (
       <MessageListDateDivider
         ref={ref}
         {...other}
         slots={{
+          ...slots,
           divider: slots?.divider ?? ChatDateDividerStyled,
           line: slots?.line ?? ChatDateDividerLineStyled,
           label: slots?.label ?? ChatDateDividerLabelStyled,
-          ...slots,
         }}
         slotProps={{
           ...slotProps,
-          divider: {
-            className: clsx(classes.dateDivider, className),
-            ...(slotProps?.divider as object),
-          } as any,
+          divider: mergeSlotProps(
+            {
+              className: clsx(classes.dateDivider, className),
+              sx,
+            },
+            slotProps?.divider,
+          ) as any,
         }}
       />
     );
@@ -79,7 +94,6 @@ ChatDateDivider.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   className: PropTypes.string,
   formatDate: PropTypes.func,
   index: PropTypes.number,
@@ -87,6 +101,11 @@ ChatDateDivider.propTypes = {
   messageId: PropTypes.string.isRequired,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatDateDivider };

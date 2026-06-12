@@ -1,10 +1,7 @@
 {
   "props": {},
   "name": "ScrollToBottomAffordance",
-  "imports": [
-    "import { ScrollToBottomAffordance } from '@mui/x-chat/headless';",
-    "import { ScrollToBottomAffordance } from '@mui/x-chat/headless';"
-  ],
+  "imports": ["import { ScrollToBottomAffordance } from '@mui/x-chat/headless';"],
   "slots": [
     { "name": "root", "description": "", "class": null },
     { "name": "badge", "description": "", "class": null },

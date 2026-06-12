@@ -481,7 +481,10 @@ export const ConversationListRoot = markChatLayoutPane(
       [conversationIds, focusConversation, handleFocusedConversationChange],
     );
 
-    const typeAheadRef = React.useRef<{ buffer: string; resetTimer: number | null }>({
+    const typeAheadRef = React.useRef<{
+      buffer: string;
+      resetTimer: ReturnType<typeof setTimeout> | null;
+    }>({
       buffer: '',
       resetTimer: null,
     });
@@ -573,7 +576,7 @@ export const ConversationListRoot = markChatLayoutPane(
         typeAheadRef.current.resetTimer = setTimeout(() => {
           typeAheadRef.current.buffer = '';
           typeAheadRef.current.resetTimer = null;
-        }, 800) as unknown as number;
+        }, 800);
 
         moveFocusToTitlePrefix(typeAheadRef.current.buffer, currentIndex);
       },
