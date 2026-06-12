@@ -39,7 +39,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Recurență',
   recurrenceMainSelectCustomLabel: 'Recurență',
   recurrenceWeeklyFrequencyLabel: 'săptămâni',
-  recurrenceWeeklyPresetLabel: (weekday) => `Se repetă săptămânal în ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repetă săptămânal în ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'luni',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Ziua ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} din ultima săptămână a lunii`,

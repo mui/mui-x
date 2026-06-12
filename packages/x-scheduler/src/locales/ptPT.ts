@@ -39,7 +39,7 @@ const ptPTDialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Recorrência',
   recurrenceMainSelectCustomLabel: 'Recorrência',
   recurrenceWeeklyFrequencyLabel: 'semanas',
-  recurrenceWeeklyPresetLabel: (weekday) => `Repete semanalmente (${weekday})`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Repete semanalmente (${weekdayName})`,
   recurrenceMonthlyFrequencyLabel: 'meses',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dia ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} da última semana do mês`,
