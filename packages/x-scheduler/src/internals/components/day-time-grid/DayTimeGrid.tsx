@@ -76,7 +76,7 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
   width: '100%',
   borderBlockEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   /* Only show border on header cell when there's no scrollbar */
-  [`&:not[data-has-scroll] .${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`]: {
+  [`&:not([data-has-scroll]) .${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`]: {
     borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
   [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}`]: {
