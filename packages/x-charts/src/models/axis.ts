@@ -129,11 +129,6 @@ export interface ChartsAxisProps extends TickParams {
    */
   disableTicks?: boolean;
   /**
-   * If true, the tick labels are not rendered.
-   * @default false
-   */
-  disableTickLabel?: boolean;
-  /**
    * The style applied to ticks text.
    */
   tickLabelStyle?: ChartsTextProps['style'];
@@ -228,6 +223,11 @@ type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
   axis?: 'rotation';
   /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
+  /**
    * The start angle (in deg).
    */
   startAngle?: number;
@@ -265,6 +265,11 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
 
 export interface ChartsRadiusAxisProps extends ChartsAxisProps {
   axis?: 'radius';
+  /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
   /**
    * The minimal radius.
    */
