@@ -8,17 +8,17 @@ components: EventCalendar, EventCalendarPremium
 
 # Event Calendar - Editing
 
-<p class="description">Configure how events are created and edited.</p>
+<p class="description">Configure event creation, editing interactions, and read-only behavior.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Event creation
 
-Use the `eventCreation` prop to customize how newly created events are defined:
+Use the `eventCreation` prop to customize event creation behavior:
 
 ### Disable event creation
 
-Pass `eventCreation={false}` to disable the event creation:
+Pass `eventCreation={false}` to disable event creation:
 
 ```tsx
 <EventCalendar eventCreation={false} />
@@ -26,7 +26,7 @@ Pass `eventCreation={false}` to disable the event creation:
 
 ### Custom default duration
 
-Pass a custom value to `eventCreation.duration` to change the default duration of newly created event:
+Pass a custom value to `eventCreation.duration` to change the default duration of newly created events:
 
 ```tsx
 <EventCalendar eventCreation={{ duration: 60 }} />
@@ -34,7 +34,7 @@ Pass a custom value to `eventCreation.duration` to change the default duration o
 
 {{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Create event on double click
+### Create event on double-click
 
 Set `eventCreation.interaction` to `"double-click"` to open the creation form when double-clicking a cell instead of clicking:
 
@@ -70,7 +70,7 @@ Events with `readOnly: true` (or belonging to a read-only resource) open the dia
 
 ## Read-only
 
-Use the `readOnly` prop to disable all editing interactions (event creation, drag and drop, resizing, and popover editing):
+Use the `readOnly` prop to disable all editing interactions (event creation, drag-and-drop, resizing, and popover editing):
 
 ```tsx
 <EventCalendar readOnly />
@@ -104,7 +104,7 @@ const resource = {
 
 #### Priority order
 
-The priority order for determining if an event is read-only is:
+The priority order for read-only behavior is:
 
 1. The `readOnly` property assigned to the event
 
@@ -126,8 +126,8 @@ The priority order for determining if an event is read-only is:
 />
 ```
 
-:::success
-If one of the properties is not defined on the resource, it checks for the closest ancestor with this property defined.
+:::info
+If the property isn't defined on the resource, the closest ancestor resource with that property defined takes precedence.
 :::
 
 3. The `readOnly` prop assigned to the Event Calendar
@@ -136,7 +136,7 @@ If one of the properties is not defined on the resource, it checks for the close
 <EventCalendar readOnly />
 ```
 
-For example, with the following code, all "work" events are read-only except `"event-3"`:
+For example, with the following code, all work events are read-only except `"event-3"`:
 
 ```tsx
 function App() {
@@ -155,7 +155,7 @@ function App() {
 }
 ```
 
-## Copy & paste events 🚧
+## Copy and paste events 🚧
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/19986) to help us prioritize it.
@@ -164,7 +164,7 @@ Please don't hesitate to leave a comment there to describe your needs, especiall
 
 With this feature, users would be able to copy and paste events within the calendar.
 
-## Undo / Redo 🚧
+## Undo and redo 🚧
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21583) to help us prioritize it.

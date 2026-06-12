@@ -6,20 +6,20 @@ githubLabel: 'scope: scheduler'
 components: EventCalendar, EventCalendarPremium, StandaloneEvent
 ---
 
-# Event Calendar - Drag Interaction
+# Event Calendar - Drag Interactions
 
-<p class="description">Re-schedule or resize your events using drag and drop.</p>
+<p class="description">Reschedule or resize your events using drag-and-drop interactions.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
-Events can be moved to a different time slot by dragging them, and resized by dragging their start or end edge.
-Both behaviors are enabled by default:
+You can move events to a different time slot by dragging them, and resize them by dragging their start or end edge.
+Both are enabled by default:
 
 {{"demo": "BasicDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Disable event dragging
 
-Use the `areEventsDraggable` property to prevent dragging events to another point in time:
+Use the `areEventsDraggable` property to prevent dragging events to a different time slot:
 
 ```tsx
 <EventCalendar areEventsDraggable={false} />
@@ -47,14 +47,14 @@ Set the `areEventsResizable` property to `"start"` or `"end"` to enable resizing
 :::
 
 :::info
-Currently the editing form is not customizable, but in the future you'll be able to apply the same logic there.
+The editing form isn't customizable yet, but you'll be able to apply the same logic there in a future release.
 :::
 
 ## Only disable on some events
 
 ### Per event
 
-Use the `draggable` property on the event model to prevent an event from being dragged to another point in time:
+Use the `draggable` property on the event model to prevent an event from being dragged to a different time slot:
 
 ```ts
 const event = {
@@ -74,7 +74,7 @@ const event = {
 
 ### Per resource
 
-Use the `areEventsDraggable` property on the resource model to prevent dragging a resource's events to another point in time:
+Use the `areEventsDraggable` property on the resource model to prevent dragging a resource's events to a different time slot:
 
 ```ts
 const resource = {
@@ -94,7 +94,7 @@ const resource = {
 
 ### Priority order
 
-The priority order for determining if an event is draggable or resizable is:
+The priority order for drag and resize behavior is:
 
 1. The `draggable` and `resizable` properties assigned to the event
 
@@ -120,7 +120,7 @@ The priority order for determining if an event is draggable or resizable is:
 ```
 
 :::success
-If one of the properties is not defined on the resource, it checks for the closest ancestor with this property defined.
+If the property isn't defined on the resource, the closest ancestor resource with that property defined takes precedence.
 :::
 
 3. The `areEventsDraggable` and `areEventsResizable` props assigned to the Event Calendar
@@ -150,8 +150,8 @@ function App() {
 
 ## External drag and drop
 
-You can enable dragging events from and to the outside of the Event Calendar using the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props.
-When `canDragEventsFromTheOutside` is `true`, you can drop events created with `StandaloneEvent` inside the Event Calendar.
-When `canDropEventsToTheOutside` is `true`, you can drop events from within the Event Calendar outside of it.
+Use the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props to drag events between the Event Calendar and external containers.
+When `canDragEventsFromTheOutside` is `true`, you can drop events created with `StandaloneEvent` into the Event Calendar.
+When `canDropEventsToTheOutside` is `true`, you can drag events out of the Event Calendar.
 
 {{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
