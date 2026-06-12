@@ -27,6 +27,15 @@ The demo below demonstrates those options.
 
 {{"demo": "RadialBarConfig.js", "hideToolbar": true, "bg": "playground"}}
 
+## Coloring each bar
+
+Set a `colorMap` on the band axis to give each category its own color.
+With `layout='horizontal'` the band categories sit on the `radiusAxis`, so an `'ordinal'` color map there paints each concentric ring independently.
+
+The demo below uses this to build a health dashboard where every metric ring tracks progress toward its goal.
+
+{{"demo": "HealthRadialBarChart.js", "bg": "outline"}}
+
 ## Click events
 
 The `RadialBarChart` provides an `onAxisClick` handler that fires when the user clicks anywhere in the chart area.
