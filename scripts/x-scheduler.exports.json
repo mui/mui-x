@@ -17,6 +17,7 @@
   { "name": "EventCalendarProps", "kind": "Interface" },
   { "name": "EventCalendarStyledContext", "kind": "Variable" },
   { "name": "EventCalendarStyledContextValue", "kind": "Interface" },
+  { "name": "ExportedMonthViewProps", "kind": "Interface" },
   { "name": "getEventCalendarUtilityClass", "kind": "Function" },
   { "name": "MonthView", "kind": "Variable" },
   { "name": "MonthViewProps", "kind": "Interface" },
