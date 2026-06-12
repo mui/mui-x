@@ -117,5 +117,10 @@ export function createTypingActions(params: {
     }
   }
 
-  return { handleComposerValueChange, handleActiveConversationChange, syncTypingSignal, disposeTyping };
+  return {
+    handleComposerValueChange,
+    handleActiveConversationChange,
+    syncTypingSignal,
+    disposeTyping,
+  };
 }

@@ -317,7 +317,10 @@ function coerceToBytes(value: unknown): Uint8Array {
 // Emit a single (already-complete) assistant reply as the canonical 5-chunk
 // stream `processStream` consumes. Used by the `{ chat }` adapter, where
 // `useChat`'s `sendMessage`/`regenerate` resolve only after streaming finishes.
-function emitWholeReplyStream(replyText: string, replyId: string): ReadableStream<ChatMessageChunk> {
+function emitWholeReplyStream(
+  replyText: string,
+  replyId: string,
+): ReadableStream<ChatMessageChunk> {
   const partId = `${replyId}-text`;
 
   return new ReadableStream<ChatMessageChunk>({

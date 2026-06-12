@@ -28,9 +28,7 @@ function createSetup(
   const setTyping =
     options.setTyping === null
       ? undefined
-      : vi.fn<NonNullable<ChatAdapter['setTyping']>>(
-          options.setTyping ?? (async () => {}),
-        );
+      : vi.fn<NonNullable<ChatAdapter['setTyping']>>(options.setTyping ?? (async () => {}));
 
   const adapter: ChatAdapter = {
     sendMessage: vi.fn(),

@@ -1,14 +1,20 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
+import type { SxProps, Theme } from '@mui/system';
+import { useChatVariant } from '@mui/x-chat-headless';
 import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
 import { ChatDateDivider } from '../ChatMessage/ChatDateDivider';
 import { ChatUnreadMarker } from '../ChatIndicators/ChatUnreadMarker';
+import { ChatStreamingIndicator } from '../ChatIndicators/ChatStreamingIndicator';
 import { useChatSlots } from '../internals/ChatSlotsContext';
 import { resolveSlotProps } from '../internals/mergeSlotProps';
 import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
 
-function warnIfHostElementRowSlot(slotName: 'dateDivider' | 'unreadMarker', value: unknown) {
+function warnIfHostElementRowSlot(
+  slotName: 'dateDivider' | 'unreadMarker' | 'streamingIndicator',
+  value: unknown,
+) {
   if (process.env.NODE_ENV === 'production') {
     return;
   }
@@ -57,6 +63,16 @@ export interface ChatMessageListFeatures {
    * @default false
    */
   unreadMarker?: boolean;
+  /**
+   * Whether to show the animated streaming indicator while waiting for /
+   * receiving an assistant response.
+   * - `'auto'` – shown only in assistant-backed conversations (auto-detected).
+   * - `true` – always shown while a response is in flight.
+   * - `false` – never shown.
+   * Use the `streamingIndicator` slot to customize the rendered component.
+   * @default 'auto'
+   */
+  streamingIndicator?: boolean | 'auto';
 }
 
 /**
@@ -68,6 +84,7 @@ type ChatMessageRowSlotKeys =
   | 'messageGroup'
   | 'dateDivider'
   | 'unreadMarker'
+  | 'streamingIndicator'
   | 'messageRoot'
   | 'messageAvatar'
   | 'messageContent'
@@ -140,8 +157,23 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   const DateDividerComponent = (slots.dateDivider ?? ChatDateDivider) as React.ElementType;
   const UnreadMarkerComponent = (slots.unreadMarker ?? ChatUnreadMarker) as React.ElementType;
 
+  // Streaming indicator: enabled by default ('auto'), unlike the opt-in dividers.
+  // The trailing row below covers the waiting phase (response in flight, no
+  // assistant message yet); the in-bubble phase is rendered by `ChatMessage`.
+  // Disabling the feature nulls the slot for the whole row pipeline, so the
+  // in-bubble instance is gated without threading the mode through slotProps.
+  const streamingIndicatorMode = features?.streamingIndicator ?? 'auto';
+  const showStreamingIndicator =
+    streamingIndicatorMode !== false && slots.streamingIndicator !== null;
+  const isLastRow = items != null && index != null && index === items.length - 1;
+  const rowSlots = React.useMemo(
+    () => (streamingIndicatorMode === false ? { ...slots, streamingIndicator: null } : slots),
+    [slots, streamingIndicatorMode],
+  );
+
   warnIfHostElementRowSlot('dateDivider', slots.dateDivider);
   warnIfHostElementRowSlot('unreadMarker', slots.unreadMarker);
+  warnIfHostElementRowSlot('streamingIndicator', slots.streamingIndicator);
   warnIfDividerSlotWithoutFeature(
     'dateDivider',
     features?.dateDivider !== true && (slots.dateDivider != null || slotProps.dateDivider != null),
@@ -182,9 +214,66 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
         messageId={id}
         index={index}
         items={items}
-        slots={slots}
+        slots={rowSlots}
         slotProps={slotProps}
       />
+      {/*
+        Mounted only on the last row so a single store subscriber exists per
+        list (and the variant/alignment work is paid once, not per row). The
+        component self-suppresses outside the waiting phase (e.g. while the
+        in-bubble indicator takes over, or in non-assistant chats under 'auto').
+      */}
+      {showStreamingIndicator && isLastRow && (
+        <TrailingStreamingIndicatorRow
+          component={(slots.streamingIndicator ?? ChatStreamingIndicator) as React.ElementType}
+          mode={streamingIndicatorMode}
+          messageId={id}
+          index={index}
+          items={items}
+          hasAvatar={slots.messageAvatar !== null}
+          slotProps={slotProps.streamingIndicator}
+        />
+      )}
     </React.Fragment>
   );
 });
+
+/**
+ * Waiting-phase trailing row, rendered only on the last message row. Aligns
+ * the dots with the message content lane: the message grid indents content by
+ * `paddingInline + avatar track + column gap` (see `ChatMessageStyled`), which
+ * collapses when the avatar slot is nulled.
+ */
+function TrailingStreamingIndicatorRow(props: {
+  component: React.ElementType;
+  mode: boolean | 'auto';
+  messageId: string;
+  index?: number;
+  items?: string[];
+  hasAvatar: boolean;
+  slotProps?: ChatBoxSlotProps['streamingIndicator'];
+}) {
+  const { component: Component, mode, messageId, index, items, hasAvatar, slotProps } = props;
+  const variant = useChatVariant();
+  const waitingRowSx = React.useMemo<SxProps<Theme>>(
+    () => (theme: Theme) => ({
+      paddingInlineStart: hasAvatar
+        ? `calc(${theme.spacing(2)} + ${variant === 'compact' ? '28px' : '36px'} + ${theme.spacing(variant === 'compact' ? 1 : 0.5)})`
+        : theme.spacing(2),
+      paddingInlineEnd: theme.spacing(2),
+    }),
+    [hasAvatar, variant],
+  );
+
+  return (
+    <Component
+      mode={mode}
+      message={null}
+      messageId={messageId}
+      index={index}
+      items={items}
+      sx={waitingRowSx}
+      {...resolveSlotProps(slotProps ?? {}, { messageId, index, items })}
+    />
+  );
+}

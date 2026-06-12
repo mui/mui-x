@@ -17,7 +17,12 @@ import {
   ComposerToolbar,
 } from './composer';
 import { ConversationListItem, ConversationListRoot } from './conversation-list';
-import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
+import {
+  ScrollToBottomAffordance,
+  StreamingIndicator,
+  TypingIndicator,
+  UnreadMarker,
+} from './indicators';
 import { MessageActions, MessageAvatar, MessageContent, MessageMeta, MessageRoot } from './message';
 import { MessageListDateDivider, MessageListRoot } from './message-list';
 
@@ -34,6 +39,11 @@ export { useChatStore } from './hooks/useChatStore';
 export { useConversation, useConversations } from './hooks/useConversation';
 export { useMessage, useMessageIds } from './hooks/useMessage';
 export { useMessageError } from './hooks/useMessageError';
+export { useStreamingIndicatorVisibility } from './hooks/useStreamingIndicatorVisibility';
+export type {
+  StreamingIndicatorMode,
+  UseStreamingIndicatorVisibilityValue,
+} from './hooks/useStreamingIndicatorVisibility';
 
 export {
   chatSelectors,
@@ -43,6 +53,7 @@ export {
   selectConversationsById,
   selectActiveConversationId,
   selectIsStreaming,
+  selectStreamingConversationId,
   selectHasMoreHistory,
   selectIsLoadingHistory,
   selectError,
@@ -177,7 +188,12 @@ export {
   ConversationListTitle,
   ConversationListUnreadBadge,
 } from './conversation-list';
-export { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
+export {
+  ScrollToBottomAffordance,
+  StreamingIndicator,
+  TypingIndicator,
+  UnreadMarker,
+} from './indicators';
 export {
   FilePart,
   MessageActions,
@@ -305,6 +321,9 @@ export type {
   ScrollToBottomAffordanceProps,
   ScrollToBottomAffordanceSlotProps,
   ScrollToBottomAffordanceSlots,
+  StreamingIndicatorProps,
+  StreamingIndicatorSlotProps,
+  StreamingIndicatorSlots,
   TypingIndicatorProps,
   TypingIndicatorSlotProps,
   TypingIndicatorSlots,
@@ -431,6 +450,7 @@ export type {
 } from './conversation-list';
 export type {
   ScrollToBottomAffordanceOwnerState,
+  StreamingIndicatorOwnerState,
   TypingIndicatorOwnerState,
   UnreadMarkerOwnerState,
 } from './indicators';
@@ -504,6 +524,7 @@ export const MessageList = {
 };
 
 export const Indicators = {
+  StreamingIndicator,
   TypingIndicator,
   UnreadMarker,
   ScrollToBottomAffordance,

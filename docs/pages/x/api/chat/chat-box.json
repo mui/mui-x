@@ -17,7 +17,7 @@
     "features": {
       "type": {
         "name": "shape",
-        "description": "{ attachments?: { acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }<br>&#124;&nbsp;bool, autoScroll?: { buffer?: number }<br>&#124;&nbsp;bool, conversationHeader?: bool, conversationList?: bool, dateDivider?: bool, helperText?: bool, scrollToBottom?: bool, suggestions?: bool, typingSignal?: bool, unreadMarker?: bool }"
+        "description": "{ attachments?: { acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }<br>&#124;&nbsp;bool, autoScroll?: { buffer?: number }<br>&#124;&nbsp;bool, conversationHeader?: bool, conversationList?: bool, dateDivider?: bool, helperText?: bool, scrollToBottom?: bool, streamingIndicator?: 'auto'<br>&#124;&nbsp;bool, suggestions?: bool, typingSignal?: bool, unreadMarker?: bool }"
       }
     },
     "getMessageAuthorAvatarUrl": {
@@ -162,6 +162,11 @@
     {
       "name": "unreadMarker",
       "description": "The \"new messages\" marker. Only rendered when `features.unreadMarker` is\nenabled. Pass `null` to hide it.",
+      "class": null
+    },
+    {
+      "name": "streamingIndicator",
+      "description": "The animated dots shown while an assistant response is in flight: as a\ntrailing row while waiting for the response to start, then inside the\nassistant bubble while it streams. Controlled by\n`features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.",
       "class": null
     },
     {

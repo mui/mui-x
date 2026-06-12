@@ -801,13 +801,18 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   );
   const SuggestionsComponent = (slots.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
 
-  // The opt-in divider feature flags, normalized to an identity-stable object so
+  // The row feature flags, normalized to an identity-stable object so
   // an inline `features={{ ... }}` on ChatBox doesn't churn the memoized rows.
   const showDateDivider = features?.dateDivider === true;
   const showUnreadMarker = features?.unreadMarker === true;
+  const streamingIndicator = features?.streamingIndicator ?? 'auto';
   const rowFeatures = React.useMemo(
-    () => ({ dateDivider: showDateDivider, unreadMarker: showUnreadMarker }),
-    [showDateDivider, showUnreadMarker],
+    () => ({
+      dateDivider: showDateDivider,
+      unreadMarker: showUnreadMarker,
+      streamingIndicator,
+    }),
+    [showDateDivider, showUnreadMarker, streamingIndicator],
   );
 
   // The per-row slots/slotProps are read from the `ChatSlots` context inside

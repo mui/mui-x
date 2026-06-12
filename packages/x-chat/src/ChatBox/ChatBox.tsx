@@ -286,6 +286,7 @@ ChatBox.propTypes = {
     dateDivider: PropTypes.bool,
     helperText: PropTypes.bool,
     scrollToBottom: PropTypes.bool,
+    streamingIndicator: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.bool]),
     suggestions: PropTypes.bool,
     typingSignal: PropTypes.bool,
     unreadMarker: PropTypes.bool,
@@ -649,9 +650,11 @@ ChatBox.propTypes = {
    * - Conversation — `conversationRoot`, `conversationList`, `conversationHeader`,
    *   `conversationHeaderInfo`, `conversationTitle`, `conversationSubtitle`,
    *   `conversationHeaderActions`.
-   * - Message list — `messageList`, `messageGroup`, `dateDivider`, `unreadMarker`.
-   *   The divider slots render only when the matching `features.dateDivider` /
-   *   `features.unreadMarker` flag is enabled.
+   * - Message list — `messageList`, `messageGroup`, `dateDivider`, `unreadMarker`,
+   *   `streamingIndicator`. The divider slots render only when the matching
+   *   `features.dateDivider` / `features.unreadMarker` flag is enabled; the
+   *   streaming indicator renders by default (`features.streamingIndicator: 'auto'`)
+   *   and accepts `null` to hide it.
    * - Message — `messageRoot`, `messageAvatar`, `messageContent`, `messageMeta`,
    *   `messageInlineMeta`, `messageError`, `messageActions`, `messageAuthorName`.
    *   Pass `null` to a presentational slot (`messageAvatar`, `messageMeta`,

@@ -6,7 +6,10 @@
     },
     "enableRovingFocus": { "type": { "name": "bool" }, "default": "true" },
     "features": {
-      "type": { "name": "shape", "description": "{ dateDivider?: bool, unreadMarker?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ dateDivider?: bool, streamingIndicator?: 'auto'<br>&#124;&nbsp;bool, unreadMarker?: bool }"
+      }
     },
     "onReachBottom": { "type": { "name": "func" } },
     "onReachTop": { "type": { "name": "func" } },

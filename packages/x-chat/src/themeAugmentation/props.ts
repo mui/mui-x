@@ -7,6 +7,7 @@ import { type ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
 import { type ChatConversationProps } from '../ChatConversation/ChatConversation';
 import { type ChatComposerProps } from '../ChatComposer/ChatComposer';
 import { type ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
+import { type ChatStreamingIndicatorProps } from '../ChatIndicators/ChatStreamingIndicator';
 import { type ChatTypingIndicatorProps } from '../ChatIndicators/ChatTypingIndicator';
 import { type ChatScrollToBottomAffordanceProps } from '../ChatIndicators/ChatScrollToBottomAffordance';
 import { type ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
@@ -25,6 +26,7 @@ export interface ChatComponentsPropsList {
   MuiChatConversation: ChatConversationProps;
   MuiChatComposer: ChatComposerProps;
   MuiChatConversationList: ChatConversationListProps;
+  MuiChatStreamingIndicator: ChatStreamingIndicatorProps;
   MuiChatTypingIndicator: ChatTypingIndicatorProps;
   MuiChatScrollToBottomAffordance: ChatScrollToBottomAffordanceProps;
   MuiChatSuggestions: ChatSuggestionsProps;

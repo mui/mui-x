@@ -3,7 +3,7 @@ productId: x-chat
 title: Streaming
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatBox
+components: ChatBox, ChatStreamingIndicator
 ---
 
 # Chat - Streaming
@@ -119,6 +119,69 @@ Higher values reduce mutation frequency at the cost of perceived latency.
 :::
 
 {{"demo": "ChatStreamingPlayground.js"}}
+
+## Streaming indicator
+
+While a response is in flight, the Chat component shows animated dots so the user knows the assistant is working.
+The indicator covers two phases:
+
+1. **Waiting** — after the user sends a message and before the `start` chunk arrives, the dots render as a trailing row below the last message.
+2. **Streaming** — once the assistant message exists with `status: 'streaming'`, the dots move inside the assistant bubble, below the streamed content, and disappear when the stream finishes.
+
+{{"demo": "ChatStreamingIndicatorDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Enabling and disabling
+
+The indicator is controlled by the `streamingIndicator` feature flag, which defaults to `'auto'`:
+
+- `'auto'` (default) — shown only in assistant-backed conversations. A conversation counts as assistant-backed when an assistant member or participant is configured (a `ChatUser` with `role: 'assistant'` in `members` or the conversation's `participants`), or when the conversation already contains an assistant message. Human-to-human chats never show it.
+- `true` — always shown while a response is in flight, regardless of detection.
+- `false` — never shown.
+
+```tsx
+<ChatBox adapter={adapter} features={{ streamingIndicator: false }} />
+```
+
+:::info
+In `'auto'` mode, the very first send in a brand-new conversation with no assistant member or participant shows nothing during the waiting phase — there is no assistant signal yet.
+The indicator still appears as soon as the `start` chunk creates the assistant message.
+To show it from the first send, configure an assistant member/participant or set `streamingIndicator: true`.
+:::
+
+### Customization
+
+Use the `streamingIndicator` slot to replace the rendered component, or pass `null` to remove it while keeping the feature semantics for a custom replacement elsewhere:
+
+```tsx
+<ChatBox
+  adapter={adapter}
+  slots={{ streamingIndicator: MyIndicator }}
+  slotProps={{ streamingIndicator: { className: 'my-indicator' } }}
+/>
+```
+
+A custom slot component receives the surrounding `message` when rendered inside a streaming assistant bubble, and the resolved `mode` plus the row contract (`messageId`, `index`, `items`) when rendered as the trailing row.
+Reuse the built-in gating with the `useStreamingIndicatorVisibility()` hook from `@mui/x-chat/headless`:
+
+```tsx
+import { useStreamingIndicatorVisibility } from '@mui/x-chat/headless';
+
+function MyIndicator({ mode = 'auto', message }) {
+  const { waiting } = useStreamingIndicatorVisibility(mode);
+  const streaming = message?.role === 'assistant' && message?.status === 'streaming';
+  if (!waiting && !streaming) {
+    return null;
+  }
+  return <LinearProgress sx={{ maxWidth: 120 }} />;
+}
+```
+
+:::info
+The dots are decorative (`aria-hidden`): the message list's status live region already announces when a response starts and completes, so screen reader users get the same signal without duplicate announcements.
+:::
+
+The streaming indicator reflects the assistant's response generation.
+For showing when _human_ participants are composing a message, see [Typing indicators](/x/react-chat/behavior/typing-indicators/).
 
 ## Stopping and cancelling streams
 

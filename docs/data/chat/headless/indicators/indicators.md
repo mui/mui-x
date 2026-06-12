@@ -2,13 +2,13 @@
 productId: x-chat
 title: Chat - Headless indicators
 packageName: '@mui/x-chat/headless'
-components: TypingIndicator, UnreadMarker, ScrollToBottomAffordance
+components: StreamingIndicator, TypingIndicator, UnreadMarker, ScrollToBottomAffordance
 githubLabel: 'scope: chat'
 ---
 
 # Chat - Headless indicators
 
-<p class="description">Display typing activity, unread boundaries, and scroll-to-bottom affordances inside the message thread.</p>
+<p class="description">Display streaming activity, typing presence, unread boundaries, and scroll-to-bottom affordances inside the message thread.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -20,11 +20,38 @@ The demo below combines all three indicator primitives inside a chat thread:
 
 The indicator group is built from:
 
+- `Indicators.StreamingIndicator`.
 - `Indicators.TypingIndicator`.
 - `Indicators.UnreadMarker`.
 - `Indicators.ScrollToBottomAffordance`.
 
-These primitives encode thread-specific behaviors — typing presence, unread state, and scroll position — that are easy to mishandle when rebuilt from scratch.
+These primitives encode thread-specific behaviors — response generation, typing presence, unread state, and scroll position — that are easy to mishandle when rebuilt from scratch.
+
+## Showing response generation
+
+`StreamingIndicator` renders while an assistant response is in flight.
+It covers two placements:
+
+- **Trailing row** — rendered after the last message row, it shows during the waiting phase (the request was sent but no assistant message exists yet). Pass `index`/`items` so it self-suppresses on every row except the last one.
+- **Inside a message** — rendered inside an assistant message (it reads the surrounding `MessageContext`, or an explicit `message` prop), it shows while that message has `status: 'streaming'`.
+
+The `mode` prop mirrors the Material `features.streamingIndicator` flag: `'auto'` (default) renders only in assistant-backed conversations, `true` always renders while a response is in flight, and `false` never renders.
+Reuse the gating in custom components with the `useStreamingIndicatorVisibility(mode)` hook.
+
+### Placing the indicator
+
+```tsx
+<MessageList.Root
+  renderItem={({ id, index }) => (
+    <React.Fragment>
+      <MessageGroup index={index} messageId={id} />
+      <Indicators.StreamingIndicator index={index} items={items} />
+    </React.Fragment>
+  )}
+/>
+```
+
+The root renders three bare `<span>` elements (the dots) for your CSS to animate, and is `aria-hidden` — the message list's status region already announces streaming transitions.
 
 ## Showing typing activity
 
@@ -110,12 +137,14 @@ When the user is already at the bottom of the thread, the affordance returns `nu
 
 The indicator primitives expose the following slot surfaces:
 
+- `StreamingIndicator`: `root`.
 - `TypingIndicator`: `root`.
 - `UnreadMarker`: `root`, `label`.
 - `ScrollToBottomAffordance`: `root`, `badge`.
 
 Custom slots receive owner state such as:
 
+- The streaming phase (`'waiting'` or `'streaming'`).
 - Resolved typing users and count.
 - Unread-boundary presence and label.
 - Unseen-message count and `isAtBottom`.
@@ -130,6 +159,7 @@ Owner state makes it possible to map the indicators into an existing design syst
 
 ## API
 
+- [StreamingIndicator](/x/api/chat/streaming-indicator/)
 - [TypingIndicator](/x/api/chat/typing-indicator/)
 - [UnreadMarker](/x/api/chat/unread-marker/)
 - [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)

@@ -8,3 +8,4 @@ export * from './useChatStatus';
 export * from './useConversation';
 export * from './useMessage';
 export * from './useMessageError';
+export * from './useStreamingIndicatorVisibility';

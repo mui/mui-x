@@ -1,12 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
-import {
-  ALLOWED_SPECIFIERS,
-  CHAT_DOCS_DIR,
-  ENTRY_POINTS,
-  workspaceRoot,
-} from './entryPoints';
+import { ALLOWED_SPECIFIERS, CHAT_DOCS_DIR, ENTRY_POINTS, workspaceRoot } from './entryPoints';
 import { type ExportSurface, getExportSurfaces } from './exportSurface';
 import {
   extractCodeFences,
@@ -45,8 +40,7 @@ function collectFiles(dir: string, predicate: (file: string) => boolean): string
   return out.sort();
 }
 
-const markdownFiles = (): string[] =>
-  collectFiles(CHAT_DOCS_DIR, (file) => file.endsWith('.md'));
+const markdownFiles = (): string[] => collectFiles(CHAT_DOCS_DIR, (file) => file.endsWith('.md'));
 
 const demoTsxFiles = (): string[] =>
   // `.js` twins are generated from these `.tsx` by `pnpm docs:typescript:formatted`,
@@ -149,12 +143,7 @@ describe('x-chat docs correctness', () => {
         }
         const imports = extractChatImports(fence.code, fence.startLine - 1);
         for (const chatImport of imports) {
-          validateImport(
-            chatImport,
-            file,
-            (line) => `code block, line ${line}`,
-            violations,
-          );
+          validateImport(chatImport, file, (line) => `code block, line ${line}`, violations);
         }
       }
     }

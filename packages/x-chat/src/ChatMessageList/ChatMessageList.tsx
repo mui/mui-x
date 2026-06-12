@@ -46,10 +46,10 @@ export interface ChatMessageListProps extends Omit<
   slots?: Partial<ChatMessageListSlots>;
   slotProps?: ChatMessageListSlotProps;
   /**
-   * Feature flags for the opt-in row dividers rendered by the default row.
-   * Both are disabled by default; pass `{ dateDivider: true }` and/or
-   * `{ unreadMarker: true }` to render them. Ignored when a custom `renderItem`
-   * replaces the default row.
+   * Feature flags for the row extras rendered by the default row: the opt-in
+   * dividers (`dateDivider` / `unreadMarker`, disabled by default) and the
+   * streaming indicator (`streamingIndicator`, `'auto'` by default). Ignored
+   * when a custom `renderItem` replaces the default row.
    */
   features?: ChatMessageListFeatures;
   className?: string;
@@ -108,6 +108,7 @@ const ROW_SLOT_KEYS: ReadonlyArray<keyof ChatMessageRowSlots> = [
   'messageGroup',
   'dateDivider',
   'unreadMarker',
+  'streamingIndicator',
   'messageRoot',
   'messageAvatar',
   'messageContent',
@@ -168,13 +169,18 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
       return { rowSlotProps: row, listSlotProps: list };
     }, [slotProps]);
 
-    // Normalize the divider feature flags into an identity-stable object so an
+    // Normalize the row feature flags into an identity-stable object so an
     // inline `features={{ ... }}` doesn't churn the memoized rows on every render.
     const showDateDivider = features?.dateDivider === true;
     const showUnreadMarker = features?.unreadMarker === true;
+    const streamingIndicator = features?.streamingIndicator ?? 'auto';
     const rowFeatures = React.useMemo<ChatMessageListFeatures>(
-      () => ({ dateDivider: showDateDivider, unreadMarker: showUnreadMarker }),
-      [showDateDivider, showUnreadMarker],
+      () => ({
+        dateDivider: showDateDivider,
+        unreadMarker: showUnreadMarker,
+        streamingIndicator,
+      }),
+      [showDateDivider, showUnreadMarker, streamingIndicator],
     );
 
     // Keep the default renderer stable; read latest slot overrides and the resolved
@@ -285,13 +291,14 @@ ChatMessageList.propTypes = {
   enableRovingFocus: PropTypes.bool,
   estimatedItemSize: PropTypes.number,
   /**
-   * Feature flags for the opt-in row dividers rendered by the default row.
-   * Both are disabled by default; pass `{ dateDivider: true }` and/or
-   * `{ unreadMarker: true }` to render them. Ignored when a custom `renderItem`
-   * replaces the default row.
+   * Feature flags for the row extras rendered by the default row: the opt-in
+   * dividers (`dateDivider` / `unreadMarker`, disabled by default) and the
+   * streaming indicator (`streamingIndicator`, `'auto'` by default). Ignored
+   * when a custom `renderItem` replaces the default row.
    */
   features: PropTypes.shape({
     dateDivider: PropTypes.bool,
+    streamingIndicator: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.bool]),
     unreadMarker: PropTypes.bool,
   }),
   getItemKey: PropTypes.func,

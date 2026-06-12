@@ -92,9 +92,7 @@ describe('ChatMessageActions', () => {
       </ChatRoot>,
     );
 
-    const button = document.querySelector(
-      'button[data-action="regenerate"]',
-    ) as HTMLButtonElement;
+    const button = document.querySelector('button[data-action="regenerate"]') as HTMLButtonElement;
     expect(button).not.toBe(null);
     expect(button.getAttribute('aria-label')).toBe('Regenerate');
     expect(button.getAttribute('title')).toBe('Regenerate');
@@ -107,9 +105,7 @@ describe('ChatMessageActions', () => {
         <MessageRoot messageId="m1">
           <ChatMessageActions
             message={sampleMessage}
-            extraActions={[
-              { id: 'a', label: 'Action', disabled: true, onClick: () => {} },
-            ]}
+            extraActions={[{ id: 'a', label: 'Action', disabled: true, onClick: () => {} }]}
           />
         </MessageRoot>
       </ChatRoot>,
@@ -148,7 +144,9 @@ describe('ChatMessageActions', () => {
           extraActions={[{ id: 'a', label: 'Action', onClick: () => {} }]}
         />,
       );
-    }).toWarnDev(['MUI X Chat: `extraActions` on the message actions bar require a `<ChatProvider>`']);
+    }).toWarnDev([
+      'MUI X Chat: `extraActions` on the message actions bar require a `<ChatProvider>`',
+    ]);
 
     const button = document.querySelector('button[data-action="a"]') as HTMLButtonElement;
     expect(button).not.toBe(null);

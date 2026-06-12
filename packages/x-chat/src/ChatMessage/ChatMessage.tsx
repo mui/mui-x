@@ -22,6 +22,10 @@ import { ChatMessageContent, type ChatMessageContentProps } from './ChatMessageC
 import { ChatMessageMeta, type ChatMessageMetaProps } from './ChatMessageMeta';
 import { ChatMessageInlineMeta, type ChatMessageInlineMetaProps } from './ChatMessageInlineMeta';
 import { ChatMessageActions, type ChatMessageActionsProps } from './ChatMessageActions';
+import {
+  ChatStreamingIndicator,
+  type ChatStreamingIndicatorProps,
+} from '../ChatIndicators/ChatStreamingIndicator';
 
 const useThemeProps = createUseThemeProps('MuiChatMessage');
 
@@ -63,6 +67,12 @@ export interface ChatMessageSlots {
    * `null` to hide.
    */
   authorName: React.ElementType | null;
+  /**
+   * The animated streaming indicator, rendered inside the bubble (after the
+   * streamed parts) while this assistant message has `status: 'streaming'`.
+   * Pass `null` to hide it.
+   */
+  streamingIndicator: React.ElementType | null;
 }
 
 /**
@@ -89,6 +99,7 @@ export interface ChatMessageSlotProps {
     | Partial<ChatMessageActionsProps>
     | ((context: ChatMessageActionsResolveContext) => Partial<ChatMessageActionsProps>);
   authorName?: MessageGroupSlotProps['authorName'];
+  streamingIndicator?: Partial<ChatStreamingIndicatorProps>;
 }
 
 export interface ChatMessageProps extends Omit<MessageRootProps, 'slots' | 'slotProps'> {
@@ -312,11 +323,37 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
       ) as Partial<ChatMessageActionsProps>;
       const hasExtraActions = (resolvedActionsProps.extraActions?.length ?? 0) > 0;
 
+      // Mounted only on the actively streaming assistant message so a single
+      // store subscriber exists per list, not one per row. Disabling the
+      // feature arrives as `slots.streamingIndicator === null` (the row
+      // pipeline nulls the slot), so no mode needs to be threaded here.
+      const StreamingIndicatorSlot = slots?.streamingIndicator;
+      const streamingIndicator =
+        isStreaming && message?.role === 'assistant' && StreamingIndicatorSlot !== null
+          ? React.createElement(
+              (StreamingIndicatorSlot ?? ChatStreamingIndicator) as React.ElementType,
+              {
+                message,
+                ...resolveSlotProps(slotProps?.streamingIndicator ?? {}, actionsContext),
+              },
+            )
+          : undefined;
+
       innerTree = (
         <React.Fragment>
           {groupAuthorName}
           {hasAvatar && <AvatarComp {...(slotProps?.avatar ?? {})} />}
-          <ContentComp afterContent={inlineMeta} {...(slotProps?.content ?? {})} />
+          <ContentComp
+            afterContent={
+              streamingIndicator !== undefined || inlineMeta !== undefined ? (
+                <React.Fragment>
+                  {streamingIndicator}
+                  {inlineMeta}
+                </React.Fragment>
+              ) : undefined
+            }
+            {...(slotProps?.content ?? {})}
+          />
           {externalMeta}
           {hasError && <ErrorComp {...(slotProps?.error ?? {})} />}
           {/*

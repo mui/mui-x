@@ -39,6 +39,7 @@ import type { ChatComposerAttachButtonProps } from '../ChatComposer/ChatComposer
 import type { ChatComposerAttachmentListProps } from '../ChatComposer/ChatComposerAttachmentList';
 import type { ChatComposerToolbarProps } from '../ChatComposer/ChatComposerToolbar';
 import type { ChatComposerHelperTextProps } from '../ChatComposer/ChatComposerHelperText';
+import type { ChatStreamingIndicatorProps } from '../ChatIndicators/ChatStreamingIndicator';
 import type { ChatTypingIndicatorProps } from '../ChatIndicators/ChatTypingIndicator';
 import type { ChatUnreadMarkerProps } from '../ChatIndicators/ChatUnreadMarker';
 import type { ChatScrollToBottomAffordanceProps } from '../ChatIndicators/ChatScrollToBottomAffordance';
@@ -137,6 +138,13 @@ interface ChatBoxMessageListSlots {
    * enabled. Pass `null` to hide it.
    */
   unreadMarker?: React.ElementType | null;
+  /**
+   * The animated dots shown while an assistant response is in flight: as a
+   * trailing row while waiting for the response to start, then inside the
+   * assistant bubble while it streams. Controlled by
+   * `features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.
+   */
+  streamingIndicator?: React.ElementType | null;
 }
 
 interface ChatBoxMessageListSlotProps {
@@ -144,6 +152,7 @@ interface ChatBoxMessageListSlotProps {
   messageGroup?: Partial<ChatMessageGroupProps>;
   dateDivider?: Partial<ChatDateDividerProps>;
   unreadMarker?: Partial<ChatUnreadMarkerProps>;
+  streamingIndicator?: Partial<ChatStreamingIndicatorProps>;
 }
 
 /**
@@ -367,6 +376,17 @@ export interface ChatBoxFeatures extends ChatFeatures {
    * @default true
    */
   suggestions?: boolean;
+  /**
+   * Whether to show the animated streaming indicator while waiting for /
+   * receiving an assistant response.
+   * - `'auto'` – shown only in assistant-backed conversations (an assistant
+   *   member/participant is configured, or an assistant message exists).
+   * - `true` – always shown while a response is in flight.
+   * - `false` – never shown.
+   * Use the `streamingIndicator` slot to customize the rendered component.
+   * @default 'auto'
+   */
+  streamingIndicator?: boolean | 'auto';
 }
 
 export type ChatBoxLayoutMode = 'standard' | 'overlay' | 'split';
@@ -419,9 +439,11 @@ export interface ChatBoxProps<Cursor = string> extends Omit<
    * - Conversation — `conversationRoot`, `conversationList`, `conversationHeader`,
    *   `conversationHeaderInfo`, `conversationTitle`, `conversationSubtitle`,
    *   `conversationHeaderActions`.
-   * - Message list — `messageList`, `messageGroup`, `dateDivider`, `unreadMarker`.
-   *   The divider slots render only when the matching `features.dateDivider` /
-   *   `features.unreadMarker` flag is enabled.
+   * - Message list — `messageList`, `messageGroup`, `dateDivider`, `unreadMarker`,
+   *   `streamingIndicator`. The divider slots render only when the matching
+   *   `features.dateDivider` / `features.unreadMarker` flag is enabled; the
+   *   streaming indicator renders by default (`features.streamingIndicator: 'auto'`)
+   *   and accepts `null` to hide it.
    * - Message — `messageRoot`, `messageAvatar`, `messageContent`, `messageMeta`,
    *   `messageInlineMeta`, `messageError`, `messageActions`, `messageAuthorName`.
    *   Pass `null` to a presentational slot (`messageAvatar`, `messageMeta`,

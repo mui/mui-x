@@ -34,10 +34,9 @@ function createProviderWrapper(initialProps: Omit<ChatProviderProps, 'children'>
 describe('useChatActions', () => {
   it('returns the same actions object as the runtime context exposed through useChat', () => {
     const Wrapper = createProviderWrapper({ adapter: createAdapter() });
-    const { result } = renderHook(
-      () => ({ actions: useChatActions(), chat: useChat() }),
-      { wrapper: Wrapper },
-    );
+    const { result } = renderHook(() => ({ actions: useChatActions(), chat: useChat() }), {
+      wrapper: Wrapper,
+    });
 
     expect(result.current.actions.regenerate).toBe(result.current.chat.regenerate);
     expect(result.current.actions.retry).toBe(result.current.chat.retry);

@@ -1,0 +1,15 @@
+{
+  "componentDescription": "Animated dots shown while an assistant response is in flight: as a trailing\nrow while waiting for the response to start, then inside the assistant\nmessage while it streams.",
+  "propDescriptions": {
+    "message": {
+      "description": "The assistant message to reflect. Falls back to the surrounding <code>MessageContext</code> when omitted (the default when mounted inside a chat message). When a message is in scope, the indicator renders only while that message is an assistant message with <code>status: &#39;streaming&#39;</code>."
+    },
+    "messageId": {
+      "description": "Row contract shared with the divider slots: when <code>index</code>/<code>items</code> are provided, the indicator self-suppresses on every row except the last one."
+    },
+    "mode": {
+      "description": "<p>Controls when the indicator renders.</p>\n<ul>\n<li><code>&#39;auto&#39;</code> – shown only in assistant-backed conversations (auto-detected).</li>\n<li><code>true</code> – always shown while a response is in flight.</li>\n<li><code>false</code> – never shown.</li>\n</ul>\n"
+    }
+  },
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+}

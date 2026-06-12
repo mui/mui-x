@@ -12,6 +12,11 @@ components: ChatTypingIndicator
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+:::info
+Typing indicators reflect _human_ presence — other participants composing a message.
+For the animated dots shown while the _assistant_ generates a response, see the [streaming indicator](/x/react-chat/behavior/streaming/#streaming-indicator).
+:::
+
 ## Interactive playground
 
 Toggle which users appear as typing in the current conversation:

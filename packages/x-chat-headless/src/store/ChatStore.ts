@@ -224,6 +224,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       typingByConversation: {},
       activeStreamAbortController: null,
       isStreaming: false,
+      streamingConversationId: undefined,
       hasMoreHistory: false,
       isLoadingHistory: false,
       historyCursor: undefined,
@@ -298,6 +299,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
         this.update({
           activeStreamAbortController: null,
           isStreaming: false,
+          streamingConversationId: undefined,
         });
       }
     };
@@ -530,8 +532,13 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     });
   };
 
-  public setStreaming = (value: boolean) => {
-    this.set('isStreaming', value);
+  public setStreaming = (value: boolean, conversationId?: string) => {
+    this.update({
+      isStreaming: value,
+      // Without a conversation id the stream is unscoped: the indicator gating
+      // treats `undefined` as "show regardless of the active conversation".
+      streamingConversationId: value ? conversationId : undefined,
+    });
   };
 
   public setHistoryLoading = (value: boolean) => {
@@ -597,6 +604,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       messageErrorsById: {},
       activeStreamAbortController: null,
       isStreaming: false,
+      streamingConversationId: undefined,
       hasMoreHistory: false,
       isLoadingHistory: false,
       historyCursor: undefined,

@@ -27,7 +27,8 @@ type ChatMessageGroupSlotKeys =
   | 'messageInlineMeta'
   | 'messageError'
   | 'messageActions'
-  | 'messageAuthorName';
+  | 'messageAuthorName'
+  | 'streamingIndicator';
 
 export interface ChatMessageGroupSlots extends Pick<ChatBoxSlots, ChatMessageGroupSlotKeys> {}
 
@@ -170,6 +171,7 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
       error: slots?.messageError,
       actions: slots?.messageActions,
       authorName: slots?.messageAuthorName,
+      streamingIndicator: slots?.streamingIndicator,
     };
     const innerMessageSlotProps: ChatMessageSlotProps = {
       root: slotProps?.messageRoot,
@@ -180,6 +182,7 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
       error: slotProps?.messageError,
       actions: slotProps?.messageActions,
       authorName: slotProps?.messageAuthorName,
+      streamingIndicator: slotProps?.streamingIndicator,
     };
 
     // Track whether the avatar slot is explicitly nulled — used to mirror the

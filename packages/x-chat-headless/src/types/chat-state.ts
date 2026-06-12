@@ -24,6 +24,8 @@ export interface ChatInternalState<Cursor = string> {
   typingByConversation: Record<string, Record<string, boolean>>;
   activeStreamAbortController: AbortController | null;
   isStreaming: boolean;
+  /** The conversation the in-flight response stream belongs to, when known. */
+  streamingConversationId?: string;
   hasMoreHistory: boolean;
   isLoadingHistory: boolean;
   historyCursor?: Cursor;

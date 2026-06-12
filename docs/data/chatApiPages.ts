@@ -138,6 +138,10 @@ const chatApiPages: MuiPage[] = [
     title: 'ChatScrollToBottomAffordance',
   },
   {
+    pathname: '/x/api/chat/chat-streaming-indicator',
+    title: 'ChatStreamingIndicator',
+  },
+  {
     pathname: '/x/api/chat/chat-suggestions',
     title: 'ChatSuggestions',
   },
@@ -272,6 +276,10 @@ const chatApiPages: MuiPage[] = [
   {
     pathname: '/x/api/chat/scroll-to-bottom-affordance',
     title: 'ScrollToBottomAffordance',
+  },
+  {
+    pathname: '/x/api/chat/streaming-indicator',
+    title: 'StreamingIndicator',
   },
   {
     pathname: '/x/api/chat/typing-indicator',

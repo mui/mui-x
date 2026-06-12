@@ -207,6 +207,16 @@ export type {
 } from './ChatMessageSkeleton';
 
 // ─── ChatIndicators ───────────────────────────────────────────────────────────
+export { ChatStreamingIndicator } from './ChatIndicators/ChatStreamingIndicator';
+export type { ChatStreamingIndicatorProps } from './ChatIndicators/ChatStreamingIndicator';
+export {
+  chatStreamingIndicatorClasses,
+  getChatStreamingIndicatorUtilityClass,
+} from './ChatIndicators/chatStreamingIndicatorClasses';
+export type {
+  ChatStreamingIndicatorClasses,
+  ChatStreamingIndicatorClassKey,
+} from './ChatIndicators/chatStreamingIndicatorClasses';
 export { ChatTypingIndicator } from './ChatIndicators/ChatTypingIndicator';
 export type { ChatTypingIndicatorProps } from './ChatIndicators/ChatTypingIndicator';
 export { ChatUnreadMarker } from './ChatIndicators/ChatUnreadMarker';

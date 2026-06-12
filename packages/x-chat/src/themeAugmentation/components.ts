@@ -46,6 +46,11 @@ export interface ChatComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversationList'];
     variants?: ComponentsVariants<Theme>['MuiChatConversationList'];
   };
+  MuiChatStreamingIndicator?: {
+    defaultProps?: ComponentsProps['MuiChatStreamingIndicator'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatStreamingIndicator'];
+    variants?: ComponentsVariants<Theme>['MuiChatStreamingIndicator'];
+  };
   MuiChatTypingIndicator?: {
     defaultProps?: ComponentsProps['MuiChatTypingIndicator'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatTypingIndicator'];

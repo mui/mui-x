@@ -7,6 +7,7 @@ import { type ChatMessageListClassKey } from '../ChatMessageList/chatMessageList
 import { type ChatConversationClassKey } from '../ChatConversation/chatConversationClasses';
 import { type ChatComposerClassKey } from '../ChatComposer/chatComposerClasses';
 import { type ChatConversationListClassKey } from '../ChatConversationList/chatConversationListClasses';
+import { type ChatStreamingIndicatorClassKey } from '../ChatIndicators/chatStreamingIndicatorClasses';
 import { type ChatTypingIndicatorClassKey } from '../ChatIndicators/chatTypingIndicatorClasses';
 import { type ChatScrollToBottomAffordanceClassKey } from '../ChatIndicators/chatScrollToBottomAffordanceClasses';
 import { type ChatSuggestionsClassKey } from '../ChatSuggestions/chatSuggestionsClasses';
@@ -26,6 +27,7 @@ export interface ChatComponentNameToClassKey {
   MuiChatConversation: ChatConversationClassKey;
   MuiChatComposer: ChatComposerClassKey;
   MuiChatConversationList: ChatConversationListClassKey;
+  MuiChatStreamingIndicator: ChatStreamingIndicatorClassKey;
   MuiChatTypingIndicator: ChatTypingIndicatorClassKey;
   MuiChatScrollToBottomAffordance: ChatScrollToBottomAffordanceClassKey;
   MuiChatSuggestions: ChatSuggestionsClassKey;
