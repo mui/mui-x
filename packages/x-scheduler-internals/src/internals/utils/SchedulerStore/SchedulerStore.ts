@@ -14,7 +14,7 @@ import {
   SchedulerResourceId,
   TemporalSupportedObject,
   SchedulerEventUpdatedProperties,
-  RecurringEventUpdateScope,
+  RecurringEventScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
@@ -23,6 +23,7 @@ import {
   SchedulerState,
   SchedulerParameters,
   UpdateRecurringEventParameters,
+  DeleteRecurringEventParameters,
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   UpdateEventsParameters,
@@ -114,7 +115,7 @@ export class SchedulerStore<
       editedEventId: null,
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
-      pendingUpdateRecurringEventParameters: null,
+      pendingRecurringEventOperation: null,
       visibleResources:
         parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
       visibleDate:
@@ -521,63 +522,90 @@ export class SchedulerStore<
       }
       return;
     }
-    this.set('pendingUpdateRecurringEventParameters', params);
+    this.set('pendingRecurringEventOperation', { kind: 'update', ...params });
   };
 
   /**
-   * Applies the update to a recurring event after the user selects a scope.
-   * @param scope The selected update scope, or null if canceled.
+   * Opens the recurring scope dialog to delete a recurring event.
    */
-  public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
-    const { recurringEventsPlugin, pendingUpdateRecurringEventParameters, adapter } = this.state;
-    if (recurringEventsPlugin == null || pendingUpdateRecurringEventParameters == null) {
+  public deleteRecurringEvent = (params: DeleteRecurringEventParameters) => {
+    if (this.state.recurringEventsPlugin == null) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X Scheduler: Recurring event deletions are a premium feature.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
+      return;
+    }
+    this.set('pendingRecurringEventOperation', { kind: 'delete', ...params });
+  };
+
+  /**
+   * Applies the pending recurring event operation after the user selects a scope.
+   * @param scope The selected scope, or null if canceled.
+   */
+  public selectRecurringEventScope = (scope: RecurringEventScope | null) => {
+    const { recurringEventsPlugin, pendingRecurringEventOperation, adapter } = this.state;
+    if (recurringEventsPlugin == null || pendingRecurringEventOperation == null) {
       return;
     }
 
-    this.set('pendingUpdateRecurringEventParameters', null);
+    this.set('pendingRecurringEventOperation', null);
     if (scope == null) {
       return;
     }
 
-    const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
-    const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
+    const { occurrenceStart, onSubmit } = pendingRecurringEventOperation;
+    const eventId =
+      pendingRecurringEventOperation.kind === 'update'
+        ? pendingRecurringEventOperation.changes.id
+        : pendingRecurringEventOperation.eventId;
+    const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     if (!original.dataTimezone.rrule) {
       throw new Error(
-        'MUI X Scheduler: The original event is not recurring and cannot be updated with updateRecurringEvent(). ' +
-          'This method is designed for recurring events with recurrence rules. ' +
-          'Use updateEvent() instead to update non-recurring events.',
+        'MUI X Scheduler: The event targeted by the recurring scope dialog is not recurring. ' +
+          'Recurring scope changes require an event with a recurrence rule. ' +
+          'Use updateEvent() or deleteEvent() for non-recurring events.',
       );
     }
 
     // IMPORTANT:
-    // Recurring updates are pattern-based, not instant-based.
+    // Recurring changes are pattern-based, not instant-based.
     // Using the raw instant here would incorrectly shift the recurring rule
     // depending on the user's display timezone. We therefore convert the
-    // occurrence to the event's dataTimezone before applying the update.
-
-    const changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
-      adapter,
-      originalEvent: original,
-      changes,
-    });
-
+    // occurrence to the event's dataTimezone before applying the change.
     const occurrenceStartInDataTimezone = adapter.setTimezone(
       occurrenceStart,
       original.dataTimezone.timezone,
     );
 
-    const updatedEvents = recurringEventsPlugin.updateRecurringEvent(
-      adapter,
-      original,
-      occurrenceStartInDataTimezone,
-      changesInDataTimezone,
-      scope,
-    );
+    let updatedEvents: UpdateEventsParameters;
+    if (pendingRecurringEventOperation.kind === 'delete') {
+      updatedEvents = recurringEventsPlugin.deleteRecurringEvent(
+        adapter,
+        original,
+        occurrenceStartInDataTimezone,
+        scope,
+      );
+    } else {
+      const changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
+        adapter,
+        originalEvent: original,
+        changes: pendingRecurringEventOperation.changes,
+      });
+      updatedEvents = recurringEventsPlugin.updateRecurringEvent(
+        adapter,
+        original,
+        occurrenceStartInDataTimezone,
+        changesInDataTimezone,
+        scope,
+      );
+    }
     this.updateEvents(updatedEvents);
 
-    const submit = onSubmit;
-    if (submit) {
-      queueMicrotask(() => submit());
+    if (onSubmit) {
+      queueMicrotask(() => onSubmit());
     }
   };
 

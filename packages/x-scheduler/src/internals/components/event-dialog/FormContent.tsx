@@ -239,6 +239,17 @@ export function FormContent(props: FormContentProps) {
   };
 
   const handleDelete = () => {
+    if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+      store.deleteRecurringEvent({
+        occurrenceStart: occurrence.displayTimezone.start.value,
+        eventId: occurrence.id,
+        onSubmit: onClose,
+      });
+
+      // don't close the dialog
+      return;
+    }
+
     store.deleteEvent(occurrence.id);
     onClose();
   };

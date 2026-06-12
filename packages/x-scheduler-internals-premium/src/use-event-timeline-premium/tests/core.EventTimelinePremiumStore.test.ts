@@ -32,7 +32,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         editedEventId: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        pendingUpdateRecurringEventParameters: null,
+        pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         processedEventLookup: new Map(),
         processedResourceLookup: new Map([
