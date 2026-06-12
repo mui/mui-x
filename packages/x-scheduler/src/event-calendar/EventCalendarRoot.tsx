@@ -12,6 +12,8 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { responsiveTypographyContainerQueries } from '../internals/constants/responsiveTypography';
+import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { ErrorContainer } from '../internals/components/error-container';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
@@ -90,6 +92,11 @@ const EventCalendarContent = styled('section', {
   height: '100%',
   maxHeight: '100%',
 
+  // The container itself lives on ResponsiveTypographyContainer one level up;
+  // these @container rules fire against that ancestor and retarget the
+  // effective vars on this slot, which descendants inherit.
+  ...responsiveTypographyContainerQueries,
+
   '&[data-side-panel-open="false"]': {
     gridColumn: '1 / -1',
   },
@@ -152,14 +159,16 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             </EventCalendarSidePanel>
           </Collapse>
 
-          <EventCalendarContent
-            className={classes.content}
-            data-view={view}
-            data-side-panel-open={isSidePanelOpen}
-            aria-label={localeText.calendarContentAriaLabel}
-          >
-            {content}
-          </EventCalendarContent>
+          <ResponsiveTypographyContainer>
+            <EventCalendarContent
+              className={classes.content}
+              data-view={view}
+              data-side-panel-open={isSidePanelOpen}
+              aria-label={localeText.calendarContentAriaLabel}
+            >
+              {content}
+            </EventCalendarContent>
+          </ResponsiveTypographyContainer>
         </EventCalendarMainPanel>
         <ErrorContainer />
         {children}

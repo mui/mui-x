@@ -10,7 +10,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import { RecurringEventUpdateScope } from '@mui/x-scheduler-internals/models';
+import { RecurringEventScope } from '@mui/x-scheduler-internals/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventDialogStyledContext } from '@mui/x-scheduler/internals';
@@ -29,7 +29,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringSc
     const handleOpenChange = React.useCallback(
       (next: boolean) => {
         if (!next) {
-          store.selectRecurringEventUpdateScope(null);
+          store.selectRecurringEventScope(null);
         }
       },
       [store],
@@ -38,8 +38,8 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringSc
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const form = new FormData(event.currentTarget);
-      const recurrenceScopeValue = form.get('recurrenceScope') as RecurringEventUpdateScope;
-      store.selectRecurringEventUpdateScope(recurrenceScopeValue);
+      const recurrenceScopeValue = form.get('recurrenceScope') as RecurringEventScope;
+      store.selectRecurringEventScope(recurrenceScopeValue);
     };
 
     return (
@@ -74,7 +74,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringSc
             </FormControl>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => store.selectRecurringEventUpdateScope(null)} type="button">
+            <Button onClick={() => store.selectRecurringEventScope(null)} type="button">
               {localeText.cancel}
             </Button>
             <Button variant="contained" type="submit">
