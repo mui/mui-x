@@ -26,7 +26,7 @@ describe('shouldUpdateOccurrencePlaceholder', () => {
     expect(shouldUpdateOccurrencePlaceholder(adapter, createPlaceholder(), null)).to.equal(true);
   });
 
-  it('returns false for two equal placeholders with distinct date instances', () => {
+  it('should return false for two equal placeholders with distinct date instances', () => {
     expect(
       shouldUpdateOccurrencePlaceholder(adapter, createPlaceholder(), createPlaceholder()),
     ).to.equal(false);
