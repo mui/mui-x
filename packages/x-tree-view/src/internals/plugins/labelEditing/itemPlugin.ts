@@ -19,6 +19,7 @@ export const useLabelEditingItemPlugin: TreeViewItemPlugin = ({ props }) => {
 
   React.useEffect(() => {
     if (!isItemBeingEdited) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLabelInputValue(label as string);
     }
   }, [isItemBeingEdited, label]);

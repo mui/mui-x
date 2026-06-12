@@ -258,6 +258,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     if (dataCache.has(cacheKey)) {
       const newData = dataCache.get(cacheKey)!;
       dataRef.current = newData;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDataReady(true);
       return undefined;
     }

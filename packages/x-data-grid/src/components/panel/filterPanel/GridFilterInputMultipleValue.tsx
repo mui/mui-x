@@ -23,6 +23,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
 
   React.useEffect(() => {
     const itemValue = item.value ?? [];
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFilterValueState(itemValue.map(String));
   }, [item.value]);
 

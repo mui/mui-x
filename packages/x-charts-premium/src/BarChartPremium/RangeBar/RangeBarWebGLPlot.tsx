@@ -58,6 +58,7 @@ function RangeBarWebGLPlotImpl(props: {
 
   React.useEffect(() => {
     const prog = new BarWebGLProgram(gl);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setProgram(prog);
     return () => {
       prog.dispose();

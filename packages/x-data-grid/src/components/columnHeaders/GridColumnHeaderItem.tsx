@@ -235,6 +235,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   React.useEffect(() => {
     if (!showColumnMenuIcon && columnMenuOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowColumnMenuIcon(columnMenuOpen);
     }
   }, [showColumnMenuIcon, columnMenuOpen]);
