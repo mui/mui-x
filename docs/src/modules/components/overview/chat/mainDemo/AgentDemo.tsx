@@ -1223,6 +1223,7 @@ export default function AgentDemo() {
       activeConversationId={activeId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
       variant="compact"
       density="compact"
       slots={{

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { SxProps, Theme } from '@mui/system';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -71,6 +72,7 @@ export interface ChatMessageSourcesProps {
   label?: string;
   children?: React.ReactNode;
   className?: string;
+  sx?: SxProps<Theme>;
   classes?: Partial<ChatMessageSourcesClasses>;
   slots?: ChatMessageSourcesSlots;
   slotProps?: ChatMessageSourcesSlotProps;
@@ -92,6 +94,7 @@ const ChatMessageSources = React.forwardRef(function ChatMessageSources(
     classes: classesProp,
     slots,
     slotProps,
+    sx,
     ...other
   } = props;
   const classes = useChatMessageSourcesUtilityClasses(classesProp);
@@ -108,6 +111,7 @@ const ChatMessageSources = React.forwardRef(function ChatMessageSources(
     additionalProps: {
       ref,
       className: clsx(classes.root, className),
+      sx,
     },
   });
 
@@ -152,6 +156,11 @@ ChatMessageSources.propTypes = {
   label: PropTypes.string,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatMessageSources };

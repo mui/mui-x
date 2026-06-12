@@ -552,6 +552,38 @@ describe('MessageRoot', () => {
     expect(screen.queryByRole('img')).to.equal(null);
   });
 
+  it('drops the internal groupAuthorName prop instead of leaking it to the DOM', () => {
+    // The headless MessageGroup clones `groupAuthorName` onto compact group
+    // children for the Material ChatMessage to place in its grid. A headless
+    // MessageRoot owns its own layout and must drop it — forwarding this non-DOM
+    // prop to the root element would trigger a React "unrecognized prop" warning.
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      render(
+        <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+          <MessageRoot
+            messageId="m1"
+            groupAuthorName={<span data-testid="leaked-author">Assistant</span>}
+          >
+            <MessageContent />
+          </MessageRoot>
+        </ChatRoot>,
+      );
+
+      // No "does not recognize the `groupAuthorName` prop" warning was emitted…
+      const leaked = spy.mock.calls.some((args) =>
+        args.some((arg) => typeof arg === 'string' && /groupAuthorName/i.test(arg)),
+      );
+      expect(leaked).to.equal(false);
+      // …and the injected element is not rendered by the headless root.
+      expect(screen.queryByTestId('leaked-author')).to.equal(null);
+      // The root element carries no leaked attribute either.
+      expect(screen.getByRole('article').hasAttribute('groupauthorname')).to.equal(false);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
   it('tolerates missing messages and empty meta without crashing', () => {
     render(
       <ChatRoot adapter={createAdapter()} initialMessages={[minimalMessage]}>

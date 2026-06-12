@@ -1,0 +1,35 @@
+{
+  "props": {},
+  "name": "ChatMessageError",
+  "imports": [
+    "import { ChatMessageError } from '@mui/x-chat/ChatMessageError';",
+    "import { ChatMessageError } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "message",
+      "className": "MuiChatMessageError-message",
+      "description": "Styles applied to the message text element.",
+      "isGlobal": false
+    },
+    {
+      "key": "retryButton",
+      "className": "MuiChatMessageError-retryButton",
+      "description": "Styles applied to the retry button.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatMessageError-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatMessageError",
+  "filename": "/packages/x-chat/src/ChatMessageError/ChatMessageError.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/error-handling/\">Chat - Error Handling</a></li></ul>",
+  "cssComponent": false
+}
