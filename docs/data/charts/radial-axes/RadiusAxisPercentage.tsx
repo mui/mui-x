@@ -14,7 +14,10 @@ const sizes = [320, 200];
 
 function Showcase({ minRadius }: { minRadius: number | string }) {
   return (
-    <Stack direction="row" sx={{ gap: 2, alignItems: 'center', justifyContent: 'center' }}>
+    <Stack
+      direction="row"
+      sx={{ gap: 2, alignItems: 'center', justifyContent: 'center' }}
+    >
       {sizes.map((size) => (
         <RadialBarChart
           key={size}
