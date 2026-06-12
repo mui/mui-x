@@ -104,6 +104,31 @@ export interface CommonLineSeriesType {
    * @default 0
    */
   baseline?: number | 'min' | 'max';
+  /**
+   * Downsample the series before rendering.
+   *
+   * - `'lttb'` enables Largest-Triangle-Three-Buckets sampling with default `target` equal to the chart width in pixels.
+   * - Object form lets you override the algorithm, the threshold above which sampling kicks in, and the target number of points to keep.
+   *
+   * Sampling is skipped when the series contains `null` values.
+   *
+   * @default undefined
+   */
+  sampling?:
+    | 'lttb'
+    | {
+        type: 'lttb';
+        /**
+         * Sampling kicks in only when the series has more points than this threshold.
+         * @default chart width in pixels
+         */
+        threshold?: number;
+        /**
+         * Target number of points to keep after sampling.
+         * @default chart width in pixels
+         */
+        target?: number;
+      };
 }
 
 export interface LineSeriesType
