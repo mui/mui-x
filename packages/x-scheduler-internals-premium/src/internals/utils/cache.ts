@@ -1,4 +1,5 @@
 import { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import { checkSchedulerEventIdIsValid } from '@mui/x-scheduler-internals/internals';
 
 type SchedulerDataSourceCacheConfig<TEvent extends object> = {
   /**
@@ -193,7 +194,9 @@ export class SchedulerDataSourceCacheDefault<
   }
 
   upsert(event: TEvent, sourceRangeKey: string | null = null) {
-    const id = String(this.getId(event));
+    const resolvedId = this.getId(event);
+    checkSchedulerEventIdIsValid(resolvedId, event);
+    const id = String(resolvedId);
     const expiry = Date.now() + this.ttl;
     this.cache[id] = { value: event, expiry, sourceRangeKey };
   }
