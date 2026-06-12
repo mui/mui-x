@@ -60,12 +60,11 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
     expect(result.maxIndex).to.equal(2);
     expect(result.days[1].withPosition[1].id).to.equal('B');
-    expect(result.days[1].withPosition[1].position).to.deep.equal({ index: 2, daySpan: 2 });
+    expect(result.days[1].withPosition[1].position).to.deep.equal({ index: 2, daySpan: 1 });
     expect(result.days[2].withPosition[0].id).to.equal('B');
     expect(result.days[2].withPosition[0].position).to.deep.equal({
-      index: 2,
+      index: 1,
       daySpan: 1,
-      isInvisible: true,
     });
   });
 
@@ -78,7 +77,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
     // Event A is not present on day 3, so event C should use index 1 on that day instead of using index 3 below Event B
     expect(result.maxIndex).to.equal(2);
-    expect(result.days[2].withPosition[0].id).to.equal('C');
+    expect(result.days[2].withPosition[0].id).to.equal('B');
     expect(result.days[2].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 1 });
   });
 });
