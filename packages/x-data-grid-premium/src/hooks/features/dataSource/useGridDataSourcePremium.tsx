@@ -224,7 +224,10 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
   const handleRowGroupingModelChange = React.useCallback(() => {
     // Clear the rows on every grouping model change to match the pre-fix behavior on
     // non-standard strategies (e.g. lazy loading) where `setRows([])` is required to
-    // reset the existing grouping state.
+    // reset the existing grouping state. `dataSourceKeepPreviousData` is intentionally
+    // not honored here: changing the grouping model implies the `GroupedData` strategy
+    // is (about to be) active, and skipping the synchronous clear would render rows in
+    // stale sort order (https://github.com/mui/mui-x/pull/21619).
     apiRef.current.setRows([]);
     // The event listener is wired regardless of the active strategy
     // (see `runIf(!pivotActive && !!props.dataSource, ...)` below), so we have to gate the

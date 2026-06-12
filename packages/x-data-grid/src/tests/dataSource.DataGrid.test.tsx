@@ -480,6 +480,160 @@ describe('<DataGrid /> - Data source', () => {
     });
   });
 
+  describe('dataSourceKeepPreviousData', () => {
+    it('should keep the previous rows visible while new rows are being fetched', async () => {
+      const { promise, resolve } = Promise.withResolvers<GridGetRowsResponse>();
+      const initialResponse: GridGetRowsResponse = {
+        rows: [{ id: 1, value: 'first' }],
+        rowCount: 2,
+      };
+      const deferredResponse: GridGetRowsResponse = {
+        rows: [{ id: 2, value: 'second' }],
+        rowCount: 2,
+      };
+      let resolvedFirst = false;
+      const getRows = spy(() => {
+        if (!resolvedFirst) {
+          resolvedFirst = true;
+          return Promise.resolve(initialResponse);
+        }
+        return promise;
+      });
+      const dataSource: GridDataSource = { getRows };
+      let localApiRef: RefObject<GridApi | null> = { current: null };
+      function Test(props: Partial<DataGridProps>) {
+        localApiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              apiRef={localApiRef}
+              columns={[{ field: 'value' }]}
+              dataSource={dataSource}
+              dataSourceCache={null}
+              dataSourceKeepPreviousData
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 1 }, rowCount: 0 },
+              }}
+              pagination
+              pageSizeOptions={[1]}
+              disableVirtualization
+              {...props}
+            />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Test />);
+
+      await waitFor(() => {
+        expect(localApiRef.current?.getRowsCount()).to.equal(1);
+      });
+
+      act(() => {
+        setProps({ paginationModel: { page: 1, pageSize: 1 } });
+      });
+
+      await waitFor(() => {
+        expect(getRows.callCount).to.equal(2);
+      });
+      expect(localApiRef.current?.getRowsCount()).to.equal(1);
+
+      await act(async () => {
+        resolve(deferredResponse);
+      });
+
+      await waitFor(() => {
+        expect(localApiRef.current?.getRow(2)).not.to.equal(null);
+      });
+    });
+
+    it('should not render the "no rows" overlay while keeping previous rows during fetch', async () => {
+      const NoRowsOverlay = spy(() => null);
+      render(
+        <TestDataSource
+          dataSourceCache={null}
+          dataSourceKeepPreviousData
+          slots={{ noRowsOverlay: NoRowsOverlay }}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+      NoRowsOverlay.resetHistory();
+
+      act(() => {
+        apiRef.current?.setPage(1);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      await waitFor(() => {
+        expect(apiRef.current?.getRowsCount()).to.be.greaterThan(0);
+      });
+
+      expect(NoRowsOverlay.callCount).to.equal(0);
+    });
+
+    it('should keep the previous rows visible when the refetch errors', async () => {
+      const initialResponse: GridGetRowsResponse = {
+        rows: [{ id: 1, value: 'first' }],
+        rowCount: 2,
+      };
+      let firstCall = true;
+      const getRows = spy(() => {
+        if (firstCall) {
+          firstCall = false;
+          return Promise.resolve(initialResponse);
+        }
+        return Promise.reject(new Error('Network error'));
+      });
+      const dataSource: GridDataSource = { getRows };
+      const onDataSourceError = spy();
+      let localApiRef: RefObject<GridApi | null> = { current: null };
+      function Test(props: Partial<DataGridProps>) {
+        localApiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              apiRef={localApiRef}
+              columns={[{ field: 'value' }]}
+              dataSource={dataSource}
+              dataSourceCache={null}
+              dataSourceKeepPreviousData
+              onDataSourceError={onDataSourceError}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 1 }, rowCount: 0 },
+              }}
+              pagination
+              pageSizeOptions={[1]}
+              disableVirtualization
+              {...props}
+            />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Test />);
+
+      await waitFor(() => {
+        expect(localApiRef.current?.getRowsCount()).to.equal(1);
+      });
+
+      act(() => {
+        setProps({ paginationModel: { page: 1, pageSize: 1 } });
+      });
+
+      await waitFor(() => {
+        expect(onDataSourceError.callCount).to.equal(1);
+      });
+      expect(localApiRef.current?.getRowsCount()).to.equal(1);
+      expect(localApiRef.current?.getRow(1)).to.deep.equal({ id: 1, value: 'first' });
+      expect(localApiRef.current?.state.rows.loading).to.equal(false);
+    });
+  });
+
   describe('Error handling', () => {
     it('should call `onDataSourceError` when the data source returns an error', async () => {
       const onDataSourceError = spy();
