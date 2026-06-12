@@ -3,6 +3,7 @@ productId: x-scheduler
 title: Scheduler visual regression tests
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
+components: StandaloneCompactDayView, StandaloneCompactThreeDayView, StandaloneCompactWeekView
 ---
 
 # Experiments
@@ -12,3 +13,20 @@ githubLabel: 'scope: scheduler'
 ## Recurring event durations
 
 {{"demo": "RecurringEventDurations.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Compact (touch) views
+
+Touch-optimized day/time-grid views for narrow widths, rendered here at a phone-like width.
+Each view shows a fixed number of days and uses the touch event variant (title only, no time).
+
+### Compact day view (1 day)
+
+{{"demo": "CompactDayView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Compact three-day view (3 days)
+
+{{"demo": "CompactThreeDayView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Compact week view (7 days)
+
+{{"demo": "CompactWeekView.js", "bg": "inline", "defaultCodeOpen": false}}
