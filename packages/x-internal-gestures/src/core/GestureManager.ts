@@ -199,12 +199,12 @@ export class GestureManager<
   }
 
   /**
-   * Removes gesture templates added with `addGestures()`, unregistering them
+   * Removes gesture templates with the provided names, unregistering them
    * from any element they are still registered on.
    *
    * @param gestureNames - The names of the gestures to remove
    */
-  public removeGestures(gestureNames: string[]): void {
+  public removeGestures(gestureNames: GestureName[]): void {
     gestureNames.forEach((gestureName) => {
       this.elementGestureMap.forEach((_, element) => {
         this.unregisterElement(gestureName, element);
