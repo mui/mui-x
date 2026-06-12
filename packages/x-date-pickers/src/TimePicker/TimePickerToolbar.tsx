@@ -17,15 +17,28 @@ import {
 } from './timePickerToolbarClasses';
 import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
-import { AdapterFormats } from '../models';
+import { AdapterFormats, PickerValidDate } from '../models';
 import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
+import { createIsAfterIgnoreDatePart, Meridiem } from '../internals/utils/time-utils';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
+import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { useNow } from '../internals/hooks/useUtils';
 
 export interface TimePickerToolbarProps extends BaseToolbarProps, ExportedTimePickerToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
+  minTime?: PickerValidDate;
+  maxTime?: PickerValidDate;
+  disablePast?: boolean;
+  disableFuture?: boolean;
+  referenceDate?: PickerValidDate;
+  defaultValue?: PickerValidDate;
+  timezone?: string;
+  disableIgnoringDatePartForTimeValidation?: boolean;
 }
 
 export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -147,7 +160,21 @@ const TimePickerToolbarAmPmSelection = styled('div', {
  */
 function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
-  const { ampm, ampmInClock, className, classes: classesProp, ...other } = props;
+  const {
+    ampm,
+    ampmInClock,
+    className,
+    classes: classesProp,
+    maxTime,
+    minTime,
+    disablePast,
+    disableFuture,
+    referenceDate: referenceDateProp,
+    defaultValue,
+    timezone: timezoneProp,
+    disableIgnoringDatePartForTimeValidation = false,
+    ...other
+  } = props;
   const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
@@ -158,6 +185,48 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   >();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
+  const { timezone } = useControlledValue({
+    name: 'TimePickerToolbar',
+    timezone: timezoneProp,
+    value,
+    defaultValue,
+    referenceDate: referenceDateProp,
+    onChange: () => {},
+    valueManager: singleItemValueManager,
+  });
+  const valueOrReferenceDate = useClockReferenceDate({
+    value,
+    referenceDate: referenceDateProp,
+    adapter,
+    props,
+    timezone,
+  });
+  const now = useNow(timezone);
+  const isMeridiemDisabled = (meridiem: Meridiem) => {
+    const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, adapter);
+    const start = adapter.setSeconds(
+      adapter.setMinutes(adapter.setHours(adapter.startOfDay(valueOrReferenceDate), meridiem === 'am' ? 0 : 12), 0),
+      0,
+    );
+    const end = adapter.addSeconds(adapter.addMinutes(adapter.addHours(start, 11), 59), 59);
+    if (minTime && isAfter(minTime, end)) {
+      return false;
+    }
+
+    if (maxTime && isAfter(start, maxTime)) {
+      return false;
+    }
+
+    if (disableFuture && isAfter(start, now)) {
+      return false;
+    }
+
+    if (disablePast && isAfter(now, end)) {
+      return false;
+    }
+
+    return true;
+  };
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
     setValue(newValue, { changeImportance: 'set', source: 'view' }),
   );
@@ -233,7 +302,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             typographyClassName={classes.ampmLabel}
             value={formatMeridiem(adapter, 'am')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
-            disabled={disabled}
+            disabled={disabled || !isMeridiemDisabled('am')}
           />
           <PickersToolbarButton
             disableRipple
@@ -243,7 +312,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             typographyClassName={classes.ampmLabel}
             value={formatMeridiem(adapter, 'pm')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
-            disabled={disabled}
+            disabled={disabled || !isMeridiemDisabled('pm')}
           />
         </TimePickerToolbarAmPmSelection>
       )}
@@ -263,11 +332,18 @@ TimePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  defaultValue: PropTypes.object,
+  disableFuture: PropTypes.bool,
+  disableIgnoringDatePartForTimeValidation: PropTypes.bool,
+  disablePast: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
+  maxTime: PropTypes.object,
+  minTime: PropTypes.object,
+  referenceDate: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -276,6 +352,7 @@ TimePickerToolbar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  timezone: PropTypes.string,
   titleId: PropTypes.string,
   /**
    * Toolbar date format.
