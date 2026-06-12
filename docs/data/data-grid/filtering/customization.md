@@ -177,9 +177,17 @@ To pass props directly to the `InputComponent` and not its wrapper, you can use 
 
 ### Customize the filter panel position
 
+#### Toolbar button anchor
+
 The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.
 
-{{"demo": "CustomFilterPanelPosition.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "CustomFilterPanelPositionNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Column headers anchor
+
+The following demo shows how to make panels always appear on the bottom-left under the column headers mimicking the default behavior of Data Grid v7.
+
+{{"demo": "FilterPanelPlacementColumnHeadersNoSnap.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## API
 
