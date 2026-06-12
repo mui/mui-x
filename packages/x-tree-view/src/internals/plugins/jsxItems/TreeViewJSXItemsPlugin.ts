@@ -129,7 +129,11 @@ Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
 
     // If a parent was selected while its children were unmounted (collapsed with unmountOnExit),
     // re-run selection propagation now that the children are registered.
-    if (parentId !== null && selectionSelectors.isItemSelected(this.store.state, parentId)) {
+    if (
+      parentId !== null &&
+      selectionSelectors.propagationRules(this.store.state).descendants &&
+      selectionSelectors.isItemSelected(this.store.state, parentId)
+    ) {
       this.store.selection.setItemSelection({
         itemId: parentId,
         shouldBeSelected: true,
