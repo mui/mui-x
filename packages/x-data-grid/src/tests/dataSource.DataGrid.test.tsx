@@ -40,10 +40,19 @@ describe('<DataGrid /> - Data source', () => {
       shouldRequestsFail?: boolean;
       dataSetOptions?: Partial<typeof dataSetOptions>;
       onFetchRows?: typeof fetchRowsSpy;
+      dataSourceKey?: number;
+      activityMode?: 'visible' | 'hidden';
     },
   ) {
     apiRef = useGridApiRef();
-    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, onFetchRows, ...other } = props;
+    const {
+      dataSetOptions: dataSetOptionsProp,
+      shouldRequestsFail,
+      dataSourceKey = 1,
+      onFetchRows,
+      activityMode = 'visible',
+      ...other
+    } = props;
     const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
     mockServer = useMockServer(
       dataSetOptionsProp ?? dataSetOptions,
@@ -54,6 +63,9 @@ describe('<DataGrid /> - Data source', () => {
     const { fetchRows, editRow } = mockServer;
 
     const dataSource: GridDataSource = React.useMemo(() => {
+      // Recreate the data source when this key changes
+      void dataSourceKey;
+
       return {
         getRows: async (params: GridGetRowsParams) => {
           const urlParams = new URLSearchParams({
@@ -78,7 +90,7 @@ describe('<DataGrid /> - Data source', () => {
           return syncedRow;
         },
       };
-    }, [fetchRows, editRow, effectiveFetchRowsSpy]);
+    }, [dataSourceKey, effectiveFetchRowsSpy, fetchRows, editRow]);
 
     if (!mockServer.isReady) {
       return null;
@@ -87,16 +99,20 @@ describe('<DataGrid /> - Data source', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <Reset />
-        <DataGrid
-          apiRef={apiRef}
-          columns={mockServer.columns}
-          dataSource={dataSource}
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
-          pagination
-          pageSizeOptions={pageSizeOptions}
-          disableVirtualization
-          {...other}
-        />
+        <React.Activity mode={activityMode}>
+          <DataGrid
+            apiRef={apiRef}
+            columns={mockServer.columns}
+            dataSource={dataSource}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+            }}
+            pagination
+            pageSizeOptions={pageSizeOptions}
+            disableVirtualization
+            {...other}
+          />
+        </React.Activity>
       </div>
     );
   }
@@ -105,6 +121,17 @@ describe('<DataGrid /> - Data source', () => {
     render(<TestDataSource />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+  });
+
+  it('should re-fetch the data on data source change', async () => {
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+    setProps({ dataSourceKey: 2 });
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
     });
   });
 
@@ -157,6 +184,18 @@ describe('<DataGrid /> - Data source', () => {
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+  });
+
+  it('should not re-retch the data when the Activity becomes visible', async () => {
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+    setProps({ activityMode: 'hidden' });
+    setProps({ activityMode: 'visible' });
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
     });
   });
 
