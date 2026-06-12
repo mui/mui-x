@@ -1,10 +1,13 @@
-import { interpolateBlues } from 'd3-scale-chromatic';
+import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { HeatmapValueType } from '@mui/x-charts-pro/models';
 import bikeData from 'docs/data/charts/dataset/ParisBicycle.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import { getOverviewHeatmapColor } from '../theme/colors';
+import SourceCaption from './SourceCaption';
 
 const days = [
   new Date(2025, 1, 24),
@@ -52,6 +55,12 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 }).format;
 
 function HeatmapDemoContent() {
+  const theme = useTheme();
+  const colorMap = React.useCallback(
+    (value: number) => getOverviewHeatmapColor(theme.palette.mode, value),
+    [theme.palette.mode],
+  );
+
   return (
     <Stack sx={{ height: '100%' }}>
       <Typography align="center" sx={{ width: '100%', mb: 1 }}>
@@ -88,8 +97,7 @@ function HeatmapDemoContent() {
               colorMap: {
                 max: 700,
                 type: 'continuous',
-
-                color: (t: number) => interpolateBlues(Math.sqrt(t)),
+                color: (t: number) => colorMap(Math.sqrt(t)),
               },
             },
           ]}
@@ -103,12 +111,12 @@ function HeatmapDemoContent() {
           }}
         />
       </div>
-      <Typography variant="caption" sx={{ textAlign: 'end' }}>
+      <SourceCaption>
         Data from{' '}
         <a href="https://parisdata.opendatasoft.com/explore/dataset/comptage-velo-donnees-compteurs/">
           Paris Data
         </a>
-      </Typography>
+      </SourceCaption>
     </Stack>
   );
 }
