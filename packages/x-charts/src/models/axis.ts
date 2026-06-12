@@ -129,6 +129,11 @@ export interface ChartsAxisProps extends TickParams {
    */
   disableTicks?: boolean;
   /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
+  /**
    * The style applied to ticks text.
    */
   tickLabelStyle?: ChartsTextProps['style'];
