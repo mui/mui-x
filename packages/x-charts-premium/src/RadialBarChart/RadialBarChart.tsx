@@ -426,4 +426,4 @@ RadialBarChart.propTypes /* remove-proptypes */ = {
   width: PropTypes.number,
 } as any;
 
-export { RadialBarChart as Unstable_RadialBarChart };
+export { RadialBarChart };

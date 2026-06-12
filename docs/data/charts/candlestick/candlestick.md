@@ -4,14 +4,9 @@ productId: x-charts
 components: CandlestickChart, CandlestickPlot
 ---
 
-# Charts - Candlestick [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
+# Charts - Candlestick [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">A candlestick chart is used to visualize price movement over time.</p>
-
-:::error
-This feature is in preview.
-It is not yet ready for production use, and its API, visuals, and behavior may change in future minor or patch releases.
-:::
 
 ## Overview
 
