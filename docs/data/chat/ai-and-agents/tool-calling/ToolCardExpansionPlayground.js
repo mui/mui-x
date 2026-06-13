@@ -16,6 +16,10 @@ import {
 } from 'docs/src/modules/components/chat-playground/controls';
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
+// The docs compile every demo in one TS project, so the `ChatToolDefinitionMap`
+// augmentation from the type-augmentation example is global. Register the `write`
+// tool here so its typed input/output line up with that registry.
+
 const conversation = {
   id: 'tool-expansion-playground',
   title: 'Tool card expansion',
