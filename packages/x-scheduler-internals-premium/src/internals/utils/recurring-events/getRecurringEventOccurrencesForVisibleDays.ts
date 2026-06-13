@@ -207,14 +207,21 @@ class RecurringEventExpander {
       occurrenceStart: occurrenceStartOriginal,
     });
 
-    const occurrenceStartDisplayTimezone = this.adapter.setTimezone(
+    // All-day occurrences span the whole day, like the base event in processEvent.
+    const occurrenceStartInDisplayTz = this.adapter.setTimezone(
       occurrenceStartOriginal,
       this.displayTimezone,
     );
-    const occurrenceEndDisplayTimezone = this.adapter.setTimezone(
+    const occurrenceEndInDisplayTz = this.adapter.setTimezone(
       occurrenceEndOriginal,
       this.displayTimezone,
     );
+    const occurrenceStartDisplayTimezone = this.event.allDay
+      ? this.adapter.startOfDay(occurrenceStartInDisplayTz)
+      : occurrenceStartInDisplayTz;
+    const occurrenceEndDisplayTimezone = this.event.allDay
+      ? this.adapter.endOfDay(occurrenceEndInDisplayTz)
+      : occurrenceEndInDisplayTz;
     occurrences.push({
       ...this.event,
       key: `${this.event.id}::${dateKey}`,
