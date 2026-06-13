@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { gridRowIdSelector } from '@mui/x-data-grid-pro';
 import type { GridColDef, GridRowId, GridValidRowModel } from '@mui/x-data-grid-pro';
+import { getRowValue as getRowValueUtil } from '@mui/x-data-grid-pro/internals';
 import type { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { GridFormulaEditCell } from '../../../components/GridFormulaEditCell';
@@ -17,7 +18,8 @@ type WrappableColumnProperty =
   | 'valueParser'
   | 'valueSetter'
   | 'preProcessEditCellProps'
-  | 'pastedValueParser';
+  | 'pastedValueParser'
+  | 'rowSpanValueGetter';
 
 interface GridColDefWithFormulaWrappers extends GridBaseColDef {
   formulaWrappedProperties: {
@@ -126,6 +128,28 @@ export const wrapColumnWithFormula = (
       wrappedPreProcessEditCellProps,
     );
   }
+
+  // Row spanning compares `rowSpanValueGetter` outputs — formula cells must
+  // compare by evaluated value, not by raw source.
+  const originalRowSpanValueGetter = column.rowSpanValueGetter;
+  const wrappedRowSpanValueGetter: GridBaseColDef['rowSpanValueGetter'] = (
+    value,
+    row,
+    colDef,
+    getterApiRef,
+  ) => {
+    const result = getFormulaResult(gridRowIdSelector(apiRef, row));
+    if (result !== null) {
+      return result.type === 'error' ? result.code : (result.value as any);
+    }
+    if (originalRowSpanValueGetter) {
+      return originalRowSpanValueGetter(value, row, colDef, getterApiRef);
+    }
+    // Replicate the row spanning fallback chain — defining a
+    // `rowSpanValueGetter` would otherwise bypass `valueGetter`.
+    return getRowValueUtil(row, colDef, apiRef) as any;
+  };
+  trackWrappedProperty('rowSpanValueGetter', originalRowSpanValueGetter, wrappedRowSpanValueGetter);
 
   const originalPastedValueParser = column.pastedValueParser;
   const wrappedPastedValueParser: GridBaseColDef['pastedValueParser'] = (

@@ -11,7 +11,12 @@ import {
   useGridEvent,
 } from '@mui/x-data-grid-pro';
 import type { GridCellCoordinates, GridEventListener } from '@mui/x-data-grid-pro';
-import { gridPivotActiveSelector, type GridStateInitializer } from '@mui/x-data-grid-pro/internals';
+import {
+  gridPivotActiveSelector,
+  GridStrategyGroup,
+  RowGroupingStrategy,
+  type GridStateInitializer,
+} from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { GridStatePremium } from '../../../models/gridStatePremium';
@@ -23,15 +28,21 @@ import {
 } from './engine';
 import {
   computeFullFormulaPass,
+  computePositionRebindFormulaPass,
   computeRowsDiffFormulaPass,
   type FormulaPassContext,
 } from './createFormulaEvaluation';
+import {
+  buildFormulaPositionSnapshot,
+  buildFormulaPositionSnapshotFromState,
+} from './gridFormulaPositionContext';
 import type {
   GridFormulaApi,
   GridFormulaLookup,
   GridFormulaPrivateApi,
 } from './gridFormulaInterfaces';
 import { gridCellFormulaResultSelector, gridFormulaLookupSelector } from './gridFormulaSelectors';
+import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 import {
   areColumnsSignaturesEqual,
   areFormulaFieldsEqual,
@@ -65,6 +76,10 @@ export const formulaStateInitializer: GridStateInitializer<
       columnsLookup,
       formulaFields,
       previousLookup: {},
+      // Sorting and filtering initialize after the formula state — the
+      // mount-time `sortedRowsSet`/`filteredRowsSet` cascade rebinds
+      // position-dependent formulas against the real view order.
+      getPositionSnapshot: () => buildFormulaPositionSnapshotFromState(premiumState),
     }).lookup;
   }
 
@@ -83,7 +98,7 @@ export const useGridFormula = (
   }, [apiRef, props.disableFormulas, props.dataSource]);
 
   const runPass = React.useCallback(
-    (mode: 'diff' | 'full'): boolean => {
+    (mode: 'diff' | 'full' | 'rebind'): GridCellCoordinates[] | null => {
       const cache = apiRef.current.caches.formula;
       const formulaFields = computeEffectiveFormulaFields();
       const previousLookup = gridFormulaLookupSelector(apiRef);
@@ -111,7 +126,7 @@ export const useGridFormula = (
         cache.formulaFields = [];
         const clearedRowKeys = Object.keys(previousLookup);
         if (clearedRowKeys.length === 0) {
-          return false;
+          return null;
         }
         const rowsLookup = gridRowsLookupSelector(apiRef);
         const changedCells: GridCellCoordinates[] = [];
@@ -127,7 +142,7 @@ export const useGridFormula = (
           formula: { ...state.formula, lookup: {} },
         }));
         apiRef.current.publishEvent('formulaEvaluationEnd', { changedCells });
-        return true;
+        return changedCells;
       }
 
       const ctx: FormulaPassContext = {
@@ -137,20 +152,75 @@ export const useGridFormula = (
         columnsLookup: gridColumnLookupSelector(apiRef),
         formulaFields,
         previousLookup,
+        getPositionSnapshot: () => buildFormulaPositionSnapshot(apiRef),
       };
-      const result =
-        mode === 'full' ? computeFullFormulaPass(ctx) : computeRowsDiffFormulaPass(ctx);
+      let result;
+      if (mode === 'full') {
+        result = computeFullFormulaPass(ctx);
+      } else if (mode === 'diff') {
+        result = computeRowsDiffFormulaPass(ctx);
+      } else {
+        result = computePositionRebindFormulaPass(ctx);
+      }
       if (result === null || result.changedCells.length === 0) {
-        return false;
+        return null;
       }
       apiRef.current.setState((state) => ({
         ...state,
         formula: { ...state.formula, lookup: result.lookup },
       }));
       apiRef.current.publishEvent('formulaEvaluationEnd', { changedCells: result.changedCells });
-      return true;
+      return result.changedCells;
     },
     [apiRef, computeEffectiveFormulaFields, props.disableFormulas, props.dataSource],
+  );
+
+  /**
+   * Refreshes the features that consumed formula values before a pass
+   * changed them. Aggregation and row spanning recompute on their own after
+   * rows-driven cascades — callers opt in only where no such cascade runs.
+   * Row grouping builds its tree before the formula pass in the same
+   * cascade, so a pass that changed cells of a grouped field re-triggers the
+   * tree build; the rebuild's own cascade is suppressed from re-triggering.
+   */
+  const triggerDependentFeatures = React.useCallback(
+    (
+      changedCells: GridCellCoordinates[] | null,
+      options: { aggregation: boolean; rowSpanning: boolean },
+    ) => {
+      if (changedCells === null || changedCells.length === 0) {
+        return;
+      }
+      if (options.aggregation) {
+        apiRef.current.applyAggregation();
+      }
+      if (options.rowSpanning) {
+        apiRef.current.resetRowSpanningState();
+      }
+      const cache = apiRef.current.caches.formula;
+      if (cache.suppressRegroupTrigger) {
+        return;
+      }
+      if (
+        apiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) !== RowGroupingStrategy.Default
+      ) {
+        return;
+      }
+      const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
+      if (groupedFields.length === 0) {
+        return;
+      }
+      if (!changedCells.some((cell) => groupedFields.includes(cell.field))) {
+        return;
+      }
+      cache.suppressRegroupTrigger = true;
+      try {
+        apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
+      } finally {
+        cache.suppressRegroupTrigger = false;
+      }
+    },
+    [apiRef],
   );
 
   /**
@@ -207,12 +277,11 @@ export const useGridFormula = (
   const applyFormulaEvaluation = React.useCallback<
     GridFormulaPrivateApi['applyFormulaEvaluation']
   >(() => {
-    if (runPass('full')) {
-      // Aggregation reads formula values through `getRowValue` — refresh it
-      // after passes that are not part of a rows update cascade.
-      apiRef.current.applyAggregation();
-    }
-  }, [apiRef, runPass]);
+    // Aggregation, row spanning and grouping consumed formula values through
+    // `getRowValue` — refresh them after passes that are not part of a rows
+    // update cascade (registry change, enablement toggle, `reevaluateFormulas`).
+    triggerDependentFeatures(runPass('full'), { aggregation: true, rowSpanning: true });
+  }, [runPass, triggerDependentFeatures]);
 
   const reevaluateFormulas = React.useCallback<GridFormulaApi['reevaluateFormulas']>(() => {
     apiRef.current.applyFormulaEvaluation();
@@ -239,8 +308,32 @@ export const useGridFormula = (
   const handleRowsSet = React.useCallback<GridEventListener<'rowsSet'>>(() => {
     // Synchronous on purpose: the filtering and sorting `rowsSet` handlers run
     // after this one in the same cascade and must read fresh formula values.
-    runPass('diff');
-  }, [runPass]);
+    // No aggregation/row-spanning refresh: both recompute later in the
+    // cascade, on `filteredRowsSet`/`sortedRowsSet`.
+    triggerDependentFeatures(runPass('diff'), { aggregation: false, rowSpanning: false });
+  }, [runPass, triggerDependentFeatures]);
+
+  const handleSortedRowsSet = React.useCallback<GridEventListener<'sortedRowsSet'>>(() => {
+    // One-shot rebind (D4): position-dependent formulas re-evaluate against
+    // the new view order exactly once; the grid never re-sorts in response.
+    // Aggregation already consumed values during this cascade — refresh it
+    // when the rebind changed something. Row spanning resets on this event
+    // after this handler, so it picks fresh values up by itself.
+    triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: false });
+  }, [runPass, triggerDependentFeatures]);
+
+  const handleFilteredRowsSet = React.useCallback<GridEventListener<'filteredRowsSet'>>(() => {
+    triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: false });
+  }, [runPass, triggerDependentFeatures]);
+
+  const handleColumnVisibilityModelChange = React.useCallback<
+    GridEventListener<'columnVisibilityModelChange'>
+  >(() => {
+    // Visibility changes do not publish `columnsChange` — they replace the
+    // columns state directly. Row spanning does not reset on this event
+    // either, so it is refreshed here when the rebind changed values.
+    triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: true });
+  }, [runPass, triggerDependentFeatures]);
 
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     const cache = apiRef.current.caches.formula;
@@ -257,16 +350,20 @@ export const useGridFormula = (
       cache.lastColumnsSignature,
     );
     if (!fieldsChanged && !signatureChanged) {
+      // The column set is stable, but columns may have moved: visibility
+      // toggles and reorders (programmatic `setColumnIndex` included) all
+      // funnel through this event. The rebind pass compares the visible
+      // field order itself and exits cheaply when nothing moved.
+      triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: false });
       return;
     }
     cache.lastColumnsSignature = columnsSignature;
     if (fieldsChanged) {
       apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     }
-    if (runPass('full')) {
-      apiRef.current.applyAggregation();
-    }
-  }, [apiRef, computeEffectiveFormulaFields, runPass]);
+    // Row spanning resets on `columnsChange` after this handler.
+    triggerDependentFeatures(runPass('full'), { aggregation: true, rowSpanning: false });
+  }, [apiRef, computeEffectiveFormulaFields, runPass, triggerDependentFeatures]);
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params, event) => {
@@ -289,6 +386,9 @@ export const useGridFormula = (
   }, [apiRef]);
 
   useGridEvent(apiRef, 'rowsSet', handleRowsSet);
+  useGridEvent(apiRef, 'sortedRowsSet', handleSortedRowsSet);
+  useGridEvent(apiRef, 'filteredRowsSet', handleFilteredRowsSet);
+  useGridEvent(apiRef, 'columnVisibilityModelChange', handleColumnVisibilityModelChange);
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'cellEditStart', handleCellEditStart);
   useGridEvent(apiRef, 'cellEditStop', handleCellEditStop);
@@ -323,4 +423,23 @@ export const useGridFormula = (
     }
     apiRef.current.applyFormulaEvaluation();
   }, [apiRef, props.disableFormulas, props.dataSource]);
+
+  const hasKickedInitialRegroup = React.useRef(false);
+  React.useEffect(() => {
+    if (hasKickedInitialRegroup.current) {
+      return;
+    }
+    hasKickedInitialRegroup.current = true;
+    // The initial row tree is built during rows state initialization, before
+    // the initial formula evaluation — when a grouped column holds formula
+    // results, rebuild the tree once so group keys use evaluated values.
+    const lookup = gridFormulaLookupSelector(apiRef);
+    const initialCells: GridCellCoordinates[] = [];
+    for (const rowKey of Object.keys(lookup)) {
+      for (const field of Object.keys(lookup[rowKey])) {
+        initialCells.push({ id: rowKey, field });
+      }
+    }
+    triggerDependentFeatures(initialCells, { aggregation: false, rowSpanning: false });
+  }, [apiRef, triggerDependentFeatures]);
 };

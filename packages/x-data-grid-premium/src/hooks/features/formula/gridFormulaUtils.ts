@@ -26,6 +26,14 @@ export function createFormulaInternalCache(
     records: new Map(),
     dependents: new Map(),
     dependentsByRowId: new Map(),
+    recordsByField: new Map(),
+    positionDependentKeys: new Set(),
+    rangeDependentsByField: new Map(),
+    positionContext: null,
+    positionContextRowIds: null,
+    positionContextFields: null,
+    positionContextVersion: 0,
+    suppressRegroupTrigger: false,
     trackedValues: new Map(),
     lastRowIdToModelLookup: null,
     formulaFields: [],
@@ -38,6 +46,13 @@ export function resetFormulaEvaluationCache(cache: GridFormulaInternalCache) {
   cache.records = new Map();
   cache.dependents = new Map();
   cache.dependentsByRowId = new Map();
+  cache.recordsByField = new Map();
+  cache.positionDependentKeys = new Set();
+  cache.rangeDependentsByField = new Map();
+  // The version counter survives: it must keep increasing across resets.
+  cache.positionContext = null;
+  cache.positionContextRowIds = null;
+  cache.positionContextFields = null;
   cache.trackedValues = new Map();
   cache.lastRowIdToModelLookup = null;
 }

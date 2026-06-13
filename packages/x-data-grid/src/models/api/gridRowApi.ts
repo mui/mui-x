@@ -160,3 +160,13 @@ export interface GridRowProPrivateApi {
    */
   updateNestedRows: (updates: GridRowModelUpdate[], nestedLevel?: string[]) => void;
 }
+
+export interface GridRowSpanningPrivateApi {
+  /**
+   * Recomputes the row spanning state from scratch.
+   * For features whose value overlays change row spanning comparisons outside
+   * the events row spanning resets on by itself. No-op when the `rowSpanning`
+   * prop is not enabled.
+   */
+  resetRowSpanningState: () => void;
+}

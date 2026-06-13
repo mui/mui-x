@@ -1,3 +1,4 @@
+import { createFormulaError } from './formulaErrors';
 import { evaluateFormula } from './formulaEvaluator';
 import { parseFormula } from './formulaParser';
 import type { FormulaResult, FormulaScalar } from './formulaTypes';
@@ -133,21 +134,135 @@ describe('formulaEvaluator', () => {
       expectValue('note + 5', 5);
     });
 
-    it('rejects positional refs until the position machinery lands', () => {
-      const result = evaluate('REF(COLUMN("price"), ROW_POSITION(1))');
+    it('resolves positional refs against the position context', () => {
+      // Default row order is the fixture order: r1 at position 1, r2 at 2.
+      expectValue('REF(COLUMN("price"), ROW_POSITION(1))', 50);
+      expectValue('REF(COLUMN("price"), ROW_POSITION(2))', 200);
+      // Default field order: price=1, quantity=2.
+      expectValue('REF(COLUMN_POSITION(1), ROW("r2"))', 200);
+      expectValue('REF(COLUMN_POSITION(2), ROW_POSITION(2))', 1);
+    });
+
+    it('resolves positional row refs in the supplied row order', () => {
+      const result = evaluate('REF(COLUMN("price"), ROW_POSITION(1))', ROWS, {
+        rowOrder: ['r2', 'r1'],
+      });
+      expect(result).to.deep.equal({ type: 'value', value: 200 });
+    });
+
+    it('returns #REF! for out-of-bounds positions', () => {
+      const result = evaluate('REF(COLUMN("price"), ROW_POSITION(3))');
       expect(result).to.deep.equal({
         type: 'error',
         code: '#REF!',
-        message: 'Positional references are not supported yet.',
+        message: 'There is no row at position 3.',
+      });
+      expectErrorCode('REF(COLUMN_POSITION(99), ROW("r1"))', '#REF!');
+    });
+  });
+
+  describe('ranges', () => {
+    it('materializes single-column ranges', () => {
+      expectValue(
+        'SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("price"), ROW("r2"))))',
+        250,
+      );
+    });
+
+    it('materializes rectangles across columns', () => {
+      expectValue(
+        'SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("quantity"), ROW("r2"))))',
+        255,
+      );
+    });
+
+    it('normalizes reversed anchors', () => {
+      expectValue(
+        'SUM(RANGE(REF(COLUMN("quantity"), ROW("r2")), REF(COLUMN("price"), ROW("r1"))))',
+        255,
+      );
+    });
+
+    it('accepts positional anchors', () => {
+      expectValue(
+        'SUM(RANGE(REF(COLUMN_POSITION(1), ROW_POSITION(1)), REF(COLUMN_POSITION(2), ROW_POSITION(2))))',
+        255,
+      );
+    });
+
+    it('materializes rectangles row-major (left to right, then top to bottom)', () => {
+      expectValue(
+        'CONCAT(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("quantity"), ROW("r2"))))',
+        '5042001',
+      );
+    });
+
+    it('returns #REF! when an anchor row has no position in the current view', () => {
+      const result = evaluate(
+        'SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("price"), ROW("r2"))))',
+        ROWS,
+        { rowOrder: ['r1'] },
+      );
+      expect(result).to.deep.equal({
+        type: 'error',
+        code: '#REF!',
+        message: 'The row with id "r2" has no position in the current view.',
       });
     });
 
-    it('rejects ranges until the position machinery lands', () => {
-      expectErrorCode(
-        'SUM(RANGE(REF(COLUMN("price"), ROW("r1")), REF(COLUMN("price"), ROW("r2"))))',
-        '#REF!',
-      );
-      expectErrorCode('SUM(COLUMN_VALUES("price"))', '#REF!');
+    it('materializes COLUMN_VALUES over the position-context rows in view order', () => {
+      expectValue('SUM(COLUMN_VALUES("price"))', 250);
+      expectValue('CONCAT(COLUMN_VALUES("name"))', 'ChairDesk');
+    });
+
+    it('materializes COLUMN_VALUES over only the rows in the view', () => {
+      const result = evaluate('SUM(COLUMN_VALUES("price"))', ROWS, { rowOrder: ['r1'] });
+      expect(result).to.deep.equal({ type: 'value', value: 50 });
+    });
+
+    it('returns #REF! for COLUMN_VALUES of an unknown field', () => {
+      const result = evaluate('SUM(COLUMN_VALUES("missing"))');
+      expect(result).to.deep.equal({
+        type: 'error',
+        code: '#REF!',
+        message: 'The field "missing" does not exist.',
+      });
+    });
+
+    it('skips empty cells in aggregating functions', () => {
+      // `note` is null on r1 — COUNTA only sees the non-empty cell.
+      expectValue('COUNTA(COLUMN_VALUES("note"))', 1);
+      expectValue('COUNT(COLUMN_VALUES("price"))', 2);
+    });
+
+    it('propagates the first error value inside a range', () => {
+      const rows: TestRow[] = [
+        { id: 'r1', price: 50 },
+        { id: 'r2', price: createFormulaError('#DIV/0!') },
+      ];
+      const result = evaluate('SUM(COLUMN_VALUES("price"))', rows);
+      expect((result as { code: string }).code).to.equal('#DIV/0!');
+    });
+
+    it('returns #VALUE! for a range in scalar position', () => {
+      expectErrorCode('1 + COLUMN_VALUES("price")', '#VALUE!');
+      expectErrorCode('ABS(COLUMN_VALUES("price"))', '#VALUE!');
+    });
+
+    it('rejects ranges in lazy scalar positions', () => {
+      // The range gate applies at thunk resolution time for lazy functions.
+      expectErrorCode('IF(TRUE, COLUMN_VALUES("price"), 0)', '#VALUE!');
+      // IFERROR catches the gate error produced by its own lazy argument.
+      expectValue('IFERROR(COLUMN_VALUES("price"), "fallback")', 'fallback');
+    });
+
+    it('returns #VALUE! for a range as the formula result', () => {
+      const result = evaluate('COLUMN_VALUES("price")');
+      expect(result).to.deep.equal({
+        type: 'error',
+        code: '#VALUE!',
+        message: 'A range cannot be the result of a formula.',
+      });
     });
   });
 

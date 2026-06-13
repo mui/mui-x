@@ -137,6 +137,17 @@ interface ResolvedAnchor {
   rowIndex: number;
 }
 
+/**
+ * The normalized rectangle a `RANGE(...)` node spans in a position context.
+ * All indexes are 1-based and inclusive.
+ */
+export interface FormulaRangeRectangle {
+  fromColumn: number;
+  toColumn: number;
+  fromIndex: number;
+  toIndex: number;
+}
+
 function resolveColumnIndex(
   selector: FormulaColumnSelector,
   context: FormulaPositionContext,
@@ -197,6 +208,32 @@ function resolveAnchor(
 }
 
 /**
+ * Resolves a `RANGE` node's anchors against a position context and normalizes
+ * them (`RANGE(B5, A1)` spans the same rectangle as `RANGE(A1, B5)`). Shared
+ * by dependency binding and range materialization so the two can never
+ * disagree about the rectangle a range covers.
+ */
+export function resolveFormulaRangeRectangle(
+  range: FormulaRangeNode,
+  context: FormulaPositionContext,
+): FormulaRangeRectangle | FormulaErrorValue {
+  const start = resolveAnchor(range.start, context);
+  if (isFormulaErrorValue(start)) {
+    return start;
+  }
+  const end = resolveAnchor(range.end, context);
+  if (isFormulaErrorValue(end)) {
+    return end;
+  }
+  return {
+    fromColumn: Math.min(start.columnIndex, end.columnIndex),
+    toColumn: Math.max(start.columnIndex, end.columnIndex),
+    fromIndex: Math.min(start.rowIndex, end.rowIndex),
+    toIndex: Math.max(start.rowIndex, end.rowIndex),
+  };
+}
+
+/**
  * Resolves static dependencies into concrete cell keys and column records
  * against a position-context snapshot. Stable cell refs (`ROW(id)` +
  * `COLUMN(field)`) bind without consulting positions — a stable ref to a row
@@ -251,27 +288,23 @@ export function bindFormulaDependencies(
   }
 
   for (const range of dependencies.ranges) {
-    const start = resolveAnchor(range.start, context);
-    if (isFormulaErrorValue(start)) {
-      bound.errors.push(start);
+    const rectangle = resolveFormulaRangeRectangle(range, context);
+    if (isFormulaErrorValue(rectangle)) {
+      bound.errors.push(rectangle);
       continue;
     }
-    const end = resolveAnchor(range.end, context);
-    if (isFormulaErrorValue(end)) {
-      bound.errors.push(end);
-      continue;
-    }
-
-    // Anchors normalize: RANGE(B5, A1) spans the same rectangle as RANGE(A1, B5).
-    const fromColumn = Math.min(start.columnIndex, end.columnIndex);
-    const toColumn = Math.max(start.columnIndex, end.columnIndex);
-    const fromIndex = Math.min(start.rowIndex, end.rowIndex);
-    const toIndex = Math.max(start.rowIndex, end.rowIndex);
-
-    for (let columnIndex = fromColumn; columnIndex <= toColumn; columnIndex += 1) {
+    for (
+      let columnIndex = rectangle.fromColumn;
+      columnIndex <= rectangle.toColumn;
+      columnIndex += 1
+    ) {
       const field = context.getFieldAtPosition(columnIndex);
       if (field !== undefined) {
-        bound.columnIntervals.push({ field, fromIndex, toIndex });
+        bound.columnIntervals.push({
+          field,
+          fromIndex: rectangle.fromIndex,
+          toIndex: rectangle.toIndex,
+        });
       }
     }
   }

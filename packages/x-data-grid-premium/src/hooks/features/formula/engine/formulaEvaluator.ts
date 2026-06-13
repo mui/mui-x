@@ -2,8 +2,11 @@ import type {
   FormulaAstNode,
   FormulaBinaryExpressionNode,
   FormulaCellRefNode,
+  FormulaColumnValuesNode,
   FormulaFunctionCallNode,
+  FormulaRangeNode,
 } from './formulaAst';
+import { resolveFormulaRangeRectangle } from './formulaDependencies';
 import { createFormulaError, isFormulaErrorValue } from './formulaErrors';
 import type { FormulaErrorValue } from './formulaErrors';
 import { isFormulaRangeValue } from './formulaTypes';
@@ -67,13 +70,28 @@ function evaluateCellRef(
   node: FormulaCellRefNode,
   context: FormulaEvaluationContext,
 ): FormulaScalar | FormulaErrorValue {
-  // Positional selectors evaluate when the position-context machinery lands;
-  // until then they parse but deterministically resolve to #REF!.
-  if (node.column.kind === 'position' || node.row.kind === 'position') {
-    return createFormulaError('#REF!', 'Positional references are not supported yet.');
+  let field: string;
+  if (node.column.kind === 'field') {
+    field = node.column.field;
+  } else {
+    // The same message dependency binding produces for the same failure —
+    // which of the two surfaces depends only on evaluation order.
+    const resolvedField = context.position.getFieldAtPosition(node.column.index);
+    if (resolvedField === undefined) {
+      return createFormulaError('#REF!', `There is no column at position ${node.column.index}.`);
+    }
+    field = resolvedField;
   }
-  const { field } = node.column;
-  const { id } = node.row;
+  let id: FormulaRowId;
+  if (node.row.kind === 'id') {
+    id = node.row.id;
+  } else {
+    const resolvedId = context.position.getRowIdAtPosition(node.row.index);
+    if (resolvedId === undefined) {
+      return createFormulaError('#REF!', `There is no row at position ${node.row.index}.`);
+    }
+    id = resolvedId;
+  }
   if (!context.hasField(field)) {
     return createFormulaError('#REF!', `The field "${field}" does not exist.`);
   }
@@ -81,6 +99,72 @@ function evaluateCellRef(
     return createFormulaError('#REF!', `The row with id "${id}" does not exist.`);
   }
   return normalizeResolvedValue(context.getCellValue({ id, field }));
+}
+
+/**
+ * Materializes a `RANGE(...)` rectangle into a flat value list, row-major
+ * (left to right, then top to bottom). The first error value inside the
+ * rectangle propagates, consistent with the strict propagation rule.
+ */
+function evaluateRange(
+  node: FormulaRangeNode,
+  context: FormulaEvaluationContext,
+): FormulaRangeValue | FormulaErrorValue {
+  const rectangle = resolveFormulaRangeRectangle(node, context.position);
+  if (isFormulaErrorValue(rectangle)) {
+    return rectangle;
+  }
+  const values: FormulaScalar[] = [];
+  for (let rowIndex = rectangle.fromIndex; rowIndex <= rectangle.toIndex; rowIndex += 1) {
+    // Anchor rows resolved, so every position between them exists.
+    const id = context.position.getRowIdAtPosition(rowIndex);
+    if (id === undefined) {
+      continue;
+    }
+    for (
+      let columnIndex = rectangle.fromColumn;
+      columnIndex <= rectangle.toColumn;
+      columnIndex += 1
+    ) {
+      const field = context.position.getFieldAtPosition(columnIndex);
+      if (field === undefined) {
+        continue;
+      }
+      const value = context.getCellValue({ id, field });
+      if (isFormulaErrorValue(value)) {
+        return value;
+      }
+      values.push(normalizeResolvedValue(value) as FormulaScalar);
+    }
+  }
+  return { kind: 'range', values };
+}
+
+/**
+ * Materializes `COLUMN_VALUES("field")`: the field's values over every row of
+ * the position context (sorted + filtered data rows), in view order. The
+ * field does not need a position — hidden columns still hold values.
+ */
+function evaluateColumnValues(
+  node: FormulaColumnValuesNode,
+  context: FormulaEvaluationContext,
+): FormulaRangeValue | FormulaErrorValue {
+  if (!context.hasField(node.field)) {
+    return createFormulaError('#REF!', `The field "${node.field}" does not exist.`);
+  }
+  const values: FormulaScalar[] = [];
+  for (let rowIndex = 1; rowIndex <= context.position.rowCount; rowIndex += 1) {
+    const id = context.position.getRowIdAtPosition(rowIndex);
+    if (id === undefined) {
+      continue;
+    }
+    const value = context.getCellValue({ id, field: node.field });
+    if (isFormulaErrorValue(value)) {
+      return value;
+    }
+    values.push(normalizeResolvedValue(value) as FormulaScalar);
+  }
+  return { kind: 'range', values };
 }
 
 function evaluateBinaryExpression(
@@ -244,10 +328,9 @@ function evaluateNode(node: FormulaAstNode, context: FormulaEvaluationContext): 
     case 'cellRef':
       return evaluateCellRef(node, context);
     case 'range':
+      return evaluateRange(node, context);
     case 'columnValues':
-      // Range evaluation lands with the position-context machinery; until
-      // then ranges parse but deterministically resolve to #REF!.
-      return createFormulaError('#REF!', 'Range references are not supported yet.');
+      return evaluateColumnValues(node, context);
     case 'unaryExpression': {
       const operand = evaluateNode(node.operand, context);
       if (isFormulaErrorValue(operand)) {

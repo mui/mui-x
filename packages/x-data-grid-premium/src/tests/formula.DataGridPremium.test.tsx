@@ -12,6 +12,7 @@ import {
   GRID_FORMULA_FUNCTIONS,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
+import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const baselineProps: DataGridPremiumProps = {
@@ -113,7 +114,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       ]);
     });
 
-    it('should report positional references as not supported yet', async () => {
+    it('should resolve positional references against the view order', async () => {
       await render(
         <Test
           rows={[{ id: 0, price: 2, total: '=REF(COLUMN("price"), ROW_POSITION(1))' }]}
@@ -123,10 +124,11 @@ describe('<DataGridPremium /> - Formulas', () => {
           ]}
         />,
       );
-      expect(getColumnValues(1)).to.deep.equal(['#REF!']);
-      const result = apiRef.current!.getCellFormulaResult(0, 'total');
-      expect(result?.type).to.equal('error');
-      expect(result?.type === 'error' && result.message).to.include('not supported yet');
+      expect(getColumnValues(1)).to.deep.equal(['2']);
+      expect(apiRef.current!.getCellFormulaResult(0, 'total')).to.deep.equal({
+        type: 'value',
+        value: 2,
+      });
     });
 
     it('should bypass the column valueFormatter for error results but not for value results', async () => {
@@ -370,6 +372,544 @@ describe('<DataGridPremium /> - Formulas', () => {
     });
   });
 
+  describe('ranges and positional references', () => {
+    const summaryColumns = [
+      { field: 'price', type: 'number' },
+      { field: 'summary', type: 'number', allowFormulas: true },
+    ] as DataGridPremiumProps['columns'];
+
+    it('should sum a column with COLUMN_VALUES', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, summary: '=SUM(COLUMN_VALUES("price"))' },
+            { id: 1, price: 3 },
+            { id: 2, price: 5 },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['10', '', '']);
+    });
+
+    it('should recompute only the range dependents on a single-cell edit', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, summary: '=SUM(COLUMN_VALUES("price"))' },
+            { id: 1, price: 3 },
+            { id: 2, price: 5 },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      const listener = spy();
+      apiRef.current!.subscribeEvent('formulaEvaluationEnd', listener);
+
+      await act(async () => apiRef.current!.updateRows([{ id: 1, price: 10 }]));
+
+      expect(getColumnValues(1)).to.deep.equal(['17', '', '']);
+      expect(listener.callCount).to.equal(1);
+      expect(listener.lastCall.args[0].changedCells).to.deep.equal([{ id: 0, field: 'summary' }]);
+    });
+
+    it('should evaluate formula cells inside a range before the range consumer', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, base: 2, price: '=base * 2', summary: '=SUM(COLUMN_VALUES("price"))' },
+            { id: 1, base: 3, price: 4 },
+          ]}
+          columns={[
+            { field: 'base', type: 'number' },
+            { field: 'price', type: 'number', allowFormulas: true },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(2)).to.deep.equal(['8', '']);
+
+      await act(async () => apiRef.current!.updateRows([{ id: 0, base: 10 }]));
+      expect(getColumnValues(1)).to.deep.equal(['20', '4']);
+      expect(getColumnValues(2)).to.deep.equal(['24', '']);
+    });
+
+    it('should materialize COLUMN_VALUES over the filtered row set', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, category: 'keep', price: 2, summary: '=SUM(COLUMN_VALUES("price"))' },
+            { id: 1, category: 'keep', price: 3 },
+            { id: 2, category: 'drop', price: 5 },
+          ]}
+          columns={[
+            { field: 'category' },
+            { field: 'price', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
+
+      await act(async () =>
+        apiRef.current!.setFilterModel({
+          items: [{ field: 'category', operator: 'equals', value: 'keep' }],
+        }),
+      );
+      expect(getColumnValues(2)).to.deep.equal(['5', '']);
+
+      await act(async () => apiRef.current!.setFilterModel({ items: [] }));
+      expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
+    });
+
+    it('should sum COLUMN_VALUES of a hidden column', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, summary: '=SUM(COLUMN_VALUES("price"))' },
+            { id: 1, price: 3 },
+          ]}
+          columns={summaryColumns}
+          initialState={{ columns: { columnVisibilityModel: { price: false } } }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['5', '']);
+    });
+
+    it('should evaluate RANGE rectangles and track edits inside the bounds', async () => {
+      await render(
+        <Test
+          rows={[
+            {
+              id: 0,
+              p1: 1,
+              p2: 2,
+              total: '=SUM(RANGE(REF(COLUMN("p1"), ROW(0)), REF(COLUMN("p2"), ROW(1))))',
+            },
+            { id: 1, p1: 3, p2: 4 },
+            { id: 2, p1: 100, p2: 100 },
+          ]}
+          columns={[
+            { field: 'p1', type: 'number' },
+            { field: 'p2', type: 'number' },
+            { field: 'total', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
+
+      const listener = spy();
+      apiRef.current!.subscribeEvent('formulaEvaluationEnd', listener);
+
+      // A change inside the rectangle recomputes the consumer.
+      await act(async () => apiRef.current!.updateRows([{ id: 1, p2: 14 }]));
+      expect(getColumnValues(2)).to.deep.equal(['20', '', '']);
+      expect(listener.callCount).to.equal(1);
+
+      // A change outside the rectangle does not.
+      await act(async () => apiRef.current!.updateRows([{ id: 2, p1: 7 }]));
+      expect(listener.callCount).to.equal(1);
+      expect(getColumnValues(2)).to.deep.equal(['20', '', '']);
+    });
+
+    it('should resolve a RANGE anchor without a view position as #REF! and recover', async () => {
+      await render(
+        <Test
+          rows={[
+            {
+              id: 0,
+              category: 'keep',
+              price: 2,
+              summary: '=SUM(RANGE(REF(COLUMN("price"), ROW(0)), REF(COLUMN("price"), ROW(2))))',
+            },
+            { id: 1, category: 'keep', price: 3 },
+            { id: 2, category: 'drop', price: 5 },
+          ]}
+          columns={[
+            { field: 'category' },
+            { field: 'price', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
+
+      // The anchor row is filtered out — it has no position to resolve against.
+      await act(async () =>
+        apiRef.current!.setFilterModel({
+          items: [{ field: 'category', operator: 'equals', value: 'keep' }],
+        }),
+      );
+      expect(getColumnValues(2)).to.deep.equal(['#REF!', '']);
+      const result = apiRef.current!.getCellFormulaResult(0, 'summary');
+      expect(result?.type === 'error' && result.message).to.include(
+        'has no position in the current view',
+      );
+
+      await act(async () => apiRef.current!.setFilterModel({ items: [] }));
+      expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
+    });
+
+    it('should mark a COLUMN_VALUES aggregation over its own column as #CYCLE!', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, total: '=SUM(COLUMN_VALUES("total"))' },
+            { id: 1, price: 3, total: 5 },
+          ]}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'total', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['#CYCLE!', '5']);
+    });
+
+    it('should rebind positional references after sorting', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 30, top: '=REF(COLUMN("price"), ROW_POSITION(1))' },
+            { id: 1, price: 10, top: 5 },
+            { id: 2, price: 20, top: 7 },
+          ]}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'top', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(apiRef.current!.getCellFormulaResult(0, 'top')).to.deep.equal({
+        type: 'value',
+        value: 30,
+      });
+
+      await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'asc' }]));
+      // The first view row is now id 1.
+      expect(apiRef.current!.getCellFormulaResult(0, 'top')).to.deep.equal({
+        type: 'value',
+        value: 10,
+      });
+    });
+
+    it('should not re-sort after rebinding a position-dependent sorted column', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, item: 'a', price: 30, posVal: '=REF(COLUMN("price"), ROW_POSITION(3))' },
+            { id: 1, item: 'b', price: 10, posVal: '=REF(COLUMN("price"), ROW_POSITION(2))' },
+            { id: 2, item: 'c', price: 20, posVal: '=REF(COLUMN("price"), ROW_POSITION(1))' },
+          ]}
+          columns={[
+            { field: 'item' },
+            { field: 'price', type: 'number' },
+            { field: 'posVal', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      // Initial view order [a, b, c]: posVal = [price@3, price@2, price@1].
+      expect(getColumnValues(2)).to.deep.equal(['20', '10', '30']);
+
+      const sortListener = spy();
+      apiRef.current!.subscribeEvent('sortedRowsSet', sortListener);
+
+      await act(async () => apiRef.current!.setSortModel([{ field: 'posVal', sort: 'asc' }]));
+
+      // The comparator consumed the values as of when it ran: [b, a, c].
+      expect(getColumnValues(0)).to.deep.equal(['b', 'a', 'c']);
+      // One-shot rebind (D4): the values re-evaluated against the new order
+      // exactly once — and even though they now disagree with the ascending
+      // sort, the grid did not re-sort.
+      expect(getColumnValues(2)).to.deep.equal(['30', '20', '10']);
+      expect(sortListener.callCount).to.equal(1);
+    });
+
+    it('should rebind COLUMN_POSITION references when column visibility changes', async () => {
+      await render(
+        <Test
+          rows={[{ id: 0, price: 5, tax: 7, summary: '=REF(COLUMN_POSITION(1), ROW(0))' }]}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'tax', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(2)).to.deep.equal(['5']);
+
+      await act(async () => apiRef.current!.setColumnVisibility('price', false));
+      // `tax` is the first visible column now.
+      expect(getColumnValues(1)).to.deep.equal(['7']);
+
+      await act(async () => apiRef.current!.setColumnVisibility('price', true));
+      expect(getColumnValues(2)).to.deep.equal(['5']);
+    });
+
+    it('should rebind COLUMN_POSITION references on programmatic column reorder', async () => {
+      await render(
+        <Test
+          rows={[{ id: 0, price: 5, tax: 7, summary: '=REF(COLUMN_POSITION(1), ROW(0))' }]}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'tax', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(2)).to.deep.equal(['5']);
+
+      await act(async () => apiRef.current!.setColumnIndex('tax', 0));
+      expect(getColumnValues(2)).to.deep.equal(['7']);
+    });
+
+    it('should exclude pinned rows from the position context', async () => {
+      await render(
+        <Test
+          rows={[{ id: 0, price: 5, top: '=REF(COLUMN("price"), ROW_POSITION(1))' }]}
+          pinnedRows={{ top: [{ id: 99, price: 1000, top: 1 }] }}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'top', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(apiRef.current!.getCellFormulaResult(0, 'top')).to.deep.equal({
+        type: 'value',
+        value: 5,
+      });
+    });
+
+    it('should include rows added with updateRows in COLUMN_VALUES', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, summary: '=SUM(COLUMN_VALUES("price"))' },
+            { id: 1, price: 3 },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['5', '']);
+
+      await act(async () => apiRef.current!.updateRows([{ id: 2, price: 10 }]));
+      expect(getColumnValues(1)).to.deep.equal(['15', '', '']);
+    });
+
+    it('should drop rows removed with updateRows from COLUMN_VALUES', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, summary: '=SUM(COLUMN_VALUES("price"))' },
+            { id: 1, price: 3 },
+            { id: 2, price: 10 },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['15', '', '']);
+
+      await act(async () => apiRef.current!.updateRows([{ id: 2, _action: 'delete' }]));
+      expect(getColumnValues(1)).to.deep.equal(['5', '']);
+    });
+
+    it('should resolve RANGE rectangles positionally: a re-sort changes the covered rows', async () => {
+      await render(
+        <Test
+          rows={[
+            {
+              id: 0,
+              price: 1,
+              summary: '=SUM(RANGE(REF(COLUMN("price"), ROW(0)), REF(COLUMN("price"), ROW(1))))',
+            },
+            { id: 1, price: 8 },
+            { id: 2, price: 2 },
+            { id: 3, price: 4 },
+          ]}
+          columns={summaryColumns}
+        />,
+      );
+      // Anchors at view positions 1 and 2: rows 0 and 1.
+      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 9,
+      });
+
+      await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'asc' }]));
+      // View order is now [0, 2, 3, 1]: the anchors sit at positions 1 and 4,
+      // so the rectangle covers every row (D6: positional bind-time resolution).
+      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 15,
+      });
+    });
+
+    it('should not re-filter after rebinding a position-dependent filtered column', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 10, posVal: '=REF(COLUMN("price"), ROW_POSITION(1))' },
+            { id: 1, price: 5, posVal: '=REF(COLUMN("price"), ROW_POSITION(2))' },
+            { id: 2, price: 7, posVal: '=REF(COLUMN("price"), ROW_POSITION(3))' },
+          ]}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'posVal', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['10', '5', '7']);
+
+      const filterListener = spy();
+      apiRef.current!.subscribeEvent('filteredRowsSet', filterListener);
+
+      await act(async () =>
+        apiRef.current!.setFilterModel({
+          items: [{ field: 'posVal', operator: '>=', value: 7 }],
+        }),
+      );
+
+      // The filter consumed [10, 5, 7] and kept rows 0 and 2. The rebind then
+      // re-evaluated row 2 against the two-row view, where position 3 does not
+      // exist — but the grid never re-filters (one-shot, D4): the row stays
+      // visible showing #REF!.
+      expect(getColumnValues(1)).to.deep.equal(['10', '#REF!']);
+      expect(filterListener.callCount).to.equal(1);
+    });
+
+    it('should materialize COLUMN_VALUES over all pages', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 1, summary: '=SUM(COLUMN_VALUES("price"))' },
+            { id: 1, price: 2 },
+            { id: 2, price: 4 },
+            { id: 3, price: 8 },
+          ]}
+          columns={summaryColumns}
+          pagination
+          initialState={{ pagination: { paginationModel: { pageSize: 2, page: 0 } } }}
+          pageSizeOptions={[2]}
+        />,
+      );
+      // The position context ignores pagination: all 4 rows take part.
+      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 15,
+      });
+    });
+
+    it('should resolve references with a custom getRowId', async () => {
+      await render(
+        <Test
+          rows={[
+            { code: 'a', price: 2, total: '=REF(COLUMN("price"), ROW("b")) + price' },
+            { code: 'b', price: 5, total: '=REF(COLUMN("price"), ROW_POSITION(1))' },
+          ]}
+          getRowId={(row) => row.code}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'total', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['7', '2']);
+    });
+
+    it('should materialize escaped literals inside COLUMN_VALUES as their display value', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, note: "'=x", summary: '=CONCAT(COLUMN_VALUES("note"))' },
+            { id: 1, note: 'y' },
+          ]}
+          columns={[
+            { field: 'note', allowFormulas: true },
+            { field: 'summary', allowFormulas: true },
+          ]}
+        />,
+      );
+      // The escaped literal contributes its unescaped display value, not the
+      // raw `'=x` source.
+      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: '=xy',
+      });
+    });
+
+    it('should give tree-data parents a row position', async () => {
+      await render(
+        <Test
+          treeData
+          getTreeDataPath={(row) => row.path}
+          defaultGroupingExpansionDepth={-1}
+          rows={[
+            { id: 0, path: ['A'], price: 10, top: '=REF(COLUMN("price"), ROW_POSITION(1))' },
+            { id: 1, path: ['A', 'B'], price: 5, top: '=REF(COLUMN("price"), ROW_POSITION(2))' },
+          ]}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'top', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      // The parent is a real data row: position 1 is the parent, 2 the child.
+      expect(apiRef.current!.getCellFormulaResult(0, 'top')).to.deep.equal({
+        type: 'value',
+        value: 10,
+      });
+      expect(apiRef.current!.getCellFormulaResult(1, 'top')).to.deep.equal({
+        type: 'value',
+        value: 5,
+      });
+    });
+
+    it('should exclude the checkbox selection column from column positions', async () => {
+      await render(
+        <Test
+          checkboxSelection
+          rows={[{ id: 0, price: 5, tax: 7, summary: '=REF(COLUMN_POSITION(1), ROW(0))' }]}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'tax', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      // Position 1 is the first data column, not the `__check__` column.
+      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 5,
+      });
+    });
+
+    it('should report #REF! in dependents only when a referenced row is removed', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2 },
+            { id: 1, price: 3, calc: '=REF(COLUMN("price"), ROW(0))' },
+            { id: 2, price: 4, calc: '=price * 2' },
+          ]}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'calc', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['', '2', '8']);
+
+      const listener = spy();
+      apiRef.current!.subscribeEvent('formulaEvaluationEnd', listener);
+
+      await act(async () => apiRef.current!.updateRows([{ id: 0, _action: 'delete' }]));
+
+      expect(getColumnValues(1)).to.deep.equal(['#REF!', '8']);
+      expect(listener.callCount).to.equal(1);
+      expect(listener.lastCall.args[0].changedCells).to.deep.equal([{ id: 1, field: 'calc' }]);
+    });
+  });
+
   describe('export', () => {
     it('should export evaluated values to CSV', async () => {
       await render(<Test />);
@@ -462,6 +1002,25 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(3)).to.deep.equal(['6', '5', '6']);
     });
 
+    it('should paste range formulas and bind them to the current view', async () => {
+      const { user } = await render(<Test cellSelection disableRowSelectionOnClick />);
+
+      const cell = getCell(2, 3);
+      await user.click(cell);
+
+      const pasteEvent = new Event('paste');
+      // @ts-ignore
+      pasteEvent.clipboardData = { getData: () => '=SUM(COLUMN_VALUES("price"))' };
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
+      await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(2).total).to.equal('=SUM(COLUMN_VALUES("price"))');
+      });
+      // price column: 2 + 1 + 4.
+      expect(getColumnValues(3)).to.deep.equal(['6', '5', '7']);
+    });
+
     it('should paste a plain value over an existing formula', async () => {
       const { user } = await render(<Test cellSelection disableRowSelectionOnClick />);
 
@@ -487,6 +1046,244 @@ describe('<DataGridPremium /> - Formulas', () => {
       await render(<Test initialState={{ aggregation: { model: { total: 'sum' } } }} />);
       await waitFor(() => {
         expect(getColumnValues(3)).to.deep.equal(['6', '5', '8', '19' /* footer */]);
+      });
+    });
+  });
+
+  describe('row grouping', () => {
+    const bucketRows = [
+      { id: 0, price: 2, bucket: '=IF(price > 2, "high", "low")' },
+      { id: 1, price: 3, bucket: '=IF(price > 2, "high", "low")' },
+      { id: 2, price: 1, bucket: 'low' },
+    ];
+    const bucketColumns = [
+      { field: 'price', type: 'number' },
+      { field: 'bucket', allowFormulas: true },
+    ] as DataGridPremiumProps['columns'];
+
+    it('should group by evaluated values from the initial render', async () => {
+      await render(
+        <Test
+          rows={bucketRows}
+          columns={bucketColumns}
+          initialState={{ rowGrouping: { model: ['bucket'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      // Plain `'low'` cells and formula cells evaluating to `'low'` share a group.
+      expect(getColumnValues(0)).to.deep.equal(['low (2)', '', '', 'high (1)', '']);
+    });
+
+    it('should move rows between groups when a dependency changes', async () => {
+      await render(
+        <Test
+          rows={bucketRows}
+          columns={bucketColumns}
+          initialState={{ rowGrouping: { model: ['bucket'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['low (2)', '', '', 'high (1)', '']);
+
+      await act(async () => apiRef.current!.updateRows([{ id: 1, price: 0 }]));
+      expect(getColumnValues(0)).to.deep.equal(['low (3)', '', '', '']);
+    });
+
+    it('should group error results by their error code', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, bucket: '=1 / 0' },
+            { id: 1, price: 3, bucket: '=1 / 0' },
+          ]}
+          columns={bucketColumns}
+          initialState={{ rowGrouping: { model: ['bucket'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['#DIV/0! (2)', '', '']);
+    });
+
+    it('should pass the evaluated value to groupingValueGetter', async () => {
+      await render(
+        <Test
+          rows={bucketRows}
+          columns={[
+            { field: 'price', type: 'number' },
+            {
+              field: 'bucket',
+              allowFormulas: true,
+              groupingValueGetter: (value) => `bucket-${value}`,
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['bucket'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['bucket-low (2)', '', '', 'bucket-high (1)', '']);
+    });
+
+    it('should exclude autogenerated group rows from COLUMN_VALUES', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, category: 'x', price: 2, summary: '=SUM(COLUMN_VALUES("price"))' },
+            { id: 1, category: 'x', price: 3 },
+            { id: 2, category: 'y', price: 5 },
+          ]}
+          columns={[
+            { field: 'category' },
+            { field: 'price', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+          initialState={{ rowGrouping: { model: ['category'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 10,
+      });
+    });
+
+    it('should exclude autogenerated group rows from row positions', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, category: 'x', price: 2, summary: '=REF(COLUMN("price"), ROW_POSITION(1))' },
+            { id: 1, category: 'x', price: 3 },
+            { id: 2, category: 'y', price: 5 },
+          ]}
+          columns={[
+            { field: 'category' },
+            { field: 'price', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+          initialState={{ rowGrouping: { model: ['category'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      // Position 1 is the first leaf, not the autogenerated group header
+      // (whose `price` would resolve to null).
+      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 2,
+      });
+    });
+
+    it('should exclude the grouping column from column positions', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, category: 'x', price: 5, summary: '=REF(COLUMN_POSITION(1), ROW(0))' },
+            { id: 1, category: 'y', price: 7 },
+          ]}
+          columns={[
+            { field: 'category' },
+            { field: 'price', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+          initialState={{ rowGrouping: { model: ['category'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      // The autogenerated grouping column takes no position: position 1 is
+      // the first data column, `category` (a leaf cell of the grouping
+      // column would resolve to null).
+      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 'x',
+      });
+    });
+  });
+
+  describe.skipIf(isJSDOM)('row spanning', () => {
+    function getSpannedCells() {
+      const privateApi = unwrapPrivateAPI(apiRef.current!);
+      return privateApi.virtualizer.store.state.rowSpanning.caches.spannedCells;
+    }
+
+    const spanColumns = [
+      { field: 'price', type: 'number' },
+      { field: 'quantity', type: 'number' },
+      { field: 'total', type: 'number', allowFormulas: true },
+    ] as DataGridPremiumProps['columns'];
+
+    it('should span cells whose evaluated values are equal', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, quantity: 3, total: '=price * quantity' },
+            { id: 1, price: 3, quantity: 2, total: '=6' },
+            { id: 2, price: 4, quantity: 1, total: 8 },
+          ]}
+          columns={spanColumns}
+          rowSpanning
+        />,
+      );
+      await waitFor(() => {
+        // Different sources, equal evaluated values (6): rows 0 and 1 span.
+        expect(getSpannedCells()).to.deep.equal({ 0: { 2: 2 } });
+      });
+    });
+
+    it('should not span identical sources with different evaluated values', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, quantity: 3, total: '=price * quantity' },
+            { id: 1, price: 3, quantity: 5, total: '=price * quantity' },
+          ]}
+          columns={spanColumns}
+          rowSpanning
+        />,
+      );
+      await microtasks();
+      expect(getSpannedCells()).to.deep.equal({});
+    });
+
+    it('should split the span when an edit changes an evaluated value', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, quantity: 3, total: '=price * quantity' },
+            { id: 1, price: 3, quantity: 2, total: '=6' },
+          ]}
+          columns={spanColumns}
+          rowSpanning
+        />,
+      );
+      await waitFor(() => {
+        expect(getSpannedCells()).to.deep.equal({ 0: { 2: 2 } });
+      });
+
+      await act(async () => apiRef.current!.updateRows([{ id: 0, price: 5 }]));
+      await waitFor(() => {
+        expect(getSpannedCells()).to.deep.equal({});
+      });
+    });
+
+    it('should refresh spans after reevaluateFormulas', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 2, quantity: 3, total: '=price * quantity' },
+            { id: 1, price: 3, quantity: 2, total: '=6' },
+          ]}
+          columns={spanColumns}
+          rowSpanning
+        />,
+      );
+      await waitFor(() => {
+        expect(getSpannedCells()).to.deep.equal({ 0: { 2: 2 } });
+      });
+
+      // In-place mutation: no rows cascade runs, the formula pass triggers
+      // the row spanning reset itself.
+      apiRef.current!.getRow(0).price = 5;
+      await act(async () => apiRef.current!.reevaluateFormulas());
+      await waitFor(() => {
+        expect(getSpannedCells()).to.deep.equal({});
       });
     });
   });
