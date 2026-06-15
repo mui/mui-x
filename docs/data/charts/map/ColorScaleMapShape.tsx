@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -41,7 +40,6 @@ export default function ColorScaleMapShape() {
   const [colorMap, setColorMap] = React.useState<ColorMapType>('continuous');
   const [unknownColor, setUnknownColor] = React.useState(true);
 
-  const theme = useTheme();
   return (
     <Stack spacing={2} sx={{ width: '100%', maxWidth: 800 }}>
       <Stack
