@@ -34,7 +34,6 @@ export default function getBabelConfig(api) {
     removePropTypesPlugin[1].mode = 'unsafe-wrap';
     removePropTypesPlugin[1].ignoreFilenames ??= [];
     removePropTypesPlugin[1].ignoreFilenames.push('DataGrid.tsx', 'DataGridPro.tsx');
-    baseConfig.plugins.push(wrapRemainingPropTypesPlugin);
   }
   const displayNamePlugin = baseConfig.plugins.find(
     (p) => p[2] === '@mui/internal-babel-plugin-display-name',
