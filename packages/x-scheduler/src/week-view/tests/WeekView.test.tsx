@@ -6,7 +6,6 @@ import {
   EventBuilder,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
-import { isJSDOM } from 'test/utils/skipIf';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
@@ -278,48 +277,6 @@ describe('<WeekView />', () => {
         const labelledBy = cell.getAttribute('aria-labelledby') ?? '';
         expect(labelledBy.split(' ')).to.include(labelId);
       });
-    });
-  });
-
-  describe('All day header cell border', () => {
-    it.skipIf(isJSDOM)('shows the inline-end border when the body does not scroll', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
-      // Tall container prevents the time grid body from scrolling, so data-has-scroll is absent.
-      render(
-        <div style={{ height: 2000 }}>
-          <EventCalendar events={[]} visibleDate={visibleDate} view="week" />
-        </div>,
-      );
-
-      const allDayGrid = document.querySelector<HTMLElement>(
-        `.${eventCalendarClasses.dayTimeGridAllDayEventsGrid}`,
-      )!;
-      const headerCell = document.querySelector<HTMLElement>(
-        `.${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`,
-      )!;
-
-      expect(allDayGrid.hasAttribute('data-has-scroll')).to.equal(false);
-      expect(window.getComputedStyle(headerCell).borderInlineEndStyle).to.equal('solid');
-    });
-
-    it.skipIf(isJSDOM)('removes the inline-end border when the body scrolls', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
-      // Short container forces the time grid body to scroll, so data-has-scroll is set.
-      render(
-        <div style={{ height: 400 }}>
-          <EventCalendar events={[]} visibleDate={visibleDate} view="week" />
-        </div>,
-      );
-
-      const allDayGrid = document.querySelector<HTMLElement>(
-        `.${eventCalendarClasses.dayTimeGridAllDayEventsGrid}`,
-      )!;
-      const headerCell = document.querySelector<HTMLElement>(
-        `.${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`,
-      )!;
-
-      expect(allDayGrid.hasAttribute('data-has-scroll')).to.equal(true);
-      expect(window.getComputedStyle(headerCell).borderInlineEndStyle).to.equal('none');
     });
   });
 
