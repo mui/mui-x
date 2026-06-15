@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 
-interface DocumentScrollLockState {
+interface ElementScrollLockState {
   count: number;
   restore: () => void;
 }
@@ -11,34 +11,47 @@ interface DocumentScrollLock {
   unlock: () => void;
 }
 
-// Lock state is kept per-document so that calls are idempotent
-// and so concurrent grids in the same document restore the original styles exactly once.
-const lockStateByDocument = new WeakMap<Document, DocumentScrollLockState>();
+// Lock state is kept per element so that calls are idempotent and so overlapping
+// scroll-container chains restore the original styles exactly once.
+const lockStateByElement = new WeakMap<HTMLElement, ElementScrollLockState>();
+
+const SCROLLABLE_OVERFLOW = /(auto|scroll|overlay)/;
 
 /**
- * Prevents the page from scrolling while drag is in progress.
+ * Prevents the page from scrolling while a drag is in progress.
  *
  * During drag-and-drop the browser auto-scrolls the nearest scrollable ancestor
- * when the pointer approaches the viewport edge. While reordering rows this
- * scrolls the whole document away from the grid, making the drag unusable
- * (see https://github.com/mui/mui-x/issues/22718). The grid already provides its
- * own in-viewport auto-scroll through `GridScrollArea`, so the caller locks the
- * outer page scroll on drag start and unlocks it on drag end.
+ * when the pointer approaches the viewport edge, then bubbles outwards. While
+ * reordering rows this scrolls the grid's scrollable ancestors (and ultimately the
+ * whole document) away from the grid, making the drag unusable (see
+ * https://github.com/mui/mui-x/issues/22718). The grid already provides its own
+ * in-viewport auto-scroll through `GridScrollArea`, so the caller locks every
+ * vertically scrollable ancestor of the grid on drag start and unlocks them on drag
+ * end.
  *
- * The hook tracks the locked document and restores the scroll automatically if
- * the consumer unmounts mid-drag.
+ * The hook tracks the locked elements and restores the scroll automatically if the
+ * consumer unmounts mid-drag.
  */
 export function useDocumentScrollLock(): DocumentScrollLock {
-  const lockedDocument = React.useRef<Document | null>(null);
+  const lockedElements = React.useRef<HTMLElement[]>([]);
 
   const lock = React.useCallback((element: Element | null | undefined) => {
-    lockedDocument.current = element?.ownerDocument ?? null;
-    lockDocumentScroll(lockedDocument.current);
+    // Release any lock this instance already holds so repeated `lock` calls
+    // (without an intervening `unlock`) stay balanced.
+    lockedElements.current.forEach(unlockElementScroll);
+    lockedElements.current = [];
+
+    if (!element) {
+      return;
+    }
+    const elements = getElementsToLock(element);
+    elements.forEach(lockElementScroll);
+    lockedElements.current = elements;
   }, []);
 
   const unlock = React.useCallback(() => {
-    unlockDocumentScroll(lockedDocument.current);
-    lockedDocument.current = null;
+    lockedElements.current.forEach(unlockElementScroll);
+    lockedElements.current = [];
   }, []);
 
   // Restore the page scroll if the consumer unmounts while a drag is active.
@@ -47,65 +60,125 @@ export function useDocumentScrollLock(): DocumentScrollLock {
   return React.useMemo(() => ({ lock, unlock }), [lock, unlock]);
 }
 
-function lockDocumentScroll(doc: Document | null): void {
-  if (!doc) {
-    return;
+function isVerticallyScrollable(element: Element, view: Window): boolean {
+  const style = view.getComputedStyle(element);
+  // Row reordering is a vertical operation, so only vertical scroll containers can
+  // run away during the drag. Horizontal-only containers are left untouched.
+  return SCROLLABLE_OVERFLOW.test(style.overflowY) && element.scrollHeight > element.clientHeight;
+}
+
+/**
+ * Collects every element the browser could vertically auto-scroll while dragging
+ * inside `element`: its vertically scrollable ancestors plus the document scroll
+ * container. The grid's own scroller is intentionally excluded — the walk starts
+ * above `element` — so the grid keeps scrolling itself through `GridScrollArea`.
+ */
+function getElementsToLock(element: Element): HTMLElement[] {
+  const doc = element.ownerDocument;
+  const view = doc.defaultView;
+  if (!view) {
+    return [];
   }
 
-  const existingState = lockStateByDocument.get(doc);
+  const elements: HTMLElement[] = [];
+
+  let current = element.parentElement;
+  while (current) {
+    if (isVerticallyScrollable(current, view)) {
+      elements.push(current);
+    }
+    current = current.parentElement;
+  }
+
+  // The document scroll container (and `<body>` as a safety net for browsers that
+  // keep auto-scrolling the root element). Their overflow is usually `visible`, so
+  // they are not picked up by the ancestor walk above.
+  const scrollingElement = (doc.scrollingElement ?? doc.documentElement) as HTMLElement | null;
+  if (scrollingElement) {
+    elements.push(scrollingElement);
+  }
+  if (doc.body) {
+    elements.push(doc.body);
+  }
+
+  return Array.from(new Set(elements));
+}
+
+/**
+ * Sizes of the scrollbars reclaimed by `overflow: hidden`, used to compensate the
+ * content with padding so it does not shift while dragging (0 with overlay
+ * scrollbars). `vertical` is the vertical scrollbar width, `horizontal` the
+ * horizontal scrollbar height.
+ */
+function getScrollbarSizes(
+  element: HTMLElement,
+  view: Window,
+  style: CSSStyleDeclaration,
+): { vertical: number; horizontal: number } {
+  const doc = element.ownerDocument;
+  // For the root scroll container, `clientWidth`/`clientHeight` exclude the
+  // scrollbars while the window's inner size includes them — the reliable way to
+  // measure the page scrollbars.
+  if (element === doc.scrollingElement || element === doc.documentElement) {
+    return {
+      vertical: Math.max(0, view.innerWidth - element.clientWidth),
+      horizontal: Math.max(0, view.innerHeight - element.clientHeight),
+    };
+  }
+  // For a regular container: offset size = content + padding + border + scrollbar,
+  // client size = content + padding, so the scrollbar is the remainder less borders.
+  const borderX = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
+  const borderY = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+  return {
+    vertical: Math.max(0, element.offsetWidth - element.clientWidth - borderX),
+    horizontal: Math.max(0, element.offsetHeight - element.clientHeight - borderY),
+  };
+}
+
+function lockElementScroll(element: HTMLElement): void {
+  const existingState = lockStateByElement.get(element);
   if (existingState) {
     existingState.count += 1;
     return;
   }
 
-  const view = doc.defaultView;
-  const scrollingElement = (doc.scrollingElement ?? doc.documentElement) as HTMLElement | null;
-  if (!view || !scrollingElement) {
+  const view = element.ownerDocument.defaultView;
+  if (!view) {
     return;
   }
 
-  // The scrollbar width reclaimed by hiding the overflow, compensated as padding
-  // so the page content does not shift horizontally while dragging.
-  const scrollbarWidth = view.innerWidth - scrollingElement.clientWidth;
+  const style = view.getComputedStyle(element);
+  // In RTL the vertical scrollbar sits on the left, so compensate that side.
+  const verticalSide = style.direction === 'rtl' ? 'paddingLeft' : 'paddingRight';
+  const { vertical, horizontal } = getScrollbarSizes(element, view, style);
 
-  // Lock both the scrolling element and `<body>`: the former is the actual scroll
-  // container, the latter is a safety net for browsers that keep auto-scrolling
-  // the root element.
-  const elements = Array.from(
-    new Set([scrollingElement, doc.body].filter(Boolean) as HTMLElement[]),
-  );
-  const previousStyles = new Map<HTMLElement, { overflow: string; paddingRight: string }>();
+  const previousOverflow = element.style.overflow;
+  const previousVerticalPadding = element.style[verticalSide];
+  const previousPaddingBottom = element.style.paddingBottom;
 
-  elements.forEach((element) => {
-    previousStyles.set(element, {
-      overflow: element.style.overflow,
-      paddingRight: element.style.paddingRight,
-    });
-    element.style.overflow = 'hidden';
-  });
-
-  if (scrollbarWidth > 0) {
-    const currentPaddingRight = parseFloat(view.getComputedStyle(scrollingElement).paddingRight);
-    scrollingElement.style.paddingRight = `${currentPaddingRight + scrollbarWidth}px`;
+  // Hide both axes (so the `overflow` shorthand is set), compensating each
+  // scrollbar so neither a vertical nor a horizontal scrollbar disappearing shifts
+  // the content.
+  element.style.overflow = 'hidden';
+  if (vertical > 0) {
+    element.style[verticalSide] = `${(parseFloat(style[verticalSide]) || 0) + vertical}px`;
+  }
+  if (horizontal > 0) {
+    element.style.paddingBottom = `${(parseFloat(style.paddingBottom) || 0) + horizontal}px`;
   }
 
-  lockStateByDocument.set(doc, {
+  lockStateByElement.set(element, {
     count: 1,
     restore: () => {
-      previousStyles.forEach((styles, element) => {
-        element.style.overflow = styles.overflow;
-        element.style.paddingRight = styles.paddingRight;
-      });
+      element.style.overflow = previousOverflow;
+      element.style[verticalSide] = previousVerticalPadding;
+      element.style.paddingBottom = previousPaddingBottom;
     },
   });
 }
 
-function unlockDocumentScroll(doc: Document | null): void {
-  if (!doc) {
-    return;
-  }
-
-  const state = lockStateByDocument.get(doc);
+function unlockElementScroll(element: HTMLElement): void {
+  const state = lockStateByElement.get(element);
   if (!state) {
     return;
   }
@@ -113,6 +186,6 @@ function unlockDocumentScroll(doc: Document | null): void {
   state.count -= 1;
   if (state.count <= 0) {
     state.restore();
-    lockStateByDocument.delete(doc);
+    lockStateByElement.delete(element);
   }
 }
