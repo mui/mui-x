@@ -9,6 +9,5 @@
   "muiName": "MuiChatRoot",
   "filename": "/packages/x-chat-headless/src/chat/ChatRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/composition/\">Chat - Headless composition</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/composition/\">Chat - Headless composition</a></li></ul>"
 }

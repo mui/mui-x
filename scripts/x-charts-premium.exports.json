@@ -676,6 +676,8 @@
   { "name": "ScatterPlot", "kind": "Function" },
   { "name": "ScatterPlotPremium", "kind": "Function" },
   { "name": "ScatterPlotPremiumProps", "kind": "Interface" },
+  { "name": "ScatterPlotPremiumSlotProps", "kind": "Interface" },
+  { "name": "ScatterPlotPremiumSlots", "kind": "Interface" },
   { "name": "ScatterPlotProps", "kind": "Interface" },
   { "name": "ScatterPlotSlotProps", "kind": "Interface" },
   { "name": "ScatterPlotSlots", "kind": "Interface" },
