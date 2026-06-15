@@ -150,7 +150,7 @@ function CopilotMessageFooter() {
         },
       });
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.warn('[Copilot] thumbs feedback failed:', err);
     } finally {
       setPending(null);

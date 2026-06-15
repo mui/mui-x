@@ -346,6 +346,9 @@ interface ConsumeOptions {
    * accumulate it into a per-messageId envelope cache that survives the
    * stream and is replayable later via `applyEnvelope` (used by
    * `switchToVariant` for the A/B preview/switch flow).
+   * @param messageId
+   * @param toolName
+   * @param body
    */
   onAssembledBody?: (messageId: string, toolName: ToolName, body: string) => void;
   /**
@@ -357,12 +360,17 @@ interface ConsumeOptions {
    * the user picks them.
    *
    * Defaults to apply-everything (existing single-stream behaviour).
+   * @param messageId
    */
   shouldApply?: (messageId: string | undefined) => boolean;
   /**
    * Surfaces `message-metadata` chunks (the A/B preamble and any later
    * frames). The executor hook uses this to populate its per-messageId
    * variant map so `shouldApply` can decide whether to dispatch.
+   * @param messageId
+   * @param metadata
+   * @param metadata.abVariant
+   * @param metadata.abPairId
    */
   onMessageMetadata?: (
     messageId: string,
@@ -384,7 +392,6 @@ async function consumeForExecutor(
   const toolsById = new Map<string, ToolStreamState>();
   let nextToolIndex = 0;
   let currentMessageId: string | undefined;
-  let resultsReported = false;
   const reportedMessageIds = new Set<string>();
 
   const dispatchOptionsFor = (messageId: string | undefined) => ({
@@ -407,7 +414,6 @@ async function consumeForExecutor(
       return;
     }
     reportedMessageIds.add(currentMessageId);
-    resultsReported = true;
     onResults(currentMessageId, {
       applied: [...executor.results.applied],
       skipped: [...executor.results.skipped],
@@ -1052,6 +1058,7 @@ export interface GridCopilotExecutorHandle {
    * the previously-applied sibling (via `history.undo`) and replay the
    * picked variant's cached envelope. No-op when the target is already
    * applied or has no cached envelope (e.g. legacy single-response).
+   * @param targetMessageId
    */
   switchToVariant: (targetMessageId: string) => GridCopilotExecutionResult | null;
   // The current executor instance — useful for inspection in tests.

@@ -93,6 +93,7 @@ export interface CreateGridCopilotAbAdapterOptions {
    * relative-passthrough default if the consumer wants to rewrite the
    * URL before it reaches the inner stream callback (e.g. point the
    * twin at a debug proxy).
+   * @param twinUrl
    */
   resolveTwinUrl?: (twinUrl: string) => string;
 }

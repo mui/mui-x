@@ -81,6 +81,7 @@ export interface GridCopilotApi {
      * Best-effort: per-call failures are swallowed (the live grid may have
      * changed since the snapshot, in which case Regenerate's "render against
      * current state" semantics still apply).
+     * @param messages
      */
     hydrateQueryResultsFromMessages: (messages: readonly ChatMessage[]) => void;
   };

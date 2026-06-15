@@ -11,7 +11,7 @@ import type {
 } from './executor/types';
 import { ALL_COMMAND_HANDLERS } from './executor/commandRegistry';
 import { ALL_PATCH_HANDLERS } from './executor/patchRegistry';
-import type { GridHostAdapter, GridCopilotApi } from './gridHostAdapter';
+import type { GridHostAdapter } from './gridHostAdapter';
 import type { GridStateDocument } from './executor/stateDocument';
 
 type XCtx = XCopilotExecutorContext<GridHostAdapter, GridStateDocument>;

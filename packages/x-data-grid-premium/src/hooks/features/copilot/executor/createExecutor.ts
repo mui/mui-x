@@ -1,19 +1,21 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { makeExecutor as makeXCopilotExecutor } from '@mui/x-copilot';
+import { makeExecutor as makeXCopilotExecutor , buildCommandRegistry, buildPatchRegistry } from '@mui/x-copilot';
 import type { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../../models/dataGridPremiumProps';
 import type { GridCopilotEnvelope, GridCopilotExecutionResult } from './types';
 import { buildGuards } from './guards';
 import { createGridHostAdapter } from '../gridHostAdapter';
 import { gridCommandPack, gridReconcilerPack } from '../gridPacks';
-import { buildCommandRegistry, buildPatchRegistry } from '@mui/x-copilot';
 
 export type ToolName = 'setGridState' | 'runCommands';
 
 export interface ExecutorOptions {
   apiRef: RefObject<GridPrivateApiPremium>;
   props: DataGridPremiumProcessedProps;
-  /** Optional progress callback invoked after every dispatched line. */
+  /**
+   * Optional progress callback invoked after every dispatched line.
+   * @param result
+   */
   onProgress?: (result: GridCopilotExecutionResult) => void;
   /**
    * Optional shared map for tracking the original column index of fields
