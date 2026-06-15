@@ -10,6 +10,7 @@ import {
   selectorProgressiveTotalRounds,
   selectorShouldUseProgressiveRenderer,
 } from './useProgressiveRendering.selectors';
+import { selectorChartZoomIsInteracting } from '../useChartCartesianAxis';
 import type { RendererType } from '../../../../ScatterChart';
 
 const EMPTY_PLANS: ReadonlyMap<string, readonly SeriesId[]> = new Map();
@@ -30,6 +31,9 @@ const REVEAL_ROUNDS_PER_FRAME = 1;
  * give the browser more CPU headroom at the cost of a slower paint.
  */
 const REVEAL_FRAMES_SKIPPED = 0;
+
+/** Rounds kept revealed while zooming or panning, so each interaction frame stays cheap. */
+const INTERACTION_REVEALED_ROUNDS = 1;
 
 /**
  * Chart-wide progressive rendering coordinator.
@@ -76,10 +80,22 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
   );
 
   const plans = store.use(selectorProgressivePlans) ?? EMPTY_PLANS;
+  const isZoomInteracting = store.use(selectorChartZoomIsInteracting) ?? false;
 
   React.useEffect(() => {
     const startTotal = selectorProgressiveTotalRounds(store.state);
     if (startTotal === 0) {
+      return undefined;
+    }
+    // While zooming/panning, paint only the first batch so the interaction stays fluid.
+    if (isZoomInteracting) {
+      const capped = Math.min(startTotal, INTERACTION_REVEALED_ROUNDS);
+      if (store.state.progressiveRendering.revealedRounds !== capped) {
+        store.set('progressiveRendering', {
+          ...store.state.progressiveRendering,
+          revealedRounds: capped,
+        });
+      }
       return undefined;
     }
     if (typeof requestAnimationFrame !== 'function') {
@@ -95,7 +111,7 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
     // Tracked in a closure variable, not derived inside a state updater (those
     // must be pure and StrictMode double-invokes them, which would schedule
     // the animation-frame chain twice).
-    let revealed = 0;
+    let revealed = store.state.progressiveRendering.revealedRounds;
 
     function scheduleNext() {
       let remaining = REVEAL_FRAMES_SKIPPED;
@@ -134,7 +150,7 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
       cancelled = true;
       cancelAnimationFrame(frame);
     };
-  }, [plans, store]);
+  }, [plans, isZoomInteracting, store]);
 
   return { instance: { registerProgressivePlan } };
 };

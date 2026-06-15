@@ -1,6 +1,7 @@
 import { type SeriesId } from '../../../../models/seriesType/common';
 import type { RendererType } from '../../../../ScatterChart';
 import { type ChartPluginSignature } from '../../models';
+import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 
 export interface UseProgressiveRenderingState {
   progressiveRendering: {
@@ -38,4 +39,5 @@ export interface UseProgressiveRenderingInstance {
 export type UseProgressiveRenderingSignature = ChartPluginSignature<{
   state: UseProgressiveRenderingState;
   instance: UseProgressiveRenderingInstance;
+  dependencies: [UseChartCartesianAxisSignature];
 }>;
