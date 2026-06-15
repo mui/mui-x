@@ -171,3 +171,15 @@ its visibility. Hidden series are skipped by `MapShapePlot` so the underlying ba
 stays visible.
 
 {{"demo": "VisibleMapShape.js"}}
+
+## Common practice
+
+### Removing Antarctica
+
+World maps often has no data for Antarctica.
+There are two ways to remove it:.
+
+- Render only the countries in series by removing the `<GeoDataPlot />`
+- Filter out Antarctica from the `geoData`
+
+{{"demo": "RemoveAntarctica.js"}}
