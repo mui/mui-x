@@ -5,6 +5,11 @@ async function main() {
     startCommand: 'pnpm serve --no-request-logging -p 3001',
     host: 'http://localhost:3001/',
     seedUrls: ['/x'],
+    // The crawler defaults to 4 concurrent page fetches. The docs export has
+    // thousands of pages, so raise this to shorten the link-check phase and keep
+    // the overall build within Netlify's timeout. Runs after static generation,
+    // so it does not compete with the memory-bound page-generation workers.
+    concurrency: 8,
     // Target paths to ignore during link checking
     ignoredPaths: [
       // Next.js build output (hashed JS/CSS chunks and their `.js.map` source
