@@ -68,8 +68,6 @@ When `hitAreaRadius` is `"item"`, the user must click directly on the point, and
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
 
-If you compose your own chart, the click handler is wired differently—see [Handling clicks](#handling-clicks).
-
 ## Bubble chart
 
 Scatter chart supports size and color scales to represent two additional values per mark.
@@ -239,22 +237,6 @@ The `data-drawing-container` attribute marks children as part of the drawing are
 
 See [Composition—clipping](/x/react-charts/composition/#clipping) for details.
 :::
-
-### Handling clicks
-
-By default, the scatter chart handles clicks at the chart level rather than on the `ScatterPlot` element, because it selects the closest point to the pointer—see [Interaction](#interaction).
-
-So `onItemClick` goes on `ChartsDataProvider`, along with `hitAreaRadius` and `disableHitArea`.
-
-```jsx
-<ChartsDataProvider onItemClick={handleItemClick}>{/* ... */}</ChartsDataProvider>
-```
-
-When `disableHitArea` is `true` (with the default `svg-single` renderer), the user must click directly on a marker, so pass `onItemClick` to `ScatterPlot` instead.
-
-```jsx
-<ScatterPlot onItemClick={handleItemClick} />
-```
 
 ### Regression line
 
