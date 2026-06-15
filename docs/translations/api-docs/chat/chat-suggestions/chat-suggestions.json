@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "alwaysVisible": {
-      "description": "Render the suggestions even when the thread already contains messages. By default <code>SuggestionsRoot</code> hides itself once a message exists, since the empty state is its primary use case. Set this to <code>true</code> to use it inline after an assistant reply (e.g. for follow-up prompts)."
+      "description": "By default, suggestions only render when the active thread has no messages (treating them as an empty-state affordance). Set to <code>true</code> to render the suggestions regardless of message count — e.g. as a &quot;next prompt&quot; row above the composer in an active conversation."
     },
     "autoSubmit": { "description": "Whether to auto-submit when a suggestion is clicked." },
     "suggestions": {

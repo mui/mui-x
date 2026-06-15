@@ -41,10 +41,10 @@ export interface SuggestionsRootProps extends Omit<
    */
   autoSubmit?: boolean;
   /**
-   * Render the suggestions even when the thread already contains messages.
-   * By default `SuggestionsRoot` hides itself once a message exists, since
-   * the empty state is its primary use case. Set this to `true` to use it
-   * inline after an assistant reply (e.g. for follow-up prompts).
+   * By default, suggestions only render when the active thread has no messages
+   * (treating them as an empty-state affordance). Set to `true` to render the
+   * suggestions regardless of message count — e.g. as a "next prompt" row above
+   * the composer in an active conversation.
    * @default false
    */
   alwaysVisible?: boolean;

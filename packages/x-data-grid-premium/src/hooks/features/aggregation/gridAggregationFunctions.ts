@@ -18,10 +18,6 @@ const sumAgg: GridAggregationFunction<unknown, number> = {
 
 const avgAgg: GridAggregationFunction<unknown, number> = {
   apply: ({ values }) => {
-    if (values.length === 0) {
-      return null;
-    }
-
     let sum = 0;
     let valuesCount = 0;
     for (let i = 0; i < values.length; i += 1) {
@@ -32,9 +28,6 @@ const avgAgg: GridAggregationFunction<unknown, number> = {
       }
     }
 
-    // Guard on the count of numeric values, not on `sum`: a group whose values
-    // average to exactly `0` (e.g. `[-5, 5]` or `[0, 0]`) has a valid average of
-    // `0` and must not be reported as `null`.
     if (valuesCount === 0) {
       return null;
     }

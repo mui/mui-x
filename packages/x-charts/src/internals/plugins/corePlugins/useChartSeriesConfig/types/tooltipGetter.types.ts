@@ -72,16 +72,21 @@ export interface TooltipGetterAxesConfig {
   radius?: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
 }
 
-export type TooltipGetter<SeriesType extends ChartSeriesType> = (params: {
+export interface TooltipGetterParams<SeriesType extends ChartSeriesType> {
   series: ChartSeriesDefaultized<SeriesType>;
   axesConfig: TooltipGetterAxesConfig;
   getColor: ColorGetter<SeriesType>;
   identifier: SeriesItemIdentifierWithType<SeriesType> | null;
-}) =>
+}
+export type TooltipGetterResult<SeriesType extends ChartSeriesType> =
   | (SeriesType extends 'radar'
       ? ItemTooltipWithMultipleValues<SeriesType>
       : ItemTooltip<SeriesType>)
   | null;
+
+export type TooltipGetter<SeriesType extends ChartSeriesType> = (
+  params: TooltipGetterParams<SeriesType>,
+) => TooltipGetterResult<SeriesType>;
 
 /**
  * If `axisId` is set to undefined, the default axis will be used.

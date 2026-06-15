@@ -102,7 +102,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
     axisId,
   } = props;
 
-  const { top, height } = useDrawingArea();
+  const { top, height, left, width } = useDrawingArea();
   const xAxisScale = useXScale(axisId);
 
   const xPosition = xAxisScale(x as any);
@@ -114,6 +114,10 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
         'error',
       );
     }
+    return null;
+  }
+
+  if (xPosition < left || xPosition > left + width) {
     return null;
   }
   const d = `M ${xPosition} ${top} l 0 ${height}`;

@@ -90,6 +90,7 @@ describe('processStream', () => {
       role: 'assistant',
       status: 'sent',
       parts: [{ type: 'text', text: 'Hello world', state: 'done' }],
+      createdAt: expect.any(String),
     });
   });
 
@@ -418,6 +419,50 @@ describe('processStream', () => {
     expect(onFinish.mock.calls[0][0].isError).toBe(true);
   });
 
+  it('binds to options.messageId when the start chunk omits a messageId', async () => {
+    const store = new ChatStore();
+
+    const result = await processStream(
+      store,
+      // `start`/`finish` without a messageId — the type requires one, but a
+      // loosely-typed adapter or JSON-parsed wire chunk can drop it at runtime.
+      createStream([
+        { type: 'start' },
+        { type: 'text-start', id: 'text-1' },
+        { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+        { type: 'text-end', id: 'text-1' },
+        { type: 'finish', finishReason: 'stop' },
+      ] as unknown as ChatMessageChunk[]),
+      { conversationId: 'c1', messageId: 'fallback-1' },
+    );
+
+    expect(result.messageId).toBe('fallback-1');
+    expect(store.state.messagesById['fallback-1'].parts).toEqual([
+      { type: 'text', text: 'Hello', state: 'done' },
+    ]);
+    expect(store.state.messagesById['fallback-1'].status).toBe('sent');
+  });
+
+  it('lets a start chunk messageId override the options.messageId fallback', async () => {
+    const store = new ChatStore();
+
+    const result = await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'from-backend' },
+        { type: 'text-start', id: 'text-1' },
+        { type: 'text-delta', id: 'text-1', delta: 'Hi' },
+        { type: 'text-end', id: 'text-1' },
+        { type: 'finish', messageId: 'from-backend', finishReason: 'stop' },
+      ]),
+      { conversationId: 'c1', messageId: 'fallback-1' },
+    );
+
+    expect(result.messageId).toBe('from-backend');
+    expect(store.state.messagesById['from-backend']).toBeDefined();
+    expect(store.state.messagesById['fallback-1']).toBeUndefined();
+  });
+
   it('merges registered tool chunks into a persistent tool part and calls onToolCall', async () => {
     const store = new ChatStore();
     const onToolCall = vi.fn();
@@ -596,6 +641,34 @@ describe('processStream', () => {
     expect(onToolCall).toHaveBeenCalledTimes(4);
     expect(onToolCall.mock.calls.at(0)?.[0].toolCall.state).toBe('approval-requested');
     expect(onToolCall.mock.calls.at(-1)?.[0].toolCall.state).toBe('output-denied');
+  });
+
+  it('keeps two interleaved parallel text streams isolated by streamId (#10)', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'm1' },
+        { type: 'text-start', id: 'A' },
+        { type: 'text-start', id: 'B' },
+        { type: 'text-delta', id: 'A', delta: 'A1' },
+        { type: 'text-delta', id: 'B', delta: 'B1' },
+        { type: 'text-delta', id: 'A', delta: 'A2' },
+        { type: 'text-end', id: 'A' },
+        { type: 'text-delta', id: 'B', delta: 'B2' },
+        { type: 'text-end', id: 'B' },
+        { type: 'finish', messageId: 'm1', finishReason: 'stop' },
+      ]),
+      { flushInterval: 0 },
+    );
+
+    const parts = store.state.messagesById.m1.parts;
+    // Each parallel stream gets its own part — neither stream adopts the other's
+    // buffer, even though their deltas are interleaved.
+    expect(parts).toHaveLength(2);
+    expect(parts[0]).toEqual({ type: 'text', text: 'A1A2', state: 'done' });
+    expect(parts[1]).toEqual({ type: 'text', text: 'B1B2', state: 'done' });
   });
 
   it('keeps multiple parts in a single assistant response', async () => {
@@ -784,6 +857,7 @@ describe('processStream', () => {
           toolCallId: 'tool-1',
           toolName: 'search',
           input: { query: 'weather' },
+          approvalId: 'approval-1',
         },
         { type: 'finish', messageId: 'a1' },
       ]),
@@ -794,6 +868,7 @@ describe('processStream', () => {
     expect(toolPart.toolInvocation.toolCallId).toBe('tool-1');
     expect(toolPart.toolInvocation.toolName).toBe('search');
     expect(toolPart.toolInvocation.input).toEqual({ query: 'weather' });
+    expect(toolPart.toolInvocation.approvalId).toBe('approval-1');
     expect(toolPart.toolInvocation.state).toBe('approval-requested');
   });
 
@@ -809,6 +884,7 @@ describe('processStream', () => {
           toolCallId: 'tool-1',
           toolName: 'dynamic-search',
           input: { query: 'weather' },
+          approvalId: 'approval-1',
           dynamic: true,
         },
         { type: 'finish', messageId: 'a1' },
@@ -819,6 +895,7 @@ describe('processStream', () => {
       .parts[0] as ChatDynamicToolMessagePart<'dynamic-search'>;
     expect(toolPart.type).toBe('dynamic-tool');
     expect(toolPart.toolInvocation.toolName).toBe('dynamic-search');
+    expect(toolPart.toolInvocation.approvalId).toBe('approval-1');
     expect(toolPart.toolInvocation.state).toBe('approval-requested');
   });
 

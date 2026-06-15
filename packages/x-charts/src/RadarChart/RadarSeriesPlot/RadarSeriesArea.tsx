@@ -57,6 +57,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
         return (
           <path
             key={id}
+            data-series={id}
             {...getPathProps({
               seriesId: id,
               points,
@@ -91,6 +92,10 @@ RadarSeriesArea.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when an area is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

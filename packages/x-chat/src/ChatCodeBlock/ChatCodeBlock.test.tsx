@@ -137,7 +137,7 @@ describe('ChatCodeBlock', () => {
     vi.useRealTimers();
   });
 
-  it('clipboard failure keeps "Copy" state', async () => {
+  it('clipboard failure exposes "Copy failed" state', async () => {
     render(<ChatCodeBlock>code</ChatCodeBlock>);
 
     const writeText = installClipboardMock();
@@ -149,6 +149,6 @@ describe('ChatCodeBlock', () => {
     });
 
     expect(writeText).toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Copy' })).not.toBe(null);
+    expect(screen.getByRole('button', { name: 'Copy failed' })).not.toBe(null);
   });
 });

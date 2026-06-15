@@ -1050,66 +1050,32 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
 
     describe('`avg`', () => {
+      const applyAvgAggregation = (values: unknown[]) =>
+        GRID_AGGREGATION_FUNCTIONS.avg.apply({
+          values,
+          field: 'value',
+          groupId: 0,
+        });
+
       it('should work with numbers', () => {
-        expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            {
-              values: [0, 10, 12, 23],
-              field: 'value',
-              groupId: 0,
-            },
-            apiRef.current!,
-          ),
-        ).to.equal(11.25);
+        expect(applyAvgAggregation([0, 10, 12, 23])).to.equal(11.25);
       });
 
       it('should ignore non-numbers', () => {
         expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            {
-              values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
-              field: 'value',
-              groupId: 0,
-            },
-            apiRef.current!,
-          ),
+          applyAvgAggregation([0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true]),
         ).to.equal(11.25);
       });
 
-      it('should return `0` when the values average to exactly zero', () => {
-        expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            { values: [-5, 5], field: 'value', groupId: 0 },
-            apiRef.current!,
-          ),
-        ).to.equal(0);
-        expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            { values: [0, 0], field: 'value', groupId: 0 },
-            apiRef.current!,
-          ),
-        ).to.equal(0);
-        expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            { values: [-10, 4, 6], field: 'value', groupId: 0 },
-            apiRef.current!,
-          ),
-        ).to.equal(0);
+      it('should return 0 when the numeric values average to 0', () => {
+        expect(applyAvgAggregation([-5, 5])).to.equal(0);
+        expect(applyAvgAggregation([0, 0])).to.equal(0);
+        expect(applyAvgAggregation([-10, 4, 6])).to.equal(0);
+        expect(applyAvgAggregation([0, 'a', '', undefined, null, NaN, {}, true])).to.equal(0);
       });
 
-      it('should return `null` when there are no numeric values', () => {
-        expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            { values: [], field: 'value', groupId: 0 },
-            apiRef.current!,
-          ),
-        ).to.equal(null);
-        expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            { values: ['a', '', null, undefined, NaN], field: 'value', groupId: 0 },
-            apiRef.current!,
-          ),
-        ).to.equal(null);
+      it('should return null when there are no numeric values', () => {
+        expect(applyAvgAggregation(['a', '', undefined, null, NaN, {}, true])).to.equal(null);
       });
     });
 
@@ -1195,6 +1161,60 @@ describe('<DataGridPremium /> - Aggregation', () => {
           ),
         ).to.equal(3);
       });
+    });
+  });
+
+  describe('colDef: multiSelect', () => {
+    it('should expose only `size` in the column menu Aggregation select', async () => {
+      const { user } = await render(
+        <Test
+          rows={[
+            { id: 0, tags: ['React'] },
+            { id: 1, tags: ['Vue'] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue'],
+            },
+          ]}
+        />,
+      );
+
+      await act(async () => apiRef.current?.showColumnMenu('tags'));
+      await user.click(screen.getByLabelText('Aggregation'));
+      const listbox = screen.getByRole('listbox', { name: 'Aggregation' });
+      const optionTexts = within(listbox)
+        .getAllByRole('option')
+        .map((o) => o.textContent);
+      // Listbox always renders an empty placeholder ("...") before the allowed functions.
+      expect(optionTexts).to.deep.equal(['...', 'size']);
+    });
+
+    it('should aggregate with `size` and render the count in the footer', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, tags: ['React'] },
+            { id: 1, tags: ['Vue', 'TypeScript'] },
+            { id: 2, tags: [] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue', 'TypeScript'],
+            },
+          ]}
+          initialState={{ aggregation: { model: { tags: 'size' } } }}
+        />,
+      );
+
+      const tagsValues = getColumnValues(1);
+      expect(tagsValues[tagsValues.length - 1]).to.equal('3');
     });
   });
 

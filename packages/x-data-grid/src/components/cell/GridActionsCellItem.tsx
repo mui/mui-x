@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps, GridBaseIconProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -48,7 +49,7 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
         {...rootProps.slotProps?.baseIconButton}
         ref={ref as React.RefObject<HTMLButtonElement>}
       >
-        {React.cloneElement(icon!, { fontSize: 'small' })}
+        {React.cloneElement(icon!, { fontSize: 'inherit' })}
       </rootProps.slots.baseIconButton>
     );
   }
@@ -73,5 +74,96 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
     </rootProps.slots.baseMenuItem>
   );
 });
+
+GridActionsCellItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+  /**
+   * from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component
+   */
+  component: PropTypes.elementType,
+  disabled: PropTypes.bool,
+  icon: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func,
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.shape({
+      '__@iterator@659': PropTypes.func.isRequired,
+    }),
+    PropTypes.shape({
+      '__@iterator@659': PropTypes.func.isRequired,
+      key: PropTypes.string,
+      props: PropTypes.any.isRequired,
+      type: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+    }),
+    PropTypes.shape({
+      '__@toStringTag@1607': PropTypes.oneOf(['BigInt']).isRequired,
+      key: PropTypes.string,
+      props: PropTypes.any.isRequired,
+      toLocaleString: PropTypes.func.isRequired,
+      toString: PropTypes.func.isRequired,
+      type: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+      valueOf: PropTypes.func.isRequired,
+    }),
+    PropTypes.shape({
+      '__@toStringTag@1607': PropTypes.oneOf(['BigInt']).isRequired,
+      toLocaleString: PropTypes.func.isRequired,
+      toString: PropTypes.func.isRequired,
+      valueOf: PropTypes.func.isRequired,
+    }),
+    PropTypes.shape({
+      '__@toStringTag@1607': PropTypes.string.isRequired,
+      catch: PropTypes.func.isRequired,
+      finally: PropTypes.func.isRequired,
+      key: PropTypes.string,
+      props: PropTypes.any.isRequired,
+      then: PropTypes.func.isRequired,
+      type: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+    }),
+    PropTypes.shape({
+      '__@toStringTag@1607': PropTypes.string.isRequired,
+      catch: PropTypes.func.isRequired,
+      finally: PropTypes.func.isRequired,
+      then: PropTypes.func.isRequired,
+    }),
+    PropTypes.shape({
+      children: PropTypes.node,
+      key: PropTypes.string,
+      props: PropTypes.any.isRequired,
+      type: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+    }),
+    PropTypes.shape({
+      key: PropTypes.string,
+      props: PropTypes.any.isRequired,
+      toExponential: PropTypes.func.isRequired,
+      toFixed: PropTypes.func.isRequired,
+      toLocaleString: PropTypes.func.isRequired,
+      toPrecision: PropTypes.func.isRequired,
+      toString: PropTypes.func.isRequired,
+      type: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+      valueOf: PropTypes.func.isRequired,
+    }),
+    PropTypes.shape({
+      key: PropTypes.string,
+      props: PropTypes.any.isRequired,
+      type: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+    }),
+    PropTypes.shape({
+      key: PropTypes.string,
+      props: PropTypes.any.isRequired,
+      type: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+      valueOf: PropTypes.func.isRequired,
+    }),
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
+  label: PropTypes.node,
+  showInMenu: PropTypes.bool,
+  style: PropTypes.object,
+} as any;
 
 export { GridActionsCellItem };

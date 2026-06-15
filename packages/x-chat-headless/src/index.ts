@@ -16,8 +16,13 @@ import {
   ComposerTextArea,
   ComposerToolbar,
 } from './composer';
-import { ConversationListRoot } from './conversation-list';
-import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
+import { ConversationListItem, ConversationListRoot } from './conversation-list';
+import {
+  ScrollToBottomAffordance,
+  StreamingIndicator,
+  TypingIndicator,
+  UnreadMarker,
+} from './indicators';
 import { MessageActions, MessageAvatar, MessageContent, MessageMeta, MessageRoot } from './message';
 import { MessageListDateDivider, MessageListRoot } from './message-list';
 
@@ -25,6 +30,7 @@ import { MessageListDateDivider, MessageListRoot } from './message-list';
 export { ChatProvider } from './ChatProvider';
 
 export { useChat } from './hooks/useChat';
+export { useChatActions } from './hooks/useChatActions';
 export { useChatComposer } from './hooks/useChatComposer';
 export { useChatOnToolCall } from './hooks/useChatOnToolCall';
 export { useChatPartRenderer } from './hooks/useChatPartRenderer';
@@ -32,7 +38,12 @@ export { useChatStatus } from './hooks/useChatStatus';
 export { useChatStore } from './hooks/useChatStore';
 export { useConversation, useConversations } from './hooks/useConversation';
 export { useMessage, useMessageIds } from './hooks/useMessage';
-export { useMessageContext } from './message';
+export { useMessageError } from './hooks/useMessageError';
+export { useStreamingIndicatorVisibility } from './hooks/useStreamingIndicatorVisibility';
+export type {
+  StreamingIndicatorMode,
+  UseStreamingIndicatorVisibilityValue,
+} from './hooks/useStreamingIndicatorVisibility';
 
 export {
   chatSelectors,
@@ -42,10 +53,13 @@ export {
   selectConversationsById,
   selectActiveConversationId,
   selectIsStreaming,
+  selectStreamingConversationId,
   selectHasMoreHistory,
+  selectIsLoadingHistory,
   selectError,
   selectMessages,
   selectMessage,
+  selectMessageError,
   selectConversations,
   selectConversation,
   selectActiveConversation,
@@ -57,14 +71,12 @@ export {
   selectTypingUserIdsForActiveConversation,
 } from './selectors/chatSelectors';
 
-export type { ChatProviderProps } from './ChatProvider';
+export type { ChatProviderProps, ChatFeatures } from './ChatProvider';
 
-export type {
-  ChatAdapter,
-  ChatSendMessageInput,
-  PaginationDirection,
-} from './adapters/chatAdapter';
-
+export type { ChatAdapter, ChatRegenerateInput, PaginationDirection } from './adapters/chatAdapter';
+export type { ChatRuntimeActions } from './internals/useChatController';
+export { createEchoAdapter } from './adapters/createEchoAdapter';
+export type { CreateEchoAdapterOptions } from './adapters/createEchoAdapter';
 export { createAiSdkAdapter } from './adapters/createAiSdkAdapter';
 export type {
   AiSdkChatInstance,
@@ -84,6 +96,7 @@ export type {
 export type {
   ChatAddToolApproveResponseInput,
   ChatOnData,
+  ChatOnError,
   ChatOnFinish,
   ChatOnFinishPayload,
   ChatOnToolCall,
@@ -100,22 +113,17 @@ export type {
   ChatDraftAttachment,
   ChatDraftAttachmentStatus,
   ChatMessage,
+  ChatMessageAuthorAvatarUrlGetter,
+  ChatMessageAuthorDisplayNameGetter,
+  ChatMessageAuthorGetterProps,
+  ChatMessageAuthorIdGetter,
   ChatMessageStatus,
   ChatRole,
   ChatUser,
   ConversationReadState,
 } from './types/chat-entities';
 
-export type { ChatError, ChatErrorCode } from './types/chat-error';
-
-export type {
-  ChatConversationMetadata,
-  ChatCustomMessagePartMap,
-  ChatDataPartMap,
-  ChatMessageMetadata,
-  ChatToolDefinitionMap,
-  ChatUserMetadata,
-} from './types/chat-type-registry';
+export type { ChatError, ChatErrorCode, ChatErrorSource } from './types/chat-error';
 
 export type {
   ChatBuiltInMessagePart,
@@ -148,7 +156,8 @@ export { ChatStreamError } from './stream/ChatStreamError';
 
 // Headless component exports (structural primitives without styling)
 // Using direct re-exports so the API docs builder can resolve component symbols correctly.
-export { ChatLayout, ChatRoot, useChatLocaleText } from './chat';
+export { ChatLayout, ChatRoot, markChatLayoutPane, useChatLocaleText } from './chat';
+export type { ChatLayoutPaneKind } from './chat';
 export {
   ConversationHeader,
   ConversationHeaderActions,
@@ -179,7 +188,12 @@ export {
   ConversationListTitle,
   ConversationListUnreadBadge,
 } from './conversation-list';
-export { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
+export {
+  ScrollToBottomAffordance,
+  StreamingIndicator,
+  TypingIndicator,
+  UnreadMarker,
+} from './indicators';
 export {
   FilePart,
   MessageActions,
@@ -194,6 +208,8 @@ export {
   MessageAuthorLabel,
   MessageAvatar,
   MessageContent,
+  MessageContextProvider,
+  MessageError,
   MessageMeta,
   MessageRoot,
   ReasoningPart,
@@ -205,11 +221,19 @@ export {
   createSourceDocumentPartRenderer,
   createSourceUrlPartRenderer,
   createToolPartRenderer,
+  useMessageContext,
 } from './message';
 export { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
 export { MessageGroup, createTimeWindowGroupKey } from './message-group';
 export { SuggestionItem, SuggestionsRoot } from './suggestions';
-export { MessageListDateDivider, MessageListRoot, useMessageListContext } from './message-list';
+export {
+  MessageListDateDivider,
+  MessageListRoot,
+  useMessageActionable,
+  useMessageContentTabIndex,
+  useMessageListContext,
+  useMessageRovingItem,
+} from './message-list';
 
 export type {
   ChatLayoutProps,
@@ -299,6 +323,9 @@ export type {
   ScrollToBottomAffordanceProps,
   ScrollToBottomAffordanceSlotProps,
   ScrollToBottomAffordanceSlots,
+  StreamingIndicatorProps,
+  StreamingIndicatorSlotProps,
+  StreamingIndicatorSlots,
   TypingIndicatorProps,
   TypingIndicatorSlotProps,
   TypingIndicatorSlots,
@@ -335,6 +362,9 @@ export type {
   MessageMetaProps,
   MessageMetaSlotProps,
   MessageMetaSlots,
+  MessageErrorProps,
+  MessageErrorSlotProps,
+  MessageErrorSlots,
   MessageRootProps,
   MessageRootSlotProps,
   MessageRootSlots,
@@ -359,6 +389,8 @@ export type {
   ToolPartSectionOwnerState,
   ToolPartSlotProps,
   ToolPartSlots,
+  ChatToolExpand,
+  ChatToolGetExpanded,
 } from './message';
 export type {
   ChatSuggestion,
@@ -384,6 +416,7 @@ export type {
   MessageListRootProps,
   MessageListRootSlotProps,
   MessageListRootSlots,
+  MessageRovingState,
 } from './message-list';
 
 // OwnerState types
@@ -421,6 +454,7 @@ export type {
 } from './conversation-list';
 export type {
   ScrollToBottomAffordanceOwnerState,
+  StreamingIndicatorOwnerState,
   TypingIndicatorOwnerState,
   UnreadMarkerOwnerState,
 } from './indicators';
@@ -430,6 +464,7 @@ export type {
   MessageAvatarOwnerState,
   MessageContentOwnerState,
   MessageMetaOwnerState,
+  MessageErrorOwnerState,
   MessageOwnerState,
   MessageRootOwnerState,
 } from './message';
@@ -466,6 +501,7 @@ export const Conversation = {
 
 export const ConversationList = {
   Root: ConversationListRoot,
+  Item: ConversationListItem,
 };
 
 export const Composer = {
@@ -492,6 +528,7 @@ export const MessageList = {
 };
 
 export const Indicators = {
+  StreamingIndicator,
   TypingIndicator,
   UnreadMarker,
   ScrollToBottomAffordance,

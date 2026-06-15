@@ -28,7 +28,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
           }
 
           return (
-            <g key={seriesId}>
+            <g key={seriesId} data-series={seriesId}>
               {
                 <path
                   key={seriesId}
@@ -86,6 +86,10 @@ RadarSeriesPlot.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when an area is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

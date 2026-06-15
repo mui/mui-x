@@ -14,7 +14,7 @@ import {
   resources as allResources,
   defaultVisibleDate,
   getEvents,
-  updateEvents,
+  persistEvents,
 } from './fakeServer';
 
 const resources = allResources.slice(0, 5);
@@ -83,7 +83,7 @@ export default function ErrorHandling() {
       <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
         <EventTimelinePremium
           apiRef={apiRef}
-          dataSource={{ getEvents: fetchData, updateEvents }}
+          dataSource={{ getEvents: fetchData, persistEvents }}
           resources={resources}
           resourceColumnLabel="Theater"
           presets={presets}

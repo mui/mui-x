@@ -51,7 +51,9 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'años',
   recurrenceYearlyPresetLabel: (date) => `Se repite anualmente el ${date}`,
   noResourceAriaLabel: 'Sin recurso',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Recurso',
+  requiredResourceError: 'Debes seleccionar un recurso.',
   saveChanges: 'Guardar',
   startDateAfterEndDateError: 'La fecha/hora de inicio debe ser anterior a la fecha/hora de fin.',
   startDateLabel: 'Fecha de inicio',
@@ -97,11 +99,13 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Mostrar número de semana',
   timeFormat: 'Formato de hora',
   viewSpecificOptions: (view) => `Opciones de la vista ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Todo el día',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} más..`,
   nextTimeSpan: (timeSpan) => `Siguiente ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
@@ -116,6 +120,9 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendario',
   miniCalendarGoToPreviousMonth: 'Mostrar el mes anterior en el calendario',
   miniCalendarGoToNextMonth: 'Mostrar el mes siguiente en el calendario',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Nombre del recurso',

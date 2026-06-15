@@ -10,13 +10,14 @@ import {
   type PieItemIdentifier,
 } from '../models/seriesType/pie';
 import { useTransformData } from './dataTransform/useTransformData';
+import type { PieArcPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface PieArcPlotSlots {
-  pieArc?: React.JSXElementConstructor<PieArcProps>;
+  pieArc?: React.JSXElementConstructor<PieArcProps & PieArcPropsOverrides>;
 }
 
 export interface PieArcPlotSlotProps {
-  pieArc?: Partial<PieArcProps>;
+  pieArc?: Partial<PieArcProps> & PieArcPropsOverrides;
 }
 
 export interface PieArcPlotProps
@@ -153,11 +154,12 @@ PieArcPlot.propTypes = {
       color: PropTypes.string.isRequired,
       endAngle: PropTypes.number.isRequired,
       formattedValue: PropTypes.string.isRequired,
+      hidden: PropTypes.bool.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       labelMarkType: PropTypes.oneOfType([
-        PropTypes.oneOf(['circle', 'line', 'square']),
+        PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
         PropTypes.func,
       ]),
       padAngle: PropTypes.number.isRequired,
@@ -191,10 +193,6 @@ PieArcPlot.propTypes = {
     paddingAngle: PropTypes.number,
   }),
   /**
-   * The id of this series.
-   */
-  seriesId: PropTypes.string.isRequired,
-  /**
    * The radius between circle center and the beginning of the arc.
    * @default 0
    */
@@ -215,6 +213,10 @@ PieArcPlot.propTypes = {
    * @default 0
    */
   paddingAngle: PropTypes.number,
+  /**
+   * The id of this series.
+   */
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

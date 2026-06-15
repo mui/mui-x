@@ -246,6 +246,35 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
       });
 
+      it('should not add multiSelect columns to the context', () => {
+        render(
+          <Test
+            columns={[
+              { field: 'id', type: 'number' },
+              { field: 'category1' },
+              { field: 'amount', type: 'number' },
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B'],
+              },
+            ]}
+            initialState={{
+              chartsIntegration: {
+                charts: {
+                  test: {
+                    dimensions: ['tags'],
+                    values: ['amount'],
+                  },
+                },
+              },
+            }}
+          />,
+        );
+
+        expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
+      });
+
       it('should pick the first available chart if there is no active chart', () => {
         render(<Test />);
         expect(apiRef!.current?.state.chartsIntegration.activeChartId).to.equal('test');

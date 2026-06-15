@@ -29,6 +29,7 @@ export * from '@mui/x-charts/ChartsRadiusAxis';
 export {
   type ChartsRotationAxisProps,
   Unstable_ChartsRotationAxis,
+  ChartsRotationAxis,
 } from '@mui/x-charts/ChartsRotationAxis';
 
 // Pro components
@@ -60,6 +61,8 @@ export * from './plugins';
 export * from './ChartsRenderer';
 export * from './ChartsDataProviderPremium';
 export * from './ChartsRadialDataProviderPremium';
+export * from './ChartsGeoDataProviderPremium';
+export * from './Map';
 export * from './ChartsContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';

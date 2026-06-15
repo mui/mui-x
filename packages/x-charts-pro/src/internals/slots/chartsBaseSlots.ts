@@ -7,11 +7,18 @@ import {
   type ChartBasePopperProps,
   type ChartBaseTooltipProps,
 } from './chartBaseSlotProps';
+import type {
+  BaseDividerPropsOverrides,
+  BaseMenuItemPropsOverrides,
+  BaseMenuListPropsOverrides,
+  BasePopperPropsOverrides,
+  BaseTooltipPropsOverrides,
+} from '../../models/chartsSlotsComponentsPropsPro';
 
 export interface ChartsBaseSlotsPro extends ChartsBaseSlots {
-  baseDivider: React.ComponentType<ChartBaseDividerProps>;
-  baseMenuItem: React.ComponentType<ChartBaseMenuItemProps>;
-  baseMenuList: React.ComponentType<ChartBaseMenuListProps>;
-  basePopper: React.ComponentType<ChartBasePopperProps>;
-  baseTooltip: React.ComponentType<ChartBaseTooltipProps>;
+  baseDivider: React.ComponentType<ChartBaseDividerProps & BaseDividerPropsOverrides>;
+  baseMenuItem: React.ComponentType<ChartBaseMenuItemProps & BaseMenuItemPropsOverrides>;
+  baseMenuList: React.ComponentType<ChartBaseMenuListProps & BaseMenuListPropsOverrides>;
+  basePopper: React.ComponentType<ChartBasePopperProps & BasePopperPropsOverrides>;
+  baseTooltip: React.ComponentType<ChartBaseTooltipProps & BaseTooltipPropsOverrides>;
 }

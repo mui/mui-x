@@ -51,7 +51,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
         }
 
         return (
-          <g key={id}>
+          <g key={id} data-series={id}>
             {points.map((point, index) => (
               <circle
                 key={index}
@@ -87,6 +87,10 @@ RadarSeriesMarks.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when a mark is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

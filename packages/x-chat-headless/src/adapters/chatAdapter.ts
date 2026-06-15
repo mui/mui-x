@@ -37,6 +37,17 @@ export interface ChatSendMessageInput {
   signal: AbortSignal;
 }
 
+export interface ChatRegenerateInput {
+  conversationId?: string;
+  /** Id of the assistant message being regenerated (already removed from `messages`). */
+  messageId: string;
+  /** The user message that prompted the reply being regenerated. */
+  message: ChatMessage;
+  /** Thread context up to and including `message`; the regenerated assistant run is excluded. */
+  messages: ChatMessage[];
+  signal: AbortSignal;
+}
+
 export interface ChatReconnectToStreamInput {
   conversationId?: string;
   messageId?: string;
@@ -86,10 +97,40 @@ export interface ChatAdapter<Cursor = string> {
     input: ChatSendMessageInput,
   ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope>>;
 
+  /**
+   * Regenerate the assistant reply identified by `messageId`. Optional: when
+   * absent the runtime falls back to re-sending the anchoring user message
+   * through `sendMessage`. Implement it when the backend distinguishes
+   * regeneration from a fresh send (e.g. AI SDK `trigger: 'regenerate-message'`).
+   */
+  regenerate?(
+    input: ChatRegenerateInput,
+  ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope>>;
+
   reconnectToStream?(
     input: ChatReconnectToStreamInput,
   ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope> | null>;
 
+  /**
+   * Sends an outbound typing signal to your backend for the active conversation.
+   *
+   * Optional. The runtime calls this automatically **only when the
+   * `features.typingSignal` flag is enabled** (default `false`). When enabled
+   * (and a conversation is active) the runtime sends `{ isTyping: true }` when
+   * the composer value changes from empty (`''`) to non-empty, and
+   * `{ isTyping: false }` when it changes back to empty — including when a
+   * message is sent, since sending clears the composer. Switching conversations
+   * sends `{ isTyping: false }` for the previous conversation and, if a draft is
+   * present, `{ isTyping: true }` for the new one; the same applies at mount when
+   * an initial draft exists, and unmounting sends a final `{ isTyping: false }`.
+   * Keystrokes that keep the composer non-empty produce no additional calls, and
+   * there is no built-in idle timeout (expire `isTyping: true` from inside this
+   * method if needed). Failures are swallowed with a dev-only warning.
+   *
+   * With the flag off (the default), the runtime never calls this — wire it up
+   * manually instead. If you enable the flag, remove any manual composer
+   * `onChange` wiring to avoid double-firing.
+   */
   setTyping?(input: ChatSetTypingInput): Promise<void>;
 
   markRead?(input: ChatMarkReadInput): Promise<void>;

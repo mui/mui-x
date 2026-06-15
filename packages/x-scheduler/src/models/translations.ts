@@ -43,7 +43,9 @@ export interface EventDialogLocaleText {
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   noResourceAriaLabel: string;
+  selectColorAriaLabel: (color: string) => string;
   resourceLabel: string;
+  requiredResourceError: string;
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;
@@ -89,6 +91,10 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   showWeekNumber: string;
   timeFormat: string;
   viewSpecificOptions: (view: CalendarView) => string;
+  startWeekOn: string;
+  weekdaySunday: string;
+  weekdayMonday: string;
+  weekdaySaturday: string;
 
   // WeekView
   allDay: string;
@@ -108,6 +114,9 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   miniCalendarLabel: string;
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
+
+  // Main calendar region
+  calendarContentAriaLabel: string;
 
   // Timeline title sub grid
   timelineResourceTitleHeader: string;

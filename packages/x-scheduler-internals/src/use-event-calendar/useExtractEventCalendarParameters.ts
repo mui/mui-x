@@ -30,6 +30,7 @@ export function useExtractEventCalendarParameters<
     preferencesMenuConfig,
     readOnly,
     dataSource,
+    shouldEventRequireResource,
     resourceModelStructure,
     resources,
     showCurrentTimeIndicator,
@@ -64,6 +65,7 @@ export function useExtractEventCalendarParameters<
       preferencesMenuConfig,
       readOnly,
       dataSource,
+      shouldEventRequireResource,
       resourceModelStructure,
       resources,
       showCurrentTimeIndicator,
@@ -75,7 +77,7 @@ export function useExtractEventCalendarParameters<
     // `dataSource` is intentionally excluded. It's re-read on every fetch, but the
     // cache + dataManager are pinned to the original instance, so runtime swaps are
     // only partially reactive — consumers should remount to swap. Including it in
-    // deps would invalidate the memo every render for inline `{ getEvents, updateEvents }`.
+    // deps would invalidate the memo every render for inline `{ getEvents, persistEvents }`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       areEventsDraggable,
@@ -99,6 +101,7 @@ export function useExtractEventCalendarParameters<
       preferences,
       preferencesMenuConfig,
       readOnly,
+      shouldEventRequireResource,
       resourceModelStructure,
       resources,
       showCurrentTimeIndicator,
