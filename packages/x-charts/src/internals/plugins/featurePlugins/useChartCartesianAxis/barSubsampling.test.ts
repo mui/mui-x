@@ -3,6 +3,7 @@ import {
   buildBarSubsamplingPyramid,
   getBarSubsamplingStrategy,
   selectBarSubsamplingLevel,
+  selectBarSubsamplingLevelByZoom,
 } from './barSubsampling';
 
 // [base, top] pairs as produced by the bar series processor (`visibleStackedData`).
@@ -73,6 +74,31 @@ describe('bar subsampling strategies', () => {
 
   it('stride keeps the first point of the bucket', () => {
     expect(getBarSubsamplingStrategy('stride')(stacked, 2, 5)).to.deep.equal({ low: 0, high: 2 });
+  });
+});
+
+describe('selectBarSubsamplingLevelByZoom', () => {
+  const pyramid = buildBarSubsamplingPyramid(stacked, envelope); // levels: bucketSize 2, 4, 8
+
+  it('renders every point (no sampling) at max zoom (span === minSpan)', () => {
+    expect(selectBarSubsamplingLevelByZoom(10, 10, pyramid)).to.equal(null);
+    // Still rounds down to level 0 just above max zoom.
+    expect(selectBarSubsamplingLevelByZoom(13, 10, pyramid)).to.equal(null);
+  });
+
+  it('halves the points (bucket size x2) for each doubling of the span', () => {
+    expect(selectBarSubsamplingLevelByZoom(20, 10, pyramid)?.bucketSize).to.equal(2);
+    expect(selectBarSubsamplingLevelByZoom(40, 10, pyramid)?.bucketSize).to.equal(4);
+    expect(selectBarSubsamplingLevelByZoom(80, 10, pyramid)?.bucketSize).to.equal(8);
+  });
+
+  it('clamps to the coarsest level when fully zoomed out', () => {
+    expect(selectBarSubsamplingLevelByZoom(100, 10, pyramid)?.bucketSize).to.equal(8);
+  });
+
+  it('returns null for non-positive spans', () => {
+    expect(selectBarSubsamplingLevelByZoom(0, 10, pyramid)).to.equal(null);
+    expect(selectBarSubsamplingLevelByZoom(50, 0, pyramid)).to.equal(null);
   });
 });
 

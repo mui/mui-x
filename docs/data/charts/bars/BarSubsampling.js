@@ -27,7 +27,7 @@ export default function BarSubsampling() {
             onChange={(event) => setSubsampling(event.target.checked)}
           />
         }
-        label={`Subsampling ${subsampling ? 'on' : 'off'} (${POINTS} bars)`}
+        label={`Subsampling ${subsampling ? 'on' : 'off'} (${POINTS} bars — zoom in fully to reach the unsampled data)`}
       />
       <BarChartPro
         xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}

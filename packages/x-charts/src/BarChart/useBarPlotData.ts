@@ -10,7 +10,10 @@ import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } fro
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import {
+  type ComputedAxisConfig,
+  type DefaultizedZoomOptions,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import {
   createGetBarDimensions,
   createGetBucketBarDimensions,
@@ -18,9 +21,20 @@ import {
 import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import { useStore } from '../internals/store/useStore';
-import { selectBarSubsamplingLevel } from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling';
+import {
+  selectBarSubsamplingLevel,
+  selectBarSubsamplingLevelByZoom,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling';
 import { selectorChartBarSubsamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling.selectors';
-import type { BarSubsamplingPyramidLookup } from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling.types';
+import type {
+  BarSubsamplingLevel,
+  BarSubsamplingPyramidLookup,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling.types';
+import {
+  selectorChartZoomMap,
+  selectorChartZoomOptionsLookup,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import type { ZoomData } from '../internals/plugins/featurePlugins/useChartCartesianAxis/zoom.types';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
 import { type SeriesId } from '../models/seriesType';
@@ -41,7 +55,10 @@ export function useBarPlotData(
 
   const chartId = useChartId();
 
-  const subsamplingPyramids = useStore().use(selectorChartBarSubsamplingPyramids);
+  const store = useStore();
+  const subsamplingPyramids = store.use(selectorChartBarSubsamplingPyramids);
+  const zoomMap = store.use(selectorChartZoomMap);
+  const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
 
   return processBarDataForPlot(
     drawingArea,
@@ -53,6 +70,8 @@ export function useBarPlotData(
     defaultXAxisId,
     defaultYAxisId,
     subsamplingPyramids,
+    zoomMap,
+    zoomOptionsLookup,
   );
 }
 
@@ -66,6 +85,8 @@ export function processBarDataForPlot(
   defaultXAxisId: AxisId,
   defaultYAxisId: AxisId,
   subsamplingPyramids: BarSubsamplingPyramidLookup = {},
+  zoomMap?: Map<AxisId, ZoomData>,
+  zoomOptionsLookup?: Record<AxisId, DefaultizedZoomOptions>,
 ) {
   const masks: Record<string, MaskData> = {};
 
@@ -170,9 +191,18 @@ export function processBarDataForPlot(
       };
 
       const pyramid = subsamplingPyramids[seriesId];
-      const activeLevel = pyramid
-        ? selectBarSubsamplingLevel(baseScaleConfig.scale.bandwidth(), pyramid)
-        : null;
+      let activeLevel: BarSubsamplingLevel | null = null;
+      if (pyramid) {
+        const baseAxisId = verticalLayout ? xAxisId : yAxisId;
+        const zoom = zoomMap?.get(baseAxisId);
+        const zoomOptions = zoomOptionsLookup?.[baseAxisId];
+        // With zoom, the level is anchored to the zoom span (max zoom = no sampling). Without zoom
+        // there is no span to map, so fall back to the on-screen bar width.
+        activeLevel =
+          zoom && zoomOptions
+            ? selectBarSubsamplingLevelByZoom(zoom.end - zoom.start, zoomOptions.minSpan, pyramid)
+            : selectBarSubsamplingLevel(baseScaleConfig.scale.bandwidth(), pyramid);
+      }
 
       if (activeLevel) {
         const getBucketBarDimensions = createGetBucketBarDimensions({
