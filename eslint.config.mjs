@@ -271,7 +271,6 @@ export default defineConfig(
   {
     files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
-      'react-hooks/set-state-in-effect': 'off',
       'no-restricted-imports': [
         'error',
         {
@@ -350,6 +349,7 @@ export default defineConfig(
   {
     files: [`test/regressions/**/*${EXTENSION_TS}`],
     rules: {
+      'react-hooks/set-state-in-effect': 'off',
       'react/jsx-filename-extension': 'off',
     },
   },
