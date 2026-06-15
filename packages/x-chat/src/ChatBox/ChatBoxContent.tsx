@@ -692,6 +692,9 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const isNarrow = resolvedLayoutMode !== 'standard';
   const isMobileSplitView = resolvedLayoutMode === 'split';
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  if (drawerOpen && (!isNarrow || isMobileSplitView)) {
+    setDrawerOpen(false);
+  }
   const drawerCloseButtonRef = React.useRef<HTMLButtonElement | null>(null);
   const drawerOpenerRef = React.useRef<HTMLElement | null>(null);
   const wasDrawerOpenRef = React.useRef(false);
@@ -758,12 +761,6 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const handleBackClick = React.useCallback(() => {
     void setActiveConversation(undefined);
   }, [setActiveConversation]);
-
-  React.useEffect(() => {
-    if (!isNarrow || isMobileSplitView) {
-      setDrawerOpen(false);
-    }
-  }, [isMobileSplitView, isNarrow]);
 
   React.useLayoutEffect(() => {
     if (drawerOpen) {
