@@ -36,6 +36,7 @@ const schedulerPages: MuiPage[] = [
         children: [
           { pathname: '/x/react-scheduler/timezone', title: 'Timezones' },
           { pathname: '/x/react-scheduler/recurring-events', plan: 'premium' },
+          { pathname: '/x/react-scheduler/accessibility', title: 'Accessibility' },
         ],
       },
       {
