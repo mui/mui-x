@@ -12,6 +12,7 @@ import {
   getDateKey,
   getOccurrenceEnd,
   mergeDateAndTime,
+  normalizeAllDayBounds,
 } from '@mui/x-scheduler-internals/internals';
 import {
   dayInWeek,
@@ -208,20 +209,13 @@ class RecurringEventExpander {
     });
 
     // All-day occurrences span the whole day, like the base event in processEvent.
-    const occurrenceStartInDisplayTz = this.adapter.setTimezone(
-      occurrenceStartOriginal,
-      this.displayTimezone,
-    );
-    const occurrenceEndInDisplayTz = this.adapter.setTimezone(
-      occurrenceEndOriginal,
-      this.displayTimezone,
-    );
-    const occurrenceStartDisplayTimezone = this.event.allDay
-      ? this.adapter.startOfDay(occurrenceStartInDisplayTz)
-      : occurrenceStartInDisplayTz;
-    const occurrenceEndDisplayTimezone = this.event.allDay
-      ? this.adapter.endOfDay(occurrenceEndInDisplayTz)
-      : occurrenceEndInDisplayTz;
+    const { start: occurrenceStartDisplayTimezone, end: occurrenceEndDisplayTimezone } =
+      normalizeAllDayBounds(
+        this.adapter,
+        this.adapter.setTimezone(occurrenceStartOriginal, this.displayTimezone),
+        this.adapter.setTimezone(occurrenceEndOriginal, this.displayTimezone),
+        this.event.allDay,
+      );
     occurrences.push({
       ...this.event,
       key: `${this.event.id}::${dateKey}`,
