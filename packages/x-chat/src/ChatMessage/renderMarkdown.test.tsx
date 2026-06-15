@@ -361,4 +361,14 @@ describe('renderMarkdown', () => {
       expect(anchor.textContent).toContain('label');
     });
   });
+
+  describe('large input', () => {
+    it('renders an oversized message as plain text instead of parsing markdown', () => {
+      // Over the length cap, so the markdown is not parsed (markdown-to-jsx is super-linear here).
+      const huge = '**bold** '.repeat(7000);
+      const { container } = render(<React.Fragment>{renderMarkdown(huge)}</React.Fragment>);
+      expect(document.querySelector('strong')).toBeNull();
+      expect(container.textContent).toContain('**bold**');
+    });
+  });
 });
