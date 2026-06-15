@@ -137,7 +137,6 @@ export default defineConfig(
     },
     rules: {
       '@typescript-eslint/no-redeclare': 'error',
-      '@typescript-eslint/no-shadow': 'off',
       'mui/straight-quotes': 'error',
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
