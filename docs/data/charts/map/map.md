@@ -111,6 +111,9 @@ When no `colorValue` is provided, the item's `value` is used as a fallback.
 
 If several `zAxis` are defined, the series can target one explicitly with the `colorAxisId` property.
 
+By default shapes with unknown values are ignored.
+Specify the `unknownColor` property in the `colorMap` to render them.
+
 {{"demo": "ColorScaleMapShape.js"}}
 
 ## Using a dataset

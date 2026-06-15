@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { interpolateBlues } from 'd3-scale-chromatic';
@@ -31,20 +34,35 @@ const data = Object.keys(countryData).map((code) => ({
 
 export default function ColorScaleMapShape() {
   const [colorMap, setColorMap] = React.useState('continuous');
+  const [unknownColor, setUnknownColor] = React.useState(true);
 
+  const theme = useTheme();
   return (
     <Stack spacing={2} sx={{ width: '100%', maxWidth: 800 }}>
-      <ToggleButtonGroup
-        color="primary"
-        size="small"
-        exclusive
-        value={colorMap}
-        onChange={(_, value) => value && setColorMap(value)}
-        aria-label="color map"
+      <Stack
+        direction="row"
+        sx={{ alignItems: 'center', justifyContent: 'space-between' }}
       >
-        <ToggleButton value="continuous">continuous</ToggleButton>
-        <ToggleButton value="piecewise">piecewise</ToggleButton>
-      </ToggleButtonGroup>
+        <ToggleButtonGroup
+          color="primary"
+          size="small"
+          exclusive
+          value={colorMap}
+          onChange={(_, value) => value && setColorMap(value)}
+          aria-label="color map"
+        >
+          <ToggleButton value="continuous">continuous</ToggleButton>
+          <ToggleButton value="piecewise">piecewise</ToggleButton>
+        </ToggleButtonGroup>
+        <FormControlLabel
+          checked={unknownColor}
+          control={
+            <Checkbox onChange={(event) => setUnknownColor(event.target.checked)} />
+          }
+          label="Use unknown color"
+          labelPlacement="end"
+        />
+      </Stack>
       <Typography variant="body2" component="h6" sx={{ textAlign: 'end' }}>
         Share of the population using the Internet in 2020
       </Typography>
@@ -74,11 +92,13 @@ export default function ColorScaleMapShape() {
                       min: 0,
                       max: 100,
                       color: ['#e3f2fd', '#0d47a1'],
+                      unknownColor: unknownColor ? 'gray' : undefined,
                     }
                   : {
                       type: 'piecewise',
                       thresholds: [25, 50, 75],
                       colors: [0.25, 0.5, 0.75, 1].map(interpolateBlues),
+                      unknownColor: unknownColor ? 'gray' : undefined,
                     },
             },
           ]}
