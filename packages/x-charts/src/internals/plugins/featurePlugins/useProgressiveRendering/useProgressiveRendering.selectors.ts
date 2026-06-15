@@ -7,6 +7,7 @@ import {
   selectorChartExperimentalFeaturesState,
   type UseChartExperimentalFeaturesSignature,
 } from '../../corePlugins/useChartExperimentalFeature';
+import { selectorChartZoomIsInteracting } from '../useChartCartesianAxis';
 import { type ChartState } from '../../models/chart';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { type UseProgressiveRenderingSignature } from './useProgressiveRendering.types';
@@ -140,12 +141,19 @@ export const selectorProgressiveTotalRounds = createSelector(
  * How many of `seriesId`'s own batches are revealed so far. Capped at that
  * series' total batch count, so series with fewer batches simply stop
  * progressing while longer ones keep filling in.
+ *
+ * While a zoom/pan interaction is in progress, this is clamped to the first
+ * batch: only the first level is ever visible during the interaction,
+ * regardless of how many rounds the scheduler had revealed before it started.
  */
 export const selectorProgressiveSeriesRevealedBatches = createSelector(
   selectorProgressiveAggregate,
   selectorProgressiveRevealedRounds,
-  function selectorProgressiveSeriesRevealedBatches(agg, revealed, seriesId: SeriesId) {
-    return Math.min(revealed, agg.nBatchesBySeries.get(seriesId) ?? 0);
+  selectorChartZoomIsInteracting,
+  function selectorProgressiveSeriesRevealedBatches(agg, revealed, isInteracting, seriesId: SeriesId) {
+    const total = agg.nBatchesBySeries.get(seriesId) ?? 0;
+    const effectiveRevealed = isInteracting ? Math.min(1, total) : revealed;
+    return Math.min(effectiveRevealed, total);
   },
 );
 

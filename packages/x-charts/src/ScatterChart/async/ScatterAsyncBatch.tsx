@@ -39,6 +39,13 @@ export interface ScatterAsyncBatchProps extends Pick<
    * paint. When `false` the `<g>` still mounts but stays empty.
    */
   revealed: boolean;
+  /**
+   * Whether a zoom/pan interaction is in progress. While interacting the
+   * per-marker highlight state and interaction handlers are skipped: they are
+   * useless mid-drag (no hover/tooltip) and recomputing them for every visible
+   * point on every frame is the dominant cost of the interaction.
+   */
+  isInteracting?: boolean;
 }
 
 /**
@@ -54,6 +61,7 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
     start,
     end,
     revealed,
+    isInteracting,
     classes: inClasses,
   } = props;
 
@@ -99,7 +107,7 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
     const dataIndex = view[local * 3 + 2];
 
     const dataPoint = { x, y, dataIndex, seriesId: series.id, type: 'scatter' as const };
-    const highlightState = getHighlightState(dataPoint);
+    const highlightState = isInteracting ? 'none' : getHighlightState(dataPoint);
     const isItemHighlighted = highlightState === 'highlighted';
     const isItemFaded = highlightState === 'faded';
 
@@ -124,7 +132,9 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
         }
         data-highlighted={isItemHighlighted || undefined}
         data-faded={isItemFaded || undefined}
-        {...(skipInteractionHandlers ? undefined : getInteractionItemProps(instance, dataPoint))}
+        {...(skipInteractionHandlers || isInteracting
+          ? undefined
+          : getInteractionItemProps(instance, dataPoint))}
         {...markerProps}
       />,
     );
