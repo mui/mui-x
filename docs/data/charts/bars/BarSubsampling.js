@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
 // Deterministic large dataset so subsampling has something to work on.
@@ -15,17 +16,24 @@ const data = Array.from({ length: POINTS }, (_, index) => {
 const categories = Array.from({ length: POINTS }, (_, index) => `#${index}`);
 
 export default function BarSubsampling() {
+  const [subsampling, setSubsampling] = React.useState(true);
+
   return (
     <Stack sx={{ width: '100%' }} spacing={1}>
-      <Typography variant="body2" color="text.secondary">
-        {POINTS} bars. Zoomed out, bars are automatically subsampled so they never
-        get too thin. Scroll to zoom in at the pointer and reveal more detail; drag
-        to pan.
-      </Typography>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={subsampling}
+            onChange={(event) => setSubsampling(event.target.checked)}
+          />
+        }
+        label={`Subsampling ${subsampling ? 'on' : 'off'} (${POINTS} bars)`}
+      />
       <BarChartPro
         xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}
         series={[{ data, label: 'Value' }]}
         height={300}
+        subsampling={subsampling}
       />
     </Stack>
   );

@@ -45,4 +45,21 @@ describe('<BarChartPro /> - Subsampling', () => {
     expect(rendered).to.be.lessThan(dataLength / 4);
     expect(rendered).to.be.greaterThan(0);
   });
+
+  it('renders every bar when subsampling is disabled', () => {
+    const dataLength = 256;
+    const { container } = render(
+      <BarChartPro
+        series={[{ data: range(dataLength) }]}
+        xAxis={[{ data: range(dataLength).map(String) }]}
+        yAxis={[{ position: 'none' }]}
+        width={200}
+        height={200}
+        subsampling={false}
+        skipAnimation
+      />,
+    );
+
+    expect(countBars(container)).to.equal(dataLength);
+  });
 });

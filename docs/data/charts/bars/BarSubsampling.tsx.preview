@@ -1,12 +1,15 @@
-<Typography variant="body2" color="text.secondary">
-  {POINTS} bars. Zoomed out, bars are automatically subsampled so they never get
-  too thin. Scroll to zoom in at the pointer and reveal more detail; drag to pan.
-</Typography>
+<FormControlLabel
+  control={
+    <Switch
+      checked={subsampling}
+      onChange={(event) => setSubsampling(event.target.checked)}
+    />
+  }
+  label={`Subsampling ${subsampling ? 'on' : 'off'} (${POINTS} bars)`}
+/>
 <BarChartPro
   xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}
   series={[{ data, label: 'Value' }]}
   height={300}
-  // Wheel zooms at the pointer; without this the single-axis default also
-  // pans horizontally on wheel, which makes the zoom drift away from the cursor.
-  zoomInteractionConfig={{ pan: ['drag'] }}
+  subsampling={subsampling}
 />
