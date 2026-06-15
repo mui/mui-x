@@ -241,6 +241,7 @@ ChartsToolbarPro.propTypes = {
       fileName: PropTypes.string,
       nonce: PropTypes.string,
       onBeforeExport: PropTypes.func,
+      pixelRatio: PropTypes.number,
       quality: PropTypes.number,
       type: PropTypes.string.isRequired,
     }),
@@ -255,6 +256,7 @@ ChartsToolbarPro.propTypes = {
       label: PropTypes.string.isRequired,
       value: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+        PropTypes.arrayOf(PropTypes.string.isRequired),
         PropTypes.func,
         PropTypes.shape({
           step: PropTypes.number,

@@ -6,6 +6,30 @@
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "area": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the area element" },
+    "areaPlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AreaPlot root element"
+    },
+    "highlight": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the highlight element"
+    },
+    "linePlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the LinePlot root element"
+    },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
+    "markAnimate": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "a mark element",
+      "conditions": "it is animated"
+    },
+    "markPlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the MarkPlot root element"
+    }
+  },
   "slotDescriptions": { "line": "The component that renders the line." }
 }

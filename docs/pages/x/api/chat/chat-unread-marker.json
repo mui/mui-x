@@ -24,6 +24,5 @@
   "muiName": "MuiChatUnreadMarker",
   "filename": "/packages/x-chat/src/ChatIndicators/ChatUnreadMarker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/unread-marker/\">Chat - Unread marker</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/read-receipts/\">Chat - Read receipts</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/display/unread-marker/\">Chat - Unread marker</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/read-receipts/\">Chat - Read receipts</a></li></ul>"
 }
