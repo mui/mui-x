@@ -1,8 +1,15 @@
 import * as React from 'react';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { ChatAdapter } from '../../adapters';
 import { processStream, type ProcessStreamResult } from '../../stream';
 import type { ChatStore } from '../../store';
-import type { ChatMessage, ChatOnData, ChatOnFinish, ChatOnToolCall } from '../../types';
+import type {
+  ChatMessage,
+  ChatOnData,
+  ChatOnError,
+  ChatOnFinish,
+  ChatOnToolCall,
+} from '../../types';
 import type { ChatDraftAttachment } from '../../types/chat-entities';
 import type { ChatError } from '../../types/chat-error';
 import { createLocalId } from '../createLocalId';
@@ -13,6 +20,7 @@ import {
   getErrorMessage,
   findAssistantMessageIdsForRetry,
   removeAssistantMessageIds,
+  resolveRegenerateAnchor,
 } from './useChatControllerHelpers';
 import { getFinishMessage } from '../../stream/streamHelpers';
 
@@ -22,7 +30,7 @@ export interface SendMessageActionsRuntimeRef<Cursor = string> {
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
   onData?: ChatOnData;
-  onError?: (error: ChatError) => void;
+  onError?: ChatOnError;
 }
 
 export function createSendMessageActions<Cursor = string>(params: {
@@ -60,6 +68,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     stream: Awaited<ReturnType<ChatAdapter<Cursor>['sendMessage']>>,
     conversationId: string | undefined,
     abortController: AbortController,
+    fallbackMessageId: string,
   ): Promise<ProcessStreamResult> {
     const adapter = runtimeRef.current.adapter;
     const shouldDeferFinish = Boolean(adapter.reconnectToStream);
@@ -70,6 +79,12 @@ export function createSendMessageActions<Cursor = string>(params: {
       onToolCall: runtimeRef.current.onToolCall,
       onFinish: shouldDeferFinish ? undefined : runtimeRef.current.onFinish,
       onData: runtimeRef.current.onData,
+      // Unique-per-run fallback the stream binds to when the adapter omits a
+      // `messageId` on `start`. A backend-supplied id still overrides it (see
+      // processStream's `start` handler), so this only fills the gap — but it
+      // guarantees each run targets a distinct assistant message even when the
+      // adapter mints no id, instead of all such runs colliding on one id.
+      messageId: fallbackMessageId,
     };
     const emitDeferredFinish = async (result: ProcessStreamResult) => {
       if (!shouldDeferFinish || !runtimeRef.current.onFinish) {
@@ -99,7 +114,7 @@ export function createSendMessageActions<Cursor = string>(params: {
     }
 
     try {
-      store.setStreaming(true);
+      store.setStreaming(true, conversationId);
       const reconnectStream = await adapter.reconnectToStream({
         conversationId,
         messageId: result.messageId,
@@ -178,7 +193,7 @@ export function createSendMessageActions<Cursor = string>(params: {
 
     isSending = true;
     store.addMessage(nextMessage);
-    store.setStreaming(true);
+    store.setStreaming(true, conversationId);
     store.setError(null);
     store.clearMessageError(nextMessage.id);
 
@@ -191,6 +206,10 @@ export function createSendMessageActions<Cursor = string>(params: {
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
 
+    // Unique fallback id for this run; used only when the adapter's `start`
+    // chunk carries no `messageId` of its own.
+    const fallbackMessageId = createLocalId();
+
     try {
       const stream = await runtimeRef.current.adapter.sendMessage({
         conversationId,
@@ -200,7 +219,12 @@ export function createSendMessageActions<Cursor = string>(params: {
         signal: abortController.signal,
       });
 
-      const result = await processStreamWithReconnect(stream, conversationId, abortController);
+      const result = await processStreamWithReconnect(
+        stream,
+        conversationId,
+        abortController,
+        fallbackMessageId,
+      );
 
       let status: 'cancelled' | 'error' | 'sent';
       if (result.status === 'cancelled') {
@@ -310,5 +334,150 @@ export function createSendMessageActions<Cursor = string>(params: {
     await sendExistingMessage(message, attachmentsByUserMessageId.get(messageId));
   }
 
-  return { sendMessage, retry, pruneAttachmentsByMessageIds };
+  async function regenerate(messageId: string): Promise<void> {
+    // Hoist the streaming guard above any destructive work — same as `retry`.
+    if (isSending || store.state.isStreaming) {
+      return;
+    }
+
+    const resolution = resolveRegenerateAnchor(
+      storeUnknown,
+      messageId,
+      assistantMessageIdByUserMessageIdRef.current,
+    );
+
+    if (!resolution) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X Chat: `regenerate()` could not resolve the target message.',
+          'The id must reference an assistant reply (or the user message that prompted it); regeneration is skipped, so the UI will not change.',
+          'Pass the `message.id` of an assistant message that follows a user message in the active conversation.',
+        ]);
+      }
+      return;
+    }
+
+    const { anchorUserMessageId, assistantMessageIds } = resolution;
+    const anchorMessage = store.state.messagesById[anchorUserMessageId];
+
+    if (!anchorMessage) {
+      return;
+    }
+
+    const adapter = runtimeRef.current.adapter;
+
+    // Fallback path: no `adapter.regenerate` — remove the resolved run and
+    // re-send the anchor user message through the existing send pipeline. This
+    // makes `regenerate` work against any adapter; `adapter.regenerate` is an
+    // opt-in transport refinement. `sendExistingMessage`'s own postlude provides
+    // the `onError` behavior here.
+    if (!adapter.regenerate) {
+      removeAssistantMessageIds(
+        storeUnknown,
+        assistantMessageIds,
+        assistantMessageIdByUserMessageIdRef.current,
+      );
+      pruneAttachmentsByMessageIds(store.state.messageIds);
+
+      await sendExistingMessage(anchorMessage, attachmentsByUserMessageId.get(anchorUserMessageId));
+      return;
+    }
+
+    // Adapter path. Set `isSending` synchronously, before any `await`, so the
+    // Strict Mode double-invocation guard is effective (the same failure mode
+    // the flag defeats in `sendExistingMessage`).
+    isSending = true;
+
+    const conversationId = anchorMessage.conversationId ?? store.state.activeConversationId;
+
+    // Snapshot the assistant-run messages so we can roll back if the adapter
+    // call rejects before any output streams (rollback precedent:
+    // `addToolApprovalResponse`).
+    const removedMessages = assistantMessageIds
+      .map((id) => store.state.messagesById[id])
+      .filter((message): message is ChatMessage => message != null);
+
+    removeAssistantMessageIds(
+      storeUnknown,
+      assistantMessageIds,
+      assistantMessageIdByUserMessageIdRef.current,
+    );
+    pruneAttachmentsByMessageIds(store.state.messageIds);
+
+    store.setStreaming(true, conversationId);
+    store.setError(null);
+
+    const abortController = new AbortController();
+    store.setActiveStreamAbortController(abortController);
+
+    // Fresh fallback id: the prior assistant run was just removed above, so a
+    // regenerated reply with no adapter-supplied id targets a new message.
+    const fallbackMessageId = createLocalId();
+
+    try {
+      const stream = await adapter.regenerate({
+        conversationId,
+        messageId,
+        message: anchorMessage,
+        messages: getMessages(storeUnknown),
+        signal: abortController.signal,
+      });
+
+      const result = await processStreamWithReconnect(
+        stream,
+        conversationId,
+        abortController,
+        fallbackMessageId,
+      );
+
+      if (result.messageId) {
+        assistantMessageIdByUserMessageIdRef.current.set(anchorUserMessageId, result.messageId);
+      }
+
+      // Postlude (mirrors `sendExistingMessage` — `processStreamWithReconnect`
+      // never fires `onError` itself): surface mid-stream errors through the
+      // public callback. Partial output is kept with the stream-reported status.
+      if (result.isError && store.state.error) {
+        runtimeRef.current.onError?.(store.state.error);
+      }
+    } catch (error) {
+      if (abortController.signal.aborted) {
+        store.setStreaming(false);
+        return;
+      }
+
+      if (store.state.error?.source === 'stream') {
+        runtimeRef.current.onError?.(store.state.error);
+        return;
+      }
+
+      // Pre-stream rejection: restore the snapshot assistant messages (D4) and
+      // surface a REGENERATE_ERROR.
+      for (const removedMessage of removedMessages) {
+        store.addMessage(removedMessage);
+      }
+
+      store.setStreaming(false);
+      setRuntimeError(
+        createRuntimeError(
+          'REGENERATE_ERROR',
+          getErrorMessage('Unable to regenerate the response.', error),
+          'send',
+          true,
+          true,
+          {
+            messageId,
+            conversationId,
+          },
+        ),
+      );
+    } finally {
+      isSending = false;
+      if (store.state.activeStreamAbortController === abortController) {
+        store.setActiveStreamAbortController(null);
+      }
+    }
+  }
+
+  return { sendMessage, retry, regenerate, pruneAttachmentsByMessageIds };
 }

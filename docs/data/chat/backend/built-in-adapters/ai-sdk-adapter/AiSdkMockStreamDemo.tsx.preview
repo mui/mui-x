@@ -1,0 +1,13 @@
+<ChatBox
+  adapter={adapter}
+  initialActiveConversationId={CONVERSATION_ID}
+  initialConversations={initialConversations}
+  initialMessages={initialMessages}
+  variant="compact"
+  sx={{
+    height: 480,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>
