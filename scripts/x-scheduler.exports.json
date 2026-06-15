@@ -29,6 +29,7 @@
   { "name": "StandaloneDayView", "kind": "Variable" },
   { "name": "StandaloneDayViewProps", "kind": "Interface" },
   { "name": "StandaloneEvent", "kind": "Variable" },
+  { "name": "StandaloneEventProps", "kind": "Interface" },
   { "name": "StandaloneMonthView", "kind": "Variable" },
   { "name": "StandaloneMonthViewProps", "kind": "Interface" },
   { "name": "StandaloneWeekView", "kind": "Variable" },
