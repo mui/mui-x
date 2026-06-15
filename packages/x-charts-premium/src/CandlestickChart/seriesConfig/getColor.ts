@@ -12,9 +12,9 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
       }
 
       const value = bandValues[dataIndex];
-      const color =  bandColorScale(value);
+      const color = bandColorScale(value);
 
-      if(typeof color !== 'string') {
+      if (typeof color !== 'string') {
         return getSeriesColor({ value, dataIndex });
       }
 

@@ -9,11 +9,10 @@ const tooltipGetter: TooltipGetter<'mapShape'> = ({ series, getColor, identifier
   if (point == null) {
     return null;
   }
-  const color = getColor(identifier.dataIndex)
+  const color = getColor(identifier.dataIndex);
   if (color === null) {
     return null;
   }
-
 
   const label = getLabel(point.label ?? point.name, 'tooltip');
   const formattedValue = series.valueFormatter(point, { dataIndex: identifier.dataIndex });
