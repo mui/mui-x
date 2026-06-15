@@ -143,6 +143,14 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    */
   formulaFunctions: Record<string, GridFormulaFunctionDefinition>;
   /**
+   * If `true`, formulas can be entered and are displayed using A1 notation
+   * (`=A1 + B2`) while still being stored in the canonical syntax.
+   * A leftmost row-number column and column-letter header adornments are shown.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  formulaA1Notation: boolean;
+  /**
    * If `true`, the clipboard paste is disabled.
    * @default false
    */

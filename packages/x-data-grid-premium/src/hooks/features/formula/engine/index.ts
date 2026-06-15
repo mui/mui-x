@@ -97,3 +97,11 @@ export { validateFormulaExpression } from './formulaValidation';
 
 export type { FormulaRecomputeOrder } from './formulaGraph';
 export { collectAffectedCells, orderForRecompute } from './formulaGraph';
+
+export type { A1TransformContext, A1TransformResult, ToCanonicalOptions } from './formulaA1';
+export {
+  columnIndexToLetters,
+  columnLettersToIndex,
+  toCanonicalFormula,
+  toDisplayFormula,
+} from './formulaA1';

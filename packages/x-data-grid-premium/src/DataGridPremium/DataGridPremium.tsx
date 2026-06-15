@@ -32,6 +32,7 @@ import { useGridAriaAttributesPremium } from '../hooks/utils/useGridAriaAttribut
 import { useGridRowAriaAttributesPremium } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { gridCellFormulaResultSelector } from '../hooks/features/formula/gridFormulaSelectors';
+import { useGridFormulaColumnHeaderAdornment } from '../hooks/features/formula/useGridFormulaColumnHeaderAdornment';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
@@ -72,6 +73,7 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
     useIsCellEditable,
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
+    useColumnHeaderAdornment: useGridFormulaColumnHeaderAdornment,
   },
 };
 const packageInfo = {

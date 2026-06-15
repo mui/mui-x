@@ -382,7 +382,17 @@ export const useGridFormula = (
   );
 
   const handleCellEditStop = React.useCallback<GridEventListener<'cellEditStop'>>(() => {
-    apiRef.current.caches.formula.lastCellEditStart = null;
+    const cache = apiRef.current.caches.formula;
+    cache.lastCellEditStart = null;
+    // A1 seed is consumed by the commit parser; clear it so it cannot affect a
+    // later edit of the same cell.
+    cache.lastA1Seed = null;
+  }, [apiRef]);
+
+  // Arm the A1 paste origin: the first cell of the batch sets it, the rest
+  // offset their relative references from it (Excel fill).
+  const handleClipboardPasteStart = React.useCallback(() => {
+    apiRef.current.caches.formula.pasteOrigin = null;
   }, [apiRef]);
 
   useGridEvent(apiRef, 'rowsSet', handleRowsSet);
@@ -392,6 +402,7 @@ export const useGridFormula = (
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'cellEditStart', handleCellEditStart);
   useGridEvent(apiRef, 'cellEditStop', handleCellEditStop);
+  useGridEvent(apiRef, 'clipboardPasteStart', handleClipboardPasteStart);
 
   /**
    * EFFECTS

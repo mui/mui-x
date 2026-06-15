@@ -39,6 +39,8 @@ export function createFormulaInternalCache(
     formulaFields: [],
     lastColumnsSignature: new Map(),
     lastCellEditStart: null,
+    lastA1Seed: null,
+    pasteOrigin: null,
   };
 }
 

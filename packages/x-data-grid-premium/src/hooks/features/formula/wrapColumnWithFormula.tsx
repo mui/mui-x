@@ -8,6 +8,7 @@ import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { GridFormulaEditCell } from '../../../components/GridFormulaEditCell';
 import { isEscapedFormulaSource, isFormulaSource, unescapeLiteralSource } from './engine';
 import { gridCellFormulaResultSelector } from './gridFormulaSelectors';
+import { convertA1ToCanonicalCommit, convertA1ToCanonicalPaste } from './gridFormulaA1Transforms';
 
 // Deliberately disjoint from the properties the aggregation wrapper touches
 // (`renderCell`/`renderHeader`): two features stacking wrappers on the same
@@ -49,6 +50,7 @@ function areCommittedValuesEqual(a: unknown, b: unknown): boolean {
 export const wrapColumnWithFormula = (
   column: GridBaseColDef,
   apiRef: RefObject<GridPrivateApiPremium>,
+  a1NotationEnabled: boolean,
 ): GridBaseColDef => {
   const getFormulaResult = (id: GridRowId) =>
     gridCellFormulaResultSelector(apiRef, { id, field: column.field });
@@ -75,6 +77,10 @@ export const wrapColumnWithFormula = (
   const originalValueParser = column.valueParser;
   const wrappedValueParser: GridBaseColDef['valueParser'] = (value, row, colDef, parserApiRef) => {
     if (isFormulaEditValue(value)) {
+      // Pass formula sources through untouched — including A1 text. A1→canonical
+      // freezing happens at commit in `valueSetter`, NOT here: `GridEditInputCell`
+      // runs `valueParser` on every keystroke and shows its result to the user, so
+      // converting here would surface canonical `REF(...)` text mid-edit.
       return value;
     }
     return originalValueParser ? originalValueParser(value, row, colDef, parserApiRef) : value;
@@ -90,6 +96,16 @@ export const wrapColumnWithFormula = (
       return row;
     }
     if (isFormulaEditValue(value)) {
+      // A1 mode: the editor holds and commits A1 text (`valueParser` passes it
+      // through so the user keeps seeing A1, not canonical, while typing). Freeze
+      // to canonical here — `valueSetter` is the real commit hook
+      // (`getRowWithUpdatedValuesFromCellEditing` calls only the setter, never the
+      // parser). `convertA1ToCanonicalCommit` restores the stored canonical on an
+      // unchanged commit (the seed still matches) and re-freezes an edited formula
+      // otherwise. Escaped literals (`'=…`) are never transformed.
+      if (a1NotationEnabled && isFormulaSource(value)) {
+        return { ...row, [colDef.field]: convertA1ToCanonicalCommit(value, row, colDef, apiRef) };
+      }
       return { ...row, [colDef.field]: value };
     }
     if (isFormulaSource(stored)) {
@@ -159,6 +175,11 @@ export const wrapColumnWithFormula = (
     parserApiRef,
   ) => {
     if (isFormulaEditValue(value)) {
+      // A1 mode: a pasted formula is frozen to canonical with the Excel fill
+      // offset. Canonical text pasted from an in-grid copy passes through.
+      if (a1NotationEnabled && isFormulaSource(value) && row !== undefined) {
+        return convertA1ToCanonicalPaste(value, row, colDef, apiRef);
+      }
       return value;
     }
     if (originalPastedValueParser) {

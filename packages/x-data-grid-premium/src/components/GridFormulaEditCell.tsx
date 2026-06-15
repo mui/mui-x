@@ -4,8 +4,10 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { GridEditInputCell } from '@mui/x-data-grid-pro';
 import type { GridColDef, GridRenderEditCellParams } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { isEscapedFormulaSource, isFormulaSource } from '../hooks/features/formula/engine';
 import { gridCellFormulaResultSelector } from '../hooks/features/formula/gridFormulaSelectors';
+import { convertCanonicalToA1Display } from '../hooks/features/formula/gridFormulaA1Transforms';
 
 export interface GridFormulaEditCellProps extends GridRenderEditCellParams {
   /**
@@ -35,6 +37,9 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
   const { originalRenderEditCell, ...params } = props;
   const { id, field, value, colDef } = params;
   const apiRef = useGridPrivateApiContext();
+  const rootProps = useGridRootProps();
+  const a1NotationEnabled =
+    rootProps.formulaA1Notation && !rootProps.disableFormulas && !rootProps.dataSource;
 
   const rawValue = apiRef.current.getRow(id)?.[field];
   const rawIsFormula = isFormulaEditValue(rawValue);
@@ -90,7 +95,21 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
         return;
       }
     }
-    apiRef.current.setEditCellValue({ id, field, value: rawValue, unstable_skipValueParser: true });
+    // A1 mode: seed the editor with the A1 rendering of the canonical source and
+    // record it so an unchanged commit restores the canonical (no re-freeze).
+    // Escaped literals (`'=…`) are never transformed.
+    let seededValue = rawValue;
+    if (a1NotationEnabled && isFormulaSource(rawValue)) {
+      const display = convertCanonicalToA1Display(rawValue, apiRef);
+      cache.lastA1Seed = { id, field, display, canonical: rawValue };
+      seededValue = display;
+    }
+    apiRef.current.setEditCellValue({
+      id,
+      field,
+      value: seededValue,
+      unstable_skipValueParser: true,
+    });
   });
 
   if (!showFormulaInput && originalRenderEditCell) {

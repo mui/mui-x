@@ -198,6 +198,20 @@ export interface GridFormulaInternalCache {
    */
   lastColumnsSignature: Map<GridColDef['field'], unknown>;
   lastCellEditStart: GridFormulaCellEditStartInfo | null;
+  /**
+   * The A1 value last seeded into the editor and the canonical source it came
+   * from (A1 notation only). Lets the commit parser detect an unchanged edit
+   * and restore the stored canonical instead of re-freezing relative references
+   * against a possibly re-sorted view. Cleared on `cellEditStop`.
+   */
+  lastA1Seed: { id: GridRowId; field: string; display: string; canonical: string } | null;
+  /**
+   * Position of the first cell of the current clipboard paste (A1 notation
+   * only). Subsequent pasted cells offset their relative references by their
+   * distance from this origin — the Excel fill adjustment. Armed on
+   * `clipboardPasteStart`, consumed lazily by the first pasted cell.
+   */
+  pasteOrigin: { rowPosition: number | undefined; columnPosition: number | undefined } | null;
 }
 
 export interface GridFormulaApi {

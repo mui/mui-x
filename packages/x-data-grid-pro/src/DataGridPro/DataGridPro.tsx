@@ -34,6 +34,7 @@ const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedPr
     useIsCellEditable,
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
+    useColumnHeaderAdornment: () => null,
   },
 };
 const packageInfo = {

@@ -15,12 +15,28 @@ export interface GridAriaAttributesInternalHook {
   useGridAriaAttributes: () => React.HTMLAttributes<HTMLElement>;
 }
 
+export interface GridColumnHeaderAdornmentInternalHook {
+  /**
+   * Returns an optional adornment rendered inside a column header's title
+   * content, at the start, before the title label. The Premium formula feature
+   * uses it to display A1-notation column letters without wrapping
+   * `colDef.renderHeader` (reserved by aggregation). Placing it inside the
+   * (non-reversed) title content keeps it on the same side of the title for
+   * both left- and right-aligned headers. Called once per rendered header
+   * cell, so the implementation may use hooks.
+   * @param {string} field The column field.
+   * @returns {React.ReactNode} The adornment node, or `null` for none.
+   */
+  useColumnHeaderAdornment: (field: string) => React.ReactNode;
+}
+
 export interface GridInternalHook<Api, Props>
   extends
     GridAriaAttributesInternalHook,
     GridRowAriaAttributesInternalHook,
     GridCellEditableInternalHook<Api, Props>,
     GridAggregationInternalHooks<Api, Props>,
+    GridColumnHeaderAdornmentInternalHook,
     GridRowsOverridableMethodsInternalHook<Api, Props>,
     GridParamsOverridableMethodsInternalHook<Api> {
   useCSSVariables: () => { id: string; variables: GridCSSVariablesInterface };

@@ -2,4 +2,7 @@
   rows={rows}
   columns={columns}
   initialState={{ aggregation: { model: { total: 'sum' } } }}
+  formulaA1Notation
+  showCellVerticalBorder
+  showColumnVerticalBorder
 />
