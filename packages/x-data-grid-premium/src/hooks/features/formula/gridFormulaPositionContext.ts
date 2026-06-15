@@ -3,6 +3,7 @@ import {
   GRID_CHECKBOX_SELECTION_FIELD,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GRID_REORDER_COL_DEF,
+  gridColumnFieldsSelector,
   gridDataRowIdsSelector,
   gridFilteredSortedRowIdsSelector,
   gridRowTreeSelector,
@@ -190,3 +191,16 @@ export function getFormulaColumnLetter(context: FormulaPositionContext, field: s
   const position = context.getPositionOfField(field);
   return position === undefined ? '' : columnIndexToLetters(position);
 }
+
+/**
+ * The data fields a formula can reference by name, in column order. Utility,
+ * grouping and row-number columns are excluded, but HIDDEN columns are kept:
+ * a same-row bare reference (`=price`) resolves against the full column lookup
+ * regardless of visibility, so the editor autocomplete offers them too. (A1
+ * column letters, in contrast, are visibility-gated through the position
+ * context — a hidden column has no letter.)
+ */
+export const gridFormulaReferenceableFieldsSelector = createSelectorMemoized(
+  gridColumnFieldsSelector,
+  (fields): string[] => fields.filter(isPositionedDataField),
+);

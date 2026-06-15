@@ -41,7 +41,7 @@ const rows = [
     quantity: 3,
     total: '=price * quantity',
     description:
-      'Inline same-row arithmetic. Same-row fields keep their names in A1.',
+      'Inline same-row arithmetic. Same-row fields keep their names in A1 notation.',
   },
   {
     id: 2,

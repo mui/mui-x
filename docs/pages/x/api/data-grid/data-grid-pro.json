@@ -1902,6 +1902,18 @@
       "isGlobal": false
     },
     {
+      "key": "formulaColumnHeaderLetter",
+      "className": "MuiDataGridPro-formulaColumnHeaderLetter",
+      "description": "Styles applied to the A1-notation column-letter adornment in the column header (Premium formulas).",
+      "isGlobal": false
+    },
+    {
+      "key": "formulaRowNumberCell",
+      "className": "MuiDataGridPro-formulaRowNumberCell",
+      "description": "Styles applied to the cells of the A1-notation row-number column (Premium formulas).",
+      "isGlobal": false
+    },
+    {
       "key": "groupingCriteriaCell",
       "className": "MuiDataGridPro-groupingCriteriaCell",
       "description": "Styles applied to the root element of the grouping criteria cell",

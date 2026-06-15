@@ -98,6 +98,18 @@ export { validateFormulaExpression } from './formulaValidation';
 export type { FormulaRecomputeOrder } from './formulaGraph';
 export { collectAffectedCells, orderForRecompute } from './formulaGraph';
 
+export type {
+  FormulaCompletionContext,
+  FormulaCompletionKind,
+  FormulaCompletionToken,
+  RankFormulaCompletionsOptions,
+} from './formulaCompletion';
+export {
+  getFormulaCompletionContext,
+  getFormulaCompletionTokens,
+  rankFormulaCompletions,
+} from './formulaCompletion';
+
 export type { A1TransformContext, A1TransformResult, ToCanonicalOptions } from './formulaA1';
 export {
   columnIndexToLetters,

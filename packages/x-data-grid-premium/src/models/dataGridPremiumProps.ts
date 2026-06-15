@@ -151,6 +151,12 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    */
   formulaA1Notation: boolean;
   /**
+   * If `true`, the suggestion dropdown shown while editing a formula cell is disabled.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  disableFormulaAutocomplete: boolean;
+  /**
    * If `true`, the clipboard paste is disabled.
    * @default false
    */

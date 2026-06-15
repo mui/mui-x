@@ -507,6 +507,12 @@ DataGridPremiumRaw.propTypes = {
    */
   disableEval: PropTypes.bool,
   /**
+   * If `true`, the suggestion dropdown shown while editing a formula cell is disabled.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  disableFormulaAutocomplete: PropTypes.bool,
+  /**
    * If `true`, the formula evaluation is disabled: `=` cell values render as raw strings.
    * @default false
    */
@@ -599,6 +605,14 @@ DataGridPremiumRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * If `true`, formulas can be entered and are displayed using A1 notation
+   * (`=A1 + B2`) while still being stored in the canonical syntax.
+   * A leftmost row-number column and column-letter header adornments are shown.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  formulaA1Notation: PropTypes.bool,
   /**
    * Functions available to formulas, keyed by name.
    * The prop replaces the built-in set: spread `GRID_FORMULA_FUNCTIONS` to extend it.

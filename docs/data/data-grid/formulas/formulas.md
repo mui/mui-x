@@ -87,6 +87,20 @@ Invalid formulas can still be committed: the cell shows the corresponding error 
 
 `processRowUpdate` and undo/redo operate on the formula source, so persisting and restoring rows keeps formulas working for free.
 
+### Autocomplete
+
+While editing a formula, a suggestion dropdown offers ranked completions for the partial token at the caret—functions, references, constants, and the grid's column fields (and, with `formulaA1Notation`, the column letters).
+Accepting a function inserts it with an open parenthesis and places the caret inside, and signature help appears while the caret is within a call.
+Suggestions are spliced at the caret, so the rest of the formula is preserved.
+
+The example below adds a custom function `DISCOUNT` that which appears in the autocomplete dropdown.
+
+{{"demo": "FormulaAutocomplete.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The dropdown is on by default.
+While it is open, <kbd class="key">Down</kbd> and <kbd class="key">Up</kbd> move the highlight, <kbd class="key">Enter</kbd> and <kbd class="key">Tab</kbd> accept the highlighted suggestion, and <kbd class="key">Escape</kbd> closes it—so those keys do not commit the edit or move between cells until the dropdown is closed.
+Pass `disableFormulaAutocomplete` prop to turn the dropdown off.
+
 ## Custom functions
 
 Provide custom functions with the `formulaFunctions` prop.
@@ -112,6 +126,9 @@ const DOUBLE: GridFormulaFunctionDefinition = {
 <DataGridPremium formulaFunctions={{ ...GRID_FORMULA_FUNCTIONS, DOUBLE }} />;
 ```
 
+Custom functions appear in the [autocomplete](#autocomplete) dropdown.
+Add the optional `signature`, `description`, and `category` fields to a definition to surface richer hints there.
+
 ## API methods
 
 The grid API exposes formula methods—see the [API reference](/x/api/data-grid/grid-api/) for details:
@@ -124,7 +141,6 @@ The grid API exposes formula methods—see the [API reference](/x/api/data-grid/
 
 ## Current limitations
 
-- The `A1` editor notation is not available yet.
 - Formulas are not supported with the [server-side data source](/x/react-data-grid/server-side-data/) or while [pivoting](/x/react-data-grid/pivoting/) is active.
 - The formula syntax is en-US only.
 

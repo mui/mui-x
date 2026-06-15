@@ -63,6 +63,20 @@ export interface FormulaFunctionDefinition {
    * recompute pass. No built-in is volatile.
    */
   volatile?: boolean;
+  /**
+   * One-line call signature shown by the formula editor autocomplete, e.g.
+   * `SUM(value1, value2, …)`. Optional — a generic signature is derived from
+   * `minArgs`/`maxArgs` when omitted.
+   */
+  signature?: string;
+  /**
+   * Short description shown by the formula editor autocomplete.
+   */
+  description?: string;
+  /**
+   * Category label used to group the function in the formula editor autocomplete.
+   */
+  category?: string;
   apply: (
     args: FormulaFunctionArg[],
     context: FormulaFunctionContext,
@@ -127,6 +141,9 @@ const sumDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: null,
   acceptsRanges: true,
+  signature: 'SUM(value1, value2, …)',
+  description: 'Adds numbers, ranges and columns.',
+  category: 'Math',
   apply: (args) => {
     const numbers = collectNumericValues(args);
     if (isFormulaErrorValue(numbers)) {
@@ -141,6 +158,9 @@ const averageDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: null,
   acceptsRanges: true,
+  signature: 'AVERAGE(value1, value2, …)',
+  description: 'Returns the arithmetic mean of its numeric values.',
+  category: 'Math',
   apply: (args) => {
     const numbers = collectNumericValues(args);
     if (isFormulaErrorValue(numbers)) {
@@ -158,6 +178,9 @@ const minDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: null,
   acceptsRanges: true,
+  signature: 'MIN(value1, value2, …)',
+  description: 'Returns the smallest numeric value.',
+  category: 'Math',
   apply: (args) => {
     const numbers = collectNumericValues(args);
     if (isFormulaErrorValue(numbers)) {
@@ -173,6 +196,9 @@ const maxDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: null,
   acceptsRanges: true,
+  signature: 'MAX(value1, value2, …)',
+  description: 'Returns the largest numeric value.',
+  category: 'Math',
   apply: (args) => {
     const numbers = collectNumericValues(args);
     if (isFormulaErrorValue(numbers)) {
@@ -187,6 +213,9 @@ const countDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: null,
   acceptsRanges: true,
+  signature: 'COUNT(value1, value2, …)',
+  description: 'Counts how many values are numbers or dates.',
+  category: 'Math',
   apply: (args) => {
     const values = flattenArgValues(args);
     if (isFormulaErrorValue(values)) {
@@ -208,6 +237,9 @@ const countaDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: null,
   acceptsRanges: true,
+  signature: 'COUNTA(value1, value2, …)',
+  description: 'Counts how many values are not empty.',
+  category: 'Math',
   apply: (args) => {
     const values = flattenArgValues(args);
     return isFormulaErrorValue(values) ? values : values.length;
@@ -218,6 +250,9 @@ const roundDefinition: FormulaFunctionDefinition = {
   name: 'ROUND',
   minArgs: 1,
   maxArgs: 2,
+  signature: 'ROUND(value, [digits])',
+  description: 'Rounds a number to the given number of decimal digits (0 by default).',
+  category: 'Math',
   apply: (args) => {
     const value = toFormulaNumber(resolveArg(args[0]));
     if (isFormulaErrorValue(value)) {
@@ -242,6 +277,9 @@ const absDefinition: FormulaFunctionDefinition = {
   name: 'ABS',
   minArgs: 1,
   maxArgs: 1,
+  signature: 'ABS(value)',
+  description: 'Returns the absolute value of a number.',
+  category: 'Math',
   apply: (args) => {
     const value = toFormulaNumber(resolveArg(args[0]));
     return isFormulaErrorValue(value) ? value : Math.abs(value);
@@ -252,6 +290,9 @@ const modDefinition: FormulaFunctionDefinition = {
   name: 'MOD',
   minArgs: 2,
   maxArgs: 2,
+  signature: 'MOD(value, divisor)',
+  description: 'Returns the remainder of a division (sign of the divisor).',
+  category: 'Math',
   apply: (args) => {
     const value = toFormulaNumber(resolveArg(args[0]));
     if (isFormulaErrorValue(value)) {
@@ -273,6 +314,9 @@ const powerDefinition: FormulaFunctionDefinition = {
   name: 'POWER',
   minArgs: 2,
   maxArgs: 2,
+  signature: 'POWER(base, exponent)',
+  description: 'Raises a number to a power.',
+  category: 'Math',
   apply: (args) => {
     const base = toFormulaNumber(resolveArg(args[0]));
     if (isFormulaErrorValue(base)) {
@@ -300,6 +344,9 @@ const ifDefinition: FormulaFunctionDefinition = {
   minArgs: 2,
   maxArgs: 3,
   lazy: true,
+  signature: 'IF(condition, valueIfTrue, [valueIfFalse])',
+  description: 'Returns one value when the condition is true and another when it is false.',
+  category: 'Logical',
   apply: (args) => {
     const conditionValue = resolveBranch(args[0]);
     if (isFormulaErrorValue(conditionValue)) {
@@ -322,6 +369,9 @@ const andDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: null,
   lazy: true,
+  signature: 'AND(condition1, condition2, …)',
+  description: 'Returns TRUE when every condition is true.',
+  category: 'Logical',
   apply: (args) => {
     for (const arg of args) {
       const value = resolveBranch(arg);
@@ -345,6 +395,9 @@ const orDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: null,
   lazy: true,
+  signature: 'OR(condition1, condition2, …)',
+  description: 'Returns TRUE when at least one condition is true.',
+  category: 'Logical',
   apply: (args) => {
     for (const arg of args) {
       const value = resolveBranch(arg);
@@ -367,6 +420,9 @@ const notDefinition: FormulaFunctionDefinition = {
   name: 'NOT',
   minArgs: 1,
   maxArgs: 1,
+  signature: 'NOT(condition)',
+  description: 'Reverses a boolean value.',
+  category: 'Logical',
   apply: (args) => {
     const condition = toFormulaBoolean(resolveArg(args[0]));
     return isFormulaErrorValue(condition) ? condition : !condition;
@@ -379,6 +435,9 @@ const ifErrorDefinition: FormulaFunctionDefinition = {
   maxArgs: 2,
   lazy: true,
   acceptsErrors: true,
+  signature: 'IFERROR(value, valueIfError)',
+  description: 'Returns a fallback value when the first argument is an error.',
+  category: 'Logical',
   apply: (args) => {
     const value = resolveArg(args[0]);
     if (isFormulaErrorValue(value)) {
@@ -396,6 +455,9 @@ const isBlankDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: 1,
   acceptsErrors: true,
+  signature: 'ISBLANK(value)',
+  description: 'Returns TRUE when the value is empty.',
+  category: 'Logical',
   apply: (args) => {
     const value = resolveArg(args[0]);
     if (isFormulaErrorValue(value)) {
@@ -413,6 +475,9 @@ const concatDefinition: FormulaFunctionDefinition = {
   minArgs: 1,
   maxArgs: null,
   acceptsRanges: true,
+  signature: 'CONCAT(text1, text2, …)',
+  description: 'Joins values into a single text string.',
+  category: 'Text',
   apply: (args) => {
     let result = '';
     for (const arg of args) {
@@ -442,6 +507,9 @@ const lenDefinition: FormulaFunctionDefinition = {
   name: 'LEN',
   minArgs: 1,
   maxArgs: 1,
+  signature: 'LEN(text)',
+  description: 'Returns the number of characters in a text string.',
+  category: 'Text',
   apply: (args) => {
     const text = toFormulaText(resolveArg(args[0]));
     return isFormulaErrorValue(text) ? text : text.length;
@@ -452,6 +520,9 @@ const upperDefinition: FormulaFunctionDefinition = {
   name: 'UPPER',
   minArgs: 1,
   maxArgs: 1,
+  signature: 'UPPER(text)',
+  description: 'Converts text to uppercase.',
+  category: 'Text',
   apply: (args) => applyTextFunction(args[0], (text) => text.toUpperCase()),
 };
 
@@ -459,6 +530,9 @@ const lowerDefinition: FormulaFunctionDefinition = {
   name: 'LOWER',
   minArgs: 1,
   maxArgs: 1,
+  signature: 'LOWER(text)',
+  description: 'Converts text to lowercase.',
+  category: 'Text',
   apply: (args) => applyTextFunction(args[0], (text) => text.toLowerCase()),
 };
 
@@ -466,6 +540,9 @@ const trimDefinition: FormulaFunctionDefinition = {
   name: 'TRIM',
   minArgs: 1,
   maxArgs: 1,
+  signature: 'TRIM(text)',
+  description: 'Removes leading, trailing and repeated spaces from text.',
+  category: 'Text',
   // Excel-compatible: TRIM also collapses internal runs of spaces.
   apply: (args) => applyTextFunction(args[0], (text) => text.trim().replace(/ {2,}/g, ' ')),
 };
@@ -496,6 +573,9 @@ const leftDefinition: FormulaFunctionDefinition = {
   name: 'LEFT',
   minArgs: 1,
   maxArgs: 2,
+  signature: 'LEFT(text, [count])',
+  description: 'Returns the first characters of a text string (1 by default).',
+  category: 'Text',
   apply: (args) => sliceTextFunction(args, (text, count) => text.slice(0, count)),
 };
 
@@ -503,6 +583,9 @@ const rightDefinition: FormulaFunctionDefinition = {
   name: 'RIGHT',
   minArgs: 1,
   maxArgs: 2,
+  signature: 'RIGHT(text, [count])',
+  description: 'Returns the last characters of a text string (1 by default).',
+  category: 'Text',
   apply: (args) =>
     sliceTextFunction(args, (text, count) => (count === 0 ? '' : text.slice(-count))),
 };
@@ -525,7 +608,7 @@ export const FORMULA_BUILT_IN_FUNCTIONS: readonly FormulaFunctionDefinition[] = 
   ifErrorDefinition,
   isBlankDefinition,
   concatDefinition,
-  { ...concatDefinition, name: 'CONCATENATE' },
+  { ...concatDefinition, name: 'CONCATENATE', signature: 'CONCATENATE(text1, text2, …)' },
   lenDefinition,
   upperDefinition,
   lowerDefinition,

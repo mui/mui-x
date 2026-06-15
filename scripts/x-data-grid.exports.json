@@ -507,6 +507,7 @@
   { "name": "GridRowsMetaState", "kind": "Interface" },
   { "name": "GridRowSpacing", "kind": "Interface" },
   { "name": "GridRowSpacingParams", "kind": "Interface" },
+  { "name": "GridRowSpanningPrivateApi", "kind": "Interface" },
   { "name": "GridRowsProp", "kind": "TypeAlias" },
   { "name": "GridRowsState", "kind": "Interface" },
   { "name": "GridRowTreeConfig", "kind": "TypeAlias" },

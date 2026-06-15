@@ -8,6 +8,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { isEscapedFormulaSource, isFormulaSource } from '../hooks/features/formula/engine';
 import { gridCellFormulaResultSelector } from '../hooks/features/formula/gridFormulaSelectors';
 import { convertCanonicalToA1Display } from '../hooks/features/formula/gridFormulaA1Transforms';
+import { GridFormulaAutocomplete } from './GridFormulaAutocomplete';
 
 export interface GridFormulaEditCellProps extends GridRenderEditCellParams {
   /**
@@ -114,6 +115,14 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
 
   if (!showFormulaInput && originalRenderEditCell) {
     return originalRenderEditCell(params);
+  }
+
+  // The suggestion dropdown is on by default; the opt-out (and `dataSource`)
+  // falls back to the plain text input.
+  const autocompleteEnabled =
+    !rootProps.disableFormulaAutocomplete && !rootProps.disableFormulas && !rootProps.dataSource;
+  if (autocompleteEnabled) {
+    return <GridFormulaAutocomplete {...params} />;
   }
 
   return <GridEditInputCell {...params} colDef={{ ...colDef, type: 'string' }} />;

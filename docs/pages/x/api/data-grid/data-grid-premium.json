@@ -91,6 +91,7 @@
     "disableColumnSorting": { "type": { "name": "bool" }, "default": "false" },
     "disableDensitySelector": { "type": { "name": "bool" }, "default": "false" },
     "disableEval": { "type": { "name": "bool" }, "default": "false" },
+    "disableFormulaAutocomplete": { "type": { "name": "bool" }, "default": "false" },
     "disableFormulas": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" }, "default": "false" },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" }, "default": "false" },
@@ -125,6 +126,7 @@
         "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
     },
+    "formulaA1Notation": { "type": { "name": "bool" }, "default": "false" },
     "formulaFunctions": {
       "type": { "name": "object" },
       "default": "GRID_FORMULA_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided"
@@ -2356,6 +2358,18 @@
       "key": "footerContainer",
       "className": "MuiDataGridPremium-footerContainer",
       "description": "Styles applied to the footer container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "formulaColumnHeaderLetter",
+      "className": "MuiDataGridPremium-formulaColumnHeaderLetter",
+      "description": "Styles applied to the A1-notation column-letter adornment in the column header (Premium formulas).",
+      "isGlobal": false
+    },
+    {
+      "key": "formulaRowNumberCell",
+      "className": "MuiDataGridPremium-formulaRowNumberCell",
+      "description": "Styles applied to the cells of the A1-notation row-number column (Premium formulas).",
       "isGlobal": false
     },
     {

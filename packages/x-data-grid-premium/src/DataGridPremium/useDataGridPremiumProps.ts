@@ -96,6 +96,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   disableFormulas: false,
   formulaFunctions: GRID_FORMULA_FUNCTIONS,
   formulaA1Notation: false,
+  disableFormulaAutocomplete: false,
   getAggregationPosition: defaultGetAggregationPosition,
   cellSelectionFillHandle: false,
   disableClipboardPaste: false,
