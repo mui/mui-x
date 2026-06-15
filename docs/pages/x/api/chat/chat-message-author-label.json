@@ -43,6 +43,18 @@
       "isGlobal": false
     },
     {
+      "key": "dateDividerLabel",
+      "className": "MuiChatMessageAuthorLabel-dateDividerLabel",
+      "description": "Styles applied to the formatted day label inside the date divider.",
+      "isGlobal": false
+    },
+    {
+      "key": "dateDividerLine",
+      "className": "MuiChatMessageAuthorLabel-dateDividerLine",
+      "description": "Styles applied to the horizontal rule on each side of the date divider label.",
+      "isGlobal": false
+    },
+    {
       "key": "error",
       "className": "Mui-error",
       "description": "Applied when the message has an error status",
@@ -85,6 +97,12 @@
       "isGlobal": false
     },
     {
+      "key": "noAvatar",
+      "className": "MuiChatMessageAuthorLabel-noAvatar",
+      "description": "Applied when the avatar slot is hidden (`slots.avatar: null`) so the grid drops the avatar track.",
+      "isGlobal": false
+    },
+    {
       "key": "roleAssistant",
       "className": "MuiChatMessageAuthorLabel-roleAssistant",
       "description": "Applied when the message role is 'assistant'",
@@ -112,6 +130,6 @@
   "muiName": "MuiChatMessageAuthorLabel",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAuthorLabel.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>",
   "cssComponent": false
 }

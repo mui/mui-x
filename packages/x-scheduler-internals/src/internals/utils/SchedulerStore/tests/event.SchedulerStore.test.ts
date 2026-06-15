@@ -274,7 +274,9 @@ storeClasses.forEach((storeClass) => {
         }).toWarnDev(['MUI X Scheduler: Two or more events share the same id "1".']);
 
         expect(schedulerEventSelectors.idList(store.state)).to.deep.equal([second.id]);
-        expect(schedulerEventSelectors.processedEvent(store.state, second.id)!.title).to.equal(second.title);
+        expect(schedulerEventSelectors.processedEvent(store.state, second.id)!.title).to.equal(
+          second.title,
+        );
       });
     });
 

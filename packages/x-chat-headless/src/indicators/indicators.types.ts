@@ -9,6 +9,16 @@ export interface TypingIndicatorOwnerState {
   label: string;
 }
 
+export interface StreamingIndicatorOwnerState {
+  /**
+   * `'waiting'` – a response is in flight but no assistant message exists yet.
+   * `'streaming'` – the surrounding assistant message is streaming.
+   * `null` – hidden.
+   */
+  phase: 'waiting' | 'streaming' | null;
+  messageId?: string;
+}
+
 export interface UnreadMarkerOwnerState {
   messageId: string;
   hasBoundary: boolean;
