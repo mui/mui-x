@@ -312,10 +312,6 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   onEventsChange: PropTypes.func,
   /**
-   * Event handler called when the preferences change.
-   */
-  onPreferencesChange: PropTypes.func,
-  /**
    * Event handler called when the preset changes.
    */
   onPresetChange: PropTypes.func,

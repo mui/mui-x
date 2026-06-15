@@ -5,6 +5,7 @@ import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/us
 import { StandaloneWeekViewProps } from './WeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
+import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { WeekView } from './WeekView';
 
 /**
@@ -24,11 +25,13 @@ const StandaloneWeekView = React.forwardRef(function StandaloneWeekView<
   >(props);
 
   return (
-    <EventCalendarProvider {...parameters}>
-      <EventDialogProvider>
-        <WeekView ref={forwardedRef} {...forwardedProps} />
-      </EventDialogProvider>
-    </EventCalendarProvider>
+    <ResponsiveTypographyContainer>
+      <EventCalendarProvider {...parameters}>
+        <EventDialogProvider>
+          <WeekView ref={forwardedRef} {...forwardedProps} />
+        </EventDialogProvider>
+      </EventCalendarProvider>
+    </ResponsiveTypographyContainer>
   );
 }) as StandaloneWeekViewComponent;
 
