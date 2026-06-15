@@ -17,12 +17,11 @@ export const useLabelEditingItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const isItemEditable = useStore(store, labelSelectors.isItemEditable, itemId);
   const isItemBeingEdited = useStore(store, labelSelectors.isItemBeingEdited, itemId);
 
-  React.useEffect(() => {
-    if (!isItemBeingEdited) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLabelInputValue(label as string);
-    }
-  }, [isItemBeingEdited, label]);
+  // When not editing, the input must mirror the current label. This resets any
+  // uncommitted edits when the user cancels (Escape) and syncs external label changes.
+  if (!isItemBeingEdited && labelInputValue !== label) {
+    setLabelInputValue(label as string);
+  }
 
   return {
     propsEnhancers: {
