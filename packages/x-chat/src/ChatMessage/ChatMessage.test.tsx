@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
-import { ChatRoot } from '@mui/x-chat-headless';
+import { ChatRoot, ChatVariantProvider } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
 import { ChatMessage } from './ChatMessage';
 
@@ -126,5 +126,237 @@ describe('ChatMessage', () => {
     );
 
     expect(document.querySelector('.my-custom-class')).not.toBe(null);
+  });
+
+  it("treats role:'user' messages from non-current users as outer messages (Alice case)", () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        currentUser={{ id: 'me', displayName: 'Me' }}
+        members={[
+          { id: 'me', displayName: 'Me' },
+          { id: 'alice', displayName: 'Alice Chen' },
+          { id: 'agent', displayName: 'MUI Assistant' },
+        ]}
+        initialMessages={[
+          {
+            id: 'm-alice',
+            role: 'user',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi from Alice' }],
+          },
+          {
+            id: 'm-me',
+            role: 'user',
+            author: { id: 'me' },
+            parts: [{ type: 'text', text: 'Hi from me' }],
+          },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const aliceRoot = document.querySelector(
+      '.MuiChatMessage-root[aria-label="Message from Alice Chen"]',
+    );
+    const meRoot = document.querySelector('.MuiChatMessage-root[aria-label="Message from Me"]');
+
+    expect(aliceRoot).not.toBe(null);
+    expect(meRoot).not.toBe(null);
+
+    // Alice's role is 'user' — the role hook is preserved for downstream styling.
+    expect(aliceRoot!.classList.contains('MuiChatMessage-roleUser')).toBe(true);
+    // …but Alice is NOT the current user, so the bubble must NOT be marked as own.
+    expect(aliceRoot!.getAttribute('data-is-own-message')).toBe(null);
+    // The current user's own user-role message IS marked as own.
+    expect(meRoot!.getAttribute('data-is-own-message')).toBe('true');
+  });
+
+  it('honors slots.error in the children composition path', () => {
+    function CustomError() {
+      return <div data-testid="custom-error">custom error</div>;
+    }
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            status: 'error',
+            parts: [{ type: 'text', text: 'Boom' }],
+          },
+        ]}
+      >
+        <ChatMessage messageId="m1" slots={{ error: CustomError }}>
+          <div data-testid="custom-child">child content</div>
+        </ChatMessage>
+      </ChatRoot>,
+    );
+
+    // Custom children render, and the error surface resolves through slots.error
+    // rather than being hardcoded to the default ChatMessageError.
+    expect(document.querySelector('[data-testid="custom-child"]')).not.toBe(null);
+    expect(document.querySelector('[data-testid="custom-error"]')).not.toBe(null);
+  });
+
+  it('renders custom children only (no slot tree) in compact mode', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            author: { id: 'a' },
+            parts: [{ type: 'text', text: 'slot text' }],
+          },
+        ]}
+      >
+        <ChatVariantProvider variant="compact">
+          <ChatMessage messageId="m1">
+            <div data-testid="custom-child">custom</div>
+          </ChatMessage>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    // Consumer-provided children win in every variant, including compact: the
+    // slot-driven message content must not be appended after them.
+    expect(document.querySelector('[data-testid="custom-child"]')).not.toBe(null);
+    expect(document.body.textContent).not.toContain('slot text');
+  });
+
+  it('resolves a function-valued slotProps.messageActions with the message context (role-conditional extraActions)', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          { id: 'u1', role: 'user', parts: [{ type: 'text', text: 'Q' }] },
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slotProps={{
+          messageActions: ({ message }) =>
+            message?.role === 'assistant'
+              ? {
+                  extraActions: [{ id: 'regenerate', label: 'Regenerate', onClick: () => {} }],
+                }
+              : {},
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    // Only assistant rows get the regenerate button.
+    const buttons = document.querySelectorAll('button[data-action="regenerate"]');
+    expect(buttons.length).toBe(1);
+  });
+
+  it('renders the actions row with extraActions alone (no slots.messageActions component)', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slotProps={{
+          messageActions: { extraActions: [{ id: 'x', label: 'X', onClick: () => {} }] },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.querySelector('.MuiChatMessage-actions')).not.toBe(null);
+    expect(document.querySelector('button[data-action="x"]')).not.toBe(null);
+  });
+
+  it('slots.messageActions: null hides the row even when extraActions are returned', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slots={{ messageActions: null }}
+        slotProps={{
+          messageActions: { extraActions: [{ id: 'x', label: 'X', onClick: () => {} }] },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.querySelector('.MuiChatMessage-actions')).toBe(null);
+    expect(document.querySelector('button[data-action="x"]')).toBe(null);
+  });
+
+  it('keeps the object-form slotProps.messageActions working (regression)', () => {
+    function CustomActions() {
+      return <button type="button">Custom</button>;
+    }
+
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slots={{ messageActions: CustomActions }}
+        slotProps={{ messageActions: { className: 'object-form-actions' } }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.querySelector('.object-form-actions')).not.toBe(null);
+    expect(document.body.textContent).toContain('Custom');
+  });
+
+  it('renders the group author label inside compact messages', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        variant="compact"
+        members={[{ id: 'alice', displayName: 'Alice' }]}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi' }],
+          },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    // The compact author label is delivered via `groupAuthorName` and rendered by
+    // the slot-driven message tree.
+    expect(document.body.textContent).toContain('Alice');
   });
 });
