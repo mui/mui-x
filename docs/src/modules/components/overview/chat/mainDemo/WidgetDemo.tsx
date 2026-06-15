@@ -4,42 +4,21 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Fab from '@mui/material/Fab';
 import Grow from '@mui/material/Grow';
-import Slide from '@mui/material/Slide';
-import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { alpha, keyframes } from '@mui/material/styles';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutlined';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutlined';
-import InsightsIcon from '@mui/icons-material/Insights';
-import {
-  ChatComposer,
-  ChatConversation,
-  ChatConversationHeader,
-  ChatConversationHeaderInfo,
-  ChatConversationSubtitle,
-  ChatConversationTitle,
-  ChatConversationList,
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageList,
-  ChatMessageInlineMeta,
-} from '@mui/x-chat';
-import {
-  ChatProvider,
-  useMessageIds,
-  type ChatAdapter,
-  type ChatConversation as ChatConversationModel,
-  type ChatMessage as ChatMessageModel,
-  type ChatUser,
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { ChatBox } from '@mui/x-chat';
+import type {
+  ChatAdapter,
+  ChatConversation as ChatConversationModel,
+  ChatMessage as ChatMessageModel,
+  ChatUser,
 } from '@mui/x-chat/headless';
 import {
   createChunkStream,
@@ -81,8 +60,6 @@ const supportAgent: ChatUser = {
   avatarUrl: createAvatarDataUrl('AS', '#635bff'),
   role: 'assistant',
 };
-
-const noConversationSelected = '__widget-home__';
 
 const billingAgent: ChatUser = {
   id: 'billing',
@@ -274,103 +251,17 @@ const messageSlideIn = keyframes`
   }
 `;
 
-/* ---------- Background dashboard metric card ---------- */
-function MetricCard({
-  label,
-  value,
-  change,
-  icon,
-}: {
-  label: string;
-  value: string;
-  change: string;
-  icon: React.ReactNode;
-}) {
-  return (
-    <Box
-      sx={(theme) => ({
-        flex: 1,
-        p: 2,
-        borderRadius: 2,
-        border: '1px solid',
-        borderColor: 'divider',
-        bgcolor: 'background.paper',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1,
-        transition: 'box-shadow 0.2s',
-        '&:hover': {
-          boxShadow: `0 2px 12px ${alpha(theme.palette.text.primary, 0.06)}`,
-        },
-      })}
-    >
-      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ fontWeight: 600, letterSpacing: 0.3 }}
-        >
-          {label}
-        </Typography>
-        <Box sx={{ color: 'text.disabled', '& .MuiSvgIcon-root': { fontSize: 16 } }}>{icon}</Box>
-      </Stack>
-      <Typography sx={{ fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{value}</Typography>
-      <Typography variant="caption" sx={{ color: 'success.main', fontWeight: 500 }}>
-        {change}
-      </Typography>
-    </Box>
-  );
-}
+/* ---------- Hypothetical Data Grid backdrop (DataGrid skeleton overlay) ---------- */
+const BACKDROP_COLUMNS: GridColDef[] = [
+  { field: 'name', headerName: 'Name', flex: 1.4 },
+  { field: 'email', headerName: 'Email', flex: 1.6 },
+  { field: 'role', headerName: 'Role', flex: 0.9 },
+  { field: 'status', headerName: 'Status', flex: 0.9 },
+  { field: 'lastActive', headerName: 'Last active', flex: 1.1 },
+  { field: 'created', headerName: 'Created', flex: 1.1 },
+];
 
-/* ---------- Background activity row ---------- */
-function ActivityRow({ name, action, time }: { name: string; action: string; time: string }) {
-  return (
-    <Stack
-      direction="row"
-      sx={{
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        px: 1.5,
-        py: 1,
-        '&:not(:last-child)': { borderBottom: '1px solid', borderColor: 'divider' },
-      }}
-    >
-      <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-        <Box
-          sx={(theme) => ({
-            width: 28,
-            height: 28,
-            borderRadius: '50%',
-            bgcolor: alpha(theme.palette.primary.main, 0.1),
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          })}
-        >
-          <Typography sx={{ fontSize: 11, fontWeight: 700, color: 'primary.main' }}>
-            {name
-              .split(' ')
-              .map((n) => n[0])
-              .join('')}
-          </Typography>
-        </Box>
-        <div>
-          <Typography variant="caption" sx={{ fontWeight: 600, display: 'block', lineHeight: 1.3 }}>
-            {name}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.3 }}>
-            {action}
-          </Typography>
-        </div>
-      </Stack>
-      <Typography variant="caption" color="text.disabled">
-        {time}
-      </Typography>
-    </Stack>
-  );
-}
-
-/* ---------- Widget header ---------- */
+/* ---------- Widget home greeting header ---------- */
 function WidgetHomeHeader({ onClose }: { onClose: () => void }) {
   return (
     <Box
@@ -495,209 +386,11 @@ function NewConversationButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function WidgetConversationHome({ onStartConversation }: { onStartConversation: () => void }) {
-  return (
-    <Box
-      sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        bgcolor: 'background.paper',
-      }}
-    >
-      <Box sx={{ flex: 1, minHeight: 0, pt: 1, pb: 1 }}>
-        <ChatConversationList
-          slotProps={{
-            scroller: {
-              sx: {
-                width: '100%',
-                borderRight: 'none',
-                bgcolor: 'transparent',
-              },
-            } as any,
-            viewport: {
-              sx: {
-                px: 1,
-                pt: 0.5,
-                pb: 1,
-              },
-            } as any,
-            root: {
-              'aria-label': 'Conversations',
-              sx: {
-                p: 0,
-              },
-            } as any,
-          }}
-        />
-      </Box>
-      <Box sx={{ px: 2, pt: 1, pb: 2 }}>
-        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <NewConversationButton onClick={onStartConversation} />
-        </Box>
-      </Box>
-    </Box>
-  );
-}
-
-function WidgetThreadHeader({
-  title,
-  subtitle,
-  onBack,
-}: {
-  title: string;
-  subtitle?: string;
-  onBack: () => void;
-}) {
-  return (
-    <ChatConversationHeader {...({ sx: { alignItems: 'center', width: '100%', px: 1 } } as any)}>
-      <IconButton size="small" onClick={onBack} sx={{ ml: 1, borderRadius: '50%' }}>
-        <ArrowBackIcon fontSize="small" />
-      </IconButton>
-      <ChatConversationHeaderInfo>
-        <ChatConversationTitle>{title}</ChatConversationTitle>
-        <ChatConversationSubtitle>{subtitle}</ChatConversationSubtitle>
-      </ChatConversationHeaderInfo>
-    </ChatConversationHeader>
-  );
-}
-
-function FloatingSupportThread({
-  title,
-  subtitle,
-  onBack,
-}: {
-  title: string;
-  subtitle?: string;
-  onBack: () => void;
-}) {
-  const messageIds = useMessageIds();
-
-  const renderItem = React.useCallback(
-    (item: { id: string; index: number }) => (
-      <Box
-        key={item.id}
-        sx={{
-          animation: `${messageSlideIn} 0.3s ease-out both`,
-          animationDelay: `${Math.min(item.index * 0.05, 0.3)}s`,
-        }}
-      >
-        <ChatMessageGroup messageId={item.id}>
-          <ChatMessage messageId={item.id}>
-            <ChatMessageAvatar />
-            <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
-          </ChatMessage>
-        </ChatMessageGroup>
-      </Box>
-    ),
-    [],
-  );
-
-  return (
-    <ChatConversation sx={{ height: '100%', bgcolor: 'background.paper' }}>
-      <WidgetThreadHeader title={title} subtitle={subtitle} onBack={onBack} />
-      <ChatMessageList
-        renderItem={renderItem}
-        items={messageIds}
-        slotProps={{
-          messageListContent: {
-            sx: {
-              py: 1.5,
-            },
-          } as any,
-        }}
-      />
-      <ChatComposer variant="compact" sx={{ mx: 1.5, mb: 1.5, mt: 0 }} />
-    </ChatConversation>
-  );
-}
-
-function FloatingSupportWidget({
-  activeConversation,
-  onBack,
-  onClose,
-  onStartConversation,
-}: {
-  activeConversation: ChatConversationModel | undefined;
-  onBack: () => void;
-  onClose: () => void;
-  onStartConversation: () => void;
-}) {
-  const isThreadOpen = activeConversation != null;
-  const containerRef = React.useRef<HTMLDivElement>(null);
-
-  return (
-    <Box
-      ref={containerRef}
-      sx={(theme) => ({
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        background:
-          theme.palette.mode === 'dark'
-            ? `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${alpha(theme.palette.primary.main, 0.85)} 100%)`
-            : `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-        overflow: 'hidden',
-        position: 'relative',
-      })}
-    >
-      {/* Home view */}
-      <Fade in={!isThreadOpen} timeout={250} unmountOnExit>
-        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <WidgetHomeHeader onClose={onClose} />
-          <Box
-            sx={{
-              mt: -2.5,
-              flex: 1,
-              minHeight: 0,
-              mx: 1,
-              borderTopLeftRadius: 16,
-              borderTopRightRadius: 16,
-              overflow: 'hidden',
-              bgcolor: 'background.paper',
-              boxShadow: '0 -4px 24px rgba(0,0,0,0.08)',
-              zIndex: 1,
-            }}
-          >
-            <WidgetConversationHome onStartConversation={onStartConversation} />
-          </Box>
-        </Box>
-      </Fade>
-
-      {/* Thread view - slides in from the right */}
-      <Slide
-        direction="left"
-        in={isThreadOpen}
-        container={containerRef.current}
-        timeout={300}
-        easing={{ enter: 'cubic-bezier(0.2, 0, 0, 1)', exit: 'cubic-bezier(0.4, 0, 1, 1)' }}
-        mountOnEnter
-        unmountOnExit
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            inset: 0,
-            bgcolor: 'background.paper',
-            zIndex: 2,
-          }}
-        >
-          {activeConversation != null && (
-            <FloatingSupportThread
-              title={activeConversation.title ?? ''}
-              subtitle={activeConversation.subtitle}
-              onBack={onBack}
-            />
-          )}
-        </Box>
-      </Slide>
-    </Box>
-  );
-}
-
 export default function WidgetDemo() {
   const [open, setOpen] = React.useState(true);
-  const [activeConversationId, setActiveConversationId] = React.useState(noConversationSelected);
+  const [activeConversationId, setActiveConversationId] = React.useState<string | undefined>(
+    undefined,
+  );
   const [conversations, setConversations] = React.useState<ChatConversationModel[]>(() =>
     conversationsSeed.map((conversation) => ({ ...conversation })),
   );
@@ -711,10 +404,8 @@ export default function WidgetDemo() {
   );
 
   const adapter = React.useMemo(() => createSupportAdapter(), []);
-  const activeConversation = conversations.find(
-    (conversation) => conversation.id === activeConversationId,
-  );
-  const messages = activeConversation == null ? [] : (threads[activeConversationId] ?? []);
+  const messages = activeConversationId == null ? [] : (threads[activeConversationId] ?? []);
+  const isHome = activeConversationId == null;
 
   const handleStartConversation = React.useCallback(() => {
     const conversationId = randomId();
@@ -744,6 +435,17 @@ export default function WidgetDemo() {
     setActiveConversationId(conversationId);
   }, []);
 
+  const handleMessagesChange = React.useCallback(
+    (nextMessages: ChatMessageModel[]) => {
+      if (activeConversationId == null) {
+        return;
+      }
+      setThreads((prev) => ({ ...prev, [activeConversationId]: nextMessages }));
+      setConversations((prev) => syncConversationPreview(prev, activeConversationId, nextMessages));
+    },
+    [activeConversationId],
+  );
+
   return (
     <Box
       sx={{
@@ -753,151 +455,18 @@ export default function WidgetDemo() {
         overflow: 'hidden',
       }}
     >
-      {/* ---------- Mock SaaS dashboard background ---------- */}
-      <Box sx={{ p: 3, height: '100%' }}>
-        {/* Top bar */}
-        <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-            <Box
-              sx={(theme) => ({
-                width: 32,
-                height: 32,
-                borderRadius: 1.5,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              })}
-            >
-              <Typography sx={{ color: '#fff', fontSize: 14, fontWeight: 800 }}>A</Typography>
-            </Box>
-            <div>
-              <Typography sx={{ fontSize: 16, fontWeight: 700, lineHeight: 1.2 }}>
-                Acme Inc.
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Dashboard
-              </Typography>
-            </div>
-          </Stack>
-          <Stack direction="row" spacing={1}>
-            {['Overview', 'Analytics', 'Team'].map((tab) => (
-              <Typography
-                key={tab}
-                variant="caption"
-                sx={(theme) => ({
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: 1,
-                  fontWeight: tab === 'Overview' ? 600 : 400,
-                  bgcolor:
-                    tab === 'Overview' ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
-                  color: tab === 'Overview' ? 'primary.main' : 'text.secondary',
-                  cursor: 'default',
-                })}
-              >
-                {tab}
-              </Typography>
-            ))}
-          </Stack>
-        </Stack>
-
-        {/* Metric cards */}
-        <Stack direction="row" spacing={1.5} sx={{ mt: 3 }}>
-          <MetricCard
-            label="Revenue"
-            value="$48.2K"
-            change="+12.5% from last month"
-            icon={<TrendingUpIcon />}
-          />
-          <MetricCard
-            label="Users"
-            value="2,847"
-            change="+8.1% from last month"
-            icon={<PeopleOutlineIcon />}
-          />
-          <MetricCard
-            label="Conversion"
-            value="3.24%"
-            change="+0.4% from last month"
-            icon={<InsightsIcon />}
-          />
-        </Stack>
-
-        {/* Activity feed + chart placeholder */}
-        <Stack direction="row" spacing={1.5} sx={{ mt: 1.5 }}>
-          {/* Recent activity */}
-          <Box
-            sx={{
-              flex: 1,
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 2,
-              bgcolor: 'background.paper',
-              overflow: 'hidden',
-            }}
-          >
-            <Box sx={{ px: 1.5, py: 1.25, borderBottom: '1px solid', borderColor: 'divider' }}>
-              <Typography variant="caption" sx={{ fontWeight: 700 }}>
-                Recent activity
-              </Typography>
-            </Box>
-            <ActivityRow name="Sarah Kim" action="Joined the team" time="2m ago" />
-            <ActivityRow name="Alex Torres" action="Deployed v2.4.1" time="18m ago" />
-            <ActivityRow name="Jordan Lee" action="Updated billing plan" time="1h ago" />
-            <ActivityRow name="Morgan Wu" action="Created project Orion" time="3h ago" />
-          </Box>
-
-          {/* Mini chart placeholder */}
-          <Box
-            sx={{
-              flex: 1,
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 2,
-              bgcolor: 'background.paper',
-              p: 1.5,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <Typography variant="caption" sx={{ fontWeight: 700, mb: 1 }}>
-              Weekly traffic
-            </Typography>
-            {/* SVG chart bars */}
-            <Box sx={{ flex: 1, display: 'flex', alignItems: 'flex-end', gap: 0.75 }}>
-              {[40, 65, 55, 80, 70, 90, 60].map((h, i) => (
-                <Box
-                  key={i}
-                  sx={(theme) => ({
-                    flex: 1,
-                    height: `${h}%`,
-                    borderRadius: 0.75,
-                    background:
-                      i === 5
-                        ? theme.palette.primary.main
-                        : alpha(theme.palette.primary.main, 0.15),
-                    transition: 'height 0.4s ease',
-                  })}
-                />
-              ))}
-            </Box>
-            <Stack direction="row" sx={{ justifyContent: 'space-between', mt: 0.75 }}>
-              {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
-                <Typography
-                  key={i}
-                  variant="caption"
-                  color="text.disabled"
-                  sx={{ flex: 1, textAlign: 'center', fontSize: 10 }}
-                >
-                  {d}
-                </Typography>
-              ))}
-            </Stack>
-          </Box>
-        </Stack>
+      {/* ---------- Hypothetical Data Grid backdrop ---------- */}
+      <Box
+        aria-hidden
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          p: 3,
+          pointerEvents: 'none',
+        }}
+      >
+        <DataGrid loading rows={[]} columns={BACKDROP_COLUMNS} />
       </Box>
-
       {/* ---------- Chat widget ---------- */}
       <Grow in={open} style={{ transformOrigin: 'bottom right' }} mountOnEnter unmountOnExit>
         <Paper
@@ -911,6 +480,7 @@ export default function WidgetDemo() {
             borderRadius: '24px',
             overflow: 'hidden',
             display: 'flex',
+            flexDirection: 'column',
             border: '1px solid',
             borderColor: alpha(theme.palette.divider, 0.6),
             boxShadow:
@@ -919,36 +489,89 @@ export default function WidgetDemo() {
                 : `0 24px 80px ${alpha(theme.palette.primary.main, 0.12)}, 0 8px 24px ${alpha('#000', 0.08)}`,
           })}
         >
-          <ChatProvider
-            adapter={adapter}
-            activeConversationId={activeConversationId}
-            conversations={conversations}
-            messages={messages}
-            onActiveConversationChange={setActiveConversationId as any}
-            onMessagesChange={(nextMessages) => {
-              if (activeConversation == null) {
-                return;
-              }
-
-              setThreads((prev) => ({ ...prev, [activeConversationId]: nextMessages }));
-              setConversations((prev) =>
-                syncConversationPreview(prev, activeConversationId, nextMessages),
-              );
+          {isHome && <WidgetHomeHeader onClose={() => setOpen(false)} />}
+          <Box
+            sx={{
+              flex: 1,
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              ...(isHome && {
+                mt: -2.5,
+                mx: 1,
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+                overflow: 'hidden',
+                bgcolor: 'background.paper',
+                boxShadow: '0 -4px 24px rgba(0,0,0,0.08)',
+                zIndex: 1,
+              }),
             }}
-            currentUser={you}
           >
-            <Box sx={{ height: '100%', width: '100%' }}>
-              <FloatingSupportWidget
-                activeConversation={activeConversation}
-                onBack={() => setActiveConversationId(noConversationSelected)}
-                onClose={() => setOpen(false)}
-                onStartConversation={handleStartConversation}
+            <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+              <ChatBox
+                adapter={adapter}
+                conversations={conversations}
+                messages={messages}
+                activeConversationId={activeConversationId}
+                onActiveConversationChange={(nextId) =>
+                  setActiveConversationId(nextId ?? undefined)
+                }
+                onMessagesChange={handleMessagesChange}
+                currentUser={you}
+                layoutMode="split"
+                features={{ conversationList: true, helperText: false }}
+                slotProps={{
+                  conversationList: {
+                    slotProps: {
+                      viewport: {
+                        sx: { px: 1, pt: 0.5, pb: 1 },
+                      } as any,
+                      root: {
+                        'aria-label': 'Conversations',
+                        sx: { p: 0 },
+                      } as any,
+                    },
+                  },
+
+                  messageList: {
+                    slotProps: {
+                      messageListContent: {
+                        sx: { py: 1.5 },
+                      } as any,
+                    },
+                  },
+
+                  messageGroup: {
+                    sx: {
+                      animation: `${messageSlideIn} 0.3s ease-out both`,
+                    },
+                  },
+
+                  composerRoot: {
+                    variant: 'compact',
+                    sx: { mx: 1.5, mb: 1.5, mt: 0 },
+                  },
+                }}
               />
             </Box>
-          </ChatProvider>
+            {isHome && (
+              <Box
+                sx={{
+                  px: 2,
+                  pt: 1,
+                  pb: 2,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  bgcolor: 'background.paper',
+                }}
+              >
+                <NewConversationButton onClick={handleStartConversation} />
+              </Box>
+            )}
+          </Box>
         </Paper>
       </Grow>
-
       {/* ---------- FAB with pulse ring ---------- */}
       <Box
         sx={{

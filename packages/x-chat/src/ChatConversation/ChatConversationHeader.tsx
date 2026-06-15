@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { ConversationHeader, type ConversationHeaderProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatConversationUtilityClasses,
   type ChatConversationClasses,
@@ -43,16 +44,18 @@ const ChatConversationHeader = React.forwardRef<HTMLElement, ChatConversationHea
       <ConversationHeader
         {...other}
         slots={{
-          header: slots?.header ?? ChatConversationHeaderStyled,
           ...slots,
+          header: slots?.header ?? ChatConversationHeaderStyled,
         }}
         slotProps={{
           ...slotProps,
-          header: {
-            ref,
-            className: clsx(classes.header, className),
-            ...(slotProps?.header as object),
-          } as any,
+          header: mergeSlotProps(
+            {
+              ref,
+              className: clsx(classes.header, className),
+            },
+            slotProps?.header,
+          ) as any,
         }}
       />
     );
