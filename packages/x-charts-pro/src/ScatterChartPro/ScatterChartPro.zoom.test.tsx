@@ -115,14 +115,6 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
   });
 
   // Regression test for https://github.com/mui/mui-x/pull/22811
-  // Wheel zoom must anchor on the cursor position. With a responsive chart the
-  // drawing area is empty on the first render and only gets its real size once
-  // the container is measured. The wheel handler must read that up-to-date
-  // drawing area; using a stale (empty) one makes the zoom ignore the cursor.
-  // Zooming near the left edge keeps the leftmost tick visible, while zooming
-  // near the right edge keeps the rightmost one.
-  // `width`/`height` are intentionally omitted so the chart sizes itself from
-  // the wrapper, reproducing the empty-then-measured drawing area.
   const { width, height, ...responsiveProps } = scatterChartProps;
 
   it('should zoom on wheel anchored at the cursor position (left)', async () => {
