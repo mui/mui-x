@@ -1,5 +1,6 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { generateId } from '@base-ui/utils/generateId';
+import { warnOnce } from '@mui/x-internals/warning';
 import { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
 import {
   SchedulerProcessedEvent,
@@ -294,6 +295,21 @@ type AnyEventSetter<TEvent extends object> = (
   value: any,
 ) => TEvent;
 
+/**
+ * Throws if the resolved event id is missing.
+ */
+export function checkSchedulerEventIdIsValid(id: SchedulerEventId, event: object) {
+  if (id == null) {
+    throw new Error(
+      `MUI X Scheduler: All events must have a unique \`id\`.
+Without an \`id\`, an event cannot be tracked and silently overwrites another event in the calendar state.
+Add an \`id\` to every event, or set \`eventModelStructure.id.getter\` to derive one from your event model.
+An event was provided without an \`id\`:
+${JSON.stringify(event)}`,
+    );
+  }
+}
+
 export function buildEventsState<TEvent extends object, TResource extends object>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
   adapter: Adapter,
@@ -321,9 +337,22 @@ export function buildEventsState<TEvent extends object, TResource extends object
       displayTimezone,
       recurringEventsPlugin,
     );
-    eventIdList.push(processedEvent.id);
-    eventModelLookup.set(processedEvent.id, event);
-    processedEventLookup.set(processedEvent.id, processedEvent);
+    const { id } = processedEvent;
+    checkSchedulerEventIdIsValid(id, event);
+
+    if (eventModelLookup.has(id)) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          `MUI X Scheduler: Two or more events share the same id "${String(id)}".`,
+          'Event ids must be unique. Only the last event with a given id is kept, the others are ignored.',
+        ]);
+      }
+    } else {
+      eventIdList.push(id);
+    }
+
+    eventModelLookup.set(id, event);
+    processedEventLookup.set(id, processedEvent);
   }
 
   return {
