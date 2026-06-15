@@ -135,6 +135,9 @@ catalogs:
     clsx:
       specifier: ^2.1.1
       version: 2.1.1
+    core-js-pure:
+      specifier: ^3.49.0
+      version: 3.49.0
     cross-env:
       specifier: ^10.1.0
       version: 10.1.0
@@ -1073,9 +1076,15 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      markdown-to-jsx:
+        specifier: ^9.8.1
+        version: 9.8.1(react@19.2.6)
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
+      remend:
+        specifier: ^1.3.0
+        version: 1.3.0
     devDependencies:
       '@mui/icons-material':
         specifier: 'catalog:'
@@ -1587,9 +1596,15 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.0.1(@types/react@19.2.15)(react@19.2.6)
+      core-js-pure:
+        specifier: 'catalog:'
+        version: 3.49.0
       reselect:
         specifier: 'catalog:'
         version: 5.2.0
@@ -6695,6 +6710,9 @@ packages:
   core-js-compat@3.48.0:
     resolution: {integrity: sha512-OM4cAF3D6VtH/WkLtWvyNC56EZVXsZdU3iqaMG2B4WvYrlqU831pc4UtG5yp0sE9z8Y02wVN7PjW5Zf9Gt0f1Q==}
 
+  core-js-pure@3.49.0:
+    resolution: {integrity: sha512-XM4RFka59xATyJv/cS3O3Kml72hQXUeGRuuTmMYFxwzc9/7C8OYTaIR/Ji+Yt8DXzsFLNhat15cE/JP15HrCgw==}
+
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
 
@@ -10023,6 +10041,9 @@ packages:
 
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
+
+  remend@1.3.0:
+    resolution: {integrity: sha512-iIhggPkhW3hFImKtB10w0dz4EZbs28mV/dmbcYVonWEJ6UGHHpP+bFZnTh6GNWJONg5m+U56JrL+8IxZRdgWjw==}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -16103,6 +16124,8 @@ snapshots:
     dependencies:
       browserslist: 4.28.1
 
+  core-js-pure@3.49.0: {}
+
   core-util-is@1.0.3: {}
 
   cosmiconfig@7.1.0:
@@ -20269,6 +20292,8 @@ snapshots:
       unified: 11.0.5
     transitivePeerDependencies:
       - supports-color
+
+  remend@1.3.0: {}
 
   require-directory@2.1.1: {}
 

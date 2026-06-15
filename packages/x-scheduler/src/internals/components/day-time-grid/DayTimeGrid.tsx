@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
@@ -24,8 +25,11 @@ import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
+import {
+  EVENT_CALENDAR_CONTAINER_NAME,
+  RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
+} from '../../constants/responsiveTypography';
 
-const FIXED_CELL_WIDTH = 68;
 const HOUR_HEIGHT = 46;
 const HOURS_IN_DAY = 24;
 
@@ -33,9 +37,8 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridContainer',
 })(({ theme }) => ({
-  '--fixed-cell-width': `${FIXED_CELL_WIDTH}px`,
+  '--fixed-cell-width': 'var(--EventCalendar-size-fixedCellWidth)',
   '--hour-height': `${HOUR_HEIGHT}px`,
-  '--has-scroll': 1,
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -138,7 +141,7 @@ const DayTimeGridAllDayEventsHeaderCell = styled('div', {
 })(({ theme }) => ({
   gridColumn: '1',
   gridRow: '1',
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-timeText, 0.75rem)',
   fontStyle: 'italic',
   padding: theme.spacing(1),
   textAlign: 'end',
@@ -233,7 +236,7 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridHeaderDayNumber',
 })(({ theme }) => ({
-  fontSize: theme.typography.h5.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-dayNumber, 1.5rem)',
   lineHeight: 1,
   width: 46,
   height: 46,
@@ -251,6 +254,11 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   '[data-current] button:hover &': {
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
+  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px)`]:
+    {
+      width: 32,
+      height: 32,
+    },
 }));
 
 const DayTimeGridBody = styled('div', {
@@ -305,7 +313,7 @@ const DayTimeGridTimeAxisText = styled('time', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridTimeAxisText',
 })(({ theme }) => ({
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-timeText, 0.75rem)',
   lineHeight: 'calc(100% / 24)',
   color: (theme.vars || theme).palette.text.secondary,
   whiteSpace: 'nowrap',
@@ -376,14 +384,18 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     [adapter, days, now],
   );
 
-  useIsoLayoutEffect(() => {
+  const updateHasScroll = React.useCallback(() => {
     const body = bodyRef.current;
     const allDayHeader = allDayHeaderWrapperRef.current;
     if (!body || !allDayHeader) {
       return;
     }
     setHasScroll(body.scrollHeight > body.clientHeight);
-  }, [occurrencesMap]);
+  }, []);
+
+  useIsoLayoutEffect(updateHasScroll, [occurrencesMap, updateHasScroll]);
+
+  useResizeObserver(bodyRef, updateHasScroll);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 
