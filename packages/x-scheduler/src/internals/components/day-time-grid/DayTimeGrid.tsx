@@ -318,12 +318,15 @@ const DayTimeGridTimeAxisText = styled('time', {
 const DayTimeGridGrid = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridGrid',
-})({
+})(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
   position: 'relative',
-});
+  [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridColumn}:last-of-type`]: {
+    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+}));
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -501,7 +504,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               ))}
             </DayTimeGridTimeAxis>
 
-            <DayTimeGridGrid className={classes.dayTimeGridGrid} role="row" aria-rowindex={3}>
+            <DayTimeGridGrid
+              className={classes.dayTimeGridGrid}
+              role="row"
+              aria-rowindex={3}
+              data-has-scroll={hasScroll || undefined}
+            >
               {occurrences.days.map((day, index) => (
                 <TimeGridColumn
                   key={day.key}
