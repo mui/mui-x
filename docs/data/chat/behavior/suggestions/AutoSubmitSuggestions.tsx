@@ -11,6 +11,7 @@ export default function AutoSubmitSuggestions() {
     <ChatBox
       adapter={adapter}
       initialActiveConversationId={minimalConversation.id}
+      // Seed only the conversation (no messages) so the empty-state suggestions show.
       initialConversations={[minimalConversation]}
       suggestions={['What can you help me with?', 'Tell me a joke']}
       suggestionsAutoSubmit

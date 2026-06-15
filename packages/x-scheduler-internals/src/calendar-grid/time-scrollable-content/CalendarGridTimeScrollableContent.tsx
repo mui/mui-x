@@ -33,7 +33,7 @@ export const CalendarGridTimeScrollableContent = React.forwardRef(
       return autoScrollForElements({
         element: ref.current,
       });
-    });
+    }, []);
 
     const element = useRenderElement('div', componentProps, {
       ref: [forwardedRef, ref],

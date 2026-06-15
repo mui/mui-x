@@ -1,4 +1,5 @@
 export * from './useChat';
+export * from './useChatActions';
 export * from './useChatComposer';
 export * from './useChatOnToolCall';
 export * from './useChatPartRenderer';
@@ -7,3 +8,4 @@ export * from './useChatStatus';
 export * from './useConversation';
 export * from './useMessage';
 export * from './useMessageError';
+export * from './useStreamingIndicatorVisibility';

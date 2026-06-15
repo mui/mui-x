@@ -67,11 +67,4 @@ export interface EventTimelinePremiumParameters<
    * Preferences currently displayed in the timeline.
    */
   preferences?: Partial<EventTimelinePremiumPreferences>;
-  /**
-   * Event handler called when the preferences change.
-   */
-  onPreferencesChange?: (
-    preferences: Partial<EventTimelinePremiumPreferences>,
-    event: React.UIEvent | Event,
-  ) => void;
 }
