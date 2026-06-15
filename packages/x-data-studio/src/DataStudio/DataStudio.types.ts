@@ -16,17 +16,13 @@ import type {
 import type { DataStudioClasses } from './dataStudioClasses';
 import type { DataStudioDataSourceConnector } from '../createDataStudioDataSourceFromAPI';
 import type { DataStudioToolbarProps } from '../DataStudioToolbar/DataStudioToolbar';
-import type { DataStudioMenuBarProps } from '../DataStudioMenuBar/DataStudioMenuBar';
 import type { DataStudioSessionCacheOptions } from './sessionCache';
 import type { DataStudioRoutingAdapter } from './routing';
 import type { DataStudioSheetsPersistenceAdapter } from './sheetsPersistence';
 import type { DataStudioJointSourcesPersistenceAdapter } from './jointSourcesPersistence';
 import type { DataStudioJoinDefinition } from '../models';
 import type { DataStudioViewType } from '../viewRegistry';
-import type {
-  StudioCopilotPanelProps,
-  StudioGuards,
-} from '../copilot';
+import type { StudioCopilotPanelProps, StudioGuards } from '../copilot';
 
 /**
  * Strategy applied to the Data Source cache used by every dataSource in a `<DataStudio>`.
@@ -121,7 +117,6 @@ export interface DataStudioDataGridInjectedProps<R extends GridValidRowModel = a
 export type DataStudioDataGridComponent = React.ElementType;
 
 export type DataStudioToolbarComponent = React.ComponentType<DataStudioToolbarProps>;
-export type DataStudioMenuBarComponent = React.ComponentType<DataStudioMenuBarProps>;
 
 export interface DataStudioSlots {
   /**
@@ -131,13 +126,7 @@ export interface DataStudioSlots {
    */
   dataGrid?: DataStudioDataGridComponent;
   /**
-   * The top menu bar (brand + title + menu strip) rendered above the toolbar.
-   * Set to `null` to hide the menu bar.
-   * @default DataStudioMenuBar
-   */
-  menuBar?: DataStudioMenuBarComponent | null;
-  /**
-   * The toolbar rendered between the menu bar and the Data Grid.
+   * The toolbar rendered between the view tab strip and the Data Grid.
    * Set to `null` to hide the toolbar.
    * @default DataStudioToolbar
    */
@@ -161,10 +150,6 @@ export interface DataStudioSlotProps<R extends GridValidRowModel = any> {
    * Props forwarded to the Data Grid slot.
    */
   dataGrid?: DataStudioDataGridProps<R>;
-  /**
-   * Props forwarded to the menu bar slot.
-   */
-  menuBar?: Partial<Omit<DataStudioMenuBarProps, 'apiRef'>>;
   /**
    * Props forwarded to the toolbar slot.
    */
@@ -280,10 +265,14 @@ export interface DataStudioChartDefaults {
 }
 
 /**
- * A user-created entity displayed alongside data sources. In v1 a Sheet
- * renders as a single grid view bound to a data source (or free-form when
- * `dataSourceId` is `null`); a later iteration will add a `views[]` container
- * so a Sheet can host multiple view types (chart, pivot, formula, …).
+ * A user-created **view** of a dataset: one render of a data source as a grid,
+ * chart, pivot table, or dashboard. Views are scoped to the data source named
+ * by `dataSourceId` and surface as tabs across the top of that dataset (the
+ * leading "Table" tab is implicit — it's the dataset's raw grid). A view with
+ * `dataSourceId: null` is free-form (e.g. a blank spreadsheet).
+ *
+ * Named `DataStudioSheet` for backwards compatibility; prefer the
+ * [[DataStudioView]] alias going forward. The two are identical.
  */
 export interface DataStudioSheet {
   /**
@@ -321,6 +310,13 @@ export interface DataStudioSheet {
 }
 
 /**
+ * A user-created view of a dataset. Canonical alias of [[DataStudioSheet]] —
+ * use this name in new code. Identical shape; the `Sheet` name is retained for
+ * backwards compatibility.
+ */
+export type DataStudioView = DataStudioSheet;
+
+/**
  * A view inside a Sheet: a JSON-defined window on data. Reserved for the view
  * registry from a later iteration. The `type` is a registry key; `params` is
  * type-specific JSON configuration.
@@ -347,8 +343,6 @@ export interface DataStudioViewDefinition {
    */
   params: Record<string, unknown>;
 }
-
-export type DataStudioLayout = 'sidebar' | 'tabs';
 
 /**
  * Shape accepted by the `viewTypes` / `sheetTemplates` props. The built-in
@@ -414,26 +408,34 @@ export interface DataStudioProps<R extends GridValidRowModel = any> extends Omit
    */
   slotProps?: DataStudioSlotProps<R>;
   /**
-   * Navigator layout.
-   * - `'sidebar'`: tree navigator on the left.
-   * - `'tabs'`: spreadsheet-style tab bar at the bottom.
-   * @default 'sidebar'
+   * The dataset views (controlled). Each view targets a dataset via
+   * `dataSourceId` (or is free-form) and surfaces as a tab across the top of
+   * that dataset.
    */
-  layout?: DataStudioLayout;
+  views?: DataStudioView[];
   /**
-   * Sheets displayed alongside dataSources (controlled).
-   * Each sheet targets a dataSource (or is free-form) and contains a single
-   * view in v1.
+   * The initial dataset views (uncontrolled). Ignored if `views` is provided.
+   */
+  defaultViews?: DataStudioView[];
+  /**
+   * Callback fired when the list of views changes (add, rename, duplicate, delete, reorder).
+   * @param {DataStudioView[]} views The updated list of views.
+   */
+  onViewsChange?: (views: DataStudioView[]) => void;
+  /**
+   * The dataset views (controlled).
+   * @deprecated Use `views` instead. Retained for backwards compatibility.
    */
   sheets?: DataStudioSheet[];
   /**
-   * Initial sheets displayed alongside dataSources (uncontrolled).
-   * Ignored if `sheets` is provided.
+   * The initial dataset views (uncontrolled). Ignored if `views`/`sheets` is provided.
+   * @deprecated Use `defaultViews` instead. Retained for backwards compatibility.
    */
   defaultSheets?: DataStudioSheet[];
   /**
-   * Callback fired when the list of sheets changes (add, rename, duplicate, delete, reorder).
-   * @param {DataStudioSheet[]} sheets The updated list of sheets.
+   * Callback fired when the list of views changes.
+   * @deprecated Use `onViewsChange` instead. Retained for backwards compatibility.
+   * @param {DataStudioSheet[]} sheets The updated list of views.
    */
   onSheetsChange?: (sheets: DataStudioSheet[]) => void;
   /**
@@ -460,17 +462,36 @@ export interface DataStudioProps<R extends GridValidRowModel = any> extends Omit
    */
   jointSourcesPersistence?: DataStudioJointSourcesPersistenceAdapter | null;
   /**
-   * The active sheet id (controlled). Pass `null` to indicate a dataSource tab is active.
+   * The active view id (controlled). Pass `null` to select the dataset's
+   * implicit "Table" view (its raw grid).
+   */
+  activeViewId?: string | null;
+  /**
+   * The initially active view id (uncontrolled). `null` selects the Table view.
+   */
+  initialActiveViewId?: string | null;
+  /**
+   * Callback fired when the active view changes. `null` means the dataset's
+   * Table view became active.
+   * @param {string | null} viewId The selected view id.
+   * @param {DataStudioView | null} view The selected view definition.
+   */
+  onActiveViewChange?: (viewId: string | null, view: DataStudioView | null) => void;
+  /**
+   * The active view id (controlled). Pass `null` to select the Table view.
+   * @deprecated Use `activeViewId` instead. Retained for backwards compatibility.
    */
   activeSheetId?: string | null;
   /**
-   * The initially active sheet id (uncontrolled).
+   * The initially active view id (uncontrolled).
+   * @deprecated Use `initialActiveViewId` instead. Retained for backwards compatibility.
    */
   initialActiveSheetId?: string | null;
   /**
-   * Callback fired when the active sheet changes. `null` means a dataSource tab became active.
-   * @param {string | null} sheetId The selected sheet id.
-   * @param {DataStudioSheet | null} sheet The selected sheet definition.
+   * Callback fired when the active view changes. `null` means the Table view became active.
+   * @deprecated Use `onActiveViewChange` instead. Retained for backwards compatibility.
+   * @param {string | null} sheetId The selected view id.
+   * @param {DataStudioSheet | null} sheet The selected view definition.
    */
   onActiveSheetChange?: (sheetId: string | null, sheet: DataStudioSheet | null) => void;
   /**

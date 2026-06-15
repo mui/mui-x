@@ -15,26 +15,22 @@ export interface DataStudioClasses {
   toolbarArea: string;
   /** Styles applied to the Data Grid wrapper. */
   grid: string;
-  /** Styles applied to the views section action. */
+  /** Styles applied to the sidebar action area (e.g. "New joint source"). */
   sheetsAction: string;
   /** Styles applied to the empty state. */
   empty: string;
-  /** Styles applied to the bottom tab bar (tabs layout). */
-  tabBar: string;
-  /** Styles applied to every tab in the tab bar. */
-  tab: string;
-  /** Styles applied to the active tab. */
-  tabActive: string;
-  /** Styles applied to tabs that represent a dataSource. */
-  tabDataset: string;
-  /** Styles applied to tabs that represent a user view. */
-  tabView: string;
-  /** Styles applied to the per-view dropdown trigger inside the active view tab. */
-  tabActions: string;
-  /** Styles applied to the "add view" button in the tab bar. */
-  tabAddButton: string;
-  /** Styles applied to the "tabs menu" button in the tab bar. */
-  tabMenuButton: string;
+  /** Styles applied to the view tab strip rendered on top of a dataset. */
+  viewTabBar: string;
+  /** Styles applied to every tab in the view tab strip. */
+  viewTab: string;
+  /** Styles applied to the active view tab. */
+  viewTabActive: string;
+  /** Styles applied to the leading, non-deletable "Table" tab. */
+  viewTabTable: string;
+  /** Styles applied to the per-view dropdown trigger inside a view tab. */
+  viewTabActions: string;
+  /** Styles applied to the "add view" button in the view tab strip. */
+  viewTabAddButton: string;
 }
 
 export type DataStudioClassKey = keyof DataStudioClasses;
@@ -52,14 +48,12 @@ export const dataStudioClasses: DataStudioClasses = generateUtilityClasses('MuiD
   'grid',
   'sheetsAction',
   'empty',
-  'tabBar',
-  'tab',
-  'tabActive',
-  'tabDataset',
-  'tabView',
-  'tabActions',
-  'tabAddButton',
-  'tabMenuButton',
+  'viewTabBar',
+  'viewTab',
+  'viewTabActive',
+  'viewTabTable',
+  'viewTabActions',
+  'viewTabAddButton',
 ]);
 
 const slots: Record<DataStudioClassKey, string[]> = {
@@ -71,14 +65,12 @@ const slots: Record<DataStudioClassKey, string[]> = {
   grid: ['grid'],
   sheetsAction: ['sheetsAction'],
   empty: ['empty'],
-  tabBar: ['tabBar'],
-  tab: ['tab'],
-  tabActive: ['tabActive'],
-  tabDataset: ['tabDataset'],
-  tabView: ['tabView'],
-  tabActions: ['tabActions'],
-  tabAddButton: ['tabAddButton'],
-  tabMenuButton: ['tabMenuButton'],
+  viewTabBar: ['viewTabBar'],
+  viewTab: ['viewTab'],
+  viewTabActive: ['viewTabActive'],
+  viewTabTable: ['viewTabTable'],
+  viewTabActions: ['viewTabActions'],
+  viewTabAddButton: ['viewTabAddButton'],
 };
 
 export const useDataStudioUtilityClasses = (

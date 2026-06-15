@@ -1,6 +1,5 @@
 export * from './DataStudio';
 export * from './DataStudioToolbar';
-export * from './DataStudioMenuBar';
 export * from './createDataStudioDataSourceFromAPI';
 export * from './createDataStudioDataSourcesFromAPI';
 export * from './createDataStudioJointDataSource';

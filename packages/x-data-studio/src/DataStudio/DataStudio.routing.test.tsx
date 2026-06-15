@@ -107,7 +107,7 @@ describe('<DataStudio /> — routing adapter', () => {
               { id: 'b', label: 'Beta', columns: [{ field: 'name', headerName: 'B' }] },
             ]}
             routing={adapter}
-            slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+            slots={{ dataGrid: Grid as any, toolbar: null }}
           />
         </div>
       );
@@ -133,7 +133,7 @@ describe('<DataStudio /> — routing adapter', () => {
         <DataStudio
           dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -155,7 +155,7 @@ describe('<DataStudio /> — routing adapter', () => {
         <DataStudio
           dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -175,7 +175,7 @@ describe('<DataStudio /> — routing adapter', () => {
           dataSources={[dataSourceA]}
           defaultSheets={[]}
           routing={router.adapter}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -194,7 +194,7 @@ describe('<DataStudio /> — routing adapter', () => {
         <DataStudio
           dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -225,7 +225,7 @@ describe('<DataStudio /> — routing adapter', () => {
             { id: 'c', label: 'Gamma', columns: [{ field: 'name', headerName: 'C' }] },
           ]}
           routing={router.adapter}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -267,7 +267,7 @@ describe('<DataStudio /> — routing adapter', () => {
         <DataStudio
           dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -295,7 +295,7 @@ describe('<DataStudio /> — routing adapter', () => {
           activeDataSourceId="b"
           onActiveDataSourceChange={onActiveDataSourceChange}
           routing={router.adapter}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -314,7 +314,7 @@ describe('<DataStudio /> — routing adapter', () => {
         <DataStudio
           dataSources={[dataSourceA, dataSourceB]}
           routing={null}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -332,7 +332,7 @@ describe('<DataStudio /> — routing adapter', () => {
         <DataStudio
           dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );

@@ -637,7 +637,7 @@ importers:
         version: 17.3.0(@babel/preset-env@7.29.5(@babel/core@7.29.0))
       knex:
         specifier: ^3.2.10
-        version: 3.2.10(better-sqlite3@12.10.0)(mysql2@3.22.3(@types/node@24.5.2))(pg@8.21.0)
+        version: 3.2.10(better-sqlite3@12.10.0)(mysql2@3.22.3(@types/node@22.19.3))(pg@8.21.0)
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -1554,6 +1554,9 @@ importers:
       '@mui/x-data-grid-pro':
         specifier: workspace:^
         version: link:../x-data-grid-pro/build
+      '@mui/x-internals':
+        specifier: workspace:^
+        version: link:../x-internals/build
       '@mui/x-tree-view':
         specifier: workspace:^
         version: link:../x-tree-view/build
@@ -1562,14 +1565,14 @@ importers:
         version: 2.1.1
       knex:
         specifier: ^3.2.10
-        version: 3.2.10(better-sqlite3@12.10.0)(mysql2@3.22.3(@types/node@24.5.2))(pg@8.21.0)
+        version: 3.2.10(better-sqlite3@12.10.0)(mysql2@3.22.3(@types/node@22.19.3))(pg@8.21.0)
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.18-canary.23(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@playwright/test@1.60.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.1.6)(chai@6.2.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(vite@8.0.13(@types/node@24.5.2)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.43.1)(tsx@4.22.2)(yaml@2.8.1))(vitest@4.1.6)
+        version: 2.0.18-canary.23(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@playwright/test@1.60.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.1.6)(chai@6.2.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(vite@8.0.13(@types/node@22.19.3)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.43.1)(tsx@4.22.2)(yaml@2.8.1))(vitest@4.1.6)
       '@mui/material':
         specifier: 'catalog:'
         version: 9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -1587,7 +1590,7 @@ importers:
         version: 7.2.0(socks@2.8.6)
       mysql2:
         specifier: ^3.22.3
-        version: 3.22.3(@types/node@24.5.2)
+        version: 3.22.3(@types/node@22.19.3)
       pg:
         specifier: ^8.21.0
         version: 8.21.0
@@ -9347,9 +9350,6 @@ packages:
   lodash.uniq@4.5.0:
     resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
 
-  lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-
   lodash@4.18.1:
     resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
@@ -15937,6 +15937,7 @@ snapshots:
   '@types/node@24.5.2':
     dependencies:
       undici-types: 7.12.0
+    optional: true
 
   '@types/normalize-package-data@2.4.4': {}
 
@@ -16864,7 +16865,7 @@ snapshots:
       '@babel/template': 7.28.6
       '@babel/types': 7.29.0
       find-cache-dir: 3.3.2
-      lodash: 4.17.21
+      lodash: 4.18.1
       object-hash: 2.2.0
 
   babel-plugin-polyfill-corejs2@0.4.15(@babel/core@7.29.0):
@@ -18025,7 +18026,7 @@ snapshots:
 
   eslint-plugin-consistent-default-export-name@0.0.15:
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.18.1
       pkg-dir: 5.0.0
 
   eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.59.4(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.4(jiti@2.7.0)):
@@ -19509,7 +19510,7 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  knex@3.2.10(better-sqlite3@12.10.0)(mysql2@3.22.3(@types/node@24.5.2))(pg@8.21.0):
+  knex@3.2.10(better-sqlite3@12.10.0)(mysql2@3.22.3(@types/node@22.19.3))(pg@8.21.0):
     dependencies:
       colorette: 2.0.19
       commander: 10.0.1
@@ -19527,7 +19528,7 @@ snapshots:
       tildify: 2.0.0
     optionalDependencies:
       better-sqlite3: 12.10.0
-      mysql2: 3.22.3(@types/node@24.5.2)
+      mysql2: 3.22.3(@types/node@22.19.3)
       pg: 8.21.0
     transitivePeerDependencies:
       - supports-color
@@ -19771,8 +19772,6 @@ snapshots:
   lodash.truncate@4.4.2: {}
 
   lodash.uniq@4.5.0: {}
-
-  lodash@4.17.21: {}
 
   lodash@4.18.1: {}
 
@@ -20524,9 +20523,9 @@ snapshots:
 
   mute-stream@3.0.0: {}
 
-  mysql2@3.22.3(@types/node@24.5.2):
+  mysql2@3.22.3(@types/node@22.19.3):
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 22.19.3
       aws-ssl-profiles: 1.1.2
       denque: 2.1.0
       generate-function: 2.3.1
@@ -22822,7 +22821,8 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici-types@7.12.0: {}
+  undici-types@7.12.0:
+    optional: true
 
   undici@7.25.0: {}
 

@@ -12,10 +12,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useDataStudioUtilityClasses } from './dataStudioClasses';
 import { DataStudioToolbar } from '../DataStudioToolbar';
-import { DataStudioMenuBar } from '../DataStudioMenuBar';
-import { DataStudioTabBar } from './DataStudioTabBar';
-import { DataStudioSidebarSheetItem } from './DataStudioSidebarSheetItem';
-import { DataStudioDataSourceView } from './DataStudioDataSourceView';
+import { DataStudioViewTabBar } from './DataStudioViewTabBar';
 import { DataStudioComposer } from './DataStudioComposer';
 import { resolveDataStudioViewType, UnknownViewType } from '../viewRegistry';
 import { getBuiltinSheetTemplates, getBuiltinViewTypes, resolveOverridable } from '../builtins';
@@ -46,8 +43,6 @@ import type {
   DataStudioDataGridComponent,
   DataStudioDataGridProps,
   DataStudioDataSource,
-  DataStudioLayout,
-  DataStudioMenuBarComponent,
   DataStudioPlan,
   DataStudioProps,
   DataStudioToolbarComponent,
@@ -91,16 +86,13 @@ function getDefaultDataGridForPlan(plan: DataStudioPlan): DataStudioDataGridComp
 
 const useThemeProps = createUseThemeProps('MuiDataStudio');
 const DATA_SOURCES_ITEM_ID = 'data-sources';
-const SHEETS_ITEM_ID = 'sheets';
 const EMPTY_DATA_SOURCES_ITEM_ID = 'data-sources-empty';
-const EMPTY_SHEETS_ITEM_ID = 'sheets-empty';
 const DATA_SOURCE_ITEM_PREFIX = 'data-source:';
-const SHEET_ITEM_PREFIX = 'sheet:';
 const LOADING_DATA_SOURCE_ITEM_PREFIX = 'data-source-loading:';
-const DEFAULT_EXPANDED_ITEMS = [DATA_SOURCES_ITEM_ID, SHEETS_ITEM_ID];
+const DEFAULT_EXPANDED_ITEMS = [DATA_SOURCES_ITEM_ID];
 const DATA_SOURCE_LOADING_ITEM_WIDTHS = ['72%', '58%', '66%'];
-// Marks the two top-level section headers ("Data Sources" / "Sheets") so their
-// labels can be styled as eyebrows, distinct from their leaf rows.
+// Marks the "Data Sources" section header so its label can be styled as an
+// eyebrow, distinct from its leaf rows.
 const DATA_STUDIO_TREE_SECTION_CLASS = 'MuiDataStudio-treeSection';
 
 const DATA_STUDIO_DEFAULT_DATA_GRID_PROPS = {
@@ -133,11 +125,10 @@ const DataStudioRoot = styled('div', {
   name: 'MuiDataStudio',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-  shouldForwardProp: (prop) => prop !== 'ownerLayout',
-})<{ ownerLayout: DataStudioLayout }>(({ theme, ownerLayout }) => ({
+})(({ theme }) => ({
   boxSizing: 'border-box',
   display: 'flex',
-  flexDirection: ownerLayout === 'tabs' ? 'column' : 'row',
+  flexDirection: 'row',
   width: '100%',
   height: '100%',
   minHeight: 0,
@@ -154,9 +145,9 @@ const DataStudioSidebar = styled('aside', {
   slot: 'Sidebar',
   overridesResolver: (_, styles) => styles.sidebar,
 })(({ theme }) => ({
-  width: 280,
-  minWidth: 240,
-  maxWidth: 360,
+  width: 240,
+  minWidth: 220,
+  maxWidth: 320,
   display: 'flex',
   flexDirection: 'column',
   minHeight: 0,
@@ -193,12 +184,12 @@ const DataStudioTree = styled(SimpleTreeView, {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    // Unify the tree leaf type with the sheet tab bar (0.8125rem).
+    // Unify the tree leaf type with the view tab strip (0.8125rem).
     fontSize: '0.8125rem',
   },
-  // Scope the two section headers ("Data Sources" / "Sheets") as eyebrows so
-  // they outrank their leaf rows. Only the section header's own label (the
-  // direct content) is targeted, not its children's labels.
+  // Scope the "Data Sources" section header as an eyebrow so it outranks its
+  // leaf rows. Only the section header's own label (the direct content) is
+  // targeted, not its children's labels.
   [`& .${DATA_STUDIO_TREE_SECTION_CLASS} > .MuiTreeItem-content .MuiTreeItem-label`]: {
     fontSize: '0.6875rem',
     fontWeight: theme.typography.fontWeightMedium,
@@ -287,18 +278,6 @@ function getDatasetIdFromTreeItemId(itemId: string | null) {
   return null;
 }
 
-function getSheetItemId(sheetId: string) {
-  return `${SHEET_ITEM_PREFIX}${sheetId}`;
-}
-
-function getSheetIdFromTreeItemId(itemId: string | null) {
-  if (itemId?.startsWith(SHEET_ITEM_PREFIX)) {
-    return itemId.slice(SHEET_ITEM_PREFIX.length);
-  }
-
-  return null;
-}
-
 type DataStudioComponent = (<R extends GridValidRowModel = any>(
   props: DataStudioProps<R> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
@@ -320,14 +299,17 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     copilotPlugins,
     copilotFeatures,
     dataSources,
+    defaultViews,
     defaultSheets,
+    initialActiveViewId,
     initialActiveSheetId,
     initialDataSourceId,
-    layout = 'sidebar',
     loading = false,
     plan = 'community',
     onActiveDataSourceChange,
+    onActiveViewChange,
     onActiveSheetChange,
+    onViewsChange,
     onSheetsChange,
     routing,
     sheetsPersistence,
@@ -335,11 +317,22 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     slotProps,
     slots,
     sx,
+    views: viewsProp,
     sheets: sheetsProp,
+    activeViewId: activeViewIdProp,
     sheetTemplates,
     viewTypes,
     ...other
   } = props;
+
+  // Canonical `views`/`activeView*` props win; the legacy `sheets`/`activeSheet*`
+  // aliases are honored for backwards compatibility. Internally everything flows
+  // as "sheets" (the persisted record + frozen copilot wire vocabulary).
+  const resolvedViewsProp = viewsProp ?? sheetsProp;
+  const resolvedDefaultViews = defaultViews ?? defaultSheets;
+  const resolvedInitialActiveViewId = initialActiveViewId ?? initialActiveSheetId;
+  const resolvedActiveViewIdProp =
+    activeViewIdProp !== undefined ? activeViewIdProp : activeSheetIdProp;
 
   const isRoutingEnabled = routing != null;
 
@@ -351,11 +344,6 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     toolbarSlot === null
       ? null
       : ((toolbarSlot ?? DataStudioToolbar) as DataStudioToolbarComponent);
-  const menuBarSlot = slots?.menuBar;
-  const MenuBarSlot: DataStudioMenuBarComponent | null =
-    menuBarSlot === null
-      ? null
-      : ((menuBarSlot ?? DataStudioMenuBar) as DataStudioMenuBarComponent);
   const internalApiRef = useGridApiRef();
 
   // Stable cache instance for this DataStudio mount. Options are captured on first render;
@@ -475,8 +463,8 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
   }
 
   let resolvedActiveViewId: string | null | undefined;
-  if (activeSheetIdProp !== undefined) {
-    resolvedActiveViewId = activeSheetIdProp;
+  if (resolvedActiveViewIdProp !== undefined) {
+    resolvedActiveViewId = resolvedActiveViewIdProp;
   } else if (isRoutingEnabled) {
     resolvedActiveViewId = navState.activeSheetId;
   }
@@ -501,9 +489,10 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
           activeSheetId: sheetId,
         });
       }
+      onActiveViewChange?.(sheetId, sheet);
       onActiveSheetChange?.(sheetId, sheet);
     },
-    [isRoutingEnabled, routing, scheduleUrlWrite, onActiveSheetChange],
+    [isRoutingEnabled, routing, scheduleUrlWrite, onActiveViewChange, onActiveSheetChange],
   );
 
   // Resolve the persistence adapter. `undefined` ⇒ default localStorage; `null`
@@ -511,16 +500,17 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
   // a controlled consumer owns the source of truth and we stay out of the way.
   const resolvedSheetsPersistence =
     sheetsPersistence === undefined ? getDefaultSheetsPersistence() : sheetsPersistence;
-  const isPersistenceEnabled = resolvedSheetsPersistence != null && sheetsProp === undefined;
+  const isPersistenceEnabled = resolvedSheetsPersistence != null && resolvedViewsProp === undefined;
 
   const handleSheetsChange = React.useCallback(
     (nextSheets: DataStudioSheet[]) => {
       if (isPersistenceEnabled) {
         resolvedSheetsPersistence!.write(nextSheets);
       }
+      onViewsChange?.(nextSheets);
       onSheetsChange?.(nextSheets);
     },
-    [isPersistenceEnabled, resolvedSheetsPersistence, onSheetsChange],
+    [isPersistenceEnabled, resolvedSheetsPersistence, onViewsChange, onSheetsChange],
   );
 
   const hydrateSheets = React.useCallback(() => {
@@ -547,11 +537,11 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     activeDataSourceId: resolvedActiveDatasetId,
     initialDataSourceId,
     onActiveDataSourceChange: handleActiveDatasetChange,
-    sheets: sheetsProp,
-    defaultSheets,
+    sheets: resolvedViewsProp,
+    defaultSheets: resolvedDefaultViews,
     onSheetsChange: handleSheetsChange,
     activeSheetId: resolvedActiveViewId,
-    initialActiveSheetId,
+    initialActiveSheetId: resolvedInitialActiveViewId,
     onActiveSheetChange: handleActiveSheetChange,
     sheetTemplates: resolvedSheetTemplates,
     sessionCache,
@@ -640,15 +630,9 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     );
   }, [isRoutingEnabled, routing, activeDataSource, stateActiveViewId, effectiveDataSources.length]);
 
-  // Highlight the active sheet's tree item when a sheet is selected (matches the
-  // tab bar's notion of "the sheet is the active tab"). Fall back to the dataSource
-  // when no sheet is active.
-  let selectedTreeItemId: string | null = null;
-  if (activeSheet) {
-    selectedTreeItemId = getSheetItemId(activeSheet.id);
-  } else if (activeDataSource) {
-    selectedTreeItemId = getDataSourceItemId(activeDataSource.id);
-  }
+  // The left rail tracks the active dataset; the active view (if any) lives in
+  // the top view tab strip, so the rail always highlights the dataset row.
+  const selectedTreeItemId = activeDataSource ? getDataSourceItemId(activeDataSource.id) : null;
   const showDataSourcesLoading = loading && effectiveDataSources.length === 0;
 
   const callerApiRef = activeDataSource?.slotProps?.dataGrid?.apiRef ?? slotProps?.dataGrid?.apiRef;
@@ -712,36 +696,42 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     ));
   }
 
-  const sheetItems =
-    state.sheets.length === 0
-      ? [
-          <TreeItem
-            key={EMPTY_SHEETS_ITEM_ID}
-            itemId={EMPTY_SHEETS_ITEM_ID}
-            label="No sheets yet"
-            disabled
-          />,
-        ]
-      : state.sheets.map((sheet, index) => (
-          <TreeItem
-            key={sheet.id}
-            itemId={getSheetItemId(sheet.id)}
-            label={
-              <DataStudioSidebarSheetItem
-                sheet={sheet}
-                index={index}
-                total={state.sheets.length}
-                state={state}
-              />
-            }
-          />
-        ));
+  // The views surfaced in the top tab strip for the active dataset: views bound
+  // to it, plus any free-form views (no dataset binding) so they stay reachable.
+  const datasetViews = React.useMemo(
+    () =>
+      state.sheets.filter(
+        (sheet) => sheet.dataSourceId === activeDataSource?.id || sheet.dataSourceId == null,
+      ),
+    [state.sheets, activeDataSource?.id],
+  );
 
-  const handleAddSheet = React.useCallback(() => {
-    // Open the Composer (prompt + template picker) so the user chooses what kind
-    // of Sheet to create, instead of silently appending a default grid Sheet.
-    state.startComposing();
-  }, [state]);
+  // Move a view left/right among the active dataset's views. Translates the
+  // neighbor's position in the filtered list into a delta on the global order.
+  const handleMoveView = React.useCallback(
+    (viewId: string, direction: -1 | 1) => {
+      const localIndex = datasetViews.findIndex((view) => view.id === viewId);
+      const neighbor = datasetViews[localIndex + direction];
+      if (!neighbor) {
+        return;
+      }
+      const fromGlobal = state.sheets.findIndex((sheet) => sheet.id === viewId);
+      const toGlobal = state.sheets.findIndex((sheet) => sheet.id === neighbor.id);
+      if (fromGlobal === -1 || toGlobal === -1) {
+        return;
+      }
+      state.moveSheet(viewId, toGlobal - fromGlobal);
+    },
+    [datasetViews, state],
+  );
+
+  // Select the dataset's implicit "Table" view (its raw grid): clears the active
+  // view while keeping the dataset active.
+  const handleSelectTable = React.useCallback(() => {
+    if (activeDataSource) {
+      state.selectDataSource(activeDataSource.id);
+    }
+  }, [state, activeDataSource]);
 
   const handleTreeSelectionChange = React.useCallback(
     (_event: React.SyntheticEvent | null, itemIds: string | string[] | null) => {
@@ -749,11 +739,6 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
       const dataSourceId = getDatasetIdFromTreeItemId(itemId);
       if (dataSourceId !== null) {
         state.selectDataSource(dataSourceId);
-        return;
-      }
-      const sheetId = getSheetIdFromTreeItemId(itemId);
-      if (sheetId !== null) {
-        state.selectSheet(sheetId);
       }
     },
     [state],
@@ -799,24 +784,6 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     return undefined;
   }, [activeDataSourceCache, activeDataSourceId, cacheStrategy, sessionCache]);
 
-  // The preview pane's "Chart" / "Pivot table" actions start the matching
-  // built-in template bound to the active Data Source. `startSheetFromTemplate`
-  // binds via the active Data Source id and returns null when the template
-  // isn't registered (e.g. a non-premium plan), in which case we fall back to a
-  // plain grid Sheet so the button is never dead.
-  const handleAddTemplateFromDataSource = React.useCallback(
-    (templateId: string, fallbackLabel: string) => {
-      if (!activeDataSource) {
-        return;
-      }
-      const created = state.startSheetFromTemplate(templateId);
-      if (!created) {
-        state.addSheet({ dataSourceId: activeDataSource.id, label: fallbackLabel });
-      }
-    },
-    [state, activeDataSource],
-  );
-
   const gridElement =
     activeDataSource === null ? null : (
       <DataGridSlot
@@ -855,13 +822,13 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     : undefined;
   const isCustomViewType = Boolean(activeSheet && activeSheetType && activeSheetType !== 'grid');
   // A grid-backed view (e.g. the spreadsheet) renders its grid on the shared
-  // `apiRef`, so the menu bar / toolbar can bind to it.
+  // `apiRef`, so the toolbar can bind to it.
   const activeViewIsGridBacked = isCustomViewType && activeSheetViewType?.gridBacked === true;
   // A view that owns its toolbar (the spreadsheet) suppresses the Data Studio
   // grid toolbar — its database controls (sort/filter/pivot/…) don't apply.
   const activeViewOwnsToolbar = isCustomViewType && activeSheetViewType?.ownsToolbar === true;
-  // The menu bar / toolbar are active when the inline grid is the surface OR a
-  // grid-backed view owns the pane (and not while composing).
+  // The toolbar is active when the inline grid is the surface OR a grid-backed
+  // view owns the pane (and not while composing).
   const chromeGridActive =
     !state.isComposing &&
     (activeViewIsGridBacked || (activeDataSource != null && !isCustomViewType));
@@ -951,16 +918,16 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
   );
 
   // Render path:
-  //   - Custom view type registered on the active sheet → its Component
+  //   - Custom view type registered on the active view → its Component
   //     (or unknown-type fallback).
   //   - No data sources at all → Composer (front door for empty studios).
-  //   - Data source available, no sheet → preview pane wrapping the grid.
-  //   - Sheet active with 'grid' (default) → bare grid (sheet supplies
-  //     `initialState`).
-  // The Composer doubles as the "create a new Sheet" screen: it shows when the
-  // studio is empty (no Data Sources) AND on demand when the user clicks
-  // "Add new sheet" (`state.isComposing`). On-demand composing offers a Cancel
-  // back to whatever was active.
+  //   - A view active with 'grid' (default), OR the implicit Table view (no
+  //     active view) → bare grid (the view supplies `initialState`; the Table
+  //     view reads the dataset's default state).
+  // The Composer doubles as the "create a new view" screen: it shows when the
+  // studio is empty (no Data Sources) AND on demand from the view tab strip's
+  // "+" → "Ask Copilot…" (`state.isComposing`). On-demand composing offers a
+  // Cancel back to whatever was active.
   const composerElement = (
     <DataStudioComposer
       templates={resolvedSheetTemplates}
@@ -982,31 +949,31 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     gridContent = customViewContent;
   } else if (activeDataSource === null) {
     gridContent = composerElement;
-  } else if (activeSheet) {
-    gridContent = gridElement;
   } else {
-    gridContent = (
-      <DataStudioDataSourceView
-        dataSource={activeDataSource}
-        onAddChartSheet={() => handleAddTemplateFromDataSource('chart', 'Chart')}
-        onAddPivotSheet={() => handleAddTemplateFromDataSource('pivot', 'Pivot table')}
-        onAddDashboardSheet={() => handleAddTemplateFromDataSource('dashboard', 'Dashboard')}
-      >
-        {gridElement}
-      </DataStudioDataSourceView>
-    );
+    // Table view (no active view) and grid-type views both render the bare grid.
+    gridContent = gridElement;
   }
+
+  const showViewTabBar = !state.isComposing && activeDataSource != null;
 
   const mainPane = (
     <DataStudioMain className={classes.main}>
-      {MenuBarSlot ? (
-        <MenuBarSlot
-          apiRef={effectiveApiRef}
-          // The menu bar binds to the inline grid OR a grid-backed view's grid
-          // (spreadsheet/pivot/chart) via the shared apiRef; `chromeGridActive`
-          // is false only for non-grid surfaces and while composing.
-          gridActive={chromeGridActive}
-          {...slotProps?.menuBar}
+      {showViewTabBar ? (
+        <DataStudioViewTabBar
+          classes={classes}
+          views={datasetViews}
+          activeViewId={stateActiveViewId}
+          hasActiveDataSource={activeDataSource != null}
+          templates={resolvedSheetTemplates}
+          promptEnabled={copilotChatAdapter != null}
+          onSelectTable={handleSelectTable}
+          onSelectView={state.selectSheet}
+          onAddFromTemplate={handlePickTemplate}
+          onStartComposing={state.startComposing}
+          onRenameView={state.renameSheet}
+          onDuplicateView={state.duplicateSheet}
+          onDeleteView={state.deleteSheet}
+          onMoveView={handleMoveView}
         />
       ) : null}
       {ToolbarSlot && !activeViewOwnsToolbar && !state.isComposing ? (
@@ -1051,13 +1018,7 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
   const CopilotPanelComponent = slots?.copilotPanel ?? StudioCopilotPanel;
 
   return (
-    <DataStudioRoot
-      ref={ref}
-      ownerLayout={layout}
-      className={clsx(classes.root, className)}
-      sx={sx}
-      {...other}
-    >
+    <DataStudioRoot ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
       <DataStudioCopilotShell
         inner={copilotChatAdapter}
         stateApi={state}
@@ -1067,66 +1028,41 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
         plugins={copilotPlugins}
         Panel={CopilotPanelComponent}
       >
-        {layout === 'sidebar' ? (
-          <React.Fragment>
-            <DataStudioSidebar className={classes.sidebar}>
-              <DataStudioTree
-                className={classes.tree}
-                defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
-                selectedItems={selectedTreeItemId}
-                onSelectedItemsChange={handleTreeSelectionChange}
-              >
-                <TreeItem
-                  className={DATA_STUDIO_TREE_SECTION_CLASS}
-                  itemId={DATA_SOURCES_ITEM_ID}
-                  label="Data Sources"
-                >
-                  {dataSourceItems}
-                </TreeItem>
-                <TreeItem
-                  className={DATA_STUDIO_TREE_SECTION_CLASS}
-                  itemId={SHEETS_ITEM_ID}
-                  label="Sheets"
-                >
-                  {sheetItems}
-                </TreeItem>
-              </DataStudioTree>
-              <DataStudioSheetsAction className={classes.sheetsAction}>
-                <Button
-                  fullWidth
-                  size="small"
-                  variant="text"
-                  onClick={handleOpenNewJointSource}
-                  disabled={joinableBaseCount < 2}
-                >
-                  New joint source
-                </Button>
-                <Button
-                  fullWidth
-                  size="small"
-                  variant="outlined"
-                  onClick={handleAddSheet}
-                  disabled={effectiveDataSources.length === 0}
-                >
-                  Add new sheet
-                </Button>
-              </DataStudioSheetsAction>
-            </DataStudioSidebar>
-            <DataStudioJoinBuilder
-              open={isJoinBuilderOpen}
-              onClose={handleCloseJointBuilder}
-              dataSources={dataSources}
-              initialConfig={editingJointConfig}
-              onSubmit={handleSubmitJointSource}
-            />
-            {mainPane}
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            {mainPane}
-            <DataStudioTabBar classes={classes} dataSources={effectiveDataSources} state={state} />
-          </React.Fragment>
-        )}
+        <DataStudioSidebar className={classes.sidebar}>
+          <DataStudioTree
+            className={classes.tree}
+            defaultExpandedItems={DEFAULT_EXPANDED_ITEMS}
+            selectedItems={selectedTreeItemId}
+            onSelectedItemsChange={handleTreeSelectionChange}
+          >
+            <TreeItem
+              className={DATA_STUDIO_TREE_SECTION_CLASS}
+              itemId={DATA_SOURCES_ITEM_ID}
+              label="Data Sources"
+            >
+              {dataSourceItems}
+            </TreeItem>
+          </DataStudioTree>
+          <DataStudioSheetsAction className={classes.sheetsAction}>
+            <Button
+              fullWidth
+              size="small"
+              variant="text"
+              onClick={handleOpenNewJointSource}
+              disabled={joinableBaseCount < 2}
+            >
+              New joint source
+            </Button>
+          </DataStudioSheetsAction>
+        </DataStudioSidebar>
+        <DataStudioJoinBuilder
+          open={isJoinBuilderOpen}
+          onClose={handleCloseJointBuilder}
+          dataSources={dataSources}
+          initialConfig={editingJointConfig}
+          onSubmit={handleSubmitJointSource}
+        />
+        {mainPane}
       </DataStudioCopilotShell>
     </DataStudioRoot>
   );
@@ -1142,9 +1078,15 @@ DataStudio.propTypes = {
    */
   activeDataSourceId: PropTypes.string,
   /**
-   * The active sheet id (controlled). Pass `null` to indicate a dataSource tab is active.
+   * The active view id (controlled). Pass `null` to select the Table view.
+   * @deprecated Use `activeViewId` instead. Retained for backwards compatibility.
    */
   activeSheetId: PropTypes.string,
+  /**
+   * The active view id (controlled). Pass `null` to select the dataset's
+   * implicit "Table" view (its raw grid).
+   */
+  activeViewId: PropTypes.string,
   /**
    * Options forwarded to the shared session cache when `cacheStrategy === 'shared'`.
    * Ignored for the other strategies.
@@ -1254,8 +1196,8 @@ DataStudio.propTypes = {
     }),
   ).isRequired,
   /**
-   * Initial sheets displayed alongside dataSources (uncontrolled).
-   * Ignored if `sheets` is provided.
+   * The initial dataset views (uncontrolled). Ignored if `views`/`sheets` is provided.
+   * @deprecated Use `defaultViews` instead. Retained for backwards compatibility.
    */
   defaultSheets: PropTypes.arrayOf(
     PropTypes.shape({
@@ -1268,9 +1210,27 @@ DataStudio.propTypes = {
     }),
   ),
   /**
-   * The initially active sheet id (uncontrolled).
+   * The initial dataset views (uncontrolled). Ignored if `views` is provided.
+   */
+  defaultViews: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataSourceId: PropTypes.string,
+      id: PropTypes.string.isRequired,
+      initialState: PropTypes.object,
+      label: PropTypes.node,
+      params: PropTypes.object,
+      type: PropTypes.string,
+    }),
+  ),
+  /**
+   * The initially active view id (uncontrolled).
+   * @deprecated Use `initialActiveViewId` instead. Retained for backwards compatibility.
    */
   initialActiveSheetId: PropTypes.string,
+  /**
+   * The initially active view id (uncontrolled). `null` selects the Table view.
+   */
+  initialActiveViewId: PropTypes.string,
   /**
    * The initially active dataSource id.
    */
@@ -1287,13 +1247,6 @@ DataStudio.propTypes = {
     write: PropTypes.func.isRequired,
   }),
   /**
-   * Navigator layout.
-   * - `'sidebar'`: tree navigator on the left.
-   * - `'tabs'`: spreadsheet-style tab bar at the bottom.
-   * @default 'sidebar'
-   */
-  layout: PropTypes.oneOf(['sidebar', 'tabs']),
-  /**
    * If `true`, the data sources tree shows a loading state.
    * @default false
    */
@@ -1305,16 +1258,30 @@ DataStudio.propTypes = {
    */
   onActiveDataSourceChange: PropTypes.func,
   /**
-   * Callback fired when the active sheet changes. `null` means a dataSource tab became active.
-   * @param {string | null} sheetId The selected sheet id.
-   * @param {DataStudioSheet | null} sheet The selected sheet definition.
+   * Callback fired when the active view changes. `null` means the Table view became active.
+   * @deprecated Use `onActiveViewChange` instead. Retained for backwards compatibility.
+   * @param {string | null} sheetId The selected view id.
+   * @param {DataStudioSheet | null} sheet The selected view definition.
    */
   onActiveSheetChange: PropTypes.func,
   /**
-   * Callback fired when the list of sheets changes (add, rename, duplicate, delete, reorder).
-   * @param {DataStudioSheet[]} sheets The updated list of sheets.
+   * Callback fired when the active view changes. `null` means the dataset's
+   * Table view became active.
+   * @param {string | null} viewId The selected view id.
+   * @param {DataStudioView | null} view The selected view definition.
+   */
+  onActiveViewChange: PropTypes.func,
+  /**
+   * Callback fired when the list of views changes.
+   * @deprecated Use `onViewsChange` instead. Retained for backwards compatibility.
+   * @param {DataStudioSheet[]} sheets The updated list of views.
    */
   onSheetsChange: PropTypes.func,
+  /**
+   * Callback fired when the list of views changes (add, rename, duplicate, delete, reorder).
+   * @param {DataStudioView[]} views The updated list of views.
+   */
+  onViewsChange: PropTypes.func,
   /**
    * MUI X plan to target. Selects the default Data Grid (community / Pro /
    * Premium).
@@ -1337,9 +1304,8 @@ DataStudio.propTypes = {
     write: PropTypes.func.isRequired,
   }),
   /**
-   * Sheets displayed alongside dataSources (controlled).
-   * Each sheet targets a dataSource (or is free-form) and contains a single
-   * view in v1.
+   * The dataset views (controlled).
+   * @deprecated Use `views` instead. Retained for backwards compatibility.
    */
   sheets: PropTypes.arrayOf(
     PropTypes.shape({
@@ -1408,6 +1374,21 @@ DataStudio.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The dataset views (controlled). Each view targets a dataset via
+   * `dataSourceId` (or is free-form) and surfaces as a tab across the top of
+   * that dataset.
+   */
+  views: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataSourceId: PropTypes.string,
+      id: PropTypes.string.isRequired,
+      initialState: PropTypes.object,
+      label: PropTypes.node,
+      params: PropTypes.object,
+      type: PropTypes.string,
+    }),
+  ),
   /**
    * View types that render a Sheet's content area, keyed by `sheet.type`
    * (defaulting to the inline `'grid'` renderer). The plan-appropriate

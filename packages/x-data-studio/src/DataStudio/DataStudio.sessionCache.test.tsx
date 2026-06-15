@@ -244,7 +244,7 @@ describe('<DataStudio /> — cacheStrategy', () => {
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
           dataSources={[dataSourceA, dataSourceB]}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -264,7 +264,7 @@ describe('<DataStudio /> — cacheStrategy', () => {
         <DataStudio
           dataSources={[dataSourceA]}
           cacheStrategy="none"
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -280,7 +280,7 @@ describe('<DataStudio /> — cacheStrategy', () => {
         <DataStudio
           dataSources={[dataSourceA]}
           cacheStrategy="per-dataSource"
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -300,7 +300,7 @@ describe('<DataStudio /> — cacheStrategy', () => {
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
           dataSources={[{ ...dataSourceA, cache: dataSourceCache }]}
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );
@@ -316,7 +316,7 @@ describe('<DataStudio /> — cacheStrategy', () => {
         <DataStudio
           dataSources={[dataSourceA, dataSourceB]}
           initialDataSourceId="a"
-          slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
+          slots={{ dataGrid: Grid as any, toolbar: null }}
         />
       </div>,
     );

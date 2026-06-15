@@ -44,6 +44,7 @@
     "@mui/x-data-grid": "workspace:^",
     "@mui/x-data-grid-premium": "workspace:^",
     "@mui/x-data-grid-pro": "workspace:^",
+    "@mui/x-internals": "workspace:^",
     "@mui/x-tree-view": "workspace:^",
     "clsx": "catalog:",
     "knex": "^3.2.10",

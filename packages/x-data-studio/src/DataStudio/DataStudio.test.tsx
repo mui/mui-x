@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { DataGridProps, GridDataSource } from '@mui/x-data-grid';
@@ -121,9 +121,6 @@ describe('<DataStudio />', () => {
 
     expect(screen.getByText('Data Sources')).not.toBe(null);
     expect(screen.getByText('No data sources')).not.toBe(null);
-    expect(screen.getByText('Sheets')).not.toBe(null);
-    expect(screen.getByText('No sheets yet')).not.toBe(null);
-    expect(screen.getByRole('button', { name: 'Add new sheet' })).toHaveProperty('disabled', true);
     // Composer renders in the main pane in place of the bare "No data source
     // selected" empty state.
     expect(screen.getByText('What would you like to build?')).not.toBe(null);
@@ -140,9 +137,9 @@ describe('<DataStudio />', () => {
     // Default-on: the spreadsheet template card appears without passing
     // `sheetTemplates`. The card is a `<button>` with an explicit
     // `role="listitem"`, so it surfaces as a listitem, not a button.
-    expect(
-      screen.getByRole('listitem', { name: 'Create from Spreadsheet template' }),
-    ).not.toBe(null);
+    expect(screen.getByRole('listitem', { name: 'Create from Spreadsheet template' })).not.toBe(
+      null,
+    );
   });
 
   it('creates a working Spreadsheet sheet from the built-in template (no viewTypes prop)', () => {
@@ -154,10 +151,8 @@ describe('<DataStudio />', () => {
 
     fireEvent.click(screen.getByRole('listitem', { name: 'Create from Spreadsheet template' }));
 
-    // The new free-form sheet is added to the sidebar...
-    expect(screen.getAllByRole('treeitem', { name: /Spreadsheet/ }).length).toBeGreaterThan(0);
-    // ...and its built-in spreadsheet view type renders (the A column header
-    // proves the spreadsheetViewType resolved without a `viewTypes` prop).
+    // The new free-form spreadsheet view renders (the A column header proves the
+    // spreadsheetViewType resolved without a `viewTypes` prop).
     expect(screen.getByRole('columnheader', { name: 'A' })).not.toBe(null);
     // Default A–H columns; no I yet.
     expect(screen.queryByRole('columnheader', { name: 'I' })).toBe(null);
@@ -217,7 +212,9 @@ describe('<DataStudio />', () => {
         <DataStudio
           dataSources={[]}
           sheetsPersistence={null}
-          sheetTemplates={(defaults) => defaults.filter((template) => template.id !== 'spreadsheet')}
+          sheetTemplates={(defaults) =>
+            defaults.filter((template) => template.id !== 'spreadsheet')
+          }
         />
       </div>,
     );
@@ -247,7 +244,7 @@ describe('<DataStudio />', () => {
     expect(screen.queryByRole('listitem', { name: 'Create from Pivot table template' })).toBe(null);
   });
 
-  it('creates a Pivot sheet bound to the Data Source from the preview action', () => {
+  it('creates a Pivot view bound to the active dataset from the "+" menu', () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
@@ -259,15 +256,14 @@ describe('<DataStudio />', () => {
       </div>,
     );
 
-    // Previewing the Data Source shows the action bar; create the pivot.
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Create a pivot table from this data source' }),
-    );
+    // The view tab strip's "+" opens the view-type menu; pick Pivot table.
+    fireEvent.click(screen.getByRole('button', { name: 'Add view' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: /Pivot table/ }));
 
-    // A bound Pivot sheet is added and activated; the built-in pivotViewType
+    // A bound Pivot view is added and activated; the built-in pivotViewType
     // resolves (with no `viewTypes` prop) and renders a grid — not the
     // "No Data Source connected" empty state and not the unknown-type fallback.
-    expect(screen.getAllByRole('treeitem', { name: /Pivot table/ }).length).toBeGreaterThan(0);
+    expect(screen.getByRole('tab', { name: 'Pivot table' })).not.toBe(null);
     expect(screen.getByRole('grid')).not.toBe(null);
     expect(screen.queryByText('No Data Source connected')).toBe(null);
   });
@@ -291,30 +287,28 @@ describe('<DataStudio />', () => {
 
   // The chart workspace mounts `ChartsRenderer`, which needs real layout / SVG
   // measurement and can't render under jsdom — exercise it in browser mode.
-  it.skipIf(isJSDOM)(
-    'creates a Chart sheet bound to the Data Source from the preview action',
-    () => {
-      render(
-        <div style={{ width: 500, height: 300 }}>
-          <DataStudio
-            dataSources={[customerDataset]}
-            sheetsPersistence={null}
-            plan="premium"
-            slotProps={{ dataGrid: { disableVirtualization: true } }}
-          />
-        </div>,
-      );
+  it.skipIf(isJSDOM)('creates a Chart view bound to the active dataset from the "+" menu', () => {
+    render(
+      <div style={{ width: 500, height: 300 }}>
+        <DataStudio
+          dataSources={[customerDataset]}
+          sheetsPersistence={null}
+          plan="premium"
+          slotProps={{ dataGrid: { disableVirtualization: true } }}
+        />
+      </div>,
+    );
 
-      fireEvent.click(screen.getByRole('button', { name: 'Create a chart from this data source' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add view' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: /Chart/ }));
 
-      // A bound Chart sheet is added and activated; the built-in chartViewType
-      // resolves (no `viewTypes` prop) and mounts its workspace — not the
-      // "No Data Source connected" empty state.
-      expect(screen.getAllByRole('treeitem', { name: /Chart/ }).length).toBeGreaterThan(0);
-      expect(screen.getByRole('grid')).not.toBe(null);
-      expect(screen.queryByText('No Data Source connected')).toBe(null);
-    },
-  );
+    // A bound Chart view is added and activated; the built-in chartViewType
+    // resolves (no `viewTypes` prop) and mounts its workspace — not the
+    // "No Data Source connected" empty state.
+    expect(screen.getByRole('tab', { name: 'Chart' })).not.toBe(null);
+    expect(screen.getByRole('grid')).not.toBe(null);
+    expect(screen.queryByText('No Data Source connected')).toBe(null);
+  });
 
   it('renders data source shimmer while loading dataSources', () => {
     render(
@@ -421,93 +415,65 @@ describe('<DataStudio />', () => {
     expect(screen.queryByPlaceholderText('Search')).toBe(null);
   });
 
-  describe('layout="tabs"', () => {
-    function getTab(name: string) {
-      return screen
-        .queryAllByRole('button', { name })
-        .find((node) => node.tagName === 'BUTTON' && node.getAttribute('type') === 'button');
-    }
+  describe('view tab strip', () => {
+    it('renders the Table tab and an Add view button for the active dataset', () => {
+      renderDataStudio();
 
-    it('renders dataSource tabs and the +/menu actions', () => {
-      renderDataStudio({ layout: 'tabs' });
-
-      expect(getTab('Customers')).not.toBeUndefined();
-      expect(getTab('Products')).not.toBeUndefined();
-      expect(screen.getByRole('button', { name: 'Add sheet' })).not.toBe(null);
-      expect(screen.getByRole('button', { name: 'All tabs' })).not.toBe(null);
-      // No sheets yet.
-      expect(screen.queryByText('View 1')).toBe(null);
+      expect(screen.getByRole('tab', { name: 'Table' })).not.toBe(null);
+      expect(screen.getByRole('button', { name: 'Add view' })).not.toBe(null);
+      // No user views yet.
+      expect(screen.queryByRole('tab', { name: 'View 1' })).toBe(null);
     });
 
-    it('switches dataSource by clicking a dataSource tab and fires onActiveDataSourceChange', () => {
-      const handleActiveDatasetChange = vi.fn();
-      renderDataStudio({ layout: 'tabs', onActiveDataSourceChange: handleActiveDatasetChange });
-
-      const productsTab = getTab('Products')!;
-      fireEvent.click(productsTab);
-
-      expect(handleActiveDatasetChange).toHaveBeenCalledWith('products', productDataset);
-      expect(screen.getByText('Arabica')).not.toBe(null);
-    });
-
-    it('adds a "Sheet N" view targeting the active dataSource without entering rename mode', () => {
+    it('adds a view bound to the active dataset from the "+" menu without entering rename mode', () => {
       const handleViewsChange = vi.fn();
       const handleActiveViewChange = vi.fn();
 
       renderDataStudio({
-        layout: 'tabs',
-        onSheetsChange: handleViewsChange,
-        onActiveSheetChange: handleActiveViewChange,
+        plan: 'premium',
+        onViewsChange: handleViewsChange,
+        onActiveViewChange: handleActiveViewChange,
       });
 
-      // "Add sheet" opens the Composer (template picker) rather than appending a
-      // default grid Sheet directly.
-      fireEvent.click(screen.getByRole('button', { name: 'Add sheet' }));
-      expect(screen.getByText('What would you like to build?')).not.toBe(null);
-      expect(handleViewsChange).not.toHaveBeenCalled();
-
-      // Picking a template creates the Sheet (community plan → Spreadsheet).
-      fireEvent.click(screen.getByRole('listitem', { name: 'Create from Spreadsheet template' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Add view' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: /Pivot table/ }));
 
       expect(handleViewsChange).toHaveBeenCalledTimes(1);
       const nextViews = handleViewsChange.mock.calls[0][0] as DataStudioSheet[];
       expect(nextViews).toHaveLength(1);
-      expect(nextViews[0]).toMatchObject({ type: 'spreadsheet', dataSourceId: null });
+      expect(nextViews[0]).toMatchObject({ type: 'pivot', dataSourceId: 'customers' });
 
       expect(handleActiveViewChange).toHaveBeenCalledWith(nextViews[0].id, nextViews[0]);
-      expect(screen.queryByRole('textbox', { name: 'Rename sheet' })).toBe(null);
+      expect(screen.queryByRole('textbox', { name: 'Rename view' })).toBe(null);
     });
 
     it('renames a view via double-click + Enter', () => {
       renderDataStudio({
-        layout: 'tabs',
-        defaultSheets: [{ id: 'v1', label: 'Sheet 1', dataSourceId: 'customers' }],
-        initialActiveSheetId: 'v1',
+        defaultViews: [{ id: 'v1', label: 'Sheet 1', dataSourceId: 'customers' }],
+        initialActiveViewId: 'v1',
       });
 
-      const tab = getTab('Sheet 1')!;
-      fireEvent.doubleClick(tab);
+      fireEvent.doubleClick(screen.getByRole('tab', { name: 'Sheet 1' }));
 
-      const input = screen.getByRole('textbox', { name: 'Rename sheet' }) as HTMLInputElement;
+      const input = screen.getByRole('textbox', { name: 'Rename view' }) as HTMLInputElement;
       fireEvent.change(input, { target: { value: 'Sales' } });
       fireEvent.keyDown(input, { key: 'Enter' });
 
-      expect(screen.queryByRole('textbox', { name: 'Rename sheet' })).toBe(null);
-      expect(getTab('Sales')).not.toBeUndefined();
+      expect(screen.queryByRole('textbox', { name: 'Rename view' })).toBe(null);
+      expect(screen.getByRole('tab', { name: 'Sales' })).not.toBe(null);
     });
 
-    it('duplicates a view via the per-tab dropdown menu', () => {
+    it('duplicates a view via the per-view dropdown menu', () => {
       const handleViewsChange = vi.fn();
       const views: DataStudioSheet[] = [{ id: 'v1', label: 'Sales', dataSourceId: 'customers' }];
 
       renderDataStudio({
-        layout: 'tabs',
-        sheets: views,
-        activeSheetId: 'v1',
-        onSheetsChange: handleViewsChange,
+        views,
+        activeViewId: 'v1',
+        onViewsChange: handleViewsChange,
       });
 
-      fireEvent.click(screen.getByRole('button', { name: 'Sheet options for Sales' }));
+      fireEvent.click(screen.getByRole('button', { name: 'View options for Sales' }));
       fireEvent.click(screen.getByRole('menuitem', { name: 'Duplicate' }));
 
       expect(handleViewsChange).toHaveBeenCalledTimes(1);
@@ -518,7 +484,7 @@ describe('<DataStudio />', () => {
       expect(next[1].id).not.toBe('v1');
     });
 
-    it('deletes a view via the per-tab dropdown menu', () => {
+    it('deletes a view via the per-view dropdown menu', () => {
       const handleViewsChange = vi.fn();
       const handleActiveViewChange = vi.fn();
       const views: DataStudioSheet[] = [
@@ -527,14 +493,13 @@ describe('<DataStudio />', () => {
       ];
 
       renderDataStudio({
-        layout: 'tabs',
-        sheets: views,
-        activeSheetId: 'v1',
-        onSheetsChange: handleViewsChange,
-        onActiveSheetChange: handleActiveViewChange,
+        views,
+        activeViewId: 'v1',
+        onViewsChange: handleViewsChange,
+        onActiveViewChange: handleActiveViewChange,
       });
 
-      fireEvent.click(screen.getByRole('button', { name: 'Sheet options for Sales' }));
+      fireEvent.click(screen.getByRole('button', { name: 'View options for Sales' }));
       fireEvent.click(screen.getByRole('menuitem', { name: 'Delete' }));
 
       expect(handleViewsChange).toHaveBeenCalledWith([
@@ -543,124 +508,117 @@ describe('<DataStudio />', () => {
       expect(handleActiveViewChange).toHaveBeenCalledWith(null, null);
     });
 
-    it('reorders a view via Move left', () => {
+    it('reorders a view among the dataset views via Move left', () => {
       const handleViewsChange = vi.fn();
       const views: DataStudioSheet[] = [
         { id: 'v1', label: 'Sales', dataSourceId: 'customers' },
-        { id: 'v2', label: 'Inventory', dataSourceId: 'products' },
-        { id: 'v3', label: 'Orders', dataSourceId: 'customers' },
+        { id: 'v2', label: 'Orders', dataSourceId: 'customers' },
+        { id: 'v3', label: 'Returns', dataSourceId: 'customers' },
       ];
 
       renderDataStudio({
-        layout: 'tabs',
-        sheets: views,
-        activeSheetId: 'v2',
-        onSheetsChange: handleViewsChange,
+        views,
+        activeViewId: 'v2',
+        onViewsChange: handleViewsChange,
       });
 
-      fireEvent.click(screen.getByRole('button', { name: 'Sheet options for Inventory' }));
+      fireEvent.click(screen.getByRole('button', { name: 'View options for Orders' }));
       fireEvent.click(screen.getByRole('menuitem', { name: 'Move left' }));
 
       expect(handleViewsChange).toHaveBeenLastCalledWith([
-        { id: 'v2', label: 'Inventory', dataSourceId: 'products' },
+        { id: 'v2', label: 'Orders', dataSourceId: 'customers' },
         { id: 'v1', label: 'Sales', dataSourceId: 'customers' },
-        { id: 'v3', label: 'Orders', dataSourceId: 'customers' },
+        { id: 'v3', label: 'Returns', dataSourceId: 'customers' },
       ]);
     });
 
-    it('reorders a view via Move right', () => {
+    it('reorders a view among the dataset views via Move right', () => {
       const handleViewsChange = vi.fn();
       const views: DataStudioSheet[] = [
         { id: 'v1', label: 'Sales', dataSourceId: 'customers' },
-        { id: 'v2', label: 'Inventory', dataSourceId: 'products' },
-        { id: 'v3', label: 'Orders', dataSourceId: 'customers' },
+        { id: 'v2', label: 'Orders', dataSourceId: 'customers' },
+        { id: 'v3', label: 'Returns', dataSourceId: 'customers' },
       ];
 
       renderDataStudio({
-        layout: 'tabs',
-        sheets: views,
-        activeSheetId: 'v2',
-        onSheetsChange: handleViewsChange,
+        views,
+        activeViewId: 'v2',
+        onViewsChange: handleViewsChange,
       });
 
-      fireEvent.click(screen.getByRole('button', { name: 'Sheet options for Inventory' }));
+      fireEvent.click(screen.getByRole('button', { name: 'View options for Orders' }));
       fireEvent.click(screen.getByRole('menuitem', { name: 'Move right' }));
 
       expect(handleViewsChange).toHaveBeenLastCalledWith([
         { id: 'v1', label: 'Sales', dataSourceId: 'customers' },
-        { id: 'v3', label: 'Orders', dataSourceId: 'customers' },
-        { id: 'v2', label: 'Inventory', dataSourceId: 'products' },
+        { id: 'v3', label: 'Returns', dataSourceId: 'customers' },
+        { id: 'v2', label: 'Orders', dataSourceId: 'customers' },
       ]);
     });
 
-    it('disables Move left on the first view', () => {
+    it('disables Move left on the first dataset view', () => {
       const views: DataStudioSheet[] = [
         { id: 'v1', label: 'Sales', dataSourceId: 'customers' },
-        { id: 'v2', label: 'Inventory', dataSourceId: 'products' },
+        { id: 'v2', label: 'Orders', dataSourceId: 'customers' },
       ];
 
-      renderDataStudio({ layout: 'tabs', sheets: views, activeSheetId: 'v1' });
+      renderDataStudio({ views, activeViewId: 'v1' });
 
-      fireEvent.click(screen.getByRole('button', { name: 'Sheet options for Sales' }));
+      fireEvent.click(screen.getByRole('button', { name: 'View options for Sales' }));
       // MUI MenuItem with `disabled` reflects aria-disabled in the DOM.
       expect(
         screen.getByRole('menuitem', { name: 'Move left' }).getAttribute('aria-disabled'),
       ).toBe('true');
     });
 
-    it('lists all dataSources and views in the hamburger menu and marks the active one', () => {
-      const views: DataStudioSheet[] = [{ id: 'v1', label: 'Sales', dataSourceId: 'customers' }];
-
-      renderDataStudio({ layout: 'tabs', sheets: views, activeSheetId: 'v1' });
-
-      fireEvent.click(screen.getByRole('button', { name: 'All tabs' }));
-
-      const menu = screen.getByRole('menu');
-      const items = within(menu).getAllByRole('menuitem');
-      const labels = items.map((item) => item.textContent);
-      expect(labels).toEqual(['Customers', 'Products', 'Sales']);
-
-      const activeItem = items.find((item) => item.textContent === 'Sales');
-      // The check mark is the only icon rendered in the active list-item icon slot.
-      expect(activeItem!.querySelector('svg[data-testid="CheckIcon"]')).not.toBe(null);
-    });
-
-    it('toggles dataSource visibility via the collapse button', () => {
-      renderDataStudio({ layout: 'tabs' });
-
-      expect(getTab('Customers')).not.toBeUndefined();
-      expect(getTab('Products')).not.toBeUndefined();
-
-      fireEvent.click(screen.getByRole('button', { name: 'Hide data sources' }));
-
-      expect(getTab('Customers')).toBeUndefined();
-      expect(getTab('Products')).toBeUndefined();
-
-      fireEvent.click(screen.getByRole('button', { name: 'Show data sources' }));
-
-      expect(getTab('Customers')).not.toBeUndefined();
-      expect(getTab('Products')).not.toBeUndefined();
-    });
-
-    it('selecting a view tab activates the view and its underlying dataSource', () => {
-      const handleActiveDatasetChange = vi.fn();
-      const handleActiveViewChange = vi.fn();
-      const views: DataStudioSheet[] = [{ id: 'v1', label: 'Sales', dataSourceId: 'products' }];
-
+    it('scopes the view tabs to the active dataset', () => {
       renderDataStudio({
-        layout: 'tabs',
-        sheets: views,
-        defaultSheets: views, // ensure uncontrolled path works the same
-        onActiveDataSourceChange: handleActiveDatasetChange,
-        onActiveSheetChange: handleActiveViewChange,
+        defaultViews: [
+          { id: 'v1', label: 'Sales', dataSourceId: 'customers' },
+          { id: 'v2', label: 'Inventory', dataSourceId: 'products' },
+        ],
+        initialActiveViewId: 'v1',
       });
 
-      const viewTab = getTab('Sales')!;
-      fireEvent.click(viewTab);
+      // Customers is active → its "Sales" view shows; the products-bound
+      // "Inventory" view does not.
+      expect(screen.getByRole('tab', { name: 'Sales' })).not.toBe(null);
+      expect(screen.queryByRole('tab', { name: 'Inventory' })).toBe(null);
+
+      // Switching datasets in the rail swaps the view set.
+      fireEvent.click(screen.getByText('Products'));
+
+      expect(screen.getByRole('tab', { name: 'Inventory' })).not.toBe(null);
+      expect(screen.queryByRole('tab', { name: 'Sales' })).toBe(null);
+    });
+
+    it('selecting the Table tab clears the active view', () => {
+      const handleActiveViewChange = vi.fn();
+
+      renderDataStudio({
+        defaultViews: [{ id: 'v1', label: 'Sales', dataSourceId: 'customers' }],
+        initialActiveViewId: 'v1',
+        onActiveViewChange: handleActiveViewChange,
+      });
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Table' }));
+
+      expect(handleActiveViewChange).toHaveBeenCalledWith(null, null);
+      expect(screen.getByText('Alice')).not.toBe(null);
+    });
+
+    it('selecting a view tab activates the view', () => {
+      const handleActiveViewChange = vi.fn();
+      const views: DataStudioSheet[] = [{ id: 'v1', label: 'Sales', dataSourceId: 'customers' }];
+
+      renderDataStudio({
+        defaultViews: views,
+        onActiveViewChange: handleActiveViewChange,
+      });
+
+      fireEvent.click(screen.getByRole('tab', { name: 'Sales' }));
 
       expect(handleActiveViewChange).toHaveBeenCalledWith('v1', views[0]);
-      expect(handleActiveDatasetChange).toHaveBeenCalledWith('products', productDataset);
-      expect(screen.getByText('Arabica')).not.toBe(null);
     });
   });
 

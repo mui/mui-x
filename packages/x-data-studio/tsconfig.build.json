@@ -13,7 +13,14 @@
   },
   "references": [
     { "path": "../x-data-grid/tsconfig.build.json" },
-    { "path": "../x-tree-view/tsconfig.build.json" }
+    { "path": "../x-data-grid-pro/tsconfig.build.json" },
+    { "path": "../x-data-grid-premium/tsconfig.build.json" },
+    { "path": "../x-charts-premium/tsconfig.build.json" },
+    { "path": "../x-tree-view/tsconfig.build.json" },
+    { "path": "../x-chat/tsconfig.build.json" },
+    { "path": "../x-chat-headless/tsconfig.build.json" },
+    { "path": "../x-copilot/tsconfig.build.json" },
+    { "path": "../x-internals/tsconfig.build.json" }
   ],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
