@@ -18,8 +18,13 @@ import {
 } from '../defaultMessagePartRenderers';
 import { MessageContent } from '../MessageContent';
 import { MessageRoot } from '../MessageRoot';
+import { SourceUrlPart } from './SourceUrlPart';
+import { FilePart } from './FilePart';
 
 const { render } = createRenderer();
+
+// eslint-disable-next-line no-script-url -- intentional attacker-controlled fixture for sanitization tests
+const SCRIPT_URL = 'javascript:alert(document.cookie)';
 
 function createAdapter(): ChatAdapter {
   return {
@@ -239,6 +244,43 @@ describe('FilePart', () => {
 
     expect(screen.getByText('https://example.com/doc.pdf')).not.to.equal(null);
   });
+
+  it('neutralizes javascript: URLs in the link href', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'file',
+          mediaType: 'application/pdf',
+          url: SCRIPT_URL,
+        },
+      ],
+    });
+
+    const link = screen.getByText(SCRIPT_URL).closest('a');
+
+    expect(link).not.to.equal(null);
+    expect(link!.getAttribute('href')).to.equal('');
+  });
+
+  it('keeps data: image sources on the img src', () => {
+    const dataUrl = 'data:image/png;base64,iVBORw0KGgo=';
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'file',
+          mediaType: 'image/png',
+          url: dataUrl,
+          filename: 'inline.png',
+        },
+      ],
+    });
+
+    expect(screen.getByAltText('inline.png')).to.have.attribute('src', dataUrl);
+  });
 });
 
 describe('SourceUrlPart', () => {
@@ -276,6 +318,62 @@ describe('SourceUrlPart', () => {
     });
 
     expect(screen.getByText('https://mui.com/x')).not.to.equal(null);
+  });
+
+  it('neutralizes javascript: URLs in the link href', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'source-url',
+          sourceId: 's1',
+          url: SCRIPT_URL,
+        },
+      ],
+    });
+
+    const link = screen.getByText(SCRIPT_URL).closest('a');
+
+    expect(link).not.to.equal(null);
+    expect(link!.getAttribute('href')).to.equal('');
+  });
+});
+
+describe('Part primitives URL sanitization', () => {
+  it('SourceUrlPart neutralizes javascript: URLs in href', () => {
+    render(
+      <SourceUrlPart
+        index={0}
+        message={{ id: 'm1', role: 'assistant', parts: [] }}
+        part={{ type: 'source-url', sourceId: 's1', url: SCRIPT_URL }}
+      />,
+    );
+
+    const link = screen.getByText(SCRIPT_URL).closest('a');
+
+    expect(link).not.to.equal(null);
+    expect(link!.getAttribute('href')).to.equal('');
+  });
+
+  it('FilePart neutralizes javascript: URLs in href', () => {
+    render(
+      <FilePart
+        index={0}
+        message={{ id: 'm1', role: 'assistant', parts: [] }}
+        part={{
+          type: 'file',
+          mediaType: 'application/pdf',
+          url: SCRIPT_URL,
+          filename: 'x.pdf',
+        }}
+      />,
+    );
+
+    const link = screen.getByText('x.pdf').closest('a');
+
+    expect(link).not.to.equal(null);
+    expect(link!.getAttribute('href')).to.equal('');
   });
 });
 
