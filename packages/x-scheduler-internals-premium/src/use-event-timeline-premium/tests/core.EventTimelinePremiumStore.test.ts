@@ -1,6 +1,7 @@
 import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { disposeSymbol } from '@mui/x-internals/disposable';
 import { schedulerRecurringEventsPlugin } from '../../internals/plugins/schedulerRecurringEventsPlugin';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -31,7 +32,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         editedEventId: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        pendingUpdateRecurringEventParameters: null,
+        pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         processedEventLookup: new Map(),
         processedResourceLookup: new Map([
@@ -176,7 +177,7 @@ describe('Core - EventTimelinePremiumStore', () => {
       // Dispose the store's pending timers; otherwise the `nowUpdatedEveryMinute` interval
       // would fire later, re-trigger the subscribe listener against the intentionally invalid
       // state left by this test, and leak an unhandled error into the test run.
-      store.disposeEffect()();
+      store[disposeSymbol]();
     });
   });
 });
