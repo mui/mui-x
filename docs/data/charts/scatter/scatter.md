@@ -174,6 +174,7 @@ The main thread stays responsive while a large dataset is being drawn.
 
 The example below renders 20,000 points.
 Use the buttons to compare the single and progressive renderers: the spinner keeps animating and "first paint" stays low with the progressive renderer, while the single renderer blocks the main thread until every point is drawn.
+Zoom and pan the chart to see the progressive renderer keep only the first level painted while you interact, then fill in the rest once the interaction settles.
 
 {{"demo": "ScatterAsyncRenderer.js"}}
 

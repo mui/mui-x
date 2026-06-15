@@ -2,7 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import Chance from 'chance';
 
 const NUMBER_OF_SERIES = 3;
@@ -204,10 +204,14 @@ export default function ScatterAsyncRenderer() {
         />
       </Stack>
       <div ref={containerRef} style={{ width: '100%' }}>
-        <ScatterChart
+        <ScatterChartPro
           key={runId}
           series={series}
           height={400}
+          // Zoom/pan to see the progressive renderer keep only the first level
+          // painted while interacting, then fill in the rest once it settles.
+          xAxis={[{ zoom: true }]}
+          yAxis={[{ zoom: true }]}
           // Force the renderer so the two modes are directly comparable:
           // - `svg-single`: original synchronous per-item renderer.
           // - `svg-progressive`: batched renderer that paints over several
