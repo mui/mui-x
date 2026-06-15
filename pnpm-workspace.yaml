@@ -115,6 +115,7 @@ allowBuilds:
   core-js: false
   msw: false
   core-js-pure: false
+  better-sqlite3: set this to true or false
 
 overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
