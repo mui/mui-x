@@ -307,6 +307,17 @@ The WebGL renderer has the same trade-offs as the batch renderer, plus a few add
 
 {{"demo": "WebGLBars.js"}}
 
+### Subsampling [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+When a `BarChartPro` has more bars than the drawing area can show without making them
+too thin, the bars are automatically subsampled.
+Levels of detail are precomputed for each zoom level, so panning and zooming stay smooth
+and bar sizes transition gradually.
+
+This requires no configuration. Zoom in to progressively reveal more bars.
+
+{{"demo": "BarSubsampling.js"}}
+
 ## Composition
 
 Use `ChartDataProvider` to provide `series`, `xAxis`, and `yAxis` props for composition.

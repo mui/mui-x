@@ -12,4 +12,7 @@ export { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 export * from './computeAxisValue';
 export * from './createZoomLookup';
 export * from './zoom.types';
+export * from './barSubsampling.selectors';
+export * from './barSubsampling';
+export type * from './barSubsampling.types';
 export { computeAxisAutoSize } from './computeAxisAutoSize';

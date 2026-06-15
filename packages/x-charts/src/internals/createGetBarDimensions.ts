@@ -1,5 +1,6 @@
 import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
+import type { BarSubsamplingBucket } from './plugins/featurePlugins/useChartCartesianAxis/barSubsampling.types';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
 
@@ -66,6 +67,53 @@ export function createGetBarDimensions(params: {
     return {
       x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
       y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
+      height: verticalLayout ? barSize : barWidth,
+      width: verticalLayout ? barWidth : barSize,
+    };
+  };
+}
+
+/**
+ * Like {@link createGetBarDimensions}, but for a subsampled bucket spanning several categories.
+ * The bar width covers the whole bucket span (so merged bars stay visible) and the value extent
+ * comes from the bucket's aggregated `low`/`high` instead of a single data point.
+ */
+export function createGetBucketBarDimensions(params: {
+  verticalLayout: boolean;
+  xAxisConfig: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
+  yAxisConfig: ComputedAxis<ScaleName, any, ChartsYAxisProps>;
+  series: ChartSeriesDefaultized<'bar'>;
+  numberOfGroups: number;
+}) {
+  const { verticalLayout, xAxisConfig, yAxisConfig, series, numberOfGroups } = params;
+
+  const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
+  const baseScale = baseScaleConfig.scale;
+  const bandwidth = baseScale.bandwidth();
+  const valueScale = verticalLayout ? yAxisConfig.scale : xAxisConfig.scale;
+
+  return function getBucketBarDimensions(bucket: BarSubsamplingBucket, groupIndex: number) {
+    const spanStart = baseScale(baseScaleConfig.data![bucket.startIndex])!;
+    const spanEnd = baseScale(baseScaleConfig.data![bucket.endIndex])! + bandwidth;
+
+    const { barWidth, offset } = getBandSize(
+      spanEnd - spanStart,
+      numberOfGroups,
+      baseScaleConfig.barGapRatio,
+    );
+    const barOffset = groupIndex * (barWidth + offset);
+
+    const valueCoordinates = [valueScale(bucket.low)!, valueScale(bucket.high)!];
+    const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
+
+    let barSize = maxValueCoord - minValueCoord;
+    if (!series.hidden && barSize > 0) {
+      barSize = Math.max(series.minBarSize, barSize);
+    }
+
+    return {
+      x: verticalLayout ? spanStart + barOffset : minValueCoord,
+      y: verticalLayout ? minValueCoord : spanStart + barOffset,
       height: verticalLayout ? barSize : barWidth,
       width: verticalLayout ? barWidth : barSize,
     };

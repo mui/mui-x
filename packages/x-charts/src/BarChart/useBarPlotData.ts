@@ -11,9 +11,16 @@ import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
-import { createGetBarDimensions } from '../internals/createGetBarDimensions';
+import {
+  createGetBarDimensions,
+  createGetBucketBarDimensions,
+} from '../internals/createGetBarDimensions';
 import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
+import { useStore } from '../internals/store/useStore';
+import { selectBarSubsamplingLevel } from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling';
+import { selectorChartBarSubsamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling.selectors';
+import type { BarSubsamplingPyramidLookup } from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling.types';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
 import { type SeriesId } from '../models/seriesType';
@@ -34,6 +41,8 @@ export function useBarPlotData(
 
   const chartId = useChartId();
 
+  const subsamplingPyramids = useStore().use(selectorChartBarSubsamplingPyramids);
+
   return processBarDataForPlot(
     drawingArea,
     chartId,
@@ -43,6 +52,7 @@ export function useBarPlotData(
     yAxes,
     defaultXAxisId,
     defaultYAxisId,
+    subsamplingPyramids,
   );
 }
 
@@ -55,6 +65,7 @@ export function processBarDataForPlot(
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
   defaultXAxisId: AxisId,
   defaultYAxisId: AxisId,
+  subsamplingPyramids: BarSubsamplingPyramidLookup = {},
 ) {
   const masks: Record<string, MaskData> = {};
 
@@ -96,42 +107,19 @@ export function processBarDataForPlot(
       const yOrigin = Math.round(yScale(0) ?? 0);
 
       const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
+      const stackId = series[seriesId].stack;
 
       const seriesDataPoints: ProcessedBarData[] = [];
-      const getBarDimensions = createGetBarDimensions({
-        verticalLayout,
-        xAxisConfig,
-        yAxisConfig,
-        series: series[seriesId],
-        numberOfGroups: stackingGroups.length,
-      });
 
-      for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
-        const barDimensions = getBarDimensions(dataIndex, groupIndex);
-
-        if (barDimensions == null) {
-          continue;
-        }
-
-        const stackId = series[seriesId].stack;
-
-        const result: ProcessedBarData = {
-          seriesId,
-          dataIndex,
-          hidden: series[seriesId].hidden,
-          ...barDimensions,
-          color: colorGetter(dataIndex),
-          value: series[seriesId].data[dataIndex],
-          maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
-        };
-
+      // Culls off-screen bars then records the bar's border-radius side and mask contribution.
+      const registerResult = (result: ProcessedBarData, dataIndex: number) => {
         if (
           result.x > xMax ||
           result.x + result.width < xMin ||
           result.y > yMax ||
           result.y + result.height < yMin
         ) {
-          continue;
+          return;
         }
 
         const lastNegative = lastNegativePerIndex.get(dataIndex);
@@ -179,6 +167,68 @@ export function processBarDataForPlot(
         mask.hasPositive = mask.hasPositive || (reverse ? value < 0 : value > 0);
 
         seriesDataPoints.push(result);
+      };
+
+      const pyramid = subsamplingPyramids[seriesId];
+      const activeLevel = pyramid
+        ? selectBarSubsamplingLevel(baseScaleConfig.scale.bandwidth(), pyramid)
+        : null;
+
+      if (activeLevel) {
+        const getBucketBarDimensions = createGetBucketBarDimensions({
+          verticalLayout,
+          xAxisConfig,
+          yAxisConfig,
+          series: series[seriesId],
+          numberOfGroups: stackingGroups.length,
+        });
+
+        for (const bucket of activeLevel.buckets) {
+          const dataIndex = bucket.startIndex;
+          const barDimensions = getBucketBarDimensions(bucket, groupIndex);
+
+          registerResult(
+            {
+              seriesId,
+              dataIndex,
+              hidden: series[seriesId].hidden,
+              ...barDimensions,
+              color: colorGetter(dataIndex),
+              value: series[seriesId].data[dataIndex],
+              maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
+            },
+            dataIndex,
+          );
+        }
+      } else {
+        const getBarDimensions = createGetBarDimensions({
+          verticalLayout,
+          xAxisConfig,
+          yAxisConfig,
+          series: series[seriesId],
+          numberOfGroups: stackingGroups.length,
+        });
+
+        for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
+          const barDimensions = getBarDimensions(dataIndex, groupIndex);
+
+          if (barDimensions == null) {
+            continue;
+          }
+
+          registerResult(
+            {
+              seriesId,
+              dataIndex,
+              hidden: series[seriesId].hidden,
+              ...barDimensions,
+              color: colorGetter(dataIndex),
+              value: series[seriesId].data[dataIndex],
+              maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
+            },
+            dataIndex,
+          );
+        }
       }
 
       return {

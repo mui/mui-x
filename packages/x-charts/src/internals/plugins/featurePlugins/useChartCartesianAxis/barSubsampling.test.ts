@@ -1,0 +1,105 @@
+import {
+  MIN_BAR_WIDTH_PX,
+  buildBarSubsamplingPyramid,
+  getBarSubsamplingStrategy,
+  selectBarSubsamplingLevel,
+} from './barSubsampling';
+
+// [base, top] pairs as produced by the bar series processor (`visibleStackedData`).
+const stacked: [number, number][] = [
+  [0, 1],
+  [0, 5],
+  [0, 2],
+  [0, 8],
+  [0, 3],
+  [0, 7],
+  [0, 4],
+  [0, 6],
+];
+
+const envelope = getBarSubsamplingStrategy('minMaxEnvelope');
+
+describe('buildBarSubsamplingPyramid', () => {
+  it('stores one level per power-of-two bucket size, starting at 2', () => {
+    const pyramid = buildBarSubsamplingPyramid(stacked, envelope);
+
+    expect(pyramid.dataLength).to.equal(8);
+    expect(pyramid.levels.map((level) => level.bucketSize)).to.deep.equal([2, 4, 8]);
+  });
+
+  it('aggregates each bucket with the min/max envelope', () => {
+    const pyramid = buildBarSubsamplingPyramid(stacked, envelope);
+
+    expect(pyramid.levels[0].buckets).to.deep.equal([
+      { startIndex: 0, endIndex: 1, low: 0, high: 5 },
+      { startIndex: 2, endIndex: 3, low: 0, high: 8 },
+      { startIndex: 4, endIndex: 5, low: 0, high: 7 },
+      { startIndex: 6, endIndex: 7, low: 0, high: 6 },
+    ]);
+    expect(pyramid.levels[2].buckets).to.deep.equal([
+      { startIndex: 0, endIndex: 7, low: 0, high: 8 },
+    ]);
+  });
+
+  it('clamps the last bucket when the length is not a power of two', () => {
+    const pyramid = buildBarSubsamplingPyramid(stacked.slice(0, 5), envelope);
+
+    expect(pyramid.levels.map((level) => level.bucketSize)).to.deep.equal([2, 4, 8]);
+    expect(pyramid.levels[0].buckets.at(-1)).to.deep.equal({
+      startIndex: 4,
+      endIndex: 4,
+      low: 0,
+      high: 3,
+    });
+    expect(pyramid.levels[2].buckets).to.deep.equal([
+      { startIndex: 0, endIndex: 4, low: 0, high: 8 },
+    ]);
+  });
+
+  it('produces no levels for one or zero data points', () => {
+    expect(buildBarSubsamplingPyramid([], envelope).levels).to.have.length(0);
+    expect(buildBarSubsamplingPyramid([[0, 1]], envelope).levels).to.have.length(0);
+  });
+});
+
+describe('bar subsampling strategies', () => {
+  it('max keeps the peak over a zero base', () => {
+    expect(getBarSubsamplingStrategy('max')(stacked, 0, 3)).to.deep.equal({ low: 0, high: 8 });
+  });
+
+  it('average means the tops', () => {
+    expect(getBarSubsamplingStrategy('average')(stacked, 0, 3)).to.deep.equal({ low: 0, high: 4 });
+  });
+
+  it('stride keeps the first point of the bucket', () => {
+    expect(getBarSubsamplingStrategy('stride')(stacked, 2, 5)).to.deep.equal({ low: 0, high: 2 });
+  });
+});
+
+describe('selectBarSubsamplingLevel', () => {
+  const pyramid = buildBarSubsamplingPyramid(stacked, envelope);
+
+  it('returns null when bars are at least the minimum width', () => {
+    expect(selectBarSubsamplingLevel(MIN_BAR_WIDTH_PX, pyramid)).to.equal(null);
+    expect(selectBarSubsamplingLevel(MIN_BAR_WIDTH_PX + 1, pyramid)).to.equal(null);
+  });
+
+  it('picks the smallest level that brings the slot back above the minimum width', () => {
+    // 4 / 2 = 2px -> needs one level (bucketSize 2).
+    expect(selectBarSubsamplingLevel(2, pyramid)?.bucketSize).to.equal(2);
+    // 4 / 1 = needs factor 4 -> bucketSize 4.
+    expect(selectBarSubsamplingLevel(1, pyramid)?.bucketSize).to.equal(4);
+  });
+
+  it('clamps to the coarsest level for tiny bars', () => {
+    expect(selectBarSubsamplingLevel(0.01, pyramid)?.bucketSize).to.equal(8);
+  });
+
+  it('returns null for non-positive width or an empty pyramid', () => {
+    expect(selectBarSubsamplingLevel(0, pyramid)).to.equal(null);
+    expect(selectBarSubsamplingLevel(-5, pyramid)).to.equal(null);
+    expect(selectBarSubsamplingLevel(0.5, buildBarSubsamplingPyramid([[0, 1]], envelope))).to.equal(
+      null,
+    );
+  });
+});
