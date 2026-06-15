@@ -7,6 +7,5 @@
   "muiName": "MuiConversationSubtitle",
   "filename": "/packages/x-chat-headless/src/conversation/ConversationSubtitle.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/thread/\">Chat - Headless thread</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/thread/\">Chat - Headless thread</a></li></ul>"
 }

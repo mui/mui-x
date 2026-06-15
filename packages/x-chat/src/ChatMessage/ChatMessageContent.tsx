@@ -400,8 +400,23 @@ ChatToolPartRoot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  onToggle: PropTypes.func,
+  open: PropTypes.bool,
   ownerState: PropTypes.shape({
-    state: PropTypes.string,
+    isMessageStreaming: PropTypes.bool.isRequired,
+    messageId: PropTypes.string.isRequired,
+    pendingApproval: PropTypes.bool.isRequired,
+    role: PropTypes.oneOf(['assistant', 'system', 'user']).isRequired,
+    state: PropTypes.oneOf([
+      'approval-requested',
+      'approval-responded',
+      'input-available',
+      'input-streaming',
+      'output-available',
+      'output-denied',
+      'output-error',
+    ]).isRequired,
+    toolName: PropTypes.string.isRequired,
   }),
 } as any;
 
@@ -708,6 +723,17 @@ function ChatToolPartSection({
   );
 }
 
+ChatToolPartSection.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  ownerState: PropTypes.shape({
+    section: PropTypes.oneOf(['input', 'output']),
+    state: PropTypes.string,
+  }),
+} as any;
+
 interface ChatToolPartSectionSummaryProps extends React.HTMLAttributes<HTMLElement> {
   ownerState?: {
     section?: 'input' | 'output';
@@ -849,6 +875,17 @@ function ChatToolPartSectionContent({
     </ChatToolPartSectionContentWrapper>
   );
 }
+
+ChatToolPartSectionContent.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  ownerState: PropTypes.shape({
+    section: PropTypes.oneOf(['input', 'output']),
+  }),
+} as any;
 
 const ChatToolPartError = styled('div', {
   name: 'MuiChatMessage',
