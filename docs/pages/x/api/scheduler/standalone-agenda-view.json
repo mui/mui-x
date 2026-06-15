@@ -113,6 +113,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler/src/agenda-view/StandaloneAgendaView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
 }
