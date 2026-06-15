@@ -88,7 +88,7 @@ ScatterMarker.propTypes = {
   /**
    * The series ID.
    */
-  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The size of the marker.
    */

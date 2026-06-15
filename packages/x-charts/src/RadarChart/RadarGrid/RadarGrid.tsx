@@ -78,10 +78,6 @@ RadarGrid.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: PropTypes.object,
-  /**
    * The number of divisions in the radar grid.
    * @default 5
    */

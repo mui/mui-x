@@ -75,6 +75,15 @@ createTheme({
         root: { backgroundColor: 'red' },
       },
     },
+    MuiChatStreamingIndicator: {
+      defaultProps: {
+        // @ts-expect-error invalid MuiChatStreamingIndicator prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: { color: 'blue' },
+      },
+    },
     MuiChatTypingIndicator: {
       defaultProps: {
         // @ts-expect-error invalid MuiChatTypingIndicator prop

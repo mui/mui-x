@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { MessageAvatar, type MessageAvatarProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageAvatar');
 
 export interface ChatMessageAvatarProps extends MessageAvatarProps {
   className?: string;
-  classes?: Partial<ChatMessageClasses>;
 }
 
 const ChatMessageAvatarStyled = styled('div', {
@@ -48,23 +48,34 @@ const ChatMessageAvatarStyled = styled('div', {
 const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProps>(
   function ChatMessageAvatar(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageAvatar' });
-    const { slots, slotProps, className, classes: classesProp, ...other } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    // Drop a JS/theme-injected `classes` (not a prop on this sub-part — it shares
+    // the `MuiChatMessage-*` namespace) so it can't leak onto the DOM via `...other`.
+    const {
+      slots,
+      slotProps,
+      className,
+      classes: classesProp,
+      ...other
+    } = props as ChatMessageAvatarProps & { classes?: unknown };
+    void classesProp;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     return (
       <MessageAvatar
         ref={ref}
         {...other}
         slots={{
-          avatar: slots?.avatar ?? ChatMessageAvatarStyled,
           ...slots,
+          avatar: slots?.avatar ?? ChatMessageAvatarStyled,
         }}
         slotProps={{
           ...slotProps,
-          avatar: {
-            className: clsx(classes.avatar, className),
-            ...(slotProps?.avatar as object),
-          } as any,
+          avatar: mergeSlotProps(
+            {
+              className: clsx(classes.avatar, className),
+            },
+            slotProps?.avatar,
+          ) as any,
         }}
       />
     );
@@ -76,7 +87,6 @@ ChatMessageAvatar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   className: PropTypes.string,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
