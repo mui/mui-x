@@ -74,6 +74,15 @@ export default withDeploymentConfig({
   },
   experimental: {
     esmExternals: undefined,
+    // Static-generation workers are forked Node processes that each inherit
+    // `NODE_OPTIONS` (`--max-old-space-size=6144`) and render several pages
+    // concurrently. On Netlify's memory-constrained build container, running one
+    // worker per CPU (6) pushed total RSS past the container limit while rendering
+    // the heavier chart/scheduler API pages, so the OOM killer SIGKILL'd a worker
+    // mid-generation and the build failed silently (no JS error). Cap the worker
+    // count there to keep peak memory under the container limit. Local builds keep
+    // the default (one per core) for speed.
+    ...(process.env.NETLIFY ? { cpus: 2 } : {}),
   },
   transpilePackages: [
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
