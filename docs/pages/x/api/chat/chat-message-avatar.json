@@ -9,6 +9,5 @@
   "muiName": "MuiChatMessageAvatar",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAvatar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>"
 }

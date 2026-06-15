@@ -63,9 +63,9 @@ AnimatedArea.propTypes = {
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
     gradientId: PropTypes.string,
-    seriesId: PropTypes.string.isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
+    seriesId: PropTypes.string.isRequired,
   }).isRequired,
   /**
    * If `true`, animations are skipped.

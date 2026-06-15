@@ -51,6 +51,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'ani',
   recurrenceYearlyPresetLabel: (date) => `Se repetă anual pe ${date}`,
   noResourceAriaLabel: 'Fără resursă',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Resursă',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvează',
@@ -105,8 +106,6 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Toată ziua',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `Încă ${hiddenEventsCount}..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} următoare`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterioară`,
@@ -121,6 +120,9 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendar',
   miniCalendarGoToPreviousMonth: 'Afișează luna anterioară în calendar',
   miniCalendarGoToNextMonth: 'Afișează luna următoare în calendar',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titlul resursei',

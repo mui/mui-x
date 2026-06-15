@@ -62,6 +62,7 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   // recurrenceYearlyFrequencyLabel: 'years',
   // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
   // noResourceAriaLabel: 'No specific resource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   // resourceLabel: 'Resource',
   // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
@@ -112,7 +113,6 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // weekdaySaturday: 'Saturday',
   // WeekView
   // allDay: 'All day',
-  // MonthView
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
@@ -125,6 +125,8 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // miniCalendarLabel: 'Calendar',
   // miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   // miniCalendarGoToNextMonth: 'Show next month in calendar',
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

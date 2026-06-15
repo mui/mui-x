@@ -154,6 +154,8 @@ ScatterPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.

@@ -55,6 +55,7 @@ export interface EventDialogLocaleText {
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   noResourceAriaLabel: string;
+  selectColorAriaLabel: (color: string) => string;
   resourceLabel: string;
   requiredResourceError: string;
   saveChanges: string;
@@ -125,6 +126,9 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   miniCalendarLabel: string;
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
+
+  // Main calendar region
+  calendarContentAriaLabel: string;
 
   // Timeline title sub grid
   timelineResourceTitleHeader: string;

@@ -27,6 +27,5 @@
   "muiName": "MuiTreeItemIcon",
   "filename": "/packages/x-tree-view/src/TreeItemIcon/TreeItemIcon.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item customization</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item customization</a></li></ul>"
 }

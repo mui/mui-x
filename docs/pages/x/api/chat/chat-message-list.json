@@ -46,6 +46,5 @@
   "muiName": "MuiChatMessageList",
   "filename": "/packages/x-chat/src/ChatMessageList/ChatMessageList.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/behavior/scrolling/\">Chat - Scrolling</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/history-and-pagination/\">Chat - History and pagination</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/behavior/scrolling/\">Chat - Scrolling</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/history-and-pagination/\">Chat - History and pagination</a></li></ul>"
 }
