@@ -296,7 +296,7 @@ type AnyEventSetter<TEvent extends object> = (
 ) => TEvent;
 
 /**
- * Throws if the resolved event id is missing, mirroring the Data Grid's `checkGridRowIdIsValid`.
+ * Throws if the resolved event id is missing.
  */
 export function checkSchedulerEventIdIsValid(id: SchedulerEventId, event: object) {
   if (id == null) {
