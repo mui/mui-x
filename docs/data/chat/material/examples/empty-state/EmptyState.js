@@ -12,7 +12,7 @@ const emptyConversation = {
   id: 'empty-conv',
   title: 'New conversation',
   subtitle: 'Start a new conversation',
-  participants: [],
+  participants: demoMembers,
   readState: 'read',
   unreadCount: 0,
   lastMessageAt: '2026-03-15T10:00:00.000Z',

@@ -45,7 +45,7 @@ ChartsRadialAxisHighlight.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  radius: PropTypes.oneOf(['line', 'none']),
+  radius: PropTypes.oneOf(['band', 'line', 'none']),
   rotation: PropTypes.oneOf(['band', 'line', 'none']),
 } as any;
 

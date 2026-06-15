@@ -14,10 +14,10 @@ export function processEvent(
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
 
-  const startInstant = resolveEventDate(model.start, dataTimezone, adapter);
-  const endInstant = resolveEventDate(model.end, dataTimezone, adapter);
+  const startInstant = resolveEventDate(model.start, dataTimezone, adapter, model.id);
+  const endInstant = resolveEventDate(model.end, dataTimezone, adapter, model.id);
   const resolvedExDates = model.exDates
-    ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, adapter))
+    ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, adapter, model.id))
     : undefined;
 
   const startInDisplayTz = adapter.setTimezone(startInstant, displayTimezone);

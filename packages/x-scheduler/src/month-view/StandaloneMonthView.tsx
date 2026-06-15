@@ -5,6 +5,7 @@ import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/us
 import { StandaloneMonthViewProps } from './MonthView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
+import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { MonthView } from './MonthView';
 
 /**
@@ -24,11 +25,13 @@ const StandaloneMonthView = React.forwardRef(function StandaloneMonthView<
   >(props);
 
   return (
-    <EventCalendarProvider {...parameters}>
-      <EventDialogProvider>
-        <MonthView ref={forwardedRef} {...forwardedProps} />
-      </EventDialogProvider>
-    </EventCalendarProvider>
+    <ResponsiveTypographyContainer>
+      <EventCalendarProvider {...parameters}>
+        <EventDialogProvider>
+          <MonthView ref={forwardedRef} {...forwardedProps} />
+        </EventDialogProvider>
+      </EventCalendarProvider>
+    </ResponsiveTypographyContainer>
   );
 }) as StandaloneMonthViewComponent;
 
@@ -201,7 +204,7 @@ StandaloneMonthView.propTypes = {
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig: PropTypes.oneOfType([
     PropTypes.oneOf([false]),

@@ -7,8 +7,9 @@ import {
   HookReactApi,
   findApiPages,
 } from '@mui/internal-api-docs-builder';
-import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
+import { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
+import generateChartsClassName from './generateChartsClassName';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
@@ -110,6 +111,7 @@ export default chartsApiPages;
       'x-charts-pro/src/SankeyChart/SankeyNodeLabelPlot.tsx',
       'x-charts-premium/src/ScatterChartPremium/webgl/ScatterWebGLPlot.tsx',
       'x-charts-premium/src/BarChartPremium/webgl/BarWebGLPlot.tsx',
+      'x-charts-premium/src/BarChartPremium/RangeBar/RangeBarWebGLPlot.tsx',
       'x-charts-premium/src/BarChartPremium/RangeBar/AnimatedRangeBarElement.tsx',
       'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
       'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
@@ -143,7 +145,7 @@ export default chartsApiPages;
   sortingStrategies: {
     slotsSort: (a, b) => a.name.localeCompare(b.name),
   },
-  generateClassName: generateUtilityClass,
+  generateClassName: generateChartsClassName,
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [
     ...getNonComponentFolders(),

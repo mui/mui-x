@@ -128,6 +128,7 @@ BarElement.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
+  hidden: PropTypes.bool,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   seriesId: PropTypes.string.isRequired,
   skipAnimation: PropTypes.bool.isRequired,

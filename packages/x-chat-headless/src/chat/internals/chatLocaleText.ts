@@ -9,6 +9,8 @@ export interface ChatLocaleText {
   composerSendButtonLabel: string;
   composerAttachButtonLabel: string;
   composerAttachInputLabel: string;
+  composerAttachmentFallbackLabel: string;
+  composerRemoveAttachmentLabel(fileName: string): string;
   messageCopyButtonLabel: string;
   messageCopyCodeButtonLabel: string;
   messageCopiedCodeButtonLabel: string;
@@ -53,6 +55,18 @@ export interface ChatLocaleText {
   /** Default author label used when a message's `role` is `'system'`
    * and no displayName was resolved from `message.author` or members. */
   messageAuthorSystemLabel: string;
+  /** Accessible name of the conversations sidebar `navigation` landmark. */
+  conversationListLandmarkLabel: string;
+  /** Accessible name of the active-conversation (thread) `region` landmark. */
+  threadLandmarkLabel: string;
+  /** Accessible name of the composer `form` landmark. */
+  composerLandmarkLabel: string;
+  /** Accessible name of a message's actions container. */
+  messageActionsLabel: string;
+  /** Announced (politely) when the assistant starts streaming a response. */
+  responseStreamingStartedAnnouncement: string;
+  /** Announced (politely) when a streaming response completes. */
+  responseStreamingCompletedAnnouncement: string;
 }
 
 function getUserLabel(user: ChatLocaleTypingUser) {
@@ -110,6 +124,8 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   composerSendButtonLabel: 'Send message',
   composerAttachButtonLabel: 'Add attachment',
   composerAttachInputLabel: 'Upload file',
+  composerAttachmentFallbackLabel: 'Attachment',
+  composerRemoveAttachmentLabel: (fileName) => `Remove ${fileName}`,
   messageCopyButtonLabel: 'Copy',
   messageCopyCodeButtonLabel: 'Copy code',
   messageCopiedCodeButtonLabel: 'Copied',
@@ -156,4 +172,10 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageAuthorUserLabel: 'User',
   messageAuthorAssistantLabel: 'Assistant',
   messageAuthorSystemLabel: 'System',
+  conversationListLandmarkLabel: 'Conversations',
+  threadLandmarkLabel: 'Conversation',
+  composerLandmarkLabel: 'Message composer',
+  messageActionsLabel: 'Message actions',
+  responseStreamingStartedAnnouncement: 'Assistant is responding',
+  responseStreamingCompletedAnnouncement: 'Response complete',
 };
