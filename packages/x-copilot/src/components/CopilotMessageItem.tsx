@@ -51,7 +51,7 @@ export interface CopilotMessageItemProps {
   className?: string;
 }
 
-// Owner state x-chat's `MessageGroup` passes to the `authorName` slot.
+// Owner state x-chat's `MessageGroup` passes to the `messageAuthorName` slot.
 interface CopilotAuthorNameOwnerState {
   authorRole?: string;
   variant?: string;
@@ -90,7 +90,7 @@ const CopilotAuthorNameRoot = styled('div', {
 });
 
 /**
- * Builds the `authorName` slot forwarded to x-chat's `ChatMessageGroup`. For
+ * Builds the `messageAuthorName` slot forwarded to x-chat's `ChatMessageGroup`. For
  * assistant messages it swaps the default label for the resolved `authorName`
  * (static string or per-message resolver); every other role keeps the default
  * label x-chat passes as `children`. Returns `undefined` when no override is
@@ -183,7 +183,7 @@ function CopilotMessageItem(props: CopilotMessageItemProps) {
     <ChatMessageGroup
       messageId={id}
       className={clsx(classes.message, className)}
-      slots={authorNameSlot ? { authorName: authorNameSlot } : undefined}
+      slots={authorNameSlot ? { messageAuthorName: authorNameSlot } : undefined}
     >
       <ChatMessageComponent messageId={id}>
         <ChatMessageContent
