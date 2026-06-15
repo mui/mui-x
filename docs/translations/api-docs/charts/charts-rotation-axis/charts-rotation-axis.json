@@ -15,8 +15,6 @@
     "position": {
       "description": "The position of the rotation axis. It can be &#39;inside&#39; or &#39;outside&#39;."
     },
-    "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." },
     "startAngle": { "description": "The start angle (in deg)." },
     "tickInterval": {
       "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has &quot;point&quot; scale. - an array containing the values where ticks should be displayed."
@@ -51,5 +49,30 @@
       "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "centered": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the tick label",
+      "conditions": "centered"
+    },
+    "line": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the main line element"
+    },
+    "radius": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of radius axis"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "rotation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of rotation axis"
+    },
+    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
+    "tickContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group including the tick and its label"
+    },
+    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tick label" }
+  }
 }

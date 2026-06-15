@@ -30,7 +30,7 @@ describe('ChatComposerAttachButton', () => {
     expect(document.querySelector('.MuiChatComposer-attachButton')).not.toBe(null);
   });
 
-  it('forwards custom className via slotProps.composerAttachButton', () => {
+  it('forwards custom className via slotProps.attach', () => {
     render(
       <ChatBox
         adapter={createAdapter()}

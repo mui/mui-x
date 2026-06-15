@@ -5,7 +5,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { ChatBox } from '@mui/x-chat';
-import { useMessage } from '@mui/x-chat/headless';
+import { useChatActions, useMessage } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
@@ -14,6 +14,9 @@ import {
 
 function RoleBasedActions({ messageId }: { messageId: string }) {
   const message = useMessage(messageId);
+  // `useChatActions` exposes the runtime actions without subscribing to message
+  // state, so the toolbar never re-renders as the conversation streams.
+  const chat = useChatActions();
   const role = message?.role;
 
   return (
@@ -22,7 +25,11 @@ function RoleBasedActions({ messageId }: { messageId: string }) {
         <ContentCopyIcon fontSize="small" />
       </IconButton>
       {role === 'assistant' && (
-        <IconButton size="small" aria-label="Regenerate">
+        <IconButton
+          size="small"
+          aria-label="Regenerate"
+          onClick={() => chat.regenerate(messageId)}
+        >
           <RefreshIcon fontSize="small" />
         </IconButton>
       )}
@@ -44,7 +51,9 @@ export default function RoleBasedMessageActions() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      slots={{ messageActions: RoleBasedActions }}
+      slots={{
+        messageActions: RoleBasedActions,
+      }}
       sx={{
         height: 500,
         border: '1px solid',

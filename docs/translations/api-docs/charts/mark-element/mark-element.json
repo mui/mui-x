@@ -8,5 +8,30 @@
     "shape": { "description": "The shape of the marker." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "area": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the area element" },
+    "areaPlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AreaPlot root element"
+    },
+    "highlight": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the highlight element"
+    },
+    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the line element" },
+    "linePlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the LinePlot root element"
+    },
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
+    "markAnimate": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "a mark element",
+      "conditions": "it is animated"
+    },
+    "markPlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the MarkPlot root element"
+    }
+  }
 }

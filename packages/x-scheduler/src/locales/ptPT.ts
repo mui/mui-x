@@ -51,6 +51,7 @@ const ptPTDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'anos',
   recurrenceYearlyPresetLabel: (date) => `Repete anualmente em ${date}`,
   noResourceAriaLabel: 'Sem recurso',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Recurso',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Guardar',
@@ -105,8 +106,6 @@ const ptPTCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Todo o dia',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} mais…`,
   nextTimeSpan: (timeSpan) => `${timeSpan} seguinte`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
@@ -121,6 +120,9 @@ const ptPTCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendário',
   miniCalendarGoToPreviousMonth: 'Mostrar mês anterior no calendário',
   miniCalendarGoToNextMonth: 'Mostrar próximo mês no calendário',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Título do recurso',

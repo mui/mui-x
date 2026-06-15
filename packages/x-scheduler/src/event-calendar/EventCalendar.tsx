@@ -259,7 +259,7 @@ EventCalendar.propTypes = {
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig: PropTypes.oneOfType([
     PropTypes.oneOf([false]),
