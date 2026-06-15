@@ -17,11 +17,12 @@ export default function SlotPropsCustomization() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slotProps={{
-        composerInput: {
-          placeholder: 'Ask me anything…',
-        },
         messageList: {
           sx: { backgroundColor: 'grey.50' },
+        },
+
+        composerInput: {
+          placeholder: 'Ask me anything...',
         },
       }}
       sx={{
