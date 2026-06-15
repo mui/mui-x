@@ -1,10 +1,7 @@
 {
   "props": {},
   "name": "ScrollToBottomAffordance",
-  "imports": [
-    "import { ScrollToBottomAffordance } from '@mui/x-chat/headless';",
-    "import { ScrollToBottomAffordance } from '@mui/x-chat/headless';"
-  ],
+  "imports": ["import { ScrollToBottomAffordance } from '@mui/x-chat/headless';"],
   "slots": [
     { "name": "root", "description": "", "class": null },
     { "name": "badge", "description": "", "class": null },
@@ -14,5 +11,6 @@
   "muiName": "MuiScrollToBottomAffordance",
   "filename": "/packages/x-chat-headless/src/indicators/ScrollToBottomAffordance.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/indicators/\">Chat - Headless indicators</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/indicators/\">Chat - Headless indicators</a></li></ul>",
+  "cssComponent": false
 }

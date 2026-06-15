@@ -46,5 +46,6 @@
   "muiName": "MuiChatConversationHeaderInfo",
   "filename": "/packages/x-chat/src/ChatConversation/ChatConversationHeaderInfo.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/multi-conversation/conversation-header/\">Chat - Conversation Header</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/multi-conversation/conversation-header/\">Chat - Conversation header</a></li></ul>",
+  "cssComponent": false
 }
