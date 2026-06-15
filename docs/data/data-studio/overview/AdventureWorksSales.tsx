@@ -184,13 +184,12 @@ export default function AdventureWorksSales() {
             plan="premium"
             dataSources={dataSources}
             loading={loading}
-            layout="sidebar"
             routing={routing}
             copilotChatAdapter={copilotChatAdapter}
             copilotPlugins={STUDIO_COPILOT_PLUGINS}
-            onSheetsChange={setViews}
+            onViewsChange={setViews}
             onActiveDataSourceChange={setActiveDataSourceId}
-            onActiveSheetChange={setActiveSheetId}
+            onActiveViewChange={setActiveSheetId}
             sx={{
               height: '100dvh',
               bgcolor: 'background.paper',

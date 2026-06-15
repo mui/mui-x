@@ -62,7 +62,7 @@
     "copilotAdapter": {
       "type": {
         "name": "shape",
-        "description": "{ addToolApprovalResponse?: func, listConversations?: func, listMessages?: func, loadMore?: func, markRead?: func, reconnectToStream?: func, sendMessage: func, setTyping?: func, stop?: func, subscribe?: func }"
+        "description": "{ addToolApprovalResponse?: func, allowMultipleMessages?: bool, listConversations?: func, listMessages?: func, loadMore?: func, markRead?: func, reconnectToStream?: func, sendMessage: func, setTyping?: func, stop?: func, subscribe?: func }"
       }
     },
     "copilotPlugins": {

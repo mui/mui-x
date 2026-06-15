@@ -320,6 +320,9 @@ function extractApprovedToolResults(messages) {
       if (
         invocation?.state === 'output-available' &&
         invocation.approval?.approved === true &&
+        // `queryGridData` is a backend-defined tool name, so it isn't part of the
+        // frontend `ChatToolDefinitionMap`. Compare as a plain string rather than
+        // against the narrowed registered-tool-name union.
         invocation.toolName === 'queryGridData'
       ) {
         results.push({
@@ -546,6 +549,10 @@ export default function CopilotBackend() {
               columns={columns}
               {...COPILOT_PROPS}
               copilotAdapter={adapter}
+              // `pdfReportPlugin()` only reads `input`/`emitResult`/`emitError`, which
+              // every host plugin context provides, so it is runtime-compatible. The
+              // grid's `CopilotPlugin` context type (`apiRef`) and x-copilot's generic
+              // one (`api`) have diverged mid-refactor, so anchor the cast to the prop.
               copilotPlugins={COPILOT_PLUGINS}
               copilotSuggestions={SUGGESTIONS[dataSet]}
               slots={{ chartsPanel: GridChartsPanel }}

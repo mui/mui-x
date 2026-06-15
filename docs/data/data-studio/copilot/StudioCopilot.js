@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import Stack from '@mui/material/Stack';
 import { createAiSdkAdapter } from '@mui/x-chat-headless';
 import {
   DataStudio,
@@ -420,7 +419,7 @@ export default function StudioCopilot() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 1, px: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1, px: 1 }}>
         <FormControlLabel
           control={
             <Switch
@@ -436,18 +435,17 @@ export default function StudioCopilot() {
             ? `POSTs to ${BACKEND_URL.replace(/^https?:\/\//, '')}`
             : 'Self-contained — works offline, recognises a fixed set of prompts.'}
         </Box>
-      </Stack>
+      </Box>
       <Box sx={{ height: 600, width: '100%' }}>
         <DataStudio
           dataSources={DATASETS}
           plan="premium"
-          layout="tabs"
           copilotChatAdapter={adapter}
           copilotPlugins={COPILOT_PLUGINS}
-          defaultSheets={[]}
-          onSheetsChange={setViews}
+          defaultViews={[]}
+          onViewsChange={setViews}
           onActiveDataSourceChange={(id) => setActiveDatasetId(id)}
-          onActiveSheetChange={(id) => setActiveViewId(id)}
+          onActiveViewChange={(id) => setActiveViewId(id)}
         />
       </Box>
     </Box>

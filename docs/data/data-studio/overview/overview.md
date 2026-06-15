@@ -8,23 +8,25 @@ components: DataStudio
 
 # Data Studio - Overview
 
-<p class="description">Explore multiple tabular dataSources in one Data Grid powered workspace.</p>
+<p class="description">Explore multiple tabular datasets in one Data Grid powered workspace, each with its own set of views.</p>
 
-Data Studio is an MVP package for switching between related dataSources without leaving the grid surface.
-Each dataSource can provide local rows or a Data Grid [Data Source](/x/react-data-grid/server-side-data/) for server-side data.
+Data Studio is an MVP package for exploring related datasets without leaving the grid surface.
+Each dataset can provide local rows or a Data Grid [Data Source](/x/react-data-grid/server-side-data/) for server-side data.
 
-By default Data Studio renders a left sidebar navigator.
-Pass `layout="tabs"` to switch to the spreadsheet-style bottom tab bar shown in the demos below — dataSources appear first as pinned tabs, and end users can add their own views, rename, duplicate, delete and reorder them.
+A dataset is the primary object: pick one from the left rail, and its **views** appear as tabs across the top — much like a Notion database.
+Every dataset starts with an implicit **Table** view (its raw grid); the `+` button adds more views (Chart, Pivot table, Dashboard) scoped to that dataset.
+End users can rename, duplicate, delete, and reorder the views they create.
 
 ## Built-in templates
 
 Data Studio ships with the templates and view types built in, so the demos below pass data only — no template wiring required.
 
-End users start a new Sheet from the composer or from a Data Source's preview actions:
+End users add a view from the `+` button in the view tab strip:
 
 - **Spreadsheet** — a blank, free-form editable grid. Available on every plan.
-- **Pivot table** — a [pivot grid](/x/react-data-grid/pivoting/) over a Data Source. Premium only.
-- **Chart** — a [chart](/x/react-charts/) over a Data Source. Premium only.
+- **Pivot table** — a [pivot grid](/x/react-data-grid/pivoting/) over a dataset. Premium only.
+- **Chart** — a [chart](/x/react-charts/) over a dataset. Premium only.
+- **Dashboard** — auto-generated KPIs and breakdowns from a dataset. Premium only.
 
 To extend the defaults, pass `sheetTemplates` (or `viewTypes`) an array to add a custom entry, or a `(defaults) => defaults` function to remove or reorder the built-in ones.
 
