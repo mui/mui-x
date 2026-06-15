@@ -42,7 +42,6 @@
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:^",
-    "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },
@@ -99,6 +98,7 @@
     "@types/moment-hijri": "catalog:",
     "@types/moment-jalaali": "catalog:",
     "@types/prop-types": "catalog:",
+    "@types/react-transition-group": "catalog:",
     "date-fns": "catalog:",
     "date-fns-jalali": "catalog:",
     "dayjs": "catalog:",
@@ -109,6 +109,7 @@
     "moment-timezone": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-transition-group": "catalog:",
     "rimraf": "catalog:"
   },
   "engines": {

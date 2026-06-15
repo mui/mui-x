@@ -102,6 +102,7 @@
     "moment": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-transition-group": "catalog:",
     "rimraf": "catalog:"
   },
   "engines": {
