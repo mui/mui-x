@@ -9,6 +9,20 @@ import type {
 } from '../types/chat-message-parts';
 
 declare module '@mui/x-chat-headless/types' {
+  // Test-only message metadata fields. `ChatMessageMetadata` ships empty so
+  // consumers can augment it; these are the fields exercised across the
+  // x-chat-headless test suite. Module augmentation merges globally within the
+  // package's TypeScript program, so declaring them once here covers every test.
+  interface ChatMessageMetadata {
+    responseId?: string;
+    abVariant?: string;
+    modelId?: string;
+    costUsd?: number;
+    suggestions?: string[];
+    traceId?: string;
+    expanded?: boolean;
+  }
+
   interface ChatToolDefinitionMap {
     search: {
       input: {
