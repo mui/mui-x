@@ -7,7 +7,7 @@ interface ElementScrollLockState {
 }
 
 interface DocumentScrollLock {
-  lock: (element: Element | null | undefined) => void;
+  lock: (element: Element | null | undefined, scrollbarSize: number) => void;
   unlock: () => void;
 }
 
@@ -35,7 +35,7 @@ const SCROLLABLE_OVERFLOW = /(auto|scroll|overlay)/;
 export function useDocumentScrollLock(): DocumentScrollLock {
   const lockedElements = React.useRef<HTMLElement[]>([]);
 
-  const lock = React.useCallback((element: Element | null | undefined) => {
+  const lock = React.useCallback((element: Element | null | undefined, scrollbarSize: number) => {
     // Release any lock this instance already holds so repeated `lock` calls
     // (without an intervening `unlock`) stay balanced.
     lockedElements.current.forEach(unlockElementScroll);
@@ -45,7 +45,7 @@ export function useDocumentScrollLock(): DocumentScrollLock {
       return;
     }
     const elements = getElementsToLock(element);
-    elements.forEach(lockElementScroll);
+    elements.forEach((lockedElement) => lockElementScroll(lockedElement, scrollbarSize));
     lockedElements.current = elements;
   }, []);
 
@@ -104,38 +104,7 @@ function getElementsToLock(element: Element): HTMLElement[] {
   return Array.from(new Set(elements));
 }
 
-/**
- * Sizes of the scrollbars reclaimed by `overflow: hidden`, used to compensate the
- * content with padding so it does not shift while dragging (0 with overlay
- * scrollbars). `vertical` is the vertical scrollbar width, `horizontal` the
- * horizontal scrollbar height.
- */
-function getScrollbarSizes(
-  element: HTMLElement,
-  view: Window,
-  style: CSSStyleDeclaration,
-): { vertical: number; horizontal: number } {
-  const doc = element.ownerDocument;
-  // For the root scroll container, `clientWidth`/`clientHeight` exclude the
-  // scrollbars while the window's inner size includes them — the reliable way to
-  // measure the page scrollbars.
-  if (element === doc.scrollingElement || element === doc.documentElement) {
-    return {
-      vertical: Math.max(0, view.innerWidth - element.clientWidth),
-      horizontal: Math.max(0, view.innerHeight - element.clientHeight),
-    };
-  }
-  // For a regular container: offset size = content + padding + border + scrollbar,
-  // client size = content + padding, so the scrollbar is the remainder less borders.
-  const borderX = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
-  const borderY = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
-  return {
-    vertical: Math.max(0, element.offsetWidth - element.clientWidth - borderX),
-    horizontal: Math.max(0, element.offsetHeight - element.clientHeight - borderY),
-  };
-}
-
-function lockElementScroll(element: HTMLElement): void {
+function lockElementScroll(element: HTMLElement, scrollbarSize: number): void {
   const existingState = lockStateByElement.get(element);
   if (existingState) {
     existingState.count += 1;
@@ -150,7 +119,11 @@ function lockElementScroll(element: HTMLElement): void {
   const style = view.getComputedStyle(element);
   // In RTL the vertical scrollbar sits on the left, so compensate that side.
   const verticalSide = style.direction === 'rtl' ? 'paddingLeft' : 'paddingRight';
-  const { vertical, horizontal } = getScrollbarSizes(element, view, style);
+
+  // Scrollbars reclaimed by `overflow: hidden` are compensated with padding so the
+  // content does not shift. `scrollbarSize` is measured by the virtualizer.
+  const vertical = element.scrollHeight > element.clientHeight ? scrollbarSize : 0;
+  const horizontal = element.scrollWidth > element.clientWidth ? scrollbarSize : 0;
 
   const previousOverflow = element.style.overflow;
   const previousVerticalPadding = element.style[verticalSide];

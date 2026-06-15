@@ -24,6 +24,7 @@ import {
 import {
   gridEditRowsStateSelector,
   gridHasScrollYSelector,
+  gridVerticalScrollbarWidthSelector,
   useGridRegisterPipeProcessor,
   type GridPipeProcessor,
   type GridStateInitializer,
@@ -275,7 +276,10 @@ export const useGridRowReorder = (
 
       // Suppress the browser's native drag auto-scroll of the page
       if (gridHasScrollYSelector(apiRef)) {
-        pageScrollLock.lock(apiRef.current.rootElementRef?.current);
+        pageScrollLock.lock(
+          apiRef.current.rootElementRef?.current,
+          gridVerticalScrollbarWidthSelector(apiRef),
+        );
       }
 
       dragRowNode.current = event.currentTarget;
