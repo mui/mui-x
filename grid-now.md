@@ -1,430 +1,430 @@
-- generic [active] [ref=e1]:
-  - generic [ref=e2]:
-    - link "Skip to content" [ref=e3] [cursor=pointer]:
+- generic \[active] \[ref=e1]:
+  - generic \[ref=e2]:
+    - link "Skip to content" \[ref=e3] \[cursor=pointer]:
       - /url: "#main-content"
-    - generic [ref=e4]:
-      - banner [ref=e5]:
-        - generic [ref=e7]:
-          - link "🚀 Material UI and MUI X v9 are out! Check out the announcement blogpost." [ref=e8] [cursor=pointer]:
+    - generic \[ref=e4]:
+      - banner \[ref=e5]:
+        - generic \[ref=e7]:
+          - link "🚀 Material UI and MUI X v9 are out! Check out the announcement blogpost." \[ref=e8] \[cursor=pointer]:
             - /url: /blog/introducing-mui-v9/
-          - button "Search…" [ref=e9] [cursor=pointer]:
-            - img [ref=e10]
-            - generic [ref=e12]: Search…
-            - generic [ref=e13]: ⌘K
-          - link "GitHub repository" [ref=e14] [cursor=pointer]:
-            - /url: https://github.com/mui/mui-x
-            - img [ref=e15]
-          - button "3 unread notifications" [ref=e17] [cursor=pointer]:
-            - generic [ref=e18]:
-              - img [ref=e19]
-              - generic [ref=e21]: "3"
-          - button "Toggle settings drawer" [ref=e22] [cursor=pointer]:
-            - img [ref=e23]
-      - navigation "documentation" [ref=e25]:
-        - generic [ref=e26]:
-          - generic [ref=e27]:
-            - link "Go to the homepage" [ref=e28] [cursor=pointer]:
+          - button "Search…" \[ref=e9] \[cursor=pointer]:
+            - img \[ref=e10]
+            - generic \[ref=e12]: Search…
+            - generic \[ref=e13]: ⌘K
+          - link "GitHub repository" \[ref=e14] \[cursor=pointer]:
+            - /url: [https://github.com/mui/mui-x](https://github.com/mui/mui-x)
+            - img \[ref=e15]
+          - button "3 unread notifications" \[ref=e17] \[cursor=pointer]:
+            - generic \[ref=e18]:
+              - img \[ref=e19]
+              - generic \[ref=e21]: "3"
+          - button "Toggle settings drawer" \[ref=e22] \[cursor=pointer]:
+            - img \[ref=e23]
+      - navigation "documentation" \[ref=e25]:
+        - generic \[ref=e26]:
+          - generic \[ref=e27]:
+            - link "Go to the homepage" \[ref=e28] \[cursor=pointer]:
               - /url: /
-              - img [ref=e29]
-            - generic [ref=e32]:
-              - paragraph [ref=e33]: MUI X
-              - generic [ref=e34]:
-                - button "Data Grid" [ref=e35] [cursor=pointer]:
+              - img \[ref=e29]
+            - generic \[ref=e32]:
+              - paragraph \[ref=e33]: MUI X
+              - generic \[ref=e34]:
+                - button "Data Grid" \[ref=e35] \[cursor=pointer]:
                   - text: Data Grid
-                  - img [ref=e37]
-                - button "v9.2.0" [ref=e39] [cursor=pointer]:
+                  - img \[ref=e37]
+                - button "v9.2.0" \[ref=e39] \[cursor=pointer]:
                   - text: v9.2.0
-                  - img [ref=e41]
-          - list [ref=e46]:
-            - listitem [ref=e47]:
-              - link "What's new in MUI X" [ref=e48] [cursor=pointer]:
-                - /url: https://mui.com/x/whats-new/
-            - listitem [ref=e49]:
-              - link "Introduction" [ref=e50] [cursor=pointer]:
+                  - img \[ref=e41]
+          - list \[ref=e46]:
+            - listitem \[ref=e47]:
+              - link "What's new in MUI X" \[ref=e48] \[cursor=pointer]:
+                - /url: [https://mui.com/x/whats-new/](https://mui.com/x/whats-new/)
+            - listitem \[ref=e49]:
+              - link "Introduction" \[ref=e50] \[cursor=pointer]:
                 - /url: /x/introduction/
-                - img [ref=e51]
+                - img \[ref=e51]
                 - text: Introduction
-            - listitem [ref=e53]:
-              - link "Common concepts" [ref=e54] [cursor=pointer]:
+            - listitem \[ref=e53]:
+              - link "Common concepts" \[ref=e54] \[cursor=pointer]:
                 - /url: /x/common-concepts/custom-components/
-                - img [ref=e55]
+                - img \[ref=e55]
                 - text: Common concepts
-            - listitem [ref=e57]:
-              - link "Data Grid" [ref=e58] [cursor=pointer]:
+            - listitem \[ref=e57]:
+              - link "Data Grid" \[ref=e58] \[cursor=pointer]:
                 - /url: /x/react-data-grid/
-                - img [ref=e59]
+                - img \[ref=e59]
                 - text: Data Grid
-              - list [ref=e64]:
-                - listitem [ref=e65]:
-                  - link "Overview" [ref=e66] [cursor=pointer]:
+              - list \[ref=e64]:
+                - listitem \[ref=e65]:
+                  - link "Overview" \[ref=e66] \[cursor=pointer]:
                     - /url: /x/react-data-grid/
-                - listitem [ref=e67]:
-                  - link "Quickstart" [ref=e68] [cursor=pointer]:
+                - listitem \[ref=e67]:
+                  - link "Quickstart" \[ref=e68] \[cursor=pointer]:
                     - /url: /x/react-data-grid/quickstart/
-                - listitem [ref=e69]:
-                  - link "Features" [ref=e70] [cursor=pointer]:
+                - listitem \[ref=e69]:
+                  - link "Features" \[ref=e70] \[cursor=pointer]:
                     - /url: /x/react-data-grid/features/
-                - listitem [ref=e71]:
-                  - link "Demos" [ref=e72] [cursor=pointer]:
+                - listitem \[ref=e71]:
+                  - link "Demos" \[ref=e72] \[cursor=pointer]:
                     - /url: /x/react-data-grid/demos/real-time-data/
-                    - img [ref=e73]
+                    - img \[ref=e73]
                     - text: Demos
-                - listitem [ref=e75]:
-                  - generic [ref=e76]: Main features
-                  - list [ref=e77]:
-                    - listitem [ref=e78]:
-                      - link "Layout" [ref=e79] [cursor=pointer]:
+                - listitem \[ref=e75]:
+                  - generic \[ref=e76]: Main features
+                  - list \[ref=e77]:
+                    - listitem \[ref=e78]:
+                      - link "Layout" \[ref=e79] \[cursor=pointer]:
                         - /url: /x/react-data-grid/layout/
-                    - listitem [ref=e80]:
-                      - link "Columns" [ref=e81] [cursor=pointer]:
+                    - listitem \[ref=e80]:
+                      - link "Columns" \[ref=e81] \[cursor=pointer]:
                         - /url: /x/react-data-grid/column-definition/
-                        - img [ref=e82]
+                        - img \[ref=e82]
                         - text: Columns
-                    - listitem [ref=e84]:
-                      - link "Rows" [ref=e85] [cursor=pointer]:
+                    - listitem \[ref=e84]:
+                      - link "Rows" \[ref=e85] \[cursor=pointer]:
                         - /url: /x/react-data-grid/row-definition/
-                        - img [ref=e86]
+                        - img \[ref=e86]
                         - text: Rows
-                    - listitem [ref=e88]:
-                      - link "Cells" [ref=e89] [cursor=pointer]:
+                    - listitem \[ref=e88]:
+                      - link "Cells" \[ref=e89] \[cursor=pointer]:
                         - /url: /x/react-data-grid/cells/
-                    - listitem [ref=e90]:
-                      - link "Editing" [ref=e91] [cursor=pointer]:
+                    - listitem \[ref=e90]:
+                      - link "Editing" \[ref=e91] \[cursor=pointer]:
                         - /url: /x/react-data-grid/editing/
-                        - img [ref=e92]
+                        - img \[ref=e92]
                         - text: Editing
-                    - listitem [ref=e94]:
-                      - link "Sorting" [ref=e95] [cursor=pointer]:
+                    - listitem \[ref=e94]:
+                      - link "Sorting" \[ref=e95] \[cursor=pointer]:
                         - /url: /x/react-data-grid/sorting/
-                    - listitem [ref=e96]:
-                      - link "Filtering" [ref=e97] [cursor=pointer]:
+                    - listitem \[ref=e96]:
+                      - link "Filtering" \[ref=e97] \[cursor=pointer]:
                         - /url: /x/react-data-grid/filtering/
-                        - img [ref=e98]
+                        - img \[ref=e98]
                         - text: Filtering
-                    - listitem [ref=e100]:
-                      - link "Pagination" [ref=e101] [cursor=pointer]:
+                    - listitem \[ref=e100]:
+                      - link "Pagination" \[ref=e101] \[cursor=pointer]:
                         - /url: /x/react-data-grid/pagination/
-                    - listitem [ref=e102]:
-                      - link "Selection" [ref=e103] [cursor=pointer]:
+                    - listitem \[ref=e102]:
+                      - link "Selection" \[ref=e103] \[cursor=pointer]:
                         - /url: /x/react-data-grid/row-selection/
-                        - img [ref=e104]
+                        - img \[ref=e104]
                         - text: Selection
-                    - listitem [ref=e106]:
-                      - link "Virtualization" [ref=e107] [cursor=pointer]:
+                    - listitem \[ref=e106]:
+                      - link "Virtualization" \[ref=e107] \[cursor=pointer]:
                         - /url: /x/react-data-grid/virtualization/
-                    - listitem [ref=e108]:
-                      - link "Accessibility" [ref=e109] [cursor=pointer]:
+                    - listitem \[ref=e108]:
+                      - link "Accessibility" \[ref=e109] \[cursor=pointer]:
                         - /url: /x/react-data-grid/accessibility/
-                    - listitem [ref=e110]:
-                      - link "Localization" [ref=e111] [cursor=pointer]:
+                    - listitem \[ref=e110]:
+                      - link "Localization" \[ref=e111] \[cursor=pointer]:
                         - /url: /x/react-data-grid/localization/
-                - listitem [ref=e112]:
-                  - generic [ref=e113]: Advanced features
-                  - list [ref=e114]:
-                    - listitem [ref=e115]:
-                      - link "Tree data Pro plan" [ref=e116] [cursor=pointer]:
+                - listitem \[ref=e112]:
+                  - generic \[ref=e113]: Advanced features
+                  - list \[ref=e114]:
+                    - listitem \[ref=e115]:
+                      - link "Tree data Pro plan" \[ref=e116] \[cursor=pointer]:
                         - /url: /x/react-data-grid/tree-data/
                         - text: Tree data
-                        - generic "Pro plan" [ref=e117]
-                    - listitem [ref=e118]:
-                      - link "Row grouping Premium plan" [ref=e119] [cursor=pointer]:
+                        - generic "Pro plan" \[ref=e117]
+                    - listitem \[ref=e118]:
+                      - link "Row grouping Premium plan" \[ref=e119] \[cursor=pointer]:
                         - /url: /x/react-data-grid/row-grouping/
-                        - img [ref=e120]
+                        - img \[ref=e120]
                         - text: Row grouping
-                        - generic "Premium plan" [ref=e122]
-                    - listitem [ref=e123]:
-                      - link "Aggregation Premium plan" [ref=e124] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e122]
+                    - listitem \[ref=e123]:
+                      - link "Aggregation Premium plan" \[ref=e124] \[cursor=pointer]:
                         - /url: /x/react-data-grid/aggregation/
                         - text: Aggregation
-                        - generic "Premium plan" [ref=e125]
-                    - listitem [ref=e126]:
-                      - link "Pivoting Premium plan New" [ref=e127] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e125]
+                    - listitem \[ref=e126]:
+                      - link "Pivoting Premium plan New" \[ref=e127] \[cursor=pointer]:
                         - /url: /x/react-data-grid/pivoting/
-                        - img [ref=e128]
+                        - img \[ref=e128]
                         - text: Pivoting
-                        - generic "Premium plan" [ref=e130]
-                        - generic [ref=e132]: New
-                    - listitem [ref=e133]:
-                      - link "Export" [ref=e134] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e130]
+                        - generic \[ref=e132]: New
+                    - listitem \[ref=e133]:
+                      - link "Export" \[ref=e134] \[cursor=pointer]:
                         - /url: /x/react-data-grid/export/
-                    - listitem [ref=e135]:
-                      - link "Copy and paste" [ref=e136] [cursor=pointer]:
+                    - listitem \[ref=e135]:
+                      - link "Copy and paste" \[ref=e136] \[cursor=pointer]:
                         - /url: /x/react-data-grid/clipboard/
-                    - listitem [ref=e137]:
-                      - link "Undo and redo Premium plan New" [ref=e138] [cursor=pointer]:
+                    - listitem \[ref=e137]:
+                      - link "Undo and redo Premium plan New" \[ref=e138] \[cursor=pointer]:
                         - /url: /x/react-data-grid/undo-redo/
                         - text: Undo and redo
-                        - generic "Premium plan" [ref=e139]
-                        - generic [ref=e141]: New
-                    - listitem [ref=e142]:
-                      - link "Scrolling" [ref=e143] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e139]
+                        - generic \[ref=e141]: New
+                    - listitem \[ref=e142]:
+                      - link "Scrolling" \[ref=e143] \[cursor=pointer]:
                         - /url: /x/react-data-grid/scrolling/
-                    - listitem [ref=e144]:
-                      - link "List view Pro plan" [ref=e145] [cursor=pointer]:
+                    - listitem \[ref=e144]:
+                      - link "List view Pro plan" \[ref=e145] \[cursor=pointer]:
                         - /url: /x/react-data-grid/list-view/
                         - text: List view
-                        - generic "Pro plan" [ref=e146]
-                    - listitem [ref=e147]:
-                      - link "Server-side data New" [ref=e148] [cursor=pointer]:
+                        - generic "Pro plan" \[ref=e146]
+                    - listitem \[ref=e147]:
+                      - link "Server-side data New" \[ref=e148] \[cursor=pointer]:
                         - /url: /x/react-data-grid/server-side-data/
-                        - img [ref=e149]
+                        - img \[ref=e149]
                         - text: Server-side data
-                        - generic [ref=e152]: New
-                    - listitem [ref=e153]:
-                      - link "Charts integration Premium plan New" [ref=e154] [cursor=pointer]:
+                        - generic \[ref=e152]: New
+                    - listitem \[ref=e153]:
+                      - link "Charts integration Premium plan New" \[ref=e154] \[cursor=pointer]:
                         - /url: /x/react-data-grid/charts-integration/
                         - text: Charts integration
-                        - generic "Premium plan" [ref=e155]
-                        - generic [ref=e157]: New
-                    - listitem [ref=e158]:
-                      - link "AI Assistant Premium plan New" [ref=e159] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e155]
+                        - generic \[ref=e157]: New
+                    - listitem \[ref=e158]:
+                      - link "AI Assistant Premium plan New" \[ref=e159] \[cursor=pointer]:
                         - /url: /x/react-data-grid/ai-assistant/
                         - text: AI Assistant
-                        - generic "Premium plan" [ref=e160]
-                        - generic [ref=e162]: New
-                    - listitem [ref=e163]:
-                      - link "Copilot Premium plan New" [ref=e164] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e160]
+                        - generic \[ref=e162]: New
+                    - listitem \[ref=e163]:
+                      - link "Copilot Premium plan New" \[ref=e164] \[cursor=pointer]:
                         - /url: /x/react-data-grid/copilot/
                         - text: Copilot
-                        - generic "Premium plan" [ref=e165]
-                        - generic [ref=e167]: New
-                - listitem [ref=e168]:
-                  - generic [ref=e169]:
+                        - generic "Premium plan" \[ref=e165]
+                        - generic \[ref=e167]: New
+                - listitem \[ref=e168]:
+                  - generic \[ref=e169]:
                     - text: Components
-                    - generic [ref=e171]: New
-                  - list [ref=e172]:
-                    - listitem [ref=e173]:
-                      - link "Usage" [ref=e174] [cursor=pointer]:
+                    - generic \[ref=e171]: New
+                  - list \[ref=e172]:
+                    - listitem \[ref=e173]:
+                      - link "Usage" \[ref=e174] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/usage/
-                    - listitem [ref=e175]:
-                      - link "Toolbar" [ref=e176] [cursor=pointer]:
+                    - listitem \[ref=e175]:
+                      - link "Toolbar" \[ref=e176] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/toolbar/
-                    - listitem [ref=e177]:
-                      - link "Export" [ref=e178] [cursor=pointer]:
+                    - listitem \[ref=e177]:
+                      - link "Export" \[ref=e178] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/export/
-                    - listitem [ref=e179]:
-                      - link "Quick Filter" [ref=e180] [cursor=pointer]:
+                    - listitem \[ref=e179]:
+                      - link "Quick Filter" \[ref=e180] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/quick-filter/
-                    - listitem [ref=e181]:
-                      - link "Columns Panel Planned" [ref=e182] [cursor=pointer]:
+                    - listitem \[ref=e181]:
+                      - link "Columns Panel Planned" \[ref=e182] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/columns-panel/
                         - text: Columns Panel
-                        - generic [ref=e184]: Planned
-                    - listitem [ref=e185]:
-                      - link "Filter Panel Planned" [ref=e186] [cursor=pointer]:
+                        - generic \[ref=e184]: Planned
+                    - listitem \[ref=e185]:
+                      - link "Filter Panel Planned" \[ref=e186] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/filter-panel/
                         - text: Filter Panel
-                        - generic [ref=e188]: Planned
-                    - listitem [ref=e189]:
-                      - link "Prompt Field Premium plan" [ref=e190] [cursor=pointer]:
+                        - generic \[ref=e188]: Planned
+                    - listitem \[ref=e189]:
+                      - link "Prompt Field Premium plan" \[ref=e190] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/prompt-field/
                         - text: Prompt Field
-                        - generic "Premium plan" [ref=e191]
-                    - listitem [ref=e192]:
-                      - link "Pivot Panel Premium plan Planned" [ref=e193] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e191]
+                    - listitem \[ref=e192]:
+                      - link "Pivot Panel Premium plan Planned" \[ref=e193] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/pivot-panel/
                         - text: Pivot Panel
-                        - generic "Premium plan" [ref=e194]
-                        - generic [ref=e196]: Planned
-                    - listitem [ref=e197]:
-                      - link "Charts Panel Premium plan Planned" [ref=e198] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e194]
+                        - generic \[ref=e196]: Planned
+                    - listitem \[ref=e197]:
+                      - link "Charts Panel Premium plan Planned" \[ref=e198] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/charts-panel/
                         - text: Charts Panel
-                        - generic "Premium plan" [ref=e199]
-                        - generic [ref=e201]: Planned
-                    - listitem [ref=e202]:
-                      - link "AI Assistant Panel Premium plan Planned" [ref=e203] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e199]
+                        - generic \[ref=e201]: Planned
+                    - listitem \[ref=e202]:
+                      - link "AI Assistant Panel Premium plan Planned" \[ref=e203] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/ai-assistant-panel/
                         - text: AI Assistant Panel
-                        - generic "Premium plan" [ref=e204]
-                        - generic [ref=e206]: Planned
-                - listitem [ref=e207]:
-                  - generic [ref=e208]: Customization
-                  - list [ref=e209]:
-                    - listitem [ref=e210]:
-                      - link "Styling basics" [ref=e211] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e204]
+                        - generic \[ref=e206]: Planned
+                - listitem \[ref=e207]:
+                  - generic \[ref=e208]: Customization
+                  - list \[ref=e209]:
+                    - listitem \[ref=e210]:
+                      - link "Styling basics" \[ref=e211] \[cursor=pointer]:
                         - /url: /x/react-data-grid/style/
-                    - listitem [ref=e212]:
-                      - link "Styling recipes" [ref=e213] [cursor=pointer]:
+                    - listitem \[ref=e212]:
+                      - link "Styling recipes" \[ref=e213] \[cursor=pointer]:
                         - /url: /x/react-data-grid/style-recipes/
-                    - listitem [ref=e214]:
-                      - link "Overlays" [ref=e215] [cursor=pointer]:
+                    - listitem \[ref=e214]:
+                      - link "Overlays" \[ref=e215] \[cursor=pointer]:
                         - /url: /x/react-data-grid/overlays/
-                    - listitem [ref=e216]:
-                      - link "Custom subcomponents" [ref=e217] [cursor=pointer]:
+                    - listitem \[ref=e216]:
+                      - link "Custom subcomponents" \[ref=e217] \[cursor=pointer]:
                         - /url: /x/react-data-grid/components/
-                - listitem [ref=e218]:
-                  - generic [ref=e219]: Resources
-                  - list [ref=e220]:
-                    - listitem [ref=e221]:
-                      - link "API object" [ref=e222] [cursor=pointer]:
+                - listitem \[ref=e218]:
+                  - generic \[ref=e219]: Resources
+                  - list \[ref=e220]:
+                    - listitem \[ref=e221]:
+                      - link "API object" \[ref=e222] \[cursor=pointer]:
                         - /url: /x/react-data-grid/api-object/
-                    - listitem [ref=e223]:
-                      - link "Events" [ref=e224] [cursor=pointer]:
+                    - listitem \[ref=e223]:
+                      - link "Events" \[ref=e224] \[cursor=pointer]:
                         - /url: /x/react-data-grid/events/
-                    - listitem [ref=e225]:
-                      - link "State" [ref=e226] [cursor=pointer]:
+                    - listitem \[ref=e225]:
+                      - link "State" \[ref=e226] \[cursor=pointer]:
                         - /url: /x/react-data-grid/state/
-                    - listitem [ref=e227]:
-                      - link "Performance" [ref=e228] [cursor=pointer]:
+                    - listitem \[ref=e227]:
+                      - link "Performance" \[ref=e228] \[cursor=pointer]:
                         - /url: /x/react-data-grid/performance/
-                - listitem [ref=e229]:
-                  - link "API reference" [ref=e230] [cursor=pointer]:
+                - listitem \[ref=e229]:
+                  - link "API reference" \[ref=e230] \[cursor=pointer]:
                     - /url: /x/api/data-grid/
-                    - img [ref=e231]
+                    - img \[ref=e231]
                     - text: API reference
-                - listitem [ref=e233]:
-                  - generic [ref=e234]: Tutorials
-                  - list [ref=e235]:
-                    - listitem [ref=e236]:
-                      - link "Server-side data" [ref=e237] [cursor=pointer]:
+                - listitem \[ref=e233]:
+                  - generic \[ref=e234]: Tutorials
+                  - list \[ref=e235]:
+                    - listitem \[ref=e236]:
+                      - link "Server-side data" \[ref=e237] \[cursor=pointer]:
                         - /url: /x/react-data-grid/tutorials/server-side-data/
-                    - listitem [ref=e238]:
-                      - link "Aggregation and row grouping Premium plan" [ref=e239] [cursor=pointer]:
+                    - listitem \[ref=e238]:
+                      - link "Aggregation and row grouping Premium plan" \[ref=e239] \[cursor=pointer]:
                         - /url: /x/react-data-grid/tutorials/aggregation-row-grouping/
                         - text: Aggregation and row grouping
-                        - generic "Premium plan" [ref=e240]
-            - listitem [ref=e241]:
-              - link "Data Studio Preview" [ref=e242] [cursor=pointer]:
+                        - generic "Premium plan" \[ref=e240]
+            - listitem \[ref=e241]:
+              - link "Data Studio Preview" \[ref=e242] \[cursor=pointer]:
                 - /url: /x/react-data-studio/
-                - img [ref=e243]
+                - img \[ref=e243]
                 - text: Data Studio
-                - generic [ref=e246]: Preview
-            - listitem [ref=e247]:
-              - link "Date and Time Pickers" [ref=e248] [cursor=pointer]:
+                - generic \[ref=e246]: Preview
+            - listitem \[ref=e247]:
+              - link "Date and Time Pickers" \[ref=e248] \[cursor=pointer]:
                 - /url: /x/react-date-pickers/
-                - img [ref=e249]
+                - img \[ref=e249]
                 - text: Date and Time Pickers
-            - listitem [ref=e251]:
-              - link "Charts" [ref=e252] [cursor=pointer]:
+            - listitem \[ref=e251]:
+              - link "Charts" \[ref=e252] \[cursor=pointer]:
                 - /url: /x/react-charts/
-                - img [ref=e253]
+                - img \[ref=e253]
                 - text: Charts
-            - listitem [ref=e255]:
-              - link "Tree View" [ref=e256] [cursor=pointer]:
+            - listitem \[ref=e255]:
+              - link "Tree View" \[ref=e256] \[cursor=pointer]:
                 - /url: /x/react-tree-view/
-                - img [ref=e257]
+                - img \[ref=e257]
                 - text: Tree View
-            - listitem [ref=e259]:
-              - link "Scheduler Preview" [ref=e260] [cursor=pointer]:
+            - listitem \[ref=e259]:
+              - link "Scheduler Preview" \[ref=e260] \[cursor=pointer]:
                 - /url: /x/react-scheduler/
-                - img [ref=e261]
+                - img \[ref=e261]
                 - text: Scheduler
-                - generic [ref=e264]: Preview
-            - listitem [ref=e265]:
-              - link "Chat Preview" [ref=e266] [cursor=pointer]:
+                - generic \[ref=e264]: Preview
+            - listitem \[ref=e265]:
+              - link "Chat Preview" \[ref=e266] \[cursor=pointer]:
                 - /url: /x/react-chat/
-                - img [ref=e267]
+                - img \[ref=e267]
                 - text: Chat
-                - generic [ref=e270]: Preview
-            - listitem [ref=e271]:
-              - link "Migration" [ref=e272] [cursor=pointer]:
+                - generic \[ref=e270]: Preview
+            - listitem \[ref=e271]:
+              - link "Migration" \[ref=e272] \[cursor=pointer]:
                 - /url: /x/migration/migration-data-grid-v8/
-                - img [ref=e273]
+                - img \[ref=e273]
                 - text: Migration
-      - main [ref=e275]:
-        - generic [ref=e276]:
-          - generic [ref=e277]:
-            - heading "Copilot" [level=1] [ref=e278]:
+      - main \[ref=e275]:
+        - generic \[ref=e276]:
+          - generic \[ref=e277]:
+            - heading "Copilot" \[level=1] \[ref=e278]:
               - text: Copilot
-              - link "Premium plan" [ref=e279] [cursor=pointer]:
+              - link "Premium plan" \[ref=e279] \[cursor=pointer]:
                 - /url: /x/introduction/licensing/#premium-plan
-            - paragraph [ref=e281]:
+            - paragraph \[ref=e281]:
               - text: Chat alongside the Data Grid with a Copilot side panel powered by
-              - code [ref=e282]: "@mui/x-chat"
+              - code \[ref=e282]: "@mui/x-chat"
               - text: .
-          - generic [ref=e283]:
-            - generic [ref=e284]:
+          - generic \[ref=e283]:
+            - generic \[ref=e284]:
               - button "A generic container that is programmatically focused to test keyboard navigation of our components."
-              - generic [ref=e285]:
-                - generic [ref=e286]:
-                  - tablist [ref=e289]:
-                    - tab "Employees" [selected] [ref=e290] [cursor=pointer]
-                    - tab "Commodities" [ref=e291] [cursor=pointer]
-                  - generic "Single response per request." [ref=e293] [cursor=pointer]:
-                    - switch "A/B test mode" [ref=e296]
-                    - generic [ref=e299]: A/B test mode
-                - generic [ref=e301]:
-                  - toolbar [ref=e302]:
-                    - generic "Undo" [ref=e303]:
-                      - button [disabled]:
+              - generic \[ref=e285]:
+                - generic \[ref=e286]:
+                  - tablist \[ref=e289]:
+                    - tab "Employees" \[selected] \[ref=e290] \[cursor=pointer]
+                    - tab "Commodities" \[ref=e291] \[cursor=pointer]
+                  - generic "Single response per request." \[ref=e293] \[cursor=pointer]:
+                    - switch "A/B test mode" \[ref=e296]
+                    - generic \[ref=e299]: A/B test mode
+                - generic \[ref=e301]:
+                  - toolbar \[ref=e302]:
+                    - generic "Undo" \[ref=e303]:
+                      - button \[disabled]:
                         - img
-                    - generic "Redo" [ref=e304]:
-                      - button [disabled]:
+                    - generic "Redo" \[ref=e304]:
+                      - button \[disabled]:
                         - img
-                    - separator [ref=e305]
-                    - button "Columns" [ref=e306] [cursor=pointer]:
-                      - img [ref=e307]
-                    - button "Filters" [ref=e309] [cursor=pointer]:
-                      - img [ref=e311]
-                    - button "Pivot" [ref=e313] [cursor=pointer]:
-                      - img [ref=e314]
-                    - button "Charts" [ref=e316] [cursor=pointer]:
-                      - img [ref=e317]
-                    - button "Copilot" [expanded] [ref=e321] [cursor=pointer]:
-                      - img [ref=e322]
-                    - separator [ref=e324]
-                    - button "Export" [ref=e325] [cursor=pointer]:
-                      - img [ref=e326]
-                    - separator [ref=e328]
-                    - generic [ref=e329]:
-                      - button "Search" [ref=e330] [cursor=pointer]:
-                        - img [ref=e331]
-                      - generic "Search" [ref=e333]:
-                        - generic [ref=e334]:
-                          - img [ref=e336]
-                          - searchbox "Search…" [ref=e338]
+                    - separator \[ref=e305]
+                    - button "Columns" \[ref=e306] \[cursor=pointer]:
+                      - img \[ref=e307]
+                    - button "Filters" \[ref=e309] \[cursor=pointer]:
+                      - img \[ref=e311]
+                    - button "Pivot" \[ref=e313] \[cursor=pointer]:
+                      - img \[ref=e314]
+                    - button "Charts" \[ref=e316] \[cursor=pointer]:
+                      - img \[ref=e317]
+                    - button "Copilot" \[expanded] \[ref=e321] \[cursor=pointer]:
+                      - img \[ref=e322]
+                    - separator \[ref=e324]
+                    - button "Export" \[ref=e325] \[cursor=pointer]:
+                      - img \[ref=e326]
+                    - separator \[ref=e328]
+                    - generic \[ref=e329]:
+                      - button "Search" \[ref=e330] \[cursor=pointer]:
+                        - img \[ref=e331]
+                      - generic "Search" \[ref=e333]:
+                        - generic \[ref=e334]:
+                          - img \[ref=e336]
+                          - searchbox "Search…" \[ref=e338]
                           - group
-                  - grid [ref=e339]:
-                    - row "Select all rows id Avatar Name Website Rating Email Phone" [ref=e340]:
-                      - columnheader "Select all rows" [ref=e341]:
-                        - generic [ref=e343] [cursor=pointer]:
-                          - checkbox "Select all rows" [ref=e344]
-                          - img [ref=e345]
-                        - img [ref=e348]
-                      - columnheader "id" [ref=e350] [cursor=pointer]:
-                        - generic [ref=e352]: id
-                        - generic [ref=e353]:
+                  - grid \[ref=e339]:
+                    - row "Select all rows id Avatar Name Website Rating Email Phone" \[ref=e340]:
+                      - columnheader "Select all rows" \[ref=e341]:
+                        - generic \[ref=e343] \[cursor=pointer]:
+                          - checkbox "Select all rows" \[ref=e344]
+                          - img \[ref=e345]
+                        - img \[ref=e348]
+                      - columnheader "id" \[ref=e350] \[cursor=pointer]:
+                        - generic \[ref=e352]: id
+                        - generic \[ref=e353]:
                           - img
-                      - columnheader "Avatar" [ref=e354]:
-                        - generic [ref=e356]: Avatar
-                        - generic [ref=e357]:
+                      - columnheader "Avatar" \[ref=e354]:
+                        - generic \[ref=e356]: Avatar
+                        - generic \[ref=e357]:
                           - img
-                      - columnheader "Name" [ref=e358] [cursor=pointer]:
-                        - generic [ref=e360]: Name
-                        - generic [ref=e361]:
+                      - columnheader "Name" \[ref=e358] \[cursor=pointer]:
+                        - generic \[ref=e360]: Name
+                        - generic \[ref=e361]:
                           - img
-                      - columnheader "Website" [ref=e362] [cursor=pointer]:
-                        - generic [ref=e364]: Website
-                        - generic [ref=e365]:
+                      - columnheader "Website" \[ref=e362] \[cursor=pointer]:
+                        - generic \[ref=e364]: Website
+                        - generic \[ref=e365]:
                           - img
-                      - columnheader "Rating" [ref=e366] [cursor=pointer]:
-                        - generic [ref=e368]: Rating
-                        - generic [ref=e369]:
+                      - columnheader "Rating" \[ref=e366] \[cursor=pointer]:
+                        - generic \[ref=e368]: Rating
+                        - generic \[ref=e369]:
                           - img
-                      - columnheader "Email" [ref=e370] [cursor=pointer]:
-                        - generic [ref=e372]: Email
-                        - generic [ref=e373]:
+                      - columnheader "Email" \[ref=e370] \[cursor=pointer]:
+                        - generic \[ref=e372]: Email
+                        - generic \[ref=e373]:
                           - img
-                      - columnheader "Phone" [ref=e374] [cursor=pointer]:
-                        - generic [ref=e376]: Phone
-                        - generic [ref=e377]:
+                      - columnheader "Phone" \[ref=e374] \[cursor=pointer]:
+                        - generic \[ref=e376]: Phone
+                        - generic \[ref=e377]:
                           - img
-                    - rowgroup [ref=e378]:
-                      - row "Select row e0d8dcea-90f5-5588-91f0-0f7b71342f4a L Lucille Medina http://ahsi.so/adi 2 Stars 2 iga@jo.it (585) 982-6596" [ref=e379]:
-                        - gridcell "Select row" [ref=e380]:
-                          - generic [ref=e381] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e382]
-                            - img [ref=e383]
-                        - gridcell "e0d8dcea-90f5-5588-91f0-0f7b71342f4a" [ref=e385]
-                        - gridcell "L" [ref=e386]:
-                          - generic [ref=e387]: L
-                        - gridcell "Lucille Medina" [ref=e388]
-                        - gridcell "http://ahsi.so/adi" [ref=e389]:
-                          - link "http://ahsi.so/adi" [ref=e390] [cursor=pointer]:
-                            - /url: http://ahsi.so/adi
-                        - gridcell "2 Stars 2" [ref=e391]:
-                          - generic [ref=e392]:
+                    - rowgroup \[ref=e378]:
+                      - row "Select row e0d8dcea-90f5-5588-91f0-0f7b71342f4a L Lucille Medina [http://ahsi.so/adi](http://ahsi.so/adi) 2 Stars 2 [iga@jo.it](mailto:iga@jo.it) (585) 982-6596" \[ref=e379]:
+                        - gridcell "Select row" \[ref=e380]:
+                          - generic \[ref=e381] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e382]
+                            - img \[ref=e383]
+                        - gridcell "e0d8dcea-90f5-5588-91f0-0f7b71342f4a" \[ref=e385]
+                        - gridcell "L" \[ref=e386]:
+                          - generic \[ref=e387]: L
+                        - gridcell "Lucille Medina" \[ref=e388]
+                        - gridcell "[http://ahsi.so/adi](http://ahsi.so/adi)" \[ref=e389]:
+                          - link "[http://ahsi.so/adi](http://ahsi.so/adi)" \[ref=e390] \[cursor=pointer]:
+                            - /url: [http://ahsi.so/adi](http://ahsi.so/adi)
+                        - gridcell "2 Stars 2" \[ref=e391]:
+                          - generic \[ref=e392]:
                             - img "2 Stars":
                               - generic:
                                 - generic:
@@ -442,24 +442,24 @@
                                 - generic:
                                   - img
                             - text: "2"
-                        - gridcell "iga@jo.it" [ref=e393]:
-                          - link "iga@jo.it" [ref=e394] [cursor=pointer]:
-                            - /url: mailto:iga@jo.it
-                        - gridcell "(585) 982-6596" [ref=e395]
-                      - row "Select row 28dcd591-5f9a-55a1-9501-ab5199345255 D Dorothy Malone http://cus.eh/si 4 Stars 4 zeklawtu@sevcap.tm (926) 305-3404" [ref=e396]:
-                        - gridcell "Select row" [ref=e397]:
-                          - generic [ref=e398] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e399]
-                            - img [ref=e400]
-                        - gridcell "28dcd591-5f9a-55a1-9501-ab5199345255" [ref=e402]
-                        - gridcell "D" [ref=e403]:
-                          - generic [ref=e404]: D
-                        - gridcell "Dorothy Malone" [ref=e405]
-                        - gridcell "http://cus.eh/si" [ref=e406]:
-                          - link "http://cus.eh/si" [ref=e407] [cursor=pointer]:
-                            - /url: http://cus.eh/si
-                        - gridcell "4 Stars 4" [ref=e408]:
-                          - generic [ref=e409]:
+                        - gridcell "[iga@jo.it](mailto:iga@jo.it)" \[ref=e393]:
+                          - link "[iga@jo.it](mailto:iga@jo.it)" \[ref=e394] \[cursor=pointer]:
+                            - /url: mailto:[iga@jo.it](mailto:iga@jo.it)
+                        - gridcell "(585) 982-6596" \[ref=e395]
+                      - row "Select row 28dcd591-5f9a-55a1-9501-ab5199345255 D Dorothy Malone [http://cus.eh/si](http://cus.eh/si) 4 Stars 4 [zeklawtu@sevcap.tm](mailto:zeklawtu@sevcap.tm) (926) 305-3404" \[ref=e396]:
+                        - gridcell "Select row" \[ref=e397]:
+                          - generic \[ref=e398] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e399]
+                            - img \[ref=e400]
+                        - gridcell "28dcd591-5f9a-55a1-9501-ab5199345255" \[ref=e402]
+                        - gridcell "D" \[ref=e403]:
+                          - generic \[ref=e404]: D
+                        - gridcell "Dorothy Malone" \[ref=e405]
+                        - gridcell "[http://cus.eh/si](http://cus.eh/si)" \[ref=e406]:
+                          - link "[http://cus.eh/si](http://cus.eh/si)" \[ref=e407] \[cursor=pointer]:
+                            - /url: [http://cus.eh/si](http://cus.eh/si)
+                        - gridcell "4 Stars 4" \[ref=e408]:
+                          - generic \[ref=e409]:
                             - img "4 Stars":
                               - generic:
                                 - generic:
@@ -477,24 +477,24 @@
                                 - generic:
                                   - img
                             - text: "4"
-                        - gridcell "zeklawtu@sevcap.tm" [ref=e410]:
-                          - link "zeklawtu@sevcap.tm" [ref=e411] [cursor=pointer]:
-                            - /url: mailto:zeklawtu@sevcap.tm
-                        - gridcell "(926) 305-3404" [ref=e412]
-                      - row "Select row 0d99359d-000c-5e97-9b86-6cb1d68b56ff N Noah Daniels http://lut.pe/seot 4 Stars 4 egu@civombum.zm (745) 405-8586" [ref=e413]:
-                        - gridcell "Select row" [ref=e414]:
-                          - generic [ref=e415] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e416]
-                            - img [ref=e417]
-                        - gridcell "0d99359d-000c-5e97-9b86-6cb1d68b56ff" [ref=e419]
-                        - gridcell "N" [ref=e420]:
-                          - generic [ref=e421]: "N"
-                        - gridcell "Noah Daniels" [ref=e422]
-                        - gridcell "http://lut.pe/seot" [ref=e423]:
-                          - link "http://lut.pe/seot" [ref=e424] [cursor=pointer]:
-                            - /url: http://lut.pe/seot
-                        - gridcell "4 Stars 4" [ref=e425]:
-                          - generic [ref=e426]:
+                        - gridcell "[zeklawtu@sevcap.tm](mailto:zeklawtu@sevcap.tm)" \[ref=e410]:
+                          - link "[zeklawtu@sevcap.tm](mailto:zeklawtu@sevcap.tm)" \[ref=e411] \[cursor=pointer]:
+                            - /url: mailto:[zeklawtu@sevcap.tm](mailto:zeklawtu@sevcap.tm)
+                        - gridcell "(926) 305-3404" \[ref=e412]
+                      - row "Select row 0d99359d-000c-5e97-9b86-6cb1d68b56ff N Noah Daniels [http://lut.pe/seot](http://lut.pe/seot) 4 Stars 4 [egu@civombum.zm](mailto:egu@civombum.zm) (745) 405-8586" \[ref=e413]:
+                        - gridcell "Select row" \[ref=e414]:
+                          - generic \[ref=e415] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e416]
+                            - img \[ref=e417]
+                        - gridcell "0d99359d-000c-5e97-9b86-6cb1d68b56ff" \[ref=e419]
+                        - gridcell "N" \[ref=e420]:
+                          - generic \[ref=e421]: "N"
+                        - gridcell "Noah Daniels" \[ref=e422]
+                        - gridcell "[http://lut.pe/seot](http://lut.pe/seot)" \[ref=e423]:
+                          - link "[http://lut.pe/seot](http://lut.pe/seot)" \[ref=e424] \[cursor=pointer]:
+                            - /url: [http://lut.pe/seot](http://lut.pe/seot)
+                        - gridcell "4 Stars 4" \[ref=e425]:
+                          - generic \[ref=e426]:
                             - img "4 Stars":
                               - generic:
                                 - generic:
@@ -512,24 +512,24 @@
                                 - generic:
                                   - img
                             - text: "4"
-                        - gridcell "egu@civombum.zm" [ref=e427]:
-                          - link "egu@civombum.zm" [ref=e428] [cursor=pointer]:
-                            - /url: mailto:egu@civombum.zm
-                        - gridcell "(745) 405-8586" [ref=e429]
-                      - row "Select row 7f158ba2-40a4-517a-a606-0d5128e7ba75 M Matthew Steele http://corih.ws/bujitdi 1 Star 1 cuzdo@sa.ws (946) 766-4424" [ref=e430]:
-                        - gridcell "Select row" [ref=e431]:
-                          - generic [ref=e432] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e433]
-                            - img [ref=e434]
-                        - gridcell "7f158ba2-40a4-517a-a606-0d5128e7ba75" [ref=e436]
-                        - gridcell "M" [ref=e437]:
-                          - generic [ref=e438]: M
-                        - gridcell "Matthew Steele" [ref=e439]
-                        - gridcell "http://corih.ws/bujitdi" [ref=e440]:
-                          - link "http://corih.ws/bujitdi" [ref=e441] [cursor=pointer]:
-                            - /url: http://corih.ws/bujitdi
-                        - gridcell "1 Star 1" [ref=e442]:
-                          - generic [ref=e443]:
+                        - gridcell "[egu@civombum.zm](mailto:egu@civombum.zm)" \[ref=e427]:
+                          - link "[egu@civombum.zm](mailto:egu@civombum.zm)" \[ref=e428] \[cursor=pointer]:
+                            - /url: mailto:[egu@civombum.zm](mailto:egu@civombum.zm)
+                        - gridcell "(745) 405-8586" \[ref=e429]
+                      - row "Select row 7f158ba2-40a4-517a-a606-0d5128e7ba75 M Matthew Steele [http://corih.ws/bujitdi](http://corih.ws/bujitdi) 1 Star 1 [cuzdo@sa.ws](mailto:cuzdo@sa.ws) (946) 766-4424" \[ref=e430]:
+                        - gridcell "Select row" \[ref=e431]:
+                          - generic \[ref=e432] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e433]
+                            - img \[ref=e434]
+                        - gridcell "7f158ba2-40a4-517a-a606-0d5128e7ba75" \[ref=e436]
+                        - gridcell "M" \[ref=e437]:
+                          - generic \[ref=e438]: M
+                        - gridcell "Matthew Steele" \[ref=e439]
+                        - gridcell "[http://corih.ws/bujitdi](http://corih.ws/bujitdi)" \[ref=e440]:
+                          - link "[http://corih.ws/bujitdi](http://corih.ws/bujitdi)" \[ref=e441] \[cursor=pointer]:
+                            - /url: [http://corih.ws/bujitdi](http://corih.ws/bujitdi)
+                        - gridcell "1 Star 1" \[ref=e442]:
+                          - generic \[ref=e443]:
                             - img "1 Star":
                               - generic:
                                 - generic:
@@ -547,24 +547,24 @@
                                 - generic:
                                   - img
                             - text: "1"
-                        - gridcell "cuzdo@sa.ws" [ref=e444]:
-                          - link "cuzdo@sa.ws" [ref=e445] [cursor=pointer]:
-                            - /url: mailto:cuzdo@sa.ws
-                        - gridcell "(946) 766-4424" [ref=e446]
-                      - row "Select row 3e05adc8-196b-53a7-a85b-00040678e2fd N Nancy Powers http://zig.gh/volet 4 Stars 4 duta@atmiw.tf (530) 999-5955" [ref=e447]:
-                        - gridcell "Select row" [ref=e448]:
-                          - generic [ref=e449] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e450]
-                            - img [ref=e451]
-                        - gridcell "3e05adc8-196b-53a7-a85b-00040678e2fd" [ref=e453]
-                        - gridcell "N" [ref=e454]:
-                          - generic [ref=e455]: "N"
-                        - gridcell "Nancy Powers" [ref=e456]
-                        - gridcell "http://zig.gh/volet" [ref=e457]:
-                          - link "http://zig.gh/volet" [ref=e458] [cursor=pointer]:
-                            - /url: http://zig.gh/volet
-                        - gridcell "4 Stars 4" [ref=e459]:
-                          - generic [ref=e460]:
+                        - gridcell "[cuzdo@sa.ws](mailto:cuzdo@sa.ws)" \[ref=e444]:
+                          - link "[cuzdo@sa.ws](mailto:cuzdo@sa.ws)" \[ref=e445] \[cursor=pointer]:
+                            - /url: mailto:[cuzdo@sa.ws](mailto:cuzdo@sa.ws)
+                        - gridcell "(946) 766-4424" \[ref=e446]
+                      - row "Select row 3e05adc8-196b-53a7-a85b-00040678e2fd N Nancy Powers [http://zig.gh/volet](http://zig.gh/volet) 4 Stars 4 [duta@atmiw.tf](mailto:duta@atmiw.tf) (530) 999-5955" \[ref=e447]:
+                        - gridcell "Select row" \[ref=e448]:
+                          - generic \[ref=e449] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e450]
+                            - img \[ref=e451]
+                        - gridcell "3e05adc8-196b-53a7-a85b-00040678e2fd" \[ref=e453]
+                        - gridcell "N" \[ref=e454]:
+                          - generic \[ref=e455]: "N"
+                        - gridcell "Nancy Powers" \[ref=e456]
+                        - gridcell "[http://zig.gh/volet](http://zig.gh/volet)" \[ref=e457]:
+                          - link "[http://zig.gh/volet](http://zig.gh/volet)" \[ref=e458] \[cursor=pointer]:
+                            - /url: [http://zig.gh/volet](http://zig.gh/volet)
+                        - gridcell "4 Stars 4" \[ref=e459]:
+                          - generic \[ref=e460]:
                             - img "4 Stars":
                               - generic:
                                 - generic:
@@ -582,24 +582,24 @@
                                 - generic:
                                   - img
                             - text: "4"
-                        - gridcell "duta@atmiw.tf" [ref=e461]:
-                          - link "duta@atmiw.tf" [ref=e462] [cursor=pointer]:
-                            - /url: mailto:duta@atmiw.tf
-                        - gridcell "(530) 999-5955" [ref=e463]
-                      - row "Select row 033bff90-0274-540a-b902-7e90c5327a06 L Leo Silva http://zofu.sk/na 4 Stars 4 ajafo@dudvi.mv (384) 215-5151" [ref=e464]:
-                        - gridcell "Select row" [ref=e465]:
-                          - generic [ref=e466] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e467]
-                            - img [ref=e468]
-                        - gridcell "033bff90-0274-540a-b902-7e90c5327a06" [ref=e470]
-                        - gridcell "L" [ref=e471]:
-                          - generic [ref=e472]: L
-                        - gridcell "Leo Silva" [ref=e473]
-                        - gridcell "http://zofu.sk/na" [ref=e474]:
-                          - link "http://zofu.sk/na" [ref=e475] [cursor=pointer]:
-                            - /url: http://zofu.sk/na
-                        - gridcell "4 Stars 4" [ref=e476]:
-                          - generic [ref=e477]:
+                        - gridcell "[duta@atmiw.tf](mailto:duta@atmiw.tf)" \[ref=e461]:
+                          - link "[duta@atmiw.tf](mailto:duta@atmiw.tf)" \[ref=e462] \[cursor=pointer]:
+                            - /url: mailto:[duta@atmiw.tf](mailto:duta@atmiw.tf)
+                        - gridcell "(530) 999-5955" \[ref=e463]
+                      - row "Select row 033bff90-0274-540a-b902-7e90c5327a06 L Leo Silva [http://zofu.sk/na](http://zofu.sk/na) 4 Stars 4 [ajafo@dudvi.mv](mailto:ajafo@dudvi.mv) (384) 215-5151" \[ref=e464]:
+                        - gridcell "Select row" \[ref=e465]:
+                          - generic \[ref=e466] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e467]
+                            - img \[ref=e468]
+                        - gridcell "033bff90-0274-540a-b902-7e90c5327a06" \[ref=e470]
+                        - gridcell "L" \[ref=e471]:
+                          - generic \[ref=e472]: L
+                        - gridcell "Leo Silva" \[ref=e473]
+                        - gridcell "[http://zofu.sk/na](http://zofu.sk/na)" \[ref=e474]:
+                          - link "[http://zofu.sk/na](http://zofu.sk/na)" \[ref=e475] \[cursor=pointer]:
+                            - /url: [http://zofu.sk/na](http://zofu.sk/na)
+                        - gridcell "4 Stars 4" \[ref=e476]:
+                          - generic \[ref=e477]:
                             - img "4 Stars":
                               - generic:
                                 - generic:
@@ -617,24 +617,24 @@
                                 - generic:
                                   - img
                             - text: "4"
-                        - gridcell "ajafo@dudvi.mv" [ref=e478]:
-                          - link "ajafo@dudvi.mv" [ref=e479] [cursor=pointer]:
-                            - /url: mailto:ajafo@dudvi.mv
-                        - gridcell "(384) 215-5151" [ref=e480]
-                      - row "Select row c579668f-ffa7-5cec-9716-806f9deb345d M Marian French http://ihijadof.np/ca 5 Stars 5 joz@mopno.in (204) 541-3492" [ref=e481]:
-                        - gridcell "Select row" [ref=e482]:
-                          - generic [ref=e483] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e484]
-                            - img [ref=e485]
-                        - gridcell "c579668f-ffa7-5cec-9716-806f9deb345d" [ref=e487]
-                        - gridcell "M" [ref=e488]:
-                          - generic [ref=e489]: M
-                        - gridcell "Marian French" [ref=e490]
-                        - gridcell "http://ihijadof.np/ca" [ref=e491]:
-                          - link "http://ihijadof.np/ca" [ref=e492] [cursor=pointer]:
-                            - /url: http://ihijadof.np/ca
-                        - gridcell "5 Stars 5" [ref=e493]:
-                          - generic [ref=e494]:
+                        - gridcell "[ajafo@dudvi.mv](mailto:ajafo@dudvi.mv)" \[ref=e478]:
+                          - link "[ajafo@dudvi.mv](mailto:ajafo@dudvi.mv)" \[ref=e479] \[cursor=pointer]:
+                            - /url: mailto:[ajafo@dudvi.mv](mailto:ajafo@dudvi.mv)
+                        - gridcell "(384) 215-5151" \[ref=e480]
+                      - row "Select row c579668f-ffa7-5cec-9716-806f9deb345d M Marian French [http://ihijadof.np/ca](http://ihijadof.np/ca) 5 Stars 5 [joz@mopno.in](mailto:joz@mopno.in) (204) 541-3492" \[ref=e481]:
+                        - gridcell "Select row" \[ref=e482]:
+                          - generic \[ref=e483] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e484]
+                            - img \[ref=e485]
+                        - gridcell "c579668f-ffa7-5cec-9716-806f9deb345d" \[ref=e487]
+                        - gridcell "M" \[ref=e488]:
+                          - generic \[ref=e489]: M
+                        - gridcell "Marian French" \[ref=e490]
+                        - gridcell "[http://ihijadof.np/ca](http://ihijadof.np/ca)" \[ref=e491]:
+                          - link "[http://ihijadof.np/ca](http://ihijadof.np/ca)" \[ref=e492] \[cursor=pointer]:
+                            - /url: [http://ihijadof.np/ca](http://ihijadof.np/ca)
+                        - gridcell "5 Stars 5" \[ref=e493]:
+                          - generic \[ref=e494]:
                             - img "5 Stars":
                               - generic:
                                 - generic:
@@ -652,24 +652,24 @@
                                 - generic:
                                   - img
                             - text: "5"
-                        - gridcell "joz@mopno.in" [ref=e495]:
-                          - link "joz@mopno.in" [ref=e496] [cursor=pointer]:
-                            - /url: mailto:joz@mopno.in
-                        - gridcell "(204) 541-3492" [ref=e497]
-                      - row "Select row 93edcb79-4927-5931-bd9a-316042aa8c1d M Mattie Love http://arguv.bt/job 2 Stars 2 kofepwa@vosji.ma (987) 569-2559" [ref=e498]:
-                        - gridcell "Select row" [ref=e499]:
-                          - generic [ref=e500] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e501]
-                            - img [ref=e502]
-                        - gridcell "93edcb79-4927-5931-bd9a-316042aa8c1d" [ref=e504]
-                        - gridcell "M" [ref=e505]:
-                          - generic [ref=e506]: M
-                        - gridcell "Mattie Love" [ref=e507]
-                        - gridcell "http://arguv.bt/job" [ref=e508]:
-                          - link "http://arguv.bt/job" [ref=e509] [cursor=pointer]:
-                            - /url: http://arguv.bt/job
-                        - gridcell "2 Stars 2" [ref=e510]:
-                          - generic [ref=e511]:
+                        - gridcell "[joz@mopno.in](mailto:joz@mopno.in)" \[ref=e495]:
+                          - link "[joz@mopno.in](mailto:joz@mopno.in)" \[ref=e496] \[cursor=pointer]:
+                            - /url: mailto:[joz@mopno.in](mailto:joz@mopno.in)
+                        - gridcell "(204) 541-3492" \[ref=e497]
+                      - row "Select row 93edcb79-4927-5931-bd9a-316042aa8c1d M Mattie Love [http://arguv.bt/job](http://arguv.bt/job) 2 Stars 2 [kofepwa@vosji.ma](mailto:kofepwa@vosji.ma) (987) 569-2559" \[ref=e498]:
+                        - gridcell "Select row" \[ref=e499]:
+                          - generic \[ref=e500] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e501]
+                            - img \[ref=e502]
+                        - gridcell "93edcb79-4927-5931-bd9a-316042aa8c1d" \[ref=e504]
+                        - gridcell "M" \[ref=e505]:
+                          - generic \[ref=e506]: M
+                        - gridcell "Mattie Love" \[ref=e507]
+                        - gridcell "[http://arguv.bt/job](http://arguv.bt/job)" \[ref=e508]:
+                          - link "[http://arguv.bt/job](http://arguv.bt/job)" \[ref=e509] \[cursor=pointer]:
+                            - /url: [http://arguv.bt/job](http://arguv.bt/job)
+                        - gridcell "2 Stars 2" \[ref=e510]:
+                          - generic \[ref=e511]:
                             - img "2 Stars":
                               - generic:
                                 - generic:
@@ -687,24 +687,24 @@
                                 - generic:
                                   - img
                             - text: "2"
-                        - gridcell "kofepwa@vosji.ma" [ref=e512]:
-                          - link "kofepwa@vosji.ma" [ref=e513] [cursor=pointer]:
-                            - /url: mailto:kofepwa@vosji.ma
-                        - gridcell "(987) 569-2559" [ref=e514]
-                      - row "Select row a332dbee-6558-59ab-ae46-b7e4139ec7ec L Lela Morrison http://jove.gp/ahakownud 5 Stars 5 ircu@nu.gi (767) 234-2687" [ref=e515]:
-                        - gridcell "Select row" [ref=e516]:
-                          - generic [ref=e517] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e518]
-                            - img [ref=e519]
-                        - gridcell "a332dbee-6558-59ab-ae46-b7e4139ec7ec" [ref=e521]
-                        - gridcell "L" [ref=e522]:
-                          - generic [ref=e523]: L
-                        - gridcell "Lela Morrison" [ref=e524]
-                        - gridcell "http://jove.gp/ahakownud" [ref=e525]:
-                          - link "http://jove.gp/ahakownud" [ref=e526] [cursor=pointer]:
-                            - /url: http://jove.gp/ahakownud
-                        - gridcell "5 Stars 5" [ref=e527]:
-                          - generic [ref=e528]:
+                        - gridcell "[kofepwa@vosji.ma](mailto:kofepwa@vosji.ma)" \[ref=e512]:
+                          - link "[kofepwa@vosji.ma](mailto:kofepwa@vosji.ma)" \[ref=e513] \[cursor=pointer]:
+                            - /url: mailto:[kofepwa@vosji.ma](mailto:kofepwa@vosji.ma)
+                        - gridcell "(987) 569-2559" \[ref=e514]
+                      - row "Select row a332dbee-6558-59ab-ae46-b7e4139ec7ec L Lela Morrison [http://jove.gp/ahakownud](http://jove.gp/ahakownud) 5 Stars 5 [ircu@nu.gi](mailto:ircu@nu.gi) (767) 234-2687" \[ref=e515]:
+                        - gridcell "Select row" \[ref=e516]:
+                          - generic \[ref=e517] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e518]
+                            - img \[ref=e519]
+                        - gridcell "a332dbee-6558-59ab-ae46-b7e4139ec7ec" \[ref=e521]
+                        - gridcell "L" \[ref=e522]:
+                          - generic \[ref=e523]: L
+                        - gridcell "Lela Morrison" \[ref=e524]
+                        - gridcell "[http://jove.gp/ahakownud](http://jove.gp/ahakownud)" \[ref=e525]:
+                          - link "[http://jove.gp/ahakownud](http://jove.gp/ahakownud)" \[ref=e526] \[cursor=pointer]:
+                            - /url: [http://jove.gp/ahakownud](http://jove.gp/ahakownud)
+                        - gridcell "5 Stars 5" \[ref=e527]:
+                          - generic \[ref=e528]:
                             - img "5 Stars":
                               - generic:
                                 - generic:
@@ -722,24 +722,24 @@
                                 - generic:
                                   - img
                             - text: "5"
-                        - gridcell "ircu@nu.gi" [ref=e529]:
-                          - link "ircu@nu.gi" [ref=e530] [cursor=pointer]:
-                            - /url: mailto:ircu@nu.gi
-                        - gridcell "(767) 234-2687" [ref=e531]
-                      - row "Select row ab0547b4-7bc1-5fe4-bfa1-7495ac9ceb4f J Jeffrey Little http://atobo.co.uk/orbe 4 Stars 4 vodak@vuv.ro (902) 823-6038" [ref=e532]:
-                        - gridcell "Select row" [ref=e533]:
-                          - generic [ref=e534] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e535]
-                            - img [ref=e536]
-                        - gridcell "ab0547b4-7bc1-5fe4-bfa1-7495ac9ceb4f" [ref=e538]
-                        - gridcell "J" [ref=e539]:
-                          - generic [ref=e540]: J
-                        - gridcell "Jeffrey Little" [ref=e541]
-                        - gridcell "http://atobo.co.uk/orbe" [ref=e542]:
-                          - link "http://atobo.co.uk/orbe" [ref=e543] [cursor=pointer]:
-                            - /url: http://atobo.co.uk/orbe
-                        - gridcell "4 Stars 4" [ref=e544]:
-                          - generic [ref=e545]:
+                        - gridcell "[ircu@nu.gi](mailto:ircu@nu.gi)" \[ref=e529]:
+                          - link "[ircu@nu.gi](mailto:ircu@nu.gi)" \[ref=e530] \[cursor=pointer]:
+                            - /url: mailto:[ircu@nu.gi](mailto:ircu@nu.gi)
+                        - gridcell "(767) 234-2687" \[ref=e531]
+                      - row "Select row ab0547b4-7bc1-5fe4-bfa1-7495ac9ceb4f J Jeffrey Little [http://atobo.co.uk/orbe](http://atobo.co.uk/orbe) 4 Stars 4 [vodak@vuv.ro](mailto:vodak@vuv.ro) (902) 823-6038" \[ref=e532]:
+                        - gridcell "Select row" \[ref=e533]:
+                          - generic \[ref=e534] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e535]
+                            - img \[ref=e536]
+                        - gridcell "ab0547b4-7bc1-5fe4-bfa1-7495ac9ceb4f" \[ref=e538]
+                        - gridcell "J" \[ref=e539]:
+                          - generic \[ref=e540]: J
+                        - gridcell "Jeffrey Little" \[ref=e541]
+                        - gridcell "[http://atobo.co.uk/orbe](http://atobo.co.uk/orbe)" \[ref=e542]:
+                          - link "[http://atobo.co.uk/orbe](http://atobo.co.uk/orbe)" \[ref=e543] \[cursor=pointer]:
+                            - /url: [http://atobo.co.uk/orbe](http://atobo.co.uk/orbe)
+                        - gridcell "4 Stars 4" \[ref=e544]:
+                          - generic \[ref=e545]:
                             - img "4 Stars":
                               - generic:
                                 - generic:
@@ -757,24 +757,24 @@
                                 - generic:
                                   - img
                             - text: "4"
-                        - gridcell "vodak@vuv.ro" [ref=e546]:
-                          - link "vodak@vuv.ro" [ref=e547] [cursor=pointer]:
-                            - /url: mailto:vodak@vuv.ro
-                        - gridcell "(902) 823-6038" [ref=e548]
-                      - row "Select row 44dc4c5e-1542-55d9-9993-778c87804a71 K Kevin Dawson http://luoc.tv/kalo 3 Stars 3 cuh@juweta.pa (910) 202-4373" [ref=e549]:
-                        - gridcell "Select row" [ref=e550]:
-                          - generic [ref=e551] [cursor=pointer]:
-                            - checkbox "Select row" [ref=e552]
-                            - img [ref=e553]
-                        - gridcell "44dc4c5e-1542-55d9-9993-778c87804a71" [ref=e555]
-                        - gridcell "K" [ref=e556]:
-                          - generic [ref=e557]: K
-                        - gridcell "Kevin Dawson" [ref=e558]
-                        - gridcell "http://luoc.tv/kalo" [ref=e559]:
-                          - link "http://luoc.tv/kalo" [ref=e560] [cursor=pointer]:
-                            - /url: http://luoc.tv/kalo
-                        - gridcell "3 Stars 3" [ref=e561]:
-                          - generic [ref=e562]:
+                        - gridcell "[vodak@vuv.ro](mailto:vodak@vuv.ro)" \[ref=e546]:
+                          - link "[vodak@vuv.ro](mailto:vodak@vuv.ro)" \[ref=e547] \[cursor=pointer]:
+                            - /url: mailto:[vodak@vuv.ro](mailto:vodak@vuv.ro)
+                        - gridcell "(902) 823-6038" \[ref=e548]
+                      - row "Select row 44dc4c5e-1542-55d9-9993-778c87804a71 K Kevin Dawson [http://luoc.tv/kalo](http://luoc.tv/kalo) 3 Stars 3 [cuh@juweta.pa](mailto:cuh@juweta.pa) (910) 202-4373" \[ref=e549]:
+                        - gridcell "Select row" \[ref=e550]:
+                          - generic \[ref=e551] \[cursor=pointer]:
+                            - checkbox "Select row" \[ref=e552]
+                            - img \[ref=e553]
+                        - gridcell "44dc4c5e-1542-55d9-9993-778c87804a71" \[ref=e555]
+                        - gridcell "K" \[ref=e556]:
+                          - generic \[ref=e557]: K
+                        - gridcell "Kevin Dawson" \[ref=e558]
+                        - gridcell "[http://luoc.tv/kalo](http://luoc.tv/kalo)" \[ref=e559]:
+                          - link "[http://luoc.tv/kalo](http://luoc.tv/kalo)" \[ref=e560] \[cursor=pointer]:
+                            - /url: [http://luoc.tv/kalo](http://luoc.tv/kalo)
+                        - gridcell "3 Stars 3" \[ref=e561]:
+                          - generic \[ref=e562]:
                             - img "3 Stars":
                               - generic:
                                 - generic:
@@ -792,214 +792,214 @@
                                 - generic:
                                   - img
                             - text: "3"
-                        - gridcell "cuh@juweta.pa" [ref=e563]:
-                          - link "cuh@juweta.pa" [ref=e564] [cursor=pointer]:
-                            - /url: mailto:cuh@juweta.pa
-                        - gridcell "(910) 202-4373" [ref=e565]
+                        - gridcell "[cuh@juweta.pa](mailto:cuh@juweta.pa)" \[ref=e563]:
+                          - link "[cuh@juweta.pa](mailto:cuh@juweta.pa)" \[ref=e564] \[cursor=pointer]:
+                            - /url: mailto:[cuh@juweta.pa](mailto:cuh@juweta.pa)
+                        - gridcell "(910) 202-4373" \[ref=e565]
                     - generic:
                       - text: MUI X Missing license key
                       - generic: Open the browser console for details on how to resolve this.
-                  - generic [ref=e573]: "Total Rows: 100"
-                  - generic [ref=e577]:
-                    - generic [ref=e578]:
-                      - generic [ref=e579]:
-                        - button "Open Copilot menu" [ref=e580] [cursor=pointer]:
-                          - img [ref=e581]
-                        - generic [ref=e583]: Copilot
-                        - generic [ref=e584]: BETA
-                      - button "New conversation" [ref=e585] [cursor=pointer]:
-                        - img [ref=e586]
-                      - button "Close Copilot" [ref=e588] [cursor=pointer]:
-                        - img [ref=e589]
-                    - generic [ref=e592]:
-                      - log "Message log" [ref=e595]:
-                        - generic [ref=e596]:
-                          - article "Message from You" [ref=e599]:
-                            - generic [ref=e600]: You
-                            - paragraph [ref=e603]: Sort by salary descending
-                            - generic [ref=e604]:
-                              - img [ref=e606]
-                              - generic [ref=e608]: 00:39
-                          - article "Message" [ref=e611]:
-                            - generic [ref=e612]: DataGrid Copilot
-                            - generic [ref=e614]:
+                  - generic \[ref=e573]: "Total Rows: 100"
+                  - generic \[ref=e577]:
+                    - generic \[ref=e578]:
+                      - generic \[ref=e579]:
+                        - button "Open Copilot menu" \[ref=e580] \[cursor=pointer]:
+                          - img \[ref=e581]
+                        - generic \[ref=e583]: Copilot
+                        - generic \[ref=e584]: BETA
+                      - button "New conversation" \[ref=e585] \[cursor=pointer]:
+                        - img \[ref=e586]
+                      - button "Close Copilot" \[ref=e588] \[cursor=pointer]:
+                        - img \[ref=e589]
+                    - generic \[ref=e592]:
+                      - log "Message log" \[ref=e595]:
+                        - generic \[ref=e596]:
+                          - article "Message from You" \[ref=e599]:
+                            - generic \[ref=e600]: You
+                            - paragraph \[ref=e603]: Sort by salary descending
+                            - generic \[ref=e604]:
+                              - img \[ref=e606]
+                              - generic \[ref=e608]: 00:39
+                          - article "Message" \[ref=e611]:
+                            - generic \[ref=e612]: DataGrid Copilot
+                            - generic \[ref=e614]:
                               - separator
-                              - group [ref=e615]:
-                                - generic "▶ Reasoning" [ref=e616] [cursor=pointer]
-                              - generic "Sort by Salary (desc)" [ref=e619]:
-                                - img [ref=e620]
-                                - generic [ref=e622]: Salary
-                              - generic [ref=e623]:
-                                - button "Mark this answer as helpful" [ref=e624] [cursor=pointer]: 👍
-                                - button "Mark this answer as not helpful" [ref=e625] [cursor=pointer]: 👎
-                      - generic [ref=e626]:
-                        - group "Suggestions" [ref=e628]:
-                          - button "Filter by country equal to USA" [ref=e629] [cursor=pointer]
-                          - button "Show average salary per city" [ref=e630] [cursor=pointer]
-                          - button "Group rows by company name" [ref=e631] [cursor=pointer]
-                        - generic [ref=e632]:
-                          - textbox "Prompt" [ref=e633]:
+                              - group \[ref=e615]:
+                                - generic "▶ Reasoning" \[ref=e616] \[cursor=pointer]
+                              - generic "Sort by Salary (desc)" \[ref=e619]:
+                                - img \[ref=e620]
+                                - generic \[ref=e622]: Salary
+                              - generic \[ref=e623]:
+                                - button "Mark this answer as helpful" \[ref=e624] \[cursor=pointer]: 👍
+                                - button "Mark this answer as not helpful" \[ref=e625] \[cursor=pointer]: 👎
+                      - generic \[ref=e626]:
+                        - group "Suggestions" \[ref=e628]:
+                          - button "Filter by country equal to USA" \[ref=e629] \[cursor=pointer]
+                          - button "Show average salary per city" \[ref=e630] \[cursor=pointer]
+                          - button "Group rows by company name" \[ref=e631] \[cursor=pointer]
+                        - generic \[ref=e632]:
+                          - textbox "Prompt" \[ref=e633]:
                             - /placeholder: Type a prompt…
-                          - button "Send" [disabled] [ref=e634]:
-                            - img [ref=e635]
-                        - generic [ref=e637]: Copilot can make mistakes. Check important results.
-            - toolbar "demo source" [ref=e640]:
-              - button "Edit in Chat" [ref=e641] [cursor=pointer]:
-                - img [ref=e642]
+                          - button "Send" \[disabled] \[ref=e634]:
+                            - img \[ref=e635]
+                        - generic \[ref=e637]: Copilot can make mistakes. Check important results.
+            - toolbar "demo source" \[ref=e640]:
+              - button "Edit in Chat" \[ref=e641] \[cursor=pointer]:
+                - img \[ref=e642]
                 - text: Edit in Chat
-              - generic [ref=e644]:
-                - button "Show code" [ref=e645] [cursor=pointer]
-                - button "Edit in StackBlitz" [ref=e646] [cursor=pointer]:
-                  - img [ref=e647]
-                - button "Edit in CodeSandbox" [ref=e649] [cursor=pointer]:
-                  - img [ref=e650]
-                - button "Copy the source" [ref=e652] [cursor=pointer]:
-                  - img [ref=e653]
-                - button "Reset focus to test keyboard navigation" [ref=e655] [cursor=pointer]:
-                  - img [ref=e656]
-                - button "Reset demo" [ref=e658] [cursor=pointer]:
-                  - img [ref=e659]
-                - button "See more" [ref=e661] [cursor=pointer]:
-                  - img [ref=e662]
-          - generic [ref=e664]:
-            - generic [ref=e665]:
-              - code [ref=e667]:
+              - generic \[ref=e644]:
+                - button "Show code" \[ref=e645] \[cursor=pointer]
+                - button "Edit in StackBlitz" \[ref=e646] \[cursor=pointer]:
+                  - img \[ref=e647]
+                - button "Edit in CodeSandbox" \[ref=e649] \[cursor=pointer]:
+                  - img \[ref=e650]
+                - button "Copy the source" \[ref=e652] \[cursor=pointer]:
+                  - img \[ref=e653]
+                - button "Reset focus to test keyboard navigation" \[ref=e655] \[cursor=pointer]:
+                  - img \[ref=e656]
+                - button "Reset demo" \[ref=e658] \[cursor=pointer]:
+                  - img \[ref=e659]
+                - button "See more" \[ref=e661] \[cursor=pointer]:
+                  - img \[ref=e662]
+          - generic \[ref=e664]:
+            - generic \[ref=e665]:
+              - code \[ref=e667]:
                 - text: "import { DataGridPremium } from '@mui/x-data-grid-premium'; // ..."
-                - generic [ref=e668]:
-                  - generic [ref=e669]: <DataGridPremium
+                - generic \[ref=e668]:
+                  - generic \[ref=e669]: \<DataGridPremium
                   - text: copilot showToolbar />
                 - text: ;
-              - button "Copy the code" [ref=e670] [cursor=pointer]:
-                - generic [ref=e671]: Copy
-            - heading "Generating PDF reports (plugin)" [level=2] [ref=e672]:
-              - link "Generating PDF reports (plugin)" [ref=e673] [cursor=pointer]:
+              - button "Copy the code" \[ref=e670] \[cursor=pointer]:
+                - generic \[ref=e671]: Copy
+            - heading "Generating PDF reports (plugin)" \[level=2] \[ref=e672]:
+              - link "Generating PDF reports (plugin)" \[ref=e673] \[cursor=pointer]:
                 - /url: "#generating-pdf-reports-plugin"
-              - button "Post a comment" [ref=e674] [cursor=pointer]:
+              - button "Post a comment" \[ref=e674] \[cursor=pointer]:
                 - img
-            - paragraph [ref=e675]:
+            - paragraph \[ref=e675]:
               - text: PDF report generation is an opt-in plugin shipped as
-              - code [ref=e676]: "@mui/x-copilot/pdf"
+              - code \[ref=e676]: "@mui/x-copilot/pdf"
               - text: . Install the package alongside the json-render PDF renderer, register the plugin via
-              - code [ref=e677]: copilotPlugins
+              - code \[ref=e677]: copilotPlugins
               - text: ", and Copilot gains the ability to compose printable artifacts."
-            - generic [ref=e678]:
-              - code [ref=e680]: npm install @mui/x-copilot @json-render/react-pdf @react-pdf/renderer
-              - button "Copy the code" [ref=e681] [cursor=pointer]:
-                - generic [ref=e682]: Copy
-            - generic [ref=e683]:
-              - code [ref=e685]:
-                - text: "import { DataGridPremium } from '@mui/x-data-grid-premium'; import { pdfReportPlugin } from '@mui/x-copilot/plugins/pdf'; const COPILOT_PLUGINS = [pdfReportPlugin()];"
-                - generic [ref=e686]:
-                  - generic [ref=e687]: <DataGridPremium
+            - generic \[ref=e678]:
+              - code \[ref=e680]: npm install @mui/x-copilot @json-render/react-pdf @react-pdf/renderer
+              - button "Copy the code" \[ref=e681] \[cursor=pointer]:
+                - generic \[ref=e682]: Copy
+            - generic \[ref=e683]:
+              - code \[ref=e685]:
+                - text: "import { DataGridPremium } from '@mui/x-data-grid-premium'; import { pdfReportPlugin } from '@mui/x-copilot/plugins/pdf'; const COPILOT\_PLUGINS = \[pdfReportPlugin()];"
+                - generic \[ref=e686]:
+                  - generic \[ref=e687]: \<DataGridPremium
                   - text: copilot copilotPlugins
-                  - generic [ref=e688]: "={COPILOT_PLUGINS}"
+                  - generic \[ref=e688]: "={COPILOT\_PLUGINS}"
                   - text: showToolbar />
                 - text: ;
-              - button "Copy the code" [ref=e689] [cursor=pointer]:
-                - generic [ref=e690]: Copy
-            - paragraph [ref=e691]:
+              - button "Copy the code" \[ref=e689] \[cursor=pointer]:
+                - generic \[ref=e690]: Copy
+            - paragraph \[ref=e691]:
               - text: The flow is approval-gated and
-              - strong [ref=e692]: no grid data leaves the browser
+              - strong \[ref=e692]: no grid data leaves the browser
               - text: ":"
-            - list [ref=e693]:
-              - listitem [ref=e694]:
+            - list \[ref=e693]:
+              - listitem \[ref=e694]:
                 - text: Copilot calls the
-                - code [ref=e695]: queryGridData
+                - code \[ref=e695]: queryGridData
                 - text: tool to request a slice — raw rows, an aggregate, or the current selection.
-              - listitem [ref=e696]: The chat panel shows an approval card listing what Copilot is asking for (row count, columns, aggregations).
-              - listitem [ref=e697]:
+              - listitem \[ref=e696]: The chat panel shows an approval card listing what Copilot is asking for (row count, columns, aggregations).
+              - listitem \[ref=e697]:
                 - text: "On"
-                - strong [ref=e698]: Approve
+                - strong \[ref=e698]: Approve
                 - text: ", the query runs locally against"
-                - code [ref=e699]: apiRef
+                - code \[ref=e699]: apiRef
                 - text: . Only the
-                - strong [ref=e700]: shape
+                - strong \[ref=e700]: shape
                 - text: of the result (row count, column field ids, aggregation definitions) is sent back to the backend, plus a
-                - code [ref=e701]: stateBinding
+                - code \[ref=e701]: stateBinding
                 - text: JSON-pointer prefix.
-              - listitem [ref=e702]:
+              - listitem \[ref=e702]:
                 - text: Copilot emits a
-                - code [ref=e703]: composePdfReport
+                - code \[ref=e703]: composePdfReport
                 - text: call carrying a
-                - link "json-render" [ref=e704] [cursor=pointer]:
-                  - /url: https://json-render.dev/docs/data-binding
+                - link "json-render" \[ref=e704] \[cursor=pointer]:
+                  - /url: [https://json-render.dev/docs/data-binding](https://json-render.dev/docs/data-binding)
                 - text: Spec full of
-                - code [ref=e705]: $state
+                - code \[ref=e705]: $state
                 - text: and
-                - code [ref=e706]: $template
+                - code \[ref=e706]: $template
                 - text: placeholders that reference the bound state path.
-              - listitem [ref=e707]:
+              - listitem \[ref=e707]:
                 - text: The plugin renders the PDF
-                - strong [ref=e708]: in the browser
+                - strong \[ref=e708]: in the browser
                 - text: using
-                - code [ref=e709]: "renderToBuffer(spec, { state })"
+                - code \[ref=e709]: "renderToBuffer(spec, { state })"
                 - text: — placeholders are resolved against the user's live grid data at render-time.
-              - listitem [ref=e710]:
+              - listitem \[ref=e710]:
                 - text: A card in chat exposes an
-                - strong [ref=e711]: Open report
+                - strong \[ref=e711]: Open report
                 - text: button (opens the PDF in a new tab) plus a
-                - strong [ref=e712]: Regenerate
+                - strong \[ref=e712]: Regenerate
                 - text: button (re-renders against the current grid state — useful if the user has filtered/sorted after the report was first composed).
-            - paragraph [ref=e713]:
+            - paragraph \[ref=e713]:
               - text: The backend tells the model the
-              - code [ref=e714]: composePdfReport
+              - code \[ref=e714]: composePdfReport
               - text: tool exists only when the request body includes
-              - code [ref=e715]: "copilotPlugins: ['pdf-report']"
+              - code \[ref=e715]: "copilotPlugins: \['pdf-report']"
               - text: . The Copilot wrapper auto-injects this from the registered plugin list.
-            - heading "API" [level=2] [ref=e716]:
-              - link "API" [ref=e717] [cursor=pointer]:
+            - heading "API" \[level=2] \[ref=e716]:
+              - link "API" \[ref=e717] \[cursor=pointer]:
                 - /url: "#api"
-              - button "Post a comment" [ref=e718] [cursor=pointer]:
+              - button "Post a comment" \[ref=e718] \[cursor=pointer]:
                 - img
-            - list [ref=e719]:
-              - listitem [ref=e720]:
-                - link "DataGrid" [ref=e721] [cursor=pointer]:
+            - list \[ref=e719]:
+              - listitem \[ref=e720]:
+                - link "DataGrid" \[ref=e721] \[cursor=pointer]:
                   - /url: /x/api/data-grid/data-grid/
-              - listitem [ref=e722]:
-                - link "DataGridPro" [ref=e723] [cursor=pointer]:
+              - listitem \[ref=e722]:
+                - link "DataGridPro" \[ref=e723] \[cursor=pointer]:
                   - /url: /x/api/data-grid/data-grid-pro/
-              - listitem [ref=e724]:
-                - link "DataGridPremium" [ref=e725] [cursor=pointer]:
+              - listitem \[ref=e724]:
+                - link "DataGridPremium" \[ref=e725] \[cursor=pointer]:
                   - /url: /x/api/data-grid/data-grid-premium/
-          - generic [ref=e726]:
-            - generic [ref=e727]:
-              - link "Edit this page" [ref=e728] [cursor=pointer]:
-                - /url: https://github.com/mui/mui-x/edit/master/docs/data/data-grid/copilot/copilot.md
-                - img [ref=e730]
+          - generic \[ref=e726]:
+            - generic \[ref=e727]:
+              - link "Edit this page" \[ref=e728] \[cursor=pointer]:
+                - /url: [https://github.com/mui/mui-x/edit/master/docs/data/data-grid/copilot/copilot.md](https://github.com/mui/mui-x/edit/master/docs/data/data-grid/copilot/copilot.md)
+                - img \[ref=e730]
                 - text: Edit this page
-              - generic [ref=e732]:
-                - paragraph [ref=e733]: Was this page helpful?
-                - button "Yes" [ref=e734] [cursor=pointer]:
-                  - img [ref=e735]
-                - button "No" [ref=e737] [cursor=pointer]:
-                  - img [ref=e738]
-            - separator [ref=e740]
-            - separator [ref=e741]
-            - generic [ref=e742]:
-              - generic [ref=e743]:
-                - link "Go to the homepage" [ref=e744] [cursor=pointer]:
-                  - /url: https://mui.com/
-                  - img [ref=e745]
-                - paragraph [ref=e749]: •
-                - link "Blog" [ref=e750] [cursor=pointer]:
-                  - /url: https://mui.com/blog/
+              - generic \[ref=e732]:
+                - paragraph \[ref=e733]: Was this page helpful?
+                - button "Yes" \[ref=e734] \[cursor=pointer]:
+                  - img \[ref=e735]
+                - button "No" \[ref=e737] \[cursor=pointer]:
+                  - img \[ref=e738]
+            - separator \[ref=e740]
+            - separator \[ref=e741]
+            - generic \[ref=e742]:
+              - generic \[ref=e743]:
+                - link "Go to the homepage" \[ref=e744] \[cursor=pointer]:
+                  - /url: [https://mui.com/](https://mui.com/)
+                  - img \[ref=e745]
+                - paragraph \[ref=e749]: •
+                - link "Blog" \[ref=e750] \[cursor=pointer]:
+                  - /url: [https://mui.com/blog/](https://mui.com/blog/)
                   - text: Blog
-                  - img [ref=e751]
-                - paragraph [ref=e753]: •
-                - link "Store" [ref=e754] [cursor=pointer]:
-                  - /url: https://mui.com/store/
+                  - img \[ref=e751]
+                - paragraph \[ref=e753]: •
+                - link "Store" \[ref=e754] \[cursor=pointer]:
+                  - /url: [https://mui.com/store/](https://mui.com/store/)
                   - text: Store
-                  - img [ref=e755]
-              - generic [ref=e757]:
-                - link "X/twitter" [ref=e758] [cursor=pointer]:
-                  - /url: https://x.com/MUI_hq
-                  - img [ref=e759]
-                - link "YouTube" [ref=e761] [cursor=pointer]:
-                  - /url: https://www.youtube.com/@MUI_hq
-                  - img [ref=e762]
-                - link "RSS Feed" [ref=e764] [cursor=pointer]:
-                  - /url: https://mui.com/feed/blog/rss.xml
-                  - img [ref=e765]
-  - button "Open Next.js Dev Tools" [ref=e773] [cursor=pointer]:
-    - img [ref=e774]
-  - alert [ref=e777]
+                  - img \[ref=e755]
+              - generic \[ref=e757]:
+                - link "X/twitter" \[ref=e758] \[cursor=pointer]:
+                  - /url: [https://x.com/MUI\_hq](https://x.com/MUI_hq)
+                  - img \[ref=e759]
+                - link "YouTube" \[ref=e761] \[cursor=pointer]:
+                  - /url: [https://www.youtube.com/@MUI\_hq](https://www.youtube.com/@MUI_hq)
+                  - img \[ref=e762]
+                - link "RSS Feed" \[ref=e764] \[cursor=pointer]:
+                  - /url: [https://mui.com/feed/blog/rss.xml](https://mui.com/feed/blog/rss.xml)
+                  - img \[ref=e765]
+  - button "Open Next.js Dev Tools" \[ref=e773] \[cursor=pointer]:
+    - img \[ref=e774]
+  - alert \[ref=e777]

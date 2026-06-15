@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "doki": {
+      "type": "local",
+      "command": [
+        "node",
+        "/Applications/Doki.app/Contents/Resources/doki-mcp/index.js"
+      ],
+      "environment": {
+        "DOKI_PORT": "49155",
+        "DOKI_WORKSPACE_ID": "9bad463f-586a-45f4-85e8-6ea259eaeaf1",
+        "DOKI_TAB_ID": "de8a4a90-dcf3-4d56-9ef7-ea353df82be6"
+      }
+    }
+  }
+}
