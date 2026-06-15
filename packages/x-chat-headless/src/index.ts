@@ -73,7 +73,12 @@ export {
 
 export type { ChatProviderProps, ChatFeatures } from './ChatProvider';
 
-export type { ChatAdapter, ChatRegenerateInput, PaginationDirection } from './adapters/chatAdapter';
+export type {
+  ChatAdapter,
+  ChatRegenerateInput,
+  ChatSendMessageInput,
+  PaginationDirection,
+} from './adapters/chatAdapter';
 export type { ChatRuntimeActions } from './internals/useChatController';
 export { createEchoAdapter } from './adapters/createEchoAdapter';
 export type { CreateEchoAdapterOptions } from './adapters/createEchoAdapter';

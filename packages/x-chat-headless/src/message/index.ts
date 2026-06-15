@@ -6,7 +6,6 @@ export { MessageContent } from './MessageContent';
 export { MessageMeta } from './MessageMeta';
 export { MessageError } from './MessageError';
 export { MessageActions } from './MessageActions';
-export { useMessageContext } from './internals/MessageContext';
 export {
   MessageActionsMenu,
   MessageActionsMenuGroup,
