@@ -285,5 +285,6 @@
   "285": "MUI X Data Grid: Row count is unknown. Please provide a valid row count for lazy loading to work.",
   "286": "MUI X Scheduler: useSharedComponentsStyledContext must be used within a SharedComponentsStyledContext.Provider. The shared internal components require the product to inject their utility classes. Ensure the component is rendered inside an EventCalendar, EventCalendarPremium, or EventTimelinePremium component, a standalone view, or another component that provides SharedComponentsStyledContext.",
   "287": "MUI X Scheduler: The date \"%s\"%s is not a valid date.\nInvalid dates produce a NaN timestamp that silently breaks sorting, positioning, and overlap calculations.\nProvide a valid ISO 8601 date string (for example \"2025-01-01T09:00:00\" or \"2025-01-01T09:00:00Z\").",
-  "288": "MUI X Scheduler: Invalid FREQ value \"%s\". The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. Provide a supported frequency value."
+  "288": "MUI X: useDisposable failed to detect React StrictMode.\nThe instance was disposed on StrictMode's simulated unmount and is about to be reused while torn down.\nThis is an internal invariant violation — please report it at https://github.com/mui/mui-x/issues.",
+  "289": "MUI X Scheduler: Invalid FREQ value \"%s\". The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. Provide a supported frequency value."
 }
