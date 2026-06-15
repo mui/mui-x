@@ -665,6 +665,53 @@ storeClasses.forEach((storeClass) => {
           },
         ]);
       });
+
+      it('should clear the clipboard after pasting a cut event so a second paste is a no-op', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+        store.cutEvent(event.id);
+
+        store.pasteEvent({ start: adapter.date('2025-07-01T09:00:00Z', 'default') });
+
+        expect(store.state.copiedEvent).to.equal(null);
+        expect(onEventsChange.calledOnce).to.equal(true);
+
+        const result = store.pasteEvent({
+          start: adapter.date('2025-07-02T09:00:00Z', 'default'),
+        });
+
+        expect(result).to.equal(null);
+        expect(onEventsChange.calledOnce).to.equal(true);
+      });
+
+      it('should keep the clipboard after pasting a copied event so it can be pasted again', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+        store.copyEvent(event.id);
+
+        const firstPastedId = store.pasteEvent({
+          start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+        });
+        const secondPastedId = store.pasteEvent({
+          start: adapter.date('2025-07-02T09:00:00Z', 'default'),
+        });
+
+        expect(store.state.copiedEvent).to.deep.equal({ id: event.id, action: 'copy' });
+        expect(firstPastedId).not.to.equal(null);
+        expect(secondPastedId).not.to.equal(null);
+        expect(firstPastedId).not.to.equal(secondPastedId);
+        expect(onEventsChange.calledTwice).to.equal(true);
+      });
     });
   });
 });

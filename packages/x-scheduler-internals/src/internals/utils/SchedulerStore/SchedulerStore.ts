@@ -1,3 +1,8 @@
+import {
+  DisposableStack,
+  disposeSymbol,
+  unwrapSuppressedErrors,
+} from '@mui/x-internals/disposable';
 import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
@@ -75,9 +80,14 @@ export class SchedulerStore<
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
-  protected timeoutManager = new TimeoutManager();
+  protected readonly disposables = new DisposableStack();
 
-  private eventManager = new EventManager();
+  // Registered first via field init so they're disposed last (LIFO): plugins
+  // added by subclasses in their constructors dispose first, then the store's
+  // own resources.
+  protected timeoutManager = this.disposables.use(new TimeoutManager());
+
+  private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
 
   public constructor(
     parameters: Parameters,
@@ -222,7 +232,10 @@ export class SchedulerStore<
         ),
       );
     }
-    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
+    // Recompute "now" only when the display timezone changes; the minute timer maintains it otherwise.
+    if (newSchedulerState.displayTimezone !== this.state.displayTimezone) {
+      newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
+    }
 
     if (
       parameters.resources !== this.parameters.resources ||
@@ -245,11 +258,25 @@ export class SchedulerStore<
   };
 
   /**
-   * Returns a cleanup function that need to be called when the store is destroyed.
+   * Disposes the store synchronously. The React consumer (`useDisposable`)
+   * handles the StrictMode double-invocation by suppressing the simulated
+   * unmount, so this method does not need to defer the teardown itself.
    */
-  public disposeEffect = () => {
-    return this.timeoutManager.clearAll;
-  };
+  [disposeSymbol](): void {
+    if (this.disposables.disposed) {
+      return;
+    }
+    try {
+      this.disposables.dispose();
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          'MUI X Scheduler: error while disposing the store.',
+          ...unwrapSuppressedErrors(error),
+        );
+      }
+    }
+  }
 
   /**
    * Removes the error with the given key from `state.errors`.
@@ -310,13 +337,14 @@ export class SchedulerStore<
   };
 
   /**
-   * Subscribe to an event emitted by the store.
+   * Subscribe to an event emitted by the store. Returns an unsubscribe function.
    */
   public subscribeEvent = <E extends SchedulerEvents>(
     eventName: E,
     handler: SchedulerEventListener<TEvent, E>,
-  ) => {
+  ): (() => void) => {
     this.eventManager.on(eventName, handler);
+    return () => this.eventManager.removeListener(eventName, handler);
   };
 
   protected setVisibleDate = ({
@@ -653,7 +681,9 @@ export class SchedulerStore<
 
     if (copiedEvent.action === 'cut') {
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
-      return this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      const result = this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      this.set('copiedEvent', null);
+      return result;
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
