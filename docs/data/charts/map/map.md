@@ -63,6 +63,26 @@ You can modify it with props
 
 {{"demo": "ProjectionMapShape.js"}}
 
+## Filtering the geographic data
+
+The `geoData` prop is a standard GeoJSON `FeatureCollection`, so you can change the rendered geography by filtering its `features` before passing it to the provider.
+
+Because the projection fits the drawing area to the bounds of `geoData` (unless you set an explicit `scale`), removing features also changes the projection.
+Antarctica is a common one to drop: it spans the bottom of most projections but rarely holds data, so excluding it lets the other landmasses fill the available space.
+
+```tsx
+const countriesWithoutAntarctica = {
+  ...countries,
+  features: countries.features.filter(
+    (feature) => feature.properties?.name !== 'Antarctica',
+  ),
+};
+```
+
+Toggle Antarctica in the demo to see how the projection adapts to the data it receives.
+
+{{"demo": "RemoveAntarctica.js"}}
+
 ## Plotting series with `MapShapePlot`
 
 `MapShapePlot` renders one path per item of every series with type `'mapShape'`.
