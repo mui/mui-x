@@ -9,6 +9,7 @@ import {
   type GridApi,
   gridDataRowIdsSelector,
 } from '@mui/x-data-grid-pro';
+import { gridHasScrollYSelector } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
@@ -75,6 +76,38 @@ function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false
 
 describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
   const { render } = createRenderer();
+
+  // https://github.com/mui/mui-x/issues/22718
+  it('should lock the page scroll while a row is dragged when the grid scrolls vertically', async () => {
+    const rows = Array.from({ length: 20 }, (_, id) => ({ id, brand: `Brand ${id}` }));
+    const columns = [{ field: 'brand' }];
+    let apiRef: ReturnType<typeof useGridApiRef>;
+
+    function Test() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 200 }}>
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    // Wait until the grid has measured that it overflows vertically.
+    await waitFor(() => {
+      expect(gridHasScrollYSelector(apiRef)).to.equal(true);
+    });
+
+    const scrollingElement = document.scrollingElement as HTMLElement;
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+
+    fireDragStart(rowReorderCell);
+    expect(scrollingElement.style.overflow).to.equal('hidden');
+
+    fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell, true));
+    expect(scrollingElement.style.overflow).to.equal('');
+  });
 
   it('should cancel the reordering when dropping the row outside the grid', () => {
     const rows = [

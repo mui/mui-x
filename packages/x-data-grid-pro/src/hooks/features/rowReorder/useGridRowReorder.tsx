@@ -23,6 +23,7 @@ import {
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
+  gridHasScrollYSelector,
   useGridRegisterPipeProcessor,
   type GridPipeProcessor,
   type GridStateInitializer,
@@ -36,6 +37,7 @@ import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 import type { ReorderValidationContext } from './models';
 
 import { findCellElement } from './utils';
+import { useDocumentScrollLock } from './useDocumentScrollLock';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -104,6 +106,7 @@ export const useGridRowReorder = (
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
+  const pageScrollLock = useDocumentScrollLock();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const dragRowNode = React.useRef<HTMLElement | null>(null);
   const originRowIndex = React.useRef<number | null>(null);
@@ -270,6 +273,11 @@ export const useGridRowReorder = (
         },
       }));
 
+      // Suppress the browser's native drag auto-scroll of the page
+      if (gridHasScrollYSelector(apiRef)) {
+        pageScrollLock.lock(apiRef.current.rootElementRef?.current);
+      }
+
       dragRowNode.current = event.currentTarget;
       // Apply cell-level dragging class to the drag handle
       dragRowNode.current.classList.add(classes.rowDragging);
@@ -286,7 +294,15 @@ export const useGridRowReorder = (
       originRowIndex.current = sortedRowIndexLookup[params.id];
       apiRef.current.setCellFocus(params.id, GRID_REORDER_COL_DEF.field);
     },
-    [apiRef, isRowReorderDisabled, logger, classes.rowDragging, applyDraggedState, timeout],
+    [
+      apiRef,
+      isRowReorderDisabled,
+      logger,
+      classes.rowDragging,
+      applyDraggedState,
+      timeout,
+      pageScrollLock,
+    ],
   );
 
   const handleDragOver = React.useCallback<GridEventListener<'cellDragOver' | 'rowDragOver'>>(
@@ -432,6 +448,9 @@ export const useGridRowReorder = (
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
     async (_, event): Promise<void> => {
+      // Always restore the page scroll locked on drag start
+      pageScrollLock.unlock();
+
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
@@ -580,6 +599,7 @@ export const useGridRowReorder = (
       applyDraggedState,
       timeout,
       applyRowAnimation,
+      pageScrollLock,
     ],
   );
 
