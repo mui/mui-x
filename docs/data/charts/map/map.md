@@ -114,6 +114,10 @@ If several `zAxis` are defined, the series can target one explicitly with the `c
 By default shapes with unknown values are ignored.
 Specify the `unknownColor` property in the `colorMap` to render them.
 
+:::info
+By using `unknownColor` instead of displaying the `GeoDataPlot` as a background, you enable the tooltip for those shapes without data.
+:::
+
 {{"demo": "ColorScaleMapShape.js"}}
 
 ## Using a dataset
