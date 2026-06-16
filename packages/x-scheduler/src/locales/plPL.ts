@@ -64,7 +64,7 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   noResourceAriaLabel: 'Brak określonego zasobu',
   selectColorAriaLabel: (color) => `Wybierz ${color} jako kolor wydarzenia`,
   resourceLabel: 'Zasób',
-  requiredResourceError: 'Zasób jest wymagany.',
+  requiredResourceError: 'Należy wybrać zasób.',
   saveChanges: 'Zapisz',
   startDateAfterEndDateError:
     'Data/godzina rozpoczęcia musi być wcześniejsza niż data/godzina zakończenia.',
