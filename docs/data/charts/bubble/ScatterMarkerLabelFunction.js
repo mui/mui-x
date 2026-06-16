@@ -22,8 +22,7 @@ export default function ScatterMarkerLabelFunction() {
         {
           data,
           sizeAxisId: 'size',
-          markerLabel: ({ value }, { marker }) =>
-            marker.size >= 12 ? value.label : null,
+          markerLabel: (marker) => (marker.size >= 12 ? marker.value.label : ''),
         },
       ]}
       zAxis={[
