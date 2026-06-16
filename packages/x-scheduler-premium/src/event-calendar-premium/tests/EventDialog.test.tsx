@@ -23,10 +23,10 @@ import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import {
   EventCalendarProvider,
   EventDialogContent,
-  EventDialogOptionalRenderersContext,
+  EventEditingOptionalRenderersContext,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
-import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
+import { RecurringScopeDialog } from '../../internals/components/recurring-scope/RecurringScopeDialog';
 
 /**
  * Wraps EventDialogContent with the premium renderers the production code supplies
@@ -35,9 +35,9 @@ import { RecurringScopeDialog } from '../../internals/components/recurring-scope
  */
 function TestEventDialogContent(props: React.ComponentProps<typeof EventDialogContent>) {
   return (
-    <EventDialogOptionalRenderersContext.Provider value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+    <EventEditingOptionalRenderersContext.Provider value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
       <EventDialogContent {...props} />
-    </EventDialogOptionalRenderersContext.Provider>
+    </EventEditingOptionalRenderersContext.Provider>
   );
 }
 

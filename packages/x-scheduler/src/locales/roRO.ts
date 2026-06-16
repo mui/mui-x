@@ -59,7 +59,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Data de început',
   startTimeLabel: 'Ora de început',
 
-  // RecurringScopeDialog
+  // RecurringScope
   all: 'Toate evenimentele',
   cancel: 'Anulează',
   confirm: 'Confirmă',

@@ -1,8 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import CloseRounded from '@mui/icons-material/CloseRounded';
 import { grey } from '@mui/material/colors';
 import { useStore } from '@base-ui/utils/store';
 import {
@@ -10,7 +8,13 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { useEventEditingContext } from '../event-editing';
+import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
+import {
+  useEventEditingContext,
+  useEventEditingOptionalRenderers,
+  FormContent,
+} from '../event-editing';
+import { CompactReadonlyContent } from './CompactReadonlyContent';
 
 // Height of the collapsed ("peek") drawer as a fraction of the compact view. The grid above
 // shrinks to make room for it; tapping the drawer expands it to the full height.
@@ -33,59 +37,44 @@ const CompactEventDrawerRoot = styled('div', {
   }),
   '&[data-open]': {
     height: PEEK_HEIGHT,
-    padding: theme.spacing(1.5, 2, 2, 2),
+    paddingTop: theme.spacing(1),
   },
   '&[data-expanded]': {
     height: '100%',
   },
 }));
 
-const CompactEventDrawerHandle = styled('div', {
+// Scrolls the editing content within the drawer. The reused dialog content is sized for the desktop
+// dialog (a fixed width), so we relax that constraint to let it fill the drawer's width instead.
+const CompactEventDrawerContent = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'CompactEventDrawerHandle',
-})(({ theme }) => ({
-  alignSelf: 'center',
-  width: 36,
-  height: 4,
-  flexShrink: 0,
-  borderRadius: 2,
-  backgroundColor: (theme.vars || theme).palette.divider,
-}));
-
-const CompactEventDrawerHeader = styled('div', {
-  name: 'MuiEventCalendar',
-  slot: 'CompactEventDrawerHeader',
-})(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: theme.spacing(1),
-}));
-
-const CompactEventDrawerTitle = styled('h2', {
-  name: 'MuiEventCalendar',
-  slot: 'CompactEventDrawerTitle',
-})(({ theme }) => ({
-  margin: 0,
-  fontSize: theme.typography.subtitle1.fontSize,
-  fontWeight: theme.typography.fontWeightMedium,
-  color: (theme.vars || theme).palette.text.primary,
-}));
+  slot: 'CompactEventDrawerContent',
+})({
+  flex: '1 1 0',
+  minHeight: 0,
+  overflowY: 'auto',
+  [`& .${eventCalendarClasses.eventDialogContent}`]: {
+    width: '100%',
+    minWidth: 0,
+  },
+});
 
 /**
- * A mock editing drawer for the compact (mobile) day/time grid.
+ * The editing drawer for the compact (mobile) day/time grid.
  *
- * Rendered below the grid and driven by the dedicated `CompactEventDrawer` context: when an
- * event is armed (selected via a single tap) it expands to a peek height — shrinking the grid
- * above it rather than overlaying it. Tapping the drawer expands it to full height; the close
- * button (or tapping the empty grid) disarms and closes it.
+ * Rendered below the grid and driven by the shared editing surface (`EventEditingContext`): when an
+ * event is armed (selected via a single tap) it expands to a peek height — shrinking the grid above
+ * it rather than overlaying it — and shows the read-only summary. Tapping the drawer expands it to
+ * full height and swaps in the editing form (or keeps the read-only summary for read-only events).
  *
- * The content is a placeholder only — wiring it to real event editing is intentionally out of
- * scope and will be handled in a follow-up.
+ * It reuses the exact same `FormContent` / `ReadonlyContent` as the desktop dialog (including their
+ * own header, close button and actions), so the editing experience matches across platforms, and
+ * stacks the recurring scope confirmation by rendering the shared `recurringScope` renderer — which
+ * picks its bottom-sheet shell from the surrounding `EditingSurfaceContext`.
  */
 export function CompactEventDrawer() {
   const store = useEventCalendarStoreContext();
-  // Concept 2 — the surface lifecycle (open/close) comes from the shared editing-surface modal.
+  // Concept 2 — the surface lifecycle (open/close) comes from the shared editing surface.
   const { isOpen, onClose } = useEventEditingContext();
   // Concept 1 — *what* is being edited comes from the store (the single source of truth).
   const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrence)?.occurrence;
@@ -93,12 +82,24 @@ export function CompactEventDrawer() {
   // simply resolves to `false`.
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence?.id ?? '');
 
+  // The recurring scope confirmation renders itself: it reads its open state from the store and
+  // picks its own shell (a bottom-sheet drawer here) from the surrounding `EditingSurfaceContext`.
+  const { recurringScope: RecurringScopeRenderer } = useEventEditingOptionalRenderers();
+
   const [expanded, setExpanded] = React.useState(false);
+
+  // Reused dialog content expects a drag handle ref (used to drag the desktop dialog). The drawer
+  // does not drag, so a throwaway ref keeps the shared content components happy.
+  const dragHandlerRef = React.useRef<HTMLElement | null>(null);
 
   // Start collapsed each time the drawer opens or switches to a different occurrence.
   React.useEffect(() => {
     setExpanded(false);
   }, [occurrence?.key]);
+
+  // Peek shows the read-only summary; expanding swaps in the form, unless the event (or the whole
+  // calendar) is read-only, in which case the summary stays.
+  const showForm = expanded && !isReadOnly;
 
   return (
     <CompactEventDrawerRoot
@@ -111,24 +112,20 @@ export function CompactEventDrawer() {
         }
       }}
     >
-      <CompactEventDrawerHandle aria-hidden />
-      <CompactEventDrawerHeader>
-        <CompactEventDrawerTitle>
-          {isReadOnly ? 'This is non editable' : 'This is editable'}
-        </CompactEventDrawerTitle>
-        <IconButton
-          aria-label="Close"
-          size="small"
-          edge="end"
-          onClick={(event) => {
-            // Don't let the click bubble to the drawer's expand handler.
-            event.stopPropagation();
-            onClose();
-          }}
-        >
-          <CloseRounded fontSize="small" />
-        </IconButton>
-      </CompactEventDrawerHeader>
+      {isOpen && occurrence && (
+        <CompactEventDrawerContent>
+          {showForm ? (
+            <FormContent
+              occurrence={occurrence}
+              onClose={onClose}
+              dragHandlerRef={dragHandlerRef}
+            />
+          ) : (
+            <CompactReadonlyContent occurrence={occurrence} onClose={onClose} />
+          )}
+        </CompactEventDrawerContent>
+      )}
+      {RecurringScopeRenderer && <RecurringScopeRenderer />}
     </CompactEventDrawerRoot>
   );
 }

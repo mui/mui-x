@@ -11,6 +11,12 @@ export const schedulerOccurrencePlaceholderSelectors = {
    * placeholder mutation, e.g. each move of a creation-placeholder resize.
    */
   isCreating: createSelector((state: State) => state.occurrencePlaceholder?.type === 'creation'),
+  /**
+   * The type of the active placeholder, or `undefined` when there is none.
+   * Selecting the type (a primitive) instead of the placeholder object avoids re-rendering on every
+   * placeholder mutation, e.g. each move of a drag or resize.
+   */
+  type: createSelector((state: State) => state.occurrencePlaceholder?.type),
   actionForOccurrence: createSelector((state: State, occurrenceKey: string) => {
     const placeholder = state.occurrencePlaceholder;
     if (

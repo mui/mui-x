@@ -5,7 +5,7 @@ import { useId } from '@base-ui/utils/useId';
 import { EventCalendarProvider as UnstyledEventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
-import { EventDialogStyledContext } from './event-dialog/EventDialogStyledContext';
+import { EventEditingStyledContext } from './event-editing/EventEditingStyledContext';
 import { SharedComponentsStyledContext } from './SharedComponentsStyledContext';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../constants/defaultLocaleText';
 import { responsiveTypographyContainerQueries } from '../constants/responsiveTypography';
@@ -47,7 +47,7 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
     }),
     [schedulerId],
   );
-  const dialogStyledValue = React.useMemo(
+  const editingStyledValue = React.useMemo(
     () => ({
       schedulerId,
       classes: eventCalendarClasses,
@@ -60,11 +60,11 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
   return (
     <UnstyledEventCalendarProvider {...other}>
       <EventCalendarStyledContext.Provider value={calendarStyledValue}>
-        <EventDialogStyledContext.Provider value={dialogStyledValue}>
+        <EventEditingStyledContext.Provider value={editingStyledValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledValue}>
             <StandaloneViewRoot>{children}</StandaloneViewRoot>
           </SharedComponentsStyledContext.Provider>
-        </EventDialogStyledContext.Provider>
+        </EventEditingStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
     </UnstyledEventCalendarProvider>
   );

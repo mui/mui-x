@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { DialogProps } from '@mui/material/Dialog';
-import type { EventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
+import type { EventEditingOptionalRenderers } from '../event-editing';
 
 export interface EventDialogProps extends DialogProps {
   /**
@@ -23,5 +23,5 @@ export interface EventDialogProviderProps {
   /**
    * Optional components rendered during editing (recurrence tab, recurring scope confirmation).
    */
-  optionalRenderers?: EventDialogOptionalRenderers;
+  optionalRenderers?: EventEditingOptionalRenderers;
 }

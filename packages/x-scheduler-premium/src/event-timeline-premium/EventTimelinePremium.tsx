@@ -16,7 +16,7 @@ import {
   ErrorContainer,
   SharedComponentsStyledContext,
   eventDialogSlots,
-  EventDialogStyledContext,
+  EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
@@ -122,7 +122,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
     [schedulerId, classes, mergedLocaleText, resourceColumnLabel],
   );
 
-  const dialogStyledContextValue = React.useMemo(
+  const editingStyledContextValue = React.useMemo(
     () => ({ schedulerId, classes, localeText: mergedLocaleText }),
     [schedulerId, classes, mergedLocaleText],
   );
@@ -132,7 +132,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
-        <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
+        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <EventTimelinePremiumRoot
               ref={forwardedRef}
@@ -144,7 +144,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
               {watermark}
             </EventTimelinePremiumRoot>
           </SharedComponentsStyledContext.Provider>
-        </EventDialogStyledContext.Provider>
+        </EventEditingStyledContext.Provider>
       </EventTimelinePremiumStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );

@@ -4,6 +4,7 @@ import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/m
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { createModal } from '../create-modal';
+import { EditingSurfaceContext } from './EditingSurfaceContext';
 import { CompactEventEditingProviderProps, EventEditingTriggerProps } from './EventEditing.types';
 
 /**
@@ -59,20 +60,22 @@ export function CompactEventEditingProvider(props: CompactEventEditingProviderPr
   const store = useSchedulerStoreContext();
 
   return (
-    <EventEditingModal.Provider
-      render={() => null}
-      anchored={false}
-      onOpen={(occurrence) => {
-        store.startEditing(
-          occurrence,
-          schedulerOccurrencePlaceholderSelectors.isCreating(store.state) ? 'creation' : 'event',
-        );
-      }}
-      onClose={() => {
-        store.stopEditing();
-      }}
-    >
-      {children}
-    </EventEditingModal.Provider>
+    <EditingSurfaceContext.Provider value="drawer">
+      <EventEditingModal.Provider
+        render={() => null}
+        anchored={false}
+        onOpen={(occurrence) => {
+          store.startEditing(
+            occurrence,
+            schedulerOccurrencePlaceholderSelectors.isCreating(store.state) ? 'creation' : 'event',
+          );
+        }}
+        onClose={() => {
+          store.stopEditing();
+        }}
+      >
+        {children}
+      </EventEditingModal.Provider>
+    </EditingSurfaceContext.Provider>
   );
 }

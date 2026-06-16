@@ -13,6 +13,8 @@ export interface EventDialogLocaleText {
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
+  eventTitlePlaceholder: string;
+  tapToEditEvent: string;
   generalTabLabel: string;
   labelNoResource: string;
   labelInvalidResource: string;
@@ -51,7 +53,7 @@ export interface EventDialogLocaleText {
   startDateLabel: string;
   startTimeLabel: string;
 
-  // RecurringScopeDialog
+  // RecurringScope
   all: string;
   cancel: string;
   confirm: string;

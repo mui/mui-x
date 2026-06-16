@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import type { ControlledValue } from './utils';
+import type { ControlledValue } from '../event-dialog/utils';
 
 export interface RecurrenceTabRendererProps {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -11,12 +11,13 @@ export interface RecurrenceTabRendererProps {
 }
 
 /**
- * Components optionally rendered inside `EventDialog`. The premium scheduler fills these
- * via the `optionalRenderers` prop on `EventDialogProvider`; community leaves them empty.
+ * Components optionally rendered inside the editing surface (the desktop dialog and the compact
+ * drawer alike). The premium scheduler fills these via the `optionalRenderers` prop on
+ * `EventDialogProvider`; community leaves them empty.
  */
-export interface EventDialogOptionalRenderers {
+export interface EventEditingOptionalRenderers {
   /**
-   * Component rendered as the "Recurrence" tab inside the event dialog.
+   * Component rendered as the "Recurrence" tab inside the editing form.
    */
   recurrenceTab?: React.ComponentType<RecurrenceTabRendererProps>;
   /**
@@ -29,9 +30,9 @@ export interface EventDialogOptionalRenderers {
   recurringScope?: React.ComponentType<Record<string, never>>;
 }
 
-export const EventDialogOptionalRenderersContext =
-  React.createContext<EventDialogOptionalRenderers>({});
+export const EventEditingOptionalRenderersContext =
+  React.createContext<EventEditingOptionalRenderers>({});
 
-export function useEventDialogOptionalRenderers(): EventDialogOptionalRenderers {
-  return React.useContext(EventDialogOptionalRenderersContext);
+export function useEventEditingOptionalRenderers(): EventEditingOptionalRenderers {
+  return React.useContext(EventEditingOptionalRenderersContext);
 }

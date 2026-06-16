@@ -59,7 +59,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Fecha de inicio',
   startTimeLabel: 'Hora de inicio',
 
-  // RecurringScopeDialog
+  // RecurringScope
   all: 'Todos los eventos',
   cancel: 'Cancelar',
   confirm: 'Confirmar',

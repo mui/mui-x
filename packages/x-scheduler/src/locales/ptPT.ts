@@ -59,7 +59,7 @@ const ptPTDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Data de início',
   startTimeLabel: 'Hora de início',
 
-  // RecurringScopeDialog
+  // RecurringScope
   all: 'Todos os eventos',
   cancel: 'Cancelar',
   confirm: 'Confirmar',

@@ -1,7 +1,7 @@
 import { RecurrenceTab } from './components/event-dialog/RecurrenceTab';
-import { RecurringScopeDialog } from './components/recurring-scope-dialog/RecurringScopeDialog';
+import { RecurringScope } from './components/recurring-scope/RecurringScope';
 
 export const PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS = {
   recurrenceTab: RecurrenceTab,
-  recurringScope: RecurringScopeDialog,
+  recurringScope: RecurringScope,
 };

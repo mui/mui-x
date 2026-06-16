@@ -34,11 +34,7 @@ describe('CompactDayView - touch resize', () => {
       .build();
 
     render(
-      <StandaloneCompactDayView
-        events={[event]}
-        resources={[]}
-        onEventsChange={onEventsChange}
-      />,
+      <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
     );
 
     // The geometry resolver maps the pointer Y to a time using the column's own bounds.
@@ -57,9 +53,9 @@ describe('CompactDayView - touch resize', () => {
   it('does not show resize handles until the event is armed', () => {
     renderResizableEvent();
     const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
-    expect(eventElement.querySelector(`.${eventCalendarClasses.timeGridEventResizeHandler}`)).to.equal(
-      null,
-    );
+    expect(
+      eventElement.querySelector(`.${eventCalendarClasses.timeGridEventResizeHandler}`),
+    ).to.equal(null);
   });
 
   it('resizes the end of an armed event to a later time', async () => {

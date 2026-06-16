@@ -59,7 +59,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Data di inizio',
   startTimeLabel: 'Ora di inizio',
 
-  // RecurringScopeDialog
+  // RecurringScope
   all: 'Tutti gli eventi',
   cancel: 'Annulla',
   confirm: 'Conferma',

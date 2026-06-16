@@ -30,7 +30,7 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import {
-  useEventDialogStyledContext,
+  useEventEditingStyledContext,
   ControlledValue,
   EndsSelection,
   getEndsSelectionFromRRule,
@@ -185,7 +185,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
   const repeatEveryLabelId = `${schedulerId}-recurrence-repeat-every-label`;
   const repeatOnLabelId = `${schedulerId}-recurrence-repeat-on-label`;

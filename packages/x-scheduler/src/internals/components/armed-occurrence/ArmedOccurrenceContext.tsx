@@ -33,7 +33,9 @@ export function ArmedOccurrenceProvider(props: {
     () => ({ armedKey, disarm: onDisarm }),
     [armedKey, onDisarm],
   );
-  return <ArmedOccurrenceContext.Provider value={value}>{children}</ArmedOccurrenceContext.Provider>;
+  return (
+    <ArmedOccurrenceContext.Provider value={value}>{children}</ArmedOccurrenceContext.Provider>
+  );
 }
 
 const noop = () => {};

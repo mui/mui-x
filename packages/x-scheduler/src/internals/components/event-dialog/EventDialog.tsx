@@ -9,20 +9,20 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
-  schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
 import { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
-import { EventEditingProvider } from '../event-editing';
-import { FormContent } from './FormContent';
+import {
+  EditingSurfaceContext,
+  EventEditingProvider,
+  EventEditingOptionalRenderers,
+  EventEditingOptionalRenderersContext,
+  useEventEditingStyledContext,
+  FormContent,
+} from '../event-editing';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import {
-  EventDialogOptionalRenderers,
-  EventDialogOptionalRenderersContext,
-} from './EventDialogOptionalRenderersContext';
 
 const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
@@ -118,7 +118,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
-  const { schedulerId, classes } = useEventDialogStyledContext();
+  const { schedulerId, classes } = useEventEditingStyledContext();
 
   // Selector hooks
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
@@ -164,43 +164,43 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, optionalRenderers, ...other } = props;
   const store = useSchedulerStoreContext();
-  const isRecurringScopeDialogOpen = useStore(
-    store,
-    schedulerOtherSelectors.isRecurringScopeDialogOpen,
-  );
-  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
+  // The recurring scope confirmation renders itself: it reads its open state from the store and
+  // picks its own shell (centered dialog here, bottom-sheet drawer in the compact drawer) from the
+  // surrounding `EditingSurfaceContext`.
   const RecurringScopeRenderer = optionalRenderers?.recurringScope;
 
   return (
-    <EventDialogOptionalRenderersContext.Provider
-      value={optionalRenderers ?? (EMPTY_OBJECT as EventDialogOptionalRenderers)}
-    >
-      <EventEditingProvider
-        render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
-          <EventDialogContent
-            open={isOpen}
-            anchorRef={anchorRef}
-            occurrence={occurrence}
-            onClose={onClose}
-            {...other}
-          />
-        )}
-        onOpen={(occurrence) => {
-          store.startEditing(
-            occurrence,
-            schedulerOccurrencePlaceholderSelectors.isCreating(store.state) ? 'creation' : 'event',
-          );
-        }}
-        onClose={() => {
-          store.stopEditing();
-        }}
+    <EditingSurfaceContext.Provider value="dialog">
+      <EventEditingOptionalRenderersContext.Provider
+        value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
       >
-        {children}
-        {showRecurrence && isRecurringScopeDialogOpen && RecurringScopeRenderer && (
-          <RecurringScopeRenderer />
-        )}
-      </EventEditingProvider>
-    </EventDialogOptionalRenderersContext.Provider>
+        <EventEditingProvider
+          render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
+            <EventDialogContent
+              open={isOpen}
+              anchorRef={anchorRef}
+              occurrence={occurrence}
+              onClose={onClose}
+              {...other}
+            />
+          )}
+          onOpen={(occurrence) => {
+            store.startEditing(
+              occurrence,
+              schedulerOccurrencePlaceholderSelectors.isCreating(store.state)
+                ? 'creation'
+                : 'event',
+            );
+          }}
+          onClose={() => {
+            store.stopEditing();
+          }}
+        >
+          {children}
+          {RecurringScopeRenderer && <RecurringScopeRenderer />}
+        </EventEditingProvider>
+      </EventEditingOptionalRenderersContext.Provider>
+    </EditingSurfaceContext.Provider>
   );
 }

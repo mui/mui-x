@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
+import { useEventEditingStyledContext } from '../event-editing';
 
 const EventDialogHeaderRoot = styled('header', {
   name: 'MuiEventDialog',
@@ -24,7 +24,7 @@ interface EventDialogHeaderProps {
 
 export default function EventDialogHeader(props: EventDialogHeaderProps) {
   const { children, onClose, dragHandlerRef } = props;
-  const { classes, localeText } = useEventDialogStyledContext();
+  const { classes, localeText } = useEventEditingStyledContext();
 
   return (
     <EventDialogHeaderRoot ref={dragHandlerRef} className={classes.eventDialogHeader}>

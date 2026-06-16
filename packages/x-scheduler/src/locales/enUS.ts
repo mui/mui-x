@@ -21,6 +21,8 @@ const enUSDialog: EventDialogLocaleText = {
   endDateLabel: 'End date',
   endTimeLabel: 'End time',
   eventTitleAriaLabel: 'Event title',
+  eventTitlePlaceholder: 'Add title',
+  tapToEditEvent: 'Tap to edit',
   generalTabLabel: 'General',
   labelNoResource: 'No resource',
   labelInvalidResource: 'Invalid resource',
@@ -59,7 +61,7 @@ const enUSDialog: EventDialogLocaleText = {
   startDateLabel: 'Start date',
   startTimeLabel: 'Start time',
 
-  // RecurringScopeDialog
+  // RecurringScope
   all: 'All events',
   cancel: 'Cancel',
   confirm: 'Confirm',

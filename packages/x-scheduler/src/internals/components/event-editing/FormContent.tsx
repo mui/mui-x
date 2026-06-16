@@ -25,11 +25,11 @@ import {
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import { useEventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
-import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
-import EventDialogHeader from './EventDialogHeader';
-import { GeneralTab } from './GeneralTab';
+import { useEventEditingStyledContext } from './EventEditingStyledContext';
+import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
+import { computeRange, ControlledValue, hasProp, validateRange } from '../event-dialog/utils';
+import EventDialogHeader from '../event-dialog/EventDialogHeader';
+import { GeneralTab } from '../event-dialog/GeneralTab';
 
 const FormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -51,6 +51,7 @@ const DialogContent = styled(MuiDialogContent, {
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
+  maxHeight: '100%',
 });
 
 const EventDialogTitleTextField = styled(TextField, {
@@ -100,7 +101,7 @@ export function FormContent(props: FormContentProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -119,7 +120,7 @@ export function FormContent(props: FormContentProps) {
   );
 
   // Optional renderer hooks
-  const { recurrenceTab: RecurrenceTabRenderer } = useEventDialogOptionalRenderers();
+  const { recurrenceTab: RecurrenceTabRenderer } = useEventEditingOptionalRenderers();
 
   const recurrencePresets = useStore(
     store,
