@@ -1,7 +1,3 @@
 {
-  "directoryListing": false,
-  "redirects": [
-    { "source": "/", "destination": "/x/introduction/" },
-    { "source": "/x", "destination": "/x/introduction/" }
-  ]
+  "directoryListing": false
 }

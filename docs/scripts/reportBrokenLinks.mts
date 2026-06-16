@@ -2,9 +2,9 @@ import { crawl } from '@mui/internal-code-infra/brokenLinksChecker';
 
 async function main() {
   const { issues } = await crawl({
-    startCommand: 'pnpm serve --no-request-logging -p 3001',
-    host: 'http://localhost:3001/',
-    seedUrls: ['/x'],
+    startCommand: 'pnpm serve --no-request-logging',
+    host: 'http://localhost:3010/',
+    seedUrls: ['/x/introduction/'],
     // Target paths to ignore during link checking
     ignoredPaths: [
       // The site root has no page in the `next export` output (redirects only
