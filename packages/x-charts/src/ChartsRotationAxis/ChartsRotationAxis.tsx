@@ -170,6 +170,11 @@ ChartsRotationAxis.propTypes = {
    */
   disableLine: PropTypes.bool,
   /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel: PropTypes.bool,
+  /**
    * If true, the ticks are disabled.
    * @default false
    */
