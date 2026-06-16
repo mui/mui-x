@@ -50,6 +50,7 @@ export * from './plugins/featurePlugins/useChartBrush';
 export * as useGeoProjectionSelectors from './plugins/featurePlugins/useGeoProjection/useGeoProjection.selectors';
 export * as useGeoProjectionTypes from './plugins/featurePlugins/useGeoProjection/useGeoProjection.types';
 export * from './plugins/featurePlugins/useChartItemClick';
+export * from './plugins/featurePlugins/useProgressiveRendering';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';

@@ -324,6 +324,34 @@ describe('useChatComposer', () => {
     expect(adapter.sendMessage).not.toHaveBeenCalled();
   });
 
+  it('emits a trailing setTyping false when submitting clears the composer (features.typingSignal)', async () => {
+    const setTyping = vi.fn(async () => {});
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createStream()),
+      setTyping,
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      initialActiveConversationId: 'c1',
+      features: { typingSignal: true },
+    });
+    const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.setValue('Hello there');
+    });
+
+    expect(setTyping).toHaveBeenLastCalledWith({ conversationId: 'c1', isTyping: true });
+
+    // Submit clears the composer optimistically (non-empty→empty), so the
+    // trailing setTyping call must be `isTyping: false`.
+    await act(async () => {
+      await result.current.submit();
+    });
+
+    expect(setTyping).toHaveBeenLastCalledWith({ conversationId: 'c1', isTyping: false });
+  });
+
   it('does not submit while IME composition is active', async () => {
     const adapter = createAdapter({
       sendMessage: vi.fn(async () => createStream()),
