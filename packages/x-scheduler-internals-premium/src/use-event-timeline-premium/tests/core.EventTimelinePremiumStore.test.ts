@@ -1,9 +1,12 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { disposeSymbol } from '@mui/x-internals/disposable';
+import { schedulerRecurringEventsPlugin } from '../../internals/plugins/schedulerRecurringEventsPlugin';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
-const DEFAULT_PARAMS = { events: [] };
+const TEST_RESOURCE = ResourceBuilder.new().id('r1').title('Resource 1').build();
+const DEFAULT_PARAMS = { events: [], resources: [TEST_RESOURCE] };
 
 describe('Core - EventTimelinePremiumStore', () => {
   describe('create', () => {
@@ -29,14 +32,27 @@ describe('Core - EventTimelinePremiumStore', () => {
         editedEventId: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        pendingUpdateRecurringEventParameters: null,
-        plan: 'premium',
+        pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         processedEventLookup: new Map(),
-        processedResourceLookup: new Map(),
+        processedResourceLookup: new Map([
+          [
+            TEST_RESOURCE.id,
+            {
+              id: TEST_RESOURCE.id,
+              title: TEST_RESOURCE.title,
+              areEventsDraggable: undefined,
+              areEventsReadOnly: undefined,
+              areEventsResizable: undefined,
+              eventColor: undefined,
+            },
+          ],
+        ]),
         readOnly: false,
+        recurringEventsPlugin: schedulerRecurringEventsPlugin,
+        shouldEventRequireResource: true,
         resourceChildrenIdLookup: new Map(),
-        resourceIdList: [],
+        resourceIdList: [TEST_RESOURCE.id],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         preset: 'dayAndHour',
@@ -45,9 +61,43 @@ describe('Core - EventTimelinePremiumStore', () => {
         visibleResources: {},
         isLoading: false,
         errors: [],
+        hasInitialized: false,
       };
 
       expect(store.state).to.deep.equal(expectedState);
+    });
+
+    it('should default `shouldEventRequireResource` to `true`', () => {
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(true);
+    });
+
+    it('should respect an explicit `shouldEventRequireResource={false}`', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, shouldEventRequireResource: false },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(false);
+    });
+
+    it('should warn in dev when `shouldEventRequireResource` is `true` but no resources are configured', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore({ events: [], resources: [] }, adapter);
+      }).toWarnDev([
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+      ]);
+    });
+
+    it('should sync `shouldEventRequireResource` when parameters update', () => {
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(true);
+
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, shouldEventRequireResource: false },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(false);
     });
 
     it('should sort the presets array into the canonical zoom order regardless of input order', () => {
@@ -127,7 +177,7 @@ describe('Core - EventTimelinePremiumStore', () => {
       // Dispose the store's pending timers; otherwise the `nowUpdatedEveryMinute` interval
       // would fire later, re-trigger the subscribe listener against the intentionally invalid
       // state left by this test, and leak an unhandled error into the test run.
-      store.disposeEffect()();
+      store[disposeSymbol]();
     });
   });
 });

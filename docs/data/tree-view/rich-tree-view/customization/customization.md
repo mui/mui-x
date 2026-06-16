@@ -1,6 +1,6 @@
 ---
 productId: x-tree-view
-components: RichTreeView, TreeItem
+components: RichTreeView, RichTreeViewPro, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -29,13 +29,28 @@ Use the `groupTransition` slot on `TreeItem` to pass a component that handles yo
 
 The demo below is animated using Material UI's [`Collapse`](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
 
+:::info
+`RichTreeViewPro` uses a flat DOM structure by default.
+To use animations that rely on the nested `groupTransition` slot, disable virtualization and set `domStructure="nested"`:
+
+```tsx
+<RichTreeViewPro items={ITEMS} disableVirtualization domStructure="nested" />
+```
+
+:::
+
 {{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
 
 ### Custom styling
 
 Use `treeItemClasses` to target internal elements of a `TreeItem` and change its styles.
+The DOM structure affects which styling patterns are available: nested DOM lets you style child groups from their parent item, while flat DOM renders every visible item as a sibling.
 
 {{"demo": "CustomStyling.js"}}
+
+`RichTreeViewPro` defaults to flat DOM, so use `domStructure="nested"` with virtualization disabled for nested-DOM styling patterns, or adapt the styles to the flat DOM structure.
+
+{{"demo": "CustomStylingRichTreeViewPro.js", "defaultCodeOpen": false}}
 
 ### Custom Tree Item
 

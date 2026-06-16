@@ -20,7 +20,7 @@ export function useCalendarGridTimeEventContext() {
   const context = React.useContext(CalendarGridTimeEventContext);
   if (context === undefined) {
     throw new Error(
-      'MUI: `CalendarGridTimeEventContext` is missing. CalendarGrid TimeEvent parts must be placed within <CalendarGrid.TimeEvent />.',
+      'MUI X Scheduler: `CalendarGridTimeEventContext` is missing. CalendarGrid TimeEvent parts must be placed within <CalendarGrid.TimeEvent />.',
     );
   }
   return context;

@@ -1,5 +1,419 @@
 # Changelog
 
+## 9.5.0
+
+_Jun 11, 2026_
+
+We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 New [`multiSelect` column type for Data Grid Pro](https://mui.com/x/react-data-grid/column-definition/#MultiSelectColumn)
+- 🚀 New [renderer="svg-progressive"](https://mui.com/x/react-charts/scatter/#progressive-renderer) paints scatter points in batched frames so large datasets render smoothly without blocking the main thread.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to community members @mustafajw07 and @Anexus5919 for their valuable contribution.
+
+The following team members contributed to this release:
+@alexfauquette, @JCQuintas, @rita-codes, @rluzists1, @sai6855, @siriwatknp, @arminmeh, @brijeshb42
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.5.0`
+
+- [DataGrid] Restrict warning messages to non-production environments in various components (#22461) @sai6855
+- [DataGrid] Prevent React state update before mount (#22374) @arminmeh
+
+#### `@mui/x-data-grid-pro@9.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.5.0`, plus:
+
+- [DataGridPro] Add new `multiSelect` column type (#21157) @siriwatknp
+
+#### `@mui/x-data-grid-premium@9.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.5.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.5.0`
+
+- [pickers] Fix missing export of `th-TH` (#22703) @alexfauquette
+
+#### `@mui/x-date-pickers-pro@9.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.5.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.5.0`
+
+- [charts] Add `FocusedBar` component to `BarScatterComposition` demo (#22704) @sai6855
+- [charts] Add dedicated Bubble Chart documentation page (#22688) @mustafajw07
+- [charts] Add progressive scatter renderer (#22518) @JCQuintas
+- [charts] Avoid full axis pipeline rebuild on resize (#22695) @JCQuintas
+- [charts] Document focus indicator in composition page (#22712) @JCQuintas
+- [charts] Fix `ChartsTooltip` `container` and `disablePortal` props being ignored (#22690) @JCQuintas
+- [charts] Make ordinal scales O(1) to copy and re-range (#22691) @JCQuintas
+- [charts] Stabilize WebGL bar rendering at sub-pixel widths (#22678) @JCQuintas
+- [charts] Use the series config to define value types (#22693) @sai6855
+- [charts] Decouple interaction hook from the cartesian zoom (#22708) @alexfauquette
+
+#### `@mui/x-charts-pro@9.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.5.0`, plus:
+
+- [charts-pro] Add missing focus highlight (#22689) @alexfauquette
+
+#### `@mui/x-charts-premium@9.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.5.0`, plus:
+
+- [charts-premium] Set `Heatmap` WebGL render as stable (#22665) @alexfauquette
+- [charts-premium] Stabilize candlestick charts (#22666) @alexfauquette
+- [charts-premium] Stabilize the radial charts (#22655) @alexfauquette
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.1`
+
+Internal changes.
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.1`, plus:
+
+- [scheduler] Remove dead CSS variable writes in `EventTimelinePremiumContent` (#22720) @rita-codes
+- [scheduler] Show scope dialog when deleting a recurring event (#22552) @Anexus5919
+
+### Core
+
+- [docs-infra] Fix immutable cache headers for `/\_next/static` assets (#22747) @brijeshb42
+- [docs-infra] Prefix `/\_next/static` cache header rule with `/x` basePath (#22748) @brijeshb42
+- [code-infra] Update dependencies to resolve Dependabot security alerts (#22714) @Janpot
+
+### Docs
+
+- [docs] Fix broken links checker crashing on 404 known-targets fetch (#22707) @sai6855
+- [docs] Fix country data (#22716) @alexfauquette
+
+### Miscellaneous
+
+- [legal] Update EULA links in docs (#22717) @rluzists1
+
+## 9.4.0
+
+<!-- generated comparing v9.3.0..master -->
+
+_Jun 4, 2026_
+
+We'd like to extend a big thank you to the 21 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎉 Scheduler is now in Beta shipping with Timeline vitualization and lazy loading
+- 📆 Implement Event Timeline virtualization (#22339)
+- 🫧 Introduce bubble charts (#22537)
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@imxv, @mixelburg, @mustafajw07
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @joserodolfofreitas, @LukasTy, @MBilalShafi, @michelengelen, @mj12albert, @noraleonte, @oliviertassinari, @rita-codes, @romgrk, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.4.0`
+
+- [DataGrid] Fix `avg` aggregation when the average is zero (#22652) @mj12albert
+- [DataGrid] Inherit icon `fontSize` from `baseIconButton` size (#22187) @imxv
+- [DataGrid] Fix `noRowsOverlay` flicker between `dataSource` re-fetches (#22465) @LukasTy
+
+#### `@mui/x-data-grid-pro@9.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.4.0`.
+
+#### `@mui/x-data-grid-premium@9.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+> This release includes a version bump of the `@mui/x-internal-exceljs-fork` package to address the vulnerable dependencies.
+> The following CVEs are fixed:
+>
+> - <https://github.com/advisories/GHSA-ph9p-34f9-6g65>
+> - <https://github.com/isaacs/minimatch/security/advisories/GHSA-23c5-xmqv-rm74>
+> - <https://github.com/advisories/GHSA-w5hq-g745-h8pq>
+>
+> To make this security update possible, we bumped the `node` version requirement from `>=14.0.0` to `>=14.17.0`.
+> [Node.js 14.17.0](https://nodejs.org/en/blog/release/v14.17.0) was released in May 2021, so we consider it safe to bump the requirement without causing issues for our users.
+
+Same changes as in `@mui/x-data-grid-pro@9.4.0`, plus:
+
+- [DataGridPremium] Nested Lazy Loading (#21043) @MBilalShafi
+- [DataGridPremium] Update exceljs fork (#22658) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.4.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.4.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.4.0`
+
+- [charts] Add functionality to hide elements during chart export (#22525) @sai6855
+- [charts] Add option to show marks only on the first/last values (#22645) @alexfauquette
+- [charts] Add text customization section and demo for axis labels (#22597) @sai6855
+- [charts] Allow axes to scale according to the visible series only (#22566) @alexfauquette
+- [charts] Correctly handle different identifiers for each series (#22556) @sai6855
+- [charts] Fix inverted Y axis zoom/pan on ordinal scales (#22654) @JCQuintas
+- [charts] Introduce bubble charts (#22537) @alexfauquette
+- [charts] Let scatter chart tooltip ignore hidden series (#22614) @alexfauquette
+- [charts] Make `'sqrt'` size mapping the default (#22683) @alexfauquette
+- [charts] Remove unused proptypes (#22618) @alexfauquette
+- [charts] Support module augmentation for slots (#22519) @sai6855
+- [charts] Support multiple marker size in `findClosestPoint` (#22622) @alexfauquette
+- [charts] Upgrade bezier-easing to v3 and use it for line chart hit-detection (#22608) @sai6855
+- [charts] Use `useLayoutEffect` with `ResizeObserver` (#22646) @JCQuintas
+
+#### `@mui/x-charts-pro@9.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.4.0`, plus:
+
+- [charts-pro] Auto-select range button matching current zoom (#22137) @JCQuintas
+- [charts-pro] Support range values in `initialZoom` (#22563) @JCQuintas
+
+#### `@mui/x-charts-premium@9.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.4.0`, plus:
+
+- [charts-premium] Support range-bar series in WebGL bar renderer (#22607) @JCQuintas
+- [charts-premium] Fix `onAxisClick` for radial bar and lines (#22522) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@9.4.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.4.0`.
+
+### Scheduler
+
+#### Breaking changes
+
+The theme `styleOverrides` slots for the skeleton and the error container were
+renamed and unified. The CSS utility class names (for example
+`.MuiEventCalendar-eventSkeleton`) are **not** affected — only
+`theme.components.*` overrides need updating.
+
+**Event skeleton**
+
+| Before                                  | After                          |
+| --------------------------------------- | ------------------------------ |
+| `MuiEventCalendar` slot `EventSkeleton` | `MuiEventSkeleton` slot `Root` |
+| `MuiEventTimeline` slot `EventSkeleton` | `MuiEventSkeleton` slot `Root` |
+
+**Error container**
+
+| Before                                                        | After                                   |
+| ------------------------------------------------------------- | --------------------------------------- |
+| `MuiEventCalendar` / `MuiEventTimeline` slot `ErrorContainer` | `MuiEventErrorContainer` slot `Root`    |
+| `MuiEventCalendar` / `MuiEventTimeline` slot `ErrorAlert`     | `MuiEventErrorContainer` slot `Alert`   |
+| `MuiEventCalendar` / `MuiEventTimeline` slot `ErrorMessage`   | `MuiEventErrorContainer` slot `Message` |
+
+If you customized these through the theme, update the component name and slot
+names accordingly:
+
+```diff
+ components: {
+-  MuiEventCalendar: {
++  MuiEventSkeleton: {
+     styleOverrides: {
+-      EventSkeleton: { /* ... */ },
++      Root: { /* ... */ },
+     },
+    },
+  },
+ }
+```
+
+#### `@mui/x-scheduler@9.0.0-beta.0`
+
+- [scheduler] Add a prop to control whether the resource of an event can be cleared (#22464) @rita-codes
+- [scheduler] Add week number labels to agenda, day and week views (#22594) @mustafajw07
+- [scheduler] Add `weekStartsOn` preference and update date functions to support custom week start (#22426) @mustafajw07
+- [scheduler] Export premium version of the standalone views (#22621) @flaviendelangle
+- [scheduler] Implement timeline virtualization (#22339) @romgrk
+- [scheduler] Split scheduler overview (#22453) @joserodolfofreitas
+- [scheduler] Unify `EventSkeleton` and `ErrorContainer` between `EventCalendar` and `EventTimeline` (#22676) @noraleonte
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.0`.
+
+### Docs
+
+- [docs] Add a performance docs page for charts (#22656) @alexfauquette
+- [docs] Add real dataset for maps documentation (#22599) @alexfauquette
+- [docs] Add spacing between selects on charts overview demo (#22589) @bernardobelchior
+- [docs] Reorganize existing chat docs navigation (#22478) @hasdfa
+- [docs] Switch to visionscarto's world atlas dataset (#22669) @cherniavskii
+- [docs] Update TreeView `domstructure` docs and add demo (#22420) @mj12albert
+- [docs] Fix indexation of Scheduler (#22567) @oliviertassinari
+- [docs] Fix wide layout on event timeline lazy loading and Import title (#22604) @rita-codes
+- [docs] Derive class name owners for shared charts classes (#22674) @JCQuintas
+
+### Core
+
+- [code-infra] Drop unused and now-transitive deps from docs/package.json (#22549) @LukasTy
+- [code-infra] Refresh CI Node pins to 22.22.3 (#22598) @LukasTy
+- [code-infra] Skip empty product sections in changelog (#22541) @rita-codes
+- [code-infra] Stabilize DataGridScrollRestoration visual regression test (#22553) @Janpot
+- [internal] Add license to the `x-data-grid-generator` (#22240) @arminmeh
+- [internal] Express default value for resource_class (#22569) @oliviertassinari
+- [internal] Fix use of ellipsis (#21852) @oliviertassinari
+- [internal] `useLayoutEffect` with `ResizeObserver` (#22428) @romgrk
+
+### Miscellaneous
+
+- [chat-headless] Add built-in chat adapters (#22479) @hasdfa
+- [chat-headless] Harden runtime model and message errors (#22480) @hasdfa
+- [core] Prepare for TypeScript 6 bump (#22551) @LukasTy
+- [core] Use CircleCI Gen2 resource classes (#22610) @LukasTy
+- [infra] Fix broken tag retrieval on `master` during release (#22174) @michelengelen
+- [infra] Group Base UI renovate updates (#22590) @LukasTy
+- [pnpm] Add security settings to pnpm-workspace.yaml (#22611) @Janpot
+- [release] Fix release PR scripts (#22680) @JCQuintas
+- [test] Add a Tree View regression test for lazy loading with getChildrenCount returning -1 (#22605) @mixelburg
+- [test] Disable LCD subpixel antialiasing in regression screenshots (#22602) @Janpot
+- [test] Fix flaky Data Grid Pro data source tree data tests (#22659) @LukasTy
+- [test] Remove stale form-submit TODO from e2e suite (#22564) @LukasTy
+- [x-license] Exclude test keys from the published npm package (#22647) @aemartos
+- [test] Fix flaky WebGL benchmark by polling for canvas content (#22535) @JCQuintas
+
+## 9.3.0
+
+_May 21, 2026_
+
+We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
+
+- 📆 Refactor Calendar Range drag editing to use Pointer Events instead of drag and touch events combination (#22279)
+- ✨ Apply lazy loading to `EventTimelinePremium` (#22308)
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+- 🌎 Added Norwegian bokmål (nb-NO) locale to the Scheduler
+- 🌎 Improved Swedish (sv-SE) locale on the Data Grid
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @jvskriubakken, @oscar-b, @rin, @viktormelin
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @arminmeh, @Janpot, @JCQuintas, @LukasTy, @mj12albert, @oliviertassinari, @rita-codes, @romgrk, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.3.0`
+
+- [DataGrid] Fix scrollbar disappearing after multiple resizes (#22512) @LukasTy
+- [DataGrid] Revert "Add support for pinned columns in `GridVirtualScroller`" (#22467) @oliviertassinari
+- [l10n] Improve Swedish (svSE) locale (#21851) @viktormelin
+
+#### `@mui/x-data-grid-pro@9.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.3.0`.
+
+#### `@mui/x-data-grid-premium@9.3.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.3.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.3.0`
+
+- [pickers] Fix disabled state styling for `PickersTextField` standard and filled variants (#22189) @LukasTy
+- [pickers] Fix previous month disabled state calculation (#22524) @mj12albert
+- [pickers] Merge `slotProps.sectionContent` in `PickersInputBase` (#22324) @rin
+
+#### `@mui/x-date-pickers-pro@9.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.3.0`, plus:
+
+- [DateRangeCalendar] Use Pointer Events for drag editing (#22279) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@9.3.0`
+
+- [charts] Add `data-series` to elements of radar chart (#22523) @alexfauquette
+- [charts] Add environment check for warning messages in axis and radar hooks (#22506) @sai6855
+- [charts] Chart `seriesConfig` deduplication for lines and bars (#22257) @sai6855
+- [charts] Fix highlighted item crash (#22539) @oscar-b
+- [charts] Fix the line and mark class (#22526) @alexfauquette
+- [charts] Fix use of deprecated API in docs (#22469) @oliviertassinari
+- [charts] Improve performance of `evaluateCurveY` function (#22407) @sai6855
+
+#### `@mui/x-charts-pro@9.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.3.0`.
+
+#### `@mui/x-charts-premium@9.3.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.3.0`, plus:
+
+- [charts-premium] Add `closePath` option to the radial line series (#22517) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view-pro@9.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Internal changes.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-alpha.7`
+
+- [I10n] Add Norwegian bokmål (nb-NO) locale (#22415) @jvskriubakken
+
+#### `@mui/x-scheduler-premium@9.0.0-alpha.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.7`, plus:
+
+- [scheduler] Apply lazy loading to `EventTimelinePremium` (#22308) @rita-codes
+- [scheduler] Deduplicate staged ranges within the debounce window (#22476) @Anexus5919
+- [scheduler] Pass full event objects to `dataSource.updateEvents` (#22462) @rita-codes
+
+### Docs
+
+- [docs] Automatically update supported versions (#21850) @arminmeh
+- [docs] Fix `New` label on bar charts docs (#22473) @oliviertassinari
+- [docs] Improve premium page header for charts (#22474) @oliviertassinari
+- [docs] Sync `README` with licensing/licensing.md in scheduler (#22468) @oliviertassinari
+
+### Core
+
+- [code-infra] Cover docs overview composites with Argos (#22283) @LukasTy
+- [code-infra] Enable `mui/no-presentation-role` lint rule (#22360) @Janpot
+- [code-infra] Make generated `propTypes` union order deterministic (#22521) @JCQuintas
+- [code-infra] Make screenshots stable across different ordering of the tests (#22449) @Janpot
+- [code-infra] Optimize visual regression testing (#22447) @Janpot
+- [code-infra] Replace markdownlint with remark from code-infra (#22255) @Janpot
+
+### Miscellaneous
+
+- [virtualizer] Improve `controlled` mode performance (#22123) @romgrk
+- [data-grid-generator] Include `tree-data` params in `useDemoData` cache key (#22456) @Janpot
+- [test] Fix flaky browser tests and optimize (#22431) @Janpot
+- [test] Speed up `test_types` job (#22442) @Janpot
+- [test] Trim ffmpeg install in `test_regressions` (#22459) @Janpot
+- [test] Add WebGL performance benchmarks for charts (#22471) @JCQuintas
+- [test] Expand chart performance benchmarks for charts (#22472) @JCQuintas
+- [x-license] use workspace dep for v9 in cross-major compat tests (#22504) @aemartos
+
 ## 9.2.0
 
 _May 13, 2026_

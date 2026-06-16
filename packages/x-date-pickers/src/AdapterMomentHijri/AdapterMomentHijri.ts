@@ -208,6 +208,10 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return value.iDate();
   };
 
+  public getDaysInMonth = (value: Moment) => {
+    return this.moment.iDaysInMonth(value.iYear(), value.iMonth());
+  };
+
   public setYear = (value: Moment, year: number) => {
     return value.clone().iYear(year);
   };

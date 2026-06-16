@@ -1,11 +1,14 @@
-import { adapter, EventBuilder, storeClasses } from 'test/utils/scheduler';
+import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '../../../../scheduler-selectors';
 
-const DEFAULT_PARAMS = { events: [] as SchedulerEvent[] };
+const DEFAULT_PARAMS = {
+  events: [] as SchedulerEvent[],
+  resources: [ResourceBuilder.new().build()],
+};
 
 storeClasses.forEach((storeClass) => {
   describe(`Core - ${storeClass.name}`, () => {
@@ -15,7 +18,7 @@ storeClasses.forEach((storeClass) => {
         const event2 = EventBuilder.new().build();
         const events = [event1, event2];
 
-        const store = new storeClass.Value({ events }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, events }, adapter);
 
         expect(schedulerEventSelectors.idList(store.state)).to.deep.equal([event1.id, event2.id]);
         expect(schedulerEventSelectors.processedEvent(store.state, event1.id)!.title).to.equal(
@@ -110,7 +113,7 @@ storeClasses.forEach((storeClass) => {
             },
             adapter,
           );
-        }).toWarnDev(['MUI: A component is changing the default visibleDate state']);
+        }).toWarnDev(['MUI X Scheduler: A component is changing the default visibleDate state']);
 
         expect(store.state.visibleDate).toEqualDateTime(defaultDate);
       });
@@ -127,7 +130,7 @@ storeClasses.forEach((storeClass) => {
         const newDate = adapter.date('2025-07-10T00:00:00Z', 'default');
         expect(() => {
           store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: newDate }, adapter);
-        }).toWarnDev('MUI: A component is changing the uncontrolled visibleDate state');
+        }).toWarnDev('MUI X Scheduler: A component is changing the uncontrolled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(newDate);
       });
@@ -145,9 +148,37 @@ storeClasses.forEach((storeClass) => {
             },
             adapter,
           );
-        }).toWarnDev('MUI: A component is changing the controlled visibleDate state');
+        }).toWarnDev('MUI X Scheduler: A component is changing the controlled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(visibleDate);
+      });
+
+      it('should keep the same `nowUpdatedEveryMinute` reference when a non-timezone parameter changes', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const before = store.state.nowUpdatedEveryMinute;
+
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, showCurrentTimeIndicator: false },
+          adapter,
+        );
+
+        expect(store.state.nowUpdatedEveryMinute).to.equal(before);
+      });
+
+      it('should recompute `nowUpdatedEveryMinute` when the display timezone changes', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, displayTimezone: 'default' },
+          adapter,
+        );
+        const before = store.state.nowUpdatedEveryMinute;
+
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, displayTimezone: 'America/New_York' },
+          adapter,
+        );
+
+        expect(store.state.nowUpdatedEveryMinute).to.not.equal(before);
+        expect(adapter.getTimezone(store.state.nowUpdatedEveryMinute)).to.equal('America/New_York');
       });
     });
   });

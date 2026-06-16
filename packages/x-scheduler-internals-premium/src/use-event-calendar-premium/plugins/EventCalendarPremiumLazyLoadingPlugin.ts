@@ -16,47 +16,44 @@ export class EventCalendarPremiumLazyLoadingPlugin<
   constructor(store: EventCalendarPremiumStore<TEvent, any>) {
     super(store);
 
-    store.registerStoreEffect(
-      (state) => {
-        const visibleDays =
-          state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
+    this.disposables.defer(
+      store.registerStoreEffect(
+        (state) => {
+          const visibleDays =
+            state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
 
-        // Build a primitive key that is stable if the visible range didn't change.
-        // Adjust the mapping if your visibleDays items have a different shape.
-        const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
+          const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
 
-        return {
-          viewConfig: state.viewConfig,
-          visibleDaysKey,
-          isLoading: state.isLoading,
-        };
-      },
+          return {
+            viewConfig: state.viewConfig,
+            visibleDaysKey,
+            isLoading: state.isLoading,
+          };
+        },
 
-      (previous, next) => {
-        // Bail out if nothing relevant changed.
-        if (previous.visibleDaysKey === next.visibleDaysKey) {
-          return;
-        }
+        (previous, next) => {
+          if (previous.visibleDaysKey === next.visibleDaysKey) {
+            return;
+          }
 
-        let isInstantLoad = false;
-        if (previous.viewConfig == null) {
-          isInstantLoad = true;
-        }
+          const visibleDays =
+            next.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ?? [];
 
-        const visibleDays =
-          next.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ?? [];
+          if (!store.parameters.dataSource || visibleDays.length === 0) {
+            return;
+          }
 
-        if (!store.parameters.dataSource || visibleDays.length === 0) {
-          return;
-        }
-
-        const range = {
-          start: visibleDays[0].value,
-          end: visibleDays[visibleDays.length - 1].value,
-        };
-
-        queueMicrotask(() => this.queueDataFetchForRange(range, isInstantLoad));
-      },
+          this.scheduleFetch(() => {
+            const days =
+              store.state.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ??
+              [];
+            return {
+              start: days[0].value,
+              end: days[days.length - 1].value,
+            };
+          }, previous.viewConfig == null);
+        },
+      ),
     );
   }
 }

@@ -13,7 +13,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }"
+        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -63,7 +63,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }"
+        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -78,7 +78,7 @@
     { "name": "baseIconButton", "description": "", "class": null },
     {
       "name": "baseToggleButton",
-      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
       "class": null
     },
     { "name": "baseToggleButtonGroup", "description": "", "class": null },
@@ -166,6 +166,5 @@
   "muiName": "MuiSankeyChart",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
 }

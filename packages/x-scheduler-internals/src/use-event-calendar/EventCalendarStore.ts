@@ -1,4 +1,5 @@
 import { warn } from '@base-ui/utils/warn';
+import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
   EventCalendarPreferences,
@@ -14,11 +15,13 @@ import {
   SchedulerStore,
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
+import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
+export const DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE = false;
 
 export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
   ...DEFAULT_SCHEDULER_PREFERENCES,
@@ -32,6 +35,7 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig
   toggleWeekNumberVisibility: true,
   toggleEmptyDaysInAgenda: true,
   toggleAmpm: true,
+  toggleWeekStartsOn: false,
 };
 
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
@@ -51,28 +55,51 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   return { views };
 };
 
+function warnIfShouldEventRequireResourceMisconfigured(
+  shouldEventRequireResource: boolean,
+  resources: readonly unknown[] | undefined,
+) {
+  if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
+    warnOnce([
+      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+    ]);
+  }
+}
+
 const mapper: SchedulerParametersToStateMapper<
   EventCalendarState,
   EventCalendarParameters<any, any>
 > = {
-  getInitialState: (schedulerInitialState, parameters) => ({
-    ...schedulerInitialState,
-    ...deriveStateFromParameters(parameters),
-    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
-    preferencesMenuConfig:
-      parameters.preferencesMenuConfig === false
-        ? parameters.preferencesMenuConfig
-        : {
-            ...DEFAULT_PREFERENCES_MENU_CONFIG,
-            ...parameters.preferencesMenuConfig,
-          },
-    viewConfig: null,
-    view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
-  }),
+  getInitialState: (schedulerInitialState, parameters) => {
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    return {
+      ...schedulerInitialState,
+      ...deriveStateFromParameters(parameters),
+      preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
+      preferencesMenuConfig:
+        parameters.preferencesMenuConfig === false
+          ? parameters.preferencesMenuConfig
+          : {
+              ...DEFAULT_PREFERENCES_MENU_CONFIG,
+              ...parameters.preferencesMenuConfig,
+            },
+      viewConfig: null,
+      view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+      shouldEventRequireResource,
+    };
+  },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
     const newState: Partial<EventCalendarState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
+      shouldEventRequireResource,
     };
 
     updateModel(newState, 'view', 'defaultView');
@@ -98,8 +125,9 @@ export class ExtendableEventCalendarStore<
     parameters: EventCalendarParameters<TEvent, TResource>,
     adapter: Adapter,
     instanceName: SchedulerInstanceName,
+    recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
-    super(parameters, adapter, instanceName, mapper);
+    super(parameters, adapter, instanceName, mapper, recurringEventsPlugin);
 
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
@@ -169,7 +197,7 @@ export class ExtendableEventCalendarStore<
     const siblingVisibleDateGetter = this.state.viewConfig?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
-        'MUI: No config found for the current view. Please use useInitializeView in your custom view.',
+        'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
       );
       return;
     }
