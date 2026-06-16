@@ -22,24 +22,16 @@ export class EventCalendarPremiumLazyLoadingPlugin<
           const visibleDays =
             state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
 
-          const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
-
-          return {
-            viewConfig: state.viewConfig,
-            visibleDaysKey,
-            isLoading: state.isLoading,
-          };
-        },
-
-        (previous, next) => {
-          if (previous.visibleDaysKey === next.visibleDaysKey) {
-            return;
+          if (visibleDays.length === 0) {
+            return null;
           }
 
-          const visibleDays =
-            next.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ?? [];
+          return visibleDays.map((day) => day.key).join('|');
+        },
 
-          if (!store.parameters.dataSource || visibleDays.length === 0) {
+        (previousKey, nextKey) => {
+          // `null` means no view is registered, so there is no range to fetch.
+          if (previousKey === nextKey || nextKey === null || !store.parameters.dataSource) {
             return;
           }
 
@@ -51,7 +43,7 @@ export class EventCalendarPremiumLazyLoadingPlugin<
               start: days[0].value,
               end: days[days.length - 1].value,
             };
-          }, previous.viewConfig == null);
+          }, previousKey === null);
         },
       ),
     );
