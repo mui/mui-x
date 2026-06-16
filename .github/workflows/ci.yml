@@ -13,6 +13,6 @@ permissions: {}
 jobs:
   continuous-releases:
     name: Continuous releases
-    uses: mui/mui-public/.github/workflows/ci-base.yml@master
+    uses: mui/mui-public/.github/workflows/ci-base.yml@bcba759d16e06c283bcf4dba32ed562f2f9e77cc # @mui/internal-code-infra@0.0.4-canary.28
     with:
       node-version: '22.18.0'
