@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { interpolateBlues } from 'd3-scale-chromatic';
 import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
@@ -40,9 +39,6 @@ export default function ColorScaleMapShape() {
   const [unknownShape, setUnknownShape] = React.useState<
     'color' | 'geoData' | 'none'
   >('color');
-
-  const isLargeScreen = useMediaQuery((theme) => theme.breakpoints.up('md'));
-  const orientation = isLargeScreen ? 'horizontal' : 'vertical';
 
   return (
     <Stack spacing={2} sx={{ width: '100%', maxWidth: 800 }}>
