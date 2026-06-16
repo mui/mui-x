@@ -157,7 +157,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
       <EventDialogHeader onClose={onClose}>
         <EventDialogTitle
           variant="h6"
-          id={`${schedulerId}-draggable-dialog-title`}
+          id={`${schedulerId}-event-dialog-title`}
           className={classes.eventDialogTitle}
         >
           {occurrence.title}

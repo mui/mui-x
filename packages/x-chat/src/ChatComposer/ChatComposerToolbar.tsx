@@ -6,6 +6,7 @@ import { SxProps, Theme } from '@mui/system';
 import { ComposerToolbar, type ComposerToolbarProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerToolbar');
 
@@ -37,16 +38,18 @@ const ChatComposerToolbar = React.forwardRef<HTMLDivElement, ChatComposerToolbar
         ref={ref}
         {...other}
         slots={{
-          toolbar: slots?.toolbar ?? ChatComposerToolbarStyled,
           ...slots,
+          toolbar: slots?.toolbar ?? ChatComposerToolbarStyled,
         }}
         slotProps={{
           ...slotProps,
-          toolbar: {
-            className: clsx(classes.toolbar, className),
-            sx,
-            ...(slotProps?.toolbar as object),
-          } as any,
+          toolbar: mergeSlotProps(
+            {
+              className: clsx(classes.toolbar, className),
+              sx,
+            },
+            slotProps?.toolbar,
+          ) as any,
         }}
       />
     );

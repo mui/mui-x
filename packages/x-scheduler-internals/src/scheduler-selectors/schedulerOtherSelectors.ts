@@ -18,7 +18,7 @@ export const schedulerOtherSelectors = {
     (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
   ),
   isRecurringScopeDialogOpen: createSelector(
-    (state: State) => state.pendingUpdateRecurringEventParameters != null,
+    (state: State) => state.pendingRecurringEventOperation != null,
   ),
   /**
    * The default event color used when no color is specified on the event or its resource.

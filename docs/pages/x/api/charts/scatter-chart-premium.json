@@ -293,6 +293,5 @@
   "muiName": "MuiScatterChartPremium",
   "filename": "/packages/x-charts-premium/src/ScatterChartPremium/ScatterChartPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bubble/\">Charts - Bubble</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/bubble/\">Charts - Bubble</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>"
 }

@@ -307,7 +307,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           <ResourceMenuColorToggle
             key={colorOption}
             value={colorOption}
-            aria-label={`Select ${colorOption} as event color`}
+            aria-label={localeText.selectColorAriaLabel(colorOption)}
             data-palette={colorOption}
             className={classes.eventDialogResourceMenuColorToggle}
           >
