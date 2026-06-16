@@ -30,9 +30,6 @@ const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   '&[data-weekend]': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
-  ':last-of-type': {
-    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
-  },
   '&:focus-visible': {
     outline: 'none',
     backgroundColor: getCellFocusBackground(theme),

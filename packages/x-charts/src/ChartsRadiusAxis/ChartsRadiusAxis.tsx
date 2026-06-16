@@ -50,6 +50,7 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
     position = 'start',
     disableLine,
     disableTicks,
+    disableTickLabel,
     tickLabelPosition: tickLabelPositionProp = 'auto',
     tickPosition = position === 'start' ? 'before' : 'after',
     tickSize = 6,
@@ -147,17 +148,19 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
                 className={classes.tick}
               />
             )}
-            <text
-              x={labelX}
-              y={labelY}
-              fill={stroke}
-              fontSize={12}
-              className={classes.tickLabel}
-              pointerEvents="none"
-              {...getLabelTextAnchors(dx, dy, tickLabelPosition)}
-            >
-              {formattedValue}
-            </text>
+            {!disableTickLabel && (
+              <text
+                x={labelX}
+                y={labelY}
+                fill={stroke}
+                fontSize={12}
+                className={classes.tickLabel}
+                pointerEvents="none"
+                {...getLabelTextAnchors(dx, dy, tickLabelPosition)}
+              >
+                {formattedValue}
+              </text>
+            )}
           </g>
         );
       })}
@@ -190,6 +193,11 @@ ChartsRadiusAxis.propTypes = {
    */
   disableLine: PropTypes.bool,
   /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel: PropTypes.bool,
+  /**
    * If true, the ticks are disabled.
    * @default false
    */
@@ -204,12 +212,18 @@ ChartsRadiusAxis.propTypes = {
   labelStyle: PropTypes.object,
   /**
    * The maximal radius.
+   * Can be a number (in pixels), a pixel string (for example `'80px'`), or a percentage string
+   * (for example `'80%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default '100%'
    */
-  maxRadius: PropTypes.number,
+  maxRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * The minimal radius.
+   * Can be a number (in pixels), a pixel string (for example `'20px'`), or a percentage string
+   * (for example `'20%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default 0
    */
-  minRadius: PropTypes.number,
+  minRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * The position of the axis in polar coordinates.
    * It can be 'start', 'end', or a specific angle in degrees.
