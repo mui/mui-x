@@ -145,6 +145,7 @@ function LegendSwatch({ type, color }) {
       swatch = (
         <Box sx={{ width: 15, height: 4, borderRadius: 1, bgcolor: color }} />
       );
+
       break;
     case 'up':
       swatch = (
@@ -185,7 +186,6 @@ function LegendSwatch({ type, color }) {
   );
 }
 
-/** HTML legend positioned over the empty top-left corner of the chart. */
 export function TrustLegend({ currentColor, previousColor }) {
   const items = [
     { type: 'square', color: currentColor, label: '2025 trust' },
@@ -195,16 +195,19 @@ export function TrustLegend({ currentColor, previousColor }) {
   ];
 
   return (
-    <Stack
-      useFlexGap
-      direction={{ xs: 'row', sm: 'column' }}
-      spacing={0.75}
+    <Box
       sx={{
-        position: 'absolute',
-        top: 8,
-        left: 8,
-        right: 8,
-        flexWrap: 'wrap',
+        display: { xs: 'grid', sm: 'flex' },
+        gridTemplateRows: { xs: 'repeat(2, auto)' },
+        gridAutoFlow: { xs: 'column' },
+        flexDirection: { sm: 'column' },
+        justifyContent: { xs: 'center', sm: 'flex-start' },
+        columnGap: 2,
+        rowGap: 0.75,
+        position: { xs: 'static', sm: 'absolute' },
+        top: { sm: 8 },
+        left: { sm: 8 },
+        mt: { xs: 1, sm: 0 },
         pointerEvents: 'none',
       }}
     >
@@ -219,7 +222,7 @@ export function TrustLegend({ currentColor, previousColor }) {
           <Typography variant="caption">{item.label}</Typography>
         </Stack>
       ))}
-    </Stack>
+    </Box>
   );
 }
 
