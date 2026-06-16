@@ -96,6 +96,7 @@ const settings = {
         min: 0,
         max: 100,
         color: ['#e3f2fd', '#0d47a1'],
+        unknownColor: 'gray',
       },
     },
   ],
@@ -109,7 +110,6 @@ const settings = {
         label: countryData[code].country,
         colorValue: internetUsageByCountry[code],
       })),
-      color: 'red',
       valueFormatter: (point) =>
         point.colorValue == null ? 'No data' : `${point.colorValue.toFixed(1)}%`,
     },
