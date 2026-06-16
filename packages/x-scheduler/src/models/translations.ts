@@ -1,5 +1,14 @@
 import { CalendarView } from '@mui/x-scheduler-internals/models';
 
+export type SchedulerWeekday =
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday';
+
 export interface EventDialogLocaleText {
   // EventDialog
   colorPickerLabel: string;
@@ -31,7 +40,10 @@ export interface EventDialogLocaleText {
   recurrenceTabLabel: string;
   recurrenceMainSelectCustomLabel: string;
   recurrenceWeeklyFrequencyLabel: string;
-  recurrenceWeeklyPresetLabel: (weekday: string) => string;
+  recurrenceWeeklyPresetLabel: (params: {
+    weekday: SchedulerWeekday;
+    weekdayName: string;
+  }) => string;
   recurrenceMonthlyDayOfMonthLabel: (dayNumber: number) => string;
   recurrenceMonthlyFrequencyLabel: string;
   recurrenceMonthlyLastWeekAriaLabel: (weekDay: string) => string;
@@ -43,6 +55,7 @@ export interface EventDialogLocaleText {
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   noResourceAriaLabel: string;
+  selectColorAriaLabel: (color: string) => string;
   resourceLabel: string;
   requiredResourceError: string;
   saveChanges: string;
@@ -113,6 +126,9 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   miniCalendarLabel: string;
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
+
+  // Main calendar region
+  calendarContentAriaLabel: string;
 
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
