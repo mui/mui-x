@@ -103,6 +103,20 @@ const GridEditMultiSelectChips = styled(GridMultiSelectChips)({
   },
 }) as typeof GridMultiSelectChips;
 
+// `baseModal` renders its child inside an MUI `FocusTrap`, which clones the child
+// and injects a `ref`. The popper slot (`basePopper`) is a ref-as-prop function
+// component (React 19 style) that simply drops the ref, so under React 18 the
+// injected ref triggers "Function components cannot be given refs" / "ref is not a
+// prop" warnings. This forwardRef boundary catches the FocusTrap ref on a real
+// element so it never reaches `basePopper`. The popper still positions against
+// `anchorEl`, so the wrapper has no layout impact.
+const GridEditMultiSelectModalChild = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(function GridEditMultiSelectModalChild(props, ref) {
+  return <div ref={ref} {...props} />;
+});
+
 export interface GridEditMultiSelectCellProps<
   V extends ValueOptions = ValueOptions,
 > extends GridRenderEditCellParams {
@@ -291,48 +305,50 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
           slotProps: { root: { style: { zIndex: 'auto' } }, backdrop: { invisible: true } },
         }}
       >
-        <GridEditMultiSelectCellPopper
-          as={rootProps.slots.basePopper}
-          ownerState={rootProps as OwnerState}
-          id={popupId}
-          role="dialog"
-          aria-label={colDef.headerName || field}
-          open={showPopup}
-          target={anchorEl}
-          placement="bottom-start"
-          flip
-          material={{
-            modifiers: [
-              {
-                name: 'offset',
-                options: { offset: [-1, -rowHeight + 1] }, // 1px compensate for the editing cell padding.
-              },
-            ],
-          }}
-          {...slotProps?.popper}
-          className={clsx(classes.popup, slotProps?.popper?.className)}
-        >
-          <GridEditMultiSelectCellPopperContent
-            onKeyDownCapture={handleKeyDownCapture}
-            {...slotProps?.popperContent}
-            className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
-            style={
-              {
-                '--_width': `${colDef.computedWidth}px`,
-                '--_rowHeight': `${rowHeight}px`,
-              } as React.CSSProperties
-            }
+        <GridEditMultiSelectModalChild>
+          <GridEditMultiSelectCellPopper
+            as={rootProps.slots.basePopper}
+            ownerState={rootProps as OwnerState}
+            id={popupId}
+            role="dialog"
+            aria-label={colDef.headerName || field}
+            open={showPopup}
+            target={anchorEl}
+            placement="bottom-start"
+            flip
+            material={{
+              modifiers: [
+                {
+                  name: 'offset',
+                  options: { offset: [-1, -rowHeight + 1] }, // 1px compensate for the editing cell padding.
+                },
+              ],
+            }}
+            {...slotProps?.popper}
+            className={clsx(classes.popup, slotProps?.popper?.className)}
           >
-            <GridEditMultiSelectAutocomplete
-              {...(props as GridEditMultiSelectCellProps)}
-              valueOptions={valueOptions}
-              selectedOptions={selectedOptions}
-              getOptionValue={getOptionValue}
-              getOptionLabel={getOptionLabel}
-              onDismiss={() => setOpen(false)}
-            />
-          </GridEditMultiSelectCellPopperContent>
-        </GridEditMultiSelectCellPopper>
+            <GridEditMultiSelectCellPopperContent
+              onKeyDownCapture={handleKeyDownCapture}
+              {...slotProps?.popperContent}
+              className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
+              style={
+                {
+                  '--_width': `${colDef.computedWidth}px`,
+                  '--_rowHeight': `${rowHeight}px`,
+                } as React.CSSProperties
+              }
+            >
+              <GridEditMultiSelectAutocomplete
+                {...(props as GridEditMultiSelectCellProps)}
+                valueOptions={valueOptions}
+                selectedOptions={selectedOptions}
+                getOptionValue={getOptionValue}
+                getOptionLabel={getOptionLabel}
+                onDismiss={() => setOpen(false)}
+              />
+            </GridEditMultiSelectCellPopperContent>
+          </GridEditMultiSelectCellPopper>
+        </GridEditMultiSelectModalChild>
       </rootProps.slots.baseModal>
     </React.Fragment>
   );

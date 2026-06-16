@@ -78,10 +78,15 @@ describe('useChatActions', () => {
   });
 
   it('throws outside a ChatProvider when called without the optional flag', () => {
+    // React 18's legacy renderer re-throws the caught error through `console.error`
+    // (the `invokeGuardedCallbackDev` path), which `vitest-fail-on-console` would
+    // otherwise treat as a failure. Silence it and assert the throw explicitly.
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() =>
       renderHook(() => useChatActions(), {
         // No wrapper — no provider.
       }),
     ).toThrow(/ChatProvider/);
+    consoleErrorSpy.mockRestore();
   });
 });

@@ -142,6 +142,12 @@ describe('ChatCodeBlock', () => {
 
     const writeText = installClipboardMock();
     writeText.mockImplementation(() => Promise.reject(new Error('denied')));
+    // When the async Clipboard API rejects, `useCopyToClipboard` falls back to the
+    // synchronous `document.execCommand('copy')` path. In a real browser that fallback
+    // can actually succeed (returning `true`), which flips the state to "copied" and
+    // makes this assertion flaky. Force the fallback to fail too so the error path is
+    // deterministic.
+    const execCommandSpy = vi.spyOn(document, 'execCommand').mockReturnValue(false);
 
     // eslint-disable-next-line testing-library/no-unnecessary-act
     await act(async () => {
@@ -150,5 +156,7 @@ describe('ChatCodeBlock', () => {
 
     expect(writeText).toHaveBeenCalled();
     expect(screen.getByRole('button', { name: 'Copy failed' })).not.toBe(null);
+
+    execCommandSpy.mockRestore();
   });
 });
