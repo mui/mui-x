@@ -21,8 +21,12 @@ export interface EventDialogOptionalRenderers {
   recurrenceTab?: React.ComponentType<RecurrenceTabRendererProps>;
   /**
    * Component rendered when the user is asked to choose the scope of a recurring update.
+   *
+   * Rendered by whichever editing surface is active, so a single renderer serves both platforms:
+   * a centered dialog stacked on the desktop editing dialog, or a drawer / bottom-sheet stacked
+   * on the compact editing drawer. The concrete shell is the renderer's own concern.
    */
-  recurringScopeDialog?: React.ComponentType<Record<string, never>>;
+  recurringScope?: React.ComponentType<Record<string, never>>;
 }
 
 export const EventDialogOptionalRenderersContext =

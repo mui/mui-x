@@ -32,7 +32,7 @@ describe('Core - EventCalendarStore', () => {
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
-        editedEventId: null,
+        editingOccurrence: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingRecurringEventOperation: null,

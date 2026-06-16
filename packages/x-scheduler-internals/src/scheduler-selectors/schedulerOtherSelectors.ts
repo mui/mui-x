@@ -5,12 +5,27 @@ import { SchedulerState as State } from '../internals/utils/SchedulerStore/Sched
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
   /**
-   * Returns `true` if the event with the given ID is the currently active event.
+   * Returns `true` if the event with the given ID is the one currently being edited.
    */
   isEditedEvent: createSelector(
-    (state: State) => state.editedEventId,
-    (editedEventId, eventId: SchedulerEventId | undefined) => editedEventId === eventId,
+    (state: State) => state.editingOccurrence?.occurrence.id ?? null,
+    (editedEventId, eventId: SchedulerEventId | undefined) =>
+      editedEventId != null && editedEventId === eventId,
   ),
+  /**
+   * The occurrence currently being edited (an existing occurrence or a creation draft), or `null`.
+   */
+  editingOccurrence: createSelector((state: State) => state.editingOccurrence),
+  /**
+   * The key of the occurrence currently being edited, or `null` when nothing is being edited.
+   */
+  editingOccurrenceKey: createSelector(
+    (state: State) => state.editingOccurrence?.occurrence.key ?? null,
+  ),
+  /**
+   * Returns `true` when an occurrence is currently being edited.
+   */
+  isEditing: createSelector((state: State) => state.editingOccurrence != null),
   visibleDate: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,

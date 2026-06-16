@@ -21,12 +21,7 @@ export interface EventDialogProps extends DialogProps {
 export interface EventDialogProviderProps {
   children: React.ReactNode;
   /**
-   * Optional components rendered inside the dialog (recurrence tab, recurring scope dialog).
+   * Optional components rendered during editing (recurrence tab, recurring scope confirmation).
    */
   optionalRenderers?: EventDialogOptionalRenderers;
-}
-
-export interface EventDialogTriggerProps extends React.HTMLAttributes<HTMLElement> {
-  occurrence: SchedulerRenderableEventOccurrence;
-  children: React.ReactNode;
 }

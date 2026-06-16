@@ -2087,59 +2087,61 @@ describe('<EventDialogContent open />', () => {
     });
   });
 
-  describe('editedEventId state', () => {
-    it('should set editedEventId on the store when the dialog opens', () => {
-      const handleActiveEventIdChange = spy();
+  describe('editingOccurrence state', () => {
+    it('should leave editingOccurrence null when the content is rendered directly', () => {
+      const handleEditingChange = spy();
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <StateWatcher
             Context={SchedulerStoreContext}
-            selector={(s) => s.editedEventId}
-            onValueChange={handleActiveEventIdChange}
+            selector={(s) => s.editingOccurrence?.occurrence.id ?? null}
+            onValueChange={handleEditingChange}
           />
           <TestEventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
 
-      // The EventDialogProvider's onOpen sets editedEventId.
+      // The EventDialogProvider's onOpen sets editingOccurrence.
       // Here we render EventDialogContent directly (without the trigger flow),
       // so we verify the initial state is null.
-      expect(handleActiveEventIdChange.lastCall?.firstArg).to.equal(null);
+      expect(handleEditingChange.lastCall?.firstArg).to.equal(null);
     });
 
-    it('should clear editedEventId on the store when the dialog closes', async () => {
-      const handleActiveEventIdChange = spy();
+    it('should reflect the edited occurrence id while an event is being edited', async () => {
+      const handleEditingChange = spy();
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
-            onMount={(store) => store.setEditedEventId(DEFAULT_EVENT.id)}
+            onMount={(store) =>
+              store.startEditing({ id: DEFAULT_EVENT.id, key: DEFAULT_EVENT.id } as any)
+            }
           />
           <StateWatcher
             Context={SchedulerStoreContext}
-            selector={(s) => s.editedEventId}
-            onValueChange={handleActiveEventIdChange}
+            selector={(s) => s.editingOccurrence?.occurrence.id ?? null}
+            onValueChange={handleEditingChange}
           />
           <TestEventDialogContent open {...defaultProps} onClose={() => {}} />
         </EventCalendarProvider>,
       );
 
-      // After SchedulerStoreRunner sets the editedEventId, it should be the event ID
-      expect(handleActiveEventIdChange.lastCall?.firstArg).to.equal(DEFAULT_EVENT.id);
+      // After SchedulerStoreRunner calls startEditing, it should be the event ID
+      expect(handleEditingChange.lastCall?.firstArg).to.equal(DEFAULT_EVENT.id);
     });
 
-    it('should call setEditedEventId via EventDialogProvider onOpen callback', () => {
-      let setEditedEventIdSpy;
+    it('should expose startEditing on the store', () => {
+      let startEditingSpy;
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <StoreSpy
             Context={SchedulerStoreContext}
-            method="setEditedEventId"
+            method="startEditing"
             onSpyReady={(sp) => {
-              setEditedEventIdSpy = sp;
+              startEditingSpy = sp;
             }}
           />
           <TestEventDialogContent open {...defaultProps} />
@@ -2147,7 +2149,7 @@ describe('<EventDialogContent open />', () => {
       );
 
       // Verify the method exists on the store (basic sanity check)
-      expect(setEditedEventIdSpy).not.to.equal(undefined);
+      expect(startEditingSpy).not.to.equal(undefined);
     });
   });
 });

@@ -11,7 +11,7 @@ import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
-import { EventDialogTrigger, useEventDialogContext } from '../event-dialog';
+import { EventEditingTrigger, useEventEditingContext } from '../event-editing';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const MoreEventsPopoverHeader = styled('div', {
@@ -67,7 +67,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   // Context hooks
   const adapter = useAdapterContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
-  const { subscribeCloseHandler } = useEventDialogContext();
+  const { subscribeCloseHandler } = useEventEditingContext();
 
   React.useEffect(() => {
     subscribeCloseHandler(() => {
@@ -88,14 +88,14 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
         {occurrences.map((occurrence) => (
-          <EventDialogTrigger occurrence={occurrence} key={occurrence.key}>
+          <EventEditingTrigger occurrence={occurrence} key={occurrence.key}>
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
               ariaLabelledBy={`${schedulerId}-PopoverHeader-${day.key}`}
             />
-          </EventDialogTrigger>
+          </EventEditingTrigger>
         ))}
       </MoreEventsPopoverBody>
     </Popover>

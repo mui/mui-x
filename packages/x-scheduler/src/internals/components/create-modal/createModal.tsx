@@ -24,7 +24,7 @@ export function createModal<TData>(config: CreateModalConfig) {
   }
 
   function Provider(props: ProviderProps<TData>) {
-    const { children, render, onOpen: onOpenProp, onClose: onCloseProp } = props;
+    const { children, render, anchored = true, onOpen: onOpenProp, onClose: onCloseProp } = props;
     const anchorRef = React.useRef<HTMLElement | null>(null);
     const eventManager = React.useRef(new EventManager());
 
@@ -70,7 +70,7 @@ export function createModal<TData>(config: CreateModalConfig) {
       <Context.Provider value={contextValue}>
         {children}
         {state.data &&
-          anchorRef.current &&
+          (!anchored || anchorRef.current) &&
           render({
             isOpen: Boolean(state.isOpen),
             anchorRef,

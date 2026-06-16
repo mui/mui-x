@@ -3,5 +3,5 @@ import { RecurringScopeDialog } from './components/recurring-scope-dialog/Recurr
 
 export const PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS = {
   recurrenceTab: RecurrenceTab,
-  recurringScopeDialog: RecurringScopeDialog,
+  recurringScope: RecurringScopeDialog,
 };

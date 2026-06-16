@@ -12,7 +12,7 @@ import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-intern
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { EventSkeleton } from '../event-skeleton';
-import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
+import { EventEditingTrigger, useEventEditingContext } from '../event-editing';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
 import { useDayTimeGridInternalRenderers } from './DayTimeGridInternalRenderersContext';
@@ -125,7 +125,7 @@ function ColumnInteractiveLayer({
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { onOpen: startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
   const { timeGridEvent: TimeGridEvent } = useDayTimeGridInternalRenderers();
 
@@ -157,9 +157,9 @@ function ColumnInteractiveLayer({
       {isLoading && <EventSkeleton data-variant="time-column" />}
       {!isLoading &&
         occurrences.map((occurrence) => (
-          <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+          <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
             <TimeGridEvent occurrence={occurrence} variant="regular" />
-          </EventDialogTrigger>
+          </EventEditingTrigger>
         ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (

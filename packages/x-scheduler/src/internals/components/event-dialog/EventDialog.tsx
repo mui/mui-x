@@ -6,19 +6,15 @@ import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
-import {
-  EventDialogProps,
-  EventDialogProviderProps,
-  EventDialogTriggerProps,
-} from './EventDialog.types';
-import { createModal } from '../create-modal';
+import { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
+import { EventEditingProvider } from '../event-editing';
 import { FormContent } from './FormContent';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
@@ -113,13 +109,6 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
 } as any as DialogProps['PaperComponent'];
 
-const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
-  contextName: 'EventDialogContext',
-});
-
-export const EventDialogContext = EventDialog.Context;
-export const useEventDialogContext = EventDialog.useContext;
-
 export const EventDialogContent = React.forwardRef(function EventDialogContent(
   inProps: EventDialogProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -164,6 +153,14 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   );
 });
 
+/**
+ * The desktop editing surface provider.
+ *
+ * It renders the anchored, draggable event dialog through the shared editing backbone
+ * (`EventEditingProvider`) and stacks the recurring scope confirmation on top when the store asks
+ * for it. Opening/closing records the editing state on the store (`startEditing`/`stopEditing`),
+ * keeping "what is being edited" (the store) decoupled from "which surface is open" (the modal).
+ */
 export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, optionalRenderers, ...other } = props;
   const store = useSchedulerStoreContext();
@@ -173,13 +170,13 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
   );
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
-  const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
+  const RecurringScopeRenderer = optionalRenderers?.recurringScope;
 
   return (
     <EventDialogOptionalRenderersContext.Provider
       value={optionalRenderers ?? (EMPTY_OBJECT as EventDialogOptionalRenderers)}
     >
-      <EventDialog.Provider
+      <EventEditingProvider
         render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
           <EventDialogContent
             open={isOpen}
@@ -190,56 +187,20 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
           />
         )}
         onOpen={(occurrence) => {
-          store.setEditedEventId(occurrence.id);
+          store.startEditing(
+            occurrence,
+            schedulerOccurrencePlaceholderSelectors.isCreating(store.state) ? 'creation' : 'event',
+          );
         }}
         onClose={() => {
-          store.setEditedEventId(null);
-          store.setOccurrencePlaceholder(null);
+          store.stopEditing();
         }}
       >
         {children}
-        {showRecurrence && isRecurringScopeDialogOpen && RecurringScopeDialogRenderer && (
-          <RecurringScopeDialogRenderer />
+        {showRecurrence && isRecurringScopeDialogOpen && RecurringScopeRenderer && (
+          <RecurringScopeRenderer />
         )}
-      </EventDialog.Provider>
+      </EventEditingProvider>
     </EventDialogOptionalRenderersContext.Provider>
-  );
-}
-
-export function EventDialogTrigger(props: EventDialogTriggerProps) {
-  const { occurrence, ...other } = props;
-  const ref = React.useRef<HTMLElement | null>(null);
-
-  return <EventDialog.Trigger ref={ref} data={occurrence} {...other} />;
-}
-
-export interface CompactEventDialogProviderProps {
-  children: React.ReactNode;
-  /**
-   * Called when an event (or creation placeholder) becomes the trigger's active occurrence.
-   */
-  onOpen?: (occurrence: SchedulerRenderableEventOccurrence) => void;
-  /**
-   * Called when the trigger's active occurrence is cleared.
-   */
-  onClose?: () => void;
-}
-
-/**
- * A minimal `EventDialog` provider for the compact (mobile) views.
- *
- * It only exists to satisfy the shared `EventDialogTrigger` (and the time-grid creation flow,
- * which both consume this context) — it renders no popover form. The compact editing surface
- * is the separate `CompactEventDrawer`; this provider just forwards the trigger's open/close
- * to the caller (which bridges them into the drawer context), so the drawer stays decoupled
- * from the event dialog and the store.
- */
-export function CompactEventDialogProvider(props: CompactEventDialogProviderProps) {
-  const { children, onOpen, onClose } = props;
-
-  return (
-    <EventDialog.Provider render={() => null} onOpen={onOpen} onClose={onClose}>
-      {children}
-    </EventDialog.Provider>
   );
 }

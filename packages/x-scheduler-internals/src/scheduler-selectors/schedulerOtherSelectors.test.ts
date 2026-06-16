@@ -3,6 +3,9 @@ import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const BASE_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 
+// The selector only reads `occurrence.id` / `occurrence.key`, so a minimal occurrence is enough.
+const occurrence = (id: string) => ({ id, key: id }) as any;
+
 storeClasses.forEach((storeClass) => {
   describe(`schedulerOtherSelectors - ${storeClass.name}`, () => {
     describe('isEditedEvent', () => {
@@ -13,22 +16,22 @@ storeClasses.forEach((storeClass) => {
 
       it('should return true when the given event ID matches the active event', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        store.setEditedEventId('event-1');
+        store.startEditing(occurrence('event-1'));
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);
       });
 
       it('should return false when a different event is active', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        store.setEditedEventId('event-2');
+        store.startEditing(occurrence('event-2'));
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
       });
 
       it('should return false after the active event is cleared', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        store.setEditedEventId('event-1');
+        store.startEditing(occurrence('event-1'));
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);
 
-        store.setEditedEventId(null);
+        store.stopEditing();
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
       });
     });

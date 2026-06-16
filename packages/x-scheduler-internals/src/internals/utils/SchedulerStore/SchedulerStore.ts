@@ -18,6 +18,7 @@ import {
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
+  SchedulerRenderableEventOccurrence,
 } from '../../../models';
 import {
   SchedulerState,
@@ -112,7 +113,7 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      editedEventId: null,
+      editingOccurrence: null,
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingRecurringEventOperation: null,
@@ -742,11 +743,24 @@ export class SchedulerStore<
   };
 
   /**
-   * Sets the ID of the currently active event (e.g. open in the event dialog).
-   * Pass `null` to clear the active event.
+   * Marks an occurrence (an existing occurrence or a creation draft) as the one being edited.
+   *
+   * This only records *what* is being edited — opening the editing surface (dialog or drawer) is a
+   * separate concern handled by the surface's modal.
    */
-  public setEditedEventId = (eventId: SchedulerEventId | null) => {
-    this.set('editedEventId', eventId);
+  public startEditing = (
+    occurrence: SchedulerRenderableEventOccurrence,
+    source: 'event' | 'creation' = 'event',
+  ) => {
+    this.set('editingOccurrence', { occurrence, source });
+  };
+
+  /**
+   * Clears the editing state and dismisses any in-progress event creation / live preview.
+   */
+  public stopEditing = () => {
+    this.set('editingOccurrence', null);
+    this.setOccurrencePlaceholder(null);
   };
 
   /**

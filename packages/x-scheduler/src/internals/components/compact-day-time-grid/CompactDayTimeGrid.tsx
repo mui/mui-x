@@ -9,11 +9,8 @@ import {
   DayTimeGridInternalRenderersContext,
 } from '../day-time-grid/DayTimeGridInternalRenderersContext';
 import { TimeGridEventTouch } from '../event/time-grid-event/TimeGridEventTouch';
-import {
-  CompactEventDrawer,
-  CompactEventDrawerProvider,
-  useCompactEventDrawerContext,
-} from '../compact-event-drawer';
+import { CompactEventDrawer } from '../compact-event-drawer';
+import { CompactEventEditingProvider, useEventEditingContext } from '../event-editing';
 import { ArmedOccurrenceProvider, useDisarmOnOutsidePointer } from '../armed-occurrence';
 
 // Every compact (touch) view renders its events through the same touch variant.
@@ -49,10 +46,11 @@ const CompactDayTimeGridContainer = React.forwardRef(function CompactDayTimeGrid
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { isOpen, data, onClose } = useCompactEventDrawerContext();
+  // Concept 2 — arming and the drawer's open state follow the editing surface (the shared modal).
+  const { isOpen, data, onClose } = useEventEditingContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  // The drawer is the current producer of arming: the open occurrence is the armed one.
+  // The editing surface is the current producer of arming: the open occurrence is the armed one.
   const armedKey = isOpen ? (data?.key ?? null) : null;
 
   // While an occurrence is armed, the first tap anywhere on the grid exits editing (disarming and
@@ -85,17 +83,17 @@ const CompactDayTimeGridContainer = React.forwardRef(function CompactDayTimeGrid
  * `CompactWeekView`).
  *
  * It reuses `DayTimeGrid` and swaps in the touch event variant through the internal renderers
- * context, stacks the mock editing drawer below the grid, and bridges the tap-to-arm / tap-to-
- * exit interactions into the dedicated `CompactEventDrawer` context. The only thing each view
- * provides is its own `days` (a 1-, 3- or 7-day range).
+ * context, stacks the mock editing drawer below the grid, and drives the tap-to-arm / tap-to-exit
+ * interactions through the shared `EventDialog` editing surface (the one stacking backbone). The
+ * only thing each view provides is its own `days` (a 1-, 3- or 7-day range).
  */
 export const CompactDayTimeGrid = React.forwardRef(function CompactDayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   return (
-    <CompactEventDrawerProvider>
+    <CompactEventEditingProvider>
       <CompactDayTimeGridContainer ref={forwardedRef} {...props} />
-    </CompactEventDrawerProvider>
+    </CompactEventEditingProvider>
   );
 });

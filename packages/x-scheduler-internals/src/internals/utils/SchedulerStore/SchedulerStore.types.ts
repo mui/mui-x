@@ -10,6 +10,7 @@ import {
   SchedulerOccurrencePlaceholder,
   SchedulerPreferences,
   SchedulerProcessedEvent,
+  SchedulerRenderableEventOccurrence,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
@@ -29,6 +30,17 @@ export interface StoredError {
    * argument to `store.dismissError(key)`.
    */
   key: string;
+}
+
+export interface SchedulerEditingState {
+  /**
+   * The occurrence being edited — an existing occurrence or a creation draft.
+   */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * Where the editing was initiated: editing an existing event vs. creating a new one.
+   */
+  source: 'event' | 'creation';
 }
 
 export interface SchedulerState<TEvent extends object = any> {
@@ -162,10 +174,13 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The ID of the event currently active (e.g. open in the event dialog).
-   * `null` when no event is active.
+   * The occurrence currently being edited (an existing occurrence or a creation draft).
+   * `null` when no event is being edited.
+   *
+   * This is the single source of truth for *what* is being edited — decoupled from *which* surface
+   * (dialog or drawer) is open to edit it. The editing surfaces and the highlight read from here.
    */
-  editedEventId: SchedulerEventId | null;
+  editingOccurrence: SchedulerEditingState | null;
   /**
    * The event that has been copied or cut, if any.
    */

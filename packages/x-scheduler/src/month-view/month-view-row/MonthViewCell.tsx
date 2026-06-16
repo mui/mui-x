@@ -21,8 +21,10 @@ import { DayGridEvent } from '../../internals/components/event/day-grid-event/Da
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
-import { EventDialogTrigger } from '../../internals/components/event-dialog';
-import { useEventDialogContext } from '../../internals/components/event-dialog/EventDialog';
+import {
+  EventEditingTrigger,
+  useEventEditingContext,
+} from '../../internals/components/event-editing';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventSkeleton } from '../../internals/components/event-skeleton';
@@ -174,7 +176,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes, localeText } = useEventCalendarStyledContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { onOpen: startEditing } = useEventEditingContext();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -256,14 +258,14 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             }
 
             return (
-              <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+              <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
                   occurrence={occurrence}
                   variant={
                     isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
                   }
                 />
-              </EventDialogTrigger>
+              </EventEditingTrigger>
             );
           })}
         {hiddenCount > 0 && (

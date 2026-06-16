@@ -5,9 +5,12 @@ import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import { grey } from '@mui/material/colors';
 import { useStore } from '@base-ui/utils/store';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { useCompactEventDrawerContext } from './CompactEventDrawerContext';
+import { useEventEditingContext } from '../event-editing';
 
 // Height of the collapsed ("peek") drawer as a fraction of the compact view. The grid above
 // shrinks to make room for it; tapping the drawer expands it to the full height.
@@ -82,7 +85,10 @@ const CompactEventDrawerTitle = styled('h2', {
  */
 export function CompactEventDrawer() {
   const store = useEventCalendarStoreContext();
-  const { isOpen, data: occurrence, onClose } = useCompactEventDrawerContext();
+  // Concept 2 — the surface lifecycle (open/close) comes from the shared editing-surface modal.
+  const { isOpen, onClose } = useEventEditingContext();
+  // Concept 1 — *what* is being edited comes from the store (the single source of truth).
+  const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrence)?.occurrence;
   // When the drawer is closed there is no occurrence, so the value is unused — an empty id
   // simply resolves to `false`.
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence?.id ?? '');
