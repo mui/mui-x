@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "onItemClick": {
-      "description": "Callback fired when a marker is clicked directly and <code>disableHitArea</code> is <code>true</code>. When <code>disableHitArea</code> is <code>false</code>, use <code>onItemClick</code> on the chart container to handle closest-point clicks.",
+      "description": "Callback fired when a marker is clicked directly. For closest-point clicks (the <code>ScatterChart</code> default), pass <code>onItemClick</code> to the chart container instead.",
       "typeDescriptions": {
         "event": {
           "name": "event",
