@@ -27,7 +27,6 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
   const { componentFamily, render, fieldType, withDate, withTime, setValue } = getOptions();
 
   describe.skipIf(componentFamily !== 'field' || !setValue)('text field keyboard:', () => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     const setValue = getOptions().setValue!;
 
     it('should not accept end date prior to start state', () => {

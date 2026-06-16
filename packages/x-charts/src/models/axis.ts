@@ -223,6 +223,11 @@ type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
 export interface ChartsRotationAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'rotation';
   /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
+  /**
    * The start angle (in deg).
    */
   startAngle?: number;
@@ -260,6 +265,11 @@ export interface ChartsRotationAxisProps extends Omit<ChartsAxisProps, 'slots' |
 
 export interface ChartsRadiusAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'radius';
+  /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
   /**
    * The minimal radius.
    * Can be a number (in pixels), a pixel string (for example `'20px'`), or a percentage string

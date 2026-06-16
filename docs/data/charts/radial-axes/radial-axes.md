@@ -36,6 +36,16 @@ To distinguish radius axis from the rotation axis, use the `chartsRadialAxisClas
 [`.${chartsRadialAxisClasses.radius} .${chartsRadialAxisClasses.tick} `]: { /* Modify only ticks from the radius axis */ },
 ```
 
+### Hiding axis elements
+
+Both axes accept three boolean props to remove parts of the axis:
+
+- `disableLine`: hides the axis line.
+- `disableTicks`: hides the tick marks.
+- `disableTickLabel`: hides the tick labels while keeping the ticks.
+
+Toggle them in the playgrounds below.
+
 ### Radius axis
 
 The `ChartsRadiusAxis` component renders tick labels along a radius direction.
