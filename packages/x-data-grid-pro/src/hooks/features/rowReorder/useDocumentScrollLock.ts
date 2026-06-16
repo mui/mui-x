@@ -125,7 +125,8 @@ function lockElementScroll(element: HTMLElement, scrollbarSize: number): void {
   const vertical = element.scrollHeight > element.clientHeight ? scrollbarSize : 0;
   const horizontal = element.scrollWidth > element.clientWidth ? scrollbarSize : 0;
 
-  const previousOverflow = element.style.overflow;
+  const previousOverflowX = element.style.overflowX;
+  const previousOverflowY = element.style.overflowY;
   const previousVerticalPadding = element.style[verticalSide];
   const previousPaddingBottom = element.style.paddingBottom;
 
@@ -143,7 +144,8 @@ function lockElementScroll(element: HTMLElement, scrollbarSize: number): void {
   lockStateByElement.set(element, {
     count: 1,
     restore: () => {
-      element.style.overflow = previousOverflow;
+      element.style.overflowX = previousOverflowX;
+      element.style.overflowY = previousOverflowY;
       element.style[verticalSide] = previousVerticalPadding;
       element.style.paddingBottom = previousPaddingBottom;
     },

@@ -280,6 +280,13 @@ export const useGridRowReorder = (
           apiRef.current.rootElementRef?.current,
           gridVerticalScrollbarWidthSelector(apiRef),
         );
+
+        // Release the lock on the native `dragend`.
+        // `rowDragEnd` is not published when the dragged row is removed mid-drag.
+        // Unmounting mid-drag is handled separately by the hook's effect cleanup.
+        event.currentTarget.addEventListener('dragend', () => pageScrollLock.unlock(), {
+          once: true,
+        });
       }
 
       dragRowNode.current = event.currentTarget;
@@ -452,9 +459,6 @@ export const useGridRowReorder = (
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
     async (_, event): Promise<void> => {
-      // Always restore the page scroll locked on drag start
-      pageScrollLock.unlock();
-
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
@@ -603,7 +607,6 @@ export const useGridRowReorder = (
       applyDraggedState,
       timeout,
       applyRowAnimation,
-      pageScrollLock,
     ],
   );
 
