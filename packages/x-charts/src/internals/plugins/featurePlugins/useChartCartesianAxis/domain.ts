@@ -30,7 +30,7 @@ function niceDomain(
  * Calculates the initial domain and tick number for a given axis.
  * The domain should still run through the zoom filterMode after this step.
  */
-export function calculateInitialDomainAndTickNumber(
+function calculateInitialDomainAndTickNumber(
   axis: DefaultedAxis<ContinuousScaleName>,
   axisDirection: 'x' | 'y',
   axisIndex: number,
@@ -110,7 +110,7 @@ function getActualAxisExtrema(
     min = axisExtrema.max;
   }
 
-  if ('min' in axisExtrema && axisExtrema.min != null && axisExtrema.min > minData) {
+  if ('min' in axisExtrema && axisExtrema.min != null && axisExtrema.min > maxData) {
     max = axisExtrema.min;
   }
 
