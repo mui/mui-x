@@ -26,7 +26,7 @@ import {
   EventEditingOptionalRenderersContext,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
-import { RecurringScopeDialog } from '../../internals/components/recurring-scope/RecurringScopeDialog';
+import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
 
 /**
  * Wraps EventDialogContent with the premium renderers the production code supplies
