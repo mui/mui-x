@@ -70,7 +70,7 @@ catalogs:
       specifier: 9.0.0
       version: 9.0.0
     '@mui/utils':
-      specifier: 9.0.1
+      specifier: ^9.0.1
       version: 9.0.1
     '@mui/x-internal-exceljs-fork':
       specifier: 5.0.0
