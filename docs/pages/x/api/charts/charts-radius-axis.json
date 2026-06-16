@@ -4,6 +4,7 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "disableLine": { "type": { "name": "bool" }, "default": "false" },
+    "disableTickLabel": { "type": { "name": "bool" }, "default": "false" },
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "string" } },
     "labelStyle": { "type": { "name": "object" } },
