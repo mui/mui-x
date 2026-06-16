@@ -1,31 +1,23 @@
-import {
-  SAMPLING_STRATEGIES,
-  type SamplingStrategy,
-} from './sampling.strategies';
-import type {
-  SamplingBucket,
-  SamplingLevel,
-  SamplingPyramid,
-  SamplingStrategyName,
-} from './sampling.types';
+import type { SamplingBucket, SamplingLevel, SamplingPyramid } from './sampling.types';
 
 /** Smallest element size (px) allowed before sampling kicks in. */
-export const MIN_ELEMENT_SIZE_PX = 4;
+export const MIN_ELEMENT_SIZE_PX = 6;
 
 /**
  * Min zoom span (%) at which the data fills the view with `MIN_ELEMENT_SIZE_PX`-wide elements.
  * Screen-derived, so elements never get thinner and the level count adapts to screen + data.
  */
 export function getSamplingMinSpan(dataLength: number, availableSizePx: number): number {
-  const capacity = availableSizePx / MIN_ELEMENT_SIZE_PX;
-  return (100 * capacity) / dataLength;
+  return (100 * availableSizePx) / (MIN_ELEMENT_SIZE_PX * dataLength);
 }
 
-/** Builds the LOD pyramid for one series. Level 0 (no merge) is implicit; `levels[0]` merges 2. */
-export function buildSamplingPyramid(
-  stacked: readonly [number, number][],
-  strategy: SamplingStrategy,
-): SamplingPyramid {
+/**
+ * Builds the LOD pyramid for one series from its stacked `[base, top]` values. Each bucket keeps
+ * the min base / max top of its range (min/max envelope, so spikes and troughs survive).
+ * Other aggregations to consider if needed: max (peak only), average, stride (keep the first).
+ * Level 0 (no merge) is implicit; `levels[i].bucketSize === 2 ** (i + 1)`.
+ */
+export function buildSamplingPyramid(stacked: readonly [number, number][]): SamplingPyramid {
   const dataLength = stacked.length;
   const levels: SamplingLevel[] = [];
 
@@ -36,7 +28,16 @@ export function buildSamplingPyramid(
       const buckets: SamplingBucket[] = [];
       for (let startIndex = 0; startIndex < dataLength; startIndex += bucketSize) {
         const endIndex = Math.min(startIndex + bucketSize - 1, dataLength - 1);
-        const { low, high } = strategy(stacked, startIndex, endIndex);
+        let low = Infinity;
+        let high = -Infinity;
+        for (let i = startIndex; i <= endIndex; i += 1) {
+          if (stacked[i][0] < low) {
+            low = stacked[i][0];
+          }
+          if (stacked[i][1] > high) {
+            high = stacked[i][1];
+          }
+        }
         buckets.push({ startIndex, endIndex, low, high });
       }
       levels.push({ bucketSize, buckets });
@@ -46,48 +47,19 @@ export function buildSamplingPyramid(
   return { dataLength, levels };
 }
 
-export function getSamplingStrategy(
-  name: SamplingStrategyName,
-): SamplingStrategy {
-  return SAMPLING_STRATEGIES[name];
-}
-
-/** Resolves a level index (0 = no sampling) to a stored level, clamped to pyramid depth. */
-function getLevelByIndex(
-  pyramid: SamplingPyramid,
-  levelIndex: number,
-): SamplingLevel | null {
-  if (levelIndex <= 0 || pyramid.levels.length === 0) {
-    return null;
-  }
-  return pyramid.levels[Math.min(levelIndex, pyramid.levels.length) - 1];
-}
-
 /**
- * Picks the level from the zoom span: max zoom (`currentSpan === minSpan`) → no sampling;
- * each span doubling → bucket size ×2.
+ * Picks the level from the zoom span: max zoom (`currentSpan === minSpan`) → no sampling (`null`);
+ * each span doubling → bucket size ×2. Clamped to the pyramid depth.
  */
 export function selectSamplingLevelByZoom(
   currentSpan: number,
   minSpan: number,
   pyramid: SamplingPyramid,
 ): SamplingLevel | null {
-  if (!(currentSpan > 0) || !(minSpan > 0)) {
+  const { levels } = pyramid;
+  if (!(currentSpan > 0) || !(minSpan > 0) || levels.length === 0) {
     return null;
   }
   const levelIndex = Math.round(Math.log2(currentSpan / minSpan));
-  return getLevelByIndex(pyramid, levelIndex);
-}
-
-/** Fallback for axes without zoom: picks the level from the element width. */
-export function selectSamplingLevel(
-  bandwidthPx: number,
-  pyramid: SamplingPyramid,
-): SamplingLevel | null {
-  if (!(bandwidthPx > 0) || bandwidthPx >= MIN_ELEMENT_SIZE_PX) {
-    return null;
-  }
-  // Smallest factor-of-two that brings the slot back to at least MIN_ELEMENT_SIZE_PX.
-  const levelIndex = Math.ceil(Math.log2(MIN_ELEMENT_SIZE_PX / bandwidthPx));
-  return getLevelByIndex(pyramid, levelIndex);
+  return levelIndex <= 0 ? null : levels[Math.min(levelIndex, levels.length) - 1];
 }

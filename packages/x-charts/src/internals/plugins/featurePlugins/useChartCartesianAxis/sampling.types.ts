@@ -1,8 +1,5 @@
 import type { SeriesId } from '../../../../models/seriesType/common';
 
-/** Aggregation used when collapsing elements into a bucket. Only `minMaxEnvelope` is wired today. */
-export type SamplingStrategyName = 'minMaxEnvelope' | 'max' | 'average' | 'stride';
-
 /** One aggregated bucket, in value space (stays valid across zoom). */
 export interface SamplingBucket {
   /** First original data index covered by the bucket. */
@@ -33,7 +30,6 @@ export interface SamplingPyramid {
 /** State slice set by the pro `useChartProSampling` plugin; absent in community. */
 export interface SamplingState {
   enabled: boolean;
-  strategy: SamplingStrategyName;
 }
 
 /** Pyramids keyed by series id, as exposed by the selector. */

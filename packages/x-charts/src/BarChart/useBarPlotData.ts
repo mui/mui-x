@@ -10,10 +10,7 @@ import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } fro
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import {
-  type ComputedAxisConfig,
-  type DefaultizedZoomOptions,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import {
   createGetBarDimensions,
   createGetBucketBarDimensions,
@@ -22,18 +19,12 @@ import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import { useStore } from '../internals/store/useStore';
 import {
-  selectSamplingLevel,
+  getSamplingMinSpan,
   selectSamplingLevelByZoom,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling';
 import { selectorChartSamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
-import type {
-  SamplingLevel,
-  SamplingPyramidLookup,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
-import {
-  selectorChartZoomMap,
-  selectorChartZoomOptionsLookup,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import type { SamplingPyramidLookup } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
+import { selectorChartZoomMap } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { ZoomData } from '../internals/plugins/featurePlugins/useChartCartesianAxis/zoom.types';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
@@ -58,7 +49,6 @@ export function useBarPlotData(
   const store = useStore();
   const samplingPyramids = store.use(selectorChartSamplingPyramids);
   const zoomMap = store.use(selectorChartZoomMap);
-  const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
 
   return processBarDataForPlot(
     drawingArea,
@@ -71,7 +61,6 @@ export function useBarPlotData(
     defaultYAxisId,
     samplingPyramids,
     zoomMap,
-    zoomOptionsLookup,
   );
 }
 
@@ -86,7 +75,6 @@ export function processBarDataForPlot(
   defaultYAxisId: AxisId,
   samplingPyramids: SamplingPyramidLookup = {},
   zoomMap?: Map<AxisId, ZoomData>,
-  zoomOptionsLookup?: Record<AxisId, DefaultizedZoomOptions>,
 ) {
   const masks: Record<string, MaskData> = {};
 
@@ -190,18 +178,31 @@ export function processBarDataForPlot(
         seriesDataPoints.push(result);
       };
 
+      const makeResult = (
+        dataIndex: number,
+        barDimensions: { x: number; y: number; width: number; height: number },
+      ): ProcessedBarData => ({
+        seriesId,
+        dataIndex,
+        hidden: series[seriesId].hidden,
+        ...barDimensions,
+        color: colorGetter(dataIndex),
+        value: series[seriesId].data[dataIndex],
+        maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
+      });
+
       const pyramid = samplingPyramids[seriesId];
-      let activeLevel: SamplingLevel | null = null;
-      if (pyramid) {
-        const baseAxisId = verticalLayout ? xAxisId : yAxisId;
-        const zoom = zoomMap?.get(baseAxisId);
-        const zoomOptions = zoomOptionsLookup?.[baseAxisId];
-        // With zoom, derive the level from the span; without zoom, from the bar width.
-        activeLevel =
-          zoom && zoomOptions
-            ? selectSamplingLevelByZoom(zoom.end - zoom.start, zoomOptions.minSpan, pyramid)
-            : selectSamplingLevel(baseScaleConfig.scale.bandwidth(), pyramid);
-      }
+      const baseAxisId = verticalLayout ? xAxisId : yAxisId;
+      const zoom = zoomMap?.get(baseAxisId);
+      const availableSize = verticalLayout ? drawingArea.width : drawingArea.height;
+      const activeLevel =
+        pyramid && zoom
+          ? selectSamplingLevelByZoom(
+              zoom.end - zoom.start,
+              getSamplingMinSpan(pyramid.dataLength, availableSize),
+              pyramid,
+            )
+          : null;
 
       if (activeLevel) {
         const getBucketBarDimensions = createGetBucketBarDimensions({
@@ -213,20 +214,9 @@ export function processBarDataForPlot(
         });
 
         for (const bucket of activeLevel.buckets) {
-          const dataIndex = bucket.startIndex;
-          const barDimensions = getBucketBarDimensions(bucket, groupIndex);
-
           registerResult(
-            {
-              seriesId,
-              dataIndex,
-              hidden: series[seriesId].hidden,
-              ...barDimensions,
-              color: colorGetter(dataIndex),
-              value: series[seriesId].data[dataIndex],
-              maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
-            },
-            dataIndex,
+            makeResult(bucket.startIndex, getBucketBarDimensions(bucket, groupIndex)),
+            bucket.startIndex,
           );
         }
       } else {
@@ -245,18 +235,7 @@ export function processBarDataForPlot(
             continue;
           }
 
-          registerResult(
-            {
-              seriesId,
-              dataIndex,
-              hidden: series[seriesId].hidden,
-              ...barDimensions,
-              color: colorGetter(dataIndex),
-              value: series[seriesId].data[dataIndex],
-              maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
-            },
-            dataIndex,
-          );
+          registerResult(makeResult(dataIndex, barDimensions), dataIndex);
         }
       }
 

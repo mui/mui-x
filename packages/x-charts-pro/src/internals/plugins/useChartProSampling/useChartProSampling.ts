@@ -16,7 +16,7 @@ export const useChartProSampling: ChartPlugin<UseChartProSamplingSignature> = ({
       isFirstRender.current = false;
       return;
     }
-    store.set('sampling', { enabled: sampling, strategy: 'minMaxEnvelope' });
+    store.set('sampling', { enabled: sampling });
   }, [sampling, store]);
 
   return {};
@@ -32,8 +32,5 @@ useChartProSampling.getDefaultizedParams = ({ params }) => ({
 });
 
 useChartProSampling.getInitialState = ({ sampling }) => ({
-  sampling: {
-    enabled: sampling,
-    strategy: 'minMaxEnvelope',
-  },
+  sampling: { enabled: sampling },
 });
