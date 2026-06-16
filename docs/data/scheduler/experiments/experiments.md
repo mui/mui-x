@@ -3,7 +3,7 @@ productId: x-scheduler
 title: Scheduler visual regression tests
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
-components: StandaloneCompactDayView, StandaloneCompactThreeDayView, StandaloneCompactWeekView
+components: StandaloneCompactDayViewPremium, StandaloneCompactThreeDayViewPremium, StandaloneCompactWeekViewPremium
 ---
 
 # Experiments

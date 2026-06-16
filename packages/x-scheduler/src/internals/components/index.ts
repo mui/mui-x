@@ -6,5 +6,6 @@ export * from './event-skeleton';
 export * from './SharedComponentsStyledContext';
 
 export { EventCalendarProvider } from './EventCalendarProvider';
+export { ResponsiveTypographyContainer } from './ResponsiveTypographyContainer';
 export { EventCalendarRoot } from '../../event-calendar/EventCalendarRoot';
 export type { EventCalendarRootProps } from '../../event-calendar/EventCalendarRoot';

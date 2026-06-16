@@ -11,6 +11,9 @@
   "exports": {
     "./models": "./src/models/index.ts",
     "./agenda-view-premium": "./src/agenda-view-premium/index.ts",
+    "./compact-day-view-premium": "./src/compact-day-view-premium/index.ts",
+    "./compact-three-day-view-premium": "./src/compact-three-day-view-premium/index.ts",
+    "./compact-week-view-premium": "./src/compact-week-view-premium/index.ts",
     "./day-view-premium": "./src/day-view-premium/index.ts",
     "./event-calendar-premium": "./src/event-calendar-premium/index.ts",
     "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
