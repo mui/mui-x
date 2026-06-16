@@ -171,3 +171,10 @@ its visibility. Hidden series are skipped by `MapShapePlot` so the underlying ba
 stays visible.
 
 {{"demo": "VisibleMapShape.js"}}
+
+## Exporting
+
+Maps can be exported as an image or as a PDF, like any other chart.
+See the [Export](/x/react-charts/export/) page for the complete documentation.
+
+{{"demo": "ExportMap.js"}}
