@@ -9,26 +9,25 @@ githubLabel: 'scope: chat'
 
 <p class="description">Observe the full runtime lifecycle for send, stream, stop, error, retry, and callbacks.</p>
 
-This demo brings the runtime lifecycle together in one place.
-It intentionally exposes success, failure, and long-running stream modes so you can observe every lifecycle phase:
+The demo below exposes success, failure, and long-running stream modes so you can observe every lifecycle phase:
 
-- `sendMessage()` — send a user turn and start streaming
-- `stopStreaming()` — cancel an active stream
-- `retry()` — retry a failed or cancelled message
-- `onData` — fires when a `data-*` chunk arrives
-- `onFinish` — fires when the stream ends (success, abort, or error)
-- `onError` — fires on any runtime error
+- `sendMessage()`—send a user turn and start streaming.
+- `stopStreaming()`—cancel an active stream.
+- `retry()`—retry a failed or cancelled message.
+- `onData`—fires when a `data-*` chunk arrives.
+- `onFinish`—fires when the stream ends (success, abort, or error).
+- `onError`—fires on any runtime error.
 
-## Key concepts
+## Lifecycle phases
 
-### The send-stream flow
+### Sending and streaming a message
 
 When `sendMessage()` is called:
 
-1. The user message is added optimistically with `status: 'sending'`
-2. The adapter's `sendMessage()` returns a `ReadableStream`
-3. Chunks update the assistant message in real time
-4. A `finish` chunk completes the turn — user message moves to `status: 'sent'`
+1. The user message is added optimistically with `status: 'sending'`.
+2. The adapter's `sendMessage()` returns a `ReadableStream`.
+3. Chunks update the assistant message in real time.
+4. A `finish` chunk completes the turn—the user message moves to `status: 'sent'`.
 
 ### Stopping a stream
 
@@ -55,21 +54,23 @@ Register callbacks on `ChatProvider` to observe lifecycle events:
 </ChatProvider>
 ```
 
+The demo below exercises every lifecycle callback alongside `sendMessage()`, `stopStreaming()`, and `retry()`:
+
 {{"demo": "StreamingLifecycleHeadlessChat.js"}}
 
-## Key takeaways
+## Lifecycle summary
 
-- The runtime manages the full send → stream → finish lifecycle automatically
-- `stopStreaming()` aborts the stream and triggers `onFinish` with `isAbort: true`
-- `retry()` removes failed assistant messages and resends the original user turn
-- Callbacks (`onData`, `onFinish`, `onError`) provide lifecycle observability without modifying the store
+- The runtime manages the full send-stream-finish lifecycle automatically.
+- `stopStreaming()` aborts the stream and triggers `onFinish` with `isAbort: true`.
+- `retry()` removes failed assistant messages and resends the original user turn.
+- Callbacks (`onData`, `onFinish`, `onError`) expose lifecycle events without touching the store.
 
 ## See also
 
-- [Streaming](/x/react-chat/core/streaming/) for the full chunk protocol reference
-- [State and store](/x/react-chat/core/state/) for the error model and callback signatures
-- [Message parts](/x/react-chat/core/examples/message-parts/) for rendering multi-part responses
-- [Tool call events](/x/react-chat/core/examples/tool-call-events/) for tool-specific lifecycle callbacks
+- See [Streaming](/x/react-chat/core/streaming/) for details on the full chunk protocol reference.
+- See [State and store](/x/react-chat/core/state/) for details on the error model and callback signatures.
+- See [Message parts](/x/react-chat/core/examples/message-parts/) for details on rendering multi-part responses.
+- See [Tool call events](/x/react-chat/core/examples/tool-call-events/) for details on tool-specific lifecycle callbacks.
 
 ## API
 

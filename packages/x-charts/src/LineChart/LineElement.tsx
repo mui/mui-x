@@ -130,7 +130,9 @@ LineElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
-  /** If `true`, the line is hidden. */
+  /**
+   * If `true`, the line is hidden.
+   */
   hidden: PropTypes.bool,
   seriesId: PropTypes.string.isRequired,
   /**

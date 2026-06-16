@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
-import { SchedulerEventModelStructure } from '@mui/x-scheduler-internals/models';
+import { SchedulerEvent, SchedulerEventModelStructure } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
@@ -241,6 +241,42 @@ storeClasses.forEach((storeClass) => {
 
         // Called again to convert Event 1 and Event 2 because props.eventModelStructure changed.
         expect(idGetter.callCount).to.equal(5);
+      });
+    });
+
+    describe('Event id validation', () => {
+      it('should throw when an event has no id', () => {
+        const validEvent = EventBuilder.new().id('1').build();
+        const eventWithoutId = {
+          ...EventBuilder.new().build(),
+          id: undefined,
+        } as unknown as SchedulerEvent;
+
+        expect(() => {
+          // eslint-disable-next-line no-new
+          new storeClass.Value(
+            { resources: TEST_RESOURCES, events: [validEvent, eventWithoutId] },
+            adapter,
+          );
+        }).to.throw(/All events must have a unique `id`/);
+      });
+
+      it('should keep the last event and warn in dev when two events share the same id', () => {
+        const first = EventBuilder.new().id('1').title('First').build();
+        const second = EventBuilder.new().id('1').title('Second').build();
+
+        const createStore = () =>
+          new storeClass.Value({ resources: TEST_RESOURCES, events: [first, second] }, adapter);
+
+        let store!: ReturnType<typeof createStore>;
+        expect(() => {
+          store = createStore();
+        }).toWarnDev(['MUI X Scheduler: Two or more events share the same id "1".']);
+
+        expect(schedulerEventSelectors.idList(store.state)).to.deep.equal([second.id]);
+        expect(schedulerEventSelectors.processedEvent(store.state, second.id)!.title).to.equal(
+          second.title,
+        );
       });
     });
 
