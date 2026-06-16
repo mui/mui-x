@@ -22,43 +22,43 @@
       "name": "marker",
       "description": "The component that renders the marker for a scatter point.",
       "default": "ScatterMarker",
-      "class": "MuiScatter-marker"
+      "class": "MuiScatterChart-marker"
     }
   ],
   "classes": [
     {
       "key": "focusedMark",
-      "className": "MuiScatter-focusedMark",
+      "className": "MuiScatterChart-focusedMark",
       "description": "Styles applied to the focused scatter mark element.",
       "isGlobal": false
     },
     {
       "key": "highlightedMark",
-      "className": "MuiScatter-highlightedMark",
+      "className": "MuiScatterChart-highlightedMark",
       "description": "Styles applied to the highlighted scatter mark element.",
       "isGlobal": false
     },
     {
       "key": "label",
-      "className": "MuiScatter-label",
+      "className": "MuiScatterChart-label",
       "description": "Styles applied to an individual marker label.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiScatter-root",
+      "className": "MuiScatterChart-root",
       "description": "Styles applied to the scatter plot element.",
       "isGlobal": false
     },
     {
       "key": "series",
-      "className": "MuiScatter-series",
+      "className": "MuiScatterChart-series",
       "description": "Styles applied to the group surrounding a series' scatter elements.",
       "isGlobal": false
     },
     {
       "key": "seriesLabels",
-      "className": "MuiScatter-seriesLabels",
+      "className": "MuiScatterChart-seriesLabels",
       "description": "Styles applied to the group surrounding a series' marker labels.",
       "isGlobal": false
     }
@@ -67,6 +67,5 @@
   "filename": "/packages/x-charts/src/ScatterChart/Scatter.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
-  "cssComponent": false,
   "deprecated": true
 }

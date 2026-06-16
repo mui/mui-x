@@ -24,7 +24,7 @@
       "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
     },
     "markerLabel": {
-      "description": "If provided, a text label is rendered next to each scatter marker.<br />Set to <code>&#39;label&#39;</code> to use the <code>label</code> property of each <code>ScatterValueType</code> data point,<br />or provide a function that returns the string to display.<br />Returning <code>null</code>, <code>undefined</code>, or an empty string skips the label for that point."
+      "description": "If provided, a text label is rendered next to each scatter marker.<br />Set to <code>&#39;label&#39;</code> to use the <code>label</code> property of each <code>ScatterValueType</code> data point,<br />or provide a function that returns the string to display.<br />Returning an empty string skips the label for that point."
     },
     "markerSize": { "description": "Size of the markers in the scatter plot, in pixels." },
     "preview": { "description": "" },

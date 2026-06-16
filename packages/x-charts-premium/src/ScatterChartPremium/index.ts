@@ -8,4 +8,9 @@ export {
   SCATTER_CHART_PREMIUM_PLUGINS,
   type ScatterChartPremiumPluginSignatures,
 } from './ScatterChartPremium.plugins';
-export { ScatterPlotPremium, type ScatterPlotPremiumProps } from './ScatterPlotPremium';
+export {
+  ScatterPlotPremium,
+  type ScatterPlotPremiumProps,
+  type ScatterPlotPremiumSlots,
+  type ScatterPlotPremiumSlotProps,
+} from './ScatterPlotPremium';

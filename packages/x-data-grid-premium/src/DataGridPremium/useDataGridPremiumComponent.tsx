@@ -63,6 +63,7 @@ import {
   useGridLazyLoader,
   useGridLazyLoaderPreProcessors,
   useGridDataSourceLazyLoader,
+  useGridDataSourceNestedLazyLoader,
   useGridInfiniteLoadingIntersection,
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
@@ -78,6 +79,7 @@ import {
   rowReorderStateInitializer,
   type GridConfiguration,
   useFirstRender,
+  registerMultiSelectColumnType,
 } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -117,6 +119,8 @@ import {
   useGridChartsIntegration,
 } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 import { historyStateInitializer, useGridHistory } from '../hooks/features/history/useGridHistory';
+
+registerMultiSelectColumnType();
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -236,6 +240,7 @@ export const useDataGridPremiumComponent = (
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
   useGridDataSourceLazyLoader(apiRef, props);
+  useGridDataSourceNestedLazyLoader(apiRef, props);
   useGridInfiniteLoadingIntersection(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef, props);

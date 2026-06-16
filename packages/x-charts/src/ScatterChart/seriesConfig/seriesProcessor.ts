@@ -1,5 +1,6 @@
 import { type ScatterValueType } from '../../models';
 import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { incompleteDatasetKeysError } from '../../internals/incompleteDatasetKeysError';
 
 const seriesProcessor: SeriesProcessor<'scatter'> = (
   { series, seriesOrder },
@@ -15,12 +16,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
       );
 
       if (seriesData?.datasetKeys && missingKeys.length > 0) {
-        throw new Error(
-          `MUI X Charts: Scatter series with id="${seriesId}" has incomplete datasetKeys. ` +
-            `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing. ` +
-            'Scatter plots require both "x" and "y" keys to map dataset values to coordinates. ' +
-            'Add the missing datasetKeys to the series configuration.',
-        );
+        incompleteDatasetKeysError('Scatter', seriesId, missingKeys);
       }
 
       let data: readonly ScatterValueType[];

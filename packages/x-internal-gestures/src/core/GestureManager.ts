@@ -184,6 +184,36 @@ export class GestureManager<
   }
 
   /**
+   * Adds gesture templates to the manager's template registry after construction.
+   *
+   * This allows optional gestures to be registered lazily by the feature using
+   * them, so they are only bundled when that feature is.
+   *
+   * @param gestures - The gesture instances to use as templates
+   */
+
+  public addGestures(gestures: Gesture<GestureName>[]): void {
+    gestures.forEach((gesture) => {
+      this.addGestureTemplate(gesture);
+    });
+  }
+
+  /**
+   * Removes gesture templates with the provided names, unregistering them
+   * from any element they are still registered on.
+   *
+   * @param gestureNames - The names of the gestures to remove
+   */
+  public removeGestures(gestureNames: GestureName[]): void {
+    gestureNames.forEach((gestureName) => {
+      this.elementGestureMap.forEach((_, element) => {
+        this.unregisterElement(gestureName, element);
+      });
+      this.gestureTemplates.delete(gestureName);
+    });
+  }
+
+  /**
    * Updates the options for a specific gesture on a given element and emits a change event.
    *
    * @param gestureName - Name of the gesture whose options should be updated

@@ -113,6 +113,10 @@ export function FormContent(props: FormContentProps) {
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
 
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventDialogOptionalRenderers();
@@ -173,6 +177,11 @@ export function FormContent(props: FormContentProps) {
       return;
     }
 
+    if (shouldEventRequireResource && controlled.resourceId === null) {
+      setErrors({ resource: localeText.requiredResourceError });
+      return;
+    }
+
     const metaChanges = {
       title: (form.get('title') as string).trim(),
       description: (form.get('description') as string).trim(),
@@ -230,6 +239,17 @@ export function FormContent(props: FormContentProps) {
   };
 
   const handleDelete = () => {
+    if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+      store.deleteRecurringEvent({
+        occurrenceStart: occurrence.displayTimezone.start.value,
+        eventId: occurrence.id,
+        onSubmit: onClose,
+      });
+
+      // don't close the dialog
+      return;
+    }
+
     store.deleteEvent(occurrence.id);
     onClose();
   };
@@ -258,6 +278,7 @@ export function FormContent(props: FormContentProps) {
                 readOnly: isPropertyReadOnly('title'),
                 'aria-label': localeText.eventTitleAriaLabel,
               },
+              formHelperText: { role: 'alert' },
             }}
             error={!!errors.title}
             helperText={errors.title}

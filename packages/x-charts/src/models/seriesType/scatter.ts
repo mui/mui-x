@@ -59,8 +59,7 @@ export type MarkerLabelFunction = (
   params: MarkerLabelParams,
 ) => string;
 
-export interface ScatterSeriesType
-  extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
+export interface ScatterSeriesType extends CommonSeriesType<'scatter'>, CartesianSeriesType {
   type: 'scatter';
   data?: readonly ScatterValueType[];
   /**

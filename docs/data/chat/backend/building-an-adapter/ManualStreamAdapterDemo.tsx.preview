@@ -1,0 +1,15 @@
+<ChatBox
+  adapter={adapter}
+  initialActiveConversationId={CONVERSATION_ID}
+  initialConversations={initialConversations}
+  initialMessages={initialMessages}
+  sx={{
+    position: 'relative',
+    height: 500,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+>
+  <StopStreamingButton />
+</ChatBox>

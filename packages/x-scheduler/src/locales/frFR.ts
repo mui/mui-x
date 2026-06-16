@@ -39,7 +39,7 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Récurrence',
   recurrenceMainSelectCustomLabel: 'Récurrence',
   recurrenceWeeklyFrequencyLabel: 'semaines',
-  recurrenceWeeklyPresetLabel: (weekday) => `Se répète chaque semaine le ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se répète chaque semaine le ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'mois',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Jour ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} de la dernière semaine du mois`,
@@ -51,7 +51,9 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'années',
   recurrenceYearlyPresetLabel: (date) => `Se répète tous les ans le ${date}`,
   noResourceAriaLabel: 'Aucune ressource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressource',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Enregistrer',
   startDateAfterEndDateError: 'La date/heure de début doit être antérieure à la date/heure de fin.',
   startDateLabel: 'Date de début',
@@ -104,8 +106,6 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Toute la journée',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} de plus..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} suivant(e)`,
   previousTimeSpan: (timeSpan) => `${timeSpan} précédent(e)`,
@@ -120,6 +120,9 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendrier',
   miniCalendarGoToPreviousMonth: 'Afficher le mois précédent dans le calendrier',
   miniCalendarGoToNextMonth: 'Afficher le mois suivant dans le calendrier',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titre de la ressource',

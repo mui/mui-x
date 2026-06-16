@@ -7,40 +7,42 @@ import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageMeta');
 
 export interface ChatMessageMetaProps extends MessageMetaProps {
   className?: string;
   sx?: SxProps<Theme>;
-  classes?: Partial<ChatMessageClasses>;
 }
 
 const ChatMessageMetaStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Meta',
   overridesResolver: (_, styles) => styles.meta,
-})<{ ownerState?: { role?: string; variant?: string } }>(({ theme, ownerState }) => ({
-  gridArea: 'meta',
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-  fontSize: theme.typography.caption.fontSize,
-  color: (theme.vars || theme).palette.text.disabled,
-  lineHeight: 1.4,
-  minHeight: '1.2em',
-  // Compact: always right-align status + timestamp regardless of role.
-  // Align to the top of the grid row so it stays at the top when content wraps.
-  // Default: only right-align for user messages.
-  ...((ownerState?.variant === 'compact' || ownerState?.role === 'user') && {
-    justifyContent: 'flex-end',
+})<{ ownerState?: { role?: string; variant?: string; isOwnMessage?: boolean } }>(
+  ({ theme, ownerState }) => ({
+    gridArea: 'meta',
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    fontSize: theme.typography.caption.fontSize,
+    color: (theme.vars || theme).palette.text.disabled,
+    lineHeight: 1.4,
+    minHeight: '1.2em',
+    // Compact: always right-align status + timestamp regardless of ownership.
+    // Align to the top of the grid row so it stays at the top when content wraps.
+    // Default: only right-align for own messages.
+    ...((ownerState?.variant === 'compact' || ownerState?.isOwnMessage) && {
+      justifyContent: 'flex-end',
+    }),
+    ...(ownerState?.variant === 'compact' && {
+      alignSelf: 'start',
+      whiteSpace: 'nowrap',
+    }),
   }),
-  ...(ownerState?.variant === 'compact' && {
-    alignSelf: 'start',
-    whiteSpace: 'nowrap',
-  }),
-}));
+);
 
 const ChatMessageStatusStyled = styled('span', {
   name: 'MuiChatMessage',
@@ -86,8 +88,18 @@ const ChatMessageStatusSlot = React.forwardRef<HTMLSpanElement, any>(function Ch
 const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(
   function ChatMessageMeta(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageMeta' });
-    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    // Drop a JS/theme-injected `classes` (not a prop on this sub-part — it shares
+    // the `MuiChatMessage-*` namespace) so it can't leak onto the DOM via `...other`.
+    const {
+      slots,
+      slotProps,
+      className,
+      sx,
+      classes: classesProp,
+      ...other
+    } = props as ChatMessageMetaProps & { classes?: unknown };
+    void classesProp;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     return (
       <MessageMeta
@@ -100,11 +112,13 @@ const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(
         }}
         slotProps={{
           ...slotProps,
-          meta: {
-            className: clsx(classes.meta, className),
-            sx,
-            ...(slotProps?.meta as object),
-          } as any,
+          meta: mergeSlotProps(
+            {
+              className: clsx(classes.meta, className),
+              sx,
+            },
+            slotProps?.meta,
+          ) as any,
         }}
       />
     );
@@ -116,7 +130,6 @@ ChatMessageMeta.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   className: PropTypes.string,
   slotProps: PropTypes.object,
   slots: PropTypes.object,

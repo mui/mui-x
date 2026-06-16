@@ -625,12 +625,24 @@ ${logOtherSection({
 /**
  * Fetches and returns the latest tagged version for a given major version.
  * @param {string | undefined} majorVersion
+ * @param {string} [upstreamRemote]
  */
-async function findLatestTaggedVersionForMajor(majorVersion) {
+async function findLatestTaggedVersionForMajor(majorVersion, upstreamRemote = 'origin') {
   // Fetch all tags from all remotes to ensure we have the latest tags.
   await $`git fetch --tags --all`;
-  const { stdout } = await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`}`; // only include "version-tags"
-  return stdout.trim();
+  const match = `v${majorVersion || ''}*`; // only include "version-tags"
+  // Tags for an older major are created on its `vN.x` version branch and are not ancestors of
+  // master, so they are invisible to `git describe` from HEAD. Describe from that branch when it
+  // exists. The current major releases from master (its version branch may not exist yet), so fall
+  // back to describing from HEAD, where its tags are reachable.
+  const versionBranch = `${upstreamRemote}/v${majorVersion}.x`;
+  try {
+    const { stdout } = await $`git describe --tags --abbrev=0 --match ${match} ${versionBranch}`;
+    return stdout.trim();
+  } catch {
+    const { stdout } = await $`git describe --tags --abbrev=0 --match ${match}`;
+    return stdout.trim();
+  }
 }
 
 /**

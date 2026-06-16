@@ -139,8 +139,8 @@ function getGroupingCriteriaProperties(
       const rowNode = gridRowNodeSelector(apiRef, rowId);
       if (rowNode?.type === 'group') {
         const originalColDef = rowNode.groupingField ? columnsLookup[rowNode.groupingField] : null;
-        if (originalColDef?.type === 'singleSelect') {
-          // the default valueFormatter of a singleSelect colDef won't work with the grouping column values
+        if (originalColDef?.type === 'singleSelect' || originalColDef?.type === 'multiSelect') {
+          // the default valueFormatter of singleSelect/multiSelect colDef won't work with the grouping column values
           return value;
         }
         const columnValueFormatter = originalColDef?.valueFormatter;
@@ -150,6 +150,9 @@ function getGroupingCriteriaProperties(
       }
       return value;
     };
+  } else if (groupedByColDef.type === 'multiSelect') {
+    // The default valueFormatter of multiSelect expects an array; the grouping key is a string.
+    valueFormatter = undefined;
   } else {
     valueFormatter = groupedByColDef.valueFormatter
       ? groupedByColValueFormatter(groupedByColDef)

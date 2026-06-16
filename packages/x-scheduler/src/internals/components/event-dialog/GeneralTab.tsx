@@ -100,6 +100,10 @@ export function GeneralTab(props: GeneralTabProps) {
 
   // Selector hooks
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
   const isPropertyReadOnly = useStore(
     store,
     schedulerEventSelectors.isPropertyReadOnly,
@@ -143,6 +147,9 @@ export function GeneralTab(props: GeneralTabProps) {
   };
 
   const handleResourceChange = (newResource: SchedulerResourceId | null) => {
+    const nextErrors = { ...errors };
+    delete nextErrors.resource;
+    setErrors(nextErrors);
     const newState = { ...controlled, resourceId: newResource };
     pushPlaceholder(newState);
     setControlled(newState);
@@ -179,6 +186,7 @@ export function GeneralTab(props: GeneralTabProps) {
                 slotProps={{
                   inputLabel: { shrink: true },
                   input: { readOnly: isPropertyReadOnly('start') },
+                  formHelperText: { role: 'alert' },
                 }}
                 error={!!errors.startDate}
                 helperText={errors.startDate}
@@ -255,6 +263,11 @@ export function GeneralTab(props: GeneralTabProps) {
             onResourceChange={handleResourceChange}
             onColorChange={handleColorChange}
             color={controlled.color}
+            error={
+              shouldEventRequireResource && typeof errors.resource === 'string'
+                ? errors.resource
+                : undefined
+            }
           />
         </SectionFieldset>
         <Divider />

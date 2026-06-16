@@ -7,7 +7,7 @@ import {
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
+import { ErrorContainer, SharedComponentsStyledContext } from '@mui/x-scheduler/internals';
 import {
   adapter,
   createSchedulerRenderer,
@@ -23,8 +23,6 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
-import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
-import { EventTimelinePremiumErrorContainer } from './error-container';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
@@ -230,8 +228,9 @@ describe('<EventTimelinePremium />', () => {
       // monthAndYear ticks per day (6px), so the total width depends on the actual
       // calendar days in the visible range — read it from the grid CSS variables.
       const grid = screen.getByRole('grid');
+      const container = grid.closest('section')!;
       const totalWidth =
-        parseFloat(grid.style.getPropertyValue('--unit-width')) *
+        parseFloat(container.style.getPropertyValue('--unit-width')) *
         parseFloat(grid.style.getPropertyValue('--unit-count'));
       const monthWidth = totalWidth / 36;
 
@@ -428,6 +427,12 @@ describe('<EventTimelinePremium />', () => {
           document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
         ).to.be.greaterThan(0);
       });
+      // The timeline renders the `timeline-row` variant, which drives its own CSS.
+      expect(
+        document.querySelectorAll(
+          `.${eventTimelinePremiumClasses.eventSkeleton}[data-variant="timeline-row"]`,
+        ).length,
+      ).to.be.greaterThan(0);
       expect(screen.queryByText(event1.title)).to.equal(null);
 
       resolveFetch(baseEvents);
@@ -443,7 +448,10 @@ describe('<EventTimelinePremium />', () => {
 
   describe('error handling', () => {
     function renderErrorContainer(initialErrors: Error[]) {
-      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      const store = new EventTimelinePremiumStore(
+        { events: [], resources: baseResources },
+        adapter,
+      );
       store.set(
         'errors',
         initialErrors.map((error, index) => ({ error, key: String(index) })),
@@ -451,15 +459,9 @@ describe('<EventTimelinePremium />', () => {
 
       return render(
         <SchedulerStoreContext.Provider value={store as any}>
-          <EventTimelinePremiumStyledContext.Provider
-            value={{
-              schedulerId: 'test',
-              classes: eventTimelinePremiumClasses,
-              localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-            }}
-          >
-            <EventTimelinePremiumErrorContainer />
-          </EventTimelinePremiumStyledContext.Provider>
+          <SharedComponentsStyledContext.Provider value={{ classes: eventTimelinePremiumClasses }}>
+            <ErrorContainer />
+          </SharedComponentsStyledContext.Provider>
         </SchedulerStoreContext.Provider>,
       );
     }
@@ -638,24 +640,23 @@ describe('<EventTimelinePremium />', () => {
 
     it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
       const sharedError = new Error('Shared error');
-      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      const store = new EventTimelinePremiumStore(
+        { events: [], resources: baseResources },
+        adapter,
+      );
       store.set('errors', [{ error: sharedError, key: '1' }]);
 
       function Test() {
         const styledContextValue = React.useMemo(
-          () => ({
-            schedulerId: 'test',
-            classes: eventTimelinePremiumClasses,
-            localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-          }),
+          () => ({ classes: eventTimelinePremiumClasses }),
           [],
         );
 
         return (
           <SchedulerStoreContext.Provider value={store as any}>
-            <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-              <EventTimelinePremiumErrorContainer />
-            </EventTimelinePremiumStyledContext.Provider>
+            <SharedComponentsStyledContext.Provider value={styledContextValue}>
+              <ErrorContainer />
+            </SharedComponentsStyledContext.Provider>
           </SchedulerStoreContext.Provider>
         );
       }
@@ -686,8 +687,9 @@ describe('<EventTimelinePremium />', () => {
       });
 
       let rootElement = screen.getByRole('grid');
+      let containerElement = rootElement.closest('section')!;
       // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('64px');
+      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('64px');
       expect(
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
@@ -698,8 +700,9 @@ describe('<EventTimelinePremium />', () => {
       });
 
       rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
+      containerElement = rootElement.closest('section')!;
       // day: tickWidth = 120px, 2 header rows (month + day).
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('120px');
+      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('120px');
       expect(
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
