@@ -10,8 +10,12 @@
     "disableTicks": { "description": "If true, the ticks are disabled." },
     "label": { "description": "The label of the axis." },
     "labelStyle": { "description": "The style applied to the axis label." },
-    "maxRadius": { "description": "The maximal radius." },
-    "minRadius": { "description": "The minimal radius." },
+    "maxRadius": {
+      "description": "The maximal radius. Can be a number (in pixels), a pixel string (for example <code>&#39;80px&#39;</code>), or a percentage string (for example <code>&#39;80%&#39;</code>) relative to the available radius (half the smallest side of the drawing area)."
+    },
+    "minRadius": {
+      "description": "The minimal radius. Can be a number (in pixels), a pixel string (for example <code>&#39;20px&#39;</code>), or a percentage string (for example <code>&#39;20%&#39;</code>) relative to the available radius (half the smallest side of the drawing area)."
+    },
     "position": {
       "description": "The position of the axis in polar coordinates. It can be &#39;start&#39;, &#39;end&#39;, or a specific angle in degrees."
     },
