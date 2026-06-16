@@ -271,7 +271,7 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
    * The maximal radius.
    * Can be a number (in pixels), a pixel string (for example `'80px'`), or a percentage string
    * (for example `'80%'`) relative to the available radius (half the smallest side of the drawing area).
-   * @default The available radius (half the smallest side of the drawing area).
+   * @default '100%'
    */
   maxRadius?: number | string;
   /**

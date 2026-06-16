@@ -15,7 +15,7 @@ const sizes = [320, 200];
 function Showcase({ minRadius }) {
   return (
     <Stack
-      direction="row"
+      direction={{ xs: 'column', sm: 'row' }}
       sx={{ gap: 2, alignItems: 'center', justifyContent: 'center' }}
     >
       {sizes.map((size) => (
