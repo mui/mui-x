@@ -4,6 +4,9 @@ import type { SamplingBucket } from './plugins/featurePlugins/useChartCartesianA
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
 
+/** Minimum on-screen gap (px) kept between merged (sampled) bars so they stay distinguishable. */
+const MIN_SAMPLED_BAR_GAP_PX = 2;
+
 function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number, reverse: boolean) {
   const isVerticalAndPositive = verticalLayout && baseValue > 0;
   const isHorizontalAndNegative = !verticalLayout && baseValue < 0;
@@ -86,14 +89,22 @@ export function createGetBucketBarDimensions(params: {
   const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
   const baseScale = baseScaleConfig.scale;
   const bandwidth = baseScale.bandwidth();
+  const step = baseScale.step();
   const valueScale = verticalLayout ? yAxisConfig.scale : xAxisConfig.scale;
 
   return function getBucketBarDimensions(bucket: SamplingBucket, groupIndex: number) {
     const spanStart = baseScale(baseScaleConfig.data![bucket.startIndex])!;
-    const spanEnd = baseScale(baseScaleConfig.data![bucket.endIndex])! + bandwidth;
+    const bucketCount = bucket.endIndex - bucket.startIndex + 1;
+    const bucketStride = bucketCount * step;
 
+    // Keep the gap between buckets proportional to the bucket (same ratio as an unsampled chart),
+    // but never thinner than MIN_SAMPLED_BAR_GAP_PX so it stays visible at every level and zoom.
+    const gap = Math.min(
+      bucketStride / 2,
+      Math.max(bucketCount * (step - bandwidth), MIN_SAMPLED_BAR_GAP_PX),
+    );
     const { barWidth, offset } = getBandSize(
-      spanEnd - spanStart,
+      bucketStride - gap,
       numberOfGroups,
       baseScaleConfig.barGapRatio,
     );
