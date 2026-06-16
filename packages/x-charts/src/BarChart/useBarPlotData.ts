@@ -196,8 +196,7 @@ export function processBarDataForPlot(
         const baseAxisId = verticalLayout ? xAxisId : yAxisId;
         const zoom = zoomMap?.get(baseAxisId);
         const zoomOptions = zoomOptionsLookup?.[baseAxisId];
-        // With zoom, the level is anchored to the zoom span (max zoom = no sampling). Without zoom
-        // there is no span to map, so fall back to the on-screen bar width.
+        // With zoom, derive the level from the span; without zoom, from the bar width.
         activeLevel =
           zoom && zoomOptions
             ? selectBarSubsamplingLevelByZoom(zoom.end - zoom.start, zoomOptions.minSpan, pyramid)

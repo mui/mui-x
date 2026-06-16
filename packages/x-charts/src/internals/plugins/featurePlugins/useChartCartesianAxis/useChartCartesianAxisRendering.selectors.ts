@@ -15,6 +15,7 @@ import {
 } from './createAxisFilterMapper';
 import { type ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
+import { getSubsamplingMinSpan } from './barSubsampling';
 import {
   type AxisId,
   type ChartsAxisProps,
@@ -88,14 +89,45 @@ export const selectorChartAxisZoomData = createSelector(
   (zoomMap, axisId: AxisId) => zoomMap?.get(axisId),
 );
 
+const selectorChartBarSubsamplingState = (
+  state: ChartState<[], [UseChartCartesianAxisSignature]>,
+) => state.barSubsampling;
+
 export const selectorChartZoomOptionsLookup = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorChartRawYAxis,
-  function selectorChartZoomOptionsLookup(xAxis, yAxis) {
-    return {
+  selectorChartBarSubsamplingState,
+  selectorChartDrawingArea,
+  function selectorChartZoomOptionsLookup(xAxis, yAxis, subsampling, drawingArea) {
+    const lookup = {
       ...createZoomLookup('x')(xAxis),
       ...createZoomLookup('y')(yAxis),
     };
+
+    // Subsampling lowers min span (from band-axis size) so the data is reachable unsampled.
+    // Recomputed on resize, not on zoom.
+    if (subsampling?.enabled) {
+      const applyMinSpan = (
+        axes: ReadonlyArray<{ id: AxisId; data?: readonly unknown[] }> | undefined,
+        availableSizePx: number,
+      ) => {
+        axes?.forEach((axis) => {
+          const options = lookup[axis.id];
+          const dataLength = axis.data?.length;
+          if (options && dataLength) {
+            const minSpan = getSubsamplingMinSpan(dataLength, availableSizePx);
+            if (minSpan < options.minSpan) {
+              lookup[axis.id] = { ...options, minSpan };
+            }
+          }
+        });
+      };
+
+      applyMinSpan(xAxis, drawingArea.width);
+      applyMinSpan(yAxis, drawingArea.height);
+    }
+
+    return lookup;
   },
 );
 

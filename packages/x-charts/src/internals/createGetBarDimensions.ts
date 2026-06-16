@@ -73,11 +73,7 @@ export function createGetBarDimensions(params: {
   };
 }
 
-/**
- * Like {@link createGetBarDimensions}, but for a subsampled bucket spanning several categories.
- * The bar width covers the whole bucket span (so merged bars stay visible) and the value extent
- * comes from the bucket's aggregated `low`/`high` instead of a single data point.
- */
+/** Like {@link createGetBarDimensions}, but for a subsampled bucket spanning several categories. */
 export function createGetBucketBarDimensions(params: {
   verticalLayout: boolean;
   xAxisConfig: ComputedAxis<ScaleName, any, ChartsXAxisProps>;

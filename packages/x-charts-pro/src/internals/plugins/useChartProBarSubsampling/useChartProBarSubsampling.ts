@@ -3,13 +3,7 @@ import * as React from 'react';
 import { type ChartPlugin } from '@mui/x-charts/internals';
 import { type UseChartProBarSubsamplingSignature } from './useChartProBarSubsampling.types';
 
-/**
- * Controls bar subsampling. The level-of-detail pyramids and the active-level selection live in
- * community selectors (`selectorChartBarSubsamplingPyramids`); this plugin only toggles the
- * feature on/off so those selectors produce data for the bar plot.
- *
- * Demos: none yet — internal performance feature.
- */
+/** Toggles bar subsampling. Pyramids and level selection live in community selectors. */
 export const useChartProBarSubsampling: ChartPlugin<UseChartProBarSubsamplingSignature> = ({
   params,
   store,

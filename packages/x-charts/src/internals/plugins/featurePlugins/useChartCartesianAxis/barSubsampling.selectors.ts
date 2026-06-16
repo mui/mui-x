@@ -12,12 +12,7 @@ export const selectorChartBarSubsamplingState: ChartRootSelector<
   'barSubsampling'
 > = (state) => state.barSubsampling;
 
-/**
- * Precomputed level-of-detail pyramids for every bar series, keyed by series id.
- *
- * Memoized on the processed series, so the pyramids are rebuilt only when the data changes —
- * not on zoom or resize. Returns an empty lookup when the pro subsampling plugin is absent.
- */
+/** LOD pyramids per bar series, keyed by series id. Rebuilt only on data change (memoized). */
 export const selectorChartBarSubsamplingPyramids = createSelectorMemoized(
   selectorChartBarSubsamplingState,
   selectorChartSeriesProcessed,

@@ -1,15 +1,9 @@
 import type { SeriesId } from '../../../../models/seriesType/common';
 
-/**
- * Aggregation used when collapsing several original bars into one rendered bucket.
- * Only `minMaxEnvelope` is wired today; the others are kept as ready alternatives.
- */
+/** Aggregation used when collapsing bars into a bucket. Only `minMaxEnvelope` is wired today. */
 export type BarSubsamplingStrategyName = 'minMaxEnvelope' | 'max' | 'average' | 'stride';
 
-/**
- * One aggregated bucket, expressed in value (data) space so it stays valid across zoom.
- * `low`/`high` are the aggregated bounds of the stacked values inside the bucket.
- */
+/** One aggregated bucket, in value space (stays valid across zoom). */
 export interface BarSubsamplingBucket {
   /** First original data index covered by the bucket. */
   startIndex: number;
@@ -21,30 +15,22 @@ export interface BarSubsamplingBucket {
   high: number;
 }
 
-/** One level of detail. `levels[0]` is the coarsest stored level (`bucketSize === 2`). */
+/** One level of detail. */
 export interface BarSubsamplingLevel {
-  /** Number of original bars merged into each bucket (a power of two, `>= 2`). */
+  /** Bars merged per bucket (power of two, `>= 2`). */
   bucketSize: number;
-  /** The aggregated buckets, ordered by `startIndex`. */
+  /** Buckets ordered by `startIndex`. */
   buckets: BarSubsamplingBucket[];
 }
 
-/**
- * The precomputed level-of-detail pyramid for a single series.
- * `levels[i].bucketSize === 2 ** (i + 1)`. The identity level (one bar per data point)
- * is intentionally not stored; it is represented by the absence of an active level.
- */
+/** Precomputed LOD pyramid for one series. `levels[i].bucketSize === 2 ** (i + 1)`. */
 export interface BarSubsamplingPyramid {
-  /** Number of original data points. */
   dataLength: number;
-  /** Coarser-detail levels, ordered from finest (`bucketSize 2`) to coarsest. */
+  /** Ordered finest (`bucketSize 2`) to coarsest. */
   levels: BarSubsamplingLevel[];
 }
 
-/**
- * State slice activated by the pro `useChartProBarSubsampling` plugin.
- * Absent in the community build, in which case subsampling never runs.
- */
+/** State slice set by the pro `useChartProBarSubsampling` plugin; absent in community. */
 export interface BarSubsamplingState {
   enabled: boolean;
   strategy: BarSubsamplingStrategyName;

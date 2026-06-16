@@ -7,8 +7,7 @@ import {
 
 export interface UseChartProBarSubsamplingParameters {
   /**
-   * If `true`, bars are subsampled when they would otherwise be too thin to render individually,
-   * keeping large datasets performant. Levels of detail are precomputed for each zoom level.
+   * If `true`, bars too thin to render individually are subsampled.
    * @default true
    */
   subsampling?: boolean;

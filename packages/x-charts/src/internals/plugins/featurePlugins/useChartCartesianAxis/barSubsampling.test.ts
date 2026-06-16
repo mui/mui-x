@@ -2,9 +2,13 @@ import {
   MIN_BAR_WIDTH_PX,
   buildBarSubsamplingPyramid,
   getBarSubsamplingStrategy,
+  getSubsamplingMinSpan,
   selectBarSubsamplingLevel,
   selectBarSubsamplingLevelByZoom,
 } from './barSubsampling';
+
+const makeStacked = (length: number): [number, number][] =>
+  Array.from({ length }, (_, i) => [0, i]);
 
 // [base, top] pairs as produced by the bar series processor (`visibleStackedData`).
 const stacked: [number, number][] = [
@@ -99,6 +103,37 @@ describe('selectBarSubsamplingLevelByZoom', () => {
   it('returns null for non-positive spans', () => {
     expect(selectBarSubsamplingLevelByZoom(0, 10, pyramid)).to.equal(null);
     expect(selectBarSubsamplingLevelByZoom(50, 0, pyramid)).to.equal(null);
+  });
+});
+
+describe('getSubsamplingMinSpan (screen + data driven level count)', () => {
+  // 800px / 4px = 200 bars capacity.
+  it('shrinks the min zoom span as the data grows', () => {
+    expect(getSubsamplingMinSpan(400, 800)).to.equal(50);
+    expect(getSubsamplingMinSpan(4000, 800)).to.equal(5);
+  });
+
+  it('grows the min zoom span as the available size shrinks', () => {
+    // Narrower chart fits fewer bars, so fewer levels are needed.
+    expect(getSubsamplingMinSpan(4000, 800)).to.equal(5);
+    expect(getSubsamplingMinSpan(4000, 400)).to.equal(2.5);
+  });
+
+  it('yields more (coarser) levels at full zoom-out for more data', () => {
+    const small = buildBarSubsamplingPyramid(makeStacked(400), envelope);
+    const large = buildBarSubsamplingPyramid(makeStacked(4000), envelope);
+
+    const smallTop = selectBarSubsamplingLevelByZoom(100, getSubsamplingMinSpan(400, 800), small);
+    const largeTop = selectBarSubsamplingLevelByZoom(100, getSubsamplingMinSpan(4000, 800), large);
+
+    expect(largeTop!.bucketSize).to.be.greaterThan(smallTop!.bucketSize);
+  });
+
+  it('reaches the unsampled level at max zoom for any data size', () => {
+    const large = buildBarSubsamplingPyramid(makeStacked(4000), envelope);
+    const minSpan = getSubsamplingMinSpan(4000, 800);
+
+    expect(selectBarSubsamplingLevelByZoom(minSpan, minSpan, large)).to.equal(null);
   });
 });
 

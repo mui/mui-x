@@ -1,17 +1,13 @@
 import type { BarSubsamplingStrategyName } from './barSubsampling.types';
 
-// Aggregates a bucket (`stacked[startIndex..endIndex]`) into one `{ low, high }` pair in value
-// space. Each `stacked` entry is a `[base, top]` pair from the bar processor (`visibleStackedData`).
+// Aggregates a bucket into one `{ low, high }` pair. Each `stacked` entry is a `[base, top]` pair.
 export type BarSubsamplingStrategy = (
   stacked: readonly [number, number][],
   startIndex: number,
   endIndex: number,
 ) => { low: number; high: number };
 
-/**
- * Default strategy. Keeps the full vertical extent of the bucket so spikes and troughs survive
- * subsampling: `low` is the smallest base, `high` is the largest top.
- */
+/** Default: full extent of the bucket (min base, max top) — keeps spikes and troughs. */
 const minMaxEnvelope: BarSubsamplingStrategy = (stacked, startIndex, endIndex) => {
   let low = Infinity;
   let high = -Infinity;
