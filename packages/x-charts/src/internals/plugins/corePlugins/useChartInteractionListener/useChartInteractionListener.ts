@@ -4,7 +4,7 @@ import {
   GestureManager,
   MoveGesture,
   PanGesture,
-  PinchGesture,
+  type PinchGesture,
   type PressAndDragGesture,
   PressGesture,
   type TapAndDragGesture,
@@ -73,10 +73,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             threshold: 0,
             maxPointers: 1,
           }),
-          new PinchGesture({
-            name: 'zoomPinch',
-            threshold: 5,
-          }),
         ],
       });
     }
@@ -88,7 +84,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       return undefined;
     }
 
-    gestureManager.registerElement(['pan', 'move', 'tap', 'quickPress', 'brush', 'zoomPinch'], svg);
+    gestureManager.registerElement(['pan', 'move', 'tap', 'quickPress', 'brush'], svg);
 
     return () => {
       // Cleanup gesture manager
