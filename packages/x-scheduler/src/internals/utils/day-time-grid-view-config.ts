@@ -10,6 +10,14 @@ import { processDate } from '@mui/x-scheduler-internals/process-date';
 const DAYS_IN_WEEK = 7;
 
 /**
+ * Number of consecutive days a day-time-grid based view can render. Restricted to the
+ * values the views actually use so the `=== 7` (week-aligned) branch below cannot be
+ * reached with an out-of-domain count (`0`, negative, or fractional) that would silently
+ * produce an empty or garbage day list.
+ */
+export type DayTimeGridDayCount = 1 | 3 | 7;
+
+/**
  * Builds an `EventCalendarViewConfig` for a day-time-grid based view.
  *
  * When `dayCount === 7` the config is week-aligned: it snaps the visible range to
@@ -17,7 +25,9 @@ const DAYS_IN_WEEK = 7;
  * other value, the config shows `dayCount` consecutive days starting from the current
  * visible date.
  */
-export function createDayTimeGridViewConfig(dayCount: number): EventCalendarViewConfig {
+export function createDayTimeGridViewConfig(
+  dayCount: DayTimeGridDayCount,
+): EventCalendarViewConfig {
   if (dayCount === DAYS_IN_WEEK) {
     return {
       siblingVisibleDateGetter: ({ state, delta }) =>

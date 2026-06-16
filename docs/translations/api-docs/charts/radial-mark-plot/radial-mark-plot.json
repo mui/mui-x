@@ -1,1 +1,11 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
+    "markPlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the MarkPlot root element"
+    }
+  }
+}

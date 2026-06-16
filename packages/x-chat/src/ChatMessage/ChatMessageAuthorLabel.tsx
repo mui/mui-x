@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { MessageAuthorLabel, type MessageAuthorLabelProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageAuthorLabel');
 
@@ -37,15 +38,17 @@ const ChatMessageAuthorLabel = React.forwardRef<HTMLSpanElement, ChatMessageAuth
         ref={ref}
         {...other}
         slots={{
-          authorLabel: slots?.authorLabel ?? ChatMessageAuthorLabelStyled,
           ...slots,
+          authorLabel: slots?.authorLabel ?? ChatMessageAuthorLabelStyled,
         }}
         slotProps={{
           ...slotProps,
-          authorLabel: {
-            className: clsx(classes.authorLabel, className),
-            ...(slotProps?.authorLabel as object),
-          } as any,
+          authorLabel: mergeSlotProps(
+            {
+              className: clsx(classes.authorLabel, className),
+            },
+            slotProps?.authorLabel,
+          ) as any,
         }}
       />
     );

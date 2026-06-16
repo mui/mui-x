@@ -83,7 +83,7 @@ const EventItemTitle = styled('span', {
   margin: 0,
   color: (theme.vars || theme).palette.text.primary,
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: 'var(--EventCalendar-fontSize-eventTitle)',
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)',
   lineHeight: 1.43,
   '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',

@@ -68,7 +68,7 @@ const DayNumberCell = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'AgendaViewDayNumberCell',
 })(({ theme }) => ({
-  fontSize: 'var(--EventCalendar-fontSize-agendaDayNumber)',
+  fontSize: 'var(--EventCalendar-fontSize-agendaDayNumber, 1.5rem)',
   fontWeight: theme.typography.fontWeightMedium,
   lineHeight: 1,
   minWidth: '4ch',
@@ -275,7 +275,7 @@ export const AgendaView = React.memo(
                           occurrence={occurrence}
                           date={date}
                           variant="regular"
-                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
+                          ariaLabelledBy={`${schedulerId}-DayHeaderCell-${date.key}`}
                         />
                       </EventDialogTrigger>
                     </li>

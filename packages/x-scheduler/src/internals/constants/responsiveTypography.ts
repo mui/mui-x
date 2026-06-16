@@ -2,12 +2,19 @@ import type { CSSObject } from '@mui/material/styles';
 
 export const EVENT_CALENDAR_CONTAINER_NAME = 'mui-event-calendar-content';
 
+// Container-query breakpoints (px) at which the effective typography vars are
+// retargeted. Shared between the queries below and any slot that needs to
+// react to the same widths (e.g. the day-number circle in `DayTimeGrid`), so
+// the tiers stay in sync from a single source.
+export const RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM = 550;
+export const RESPONSIVE_TYPOGRAPHY_BREAKPOINT_MD = 800;
+
 // Each token is declared in two layers:
 // 1. Three tier vars (`-sm`, `-md`, `-lg`) hold the per-tier font sizes.
-//    They are declared unconditionally on ResponsiveTypographyContainer.
-//    Consumers can override a single tier via
-//    theme.components.MuiEventCalendar.styleOverrides without copying the
-//    @container blocks below.
+//    They are declared unconditionally on the `ResponsiveTypographyContainer`
+//    slot. Consumers can override a single tier by targeting that slot via
+//    theme.components.MuiEventCalendar.styleOverrides.responsiveTypographyContainer
+//    without copying the @container blocks below.
 // 2. An unsuffixed effective var (e.g. `--EventCalendar-fontSize-eventTitle`)
 //    is what styled slots reference. It defaults to the lg tier and is
 //    retargeted at narrower widths by the @container queries below.
@@ -35,6 +42,13 @@ export const responsiveTypographyTokens: CSSObject = {
   '--EventCalendar-fontSize-timeText-md': '0.7rem',
   '--EventCalendar-fontSize-timeText-lg': '0.75rem',
 
+  // Recurring-event icon on event cards — TimeGridEventRecurringIcon.
+  // lg matches the historical `fontSize="small"` (1.25rem) so the widest tier is
+  // unchanged; narrower tiers shrink it alongside the text.
+  '--EventCalendar-fontSize-recurringIcon-sm': '1rem',
+  '--EventCalendar-fontSize-recurringIcon-md': '1.125rem',
+  '--EventCalendar-fontSize-recurringIcon-lg': '1.25rem',
+
   // Effective vars. Slots reference these; they default to the lg tier and
   // are retargeted by the @container rules in
   // `responsiveTypographyContainerQueries` at narrower widths.
@@ -42,6 +56,7 @@ export const responsiveTypographyTokens: CSSObject = {
   '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-lg)',
   '--EventCalendar-fontSize-agendaDayNumber': 'var(--EventCalendar-fontSize-agendaDayNumber-lg)',
   '--EventCalendar-fontSize-timeText': 'var(--EventCalendar-fontSize-timeText-lg)',
+  '--EventCalendar-fontSize-recurringIcon': 'var(--EventCalendar-fontSize-recurringIcon-lg)',
 };
 
 export const responsiveTokens: CSSObject = {
@@ -55,23 +70,30 @@ export const responsiveTokens: CSSObject = {
 };
 
 // Inert unless an ancestor declares container-type=inline-size and the
-// matching container-name. EventCalendarContent provides that ancestor for
-// the full calendar; for standalone views the consumer can opt in by
-// wrapping the view in an element with the same container-name.
+// matching container-name. `ResponsiveTypographyContainer` is that ancestor:
+// it wraps `EventCalendarContent` inside the full calendar and the view tree
+// inside every `Standalone*View`, so these queries fire in both cases — no
+// manual opt-in is required from the consumer.
 export const responsiveTypographyContainerQueries: CSSObject = {
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
-    // fixed cell width
-    '--EventCalendar-size-fixedCellWidth': '54px',
-    // Typography
-    '--EventCalendar-fontSize-eventTitle': 'var(--EventCalendar-fontSize-eventTitle-sm)',
-    '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-sm)',
-    '--EventCalendar-fontSize-agendaDayNumber': 'var(--EventCalendar-fontSize-agendaDayNumber-sm)',
-    '--EventCalendar-fontSize-timeText': 'var(--EventCalendar-fontSize-timeText-sm)',
-  },
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (550px <= width < 800px)`]: {
-    '--EventCalendar-fontSize-eventTitle': 'var(--EventCalendar-fontSize-eventTitle-md)',
-    '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-md)',
-    '--EventCalendar-fontSize-agendaDayNumber': 'var(--EventCalendar-fontSize-agendaDayNumber-md)',
-    '--EventCalendar-fontSize-timeText': 'var(--EventCalendar-fontSize-timeText-md)',
-  },
+  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px)`]:
+    {
+      // fixed cell width
+      '--EventCalendar-size-fixedCellWidth': '54px',
+      // Typography
+      '--EventCalendar-fontSize-eventTitle': 'var(--EventCalendar-fontSize-eventTitle-sm)',
+      '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-sm)',
+      '--EventCalendar-fontSize-agendaDayNumber':
+        'var(--EventCalendar-fontSize-agendaDayNumber-sm)',
+      '--EventCalendar-fontSize-timeText': 'var(--EventCalendar-fontSize-timeText-sm)',
+      '--EventCalendar-fontSize-recurringIcon': 'var(--EventCalendar-fontSize-recurringIcon-sm)',
+    },
+  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px <= width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_MD}px)`]:
+    {
+      '--EventCalendar-fontSize-eventTitle': 'var(--EventCalendar-fontSize-eventTitle-md)',
+      '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-md)',
+      '--EventCalendar-fontSize-agendaDayNumber':
+        'var(--EventCalendar-fontSize-agendaDayNumber-md)',
+      '--EventCalendar-fontSize-timeText': 'var(--EventCalendar-fontSize-timeText-md)',
+      '--EventCalendar-fontSize-recurringIcon': 'var(--EventCalendar-fontSize-recurringIcon-md)',
+    },
 };

@@ -11,6 +11,7 @@ import {
   type ChatVariant,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   chatComposerClasses,
   useChatComposerUtilityClasses,
@@ -70,7 +71,6 @@ const ChatComposerStyled = styled('form', {
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
-  zIndex: 1,
   gap: theme.spacing(0.5),
   padding: theme.spacing(1, 1.5),
   border: '1px solid',
@@ -260,21 +260,23 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
         {...other}
         attachmentConfig={attachmentConfig}
         slots={{
-          root: slots?.root ?? ChatComposerStyled,
           ...slots,
+          root: slots?.root ?? ChatComposerStyled,
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(
-              classes.root,
-              isCompact && classes.variantCompact,
-              disabled && classes.disabled,
-              className,
-            ),
-            sx,
-            ...slotProps?.root,
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(
+                classes.root,
+                isCompact && classes.variantCompact,
+                disabled && classes.disabled,
+                className,
+              ),
+              sx,
+            },
+            slotProps?.root,
+          ) as any,
         }}
       >
         {children ?? defaultContent}

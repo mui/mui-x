@@ -546,8 +546,6 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
   selectorChartDefaultXAxisId,
   selectorChartDefaultYAxisId,
   selectorChartZAxis,
-  selectorChartDrawingArea,
-
   function selectChartSeriesFlatbushMap(
     allSeries,
     xAxesScaleMap,

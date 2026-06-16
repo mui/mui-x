@@ -113,7 +113,7 @@ export const TimeGridEventTouch = React.forwardRef(function TimeGridEventTouch(
     className: clsx(className, occurrence.className),
   };
 
-  if (variant === 'placeholder' && true) {
+  if (variant === 'placeholder') {
     // A creation placeholder is resizable: render it as a real event with forced pointer
     // handles so the user can size the new event before saving it. Other placeholders (the
     // transient drag/resize previews) stay inert.

@@ -11,6 +11,7 @@ export default function SuggestionsWithLabels() {
     <ChatBox
       adapter={adapter}
       initialActiveConversationId={minimalConversation.id}
+      // Seed only the conversation (no messages) so the empty-state suggestions show.
       initialConversations={[minimalConversation]}
       suggestions={[
         {

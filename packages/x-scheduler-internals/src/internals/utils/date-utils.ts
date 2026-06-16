@@ -69,6 +69,21 @@ export function mergeDateAndTime(
 }
 
 /**
+ * Snaps an all-day event's bounds to span the whole day; non-all-day bounds are returned unchanged.
+ */
+export function normalizeAllDayBounds(
+  adapter: Adapter,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
+  allDay: boolean | undefined,
+): { start: TemporalSupportedObject; end: TemporalSupportedObject } {
+  if (!allDay) {
+    return { start, end };
+  }
+  return { start: adapter.startOfDay(start), end: adapter.endOfDay(end) };
+}
+
+/**
  * Returns a string representation of the date.
  * It can be used as key in Maps or passed to the React `key` property when looping through days.
  * It only contains date information, two dates representing the same day but with different time will have the same key.
