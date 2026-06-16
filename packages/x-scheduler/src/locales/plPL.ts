@@ -39,7 +39,18 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Powtarzanie',
   recurrenceMainSelectCustomLabel: 'Powtarzanie',
   recurrenceWeeklyFrequencyLabel: 'tygodnie',
-  recurrenceWeeklyPresetLabel: (weekday) => `Powtarza się co tydzień w ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekday }) => {
+    const map = {
+      monday: 'w poniedziałek',
+      tuesday: 'we wtorek',
+      wednesday: 'w środę',
+      thursday: 'w czwartek',
+      friday: 'w piątek',
+      saturday: 'w sobotę',
+      sunday: 'w niedzielę',
+    };
+    return `Powtarza się co tydzień ${map[weekday]}`;
+  },
   recurrenceMonthlyFrequencyLabel: 'miesiące',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dzień ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} w ostatnim tygodniu miesiąca`,
@@ -51,7 +62,9 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'lata',
   recurrenceYearlyPresetLabel: (date) => `Powtarza się co roku w ${date}`,
   noResourceAriaLabel: 'Brak określonego zasobu',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Zasób',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Zapisz',
   startDateAfterEndDateError:
     'Data/godzina rozpoczęcia musi być wcześniejsza niż data/godzina zakończenia.',
@@ -105,8 +118,6 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Cały dzień',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} więcej..`,
   nextTimeSpan: (timeSpan) => `Następny ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Poprzedni ${timeSpan}`,
@@ -121,6 +132,9 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Kalendarz',
   miniCalendarGoToPreviousMonth: 'Pokaż poprzedni miesiąc w kalendarzu',
   miniCalendarGoToNextMonth: 'Pokaż następny miesiąc w kalendarzu',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',

@@ -8,7 +8,7 @@ import { createRandomNumberGenerator } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridColType } from '../../models';
+import type { GridColType, GridSlotProps } from '../../models';
 
 const CIRCULAR_CONTENT_SIZE = '1.3em';
 
@@ -35,6 +35,7 @@ export interface GridSkeletonCellProps extends React.HTMLAttributes<HTMLDivEleme
    * @default false
    */
   empty?: boolean;
+  skeletonProps?: GridSlotProps['baseSkeleton'];
 }
 
 type OwnerState = Pick<GridSkeletonCellProps, 'align' | 'empty'> & {
@@ -59,13 +60,24 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const randomNumberGenerator = createRandomNumberGenerator(12345);
 
 function GridSkeletonCell(props: GridSkeletonCellProps) {
-  const { field, type, align, width, height, empty = false, style, className, ...other } = props;
+  const {
+    field,
+    type,
+    align,
+    width,
+    height,
+    empty = false,
+    style,
+    className,
+    skeletonProps: skeletonPropsOverride,
+    ...other
+  } = props;
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes, align, empty };
   const classes = useUtilityClasses(ownerState);
 
   // Memo prevents the non-circular skeleton widths changing to random widths on every render
-  const skeletonProps = React.useMemo(() => {
+  const baseSkeletonProps = React.useMemo(() => {
     const isCircularContent = type === 'boolean' || type === 'actions';
 
     if (isCircularContent) {
@@ -88,6 +100,13 @@ function GridSkeletonCell(props: GridSkeletonCellProps) {
       height: CONTENT_HEIGHT,
     } as const;
   }, [type]);
+
+  // Merge caller overrides outside the memo so an inline `skeletonProps` object
+  // doesn't bust the memo and re-roll the random width on every render
+  const skeletonProps =
+    skeletonPropsOverride && Object.keys(skeletonPropsOverride).length > 0
+      ? { ...baseSkeletonProps, ...skeletonPropsOverride }
+      : baseSkeletonProps;
 
   return (
     <div
@@ -114,12 +133,15 @@ GridSkeletonCell.propTypes = {
   empty: PropTypes.bool,
   field: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  skeletonProps: PropTypes.object,
   type: PropTypes.oneOf([
     'actions',
     'boolean',
     'custom',
     'date',
     'dateTime',
+    'longText',
+    'multiSelect',
     'number',
     'singleSelect',
     'string',

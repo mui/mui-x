@@ -23,6 +23,17 @@ const userMessage: ChatMessage = {
   parts: [{ type: 'text', text: 'Hello' }],
 };
 
+function createDeferred<Value = any>() {
+  let resolve!: (value: Value) => void;
+  let reject!: (error: Error) => void;
+  const promise = new Promise<Value>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
+  return { promise, resolve, reject };
+}
+
 describe('createConversationActions', () => {
   describe('loadConversationMessages', () => {
     it('resets messages and returns early when conversationId is undefined and resetWhenUndefined=true', async () => {
@@ -34,6 +45,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await loadConversationMessages(undefined);
@@ -50,6 +62,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await loadConversationMessages(undefined, { resetWhenUndefined: false });
@@ -71,11 +84,54 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       // Should not throw and should not add messages
       await loadConversationMessages('c1');
       expect(store.state.messageIds).toEqual([]);
+    });
+
+    it('clears stale messages when switching to a conversation without listMessages support', async () => {
+      const store = new ChatStore({ initialMessages: [userMessage] });
+      store.setActiveConversation('c2');
+      const adapter = createAdapter();
+      delete (adapter as any).listMessages;
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      await loadConversationMessages('c2');
+
+      expect(store.state.messageIds).toEqual([]);
+    });
+
+    it('keeps initial messages on initial load when listMessages is unavailable', async () => {
+      const store = new ChatStore({ initialMessages: [userMessage] });
+      store.setActiveConversation('c1');
+      const adapter = createAdapter();
+      delete (adapter as any).listMessages;
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      await loadConversationMessages('c1', { resetWhenUndefined: false });
+
+      expect(store.state.messageIds).toEqual(['m1']);
     });
 
     it('calls adapter.listMessages and populates store on success', async () => {
@@ -98,6 +154,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await loadConversationMessages('c1');
@@ -106,6 +163,53 @@ describe('createConversationActions', () => {
       expect(store.state.historyCursor).toBe('cursor-abc');
       expect(store.state.hasMoreHistory).toBe(true);
       expect(store.state.error).toBeNull();
+    });
+
+    it('clears stale message and history state while loading a new conversation', async () => {
+      const store = new ChatStore({
+        initialMessages: [{ id: 'old', role: 'user', parts: [] }],
+      });
+      store.setActiveConversation('c2');
+      store.setHistoryState({
+        cursor: 'old-cursor',
+        hasMore: true,
+      });
+
+      let resolveFetch!: (value: any) => void;
+      const adapter = createAdapter({
+        listMessages: vi.fn().mockReturnValue(
+          new Promise((resolve) => {
+            resolveFetch = resolve;
+          }),
+        ),
+      });
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      const promise = loadConversationMessages('c2');
+
+      expect(store.state.messageIds).toEqual([]);
+      expect(store.state.historyCursor).toBeUndefined();
+      expect(store.state.hasMoreHistory).toBe(false);
+
+      resolveFetch({
+        messages: [{ id: 'new', role: 'assistant', parts: [] }],
+        cursor: 'new-cursor',
+        hasMore: true,
+      });
+      await promise;
+
+      expect(store.state.messageIds).toEqual(['new']);
+      expect(store.state.historyCursor).toBe('new-cursor');
+      expect(store.state.hasMoreHistory).toBe(true);
     });
 
     it('ignores stale response when requestId has changed during fetch', async () => {
@@ -130,6 +234,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef,
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       const promise = loadConversationMessages('c1');
@@ -162,6 +267,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       const promise = loadConversationMessages('c1');
@@ -189,6 +295,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await loadConversationMessages('c1');
@@ -221,6 +328,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef,
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       const promise = loadConversationMessages('c1');
@@ -244,6 +352,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await loadMoreHistory();
@@ -273,6 +382,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await loadMoreHistory();
@@ -307,6 +417,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await loadMoreHistory();
@@ -331,6 +442,7 @@ describe('createConversationActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await loadMoreHistory();
@@ -354,6 +466,7 @@ describe('createConversationActions', () => {
         stopStreaming,
         conversationNavigationRequestIdRef: { current: 0 },
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await setActiveConversation('c1');
@@ -380,6 +493,7 @@ describe('createConversationActions', () => {
         stopStreaming,
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
       });
 
       await setActiveConversation('c2');
@@ -388,6 +502,400 @@ describe('createConversationActions', () => {
       expect(store.state.activeConversationId).toBe('c2');
       expect(conversationNavigationRequestIdRef.current).toBe(1);
       expect(store.state.messageIds).toEqual(['m1']);
+    });
+  });
+
+  describe('isLoadingHistory', () => {
+    it('is true while the initial listMessages fetch is in flight and false after it resolves', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+
+      const deferred = createDeferred();
+      const adapter = createAdapter({
+        listMessages: vi.fn().mockReturnValue(deferred.promise),
+      });
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      expect(store.state.isLoadingHistory).toBe(false);
+
+      const promise = loadConversationMessages('c1');
+
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      deferred.resolve({
+        messages: [{ id: 'm1', role: 'user', parts: [] }],
+        hasMore: false,
+      });
+      await promise;
+
+      expect(store.state.isLoadingHistory).toBe(false);
+      expect(store.state.messageIds).toEqual(['m1']);
+    });
+
+    it('is reset to false when the initial listMessages fetch rejects', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+
+      const deferred = createDeferred();
+      const setRuntimeError = vi.fn();
+      const adapter = createAdapter({
+        listMessages: vi.fn().mockReturnValue(deferred.promise),
+      });
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError,
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      const promise = loadConversationMessages('c1');
+
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      deferred.reject(new Error('Network error'));
+      await promise;
+
+      expect(store.state.isLoadingHistory).toBe(false);
+      expect(setRuntimeError).toHaveBeenCalledTimes(1);
+      expect(setRuntimeError.mock.calls[0][0].code).toBe('HISTORY_ERROR');
+    });
+
+    it('is true while loadMoreHistory is in flight and false after it resolves', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      store.setHistoryState({ cursor: 'cursor-1', hasMore: true });
+
+      const deferred = createDeferred();
+      const adapter = createAdapter({
+        listMessages: vi.fn().mockReturnValue(deferred.promise),
+      });
+
+      const { loadMoreHistory } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      const promise = loadMoreHistory();
+
+      expect(store.state.isLoadingHistory).toBe(true);
+      expect(adapter.listMessages).toHaveBeenCalledWith(
+        expect.objectContaining({ conversationId: 'c1', cursor: 'cursor-1' }),
+      );
+
+      deferred.resolve({
+        messages: [{ id: 'older', role: 'user', parts: [] }],
+        hasMore: false,
+      });
+      await promise;
+
+      expect(store.state.isLoadingHistory).toBe(false);
+      expect(store.state.messageIds).toEqual(['older']);
+    });
+
+    it('is reset to false when loadMoreHistory rejects', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+
+      const deferred = createDeferred();
+      const setRuntimeError = vi.fn();
+      const adapter = createAdapter({
+        listMessages: vi.fn().mockReturnValue(deferred.promise),
+      });
+
+      const { loadMoreHistory } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError,
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      const promise = loadMoreHistory();
+
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      deferred.reject(new Error('Pagination failed'));
+      await promise;
+
+      expect(store.state.isLoadingHistory).toBe(false);
+      expect(setRuntimeError).toHaveBeenCalledTimes(1);
+      expect(setRuntimeError.mock.calls[0][0].code).toBe('HISTORY_ERROR');
+    });
+
+    it('flips around the deprecated loadMore fallback as well', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+
+      const deferred = createDeferred();
+      const loadMore = vi.fn().mockReturnValue(deferred.promise);
+      const adapter: ChatAdapter = {
+        sendMessage: vi.fn().mockResolvedValue(
+          new ReadableStream({
+            start(c) {
+              c.close();
+            },
+          }),
+        ),
+        loadMore,
+      };
+
+      const { loadMoreHistory } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      const promise = loadMoreHistory();
+
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      deferred.resolve({
+        messages: [{ id: 'older', role: 'user', parts: [] }],
+        hasMore: false,
+      });
+      await promise;
+
+      expect(store.state.isLoadingHistory).toBe(false);
+      expect(loadMore).toHaveBeenCalledTimes(1);
+    });
+
+    it('stays false on loadConversationMessages no-op paths', async () => {
+      const storeWithoutConversation = new ChatStore();
+      const adapterWithoutListMessages = createAdapter();
+      delete (adapterWithoutListMessages as any).listMessages;
+
+      const { loadConversationMessages } = createConversationActions({
+        store: storeWithoutConversation,
+        runtimeRef: { current: { adapter: adapterWithoutListMessages } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      // conversationId == null
+      await loadConversationMessages(undefined);
+      expect(storeWithoutConversation.state.isLoadingHistory).toBe(false);
+
+      // adapter without listMessages
+      storeWithoutConversation.setActiveConversation('c1');
+      await loadConversationMessages('c1');
+      expect(storeWithoutConversation.state.isLoadingHistory).toBe(false);
+    });
+
+    it('stays false on loadMoreHistory no-op paths', async () => {
+      // No active conversation
+      const storeWithoutConversation = new ChatStore();
+      const adapter = createAdapter({ listMessages: vi.fn() });
+
+      const actionsWithoutConversation = createConversationActions({
+        store: storeWithoutConversation,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      await actionsWithoutConversation.loadMoreHistory();
+      expect(storeWithoutConversation.state.isLoadingHistory).toBe(false);
+
+      // Adapter with neither listMessages nor loadMore
+      const storeWithConversation = new ChatStore();
+      storeWithConversation.setActiveConversation('c1');
+      const bareAdapter = createAdapter();
+      delete (bareAdapter as any).listMessages;
+      delete (bareAdapter as any).loadMore;
+
+      const actionsWithBareAdapter = createConversationActions({
+        store: storeWithConversation,
+        runtimeRef: { current: { adapter: bareAdapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      await actionsWithBareAdapter.loadMoreHistory();
+      expect(storeWithConversation.state.isLoadingHistory).toBe(false);
+    });
+
+    it('is not cleared by a stale request when switching conversations mid-flight', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+
+      const deferredByConversation: Record<string, ReturnType<typeof createDeferred<any>>> = {
+        c1: createDeferred(),
+        c2: createDeferred(),
+      };
+      const adapter = createAdapter({
+        listMessages: vi.fn(
+          ({ conversationId }: { conversationId: string }) =>
+            deferredByConversation[conversationId].promise,
+        ),
+      });
+
+      const { loadConversationMessages, setActiveConversation } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      const firstLoad = loadConversationMessages('c1');
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      const switchPromise = setActiveConversation('c2');
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      // The stale c1 request settles while c2 is still loading: the flag must stay true.
+      deferredByConversation.c1.resolve({
+        messages: [{ id: 'stale', role: 'user', parts: [] }],
+        hasMore: false,
+      });
+      await firstLoad;
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      deferredByConversation.c2.resolve({
+        messages: [{ id: 'fresh', role: 'user', parts: [] }],
+        hasMore: false,
+      });
+      await switchPromise;
+
+      expect(store.state.isLoadingHistory).toBe(false);
+      expect(store.state.messageIds).toEqual(['fresh']);
+    });
+
+    it('is reset by resetMessages when switching to a conversation with no history work (uncontrolled)', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+
+      const deferred = createDeferred();
+      const adapter = createAdapter({
+        listMessages: vi.fn().mockReturnValue(deferred.promise),
+      });
+
+      const { loadConversationMessages, setActiveConversation } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      const firstLoad = loadConversationMessages('c1');
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      // Switching to no conversation resets messages (uncontrolled) and the flag with them.
+      await setActiveConversation(undefined);
+      expect(store.state.isLoadingHistory).toBe(false);
+
+      deferred.resolve({ messages: [], hasMore: false });
+      await firstLoad;
+      expect(store.state.isLoadingHistory).toBe(false);
+    });
+
+    it('keeps the flag true until the newest request settles when loadMoreHistory races a reload', async () => {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      store.setHistoryState({ cursor: 'cursor-1', hasMore: true });
+
+      const loadMoreDeferred = createDeferred();
+      const reloadDeferred = createDeferred();
+      const listMessages = vi
+        .fn()
+        .mockReturnValueOnce(loadMoreDeferred.promise)
+        .mockReturnValueOnce(reloadDeferred.promise);
+      const adapter = createAdapter({ listMessages });
+
+      const { loadConversationMessages, loadMoreHistory } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      const loadMorePromise = loadMoreHistory();
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      const reloadPromise = loadConversationMessages('c1');
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      // The older (loadMoreHistory) request settles first: the flag must stay true.
+      loadMoreDeferred.resolve({ messages: [], hasMore: false });
+      await loadMorePromise;
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      reloadDeferred.resolve({ messages: [], hasMore: false });
+      await reloadPromise;
+      expect(store.state.isLoadingHistory).toBe(false);
+    });
+
+    it('stays transiently true in controlled mode after setActiveConversation(undefined) until the stale request settles', async () => {
+      const store = new ChatStore({ messages: [userMessage] });
+      store.setActiveConversation('c1');
+
+      const deferred = createDeferred();
+      const adapter = createAdapter({
+        listMessages: vi.fn().mockReturnValue(deferred.promise),
+      });
+
+      const { loadConversationMessages, setActiveConversation } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+
+      const firstLoad = loadConversationMessages('c1');
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      // Controlled messages: resetMessages is skipped and no new request bumps the
+      // ownership ref, so the flag stays true while the stale request is pending.
+      await setActiveConversation(undefined);
+      expect(store.state.isLoadingHistory).toBe(true);
+
+      deferred.resolve({ messages: [], hasMore: false });
+      await firstLoad;
+      expect(store.state.isLoadingHistory).toBe(false);
     });
   });
 });

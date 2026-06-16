@@ -45,7 +45,9 @@
       "isProPlan": true
     },
     "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" },
+      "type": {
+        "description": "SeriesValueFormatter&lt;ChartsSeriesConfig[SeriesType]['valueType']&gt;"
+      },
       "isProPlan": true
     },
     "variant": {

@@ -8,6 +8,7 @@ import {
   type ConversationHeaderActionsProps,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatConversationUtilityClasses,
   type ChatConversationClasses,
@@ -45,16 +46,18 @@ const ChatConversationHeaderActions = React.forwardRef<
       ref={ref}
       {...other}
       slots={{
-        actions: slots?.actions ?? ChatConversationHeaderActionsStyled,
         ...slots,
+        actions: slots?.actions ?? ChatConversationHeaderActionsStyled,
       }}
       slotProps={{
         ...slotProps,
-        actions: {
-          className: clsx(classes.headerActions, className),
-          sx,
-          ...(slotProps?.actions as object),
-        } as any,
+        actions: mergeSlotProps(
+          {
+            className: clsx(classes.headerActions, className),
+            sx,
+          },
+          slotProps?.actions,
+        ) as any,
       }}
     />
   );

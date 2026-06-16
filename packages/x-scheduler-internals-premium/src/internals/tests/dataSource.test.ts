@@ -1,11 +1,11 @@
 import { spy } from 'sinon';
 import { describe, expect, it, vi } from 'vitest';
 import { SchedulerEventId, SchedulerEventModelStructure } from '@mui/x-scheduler-internals/models';
-import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
+import { adapter, premiumStoreClasses, ResourceBuilder } from 'test/utils/scheduler';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { DEBOUNCE_MS } from '../utils/queue';
 
-const DEFAULT_PARAMS = { events: [] };
+const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 
 // Basic types for testing
 interface TestEvent {
@@ -417,7 +417,10 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: spy(async () => [initialEvent]),
         persistEvents: persistEventsSpy,
       };
-      const store = new storeClass.Value({ events: [], eventModelStructure, dataSource }, adapter);
+      const store = new storeClass.Value(
+        { ...DEFAULT_PARAMS, eventModelStructure, dataSource },
+        adapter,
+      );
 
       const createdId = store.createEvent({
         start: '2025-07-02T09:00:00.000Z',
@@ -514,7 +517,10 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: spy(async () => seeded),
         persistEvents: spy(async () => ({ success: true })),
       };
-      const store = new storeClass.Value({ events: [], eventModelStructure, dataSource }, adapter);
+      const store = new storeClass.Value(
+        { ...DEFAULT_PARAMS, eventModelStructure, dataSource },
+        adapter,
+      );
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -987,5 +993,29 @@ describe('SchedulerDataSourceCacheDefault', () => {
         .map((event) => event.id)
         .sort(),
     ).to.deep.equal(['1', '3']);
+  });
+
+  it('upsert should throw when the resolved event id is missing', () => {
+    const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+    const eventWithoutId = {
+      start: '2025-07-01T00:00:00.000Z',
+      end: '2025-07-01T11:00:00.000Z',
+      title: 'No id',
+    } as unknown as TestEvent;
+
+    expect(() => cache.upsert(eventWithoutId)).to.throw(/All events must have a unique `id`/);
+  });
+
+  it('setRange should throw when a fetched event id is missing instead of colliding on "undefined"', () => {
+    const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+    const eventWithoutId = {
+      start: '2025-07-01T00:00:00.000Z',
+      end: '2025-07-01T11:00:00.000Z',
+      title: 'No id',
+    } as unknown as TestEvent;
+
+    expect(() => cache.setRange(0, 1000, [buildTestEvent('1'), eventWithoutId])).to.throw(
+      /All events must have a unique `id`/,
+    );
   });
 });
