@@ -96,7 +96,7 @@ function MarkerLabelItem(props: MarkerLabelItemProps) {
 
   const text = getMarkerLabel({ markerLabel, value, dataIndex, seriesId, markerSize });
 
-  if (text === null || text === undefined || text === '') {
+  if (text==='') {
     return null;
   }
 

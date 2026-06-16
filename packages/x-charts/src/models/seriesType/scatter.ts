@@ -34,9 +34,9 @@ export type ScatterValueType = {
 };
 
 /**
- * Information about a scatter point passed to a `markerLabel` formatter function.
+ * Information passed to a `markerLabel` formatter function.
  */
-export type MarkerItem = {
+export type MarkerLabelParams = {
   /**
    * The id of the series the point belongs to.
    */
@@ -49,24 +49,15 @@ export type MarkerItem = {
    * The full scatter point value.
    */
   value: ScatterValueType;
-};
-
-/**
- * Contextual information passed to a `markerLabel` formatter function.
- */
-export type MarkerLabelContext = {
-  marker: {
-    /**
-     * The size of the marker (radius in pixels) after the size axis is applied.
-     */
-    size: number;
-  };
+  /**
+   * The size of the marker (radius in pixels) after the size axis is applied.
+   */
+  size: number;
 };
 
 export type MarkerLabelFunction = (
-  item: MarkerItem,
-  context: MarkerLabelContext,
-) => string | null | undefined;
+  params: MarkerLabelParams,
+) => string;
 
 export interface ScatterSeriesType
   extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
@@ -99,7 +90,7 @@ export interface ScatterSeriesType
    * If provided, a text label is rendered next to each scatter marker.
    * Set to `'label'` to use the `label` property of each `ScatterValueType` data point,
    * or provide a function that returns the string to display.
-   * Returning `null`, `undefined`, or an empty string skips the label for that point.
+   * Returning an empty string skips the label for that point.
    */
   markerLabel?: 'label' | MarkerLabelFunction;
   /**

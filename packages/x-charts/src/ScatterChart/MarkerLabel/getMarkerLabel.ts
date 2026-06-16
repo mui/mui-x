@@ -7,12 +7,12 @@ export function getMarkerLabel(options: {
   dataIndex: number;
   seriesId: SeriesId;
   markerSize: number;
-}): string | null | undefined {
+}): string {
   const { markerLabel, value, dataIndex, seriesId, markerSize } = options;
 
   if (markerLabel === 'label') {
-    return value.label ?? null;
+    return value.label ?? '';
   }
 
-  return markerLabel({ seriesId, dataIndex, value }, { marker: { size: markerSize } });
+  return markerLabel({ seriesId, dataIndex, value, size: markerSize });
 }
