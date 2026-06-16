@@ -51,7 +51,9 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'anni',
   recurrenceYearlyPresetLabel: (date) => `Si ripete ogni anno il ${date}`,
   noResourceAriaLabel: 'Nessuna risorsa specifica',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Risorsa',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salva',
   startDateAfterEndDateError: 'La data/ora di inizio deve essere precedente alla data/ora di fine.',
   startDateLabel: 'Data di inizio',
@@ -104,8 +106,6 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Tutto il giorno',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} altri..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} successivo`,
   previousTimeSpan: (timeSpan) => `${timeSpan} precedente`,
@@ -120,6 +120,9 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendario',
   miniCalendarGoToPreviousMonth: 'Mostra il mese precedente nel calendario',
   miniCalendarGoToNextMonth: 'Mostra il mese successivo nel calendario',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titolo risorsa',

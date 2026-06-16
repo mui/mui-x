@@ -51,7 +51,9 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'Jahre',
   recurrenceYearlyPresetLabel: (date) => `Wird jährlich am ${date} wiederholt`,
   noResourceAriaLabel: 'Keine Ressource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressource',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Speichern',
   startDateAfterEndDateError: 'Startdatum/-zeit muss vor dem Enddatum/-zeit liegen.',
   startDateLabel: 'Startdatum',
@@ -104,8 +106,6 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Ganztägig',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} weitere..`,
   nextTimeSpan: (timeSpan) => `Nächste(r) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Vorherige(r) ${timeSpan}`,
@@ -120,6 +120,9 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Kalender',
   miniCalendarGoToPreviousMonth: 'Vorherigen Monat im Kalender anzeigen',
   miniCalendarGoToNextMonth: 'Nächsten Monat im Kalender anzeigen',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressourcentitel',

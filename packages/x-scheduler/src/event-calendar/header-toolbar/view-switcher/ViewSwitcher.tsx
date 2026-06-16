@@ -64,7 +64,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         aria-controls={open ? `${schedulerId}-view-switcher-menu` : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        aria-label="Switch View"
         onClick={handleMenuOpen}
         endIcon={<ExpandMoreOutlined />}
       >

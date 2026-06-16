@@ -51,7 +51,9 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'år',
   recurrenceYearlyPresetLabel: (date) => `Gjentas årlig den ${date}`,
   noResourceAriaLabel: 'Ingen spesifikk ressurs',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressurs',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Lagre',
   startDateAfterEndDateError: 'Startdato/-tid må være før sluttdato/-tid.',
   startDateLabel: 'Startdato',
@@ -104,8 +106,6 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Hele dagen',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} til..`,
   nextTimeSpan: (timeSpan) => `Neste ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Forrige ${timeSpan}`,
@@ -120,6 +120,9 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Kalender',
   miniCalendarGoToPreviousMonth: 'Vis forrige måned i kalender',
   miniCalendarGoToNextMonth: 'Vis neste måned i kalender',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressurstittel',

@@ -61,12 +61,18 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
-      // always fetch/get from cache the children when the node is expanded
-      apiRef.current.dataSource.fetchRows(id);
+      if (rootProps.lazyLoading) {
+        apiRef.current.setRowChildrenExpansion(id, true);
+      } else {
+        // always fetch/get from cache the children when the node is expanded
+        apiRef.current.dataSource.fetchRows(id);
+      }
     } else {
       // Collapse the node and remove child rows from the grid
       apiRef.current.setRowChildrenExpansion(id, false);
-      apiRef.current.removeChildrenRows(id);
+      if (!rootProps.lazyLoading) {
+        apiRef.current.removeChildrenRows(id);
+      }
     }
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation(); // TODO remove event.stopPropagation
@@ -76,7 +82,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
     ? rootProps.slots.treeDataCollapseIcon
     : rootProps.slots.treeDataExpandIcon;
 
-  if (isDataLoading) {
+  if (isDataLoading && !rootProps.lazyLoading) {
     return (
       <div className={classes.loadingContainer}>
         <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />

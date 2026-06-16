@@ -222,12 +222,12 @@ export default function IndicatorsInContext() {
                 <Message.Root
                   messageId={id}
                   slotProps={{
-                    root: demoSlotProps.messageRoot as any,
+                    root: demoSlotProps.message as any,
                   }}
                 >
                   <Message.Avatar
                     slotProps={{
-                      avatar: demoSlotProps.messageAvatar as any,
+                      avatar: demoSlotProps.avatar as any,
                       image: demoSlotProps.messageAvatarImage,
                     }}
                   />
@@ -238,7 +238,7 @@ export default function IndicatorsInContext() {
                   />
                   <Message.Meta
                     slotProps={{
-                      meta: demoSlotProps.messageMeta as any,
+                      meta: demoSlotProps.meta as any,
                     }}
                   />
                 </Message.Root>
@@ -252,7 +252,7 @@ export default function IndicatorsInContext() {
         />
         <Composer.Root
           slotProps={{
-            root: demoSlotProps.composerRoot,
+            root: demoSlotProps.composer,
           }}
         >
           <Composer.TextArea
@@ -266,7 +266,7 @@ export default function IndicatorsInContext() {
             <Composer.SendButton
               data-variant="primary"
               slotProps={{
-                sendButton: demoSlotProps.composerSendButton,
+                sendButton: demoSlotProps.send,
               }}
             >
               Send

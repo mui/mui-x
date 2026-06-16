@@ -18,13 +18,14 @@ import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins
 import { useChartsContext } from '../context/ChartsProvider';
 import { useMarkPlotData } from './useMarkPlotData';
 import { useUtilityClasses } from './lineClasses';
+import type { MarkPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface MarkPlotSlots {
-  mark?: React.JSXElementConstructor<MarkElementProps>;
+  mark?: React.JSXElementConstructor<MarkElementProps & MarkPropsOverrides>;
 }
 
 export interface MarkPlotSlotProps {
-  mark?: Partial<MarkElementProps>;
+  mark?: Partial<MarkElementProps> & MarkPropsOverrides;
 }
 
 export interface MarkPlotProps
@@ -155,6 +156,7 @@ MarkPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
+   * @default false
    */
   skipAnimation: PropTypes.bool,
   /**
