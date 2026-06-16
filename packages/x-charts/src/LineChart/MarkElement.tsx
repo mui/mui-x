@@ -144,7 +144,6 @@ MarkElement.propTypes = {
    * @default false
    */
   hidden: PropTypes.bool,
-  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, the marker is faded.
    * @default false
@@ -155,6 +154,7 @@ MarkElement.propTypes = {
    * @default false
    */
   isHighlighted: PropTypes.bool,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The shape of the marker.
    */
@@ -162,6 +162,7 @@ MarkElement.propTypes = {
     .isRequired,
   /**
    * If `true`, animations are skipped.
+   * @default false
    */
   skipAnimation: PropTypes.bool,
 } as any;

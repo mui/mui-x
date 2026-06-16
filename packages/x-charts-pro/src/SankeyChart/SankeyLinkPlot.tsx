@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import type { SankeyLinkIdentifierWithData } from './sankey.types';
 import { SankeyLinkElement } from './SankeyLinkElement';
@@ -64,5 +65,22 @@ function SankeyLinkPlot(props: SankeyLinkPlotProps) {
     </SankeyLinkPlotRoot>
   );
 }
+
+SankeyLinkPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Classes applied to the various elements.
+   */
+  classes: PropTypes.object,
+  /**
+   * Callback fired when a sankey item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {SankeyLinkIdentifierWithData} link The sankey link identifier.
+   */
+  onClick: PropTypes.func,
+} as any;
 
 export { SankeyLinkPlot };
