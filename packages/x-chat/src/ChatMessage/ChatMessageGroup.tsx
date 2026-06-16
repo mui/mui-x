@@ -3,26 +3,45 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import {
-  MessageGroup,
-  type MessageGroupProps,
-  useChatVariant,
-  useMessage,
-} from '@mui/x-chat-headless';
+import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
-import { ChatMessage } from './ChatMessage';
-import { ChatMessageAvatar } from './ChatMessageAvatar';
-import { ChatMessageContent } from './ChatMessageContent';
-import { ChatMessageMeta } from './ChatMessageMeta';
-import { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import { ChatMessage, type ChatMessageSlots, type ChatMessageSlotProps } from './ChatMessage';
+import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageGroup');
 
-export interface ChatMessageGroupProps extends MessageGroupProps {
+/**
+ * Flat slot keys for `ChatMessageGroup` — part of the message-rendering pipeline
+ * vocabulary. `messageGroup` is the styled group wrapper (wrapper-only); the
+ * `message*` keys are mapped onto the inner `ChatMessage`'s short local slots.
+ * A subset of the public `ChatBoxSlots`.
+ */
+type ChatMessageGroupSlotKeys =
+  | 'messageGroup'
+  | 'messageRoot'
+  | 'messageAvatar'
+  | 'messageContent'
+  | 'messageMeta'
+  | 'messageInlineMeta'
+  | 'messageError'
+  | 'messageActions'
+  | 'messageAuthorName'
+  | 'streamingIndicator';
+
+export interface ChatMessageGroupSlots extends Pick<ChatBoxSlots, ChatMessageGroupSlotKeys> {}
+
+export interface ChatMessageGroupSlotProps extends Pick<
+  ChatBoxSlotProps,
+  ChatMessageGroupSlotKeys
+> {}
+
+export interface ChatMessageGroupProps extends Omit<MessageGroupProps, 'slots' | 'slotProps'> {
   className?: string;
   sx?: SxProps<Theme>;
-  classes?: Partial<ChatMessageClasses>;
+  slots?: ChatMessageGroupSlots;
+  slotProps?: ChatMessageGroupSlotProps;
 }
 
 const ChatMessageGroupStyled = styled('div', {
@@ -54,21 +73,24 @@ const ChatMessageGroupStyled = styled('div', {
     gap: 0,
     width: '100%',
     marginBlockStart,
+    // When the avatar slot is hidden, drop the reserved avatar size so any
+    // descendant relying on the variable (padding, author-name offset) collapses too.
+    '&.MuiChatMessage-noAvatar': {
+      '--MuiChatMessage-avatarSize': '0px',
+    },
   };
 });
 
 const ChatMessageGroupAuthorNameStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'GroupAuthorName',
-})<{ ownerState?: { authorRole?: string; variant?: string } }>(({ theme, ownerState }) => ({
+})<{ ownerState?: { isOwnMessage?: boolean; variant?: string } }>(({ theme, ownerState }) => ({
   fontSize: theme.typography.caption.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
   color: (theme.vars || theme).palette.text.secondary,
   marginBottom: 0,
   ...(ownerState?.variant === 'compact'
     ? {
-        // Compact: author name lives inside the message grid in the "authorName" area.
-        // It shares a row with the avatar. Flex to push timestamp to the right.
         gridArea: 'authorName',
         display: 'flex',
         alignItems: 'center',
@@ -78,8 +100,7 @@ const ChatMessageGroupAuthorNameStyled = styled('div', {
         color: (theme.vars || theme).palette.primary.main,
       }
     : {
-        // Default: offset by avatar width, user right-aligned
-        ...(ownerState?.authorRole === 'user'
+        ...(ownerState?.isOwnMessage
           ? {
               textAlign: 'right' as const,
               paddingInlineEnd: `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
@@ -89,6 +110,10 @@ const ChatMessageGroupAuthorNameStyled = styled('div', {
             }),
       }),
 }));
+
+function HiddenAuthorName() {
+  return null;
+}
 
 const ChatMessageGroupTimestampStyled = styled('span', {
   name: 'MuiChatMessage',
@@ -101,32 +126,6 @@ const ChatMessageGroupTimestampStyled = styled('span', {
   flexShrink: 0,
 }));
 
-/**
- * Default content rendered inside ChatMessageGroup when no children are provided.
- * Uses the variant-aware styled components (avatar, content bubble, meta).
- */
-function ChatMessageGroupDefaultContent({ messageId }: { messageId: string }) {
-  const variant = useChatVariant();
-  const isCompact = variant === 'compact';
-  const message = useMessage(messageId);
-  const isStreaming = message?.status === 'streaming';
-  const hasMeta =
-    Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
-  // In the default variant, meta is rendered inline inside the bubble.
-  // Skip it during streaming — there is no timestamp yet, and the streaming state
-  // is already communicated via the MuiChatMessage-streaming CSS class.
-  const afterContent =
-    !isCompact && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
-
-  return (
-    <React.Fragment>
-      <ChatMessageAvatar />
-      <ChatMessageContent afterContent={afterContent} />
-      {isCompact && <ChatMessageMeta />}
-    </React.Fragment>
-  );
-}
-
 const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>(
   function ChatMessageGroup(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageGroup' });
@@ -134,43 +133,108 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
       slots,
       slotProps,
       className,
-      classes: classesProp,
       sx,
       children,
       messageId,
+      classes: classesProp,
       ...other
-    } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    } = props as ChatMessageGroupProps & { classes?: unknown };
+    void classesProp;
+    const classes = useChatMessageUtilityClasses(undefined);
 
-    // When no children are provided, render the default styled message layout.
-    // This ensures ChatMessageGroup works as a standalone component with proper
-    // styling for both default and compact variants.
-    const resolvedChildren =
-      children ??
-      (messageId ? (
-        <ChatMessage messageId={messageId}>
-          <ChatMessageGroupDefaultContent messageId={messageId} />
-        </ChatMessage>
-      ) : null);
+    // `slotProps.messageGroup` is typed `Partial<ChatMessageGroupProps>`, so it can
+    // carry MessageGroup-primitive props (notably `groupKey` for time-window
+    // grouping) alongside wrapper styling. Route the primitives to the headless
+    // `<MessageGroup>` and keep only wrapper props (className/sx/DOM) on the group
+    // slot — otherwise `groupKey` is ignored and these non-DOM props leak onto the
+    // wrapper element. Row-structural values (index/items/messageId) from the props
+    // win, so the slotProps copies act only as a fallback.
+    const {
+      groupKey: messageGroupGroupKey,
+      index: messageGroupIndex,
+      items: messageGroupItems,
+      messageId: messageGroupMessageIdProp,
+      ...messageGroupWrapperProps
+    } = (slotProps?.messageGroup ?? {}) as Partial<ChatMessageGroupProps>;
+    void messageGroupMessageIdProp;
+
+    // Map the flat `message*` keys onto the inner `ChatMessage`'s short local
+    // slots. `messageRoot` swaps ChatMessage's own styled root — it is applied by
+    // ChatMessage (not hoisted to the row component), so a raw element (e.g.
+    // `'section'`) never receives `messageId`/`slots` it can't read.
+    const innerMessageSlots: Partial<ChatMessageSlots> = {
+      root: slots?.messageRoot,
+      avatar: slots?.messageAvatar,
+      content: slots?.messageContent,
+      meta: slots?.messageMeta,
+      inlineMeta: slots?.messageInlineMeta,
+      error: slots?.messageError,
+      actions: slots?.messageActions,
+      authorName: slots?.messageAuthorName,
+      streamingIndicator: slots?.streamingIndicator,
+    };
+    const innerMessageSlotProps: ChatMessageSlotProps = {
+      root: slotProps?.messageRoot,
+      avatar: slotProps?.messageAvatar,
+      content: slotProps?.messageContent,
+      meta: slotProps?.messageMeta,
+      inlineMeta: slotProps?.messageInlineMeta,
+      error: slotProps?.messageError,
+      actions: slotProps?.messageActions,
+      authorName: slotProps?.messageAuthorName,
+      streamingIndicator: slotProps?.streamingIndicator,
+    };
+
+    // Track whether the avatar slot is explicitly nulled — used to mirror the
+    // `noAvatar` class on the group wrapper so any descendant CSS that reads
+    // `var(--MuiChatMessage-avatarSize)` can collapse the reserved space.
+    const hasAvatar = slots?.messageAvatar !== null;
+
+    // `authorName` is rendered by the headless MessageGroup (group-level), but
+    // consumer-facing it lives under the flat `messageAuthorName` key so all
+    // per-row overrides cluster in one namespace. Null hides the label entirely.
+    const authorNameOverride = slots?.messageAuthorName;
+    const AuthorNameSlot =
+      authorNameOverride === null
+        ? (HiddenAuthorName as React.ElementType)
+        : ((authorNameOverride ?? ChatMessageGroupAuthorNameStyled) as React.ElementType);
+
+    // Render priority:
+    // 1. Explicit `children` (legacy: caller provided their own composition)
+    // 2. Inner ChatMessage instance with the mapped short slot map.
+    let resolvedChildren = children;
+    if (children === undefined) {
+      resolvedChildren = messageId ? (
+        <ChatMessage
+          messageId={messageId}
+          slots={innerMessageSlots}
+          slotProps={innerMessageSlotProps}
+        />
+      ) : null;
+    }
 
     return (
       <MessageGroup
         ref={ref}
         messageId={messageId}
+        {...(messageGroupGroupKey !== undefined ? { groupKey: messageGroupGroupKey } : {})}
+        {...(messageGroupIndex !== undefined ? { index: messageGroupIndex } : {})}
+        {...(messageGroupItems !== undefined ? { items: messageGroupItems } : {})}
         {...other}
         slots={{
-          group: slots?.group ?? ChatMessageGroupStyled,
-          authorName: slots?.authorName ?? ChatMessageGroupAuthorNameStyled,
-          groupTimestamp: slots?.groupTimestamp ?? ChatMessageGroupTimestampStyled,
-          ...slots,
+          group: (slots?.messageGroup ?? ChatMessageGroupStyled) as React.ElementType,
+          authorName: AuthorNameSlot,
+          groupTimestamp: ChatMessageGroupTimestampStyled,
         }}
         slotProps={{
-          ...slotProps,
-          group: {
-            className: clsx(classes.group, className),
-            sx,
-            ...(slotProps?.group as object),
-          } as any,
+          group: mergeSlotProps(
+            {
+              className: clsx(classes.group, !hasAvatar && classes.noAvatar, className),
+              sx,
+            },
+            messageGroupWrapperProps as any,
+          ) as any,
+          authorName: slotProps?.messageAuthorName as any,
         }}
       >
         {resolvedChildren}
@@ -185,7 +249,6 @@ ChatMessageGroup.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
-  classes: PropTypes.object,
   className: PropTypes.string,
   /**
    * A function that maps a message to a group key.

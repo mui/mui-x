@@ -4,6 +4,7 @@ import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
+  EventBuilder,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
@@ -33,6 +34,21 @@ describe('<AgendaView />', () => {
       expect(
         document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`).length,
       ).to.be.greaterThan(0);
+    });
+  });
+
+  it('should reference resolvable header IDs in each event aria-labelledby', () => {
+    const event = EventBuilder.new().title('My Event').build();
+
+    render(
+      <EventCalendar events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />,
+    );
+
+    const eventButton = screen.getByRole('button', { name: /My Event/i });
+    const tokens = (eventButton.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
+    expect(tokens.length).to.be.greaterThan(0);
+    tokens.forEach((token) => {
+      expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(null);
     });
   });
 

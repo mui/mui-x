@@ -59,6 +59,28 @@ It can be set to
 
 {{"demo": "RadiusAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
 
+#### Radius extent
+
+The `minRadius` and `maxRadius` props control the radial extent of the radius axis.
+They accept three kinds of value:
+
+- a number—the radius in pixels (for example `50`).
+- a pixel string—the radius in pixels (for example `'50px'`).
+- a percentage string—relative to the available radius, half the smallest side of the drawing area (for example `'40%'`).
+
+Pixel values are fixed: the inner hole keeps the same size regardless of how big the chart is.
+Percentage values scale with the chart, which keeps the proportions consistent across container sizes.
+
+```jsx
+// Fixed: 50px hole no matter the chart size
+<radiusAxis minRadius={50} />
+
+// Responsive: hole is always 40% of the available radius
+<radiusAxis minRadius="40%" />
+```
+
+{{"demo": "RadiusAxisPercentage.js"}}
+
 ### Rotation axis
 
 The `ChartsRotationAxis` component renders an arc along the rotation axis with tick marks and labels.
