@@ -25,15 +25,16 @@ function ScatterAsync(props: ScatterProps) {
   const batchSize = store.use(selectorProgressiveBatchSize);
   const revealedBatches = store.use(selectorProgressiveSeriesRevealedBatches, series.id);
   const isZoomInteracting = store.use(selectorChartZoomIsInteracting);
-  // Size batches by the number of *visible* points so that zooming in (which
-  // shrinks the filtered set in the selector) collapses the progressive wave
-  // into a single tick once everything fits in one batch.
   const renderData = store.use(selectorScatterSeriesRenderData, series.id);
+  // Batch over `dataIndex` ranges (matching the scheduler's total-based sizing)
+  // so a point's batch is fixed across zoom/pan; off-screen points are skipped
+  // at render time. Batching the viewport-filtered array instead makes points
+  // pop while panning.
   const count = renderData?.count ?? 0;
   const nBatches = count === 0 ? 0 : Math.ceil(count / Math.max(1, batchSize));
-  // While zooming/panning only the first level is ever visible, so don't even
-  // mount the other batches: their `<g>` would stay empty yet still re-render
-  // on every interaction frame (the store subscription bypasses `React.memo`).
+  // While interacting only the first level shows, so don't mount the rest:
+  // their `<g>` stays empty yet re-renders every frame (subscription bypasses
+  // `React.memo`).
   const mountedBatches = isZoomInteracting ? Math.min(1, nBatches) : nBatches;
 
   const batches: React.ReactNode[] = [];

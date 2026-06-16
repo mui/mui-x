@@ -29,9 +29,9 @@ export interface ScatterAsyncBatchProps extends Pick<
 > {
   series: DefaultizedScatterSeriesType;
   colorGetter: ColorGetter<'scatter'>;
-  /** First point index of this batch (inclusive). */
+  /** First `dataIndex` of this batch (inclusive). */
   start: number;
-  /** Last point index of this batch (exclusive). */
+  /** Last `dataIndex` of this batch (exclusive). */
   end: number;
   /**
    * Whether this batch is allowed to render its markers yet. `ScatterAsync`
@@ -102,9 +102,13 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
   const markers: React.ReactNode[] = [];
   const nLocal = view.length / 3;
   for (let local = 0; local < nLocal; local += 1) {
+    // Skip off-screen points (kept in-array to keep batches stable across pan).
+    if (view[local * 3 + 2] === 0) {
+      continue;
+    }
     const x = view[local * 3];
     const y = view[local * 3 + 1];
-    const dataIndex = view[local * 3 + 2];
+    const dataIndex = start + local;
 
     const dataPoint = { x, y, dataIndex, seriesId: series.id, type: 'scatter' as const };
     const highlightState = isInteracting ? 'none' : getHighlightState(dataPoint);
