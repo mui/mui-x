@@ -62,9 +62,9 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'lata',
   recurrenceYearlyPresetLabel: (date) => `Powtarza się co roku w ${date}`,
   noResourceAriaLabel: 'Brak określonego zasobu',
-  // selectColorAriaLabel: color => `Select ${color} as event color`,
+  selectColorAriaLabel: (color) => `Wybierz ${color} jako kolor wydarzenia`,
   resourceLabel: 'Zasób',
-  // requiredResourceError: 'A resource is required.',
+  requiredResourceError: 'Zasób jest wymagany.',
   saveChanges: 'Zapisz',
   startDateAfterEndDateError:
     'Data/godzina rozpoczęcia musi być wcześniejsza niż data/godzina zakończenia.',
@@ -134,7 +134,7 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarGoToNextMonth: 'Pokaż następny miesiąc w kalendarzu',
 
   // Main calendar region
-  // calendarContentAriaLabel: 'Calendar content',
+  calendarContentAriaLabel: 'Zawartość kalendarza',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',
