@@ -88,6 +88,10 @@ RadarAxis.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
+  /**
    * The number of divisions with label.
    * @default 1
    */

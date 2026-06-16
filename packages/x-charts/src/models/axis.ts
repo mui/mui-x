@@ -220,7 +220,7 @@ type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
   width?: AxisProps extends ChartsYAxisProps ? number | 'auto' : never;
 };
 
-export interface ChartsRotationAxisProps extends ChartsAxisProps {
+export interface ChartsRotationAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'rotation';
   /**
    * The start angle (in deg).
@@ -258,7 +258,7 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
   classes?: Partial<ChartsRadialAxisClasses>;
 }
 
-export interface ChartsRadiusAxisProps extends ChartsAxisProps {
+export interface ChartsRadiusAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'radius';
   /**
    * The minimal radius.
