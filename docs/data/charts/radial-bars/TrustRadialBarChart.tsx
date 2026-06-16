@@ -49,7 +49,7 @@ export default function TrustRadialBarChart() {
             scaleType: 'linear',
             min: 0,
             max: 10,
-            minRadius: 130,
+            minRadius: '40%',
             tickInterval: [2, 4, 6, 8, 10],
           },
         ]}

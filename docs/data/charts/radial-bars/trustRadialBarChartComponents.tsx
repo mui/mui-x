@@ -155,7 +155,9 @@ function LegendSwatch({ type, color }: { type: string; color: string }) {
   let swatch: React.ReactNode;
   switch (type) {
     case 'line':
-      swatch = <Box sx={{ width: 15, height: 4, borderRadius: 1, bgcolor: color }} />;
+      swatch = (
+        <Box sx={{ width: 15, height: 4, borderRadius: 1, bgcolor: color }} />
+      );
       break;
     case 'up':
       swatch = (
@@ -184,7 +186,9 @@ function LegendSwatch({ type, color }: { type: string; color: string }) {
       );
       break;
     default:
-      swatch = <Box sx={{ width: 13, height: 13, borderRadius: 1, bgcolor: color }} />;
+      swatch = (
+        <Box sx={{ width: 13, height: 13, borderRadius: 1, bgcolor: color }} />
+      );
   }
 
   return (
@@ -216,7 +220,12 @@ export function TrustLegend({ currentColor, previousColor }: TrustLegendProps) {
       }}
     >
       {items.map((item) => (
-        <Stack key={item.label} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <Stack
+          key={item.label}
+          direction="row"
+          spacing={1}
+          sx={{ alignItems: 'center' }}
+        >
           <LegendSwatch type={item.type} color={item.color} />
           <Typography variant="caption">{item.label}</Typography>
         </Stack>
