@@ -19,6 +19,13 @@ export interface EventTimelinePremiumState extends SchedulerState {
    * Preferences for the timeline.
    */
   preferences: Partial<EventTimelinePremiumPreferences>;
+  /**
+   * `false` until the first parameters→state mapping has applied, then `true`.
+   * Gates the lazy-loading plugin's first fetch so it doesn't run against the
+   * constructor-only initial state.
+   * @internal
+   */
+  hasInitialized: boolean;
 }
 
 export interface EventTimelinePremiumParameters<
@@ -60,11 +67,4 @@ export interface EventTimelinePremiumParameters<
    * Preferences currently displayed in the timeline.
    */
   preferences?: Partial<EventTimelinePremiumPreferences>;
-  /**
-   * Event handler called when the preferences change.
-   */
-  onPreferencesChange?: (
-    preferences: Partial<EventTimelinePremiumPreferences>,
-    event: React.UIEvent | Event,
-  ) => void;
 }

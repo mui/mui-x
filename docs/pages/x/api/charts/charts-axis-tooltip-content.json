@@ -4,7 +4,7 @@
     "sort": {
       "type": {
         "name": "enum",
-        "description": "'none'<br>&#124;&nbsp;'asc'<br>&#124;&nbsp;'desc'"
+        "description": "'asc'<br>&#124;&nbsp;'desc'<br>&#124;&nbsp;'none'"
       },
       "default": "'none'"
     }
@@ -19,61 +19,61 @@
   "classes": [
     {
       "key": "axisValueCell",
-      "className": "MuiChartsAxisTooltipContent-axisValueCell",
+      "className": "MuiChartsTooltip-axisValueCell",
       "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
       "isGlobal": false
     },
     {
       "key": "cell",
-      "className": "MuiChartsAxisTooltipContent-cell",
+      "className": "MuiChartsTooltip-cell",
       "description": "Styles applied to the cell element.",
       "isGlobal": false
     },
     {
       "key": "labelCell",
-      "className": "MuiChartsAxisTooltipContent-labelCell",
+      "className": "MuiChartsTooltip-labelCell",
       "description": "Styles applied to the labelCell element.",
       "isGlobal": false
     },
     {
       "key": "mark",
-      "className": "MuiChartsAxisTooltipContent-mark",
+      "className": "MuiChartsTooltip-mark",
       "description": "Styles applied to the mark element.",
       "isGlobal": false
     },
     {
       "key": "markContainer",
-      "className": "MuiChartsAxisTooltipContent-markContainer",
+      "className": "MuiChartsTooltip-markContainer",
       "description": "Styles applied to the markContainer element.",
       "isGlobal": false
     },
     {
       "key": "paper",
-      "className": "MuiChartsAxisTooltipContent-paper",
+      "className": "MuiChartsTooltip-paper",
       "description": "Styles applied to the paper element.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiChartsAxisTooltipContent-root",
+      "className": "MuiChartsTooltip-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "row",
-      "className": "MuiChartsAxisTooltipContent-row",
+      "className": "MuiChartsTooltip-row",
       "description": "Styles applied to the row element.",
       "isGlobal": false
     },
     {
       "key": "table",
-      "className": "MuiChartsAxisTooltipContent-table",
+      "className": "MuiChartsTooltip-table",
       "description": "Styles applied to the table element.",
       "isGlobal": false
     },
     {
       "key": "valueCell",
-      "className": "MuiChartsAxisTooltipContent-valueCell",
+      "className": "MuiChartsTooltip-valueCell",
       "description": "Styles applied to the valueCell element.",
       "isGlobal": false
     }
@@ -81,6 +81,5 @@
   "muiName": "MuiChartsAxisTooltipContent",
   "filename": "/packages/x-charts/src/ChartsTooltip/ChartsAxisTooltipContent.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>"
 }

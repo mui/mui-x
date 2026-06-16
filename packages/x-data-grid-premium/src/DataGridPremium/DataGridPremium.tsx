@@ -16,6 +16,7 @@ import {
   type GridConfiguration,
   useGridApiInitialization,
   getRowValue,
+  GridMultiSelectMeasurer,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -111,6 +112,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         sidePanel={sidePanel}
       >
         {watermark}
+        <GridMultiSelectMeasurer />
       </GridRoot>
     </GridContextProvider>
   );

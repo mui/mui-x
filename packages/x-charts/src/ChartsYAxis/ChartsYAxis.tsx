@@ -27,7 +27,9 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const axis = yAxis[inProps.axisId ?? yAxisIds[0]];
   if (!axis) {
-    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+    }
     return null;
   }
 
@@ -49,6 +51,10 @@ ChartsYAxis.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * If true, the axis line is disabled.
    * @default false
@@ -137,6 +143,11 @@ ChartsYAxis.propTypes = {
    * @default 6
    */
   tickSize: PropTypes.number,
+  /**
+   * The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
+   * @default 0
+   */
+  tickSpacing: PropTypes.number,
 } as any;
 
 export { ChartsYAxis };

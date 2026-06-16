@@ -1,37 +1,17 @@
 'use client';
 import * as React from 'react';
-import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
-import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
-import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
-import { createSelectorMemoized } from '@base-ui/utils/store';
 import { WeekViewProps } from './WeekView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
+import { createDayTimeGridViewConfig } from '../internals/utils/day-time-grid-view-config';
 
-const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
-  siblingVisibleDateGetter: ({ state, delta }) =>
-    state.adapter.addWeeks(
-      state.adapter.startOfWeek(schedulerOtherSelectors.visibleDate(state)),
-      delta,
-    ),
-  visibleDaysSelector: createSelectorMemoized(
-    (state: State) => state.adapter,
-    schedulerOtherSelectors.visibleDate,
-    eventCalendarPreferenceSelectors.showWeekends,
-    (adapter, visibleDate, showWeekends) =>
-      getDayList({
-        adapter,
-        start: adapter.startOfWeek(visibleDate),
-        end: adapter.endOfWeek(visibleDate),
-        excludeWeekends: !showWeekends,
-      }),
-  ),
-};
+const WEEK_VIEW_CONFIG = createDayTimeGridViewConfig(7);
 
 /**
  * A Week View to use inside the Event Calendar.
+ *
+ * Renders the desktop event variant, which `DayTimeGrid` resolves from the default value of
+ * `DayTimeGridInternalRenderersContext` — no provider is needed here.
  */
 export const WeekView = React.memo(
   React.forwardRef(function WeekView(

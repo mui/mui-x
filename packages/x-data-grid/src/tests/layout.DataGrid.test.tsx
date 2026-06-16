@@ -128,6 +128,34 @@ describe('<DataGrid /> - Layout & warnings', () => {
         expect(ref.current).to.equal(container.firstChild?.firstChild);
       });
 
+      it('mounts the root element during the first SPA commit', () => {
+        let rootElementInLayoutEffect: HTMLDivElement | null | undefined;
+        let renderCount = 0;
+
+        function TestCase() {
+          const apiRef = useGridApiRef();
+
+          React.useLayoutEffect(() => {
+            renderCount += 1;
+            if (renderCount === 1) {
+              rootElementInLayoutEffect = apiRef.current!.rootElementRef.current;
+            }
+          }, [apiRef]);
+
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid apiRef={apiRef} {...baselineProps} />
+            </div>
+          );
+        }
+
+        render(<TestCase />);
+
+        // Assert against the actual mounted root node because `rootElementInLayoutEffect` starts as `undefined`.
+        // A plain null check would pass if the effect never captured the node.
+        expect(rootElementInLayoutEffect).to.equal(document.querySelector(`.${gridClasses.root}`));
+      });
+
       describe('`classes` prop', () => {
         it("should apply the `root` rule name's value as a class to the root grid component", () => {
           const classes = {
@@ -236,7 +264,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       it('should have a stable height if the parent container has no intrinsic height', () => {
         render(
           <div>
-            <p>The table keeps growing... and growing...</p>
+            <p>The table keeps growing… and growing…</p>
             <DataGrid {...baselineProps} />
           </div>,
         );
@@ -1338,6 +1366,82 @@ describe('<DataGrid /> - Layout & warnings', () => {
           />
         </div>,
       );
+    },
+  );
+
+  // See https://github.com/mui/mui-x/issues/22510
+  // Need layout
+  it.skipIf(isJSDOM)(
+    'should keep the vertical scrollbar after the container size oscillates across the threshold',
+    async () => {
+      function TestCase({ height }: { height: number }) {
+        return (
+          <div style={{ width: 300, height }}>
+            <DataGrid
+              rows={Array.from({ length: 3 }, (_, i) => ({ id: i, brand: `b${i}` }))}
+              columns={[{ field: 'brand' }]}
+              resizeThrottleMs={0}
+            />
+          </div>
+        );
+      }
+      const { setProps } = render(<TestCase height={150} />);
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+      });
+      // Pauses simulate user-paced resize (each flip > OSCILLATION_FLIP_WINDOW_MS apart).
+      await sleep(150);
+      setProps({ height: 400 });
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+      });
+      await sleep(150);
+      setProps({ height: 150 });
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+      });
+    },
+  );
+
+  // See https://github.com/mui/mui-x/issues/20539
+  // Need layout
+  it.skipIf(isJSDOM)(
+    'should force the vertical scrollbar off when consecutive flips happen inside one render frame',
+    async () => {
+      // Stub performance.now to drive the oscillation detector's elapsed-time check.
+      let mockTime = 1000;
+      const performanceNowStub = stub(performance, 'now').callsFake(() => mockTime);
+      try {
+        function TestCase({ height }: { height: number }) {
+          return (
+            <div style={{ width: 300, height }}>
+              <DataGrid
+                rows={Array.from({ length: 3 }, (_, i) => ({ id: i, brand: `b${i}` }))}
+                columns={[{ field: 'brand' }]}
+                resizeThrottleMs={0}
+              />
+            </div>
+          );
+        }
+        const { setProps } = render(<TestCase height={150} />);
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+        });
+        // First flip outside the window — counter resets.
+        mockTime += 200;
+        setProps({ height: 400 });
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+        });
+        // Second flip inside the window — force-suppressed despite needing the scrollbar.
+        mockTime += 30;
+        setProps({ height: 150 });
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+        });
+      } finally {
+        performanceNowStub.restore();
+      }
     },
   );
 });

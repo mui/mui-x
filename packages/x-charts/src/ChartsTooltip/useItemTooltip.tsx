@@ -69,8 +69,10 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
       rotationAxisIds[0])
     : undefined;
 
-  const zAxisId: AxisId | undefined =
-    'zAxisId' in itemSeries ? (itemSeries.zAxisId ?? zAxisIds[0]) : zAxisIds[0];
+  const colorAxisId: AxisId | undefined =
+    ('colorAxisId' in itemSeries ? itemSeries.colorAxisId : undefined) ??
+    ('zAxisId' in itemSeries ? itemSeries.zAxisId : undefined) ??
+    zAxisIds[0];
 
   const mainAxis =
     // eslint-disable-next-line no-nested-ternary
@@ -93,7 +95,7 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
     itemSeries,
     mainAxis,
     secondAxis,
-    zAxisId !== undefined ? zAxis[zAxisId] : undefined,
+    colorAxisId !== undefined ? zAxis[colorAxisId] : undefined,
   ) as ColorGetter<SeriesType>;
 
   const axesConfig: TooltipGetterAxesConfig = {};

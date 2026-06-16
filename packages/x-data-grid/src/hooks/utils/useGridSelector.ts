@@ -1,10 +1,11 @@
 'use client';
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { RefObject } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
-import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
+import type { GridStateCommunity } from '../../models/gridStateCommunity';
 import { useLazyRef } from './useLazyRef';
 
 const defaultCompare = Object.is;
@@ -27,19 +28,23 @@ const argsEqual = (prev: any, curr: any) => {
   return fn(prev, curr);
 };
 
-const createRefs = () => ({ state: null, equals: null, selector: null, args: undefined }) as any;
+const createRefs = () =>
+  ({ state: null, equals: null, selector: null, args: undefined, storeState: null }) as any;
 
 const EMPTY = [] as unknown[];
 
 type Refs<T> = {
+  // `state` holds the value this hook currently returns.
+  // `storeState` remembers which store state that value was computed from.
+  // The store creates a new state object on every update, so comparing `storeState`
+  // with the current `store.state` allows `updateState` to skip needless selector
+  // calls and to catch updates that happened before the hook subscribed to the store.
   state: T;
+  storeState: GridStateCommunity | null;
   equals: <U = T>(a: U, b: U) => boolean;
   selector: Function;
   args: any;
-  subscription: undefined | (() => void);
 };
-
-const emptyGetSnapshot = () => null;
 
 export function useGridSelector<Api extends GridApiCommon, T>(
   apiRef: RefObject<Api>,
@@ -59,7 +64,7 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
   args: Args = undefined as Args,
   equals: <U = T>(a: U, b: U) => boolean = defaultCompare,
 ) {
-  if (!apiRef.current.state) {
+  if (process.env.NODE_ENV !== 'production' && !apiRef.current.state) {
     warnOnce([
       'MUI X: `useGridSelector` has been called before the initialization of the state.',
       'This hook can only be used inside the context of the grid.',
@@ -75,6 +80,9 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
   );
 
   refs.current.state = state;
+  if (!didInit) {
+    refs.current.storeState = apiRef.current.store.state;
+  }
   refs.current.equals = equals;
   refs.current.selector = selector;
   const prevArgs = refs.current.args;
@@ -86,44 +94,40 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
       refs.current.state = newState;
       setState(newState);
     }
+    refs.current.storeState = apiRef.current.store.state;
   }
 
-  const subscribe = React.useCallback(
+  const updateState = React.useCallback(
     () => {
-      if (refs.current.subscription) {
-        return null;
-      }
+      const storeState = apiRef.current.store.state;
 
-      refs.current.subscription = apiRef.current.store.subscribe(() => {
+      if (refs.current.storeState !== storeState) {
         const newState = refs.current.selector(apiRef, refs.current.args) as T;
+        refs.current.storeState = storeState;
+
         if (!refs.current.equals(refs.current.state, newState)) {
           refs.current.state = newState;
           setState(newState);
         }
-      });
-
-      return null;
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     EMPTY,
   );
 
-  const unsubscribe = React.useCallback(() => {
-    // Fixes issue in React Strict Mode, where getSnapshot is not called
-    if (!refs.current.subscription) {
-      subscribe();
-    }
-
-    return () => {
-      if (refs.current.subscription) {
-        refs.current.subscription();
-        refs.current.subscription = undefined;
-      }
-    };
+  // Why subscribe in an effect instead of during render: a component can render without
+  // ever mounting (e.g. when it suspends during hydration). If it subscribed during render,
+  // it could receive a store update and call `setState` before being mounted (#17077).
+  // Effects only run for mounted components, so subscribing here is safe.
+  //
+  // Using a layout effect because the store may already have changed
+  // between render and mount (e.g. from a child's ref callback or layout effect).
+  // `updateState()` picks up such changes, so the corrected value is shown right away instead of in a second frame.
+  useEnhancedEffect(() => {
+    updateState();
+    return apiRef.current.store.subscribe(updateState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, EMPTY);
-
-  useSyncExternalStore(unsubscribe, subscribe, emptyGetSnapshot);
 
   return state;
 }

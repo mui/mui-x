@@ -56,7 +56,9 @@ export default function PaperBubble() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      slots={{ messageContent: CustomMessageContent }}
+      slots={{
+        messageContent: CustomMessageContent,
+      }}
       sx={{
         height: 500,
         border: '1px solid',

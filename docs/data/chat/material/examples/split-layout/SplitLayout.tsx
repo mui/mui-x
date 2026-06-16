@@ -9,14 +9,9 @@ import {
   ChatComposerSendButton,
   ChatComposerTextArea,
   ChatComposerToolbar,
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useMessageIds, ChatRoot } from '@mui/x-chat/headless';
+import { ChatRoot } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import {
   createChunkStream,
@@ -82,25 +77,11 @@ function SendIcon() {
   );
 }
 
-// Left column — message display. Must be inside ChatRoot to call useMessageIds().
+// Left column — message display, sourced from the shared ChatRoot context.
 function MessagePane() {
-  const messageIds = useMessageIds();
-
-  const renderItem = React.useCallback(
-    (params: { id: string }) => (
-      <ChatMessageGroup key={params.id} messageId={params.id}>
-        <ChatMessage messageId={params.id}>
-          <ChatMessageAvatar />
-          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
-        </ChatMessage>
-      </ChatMessageGroup>
-    ),
-    [],
-  );
-
   return (
     <ChatConversation sx={{ borderRight: '1px solid', borderColor: 'divider' }}>
-      <ChatMessageList renderItem={renderItem} items={messageIds} />
+      <ChatMessageList />
     </ChatConversation>
   );
 }

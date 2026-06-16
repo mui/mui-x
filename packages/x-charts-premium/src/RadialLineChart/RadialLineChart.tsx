@@ -1,21 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import type { MakeOptional } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import {
   useChartsContainerProps,
   type ChartsSlots,
   type ChartsSlotProps,
 } from '@mui/x-charts/internals';
+import { ChartsRadialGrid, type ChartsRadialGridProps } from '@mui/x-charts/ChartsRadialGrid';
 import {
-  Unstable_ChartsRadialGrid as ChartsRadialGrid,
-  type ChartsRadialGridProps,
-} from '@mui/x-charts/ChartsRadialGrid';
-import {
-  Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
+  ChartsRadialAxisHighlight,
   type ChartsRadialAxisHighlightProps,
 } from '@mui/x-charts/ChartsRadialAxisHighlight';
-import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
-import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
+import { ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
+import { ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
 import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
@@ -35,7 +33,6 @@ import {
   type ChartsOverlaySlots,
   type ChartsOverlaySlotProps,
 } from '../ChartsOverlay';
-import type { LinePlotSlots, LinePlotSlotProps, LineSeries } from '../LineChart';
 import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
 import { useRadialLineChartProps } from './useRadialLineChartProps';
 import { radialLineSeriesConfig } from './seriesConfig';
@@ -48,10 +45,10 @@ import {
   ChartsRadialDataProviderPremium,
   type ChartsRadialDataProviderPremiumProps,
 } from '../ChartsRadialDataProviderPremium';
+import type { RadialLineSeriesType } from '../models/seriesType/radialLine';
 
 export interface RadialLineChartSlots
   extends
-    LinePlotSlots,
     RadialLineHighlightPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
@@ -60,13 +57,14 @@ export interface RadialLineChartSlots
     Partial<ChartsSlots> {}
 export interface RadialLineChartSlotProps
   extends
-    LinePlotSlotProps,
     RadialLineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
+
+export type RadialLineSeries = MakeOptional<RadialLineSeriesType, 'type'>;
 
 export interface RadialLineChartProps
   extends
@@ -77,9 +75,9 @@ export interface RadialLineChartProps
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the line chart.
-   * An array of [[LineSeries]] objects.
+   * An array of [[RadialLineSeries]] objects.
    */
-  series: Readonly<LineSeries[]>;
+  series: Readonly<RadialLineSeries[]>;
   /**
    * Option to display a radial grid in the background.
    */
@@ -267,12 +265,12 @@ RadialLineChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialLine']),
+        type: PropTypes.oneOf(['radialLine']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialLine']).isRequired,
+        type: PropTypes.oneOf(['radialLine']),
       }),
     ]).isRequired,
   ),
@@ -288,11 +286,11 @@ RadialLineChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialLine']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radialLine']).isRequired,
     }),
   ]),
   /**
@@ -326,12 +324,12 @@ RadialLineChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialLine']),
+        type: PropTypes.oneOf(['radialLine']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialLine']).isRequired,
+        type: PropTypes.oneOf(['radialLine']),
       }),
     ]).isRequired,
   ),
@@ -397,7 +395,7 @@ RadialLineChart.propTypes = {
   rotationAxis: PropTypes.arrayOf(PropTypes.object),
   /**
    * The series to display in the line chart.
-   * An array of [[LineSeries]] objects.
+   * An array of [[RadialLineSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -429,11 +427,11 @@ RadialLineChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialLine']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radialLine']).isRequired,
     }),
   ]),
   /**
@@ -442,4 +440,4 @@ RadialLineChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadialLineChart as Unstable_RadialLineChart };
+export { RadialLineChart };

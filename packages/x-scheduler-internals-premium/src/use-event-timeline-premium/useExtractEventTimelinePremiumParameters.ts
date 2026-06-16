@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler -- intentional `react-hooks/exhaustive-deps` disable below */
 import * as React from 'react';
 import { EventTimelinePremiumParameters } from './EventTimelinePremiumStore.types';
 
@@ -11,6 +12,7 @@ export function useExtractEventTimelinePremiumParameters<
     areEventsResizable,
     canDragEventsFromTheOutside,
     canDropEventsToTheOutside,
+    dataSource,
     dateLocale,
     defaultPreferences,
     defaultPreset,
@@ -22,7 +24,6 @@ export function useExtractEventTimelinePremiumParameters<
     eventModelStructure,
     events,
     onEventsChange,
-    onPreferencesChange,
     onPresetChange,
     onVisibleDateChange,
     onVisibleResourcesChange,
@@ -30,6 +31,7 @@ export function useExtractEventTimelinePremiumParameters<
     preset,
     presets,
     readOnly,
+    shouldEventRequireResource,
     resourceModelStructure,
     resources,
     showCurrentTimeIndicator,
@@ -44,6 +46,7 @@ export function useExtractEventTimelinePremiumParameters<
       areEventsResizable,
       canDragEventsFromTheOutside,
       canDropEventsToTheOutside,
+      dataSource,
       dateLocale,
       defaultPreferences,
       defaultPreset,
@@ -55,7 +58,6 @@ export function useExtractEventTimelinePremiumParameters<
       eventModelStructure,
       events,
       onEventsChange,
-      onPreferencesChange,
       onPresetChange,
       onVisibleDateChange,
       onVisibleResourcesChange,
@@ -63,12 +65,18 @@ export function useExtractEventTimelinePremiumParameters<
       preset,
       presets,
       readOnly,
+      shouldEventRequireResource,
       resourceModelStructure,
       resources,
       showCurrentTimeIndicator,
       visibleDate,
       visibleResources,
     }),
+    // `dataSource` is intentionally excluded. It's re-read on every fetch, but the
+    // cache + dataManager are pinned to the original instance, so runtime swaps are
+    // only partially reactive — consumers should remount to swap. Including it in
+    // deps would invalidate the memo every render for inline `{ getEvents, persistEvents }`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       areEventsDraggable,
       areEventsResizable,
@@ -85,7 +93,6 @@ export function useExtractEventTimelinePremiumParameters<
       eventModelStructure,
       events,
       onEventsChange,
-      onPreferencesChange,
       onPresetChange,
       onVisibleDateChange,
       onVisibleResourcesChange,
@@ -93,6 +100,7 @@ export function useExtractEventTimelinePremiumParameters<
       preset,
       presets,
       readOnly,
+      shouldEventRequireResource,
       resourceModelStructure,
       resources,
       showCurrentTimeIndicator,
