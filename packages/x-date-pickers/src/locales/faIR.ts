@@ -71,8 +71,8 @@ const faIRPickers: Partial<PickersLocaleText> = {
       : 'زمان را انتخاب کنید',
   openRangePickerDialogue: (formattedRange) =>
     formattedRange
-    ? `بازه را انتخاب کنید، بازه زمانی انتخاب شده ${formattedRange} است`
-    : 'بازه را انتخاب کنید',
+      ? `بازه را انتخاب کنید، بازه زمانی انتخاب شده ${formattedRange} است`
+      : 'بازه را انتخاب کنید',
   fieldClearLabel: 'پاک کردن',
 
   // Table labels
