@@ -21,7 +21,7 @@ import type {
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 import type { UseChartBrushSignature } from '../useChartBrush';
-import type { BarSubsamplingState } from './barSubsampling.types';
+import type { SubsamplingState } from './subsampling.types';
 
 /**
  * The axes' configuration after computing.
@@ -125,9 +125,9 @@ export interface UseChartCartesianAxisState {
     zoomData: readonly ZoomData[];
   };
   /**
-   * @ignore - state populated by the useChartProBarSubsampling plugin
+   * @ignore - state populated by the useChartProSubsampling plugin
    */
-  barSubsampling?: BarSubsamplingState;
+  subsampling?: SubsamplingState;
   cartesianAxis: {
     axesGap: number;
     x: DefaultedXAxis[];

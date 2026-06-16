@@ -22,14 +22,14 @@ import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import { useStore } from '../internals/store/useStore';
 import {
-  selectBarSubsamplingLevel,
-  selectBarSubsamplingLevelByZoom,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling';
-import { selectorChartBarSubsamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling.selectors';
+  selectSubsamplingLevel,
+  selectSubsamplingLevelByZoom,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/subsampling';
+import { selectorChartSubsamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/subsampling.selectors';
 import type {
-  BarSubsamplingLevel,
-  BarSubsamplingPyramidLookup,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/barSubsampling.types';
+  SubsamplingLevel,
+  SubsamplingPyramidLookup,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/subsampling.types';
 import {
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
@@ -56,7 +56,7 @@ export function useBarPlotData(
   const chartId = useChartId();
 
   const store = useStore();
-  const subsamplingPyramids = store.use(selectorChartBarSubsamplingPyramids);
+  const subsamplingPyramids = store.use(selectorChartSubsamplingPyramids);
   const zoomMap = store.use(selectorChartZoomMap);
   const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
 
@@ -84,7 +84,7 @@ export function processBarDataForPlot(
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
   defaultXAxisId: AxisId,
   defaultYAxisId: AxisId,
-  subsamplingPyramids: BarSubsamplingPyramidLookup = {},
+  subsamplingPyramids: SubsamplingPyramidLookup = {},
   zoomMap?: Map<AxisId, ZoomData>,
   zoomOptionsLookup?: Record<AxisId, DefaultizedZoomOptions>,
 ) {
@@ -191,7 +191,7 @@ export function processBarDataForPlot(
       };
 
       const pyramid = subsamplingPyramids[seriesId];
-      let activeLevel: BarSubsamplingLevel | null = null;
+      let activeLevel: SubsamplingLevel | null = null;
       if (pyramid) {
         const baseAxisId = verticalLayout ? xAxisId : yAxisId;
         const zoom = zoomMap?.get(baseAxisId);
@@ -199,8 +199,8 @@ export function processBarDataForPlot(
         // With zoom, derive the level from the span; without zoom, from the bar width.
         activeLevel =
           zoom && zoomOptions
-            ? selectBarSubsamplingLevelByZoom(zoom.end - zoom.start, zoomOptions.minSpan, pyramid)
-            : selectBarSubsamplingLevel(baseScaleConfig.scale.bandwidth(), pyramid);
+            ? selectSubsamplingLevelByZoom(zoom.end - zoom.start, zoomOptions.minSpan, pyramid)
+            : selectSubsamplingLevel(baseScaleConfig.scale.bandwidth(), pyramid);
       }
 
       if (activeLevel) {

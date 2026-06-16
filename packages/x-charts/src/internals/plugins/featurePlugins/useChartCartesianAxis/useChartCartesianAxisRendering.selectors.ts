@@ -15,7 +15,7 @@ import {
 } from './createAxisFilterMapper';
 import { type ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
-import { getSubsamplingMinSpan } from './barSubsampling';
+import { getSubsamplingMinSpan } from './subsampling';
 import {
   type AxisId,
   type ChartsAxisProps,
@@ -89,14 +89,14 @@ export const selectorChartAxisZoomData = createSelector(
   (zoomMap, axisId: AxisId) => zoomMap?.get(axisId),
 );
 
-const selectorChartBarSubsamplingState = (
+const selectorChartSubsamplingState = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
-) => state.barSubsampling;
+) => state.subsampling;
 
 export const selectorChartZoomOptionsLookup = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorChartRawYAxis,
-  selectorChartBarSubsamplingState,
+  selectorChartSubsamplingState,
   selectorChartDrawingArea,
   function selectorChartZoomOptionsLookup(xAxis, yAxis, subsampling, drawingArea) {
     const lookup = {
