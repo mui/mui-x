@@ -8,6 +8,7 @@ import {
   ResourceBuilder,
   withinMonthView,
   dateLocaleFr,
+  dateLocalePl,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
@@ -396,6 +397,21 @@ describe('EventCalendar', () => {
       // In French, Monday is "lundi"
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view (mini calendar also has column headers)
       expect(monthView.getByRole('columnheader', { name: /lundi/i })).not.to.equal(null);
+    });
+
+    it('should render the calendar header with a standalone month name in Polish when dateLocale is set to pl', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          defaultVisibleDate={new Date('2026-06-01T00:00:00Z')}
+          dateLocale={dateLocalePl}
+        />,
+      );
+
+      const header = document.querySelector(`.${eventCalendarClasses.headerToolbar}`);
+      const headerLabel = header?.querySelector('[aria-live="polite"]');
+      expect(headerLabel).not.to.equal(null);
+      expect(headerLabel).to.have.text('czerwiec 2026');
     });
   });
 

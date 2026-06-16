@@ -25,7 +25,7 @@ function formatWeekDayMonthAndDayOfMonth(adapter: TemporalAdapter, date: Tempora
 
 function formatMonthAndYear(adapter: TemporalAdapter, date: TemporalSupportedObject) {
   const f = adapter.formats;
-  return adapter.formatByString(date, `${f.monthFullLetter} ${f.yearPadded}`);
+  return adapter.formatByString(date, `${f.monthFullLetterStandalone} ${f.yearPadded}`);
 }
 
 function formatHourLabel(adapter: TemporalAdapter, date: TemporalSupportedObject, ampm: boolean) {

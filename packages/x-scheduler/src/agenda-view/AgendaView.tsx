@@ -256,7 +256,7 @@ export const AgendaView = React.memo(
                     className={classes.agendaViewYearAndMonthLabel}
                     style={{ '--number-of-lines': 1 } as React.CSSProperties}
                   >
-                    {adapter.format(date.value, 'monthFullLetter')},{' '}
+                    {adapter.format(date.value, 'monthFullLetterStandalone')},{' '}
                     {adapter.format(date.value, 'yearPadded')}
                   </AgendaYearAndMonthLabel>
                 </WeekDayCell>

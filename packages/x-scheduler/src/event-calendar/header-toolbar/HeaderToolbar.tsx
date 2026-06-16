@@ -128,7 +128,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           {isSidePanelOpen ? <MenuOpen /> : <Menu />}
         </IconButton>
         <HeaderToolbarLabel aria-live="polite">
-          {adapter.format(visibleDate, 'monthFullLetter')}{' '}
+          {adapter.format(visibleDate, 'monthFullLetterStandalone')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
           {showWeekLabel && (
             <HeaderToolbarWeekNumber className={classes.headerToolbarWeekNumber}>

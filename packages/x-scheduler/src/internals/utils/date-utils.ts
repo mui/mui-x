@@ -36,7 +36,7 @@ export function formatDayOfMonthAndMonthFullLetter(
 
 export function formatMonthFullLetterAndYear(date: TemporalSupportedObject, adapter: Adapter) {
   const f = adapter.formats;
-  const dateFormat = `${f.monthFullLetter} ${f.yearPadded}`;
+  const dateFormat = `${f.monthFullLetterStandalone} ${f.yearPadded}`;
 
   return adapter.formatByString(date, dateFormat);
 }
