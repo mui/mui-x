@@ -39,7 +39,18 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   // recurrenceTabLabel: 'Recurrence',
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
-  // recurrenceWeeklyPresetLabel: weekday => `Repeats weekly on ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekday }) => {
+    const map = {
+      monday: 'w poniedziałek',
+      tuesday: 'we wtorek',
+      wednesday: 'w środę',
+      thursday: 'w czwartek',
+      friday: 'w piątek',
+      saturday: 'w sobotę',
+      sunday: 'w niedzielę',
+    };
+    return `Powtarza się co tydzień ${map[weekday]}`;
+  },
   // recurrenceMonthlyFrequencyLabel: 'months',
   // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
   // recurrenceMonthlyLastWeekAriaLabel: weekDay => `${weekDay} of the last week of the month`,
@@ -58,6 +69,7 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   // startDateLabel: 'Start date',
   // startTimeLabel: 'Start time',
+
   // RecurringScopeDialog
   // all: 'All events',
   // cancel: 'Cancel',

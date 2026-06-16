@@ -47,7 +47,9 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
       return () => {};
     }
 
-    const rafThrottledOnWheel = rafThrottle(onWheelRef.current);
+    const rafThrottledOnWheel = rafThrottle((point: ChartPoint, event: WheelEvent) =>
+      onWheelRef.current(point, event),
+    );
 
     const handler = instance.addInteractionListener('zoomTurnWheel', (event) => {
       const point = getChartPoint(element, {

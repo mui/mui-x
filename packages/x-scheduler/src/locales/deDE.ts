@@ -39,7 +39,7 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Wiederholung',
   recurrenceMainSelectCustomLabel: 'Wiederholung',
   recurrenceWeeklyFrequencyLabel: 'Wochen',
-  recurrenceWeeklyPresetLabel: (weekday) => `Wird wöchentlich am ${weekday} wiederholt`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Wird wöchentlich am ${weekdayName} wiederholt`,
   recurrenceMonthlyFrequencyLabel: 'Monate',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Tag ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} der letzten Woche des Monats`,
