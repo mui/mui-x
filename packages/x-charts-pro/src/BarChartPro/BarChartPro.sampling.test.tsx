@@ -3,7 +3,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { barClasses } from '@mui/x-charts/BarChart';
 import { BarChartPro } from './BarChartPro';
 
-describe('<BarChartPro /> - Subsampling', () => {
+describe('<BarChartPro /> - Sampling', () => {
   const { render } = createRenderer();
 
   const countBars = (container: HTMLElement) =>
@@ -46,7 +46,7 @@ describe('<BarChartPro /> - Subsampling', () => {
     expect(rendered).to.be.greaterThan(0);
   });
 
-  it('renders every bar when subsampling is disabled', () => {
+  it('renders every bar when sampling is disabled', () => {
     const dataLength = 256;
     const { container } = render(
       <BarChartPro
@@ -55,7 +55,7 @@ describe('<BarChartPro /> - Subsampling', () => {
         yAxis={[{ position: 'none' }]}
         width={200}
         height={200}
-        subsampling={false}
+        sampling={false}
         skipAnimation
       />,
     );

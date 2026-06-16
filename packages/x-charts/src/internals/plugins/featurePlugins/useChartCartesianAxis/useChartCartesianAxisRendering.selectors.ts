@@ -15,7 +15,7 @@ import {
 } from './createAxisFilterMapper';
 import { type ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
-import { getSubsamplingMinSpan } from './subsampling';
+import { getSamplingMinSpan } from './sampling';
 import {
   type AxisId,
   type ChartsAxisProps,
@@ -89,24 +89,24 @@ export const selectorChartAxisZoomData = createSelector(
   (zoomMap, axisId: AxisId) => zoomMap?.get(axisId),
 );
 
-const selectorChartSubsamplingState = (
+const selectorChartSamplingState = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
-) => state.subsampling;
+) => state.sampling;
 
 export const selectorChartZoomOptionsLookup = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorChartRawYAxis,
-  selectorChartSubsamplingState,
+  selectorChartSamplingState,
   selectorChartDrawingArea,
-  function selectorChartZoomOptionsLookup(xAxis, yAxis, subsampling, drawingArea) {
+  function selectorChartZoomOptionsLookup(xAxis, yAxis, sampling, drawingArea) {
     const lookup = {
       ...createZoomLookup('x')(xAxis),
       ...createZoomLookup('y')(yAxis),
     };
 
-    // Subsampling lowers min span (from band-axis size) so the data is reachable unsampled.
+    // Sampling lowers min span (from band-axis size) so the data is reachable unsampled.
     // Recomputed on resize, not on zoom.
-    if (subsampling?.enabled) {
+    if (sampling?.enabled) {
       const applyMinSpan = (
         axes: ReadonlyArray<{ id: AxisId; data?: readonly unknown[] }> | undefined,
         availableSizePx: number,
@@ -115,7 +115,7 @@ export const selectorChartZoomOptionsLookup = createSelectorMemoized(
           const options = lookup[axis.id];
           const dataLength = axis.data?.length;
           if (options && dataLength) {
-            const minSpan = getSubsamplingMinSpan(dataLength, availableSizePx);
+            const minSpan = getSamplingMinSpan(dataLength, availableSizePx);
             if (minSpan < options.minSpan) {
               lookup[axis.id] = { ...options, minSpan };
             }

@@ -1,0 +1,15 @@
+<FormControlLabel
+  control={
+    <Switch
+      checked={sampling}
+      onChange={(event) => setSampling(event.target.checked)}
+    />
+  }
+  label={`Sampling ${sampling ? 'on' : 'off'} (${POINTS} bars — zoom in fully to reach the unsampled data)`}
+/>
+<BarChartPro
+  xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}
+  series={[{ data, label: 'Value' }]}
+  height={300}
+  sampling={sampling}
+/>

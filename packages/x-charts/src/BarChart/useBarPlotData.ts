@@ -22,14 +22,14 @@ import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import { useStore } from '../internals/store/useStore';
 import {
-  selectSubsamplingLevel,
-  selectSubsamplingLevelByZoom,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/subsampling';
-import { selectorChartSubsamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/subsampling.selectors';
+  selectSamplingLevel,
+  selectSamplingLevelByZoom,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling';
+import { selectorChartSamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
 import type {
-  SubsamplingLevel,
-  SubsamplingPyramidLookup,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/subsampling.types';
+  SamplingLevel,
+  SamplingPyramidLookup,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
 import {
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
@@ -56,7 +56,7 @@ export function useBarPlotData(
   const chartId = useChartId();
 
   const store = useStore();
-  const subsamplingPyramids = store.use(selectorChartSubsamplingPyramids);
+  const samplingPyramids = store.use(selectorChartSamplingPyramids);
   const zoomMap = store.use(selectorChartZoomMap);
   const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
 
@@ -69,7 +69,7 @@ export function useBarPlotData(
     yAxes,
     defaultXAxisId,
     defaultYAxisId,
-    subsamplingPyramids,
+    samplingPyramids,
     zoomMap,
     zoomOptionsLookup,
   );
@@ -84,7 +84,7 @@ export function processBarDataForPlot(
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
   defaultXAxisId: AxisId,
   defaultYAxisId: AxisId,
-  subsamplingPyramids: SubsamplingPyramidLookup = {},
+  samplingPyramids: SamplingPyramidLookup = {},
   zoomMap?: Map<AxisId, ZoomData>,
   zoomOptionsLookup?: Record<AxisId, DefaultizedZoomOptions>,
 ) {
@@ -190,8 +190,8 @@ export function processBarDataForPlot(
         seriesDataPoints.push(result);
       };
 
-      const pyramid = subsamplingPyramids[seriesId];
-      let activeLevel: SubsamplingLevel | null = null;
+      const pyramid = samplingPyramids[seriesId];
+      let activeLevel: SamplingLevel | null = null;
       if (pyramid) {
         const baseAxisId = verticalLayout ? xAxisId : yAxisId;
         const zoom = zoomMap?.get(baseAxisId);
@@ -199,8 +199,8 @@ export function processBarDataForPlot(
         // With zoom, derive the level from the span; without zoom, from the bar width.
         activeLevel =
           zoom && zoomOptions
-            ? selectSubsamplingLevelByZoom(zoom.end - zoom.start, zoomOptions.minSpan, pyramid)
-            : selectSubsamplingLevel(baseScaleConfig.scale.bandwidth(), pyramid);
+            ? selectSamplingLevelByZoom(zoom.end - zoom.start, zoomOptions.minSpan, pyramid)
+            : selectSamplingLevel(baseScaleConfig.scale.bandwidth(), pyramid);
       }
 
       if (activeLevel) {

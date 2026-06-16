@@ -75,7 +75,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, subsampling, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, sampling, ...other } = props;
   const {
     chartsWrapperProps,
     chartsContainerProps,
@@ -108,7 +108,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   return (
     <ChartsDataProviderPro<'bar', BarChartProPluginSignatures>
       {...chartsDataProviderProProps}
-      subsampling={subsampling}
+      sampling={sampling}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}

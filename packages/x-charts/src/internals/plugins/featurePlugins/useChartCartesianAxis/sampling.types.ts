@@ -1,10 +1,10 @@
 import type { SeriesId } from '../../../../models/seriesType/common';
 
 /** Aggregation used when collapsing elements into a bucket. Only `minMaxEnvelope` is wired today. */
-export type SubsamplingStrategyName = 'minMaxEnvelope' | 'max' | 'average' | 'stride';
+export type SamplingStrategyName = 'minMaxEnvelope' | 'max' | 'average' | 'stride';
 
 /** One aggregated bucket, in value space (stays valid across zoom). */
-export interface SubsamplingBucket {
+export interface SamplingBucket {
   /** First original data index covered by the bucket. */
   startIndex: number;
   /** Last original data index covered by the bucket (inclusive). */
@@ -16,25 +16,25 @@ export interface SubsamplingBucket {
 }
 
 /** One level of detail. */
-export interface SubsamplingLevel {
+export interface SamplingLevel {
   /** Elements merged per bucket (power of two, `>= 2`). */
   bucketSize: number;
   /** Buckets ordered by `startIndex`. */
-  buckets: SubsamplingBucket[];
+  buckets: SamplingBucket[];
 }
 
 /** Precomputed LOD pyramid for one series. `levels[i].bucketSize === 2 ** (i + 1)`. */
-export interface SubsamplingPyramid {
+export interface SamplingPyramid {
   dataLength: number;
   /** Ordered finest (`bucketSize 2`) to coarsest. */
-  levels: SubsamplingLevel[];
+  levels: SamplingLevel[];
 }
 
-/** State slice set by the pro `useChartProSubsampling` plugin; absent in community. */
-export interface SubsamplingState {
+/** State slice set by the pro `useChartProSampling` plugin; absent in community. */
+export interface SamplingState {
   enabled: boolean;
-  strategy: SubsamplingStrategyName;
+  strategy: SamplingStrategyName;
 }
 
 /** Pyramids keyed by series id, as exposed by the selector. */
-export type SubsamplingPyramidLookup = Record<SeriesId, SubsamplingPyramid>;
+export type SamplingPyramidLookup = Record<SeriesId, SamplingPyramid>;

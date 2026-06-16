@@ -1,14 +1,14 @@
-import type { SubsamplingStrategyName } from './subsampling.types';
+import type { SamplingStrategyName } from './sampling.types';
 
 // Aggregates a bucket into one `{ low, high }` pair. Each `stacked` entry is a `[base, top]` pair.
-export type SubsamplingStrategy = (
+export type SamplingStrategy = (
   stacked: readonly [number, number][],
   startIndex: number,
   endIndex: number,
 ) => { low: number; high: number };
 
 /** Default: full extent of the bucket (min base, max top) — keeps spikes and troughs. */
-const minMaxEnvelope: SubsamplingStrategy = (stacked, startIndex, endIndex) => {
+const minMaxEnvelope: SamplingStrategy = (stacked, startIndex, endIndex) => {
   let low = Infinity;
   let high = -Infinity;
   for (let i = startIndex; i <= endIndex; i += 1) {
@@ -24,7 +24,7 @@ const minMaxEnvelope: SubsamplingStrategy = (stacked, startIndex, endIndex) => {
 };
 
 /** Peak-preserving: render to the bucket's max top, dropping troughs. */
-const max: SubsamplingStrategy = (stacked, startIndex, endIndex) => {
+const max: SamplingStrategy = (stacked, startIndex, endIndex) => {
   let low = Infinity;
   let high = -Infinity;
   for (let i = startIndex; i <= endIndex; i += 1) {
@@ -40,7 +40,7 @@ const max: SubsamplingStrategy = (stacked, startIndex, endIndex) => {
 };
 
 /** Smoothing: mean of the bucket tops over a flat base. */
-const average: SubsamplingStrategy = (stacked, startIndex, endIndex) => {
+const average: SamplingStrategy = (stacked, startIndex, endIndex) => {
   let baseSum = 0;
   let topSum = 0;
   const count = endIndex - startIndex + 1;
@@ -52,14 +52,14 @@ const average: SubsamplingStrategy = (stacked, startIndex, endIndex) => {
 };
 
 /** Cheapest: keep the first point of the bucket, drop the rest. */
-const stride: SubsamplingStrategy = (stacked, startIndex) => {
+const stride: SamplingStrategy = (stacked, startIndex) => {
   const [base, top] = stacked[startIndex];
   return { low: base, high: top };
 };
 
-export const SUBSAMPLING_STRATEGIES: Record<
-  SubsamplingStrategyName,
-  SubsamplingStrategy
+export const SAMPLING_STRATEGIES: Record<
+  SamplingStrategyName,
+  SamplingStrategy
 > = {
   minMaxEnvelope,
   max,

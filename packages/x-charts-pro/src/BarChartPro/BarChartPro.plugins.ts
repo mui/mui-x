@@ -26,9 +26,9 @@ import {
   type UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
 import {
-  useChartProSubsampling,
-  type UseChartProSubsamplingSignature,
-} from '../internals/plugins/useChartProSubsampling';
+  useChartProSampling,
+  type UseChartProSamplingSignature,
+} from '../internals/plugins/useChartProSampling';
 
 export type BarChartProPluginSignatures = [
   UseChartZAxisSignature,
@@ -41,7 +41,7 @@ export type BarChartProPluginSignatures = [
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,
-  UseChartProSubsamplingSignature,
+  UseChartProSamplingSignature,
 ];
 
 export const BAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<BarChartProPluginSignatures> = [
@@ -55,5 +55,5 @@ export const BAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<BarChartProPlug
   useChartKeyboardNavigation,
   useChartProZoom,
   useChartProExport,
-  useChartProSubsampling,
+  useChartProSampling,
 ];

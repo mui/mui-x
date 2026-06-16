@@ -4,7 +4,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
-// Deterministic large dataset so subsampling has something to work on.
+// Deterministic large dataset so sampling has something to work on.
 const POINTS = 2000;
 const data = Array.from({ length: POINTS }, (_, index) => {
   const trend = Math.sin(index / 90) * 40 + 60;
@@ -15,25 +15,25 @@ const data = Array.from({ length: POINTS }, (_, index) => {
 
 const categories = Array.from({ length: POINTS }, (_, index) => `#${index}`);
 
-export default function BarSubsampling() {
-  const [subsampling, setSubsampling] = React.useState(true);
+export default function BarSampling() {
+  const [sampling, setSampling] = React.useState(true);
 
   return (
     <Stack sx={{ width: '100%' }} spacing={1}>
       <FormControlLabel
         control={
           <Switch
-            checked={subsampling}
-            onChange={(event) => setSubsampling(event.target.checked)}
+            checked={sampling}
+            onChange={(event) => setSampling(event.target.checked)}
           />
         }
-        label={`Subsampling ${subsampling ? 'on' : 'off'} (${POINTS} bars — zoom in fully to reach the unsampled data)`}
+        label={`Sampling ${sampling ? 'on' : 'off'} (${POINTS} bars — zoom in fully to reach the unsampled data)`}
       />
       <BarChartPro
         xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}
         series={[{ data, label: 'Value' }]}
         height={300}
-        subsampling={subsampling}
+        sampling={sampling}
       />
     </Stack>
   );

@@ -1,6 +1,6 @@
 import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
-import type { SubsamplingBucket } from './plugins/featurePlugins/useChartCartesianAxis/subsampling.types';
+import type { SamplingBucket } from './plugins/featurePlugins/useChartCartesianAxis/sampling.types';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
 
@@ -88,7 +88,7 @@ export function createGetBucketBarDimensions(params: {
   const bandwidth = baseScale.bandwidth();
   const valueScale = verticalLayout ? yAxisConfig.scale : xAxisConfig.scale;
 
-  return function getBucketBarDimensions(bucket: SubsamplingBucket, groupIndex: number) {
+  return function getBucketBarDimensions(bucket: SamplingBucket, groupIndex: number) {
     const spanStart = baseScale(baseScaleConfig.data![bucket.startIndex])!;
     const spanEnd = baseScale(baseScaleConfig.data![bucket.endIndex])! + bandwidth;
 
