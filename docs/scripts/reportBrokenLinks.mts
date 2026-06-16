@@ -7,6 +7,10 @@ async function main() {
     seedUrls: ['/x'],
     // Target paths to ignore during link checking
     ignoredPaths: [
+      // The site root has no page in the `next export` output (redirects only
+      // apply in dev, not in the exported site), so the shared header's logo
+      // link to `/` resolves to a 404 here even though mui.com redirects it.
+      /^\/$/,
       // Internal links not on this server
       // TODO: Seed crawler with stored links from e.g. mui.com/x/link-structure.json
       // /^\/(base-ui|joy-ui|store|toolpad)(\/|$)/,
