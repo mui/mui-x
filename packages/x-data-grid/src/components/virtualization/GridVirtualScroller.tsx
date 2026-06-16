@@ -73,10 +73,10 @@ const Scroller = styled('div', {
   // So keep this scroller's own native scrollbars and hide the ones in `GridVirtualScrollbar`
   // instead to avoid a duplicate thumb.
   scrollbarWidth: 'none' /* Firefox */,
-  ...( isIOS && { scrollbarWidth: 'auto' }),
+  ...(isIOS && { scrollbarWidth: 'auto' }),
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
-    ...( isIOS && { display: 'block' }),
+    ...(isIOS && { display: 'block' }),
   },
 
   '@media print': {
