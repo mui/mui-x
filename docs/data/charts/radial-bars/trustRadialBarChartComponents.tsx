@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useDrawingArea, useRotationAxis, useRadiusAxis } from '@mui/x-charts/hooks';
-import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltipContainer, useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
 import {
   euAverageTrust2025,
   europeanYouthTrust,
@@ -16,12 +16,13 @@ interface PreviousTrustDataProps {
 }
 
 function TrustTooltipContent() {
-  const item = useItemTooltip<'radialBar'>();
-  if (!item) {
+  const tooltipAxes = useAxesTooltip({ directions: ['rotation'] });
+  const dataIndex = tooltipAxes?.[0]?.dataIndex;
+  if (dataIndex == null) {
     return null;
   }
 
-  const country = europeanYouthTrust[item.identifier.dataIndex];
+  const country = europeanYouthTrust[dataIndex];
   if (!country) {
     return null;
   }
@@ -72,10 +73,10 @@ function TrustTooltipContent() {
   );
 }
 
-/** Item tooltip showing the 2013 and 2025 values and their difference. */
+/** Axis tooltip showing the 2013 and 2025 values and their difference. */
 export function TrustTooltip() {
   return (
-    <ChartsTooltipContainer trigger="item">
+    <ChartsTooltipContainer trigger="axis">
       <TrustTooltipContent />
     </ChartsTooltipContainer>
   );
@@ -202,8 +203,17 @@ export function TrustLegend({ currentColor, previousColor }: TrustLegendProps) {
 
   return (
     <Stack
+      useFlexGap
+      direction={{ xs: 'row', sm: 'column' }}
       spacing={0.75}
-      sx={{ position: 'absolute', top: 8, left: 8, pointerEvents: 'none' }}
+      sx={{
+        position: 'absolute',
+        top: 8,
+        left: 8,
+        right: 8,
+        flexWrap: 'wrap',
+        pointerEvents: 'none',
+      }}
     >
       {items.map((item) => (
         <Stack key={item.label} direction="row" spacing={1} sx={{ alignItems: 'center' }}>

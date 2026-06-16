@@ -8,8 +8,8 @@ import {
   TrustTooltip,
 } from './trustRadialBarChartComponents';
 
-const CURRENT_COLOR = '#1976d2';
-const PREVIOUS_COLOR = '#d32f2f';
+const COLOR_2025 = '#1976d2';
+const COLOR_2013 = '#d32f2f';
 
 const trustFormatter = (value: number | null) =>
   value == null ? '' : `${value.toFixed(1)} / 10`;
@@ -19,18 +19,18 @@ const highlightScope = { highlight: 'item', fade: 'none' } as const;
 export default function TrustRadialBarChart() {
   return (
     <div style={{ position: 'relative', width: '100%' }}>
-      <TrustLegend currentColor={CURRENT_COLOR} previousColor={PREVIOUS_COLOR} />
+      <TrustLegend currentColor={COLOR_2025} previousColor={COLOR_2013} />
       <RadialBarChart
         dataset={europeanYouthTrust}
         height={600}
-        margin={{ top: 24, bottom: 24, left: 24, right: 24 }}
+        margin={{ top: 24, bottom: 24, left: 60, right: 60 }}
         hideLegend
         slots={{ tooltip: TrustTooltip }}
         series={[
           {
             dataKey: 'trust2025',
             label: '2025 trust',
-            color: CURRENT_COLOR,
+            color: COLOR_2025,
             highlightScope,
             valueFormatter: trustFormatter,
           },
@@ -56,7 +56,7 @@ export default function TrustRadialBarChart() {
         grid={{ radius: true }}
       >
         <EuAverageRing />
-        <PreviousTrustData currentColor={CURRENT_COLOR} previousColor={PREVIOUS_COLOR} />
+        <PreviousTrustData currentColor={COLOR_2025} previousColor={COLOR_2013} />
       </RadialBarChart>
     </div>
   );
