@@ -1,0 +1,13 @@
+<ChatBox
+  adapter={adapter}
+  features={{ dateDivider: true, unreadMarker: true }}
+  initialConversations={conversations}
+  initialActiveConversationId={CONVERSATION_ID}
+  initialMessages={messages}
+  sx={{
+    height: 480,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

@@ -3,8 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import { ConversationRoot, type ConversationRootProps } from '@mui/x-chat-headless';
+import {
+  ConversationRoot,
+  markChatLayoutPane,
+  type ConversationRootProps,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatConversationUtilityClasses,
   type ChatConversationClasses,
@@ -42,16 +47,18 @@ const ChatConversation = React.forwardRef<HTMLDivElement, ChatConversationProps>
         ref={ref}
         {...other}
         slots={{
-          root: slots?.root ?? ChatConversationStyled,
           ...slots,
+          root: slots?.root ?? ChatConversationStyled,
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(classes.root, className),
-            sx,
-            ...slotProps?.root,
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(classes.root, className),
+              sx,
+            },
+            slotProps?.root,
+          ) as any,
         }}
       />
     );
@@ -74,5 +81,10 @@ ChatConversation.propTypes = {
     PropTypes.object,
   ]),
 } as any;
+
+// Mirror the headless `ConversationRoot` pane marker on the Material wrapper so
+// `ChatLayout` assigns it to the thread pane (the symbol lives on the headless
+// primitive, not this wrapper).
+markChatLayoutPane(ChatConversation, 'thread');
 
 export { ChatConversation };
