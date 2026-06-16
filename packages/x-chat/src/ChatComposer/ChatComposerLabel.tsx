@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { ComposerLabel, type ComposerLabelProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerLabel');
@@ -39,16 +40,18 @@ const ChatComposerLabel = React.forwardRef<HTMLLabelElement, ChatComposerLabelPr
         ref={ref}
         {...other}
         slots={{
-          label: slots?.label ?? ChatComposerLabelStyled,
           ...slots,
+          label: slots?.label ?? ChatComposerLabelStyled,
         }}
         slotProps={{
           ...slotProps,
-          label: {
-            className: clsx(classes.label, className),
-            sx,
-            ...slotProps?.label,
-          } as any,
+          label: mergeSlotProps(
+            {
+              className: clsx(classes.label, className),
+              sx,
+            },
+            slotProps?.label,
+          ) as any,
         }}
       />
     );

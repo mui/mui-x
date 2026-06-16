@@ -223,8 +223,8 @@ GridToolbar.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   additionalExportMenuItems: PropTypes.func,
-  additionalItems: PropTypes.node,
   csvOptions: PropTypes.object,
+  mainControls: PropTypes.node,
   printOptions: PropTypes.object,
   /**
    * Props passed to the quick filter component.
@@ -236,6 +236,11 @@ GridToolbar.propTypes = {
     quickFilterParser: PropTypes.func,
     slotProps: PropTypes.object,
   }),
+  /**
+   * Show the history controls (undo/redo buttons).
+   * @default true
+   */
+  showHistoryControls: PropTypes.bool,
   /**
    * Show the quick filter component.
    * @default true

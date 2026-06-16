@@ -455,4 +455,152 @@ describe('ChatProvider', () => {
     expect(result.current).toBeInstanceOf(TestStore);
     expect(TestStore.instances).toHaveLength(1);
   });
+
+  describe('outbound typing signals (features.typingSignal)', () => {
+    function createTypingAdapter(): ChatAdapter & { setTyping: ReturnType<typeof vi.fn> } {
+      const adapter = createAdapter() as ChatAdapter & { setTyping: ReturnType<typeof vi.fn> };
+      adapter.setTyping = vi.fn(async () => {});
+      return adapter;
+    }
+
+    it('signals true once on empty→non-empty and never again while typing continues', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        features: { typingSignal: true },
+      });
+      const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('h');
+      });
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(1);
+      expect(adapter.setTyping).toHaveBeenCalledWith({ conversationId: 'c1', isTyping: true });
+
+      act(() => {
+        for (let i = 0; i < 10; i += 1) {
+          result.current.setComposerValue(`h${'i'.repeat(i + 1)}`);
+        }
+      });
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(1);
+    });
+
+    it('signals false on non-empty→empty', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        features: { typingSignal: true },
+      });
+      const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('h');
+      });
+      act(() => {
+        result.current.setComposerValue('');
+      });
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(2);
+      expect(adapter.setTyping).toHaveBeenLastCalledWith({ conversationId: 'c1', isTyping: false });
+    });
+
+    it('signals false on the previous conversation and true on the new one when switching with a draft', async () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        initialConversations: [conversation1, conversation2],
+        features: { typingSignal: true },
+      });
+      const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('draft');
+      });
+      adapter.setTyping.mockClear();
+
+      await act(async () => {
+        result.current.setActiveConversation('c2');
+      });
+
+      expect(adapter.setTyping).toHaveBeenCalledWith({ conversationId: 'c1', isTyping: false });
+      expect(adapter.setTyping).toHaveBeenCalledWith({ conversationId: 'c2', isTyping: true });
+    });
+
+    it('signals false on unmount while typing', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        features: { typingSignal: true },
+      });
+      const { result, unmount } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('h');
+      });
+      adapter.setTyping.mockClear();
+
+      unmount();
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(1);
+      expect(adapter.setTyping).toHaveBeenLastCalledWith({ conversationId: 'c1', isTyping: false });
+    });
+
+    it('seeds true at mount when an initial draft and active conversation exist', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        initialComposerValue: 'draft',
+        features: { typingSignal: true },
+      });
+      renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      expect(adapter.setTyping).toHaveBeenCalledTimes(1);
+      expect(adapter.setTyping).toHaveBeenCalledWith({ conversationId: 'c1', isTyping: true });
+    });
+
+    it('never calls setTyping when the feature is off (default)', () => {
+      const adapter = createTypingAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        initialComposerValue: 'draft',
+        initialConversations: [conversation1, conversation2],
+      });
+      const { result, unmount } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.setComposerValue('hello');
+        result.current.setComposerValue('');
+        result.current.setActiveConversation('c2');
+      });
+      unmount();
+
+      expect(adapter.setTyping).not.toHaveBeenCalled();
+    });
+
+    it('does not error when the adapter has no setTyping (smoke)', () => {
+      const adapter = createAdapter();
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        initialActiveConversationId: 'c1',
+        features: { typingSignal: true },
+      });
+      const { result, unmount } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+      expect(() => {
+        act(() => {
+          result.current.setComposerValue('hello');
+          result.current.setComposerValue('');
+        });
+        unmount();
+      }).not.toThrow();
+    });
+  });
 });
