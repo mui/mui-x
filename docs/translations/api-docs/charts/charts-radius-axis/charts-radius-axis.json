@@ -10,13 +10,15 @@
     "disableTicks": { "description": "If true, the ticks are disabled." },
     "label": { "description": "The label of the axis." },
     "labelStyle": { "description": "The style applied to the axis label." },
-    "maxRadius": { "description": "The maximal radius." },
-    "minRadius": { "description": "The minimal radius." },
+    "maxRadius": {
+      "description": "The maximal radius. Can be a number (in pixels), a pixel string (for example <code>&#39;80px&#39;</code>), or a percentage string (for example <code>&#39;80%&#39;</code>) relative to the available radius (half the smallest side of the drawing area)."
+    },
+    "minRadius": {
+      "description": "The minimal radius. Can be a number (in pixels), a pixel string (for example <code>&#39;20px&#39;</code>), or a percentage string (for example <code>&#39;20%&#39;</code>) relative to the available radius (half the smallest side of the drawing area)."
+    },
     "position": {
       "description": "The position of the axis in polar coordinates. It can be &#39;start&#39;, &#39;end&#39;, or a specific angle in degrees."
     },
-    "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." },
     "tickInterval": {
       "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has &quot;point&quot; scale. - an array containing the values where ticks should be displayed."
     },
@@ -50,5 +52,30 @@
       "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "centered": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the tick label",
+      "conditions": "centered"
+    },
+    "line": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the main line element"
+    },
+    "radius": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of radius axis"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "rotation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of rotation axis"
+    },
+    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
+    "tickContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group including the tick and its label"
+    },
+    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tick label" }
+  }
 }
