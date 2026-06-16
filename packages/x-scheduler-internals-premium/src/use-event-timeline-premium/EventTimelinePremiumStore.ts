@@ -146,7 +146,7 @@ export class EventTimelinePremiumStore<
       });
     }
 
-    this.lazyLoading = new EventTimelinePremiumLazyLoadingPlugin(this);
+    this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
   }
 
   private assertPresetValidity(preset: EventTimelinePremiumPreset) {

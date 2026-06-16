@@ -27,7 +27,7 @@ catalog:
   '@mui/stylis-plugin-rtl': 9.0.1
   '@mui/system': 9.0.1
   '@mui/types': 9.0.0
-  '@mui/utils': 9.0.1
+  '@mui/utils': ^9.0.1
   '@mui/x-internal-exceljs-fork': 5.0.0
   '@playwright/test': 1.60.0
   '@react-spring/web': ^10.1.0
@@ -52,6 +52,7 @@ catalog:
   babel-plugin-react-remove-properties: ^0.3.1
   chance: ^1.1.13
   clsx: ^2.1.1
+  core-js-pure: ^3.49.0
   cross-env: ^10.1.0
   csstype: ^3.2.3
   date-fns: ^4.2.1
@@ -113,6 +114,7 @@ allowBuilds:
   '@mui/x-telemetry': false
   core-js: false
   msw: false
+  core-js-pure: false
 
 overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error

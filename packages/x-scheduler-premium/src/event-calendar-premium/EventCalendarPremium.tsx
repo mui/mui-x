@@ -9,15 +9,13 @@ import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarPremium } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import {
-  useEventCalendarUtilityClasses,
-  EventCalendarStyledContext,
-} from '@mui/x-scheduler/event-calendar';
-import {
   EventDialogStyledContext,
   EventDialogProvider,
   EventCalendarRoot,
   SharedComponentsStyledContext,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+  EventCalendarStyledContext,
+  useEventCalendarUtilityClasses,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
@@ -280,7 +278,7 @@ EventCalendarPremium.propTypes = {
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig: PropTypes.oneOfType([
     PropTypes.oneOf([false]),

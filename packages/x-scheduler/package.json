@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler",
-  "version": "9.0.0-beta.0",
+  "version": "9.0.0-beta.1",
   "author": "MUI Team",
   "description": "The community edition of the Scheduler component (MUI X).",
   "license": "MIT",
@@ -14,6 +14,9 @@
   },
   "exports": {
     "./agenda-view": "./src/agenda-view/index.ts",
+    "./compact-day-view": "./src/compact-day-view/index.ts",
+    "./compact-three-day-view": "./src/compact-three-day-view/index.ts",
+    "./compact-week-view": "./src/compact-week-view/index.ts",
     "./day-view": "./src/day-view/index.ts",
     "./event-calendar": "./src/event-calendar/index.ts",
     "./models": "./src/models/index.ts",

@@ -4,7 +4,7 @@
   "3": "MUI X Charts: %s should be a continuous type to display the bar series of id \"%s\". Bar charts require a continuous scale (like \"linear\" or \"log\") for the value axis. Change the scaleType to a continuous type such as \"linear\".",
   "4": "MUI X Charts: The ChartsReferenceLine cannot have both `x` and `y` props set. A reference line can only be vertical (x) or horizontal (y), not both. Remove either the `x` or `y` prop.",
   "5": "MUI X Charts: The ChartsReferenceLine requires either an `x` or `y` prop. Without a value, the reference line cannot be positioned on the chart. Provide either an `x` value for a vertical line or a `y` value for a horizontal line.",
-  "6": "MUI X: Prop '%s' is required but wasn't specified",
+  "6": "Prop '%s' is required but wasn't specified",
   "7": "MUI X: Expected prop '%s' to be of type Element",
   "8": "MUI X Charts: ChartsGroupedXAxis only supports the `band` and `point` scale types. Grouped axis ticks require an ordinal scale to display category groupings. Use a band or point scale type for the x-axis, or use a non-grouped axis component.",
   "9": "MUI X Charts: ChartsGroupedYAxis only supports the `band` and `point` scale types. Grouped axis ticks require an ordinal scale to display category groupings. Use a band or point scale type for the y-axis, or use a non-grouped axis component.",
@@ -220,7 +220,7 @@
   "220": "MUI X Scheduler: `CalendarGridTimeEventContext` is missing. CalendarGrid TimeEvent parts must be placed within <CalendarGrid.TimeEvent />.",
   "221": "Base UI: CompositeRootContext is missing. Composite parts must be placed within <Composite.Root>.",
   "222": "MUI X Scheduler: This event is recurring and cannot be updated with updateEvent(). Recurring events require special handling to manage series and exceptions. Use updateRecurringEvent() instead to update recurring events.",
-  "223": "MUI X Scheduler: The original event is not recurring and cannot be updated with updateRecurringEvent(). This method is designed for recurring events with recurrence rules. Use updateEvent() instead to update non-recurring events.",
+  "223": "MUI X Scheduler: The event targeted by the recurring scope dialog is not recurring. Recurring scope changes require an event with a recurrence rule. Use updateEvent() or deleteEvent() for non-recurring events.",
   "224": "MUI X Scheduler: The recurring rule cannot have both count and until properties. A recurrence rule should specify either a count (number of occurrences) or an until date, but not both. Remove one of these properties from the recurrence rule.",
   "225": "MUI X Scheduler: Monthly recurrences cannot have both byDay and byMonthDay properties. Specify either specific weekdays (byDay) or specific dates (byMonthDay), but not both. Remove one of these properties from the recurrence rule.",
   "226": "MUI X Scheduler: Yearly recurrences only support exact same date recurrence. The yearly frequency repeats on the same month and day as DTSTART. Remove byMonth, byMonthDay, and byDay properties for yearly recurrence.",
@@ -240,7 +240,7 @@
   "240": "MUI X Scheduler: Invalid BYMONTH values \"%s\". BYMONTH values must be integers between 1 and 12. Provide valid month values.",
   "241": "MUI X Scheduler: Invalid COUNT value \"%s\". COUNT must be a positive integer (1 or greater). Provide a valid count value.",
   "242": "MUI X Scheduler: Invalid UNTIL date \"%s\". The UNTIL value must be a valid date in ISO format. Provide a valid date string.",
-  "243": "MUI X Scheduler: The scope \"%s\" is not supported for recurring event updates. Supported scopes are \"all\", \"only-this\", and \"this-and-following\". Use one of the supported scope values.",
+  "243": "MUI X Scheduler: The scope \"%s\" is not supported for recurring events. Supported scopes are \"all\", \"only-this\", and \"this-and-following\". Use one of the supported scope values.",
   "244": "MUI: useEventCalendarPremiumStoreContext must be used within an <EventCalendarPremium /> component",
   "245": "MUI: useEventTimelinePremiumStoreContext must be used within an <EventTimelinePremium /> component",
   "246": "MUI: `TimelineGridEventContext` is missing. TimelineGrid Event parts must be placed within <TimelineGrid.Event />.",
@@ -283,5 +283,10 @@
   "283": "MUI X Scheduler: TitleColumnWidthProvider is missing.",
   "284": "MUI X Data Grid: Nested lazy loading does not support unknown children count for now.\nIf this is a use-case that you are interested in, please open an issue: https://github.com/mui/mui-x/issues/new?template=2.feature.yml",
   "285": "MUI X Data Grid: Row count is unknown. Please provide a valid row count for lazy loading to work.",
-  "286": "MUI X Scheduler: useSharedComponentsStyledContext must be used within a SharedComponentsStyledContext.Provider. The shared internal components require the product to inject their utility classes. Ensure the component is rendered inside an EventCalendar, EventCalendarPremium, or EventTimelinePremium component, a standalone view, or another component that provides SharedComponentsStyledContext."
+  "286": "MUI X Scheduler: useSharedComponentsStyledContext must be used within a SharedComponentsStyledContext.Provider. The shared internal components require the product to inject their utility classes. Ensure the component is rendered inside an EventCalendar, EventCalendarPremium, or EventTimelinePremium component, a standalone view, or another component that provides SharedComponentsStyledContext.",
+  "287": "MUI X Scheduler: The date \"%s\"%s is not a valid date.\nInvalid dates produce a NaN timestamp that silently breaks sorting, positioning, and overlap calculations.\nProvide a valid ISO 8601 date string (for example \"2025-01-01T09:00:00\" or \"2025-01-01T09:00:00Z\").",
+  "288": "MUI X: useDisposable failed to detect React StrictMode.\nThe instance was disposed on StrictMode's simulated unmount and is about to be reused while torn down.\nThis is an internal invariant violation — please report it at https://github.com/mui/mui-x/issues.",
+  "289": "MUI X Chat docs-correctness guard: could not load entry point %s (%s). The export surface cannot be enumerated.",
+  "290": "MUI X Chat docs-correctness guard: %s has no module symbol (%s); it may be missing exports.",
+  "291": "MUI X Scheduler: All events must have a unique `id`.\nWithout an `id`, an event cannot be tracked and silently overwrites another event in the calendar state.\nAdd an `id` to every event, or set `eventModelStructure.id.getter` to derive one from your event model.\nAn event was provided without an `id`:\n%s"
 }

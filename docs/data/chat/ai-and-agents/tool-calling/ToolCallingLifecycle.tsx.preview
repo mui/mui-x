@@ -1,0 +1,11 @@
+<ChatBox
+  adapter={adapter}
+  partRenderers={partRenderers}
+  localeText={{ composerInputPlaceholder: 'Ask about the weather' }}
+  sx={{
+    height: 420,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>
