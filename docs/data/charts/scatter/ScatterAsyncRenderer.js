@@ -208,8 +208,7 @@ export default function ScatterAsyncRenderer() {
           key={runId}
           series={series}
           height={400}
-          // Zoom/pan to see the progressive renderer keep only the first level
-          // painted while interacting, then fill in the rest once it settles.
+          // Zoom/pan: first level stays painted while interacting, rest fills on settle.
           xAxis={[{ zoom: true }]}
           yAxis={[{ zoom: true }]}
           // Force the renderer so the two modes are directly comparable:

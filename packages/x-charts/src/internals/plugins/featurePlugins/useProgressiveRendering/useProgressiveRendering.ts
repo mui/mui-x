@@ -16,47 +16,23 @@ import type { RendererType } from '../../../../ScatterChart';
 
 const EMPTY_PLANS: ReadonlyMap<string, readonly SeriesId[]> = new Map();
 
-/**
- * How many *rounds* are revealed per reveal tick once the render data is ready.
- * A round reveals one batch in every series simultaneously, so the chart looks
- * complete from the first paint rather than appearing series-by-series. Lower
- * spreads the paint over more ticks (smoother, more visibly progressive);
- * higher finishes sooner.
- */
+/** Rounds revealed per tick. One round adds a batch to every series at once. */
 const REVEAL_ROUNDS_PER_FRAME = 1;
 
-/**
- * How many animation frames are skipped between two reveal ticks. `0` reveals
- * on every frame; `1` reveals every other frame, leaving the browser an idle
- * frame for layout, paint and input handling between commits. Higher values
- * give the browser more CPU headroom at the cost of a slower paint.
- */
+/** Frames skipped between reveal ticks. `0` = every frame; higher = more headroom. */
 const REVEAL_FRAMES_SKIPPED = 0;
 
-/**
- * Number of rounds kept visible during a zoom/pan interaction. Only the first
- * level is ever painted while interacting so the interaction stays fluid; the
- * remaining rounds resume once the interaction settles.
- */
+/** Rounds kept visible during a zoom/pan interaction (first level only). */
 const INTERACTION_REVEALED_ROUNDS = 1;
 
-/**
- * How long the chart must stay free of zoom/pan interaction before the
- * progressive reveal of the remaining rounds resumes. The pro zoom plugin
- * already debounces the end of an interaction, so this only adds a small extra
- * settle window on top of that.
- */
+/** Settle delay before the reveal resumes after an interaction ends (ms). */
 const RESUME_AFTER_INTERACTION_DELAY = 200;
 
 /**
- * Chart-wide progressive rendering coordinator.
- *
- * Lives on the chart store, so every renderer composed into the same chart
- * (e.g. several `ScatterPlot` instances under one `ChartsContainer`) shares
- * the same scheduler. Each renderer registers a plan via
- * `setProgressivePlan(plotId, plan)`; the plugin aggregates them, computes a
- * single per-tick budget, and ramps a global "rounds" counter — one round
- * adds one batch in every registered series at once.
+ * Chart-wide progressive rendering coordinator. Lives on the store so every
+ * renderer in the chart shares one scheduler: each registers a plan via
+ * `registerProgressivePlan`, and the plugin ramps a global "rounds" counter,
+ * one round adding a batch to every series at once.
  */
 export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignature> = ({
   store,
@@ -101,9 +77,8 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
       return undefined;
     }
 
-    // While the user zooms/pans, keep only the first level revealed and pause
-    // the reveal so the interaction stays fluid. Resetting here also restarts
-    // the progressive wave from the first level once the interaction ends.
+    // While interacting, keep only the first level and pause; resets the wave
+    // so it restarts from the first level once the interaction ends.
     if (isZoomInteracting) {
       const target = Math.min(INTERACTION_REVEALED_ROUNDS, startTotal);
       if (selectorProgressiveRevealedRounds(store.state) !== target) {
@@ -126,11 +101,9 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
     let frame = 0;
     let resumeTimeout: ReturnType<typeof setTimeout> | undefined;
     let cancelled = false;
-    // Resume from the rounds already revealed rather than restarting from zero,
-    // so coming out of a zoom/pan keeps the first level on screen and only
-    // fills in the rest. Tracked in a closure variable, not derived inside a
-    // state updater (those must be pure and StrictMode double-invokes them,
-    // which would schedule the animation-frame chain twice).
+    // Resume from the rounds already revealed (keeps the first level on screen).
+    // Closure var, not a state-updater derivation: StrictMode double-invokes
+    // those, scheduling the frame chain twice.
     let revealed = selectorProgressiveRevealedRounds(store.state);
 
     function scheduleNext() {
@@ -168,9 +141,8 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
       return undefined;
     }
 
-    // A partially revealed paint (`revealed > 0`) means we are resuming after a
-    // zoom/pan reset, so wait out the inactivity delay before filling in the
-    // rest. The initial paint (`revealed === 0`) starts immediately.
+    // `revealed > 0` means resuming after an interaction: wait the settle delay.
+    // Initial paint (`revealed === 0`) starts immediately.
     if (revealed > 0) {
       resumeTimeout = setTimeout(() => {
         frame = requestAnimationFrame(step);

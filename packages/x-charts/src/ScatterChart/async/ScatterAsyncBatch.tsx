@@ -34,16 +34,14 @@ export interface ScatterAsyncBatchProps extends Pick<
   /** Last `dataIndex` of this batch (exclusive). */
   end: number;
   /**
-   * Whether this batch is allowed to render its markers yet. `ScatterAsync`
-   * ramps this up batch by batch across animation frames for a progressive
-   * paint. When `false` the `<g>` still mounts but stays empty.
+   * Whether this batch may render its markers yet. Ramped batch by batch across
+   * frames for the progressive paint. When `false` the `<g>` mounts empty.
    */
   revealed: boolean;
   /**
-   * Whether a zoom/pan interaction is in progress. While interacting the
-   * per-marker highlight state and interaction handlers are skipped: they are
-   * useless mid-drag (no hover/tooltip) and recomputing them for every visible
-   * point on every frame is the dominant cost of the interaction.
+   * Whether a zoom/pan interaction is in progress. While interacting, per-marker
+   * highlight state and interaction handlers are skipped: useless mid-drag and
+   * the dominant per-frame cost.
    */
   isInteracting?: boolean;
 }
@@ -151,8 +149,7 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
   );
 }
 
-// Memoized so a reveal tick (which re-renders every `ScatterAsync`) only
-// re-renders the one batch whose `revealed` prop changed.
+// Memoized so a reveal tick only re-renders the batch whose `revealed` changed.
 const ScatterAsyncBatch = React.memo(ScatterAsyncBatchComponent);
 
 export { ScatterAsyncBatch };

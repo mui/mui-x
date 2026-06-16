@@ -13,40 +13,22 @@ import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { type UseProgressiveRenderingSignature } from './useProgressiveRendering.types';
 import type { RendererType } from '../../../../ScatterChart';
 
-/**
- * Total point count above which the auto (`renderer` unset) mode switches to
- * the progressive renderer. Below it the synchronous renderer is used, since
- * the progressive paint's overhead is not worth it for small datasets.
- */
+/** Auto mode switches to the progressive renderer above this total point count. */
 const PROGRESSIVE_POINT_THRESHOLD = 20000;
 
-/**
- * Target number of reveal commits. Each commit repaints every already-painted
- * circle, so the total progressive wall time is roughly `(C + 1) / 2` times a
- * single synchronous render (where `C` is the number of commits). Targeting
- * `5` commits keeps the progressive paint at roughly 2–3× the sync render time.
- */
+/** Target reveal commits. Progressive wall time ≈ `(C + 1) / 2` × a sync render. */
 const TARGET_PROGRESSIVE_COMMITS = 5;
 
-/**
- * Lower bound for the per-tick reveal budget (total points across every
- * series). Prevents tiny commits whose React overhead would dominate.
- */
+/** Min per-tick reveal budget (total points). Avoids tiny React-bound commits. */
 const MIN_BATCH_TOTAL = 1000;
 
-/**
- * Upper bound for the per-tick reveal budget (total points across every
- * series). Prevents a single commit from blocking the main thread for too
- * long; very large datasets simply use more commits.
- */
+/** Max per-tick reveal budget (total points). Caps main-thread block per commit. */
 const MAX_BATCH_TOTAL = 10000;
 
 /**
- * Per-series points revealed per tick, derived from the total point count
- * across visible series and the number of visible series. The total per-tick
- * budget aims for {@link TARGET_PROGRESSIVE_COMMITS} commits, clamped by
- * {@link MIN_BATCH_TOTAL} / {@link MAX_BATCH_TOTAL}, then split evenly across
- * the visible series so every series progresses together.
+ * Per-series points per tick: total budget aims for
+ * {@link TARGET_PROGRESSIVE_COMMITS} commits, clamped by
+ * {@link MIN_BATCH_TOTAL}/{@link MAX_BATCH_TOTAL}, split evenly across series.
  */
 const getEffectiveBatchSize = (nSeries: number, totalPoints: number) => {
   const safeSeries = Math.max(1, nSeries);
@@ -86,10 +68,9 @@ function getSeriesPointCount(processedSeries: ProcessedSeries, seriesId: SeriesI
 }
 
 /**
- * Aggregated view of every registered plan: the per-series batch counts, the
- * total number of rounds, and the per-series batch size (so every consumer
- * sizes its batches the same way). Point counts are read straight from the
- * processed series rather than carried by the registration.
+ * Aggregate of every plan: per-series batch counts, total rounds, and batch
+ * size (so every consumer sizes batches the same). Point counts read from the
+ * processed series, not the registration.
  */
 export const selectorProgressiveAggregate = createSelectorMemoized(
   selectorProgressivePlans,
@@ -138,13 +119,8 @@ export const selectorProgressiveTotalRounds = createSelector(
 );
 
 /**
- * How many of `seriesId`'s own batches are revealed so far. Capped at that
- * series' total batch count, so series with fewer batches simply stop
- * progressing while longer ones keep filling in.
- *
- * While a zoom/pan interaction is in progress, this is clamped to the first
- * batch: only the first level is ever visible during the interaction,
- * regardless of how many rounds the scheduler had revealed before it started.
+ * How many of `seriesId`'s batches are revealed, capped at its total batch
+ * count. Clamped to the first batch while interacting.
  */
 export const selectorProgressiveSeriesRevealedBatches = createSelector(
   selectorProgressiveAggregate,
@@ -158,14 +134,11 @@ export const selectorProgressiveSeriesRevealedBatches = createSelector(
 );
 
 /**
- * Whether `seriesIds` should be rendered progressively given the requested
- * `renderer`:
- * - `svg-single` / `svg-batch`: never (those are non-progressive renderers).
+ * Whether `seriesIds` render progressively:
+ * - `svg-single`/`svg-batch`: never.
  * - `svg-progressive`: always.
- * - unset (auto): only when the `progressiveRendering` experimental feature is
- *   enabled and the total point count is above
- *   {@link PROGRESSIVE_POINT_THRESHOLD}. The flag keeps the auto behavior
- *   opt-in so the default (`svg-single`) stays non-breaking.
+ * - unset (auto): only when the experimental feature is on and total points
+ *   exceed {@link PROGRESSIVE_POINT_THRESHOLD}.
  */
 const selectorProgressiveRenderingEnabled = (
   state: ChartState<[UseChartExperimentalFeaturesSignature<ChartSeriesType>]>,

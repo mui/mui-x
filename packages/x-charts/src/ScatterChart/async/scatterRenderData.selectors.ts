@@ -9,10 +9,9 @@ import {
 } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 /**
- * Render data for a single scatter series. Packed `Float64Array` indexed by
- * `dataIndex` (stride 3: `[x, y, visible]`, `visible` = `1`/`0`). Off-screen
- * points keep their slot so a point's batch stays fixed across zoom/pan (no
- * popping); visibility is filtered per point at render time.
+ * Render data for one scatter series. Packed `Float64Array` indexed by
+ * `dataIndex` (stride 3: `[x, y, visible]`). Off-screen points keep their slot
+ * so a point's batch stays fixed across zoom/pan (no popping).
  */
 export interface ScatterSeriesRenderData {
   /** Packed projected coordinates + visibility flag, stride 3. */
@@ -77,10 +76,7 @@ export const selectorScatterRenderData = createSelectorMemoized(
   },
 );
 
-/**
- * Render data for a single scatter series, or `undefined` while it is not
- * available yet (processors/axes still pending).
- */
+/** Render data for one series, or `undefined` while processors/axes are pending. */
 export const selectorScatterSeriesRenderData = createSelector(
   selectorScatterRenderData,
   (renderData, seriesId: SeriesId) => renderData.get(seriesId),
