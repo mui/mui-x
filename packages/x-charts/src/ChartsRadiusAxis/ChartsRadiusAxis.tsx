@@ -204,12 +204,18 @@ ChartsRadiusAxis.propTypes = {
   labelStyle: PropTypes.object,
   /**
    * The maximal radius.
+   * Can be a number (in pixels), a pixel string (for example `'80px'`), or a percentage string
+   * (for example `'80%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default '100%'
    */
-  maxRadius: PropTypes.number,
+  maxRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * The minimal radius.
+   * Can be a number (in pixels), a pixel string (for example `'20px'`), or a percentage string
+   * (for example `'20%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default 0
    */
-  minRadius: PropTypes.number,
+  minRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * The position of the axis in polar coordinates.
    * It can be 'start', 'end', or a specific angle in degrees.

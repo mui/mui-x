@@ -24,6 +24,7 @@ import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartS
 import { deg2rad } from '../../../angleConversion';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { scaleBand, scalePoint } from '../../../scales';
+import { getPercentageValue } from '../../../getPercentageValue';
 import { type ComputedAxisConfig } from '../useChartCartesianAxis';
 import { EPSILON } from '../../../../utils/epsilon';
 
@@ -49,10 +50,11 @@ function getRange(
     return { range: angles, isFullCircle };
   }
   const availableRadius = Math.min(drawingArea.height, drawingArea.width) / 2;
+  const { minRadius, maxRadius } = axis as RadiusConfig;
   return {
     range: [
-      (axis as RadiusConfig).minRadius ?? 0,
-      (axis as RadiusConfig).maxRadius ?? availableRadius,
+      minRadius === undefined ? 0 : getPercentageValue(minRadius, availableRadius),
+      maxRadius === undefined ? availableRadius : getPercentageValue(maxRadius, availableRadius),
     ],
     isFullCircle: false,
   };
