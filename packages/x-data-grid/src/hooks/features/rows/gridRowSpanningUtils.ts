@@ -47,7 +47,7 @@ export const getCellValue = (
   colDef: GridColDef,
   apiRef: RefObject<GridApiCommunity>,
 ) => {
-  if (!row) {
+  if (!row || !colDef) {
     return null;
   }
 

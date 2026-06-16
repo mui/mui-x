@@ -84,10 +84,12 @@ export const getRowValue = (
   colDef: GridColDef,
   apiRef: RefObject<GridApiCommunity>,
 ) => {
-  const field = colDef.field;
+  if (!colDef) {
+    return undefined;
+  }
 
-  if (!colDef || !colDef.valueGetter) {
-    return row[field];
+  if (!colDef.valueGetter) {
+    return row[colDef.field];
   }
 
   const value = row[colDef.field];
