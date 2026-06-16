@@ -1,6 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { SchedulerEventId } from '../models';
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import { processDate } from '../process-date';
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
@@ -16,6 +17,37 @@ export const schedulerOtherSelectors = {
    * The occurrence currently being edited (an existing occurrence or a creation draft), or `null`.
    */
   editingOccurrence: createSelector((state: State) => state.editingOccurrence),
+  /**
+   * The occurrence currently being edited, with the live resize preview applied, or `null`.
+   *
+   * While the user resizes the edited occurrence by touch, the new start/end live on the
+   * `internal-resize` placeholder (the committed occurrence only updates on pointer-up). Surfaces
+   * bound to the editing occurrence (e.g. the compact drawer) read this selector so they preview
+   * the in-progress times instead of the stale committed ones.
+   */
+  editingOccurrenceWithResizePreview: createSelectorMemoized(
+    (state: State) => state.adapter,
+    (state: State) => state.editingOccurrence?.occurrence ?? null,
+    (state: State) => state.occurrencePlaceholder,
+    (adapter, occurrence, placeholder) => {
+      if (
+        occurrence == null ||
+        placeholder?.type !== 'internal-resize' ||
+        placeholder.occurrenceKey !== occurrence.key
+      ) {
+        return occurrence;
+      }
+
+      return {
+        ...occurrence,
+        displayTimezone: {
+          ...occurrence.displayTimezone,
+          start: processDate(placeholder.start, adapter),
+          end: processDate(placeholder.end, adapter),
+        },
+      };
+    },
+  ),
   /**
    * The key of the occurrence currently being edited, or `null` when nothing is being edited.
    */

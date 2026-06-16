@@ -23,9 +23,8 @@ export interface EventEditingOptionalRenderers {
   /**
    * Component rendered when the user is asked to choose the scope of a recurring update.
    *
-   * Rendered by whichever editing surface is active, so a single renderer serves both platforms:
-   * a centered dialog stacked on the desktop editing dialog, or a drawer / bottom-sheet stacked
-   * on the compact editing drawer. The concrete shell is the renderer's own concern.
+   * Stacked on top of the active editing surface (the desktop dialog or the compact drawer); it
+   * renders its own shell (a centered dialog). The concrete shell is the renderer's own concern.
    */
   recurringScope?: React.ComponentType<Record<string, never>>;
 }

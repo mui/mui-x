@@ -14,7 +14,6 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-schedul
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
 import { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
 import {
-  EditingSurfaceContext,
   EventEditingProvider,
   EventEditingOptionalRenderers,
   EventEditingOptionalRenderersContext,
@@ -166,41 +165,36 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
   const store = useSchedulerStoreContext();
 
   // The recurring scope confirmation renders itself: it reads its open state from the store and
-  // picks its own shell (centered dialog here, bottom-sheet drawer in the compact drawer) from the
-  // surrounding `EditingSurfaceContext`.
+  // renders its own shell (a centered dialog).
   const RecurringScopeRenderer = optionalRenderers?.recurringScope;
 
   return (
-    <EditingSurfaceContext.Provider value="dialog">
-      <EventEditingOptionalRenderersContext.Provider
-        value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
+    <EventEditingOptionalRenderersContext.Provider
+      value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
+    >
+      <EventEditingProvider
+        render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
+          <EventDialogContent
+            open={isOpen}
+            anchorRef={anchorRef}
+            occurrence={occurrence}
+            onClose={onClose}
+            {...other}
+          />
+        )}
+        onOpen={(occurrence) => {
+          store.startEditing(
+            occurrence,
+            schedulerOccurrencePlaceholderSelectors.isCreating(store.state) ? 'creation' : 'event',
+          );
+        }}
+        onClose={() => {
+          store.stopEditing();
+        }}
       >
-        <EventEditingProvider
-          render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
-            <EventDialogContent
-              open={isOpen}
-              anchorRef={anchorRef}
-              occurrence={occurrence}
-              onClose={onClose}
-              {...other}
-            />
-          )}
-          onOpen={(occurrence) => {
-            store.startEditing(
-              occurrence,
-              schedulerOccurrencePlaceholderSelectors.isCreating(store.state)
-                ? 'creation'
-                : 'event',
-            );
-          }}
-          onClose={() => {
-            store.stopEditing();
-          }}
-        >
-          {children}
-          {RecurringScopeRenderer && <RecurringScopeRenderer />}
-        </EventEditingProvider>
-      </EventEditingOptionalRenderersContext.Provider>
-    </EditingSurfaceContext.Provider>
+        {children}
+        {RecurringScopeRenderer && <RecurringScopeRenderer />}
+      </EventEditingProvider>
+    </EventEditingOptionalRenderersContext.Provider>
   );
 }

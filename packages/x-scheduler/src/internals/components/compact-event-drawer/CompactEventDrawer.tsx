@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
 import { useStore } from '@base-ui/utils/store';
 import {
   schedulerEventSelectors,
@@ -30,7 +29,7 @@ const CompactEventDrawerRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(1),
-  backgroundColor: grey[50],
+  backgroundColor: (theme.vars || theme).palette.grey[50],
   height: 0,
   transition: theme.transitions.create('height', {
     duration: theme.transitions.duration.shorter,
@@ -69,21 +68,22 @@ const CompactEventDrawerContent = styled('div', {
  *
  * It reuses the exact same `FormContent` / `ReadonlyContent` as the desktop dialog (including their
  * own header, close button and actions), so the editing experience matches across platforms, and
- * stacks the recurring scope confirmation by rendering the shared `recurringScope` renderer — which
- * picks its bottom-sheet shell from the surrounding `EditingSurfaceContext`.
+ * stacks the recurring scope confirmation by rendering the shared `recurringScope` renderer.
  */
 export function CompactEventDrawer() {
   const store = useEventCalendarStoreContext();
   // Concept 2 — the surface lifecycle (open/close) comes from the shared editing surface.
   const { isOpen, onClose } = useEventEditingContext();
-  // Concept 1 — *what* is being edited comes from the store (the single source of truth).
-  const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrence)?.occurrence;
+  // Concept 1 — *what* is being edited comes from the store (the single source of truth). While a
+  // touch resize is in progress, this reflects the live placeholder times so the drawer previews
+  // the new start/end before the resize is committed.
+  const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrenceWithResizePreview);
   // When the drawer is closed there is no occurrence, so the value is unused — an empty id
   // simply resolves to `false`.
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence?.id ?? '');
 
   // The recurring scope confirmation renders itself: it reads its open state from the store and
-  // picks its own shell (a bottom-sheet drawer here) from the surrounding `EditingSurfaceContext`.
+  // renders its own shell (a centered dialog).
   const { recurringScope: RecurringScopeRenderer } = useEventEditingOptionalRenderers();
 
   const [expanded, setExpanded] = React.useState(false);

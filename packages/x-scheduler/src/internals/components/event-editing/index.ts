@@ -5,8 +5,6 @@ export {
   EventEditingTrigger,
   CompactEventEditingProvider,
 } from './EventEditingContext';
-export { EditingSurfaceContext, useEditingSurface } from './EditingSurfaceContext';
-export type { EditingSurface } from './EditingSurfaceContext';
 export type {
   EventEditingTriggerProps,
   CompactEventEditingProviderProps,

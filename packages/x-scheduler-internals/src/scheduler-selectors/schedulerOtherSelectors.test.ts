@@ -36,6 +36,96 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('editingOccurrenceWithResizePreview', () => {
+      const start = adapter.date('2025-07-03T09:00:00Z', 'default');
+      const end = adapter.date('2025-07-03T10:00:00Z', 'default');
+
+      // The selector reads `occurrence.key` and spreads `occurrence.displayTimezone`, so a minimal
+      // occurrence carrying those is enough.
+      const editedOccurrence = {
+        id: 'event-1',
+        key: 'event-1',
+        displayTimezone: { start, end, timezone: 'default' },
+      } as any;
+
+      it('should return null when nothing is being edited', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        expect(
+          schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state),
+        ).to.equal(null);
+      });
+
+      it('should return the edited occurrence unchanged when no resize is in progress', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.startEditing(editedOccurrence);
+        expect(
+          schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state),
+        ).to.equal(editedOccurrence);
+      });
+
+      it('should apply the resize placeholder times when resizing the edited occurrence', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.startEditing(editedOccurrence);
+
+        const newEnd = adapter.date('2025-07-03T11:30:00Z', 'default');
+        store.setOccurrencePlaceholder({
+          type: 'internal-resize',
+          surfaceType: 'time-grid',
+          start,
+          end: newEnd,
+          eventId: 'event-1',
+          occurrenceKey: 'event-1',
+          originalOccurrence: editedOccurrence,
+          resourceId: null,
+        });
+
+        const result = schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state);
+        expect(result).to.not.equal(editedOccurrence);
+        expect(result!.displayTimezone.start.value).toEqualDateTime(start);
+        expect(result!.displayTimezone.end.value).toEqualDateTime(newEnd);
+      });
+
+      it('should ignore a resize placeholder targeting a different occurrence', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.startEditing(editedOccurrence);
+
+        store.setOccurrencePlaceholder({
+          type: 'internal-resize',
+          surfaceType: 'time-grid',
+          start,
+          end: adapter.date('2025-07-03T11:30:00Z', 'default'),
+          eventId: 'event-2',
+          occurrenceKey: 'event-2',
+          originalOccurrence: editedOccurrence,
+          resourceId: null,
+        });
+
+        expect(
+          schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state),
+        ).to.equal(editedOccurrence);
+      });
+
+      it('should ignore a non-resize placeholder (e.g. an internal drag)', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.startEditing(editedOccurrence);
+
+        store.setOccurrencePlaceholder({
+          type: 'internal-drag',
+          surfaceType: 'time-grid',
+          start: adapter.date('2025-07-03T12:00:00Z', 'default'),
+          end: adapter.date('2025-07-03T13:00:00Z', 'default'),
+          eventId: 'event-1',
+          occurrenceKey: 'event-1',
+          originalOccurrence: editedOccurrence,
+          resourceId: null,
+        });
+
+        expect(
+          schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state),
+        ).to.equal(editedOccurrence);
+      });
+    });
+
     describe('visibleDate', () => {
       it('should return the visibleDate with the default display timezone applied', () => {
         const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');

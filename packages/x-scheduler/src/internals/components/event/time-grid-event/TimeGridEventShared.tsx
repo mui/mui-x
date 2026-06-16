@@ -2,7 +2,10 @@
 import * as React from 'react';
 import { CSSObject, styled, Theme } from '@mui/material/styles';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { EVENT_CALENDAR_CONTAINER_NAME } from '../../../constants';
+import {
+  EVENT_CALENDAR_CONTAINER_NAME,
+  RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
+} from '../../../constants';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 
 export const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
@@ -98,9 +101,10 @@ export const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
     outlineOffset: 2,
   },
   variants: getPaletteVariants(theme),
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
-    '--time-grid-event-column-gap': '0px',
-  },
+  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px)`]:
+    {
+      '--time-grid-event-column-gap': '0px',
+    },
 });
 
 export const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
@@ -130,7 +134,8 @@ export const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder
     content: '""',
     position: 'absolute',
   },
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
-    '--time-grid-event-column-gap': '0px',
-  },
+  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px)`]:
+    {
+      '--time-grid-event-column-gap': '0px',
+    },
 }));
