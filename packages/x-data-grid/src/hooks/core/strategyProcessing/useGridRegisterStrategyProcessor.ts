@@ -15,10 +15,12 @@ export const useGridRegisterStrategyProcessor = <
   processor: GridStrategyProcessor<G>,
 ) => {
   const registerPreProcessor = React.useCallback(() => {
-    // FIXME: the unregister fn is discarded — unlike `useGridRegisterPipeProcessor`,
-    // which stores and calls it. Strategy processors currently must outlive the
-    // component: tearing one down on unmount breaks strategy resolution (e.g.
-    // "No processor found" on tree-data filtering/sorting). `void` until resolved.
+    // NOTE: the unregister fn is intentionally discarded. Unlike pipe processors
+    // (which are additive), a strategy processor is required for as long as its
+    // strategy is active — `applyStrategyProcessor` throws if the active strategy's
+    // processor is missing — so it must outlive the registering component. The cache
+    // keeps a single entry per (processor, strategy) and is reclaimed with the grid
+    // api, so nothing leaks; `void` documents the deliberate discard.
     void apiRef.current.registerStrategyProcessor(strategyName, group, processor);
   }, [apiRef, processor, group, strategyName]);
 
