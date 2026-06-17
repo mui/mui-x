@@ -87,11 +87,16 @@ It accepts either a string or a function:
   ```
 
 - **Function**: called with each feature and returning the key to use (or `null` to ignore the feature).
+  This is convenient to give several features the same key so a single series item targets them all.
 
   ```tsx
   <Unstable_ChartsGeoDataProviderPremium
     geoData={geoData}
-    geoFeatureKey={(feature) => feature.isoCode ? `iso-${feature.isoCode}` : null}
+    geoFeatureKey={(feature) =>
+      feature.properties?.name === 'Somaliland'
+        ? 'Somalia'
+        : (feature.properties?.name ?? null)
+    }
   >
     {/* ... */}
   </Unstable_ChartsGeoDataProviderPremium>
@@ -99,6 +104,13 @@ It accepts either a string or a function:
 
 The resolved key is what `mapShape` series items match against through their `name` property
 (or the `name` field of their dataset/`valueGetter`).
+
+In the demo below, the world atlas stores Somalia and Somaliland as two separate features.
+But the data from Our World in Data merge them.
+Returning `'Somalia'` for both gives them the same key, so the single `{ name: 'Somalia' }`
+series item highlights the two shapes at once.
+
+{{"demo": "GeoFeatureKeyMapShape.js"}}
 
 ## Mapping values to colors
 
