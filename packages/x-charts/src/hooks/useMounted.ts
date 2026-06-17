@@ -13,7 +13,6 @@ export function useMounted(defer = false) {
 
   React.useEffect(() => {
     if (defer) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMountedState(true);
     }
   }, [defer]);

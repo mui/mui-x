@@ -78,7 +78,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
   React.useEffect(() => {
     const value = convertFilterItemValueToInputValue(item.value, type);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     setFilterValueState(value);
   }, [item.value, type]);
 

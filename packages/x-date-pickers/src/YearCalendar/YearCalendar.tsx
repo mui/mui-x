@@ -232,7 +232,6 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
   });
 
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFocusedYear((prevFocusedYear) =>
       selectedYear !== null && prevFocusedYear !== selectedYear ? selectedYear : prevFocusedYear,
     );

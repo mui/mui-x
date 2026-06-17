@@ -172,7 +172,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     // of the demos.
     if (dataCache.has(cacheKey)) {
       const newData = dataCache.get(cacheKey)!;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+
       setData(newData);
       setLoading(false);
       return undefined;

@@ -157,7 +157,6 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
   const firstFocusableButtonIndex = actions.findIndex((o) => !o.props.disabled);
   React.useEffect(() => {
     if (hasFocus && focusedButtonIndex === -1) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFocusedButtonIndex(firstFocusableButtonIndex);
     }
     if (!hasFocus) {
@@ -168,7 +167,6 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
 
   React.useEffect(() => {
     if (focusedButtonIndex >= numberOfButtons) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFocusedButtonIndex(numberOfButtons - 1);
     }
   }, [focusedButtonIndex, numberOfButtons]);

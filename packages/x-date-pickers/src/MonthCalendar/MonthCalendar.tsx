@@ -242,7 +242,6 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
   });
 
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFocusedMonth((prevFocusedMonth) =>
       selectedMonth !== null && prevFocusedMonth !== selectedMonth
         ? selectedMonth

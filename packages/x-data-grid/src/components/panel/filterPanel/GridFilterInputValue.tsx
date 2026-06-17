@@ -61,7 +61,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   React.useEffect(() => {
     const itemPlusTag = item as ItemPlusTag;
     if (itemPlusTag.fromInput !== id || item.value == null) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilterValueState(sanitizeFilterItemValue(item.value));
     }
   }, [id, item]);

@@ -175,7 +175,6 @@ function GridLongTextCell(props: GridLongTextCellProps) {
       }
     }
     if (!hasFocus) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPopupOpen(false);
     }
   }, [hasFocus, popupOpen]);

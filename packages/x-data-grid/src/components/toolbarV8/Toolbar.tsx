@@ -187,7 +187,6 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
     if (sortedItems.length > 0) {
       // Set initial focusable item
       if (!focusableItemId) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setFocusableItemId(sortedItems[0].id);
         return;
       }

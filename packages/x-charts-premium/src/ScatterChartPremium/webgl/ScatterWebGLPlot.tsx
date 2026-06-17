@@ -43,7 +43,7 @@ function ScatterWebGLPlotImpl(props: {
 
   React.useEffect(() => {
     const prog = new ScatterWebGLProgram(gl);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     setProgram(prog);
 
     return () => {

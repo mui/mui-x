@@ -46,7 +46,6 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   );
 
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFilterValueState(sanitizeFilterItemValue(item.value));
   }, [item.value]);
 
