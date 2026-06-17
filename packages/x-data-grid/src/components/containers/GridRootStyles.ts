@@ -189,7 +189,10 @@ export const GridRootStyles = styled('div', {
       overflowAnchor: 'none', // Keep the same scrolling position
     },
 
-    // Use `css` tagged template so the ignore-comment remains a sibling of the
+   [`.${c.main} > *:first-child${ignoreSsrWarning}`]: {
+      borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
+      borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
+    },
     // `:first-child` rule in the stylis AST. Previously, the comment was embedded
     // in the object-key selector, which got separated from the rule during
     // pre-serialization when `styleOverrides` were applied, re-triggering Emotion's
