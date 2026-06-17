@@ -16,7 +16,56 @@ const ROWS = [
 const rowsStateSelector = (apiRef: ReturnType<typeof useGridApiContext>) =>
   apiRef.current.state.rows;
 
+const hasHydrationError = (errors: string[]) =>
+  errors.some((error) => /hydration|did not match/i.test(error));
+
 describe('<DataGrid /> - SSR', () => {
+  // `react-dom/client` only exists in React 18+, so it is imported dynamically inside the test
+  // to avoid breaking module resolution on the React 17 lane.
+  it.skipIf(reactMajor < 18)('should not report hydration errors', async () => {
+    async function hydrateWithoutConsoleErrors(tree: React.ReactElement) {
+      const ReactDOMClient = await import('react-dom/client');
+    
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      container.innerHTML = ReactDOMServer.renderToString(tree);
+    
+      const errors: string[] = [];
+      const originalConsoleError = console.error;
+      const interceptor = (...args: any[]) => {
+        errors.push(args.map(String).join(' '));
+      };
+      // Direct assignment shadows the property; the test runner's
+      // vitest-fail-on-console wrapper assigned in beforeEach is bypassed.
+      console.error = interceptor;
+    
+      let root: ReturnType<typeof ReactDOMClient.hydrateRoot> | undefined;
+      try {
+        await act(async () => {
+          root = ReactDOMClient.hydrateRoot(container, tree);
+        });
+        await act(async () => {
+          root?.unmount();
+        });
+      } finally {
+        console.error = originalConsoleError;
+        document.body.removeChild(container);
+      }
+    
+      return errors;
+    }
+    
+    const tree = (
+      <div style={{ height: 300, width: 400 }}>
+        <DataGrid rows={ROWS} columns={COLUMNS} />
+      </div>
+    );
+
+    const errors = await hydrateWithoutConsoleErrors(tree);
+
+    expect(hasHydrationError(errors)).to.equal(false);
+  });
+
   // Reproduces https://github.com/mui/mui-x/issues/17077 in a minimal way.
   // In the Next.js reproduction, the grid synchronously updates its store during hydration
   // while selector subscribers registered during render are not committed yet. The suspended
