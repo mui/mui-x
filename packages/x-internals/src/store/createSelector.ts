@@ -180,7 +180,7 @@ export const createSelectorMemoizedWithOptions =
     let fn = cache.get(cacheKey);
     if (!fn) {
       const selectors = inputs.length === 1 ? [((x: any) => x), combiner] : inputs
-      let selectorsAndCombiner = inputs;
+      let selectorsAndCombiner = selectors;
       const selectorArgs = [undefined, undefined, undefined];
       switch (argsLength) {
         case 0:

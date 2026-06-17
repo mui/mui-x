@@ -4,11 +4,10 @@
  * @param params Extra parameters forwarded to the selector.
  * @returns The derived value.
  */
-export type Selector<
-  State = any,
-  Result = unknown,
-  Params extends readonly any[] = any[],
-> = (state: State, ...params: Params) => Result;
+export type Selector<State = any, Result = unknown, Params extends readonly any[] = any[]> = (
+  state: State,
+  ...params: Params
+) => Result;
 
 /**
  * The NoOptionalParams type is a utility type that checks if a function has optional or default parameters.
