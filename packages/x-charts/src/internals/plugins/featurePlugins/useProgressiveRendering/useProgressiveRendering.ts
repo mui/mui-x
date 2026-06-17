@@ -80,16 +80,8 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
     // While interacting, keep only the first level and pause; resets the wave
     // so it restarts from the first level once the interaction ends.
     if (isZoomInteracting) {
-      // Don't collapse an already-complete wave: ScatterAsync caps the mounted
-      // batches while interacting anyway, so collapsing would only hide painted
-      // points for the gesture and re-reveal them (with the settle delay) on
-      // every pan, flickering on repeated panning.
-      const revealed = selectorProgressiveRevealedRounds(store.state);
-      if (revealed >= startTotal) {
-        return undefined;
-      }
       const target = Math.min(INTERACTION_REVEALED_ROUNDS, startTotal);
-      if (revealed !== target) {
+      if (selectorProgressiveRevealedRounds(store.state) !== target) {
         store.set('progressiveRendering', {
           ...store.state.progressiveRendering,
           revealedRounds: target,
