@@ -24,19 +24,19 @@ interface ReactSharedInternalsLike {
   ReactCurrentOwner?: { current?: { mode?: number } | null } | null;
 }
 
-// Read the shared internals through a plain local binding rather than as a
-// member of the `React` namespace import. Bundlers (webpack) statically resolve
-// `React.<name>` against React's ESM exports and emit an "Attempted import
-// error" warning when the name is absent — React 19 dropped
-// `__SECRET_INTERNALS_…`. Aliasing to a local var sidesteps that analysis while
-// keeping the same runtime lookup. TS casts (`as`) compile away, so they don't.
-const ReactRuntime = React as unknown as Record<string, ReactSharedInternalsLike | undefined>;
-
 const ReactInternals: ReactSharedInternalsLike | undefined =
   // eslint-disable-next-line no-underscore-dangle
-  ReactRuntime.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE ??
+  (
+    React as unknown as {
+      __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?: ReactSharedInternalsLike;
+    }
+  ).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE ??
   // eslint-disable-next-line no-underscore-dangle
-  ReactRuntime.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  (
+    React as unknown as {
+      __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?: ReactSharedInternalsLike;
+    }
+  ).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
 function isInStrictMode(): boolean {
   try {
