@@ -20,7 +20,7 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
   const getRowValue = React.useCallback<GridParamsApi['getRowValue']>(
     (row, colDef) => {
       if (!colDef) {
-        return communityMethods.getRowValue(row, colDef);
+        return undefined;
       }
       return (
         gridCellAggregationResultSelector(apiRef, {

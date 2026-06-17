@@ -44,7 +44,7 @@ export function isRowContextInitialized(renderContext: GridRenderContext) {
 
 export const getCellValue = (
   row: GridValidRowModel,
-  colDef: GridColDef,
+  colDef: GridColDef | undefined,
   apiRef: RefObject<GridApiCommunity>,
 ) => {
   if (!row || !colDef) {

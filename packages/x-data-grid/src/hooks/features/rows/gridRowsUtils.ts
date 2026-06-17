@@ -81,7 +81,7 @@ export const getRowIdFromRowModel = (
 
 export const getRowValue = (
   row: GridValidRowModel,
-  colDef: GridColDef,
+  colDef: GridColDef | undefined,
   apiRef: RefObject<GridApiCommunity>,
 ) => {
   if (!colDef) {
