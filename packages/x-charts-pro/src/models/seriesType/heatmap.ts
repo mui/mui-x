@@ -10,7 +10,7 @@ export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
   extends
-    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
+    Omit<CommonSeriesType<'heatmap'>, 'color' | 'colorGetter' | 'valueFormatter'>,
     CartesianSeriesType {
   type: 'heatmap';
   /**

@@ -141,6 +141,17 @@ export default defineConfig(
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
       'react/react-in-jsx-scope': 'off',
+
+      // TODO: re-enable. Temporarily disabled after the eslint-plugin-react-hooks
+      // 7.1 bump (via @mui/internal-code-infra) introduced this rule, which flags
+      // existing code that needs to be addressed separately.
+      'react-hooks/set-state-in-effect': 'off',
+
+      // Modern browsers imply rel="noopener" for target="_blank", so no rel is required.
+      // See https://github.com/mui/material-ui/pull/40447
+      // TODO move to mui/mui-public.
+      'react/jsx-no-target-blank': 'off',
+
       'import/no-relative-packages': 'error',
       'import/no-restricted-paths': [
         'error',

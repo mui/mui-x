@@ -51,6 +51,12 @@
       },
       "default": "\"teal\""
     },
+    "eventCreation": {
+      "type": {
+        "name": "union",
+        "description": "{ duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+      }
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -58,7 +64,6 @@
     },
     "localeText": { "type": { "name": "object" } },
     "onEventsChange": { "type": { "name": "func" } },
-    "onPreferencesChange": { "type": { "name": "func" } },
     "onPresetChange": { "type": { "name": "func" } },
     "onVisibleDateChange": { "type": { "name": "func" } },
     "onVisibleResourcesChange": { "type": { "name": "func" } },
@@ -85,6 +90,7 @@
     "resourceColumnLabel": { "type": { "name": "string" } },
     "resourceModelStructure": { "type": { "name": "object" } },
     "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "shouldEventRequireResource": { "type": { "name": "bool" }, "default": "true" },
     "showCurrentTimeIndicator": { "type": { "name": "bool" }, "default": "true" },
     "sx": {
       "type": {
@@ -123,7 +129,7 @@
     {
       "key": "errorAlert",
       "className": "MuiEventTimelinePremium-errorAlert",
-      "description": "Styles applied to error alert elements.",
+      "description": "Styles applied to the error alert element.",
       "isGlobal": false
     },
     {
@@ -135,7 +141,7 @@
     {
       "key": "errorMessage",
       "className": "MuiEventTimelinePremium-errorMessage",
-      "description": "Styles applied to error message elements.",
+      "description": "Styles applied to the error message element.",
       "isGlobal": false
     },
     {
@@ -463,6 +469,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventsCell",
+      "className": "MuiEventTimelinePremium-eventsCell",
+      "description": "Styles applied to the events cell element in a body row.",
+      "isGlobal": false
+    },
+    {
       "key": "eventsHeaderCell",
       "className": "MuiEventTimelinePremium-eventsHeaderCell",
       "description": "Styles applied to the events header cell element.",
@@ -477,25 +489,7 @@
     {
       "key": "eventSkeleton",
       "className": "MuiEventTimelinePremium-eventSkeleton",
-      "description": "Styles applied to event skeleton elements rendered while events are loading.",
-      "isGlobal": false
-    },
-    {
-      "key": "eventsSubGrid",
-      "className": "MuiEventTimelinePremium-eventsSubGrid",
-      "description": "Styles applied to the events sub-grid element.",
-      "isGlobal": false
-    },
-    {
-      "key": "eventsSubGridRow",
-      "className": "MuiEventTimelinePremium-eventsSubGridRow",
-      "description": "Styles applied to the events sub-grid row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "eventsSubGridWrapper",
-      "className": "MuiEventTimelinePremium-eventsSubGridWrapper",
-      "description": "Styles applied to the events sub-grid wrapper element.",
+      "description": "Styles applied to the event skeleton element.",
       "isGlobal": false
     },
     {
@@ -547,6 +541,12 @@
       "isGlobal": false
     },
     {
+      "key": "titleCellContent",
+      "className": "MuiEventTimelinePremium-titleCellContent",
+      "description": "Styles applied to the title cell content wrapper element.",
+      "isGlobal": false
+    },
+    {
       "key": "titleCellLegendColor",
       "className": "MuiEventTimelinePremium-titleCellLegendColor",
       "description": "Styles applied to the title cell legend color element.",
@@ -563,12 +563,6 @@
       "className": "MuiEventTimelinePremium-titleHeaderCell",
       "description": "Styles applied to the title header cell element.",
       "isGlobal": false
-    },
-    {
-      "key": "titleSubGrid",
-      "className": "MuiEventTimelinePremium-titleSubGrid",
-      "description": "Styles applied to the title sub-grid element.",
-      "isGlobal": false
     }
   ],
   "spread": true,
@@ -577,6 +571,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/event-timeline-premium/EventTimelinePremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interaction</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/lazy-loading/\">Event Timeline - Lazy loading events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interaction</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/lazy-loading/\">Event Timeline - Lazy loading events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>"
 }

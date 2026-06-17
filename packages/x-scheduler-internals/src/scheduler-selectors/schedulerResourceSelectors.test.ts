@@ -5,7 +5,10 @@ storeClasses.forEach((storeClass) => {
   describe(`schedulerResourceSelectors - ${storeClass.name}`, () => {
     describe('processedResourceFlatList', () => {
       it('should return an empty array when there are no resources', () => {
-        const state = new storeClass.Value({ events: [] }, adapter).state;
+        const state = new storeClass.Value(
+          { events: [], shouldEventRequireResource: false },
+          adapter,
+        ).state;
         const result = schedulerResourceSelectors.processedResourceFlatList(state);
         expect(result).to.deep.equal([]);
       });
@@ -155,7 +158,10 @@ storeClasses.forEach((storeClass) => {
 
     describe('processedResourceList', () => {
       it('should return an empty array when there are no resources', () => {
-        const state = new storeClass.Value({ events: [] }, adapter).state;
+        const state = new storeClass.Value(
+          { events: [], shouldEventRequireResource: false },
+          adapter,
+        ).state;
         const result = schedulerResourceSelectors.processedResourceList(state);
         expect(result).to.deep.equal([]);
       });
@@ -188,7 +194,10 @@ storeClasses.forEach((storeClass) => {
 
     describe('processedResourceChildrenLookup', () => {
       it('should return an empty map when there are no resources', () => {
-        const state = new storeClass.Value({ events: [] }, adapter).state;
+        const state = new storeClass.Value(
+          { events: [], shouldEventRequireResource: false },
+          adapter,
+        ).state;
         const result = schedulerResourceSelectors.processedResourceChildrenLookup(state);
         expect(result.size).to.equal(0);
       });
@@ -296,7 +305,10 @@ storeClasses.forEach((storeClass) => {
 
     describe('resourceParentIdLookup', () => {
       it('should return an empty map when there are no resources', () => {
-        const state = new storeClass.Value({ events: [] }, adapter).state;
+        const state = new storeClass.Value(
+          { events: [], shouldEventRequireResource: false },
+          adapter,
+        ).state;
         const result = schedulerResourceSelectors.resourceParentIdLookup(state);
         expect(result.size).to.equal(0);
       });
@@ -545,7 +557,10 @@ storeClasses.forEach((storeClass) => {
 
     describe('resourceDepthLookup', () => {
       it('should return an empty map when there are no resources', () => {
-        const state = new storeClass.Value({ events: [] }, adapter).state;
+        const state = new storeClass.Value(
+          { events: [], shouldEventRequireResource: false },
+          adapter,
+        ).state;
         const result = schedulerResourceSelectors.resourceDepthLookup(state);
         expect(result.size).to.equal(0);
       });

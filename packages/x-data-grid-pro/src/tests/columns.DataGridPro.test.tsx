@@ -795,6 +795,38 @@ describe('<DataGridPro /> - Columns', () => {
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
+
+    it('should preserve a resized multiSelect column width across pipe re-application', () => {
+      let privateApi: GridPrivateApiContextRef;
+      function Footer() {
+        privateApi = useGridPrivateApiContext();
+        return null;
+      }
+      render(
+        <Test
+          rows={[{ id: 0, tags: ['React'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue'],
+              width: 200,
+            },
+          ]}
+          slots={{ footer: Footer }}
+        />,
+      );
+
+      act(() => apiRef.current?.setColumnWidth('tags', 350));
+      expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
+      // Re-apply twice: the resized width must survive repeated hydration, which requires
+      // `hasBeenResized` to be carried over on each pass, not just the first.
+      // @ts-ignore
+      act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
+      // @ts-ignore
+      act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
+      expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
+    });
   });
 
   describe.skipIf(isJSDOM)('flex columns with pinned columns', () => {

@@ -101,7 +101,8 @@ export namespace StandaloneEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      Pick<useDragPreview.Parameters, 'renderDragPreview' | 'data'> {
+      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
+    data: SchedulerOccurrencePlaceholderExternalDragData;
     /**
      * Callback fired when the event is dropped into the Event Calendar.
      */
