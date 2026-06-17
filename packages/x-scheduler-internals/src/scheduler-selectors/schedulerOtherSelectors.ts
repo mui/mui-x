@@ -19,11 +19,9 @@ export const schedulerOtherSelectors = {
   editingOccurrence: createSelector((state: State) => state.editingOccurrence),
   /**
    * The occurrence currently being edited, with the live resize preview applied, or `null`.
-   *
-   * While the user resizes the edited occurrence by touch, the new start/end live on the
-   * `internal-resize` placeholder (the committed occurrence only updates on pointer-up). Surfaces
-   * bound to the editing occurrence (e.g. the compact drawer) read this selector so they preview
-   * the in-progress times instead of the stale committed ones.
+   * During a resize the new start/end live on the `internal-resize` placeholder (the occurrence
+   * only updates on pointer-up), so surfaces bound to the editing occurrence read this to preview
+   * the in-progress times.
    */
   editingOccurrenceWithResizePreview: createSelectorMemoized(
     (state: State) => state.adapter,

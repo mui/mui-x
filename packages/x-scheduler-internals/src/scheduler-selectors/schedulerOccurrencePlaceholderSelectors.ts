@@ -7,14 +7,13 @@ export const schedulerOccurrencePlaceholderSelectors = {
   isDefined: createSelector((state: State) => state.occurrencePlaceholder !== null),
   /**
    * Returns `true` while a new event is being created (a `creation` placeholder is active).
-   * Selecting this boolean (instead of the placeholder object) avoids re-rendering on every
-   * placeholder mutation, e.g. each move of a creation-placeholder resize.
+   * Selecting a boolean instead of the placeholder object avoids re-rendering on every mutation.
    */
   isCreating: createSelector((state: State) => state.occurrencePlaceholder?.type === 'creation'),
   /**
    * The type of the active placeholder, or `undefined` when there is none.
-   * Selecting the type (a primitive) instead of the placeholder object avoids re-rendering on every
-   * placeholder mutation, e.g. each move of a drag or resize.
+   * Selecting the primitive type instead of the placeholder object avoids re-rendering on every
+   * mutation (e.g. each move of a drag or resize).
    */
   type: createSelector((state: State) => state.occurrencePlaceholder?.type),
   actionForOccurrence: createSelector((state: State, occurrenceKey: string) => {

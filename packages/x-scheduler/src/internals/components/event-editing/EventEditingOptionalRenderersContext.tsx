@@ -11,9 +11,8 @@ export interface RecurrenceTabRendererProps {
 }
 
 /**
- * Components optionally rendered inside the editing surface (the desktop dialog and the compact
- * drawer alike). The premium scheduler fills these via the `optionalRenderers` prop on
- * `EventDialogProvider`; community leaves them empty.
+ * Components optionally rendered inside the editing surface (desktop dialog and compact drawer).
+ * The premium scheduler fills these via the `optionalRenderers` prop; community leaves them empty.
  */
 export interface EventEditingOptionalRenderers {
   /**
@@ -22,9 +21,7 @@ export interface EventEditingOptionalRenderers {
   recurrenceTab?: React.ComponentType<RecurrenceTabRendererProps>;
   /**
    * Component rendered when the user is asked to choose the scope of a recurring update.
-   *
-   * Stacked on top of the active editing surface (the desktop dialog or the compact drawer); it
-   * renders its own shell (a centered dialog). The concrete shell is the renderer's own concern.
+   * Stacks on top of the active editing surface and renders its own shell (a centered dialog).
    */
   recurringScope?: React.ComponentType<Record<string, never>>;
 }

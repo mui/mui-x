@@ -6,9 +6,8 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { SchedulerEventSide } from '../../models';
 
 /**
- * Native drag-and-drop resize for calendar events. Self-contained: it knows nothing about the
- * pointer-based touch resize (`useEventPointerResizeHandler`). The component that hosts both
- * decides which one is active by passing `enabled`.
+ * Native drag-and-drop resize for calendar events. The hosting component decides whether this or
+ * the pointer-based resize ({@link useEventPointerResizeHandler}) is active via `enabled`.
  */
 export function useEventResizeHandler(
   parameters: useEventResizeHandler.Parameters,
@@ -59,8 +58,8 @@ export namespace useEventResizeHandler {
     side: SchedulerEventSide;
     /**
      * How the resize gesture is initiated.
-     * - `'native'`: uses the native drag-and-drop API (best for mouse/desktop).
-     * - `'pointer'`: uses pointer events, so a plain touch + drag starts the resize (best for touch).
+     * - `'native'`: native drag-and-drop API (best for mouse/desktop).
+     * - `'pointer'`: pointer events, so a plain touch + drag starts the resize (best for touch).
      * @default 'native'
      */
     interaction?: 'native' | 'pointer';
@@ -72,8 +71,8 @@ export namespace useEventResizeHandler {
      */
     ref: React.RefObject<HTMLDivElement | null>;
     /**
-     * Whether the native drag-and-drop listeners should be attached. When `false` (e.g. the side
-     * is clipped by the collection, or the pointer interaction is active), nothing is attached.
+     * Whether to attach the native drag-and-drop listeners (false when the side is clipped by the
+     * collection or the pointer interaction is active).
      */
     enabled: boolean;
     /**

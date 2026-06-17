@@ -17,8 +17,7 @@ import { useEventEditingStyledContext } from '@mui/x-scheduler/internals';
 import { RecurringScopeDialogProps } from './RecurringScopeDialog.types';
 
 /**
- * The recurring scope confirmation: a centered dialog stacked on top of the event editing surface,
- * shown whenever a recurring occurrence needs the user to pick which occurrences a change applies to.
+ * Dialog that asks which occurrences a change to a recurring event should apply to.
  */
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringScopeDialogProps>(
   function RecurringScopeDialog(props, ref) {

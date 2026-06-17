@@ -76,9 +76,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         end,
       });
 
-      // The pointer-based resize maps the pointer straight to a date and never reads the grab
-      // offset, so it calls this without an `input` — skipping the layout-reading cursor
-      // measurement (a `getBoundingClientRect`) that only the native drag/resize needs.
+      // Without an `input` (pointer-based resize, which doesn't need the grab offset), skip the
+      // layout-reading cursor measurement that only the native drag/resize needs.
       const initialCursorPositionInEventMs = input
         ? Math.max(adapter.getTime(columnStart) - start.timestamp, 0) +
           getCursorPositionInElementMs({ input, elementRef: ref })

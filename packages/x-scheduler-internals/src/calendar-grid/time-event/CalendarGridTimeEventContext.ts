@@ -6,9 +6,8 @@ import type { useDraggableEvent } from '../../internals/utils/useDraggableEvent'
 export interface CalendarGridTimeEventContext extends useDraggableEvent.ContextValue {
   /**
    * Gets the drag data shared by the CalendarGrid.TimeEvent and CalendarGrid.TimeEventResizeHandler parts.
-   * @param {{ clientY: number }} [input] The pointer position, used to compute the grab offset
-   * (`initialCursorPositionInEventMs`). Omit it when that offset isn't needed (the pointer-based
-   * resize), to skip the layout measurement.
+   * @param {{ clientY: number }} [input] The pointer position, used to compute the grab offset.
+   * Omit it when that offset isn't needed (pointer-based resize) to skip the layout measurement.
    * @returns {CalendarGridTimeEvent.SharedDragData} The shared drag data.
    */
   getSharedDragData: (input?: { clientY: number }) => CalendarGridTimeEvent.SharedDragData;

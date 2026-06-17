@@ -2,11 +2,8 @@
 import * as React from 'react';
 
 /**
- * While `active`, the first click anywhere inside `ref` (other than on an element matching
- * `ignoreSelector`) is swallowed in the capture phase and routed to `onDisarm` — so a tap that
- * would otherwise create or arm another event instead just exits the current editing session.
- *
- * Extracted from the compact day/time grid so every touch surface disarms the same way.
+ * While `active`, swallows the next click inside `ref` (unless it matches `ignoreSelector`) and
+ * calls `onDisarm`, so a tap that would otherwise create or arm an event just exits editing instead.
  */
 export function useDisarmOnOutsidePointer(parameters: {
   ref: React.RefObject<HTMLElement | null>;

@@ -94,10 +94,9 @@ interface ReadonlyEventDetailsProps {
 }
 
 /**
- * The read-only details of an event occurrence (resource, date/time, recurrence and description),
- * surface-agnostic and shared by both editing surfaces: the desktop dialog's `ReadonlyContent` and
- * the compact drawer's `CompactReadonlyContent`. Each surface wraps these details with its own
- * chrome (heading, close affordances), so only the details rendering stays identical.
+ * Read-only details of an event occurrence (resource, date/time, recurrence and description).
+ * Surface-agnostic and shared by both editing surfaces, each of which wraps these details with its
+ * own chrome (heading, close affordances).
  */
 export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const { occurrence } = props;

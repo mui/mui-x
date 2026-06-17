@@ -61,9 +61,8 @@ const TimeGridEventTouchTitle = styled(Typography, {
   ...touchTitleLineClampSteps,
 }));
 
-// A creation placeholder rendered as a real `CalendarGrid.TimeEvent` (rather than the inert
-// `TimeEventPlaceholder`) so it can host pointer resize handles — letting the user size the
-// new event before it is saved.
+// A placeholder rendered as a real `CalendarGrid.TimeEvent` (rather than the inert
+// `TimeEventPlaceholder`) so it can host pointer resize handles for sizing the event.
 const TimeGridEventTouchPlaceholderRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventTouchPlaceholderRoot',
@@ -92,16 +91,13 @@ export const TimeGridEventTouch = React.forwardRef(function TimeGridEventTouch(
   const { isDraggable, isStartResizable, isEndResizable, rootDataAttributes, rootPositionProps } =
     useTimeGridEvent(occurrence);
 
-  // Creation and resize placeholders host resize handles (see the placeholder branch below); a
-  // move (drag) placeholder must not, since the user is repositioning the event, not resizing it.
-  // The three previews all reuse the `placeholder` variant, so the type is what tells them apart.
+  // Creation/resize placeholders show resize handles; move (drag) placeholders don't. All three
+  // reuse the `placeholder` variant, so the placeholder type is what distinguishes them.
   const placeholderType = useStore(store, schedulerOccurrencePlaceholderSelectors.type);
   const placeholderHasResizeHandles =
     placeholderType === 'creation' || placeholderType === 'internal-resize';
 
-  // A single tap on the event arms it (today via the compact drawer; see ArmedOccurrenceProvider),
-  // revealing its resize handles and selection outline without any custom long-press. The event
-  // depends only on the surface-agnostic arming context, not on the drawer itself.
+  // Tapping the event arms it, revealing its resize handles and selection outline.
   const { isArmed } = useArmedOccurrence(occurrence.key);
 
   const content = (
@@ -118,9 +114,6 @@ export const TimeGridEventTouch = React.forwardRef(function TimeGridEventTouch(
   };
 
   if (variant === 'placeholder') {
-    // Render the placeholder as a real event so it can host pointer resize handles. Creation and
-    // resize previews keep their handles (sizing a new event / continuing the resize gesture); a
-    // move (drag) preview drops them, since dragging repositions the event rather than resizing it.
     return (
       <TimeGridEventTouchPlaceholderRoot
         isDraggable={false}

@@ -12,9 +12,8 @@ import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 
 /**
- * Touch resize uses pointer events (`useEventPointerResizeHandler`) rather than the native
- * drag-and-drop API, so it is exercised here through {@link simulatePointerResize} on the
- * compact (touch) view.
+ * Touch resize uses pointer events rather than native drag-and-drop, so it is exercised here
+ * through {@link simulatePointerResize} on the compact (touch) view.
  */
 describe('CompactDayView - touch resize', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
@@ -43,7 +42,7 @@ describe('CompactDayView - touch resize', () => {
     return { onEventsChange };
   }
 
-  /** Taps the event to arm it (open the drawer), revealing its resize handles. */
+  /** Taps the event to arm it, revealing its resize handles. */
   function armEvent(): HTMLElement {
     const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
     fireEvent.click(eventElement);

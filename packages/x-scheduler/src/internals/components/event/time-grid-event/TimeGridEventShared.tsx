@@ -29,17 +29,12 @@ const TOUCH_RESIZE_HANDLE_HIT_INSET_PX = -(
 );
 
 /**
- * Styles for a circular touch resize handle, centralized so every touch surface (time grid now,
- * day grid later) renders the same accessible target.
+ * Styles for a circular touch resize handle, shared by all touch surfaces.
  *
- * The visible dot stays {@link TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX}px, but a transparent `::before`
- * expands the *hit area* to ~{@link TOUCH_RESIZE_HANDLE_HIT_SIZE_PX}px. The pseudo-element is part
- * of this element for hit-testing, so pointer events on it dispatch here — where the resize
- * listeners and pointer capture live.
- *
- * The hit area is biased *outward* (the start handle only grows upward, the end handle only
- * downward), so the two handles' hit areas never overlap until the event is shorter than the dot
- * itself — a min-height guard that keeps the wrong edge from grabbing on short events.
+ * The visible dot stays {@link TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX}px, while a transparent `::before`
+ * expands the hit area to {@link TOUCH_RESIZE_HANDLE_HIT_SIZE_PX}px. The hit area is biased outward
+ * (start grows up, end grows down) so the two handles never overlap until the event is shorter than
+ * the dot, keeping the wrong edge from grabbing on short events.
  */
 export const getTouchResizeHandleStyles = (): CSSObject => ({
   position: 'absolute',

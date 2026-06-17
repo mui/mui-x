@@ -61,35 +61,31 @@ const CompactEventDrawerContent = styled('div', {
 /**
  * The editing drawer for the compact (mobile) day/time grid.
  *
- * Rendered below the grid and driven by the shared editing surface (`EventEditingContext`): when an
- * event is armed (selected via a single tap) it expands to a peek height — shrinking the grid above
- * it rather than overlaying it — and shows the read-only summary. Tapping the drawer expands it to
- * full height and swaps in the editing form (or keeps the read-only summary for read-only events).
+ * Rendered below the grid and driven by the shared editing surface: arming an event (single tap)
+ * expands it to a peek height showing the read-only summary; tapping the drawer expands it to full
+ * height and swaps in the editing form (read-only events keep the summary).
  *
- * It reuses the exact same `FormContent` / `ReadonlyContent` as the desktop dialog (including their
- * own header, close button and actions), so the editing experience matches across platforms, and
- * stacks the recurring scope confirmation by rendering the shared `recurringScope` renderer.
+ * It reuses the desktop dialog's `FormContent` / `ReadonlyContent` so the editing experience matches
+ * across platforms, and renders the shared `recurringScope` renderer for the scope confirmation.
  */
 export function CompactEventDrawer() {
   const store = useEventCalendarStoreContext();
-  // Concept 2 — the surface lifecycle (open/close) comes from the shared editing surface.
+  // The drawer's open/close state comes from the shared editing surface.
   const { isOpen, onClose } = useEventEditingContext();
-  // Concept 1 — *what* is being edited comes from the store (the single source of truth). While a
-  // touch resize is in progress, this reflects the live placeholder times so the drawer previews
-  // the new start/end before the resize is committed.
+  // What is being edited comes from the store. During a touch resize this reflects the live
+  // placeholder times, so the drawer previews the new start/end before the resize is committed.
   const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrenceWithResizePreview);
-  // When the drawer is closed there is no occurrence, so the value is unused — an empty id
-  // simply resolves to `false`.
+  // When the drawer is closed there is no occurrence; the empty id then resolves to `false`.
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence?.id ?? '');
 
-  // The recurring scope confirmation renders itself: it reads its open state from the store and
-  // renders its own shell (a centered dialog).
+  // The recurring scope confirmation reads its own open state from the store and renders its own
+  // shell (a centered dialog).
   const { recurringScope: RecurringScopeRenderer } = useEventEditingOptionalRenderers();
 
   const [expanded, setExpanded] = React.useState(false);
 
-  // Reused dialog content expects a drag handle ref (used to drag the desktop dialog). The drawer
-  // does not drag, so a throwaway ref keeps the shared content components happy.
+  // The reused dialog content expects a drag handle ref (for dragging the desktop dialog). The
+  // drawer does not drag, so we pass a throwaway ref.
   const dragHandlerRef = React.useRef<HTMLElement | null>(null);
 
   // Start collapsed each time the drawer opens or switches to a different occurrence.

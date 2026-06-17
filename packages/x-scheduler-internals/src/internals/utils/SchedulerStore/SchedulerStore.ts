@@ -744,9 +744,8 @@ export class SchedulerStore<
 
   /**
    * Marks an occurrence (an existing occurrence or a creation draft) as the one being edited.
-   *
-   * This only records *what* is being edited — opening the editing surface (dialog or drawer) is a
-   * separate concern handled by the surface's modal.
+   * This only records *what* is being edited; opening the editing surface (dialog or drawer) is
+   * handled separately.
    */
   public startEditing = (
     occurrence: SchedulerRenderableEventOccurrence,

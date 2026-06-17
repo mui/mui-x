@@ -174,11 +174,9 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The occurrence currently being edited (an existing occurrence or a creation draft).
-   * `null` when no event is being edited.
-   *
-   * This is the single source of truth for *what* is being edited — decoupled from *which* surface
-   * (dialog or drawer) is open to edit it. The editing surfaces and the highlight read from here.
+   * The occurrence currently being edited (an existing occurrence or a creation draft), or `null`.
+   * Single source of truth for *what* is being edited, decoupled from *which* surface (dialog or
+   * drawer) is open. The editing surfaces and the highlight read from here.
    */
   editingOccurrence: SchedulerEditingState | null;
   /**

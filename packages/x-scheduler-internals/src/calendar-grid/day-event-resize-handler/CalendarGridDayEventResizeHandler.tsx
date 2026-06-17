@@ -9,12 +9,8 @@ import { useCalendarGridDayEventContext } from '../day-event/CalendarGridDayEven
 import type { CalendarGridDayEvent } from '../day-event/CalendarGridDayEvent';
 import { SchedulerEventSide } from '../../models';
 
-// Touch readiness (not yet implemented): the day grid can gain a pointer-based touch resize the
-// same way the time grid did, without changing the core. Add an `interaction` prop and, when it is
-// `'pointer'`, call `useEventPointerResizeHandler` with: a *horizontal* `getDateAtPointer` resolver
-// supplied by the day row/column (mapping `clientX` → a precision-rounded date), `surfaceType:
-// 'day-grid'`, and a `getResizeSession` built from this handler's shared drag data. The gesture
-// mechanics, min-duration clamp (`clampResizedEventEdge`) and placeholder commit are already shared.
+// Touch resize is not yet implemented here. The day grid could get it like the time grid did, by
+// calling useEventPointerResizeHandler with a horizontal getDateAtPointer resolver (clientX -> date).
 export const CalendarGridDayEventResizeHandler = React.forwardRef(
   function CalendarGridDayEventResizeHandler(
     componentProps: CalendarGridDayEventResizeHandler.Props,

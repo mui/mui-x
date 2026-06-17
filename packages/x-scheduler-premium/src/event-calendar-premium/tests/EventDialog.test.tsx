@@ -2102,9 +2102,8 @@ describe('<EventDialogContent open />', () => {
         </EventCalendarProvider>,
       );
 
-      // The EventDialogProvider's onOpen sets editingOccurrence.
-      // Here we render EventDialogContent directly (without the trigger flow),
-      // so we verify the initial state is null.
+      // EventDialogProvider's onOpen sets editingOccurrence; rendering the content directly
+      // (without the trigger flow) leaves it null.
       expect(handleEditingChange.lastCall?.firstArg).to.equal(null);
     });
 

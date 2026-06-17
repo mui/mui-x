@@ -10,15 +10,12 @@ import { CompactEventEditingProviderProps, EventEditingTriggerProps } from './Ev
  * The shared, surface-agnostic editing backbone.
  *
  * Both the desktop event dialog and the compact (mobile) editing drawer open through this single
- * `createModal` instance — the one stacking backbone — so any surface stacked after the editing
- * surface (e.g. the recurring scope confirmation) participates in the same open/close/
- * `subscribeCloseHandler` flow regardless of platform.
+ * `createModal` instance, so any surface stacked after them (e.g. the recurring scope confirmation)
+ * shares the same open/close flow regardless of platform.
  *
- * This context only tracks *which* surface is open (concept 2). *What* is being edited (the
- * occurrence) lives on the store (`editingOccurrence`, concept 1), so the two concerns stay
- * decoupled. The concrete surface (dialog vs. drawer) is provided by the consumers: the desktop
- * dialog renders through `EventEditingProvider`, the compact drawer through
- * `CompactEventEditingProvider`.
+ * This context only tracks *which* surface is open; *what* is being edited (the occurrence) lives on
+ * the store, so the two concerns stay decoupled. The concrete surface is provided by the consumers:
+ * the desktop dialog via `EventEditingProvider`, the compact drawer via `CompactEventEditingProvider`.
  */
 const EventEditingModal = createModal<SchedulerRenderableEventOccurrence>({
   contextName: 'EventEditingContext',
@@ -27,8 +24,8 @@ const EventEditingModal = createModal<SchedulerRenderableEventOccurrence>({
 export const EventEditingContext = EventEditingModal.Context;
 export const useEventEditingContext = EventEditingModal.useContext;
 /**
- * The low-level editing-surface provider. Desktop wraps this to render the anchored dialog; the
- * compact provider below wraps it for the in-flow drawer.
+ * The low-level editing-surface provider. The desktop dialog wraps it for the anchored dialog;
+ * `CompactEventEditingProvider` wraps it for the in-flow drawer.
  */
 export const EventEditingProvider = EventEditingModal.Provider;
 
@@ -45,14 +42,9 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
 }
 
 /**
- * The compact (mobile) editing-surface provider.
- *
- * It reuses the shared editing backbone but renders no surface of its own (`render={() => null}`):
- * the drawer is rendered in-flow by `CompactDayTimeGrid`, reading the open state from this context.
- * Being a non-anchored surface, it opens without an anchor element (`anchored={false}`).
- *
- * Opening/closing records the editing state on the store, keeping "what is being edited" (the
- * store) decoupled from "which surface is open" (this modal).
+ * Compact (mobile) editing surface: reuses the shared backbone but renders no surface of its own.
+ * The drawer is rendered in-flow by `CompactDayTimeGrid`, reading the open state from this context;
+ * being non-anchored, it opens without an anchor element.
  */
 export function CompactEventEditingProvider(props: CompactEventEditingProviderProps) {
   const { children } = props;

@@ -2,13 +2,9 @@
 import * as React from 'react';
 
 /**
- * Surface-agnostic "armed occurrence" concept.
- *
- * An armed occurrence is the one the user has selected for touch editing — it reveals its resize
- * handles and selection outline. This is deliberately decoupled from *how* it got armed (today the
- * compact event drawer): event components across every surface (time grid, and later day grid /
- * month) read arming through this context instead of reaching into a specific modal, so the same
- * touch event component can be reused as new surfaces gain a touch experience.
+ * Tracks the "armed" occurrence: the one selected for touch editing, showing its resize handles and
+ * selection outline. Event components read arming through this context (rather than from whatever
+ * armed it), so the same touch event component works across surfaces.
  */
 export interface ArmedOccurrenceContextValue {
   /**

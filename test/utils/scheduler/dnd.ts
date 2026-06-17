@@ -237,11 +237,8 @@ export function getResizeHandle(eventElement: HTMLElement, side: 'start' | 'end'
 }
 
 /**
- * Ensures pointer-capture methods exist on the element.
- *
- * The pointer-based resize (`useEventPointerResizeHandler`) calls `setPointerCapture` /
- * `hasPointerCapture` / `releasePointerCapture`, which JSDOM does not implement. Stub them as
- * no-ops so the gesture can be simulated in unit tests (they are real in browser mode).
+ * Stubs the pointer-capture methods the resize handler relies on, since JSDOM doesn't implement
+ * `setPointerCapture` / `hasPointerCapture` / `releasePointerCapture`.
  */
 function ensurePointerCaptureMethods(element: HTMLElement): void {
   const target = element as any;

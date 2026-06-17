@@ -2,12 +2,9 @@ import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { SchedulerEventSide, TemporalSupportedObject } from '../../models';
 
 /**
- * Whether a resize handler for the given side may run, i.e. the edge it moves is actually inside
- * the collection (an event clipped at the collection start can't have its start resized, etc.).
- *
- * This is the shared gate so `useEventResizeHandler` (native) and `useEventPointerResizeHandler`
- * (pointer) stay independent of each other: the component computes it once and passes it to
- * whichever handler is active, rather than one hook reading the other's output.
+ * Whether a resize handler for the given side may run: the edge it moves must be inside the
+ * collection (an event clipped at the collection start can't have its start resized, etc.).
+ * Computed once by the component and passed to whichever resize handler is active.
  */
 export function isResizeHandlerEnabled(parameters: {
   side: SchedulerEventSide;
@@ -22,12 +19,9 @@ export function isResizeHandlerEnabled(parameters: {
 }
 
 /**
- * Clamps the moving edge of a resize gesture so the event keeps at least `precisionMinute`
- * minutes of duration, leaving the opposite (fixed) edge untouched.
- *
- * This is the single source of truth for the minimum-duration rule, shared by the native
- * drag-and-drop resize (`useTimeDropTarget`) and the pointer-based resize
- * (`useEventPointerResizeHandler`) so both paths stay in sync.
+ * Clamps the moving edge of a resize gesture so the event keeps at least `precisionMinute` minutes
+ * of duration, leaving the opposite (fixed) edge untouched. Shared by the native and pointer
+ * resize paths so the minimum-duration rule stays in sync.
  */
 export function clampResizedEventEdge(parameters: {
   adapter: Adapter;

@@ -153,19 +153,14 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 });
 
 /**
- * The desktop editing surface provider.
- *
- * It renders the anchored, draggable event dialog through the shared editing backbone
- * (`EventEditingProvider`) and stacks the recurring scope confirmation on top when the store asks
- * for it. Opening/closing records the editing state on the store (`startEditing`/`stopEditing`),
- * keeping "what is being edited" (the store) decoupled from "which surface is open" (the modal).
+ * Desktop editing surface: renders the anchored, draggable event dialog through the shared
+ * `EventEditingProvider` and stacks the recurring scope confirmation on top when needed.
  */
 export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, optionalRenderers, ...other } = props;
   const store = useSchedulerStoreContext();
 
-  // The recurring scope confirmation renders itself: it reads its open state from the store and
-  // renders its own shell (a centered dialog).
+  // The recurring scope confirmation renders itself: it reads its own open state from the store.
   const RecurringScopeRenderer = optionalRenderers?.recurringScope;
 
   return (

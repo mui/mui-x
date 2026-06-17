@@ -18,17 +18,12 @@ import {
 } from '../../models';
 
 /**
- * Pointer-based resize for calendar events, driven directly from pointer events.
+ * Pointer-based resize for calendar events. Unlike {@link useEventResizeHandler} (native
+ * drag-and-drop, which needs a long-press on touch), this responds to a plain touch + drag.
  *
- * Unlike {@link useEventResizeHandler}, which relies on the native HTML drag-and-drop API
- * (and therefore needs the browser's own long-press to start a drag on touch devices), this
- * hook responds to a plain touch + drag — the gesture mobile users expect once an event has
- * been armed.
- *
- * It is **surface-agnostic**: the axis and geometry live in the injected `getDateAtPointer`
- * resolver, and the surface semantics in `surfaceType` and `getResizeSession`. The same hook
- * therefore drives the (vertical) time grid today and could drive the (horizontal) day grid
- * with a different resolver, without touching this file.
+ * Surface-agnostic: the axis/geometry come from `getDateAtPointer` and the surface semantics
+ * from `surfaceType`/`getResizeSession`, so the same hook can drive any surface with a
+ * different resolver.
  */
 export function useEventPointerResizeHandler(parameters: useEventPointerResizeHandler.Parameters) {
   const {
@@ -75,8 +70,8 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
       });
 
       if (session.kind === 'creation') {
-        // A creation placeholder has no underlying event: update it in place, keeping its
-        // `creation` type so the user keeps sizing the new event before saving it.
+        // A creation placeholder has no underlying event: keep its `creation` type so the user
+        // keeps sizing the new event before saving it.
         store.setOccurrencePlaceholder({
           type: 'creation',
           surfaceType,
@@ -99,8 +94,8 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
       });
     };
 
-    // Releases the pointer capture and clears the active gesture. Returns the session that was
-    // in progress (or `null`) so the caller can decide whether to commit it.
+    // Releases the pointer capture, clears the gesture and returns the session in progress (or
+    // `null`) so the caller can decide whether to commit it.
     const finishGesture = (event: PointerEvent) => {
       if (event.pointerId !== activePointerId) {
         return undefined;
@@ -120,7 +115,7 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
       }
       const endedSession = finishGesture(event);
 
-      // A resized creation placeholder stays as-is — there is no existing event to commit to.
+      // A creation placeholder stays as-is — there is no existing event to commit to.
       if (!endedSession || endedSession.kind === 'creation') {
         return;
       }
@@ -137,15 +132,14 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
       }
     };
 
-    // The gesture was aborted by the system (e.g. a scroll took over). Discard the in-progress
-    // resize preview rather than committing it, so an interrupted gesture never edits the event.
+    // The gesture was aborted by the system (e.g. a scroll took over): discard the resize preview
+    // so an interrupted gesture never edits the event.
     const onPointerCancel = (event: PointerEvent) => {
       if (event.pointerId !== activePointerId) {
         return;
       }
       const endedSession = finishGesture(event);
-      // Keep a creation placeholder so the user can keep editing the new event; otherwise drop the
-      // resize preview, reverting the event to its pre-gesture size.
+      // Keep a creation placeholder for further editing; drop a resize preview to revert the event.
       if (endedSession && endedSession.kind !== 'creation') {
         store.setOccurrencePlaceholder(null);
       }
@@ -156,8 +150,8 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
       if (event.button !== 0 || activePointerId !== null) {
         return;
       }
-      // Stop the event from reaching the root, which would arm long-press detection and let
-      // the native drag-and-drop adapter try to move the whole event instead of resizing it.
+      // Stop the event from reaching the root, where it would arm long-press detection and let the
+      // native drag-and-drop adapter move the whole event instead of resizing it.
       event.stopPropagation();
       event.preventDefault();
 
@@ -242,8 +236,7 @@ export namespace useEventPointerResizeHandler {
      */
     surfaceType: EventSurfaceType;
     /**
-     * Maps a pointer position to a precision-rounded date on the surface (the geometry/axis).
-     * Should be a stable callback.
+     * Maps a pointer position to a precision-rounded date on the surface. Should be stable.
      */
     getDateAtPointer: (input: {
       clientX: number;
@@ -251,7 +244,7 @@ export namespace useEventPointerResizeHandler {
     }) => TemporalSupportedObject | null;
     /**
      * Resolves the session to start when the pointer goes down, or `null` to ignore the gesture.
-     * Should be a stable callback.
+     * Should be stable.
      */
     getResizeSession: (input: { clientX: number; clientY: number }) => ResizeSession | null;
     /**
