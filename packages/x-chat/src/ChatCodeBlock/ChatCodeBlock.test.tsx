@@ -142,13 +142,20 @@ describe('ChatCodeBlock', () => {
 
     const writeText = installClipboardMock();
     writeText.mockImplementation(() => Promise.reject(new Error('denied')));
+    // The rejection path falls back to `execCommand('copy')`, which actually
+    // succeeds in a real browser — force it to fail to reach the error state.
+    const execCommand = vi.spyOn(document, 'execCommand').mockImplementation(() => false);
 
-    // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
-    });
+    try {
+      // eslint-disable-next-line testing-library/no-unnecessary-act
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
+      });
 
-    expect(writeText).toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Copy failed' })).not.toBe(null);
+      expect(writeText).toHaveBeenCalled();
+      expect(screen.getByRole('button', { name: 'Copy failed' })).not.toBe(null);
+    } finally {
+      execCommand.mockRestore();
+    }
   });
 });
