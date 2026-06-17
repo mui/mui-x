@@ -25,11 +25,11 @@ describe('<DataGrid /> - SSR', () => {
   it.skipIf(reactMajor < 18)('should not report hydration errors', async () => {
     async function hydrateWithoutConsoleErrors(tree: React.ReactElement) {
       const ReactDOMClient = await import('react-dom/client');
-    
+
       const container = document.createElement('div');
       document.body.appendChild(container);
       container.innerHTML = ReactDOMServer.renderToString(tree);
-    
+
       const errors: string[] = [];
       const originalConsoleError = console.error;
       const interceptor = (...args: any[]) => {
@@ -38,7 +38,7 @@ describe('<DataGrid /> - SSR', () => {
       // Direct assignment shadows the property; the test runner's
       // vitest-fail-on-console wrapper assigned in beforeEach is bypassed.
       console.error = interceptor;
-    
+
       let root: ReturnType<typeof ReactDOMClient.hydrateRoot> | undefined;
       try {
         await act(async () => {
@@ -51,10 +51,10 @@ describe('<DataGrid /> - SSR', () => {
         console.error = originalConsoleError;
         document.body.removeChild(container);
       }
-    
+
       return errors;
     }
-    
+
     const tree = (
       <div style={{ height: 300, width: 400 }}>
         <DataGrid rows={ROWS} columns={COLUMNS} />
