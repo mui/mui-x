@@ -6,7 +6,7 @@ _Jun 17, 2026_
 
 We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 Small new features to the radial bar charts, like percentage min radius and disabling tick labels.
+- 📊 New features for the radial bar charts, like percentage min radius and disabling tick labels.
 
 Special thanks go out to these community members for their valuable contributions:
 @adamowski10, @Anexus5919, @Morteza-hp, @mustafajw07, @TargiX
@@ -18,14 +18,13 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.6.0`
 
-- [data grid][docs] Clarify 'Scrolling without render gaps' (#22629) @oliviertassinari
 - [DataGrid] Define `overflowAnchor` style at the right element (#22849) @arminmeh
 
 #### `@mui/x-data-grid-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@9.6.0`, plus:
 
-- [DataGridPro] Prevent incorrect row range capping on first page with known rowCount (#22808) @michelengelen
+- [DataGridPro] Prevent incorrect row range capping on the first page with known `rowCount` (#22808) @michelengelen
 
 #### `@mui/x-data-grid-premium@9.6.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -35,7 +34,8 @@ Same changes as in `@mui/x-data-grid-pro@9.6.0`.
 
 #### `@mui/x-date-pickers@9.6.0`
 
-- [pickers] Fix AdapterMomentHijri.getDaysInMonth returning the Gregorian month length (#22774) @Anexus5919
+- [pickers] Fix `AdapterMomentHijri.getDaysInMonth` returning the Gregorian month length (#22774) @Anexus5919
+- [l10n] Improve Persian (fa-IR) locale (#22454) @Morteza-hp
 
 #### `@mui/x-date-pickers-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -50,7 +50,7 @@ Same changes as in `@mui/x-date-pickers@9.6.0`.
 - [charts] Fix bug when `min` is in axis domain (#22827) @alexfauquette
 - [charts] Fix wheel zoom not centering on cursor position (#22811) @JCQuintas
 - [charts] Remove zoom gesture registration from community package (#22753) @sai6855
-- [charts] Support percentage values for radial axis minRadius/maxRadius (#22803) @JCQuintas
+- [charts] Support percentage values for radial axis `minRadius`/`maxRadius` (#22803) @JCQuintas
 - [charts][docs] Document click listener for scatter composition (#22809) @sai6855
 
 #### `@mui/x-charts-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -61,7 +61,7 @@ Same changes as in `@mui/x-charts@9.6.0`.
 
 Same changes as in `@mui/x-charts-pro@9.6.0`, plus:
 
-- [charts-premium] Regenerate ScatterPlotPremium propTypes (#22829) @rita-codes
+- [charts-premium] Regenerate `ScatterPlotPremium` `propTypes` (#22829) @rita-codes
 
 ### Tree View
 
@@ -79,13 +79,13 @@ Same changes as in `@mui/x-tree-view@9.6.0`.
 
 - [scheduler] Add dispose lifecycle to `SchedulerLazyLoadingPlugin` (#22532) @rita-codes
 - [scheduler] Add responsive mobile week view and responsive typography (#22593) @noraleonte
-- [scheduler] Add stable weekday token to recurrenceWeeklyPresetLabel (#22733) @mustafajw07
+- [scheduler] Add stable weekday token to `recurrenceWeeklyPresetLabel` (#22733) @mustafajw07
 - [scheduler] Create accessibility documentation section (#22557) @mustafajw07
-- [scheduler] Decouple MonthViewProps from day time grid props (#22802) @mustafajw07
+- [scheduler] Decouple `MonthViewProps` from day time grid props (#22802) @mustafajw07
 - [scheduler] Export missing public scheduler types (#22785) @mustafajw07
 - [scheduler] Fix JSDoc defaults and improve public type readability (#22784) @mustafajw07
 - [scheduler] Fix `aria-labelledby` on events referencing non-existent header IDs (#22778) @rita-codes
-- [scheduler] Move EventCalendarStyledContext to internals (#22787) @mustafajw07
+- [scheduler] Move `EventCalendarStyledContext` to internals (#22787) @mustafajw07
 - [scheduler] Normalize all-day recurring occurrences to whole days (#22792) @Anexus5919
 - [scheduler] Recalculate `DayTimeGrid` `hasScroll` on container resize (#22780) @Anexus5919
 - [scheduler] Recompute `nowUpdatedEveryMinute` only on timezone change (#22793) @Anexus5919
@@ -94,13 +94,14 @@ Same changes as in `@mui/x-tree-view@9.6.0`.
 - [scheduler] Remove unused `--has-scroll` CSS variable from `DayTimeGrid` (#22799) @Anexus5919
 - [scheduler] Remove vestigial async from internal drop handler (#22781) @mustafajw07
 - [scheduler] Return a primitive key from the Calendar lazy-loading selector (#22791) @Anexus5919
-- [scheduler] Throw on invalid event dates instead of emitting NaN timestamps (#22740) @rita-codes
-- [scheduler] Tighten StandaloneEventProps data typing (#22796) @mustafajw07
+- [scheduler] Throw on invalid event dates instead of emitting `NaN` timestamps (#22740) @rita-codes
+- [scheduler] Tighten `StandaloneEventProps` data typing (#22796) @mustafajw07
 - [scheduler] Update feedback banner to say beta instead of alpha (#22804) @rita-codes
 - [scheduler] Use `@base-ui` `generateId` for event ids in `createEventModel` (#22788) @rita-codes
-- [scheduler] clear clipboard after pasting a cut event (#22773) @Anexus5919
-- [scheduler] show drag placeholder when re-entering the same position (#22775) @Anexus5919
-- [scheduler] validate missing and duplicate event ids (#22790) @Anexus5919
+- [scheduler] Clear clipboard after pasting a cut event (#22773) @Anexus5919
+- [scheduler] Show drag placeholder when re-entering the same position (#22775) @Anexus5919
+- [scheduler] Validate missing and duplicate event ids (#22790) @Anexus5919
+- [l10n] Improve Polish (pl-PL) locale (#22612) @adamowski10
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -130,13 +131,12 @@ Internal changes.
 
 - [docs][charts] add weather composition demo (#22723) @TargiX
 - [docs][chat] Add docs overview gallery and playground (#22488) @hasdfa
-- [core] Add remove-proptypes markers to generated propTypes (#22850) @JCQuintas
+- [docs][DataGrid] Clarify 'Scrolling without render gaps' (#22629) @oliviertassinari
+- [core] Add remove-proptypes markers to generated `propTypes` (#22850) @JCQuintas
 - [core] Bump vitest packages to 4.1.8 to fix browser-test version skew (#22845) @Janpot
 - [core] Reduce e2e build concurrency to avoid OOM (#22843) @Janpot
 - [core] Strip proptypes from Production bundles (#22750) @sai6855
-- [l10n] Improve Persian (fa-IR) locale (#22454) @Morteza-hp
-- [l10n][scheduler] Improve Polish (pl-PL) locale (#22612) @adamowski10
-- [test] Wait for GridToolbarCustom rows before screenshot (#22844) @Janpot
+- [test] Wait for `GridToolbarCustom` rows before screenshot (#22844) @Janpot
 
 ## 9.5.0
 
