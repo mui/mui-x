@@ -6,9 +6,7 @@ import { useUtilityClasses } from '../scatterClasses';
 import { type ScatterClasses } from '../scatterClasses';
 import { useItemHighlightState } from '../../hooks/useItemHighlightState';
 import { type SeriesId } from '../../models/seriesType/common';
-import { type MarkerLabelFunction, type ScatterValueType } from '../../models/seriesType/scatter';
 import { MarkerLabel, type MarkerLabelOwnerState, type MarkerLabelProps } from './MarkerLabel';
-import { getMarkerLabel } from './getMarkerLabel';
 
 export interface MarkerLabelSlots {
   /**
@@ -37,32 +35,13 @@ export type MarkerLabelItemProps = {
    */
   y: number;
   /**
-   * The full scatter point value.
+   * The resolved label to display.
    */
-  value: ScatterValueType;
-  /**
-   * The resolved marker size in pixels.
-   */
-  markerSize: number;
-  /**
-   * Resolver for the displayed label.
-   */
-  markerLabel: 'label' | MarkerLabelFunction;
+  text: string;
 };
 
 function MarkerLabelItem(props: MarkerLabelItemProps) {
-  const {
-    seriesId,
-    classes: innerClasses,
-    dataIndex,
-    slots,
-    slotProps,
-    x,
-    y,
-    value,
-    markerSize,
-    markerLabel,
-  } = props;
+  const { seriesId, classes: innerClasses, dataIndex, slots, slotProps, x, y, text } = props;
 
   const highlightState = useItemHighlightState({
     type: 'scatter',
@@ -94,12 +73,6 @@ function MarkerLabelItem(props: MarkerLabelItemProps) {
     ownerState,
   });
 
-  const text = getMarkerLabel({ markerLabel, value, dataIndex, seriesId, markerSize });
-
-  if (text === '') {
-    return null;
-  }
-
   return (
     <Component {...markerLabelProps} {...markerLabelOwnerState}>
       {text}
@@ -114,12 +87,10 @@ MarkerLabelItem.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
-  markerLabel: PropTypes.oneOfType([PropTypes.oneOf(['label']), PropTypes.func]).isRequired,
-  markerSize: PropTypes.number.isRequired,
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
-  value: PropTypes.object.isRequired,
+  text: PropTypes.string.isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
 } as any;

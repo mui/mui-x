@@ -15,6 +15,7 @@ import {
   type MarkerLabelSlotProps,
   type MarkerLabelSlots,
 } from './MarkerLabelItem';
+import { getMarkerLabel } from './getMarkerLabel';
 
 export interface MarkerLabelPlotSlots extends MarkerLabelSlots {}
 export interface MarkerLabelPlotSlotProps extends MarkerLabelSlotProps {}
@@ -85,6 +86,18 @@ function MarkerLabelPlot(props: MarkerLabelPlotProps) {
                 return null;
               }
 
+              const text = getMarkerLabel({
+                markerLabel,
+                value: point,
+                dataIndex,
+                seriesId: id,
+                markerSize: sizeGetter(dataIndex),
+              });
+
+              if (!text) {
+                return null;
+              }
+
               return (
                 <MarkerLabelItem
                   key={point.id ?? dataIndex}
@@ -92,9 +105,7 @@ function MarkerLabelPlot(props: MarkerLabelPlotProps) {
                   dataIndex={dataIndex}
                   x={x}
                   y={y}
-                  value={point}
-                  markerSize={sizeGetter(dataIndex)}
-                  markerLabel={markerLabel}
+                  text={text}
                   slots={slots}
                   slotProps={slotProps}
                 />

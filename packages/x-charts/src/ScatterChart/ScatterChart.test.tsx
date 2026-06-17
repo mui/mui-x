@@ -233,7 +233,7 @@ describe('<ScatterChart />', () => {
       expect(labels.length).to.equal(2);
     });
 
-    it('invokes the `markerLabel` function with item and marker context', () => {
+    it('invokes the `markerLabel` function with the marker params', () => {
       const markerLabel = vi.fn(
         ({ value }: { value: { x: number; y: number } }) => `point-${value.x}`,
       );
@@ -249,12 +249,10 @@ describe('<ScatterChart />', () => {
 
       expect(markerLabel).toHaveBeenCalled();
       const firstCall = markerLabel.mock.calls[0] as unknown as [
-        { seriesId: string; dataIndex: number; value: { x: number; y: number } },
-        { marker: { size: number } },
+        { seriesId: string; dataIndex: number; value: { x: number; y: number }; size: number },
       ];
-      expect(firstCall[0]).to.deep.include({ seriesId: 's1', dataIndex: 0 });
+      expect(firstCall[0]).to.deep.include({ seriesId: 's1', dataIndex: 0, size: 7 });
       expect(firstCall[0].value).to.deep.include({ x: 1, y: 1 });
-      expect(firstCall[1]).to.deep.equal({ marker: { size: 7 } });
 
       const labelTexts = [
         ...document.querySelectorAll<SVGTextElement>(`.${scatterClasses.label}`),
