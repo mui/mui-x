@@ -189,20 +189,10 @@ export const GridRootStyles = styled('div', {
       overflowAnchor: 'none', // Keep the same scrolling position
     },
 
-   [`.${c.main} > *:first-child${ignoreSsrWarning}`]: {
+    [`.${c.main} > *:first-child${ignoreSsrWarning}`]: {
       borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
       borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
     },
-    // `:first-child` rule in the stylis AST. Previously, the comment was embedded
-    // in the object-key selector, which got separated from the rule during
-    // pre-serialization when `styleOverrides` were applied, re-triggering Emotion's
-    // unsafe-selector SSR warning. https://github.com/emotion-js/emotion/issues/1105
-    [`.${c.main}`]: css`
-      & > *:first-child ${ignoreSsrWarning} {
-        border-top-left-radius: var(--unstable_DataGrid-radius);
-        border-top-right-radius: var(--unstable_DataGrid-radius);
-      }
-    `,
     [`&.${c.autoHeight}`]: {
       height: 'auto',
     },
