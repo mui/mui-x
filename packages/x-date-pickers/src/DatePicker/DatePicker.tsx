@@ -41,7 +41,7 @@ const DatePicker = React.forwardRef(function DatePicker(
   return <MobileDatePicker ref={ref} {...other} />;
 }) as DatePickerComponent;
 
-DatePicker.propTypes = {
+DatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

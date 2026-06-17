@@ -88,7 +88,7 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   );
 }
 
-GridTreeDataGroupingCell.propTypes = {
+GridTreeDataGroupingCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

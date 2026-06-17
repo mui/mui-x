@@ -55,7 +55,7 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
 
 SingleInputTimeRangeField.fieldType = 'single-input';
 
-SingleInputTimeRangeField.propTypes = {
+SingleInputTimeRangeField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
