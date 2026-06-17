@@ -60,6 +60,13 @@ export default defineConfig({
   test: {
     globals: true,
     setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
+    // Inline so Vite resolves @mui/material's `react-transition-group/TransitionGroupContext`
+    // directory import (legacy `main`/`module`, no `exports`), which native ESM rejects.
+    server: {
+      deps: {
+        inline: [/@mui\/material/, /react-transition-group/],
+      },
+    },
     // Required for some tests that contain early returns or conditional tests.
     passWithNoTests: true,
     env: {
