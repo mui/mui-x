@@ -13,6 +13,7 @@ export {
   type GestureInstance,
   type PanGestureConfig,
 } from './plugins/zoomGestures';
+export { useRegisterZoomGestures } from './plugins/useChartProZoom/gestureHooks/useRegisterZoomGestures';
 export { defaultSeriesConfigPro } from '../ChartsDataProviderPro/ChartsDataProviderPro';
 export type { ProPluginsPerSeriesType } from '../context/ChartProApi';
 export { useHeatmapProps } from '../Heatmap/useHeatmapProps';

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { type ChartPlugin } from '@mui/x-charts/internals';
+import { type ChartUsedInstance } from '@mui/x-charts/internals';
 import {
   PanGesture,
   PinchGesture,
@@ -9,7 +9,6 @@ import {
   TapGesture,
   TurnWheelGesture,
 } from '@mui/x-internal-gestures/core';
-import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 
 /**
  * Registers the gestures required by the zoom feature.
@@ -18,7 +17,7 @@ import { type UseChartProZoomSignature } from '../useChartProZoom.types';
  */
 export const useRegisterZoomGestures = ({
   instance,
-}: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'instance'>) => {
+}: { instance: ChartUsedInstance<any> }) => {
   React.useEffect(() => {
     return instance.registerGestures([
       new PanGesture({
