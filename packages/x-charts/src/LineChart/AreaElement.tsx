@@ -114,7 +114,7 @@ function AreaElement(props: AreaElementProps) {
   return <Area {...other} {...areaProps} />;
 }
 
-AreaElement.propTypes = {
+AreaElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

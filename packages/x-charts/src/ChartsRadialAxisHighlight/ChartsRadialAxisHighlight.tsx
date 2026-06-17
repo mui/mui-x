@@ -40,7 +40,7 @@ function ChartsRadialAxisHighlight(props: ChartsRadialAxisHighlightProps) {
   );
 }
 
-ChartsRadialAxisHighlight.propTypes = {
+ChartsRadialAxisHighlight.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
