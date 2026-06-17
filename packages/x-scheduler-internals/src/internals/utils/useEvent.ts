@@ -1,17 +1,17 @@
 'use client';
 import { useStore } from '@base-ui/utils/store';
-import { SchedulerEventId, SchedulerProcessedDate } from '../../models';
+import { SchedulerProcessedDate } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context/useSchedulerStoreContext';
 import { schedulerOccurrenceSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 
 export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
-  const { start, end, eventId } = parameters;
+  const { start, end, occurrenceKey } = parameters;
 
   const store = useSchedulerStoreContext();
 
   const started = useStore(store, schedulerOccurrenceSelectors.isStarted, start);
   const ended = useStore(store, schedulerOccurrenceSelectors.isEnded, end);
-  const editing = useStore(store, schedulerOtherSelectors.isEditedEvent, eventId);
+  const editing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrenceKey);
 
   return { state: { started, ended, editing } };
 }
@@ -27,9 +27,9 @@ export namespace useEvent {
      */
     end: SchedulerProcessedDate;
     /**
-     * The unique identifier of the event.
+     * The unique key of the event occurrence.
      */
-    eventId?: SchedulerEventId;
+    occurrenceKey?: string;
   }
 
   export interface ReturnValue {

@@ -164,6 +164,27 @@ describe('<EventTimelinePremium />', () => {
       ).to.equal(null);
     });
 
+    it('should highlight only the edited occurrence of a recurring event', async () => {
+      const recurringEvent = EventBuilder.new()
+        .title('Recurring standup')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .recurrent('DAILY')
+        .build();
+
+      const { user } = renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
+
+      const occurrences = screen.getAllByLabelText(recurringEvent.title);
+      expect(occurrences.length).to.be.greaterThan(1);
+
+      await user.click(occurrences[0]);
+
+      const editedOccurrences = screen
+        .getAllByLabelText(recurringEvent.title)
+        .filter((occurrence) => occurrence.hasAttribute('data-editing'));
+      expect(editedOccurrences).to.have.length(1);
+    });
+
     it('should render events correctly in the dayAndHour preset', () => {
       const totalWidth = 6144; // 96 hours * 64px
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
