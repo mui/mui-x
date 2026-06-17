@@ -137,18 +137,15 @@ describe('ChatCodeBlock', () => {
     vi.useRealTimers();
   });
 
-  it.skipIf(isJsdom)('clipboard failure exposes "Copy failed" state', async () => {
-    render(<ChatCodeBlock>code</ChatCodeBlock>);
+  it.skipIf(isJsdom())('clipboard failure exposes "Copy failed" state', async () => {
+    const { user } = render(<ChatCodeBlock>code</ChatCodeBlock>);
 
     const writeText = installClipboardMock();
     writeText.mockImplementation(() => Promise.reject(new Error('denied')));
     const mock = vi.spyOn(document, 'execCommand').mockImplementation(() => false);
 
     try {
-      // eslint-disable-next-line testing-library/no-unnecessary-act
-      await act(async () => {
-        fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
-      });
+      await user.click(screen.getByRole('button', { name: 'Copy' }));
 
       expect(writeText).toHaveBeenCalled();
       expect(screen.getByRole('button', { name: 'Copy failed' })).not.toBe(null);
