@@ -115,7 +115,7 @@ const ChatMessageSkeleton = React.forwardRef(function ChatMessageSkeleton(
   );
 }) as ChatMessageSkeletonComponent;
 
-ChatMessageSkeleton.propTypes = {
+ChatMessageSkeleton.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
