@@ -230,7 +230,7 @@ function ChartsToolbarPro({
   return <Toolbar {...other}>{children}</Toolbar>;
 }
 
-ChartsToolbarPro.propTypes = {
+ChartsToolbarPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -241,6 +241,7 @@ ChartsToolbarPro.propTypes = {
       fileName: PropTypes.string,
       nonce: PropTypes.string,
       onBeforeExport: PropTypes.func,
+      pixelRatio: PropTypes.number,
       quality: PropTypes.number,
       type: PropTypes.string.isRequired,
     }),
@@ -255,6 +256,7 @@ ChartsToolbarPro.propTypes = {
       label: PropTypes.string.isRequired,
       value: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+        PropTypes.arrayOf(PropTypes.string.isRequired),
         PropTypes.func,
         PropTypes.shape({
           step: PropTypes.number,

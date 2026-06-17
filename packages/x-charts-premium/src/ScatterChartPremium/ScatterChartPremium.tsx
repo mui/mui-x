@@ -167,7 +167,7 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
   );
 });
 
-ScatterChartPremium.propTypes = {
+ScatterChartPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -248,7 +248,9 @@ ScatterChartPremium.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    progressiveRendering: PropTypes.bool,
+  }),
   /**
    * Option to display a cartesian grid in the background.
    */

@@ -13,6 +13,7 @@ export default function RadiusAxisPlayground() {
       data={{
         disableLine: { knob: 'switch', defaultValue: true },
         disableTicks: { knob: 'switch', defaultValue: true },
+        disableTickLabel: { knob: 'switch', defaultValue: false },
         tickPosition: {
           knob: 'select',
           options: ['after', 'before'],
@@ -82,6 +83,7 @@ export default function RadiusAxisPlayground() {
                   position={props.position}
                   disableLine={props.disableLine}
                   disableTicks={props.disableTicks}
+                  disableTickLabel={props.disableTickLabel}
                   tickSize={props.tickSize}
                   tickLabelPosition={props.tickLabelPosition}
                   tickPosition={props.tickPosition}
@@ -105,6 +107,7 @@ ${[
   `tickSize: ${props.tickSize}`,
   props.disableLine && 'disableLine: true,',
   props.disableTicks && 'disableTicks: true,',
+  props.disableTickLabel && 'disableTickLabel: true,',
   props.tickPosition && `tickPosition: "${props.tickPosition}",`,
   props.tickLabelPosition && `tickLabelPosition: "${props.tickLabelPosition}",`,
 ]

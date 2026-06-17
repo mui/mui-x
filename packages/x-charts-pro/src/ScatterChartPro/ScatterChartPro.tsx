@@ -142,7 +142,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   );
 });
 
-ScatterChartPro.propTypes = {
+ScatterChartPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -223,7 +223,9 @@ ScatterChartPro.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    progressiveRendering: PropTypes.bool,
+  }),
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -442,13 +444,15 @@ ScatterChartPro.propTypes = {
   onZoomChange: PropTypes.func,
   /**
    * The type of renderer to use for the scatter plot.
-   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element, synchronously.
+   * - `svg-progressive`: Renders every scatter item in a `<circle />` element, in progressive batches that paint over several animation frames to keep the main thread responsive.
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/scatter/#performance
    *
+   * When not set, defaults to `svg-single`. Enable the `progressiveRendering` experimental feature to auto-select `svg-progressive` above an internal point-count threshold; this will become the default in the next major version.
    * @default 'svg-single'
    */
-  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-progressive', 'svg-single']),
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.

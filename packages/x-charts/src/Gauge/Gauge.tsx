@@ -36,7 +36,7 @@ const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<
   );
 });
 
-Gauge.propTypes = {
+Gauge.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

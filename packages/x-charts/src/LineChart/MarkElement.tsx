@@ -89,7 +89,8 @@ function MarkElement(props: MarkElementProps) {
   const store = useStore();
   const enablePositionBasedPointerInteraction = store.use(
     selectorChartExperimentalFeaturesState,
-  )?.enablePositionBasedPointerInteraction;
+    'enablePositionBasedPointerInteraction',
+  );
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
   const ownerState = {
@@ -128,7 +129,7 @@ function MarkElement(props: MarkElementProps) {
   );
 }
 
-MarkElement.propTypes = {
+MarkElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -143,7 +144,6 @@ MarkElement.propTypes = {
    * @default false
    */
   hidden: PropTypes.bool,
-  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, the marker is faded.
    * @default false
@@ -154,6 +154,7 @@ MarkElement.propTypes = {
    * @default false
    */
   isHighlighted: PropTypes.bool,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The shape of the marker.
    */
@@ -161,6 +162,7 @@ MarkElement.propTypes = {
     .isRequired,
   /**
    * If `true`, animations are skipped.
+   * @default false
    */
   skipAnimation: PropTypes.bool,
 } as any;

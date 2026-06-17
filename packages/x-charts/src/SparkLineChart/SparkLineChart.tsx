@@ -321,7 +321,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
   );
 });
 
-SparkLineChart.propTypes = {
+SparkLineChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -430,6 +430,7 @@ SparkLineChart.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     enablePositionBasedPointerInteraction: PropTypes.bool,
+    progressiveRendering: PropTypes.bool,
   }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.

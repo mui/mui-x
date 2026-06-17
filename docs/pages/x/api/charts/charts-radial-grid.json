@@ -1,6 +1,7 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } },
     "radius": { "type": { "name": "bool" } },
     "rotation": { "type": { "name": "bool" } }
   },
@@ -42,6 +43,5 @@
   "muiName": "MuiChartsRadialGrid",
   "filename": "/packages/x-charts/src/ChartsRadialGrid/ChartsRadialGrid.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li>\n<li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li>\n<li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>"
 }
