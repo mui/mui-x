@@ -143,7 +143,7 @@ function MarkPlot(props: MarkPlotProps) {
   );
 }
 
-MarkPlot.propTypes = {
+MarkPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -156,6 +156,7 @@ MarkPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
+   * @default false
    */
   skipAnimation: PropTypes.bool,
   /**

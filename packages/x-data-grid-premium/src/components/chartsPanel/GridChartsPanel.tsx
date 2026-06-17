@@ -134,7 +134,7 @@ function GridChartsPanelChartSelector(props: {
   );
 }
 
-GridChartsPanelChartSelector.propTypes = {
+GridChartsPanelChartSelector.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -296,7 +296,7 @@ function GridChartsPanel(props: GridChartsPanelProps) {
   );
 }
 
-GridChartsPanel.propTypes = {
+GridChartsPanel.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

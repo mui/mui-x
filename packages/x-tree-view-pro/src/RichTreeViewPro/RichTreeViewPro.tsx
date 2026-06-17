@@ -155,7 +155,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   );
 }) as RichTreeViewProComponent;
 
-RichTreeViewPro.propTypes = {
+RichTreeViewPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -1,4 +1,5 @@
 import type { ChatAdapter } from './chatAdapter';
+import type { ChatMessage } from '../types/chat-entities';
 import type { ChatMessageChunk } from '../types/chat-stream';
 
 export interface CreateEchoAdapterOptions {
@@ -30,74 +31,93 @@ const defaultRespond = (text: string) =>
 export function createEchoAdapter(options: CreateEchoAdapterOptions = {}): ChatAdapter {
   const respond = options.respond ?? defaultRespond;
   const delayMs = options.delayMs ?? 400;
+  // Per-anchor attempt counter so a second regeneration of the same message
+  // never collides with the reply id of the first.
+  const attemptByMessageId = new Map<string, number>();
 
-  return {
-    async sendMessage({ message, signal }) {
-      const text = message.parts.map((part) => (part.type === 'text' ? part.text : '')).join('');
-      const reply = respond(text);
-      const replyId = `reply-${message.id}`;
-      const partId = `${replyId}-text`;
-      let closed = false;
-      let timer: ReturnType<typeof setTimeout> | null = null;
-      let streamController: ReadableStreamDefaultController<ChatMessageChunk> | null = null;
-      let handleAbort = () => {};
+  function createReplyStream(
+    text: string,
+    replyId: string,
+    signal: AbortSignal,
+  ): ReadableStream<ChatMessageChunk> {
+    const reply = respond(text);
+    const partId = `${replyId}-text`;
+    let closed = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let streamController: ReadableStreamDefaultController<ChatMessageChunk> | null = null;
+    let handleAbort = () => {};
 
-      const cleanup = () => {
-        if (timer != null) {
-          clearTimeout(timer);
-          timer = null;
-        }
-        signal.removeEventListener('abort', handleAbort);
-      };
+    const cleanup = () => {
+      if (timer != null) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      signal.removeEventListener('abort', handleAbort);
+    };
 
-      const close = () => {
-        if (closed) {
+    const close = () => {
+      if (closed) {
+        return;
+      }
+      closed = true;
+      cleanup();
+      try {
+        streamController?.close();
+      } catch {
+        // already closed
+      }
+    };
+
+    handleAbort = () => close();
+
+    return new ReadableStream<ChatMessageChunk>({
+      start(controller) {
+        streamController = controller;
+
+        if (signal.aborted) {
+          close();
           return;
         }
-        closed = true;
-        cleanup();
-        try {
-          streamController?.close();
-        } catch {
-          // already closed
-        }
-      };
 
-      handleAbort = () => close();
-
-      return new ReadableStream<ChatMessageChunk>({
-        start(controller) {
-          streamController = controller;
-
+        timer = setTimeout(() => {
+          timer = null;
           if (signal.aborted) {
             close();
             return;
           }
-
-          timer = setTimeout(() => {
-            timer = null;
-            if (signal.aborted) {
-              close();
-              return;
-            }
-            closed = true;
-            cleanup();
-            controller.enqueue({ type: 'start', messageId: replyId });
-            controller.enqueue({ type: 'text-start', id: partId });
-            controller.enqueue({ type: 'text-delta', id: partId, delta: reply });
-            controller.enqueue({ type: 'text-end', id: partId });
-            controller.enqueue({ type: 'finish', messageId: replyId, finishReason: 'stop' });
-            controller.close();
-          }, delayMs);
-
-          signal.addEventListener('abort', handleAbort, { once: true });
-        },
-        cancel() {
           closed = true;
           cleanup();
-          streamController = null;
-        },
-      });
+          controller.enqueue({ type: 'start', messageId: replyId });
+          controller.enqueue({ type: 'text-start', id: partId });
+          controller.enqueue({ type: 'text-delta', id: partId, delta: reply });
+          controller.enqueue({ type: 'text-end', id: partId });
+          controller.enqueue({ type: 'finish', messageId: replyId, finishReason: 'stop' });
+          controller.close();
+        }, delayMs);
+
+        signal.addEventListener('abort', handleAbort, { once: true });
+      },
+      cancel() {
+        closed = true;
+        cleanup();
+        streamController = null;
+      },
+    });
+  }
+
+  const getMessageText = (message: ChatMessage) =>
+    message.parts.map((part) => (part.type === 'text' ? part.text : '')).join('');
+
+  return {
+    async sendMessage({ message, signal }) {
+      const text = getMessageText(message);
+      return createReplyStream(text, `reply-${message.id}`, signal);
+    },
+    async regenerate({ message, signal }) {
+      const text = getMessageText(message);
+      const attempt = (attemptByMessageId.get(message.id) ?? 0) + 1;
+      attemptByMessageId.set(message.id, attempt);
+      return createReplyStream(text, `reply-${message.id}-${attempt}`, signal);
     },
   };
 }
