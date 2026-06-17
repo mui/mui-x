@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { disposeSymbol } from '@mui/x-internals/disposable';
 import {
   TreeItemWrapper,
   TreeViewItemPluginResponse,
@@ -19,7 +20,9 @@ export type TreeViewStoreInContext<TStore extends TreeViewAnyStore> = Omit<
   | 'update'
   | 'set'
   | 'updateStateFromParameters'
-  | 'disposeEffect'
+  | 'disposables'
+  | typeof disposeSymbol
+  | 'mountEffect'
   | 'registerStoreEffect'
   | 'itemPluginManager'
   | 'parameters'

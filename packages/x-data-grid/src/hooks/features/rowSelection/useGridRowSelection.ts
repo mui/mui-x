@@ -961,7 +961,11 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
   }, [apiRef, canHaveMultipleSelection, checkboxSelection, isStateControlled, props.rowSelection]);
 
   React.useEffect(() => {
-    runIf(props.rowSelection, removeOutdatedSelection);
+    // FIXME: no-op since #20668. `runIf` is curried, so this builds a wrapper and
+    // discards it (previously `runIfRowSelectionIsEnabled(removeOutdatedSelection)`,
+    // which invoked it). Restoring the call changes selection behavior, so it needs
+    // a decision; `void` preserves current behavior. See #20668.
+    void runIf(props.rowSelection, removeOutdatedSelection);
   }, [props.rowSelection, removeOutdatedSelection]);
 
   React.useEffect(() => {
