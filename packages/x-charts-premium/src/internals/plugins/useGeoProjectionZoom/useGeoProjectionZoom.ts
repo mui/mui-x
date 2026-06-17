@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { type ChartPlugin, selectorChartDrawingArea } from '@mui/x-charts/internals';
-import { usePanGesture, useWheelGesture, usePinchGesture } from '@mui/x-charts-pro/internals';
+import { useDragGesture, useWheelGesture, usePinchGesture } from '@mui/x-charts-pro/internals';
 import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { selectorChartProjection } from '../useGeoProjection/useGeoProjection.selectors';
 import { type UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
@@ -68,7 +68,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   }, [store]);
 
   // --- gestures: reuse the generic primitives from x-charts-pro -------------
-  usePanGesture(instance, {
+  useDragGesture(instance, {
     enabled,
     onPan: (delta) => {
       const projection = getProjection();

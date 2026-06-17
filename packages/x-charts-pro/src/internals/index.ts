@@ -4,10 +4,10 @@ export type { ChartsSlotsPro, ChartsSlotPropsPro } from './material';
 export { seriesPreviewPlotMap } from '../ChartsZoomSlider/internals/seriesPreviewPlotMap';
 export type { PreviewPlotProps } from '../ChartsZoomSlider/internals/previews/PreviewPlot.types';
 export {
-  usePanGesture,
+  useDragGesture,
   useWheelGesture,
   usePinchGesture,
-  type UsePanGestureOptions,
+  type UseDragGestureOptions,
   type UseWheelGestureOptions,
   type UsePinchGestureOptions,
   type GestureInstance,
