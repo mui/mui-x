@@ -17,7 +17,15 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   instance,
   params,
 }) => {
-  const { zoom: enabled, minScaleRatio, maxScaleRatio, onZoomChange } = params;
+  const {
+    zoom: enabled,
+    minScaleRatio,
+    maxScaleRatio,
+    onZoomChange,
+    transform: controlledTransform,
+  } = params;
+
+  const isControlled = controlledTransform !== undefined;
 
   // The scale that fits the data in the drawing area. Captured lazily on first
   // interaction and used as the reference for the min/max zoom clamp.
@@ -30,15 +38,33 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 
   const applyTransform = React.useCallback(
     (transform: MapZoomTransform) => {
-      store.set('geoProjection', {
-        ...store.state.geoProjection,
-        scale: transform.scale,
-        translate: transform.translate,
-      });
+      // In controlled mode the parent owns the transform: only notify, the store is
+      // synced from the `transform` param via the effect below.
+      if (!isControlled) {
+        store.set('geoProjection', {
+          ...store.state.geoProjection,
+          scale: transform.scale,
+          translate: transform.translate,
+        });
+      }
       onZoomChange?.(transform);
     },
-    [store, onZoomChange],
+    [store, onZoomChange, isControlled],
   );
+
+  // Seed the initial (uncontrolled) transform, or keep the store in sync with the
+  // controlled `transform` param.
+  React.useEffect(() => {
+    if (!isControlled || !controlledTransform) {
+      return;
+    }
+    store.set('geoProjection', {
+      ...store.state.geoProjection,
+      scale: controlledTransform.scale,
+      translate: controlledTransform.translate,
+    });
+    // `initialTransform` is only applied on mount, `controlledTransform` on every change.
+  }, [store, isControlled, controlledTransform]);
 
   const zoomAtPoint = React.useCallback(
     (factor: number, focal: { x: number; y: number }) => {
@@ -96,19 +122,35 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     },
   });
 
+  const zoomIn = React.useCallback(
+    () => zoomAtPoint(BUTTON_ZOOM_STEP, drawingAreaCenter()),
+    [zoomAtPoint, drawingAreaCenter],
+  );
+  const zoomOut = React.useCallback(
+    () => zoomAtPoint(1 / BUTTON_ZOOM_STEP, drawingAreaCenter()),
+    [zoomAtPoint, drawingAreaCenter],
+  );
+  const resetZoom = React.useCallback(() => {
+    fitScaleRef.current = null;
+    if (!isControlled) {
+      store.set('geoProjection', {
+        ...store.state.geoProjection,
+        scale: null,
+        translate: null,
+      });
+    }
+    // Notify so controlled consumers and listeners learn about the reset.
+    const projection = getProjection();
+    if (projection) {
+      onZoomChange?.({ scale: projection.scale(), translate: projection.translate() });
+    }
+  }, [store, isControlled, getProjection, onZoomChange]);
+
+  const publicAPI = { zoomIn, zoomOut, resetZoom };
+
   return {
-    instance: {
-      zoomIn: () => zoomAtPoint(BUTTON_ZOOM_STEP, drawingAreaCenter()),
-      zoomOut: () => zoomAtPoint(1 / BUTTON_ZOOM_STEP, drawingAreaCenter()),
-      resetMapZoom: () => {
-        fitScaleRef.current = null;
-        store.set('geoProjection', {
-          ...store.state.geoProjection,
-          scale: null,
-          translate: null,
-        });
-      },
-    },
+    publicAPI,
+    instance: publicAPI,
   };
 };
 
@@ -116,6 +158,8 @@ useGeoProjectionZoom.params = {
   zoom: true,
   minScaleRatio: true,
   maxScaleRatio: true,
+  initialTransform: true,
+  transform: true,
   onZoomChange: true,
 };
 
@@ -126,4 +170,7 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
   maxScaleRatio: params.maxScaleRatio ?? 8,
 });
 
-useGeoProjectionZoom.getInitialState = () => ({});
+useGeoProjectionZoom.getInitialState = (params) => ({
+  scale: params.transform?.scale ?? params.initialTransform?.scale ?? null,
+  translate: params.transform?.translate ?? params.initialTransform?.translate ?? null,
+});
