@@ -137,6 +137,14 @@ describe('recurring-events/rRuleString', () => {
       );
     });
 
+    it('should throw a dedicated message when the object input has no freq value', () => {
+      expect(() =>
+        parseRRule(adapter, {} as SchedulerEventRecurrenceRule, 'default'),
+      ).to.throw(
+        'MUI X Scheduler: The recurrence rule must include a FREQ value. The frequency (DAILY, WEEKLY, MONTHLY, or YEARLY) is required for recurrence rules. Provide a freq value.',
+      );
+    });
+
     it('should throw when the object freq matches a prototype key', () => {
       expect(() =>
         parseRRule(adapter, { freq: 'toString' as SchedulerEventRecurrenceRule['freq'] }, 'default'),

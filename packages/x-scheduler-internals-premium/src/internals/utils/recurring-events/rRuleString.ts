@@ -28,6 +28,13 @@ const SUPPORTED_FREQUENCIES: Record<RecurringEventFrequency, true> = {
 };
 
 function validateFreq(freq: string): RecurringEventFrequency {
+  if (!freq) {
+    throw new Error(
+      'MUI X Scheduler: The recurrence rule must include a FREQ value. ' +
+        'The frequency (DAILY, WEEKLY, MONTHLY, or YEARLY) is required for recurrence rules. ' +
+        'Provide a freq value.',
+    );
+  }
   if (!Object.prototype.hasOwnProperty.call(SUPPORTED_FREQUENCIES, freq)) {
     throw new Error(
       `MUI X Scheduler: Invalid FREQ value "${freq}". ` +
