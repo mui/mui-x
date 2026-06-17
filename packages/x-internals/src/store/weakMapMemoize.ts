@@ -19,8 +19,6 @@ const isObjectLike = (value: unknown): value is object =>
  * Memoizes a function using a tree of caches keyed by its arguments.
  * Object arguments are held weakly, so cached results can be garbage collected
  * together with the arguments that produced them.
- *
- * Drop-in replacement for the subset of `weakMapMemoize` from `reselect` that MUI X relies on.
  */
 export function weakMapMemoize<F extends (...args: any[]) => any>(func: F): F {
   const root = createCacheNode();

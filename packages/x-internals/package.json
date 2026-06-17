@@ -40,7 +40,6 @@
     "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "core-js-pure": "catalog:",
-    "reselect": "catalog:",
     "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {

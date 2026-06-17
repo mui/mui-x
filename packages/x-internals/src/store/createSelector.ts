@@ -11,8 +11,7 @@ interface MemoizedSelectorOptions {
 }
 
 /**
- * Combines input selectors and a combiner into a single memoized selector,
- * with the same memoization strategy as `reselect`:
+ * Combines input selectors and a combiner into a single memoized selector:
  * the combiner is memoized on its input values (latest call only),
  * while the selector itself is memoized on its arguments with a weak cache.
  */

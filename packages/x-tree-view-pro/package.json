@@ -48,7 +48,6 @@
     "clsx": "catalog:",
     "prop-types": "catalog:",
     "react-transition-group": "catalog:",
-    "reselect": "catalog:",
     "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {

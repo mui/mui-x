@@ -33,9 +33,8 @@ const referenceEqualityCheck: EqualityFn = (a, b) => a === b;
  * Memoizes a function, caching the result of its most recent call.
  * The arguments of the last call are compared with the provided `equalityCheck`.
  *
- * Drop-in replacement for the subset of `lruMemoize` from `reselect` that MUI X
- * relies on. Only the `maxSize: 1` (singleton) behaviour is implemented, since
- * that is the only cache size MUI X uses.
+ * Only the `maxSize: 1` (singleton) behaviour is implemented, since that is the
+ * only cache size MUI X uses.
  */
 export function lruMemoize<F extends (...args: any[]) => any>(
   func: F,

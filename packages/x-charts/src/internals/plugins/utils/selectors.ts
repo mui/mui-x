@@ -1,4 +1,4 @@
-import type { Selector } from 'reselect';
+import type { Selector } from '@mui/x-internals/store';
 import { type ChartAnyPluginSignature } from '../models/plugin';
 import { type ChartState } from '../models/chart';
 
