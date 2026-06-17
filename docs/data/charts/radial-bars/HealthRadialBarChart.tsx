@@ -14,7 +14,7 @@ const dataset = healthData.map((d) => ({
   progress: Math.round((d.value / d.goal) * 100),
 }));
 
-const highlightScope = { highlight: 'item', fade: 'global' } as const;
+const highlightScope = { highlight: 'none', fade: 'none' } as const;
 
 export default function HealthRadialBarChart() {
   return (
@@ -47,12 +47,15 @@ export default function HealthRadialBarChart() {
       rotationAxis={[
         {
           scaleType: 'linear',
+          disableTickLabel: true,
+          disableLine: true,
+          disableTicks: true,
           min: 0,
           max: 100,
           valueFormatter: (value) => `${value}%`,
         },
       ]}
-      grid={{ rotation: true }}
+      axisHighlight={{ rotation: 'none', radius: 'none' }}
       hideLegend
       slotProps={{ tooltip: { trigger: 'none' } }}
     />
