@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useStore } from '@base-ui/utils/store';
+import { useStore } from '@base-ui/utils/store/useStore';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from '@mui/x-scheduler-internals/internals';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
