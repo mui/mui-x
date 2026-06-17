@@ -586,9 +586,8 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-function BasePopper(props: P['basePopper']) {
+const BasePopper = forwardRef<any, P['basePopper']>(function BasePopper(props, ref) {
   const {
-    ref,
     open,
     children,
     className,
@@ -677,11 +676,12 @@ function BasePopper(props: P['basePopper']) {
       modifiers={modifiers}
       {...other}
       {...material}
+      ref={ref}
     >
       {content}
     </MUIPopper>
   );
-}
+});
 
 function wrappers(props: PopperProps, content: any) {
   return focusTrapWrapper(props, clickAwayWrapper(props, content));

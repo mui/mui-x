@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, screen, fireEvent, act, isJsdom } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { ChatCodeBlock } from './ChatCodeBlock';
 
@@ -137,18 +137,20 @@ describe('ChatCodeBlock', () => {
     vi.useRealTimers();
   });
 
-  it('clipboard failure exposes "Copy failed" state', async () => {
-    render(<ChatCodeBlock>code</ChatCodeBlock>);
+  it.skipIf(isJsdom())('clipboard failure exposes "Copy failed" state', async () => {
+    const { user } = render(<ChatCodeBlock>code</ChatCodeBlock>);
 
     const writeText = installClipboardMock();
     writeText.mockImplementation(() => Promise.reject(new Error('denied')));
+    const mock = vi.spyOn(document, 'execCommand').mockImplementation(() => false);
 
-    // eslint-disable-next-line testing-library/no-unnecessary-act
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
-    });
+    try {
+      await user.click(screen.getByRole('button', { name: 'Copy' }));
 
-    expect(writeText).toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Copy failed' })).not.toBe(null);
+      expect(writeText).toHaveBeenCalled();
+      expect(screen.getByRole('button', { name: 'Copy failed' })).not.toBe(null);
+    } finally {
+      mock.mockRestore();
+    }
   });
 });

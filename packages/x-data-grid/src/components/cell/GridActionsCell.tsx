@@ -310,7 +310,7 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
   );
 }
 
-GridActionsCell.propTypes = {
+GridActionsCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -425,7 +425,7 @@ function GridActionsCellWrapper(props: GridRenderCellParams) {
   );
 }
 
-GridActionsCellWrapper.propTypes = {
+GridActionsCellWrapper.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

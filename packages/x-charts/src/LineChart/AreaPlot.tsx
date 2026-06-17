@@ -102,7 +102,7 @@ function AreaPlot(props: AreaPlotProps) {
   );
 }
 
-AreaPlot.propTypes = {
+AreaPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
