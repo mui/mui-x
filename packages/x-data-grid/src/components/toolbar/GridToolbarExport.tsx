@@ -59,7 +59,7 @@ function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
   );
 }
 
-GridCsvExportMenuItem.propTypes = {
+GridCsvExportMenuItem.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -98,7 +98,7 @@ function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
   );
 }
 
-GridPrintExportMenuItem.propTypes = {
+GridPrintExportMenuItem.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
