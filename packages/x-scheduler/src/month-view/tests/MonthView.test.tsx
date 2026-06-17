@@ -169,6 +169,23 @@ describe('<MonthView />', () => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
       });
     });
+
+    it('should reference resolvable header IDs in each event aria-labelledby', async () => {
+      const { popover } = await renderAndOpenPopover();
+
+      const eventButtons = within(popover).getAllByRole('button');
+      expect(eventButtons.length).to.be.greaterThan(0);
+
+      eventButtons.forEach((button) => {
+        const tokens = (button.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
+        expect(tokens.length).to.be.greaterThan(0);
+        tokens.forEach((token) => {
+          expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(
+            null,
+          );
+        });
+      });
+    });
   });
 
   describe('All day events', () => {

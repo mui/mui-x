@@ -62,11 +62,11 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "ScatterClick.js"}}
-
 When `hitAreaRadius` is `"item"`, the user must click directly on the point, and the mouse event comes from that element.
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
+
+{{"demo": "ScatterClick.js"}}
 
 ## Bubble chart
 
@@ -138,9 +138,48 @@ See [Custom components](/x/react-charts/components/) for more ways to customize 
 ### SVG batch rendering
 
 Scatter charts can have many points, which can slow down rendering.
-By default, points are drawn with SVG `circle` elements, which may be slow for large datasets.
+By default, points are drawn with SVG `circle` elements, which can be slow for large datasets.
 
-Set the `renderer` prop to `"svg-batch"` to draw circles in a more efficient way.
+The `renderer` prop selects how points are drawn.
+The `renderer` prop selects how points are drawn.
+The default value is set to `'svg-single'`.
+
+Set `experimentalFeatures.progressiveRendering` to `true` to get the renderer chosen automatically based on the number of points: `'svg-progressive'` is used when above 2.000 points, `'svg-single'` otherwise.
+
+### Choosing a renderer
+
+| `renderer`                                                                                           | Element drawn  | CSS | Interactions | Blocking                 | Best for                           |
+| :--------------------------------------------------------------------------------------------------- | :------------- | :-- | :----------- | :----------------------- | :--------------------------------- |
+| `svg-single`                                                                                         | `circle`       | Yes | Yes          | Blocks until fully drawn | Small datasets                     |
+| `svg-progressive`                                                                                    | `circle`       | Yes | Yes          | Stays responsive         | Large datasets that still need CSS |
+| `svg-batch`                                                                                          | grouped `path` | No  | Limited      | Stays responsive         | Very large datasets                |
+| `webgl` [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') | WebGL canvas   | No  | No           | Stays responsive         | Massive datasets                   |
+
+**CSS**: whether you can style individual points with CSS selectors.
+
+**Interactions**: whether per-point interactions such as `onItemClick` work.
+
+**Blocking**: whether the main thread is blocked until every point is drawn.
+
+### Single renderer
+
+`renderer="svg-single"` draws one `circle` element per point in a single synchronous pass.
+CSS styling, the `marker` slot, and per-item interactions all work, but the main thread is blocked until every point is drawn, so it is only suited to small datasets.
+
+### Progressive renderer
+
+`renderer="svg-progressive"` also draws one `circle` element per point, keeping CSS styling, the `marker` slot, and per-item interactions.
+The difference is that the series and axes are processed off the render path, and the points are split into batches whose groups mount immediately and paint progressively over several animation frames.
+The main thread stays responsive while a large dataset is being drawn.
+
+The example below renders 20,000 points.
+Use the buttons to compare the single and progressive renderers: the spinner keeps animating and "first paint" stays low with the progressive renderer, while the single renderer blocks the main thread until every point is drawn.
+
+{{"demo": "ScatterAsyncRenderer.js"}}
+
+### Batch renderer
+
+`renderer="svg-batch"` draws circles grouped into `path` elements, which is more efficient for very large datasets.
 This has some trade-offs:
 
 - You cannot style individual circles with CSS
@@ -149,7 +188,7 @@ This has some trade-offs:
 
 Behavior also differs in a few ways:
 
-- Rendering order may change, so overlapping circles can appear at different depths than with the default renderer
+- Rendering order can change, so overlapping circles can appear at different depths than with the other renderers
 - When `disableHitArea` is `true`, `onItemClick` does not run, because it depends on the hit area logic
 
 The example below uses the `renderer` prop to render 16,000 points with better performance.
