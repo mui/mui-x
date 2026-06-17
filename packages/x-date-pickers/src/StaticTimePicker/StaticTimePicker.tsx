@@ -70,7 +70,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker(
   return renderPicker();
 }) as StaticTimePickerComponent;
 
-StaticTimePicker.propTypes = {
+StaticTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

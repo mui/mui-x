@@ -78,10 +78,14 @@ describe('useChatActions', () => {
   });
 
   it('throws outside a ChatProvider when called without the optional flag', () => {
+    // React 18 logs the render-time throw via `console.error`, which trips
+    // `vitest-fail-on-console` in the browser runner; silence it for this case.
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() =>
       renderHook(() => useChatActions(), {
         // No wrapper — no provider.
       }),
     ).toThrow(/ChatProvider/);
+    consoleErrorSpy.mockRestore();
   });
 });

@@ -37,7 +37,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   return <ChartsXAxisImpl {...inProps} axis={axis} />;
 }
 
-ChartsXAxis.propTypes = {
+ChartsXAxis.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

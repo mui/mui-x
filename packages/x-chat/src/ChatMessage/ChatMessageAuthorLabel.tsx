@@ -55,7 +55,7 @@ const ChatMessageAuthorLabel = React.forwardRef<HTMLSpanElement, ChatMessageAuth
   },
 );
 
-ChatMessageAuthorLabel.propTypes = {
+ChatMessageAuthorLabel.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

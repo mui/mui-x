@@ -86,6 +86,14 @@ const TEST_RULES: RouteRule[] = [
     // only enters the DOM once the virtualizer has rendered the scrolled window.
     waitForSelector: '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell',
   },
+  {
+    test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
+    // The demo loads its rows asynchronously via `useDemoData`, which the
+    // `aria-busy` font gate doesn't track. Until the data resolves the grid
+    // shows the skeleton overlay (skeleton rows carry both `row` and
+    // `rowSkeleton`), so wait for a real, non-skeleton row before screenshotting.
+    waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
+  },
 ];
 
 function getRouteConfig(routeUrl: string): RouteConfig | undefined {
