@@ -161,7 +161,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
   const store = useSchedulerStoreContext();
 
   // The recurring scope confirmation renders itself: it reads its own open state from the store.
-  const RecurringScopeRenderer = optionalRenderers?.recurringScope;
+  const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
 
   return (
     <EventEditingOptionalRenderersContext.Provider
@@ -188,7 +188,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
         }}
       >
         {children}
-        {RecurringScopeRenderer && <RecurringScopeRenderer />}
+        {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}
       </EventEditingProvider>
     </EventEditingOptionalRenderersContext.Provider>
   );

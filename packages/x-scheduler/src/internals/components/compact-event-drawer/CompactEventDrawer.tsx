@@ -66,7 +66,7 @@ const CompactEventDrawerContent = styled('div', {
  * height and swaps in the editing form (read-only events keep the summary).
  *
  * It reuses the desktop dialog's `FormContent` / `ReadonlyContent` so the editing experience matches
- * across platforms, and renders the shared `recurringScope` renderer for the scope confirmation.
+ * across platforms, and renders the shared `recurringScopeDialog` renderer for the scope confirmation.
  */
 export function CompactEventDrawer() {
   const store = useEventCalendarStoreContext();
@@ -80,7 +80,7 @@ export function CompactEventDrawer() {
 
   // The recurring scope confirmation reads its own open state from the store and renders its own
   // shell (a centered dialog).
-  const { recurringScope: RecurringScopeRenderer } = useEventEditingOptionalRenderers();
+  const { recurringScopeDialog: RecurringScopeDialogRenderer } = useEventEditingOptionalRenderers();
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -121,7 +121,7 @@ export function CompactEventDrawer() {
           )}
         </CompactEventDrawerContent>
       )}
-      {RecurringScopeRenderer && <RecurringScopeRenderer />}
+      {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}
     </CompactEventDrawerRoot>
   );
 }

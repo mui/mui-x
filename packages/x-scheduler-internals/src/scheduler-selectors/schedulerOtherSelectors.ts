@@ -62,7 +62,7 @@ export const schedulerOtherSelectors = {
     (state: State) => state.displayTimezone,
     (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
   ),
-  isRecurringScopeOpen: createSelector(
+  isRecurringScopeDialogOpen: createSelector(
     (state: State) => state.pendingRecurringEventOperation != null,
   ),
   /**

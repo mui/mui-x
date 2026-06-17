@@ -26,7 +26,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringSc
     const store = useSchedulerStoreContext();
 
     // Selector hooks
-    const open = useStore(store, schedulerOtherSelectors.isRecurringScopeOpen);
+    const open = useStore(store, schedulerOtherSelectors.isRecurringScopeDialogOpen);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();

@@ -65,7 +65,7 @@ export interface EventDialogLocaleText {
   startDateLabel: string;
   startTimeLabel: string;
 
-  // RecurringScope
+  // RecurringScopeDialog
   all: string;
   cancel: string;
   confirm: string;

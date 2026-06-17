@@ -23,7 +23,7 @@ export interface EventEditingOptionalRenderers {
    * Component rendered when the user is asked to choose the scope of a recurring update.
    * Stacks on top of the active editing surface and renders its own shell (a centered dialog).
    */
-  recurringScope?: React.ComponentType<Record<string, never>>;
+  recurringScopeDialog?: React.ComponentType<Record<string, never>>;
 }
 
 export const EventEditingOptionalRenderersContext =

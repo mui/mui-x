@@ -61,7 +61,7 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Startdatum',
   startTimeLabel: 'Startzeit',
 
-  // RecurringScope
+  // RecurringScopeDialog
   all: 'Alle Ereignisse',
   cancel: 'Abbrechen',
   confirm: 'Bestätigen',

@@ -61,7 +61,7 @@ const enUSDialog: EventDialogLocaleText = {
   startDateLabel: 'Start date',
   startTimeLabel: 'Start time',
 
-  // RecurringScope
+  // RecurringScopeDialog
   all: 'All events',
   cancel: 'Cancel',
   confirm: 'Confirm',

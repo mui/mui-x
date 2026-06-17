@@ -62,7 +62,7 @@ const heILDialog: Partial<EventDialogLocaleText> = {
   // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   // startDateLabel: 'Start date',
   // startTimeLabel: 'Start time',
-  // RecurringScope
+  // RecurringScopeDialog
   // all: 'All events',
   // cancel: 'Cancel',
   // confirm: 'Confirm',
