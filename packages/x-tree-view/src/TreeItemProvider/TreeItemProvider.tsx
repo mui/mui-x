@@ -15,7 +15,7 @@ function TreeItemProvider(props: TreeItemProviderProps) {
   return <React.Fragment>{wrapItem({ children, itemId, store, idAttribute })}</React.Fragment>;
 }
 
-TreeItemProvider.propTypes = {
+TreeItemProvider.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
