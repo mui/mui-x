@@ -82,7 +82,7 @@ function ChartsAxisHighlightValue(props: ChartsAxisHighlightValueProps) {
   return ReactDOM.createPortal(content, chartsLayerContainerRef.current);
 }
 
-ChartsAxisHighlightValue.propTypes = {
+ChartsAxisHighlightValue.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

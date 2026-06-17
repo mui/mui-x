@@ -39,7 +39,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Gjentakelse',
   recurrenceMainSelectCustomLabel: 'Gjentakelse',
   recurrenceWeeklyFrequencyLabel: 'uker',
-  recurrenceWeeklyPresetLabel: (weekday) => `Gjentas ukentlig på ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Gjentas ukentlig på ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'måneder',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dag ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} i siste uke av måneden`,

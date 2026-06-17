@@ -400,7 +400,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   );
 }) as DateCalendarComponent;
 
-DateCalendar.propTypes = {
+DateCalendar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
