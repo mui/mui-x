@@ -193,7 +193,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   );
 }) as ChatBoxComponent;
 
-ChatBox.propTypes = {
+ChatBox.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

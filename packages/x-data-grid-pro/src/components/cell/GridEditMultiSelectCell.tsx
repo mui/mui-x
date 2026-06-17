@@ -456,7 +456,7 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
   );
 }
 
-GridEditMultiSelectAutocomplete.propTypes = {
+GridEditMultiSelectAutocomplete.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -551,7 +551,7 @@ GridEditMultiSelectAutocomplete.propTypes = {
   ).isRequired,
 } as any;
 
-GridEditMultiSelectCell.propTypes = {
+GridEditMultiSelectCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

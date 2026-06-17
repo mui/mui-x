@@ -243,7 +243,7 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
   },
 );
 
-ChatMessageGroup.propTypes = {
+ChatMessageGroup.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

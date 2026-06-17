@@ -71,7 +71,7 @@ const EventCalendar = React.forwardRef(function EventCalendar<
   );
 }) as EventCalendarComponent;
 
-EventCalendar.propTypes = {
+EventCalendar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

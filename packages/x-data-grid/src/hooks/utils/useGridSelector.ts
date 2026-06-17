@@ -111,7 +111,7 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
     EMPTY,
   );
 

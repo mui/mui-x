@@ -62,11 +62,11 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "ScatterClick.js"}}
-
 When `hitAreaRadius` is `"item"`, the user must click directly on the point, and the mouse event comes from that element.
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
+
+{{"demo": "ScatterClick.js"}}
 
 ## Bubble chart
 
