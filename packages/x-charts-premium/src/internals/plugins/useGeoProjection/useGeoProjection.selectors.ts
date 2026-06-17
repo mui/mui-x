@@ -66,6 +66,11 @@ export const selectorChartRawGeoData: (
   (geoProjection) => geoProjection?.geoData ?? null,
 );
 
+export const selectorChartGeoFeatureKey = createSelector(
+  selectorChartGeoProjectionState,
+  (geoProjection) => geoProjection?.geoFeatureKey ?? 'name',
+);
+
 export const selectorChartRawProjection = createSelector(
   selectorChartGeoProjectionState,
   (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
@@ -101,13 +106,14 @@ const selectorChartParallels = createSelectorMemoized(
  */
 export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   selectorChartRawGeoData,
-  (geoData): ReadonlyMap<string, number[]> => {
+  selectorChartGeoFeatureKey,
+  (geoData, geoFeatureKey): ReadonlyMap<string, number[]> => {
     const map = new Map<string, number[]>();
     if (!geoData) {
       return map;
     }
     geoData.features.forEach((feature, index) => {
-      const name = feature.properties?.name;
+      const name = typeof geoFeatureKey === 'function' ? geoFeatureKey(feature) : feature.properties?.[geoFeatureKey];
       if (typeof name !== 'string') {
         return;
       }
