@@ -21,7 +21,7 @@ describe('createSelectorMemoized', () => {
     const selector = createSelectorMemoized((state: { value: number }) => state.value) as any;
     const apiRef = {
       current: { state: { value: 42 }, instanceId: { id: 0 } },
-    } as RefObject<GridApiCommunity>;
+    };
 
     expect(selector(apiRef)).to.equal(42);
   });
