@@ -3,7 +3,10 @@ import {
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderCreation,
 } from '../../../models';
-import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
+import {
+  getCustomEventProperties,
+  shouldUpdateOccurrencePlaceholder,
+} from './SchedulerStore.utils';
 
 describe('shouldUpdateOccurrencePlaceholder', () => {
   const createPlaceholder = (
@@ -54,5 +57,29 @@ describe('shouldUpdateOccurrencePlaceholder', () => {
     const previous = createPlaceholder();
     const next = createPlaceholder({ isHidden: true });
     expect(shouldUpdateOccurrencePlaceholder(adapter, previous, next)).to.equal(true);
+  });
+});
+
+describe('getCustomEventProperties', () => {
+  it('should return only the properties that are not part of the built-in event shape', () => {
+    const model = {
+      id: '1',
+      title: 'Meeting',
+      start: '2025-07-03T09:00:00Z',
+      end: '2025-07-03T10:00:00Z',
+      priority: 'high',
+      tags: ['a', 'b'],
+    };
+    expect(getCustomEventProperties(model)).to.deep.equal({ priority: 'high', tags: ['a', 'b'] });
+  });
+
+  it('should return an empty object when the model only has built-in properties', () => {
+    const model = {
+      id: '1',
+      title: 'Meeting',
+      start: '2025-07-03T09:00:00Z',
+      end: '2025-07-03T10:00:00Z',
+    };
+    expect(getCustomEventProperties(model)).to.deep.equal({});
   });
 });

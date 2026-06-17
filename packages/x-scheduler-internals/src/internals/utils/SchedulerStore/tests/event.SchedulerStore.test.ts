@@ -352,6 +352,25 @@ storeClasses.forEach((storeClass) => {
         expect(updated.end).to.equal(newEnd.toISOString());
       });
 
+      it('should preserve unknown custom properties on the event model', () => {
+        const onEventsChange = spy();
+        const event = {
+          ...EventBuilder.new().title('Original title').build(),
+          priority: 'high',
+        } as SchedulerEvent;
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.updateEvent({ id: event.id, title: 'Updated title' });
+
+        const updated = onEventsChange.lastCall.firstArg[0];
+        expect(updated.title).to.equal('Updated title');
+        expect(updated.priority).to.equal('high');
+      });
+
       it.skipIf(storeClass.name !== 'EventCalendarStore')(
         'should not throw when updating an event that had rrule on input',
         () => {

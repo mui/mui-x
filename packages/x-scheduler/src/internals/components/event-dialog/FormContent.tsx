@@ -19,6 +19,7 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { getCustomEventProperties } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
@@ -190,6 +191,9 @@ export function FormContent(props: FormContentProps) {
       color: controlled.color === null ? undefined : controlled.color,
     };
 
+    const originalModel = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
+    const customData = originalModel ? getCustomEventProperties(originalModel) : undefined;
+
     let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
     if (!showRecurrence || !recurrencePresets) {
       rruleToSubmit = undefined;
@@ -216,6 +220,7 @@ export function FormContent(props: FormContentProps) {
       );
 
       const changes: SchedulerEventUpdatedProperties = {
+        ...customData,
         ...metaChanges,
         id: occurrence.id,
         start,
@@ -232,7 +237,14 @@ export function FormContent(props: FormContentProps) {
       // don't close the dialog
       return;
     } else {
-      store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule: rruleToSubmit });
+      store.updateEvent({
+        ...customData,
+        id: occurrence.id,
+        ...metaChanges,
+        start,
+        end,
+        rrule: rruleToSubmit,
+      });
     }
 
     onClose();
