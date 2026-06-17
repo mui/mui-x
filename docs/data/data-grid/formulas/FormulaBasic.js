@@ -154,6 +154,7 @@ export default function FormulaBasic() {
         formulaA1Notation
         showCellVerticalBorder
         showColumnVerticalBorder
+        density="compact"
       />
     </div>
   );
