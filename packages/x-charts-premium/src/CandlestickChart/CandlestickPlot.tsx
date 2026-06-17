@@ -76,7 +76,6 @@ function CandlestickWebGLPlotImpl({
 
   React.useEffect(() => {
     const prog = new CandlestickWebGLProgram(gl);
-
     setProgram(prog);
 
     return () => {

@@ -258,7 +258,6 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     if (dataCache.has(cacheKey)) {
       const newData = dataCache.get(cacheKey)!;
       dataRef.current = newData;
-
       setDataReady(true);
       return undefined;
     }

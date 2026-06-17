@@ -23,7 +23,6 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
 
   React.useEffect(() => {
     const itemValue = item.value ?? [];
-
     setFilterValueState(itemValue.map(String));
   }, [item.value]);
 

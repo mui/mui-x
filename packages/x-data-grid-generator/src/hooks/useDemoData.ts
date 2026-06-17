@@ -172,7 +172,6 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     // of the demos.
     if (dataCache.has(cacheKey)) {
       const newData = dataCache.get(cacheKey)!;
-
       setData(newData);
       setLoading(false);
       return undefined;

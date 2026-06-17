@@ -43,7 +43,6 @@ function ScatterWebGLPlotImpl(props: {
 
   React.useEffect(() => {
     const prog = new ScatterWebGLProgram(gl);
-
     setProgram(prog);
 
     return () => {

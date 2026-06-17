@@ -78,7 +78,6 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
   React.useEffect(() => {
     const value = convertFilterItemValueToInputValue(item.value, type);
-
     setFilterValueState(value);
   }, [item.value, type]);
 

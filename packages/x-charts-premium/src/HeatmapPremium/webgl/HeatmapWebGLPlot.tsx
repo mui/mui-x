@@ -63,7 +63,6 @@ function HeatmapWebGLPlotImpl(props: {
 
   React.useEffect(() => {
     const prog = new HeatmapWebGLProgram(gl);
-
     setProgram(prog);
     return () => {
       prog.dispose();

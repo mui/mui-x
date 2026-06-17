@@ -400,7 +400,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       return;
     }
     const newCache = getCache(props.dataSourceCache, options.cacheOptions);
-
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
   }, [props.dataSourceCache, options.cacheOptions]);
 

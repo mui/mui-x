@@ -58,7 +58,6 @@ function RangeBarWebGLPlotImpl(props: {
 
   React.useEffect(() => {
     const prog = new BarWebGLProgram(gl);
-
     setProgram(prog);
     return () => {
       prog.dispose();
