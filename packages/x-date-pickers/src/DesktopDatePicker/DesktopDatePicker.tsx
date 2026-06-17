@@ -83,7 +83,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker(
   return renderPicker();
 }) as DesktopDatePickerComponent;
 
-DesktopDatePicker.propTypes = {
+DesktopDatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

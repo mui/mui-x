@@ -63,7 +63,7 @@ const ChatConversationSubtitle = React.forwardRef<
   );
 });
 
-ChatConversationSubtitle.propTypes = {
+ChatConversationSubtitle.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
