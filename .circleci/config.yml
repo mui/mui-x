@@ -230,7 +230,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build --concurrency 5
+          command: pnpm release:build --concurrency 4
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
