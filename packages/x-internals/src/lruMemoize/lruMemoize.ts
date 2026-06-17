@@ -7,30 +7,35 @@ export interface LruMemoizeOptions {
    */
   equalityCheck?: EqualityFn;
   /**
-   * When provided and a new result is computed, the cache is searched for a result
-   * considered equal by this function. If found, the cached value is returned instead,
-   * preserving referential stability.
+   * When provided and a new result is computed, the cached result is returned
+   * instead if it is considered equal by this function, preserving referential
+   * stability.
    */
   resultEqualityCheck?: EqualityFn;
   /**
    * The number of previous calls to keep in the cache.
+   *
+   * Only a single entry is cached. The option is kept for API compatibility but
+   * values greater than `1` are ignored, as MUI X never relies on a larger cache.
    * @default 1
    */
   maxSize?: number;
 }
 
 interface CacheEntry {
-  args: any[];
+  args: IArguments | any[];
   value: any;
 }
 
 const referenceEqualityCheck: EqualityFn = (a, b) => a === b;
 
 /**
- * Memoizes a function using a least-recently-used cache.
- * The arguments of the last `maxSize` calls are compared with the provided `equalityCheck`.
+ * Memoizes a function, caching the result of its most recent call.
+ * The arguments of the last call are compared with the provided `equalityCheck`.
  *
- * Drop-in replacement for the subset of `lruMemoize` from `reselect` that MUI X relies on.
+ * Drop-in replacement for the subset of `lruMemoize` from `reselect` that MUI X
+ * relies on. Only the `maxSize: 1` (singleton) behaviour is implemented, since
+ * that is the only cache size MUI X uses.
  */
 export function lruMemoize<F extends (...args: any[]) => any>(
   func: F,
@@ -40,11 +45,11 @@ export function lruMemoize<F extends (...args: any[]) => any>(
     typeof equalityCheckOrOptions === 'object'
       ? equalityCheckOrOptions
       : { equalityCheck: equalityCheckOrOptions };
-  const { equalityCheck = referenceEqualityCheck, maxSize = 1, resultEqualityCheck } = options;
+  const { equalityCheck = referenceEqualityCheck, resultEqualityCheck } = options;
 
-  let entries: CacheEntry[] = [];
+  let entry: CacheEntry | undefined;
 
-  const areArgsEqual = (cachedArgs: any[], args: any[]) => {
+  const areArgsEqual = (cachedArgs: IArguments | any[], args: IArguments) => {
     if (cachedArgs.length !== args.length) {
       return false;
     }
@@ -56,36 +61,24 @@ export function lruMemoize<F extends (...args: any[]) => any>(
     return true;
   };
 
-  function memoized(...args: any[]) {
-    for (let i = 0; i < entries.length; i += 1) {
-      const entry = entries[i];
-      if (areArgsEqual(entry.args, args)) {
-        if (i > 0) {
-          // Move the hit to the front of the cache
-          entries.splice(i, 1);
-          entries.unshift(entry);
-        }
-        return entry.value;
-      }
+  // Use `arguments` and `func.apply` instead of rest/spread to avoid allocating
+  // a new array on every call.
+  function memoized(this: unknown) {
+    if (entry !== undefined && areArgsEqual(entry.args, arguments)) {
+      return entry.value;
     }
 
-    let value = func(...args);
-    if (resultEqualityCheck) {
-      const matchingEntry = entries.find((entry) => resultEqualityCheck(entry.value, value));
-      if (matchingEntry) {
-        value = matchingEntry.value;
-      }
+    let value = func.apply(null, arguments as any);
+    if (resultEqualityCheck && entry !== undefined && resultEqualityCheck(entry.value, value)) {
+      value = entry.value;
     }
 
-    entries.unshift({ args, value });
-    if (entries.length > maxSize) {
-      entries.pop();
-    }
+    entry = { args: arguments, value };
     return value;
   }
 
   memoized.clearCache = () => {
-    entries = [];
+    entry = undefined;
   };
 
   return memoized as unknown as F;
