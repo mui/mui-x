@@ -420,8 +420,7 @@ function GridActionsCellWrapper(props: GridRenderCellParams) {
 
   return (
     <GridActionsCell suppressChildrenValidation {...props}>
-      {/* Key the `getActions` array so React doesn't warn about missing keys
-           (React 18's dev warning trips `vitest-fail-on-console`). */}
+      {/* Key the `getActions` array so React doesn't warn about missing keys (React 18's dev warning trips `vitest-fail-on-console`). */}
       {actions.map((action, index) =>
         React.isValidElement(action)
           ? React.cloneElement(action, { key: action.key ?? index })
