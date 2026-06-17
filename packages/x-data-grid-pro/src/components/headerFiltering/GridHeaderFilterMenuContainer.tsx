@@ -96,7 +96,7 @@ function GridHeaderFilterMenuContainer(props: {
   );
 }
 
-GridHeaderFilterMenuContainer.propTypes = {
+GridHeaderFilterMenuContainer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

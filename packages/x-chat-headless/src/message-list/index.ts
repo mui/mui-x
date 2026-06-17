@@ -2,6 +2,12 @@ export { MessageListRoot } from './MessageListRoot';
 export { MessageListDateDivider } from './MessageListDateDivider';
 export { useMessageListContext } from './internals/MessageListContext';
 export type { MessageListContextValue } from './internals/MessageListContext';
+export {
+  useMessageActionable,
+  useMessageContentTabIndex,
+  useMessageRovingItem,
+} from './internals/MessageRovingContext';
+export type { MessageRovingState } from './internals/MessageRovingContext';
 
 export type {
   MessageListDateDividerProps,

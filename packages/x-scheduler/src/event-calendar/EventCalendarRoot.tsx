@@ -112,7 +112,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     const { children, className, ...other } = props;
 
     const store = useEventCalendarStoreContext();
-    const { classes } = useEventCalendarStyledContext();
+    const { classes, localeText } = useEventCalendarStyledContext();
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
@@ -164,7 +164,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
               className={classes.content}
               data-view={view}
               data-side-panel-open={isSidePanelOpen}
-              aria-label="Calendar content"
+              aria-label={localeText.calendarContentAriaLabel}
             >
               {content}
             </EventCalendarContent>

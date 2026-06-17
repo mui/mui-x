@@ -1,6 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
+import { normalizeAllDayBounds } from '../internals/utils/date-utils';
 import { Adapter } from '../use-adapter';
 import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import { TemporalTimezone } from '../base-ui-copy/types';
@@ -22,6 +23,12 @@ export function processEvent(
 
   const startInDisplayTz = adapter.setTimezone(startInstant, displayTimezone);
   const endInDisplayTz = adapter.setTimezone(endInstant, displayTimezone);
+  const displayBounds = normalizeAllDayBounds(
+    adapter,
+    startInDisplayTz,
+    endInDisplayTz,
+    model.allDay,
+  );
   const exDatesInDisplayTz = resolvedExDates
     ? resolvedExDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
     : undefined;
@@ -62,12 +69,8 @@ export function processEvent(
       exDates: resolvedExDates,
     },
     displayTimezone: {
-      start: model.allDay
-        ? processDate(adapter.startOfDay(startInDisplayTz), adapter)
-        : processDate(startInDisplayTz, adapter),
-      end: model.allDay
-        ? processDate(adapter.endOfDay(endInDisplayTz), adapter)
-        : processDate(endInDisplayTz, adapter),
+      start: processDate(displayBounds.start, adapter),
+      end: processDate(displayBounds.end, adapter),
       timezone: displayTimezone,
       rrule: displayTimezoneRRule,
       exDates: exDatesInDisplayTz,

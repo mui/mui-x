@@ -121,7 +121,7 @@ function LineElement(props: LineElementProps) {
   return <Line {...other} {...lineProps} />;
 }
 
-LineElement.propTypes = {
+LineElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -130,7 +130,9 @@ LineElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
-  /** If `true`, the line is hidden. */
+  /**
+   * If `true`, the line is hidden.
+   */
   hidden: PropTypes.bool,
   seriesId: PropTypes.string.isRequired,
   /**

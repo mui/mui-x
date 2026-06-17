@@ -56,6 +56,7 @@ export default function DateDividerFormat() {
       initialActiveConversationId={conversation.id}
       initialConversations={[conversation]}
       initialMessages={messages}
+      features={{ dateDivider: true }}
       slotProps={{
         dateDivider: {
           formatDate: (date) =>

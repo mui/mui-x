@@ -146,7 +146,7 @@ function RangeBarSvgPlot(props: Omit<RangeBarPlotProps, 'renderer'>): React.JSX.
   );
 }
 
-RangeBarSvgPlot.propTypes = {
+RangeBarSvgPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -178,7 +178,7 @@ RangeBarSvgPlot.propTypes = {
   slots: PropTypes.object,
 } as any;
 
-RangeBarPlot.propTypes = {
+RangeBarPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

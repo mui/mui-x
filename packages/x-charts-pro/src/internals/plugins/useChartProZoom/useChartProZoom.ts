@@ -35,6 +35,7 @@ import { useZoomOnBrush } from './gestureHooks/useZoomOnBrush';
 import { useZoomOnDoubleTapReset } from './gestureHooks/useZoomOnDoubleTapReset';
 import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
 import { initializeZoomData } from './initializeZoomData';
+import { useRegisterZoomGestures } from './gestureHooks/useRegisterZoomGestures';
 
 /**
  * Type guard for `initialZoom` entries provided as a range value.
@@ -245,6 +246,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   }, [removeIsInteracting]);
 
   // Add events
+  useRegisterZoomGestures(pluginData);
+
   usePanOnDrag(pluginData, setZoomDataCallback);
 
   usePanOnPressAndDrag(pluginData, setZoomDataCallback);

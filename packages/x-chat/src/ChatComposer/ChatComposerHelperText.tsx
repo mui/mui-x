@@ -9,6 +9,7 @@ import {
   type ComposerHelperTextOwnerState,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerHelperText');
@@ -48,23 +49,25 @@ const ChatComposerHelperText = React.forwardRef<HTMLParagraphElement, ChatCompos
         ref={ref}
         {...other}
         slots={{
-          helperText: slots?.helperText ?? ChatComposerHelperTextStyled,
           ...slots,
+          helperText: slots?.helperText ?? ChatComposerHelperTextStyled,
         }}
         slotProps={{
           ...slotProps,
-          helperText: {
-            className: clsx(classes.helperText, className),
-            sx,
-            ...slotProps?.helperText,
-          } as any,
+          helperText: mergeSlotProps(
+            {
+              className: clsx(classes.helperText, className),
+              sx,
+            },
+            slotProps?.helperText,
+          ) as any,
         }}
       />
     );
   },
 );
 
-ChatComposerHelperText.propTypes = {
+ChatComposerHelperText.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
