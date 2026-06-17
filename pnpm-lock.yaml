@@ -1611,7 +1611,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.1.1(@types/react@19.2.15)(react@19.2.6)
