@@ -5,4 +5,4 @@ export type {
   UseGeoProjectionZoomInstance,
   UseGeoProjectionZoomPublicApi,
 } from './useGeoProjectionZoom.types';
-export type { MapZoomTransform } from './mapZoom.utils';
+export type { MapZoomView } from './mapZoom.utils';

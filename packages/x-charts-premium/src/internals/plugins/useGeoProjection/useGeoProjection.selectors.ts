@@ -71,9 +71,9 @@ export const selectorChartRawProjection = createSelector(
   (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
 );
 
-export const selectorChartRawScale = createSelector(
+export const selectorChartZoomLevel = createSelector(
   selectorChartGeoProjectionState,
-  (geoProjection): number | null => geoProjection?.scale ?? null,
+  (geoProjection): number | null => geoProjection?.zoomLevel ?? null,
 );
 
 const selectorChartRotate = createSelectorMemoized(
@@ -81,9 +81,9 @@ const selectorChartRotate = createSelectorMemoized(
   (geoProjection): [number, number] | null => geoProjection?.rotate ?? null,
 );
 
-const selectorChartTranslate = createSelectorMemoized(
+const selectorChartCenter = createSelectorMemoized(
   selectorChartGeoProjectionState,
-  (geoProjection): [number, number] | null => geoProjection?.translate ?? null,
+  (geoProjection): [number, number] | null => geoProjection?.center ?? null,
 );
 
 const selectorChartParallels = createSelectorMemoized(
@@ -122,11 +122,15 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
 );
 
 /**
- * Resolves the raw `projection` input into a ready-to-use `GeoProjection` instance
- * fitted to the chart's drawing area.
+ * Resolves the raw `projection` input into a ready-to-use `GeoProjection` instance,
+ * fitted to the chart's drawing area then zoomed/panned according to the current view.
  *
  * - String inputs (e.g. `'mercator'`) are mapped to the matching d3-geo factory.
  * - `GeoProjection` instances are used as-is, then fitted.
+ * - The projection is first fitted to the data (the `zoomLevel === 1` baseline), then its
+ *   scale is multiplied by `zoomLevel` and its translation is offset so `center` lands at the
+ *   center of the drawing area. Keeping the view as `{ zoomLevel, center }` means the absolute
+ *   scale/translation are derived here, never stored — so they stay correct across resizes.
  * - Returns `null` when no projection is registered or the name is unknown.
  */
 export const selectorChartProjection = createSelectorMemoized(
@@ -134,16 +138,16 @@ export const selectorChartProjection = createSelectorMemoized(
   selectorChartRawGeoData,
   selectorChartParallels,
   selectorChartRotate,
-  selectorChartTranslate,
-  selectorChartRawScale,
+  selectorChartCenter,
+  selectorChartZoomLevel,
   selectorChartDrawingArea,
   (
     projectionInput,
     geoData,
     parallels,
     rotate,
-    translate,
-    scale,
+    center,
+    zoomLevel,
     drawingArea,
   ): GeoProjection | null => {
     if (!projectionInput) {
@@ -168,56 +172,67 @@ export const selectorChartProjection = createSelectorMemoized(
     } else {
       projection = projectionInput;
     }
-    if (geoData) {
-      if (isConicProjection(projection)) {
-        if (rotate) {
-          projection.rotate?.(rotate);
-        }
 
-        if (!scale) {
-          const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
-
-          const currentScale = projection.scale();
-
-          const fitScale = Math.min(
-            currentScale * (drawingArea.width / (x1 - x0)),
-            currentScale * (drawingArea.height / (y1 - y0)),
-          );
-          projection.scale(fitScale);
-        } else {
-          projection.scale(scale);
-        }
-
-        return projection;
-      }
-
-      if (rotate) {
-        projection.rotate?.(rotate);
-      }
-
-      if (scale) {
-        projection.scale(scale);
-        projection.clipExtent?.([
-          [drawingArea.left, drawingArea.top],
-          [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
-        ]);
-      } else {
-        projection.fitExtent?.(
-          [
-            [drawingArea.left, drawingArea.top],
-            [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
-          ],
-          geoData,
-        );
-      }
-
-      projection.translate(
-        translate ?? [
-          drawingArea.left + drawingArea.width / 2,
-          drawingArea.top + drawingArea.height / 2,
-        ],
-      );
+    if (!geoData) {
+      return projection;
     }
+
+    if (rotate) {
+      projection.rotate?.(rotate);
+    }
+
+    const drawingAreaCenter = {
+      x: drawingArea.left + drawingArea.width / 2,
+      y: drawingArea.top + drawingArea.height / 2,
+    };
+
+    // 1. Fit the data to the drawing area — this is the `zoomLevel === 1` reference scale.
+    if (isConicProjection(projection)) {
+      const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
+      const currentScale = projection.scale();
+      const fitScale = Math.min(
+        currentScale * (drawingArea.width / (x1 - x0)),
+        currentScale * (drawingArea.height / (y1 - y0)),
+      );
+      projection.scale(fitScale);
+      // Conic projections are positioned via `rotate`; `center` panning is not applied.
+      if (zoomLevel != null && zoomLevel !== 1) {
+        projection.scale(fitScale * zoomLevel);
+      }
+      return projection;
+    }
+
+    projection.fitExtent?.(
+      [
+        [drawingArea.left, drawingArea.top],
+        [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
+      ],
+      geoData,
+    );
+    const fitScale = projection.scale();
+
+    // The fitted projection centers the data: invert the drawing-area center to get the
+    // default geographic center used when `center` is not set.
+    const targetCenter =
+      center ?? projection.invert?.([drawingAreaCenter.x, drawingAreaCenter.y]) ?? null;
+
+    // 2. Apply the zoom level relative to the fit scale.
+    if (zoomLevel != null && zoomLevel !== 1) {
+      projection.scale(fitScale * zoomLevel);
+    }
+
+    // 3. Offset the translation so `targetCenter` lands at the drawing-area center.
+    if (targetCenter && projection.invert) {
+      projection.translate([0, 0]);
+      const projected = projection(targetCenter);
+      if (projected) {
+        projection.translate([
+          drawingAreaCenter.x - projected[0],
+          drawingAreaCenter.y - projected[1],
+        ]);
+      }
+    }
+
     return projection;
   },
 );

@@ -1,11 +1,16 @@
 'use client';
 import * as React from 'react';
 import { type ChartPlugin, selectorChartDrawingArea } from '@mui/x-charts/internals';
-import { useDragGesture, useWheelGesture, usePinchGesture, useRegisterZoomGestures } from '@mui/x-charts-pro/internals';
+import {
+  useDragGesture,
+  useWheelGesture,
+  usePinchGesture,
+  useRegisterZoomGestures,
+} from '@mui/x-charts-pro/internals';
 import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { selectorChartProjection } from '../useGeoProjection/useGeoProjection.selectors';
 import { type UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
-import { panProjection, zoomProjectionAtPoint, type MapZoomTransform } from './mapZoom.utils';
+import { centerAfterPan, centerAfterZoom, type MapZoomView } from './mapZoom.utils';
 
 /** Multiplicative zoom step applied per wheel tick. */
 const WHEEL_ZOOM_STEP = 1.1;
@@ -22,76 +27,77 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     minScaleRatio,
     maxScaleRatio,
     onZoomChange,
-    transform: controlledTransform,
+    initialView,
+    view: controlledView,
   } = params;
 
-  const isControlled = controlledTransform !== undefined;
-
-  // The scale that fits the data in the drawing area. Captured lazily on first
-  // interaction and used as the reference for the min/max zoom clamp.
-  const fitScaleRef = React.useRef<number | null>(null);
+  const isControlled = controlledView !== undefined;
 
   const getProjection = React.useCallback(
     (): GeoProjection | null => selectorChartProjection(store.state),
     [store],
   );
 
-  const applyTransform = React.useCallback(
-    (transform: MapZoomTransform) => {
-      // In controlled mode the parent owns the transform: only notify, the store is
-      // synced from the `transform` param via the effect below.
+  const drawingAreaCenter = React.useCallback(() => {
+    const { left, top, width, height } = selectorChartDrawingArea(store.state);
+    return { x: left + width / 2, y: top + height / 2 };
+  }, [store]);
+
+  // The view is the source of truth, stored directly: no pixel <-> view conversion on write/read.
+  const applyView = React.useCallback(
+    (view: MapZoomView) => {
       if (!isControlled) {
         store.set('geoProjection', {
           ...store.state.geoProjection,
-          scale: transform.scale,
-          translate: transform.translate,
+          zoomLevel: view.zoomLevel,
+          center: view.center,
         });
       }
-      onZoomChange?.(transform);
+      onZoomChange?.(view);
     },
-    [store, onZoomChange, isControlled],
+    [store, isControlled, onZoomChange],
   );
 
-  // Seed the initial (uncontrolled) transform, or keep the store in sync with the
-  // controlled `transform` param.
+  // Seed the initial (uncontrolled) view once, and keep the store in sync with the controlled
+  // `view`. Both write the view as-is — the projection derives scale/translate from it.
+  const initialViewApplied = React.useRef(false);
   React.useEffect(() => {
-    if (!isControlled || !controlledTransform) {
+    const view = isControlled ? controlledView : !initialViewApplied.current && initialView;
+    if (!view) {
       return;
     }
+    initialViewApplied.current = true;
     store.set('geoProjection', {
       ...store.state.geoProjection,
-      scale: controlledTransform.scale,
-      translate: controlledTransform.translate,
+      zoomLevel: view.zoomLevel,
+      center: view.center,
     });
-    // `initialTransform` is only applied on mount, `controlledTransform` on every change.
-  }, [store, isControlled, controlledTransform]);
+  }, [store, isControlled, controlledView, initialView]);
 
+  // Zoom about a focal point (in SVG pixels). `zoomLevel` is clamped directly — no fit scale.
   const zoomAtPoint = React.useCallback(
     (factor: number, focal: { x: number; y: number }) => {
       const projection = getProjection();
       if (!projection) {
         return;
       }
-      if (fitScaleRef.current === null) {
-        fitScaleRef.current = projection.scale();
+      const currentZoom = store.state.geoProjection.zoomLevel ?? 1;
+      const nextZoom = Math.max(minScaleRatio, Math.min(maxScaleRatio, currentZoom * factor));
+      if (nextZoom === currentZoom) {
+        return;
       }
-      applyTransform(
-        zoomProjectionAtPoint(
-          projection,
-          factor,
-          focal,
-          fitScaleRef.current * minScaleRatio,
-          fitScaleRef.current * maxScaleRatio,
-        ),
+      const center = centerAfterZoom(
+        projection,
+        nextZoom / currentZoom,
+        focal,
+        drawingAreaCenter(),
       );
+      if (center) {
+        applyView({ zoomLevel: nextZoom, center });
+      }
     },
-    [getProjection, applyTransform, minScaleRatio, maxScaleRatio],
+    [getProjection, store, applyView, drawingAreaCenter, minScaleRatio, maxScaleRatio],
   );
-
-  const drawingAreaCenter = React.useCallback(() => {
-    const { left, top, width, height } = selectorChartDrawingArea(store.state);
-    return { x: left + width / 2, y: top + height / 2 };
-  }, [store]);
 
   useRegisterZoomGestures({ instance });
 
@@ -103,7 +109,10 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       if (!projection) {
         return;
       }
-      applyTransform(panProjection(projection, delta.x, delta.y));
+      const center = centerAfterPan(projection, delta.x, delta.y, drawingAreaCenter());
+      if (center) {
+        applyView({ zoomLevel: store.state.geoProjection.zoomLevel ?? 1, center });
+      }
     },
   });
 
@@ -131,20 +140,20 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     [zoomAtPoint, drawingAreaCenter],
   );
   const resetZoom = React.useCallback(() => {
-    fitScaleRef.current = null;
     if (!isControlled) {
       store.set('geoProjection', {
         ...store.state.geoProjection,
-        scale: null,
-        translate: null,
+        zoomLevel: null,
+        center: null,
       });
     }
-    // Notify so controlled consumers and listeners learn about the reset.
+    // Notify so controlled consumers and listeners learn about the reset (fit view: zoomLevel 1).
     const projection = getProjection();
-    if (projection) {
-      onZoomChange?.({ scale: projection.scale(), translate: projection.translate() });
+    const center = projection?.invert?.([drawingAreaCenter().x, drawingAreaCenter().y]);
+    if (center) {
+      onZoomChange?.({ zoomLevel: 1, center: center as [number, number] });
     }
-  }, [store, isControlled, getProjection, onZoomChange]);
+  }, [store, isControlled, getProjection, drawingAreaCenter, onZoomChange]);
 
   const publicAPI = { zoomIn, zoomOut, resetZoom };
 
@@ -158,8 +167,8 @@ useGeoProjectionZoom.params = {
   zoom: true,
   minScaleRatio: true,
   maxScaleRatio: true,
-  initialTransform: true,
-  transform: true,
+  initialView: true,
+  view: true,
   onZoomChange: true,
 };
 
@@ -170,7 +179,4 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
   maxScaleRatio: params.maxScaleRatio ?? 8,
 });
 
-useGeoProjectionZoom.getInitialState = (params) => ({
-  scale: params.transform?.scale ?? params.initialTransform?.scale ?? null,
-  translate: params.transform?.translate ?? params.initialTransform?.translate ?? null,
-});
+useGeoProjectionZoom.getInitialState = () => ({});

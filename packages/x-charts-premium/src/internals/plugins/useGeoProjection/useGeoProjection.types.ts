@@ -38,18 +38,20 @@ export interface UseGeoProjectionParameters {
    */
   projection?: GeoProjectionInput;
   /**
-   * The center of the projection, specified as a `[longitude, latitude]` pair in degrees.
-   */
-  translate?: [number, number];
-  /**
    * The rotation of the projection, specified as a `[longitude, latitude]` pair in degrees.
    */
   rotate?: [number, number];
   /**
-   * The scale of the projection.
-   * Id not provided the scale will default to fit the entire geoData in the drawing area.
+   * The level of zoom on the map.
+   * 1 being the map data fit in the drawing area.
+   * @default 1
    */
-  scale?: number;
+  zoomLevel?: number | null;
+  /**
+   * The geographic coordinate `[longitude, latitude]` displayed at the center of the drawing area.
+   * @default [0, 0]
+   */
+  center?: [number, number] | null;
 }
 
 export type UseGeoProjectionDefaultizedParameters = UseGeoProjectionParameters;
@@ -58,9 +60,18 @@ export interface UseGeoProjectionState {
   geoProjection: {
     geoData: ExtendedFeatureCollection | null;
     projection: GeoProjectionInput | null;
-    translate: [number, number] | null;
     rotate: [number, number] | null;
-    scale: number | null;
+    /**
+     * The zoom level, as a multiple of the scale that fits the data in the drawing area.
+     * `null` (the default) and `1` both mean fit-to-data. The absolute projection scale is
+     * derived as `fitScale * zoomLevel`, so this stays valid across resizes.
+     */
+    zoomLevel: number | null;
+    /**
+     * The geographic coordinate `[longitude, latitude]` displayed at the center of the drawing area.
+     * `null` keeps the data centered (the fit center).
+     */
+    center: [number, number] | null;
     /**
      * The two standard parallels used by conic projections, if applicable.
      * Used for projection 'conicConformal', 'conicEqualArea', 'conicEquidistant'.

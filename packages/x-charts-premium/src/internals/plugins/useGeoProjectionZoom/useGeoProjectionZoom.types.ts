@@ -1,6 +1,6 @@
 import { type ChartPluginSignature } from '@mui/x-charts/internals';
 import { type UseGeoProjectionSignature } from '../useGeoProjection';
-import { type MapZoomTransform } from './mapZoom.utils';
+import { type MapZoomView } from './mapZoom.utils';
 
 export interface UseGeoProjectionZoomParameters {
   /**
@@ -19,25 +19,20 @@ export interface UseGeoProjectionZoomParameters {
    */
   maxScaleRatio?: number;
   /**
-   * The zoom transform to apply on mount, when the zoom is not controlled.
-   * Use this to seed the map with a specific scale/translation without controlling it.
-   *
-   * Note: `translate` is expressed in SVG pixels and is therefore tied to the current
-   * drawing-area size. A value captured at one size may not restore the same view at another.
+   * The view to apply on mount, when the zoom is not controlled.
+   * Use this to seed the map at a specific zoom level and center without controlling it.
    */
-  initialTransform?: MapZoomTransform;
+  initialView?: MapZoomView;
   /**
-   * The zoom transform to apply, in controlled mode.
-   * When set, the component does not update the transform on its own — drive it from `onZoomChange`.
-   *
-   * Note: `translate` is expressed in SVG pixels (see `initialTransform`).
+   * The view to display, in controlled mode.
+   * When set, the component does not update the view on its own — drive it from `onZoomChange`.
    */
-  transform?: MapZoomTransform;
+  view?: MapZoomView;
   /**
    * Callback fired when the map zoom or pan changes (including programmatic reset).
-   * @param {MapZoomTransform} transform The new projection scale and translation.
+   * @param {MapZoomView} view The new zoom level and geographic center.
    */
-  onZoomChange?: (transform: MapZoomTransform) => void;
+  onZoomChange?: (view: MapZoomView) => void;
 }
 
 interface UseGeoProjectionZoomDefaultizedParameters extends UseGeoProjectionZoomParameters {

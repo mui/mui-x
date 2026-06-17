@@ -15,9 +15,7 @@ import {
  * They are registered here instead of in the core interaction listener plugin
  * so their implementations are only bundled with the zoom plugin.
  */
-export const useRegisterZoomGestures = ({
-  instance,
-}: { instance: ChartUsedInstance<any> }) => {
+export const useRegisterZoomGestures = ({ instance }: { instance: ChartUsedInstance<any> }) => {
   React.useEffect(() => {
     return instance.registerGestures([
       new PanGesture({
