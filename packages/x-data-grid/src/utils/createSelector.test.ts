@@ -17,6 +17,15 @@ describe('createSelectorMemoized', () => {
     expect(selector(apiRef)).to.equal(selector(apiRef));
   });
 
+  it('should pass the state to a single combiner function', () => {
+    const selector = createSelectorMemoized((state: { value: number }) => state.value) as any;
+    const apiRef = {
+      current: { state: { value: 42 }, instanceId: { id: 0 } },
+    };
+
+    expect(selector(apiRef)).to.equal(42);
+  });
+
   it('should return different selectors for different cache keys', () => {
     const selector = createSelectorMemoized(() => []) as OutputSelector<
       GridStateCommunity,

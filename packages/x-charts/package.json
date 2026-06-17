@@ -43,7 +43,6 @@
     "bezier-easing": "^3.0.0",
     "clsx": "catalog:",
     "prop-types": "catalog:",
-    "reselect": "catalog:",
     "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {

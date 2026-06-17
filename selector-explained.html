@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MUI X Selectors &amp; Memoization — Explained</title>
+    <style>
+      :root {
+        --bg: #0d1117;
+        --panel: #161b22;
+        --border: #30363d;
+        --text: #c9d1d9;
+        --muted: #8b949e;
+        --accent: #58a6ff;
+        --green: #3fb950;
+        --red: #f85149;
+        --yellow: #d29922;
+        --purple: #bc8cff;
+        --code-bg: #1c2128;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        font-size: 16px;
+      }
+      .wrap {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 24px 120px;
+      }
+      h1 {
+        font-size: 30px;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 14px;
+      }
+      h2 {
+        font-size: 23px;
+        margin-top: 52px;
+        color: var(--accent);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+      }
+      h3 {
+        font-size: 18px;
+        margin-top: 32px;
+        color: var(--purple);
+      }
+      p,
+      li {
+        color: var(--text);
+      }
+      code {
+        background: var(--code-bg);
+        padding: 2px 6px;
+        border-radius: 5px;
+        font-family: 'SF Mono', Consolas, monospace;
+        font-size: 14px;
+        color: var(--yellow);
+      }
+      pre {
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px;
+        overflow-x: auto;
+        font-size: 13.5px;
+        line-height: 1.55;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+        color: var(--text);
+      }
+      .k {
+        color: var(--purple);
+      } /* keyword */
+      .f {
+        color: var(--accent);
+      } /* function */
+      .s {
+        color: var(--green);
+      } /* string */
+      .c {
+        color: var(--muted);
+        font-style: italic;
+      } /* comment */
+      .n {
+        color: var(--yellow);
+      } /* number/value */
+      .box {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 18px 0;
+      }
+      .box.tip {
+        border-left: 4px solid var(--green);
+      }
+      .box.warn {
+        border-left: 4px solid var(--yellow);
+      }
+      .box.key {
+        border-left: 4px solid var(--accent);
+      }
+      .tag {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 1px 9px;
+        border-radius: 20px;
+        margin-right: 6px;
+        vertical-align: middle;
+      }
+      .tag.miss {
+        background: #5a1e1e;
+        color: #ff9a9a;
+      }
+      .tag.hit {
+        background: #15391f;
+        color: #7ee787;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 18px 0;
+        font-size: 14.5px;
+      }
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 9px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--panel);
+        color: var(--accent);
+      }
+      .flow {
+        font-family: 'SF Mono', Consolas, monospace;
+        font-size: 13px;
+        white-space: pre;
+        background: var(--code-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 18px;
+        overflow-x: auto;
+        line-height: 1.5;
+        color: var(--text);
+      }
+      .toc {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 24px;
+      }
+      .toc a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .toc a:hover {
+        text-decoration: underline;
+      }
+      strong {
+        color: #fff;
+      }
+      .em {
+        color: var(--green);
+        font-weight: 600;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>MUI X Selectors &amp; Memoization</h1>
+      <p>
+        Everything happening between a <strong>user interaction</strong> and a React component
+        <strong>re-rendering (or not)</strong> — and where <code>createSelector</code>,
+        <code>lruMemoize</code>, and <code>weakMapMemoize</code> fit.
+      </p>
+
+      <div class="toc">
+        <ol>
+          <li><a href="#mem">What is memoization</a></li>
+          <li><a href="#lru">What is LRU</a></li>
+          <li><a href="#store">The Store: where all data lives</a></li>
+          <li><a href="#problem">The problem selectors solve</a></li>
+          <li><a href="#two">Two functions: createSelector vs createSelectorMemoized</a></li>
+          <li><a href="#layers">The two cache layers</a></li>
+          <li><a href="#flow">The full code flow (user → render)</a></li>
+          <li><a href="#syncstore">useSyncExternalStore: the React bridge</a></li>
+          <li><a href="#rerender">How only part re-runs, not the whole component</a></li>
+          <li><a href="#branch">What this branch changed</a></li>
+          <li><a href="#recap">One-paragraph recap</a></li>
+        </ol>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="mem">1. What is memoization</h2>
+      <p>
+        <strong
+          >Memoization = remember the last answer; if asked the same question, return the saved
+          answer instead of recomputing.</strong
+        >
+      </p>
+      <pre><code><span class="c">// Without memoization: runs the heavy work EVERY call</span>
+<span class="k">function</span> <span class="f">slow</span>(n) { <span class="k">return</span> heavyCompute(n); }
+
+<span class="c">// With memoization: remembers last input + output</span>
+<span class="k">function</span> <span class="f">memo</span>(fn) {
+  <span class="k">let</span> lastArg, lastResult, has = <span class="n">false</span>;
+  <span class="k">return</span> (arg) => {
+    <span class="k">if</span> (has && arg === lastArg) <span class="k">return</span> lastResult; <span class="c">// HIT: skip work</span>
+    lastArg = arg; lastResult = fn(arg); has = <span class="n">true</span>;       <span class="c">// MISS: compute + save</span>
+    <span class="k">return</span> lastResult;
+  };
+}</code></pre>
+      <p>Two payoffs, both critical here:</p>
+      <ul>
+        <li><strong>Speed</strong> — skip expensive recomputation.</li>
+        <li>
+          <span class="em">Reference stability</span> — return the <em>same object in memory</em> as
+          last time. This is what stops React re-renders (explained in §8).
+        </li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2 id="lru">2. What is LRU</h2>
+      <p>
+        <strong>LRU = Least Recently Used.</strong> A cache that holds the last
+        <code>N</code> entries. When full, it evicts the entry used longest ago.
+        <code>maxSize: 1</code> (the default here) means "remember only the most recent call".
+      </p>
+      <pre><code><span class="c">// From your new lruMemoize.ts — the LRU "move to front" on a hit:</span>
+<span class="k">if</span> (<span class="f">areArgsEqual</span>(entry.args, args)) {
+  <span class="k">if</span> (i > <span class="n">0</span>) {
+    entries.<span class="f">splice</span>(i, <span class="n">1</span>);   <span class="c">// remove from current spot</span>
+    entries.<span class="f">unshift</span>(entry);  <span class="c">// put at front = "most recently used"</span>
+  }
+  <span class="k">return</span> entry.value;       <span class="c">// HIT</span>
+}
+<span class="c">// ...after computing a MISS:</span>
+entries.<span class="f">unshift</span>({ args, value });
+<span class="k">if</span> (entries.length > maxSize) entries.<span class="f">pop</span>(); <span class="c">// evict least-recently-used</span></code></pre>
+      <p>
+        Front of the array = freshest. Back = stalest, evicted first. With
+        <code>maxSize: 1</code> there is exactly one slot, so any different argument is a miss.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2 id="store">3. The Store: where all data lives</h2>
+      <p>
+        Each Data Grid and each Chart owns one <strong>Store</strong> — a single object holding all
+        state, plus a list of listeners.
+      </p>
+      <pre><code><span class="c">// Store.ts (simplified)</span>
+<span class="k">class</span> Store {
+  state;                  <span class="c">// the one big state object</span>
+  listeners = <span class="k">new</span> Set();  <span class="c">// components waiting for changes</span>
+
+  <span class="f">setState</span>(newState) {
+    <span class="k">this</span>.state = newState;
+    <span class="k">this</span>.listeners.<span class="f">forEach</span>(l => <span class="f">l</span>(newState)); <span class="c">// notify everyone</span>
+  }
+  <span class="f">subscribe</span>(fn) { <span class="k">this</span>.listeners.<span class="f">add</span>(fn); ... }
+}</code></pre>
+
+      <h3>Grid store shape</h3>
+      <pre><code><span class="c">// GridStateCommunity — one key per feature (~24 keys)</span>
+{
+  rows:         { dataRowIds: [...], dataRowIdToModelLookup: {...} },
+  columns:      { orderedFields: [...], lookup: {...} },
+  filter:       { filterModel: {...}, filteredRowsLookup: {...} },
+  sorting:      { sortModel: [...], sortedRows: [...] },
+  pagination:   { paginationModel: { page, pageSize } },
+  rowSelection: [...],
+  focus:        { cell, columnHeader },
+  dimensions, density, virtualization, ...
+}</code></pre>
+
+      <h3>Chart store shape</h3>
+      <pre><code><span class="c">// ChartState — merged from all active plugins</span>
+{
+  series:        { defaultizedSeries, idToType, dataset },
+  seriesConfig:  { config },
+  dimensions:    { width, height, margin },
+  animation:     { skip },
+  <span class="c">// optional feature plugins add their own keys:</span>
+  interaction:   {...},   zoom: {...},
+  brush:         { start, current },
+  cartesianAxis: { xAxis, yAxis, xAxisExtrema },
+}</code></pre>
+
+      <div class="box key">
+        <strong>The single most important rule.</strong> Every update creates a
+        <em>new top-level object</em> but
+        <strong>keeps the references of slices it did not touch</strong>:
+        <pre
+          style="margin: 12px 0 0"
+        ><code><span class="c">// update only filter → new state object, but state.sorting is the SAME ref as before</span>
+store.<span class="f">setState</span>({ ...state, filter: newFilter });</code></pre>
+        This reference-preservation is the entire foundation memoization stands on.
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="problem">4. The problem selectors solve</h2>
+      <p>
+        A component rarely needs the whole store — it needs a <em>derived slice</em>: "the rows
+        after filter + sort", "the visible series". Computing that is often expensive and produces a
+        <strong>new array/object</strong> each time.
+      </p>
+      <p>If you recompute on every store change, two things break:</p>
+      <ul>
+        <li>Wasted CPU re-deriving data that did not change.</li>
+        <li>
+          A fresh <code>[]</code>/<code>{}</code> every time is a <em>new reference</em> → React
+          thinks it changed → re-renders needlessly.
+        </li>
+      </ul>
+      <p>
+        A <strong>selector</strong> = a function <code>(state, ...args) =&gt; derivedValue</code>. A
+        <strong>memoized selector</strong> solves both problems at once.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2 id="two">5. Two functions — and only one memoizes</h2>
+      <table>
+        <tr>
+          <th>&nbsp;</th>
+          <th><code>createSelector</code></th>
+          <th><code>createSelectorMemoized</code></th>
+        </tr>
+        <tr>
+          <td><strong>Caches?</strong></td>
+          <td class="tag miss" style="text-align: center">NO</td>
+          <td class="tag hit" style="text-align: center">YES</td>
+        </tr>
+        <tr>
+          <td><strong>Does</strong></td>
+          <td>Just composes: run inputs, run combiner, return.</td>
+          <td>Composes <em>+</em> wraps in the two-layer cache.</td>
+        </tr>
+        <tr>
+          <td><strong>Use for</strong></td>
+          <td>Cheap results / primitives (number, boolean).</td>
+          <td>Expensive results / objects &amp; arrays.</td>
+        </tr>
+        <tr>
+          <td><strong>Why</strong></td>
+          <td>Recompute is free; primitives compare by value anyway.</td>
+          <td>Avoid recompute + keep stable reference to stop re-renders.</td>
+        </tr>
+      </table>
+
+      <pre><code><span class="c">// createSelector — NO cache. Builds a plain function:</span>
+selector = (state, a1, a2, a3) => {
+  <span class="k">const</span> va = <span class="f">a</span>(state, a1, a2, a3);   <span class="c">// run input selector a</span>
+  <span class="k">const</span> vb = <span class="f">b</span>(state, a1, a2, a3);   <span class="c">// run input selector b</span>
+  <span class="k">return</span> <span class="f">c</span>(va, vb, a1, a2, a3);      <span class="c">// run combiner — EVERY call</span>
+};</code></pre>
+
+      <div class="box key">
+        <strong
+          >Read this snippet carefully — it is what <code>createSelector</code>
+          <em>returns</em>.</strong
+        >
+        <code>createSelector</code> does not select anything itself; it
+        <strong>assembles a function out of the pieces you passed</strong> and hands it back. Above
+        is the assembled function for the "2 input selectors + 1 combiner" case (<code
+          >createSelector(a, b, c)</code
+        >):
+        <ul style="margin-bottom: 0">
+          <li>
+            <code>a</code>, <code>b</code> = <strong>input selectors</strong> — each pulls one slice
+            out of state (e.g. <code>state.filter</code>, <code>state.sorting</code>).
+          </li>
+          <li>
+            <code>c</code> = <strong>combiner</strong> — turns those slices into the final derived
+            value.
+          </li>
+          <li>
+            <code>va</code>, <code>vb</code> = the values the input selectors returned, fed into the
+            combiner.
+          </li>
+        </ul>
+        The <code>// EVERY call</code> comment is the whole point:
+        <strong>nothing caches this</strong> — <code>a</code>, <code>b</code>, <code>c</code> all
+        re-run on every invocation. (The real file has parallel branches for 1–8 selectors; this is
+        the <code>a&nbsp;&amp;&amp;&nbsp;b&nbsp;&amp;&amp;&nbsp;c</code> one.
+        <code>createSelectorMemoized</code> builds the <em>same shape</em>, then wraps it in the two
+        cache layers.)
+      </div>
+
+      <h3>Real example — <code>canItemBeReordered</code></h3>
+      <p>
+        From the Tree View Pro (<code>x-tree-view-pro/.../itemsReordering/selectors.ts</code>).
+        Exactly the <code>createSelector(a, b, c)</code> shape, and it uses the
+        <strong>non-memoized</strong> <code>createSelector</code> because the result is a
+        <code>boolean</code> — cheap to recompute, no reference to stabilize.
+      </p>
+      <pre><code><span class="k">canItemBeReordered</span>: <span class="f">createSelector</span>(
+  (state) => state.isItemReorderable,    <span class="c">// ← a: input selector (a slice of state)</span>
+  labelSelectors.isAnyItemBeingEdited,   <span class="c">// ← b: input selector (reused from another file)</span>
+  (isItemReorderable, isEditing, itemId) =>   <span class="c">// ← c: combiner</span>
+    !isEditing && <span class="f">isItemReorderable</span>(itemId),
+),</code></pre>
+      <table>
+        <tr>
+          <th>Snippet placeholder</th>
+          <th>Real code</th>
+          <th>Role</th>
+        </tr>
+        <tr>
+          <td><code>a</code></td>
+          <td><code>(state) =&gt; state.isItemReorderable</code></td>
+          <td>input selector → <code>va</code> = <code>isItemReorderable</code></td>
+        </tr>
+        <tr>
+          <td><code>b</code></td>
+          <td><code>labelSelectors.isAnyItemBeingEdited</code></td>
+          <td>input selector → <code>vb</code> = <code>isEditing</code></td>
+        </tr>
+        <tr>
+          <td><code>c</code></td>
+          <td><code>(isItemReorderable, isEditing, itemId) =&gt; ...</code></td>
+          <td>
+            combiner — receives <code>va</code>, <code>vb</code>, then the extra arg
+            <code>itemId</code>
+          </td>
+        </tr>
+        <tr>
+          <td>output</td>
+          <td><code>boolean</code></td>
+          <td>primitive → compared by value → no memo needed</td>
+        </tr>
+      </table>
+      <p>
+        Note the <strong>extra argument</strong> <code>itemId</code>: it is not produced by an input
+        selector — it is passed in at call time (<code>store.use(canItemBeReordered, itemId)</code>)
+        and forwarded straight to the combiner. That matches the <code>a1, a2, a3</code> slots in
+        the assembled-function snippet above.
+      </p>
+      <div class="box tip">
+        <strong>Contrast — same file, memoized sibling:</strong>
+        <code>draggedItemProperties</code> uses <code>createSelectorMemoized</code> because it
+        returns an <em>object</em> (<code>{ id, ... }</code>). Object output must keep a stable
+        reference across calls, or every subscriber re-renders — exactly the case the two cache
+        layers exist for.
+      </div>
+
+      <div class="box tip">
+        <strong>The two layers below only exist inside <code>createSelectorMemoized</code>.</strong>
+        <code>createSelector</code> never touches <code>lruMemoize</code> or
+        <code>weakMapMemoize</code>.
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="layers">6. The two cache layers</h2>
+      <p>
+        <code>createMemoizedSelector</code> wires two memoizers together — exactly mirroring what
+        <code>reselect</code> did:
+      </p>
+      <pre><code><span class="c">// createSelector.ts</span>
+<span class="k">function</span> <span class="f">createMemoizedSelector</span>(selectorsAndCombiner, options) {
+  <span class="k">const</span> combiner       = selectorsAndCombiner.at(-<span class="n">1</span>);
+  <span class="k">const</span> inputSelectors = selectorsAndCombiner.<span class="f">slice</span>(<span class="n">0</span>, -<span class="n">1</span>);
+
+  <span class="k">const</span> memoizedCombiner = <span class="f">lruMemoize</span>(combiner, { equalityCheck: Object.is });  <span class="c">// INNER</span>
+
+  <span class="k">return</span> <span class="f">weakMapMemoize</span>((...args) => {                                     <span class="c">// OUTER</span>
+    <span class="k">const</span> values = inputSelectors.<span class="f">map</span>(s => <span class="f">s</span>(...args));  <span class="c">// pull slices from state</span>
+    <span class="k">return</span> <span class="f">memoizedCombiner</span>(...values);
+  });
+}</code></pre>
+
+      <h3>Outer — <code>weakMapMemoize</code> (keyed on the arguments)</h3>
+      <p>
+        Builds a <strong>tree of caches</strong>, one level per argument. Object args (like
+        <code>state</code>) go in a <code>WeakMap</code>; primitives in a <code>Map</code>. Walk the
+        tree by args → if the leaf was computed, return it without running anything.
+      </p>
+      <pre><code><span class="c">// weakMapMemoize.ts — per-argument descent</span>
+<span class="k">let</span> node = root;
+<span class="k">for</span> (<span class="k">const</span> arg <span class="k">of</span> args) {
+  <span class="k">const</span> map = <span class="f">isObjectLike</span>(arg) ? node.objects : node.primitives;
+  node = map.<span class="f">get</span>(arg) ?? <span class="f">createCacheNode</span>(); <span class="c">// follow / create branch</span>
+}
+<span class="k">if</span> (!node.computed) { node.value = <span class="f">func</span>(...args); node.computed = <span class="n">true</span>; }
+<span class="k">return</span> node.value;</code></pre>
+      <p>
+        <strong>Why WeakMap?</strong> When the <code>state</code> object is garbage-collected, its
+        cache branch vanishes automatically — no memory leak, no manual cleanup.
+      </p>
+
+      <p>
+        Picture the cache as a tree. Each <strong>node</strong> holds two maps —
+        <code>objects</code> (a <code>WeakMap</code>, for object args) and
+        <code>primitives</code> (a <code>Map</code>, for things like numbers/strings) — plus a
+        <code>value</code> slot at the leaf. Calling the selector means walking down one branch, one
+        argument at a time:
+      </p>
+
+      <div class="flow">
+        <span class="c">// Calls made over time, each = selector(state, axisId):</span>
+        <span class="c">// selectXAxisTicks(stateA, "x")</span>
+        <span class="c">// selectXAxisTicks(stateA, "y")</span>
+        <span class="c">// selectXAxisTicks(stateB, "x")</span>
+
+        <span style="color: #fff">root</span> (a CacheNode) │ .objects = WeakMap
+        <span class="c">// next arg is an object</span> ┌─────────┴──────────┐ key=<span class="n"
+          >stateA</span
+        >
+        (obj) key=<span class="n">stateB</span> (obj)
+        <span class="c">← arg #1: the state object</span> │ node │ node │ .primitives = Map │
+        .primitives = Map <span class="c">// next arg is a primitive</span> ┌────┴─────┐ │ key=<span
+          class="s"
+          >"x"</span
+        >
+        key=<span class="s">"y"</span> key=<span class="s">"x"</span>
+        <span class="c">← arg #2: the axisId</span>
+        │ leaf │ leaf │ leaf ▼ ▼ ▼
+        <span style="color: #3fb950">computed=true</span>
+        <span style="color: #3fb950">computed=true</span>
+        <span style="color: #3fb950">computed=true</span>
+        <span class="c">← value cached here</span> value=[ticks] value=[ticks] value=[ticks]
+      </div>
+
+      <p>How each call resolves against this tree:</p>
+      <table>
+        <tr>
+          <th>Call</th>
+          <th>Walk</th>
+          <th>Leaf</th>
+          <th>Result</th>
+        </tr>
+        <tr>
+          <td><code>(stateA,&nbsp;"x")</code> again</td>
+          <td>root → <code>objects[stateA]</code> → <code>primitives["x"]</code></td>
+          <td>already <code>computed</code></td>
+          <td class="tag hit">HIT — return value, run nothing</td>
+        </tr>
+        <tr>
+          <td><code>(stateA,&nbsp;"z")</code></td>
+          <td>root → <code>objects[stateA]</code> → <code>primitives["z"]</code> missing</td>
+          <td>new leaf, <code>computed=false</code></td>
+          <td class="tag miss">MISS — compute, store at new leaf</td>
+        </tr>
+        <tr>
+          <td><code>(stateC,&nbsp;"x")</code></td>
+          <td>root → <code>objects[stateC]</code> missing</td>
+          <td>whole new branch</td>
+          <td class="tag miss">MISS — compute, store</td>
+        </tr>
+      </table>
+
+      <div class="box tip">
+        <strong>The garbage-collection trick.</strong> Because the first level is a
+        <code>WeakMap</code>, the <code>stateA</code> branch is only reachable
+        <em>through the <code>stateA</code> object itself</em>. The moment <code>stateA</code> is no
+        longer referenced anywhere, the GC reclaims it and its entire cache branch (both axis
+        leaves) disappears automatically — no eviction logic, no size cap, no leak. This is why the
+        <strong>outer</strong> layer uses a weak tree (unbounded but self-cleaning) while the
+        <strong>inner</strong> <code>lruMemoize</code> uses a fixed <code>maxSize</code>.
+      </div>
+
+      <h3>Inner — <code>lruMemoize</code> (keyed on the input <em>values</em>)</h3>
+      <p>
+        Wraps the combiner. Compares the freshly-pulled input values against the last call with
+        <code>Object.is</code>. Same values → return the <strong>old result object</strong> (stable
+        reference). Different → recompute.
+      </p>
+
+      <div class="box key">
+        <strong>Why two layers, not one?</strong>
+        <ul style="margin-bottom: 0">
+          <li>
+            <strong>Outer (weakMap, on args):</strong> instant bail-out when called with the
+            identical <code>state</code> again, and leak-free lifetime.
+          </li>
+          <li>
+            <strong>Inner (lru, on values):</strong> even when <code>state</code> is a
+            <em>brand-new object</em> but the slice you read is unchanged, you still get back the
+            same result reference.
+          </li>
+        </ul>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="flow">7. The full code flow — user to render</h2>
+      <div class="flow">
+        <span style="color: #fff">1. USER interacts</span> (types in filter box / drags zoom /
+        clicks) │ ▼
+        <span style="color: #fff">2. handler updates the store</span>
+        store.setState({ ...state, filter: newFilter }) <span class="c">// Store.ts</span>
+        → new top-level object; untouched slices keep old refs │ ▼
+        <span style="color: #fff">3. store notifies every listener</span>
+        listeners.forEach(l =&gt; l(newState)) <span class="c">// Store.ts</span>
+        │ ▼
+        <span style="color: #fff">4. each subscribed component wakes up</span>
+        store.use(selectFilteredRows) <span class="c">// Store.ts → useStore.ts</span>
+        │ ▼
+        <span style="color: #fff">5. React reads via useSyncExternalStore</span>
+        getSelection = () =&gt; selector(getSnapshot(), ...) <span class="c">// useStore.ts</span>
+        │ ▼
+        <span style="color: #fff">6. THE SELECTOR RUNS</span> (built by createSelectorMemoized) │ ├─
+        OUTER weakMapMemoize — seen this exact state before? │
+        <span class="tag hit">HIT</span> return cached result ──────────────┐ │
+        <span class="tag miss">MISS</span> run input selectors → values │ │ │ ├─ INNER lruMemoize —
+        same input values as last? │ │ <span class="tag hit">HIT</span> return OLD result object
+        ──────────┤ │ <span class="tag miss">MISS</span> run combiner → NEW result object │ │ │ ▼ ▼
+        <span style="color: #fff">7. React compares returned reference to previous</span>
+        │ ├─ same reference → <span style="color: #3fb950">SKIP re-render</span> └─ new reference →
+        <span style="color: #d29922">RE-RENDER this component</span>
+      </div>
+
+      <h3>Concrete walkthrough — Data Grid</h3>
+      <pre><code><span class="c">// The selector (real code, gridFilterSelector.ts)</span>
+<span class="k">export const</span> gridFilteredSortedRowEntriesSelector = <span class="f">createSelectorMemoized</span>(
+  gridFilteredRowsLookupSelector,  <span class="c">// reads state.filter.filteredRowsLookup</span>
+  gridSortedRowEntriesSelector,    <span class="c">// reads state.sorting.sortedRows</span>
+  (filteredLookup, sortedRows) =>
+    sortedRows.<span class="f">filter</span>(r => filteredLookup[r.id] !== <span class="n">false</span>),
+);</code></pre>
+
+      <table>
+        <tr>
+          <th>User action</th>
+          <th>What setState changed</th>
+          <th>Inner inputs</th>
+          <th>Result</th>
+        </tr>
+        <tr>
+          <td>Types in filter box</td>
+          <td><code>state.filter</code></td>
+          <td><code>filteredLookup</code> changed</td>
+          <td class="tag miss">MISS</td>
+        </tr>
+        <tr>
+          <td>Resizes a column</td>
+          <td><code>state.columns</code></td>
+          <td>both inputs <em>same ref</em></td>
+          <td class="tag hit">HIT → same array → no re-render of the rows</td>
+        </tr>
+      </table>
+      <p>
+        Resizing a column makes a new top-level state object, so the <em>outer</em> cache misses —
+        but the input selectors return the <strong>same</strong> <code>state.filter</code> and
+        <code>state.sorting</code> slices, so the <em>inner</em> cache hits and hands back the
+        identical rows array. React skips re-rendering the row list.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2 id="syncstore">8. useSyncExternalStore: the React bridge</h2>
+      <p>
+        The Store lives <em>outside</em> React — it is a plain class, not React state.
+        <code>useSyncExternalStore</code> is the official React 18+ hook for letting a component
+        <strong>read from and subscribe to an external store</strong> safely. It is the glue in
+        steps 4–7 of the flow.
+      </p>
+
+      <h3>The hook's contract</h3>
+      <pre><code>const value = <span class="f">useSyncExternalStore</span>(
+  subscribe,         <span class="c">// 1. how to register a re-render callback; returns an unsubscribe fn</span>
+  getSnapshot,       <span class="c">// 2. how to read the current value (client)</span>
+  getServerSnapshot, <span class="c">// 3. how to read it during SSR (optional)</span>
+);</code></pre>
+      <p>What React does with these three:</p>
+      <ol>
+        <li>
+          On mount, calls <code>subscribe(cb)</code> — React's <code>cb</code> gets added to the
+          store's listener set.
+        </li>
+        <li>To render, calls <code>getSnapshot()</code> to get the current value.</li>
+        <li>
+          When the store fires <code>cb</code>, React calls <code>getSnapshot()</code> again and
+          <strong>compares the new return to the previous one with <code>Object.is</code></strong
+          >. Same reference → no re-render. Different → re-render.
+        </li>
+      </ol>
+
+      <div class="box key">
+        This comparison is <strong>the exact moment memoization pays off</strong>.
+        <code>getSnapshot</code> here <em>is</em> your selector running against the latest state. If
+        the selector returns the same reference (a memoization HIT), <code>Object.is</code> is true
+        and React skips the component — §9 is this rule applied to multiple components.
+      </div>
+
+      <h3>How MUI X wires it — <code>useStore.ts</code></h3>
+      <pre><code><span class="k">export function</span> <span class="f">useStore</span>(store, selector, a1, a2, a3) {
+  <span class="k">return</span> <span class="f">useStoreImplementation</span>(store, selector, a1, a2, a3);
+}
+
+<span class="c">// React 19+: the raw hook</span>
+<span class="k">function</span> <span class="f">useStoreR19</span>(store, selector, a1, a2, a3) {
+  <span class="k">const</span> getSelection = React.<span class="f">useCallback</span>(
+    () => <span class="f">selector</span>(store.<span class="f">getSnapshot</span>(), a1, a2, a3), <span class="c">// getSnapshot = run selector on state</span>
+    [store, selector, a1, a2, a3],
+  );
+  <span class="k">return</span> <span class="f">useSyncExternalStore</span>(store.subscribe, getSelection, getSelection);
+}
+
+<span class="c">// React 17/18: the "with selector" variant from the shim</span>
+<span class="k">function</span> <span class="f">useStoreLegacy</span>(store, selector, a1, a2, a3) {
+  <span class="k">return</span> <span class="f">useSyncExternalStoreWithSelector</span>(
+    store.subscribe,
+    store.getSnapshot,          <span class="c">// raw state snapshot</span>
+    store.getSnapshot,          <span class="c">// SSR snapshot</span>
+    (state) => <span class="f">selector</span>(state, a1, a2, a3), <span class="c">// selector applied separately</span>
+  );
+}</code></pre>
+
+      <h3>Two implementations, why</h3>
+      <table>
+        <tr>
+          <th>&nbsp;</th>
+          <th><code>useStoreR19</code> (React ≥19)</th>
+          <th><code>useStoreLegacy</code> (React 17–18)</th>
+        </tr>
+        <tr>
+          <td>Hook</td>
+          <td><code>useSyncExternalStore</code></td>
+          <td><code>useSyncExternalStoreWithSelector</code> (shim)</td>
+        </tr>
+        <tr>
+          <td>Selector applied</td>
+          <td>inside <code>getSnapshot</code> itself</td>
+          <td>as a separate selector argument</td>
+        </tr>
+        <tr>
+          <td>Why</td>
+          <td>raw hook is reliable here on R19+</td>
+          <td>
+            raw hook had edge-case issues on R18 in tests; the shim + React 17 fallback are needed
+            for older support
+          </td>
+        </tr>
+      </table>
+      <p>
+        The choice is made once: <code>reactMajor &gt;= 19 ? useStoreR19 : useStoreLegacy</code>.
+      </p>
+
+      <h3>Why this hook and not <code>useState</code>/Context</h3>
+      <ul>
+        <li>
+          <strong>External source of truth</strong> — the store outlives renders and is mutated
+          imperatively by plugins/handlers; it is not React state.
+        </li>
+        <li>
+          <strong>Tearing-safe</strong> — in concurrent React, two components could otherwise read
+          different store values mid-render. <code>useSyncExternalStore</code> guarantees a
+          consistent snapshot, preventing this "tearing".
+        </li>
+        <li>
+          <strong>Granular subscriptions</strong> — each component subscribes through its own
+          selector, so each re-renders only when <em>its</em> slice changes. Context would re-render
+          every consumer on any change.
+        </li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2 id="rerender">9. How only PART re-runs, not the whole component</h2>
+      <p>
+        This is the payoff. React's <code>useSyncExternalStore</code> works like this: after the
+        store notifies, it calls your selector and
+        <strong>compares the returned value to the previous one with <code>Object.is</code></strong
+        >. If they are the same reference, React treats the hook output as unchanged and
+        <strong>does not re-render that component</strong>.
+      </p>
+
+      <pre><code><span class="c">// A component subscribes to ONE slice:</span>
+<span class="k">function</span> <span class="f">RowList</span>() {
+  <span class="k">const</span> rows = store.<span class="f">use</span>(gridFilteredSortedRowEntriesSelector);
+  <span class="k">return</span> rows.<span class="f">map</span>(...);
+}
+<span class="k">function</span> <span class="f">DensityButton</span>() {
+  <span class="k">const</span> density = store.<span class="f">use</span>(gridDensitySelector);
+  ...
+}</code></pre>
+
+      <p>One <code>setState</code> notifies <strong>both</strong> components. But:</p>
+      <ul>
+        <li>
+          Change <code>state.filter</code> → <code>RowList</code>'s selector returns a new array
+          (<span class="tag miss">re-renders</span>); <code>DensityButton</code>'s selector returns
+          the same density (<span class="tag hit">skips</span>).
+        </li>
+        <li>
+          Change <code>state.density</code> → reverse: <code>DensityButton</code> re-renders,
+          <code>RowList</code> skips.
+        </li>
+      </ul>
+
+      <h3>Side by side: without vs with memoization</h3>
+      <p>
+        Scenario: user resizes a column (changes <code>state.columns</code> only). Three components
+        are subscribed. Watch what each path does.
+      </p>
+
+      <div class="flow">
+        <span style="color: #f85149"
+          >━━━ WITHOUT MEMOIZATION (plain createSelector everywhere) ━━━</span
+        >
+
+        setState({ ...state, columns: new }) <span class="c">// only columns changed</span> │
+        notifies all 3 subscribers ▼ ┌──────────────┬──────────────┬──────────────┐ │ RowList │
+        ColumnHeader │ DensityBtn │ │ selector │ selector │ selector │ │ re-runs │ re-runs │ re-runs
+        │ <span class="c">← combiner runs EVERY time</span> │ filter+sort │ map cols │ read density│
+        │ → NEW array │ → NEW array │ → NEW value │
+        <span class="c">← fresh reference each call</span>
+        ▼ ▼ ▼
+        <span style="color: #d29922">RE-RENDER</span> <span style="color: #d29922">RE-RENDER</span>
+        <span style="color: #d29922">RE-RENDER</span>
+        <span class="c">← React sees new ref → all 3 render</span>
+
+        Result: 3 recomputations, 3 re-renders. 2 of them were pointless.
+
+        <span style="color: #3fb950"
+          >━━━ WITH MEMOIZATION (createSelectorMemoized) ━━━━━━━━━━━━━</span
+        >
+
+        setState({ ...state, columns: new })
+        <span class="c">// columns changed; filter/sorting refs UNCHANGED</span> │ notifies all 3
+        subscribers ▼ ┌──────────────────┬──────────────────┬──────────────────┐ │ RowList │
+        ColumnHeader │ DensityBtn │ │ inner inputs: │ inner inputs: │ inner inputs: │ │
+        filter,sorting │ columns │ density │ │ SAME refs │ CHANGED │ SAME ref │ │
+        <span class="tag hit">HIT</span> │ <span class="tag miss">MISS</span> │
+        <span class="tag hit">HIT</span> │ │ return OLD array│ recompute → NEW │ return OLD value│ ▼
+        ▼ ▼ <span style="color: #3fb950">SKIP</span> <span style="color: #d29922">RE-RENDER</span>
+        <span style="color: #3fb950">SKIP</span>
+        <span class="c">← only the affected one renders</span>
+
+        Result: 1 recomputation, 1 re-render. The 2 unrelated components are untouched.
+      </div>
+
+      <table>
+        <tr>
+          <th>&nbsp;</th>
+          <th>Without memoization</th>
+          <th>With memoization</th>
+        </tr>
+        <tr>
+          <td>Combiner runs</td>
+          <td>3× (all subscribers)</td>
+          <td>1× (only changed slice)</td>
+        </tr>
+        <tr>
+          <td>Return reference</td>
+          <td>always new</td>
+          <td>same unless inputs changed</td>
+        </tr>
+        <tr>
+          <td>Components re-rendered</td>
+          <td class="tag miss">3 of 3</td>
+          <td class="tag hit">1 of 3</td>
+        </tr>
+        <tr>
+          <td>Wasted work</td>
+          <td>2 recomputes + 2 renders</td>
+          <td>none</td>
+        </tr>
+      </table>
+
+      <div class="box tip">
+        <strong>"Only part re-runs" has two distinct meanings — both happen:</strong>
+        <ol style="margin-bottom: 0">
+          <li>
+            <strong>The computation</strong>: memoization skips re-deriving slices whose inputs are
+            unchanged (§6).
+          </li>
+          <li>
+            <strong>The render</strong>: because skipped computations return the same reference, the
+            subscribing component's hook sees no change and React skips that component's render
+            (this section).
+          </li>
+        </ol>
+        Memoization is the mechanism; selective re-rendering is the result. No memoization → new
+        reference every time → every subscriber re-renders on every change.
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="branch">10. What this branch changed</h2>
+      <p>
+        Behavior is <strong>identical</strong>. The change is purely
+        <em>where the memoization code comes from</em>: it dropped the external
+        <code>reselect</code> dependency and ships its own minimal copies.
+      </p>
+      <table>
+        <tr>
+          <th>File</th>
+          <th>Change</th>
+        </tr>
+        <tr>
+          <td><code>lruMemoize/lruMemoize.ts</code></td>
+          <td>
+            <span class="tag hit">NEW</span> in-house LRU memoizer (was <code>reselect</code>'s).
+          </td>
+        </tr>
+        <tr>
+          <td><code>store/weakMapMemoize.ts</code></td>
+          <td>
+            <span class="tag hit">NEW</span> in-house weak-tree memoizer (was
+            <code>reselect</code>'s).
+          </td>
+        </tr>
+        <tr>
+          <td><code>store/createSelector.ts</code></td>
+          <td>
+            Removed <code>reselect</code> imports; new <code>createMemoizedSelector</code> wires the
+            two local memoizers; renamed <code>reselectArgs</code> →
+            <code>selectorsAndCombiner</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><code>lruMemoize/index.ts</code></td>
+          <td>Re-exports local <code>lruMemoize</code> instead of <code>reselect</code>'s.</td>
+        </tr>
+      </table>
+      <p>
+        The grid wrapper (<code>x-data-grid/src/utils/createSelector.ts</code>) is unchanged by this
+        branch — it just adds <code>apiRef</code> unwrapping on top of the
+        <code>@mui/x-internals/store</code> versions:
+      </p>
+      <pre><code><span class="k">const</span> selector = (apiRef, a1, a2, a3) =>
+  <span class="f">baseSelector</span>(<span class="f">unwrapIfNeeded</span>(apiRef), a1, a2, a3); <span class="c">// apiRef.current.state → state</span></code></pre>
+      <div class="box warn">
+        <strong>Why do it?</strong> One fewer dependency, full control, smaller surface — while
+        reproducing the exact subset of <code>reselect</code> MUI X relied on. Both new files
+        literally say "Drop-in replacement for the subset of <code>reselect</code> that MUI X relies
+        on."
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="recap">11. One-paragraph recap</h2>
+      <div class="box key">
+        Each grid/chart keeps all state in a <strong>Store</strong>. On any interaction,
+        <code>setState</code> builds a new top-level object but
+        <strong>preserves references of untouched slices</strong>. Components subscribe to
+        <em>derived</em> slices through <strong>selectors</strong>. <code>createSelector</code> just
+        composes (no cache — for cheap primitives); <code>createSelectorMemoized</code> adds a
+        two-layer cache: <strong>weakMapMemoize</strong> (outer, keyed on arguments, leak-free) for
+        instant bail-out, and <strong>lruMemoize</strong> (inner, keyed on input values) so
+        unchanged slices return the <em>same result reference</em>. React's
+        <code>useSyncExternalStore</code> compares that reference and
+        <strong>re-renders only the components whose slice actually changed</strong>. This branch
+        replaces the external <code>reselect</code> library with in-house copies of those two
+        memoizers — same behavior, one fewer dependency.
+      </div>
+    </div>
+  </body>
+</html>
