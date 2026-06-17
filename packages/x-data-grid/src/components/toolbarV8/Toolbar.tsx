@@ -236,7 +236,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
   return <ToolbarContext.Provider value={contextValue}>{element}</ToolbarContext.Provider>;
 });
 
-Toolbar.propTypes = {
+Toolbar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
