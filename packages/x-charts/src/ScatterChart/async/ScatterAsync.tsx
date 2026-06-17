@@ -17,8 +17,11 @@ import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 /**
  * Per-series points rendered while interacting. The first level is capped to a
- * short stable `dataIndex` prefix (a uniform sample for unsorted data) to keep
- * frames cheap; the rest fills in once the interaction settles.
+ * short stable `dataIndex` prefix (the cheap contiguous slice) to keep frames
+ * light; the rest fills in once the interaction settles. The prefix is a
+ * representative sample only when the data is unordered — for data sorted along
+ * an axis it is a spatial corner, so panning to a high-index region may show a
+ * partial cloud until the interaction settles.
  */
 const INTERACTION_POINT_BUDGET = 2000;
 
