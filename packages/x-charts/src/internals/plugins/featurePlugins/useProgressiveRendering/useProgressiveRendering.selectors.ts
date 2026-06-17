@@ -126,7 +126,12 @@ export const selectorProgressiveSeriesRevealedBatches = createSelector(
   selectorProgressiveAggregate,
   selectorProgressiveRevealedRounds,
   selectorChartZoomIsInteracting,
-  function selectorProgressiveSeriesRevealedBatches(agg, revealed, isInteracting, seriesId: SeriesId) {
+  function selectorProgressiveSeriesRevealedBatches(
+    agg,
+    revealed,
+    isInteracting,
+    seriesId: SeriesId,
+  ) {
     const total = agg.nBatchesBySeries.get(seriesId) ?? 0;
     const effectiveRevealed = isInteracting ? Math.min(1, total) : revealed;
     return Math.min(effectiveRevealed, total);
