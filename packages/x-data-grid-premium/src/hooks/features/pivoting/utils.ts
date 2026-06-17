@@ -262,10 +262,7 @@ export const createPivotPropsFromRows = ({
           colValue = String(colValue);
         }
 
-        // Coerce to a string: the column group header renders via
-        // `GridColumnHeaderTitle`, whose `label` must be a string. Numeric pivot
-        // values (e.g. a `date-year` column yielding `2024`) would otherwise trip
-        // React 18's prop-type check (React 19 no longer validates prop-types).
+        // Coerce to a string because of React 18's prop-type check
         const formattedHeaderName = String(
           apiRef.current.getRowFormattedValue(row, column) || colValue,
         );
