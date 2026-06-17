@@ -395,7 +395,7 @@ function ChatToolPartRoot({
   );
 }
 
-ChatToolPartRoot.propTypes = {
+ChatToolPartRoot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -490,7 +490,7 @@ const ChatToolPartIconComponent = React.forwardRef<HTMLSpanElement, ChatToolPart
   },
 );
 
-ChatToolPartIconComponent.propTypes = {
+ChatToolPartIconComponent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -612,7 +612,7 @@ const ChatToolPartStateComponent = React.forwardRef<HTMLSpanElement, ChatToolPar
   },
 );
 
-ChatToolPartStateComponent.propTypes = {
+ChatToolPartStateComponent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -723,7 +723,7 @@ function ChatToolPartSection({
   );
 }
 
-ChatToolPartSection.propTypes = {
+ChatToolPartSection.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -760,7 +760,7 @@ const ChatToolPartSectionSummary = React.forwardRef<HTMLElement, ChatToolPartSec
   },
 );
 
-ChatToolPartSectionSummary.propTypes = {
+ChatToolPartSectionSummary.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -876,7 +876,7 @@ function ChatToolPartSectionContent({
   );
 }
 
-ChatToolPartSectionContent.propTypes = {
+ChatToolPartSectionContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -1039,7 +1039,7 @@ const ChatReasoningPartSummary = React.forwardRef<HTMLElement, ChatReasoningSumm
   },
 );
 
-ChatReasoningPartSummary.propTypes = {
+ChatReasoningPartSummary.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -1303,7 +1303,7 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
   },
 );
 
-ChatMessageContent.propTypes = {
+ChatMessageContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
