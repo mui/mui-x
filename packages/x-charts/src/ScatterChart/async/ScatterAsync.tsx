@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type ScatterProps } from '../Scatter';
+import type { ScatterProps } from '../Scatter';
 import { ScatterAsyncBatch } from './ScatterAsyncBatch';
 import { useStore } from '../../internals/store/useStore';
 import {
   selectorProgressiveBatchSize,
   selectorProgressiveSeriesRevealedBatches,
-  type UseProgressiveRenderingSignature,
 } from '../../internals/plugins/featurePlugins/useProgressiveRendering';
+import type { UseProgressiveRenderingSignature } from '../../internals/plugins/featurePlugins/useProgressiveRendering';
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 /**

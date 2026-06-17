@@ -1,20 +1,18 @@
 import * as React from 'react';
 import { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
-import {
-  findMinMax,
-  getBandSize,
-  useAllSeriesOfType,
-  type AxisId,
-  type ChartSeriesDefaultized,
-  type ComputedAxis,
-  type ScaleName,
-  type SeriesProcessorResult,
-  type StackingGroupsType,
-  type ChartsRotationAxisProps,
-  type ChartsRadiusAxisProps,
-  type ChartsRadialAxisProps,
+import { findMinMax, getBandSize, useAllSeriesOfType } from '@mui/x-charts/internals';
+import type {
+  AxisId,
+  ChartSeriesDefaultized,
+  ComputedAxis,
+  ScaleName,
+  SeriesProcessorResult,
+  StackingGroupsType,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  ChartsRadialAxisProps,
 } from '@mui/x-charts/internals';
-import { type SeriesId } from '@mui/x-charts/models';
+import type { SeriesId } from '@mui/x-charts/models';
 
 interface ProcessedRadialBarData {
   seriesId: SeriesId;

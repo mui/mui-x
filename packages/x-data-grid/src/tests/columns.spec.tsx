@@ -1,7 +1,8 @@
-import { DataGrid, type GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import type { GridRenderCellParams } from '@mui/x-data-grid';
 import type { Expect, Equal } from 'test/utils/typeUtils';
-import { type GridCellParams } from '../models/params/gridCellParams';
-import { type GridColDef, type GridRowParams } from '../models';
+import type { GridCellParams } from '../models/params/gridCellParams';
+import type { GridColDef, GridRowParams } from '../models';
 
 function RenderCellParamsExplicitTyping() {
   return (

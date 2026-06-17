@@ -1,17 +1,15 @@
 'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
-import {
-  type ChartAnyPluginSignature,
-  type ChartSeriesType,
-  type ChartsPluginParams,
-  type ChartsProviderProps,
-  type ChartSeriesConfig,
+import type {
+  ChartAnyPluginSignature,
+  ChartSeriesType,
+  ChartsPluginParams,
+  ChartsProviderProps,
+  ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import type { ChartsGeoDataProviderPremiumProps } from './ChartsGeoDataProviderPremium';
-import {
-  GEO_PREMIUM_PLUGINS,
-  type GeoPremiumPluginSignatures,
-} from './ChartsGeoDataProviderPremium.plugins';
+import { GEO_PREMIUM_PLUGINS } from './ChartsGeoDataProviderPremium.plugins';
+import type { GeoPremiumPluginSignatures } from './ChartsGeoDataProviderPremium.plugins';
 import { mapShapeSeriesConfig } from '../Map/seriesConfig';
 
 const GEO_PREMIUM_SERIES_CONFIG: ChartSeriesConfig<'mapShape'> = {

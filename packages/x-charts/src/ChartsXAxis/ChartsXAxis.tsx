@@ -1,11 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import { warnOnce } from '@mui/x-internals/warning';
-import {
-  type ChartsXAxisProps,
-  type ChartsAxisSlots,
-  type ChartsAxisSlotProps,
-} from '../models/axis';
+import type { ChartsXAxisProps, ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
 
 import { ChartsXAxisImpl } from './ChartsXAxisImpl';

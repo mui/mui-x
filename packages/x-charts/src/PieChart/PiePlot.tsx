@@ -1,17 +1,10 @@
 'use client';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {
-  PieArcPlot,
-  type PieArcPlotProps,
-  type PieArcPlotSlotProps,
-  type PieArcPlotSlots,
-} from './PieArcPlot';
-import {
-  type PieArcLabelPlotSlots,
-  type PieArcLabelPlotSlotProps,
-  PieArcLabelPlot,
-} from './PieArcLabelPlot';
+import { PieArcPlot } from './PieArcPlot';
+import type { PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
+import { PieArcLabelPlot } from './PieArcLabelPlot';
+import type { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps } from './PieArcLabelPlot';
 import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useUtilityClasses } from './pieClasses';

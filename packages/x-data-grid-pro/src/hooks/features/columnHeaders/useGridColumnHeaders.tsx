@@ -6,23 +6,25 @@ import {
   gridFilterModelSelector,
   gridTabIndexColumnHeaderFilterSelector,
   getDataGridUtilityClass,
-  type GridFilterItem,
 } from '@mui/x-data-grid';
+import type { GridFilterItem } from '@mui/x-data-grid';
 import {
   gridColumnsTotalWidthSelector,
   gridHasFillerSelector,
   gridHeaderFilterHeightSelector,
   gridVerticalScrollbarWidthSelector,
   useGridColumnHeaders as useGridColumnHeadersCommunity,
-  type UseGridColumnHeadersProps,
-  type GetHeadersParams,
   useGridPrivateApiContext,
   getGridFilter,
-  type GridStateColDef,
   GridColumnHeaderRow,
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
   PinnedColumnPosition,
+} from '@mui/x-data-grid/internals';
+import type {
+  UseGridColumnHeadersProps,
+  GetHeadersParams,
+  GridStateColDef,
 } from '@mui/x-data-grid/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';

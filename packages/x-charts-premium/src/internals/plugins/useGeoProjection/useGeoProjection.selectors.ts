@@ -1,5 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type ChartState, selectorChartDrawingArea } from '@mui/x-charts/internals';
+import { selectorChartDrawingArea } from '@mui/x-charts/internals';
+import type { ChartState } from '@mui/x-charts/internals';
 import {
   geoAlbers,
   geoAlbersUsa,
@@ -17,10 +18,12 @@ import {
   geoStereographic,
   geoTransverseMercator,
   geoPath,
-  type ExtendedFeatureCollection,
-  type GeoProjection,
-  type GeoPath,
-  type GeoConicProjection,
+} from '@mui/x-charts-vendor/d3-geo';
+import type {
+  ExtendedFeatureCollection,
+  GeoProjection,
+  GeoPath,
+  GeoConicProjection,
 } from '@mui/x-charts-vendor/d3-geo';
 import type {
   D3NamedProjection,

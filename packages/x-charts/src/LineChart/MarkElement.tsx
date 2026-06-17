@@ -8,11 +8,8 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
 import { useStore } from '../internals/store/useStore';
 import { getSymbol } from '../internals/getSymbol';
-import {
-  lineClasses,
-  type MarkElementOwnerState,
-  useUtilityClasses as useLineUtilityClasses,
-} from './lineClasses';
+import { lineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { MarkElementOwnerState } from './lineClasses';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',

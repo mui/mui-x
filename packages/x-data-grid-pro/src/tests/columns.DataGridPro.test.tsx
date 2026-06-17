@@ -1,16 +1,14 @@
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
   gridClasses,
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
-  type GridApi,
-  type GridAutosizeOptions,
 } from '@mui/x-data-grid-pro';
+import type { DataGridProProps, GridApi, GridAutosizeOptions } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';

@@ -4,13 +4,8 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import {
-  FocusedHeatmapCell,
-  HeatmapTooltip,
-  type HeatmapProps,
-  type HeatmapSlots,
-  type HeatmapSlotProps,
-} from '@mui/x-charts-pro/Heatmap';
+import { FocusedHeatmapCell, HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';
+import type { HeatmapProps, HeatmapSlots, HeatmapSlotProps } from '@mui/x-charts-pro/Heatmap';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -21,7 +16,7 @@ import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
-import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
+import type { HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 
 export interface HeatmapPremiumSlots extends HeatmapSlots {}

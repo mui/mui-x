@@ -1,6 +1,6 @@
 import type { SeriesLegendItemParams } from '../../ChartsLegend';
 import { getLabel } from '../../internals/getLabel';
-import { type LegendGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { LegendGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const legendGetter: LegendGetter<'line'> = (params) => {
   const { seriesOrder, series } = params;

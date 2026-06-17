@@ -1,15 +1,13 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type SeriesId } from '../../../../models/seriesType/common';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import type { SeriesId } from '../../../../models/seriesType/common';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
-import {
-  selectorChartExperimentalFeaturesState,
-  type UseChartExperimentalFeaturesSignature,
-} from '../../corePlugins/useChartExperimentalFeature';
-import { type ChartState } from '../../models/chart';
-import { type ChartOptionalRootSelector } from '../../utils/selectors';
-import { type UseProgressiveRenderingSignature } from './useProgressiveRendering.types';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { selectorChartExperimentalFeaturesState } from '../../corePlugins/useChartExperimentalFeature';
+import type { UseChartExperimentalFeaturesSignature } from '../../corePlugins/useChartExperimentalFeature';
+import type { ChartState } from '../../models/chart';
+import type { ChartOptionalRootSelector } from '../../utils/selectors';
+import type { UseProgressiveRenderingSignature } from './useProgressiveRendering.types';
 import type { RendererType } from '../../../../ScatterChart';
 
 /**

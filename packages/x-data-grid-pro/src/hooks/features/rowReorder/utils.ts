@@ -1,14 +1,13 @@
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  GRID_ROOT_GROUP_ID,
-  gridClasses,
-  type GridRowId,
-  type GridTreeNode,
-  type GridGroupNode,
-  type GridRowTreeConfig,
-  type GridKeyValue,
-  type GridValidRowModel,
-  type GridUpdateRowParams,
+import { GRID_ROOT_GROUP_ID, gridClasses } from '@mui/x-data-grid';
+import type {
+  GridRowId,
+  GridTreeNode,
+  GridGroupNode,
+  GridRowTreeConfig,
+  GridKeyValue,
+  GridValidRowModel,
+  GridUpdateRowParams,
 } from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { ReorderOperationType } from './types';

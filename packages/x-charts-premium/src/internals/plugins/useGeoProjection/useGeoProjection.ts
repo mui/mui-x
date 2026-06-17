@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { type ChartPlugin } from '@mui/x-charts/internals';
-import { type UseGeoProjectionSignature } from './useGeoProjection.types';
+import type { ChartPlugin } from '@mui/x-charts/internals';
+import type { UseGeoProjectionSignature } from './useGeoProjection.types';
 
 export const useGeoProjection: ChartPlugin<UseGeoProjectionSignature> = ({ params, store }) => {
   const { geoData, projection, translate, rotate, scale } = params;

@@ -2,18 +2,16 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, getRow } from 'test/utils/helperFn';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPro,
-  type DataGridProProps,
-  type GridApi,
-  type GridDataSource,
-  type GridGetRowsParams,
-  type GridGetRowsResponse,
-  type GridGroupNode,
-  type GridRowSelectionModel,
-  useGridApiRef,
-  GRID_ROOT_GROUP_ID,
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPro, useGridApiRef, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridApi,
+  GridDataSource,
+  GridGetRowsParams,
+  GridGetRowsResponse,
+  GridGroupNode,
+  GridRowSelectionModel,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
