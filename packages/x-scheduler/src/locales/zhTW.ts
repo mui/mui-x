@@ -21,6 +21,8 @@ const zhTWDialog: Partial<EventDialogLocaleText> = {
   // endDateLabel: 'End date',
   // endTimeLabel: 'End time',
   // eventTitleAriaLabel: 'Event title',
+  // eventTitlePlaceholder: 'Add title',
+  // tapToEditEvent: 'Tap to edit',
   // generalTabLabel: 'General',
   // labelNoResource: 'No resource',
   // labelInvalidResource: 'Invalid resource',
@@ -39,7 +41,9 @@ const zhTWDialog: Partial<EventDialogLocaleText> = {
   // recurrenceTabLabel: 'Recurrence',
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
-  // recurrenceWeeklyPresetLabel: weekday => `Repeats weekly on ${weekday}`,
+  // recurrenceWeeklyPresetLabel: ({
+  //   weekdayName
+  // }) => `Repeats weekly on ${weekdayName}`,
   // recurrenceMonthlyFrequencyLabel: 'months',
   // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
   // recurrenceMonthlyLastWeekAriaLabel: weekDay => `${weekDay} of the last week of the month`,

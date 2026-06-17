@@ -41,7 +41,7 @@ const enUSDialog: EventDialogLocaleText = {
   recurrenceTabLabel: 'Recurrence',
   recurrenceMainSelectCustomLabel: 'Recurrence',
   recurrenceWeeklyFrequencyLabel: 'weeks',
-  recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Repeats weekly on ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'months',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Day ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} of the last week of the month`,

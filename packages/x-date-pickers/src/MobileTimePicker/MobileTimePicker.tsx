@@ -84,7 +84,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker(
   return renderPicker();
 }) as MobileTimePickerComponent;
 
-MobileTimePicker.propTypes = {
+MobileTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
