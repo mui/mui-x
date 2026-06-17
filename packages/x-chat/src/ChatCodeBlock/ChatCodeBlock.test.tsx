@@ -144,7 +144,12 @@ describe('ChatCodeBlock', () => {
     writeText.mockImplementation(() => Promise.reject(new Error('denied')));
     // The rejection path falls back to `execCommand('copy')`, which actually
     // succeeds in a real browser — force it to fail to reach the error state.
-    const execCommand = vi.spyOn(document, 'execCommand').mockImplementation(() => false);
+    // Assign directly (not `vi.spyOn`) since jsdom doesn't define `execCommand`.
+    let originalExecCommand: typeof document.execCommand | undefined;
+    if (typeof document.execCommand === 'function') {
+      originalExecCommand = document.execCommand;
+      document.execCommand = () => false;
+    }
 
     try {
       // eslint-disable-next-line testing-library/no-unnecessary-act
@@ -155,7 +160,9 @@ describe('ChatCodeBlock', () => {
       expect(writeText).toHaveBeenCalled();
       expect(screen.getByRole('button', { name: 'Copy failed' })).not.toBe(null);
     } finally {
-      execCommand.mockRestore();
+      if (originalExecCommand) {
+        document.execCommand = originalExecCommand;
+      }
     }
   });
 });
