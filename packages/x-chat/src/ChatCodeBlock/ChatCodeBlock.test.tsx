@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, screen, fireEvent, act, isJsdom } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { ChatCodeBlock } from './ChatCodeBlock';
 
@@ -137,19 +137,12 @@ describe('ChatCodeBlock', () => {
     vi.useRealTimers();
   });
 
-  it('clipboard failure exposes "Copy failed" state', async () => {
+  it.skipIf(isJsdom)('clipboard failure exposes "Copy failed" state', async () => {
     render(<ChatCodeBlock>code</ChatCodeBlock>);
 
     const writeText = installClipboardMock();
     writeText.mockImplementation(() => Promise.reject(new Error('denied')));
-    // The rejection path falls back to `execCommand('copy')`, which actually
-    // succeeds in a real browser — force it to fail to reach the error state.
-    // Assign directly (not `vi.spyOn`) since jsdom doesn't define `execCommand`.
-    let originalExecCommand: typeof document.execCommand | undefined;
-    if (typeof document.execCommand === 'function') {
-      originalExecCommand = document.execCommand;
-      document.execCommand = () => false;
-    }
+    const mock = vi.spyOn(document, 'execCommand').mockImplementation(() => false);
 
     try {
       // eslint-disable-next-line testing-library/no-unnecessary-act
@@ -160,9 +153,7 @@ describe('ChatCodeBlock', () => {
       expect(writeText).toHaveBeenCalled();
       expect(screen.getByRole('button', { name: 'Copy failed' })).not.toBe(null);
     } finally {
-      if (originalExecCommand) {
-        document.execCommand = originalExecCommand;
-      }
+      mock.mockRestore();
     }
   });
 });
