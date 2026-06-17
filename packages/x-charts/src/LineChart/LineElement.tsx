@@ -81,7 +81,8 @@ function LineElement(props: LineElementProps) {
   const store = useStore();
   const enablePositionBasedPointerInteraction = store.use(
     selectorChartExperimentalFeaturesState,
-  )?.enablePositionBasedPointerInteraction;
+    'enablePositionBasedPointerInteraction',
+  );
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
   const interactionProps = useInteractionItemProps(identifier);
 
@@ -129,7 +130,9 @@ LineElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
-  /** If `true`, the line is hidden. */
+  /**
+   * If `true`, the line is hidden.
+   */
   hidden: PropTypes.bool,
   seriesId: PropTypes.string.isRequired,
   /**

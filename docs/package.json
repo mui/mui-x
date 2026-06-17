@@ -9,7 +9,7 @@
     "dev": "cross-env-shell 'next dev --webpack --port ${PORT:-3001}'",
     "deploy": "git fetch upstream master && git push -f upstream FETCH_HEAD:docs-v9",
     "icons": "rimraf public/static/icons/* && node ./scripts/buildIcons.js",
-    "serve": "serve ./export -l 3010",
+    "serve": "serve ./export -l 3010 -c ../serve.json",
     "create-playground": "node ./scripts/createPlayground.js",
     "typescript": "tsc -p tsconfig.json",
     "typescript:transpile": "cross-env BABEL_ENV=development node scripts/formattedTSDemos",
@@ -95,7 +95,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
-    "@mui/internal-docs-utils": "3.0.4-canary.3",
+    "@mui/internal-docs-utils": "3.0.5-canary.1",
     "@types/chance": "catalog:",
     "@types/d3-scale-chromatic": "3.1.0",
     "@types/luxon": "catalog:",

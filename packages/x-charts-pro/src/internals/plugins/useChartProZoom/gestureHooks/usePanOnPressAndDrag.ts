@@ -8,7 +8,7 @@ import {
 import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { selectorPanInteractionConfig } from '../ZoomInteractionConfig.selectors';
-import { usePanOnPressGesture } from '../../zoomGestures/usePanOnPressGesture';
+import { useDragOnPressGesture } from '../../zoomGestures/useDragOnPressGesture';
 
 export const usePanOnPressAndDrag = (
   {
@@ -24,7 +24,8 @@ export const usePanOnPressAndDrag = (
   const isPanOnPressAndDragEnabled: boolean =
     Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
 
-  usePanOnPressGesture(instance, {
+  useDragOnPressGesture(instance, {
+    config: config ?? undefined,
     enabled: isPanOnPressAndDragEnabled,
     onPan: (delta) => {
       setZoomDataCallback((prev) =>

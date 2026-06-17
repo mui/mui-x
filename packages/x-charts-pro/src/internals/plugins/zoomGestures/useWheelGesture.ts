@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { getChartPoint } from '@mui/x-charts/internals';
 import { type KeyboardKey } from '@mui/x-internal-gestures/core';
 import { type ChartPoint, type GestureInstance } from './zoomGestures.types';
@@ -10,17 +11,18 @@ export interface UseWheelGestureOptions {
   /** Keys that must be held for the wheel to trigger the gesture. */
   requiredKeys?: KeyboardKey[];
   /**
-   * Called on each wheel tick that lands inside the drawing area.
+   * Called on each wheel tick inside the drawing area.
    *
    * @param {ChartPoint} point The wheel focal point, in SVG coordinates.
-   * @param {WheelEvent} event The raw `WheelEvent`.
+   * @param {WheelEvent} event The `WheelEvent`.
    */
   onWheel: (point: ChartPoint, event: WheelEvent) => void;
 }
 
 /**
- * Generic wheel gesture binding. Handles the "started outside the chart" guard and
- * `preventDefault`, then forwards the focal point and wheel delta to `onWheel`.
+ * Generic wheel gesture binding.
+ *
+ * It owns the listener lifecycle, and lets you create your own interactions from the focal point and wheel event it forwards to `onWheel`.
  */
 export function useWheelGesture(instance: GestureInstance, options: UseWheelGestureOptions): void {
   const { enabled, requiredKeys, onWheel } = options;
@@ -45,6 +47,10 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
       return () => {};
     }
 
+    const rafThrottledOnWheel = rafThrottle((point: ChartPoint, event: WheelEvent) =>
+      onWheelRef.current(point, event),
+    );
+
     const handler = instance.addInteractionListener('zoomTurnWheel', (event) => {
       const point = getChartPoint(element, {
         clientX: event.detail.centroid.x,
@@ -67,7 +73,7 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
 
       event.detail.srcEvent.preventDefault();
 
-      onWheelRef.current(point, event.detail.srcEvent as WheelEvent);
+      rafThrottledOnWheel(point, event.detail.srcEvent as WheelEvent);
     });
 
     return () => {
@@ -77,6 +83,7 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
         startedOutsideTimeoutRef.current = null;
       }
       startedOutsideRef.current = false;
+      rafThrottledOnWheel.clear();
     };
   }, [chartsLayerContainerRef, enabled, instance]);
 }
