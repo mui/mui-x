@@ -119,6 +119,19 @@ export const selectorProgressiveTotalRounds = createSelector(
 );
 
 /**
+ * Revealed batch count for a series: `revealed` rounds normally, clamped to the
+ * first batch while interacting, never above `total`.
+ */
+export function getRevealedBatchCount(
+  total: number,
+  revealed: number,
+  isInteracting: boolean | undefined,
+): number {
+  const effectiveRevealed = isInteracting ? Math.min(1, total) : revealed;
+  return Math.min(effectiveRevealed, total);
+}
+
+/**
  * How many of `seriesId`'s batches are revealed, capped at its total batch
  * count. Clamped to the first batch while interacting.
  */
@@ -133,8 +146,7 @@ export const selectorProgressiveSeriesRevealedBatches = createSelector(
     seriesId: SeriesId,
   ) {
     const total = agg.nBatchesBySeries.get(seriesId) ?? 0;
-    const effectiveRevealed = isInteracting ? Math.min(1, total) : revealed;
-    return Math.min(effectiveRevealed, total);
+    return getRevealedBatchCount(total, revealed, isInteracting);
   },
 );
 

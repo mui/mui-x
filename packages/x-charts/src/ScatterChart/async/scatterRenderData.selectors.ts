@@ -56,25 +56,54 @@ export const selectorScatterRenderData = createSelectorMemoized(
       const getXPosition = getValueToPositionMapper(xAxis.scale);
       const getYPosition = getValueToPositionMapper(yAxis.scale);
 
-      const data = series.data;
-      const n = data.length;
-      const packed = new Float64Array(n * 3);
-
-      for (let i = 0; i < n; i += 1) {
-        const x = getXPosition(data[i].x);
-        const y = getYPosition(data[i].y);
-        const visible = x >= xMin && x <= xMax && y >= yMin && y <= yMax;
-        packed[i * 3] = x;
-        packed[i * 3 + 1] = y;
-        packed[i * 3 + 2] = visible ? 1 : 0;
-      }
-
-      result.set(seriesId, { coords: packed, count: n });
+      result.set(
+        seriesId,
+        packScatterSeriesCoords(series.data, getXPosition, getYPosition, {
+          xMin,
+          xMax,
+          yMin,
+          yMax,
+        }),
+      );
     }
 
     return result;
   },
 );
+
+/** Pixel bounds (inclusive) a point must fall within to be flagged visible. */
+export interface ScatterVisibilityBounds {
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+}
+
+/**
+ * Projects `data` into a `dataIndex`-indexed packed array (stride 3:
+ * `[x, y, visible]`). Every point keeps its slot; `visible` is `1` inside
+ * `bounds`, `0` otherwise.
+ */
+export function packScatterSeriesCoords(
+  data: readonly { x: number | Date; y: number | Date }[],
+  getXPosition: (value: number | Date) => number,
+  getYPosition: (value: number | Date) => number,
+  bounds: ScatterVisibilityBounds,
+): ScatterSeriesRenderData {
+  const n = data.length;
+  const packed = new Float64Array(n * 3);
+
+  for (let i = 0; i < n; i += 1) {
+    const x = getXPosition(data[i].x);
+    const y = getYPosition(data[i].y);
+    const visible = x >= bounds.xMin && x <= bounds.xMax && y >= bounds.yMin && y <= bounds.yMax;
+    packed[i * 3] = x;
+    packed[i * 3 + 1] = y;
+    packed[i * 3 + 2] = visible ? 1 : 0;
+  }
+
+  return { coords: packed, count: n };
+}
 
 /** Render data for one series, or `undefined` while processors/axes are pending. */
 export const selectorScatterSeriesRenderData = createSelector(
