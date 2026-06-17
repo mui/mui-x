@@ -16,6 +16,13 @@ import {
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 /**
+ * Per-series points rendered while interacting. The first level is capped to a
+ * short stable `dataIndex` prefix (a uniform sample for unsorted data) to keep
+ * frames cheap; the rest fills in once the interaction settles.
+ */
+const INTERACTION_POINT_BUDGET = 2000;
+
+/**
  * @ignore - internal component.
  */
 function ScatterAsync(props: ScatterProps) {
@@ -37,7 +44,9 @@ function ScatterAsync(props: ScatterProps) {
   const batches: React.ReactNode[] = [];
   for (let b = 0; b < mountedBatches; b += 1) {
     const start = b * batchSize;
-    const end = Math.min(count, start + batchSize);
+    // Shrink the first level to a smaller stable prefix while interacting.
+    const cap = isZoomInteracting ? Math.min(batchSize, INTERACTION_POINT_BUDGET) : batchSize;
+    const end = Math.min(count, start + cap);
     batches.push(
       <ScatterAsyncBatch
         key={b}
