@@ -18,16 +18,26 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
   );
 
   const getRowValue = React.useCallback<GridParamsApi['getRowValue']>(
-    (row, colDef) =>
-      gridCellAggregationResultSelector(apiRef, {
-        id: gridRowIdSelector(apiRef, row),
-        field: colDef.field,
-      })?.value ?? communityMethods.getRowValue(row, colDef),
+    (row, colDef) => {
+      if (!colDef) {
+        return communityMethods.getRowValue(row, colDef);
+      }
+      return (
+        gridCellAggregationResultSelector(apiRef, {
+          id: gridRowIdSelector(apiRef, row),
+          field: colDef.field,
+        })?.value ?? communityMethods.getRowValue(row, colDef)
+      );
+    },
     [apiRef, communityMethods],
   );
 
   const getRowFormattedValue = React.useCallback<GridParamsApi['getRowFormattedValue']>(
     (row, colDef) => {
+      if (!colDef) {
+        return getRowValue(row, colDef);
+      }
+
       const aggregationFormattedValue = gridCellAggregationResultSelector(apiRef, {
         id: gridRowIdSelector(apiRef, row),
         field: colDef.field,
