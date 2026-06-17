@@ -183,13 +183,23 @@ export const GridRootStyles = styled('div', {
     minHeight: 0,
     flexDirection: 'column',
     overflow: 'hidden',
-    overflowAnchor: 'none', // Keep the same scrolling position
     transform: 'translate(0, 0)', // Create a stacking context to keep scrollbars from showing on top
 
-    [`.${c.main} > *:first-child${ignoreSsrWarning}`]: {
-      borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
-      borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
+    [`& .${c.virtualScroller}`]: {
+      overflowAnchor: 'none', // Keep the same scrolling position
     },
+
+    // Use `css` tagged template so the ignore-comment remains a sibling of the
+    // `:first-child` rule in the stylis AST. Previously, the comment was embedded
+    // in the object-key selector, which got separated from the rule during
+    // pre-serialization when `styleOverrides` were applied, re-triggering Emotion's
+    // unsafe-selector SSR warning. https://github.com/emotion-js/emotion/issues/1105
+    [`.${c.main}`]: css`
+      & > *:first-child ${ignoreSsrWarning} {
+        border-top-left-radius: var(--unstable_DataGrid-radius);
+        border-top-right-radius: var(--unstable_DataGrid-radius);
+      }
+    `,
     [`&.${c.autoHeight}`]: {
       height: 'auto',
     },
