@@ -50,17 +50,17 @@ storeClasses.forEach((storeClass) => {
 
       it('should return null when nothing is being edited', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        expect(
-          schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state),
-        ).to.equal(null);
+        expect(schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state)).to.equal(
+          null,
+        );
       });
 
       it('should return the edited occurrence unchanged when no resize is in progress', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.startEditing(editedOccurrence);
-        expect(
-          schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state),
-        ).to.equal(editedOccurrence);
+        expect(schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state)).to.equal(
+          editedOccurrence,
+        );
       });
 
       it('should apply the resize placeholder times when resizing the edited occurrence', () => {
@@ -100,9 +100,9 @@ storeClasses.forEach((storeClass) => {
           resourceId: null,
         });
 
-        expect(
-          schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state),
-        ).to.equal(editedOccurrence);
+        expect(schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state)).to.equal(
+          editedOccurrence,
+        );
       });
 
       it('should ignore a non-resize placeholder (e.g. an internal drag)', () => {
@@ -120,9 +120,9 @@ storeClasses.forEach((storeClass) => {
           resourceId: null,
         });
 
-        expect(
-          schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state),
-        ).to.equal(editedOccurrence);
+        expect(schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state)).to.equal(
+          editedOccurrence,
+        );
       });
     });
 
