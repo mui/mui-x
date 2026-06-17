@@ -129,6 +129,22 @@ describe('recurring-events/rRuleString', () => {
       );
     });
 
+    it('should reject a non-canonical object freq instead of normalizing it', () => {
+      expect(() =>
+        parseRRule(adapter, { freq: 'daily' as SchedulerEventRecurrenceRule['freq'] }, 'default'),
+      ).to.throw(
+        'MUI X Scheduler: Invalid FREQ value "daily". The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. Provide a supported frequency value.',
+      );
+    });
+
+    it('should throw when the object freq matches a prototype key', () => {
+      expect(() =>
+        parseRRule(adapter, { freq: 'toString' as SchedulerEventRecurrenceRule['freq'] }, 'default'),
+      ).to.throw(
+        'MUI X Scheduler: Invalid FREQ value "toString". The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. Provide a supported frequency value.',
+      );
+    });
+
     it('should throw when the RRULE contains unsupported properties', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;FOO=bar', 'default')).to.throw(
         'MUI X Scheduler: Unsupported RRULE property "FOO". Supported properties are: FREQ, INTERVAL, BYDAY, BYMONTHDAY, BYMONTH, UNTIL, COUNT. Remove or replace the unsupported property.',
