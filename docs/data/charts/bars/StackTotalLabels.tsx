@@ -67,5 +67,7 @@ const TotalLabel = styled('text')(({ theme }) => ({
   fontWeight: 600,
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
-  dominantBaseline: 'central',
+  textAnchor: 'middle',
+  dominantBaseline: 'auto',
+  pointerEvents: 'none',
 }));
