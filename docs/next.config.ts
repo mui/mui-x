@@ -5,12 +5,6 @@ import * as semver from 'semver';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
-import {
-  LANGUAGES,
-  LANGUAGES_SSR,
-  LANGUAGES_IGNORE_PAGES,
-  LANGUAGES_IN_PROGRESS,
-} from '@mui/internal-core-docs/constants';
 import { findPages } from './src/modules/utils/find';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
@@ -68,10 +62,6 @@ try {
 
 export default withDeploymentConfig({
   reactStrictMode: true,
-  typescript: {
-    // The tsconfig also contains path aliases that are used by next.js.
-    tsconfigPath: IS_PRODUCTION ? '../tsconfig.prod.json' : '../tsconfig.dev.json',
-  },
   experimental: {
     esmExternals: undefined,
   },
@@ -134,8 +124,8 @@ export default withDeploymentConfig({
                     loader: '@mui/internal-markdown/loader',
                     options: {
                       workspaceRoot: WORKSPACE_ROOT,
-                      ignoreLanguagePages: LANGUAGES_IGNORE_PAGES,
-                      languagesInProgress: LANGUAGES_IN_PROGRESS,
+                      ignoreLanguagePages: () => false,
+                      languagesInProgress: [],
                       env: {
                         SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
                         LIB_VERSION: options.config.env.LIB_VERSION,
@@ -179,9 +169,7 @@ export default withDeploymentConfig({
     const map = {};
 
     // @ts-ignore
-    function traverse(pages2, userLanguage) {
-      const prefix = userLanguage === 'en' ? '' : `/${userLanguage}`;
-
+    function traverse(pages2) {
       // @ts-ignore
       pages2.forEach((page) => {
         // The experiments pages are only meant for experiments, they shouldn't leak to production.
@@ -191,29 +179,17 @@ export default withDeploymentConfig({
 
         if (!page.children) {
           // @ts-ignore
-          map[`${prefix}${page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')}`] = {
+          map[page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')] = {
             page: page.pathname,
-            query: {
-              userLanguage,
-            },
           };
           return;
         }
 
-        traverse(page.children, userLanguage);
+        traverse(page.children);
       });
     }
 
-    // We want to speed-up the build of pull requests.
-    if (process.env.PULL_REQUEST === 'true') {
-      // eslint-disable-next-line no-console
-      console.log('Considering only English for SSR');
-      traverse(pages, 'en');
-    } else {
-      LANGUAGES_SSR.forEach((userLanguage) => {
-        traverse(pages, userLanguage);
-      });
-    }
+    traverse(pages);
 
     return map;
   },
@@ -224,10 +200,7 @@ export default withDeploymentConfig({
       }
     : {
         rewrites: async () => {
-          return [
-            { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
-            { source: '/api/:rest*', destination: '/api-docs/:rest*' },
-          ];
+          return [{ source: '/api/:rest*', destination: '/api-docs/:rest*' }];
         },
         // redirects only take effect in the development, not production (because of `next export`).
         redirects: async () => [

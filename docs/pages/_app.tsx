@@ -1,7 +1,6 @@
 import 'docs/src/bootstrap';
 // --- Post bootstrap -----
 import * as React from 'react';
-import type { DocsAppProps } from '@mui/internal-core-docs/DocsApp';
 import {
   DocsApp,
   createGetInitialProps,
@@ -20,13 +19,7 @@ import xPages from 'docs/data/pages'; // DO NOT REMOVE
 import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import {
-  LANGUAGES,
-  LANGUAGES_SSR,
-  LANGUAGES_IGNORE_PAGES,
-  LANGUAGES_IN_PROGRESS,
-} from '@mui/internal-core-docs/constants';
-import { DocsConfig } from '@mui/internal-core-docs/DocsProvider';
+import { DEFAULT_DOCS_CONFIG, DocsConfig } from '@mui/internal-core-docs/DocsProvider';
 
 export { fontClasses } from '@mui/internal-core-docs/nextFonts';
 
@@ -47,7 +40,7 @@ function getMuiPackageVersion(packageName: string, commitRef?: string) {
   return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
 
-function usePageData(pageProps: DocsAppProps['pageProps']) {
+function usePageData() {
   const router = useRouter();
   const { productId: productIdRaw, productCategoryId } = getProductInfoFromUrl(router.asPath);
   const { canonicalAs } = pathnameToLanguage(router.asPath);
@@ -68,7 +61,6 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
 
   return React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(xPages, router.pathname);
-    const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
     const productIdMap: Record<string, { subpath: string; version: string | undefined }> = {
       introduction: { subpath: '/x/introduction', version: process.env.LIB_VERSION },
       'x-data-grid': { subpath: '/x/react-data-grid', version: process.env.DATA_GRID_VERSION },
@@ -88,12 +80,12 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
           return {
             current: true,
             text: `v${version}`,
-            href: `${languagePrefix}${productIdMap[id].subpath}/`,
+            href: `${productIdMap[id].subpath}/`,
           };
         }
         return {
           text: version,
-          href: `https://${version}.mui.com${languagePrefix}${productIdMap[id].subpath}/`,
+          href: `https://${version}.mui.com${productIdMap[id].subpath}/`,
         };
       });
 
@@ -102,7 +94,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
       name: 'MUI X',
       versions: [
         ...getVersionOptions('introduction', [process.env.LIB_VERSION!, 'v8', 'v7', 'v6', 'v5']),
-        { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+        { text: 'v4', href: `https://v4.mui.com/components/data-grid/` },
       ],
     };
 
@@ -118,7 +110,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
             'v6',
             'v5',
           ]),
-          { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+          { text: 'v4', href: `https://v4.mui.com/components/data-grid/` },
         ],
       };
     } else if (productId === 'x-date-pickers') {
@@ -134,7 +126,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
           ]),
           {
             text: 'v5',
-            href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
+            href: `https://v5.mui.com/x/react-date-pickers/getting-started/`,
           },
         ],
       };
@@ -152,7 +144,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
           ...getVersionOptions('x-tree-view', [process.env.TREE_VIEW_VERSION!, 'v8', 'v7']),
           {
             text: 'v6',
-            href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+            href: `https://v6.mui.com/x/react-tree-view/getting-started`,
           },
         ],
       };
@@ -192,7 +184,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
       productId,
       productCategoryId,
     };
-  }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
+  }, [productId, productCategoryId, router.pathname]);
 }
 
 const CSB_CONFIG = {
@@ -246,10 +238,7 @@ const CSB_CONFIG = {
 };
 
 const DOCS_CONFIG: DocsConfig = {
-  LANGUAGES,
-  LANGUAGES_SSR,
-  LANGUAGES_IN_PROGRESS,
-  LANGUAGES_IGNORE_PAGES,
+  ...DEFAULT_DOCS_CONFIG,
 };
 
 function useThemeWrapper() {
@@ -264,7 +253,7 @@ export default function MyApp(
 ) {
   const { Component, pageProps } = props;
   const { activePage, activePageParents, productIdentifier, productId, productCategoryId } =
-    usePageData(pageProps);
+    usePageData();
   const ThemeWrapper = useThemeWrapper();
 
   return (
