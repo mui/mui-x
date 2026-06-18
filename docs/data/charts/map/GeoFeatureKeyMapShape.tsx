@@ -47,7 +47,7 @@ export default function GeoFeatureKeyMapShape() {
               type: 'mapShape',
               label: 'Internet usage',
               data,
-              highlightScope: {highlight: 'item', fade:'global'},
+              highlightScope: { highlight: 'item', fade: 'global' },
               valueFormatter: (point) =>
                 point.colorValue == null
                   ? 'No data'
@@ -65,7 +65,6 @@ export default function GeoFeatureKeyMapShape() {
               },
             },
           ]}
-          
         >
           <ChartsSurface>
             <GeoDataPlot fill="#f5f5f5" stroke="#bdbdbd" />

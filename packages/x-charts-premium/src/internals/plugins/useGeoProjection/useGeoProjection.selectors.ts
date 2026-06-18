@@ -113,7 +113,10 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
       return map;
     }
     geoData.features.forEach((feature, index) => {
-      const name = typeof geoFeatureKey === 'function' ? geoFeatureKey(feature) : feature.properties?.[geoFeatureKey];
+      const name =
+        typeof geoFeatureKey === 'function'
+          ? geoFeatureKey(feature)
+          : feature.properties?.[geoFeatureKey];
       if (typeof name !== 'string') {
         return;
       }
