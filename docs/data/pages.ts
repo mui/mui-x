@@ -106,7 +106,7 @@ const schedulerPages: MuiPage[] = [
 
 const pages: MuiPage[] = [
   {
-    pathname: 'https://mui.com/x/whats-new/',
+    pathname: '/x/whats-new/',
     title: "What's new in MUI X",
   },
   {

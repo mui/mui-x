@@ -124,4 +124,4 @@ overrides:
   caniuse-lite: ^1.0.30001793
 
 patchedDependencies:
-  eslint-plugin-consistent-default-export-name@0.0.15: patches/eslint-plugin-consistent-default-export-name@0.0.15.patch
+  '@mui/internal-markdown@3.0.9-canary.2': patches/@mui__internal-markdown@3.0.9-canary.2.patch

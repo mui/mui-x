@@ -73,6 +73,7 @@
     "@babel/traverse": "catalog:",
     "@babel/types": "7.29.7",
     "@emotion/cache": "catalog:",
+    "@eslint/compat": "2.1.0",
     "@inquirer/prompts": "8.5.1",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.20",
     "@mui/internal-babel-plugin-minify-errors": "2.0.8-canary.27",

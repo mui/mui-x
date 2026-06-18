@@ -234,7 +234,7 @@ overrides:
   caniuse-lite: ^1.0.30001793
 
 patchedDependencies:
-  eslint-plugin-consistent-default-export-name@0.0.15: 3b477b1fe1acac94b495cfa37413ab9c93c30203146b4b108da935add29ef44a
+  '@mui/internal-markdown@3.0.9-canary.2': 40a165397e5de8aeccbb647e750e0e29fa7af96591107c960d784392dcfd6030
 
 importers:
 
@@ -261,6 +261,9 @@ importers:
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
+      '@eslint/compat':
+        specifier: 2.1.0
+        version: 2.1.0(eslint@10.4.1(jiti@2.7.0))
       '@inquirer/prompts':
         specifier: 8.5.1
         version: 8.5.1(@types/node@22.19.19)
@@ -284,7 +287,7 @@ importers:
         version: 9.0.2-canary.2(b296b1cdd39953f5604212bc0a0595d1)
       '@mui/internal-markdown':
         specifier: 3.0.9-canary.2
-        version: 3.0.9-canary.2
+        version: 3.0.9-canary.2(patch_hash=40a165397e5de8aeccbb647e750e0e29fa7af96591107c960d784392dcfd6030)
       '@mui/internal-netlify-cache':
         specifier: 0.0.3-canary.5
         version: 0.0.3-canary.5
@@ -380,7 +383,7 @@ importers:
         version: 10.4.1(jiti@2.7.0)
       eslint-plugin-consistent-default-export-name:
         specifier: 0.0.15
-        version: 0.0.15(patch_hash=3b477b1fe1acac94b495cfa37413ab9c93c30203146b4b108da935add29ef44a)
+        version: 0.0.15
       eslint-plugin-jsdoc:
         specifier: 63.0.1
         version: 63.0.1(eslint@10.4.1(jiti@2.7.0))
@@ -13259,7 +13262,7 @@ snapshots:
       '@babel/traverse': 7.29.7
       '@babel/types': 7.29.7
       '@mui/internal-docs-utils': 3.0.5-canary.2(typescript@6.0.3)
-      '@mui/internal-markdown': 3.0.9-canary.2
+      '@mui/internal-markdown': 3.0.9-canary.2(patch_hash=40a165397e5de8aeccbb647e750e0e29fa7af96591107c960d784392dcfd6030)
       doctrine: 3.0.0
       es-toolkit: 1.46.1
       fast-glob: 3.3.3
@@ -13459,7 +13462,7 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.15)(react@19.2.6)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
       '@mui/icons-material': 9.1.1(@mui/material@9.1.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
-      '@mui/internal-markdown': 3.0.9-canary.2
+      '@mui/internal-markdown': 3.0.9-canary.2(patch_hash=40a165397e5de8aeccbb647e750e0e29fa7af96591107c960d784392dcfd6030)
       '@mui/material': 9.1.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/material-nextjs': 9.1.1(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/server@11.11.0)(@types/react@19.2.15)(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       '@mui/stylis-plugin-rtl': 9.1.1(stylis@4.4.0)
@@ -13493,7 +13496,7 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.15)(react@19.2.6)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
       '@mui/icons-material': 9.1.1(@mui/material@9.1.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
-      '@mui/internal-markdown': 3.0.9-canary.2
+      '@mui/internal-markdown': 3.0.9-canary.2(patch_hash=40a165397e5de8aeccbb647e750e0e29fa7af96591107c960d784392dcfd6030)
       '@mui/material': 9.1.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/material-nextjs': 9.1.1(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/server@11.11.0)(@types/react@19.2.15)(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       '@mui/stylis-plugin-rtl': 9.1.1(stylis@4.4.0)
@@ -13568,7 +13571,7 @@ snapshots:
       rimraf: 6.1.3
       typescript: 6.0.3
 
-  '@mui/internal-markdown@3.0.9-canary.2':
+  '@mui/internal-markdown@3.0.9-canary.2(patch_hash=40a165397e5de8aeccbb647e750e0e29fa7af96591107c960d784392dcfd6030)':
     dependencies:
       '@babel/runtime': 7.29.7
       es-toolkit: 1.46.1
@@ -16623,7 +16626,7 @@ snapshots:
       lodash.memoize: 4.1.2
       semver: 7.8.1
 
-  eslint-plugin-consistent-default-export-name@0.0.15(patch_hash=3b477b1fe1acac94b495cfa37413ab9c93c30203146b4b108da935add29ef44a):
+  eslint-plugin-consistent-default-export-name@0.0.15:
     dependencies:
       lodash: 4.18.1
       pkg-dir: 5.0.0
