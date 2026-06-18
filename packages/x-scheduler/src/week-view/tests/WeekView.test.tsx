@@ -172,8 +172,8 @@ describe('<WeekView />', () => {
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];
 
-      // Should span 4 columns (4 days)
-      expect(gridColumnSpan).to.equal('3');
+      // Should span 3 columns — event is split at the overflow boundary, resuming on day 4
+      expect(gridColumnSpan).to.equal('4');
     });
   });
 
