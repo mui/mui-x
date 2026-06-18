@@ -146,7 +146,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
   );
 }) as PickersLayoutComponent;
 
-PickersLayout.propTypes = {
+PickersLayout.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

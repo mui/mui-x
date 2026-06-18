@@ -416,7 +416,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
   );
 }) as TimeClockComponent;
 
-TimeClock.propTypes = {
+TimeClock.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

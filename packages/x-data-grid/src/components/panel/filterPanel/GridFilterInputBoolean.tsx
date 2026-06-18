@@ -111,7 +111,7 @@ export function sanitizeFilterItemValue(value: any): boolean | undefined {
   return undefined;
 }
 
-GridFilterInputBoolean.propTypes = {
+GridFilterInputBoolean.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

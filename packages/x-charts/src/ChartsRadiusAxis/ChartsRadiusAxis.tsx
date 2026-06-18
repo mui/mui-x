@@ -9,10 +9,19 @@ import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import type { ChartsRadiusAxisProps, D3Scale } from '../models/axis';
+import type {
+  ChartsRadiusAxisProps,
+  ChartsAxisSlots,
+  ChartsAxisSlotProps,
+  D3Scale,
+} from '../models/axis';
 import { useUtilityClasses } from './chartsRadiusAxisClasses';
 import { createGetLabelTextAnchors } from './createGetLabelTextAnchors';
 import { getLabelTransform } from './getLabelTransform';
+
+export interface ChartsRadiusAxisSlots extends ChartsAxisSlots {}
+
+export interface ChartsRadiusAxisSlotProps extends ChartsAxisSlotProps {}
 
 /* Gap between a tick and its label. */
 const TICK_LABEL_GAP = 3;
@@ -50,6 +59,7 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
     position = 'start',
     disableLine,
     disableTicks,
+    disableTickLabel,
     tickLabelPosition: tickLabelPositionProp = 'auto',
     tickPosition = position === 'start' ? 'before' : 'after',
     tickSize = 6,
@@ -147,17 +157,19 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
                 className={classes.tick}
               />
             )}
-            <text
-              x={labelX}
-              y={labelY}
-              fill={stroke}
-              fontSize={12}
-              className={classes.tickLabel}
-              pointerEvents="none"
-              {...getLabelTextAnchors(dx, dy, tickLabelPosition)}
-            >
-              {formattedValue}
-            </text>
+            {!disableTickLabel && (
+              <text
+                x={labelX}
+                y={labelY}
+                fill={stroke}
+                fontSize={12}
+                className={classes.tickLabel}
+                pointerEvents="none"
+                {...getLabelTextAnchors(dx, dy, tickLabelPosition)}
+              >
+                {formattedValue}
+              </text>
+            )}
           </g>
         );
       })}
@@ -165,7 +177,7 @@ function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   );
 }
 
-ChartsRadiusAxis.propTypes = {
+ChartsRadiusAxis.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -189,6 +201,11 @@ ChartsRadiusAxis.propTypes = {
    * @default false
    */
   disableLine: PropTypes.bool,
+  /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel: PropTypes.bool,
   /**
    * If true, the ticks are disabled.
    * @default false
