@@ -1,3 +1,4 @@
+import type { ExtendedFeatureCollection, GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import type { SeriesItemIdentifierWithType } from '../../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import {
@@ -10,11 +11,18 @@ import { type ChartDrawingArea } from '../../../../../hooks/useDrawingArea';
 import { type ProcessedSeries, type SeriesLayout } from '../../useChartSeries';
 import { type ComputeResult } from '../../../featurePlugins/useChartPolarAxis/computeAxisValue';
 
+export type GeoTooltipPosition = {
+  geoData: ExtendedFeatureCollection | null;
+  projection: GeoProjection | null;
+  featureIndexesByName: ReadonlyMap<string, number[]>;
+};
+
 export interface TooltipPositionGetterAxesConfig {
   x?: ComputedXAxis;
   y?: ComputedYAxis;
   rotationAxes?: ComputeResult<ChartsRotationAxisProps>;
   radiusAxes?: ComputeResult<ChartsRadiusAxisProps>;
+  geo?: GeoTooltipPosition;
 }
 
 export type TooltipItemPositionGetter<SeriesType extends ChartSeriesType> = (params: {
