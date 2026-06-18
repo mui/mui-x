@@ -686,7 +686,6 @@ export default function WhatsNewLayout() {
         {entries.map((entry) => (
           <Box
             component="li"
-            className="MuiTimelineItem-root MuiTimelineItem-positionRight"
             key={entry.date.toISOString()}
             sx={{
               listStyle: 'none',
@@ -697,7 +696,6 @@ export default function WhatsNewLayout() {
           >
             <Typography
               component="div"
-              className="MuiTimelineOppositeContent-root MuiTimelineOppositeContent-positionRight"
               variant="body2"
               sx={{
                 color: 'text.tertiary',
@@ -715,7 +713,6 @@ export default function WhatsNewLayout() {
               {dateFormatter.format(entry.date)}
             </Typography>
             <Box
-              className="MuiTimelineSeparator-root"
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -725,7 +722,7 @@ export default function WhatsNewLayout() {
             >
               <Box
                 component="span"
-                className="MuiTimelineConnector-root top-connector"
+                className="top-connector"
                 sx={{
                   height: 32,
                   flexGrow: 0,
@@ -737,7 +734,6 @@ export default function WhatsNewLayout() {
               />
               <Box
                 component="span"
-                className="MuiTimelineDot-root MuiTimelineDot-filled MuiTimelineDot-filledGrey"
                 sx={{
                   boxSizing: 'border-box',
                   width: 10,
@@ -757,7 +753,7 @@ export default function WhatsNewLayout() {
               />
               <Box
                 component="span"
-                className="MuiTimelineConnector-root bottom-connector"
+                className="bottom-connector"
                 sx={{
                   flexGrow: 1,
                   width: '1px',
@@ -768,7 +764,7 @@ export default function WhatsNewLayout() {
               />
             </Box>
             <Box
-              className="MuiTimelineContent-root MuiTimelineContent-positionRight timeline-content"
+              className="timeline-content"
               sx={{ flex: 1, pl: { xs: 2, sm: 4 }, pr: 0, pt: 0, pb: 3, textAlign: 'left' }}
             >
               <BlogCard entry={entry} />
