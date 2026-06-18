@@ -224,7 +224,7 @@ The example below positions the labels above the bars they refer to.
 The `barLabel` property only has access to a single bar, so it can't display a stack's total.
 To show it, render a custom component as a child of the chart container.
 
-The example below sums the series with the [`useBarSeries`](/x/react-charts/hooks/) hook and positions each total with the [`useXScale`](/x/react-charts/hooks/) and [`useYScale`](/x/react-charts/hooks/) scales.
+The example below sums the series with the [`useBarSeries`](/x/react-charts/hooks/use-series/) hook and positions each total with the [`useXScale`](/x/react-charts/hooks/use-scale/) and [`useYScale`](/x/react-charts/hooks/use-scale/) scales.
 
 {{"demo": "StackTotalLabels.js"}}
 
