@@ -14,8 +14,8 @@ import { mapShapeSeriesConfig } from './seriesConfig';
 export interface MapShapePlotProps {
   /**
    * Callback fired when clicking on a map shape.
-   * @param event {React.MouseEvent<SVGPathElement, MouseEvent>} The event source of the callback.
-   * @param mapShapeItemIdentifier {MapShapeItemIdentifier} The identifier of the clicked map shape.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {MapShapeItemIdentifier} mapShapeItemIdentifier The identifier of the clicked map shape.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGPathElement, MouseEvent>,
@@ -125,6 +125,12 @@ MapShapePlot.propTypes /* remove-proptypes */ = {
    * Fill color applied to every feature path. Overrides item and series colors.
    */
   fill: PropTypes.string,
+  /**
+   * Callback fired when clicking on a map shape.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {MapShapeItemIdentifier} mapShapeItemIdentifier The identifier of the clicked map shape.
+   */
+  onItemClick: PropTypes.func,
   /**
    * Stroke color applied to every feature path.
    * @default 'none'
