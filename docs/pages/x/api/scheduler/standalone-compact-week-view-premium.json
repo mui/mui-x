@@ -1,0 +1,13 @@
+{
+  "props": {},
+  "name": "StandaloneCompactWeekViewPremium",
+  "imports": [
+    "import { StandaloneCompactWeekViewPremium } from '@mui/x-scheduler-premium/compact-week-view-premium';",
+    "import { StandaloneCompactWeekViewPremium } from '@mui/x-scheduler-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiStandaloneCompactWeekViewPremium",
+  "filename": "/packages/x-scheduler-premium/src/compact-week-view-premium/StandaloneCompactWeekViewPremium.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-scheduler/experiments/\">Experiments</a></li></ul>"
+}

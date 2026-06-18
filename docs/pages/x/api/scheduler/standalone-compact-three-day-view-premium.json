@@ -1,0 +1,13 @@
+{
+  "props": {},
+  "name": "StandaloneCompactThreeDayViewPremium",
+  "imports": [
+    "import { StandaloneCompactThreeDayViewPremium } from '@mui/x-scheduler-premium/compact-three-day-view-premium';",
+    "import { StandaloneCompactThreeDayViewPremium } from '@mui/x-scheduler-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiStandaloneCompactThreeDayViewPremium",
+  "filename": "/packages/x-scheduler-premium/src/compact-three-day-view-premium/StandaloneCompactThreeDayViewPremium.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-scheduler/experiments/\">Experiments</a></li></ul>"
+}
