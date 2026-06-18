@@ -30,6 +30,9 @@ const CompactEventDrawerRoot = styled('div', {
   flexDirection: 'column',
   gap: theme.spacing(1),
   backgroundColor: (theme.vars || theme).palette.grey[50],
+  ...theme.applyStyles('dark', {
+    backgroundColor: (theme.vars || theme).palette.grey[900],
+  }),
   height: 0,
   transition: theme.transitions.create('height', {
     duration: theme.transitions.duration.shorter,
