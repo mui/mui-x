@@ -223,3 +223,15 @@ Maps can be exported as an image or as a PDF, like any other chart.
 See the [Export](/x/react-charts/export/) page for the complete documentation.
 
 {{"demo": "ExportMap.js"}}
+
+## Common practice
+
+### Removing Antarctica
+
+World maps often has no data for Antarctica.
+There are two ways to remove it:.
+
+- Render only the countries in series by removing the `<GeoDataPlot />`
+- Filter out Antarctica from the `geoData`
+
+{{"demo": "RemoveAntarctica.js"}}

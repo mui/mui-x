@@ -192,12 +192,9 @@ export const selectorChartProjection = createSelectorMemoized(
         );
       }
 
-      projection.translate(
-        translate ?? [
-          drawingArea.left + drawingArea.width / 2,
-          drawingArea.top + drawingArea.height / 2,
-        ],
-      );
+      if (translate) {
+        projection.translate(translate);
+      }
     }
     return projection;
   },
