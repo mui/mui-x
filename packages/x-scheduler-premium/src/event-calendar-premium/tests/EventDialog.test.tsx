@@ -2181,6 +2181,52 @@ describe('<EventDialogContent open />', () => {
         expect(created).to.not.equal(undefined);
         expect(created.customField).to.equal('preserve-me');
       });
+
+      it('should use the latest custom data when it changes while the scope dialog is open', async () => {
+        const onEventsChange = spy();
+        const eventBefore = {
+          ...recurringEventWithCustomData,
+          customField: 'before',
+        } as SchedulerEvent;
+        const eventAfter = {
+          ...recurringEventWithCustomData,
+          customField: 'after',
+        } as SchedulerEvent;
+
+        const renderDialog = (events: SchedulerEvent[]) => (
+          <EventCalendarProvider
+            events={events}
+            onEventsChange={onEventsChange}
+            resources={resources}
+            storeClass={PremiumTestStore}
+          >
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={recurringEventWithCustomDataOccurrence}
+            />
+            <RecurringScopeDialog />
+          </EventCalendarProvider>
+        );
+
+        const { user, rerender } = render(renderDialog([eventBefore]));
+
+        await user.clear(screen.getByLabelText(/start time/i));
+        await user.type(screen.getByLabelText(/start time/i), '10:05');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+        await screen.findByText(/Apply this change to:/i);
+
+        // The events prop updates while the scope dialog is open.
+        rerender(renderDialog([eventAfter]));
+
+        await user.click(screen.getByText(/All events/i));
+        await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+        const updated = onEventsChange.lastCall.firstArg.find(
+          (event) => event.id === recurringEventWithCustomData.id,
+        );
+        expect(updated.customField).to.equal('after');
+      });
     });
   });
 

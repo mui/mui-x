@@ -41,6 +41,7 @@ import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
+  getCustomEventProperties,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
@@ -605,6 +606,18 @@ export class SchedulerStore<
         scope,
       );
     }
+
+    // Events split from the original are built from the built-in shape, so carry over custom fields.
+    const originalModel = schedulerEventSelectors.modelLookup(this.state).get(eventId);
+    if (originalModel && updatedEvents.created) {
+      const customData = getCustomEventProperties(originalModel);
+      updatedEvents.created = updatedEvents.created.map((createdEvent) =>
+        createdEvent.extractedFromId === eventId
+          ? { ...customData, ...createdEvent }
+          : createdEvent,
+      );
+    }
+
     this.updateEvents(updatedEvents);
 
     if (onSubmit) {
