@@ -50,6 +50,7 @@ Same changes as in `@mui/x-date-pickers@9.6.0`.
 - [charts] Fix wheel zoom not centering on cursor position (#22811) @JCQuintas
 - [charts] Remove zoom gesture registration from community package (#22753) @sai6855
 - [charts] Support percentage values for radial axis `minRadius`/`maxRadius` (#22803) @JCQuintas
+- [charts] Support `unknownColor` in color scale (#22813) @alexfauquette
 - [charts] Document click listener for scatter composition (#22809) @sai6855
 
 #### `@mui/x-charts-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -128,12 +129,16 @@ Internal changes.
 - [docs] Add weather composition demo (#22723) @TargiX
 - [docs] Add docs overview gallery and playground (#22488) @hasdfa
 - [docs] Clarify 'Scrolling without render gaps' (#22629) @oliviertassinari
+- [docs] Fix typo in release instructions (#22864) @brijeshb42
 
 ### Core
 
+- [code-infra] Fix lint issues (#22757) @brijeshb42
 - [code-infra] Fix remaining Dependabot security alerts (#22761) @Janpot
+- [code-infra] Remove release:build from docs:build script (#22852) @brijeshb42
 - [code-infra] Unpin `@mui/utils` version to allow dedupe (#22828) @mustafajw07
 - [docs-infra] Cap Netlify Next.js build parallelism to avoid OOM (#22847) @Janpot
+- [docs-infra] Remove i18n codebase (#22591) @brijeshb42
 - [internal] Fix failing React 18 unit tests (#22846) @brijeshb42
 
 ### Miscellaneous
