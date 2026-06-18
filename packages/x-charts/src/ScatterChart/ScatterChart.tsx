@@ -189,7 +189,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   );
 });
 
-ScatterChart.propTypes = {
+ScatterChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
