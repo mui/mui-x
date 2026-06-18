@@ -4,7 +4,7 @@ import * as React from 'react';
 import {
   DocsApp,
   printConsoleBanner,
-  reportWebVitals,
+  reportWebVitals as _reportWebVitals,
 } from '@mui/internal-core-docs/DocsApp';
 import { ThemeProvider } from '@mui/internal-core-docs/ThemeContext';
 import findActivePage from '@mui/internal-core-docs/findActivePage';
@@ -21,8 +21,14 @@ import { useRouter } from 'next/router';
 import { DEFAULT_DOCS_CONFIG, DocsConfig } from '@mui/internal-core-docs/DocsProvider';
 import translationsJson from '../translations/translations.json';
 import translationsZhJson from '../translations/translations-zh.json';
+import { fontClasses as _fontClasses } from '@mui/internal-core-docs/nextFonts';
 
-export { fontClasses } from '@mui/internal-core-docs/nextFonts';
+// Workaround: turbopack's pages-router Custom App detection misfires when
+// `_app.tsx` re-exports an imported binding (`export ... from`, or
+// `import { x }; export { x }`), which makes turbopack reject the file as the
+// Custom App. Re-export as fresh local bindings instead.
+// Related issue - https://github.com/vercel/next.js/issues/93162
+export const fontClasses = _fontClasses;
 
 // require.context is webpack-only and unsupported by turbopack, so build the
 // translations map statically. Mirrors `mapTranslations` (filename → language).
@@ -300,4 +306,6 @@ export default function MyApp(
   );
 }
 
-export { reportWebVitals };
+// See note above about turbopack re-export detection — wrap rather than
+// `export { reportWebVitals }` so _app.tsx stays the Custom App.
+export const reportWebVitals: typeof _reportWebVitals = (...args) => _reportWebVitals(...args);
