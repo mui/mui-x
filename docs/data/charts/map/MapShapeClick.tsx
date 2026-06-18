@@ -39,14 +39,18 @@ export default function MapShapeClick() {
               type: 'mapShape',
               label: 'European Union',
               color: '#1976d2',
-              data: EU_COUNTRIES.map((code) => ({ name: countryData[code].country })),
+              data: EU_COUNTRIES.map((code) => ({
+                name: countryData[code].country,
+              })),
               valueFormatter: (point) => point.name,
             },
           ]}
         >
           <ChartsSurface>
             <GeoDataPlot fill="#f5f5f5" stroke="#bdbdbd" />
-            <MapShapePlot onItemClick={(event, identifier) => setItemData(identifier)} />
+            <MapShapePlot
+              onItemClick={(event, identifier) => setItemData(identifier)}
+            />
           </ChartsSurface>
           <ChartsTooltip trigger="item" />
         </ChartsGeoDataProviderPremium>
