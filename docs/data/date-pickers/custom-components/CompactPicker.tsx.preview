@@ -1,0 +1,12 @@
+<Stack spacing={1}>
+  <Typography variant="caption" color="text.secondary">
+    Default
+  </Typography>
+  <StaticDatePicker />
+</Stack>
+<Stack spacing={1}>
+  <Typography variant="caption" color="text.secondary">
+    Compact
+  </Typography>
+  <StaticDatePicker compact />
+</Stack>
