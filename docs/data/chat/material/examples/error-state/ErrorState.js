@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import Alert from '@mui/material/Alert';
 import { ChatBox } from '@mui/x-chat';
 import {
   minimalConversation,
@@ -43,19 +44,9 @@ export default function ErrorState() {
         }}
       />
       {errorMessage && (
-        <div
-          role="alert"
-          style={{
-            marginTop: 8,
-            padding: '8px 16px',
-            backgroundColor: '#fdeded',
-            color: '#5f2120',
-            borderRadius: 4,
-            fontSize: 14,
-          }}
-        >
+        <Alert severity="error" sx={{ mt: 1 }}>
           Error: {errorMessage}
-        </div>
+        </Alert>
       )}
     </div>
   );

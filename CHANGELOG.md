@@ -1,5 +1,105 @@
 # Changelog
 
+## 9.5.0
+
+_Jun 11, 2026_
+
+We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 New [`multiSelect` column type for Data Grid Pro](https://mui.com/x/react-data-grid/column-definition/#MultiSelectColumn)
+- 🚀 New [renderer="svg-progressive"](https://mui.com/x/react-charts/scatter/#progressive-renderer) paints scatter points in batched frames so large datasets render smoothly without blocking the main thread.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to community members @mustafajw07 and @Anexus5919 for their valuable contribution.
+
+The following team members contributed to this release:
+@alexfauquette, @JCQuintas, @rita-codes, @rluzists1, @sai6855, @siriwatknp, @arminmeh, @brijeshb42
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.5.0`
+
+- [DataGrid] Restrict warning messages to non-production environments in various components (#22461) @sai6855
+- [DataGrid] Prevent React state update before mount (#22374) @arminmeh
+
+#### `@mui/x-data-grid-pro@9.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.5.0`, plus:
+
+- [DataGridPro] Add new `multiSelect` column type (#21157) @siriwatknp
+
+#### `@mui/x-data-grid-premium@9.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.5.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.5.0`
+
+- [pickers] Fix missing export of `th-TH` (#22703) @alexfauquette
+
+#### `@mui/x-date-pickers-pro@9.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.5.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.5.0`
+
+- [charts] Add `FocusedBar` component to `BarScatterComposition` demo (#22704) @sai6855
+- [charts] Add dedicated Bubble Chart documentation page (#22688) @mustafajw07
+- [charts] Add progressive scatter renderer (#22518) @JCQuintas
+- [charts] Avoid full axis pipeline rebuild on resize (#22695) @JCQuintas
+- [charts] Document focus indicator in composition page (#22712) @JCQuintas
+- [charts] Fix `ChartsTooltip` `container` and `disablePortal` props being ignored (#22690) @JCQuintas
+- [charts] Make ordinal scales O(1) to copy and re-range (#22691) @JCQuintas
+- [charts] Stabilize WebGL bar rendering at sub-pixel widths (#22678) @JCQuintas
+- [charts] Use the series config to define value types (#22693) @sai6855
+- [charts] Decouple interaction hook from the cartesian zoom (#22708) @alexfauquette
+
+#### `@mui/x-charts-pro@9.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.5.0`, plus:
+
+- [charts-pro] Add missing focus highlight (#22689) @alexfauquette
+
+#### `@mui/x-charts-premium@9.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.5.0`, plus:
+
+- [charts-premium] Set `Heatmap` WebGL render as stable (#22665) @alexfauquette
+- [charts-premium] Stabilize candlestick charts (#22666) @alexfauquette
+- [charts-premium] Stabilize the radial charts (#22655) @alexfauquette
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.1`
+
+Internal changes.
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.1`, plus:
+
+- [scheduler] Remove dead CSS variable writes in `EventTimelinePremiumContent` (#22720) @rita-codes
+- [scheduler] Show scope dialog when deleting a recurring event (#22552) @Anexus5919
+
+### Core
+
+- [docs-infra] Fix immutable cache headers for `/\_next/static` assets (#22747) @brijeshb42
+- [docs-infra] Prefix `/\_next/static` cache header rule with `/x` basePath (#22748) @brijeshb42
+- [code-infra] Update dependencies to resolve Dependabot security alerts (#22714) @Janpot
+
+### Docs
+
+- [docs] Fix broken links checker crashing on 404 known-targets fetch (#22707) @sai6855
+- [docs] Fix country data (#22716) @alexfauquette
+
+### Miscellaneous
+
+- [legal] Update EULA links in docs (#22717) @rluzists1
+
 ## 9.4.0
 
 <!-- generated comparing v9.3.0..master -->

@@ -172,7 +172,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
   );
 });
 
-RadialBarChart.propTypes = {
+RadialBarChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -426,4 +426,4 @@ RadialBarChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadialBarChart as Unstable_RadialBarChart };
+export { RadialBarChart };

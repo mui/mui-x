@@ -80,10 +80,12 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
-      let value = event.target.value;
-
-      // NativeSelect casts the value to a string.
-      value = getValueFromValueOptions(value, currentValueOptions, getOptionValue);
+      // NativeSelect casts the value to a string, convert it back to the original type.
+      const value = getValueFromValueOptions(
+        event.target.value,
+        currentValueOptions,
+        getOptionValue,
+      );
       applyValue({ ...item, value });
     },
     [currentValueOptions, getOptionValue, applyValue, item],
@@ -135,7 +137,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   );
 }
 
-GridFilterInputSingleSelect.propTypes = {
+GridFilterInputSingleSelect.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

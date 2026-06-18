@@ -77,14 +77,13 @@ function SankeyPlot(props: SankeyPlotProps) {
     <SankeyPlotRoot className={clsx(classes.root, className)}>
       <SankeyLinkPlot classes={classes} onClick={onLinkClick} />
       <SankeyNodePlot classes={classes} onClick={onNodeClick} />
-
       {linkOptions?.showValues && <SankeyLinkLabelPlot classes={classes} />}
       {showNodeLabels && <SankeyNodeLabelPlot classes={classes} />}
     </SankeyPlotRoot>
   );
 }
 
-SankeyPlot.propTypes = {
+SankeyPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -93,6 +92,10 @@ SankeyPlot.propTypes = {
    * Classes applied to the various elements.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

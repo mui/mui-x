@@ -104,4 +104,71 @@ describe('createEchoAdapter', () => {
       vi.useRealTimers();
     }
   });
+
+  describe('regenerate', () => {
+    it('emits a reply derived from the anchor message', async () => {
+      const adapter = createEchoAdapter({ delayMs: 0, respond: (text) => `Regen: ${text}` });
+
+      const stream = await adapter.regenerate!({
+        messageId: 'assistant-1',
+        message: makeUserMessage('hello'),
+        messages: [],
+        signal: new AbortController().signal,
+      });
+
+      const chunks = await readAll(stream);
+      const delta = chunks.find((c) => (c as ChatMessageChunk).type === 'text-delta') as {
+        delta: string;
+      };
+      expect(delta.delta).toBe('Regen: hello');
+    });
+
+    it('honors signal abort before the delay elapses', async () => {
+      const adapter = createEchoAdapter({ delayMs: 100 });
+      const controller = new AbortController();
+
+      const stream = await adapter.regenerate!({
+        messageId: 'assistant-1',
+        message: makeUserMessage('hello'),
+        messages: [],
+        signal: controller.signal,
+      });
+      const readPromise = readAll(stream);
+
+      controller.abort();
+
+      expect(await readPromise).toEqual([]);
+    });
+
+    it('produces distinct message ids for consecutive regenerations of the same message', async () => {
+      const adapter = createEchoAdapter({ delayMs: 0 });
+      const message = makeUserMessage('hello');
+
+      const first = await readAll(
+        await adapter.regenerate!({
+          messageId: 'assistant-1',
+          message,
+          messages: [],
+          signal: new AbortController().signal,
+        }),
+      );
+      const second = await readAll(
+        await adapter.regenerate!({
+          messageId: 'assistant-1',
+          message,
+          messages: [],
+          signal: new AbortController().signal,
+        }),
+      );
+
+      const firstStart = first.find((c) => (c as ChatMessageChunk).type === 'start') as {
+        messageId: string;
+      };
+      const secondStart = second.find((c) => (c as ChatMessageChunk).type === 'start') as {
+        messageId: string;
+      };
+
+      expect(firstStart.messageId).not.toBe(secondStart.messageId);
+    });
+  });
 });

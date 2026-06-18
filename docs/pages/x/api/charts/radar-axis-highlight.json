@@ -1,5 +1,8 @@
 {
-  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } }
+  },
   "name": "RadarAxisHighlight",
   "imports": [
     "import { RadarAxisHighlight } from '@mui/x-charts/RadarChart';",
@@ -7,10 +10,28 @@
     "import { RadarAxisHighlight } from '@mui/x-charts-pro';",
     "import { RadarAxisHighlight } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "axisHighlightDot",
+      "className": "MuiRadarChart-axisHighlightDot",
+      "description": "Styles applied to every axis highlight dot element.",
+      "isGlobal": false
+    },
+    {
+      "key": "axisHighlightLine",
+      "className": "MuiRadarChart-axisHighlightLine",
+      "description": "Styles applied to the axis highlight line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "axisHighlightRoot",
+      "className": "MuiRadarChart-axisHighlightRoot",
+      "description": "Styles applied to the axis highlight root element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiRadarAxisHighlight",
   "filename": "/packages/x-charts/src/RadarChart/RadarAxisHighlight/RadarAxisHighlight.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>"
 }

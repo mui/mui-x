@@ -98,6 +98,10 @@ export interface ChatDraftAttachment {
   file: File;
   previewUrl?: string;
   status: ChatDraftAttachmentStatus;
+  /**
+   * Upload progress as a percentage (0 to 100).
+   * Only meaningful while `status` is `'uploading'`.
+   */
   progress?: number;
 }
 
