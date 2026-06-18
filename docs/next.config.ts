@@ -62,12 +62,11 @@ try {
 
 export default withDeploymentConfig({
   reactStrictMode: true,
-  typescript: {
-    // The tsconfig also contains path aliases that are used by next.js.
-    tsconfigPath: IS_PRODUCTION ? '../tsconfig.prod.json' : '../tsconfig.dev.json',
-  },
   experimental: {
     esmExternals: undefined,
+  },
+  typescript: {
+    tsconfigPath: './tsconfig.json',
   },
   transpilePackages: [
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.

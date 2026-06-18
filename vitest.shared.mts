@@ -62,6 +62,7 @@ export default defineConfig({
     setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
     // Inline so Vite resolves @mui/material's `react-transition-group/TransitionGroupContext`
     // directory import (legacy `main`/`module`, no `exports`), which native ESM rejects.
+    // @TODO: Remove once https://github.com/mui/material-ui/pull/48645 is merged.
     server: {
       deps: {
         inline: [/@mui\/material/, /react-transition-group/],

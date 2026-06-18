@@ -105,6 +105,7 @@ trustPolicyIgnoreAfter: 525600
 enablePrePostScripts: true
 
 allowBuilds:
+  '@mui/x-charts-vendor': true
   '@swc/core': true
   '@vvago/vale': true
   esbuild: true
