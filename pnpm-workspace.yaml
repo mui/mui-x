@@ -22,7 +22,7 @@ catalog:
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.1.1
   '@mui/internal-test-utils': 2.0.18-canary.25
-  '@mui/internal-core-docs': 9.0.2-canary.2
+  '@mui/internal-core-docs': 9.1.2-canary.0
   '@mui/material': 9.1.1
   '@mui/stylis-plugin-rtl': 9.1.1
   '@mui/system': 9.1.1
@@ -122,6 +122,3 @@ overrides:
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
   caniuse-lite: ^1.0.30001793
-
-patchedDependencies:
-  '@mui/internal-markdown@3.0.9-canary.2': patches/@mui__internal-markdown@3.0.9-canary.2.patch
