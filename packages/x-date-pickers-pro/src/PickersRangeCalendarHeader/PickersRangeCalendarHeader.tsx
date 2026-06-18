@@ -17,11 +17,19 @@ type PickersRangeCalendarHeaderComponent = ((
 
 const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher, {
   slot: 'internal',
-})({
+})<{ ownerState: { compact: boolean } }>({
   padding: '12px 16px 4px 16px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+  variants: [
+    {
+      props: { compact: true },
+      style: {
+        padding: '6px 8px 2px 8px',
+      },
+    },
+  ],
 });
 
 const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalendarHeader(
@@ -47,8 +55,11 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
     reduceAnimations,
     views,
     view,
+    compact = false,
     ...otherRangeProps
   } = other;
+
+  const ownerState = { compact };
 
   const isNextMonthDisabled = useNextMonthDisabled(currentMonth, {
     disableFuture,
@@ -73,6 +84,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   return (
     <PickersRangeCalendarHeaderContentMultipleCalendars
       {...otherRangeProps}
+      ownerState={ownerState}
       ref={ref}
       onGoToPrevious={selectPreviousMonth}
       onGoToNext={selectNextMonth}
@@ -105,6 +117,11 @@ PickersRangeCalendarHeader.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   currentMonth: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,

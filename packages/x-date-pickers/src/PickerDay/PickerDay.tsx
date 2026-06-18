@@ -8,7 +8,13 @@ import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { MuiEvent } from '@mui/x-internals/types';
-import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
+import { shouldForwardProp } from '@mui/system/createStyled';
+import {
+  DAY_MARGIN,
+  DAY_SIZE,
+  DAY_MARGIN_COMPACT,
+  DAY_SIZE_COMPACT,
+} from '../internals/constants/dimensions';
 import {
   pickerDayClasses,
   PickerDayClassKey,
@@ -49,6 +55,7 @@ const useUtilityClasses = (
 const PickerDayRoot = styled(ButtonBase, {
   name: 'MuiPickerDay',
   slot: 'Root',
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
   overridesResolver: (
     props: { ownerState: PickerDayOwnerState },
     styles: Record<PickerDayClassKey, CSSInterpolation>,
@@ -140,6 +147,13 @@ const PickerDayRoot = styled(ButtonBase, {
         outlineOffset: -1,
       },
     },
+    {
+      props: { compact: true },
+      style: {
+        '--PickerDay-horizontalMargin': `${DAY_MARGIN_COMPACT}px`,
+        '--PickerDay-size': `${DAY_SIZE_COMPACT}px`,
+      },
+    },
   ],
 }));
 
@@ -185,6 +199,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     showDaysOutsideCurrentMonth,
     isVisuallySelected,
     isDayFillerCell: isDayFillerCellProp,
+    compact,
     ...other
   } = props;
 
@@ -196,6 +211,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
     outsideCurrentMonth,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
+    compact,
   });
 
   const ownerState: PickerDayOwnerState = {
@@ -305,6 +321,11 @@ PickerDayRaw.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   component: PropTypes.elementType,
   /**
    * The date to show.

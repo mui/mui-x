@@ -87,6 +87,11 @@ StaticDateRangePicker.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
   /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
+  /**
    * Position the current month is rendered in.
    * @default 1
    */

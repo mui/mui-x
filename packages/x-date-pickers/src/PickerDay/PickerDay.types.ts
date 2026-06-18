@@ -21,6 +21,11 @@ export interface ExportedPickerDayProps {
    * @default false
    */
   showDaysOutsideCurrentMonth?: boolean;
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact?: boolean;
 }
 
 export interface PickerDayProps

@@ -52,6 +52,7 @@ export const renderDateViewCalendar = ({
   fixedWeekNumber,
   displayWeekNumber,
   timezone,
+  compact,
 }: DateViewRendererProps<DateView>) => (
   <DateCalendar
     view={view}
@@ -92,5 +93,6 @@ export const renderDateViewCalendar = ({
     fixedWeekNumber={fixedWeekNumber}
     displayWeekNumber={displayWeekNumber}
     timezone={timezone}
+    compact={compact}
   />
 );

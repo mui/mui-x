@@ -5,6 +5,7 @@ import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   DIALOG_WIDTH,
+  DIALOG_WIDTH_COMPACT,
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
@@ -39,7 +40,7 @@ export const useStaticRangePicker = <
   steps,
   ...pickerParams
 }: UseStaticRangePickerParams<TView, TExternalProps>) => {
-  const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus, compact } = props;
 
   const rangePositionResponse = useRangePosition(props);
 
@@ -68,7 +69,11 @@ export const useStaticRangePicker = <
           {...slotProps?.layout}
           slots={slots}
           slotProps={slotProps}
-          sx={mergeSx(providerProps.contextValue.rootSx, slotProps?.layout?.sx)}
+          sx={mergeSx(
+            compact ? { minWidth: DIALOG_WIDTH_COMPACT } : undefined,
+            providerProps.contextValue.rootSx,
+            slotProps?.layout?.sx,
+          )}
           className={clsx(providerProps.contextValue.rootClassName, slotProps?.layout?.className)}
           ref={providerProps.contextValue.rootRef}
         >

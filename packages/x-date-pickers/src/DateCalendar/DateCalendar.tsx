@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
@@ -22,7 +23,11 @@ import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendar
 import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import {
+  VIEW_HEIGHT,
+  DIALOG_WIDTH_COMPACT,
+  VIEW_HEIGHT_COMPACT,
+} from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
@@ -63,16 +68,27 @@ function useDateCalendarDefaultizedProps(
 const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
-})<{ ownerState: PickerOwnerState }>({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
+})<{ ownerState: PickerOwnerState & { compact: boolean } }>({
   display: 'flex',
   flexDirection: 'column',
   height: VIEW_HEIGHT,
+  variants: [
+    {
+      props: { compact: true },
+      style: {
+        width: DIALOG_WIDTH_COMPACT,
+        height: VIEW_HEIGHT_COMPACT,
+      },
+    },
+  ],
 });
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',
   slot: 'ViewTransitionContainer',
-})<{ ownerState: PickerOwnerState }>({});
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
+})<{ ownerState: PickerOwnerState & { compact: boolean } }>({});
 
 type DateCalendarComponent = ((
   props: DateCalendarProps & React.RefAttributes<HTMLDivElement>,
@@ -94,7 +110,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
-  const { ownerState } = usePickerPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const id = useId();
   const props = useDateCalendarDefaultizedProps(inProps, 'MuiDateCalendar');
 
@@ -137,8 +153,11 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     yearsPerRow,
     monthsPerRow,
     timezone: timezoneProp,
+    compact = false,
     ...other
   } = props;
+
+  const ownerState = { ...pickerOwnerState, compact };
 
   const { value, handleValueChange, timezone } = useControlledValue({
     name: 'DateCalendar',
@@ -213,6 +232,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       reduceAnimations,
       timezone,
       labelId: gridLabelId,
+      compact,
     },
     ownerState,
   });
@@ -374,6 +394,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
               {...calendarState}
               {...baseDateValidationProps}
               {...commonViewProps}
+              compact={compact}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               hasFocus={hasFocus}
               onFocusedDayChange={(focusedDate) =>
@@ -417,6 +438,11 @@ DateCalendar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {PickerValidDate} date The date of the day of week provided by the adapter.

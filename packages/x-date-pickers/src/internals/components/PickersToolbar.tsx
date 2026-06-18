@@ -46,6 +46,10 @@ const PickersToolbarRoot = styled('div', {
         flexWrap: 'wrap',
       },
     },
+    {
+      props: { isPickerCompact: true, isPickerStaticVariant: true },
+      style: ({ theme }) => ({ padding: theme.spacing(1, 1.5) }),
+    },
   ],
 }));
 

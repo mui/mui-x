@@ -55,7 +55,12 @@ import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
 import { useRangePosition } from '../internals/hooks/useRangePosition';
-import { DAY_RANGE_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
+import {
+  DAY_RANGE_SIZE,
+  DAY_RANGE_SIZE_COMPACT,
+  DAY_MARGIN,
+  DAY_MARGIN_COMPACT,
+} from '../internals/constants/dimensions';
 import {
   PickersRangeCalendarHeader,
   PickersRangeCalendarHeaderProps,
@@ -87,18 +92,30 @@ const DateRangeCalendarMonthContainer = styled('div', {
 }));
 
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
+const weeksContainerHeightCompact = (DAY_RANGE_SIZE_COMPACT + DAY_MARGIN_COMPACT * 2) * 6;
+const dayCalendarMinWidth = 7 * (DAY_RANGE_SIZE + DAY_MARGIN * 2) + 32;
+const dayCalendarMinWidthCompact = 7 * (DAY_RANGE_SIZE_COMPACT + DAY_MARGIN_COMPACT * 2) + 4;
 
 const InnerDayCalendarForRange = styled(DayCalendar, {
   slot: 'internal',
-})(() => ({
-  minWidth: 312,
+})({
+  minWidth: dayCalendarMinWidth,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
     [`& .${dayClasses.root}`]: {
       cursor: 'grabbing',
     },
   },
-}));
+  variants: [
+    {
+      props: { compact: true },
+      style: {
+        minWidth: dayCalendarMinWidthCompact,
+        minHeight: weeksContainerHeightCompact,
+      },
+    },
+  ],
+});
 
 const DayCalendarForRange = InnerDayCalendarForRange as typeof DayCalendar;
 
@@ -205,6 +222,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     view: inView,
     openTo,
     onViewChange,
+    compact = false,
     ...other
   } = props;
 
@@ -308,6 +326,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const ownerState: DateRangeCalendarOwnerState = {
     ...pickersOwnerState,
     isDraggingDay: isDragging,
+    compact,
   };
   const classes = useUtilityClasses(classesProp, ownerState);
 
@@ -393,6 +412,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         disableFuture,
         reduceAnimations,
         timezone,
+        compact,
         slots,
         slotProps,
       },
@@ -446,6 +466,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     disableHighlightToday,
     readOnly,
     disabled,
+    compact,
   };
 
   const [rangePreviewDay, setRangePreviewDay] = React.useState<PickerValidDate | null>(null);
@@ -658,6 +679,11 @@ DateRangeCalendar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   /**
    * Position the current month is rendered in.
    * @default 1
