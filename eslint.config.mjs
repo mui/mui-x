@@ -142,6 +142,11 @@ export default defineConfig(
       'react-compiler/react-compiler': 'off',
       'react/react-in-jsx-scope': 'off',
 
+      // TODO: re-enable. Temporarily disabled after the eslint-plugin-react-hooks
+      // 7.1 bump (via @mui/internal-code-infra) introduced this rule, which flags
+      // existing code that needs to be addressed separately.
+      'react-hooks/set-state-in-effect': 'off',
+
       // Modern browsers imply rel="noopener" for target="_blank", so no rel is required.
       // See https://github.com/mui/material-ui/pull/40447
       // TODO move to mui/mui-public.
@@ -337,12 +342,14 @@ export default defineConfig(
     rules: {
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
 
   {
     files: [`test/regressions/**/*${EXTENSION_TS}`],
     rules: {
+      'react-hooks/set-state-in-effect': 'off',
       'react/jsx-filename-extension': 'off',
     },
   },

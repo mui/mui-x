@@ -58,7 +58,7 @@ const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(function GridOv
   );
 });
 
-GridOverlay.propTypes = {
+GridOverlay.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

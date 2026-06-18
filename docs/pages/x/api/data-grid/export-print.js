@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
 import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
+import translation from 'docs/translations/api-docs/data-grid/export-print/export-print.json';
 import jsonPageContent from './export-print.json';
 
 export default function Page(props) {
@@ -10,12 +11,7 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docs/translations/api-docs/data-grid/export-print',
-    false,
-    /\.\/export-print.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
 
   return { props: { descriptions } };
 }

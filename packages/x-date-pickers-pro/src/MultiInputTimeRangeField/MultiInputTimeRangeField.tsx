@@ -41,7 +41,7 @@ const MultiInputTimeRangeField = createMultiInputTimeRangeField({
   allowTriggerShifting: true,
 }) as MultiInputTimeRangeFieldComponent;
 
-MultiInputTimeRangeField.propTypes = {
+MultiInputTimeRangeField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
