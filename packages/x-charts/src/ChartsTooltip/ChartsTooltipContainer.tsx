@@ -348,7 +348,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   );
 }
 
-ChartsTooltipContainer.propTypes = {
+ChartsTooltipContainer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -357,7 +357,7 @@ ChartsTooltipContainer.propTypes = {
    * Determine if the tooltip should be placed on the pointer location or on the node.
    * @default 'pointer'
    */
-  anchor: PropTypes.oneOf(['node', 'pointer']),
+  anchor: PropTypes.oneOf(['chart', 'node', 'pointer']),
   /**
    * An HTML element, [virtualElement](https://popper.js.org/docs/v2/virtual-elements/),
    * or a function that returns either.
@@ -383,25 +383,6 @@ ChartsTooltipContainer.propTypes = {
    */
   component: PropTypes.elementType,
   /**
-   * The components used for each slot inside the Popper.
-   * Either a string to use a HTML element or a component.
-   *
-   * @deprecated use the `slots` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
-   * @default {}
-   */
-  components: PropTypes.shape({
-    Root: PropTypes.elementType,
-  }),
-  /**
-   * The props used for each slot inside the Popper.
-   *
-   * @deprecated use the `slotProps` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
-   * @default {}
-   */
-  componentsProps: PropTypes.shape({
-    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  }),
-  /**
    * An HTML element or function that returns one.
    * The `container` will have the portal children appended to it.
    *
@@ -414,10 +395,10 @@ ChartsTooltipContainer.propTypes = {
   container: PropTypes.oneOfType([
     (props, propName) => {
       if (props[propName] == null) {
-        return new Error(`MUI X: Prop '${propName}' is required but wasn't specified`);
+        return new Error(`Prop '${propName}' is required but wasn't specified`);
       }
       if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-        return new Error(`MUI X: Expected prop '${propName}' to be of type Element`);
+        return new Error(`Expected prop '${propName}' to be of type Element`);
       }
       return null;
     },
@@ -566,13 +547,12 @@ ChartsTooltipContainer.propTypes = {
    */
   position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
   /**
-   * The props used for each slot inside the Popper.
+   * The props used for each component slot.
    * @default {}
    */
   slotProps: PropTypes.object,
   /**
-   * The components used for each slot inside the Popper.
-   * Either a string to use a HTML element or a component.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

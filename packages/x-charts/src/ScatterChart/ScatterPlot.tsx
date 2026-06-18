@@ -33,8 +33,15 @@ export interface ScatterPlotSlotProps extends ScatterSlotProps {
 
 export type RendererType = 'svg-single' | 'svg-batch';
 
-export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'classes'> {
+export interface ScatterPlotProps extends Pick<ScatterProps, 'classes'> {
   className?: string;
+  /**
+   * Callback fired when a marker is clicked directly.
+   * For closest-point clicks (the `ScatterChart` default), pass `onItemClick` to the chart container instead.
+   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
+   */
+  onItemClick?: ScatterProps['onItemClick'];
   /**
    * Overridable component slots.
    * @default {}
@@ -149,13 +156,16 @@ function ScatterPlot(props: ScatterPlotProps) {
   );
 }
 
-ScatterPlot.propTypes = {
+ScatterPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
   /**
-   * Callback fired when clicking on a scatter item.
+   * Callback fired when a marker is clicked directly.
+   * For closest-point clicks (the `ScatterChart` default), pass `onItemClick` to the chart container instead.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import reactMajor from '@mui/x-internals/reactMajor';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { type SeriesId } from '@mui/x-charts/models';
@@ -50,5 +51,15 @@ function RadialLineHighlightElement(props: RadialLineHighlightElementProps) {
     />
   );
 }
+
+RadialLineHighlightElement.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  seriesId: PropTypes.string.isRequired,
+  shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
+    .isRequired,
+} as any;
 
 export { RadialLineHighlightElement };

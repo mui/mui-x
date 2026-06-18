@@ -310,7 +310,7 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
   );
 }
 
-GridActionsCell.propTypes = {
+GridActionsCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -320,7 +320,7 @@ GridActionsCell.propTypes = {
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -345,6 +345,24 @@ GridActionsCell.propTypes = {
    * If true, the cell is editable.
    */
   isEditable: PropTypes.bool,
+  /**
+   * Callback to fire before the menu gets closed.
+   * Use this callback to prevent the menu from closing.
+   *
+   * @param {GridRowParams<R>} params Row parameters.
+   * @param {React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined} event The event triggering this callback.
+   * @returns {boolean} if the menu should be closed.
+   */
+  onMenuClose: PropTypes.func,
+  /**
+   * Callback to fire before the menu gets opened.
+   * Use this callback to prevent the menu from opening.
+   *
+   * @param {GridRowParams<R>} params Row parameters.
+   * @param {React.MouseEvent<HTMLElement>} event The event triggering this callback.
+   * @returns {boolean} if the menu should be opened.
+   */
+  onMenuOpen: PropTypes.func,
   position: PropTypes.oneOf([
     'bottom-end',
     'bottom-start',
@@ -362,11 +380,18 @@ GridActionsCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.any.isRequired,
+  row: PropTypes.object.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */
   rowNode: PropTypes.object.isRequired,
+  /**
+   * If true, the children passed to the component will not be validated.
+   * If false, only `GridActionsCellItem` and `React.Fragment` are allowed as children.
+   * Only use this prop if you know what you are doing.
+   * @default false
+   */
+  suppressChildrenValidation: PropTypes.bool,
   /**
    * the tabIndex value.
    */
@@ -399,6 +424,62 @@ function GridActionsCellWrapper(props: GridRenderCellParams) {
     </GridActionsCell>
   );
 }
+
+GridActionsCellWrapper.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: PropTypes.object.isRequired,
+  /**
+   * The mode of the cell.
+   */
+  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  /**
+   * The column of the row that the current cell belongs to.
+   */
+  colDef: PropTypes.object.isRequired,
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
+  formattedValue: PropTypes.any,
+  /**
+   * If true, the cell is the active element.
+   */
+  hasFocus: PropTypes.bool.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * If true, the cell is editable.
+   */
+  isEditable: PropTypes.bool,
+  /**
+   * The row model of the row that the current cell belongs to.
+   */
+  row: PropTypes.any.isRequired,
+  /**
+   * The node of the row that the current cell belongs to.
+   */
+  rowNode: PropTypes.object.isRequired,
+  /**
+   * the tabIndex value.
+   */
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+} as any;
 
 export const renderActionsCell = (params: GridRenderCellParams) => (
   <GridActionsCellWrapper {...params} />

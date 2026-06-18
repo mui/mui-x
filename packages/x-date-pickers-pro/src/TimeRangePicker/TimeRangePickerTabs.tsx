@@ -130,7 +130,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
   );
 };
 
-TimeRangePickerTabs.propTypes = {
+TimeRangePickerTabs.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -202,11 +202,15 @@ function FunnelPlot(props: FunnelPlotProps) {
   );
 }
 
-FunnelPlot.propTypes = {
+FunnelPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

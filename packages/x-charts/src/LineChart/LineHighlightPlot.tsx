@@ -173,7 +173,7 @@ function getStartEndMarkIndex(data: readonly (number | null)[], type: 'start' | 
   return index < 0 ? undefined : index;
 }
 
-LineHighlightPlot.propTypes = {
+LineHighlightPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

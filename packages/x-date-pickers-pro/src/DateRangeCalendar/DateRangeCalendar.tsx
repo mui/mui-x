@@ -628,7 +628,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   );
 }) as DateRangeCalendarComponent;
 
-DateRangeCalendar.propTypes = {
+DateRangeCalendar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
