@@ -342,12 +342,14 @@ export default defineConfig(
     rules: {
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
 
   {
     files: [`test/regressions/**/*${EXTENSION_TS}`],
     rules: {
+      'react-hooks/set-state-in-effect': 'off',
       'react/jsx-filename-extension': 'off',
     },
   },
