@@ -1,7 +1,7 @@
 'use client';
 import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 import { useStore } from '@mui/x-charts/internals';
-import { selectorChartRawGeoData } from '../internals/plugins/useGeoProjection';
+import { selectorChartGeoData } from '../internals/plugins/useGeoProjection';
 import type { UseGeoProjectionSignature } from '../internals/plugins/useGeoProjection';
 
 /**
@@ -10,5 +10,5 @@ import type { UseGeoProjectionSignature } from '../internals/plugins/useGeoProje
  */
 export function useGeoData(): ExtendedFeatureCollection | null {
   const store = useStore<[UseGeoProjectionSignature]>();
-  return store.use(selectorChartRawGeoData);
+  return store.use(selectorChartGeoData);
 }

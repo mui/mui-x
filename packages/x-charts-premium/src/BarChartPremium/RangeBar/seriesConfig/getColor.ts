@@ -15,9 +15,9 @@ const getColor: ColorProcessor<'rangeBar'> = (series, xAxis, yAxis) => {
       }
 
       const value = bandValues[dataIndex];
-      const color = value === null ? getSeriesColor({ value, dataIndex }) : bandColorScale(value);
+      const color = bandColorScale(value);
 
-      if (color === null) {
+      if (typeof color !== 'string') {
         return getSeriesColor({ value, dataIndex });
       }
 

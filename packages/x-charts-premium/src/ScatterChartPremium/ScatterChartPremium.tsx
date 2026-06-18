@@ -556,6 +556,7 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -563,6 +564,7 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

@@ -10,10 +10,12 @@ export function getSequentialColorScale<Value extends number | Date>(
   config: ContinuousColorConfig<Value> | PiecewiseColorConfig<Value>,
 ) {
   if (config.type === 'piecewise') {
-    return scaleThreshold(config.thresholds, config.colors);
+    return scaleThreshold(config.thresholds, config.colors).unknown(config.unknownColor ?? null);
   }
 
-  return scaleSequential([config.min ?? 0, config.max ?? 100], config.color);
+  return scaleSequential([config.min ?? 0, config.max ?? 100], config.color).unknown(
+    config.unknownColor ?? null,
+  );
 }
 
 export function getOrdinalColorScale<Value extends number | Date | string>(

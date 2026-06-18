@@ -10,6 +10,7 @@ import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfi
 import type {
   TooltipPositionGetterAxesConfig,
   ChartSeriesConfig,
+  GeoTooltipPosition,
 } from '../../corePlugins/useChartSeriesConfig';
 import {
   selectorChartXAxis,
@@ -38,6 +39,7 @@ import {
 import type { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
+import { selectorGeoTooltipPosition } from '../useGeoProjection/useGeoProjection.selectors';
 
 const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
 
@@ -74,6 +76,7 @@ const selectorChartsTooltipAxisConfig = createSelectorMemoized(
   selectorChartRotationAxis,
   selectorChartRadiusAxis,
   selectorChartSeriesProcessed,
+  selectorGeoTooltipPosition,
   function selectorChartsTooltipAxisConfig<SeriesType extends ChartSeriesType>(
     identifier: SeriesItemIdentifierWithType<SeriesType> | null,
     { axis: xAxis, axisIds: xAxisIds }: ComputeResult<ChartsXAxisProps>,
@@ -81,6 +84,7 @@ const selectorChartsTooltipAxisConfig = createSelectorMemoized(
     rotationAxes: ComputePolarResult<ChartsRotationAxisProps>,
     radiusAxes: ComputePolarResult<ChartsRadiusAxisProps>,
     series: ProcessedSeries<SeriesType>,
+    geo: GeoTooltipPosition,
   ) {
     if (!identifier) {
       return {};
@@ -110,6 +114,9 @@ const selectorChartsTooltipAxisConfig = createSelectorMemoized(
     }
     if (yAxisId !== undefined) {
       axesConfig.y = yAxis[yAxisId];
+    }
+    if (geo) {
+      axesConfig.geo = geo;
     }
 
     return axesConfig;
