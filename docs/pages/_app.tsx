@@ -3,7 +3,6 @@ import 'docs/src/bootstrap';
 import * as React from 'react';
 import {
   DocsApp,
-  createGetInitialProps,
   printConsoleBanner,
   reportWebVitals,
 } from '@mui/internal-core-docs/DocsApp';
@@ -20,8 +19,18 @@ import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { DEFAULT_DOCS_CONFIG, DocsConfig } from '@mui/internal-core-docs/DocsProvider';
+import translationsJson from '../translations/translations.json';
+import translationsZhJson from '../translations/translations-zh.json';
 
 export { fontClasses } from '@mui/internal-core-docs/nextFonts';
+
+// require.context is webpack-only and unsupported by turbopack, so build the
+// translations map statically. Mirrors `mapTranslations` (filename → language).
+const translations: Translations = {
+  en: translationsJson,
+  zh: translationsZhJson,
+};
+const allVersions: VersionEntry[] = [];
 
 // Enable telemetry for internal purposes
 muiXTelemetrySettings.enableTelemetry();
@@ -251,7 +260,22 @@ function useThemeWrapper() {
 export default function MyApp(
   props: AppProps<{ userLanguage: string; translations: Translations; versions: VersionEntry[] }>,
 ) {
-  const { Component, pageProps } = props;
+  const { Component } = props;
+  const pageProps = React.useMemo(() => {
+    const {
+      userLanguage = 'en',
+      translations: pageTranslations = translations,
+      versions = allVersions,
+      ...otherPageProps
+    } = props.pageProps;
+
+    return {
+      ...otherPageProps,
+      userLanguage,
+      translations: pageTranslations,
+      versions,
+    };
+  }, [props.pageProps]);
   const { activePage, activePageParents, productIdentifier, productId, productCategoryId } =
     usePageData();
   const ThemeWrapper = useThemeWrapper();
@@ -275,10 +299,5 @@ export default function MyApp(
     />
   );
 }
-
-MyApp.getInitialProps = createGetInitialProps({
-  translationsContext: require.context('../translations', false, /\.\/translations.*\.json$/),
-  versions: [],
-});
 
 export { reportWebVitals };
