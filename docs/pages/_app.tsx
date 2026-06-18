@@ -19,9 +19,10 @@ import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { DEFAULT_DOCS_CONFIG, DocsConfig } from '@mui/internal-core-docs/DocsProvider';
+import { fontClasses as _fontClasses } from '@mui/internal-core-docs/nextFonts';
+
 import translationsJson from '../translations/translations.json';
 import translationsZhJson from '../translations/translations-zh.json';
-import { fontClasses as _fontClasses } from '@mui/internal-core-docs/nextFonts';
 
 // Workaround: turbopack's pages-router Custom App detection misfires when
 // `_app.tsx` re-exports an imported binding (`export ... from`, or
