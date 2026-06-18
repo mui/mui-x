@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useZAxes } from '@mui/x-charts/hooks';
+import type { MapShapeItemIdentifier } from '../models/seriesType/mapShape';
 import { useGeoData } from '../hooks/useGeoData';
 import { useGeoPath } from '../hooks/useGeoPath';
 import { useMapShapeSeries } from '../hooks/useMapShapeSeries';
@@ -11,6 +12,15 @@ import { FocusedMapShape } from './FocusedMapShape';
 import { mapShapeSeriesConfig } from './seriesConfig';
 
 export interface MapShapePlotProps {
+  /**
+   * Callback fired when clicking on a map shape.
+   * @param event {React.MouseEvent<SVGPathElement, MouseEvent>} The event source of the callback.
+   * @param mapShapeItemIdentifier {MapShapeItemIdentifier} The identifier of the clicked map shape.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGPathElement, MouseEvent>,
+    mapShapeItemIdentifier: MapShapeItemIdentifier,
+  ) => void;
   className?: string;
   /**
    * Fill color applied to every feature path. Overrides item and series colors.
@@ -32,7 +42,7 @@ export interface MapShapePlotProps {
  * Renders series mapShape items.
  */
 function MapShapePlot(props: MapShapePlotProps) {
-  const { className, fill, stroke = 'none', strokeWidth = 1 } = props;
+  const { className, fill, stroke = 'none', strokeWidth = 1, onItemClick } = props;
   const geoData = useGeoData();
   const path = useGeoPath();
   const series = useMapShapeSeries();
@@ -86,6 +96,11 @@ function MapShapePlot(props: MapShapePlotProps) {
                         color={fill ?? colorGetter(dataIndex)}
                         stroke={stroke}
                         strokeWidth={strokeWidth}
+                        onClick={
+                          onItemClick &&
+                          ((event) =>
+                            onItemClick(event, { type: 'mapShape', seriesId: id, dataIndex }))
+                        }
                       />
                     );
                   })}
