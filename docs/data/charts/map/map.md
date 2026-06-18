@@ -67,12 +67,50 @@ You can modify it with props
 
 `MapShapePlot` renders one path per item of every series with type `'mapShape'`.
 
-Each item is joined to a GeoJSON feature through its `name` property
-(matching `feature.properties.name`).
-
 Stacking it on top of a `GeoDataPlot` is convenient for highlighting a subset of features over the full geography.
 
 {{"demo": "MapShapePlotDemo.js"}}
+
+## Matching features with `geoFeatureKey`
+
+By default, a series item is joined to a GeoJSON feature through the feature's `name` property
+(`feature.properties.name`).
+When your `geoData` identifies features with another property, use the `geoFeatureKey` prop.
+It accepts either a string or a function:
+
+- **String**: the name of the property to read, so `feature.properties[geoFeatureKey]` is used as the key.
+
+  ```tsx
+  <Unstable_ChartsGeoDataProviderPremium geoData={geoData} geoFeatureKey="iso_a3">
+    {/* series items now match feature.properties.iso_a3 */}
+  </Unstable_ChartsGeoDataProviderPremium>
+  ```
+
+- **Function**: called with each feature and returning the key to use (or `null` to ignore the feature).
+  This is convenient to give several features the same key so a single series item targets them all.
+
+  ```tsx
+  <Unstable_ChartsGeoDataProviderPremium
+    geoData={geoData}
+    geoFeatureKey={(feature) =>
+      feature.properties?.name === 'Somaliland'
+        ? 'Somalia'
+        : (feature.properties?.name ?? null)
+    }
+  >
+    {/* ... */}
+  </Unstable_ChartsGeoDataProviderPremium>
+  ```
+
+The resolved key is what `mapShape` series items match against through their `name` property
+(or the `name` field of their dataset/`valueGetter`).
+
+In the demo below, the world atlas stores Somalia and Somaliland as two separate features.
+But the data from Our World in Data merge them.
+Returning `'Somalia'` for both gives them the same key, so the single `{ name: 'Somalia' }`
+series item highlights the two shapes at once.
+
+{{"demo": "GeoFeatureKeyMapShape.js"}}
 
 ## Mapping values to colors
 

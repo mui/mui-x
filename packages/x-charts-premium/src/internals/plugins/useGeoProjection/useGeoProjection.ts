@@ -48,7 +48,7 @@ const PROJECTION_FACTORIES: Record<
 };
 
 export const useGeoProjection: ChartPlugin<UseGeoProjectionSignature> = ({ params, store }) => {
-  const { geoData, projection, translate, rotate, scale } = params;
+  const { geoData, geoFeatureKey, projection, translate, rotate, scale } = params;
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -59,19 +59,21 @@ export const useGeoProjection: ChartPlugin<UseGeoProjectionSignature> = ({ param
 
     store.set('geoProjection', {
       geoData: geoData ?? null,
+      geoFeatureKey: geoFeatureKey ?? 'name',
       projection: projection ?? null,
       translate: translate ?? null,
       rotate: rotate ?? null,
       scale: scale ?? null,
       factories: PROJECTION_FACTORIES,
     });
-  }, [geoData, projection, translate, rotate, scale, store]);
+  }, [geoData, geoFeatureKey, projection, translate, rotate, scale, store]);
 
   return {};
 };
 
 useGeoProjection.params = {
   geoData: true,
+  geoFeatureKey: true,
   projection: true,
   translate: true,
   rotate: true,
@@ -83,6 +85,7 @@ useGeoProjection.getDefaultizedParams = ({ params }) => ({ ...params });
 useGeoProjection.getInitialState = (params) => ({
   geoProjection: {
     geoData: params.geoData ?? null,
+    geoFeatureKey: params.geoFeatureKey ?? 'name',
     projection: params.projection ?? null,
     translate: params.translate ?? null,
     rotate: params.rotate ?? null,
