@@ -29,7 +29,7 @@ export default function MapShapeClick() {
         <ChartsGeoDataProviderPremium
           geoData={countries}
           projection="naturalEarth1"
-          height={360}
+          height={240}
           series={[
             {
               type: 'mapShape',
