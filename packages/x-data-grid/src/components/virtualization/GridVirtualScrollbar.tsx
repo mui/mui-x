@@ -5,6 +5,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useOnMount } from '../../hooks/utils/useOnMount';
 import { iOSMediaQuery } from '@mui/x-internals/platform';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';

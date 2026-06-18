@@ -3,8 +3,6 @@ import type { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { iOSMediaQuery } from '@mui/x-internals/platform';
-import clsx from 'clsx';
-import { LayoutDataGrid, Virtualization } from '@mui/x-virtualizer';
 import {
   gridHasBottomFillerSelector,
   gridHasScrollXSelector,
