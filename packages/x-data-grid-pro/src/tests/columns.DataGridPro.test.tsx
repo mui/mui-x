@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { type RefObject } from '@mui/x-internals/types';
@@ -656,9 +657,13 @@ describe('<DataGridPro /> - Columns', () => {
         React.useEffect(() => {
           if (!showValue) {
             // Hack to make the test fail similar to https://github.com/mui/mui-x/issues/22505
-            // in our test env
+            // in our test env. We reveal the wide value a couple of microtasks after mount, so
+            // that the unfixed code (which autosizes on the first microtask) misses it. The
+            // commit is flushed synchronously so the wide value is reliably in the DOM before
+            // the autosize `requestAnimationFrame` fires, regardless of the React version's
+            // scheduler (a plain `setState` here is committed after the frame on React 18).
             Promise.resolve().then(() => {
-              Promise.resolve().then(() => setShowValue(true));
+              Promise.resolve().then(() => ReactDOM.flushSync(() => setShowValue(true)));
             });
           }
         }, [showValue]);
