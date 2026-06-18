@@ -63,6 +63,35 @@ const PROJECTION_FACTORIES: Record<D3NamedProjection, (() => GeoProjection) | un
 const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
   return 'parallels' in projection && typeof projection.parallels === 'function';
 };
+
+/**
+ * Resolves a raw projection input (a d3-geo name like `'mercator'`, or a `GeoProjection` instance)
+ * into a usable `GeoProjection`. Named projections are instantiated from their factory and, when
+ * conic, configured with `parallels`. Returns `null` for an unknown name.
+ */
+const resolveProjection = (
+  projectionInput: GeoProjectionInput,
+  parallels: [number, number],
+): GeoProjection | null => {
+  if (typeof projectionInput !== 'string') {
+    return projectionInput;
+  }
+  const factory = PROJECTION_FACTORIES[projectionInput];
+  if (!factory) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(
+        `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
+          `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
+      );
+    }
+    return null;
+  }
+  const projection = factory();
+  if (isConicProjection(projection)) {
+    projection.parallels(parallels);
+  }
+  return projection;
+};
 export const selectorChartGeoProjectionState = (
   state: GeoChartState,
 ): UseGeoProjectionState['geoProjection'] | undefined => state.geoProjection;
@@ -85,12 +114,6 @@ export const selectorChartZoomLevel = createSelector(
   selectorChartGeoProjectionZoomState,
   (geoProjectionZoom): number | null => geoProjectionZoom?.zoomLevel ?? 1,
 );
-
-const selectorChartRotate = createSelectorMemoized(
-  selectorChartGeoProjectionState,
-  (geoProjection): [number, number] | null => geoProjection?.rotate ?? null,
-);
-
 const selectorChartCenter = createSelectorMemoized(
   selectorChartGeoProjectionZoomState,
   (geoProjectionZoom): [number, number] | null => geoProjectionZoom?.center ?? [0, 0],
@@ -98,9 +121,9 @@ const selectorChartCenter = createSelectorMemoized(
 
 const selectorChartParallels = createSelectorMemoized(
   selectorChartGeoProjectionState,
-  selectorChartRotate,
-  (geoProjection, rotate): [number, number] =>
-    geoProjection?.parallels ?? (rotate ? [rotate[1] - 15, rotate[1] + 15] : [30, 30]),
+  selectorChartCenter,
+  (geoProjection, center): [number, number] =>
+    geoProjection?.parallels ?? (center ? [-center[1] - 15, -center[1] + 15] : [30, 30]),
 );
 /**
  * Map a feature's `properties.name` to its index in `geoData.features`,
@@ -131,6 +154,28 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   },
 );
 
+const selectorFitScale = createSelector(
+  selectorChartRawGeoData,
+  selectorChartDrawingArea,
+  selectorChartRawProjection,
+  selectorChartParallels,
+  (geoData, drawingArea, projectionInput, parallels): number | null => {
+    if (!geoData || !projectionInput) {
+      return null;
+    }
+    const projection = resolveProjection(projectionInput, parallels);
+    if (!projection) {
+      return null;
+    }
+    const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
+    const currentScale = projection.scale();
+    return Math.min(
+      currentScale * (drawingArea.width / (x1 - x0)),
+      currentScale * (drawingArea.height / (y1 - y0)),
+    );
+  },
+);
+
 /**
  * Resolves the raw `projection` input into a ready-to-use `GeoProjection` instance,
  * fitted to the chart's drawing area then zoomed/panned according to the current view.
@@ -147,101 +192,47 @@ export const selectorChartProjection = createSelectorMemoized(
   selectorChartRawProjection,
   selectorChartRawGeoData,
   selectorChartParallels,
-  selectorChartRotate,
   selectorChartCenter,
   selectorChartZoomLevel,
   selectorChartDrawingArea,
+  selectorFitScale,
   (
     projectionInput,
     geoData,
     parallels,
-    rotate,
     center,
     zoomLevel,
     drawingArea,
+    fitScale,
   ): GeoProjection | null => {
     if (!projectionInput) {
       return null;
     }
-    let projection: GeoProjection;
-    if (typeof projectionInput === 'string') {
-      const factory = PROJECTION_FACTORIES[projectionInput];
-      if (!factory) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(
-            `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-              `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
-          );
-        }
-        return null;
-      }
-      projection = factory();
-      if (isConicProjection(projection)) {
-        projection.parallels(parallels);
-      }
-    } else {
-      projection = projectionInput;
+    const projection = resolveProjection(projectionInput, parallels);
+    if (!projection) {
+      return null;
     }
 
-    if (!geoData) {
+    if (!geoData || fitScale == null) {
       return projection;
     }
 
-    if (rotate) {
-      projection.rotate?.(rotate);
+    if (center) {
+      projection.rotate?.([-center[0], -center[1]]);
     }
 
-    const drawingAreaCenter = {
-      x: drawingArea.left + drawingArea.width / 2,
-      y: drawingArea.top + drawingArea.height / 2,
-    };
+    // `fitScale` is the `zoomLevel === 1` reference scale, computed independently in
+    // `selectorFitScale` so it stays stable across pan/zoom transforms.
+    projection.scale(zoomLevel != null && zoomLevel !== 1 ? fitScale * zoomLevel : fitScale);
 
-    // 1. Fit the data to the drawing area — this is the `zoomLevel === 1` reference scale.
+    // Conic projections are positioned via `rotate`; `center` panning is not applied.
     if (isConicProjection(projection)) {
-      const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
-      const currentScale = projection.scale();
-      const fitScale = Math.min(
-        currentScale * (drawingArea.width / (x1 - x0)),
-        currentScale * (drawingArea.height / (y1 - y0)),
-      );
-      projection.scale(fitScale);
-      // Conic projections are positioned via `rotate`; `center` panning is not applied.
-      if (zoomLevel != null && zoomLevel !== 1) {
-        projection.scale(fitScale * zoomLevel);
-      }
       return projection;
     }
-
-    projection.fitExtent?.(
-      [
-        [drawingArea.left, drawingArea.top],
-        [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
-      ],
-      geoData,
-    );
-    const fitScale = projection.scale();
-
-    // The fitted projection centers the data: invert the drawing-area center to get the
-    // default geographic center used when `center` is not set.
-    const targetCenter =
-      center ?? projection.invert?.([drawingAreaCenter.x, drawingAreaCenter.y]) ?? null;
-
-    // 2. Apply the zoom level relative to the fit scale.
-    if (zoomLevel != null && zoomLevel !== 1) {
-      projection.scale(fitScale * zoomLevel);
-    }
-
-    // 3. Offset the translation so `targetCenter` lands at the drawing-area center.
-    if (targetCenter && projection.invert) {
-      projection.translate([0, 0]);
-      const projected = projection(targetCenter);
-      if (projected) {
-        projection.translate([
-          drawingAreaCenter.x - projected[0],
-          drawingAreaCenter.y - projected[1],
-        ]);
-      }
-    }
+    projection.translate([
+      drawingArea.left + drawingArea.width / 2,
+      drawingArea.top + drawingArea.height / 2,
+    ]);
 
     return projection;
   },

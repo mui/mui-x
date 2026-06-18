@@ -34,6 +34,7 @@ export default function ZoomMap() {
           geoData={countries}
           projection="naturalEarth1"
           height={360}
+          zoom
           series={[
             {
               type: 'mapShape',

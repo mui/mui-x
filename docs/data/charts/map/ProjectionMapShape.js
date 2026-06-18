@@ -111,6 +111,7 @@ export default function ProjectionMapShape() {
           {...(!autoRotation && { rotate: rotation })}
           {...(!autoTranslation && { translate: translation })}
           {...(!autoScale && { scale })}
+          zoom
           height={360}
         >
           <ChartsSurface>

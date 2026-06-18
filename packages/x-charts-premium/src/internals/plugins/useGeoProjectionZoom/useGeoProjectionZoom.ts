@@ -11,7 +11,7 @@ import {
 import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { selectorChartProjection } from '../useGeoProjection/useGeoProjection.selectors';
 import { type UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
-import { centerAfterPan, centerAfterZoom, type MapZoomView } from './mapZoom.utils';
+import { getRotation, type MapZoomView } from './mapZoom.utils';
 
 /** Multiplicative zoom step applied per wheel tick. */
 const WHEEL_ZOOM_STEP = 1.1;
@@ -66,42 +66,45 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     });
   }, [store, view]);
 
-  // Zoom about a focal point (in SVG pixels). `zoomLevel` is clamped directly — no fit scale.
-  const zoomAtPoint = React.useCallback(
-    (factor: number, focal: { x: number; y: number }) => {
-      const projection = getProjection();
-      if (!projection) {
-        return;
-      }
-      const currentZoom = store.state.geoProjectionZoom.zoomLevel ?? 1;
-      const nextZoom = Math.max(minScaleRatio, Math.min(maxScaleRatio, currentZoom * factor));
-      if (nextZoom === currentZoom) {
-        return;
-      }
-      const center = centerAfterZoom(
-        projection,
-        nextZoom / currentZoom,
-        focal,
-        drawingAreaCenter(),
-      );
-      if (center) {
-        applyView({ zoomLevel: nextZoom, center });
-      }
-    },
-    [getProjection, store, applyView, drawingAreaCenter, minScaleRatio, maxScaleRatio],
-  );
-
   useRegisterZoomGestures({ instance });
+
+  const geoPoint = React.useRef<[number, number] | null>(null);
+  const dragStartPoint = React.useRef<[number, number] | null>(null);
+  const dragCurrentPoint = React.useRef<[number, number] | null>(null);
 
   // --- gestures: reuse the generic primitives from x-charts-pro -------------
   useDragGesture(instance, {
     enabled,
+    onPanStart: (event) => {
+      const projection = getProjection();
+      if (!projection || !projection.invert) {
+        return;
+      }
+      geoPoint.current = projection.invert([
+        event.detail.srcEvent.offsetX,
+        event.detail.srcEvent.offsetY,
+      ]) as [number, number] | null;
+      dragStartPoint.current = [event.detail.srcEvent.offsetX, event.detail.srcEvent.offsetY];
+      dragCurrentPoint.current = [event.detail.srcEvent.offsetX, event.detail.srcEvent.offsetY];
+    },
+    onPanEnd: () => {
+      geoPoint.current = null;
+      dragStartPoint.current = null;
+      dragCurrentPoint.current = null;
+    },
     onPan: (delta) => {
       const projection = getProjection();
       if (!projection) {
         return;
       }
-      const center = centerAfterPan(projection, delta.x, delta.y, drawingAreaCenter());
+      dragCurrentPoint.current = [
+        dragCurrentPoint.current![0] + delta.x,
+        dragCurrentPoint.current![1] + delta.y,
+      ];
+      const center = getRotation(projection, geoPoint.current!, dragCurrentPoint.current!);
+
+      // const center = getRotation(projection, delta.x, delta.y, drawingAreaCenter());
+
       if (center) {
         applyView({ zoomLevel: store.state.geoProjectionZoom.zoomLevel ?? 1, center });
       }
@@ -112,31 +115,87 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     enabled,
     onWheel: (point, event) => {
       const factor = event.deltaY < 0 ? WHEEL_ZOOM_STEP : 1 / WHEEL_ZOOM_STEP;
-      zoomAtPoint(factor, point);
+
+      const projection = getProjection();
+      if (!projection || !projection.invert) {
+        return;
+      }
+      const geoPoint = projection.invert([point.x, point.y]) as [number, number] | null;
+      if (!geoPoint) {
+        return;
+      }
+      const center = getRotation(projection, geoPoint, [point.x, point.y], factor);
+
+      if (center) {
+        applyView({
+          zoomLevel: (store.state.geoProjectionZoom.zoomLevel ?? 1) * factor,
+          center,
+        });
+      }
     },
   });
 
   usePinchGesture(instance, {
     enabled,
     onPinch: (point, deltaScale) => {
-      zoomAtPoint(1 + deltaScale, point);
+      const projection = getProjection();
+      if (!projection || !projection.invert) {
+        return;
+      }
+
+      const geoPoint = projection.invert([point.x, point.y]) as [number, number] | null;
+      if (!geoPoint) {
+        return;
+      }
+      const center = getRotation(projection, geoPoint, [point.x, point.y], 1 + deltaScale);
+
+      if (center) {
+        applyView({
+          zoomLevel: (store.state.geoProjectionZoom.zoomLevel ?? 1) * (1 + deltaScale),
+          center,
+        });
+      }
     },
   });
 
   const zoomIn = React.useCallback(
-    () => zoomAtPoint(BUTTON_ZOOM_STEP, drawingAreaCenter()),
-    [zoomAtPoint, drawingAreaCenter],
+    (factor = BUTTON_ZOOM_STEP, center?: [number, number]) => {
+      const currentZoom = store.state.geoProjectionZoom.zoomLevel ?? 1;
+      const nextZoom = Math.max(minScaleRatio, Math.min(maxScaleRatio, currentZoom * factor));
+      if (nextZoom === currentZoom) {
+        return;
+      }
+      store.set('geoProjectionZoom', {
+        ...store.state.geoProjectionZoom,
+        zoomLevel: nextZoom,
+        center: center ?? store.state.geoProjectionZoom.center,
+      });
+    },
+    [store, minScaleRatio, maxScaleRatio],
   );
+
   const zoomOut = React.useCallback(
-    () => zoomAtPoint(1 / BUTTON_ZOOM_STEP, drawingAreaCenter()),
-    [zoomAtPoint, drawingAreaCenter],
+    (factor = 1 / BUTTON_ZOOM_STEP, center?: [number, number]) => {
+      const currentZoom = store.state.geoProjectionZoom.zoomLevel ?? 1;
+      const nextZoom = Math.max(minScaleRatio, Math.min(maxScaleRatio, currentZoom * factor));
+      if (nextZoom === currentZoom) {
+        return;
+      }
+      store.set('geoProjectionZoom', {
+        ...store.state.geoProjectionZoom,
+        zoomLevel: nextZoom,
+        center: center ?? store.state.geoProjectionZoom.center,
+      });
+    },
+    [store, minScaleRatio, maxScaleRatio],
   );
+
   const resetZoom = React.useCallback(() => {
     if (!isControlled) {
       store.set('geoProjectionZoom', {
         ...store.state.geoProjectionZoom,
-        zoomLevel: null,
-        center: null,
+        zoomLevel: 1,
+        center: [0, 0],
       });
     }
     // Notify so controlled consumers and listeners learn about the reset (fit view: zoomLevel 1).

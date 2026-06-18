@@ -18,49 +18,82 @@ export interface MapZoomView {
   center: [number, number];
 }
 
+const DEG = Math.PI / 180;
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
 /**
- * The geographic coordinate shown at the drawing-area center after scaling the projection by
- * `factor` about a focal point (in SVG pixels) that must stay fixed on screen.
+ * The geographic `center` (`[longitude, latitude]`) such that, after scaling the projection by
+ * `zoomFactor` and applying `rotate([-center[0], -center[1]])`, the geographic coordinate
+ * `geoPoint` is displayed exactly under the pixel `to`.
  *
- * Gestures are inherently pixel-space, so the new translation is computed in pixels (keeping the
- * focal point fixed), then inverted back to a geographic center. The projection is mutated to
- * measure that point and restored before returning, so this reads as a pure function.
+ * `rotate([-c0, -c1])` is a yaw (longitude) followed by a pitch (latitude) rotation of the sphere,
+ * so the relation between `geoPoint`, `to` and `center` is non-linear — a naive additive offset
+ * only holds along the central meridian. We solve it exactly: `q` is the geographic point the
+ * unrotated (but zoomed) projection shows under `to` (independent of the current rotation, hence
+ * computed with `rotate([0, 0])`), then we find the yaw/pitch that maps `geoPoint` onto `q`.
+ *
+ * The projection is mutated to measure `q` and restored before returning, so this reads as a pure
+ * function. Returns `null` when the projection is not invertible or the target latitude is
+ * unreachable by a pitch-only rotation of `geoPoint`.
  */
-export function centerAfterZoom(
+export function getRotation(
   projection: GeoProjection,
-  factor: number,
-  focal: { x: number; y: number },
-  drawingAreaCenter: { x: number; y: number },
+  geoPoint: [number, number],
+  to: [number, number],
+  zoomFactor: number = 1,
 ): [number, number] | null {
   if (!projection.invert) {
     return null;
   }
+
+  const rotate = projection.rotate();
   const scale = projection.scale();
-  const [tx, ty] = projection.translate();
+  projection.scale(scale * zoomFactor);
+  projection.rotate([0, 0]);
 
-  projection
-    .scale(scale * factor)
-    .translate([factor * tx + (1 - factor) * focal.x, factor * ty + (1 - factor) * focal.y]);
-  const center = projection.invert([drawingAreaCenter.x, drawingAreaCenter.y]);
+  const q = projection.invert(to);
 
-  projection.scale(scale).translate([tx, ty]);
-  return center as [number, number] | null;
-}
+  // Reset projection modifications to avoid side effects.
+  projection.rotate(rotate);
+  projection.scale(scale);
 
-/**
- * The geographic coordinate shown at the drawing-area center after panning the projection by a
- * screen-space pixel delta. Panning content by `(dx, dy)` moves the center to the point that was
- * previously at `drawingAreaCenter - delta`.
- */
-export function centerAfterPan(
-  projection: GeoProjection,
-  dx: number,
-  dy: number,
-  drawingAreaCenter: { x: number; y: number },
-): [number, number] | null {
-  if (!projection.invert) {
+  if (!geoPoint || !q) {
     return null;
   }
-  const center = projection.invert([drawingAreaCenter.x - dx, drawingAreaCenter.y - dy]);
-  return center as [number, number] | null;
+
+  // Solve `geoRotation([-c0, -c1])(geoPoint) === q` for the yaw `c0` and pitch `c1` (radians).
+  const lonG = geoPoint[0] * DEG;
+  const latG = geoPoint[1] * DEG;
+  const lonQ = q[0] * DEG;
+  const latQ = q[1] * DEG;
+
+  const x = Math.cos(lonQ) * Math.cos(latQ);
+  const y = Math.sin(lonQ) * Math.cos(latQ);
+  const z = Math.sin(latQ);
+
+  // Pitch from `A·cos(c1) + B·sin(c1) = sin(latG)` with `A = z`, `B = x`.
+  const hyp = Math.hypot(z, x);
+  if (hyp === 0 || Math.abs(Math.sin(latG)) > hyp) {
+    // Target latitude is out of reach for a pitch-only rotation of `geoPoint`.
+    return null;
+  }
+  // Two branches solve the equation; pick the one closest to no pitch for drag continuity.
+  const base = Math.atan2(x, z);
+  const offset = Math.acos(clamp(Math.sin(latG) / hyp, -1, 1));
+  const c1a = base - offset;
+  const c1b = base + offset;
+  const c1 = Math.abs(c1a) <= Math.abs(c1b) ? c1a : c1b;
+
+  // Yaw, once the pitch is known.
+  const c0 = lonG - Math.atan2(y, x * Math.cos(c1) - z * Math.sin(c1));
+
+  // Normalize the longitude into `[-180, 180]`.
+  let lon = (c0 / DEG) % 360;
+  if (lon > 180) {
+    lon -= 360;
+  } else if (lon < -180) {
+    lon += 360;
+  }
+
+  return [lon, c1 / DEG];
 }
