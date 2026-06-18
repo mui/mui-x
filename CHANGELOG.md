@@ -46,12 +46,11 @@ Same changes as in `@mui/x-date-pickers@9.6.0`.
 #### `@mui/x-charts@9.6.0`
 
 - [charts] Add `disableTickLabel` prop to radial axes (#22801) @JCQuintas
-- [charts] Add radial bar overview demo with custom overlays (#22776) @JCQuintas
 - [charts] Fix bug when `min` is in axis domain (#22827) @alexfauquette
 - [charts] Fix wheel zoom not centering on cursor position (#22811) @JCQuintas
 - [charts] Remove zoom gesture registration from community package (#22753) @sai6855
 - [charts] Support percentage values for radial axis `minRadius`/`maxRadius` (#22803) @JCQuintas
-- [charts][docs] Document click listener for scatter composition (#22809) @sai6855
+- [charts] Document click listener for scatter composition (#22809) @sai6855
 
 #### `@mui/x-charts-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -61,7 +60,12 @@ Same changes as in `@mui/x-charts@9.6.0`.
 
 Same changes as in `@mui/x-charts-pro@9.6.0`, plus:
 
+- [charts-premium] Add `geoFeatureKey` to transform features identifier (#22848) @alexfauquette
+- [charts-premium] Allow to remove Antartica (#22815) @alexfauquette
 - [charts-premium] Regenerate `ScatterPlotPremium` `propTypes` (#22829) @rita-codes
+- [charts-premium] Support maps tooltip positioned on items (#22648) @alexfauquette
+- [docs] Show how to export maps (#22837) @alexfauquette
+
 
 ### Tree View
 
@@ -119,6 +123,11 @@ Internal changes.
 ### Docs
 
 - [docs] Fix link-check build timeout by disabling serve directory listing (#22836) @Janpot
+- [docs] Show how to export maps (#22837) @alexfauquette
+- [docs] Add radial bar overview demo with custom overlays (#22776) @JCQuintas
+- [docs] Add weather composition demo (#22723) @TargiX
+- [docs] Add docs overview gallery and playground (#22488) @hasdfa
+- [docs] Clarify 'Scrolling without render gaps' (#22629) @oliviertassinari
 
 ### Core
 
@@ -129,9 +138,6 @@ Internal changes.
 
 ### Miscellaneous
 
-- [docs][charts] add weather composition demo (#22723) @TargiX
-- [docs][chat] Add docs overview gallery and playground (#22488) @hasdfa
-- [docs][DataGrid] Clarify 'Scrolling without render gaps' (#22629) @oliviertassinari
 - [core] Add remove-proptypes markers to generated `propTypes` (#22850) @JCQuintas
 - [core] Bump vitest packages to 4.1.8 to fix browser-test version skew (#22845) @Janpot
 - [core] Reduce e2e build concurrency to avoid OOM (#22843) @Janpot
