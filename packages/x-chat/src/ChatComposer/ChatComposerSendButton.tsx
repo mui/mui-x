@@ -90,7 +90,7 @@ const ChatComposerSendButton = React.forwardRef<HTMLButtonElement, ChatComposerS
   },
 );
 
-ChatComposerSendButton.propTypes = {
+ChatComposerSendButton.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

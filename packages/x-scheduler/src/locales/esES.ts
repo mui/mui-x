@@ -39,7 +39,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Recurrencia',
   recurrenceMainSelectCustomLabel: 'Recurrencia',
   recurrenceWeeklyFrequencyLabel: 'semanas',
-  recurrenceWeeklyPresetLabel: (weekday) => `Se repite semanalmente el ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repite semanalmente el ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'meses',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Día ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} de la última semana del mes`,

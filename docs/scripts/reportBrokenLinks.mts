@@ -2,9 +2,9 @@ import { crawl } from '@mui/internal-code-infra/brokenLinksChecker';
 
 async function main() {
   const { issues } = await crawl({
-    startCommand: 'pnpm serve --no-request-logging -p 3001',
-    host: 'http://localhost:3001/',
-    seedUrls: ['/x'],
+    startCommand: 'pnpm serve --no-request-logging',
+    host: 'http://localhost:3010/',
+    seedUrls: ['/x/introduction/'],
     // The crawler defaults to 4 concurrent page fetches. The docs export has
     // thousands of pages, so raise this to shorten the link-check phase and keep
     // the overall build within Netlify's timeout. Runs after static generation,
@@ -12,6 +12,10 @@ async function main() {
     concurrency: 8,
     // Target paths to ignore during link checking
     ignoredPaths: [
+      // The site root has no page in the `next export` output (redirects only
+      // apply in dev, not in the exported site), so the shared header's logo
+      // link to `/` resolves to a 404 here even though mui.com redirects it.
+      /^\/$/,
       // Next.js build output (hashed JS/CSS chunks and their `.js.map` source
       // maps). The crawler spawns a worker thread, fetches and HTML-validates
       // every URL it discovers, so crawling these assets means downloading and

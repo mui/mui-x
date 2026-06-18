@@ -1,5 +1,156 @@
 # Changelog
 
+## 9.6.0
+
+_Jun 18, 2026_
+
+We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 New features for the radial bar charts, like percentage min radius and disabling tick labels.
+
+Special thanks go out to these community members for their valuable contributions:
+@adamowski10, @Anexus5919, @Morteza-hp, @mustafajw07, @TargiX
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @brijeshb42, @cherniavskii, @hasdfa, @Janpot, @JCQuintas, @michelengelen, @noraleonte, @oliviertassinari, @rita-codes, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.6.0`
+
+- [DataGrid] Define `overflowAnchor` style at the right element (#22849) @arminmeh
+- [DataGrid] Fix scrollbars not showing up on scroll on iOS (#22832) @cherniavskii
+
+#### `@mui/x-data-grid-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.6.0`, plus:
+
+- [DataGridPro] Prevent incorrect row range capping on the first page with known `rowCount` (#22808) @michelengelen
+
+#### `@mui/x-data-grid-premium@9.6.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.6.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.6.0`
+
+- [pickers] Fix `AdapterMomentHijri.getDaysInMonth` returning the Gregorian month length (#22774) @Anexus5919
+- [l10n] Improve Persian (fa-IR) locale (#22454) @Morteza-hp
+
+#### `@mui/x-date-pickers-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.6.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.6.0`
+
+- [charts] Add `disableTickLabel` prop to radial axes (#22801) @JCQuintas
+- [charts] Fix bug when `min` is in axis domain (#22827) @alexfauquette
+- [charts] Fix wheel zoom not centering on cursor position (#22811) @JCQuintas
+- [charts] Remove zoom gesture registration from community package (#22753) @sai6855
+- [charts] Support percentage values for radial axis `minRadius`/`maxRadius` (#22803) @JCQuintas
+- [charts] Support `unknownColor` in color scale (#22813) @alexfauquette
+- [charts] Document click listener for scatter composition (#22809) @sai6855
+
+#### `@mui/x-charts-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.6.0`.
+
+#### `@mui/x-charts-premium@9.6.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.6.0`, plus:
+
+- [charts-premium] Add `geoFeatureKey` to transform features identifier (#22848) @alexfauquette
+- [charts-premium] Allow to remove Antartica (#22815) @alexfauquette
+- [charts-premium] Regenerate `ScatterPlotPremium` `propTypes` (#22829) @rita-codes
+- [charts-premium] Support maps tooltip positioned on items (#22648) @alexfauquette
+- [docs] Show how to export maps (#22837) @alexfauquette
+
+
+### Tree View
+
+#### `@mui/x-tree-view@9.6.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.6.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.2`
+
+- [scheduler] Add dispose lifecycle to `SchedulerLazyLoadingPlugin` (#22532) @rita-codes
+- [scheduler] Add responsive mobile week view and responsive typography (#22593) @noraleonte
+- [scheduler] Add stable weekday token to `recurrenceWeeklyPresetLabel` (#22733) @mustafajw07
+- [scheduler] Create accessibility documentation section (#22557) @mustafajw07
+- [scheduler] Decouple `MonthViewProps` from day time grid props (#22802) @mustafajw07
+- [scheduler] Export missing public scheduler types (#22785) @mustafajw07
+- [scheduler] Fix JSDoc defaults and improve public type readability (#22784) @mustafajw07
+- [scheduler] Fix `aria-labelledby` on events referencing non-existent header IDs (#22778) @rita-codes
+- [scheduler] Move `EventCalendarStyledContext` to internals (#22787) @mustafajw07
+- [scheduler] Normalize all-day recurring occurrences to whole days (#22792) @Anexus5919
+- [scheduler] Recalculate `DayTimeGrid` `hasScroll` on container resize (#22780) @Anexus5919
+- [scheduler] Recompute `nowUpdatedEveryMinute` only on timezone change (#22793) @Anexus5919
+- [scheduler] Register auto-scroll once instead of on every render (#22794) @Anexus5919
+- [scheduler] Remove duplicate dividers in the day/time grid (#22795) @Anexus5919
+- [scheduler] Remove unused `--has-scroll` CSS variable from `DayTimeGrid` (#22799) @Anexus5919
+- [scheduler] Remove vestigial async from internal drop handler (#22781) @mustafajw07
+- [scheduler] Return a primitive key from the Calendar lazy-loading selector (#22791) @Anexus5919
+- [scheduler] Throw on invalid event dates instead of emitting `NaN` timestamps (#22740) @rita-codes
+- [scheduler] Tighten `StandaloneEventProps` data typing (#22796) @mustafajw07
+- [scheduler] Update feedback banner to say beta instead of alpha (#22804) @rita-codes
+- [scheduler] Use `@base-ui` `generateId` for event ids in `createEventModel` (#22788) @rita-codes
+- [scheduler] Clear clipboard after pasting a cut event (#22773) @Anexus5919
+- [scheduler] Show drag placeholder when re-entering the same position (#22775) @Anexus5919
+- [scheduler] Validate missing and duplicate event ids (#22790) @Anexus5919
+- [l10n] Improve Polish (pl-PL) locale (#22612) @adamowski10
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.2`, plus:
+
+- [scheduler-premium] Expose premium model types through public API (#22798) @mustafajw07
+- [scheduler-premium] Remove non-functional `onPreferencesChange` prop from `EventTimelinePremium` (#22777) @rita-codes
+- [scheduler-premium] Validate the `FREQ` value in `parseRRule`] (#22786) @rita-codes 
+
+### Codemod
+
+#### `@mui/x-codemod@9.6.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix link-check build timeout by disabling serve directory listing (#22836) @Janpot
+- [docs] Show how to export maps (#22837) @alexfauquette
+- [docs] Add radial bar overview demo with custom overlays (#22776) @JCQuintas
+- [docs] Add weather composition demo (#22723) @TargiX
+- [docs] Add docs overview gallery and playground (#22488) @hasdfa
+- [docs] Clarify 'Scrolling without render gaps' (#22629) @oliviertassinari
+- [docs] Fix typo in release instructions (#22864) @brijeshb42
+
+### Core
+
+- [code-infra] Fix lint issues (#22757) @brijeshb42
+- [code-infra] Fix remaining Dependabot security alerts (#22761) @Janpot
+- [code-infra] Remove release:build from docs:build script (#22852) @brijeshb42
+- [code-infra] Unpin `@mui/utils` version to allow dedupe (#22828) @mustafajw07
+- [docs-infra] Cap Netlify Next.js build parallelism to avoid OOM (#22847) @Janpot
+- [docs-infra] Remove i18n codebase (#22591) @brijeshb42
+- [internal] Fix failing React 18 unit tests (#22846) @brijeshb42
+
+### Miscellaneous
+
+- [core] Add remove-proptypes markers to generated `propTypes` (#22850) @JCQuintas
+- [core] Bump vitest packages to 4.1.8 to fix browser-test version skew (#22845) @Janpot
+- [core] Reduce e2e build concurrency to avoid OOM (#22843) @Janpot
+- [core] Strip proptypes from Production bundles (#22750) @sai6855
+- [test] Wait for `GridToolbarCustom` rows before screenshot (#22844) @Janpot
+
 ## 9.5.0
 
 _Jun 11, 2026_

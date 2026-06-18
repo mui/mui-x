@@ -46,7 +46,7 @@ export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(function T
   return <ToolbarContextProvider>{element}</ToolbarContextProvider>;
 });
 
-Toolbar.propTypes = {
+Toolbar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

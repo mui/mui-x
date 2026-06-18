@@ -83,6 +83,21 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(store.state.eventIdList).to.have.length(1);
   });
 
+  it('should fire the initial fetch without waiting for the debounce window', async () => {
+    const dataSource = {
+      getEvents: spy(async () => buildEvents()),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    store.setViewConfig(buildViewConfig());
+
+    // Only flush microtasks + a short advance well below the debounce window.
+    await flushEffect();
+    await vi.advanceTimersByTimeAsync(50);
+
+    expect(dataSource.getEvents.calledOnce).to.equal(true);
+  });
+
   it('should NOT fetch before a view registers (visibleDays empty)', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
