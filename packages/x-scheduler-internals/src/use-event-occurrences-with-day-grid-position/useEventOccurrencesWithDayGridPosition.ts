@@ -47,6 +47,11 @@ export function useEventOccurrencesWithDayGridPosition(
 
       // 2. Sort: multi-day events first (so they claim top rows), then by start date
       const sortedNeedsPosition = sortEventOccurrences(needsPosition).sort((a, b) => {
+        const aIsActive = activeSegments[a.key] != null ? 0 : 1;
+        const bIsActive = activeSegments[b.key] != null ? 0 : 1;
+        if (aIsActive !== bIsActive) {
+          return aIsActive - bIsActive;
+        }
         const aSpan = adapter.differenceInDays(
           a.displayTimezone.end.value,
           a.displayTimezone.start.value,
@@ -55,10 +60,7 @@ export function useEventOccurrencesWithDayGridPosition(
           b.displayTimezone.end.value,
           b.displayTimezone.start.value,
         );
-        if (bSpan !== aSpan) {
-          return bSpan - aSpan; // longer span first
-        }
-        return 0; // preserve existing sort order for equal spans
+        return bSpan - aSpan;
       });
 
       // 3. Assign position to each occurrence
