@@ -114,6 +114,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.2`, plus:
 
 - [scheduler-premium] Expose premium model types through public API (#22798) @mustafajw07
 - [scheduler-premium] Remove non-functional `onPreferencesChange` prop from `EventTimelinePremium` (#22777) @rita-codes
+- [scheduler-premium] Validate the `FREQ` value in `parseRRule`] (#22786) @rita-codes 
 
 ### Codemod
 
