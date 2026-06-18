@@ -4,7 +4,7 @@
 
 _Jun 18, 2026_
 
-We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 New features for the radial bar charts, like percentage min radius and disabling tick labels.
 
@@ -12,13 +12,14 @@ Special thanks go out to these community members for their valuable contribution
 @adamowski10, @Anexus5919, @Morteza-hp, @mustafajw07, @TargiX
 
 The following team members contributed to this release:
-@alexfauquette, @arminmeh, @brijeshb42, @hasdfa, @Janpot, @JCQuintas, @michelengelen, @noraleonte, @oliviertassinari, @rita-codes, @sai6855
+@alexfauquette, @arminmeh, @brijeshb42, @cherniavskii, @hasdfa, @Janpot, @JCQuintas, @michelengelen, @noraleonte, @oliviertassinari, @rita-codes, @sai6855
 
 ### Data Grid
 
 #### `@mui/x-data-grid@9.6.0`
 
 - [DataGrid] Define `overflowAnchor` style at the right element (#22849) @arminmeh
+- [DataGrid] Fix scrollbars not showing up on scroll on iOS (#22832) @cherniavskii
 
 #### `@mui/x-data-grid-pro@9.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
