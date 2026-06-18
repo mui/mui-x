@@ -44,7 +44,8 @@ function StackTotals() {
     <React.Fragment>
       {categories.map((category, dataIndex) => {
         const total = barSeries.reduce(
-          (acc, series) => acc + (series.data[dataIndex] ?? 0),
+          (acc, series) =>
+            acc + (series.stack === 'total' ? (series.data[dataIndex] ?? 0) : 0),
           0,
         );
 
@@ -66,7 +67,5 @@ const TotalLabel = styled('text')(({ theme }) => ({
   fontWeight: 600,
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
-  textAnchor: 'middle',
-  dominantBaseline: 'auto',
-  pointerEvents: 'none',
+  dominantBaseline: 'central',
 }));
