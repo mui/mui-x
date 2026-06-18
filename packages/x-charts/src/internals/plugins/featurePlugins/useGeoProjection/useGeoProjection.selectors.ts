@@ -30,6 +30,11 @@ export const selectorChartGeoData: (
   (geoProjection) => geoProjection?.geoData ?? null,
 );
 
+export const selectorChartGeoFeatureKey = createSelector(
+  selectorChartGeoProjectionState,
+  (geoProjection) => geoProjection?.geoFeatureKey ?? 'name',
+);
+
 export const selectorChartRawProjection = createSelector(
   selectorChartGeoProjectionState,
   (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
@@ -71,13 +76,17 @@ const selectorChartParallels = createSelectorMemoized(
  */
 export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   selectorChartGeoData,
-  (geoData): ReadonlyMap<string, number[]> => {
+  selectorChartGeoFeatureKey,
+  (geoData, geoFeatureKey): ReadonlyMap<string, number[]> => {
     const map = new Map<string, number[]>();
     if (!geoData) {
       return map;
     }
     geoData.features.forEach((feature, index) => {
-      const name = feature.properties?.name;
+      const name =
+        typeof geoFeatureKey === 'function'
+          ? geoFeatureKey(feature)
+          : feature.properties?.[geoFeatureKey];
       if (typeof name !== 'string') {
         return;
       }
@@ -183,12 +192,9 @@ export const selectorChartProjection = createSelectorMemoized(
         );
       }
 
-      projection.translate(
-        translate ?? [
-          drawingArea.left + drawingArea.width / 2,
-          drawingArea.top + drawingArea.height / 2,
-        ],
-      );
+      if (translate) {
+        projection.translate(translate);
+      }
     }
     return projection;
   },
