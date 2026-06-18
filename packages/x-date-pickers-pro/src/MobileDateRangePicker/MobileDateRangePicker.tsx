@@ -86,7 +86,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker(
   return renderPicker();
 }) as MobileDateRangePickerComponent;
 
-MobileDateRangePicker.propTypes = {
+MobileDateRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

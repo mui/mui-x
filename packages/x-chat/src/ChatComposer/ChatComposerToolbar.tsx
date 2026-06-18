@@ -56,7 +56,7 @@ const ChatComposerToolbar = React.forwardRef<HTMLDivElement, ChatComposerToolbar
   },
 );
 
-ChatComposerToolbar.propTypes = {
+ChatComposerToolbar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

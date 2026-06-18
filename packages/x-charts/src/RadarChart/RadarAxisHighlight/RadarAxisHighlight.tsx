@@ -78,7 +78,7 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
   );
 }
 
-RadarAxisHighlight.propTypes = {
+RadarAxisHighlight.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
