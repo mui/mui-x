@@ -63,6 +63,8 @@ describe('<DataGrid /> - SSR', () => {
 
     const errors = await hydrateWithoutConsoleErrors(tree);
 
+    const nonHydrationErrors = errors.filter((error) => !/hydration|did not match/i.test(error));
+     expect(nonHydrationErrors).to.deep.equal([]);
     expect(hasHydrationError(errors)).to.equal(false);
   });
 

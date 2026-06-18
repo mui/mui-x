@@ -2,7 +2,9 @@ const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent.toLower
 
 export const isFirefox = userAgent.includes('firefox');
 
-export const iOSMediaQuery = '@supports (-webkit-touch-callout: none)'; // Only available on iOS Safari
+// iOS/iPadOS WebKit browsers
+// Check support status at: https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html
+export const iOSMediaQuery = '@supports (-webkit-touch-callout: none)';
 
 export const isJSDOM =
   typeof window !== 'undefined' && /jsdom|HappyDOM/.test(window.navigator.userAgent);
