@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
-import { ChatProvider, type ChatAdapter, type ChatMessage } from '@mui/x-chat-headless';
+import {
+  ChatProvider,
+  ChatVariantProvider,
+  type ChatAdapter,
+  type ChatMessage,
+} from '@mui/x-chat-headless';
 import { CopilotThreadView } from './CopilotThreadView';
 
 function createAdapter(): ChatAdapter {
@@ -86,7 +91,24 @@ describe('CopilotChatPanel authorName', () => {
     renderThread(<CopilotThreadView />, render, [USER_MESSAGE, ASSISTANT_MESSAGE]);
 
     expect(screen.queryByText('DataGrid Copilot')).to.equal(null);
-    // The default author label for an unauthored assistant message is its role.
-    expect(screen.getByText('assistant')).not.to.equal(null);
+    // The default author label for an unauthored assistant message is x-chat's
+    // role display name ("Assistant").
+    expect(screen.getByText('Assistant')).not.to.equal(null);
+  });
+
+  it('labels assistant messages in the compact variant', () => {
+    // Regression: in the `compact` variant x-chat routes the author label
+    // through `groupAuthorName`, which `ChatMessage` only renders in its
+    // custom-children path (the panel's composition). Without that, the
+    // assistant author label silently disappeared in the Data Grid panel.
+    render(
+      <ChatProvider adapter={createAdapter()} initialMessages={[USER_MESSAGE, ASSISTANT_MESSAGE]}>
+        <ChatVariantProvider variant="compact">
+          <CopilotThreadView authorName="DataGrid Copilot" />
+        </ChatVariantProvider>
+      </ChatProvider>,
+    );
+
+    expect(screen.getByText('DataGrid Copilot')).not.to.equal(null);
   });
 });

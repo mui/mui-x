@@ -8,8 +8,6 @@ export { CopilotMessageFooter } from './CopilotMessageFooter';
 export type { CopilotMessageFooterProps } from './CopilotMessageFooter';
 export { CopilotFeedbackProvider, useCopilotFeedback } from './CopilotFeedbackProvider';
 export type { CopilotFeedbackProviderProps } from './CopilotFeedbackProvider';
-export { CopilotStreamingIndicator } from './CopilotStreamingIndicator';
-export type { CopilotStreamingIndicatorProps } from './CopilotStreamingIndicator';
 export { CopilotToolBlock } from './CopilotToolBlock';
 export type {
   CopilotToolBlockProps,

@@ -7,9 +7,9 @@ import {
   ChatMessageContent,
   ChatMessageGroup,
   ChatMessageMeta,
+  ChatStreamingIndicator,
 } from '@mui/x-chat';
 import { type ChatMessage, type ToolPartSlots, useMessage } from '@mui/x-chat-headless';
-import { CopilotStreamingIndicator } from './CopilotStreamingIndicator';
 import { CopilotMessageMetadata } from './CopilotMessageMetadata';
 import { CopilotMessageFooter } from './CopilotMessageFooter';
 import { useCopilotPanelUtilityClasses, type CopilotPanelClasses } from './copilotPanelClasses';
@@ -51,15 +51,16 @@ export interface CopilotMessageItemProps {
   className?: string;
 }
 
-// Owner state x-chat's `MessageGroup` passes to the `messageAuthorName` slot.
+// Owner state that drives the author-name styling (mirrors x-chat's
+// `MessageGroup` author-name owner state).
 interface CopilotAuthorNameOwnerState {
   authorRole?: string;
   variant?: string;
 }
 
 // Mirrors x-chat's internal default author-name styling (caption, medium weight,
-// avatar-width offset, primary color + flex layout in the compact variant) so an
-// `authorName` override keeps pixel parity with the default rendering.
+// avatar-width offset, primary color + flex layout in the compact variant) so the
+// copilot's author label keeps pixel parity with x-chat's default rendering.
 const CopilotAuthorNameRoot = styled('div', {
   name: 'MuiCopilotMessageItem',
   slot: 'AuthorName',
@@ -95,6 +96,11 @@ const CopilotAuthorNameRoot = styled('div', {
  * (static string or per-message resolver); every other role keeps the default
  * label x-chat passes as `children`. Returns `undefined` when no override is
  * supplied so x-chat's default author rendering stays untouched.
+ *
+ * x-chat renders this slot in both layout variants — above the message in
+ * `default`, and (via `groupAuthorName`) inside the message grid in `compact`.
+ * The latter only reaches the panel's custom message composition because
+ * `ChatMessage` forwards `groupAuthorName` through its `children` path.
  */
 function useCopilotAuthorNameSlot(
   authorName: CopilotAuthorName | undefined,
@@ -189,7 +195,7 @@ function CopilotMessageItem(props: CopilotMessageItemProps) {
         <ChatMessageContent
           afterContent={
             <React.Fragment>
-              <CopilotStreamingIndicator />
+              <ChatStreamingIndicator />
               {metadataCardNode}
               <CopilotMessageFooter />
             </React.Fragment>

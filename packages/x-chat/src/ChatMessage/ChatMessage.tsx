@@ -275,12 +275,16 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
     // Build the inner tree from slots when no `children` were passed (slot-driven).
     // When a consumer provides `children`, render them as-is for backward-compatible
     // custom composition — in every variant, including compact. The compact author
-    // label is delivered separately via `groupAuthorName` (see headless MessageGroup),
-    // so it never conflates with a consumer's children.
+    // label is delivered separately via `groupAuthorName` (see headless MessageGroup):
+    // it carries its own `gridArea: authorName`, so it slots into the message grid
+    // alongside the consumer's children instead of conflating with them. Omitted in
+    // the default variant (the group renders the author label above the message), so
+    // this is a no-op there.
     let innerTree: React.ReactNode;
     if (children !== undefined) {
       innerTree = (
         <React.Fragment>
+          {groupAuthorName}
           {children}
           {hasError && <ErrorComp {...(slotProps?.error ?? {})} />}
         </React.Fragment>
