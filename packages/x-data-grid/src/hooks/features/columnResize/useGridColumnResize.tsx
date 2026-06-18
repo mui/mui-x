@@ -82,6 +82,7 @@ function isRenderContextReadyForAutosizeOnMount(apiRef: RefObject<GridPrivateApi
     return false;
   }
 
+  // If all rows fit in the viewport, wait for them all; otherwise we can only measure the rendered rows.
   if (!dimensions.hasScrollY) {
     return renderContext.firstRowIndex === 0 && renderContext.lastRowIndex >= rows.length;
   }
