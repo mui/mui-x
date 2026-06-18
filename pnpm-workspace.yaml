@@ -94,3 +94,6 @@ onlyBuiltDependencies:
   - nx
   - sharp
   - unrs-resolver
+
+overrides:
+  ast-types: ^0.14.2
