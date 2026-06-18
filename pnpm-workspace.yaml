@@ -20,13 +20,13 @@ catalog:
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
-  '@mui/icons-material': 9.0.1
+  '@mui/icons-material': 9.1.1
   '@mui/internal-test-utils': 2.0.18-canary.25
-  '@mui/internal-core-docs': 9.0.2-canary.0
-  '@mui/material': 9.0.1
-  '@mui/stylis-plugin-rtl': 9.0.1
-  '@mui/system': 9.0.1
-  '@mui/types': 9.0.0
+  '@mui/internal-core-docs': 9.0.2-canary.2
+  '@mui/material': 9.1.1
+  '@mui/stylis-plugin-rtl': 9.1.1
+  '@mui/system': 9.1.1
+  '@mui/types': 9.1.1
   '@mui/utils': ^9.0.1
   '@mui/x-internal-exceljs-fork': 5.0.0
   '@playwright/test': 1.60.0
@@ -105,6 +105,7 @@ trustPolicyIgnoreAfter: 525600
 enablePrePostScripts: true
 
 allowBuilds:
+  '@mui/x-charts-vendor': true
   '@swc/core': true
   '@vvago/vale': true
   esbuild: true
@@ -120,6 +121,7 @@ overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
+  caniuse-lite: ^1.0.30001793
 
 patchedDependencies:
   eslint-plugin-consistent-default-export-name@0.0.15: patches/eslint-plugin-consistent-default-export-name@0.0.15.patch
