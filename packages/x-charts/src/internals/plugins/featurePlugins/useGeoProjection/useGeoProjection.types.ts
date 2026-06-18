@@ -32,6 +32,15 @@ export interface UseGeoProjectionParameters {
    */
   geoData?: ExtendedFeatureCollection;
   /**
+   * The key, or value getter, used to identify each feature in `geoData`.
+   * - If a string is provided, `feature.properties[geoFeatureKey]` will be used.
+   * - If a function is provided, it will be called with each feature and should return a key for that feature.
+   * @default 'name'
+   */
+  geoFeatureKey?:
+    | string
+    | ((feature: ExtendedFeatureCollection['features'][number]) => string | null);
+  /**
    * The d3-geo projection used to map geographic coordinates to SVG coordinates.
    * Accepts a d3-geo projection name (e.g. `'mercator'`, `'naturalEarth1'`)
    * or a custom `GeoProjection` instance.
@@ -47,7 +56,7 @@ export interface UseGeoProjectionParameters {
   rotate?: [number, number];
   /**
    * The scale of the projection.
-   * Id not provided the scale will default to fit the entire geoData in the drawing area.
+   * If not provided, the scale will default to fit the entire geoData in the drawing area.
    */
   scale?: number;
 }
@@ -57,6 +66,9 @@ export type UseGeoProjectionDefaultizedParameters = UseGeoProjectionParameters;
 export interface UseGeoProjectionState {
   geoProjection: {
     geoData: ExtendedFeatureCollection | null;
+    geoFeatureKey:
+      | string
+      | ((feature: ExtendedFeatureCollection['features'][number]) => string | null);
     projection: GeoProjectionInput | null;
     translate: [number, number] | null;
     rotate: [number, number] | null;
