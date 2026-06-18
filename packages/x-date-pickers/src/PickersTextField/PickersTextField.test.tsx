@@ -123,16 +123,14 @@ describe('<PickersTextField /> - outlined notch', () => {
   const COLLAPSED_LEGEND_MAX_WIDTH = '0.01px';
 
   it('should notch the outline when the field is filled and `notched` is not set', () => {
-    const { container } = render(
-      <PickersTextField {...STUB_PROPS} areAllSectionsEmpty={false} label="My label" />,
-    );
+    render(<PickersTextField {...STUB_PROPS} areAllSectionsEmpty={false} label="My label" />);
 
-    const legend = container.querySelector('legend')!;
+    const legend = document.querySelector('legend')!;
     expect(window.getComputedStyle(legend).maxWidth).not.to.equal(COLLAPSED_LEGEND_MAX_WIDTH);
   });
 
   it('should remove the notch when `notched={false}` is passed, even when the field is filled', () => {
-    const { container } = render(
+    render(
       <PickersTextField
         {...STUB_PROPS}
         areAllSectionsEmpty={false}
@@ -141,7 +139,7 @@ describe('<PickersTextField /> - outlined notch', () => {
       />,
     );
 
-    const legend = container.querySelector('legend')!;
+    const legend = document.querySelector('legend')!;
     expect(window.getComputedStyle(legend).maxWidth).to.equal(COLLAPSED_LEGEND_MAX_WIDTH);
   });
 });
