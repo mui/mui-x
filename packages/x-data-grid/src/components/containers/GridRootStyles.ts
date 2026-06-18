@@ -183,8 +183,11 @@ export const GridRootStyles = styled('div', {
     minHeight: 0,
     flexDirection: 'column',
     overflow: 'hidden',
-    overflowAnchor: 'none', // Keep the same scrolling position
     transform: 'translate(0, 0)', // Create a stacking context to keep scrollbars from showing on top
+
+    [`& .${c.virtualScroller}`]: {
+      overflowAnchor: 'none', // Keep the same scrolling position
+    },
 
     [`.${c.main} > *:first-child${ignoreSsrWarning}`]: {
       borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
