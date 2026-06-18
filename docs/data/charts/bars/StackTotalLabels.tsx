@@ -3,7 +3,12 @@ import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { useBarSeries, useXScale, useYScale } from '@mui/x-charts/hooks';
+import {
+  getValueToPositionMapper,
+  useBarSeries,
+  useXScale,
+  useYScale,
+} from '@mui/x-charts/hooks';
 import { styled } from '@mui/material/styles';
 
 export default function StackTotalLabels() {
@@ -33,27 +38,28 @@ export default function StackTotalLabels() {
 }
 
 function StackTotals() {
-  const xScale = useXScale<'band'>();
+  const xScale = useXScale();
   const yScale = useYScale();
   const barSeries = useBarSeries();
 
-  const categories = xScale.domain();
-  const bandWidth = xScale.bandwidth();
+  const xMapper = getValueToPositionMapper(xScale);
+  const yMapper = getValueToPositionMapper(yScale);
 
   return (
     <React.Fragment>
-      {categories.map((category, dataIndex) => {
+      {xScale.domain().map((category, dataIndex) => {
         const total = barSeries.reduce(
           (acc, series) =>
             acc + (series.stack === 'total' ? (series.data[dataIndex] ?? 0) : 0),
           0,
         );
 
-        const cx = (xScale(category) ?? 0) + bandWidth / 2;
-        const cy = yScale(total) ?? 0;
-
         return (
-          <TotalLabel key={String(category)} x={cx} y={cy - 8}>
+          <TotalLabel
+            key={String(category)}
+            x={xMapper(category)}
+            y={yMapper(total) - 8}
+          >
             {total}
           </TotalLabel>
         );
