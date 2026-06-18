@@ -18,9 +18,7 @@ The map provider `ChartsGeoDataProviderPremium` uses three main props:
 
 - `geoData`: an array of geographical objects defining the map (countries, cities, road, ...)
 - `projection`: a string that defines how the objects should be projected on the SVG.
-- `series`: the data associated to the geographical objects.
-
-The series can be of type `'mapShape'`, `'mapPoint'`, or `'mapLink'`.
+- `series`: the data associated to the geographical objects of type `'mapShape'`.
 
 {{"demo": "BasicGeoDataPlot.js"}}
 
@@ -163,6 +161,10 @@ the `fade` option decides which items are dimmed
 (`'series'` for the rest of the same series, `'global'` for every shape in every series).
 
 {{"demo": "HighlightedMapShape.js"}}
+
+## Zoom
+
+{{"demo": "ZoomMap.js"}}
 
 ## Managing visibility from the legend
 

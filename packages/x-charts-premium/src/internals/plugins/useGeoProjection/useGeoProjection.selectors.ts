@@ -28,6 +28,14 @@ import type {
   UseGeoProjectionSignature,
   UseGeoProjectionState,
 } from './useGeoProjection.types';
+import type { UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
+
+/**
+ * The projection lives in `useGeoProjection`, while its zoom state (`zoomLevel`/`center`) lives in
+ * the optional `useGeoProjectionZoom` plugin. The projection selector reads both, so its state is
+ * typed with the zoom signature as an optional dependency.
+ */
+type GeoChartState = ChartState<[], [UseGeoProjectionSignature, UseGeoProjectionZoomSignature]>;
 
 const PROJECTION_FACTORIES: Record<D3NamedProjection, (() => GeoProjection) | undefined> = {
   // Azimuthal projections (https://d3js.org/d3-geo/azimuthal)
@@ -56,8 +64,10 @@ const isConicProjection = (projection: GeoProjection): projection is GeoConicPro
   return 'parallels' in projection && typeof projection.parallels === 'function';
 };
 export const selectorChartGeoProjectionState = (
-  state: ChartState<[], [UseGeoProjectionSignature]>,
+  state: GeoChartState,
 ): UseGeoProjectionState['geoProjection'] | undefined => state.geoProjection;
+
+const selectorChartGeoProjectionZoomState = (state: GeoChartState) => state.geoProjectionZoom;
 
 export const selectorChartRawGeoData: (
   state: ChartState<[], [UseGeoProjectionSignature]>,
@@ -72,8 +82,8 @@ export const selectorChartRawProjection = createSelector(
 );
 
 export const selectorChartZoomLevel = createSelector(
-  selectorChartGeoProjectionState,
-  (geoProjection): number | null => geoProjection?.zoomLevel ?? null,
+  selectorChartGeoProjectionZoomState,
+  (geoProjectionZoom): number | null => geoProjectionZoom?.zoomLevel ?? 1,
 );
 
 const selectorChartRotate = createSelectorMemoized(
@@ -82,8 +92,8 @@ const selectorChartRotate = createSelectorMemoized(
 );
 
 const selectorChartCenter = createSelectorMemoized(
-  selectorChartGeoProjectionState,
-  (geoProjection): [number, number] | null => geoProjection?.center ?? null,
+  selectorChartGeoProjectionZoomState,
+  (geoProjectionZoom): [number, number] | null => geoProjectionZoom?.center ?? [0, 0],
 );
 
 const selectorChartParallels = createSelectorMemoized(

@@ -61,10 +61,26 @@ export interface UseGeoProjectionZoomPublicApi {
 
 export interface UseGeoProjectionZoomInstance extends UseGeoProjectionZoomPublicApi {}
 
+interface UseGeoProjectionZoomState {
+  geoProjectionZoom: {
+    /**
+     * The zoom level, as a multiple of the scale that fits the data in the drawing area.
+     * `null` (the default) and `1` both mean fit-to-data. The absolute projection scale is
+     * derived as `fitScale * zoomLevel`, so this stays valid across resizes.
+     */
+    zoomLevel: number | null;
+    /**
+     * The geographic coordinate `[longitude, latitude]` displayed at the center of the drawing area.
+     * `null` keeps the data centered (the fit center).
+     */
+    center: [number, number] | null;
+  };
+}
 export type UseGeoProjectionZoomSignature = ChartPluginSignature<{
   params: UseGeoProjectionZoomParameters;
   defaultizedParams: UseGeoProjectionZoomDefaultizedParameters;
   publicAPI: UseGeoProjectionZoomPublicApi;
   instance: UseGeoProjectionZoomInstance;
+  state: UseGeoProjectionZoomState;
   dependencies: [UseGeoProjectionSignature];
 }>;

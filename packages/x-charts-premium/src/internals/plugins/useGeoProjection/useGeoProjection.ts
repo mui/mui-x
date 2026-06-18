@@ -4,7 +4,7 @@ import { type ChartPlugin } from '@mui/x-charts/internals';
 import { type UseGeoProjectionSignature } from './useGeoProjection.types';
 
 export const useGeoProjection: ChartPlugin<UseGeoProjectionSignature> = ({ params, store }) => {
-  const { geoData, projection, rotate, zoomLevel, center } = params;
+  const { geoData, projection, rotate } = params;
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -13,16 +13,13 @@ export const useGeoProjection: ChartPlugin<UseGeoProjectionSignature> = ({ param
       return;
     }
 
-    // Preserve the zoom state (`zoomLevel`/`center`) owned by `useGeoProjectionZoom`.
     store.set('geoProjection', {
       ...store.state.geoProjection,
       geoData: geoData ?? null,
       projection: projection ?? null,
       rotate: rotate ?? null,
-      zoomLevel: zoomLevel ?? 1,
-      center: center ?? [0, 0],
     });
-  }, [geoData, projection, rotate, zoomLevel, center, store]);
+  }, [geoData, projection, rotate, store]);
 
   return {};
 };
@@ -30,8 +27,6 @@ export const useGeoProjection: ChartPlugin<UseGeoProjectionSignature> = ({ param
 useGeoProjection.params = {
   geoData: true,
   projection: true,
-  zoomLevel: true,
-  center: true,
   rotate: true,
 };
 
@@ -42,7 +37,5 @@ useGeoProjection.getInitialState = (params) => ({
     geoData: params.geoData ?? null,
     projection: params.projection ?? null,
     rotate: params.rotate ?? null,
-    zoomLevel: null,
-    center: null,
   },
 });

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { type ChartPlugin, selectorChartDrawingArea } from '@mui/x-charts/internals';
 import {
   useDragGesture,
@@ -22,16 +23,9 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   instance,
   params,
 }) => {
-  const {
-    zoom: enabled,
-    minScaleRatio,
-    maxScaleRatio,
-    onZoomChange,
-    initialView,
-    view: controlledView,
-  } = params;
+  const { zoom: enabled, minScaleRatio, maxScaleRatio, onZoomChange, view } = params;
 
-  const isControlled = controlledView !== undefined;
+  const isControlled = view !== undefined;
 
   const getProjection = React.useCallback(
     (): GeoProjection | null => selectorChartProjection(store.state),
@@ -45,34 +39,32 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 
   // The view is the source of truth, stored directly: no pixel <-> view conversion on write/read.
   const applyView = React.useCallback(
-    (view: MapZoomView) => {
+    (newView: MapZoomView) => {
       if (!isControlled) {
-        store.set('geoProjection', {
-          ...store.state.geoProjection,
-          zoomLevel: view.zoomLevel,
-          center: view.center,
+        store.set('geoProjectionZoom', {
+          ...store.state.geoProjectionZoom,
+          zoomLevel: newView.zoomLevel,
+          center: newView.center,
         });
       }
-      onZoomChange?.(view);
+      onZoomChange?.(newView);
     },
     [store, isControlled, onZoomChange],
   );
 
-  // Seed the initial (uncontrolled) view once, and keep the store in sync with the controlled
-  // `view`. Both write the view as-is — the projection derives scale/translate from it.
-  const initialViewApplied = React.useRef(false);
-  React.useEffect(() => {
-    const view = isControlled ? controlledView : !initialViewApplied.current && initialView;
+  // In controlled mode, keep the store in sync with the `view` prop. The initial view is seeded in
+  // `getInitialState`, so this only reacts to subsequent updates.
+  useEffectAfterFirstRender(() => {
     if (!view) {
       return;
     }
-    initialViewApplied.current = true;
-    store.set('geoProjection', {
-      ...store.state.geoProjection,
+
+    store.set('geoProjectionZoom', {
+      ...store.state.geoProjectionZoom,
       zoomLevel: view.zoomLevel,
       center: view.center,
     });
-  }, [store, isControlled, controlledView, initialView]);
+  }, [store, view]);
 
   // Zoom about a focal point (in SVG pixels). `zoomLevel` is clamped directly — no fit scale.
   const zoomAtPoint = React.useCallback(
@@ -81,7 +73,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       if (!projection) {
         return;
       }
-      const currentZoom = store.state.geoProjection.zoomLevel ?? 1;
+      const currentZoom = store.state.geoProjectionZoom.zoomLevel ?? 1;
       const nextZoom = Math.max(minScaleRatio, Math.min(maxScaleRatio, currentZoom * factor));
       if (nextZoom === currentZoom) {
         return;
@@ -111,7 +103,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       }
       const center = centerAfterPan(projection, delta.x, delta.y, drawingAreaCenter());
       if (center) {
-        applyView({ zoomLevel: store.state.geoProjection.zoomLevel ?? 1, center });
+        applyView({ zoomLevel: store.state.geoProjectionZoom.zoomLevel ?? 1, center });
       }
     },
   });
@@ -141,8 +133,8 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   );
   const resetZoom = React.useCallback(() => {
     if (!isControlled) {
-      store.set('geoProjection', {
-        ...store.state.geoProjection,
+      store.set('geoProjectionZoom', {
+        ...store.state.geoProjectionZoom,
         zoomLevel: null,
         center: null,
       });
@@ -179,4 +171,9 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
   maxScaleRatio: params.maxScaleRatio ?? 8,
 });
 
-useGeoProjectionZoom.getInitialState = () => ({});
+useGeoProjectionZoom.getInitialState = (params) => ({
+  geoProjectionZoom: {
+    zoomLevel: params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1,
+    center: params.view?.center ?? params.initialView?.center ?? [0, 0],
+  },
+});
