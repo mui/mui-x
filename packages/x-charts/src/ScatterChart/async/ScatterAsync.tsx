@@ -16,12 +16,10 @@ import {
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 /**
- * Per-series points rendered while interacting. The first level is capped to a
- * short stable `dataIndex` prefix (the cheap contiguous slice) to keep frames
- * light; the rest fills in once the interaction settles. The prefix is a
- * representative sample only when the data is unordered — for data sorted along
- * an axis it is a spatial corner, so panning to a high-index region may show a
- * partial cloud until the interaction settles.
+ * Per-series points rendered while interacting. A single uniform sample across
+ * the whole series (every `step`-th `dataIndex`) is drawn to keep frames light;
+ * the rest fills in once the interaction settles. Sampling by `dataIndex` keeps
+ * the sample uniform regardless of how the data is ordered.
  */
 const INTERACTION_POINT_BUDGET = 2000;
 
@@ -36,20 +34,21 @@ function ScatterAsync(props: ScatterProps) {
   const revealedBatches = store.use(selectorProgressiveSeriesRevealedBatches, series.id);
   const isZoomInteracting = store.use(selectorChartZoomIsInteracting);
   const renderData = store.use(selectorScatterSeriesRenderData, series.id);
-  // Batch by `dataIndex` range, not by visible count: fixes a point's batch
-  // across zoom/pan so it can't pop. Off-screen points skipped at render time.
   const count = renderData?.count ?? 0;
+  // Strided batches: batch `b` renders every `nBatches`-th point starting at
+  // `b`, so each batch is a uniform sample of the whole series and a point's
+  // batch depends only on its `dataIndex` (stable across zoom/pan, no popping).
   const nBatches = count === 0 ? 0 : Math.ceil(count / Math.max(1, batchSize));
   // Only the first level shows while interacting; skip mounting the rest (empty
   // `<g>` still re-renders every frame, bypassing `React.memo`).
   const mountedBatches = isZoomInteracting ? Math.min(1, nBatches) : nBatches;
+  // While interacting, draw one uniform sample of ~INTERACTION_POINT_BUDGET
+  // points. `count` is the total point count (constant across zoom/pan), so the
+  // step is stable and the sampled set doesn't churn while panning.
+  const interactionStep = Math.max(1, Math.ceil(count / INTERACTION_POINT_BUDGET));
 
   const batches: React.ReactNode[] = [];
   for (let b = 0; b < mountedBatches; b += 1) {
-    const start = b * batchSize;
-    // Shrink the first level to a smaller stable prefix while interacting.
-    const cap = isZoomInteracting ? Math.min(batchSize, INTERACTION_POINT_BUDGET) : batchSize;
-    const end = Math.min(count, start + cap);
     batches.push(
       <ScatterAsyncBatch
         key={b}
@@ -58,10 +57,10 @@ function ScatterAsync(props: ScatterProps) {
         onItemClick={onItemClick}
         slots={slots}
         slotProps={slotProps}
-        start={start}
-        end={end}
+        start={isZoomInteracting ? 0 : b}
+        step={isZoomInteracting ? interactionStep : nBatches}
         classes={classes}
-        revealed={b < revealedBatches}
+        revealed={isZoomInteracting || b < revealedBatches}
         isInteracting={isZoomInteracting}
       />,
     );

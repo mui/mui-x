@@ -110,12 +110,3 @@ export const selectorScatterSeriesRenderData = createSelector(
   selectorScatterRenderData,
   (renderData, seriesId: SeriesId) => renderData.get(seriesId),
 );
-
-/** Zero-copy view of the `dataIndex` range `[start, end)`, sharing `coords`' buffer. */
-export function getScatterBatchView(
-  renderData: ScatterSeriesRenderData,
-  start: number,
-  end: number,
-): Float64Array {
-  return renderData.coords.subarray(start * 3, end * 3);
-}

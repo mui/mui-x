@@ -1,8 +1,4 @@
-import {
-  getScatterBatchView,
-  packScatterSeriesCoords,
-  type ScatterSeriesRenderData,
-} from './scatterRenderData.selectors';
+import { packScatterSeriesCoords } from './scatterRenderData.selectors';
 
 const identity = (value: number | Date) => value as number;
 const bounds = { xMin: 0, xMax: 100, yMin: 0, yMax: 100 };
@@ -69,30 +65,5 @@ describe('packScatterSeriesCoords', () => {
 
     expect(count).to.equal(0);
     expect(coords.length).to.equal(0);
-  });
-});
-
-describe('getScatterBatchView', () => {
-  // coords for dataIndex 0..3
-  const renderData: ScatterSeriesRenderData = {
-    coords: Float64Array.from([0, 0, 1, 1, 1, 1, 2, 2, 1, 3, 3, 0]),
-    count: 4,
-  };
-
-  it('returns the stride-3 slice for the dataIndex range [start, end)', () => {
-    const view = getScatterBatchView(renderData, 1, 3);
-
-    expect(view.length).to.equal(6);
-    expect(Array.from(view)).to.deep.equal([1, 1, 1, 2, 2, 1]);
-  });
-
-  it('shares the underlying buffer (zero-copy)', () => {
-    const view = getScatterBatchView(renderData, 0, 1);
-
-    expect(view.buffer).to.equal(renderData.coords.buffer);
-  });
-
-  it('returns an empty view for an empty range', () => {
-    expect(getScatterBatchView(renderData, 2, 2).length).to.equal(0);
   });
 });

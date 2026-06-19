@@ -18,10 +18,7 @@ import { type UseChartTooltipSignature } from '../../internals/plugins/featurePl
 import { type UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import { type ScatterProps } from '../Scatter';
-import {
-  getScatterBatchView,
-  selectorScatterSeriesRenderData,
-} from './scatterRenderData.selectors';
+import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 export interface ScatterAsyncBatchProps extends Pick<
   ScatterProps,
@@ -29,10 +26,10 @@ export interface ScatterAsyncBatchProps extends Pick<
 > {
   series: DefaultizedScatterSeriesType;
   colorGetter: ColorGetter<'scatter'>;
-  /** First `dataIndex` of this batch (inclusive). */
+  /** First `dataIndex` this batch renders. */
   start: number;
-  /** Last `dataIndex` of this batch (exclusive). */
-  end: number;
+  /** Stride between rendered `dataIndex`es, so the batch is a uniform sample. */
+  step: number;
   /**
    * Whether this batch may render its markers yet. Ramped batch by batch across
    * frames for the progressive paint. When `false` the `<g>` mounts empty.
@@ -57,7 +54,7 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
     slots,
     slotProps,
     start,
-    end,
+    step,
     revealed,
     isInteracting,
     classes: inClasses,
@@ -95,18 +92,17 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
     return <g data-series={series.id} className={classes.series} />;
   }
 
-  const view = getScatterBatchView(renderData, start, end);
+  const { coords, count } = renderData;
 
   const markers: React.ReactNode[] = [];
-  const nLocal = view.length / 3;
-  for (let local = 0; local < nLocal; local += 1) {
+  const safeStep = Math.max(1, step);
+  for (let dataIndex = start; dataIndex < count; dataIndex += safeStep) {
     // Skip off-screen points (kept in-array to keep batches stable across pan).
-    if (view[local * 3 + 2] === 0) {
+    if (coords[dataIndex * 3 + 2] === 0) {
       continue;
     }
-    const x = view[local * 3];
-    const y = view[local * 3 + 1];
-    const dataIndex = start + local;
+    const x = coords[dataIndex * 3];
+    const y = coords[dataIndex * 3 + 1];
 
     const dataPoint = { x, y, dataIndex, seriesId: series.id, type: 'scatter' as const };
     const highlightState = isInteracting ? 'none' : getHighlightState(dataPoint);
