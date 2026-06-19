@@ -324,8 +324,9 @@ export function Clock(inProps: ClockProps) {
       return;
     }
 
-    // A fresh primary pointerdown ends any previous gesture whose pointerup was lost.
-    removeDragListenersRef.current?.();
+    // A fresh primary pointerdown ends any previous gesture whose pointerup was
+    // lost, fully resetting its state before starting the new one.
+    stopTracking();
 
     isMoving.current = true;
     activePointerIdRef.current = event.pointerId;
