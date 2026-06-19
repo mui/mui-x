@@ -36,7 +36,7 @@ export function FocusedMapShape() {
     return null;
   }
 
-  const dataItem = seriesItem.data[focusedItem.dataIndex];
+  const dataItem = seriesItem.data.find((d) => d.name === focusedItem.dataIndex);
   if (!dataItem || dataItem.hidden) {
     return null;
   }

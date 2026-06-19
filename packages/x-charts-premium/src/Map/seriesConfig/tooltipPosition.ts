@@ -23,7 +23,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'mapShape'> = (params
     return null;
   }
 
-  const featureIndex = featureIndexesByName.get(itemSeries.data[identifier.dataIndex].name)?.[0];
+  const featureIndex = featureIndexesByName.get(identifier.dataIndex)?.[0];
 
   if (featureIndex === undefined) {
     return null;

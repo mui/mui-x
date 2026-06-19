@@ -7,7 +7,7 @@ import { useItemHighlightState } from '../hooks';
 
 export type MapShapeProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
   seriesId: SeriesId;
-  dataIndex: number;
+  dataIndex: string;
   d: string;
   color: string;
 };

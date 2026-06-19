@@ -1,7 +1,7 @@
 import { getLabel, type DescriptionGetter } from '@mui/x-charts/internals';
 
 const descriptionGetter: DescriptionGetter<'mapShape'> = ({ identifier, series }) => {
-  const item = series.data[identifier.dataIndex];
+  const item = series.data.find((d) => d.name === identifier.dataIndex);
   if (!item) {
     return '';
   }

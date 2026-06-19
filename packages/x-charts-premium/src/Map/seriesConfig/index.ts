@@ -1,7 +1,5 @@
 import {
   type ChartSeriesTypeConfig,
-  identifierSerializerSeriesIdDataIndex,
-  identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
   createIsFaded,
 } from '@mui/x-charts/internals';
@@ -13,6 +11,8 @@ import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import tooltipItemPositionGetter from './tooltipPosition';
+import identifierSerializer from './identifierSerializer';
+import identifierCleaner from './identifierCleaner';
 
 export const mapShapeSeriesConfig: ChartSeriesTypeConfig<'mapShape'> = {
   seriesProcessor,
@@ -22,8 +22,8 @@ export const mapShapeSeriesConfig: ChartSeriesTypeConfig<'mapShape'> = {
   tooltipItemPositionGetter,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
-  identifierSerializer: identifierSerializerSeriesIdDataIndex,
-  identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  identifierSerializer,
+  identifierCleaner,
   descriptionGetter,
   isHighlightedCreator: createIsHighlighted,
   isFadedCreator: createIsFaded,

@@ -49,9 +49,9 @@ const seriesProcessor: SeriesProcessor<'mapShape'> = (
     defaultizedSeries[seriesId] = {
       labelMarkType: 'square',
       ...input,
-      data: data.map((item, dataIndex) => ({
+      data: data.map((item) => ({
         ...item,
-        hidden: !isItemVisible?.({ type: 'mapShape', seriesId, dataIndex }),
+        hidden: !isItemVisible?.({ type: 'mapShape', seriesId, dataIndex: item.name }),
       })),
       hidden: !isItemVisible?.({ type: 'mapShape', seriesId }),
       valueFormatter: input.valueFormatter ?? defaultValueFormatter,
