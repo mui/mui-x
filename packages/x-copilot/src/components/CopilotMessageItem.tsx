@@ -9,7 +9,12 @@ import {
   ChatMessageMeta,
   ChatStreamingIndicator,
 } from '@mui/x-chat';
-import { type ChatMessage, type ToolPartSlots, useMessage } from '@mui/x-chat-headless';
+import {
+  type ChatMessage,
+  type ToolPartSlots,
+  useChatVariant,
+  useMessage,
+} from '@mui/x-chat-headless';
 import { CopilotMessageMetadata } from './CopilotMessageMetadata';
 import { CopilotMessageFooter } from './CopilotMessageFooter';
 import { useCopilotPanelUtilityClasses, type CopilotPanelClasses } from './copilotPanelClasses';
@@ -157,6 +162,7 @@ function CopilotMessageItem(props: CopilotMessageItemProps) {
     className,
   } = props;
   const classes = useCopilotPanelUtilityClasses(classesProp);
+  const variant = useChatVariant();
   // Reactive read: `useMessage` subscribes to the store so the metadata card +
   // A/B detection re-render as the message streams / finishes (vs a one-shot
   // `store.state` snapshot, which would go stale during streaming).
@@ -189,7 +195,14 @@ function CopilotMessageItem(props: CopilotMessageItemProps) {
     <ChatMessageGroup
       messageId={id}
       className={clsx(classes.message, className)}
-      slots={authorNameSlot ? { messageAuthorName: authorNameSlot } : undefined}
+      // The Copilot composes its own message body and never renders an avatar. In
+      // the `compact` variant (the bubble-style, avatar-less layout) hide x-chat's
+      // avatar slot so the reserved avatar grid track collapses instead of
+      // indenting the author name / content / meta by the (empty) avatar width.
+      slots={{
+        ...(variant === 'compact' ? { messageAvatar: null } : null),
+        ...(authorNameSlot ? { messageAuthorName: authorNameSlot } : null),
+      }}
     >
       <ChatMessageComponent messageId={id}>
         <ChatMessageContent

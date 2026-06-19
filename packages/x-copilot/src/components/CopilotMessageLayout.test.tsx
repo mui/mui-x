@@ -49,9 +49,10 @@ function renderThread(
   );
 }
 
-// The avatar slot size is the canonical signal x-chat flips per variant:
-// `36px` in the default (avatars-shown) layout, `28px` in the compact
-// (no-avatar bubble) layout.
+// The avatar slot size is the canonical signal x-chat flips per variant. The
+// Copilot composes its own message body and never renders an avatar, so in the
+// `compact` variant it hides the avatar slot and the reserved track collapses to
+// `0px`; the `default` variant keeps x-chat's `36px` avatar track.
 function avatarSizes(container: HTMLElement): string[] {
   return Array.from(container.querySelectorAll<HTMLElement>('.MuiChatMessage-root')).map((root) =>
     getComputedStyle(root).getPropertyValue('--MuiChatMessage-avatarSize').trim(),
@@ -61,7 +62,7 @@ function avatarSizes(container: HTMLElement): string[] {
 describe('CopilotChatPanel message layout', () => {
   const { render } = createRenderer();
 
-  it('renders the default (avatar) layout when no variant is forwarded', () => {
+  it('keeps x-chat\'s avatar track in the default variant', () => {
     const { container } = renderThread(render);
 
     const sizes = avatarSizes(container);
@@ -69,14 +70,14 @@ describe('CopilotChatPanel message layout', () => {
     sizes.forEach((size) => expect(size).to.equal('36px'));
   });
 
-  it('switches to the compact (no-avatar) layout when variant="compact" is forwarded', () => {
+  it('collapses the avatar track in the compact variant', () => {
     const { container } = renderThread(render, 'compact');
 
     const sizes = avatarSizes(container);
     expect(sizes.length).to.be.greaterThan(0);
-    // Compact collapses the avatar column (28px slot) — the visible difference
-    // from the default 36px avatar layout the grid suppresses entirely.
-    sizes.forEach((size) => expect(size).to.equal('28px'));
+    // The Copilot hides the avatar in compact, so the reserved track collapses
+    // to `0px` (vs the `28px` x-chat would otherwise reserve).
+    sizes.forEach((size) => expect(size).to.equal('0px'));
   });
 
   it('compact layout differs from the default layout', () => {
