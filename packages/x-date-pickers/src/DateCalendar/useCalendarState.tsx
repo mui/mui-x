@@ -177,17 +177,17 @@ export const useCalendarState = (
 
   const setVisibleDate = useEventCallback(({ target, reason }: SetVisibleDateParameters) => {
     if (
-      reason === 'cell-interaction' &&
+      reason === 'cell' &&
       calendarState.focusedDay != null &&
       adapter.isSameDay(target, calendarState.focusedDay)
     ) {
       return;
     }
 
-    const skipAnimation = reason === 'cell-interaction';
+    const skipAnimation = reason === 'cell';
     let month: PickerValidDate;
     let focusedDay: PickerValidDate | null;
-    if (reason === 'cell-interaction') {
+    if (reason === 'cell') {
       month = getCurrentMonthFromVisibleDate(target, calendarState.currentMonth);
       focusedDay = target;
     } else {
@@ -251,5 +251,5 @@ export const useCalendarState = (
 
 interface SetVisibleDateParameters {
   target: PickerValidDate;
-  reason: 'header-navigation' | 'cell-interaction' | 'controlled-value-change';
+  reason: 'header' | 'cell' | 'value';
 }

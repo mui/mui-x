@@ -385,7 +385,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         views: ['day'],
         view: 'day',
         currentMonth: calendarState.currentMonth,
-        onMonthChange: (month) => setVisibleDate({ target: month, reason: 'header-navigation' }),
+        onMonthChange: (month) => setVisibleDate({ target: month, reason: 'header' }),
         minDate,
         maxDate,
         disabled,
@@ -431,7 +431,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
             adapter.addMonths(date, -displayingMonthRange);
 
-      setVisibleDate({ target: newMonth, reason: 'controlled-value-change' });
+      setVisibleDate({ target: newMonth, reason: 'value' });
     }
   }, [rangePosition, value]); // eslint-disable-line
 
@@ -600,7 +600,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
               {...commonViewProps}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               onFocusedDayChange={(focusedDate) =>
-                setVisibleDate({ target: focusedDate, reason: 'cell-interaction' })
+                setVisibleDate({ target: focusedDate, reason: 'cell' })
               }
               reduceAnimations={reduceAnimations}
               selectedDays={value}
