@@ -15,13 +15,20 @@ import {
 } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
-/**
- * Per-series points rendered while interacting. A single uniform sample across
- * the whole series (every `step`-th `dataIndex`) is drawn to keep frames light;
- * the rest fills in once the interaction settles. Sampling by `dataIndex` keeps
- * the sample uniform regardless of how the data is ordered.
- */
+/** Per-series points sampled while interacting; the rest fills in on settle. */
 const INTERACTION_POINT_BUDGET = 2000;
+
+/**
+ * Interacting sample stride. Multiple of `nBatches` (batch 0's stride) so the
+ * sample is a subset of batch 0 — settling only adds points, no jump. Coarsened
+ * to stay within `budget`.
+ */
+export function getInteractionStep(count: number, nBatches: number, budget: number): number {
+  if (nBatches <= 0) {
+    return 1;
+  }
+  return nBatches * Math.max(1, Math.ceil(count / (budget * nBatches)));
+}
 
 /**
  * @ignore - internal component.
@@ -35,17 +42,15 @@ function ScatterAsync(props: ScatterProps) {
   const isZoomInteracting = store.use(selectorChartZoomIsInteracting);
   const renderData = store.use(selectorScatterSeriesRenderData, series.id);
   const count = renderData?.count ?? 0;
-  // Strided batches: batch `b` renders every `nBatches`-th point starting at
-  // `b`, so each batch is a uniform sample of the whole series and a point's
-  // batch depends only on its `dataIndex` (stable across zoom/pan, no popping).
+  // Batch `b` = every `nBatches`-th point from `b`: a uniform sample whose
+  // membership depends only on `dataIndex` (stable across zoom/pan, no popping).
   const nBatches = count === 0 ? 0 : Math.ceil(count / Math.max(1, batchSize));
   // Only the first level shows while interacting; skip mounting the rest (empty
   // `<g>` still re-renders every frame, bypassing `React.memo`).
   const mountedBatches = isZoomInteracting ? Math.min(1, nBatches) : nBatches;
-  // While interacting, draw one uniform sample of ~INTERACTION_POINT_BUDGET
-  // points. `count` is the total point count (constant across zoom/pan), so the
-  // step is stable and the sampled set doesn't churn while panning.
-  const interactionStep = Math.max(1, Math.ceil(count / INTERACTION_POINT_BUDGET));
+  // `count` (total points) is constant across zoom/pan, so the sampled set is
+  // stable while panning.
+  const interactionStep = getInteractionStep(count, nBatches, INTERACTION_POINT_BUDGET);
 
   const batches: React.ReactNode[] = [];
   for (let b = 0; b < mountedBatches; b += 1) {
