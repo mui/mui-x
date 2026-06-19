@@ -106,7 +106,8 @@ const schedulerPages: MuiPage[] = [
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/whats-new/',
+    // This is the full url because we want users (on the older version of the docs) to always go to the latest version's content.
+    pathname: 'https://mui.com/x/whats-new/',
     title: "What's new in MUI X",
   },
   {
