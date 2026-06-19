@@ -118,6 +118,10 @@ const selectorChartCenter = createSelectorMemoized(
   selectorChartGeoProjectionZoomState,
   (geoProjectionZoom): [number, number] | null => geoProjectionZoom?.center ?? [0, 0],
 );
+const selectorChartTranslation = createSelectorMemoized(
+  selectorChartGeoProjectionZoomState,
+  (geoProjectionZoom): [number, number] | null => geoProjectionZoom?.translation ?? [0, 0],
+);
 
 const selectorChartParallels = createSelectorMemoized(
   selectorChartGeoProjectionState,
@@ -193,6 +197,7 @@ export const selectorChartProjection = createSelectorMemoized(
   selectorChartRawGeoData,
   selectorChartParallels,
   selectorChartCenter,
+  selectorChartTranslation,
   selectorChartZoomLevel,
   selectorChartDrawingArea,
   selectorFitScale,
@@ -201,6 +206,7 @@ export const selectorChartProjection = createSelectorMemoized(
     geoData,
     parallels,
     center,
+    translation,
     zoomLevel,
     drawingArea,
     fitScale,
@@ -229,9 +235,10 @@ export const selectorChartProjection = createSelectorMemoized(
     if (isConicProjection(projection)) {
       return projection;
     }
+
     projection.translate([
-      drawingArea.left + drawingArea.width / 2,
-      drawingArea.top + drawingArea.height / 2,
+      drawingArea.left + drawingArea.width / 2 + (translation?.[0] ?? 0) * drawingArea.width,
+      drawingArea.top + drawingArea.height / 2 + (translation?.[1] ?? 0) * drawingArea.height,
     ]);
 
     return projection;

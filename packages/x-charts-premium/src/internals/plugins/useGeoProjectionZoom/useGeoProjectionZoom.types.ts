@@ -1,13 +1,33 @@
 import { type ChartPluginSignature } from '@mui/x-charts/internals';
 import { type UseGeoProjectionSignature } from '../useGeoProjection';
-import { type MapZoomView } from './mapZoom.utils';
+import type { MapTranslationAxis, MapRotationAxis, MapZoomView } from './mapZoom.utils';
+
+/**
+ * Fine-grained configuration for the map zoom/pan interaction, passed as the `zoom` parameter
+ * instead of a plain `true`.
+ */
+export interface MapZoomOptions {
+  /**
+   * Which axes the map can be rotated along while panning or zooming.
+   * For example, `'long'` lets the map rotate east–west but locks the north–south tilt.
+   * @default 'both'
+   */
+  rotationAllowed?: MapRotationAxis;
+  /**
+   * Which axes the map can be rotated along while panning or zooming.
+   * For example, `'long'` lets the map rotate east–west but locks the north–south tilt.
+   * @default 'both'
+   */
+  translationAllowed?: MapTranslationAxis;
+}
 
 export interface UseGeoProjectionZoomParameters {
   /**
    * If `true`, the map can be panned (drag) and zoomed (wheel / pinch).
+   * Pass a {@link MapZoomOptions} object to fine-tune the interaction, e.g. restrict rotation axes.
    * @default false
    */
-  zoom?: boolean;
+  zoom?: boolean | MapZoomOptions;
   /**
    * The minimum zoom level, as a multiple of the scale that fits the data in the drawing area.
    * @default 1
@@ -36,7 +56,7 @@ export interface UseGeoProjectionZoomParameters {
 }
 
 interface UseGeoProjectionZoomDefaultizedParameters extends UseGeoProjectionZoomParameters {
-  zoom: boolean;
+  zoom: boolean | MapZoomOptions;
   minScaleRatio: number;
   maxScaleRatio: number;
 }
@@ -74,6 +94,10 @@ interface UseGeoProjectionZoomState {
      * `null` keeps the data centered (the fit center).
      */
     center: [number, number] | null;
+    /**
+     * The map translation in percentage of the drawing area.
+     */
+    translation: [number, number] | null;
   };
 }
 export type UseGeoProjectionZoomSignature = ChartPluginSignature<{

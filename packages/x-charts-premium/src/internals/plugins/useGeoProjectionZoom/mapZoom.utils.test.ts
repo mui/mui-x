@@ -56,4 +56,38 @@ describe('getRotation', () => {
     const projection = { invert: undefined } as unknown as GeoProjection;
     expect(getRotation(projection, [0, 0], [0, 0])).to.equal(null);
   });
+
+  describe('rotationAllowed', () => {
+    // A projection already rotated to center [10, 20], so the "locked" value is non-trivial.
+    const rotatedProjection = () => {
+      const projection = geoMercator().fitExtent(EXTENT, sphere);
+      projection.rotate([-10, -20]);
+      return projection;
+    };
+    const grabbed: [number, number] = [33, 25];
+    const target: [number, number] = [120, 250];
+
+    it("keeps the latitude fixed when rotation is restricted to 'long'", () => {
+      const projection = rotatedProjection();
+      const center = getRotation(projection, grabbed, target, 1, 'long');
+      expect(center).not.to.equal(null);
+      expect(center![1]).to.be.closeTo(20, 1e-9); // latitude unchanged
+      expect(center![0]).not.to.be.closeTo(10, 1e-3); // longitude moved
+    });
+
+    it("keeps the longitude fixed when rotation is restricted to 'lat'", () => {
+      const projection = rotatedProjection();
+      const center = getRotation(projection, grabbed, target, 1, 'lat');
+      expect(center).not.to.equal(null);
+      expect(center![0]).to.be.closeTo(10, 1e-9); // longitude unchanged
+      expect(center![1]).not.to.be.closeTo(20, 1e-3); // latitude moved
+    });
+
+    it("leaves the center unchanged when rotation is 'none'", () => {
+      const projection = rotatedProjection();
+      const center = getRotation(projection, grabbed, target, 1, 'none');
+      expect(center![0]).to.be.closeTo(10, 1e-9);
+      expect(center![1]).to.be.closeTo(20, 1e-9);
+    });
+  });
 });

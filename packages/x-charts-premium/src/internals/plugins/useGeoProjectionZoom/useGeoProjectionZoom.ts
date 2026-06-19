@@ -11,7 +11,13 @@ import {
 import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { selectorChartProjection } from '../useGeoProjection/useGeoProjection.selectors';
 import { type UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
-import { getRotation, type MapZoomView } from './mapZoom.utils';
+import {
+  getRotation,
+  getTranslation,
+  type MapTranslationAxis,
+  type MapRotationAxis,
+  type MapZoomView,
+} from './mapZoom.utils';
 
 /** Multiplicative zoom step applied per wheel tick. */
 const WHEEL_ZOOM_STEP = 1.1;
@@ -23,7 +29,14 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   instance,
   params,
 }) => {
-  const { zoom: enabled, minScaleRatio, maxScaleRatio, onZoomChange, view } = params;
+  const { zoom, minScaleRatio, maxScaleRatio, onZoomChange, view } = params;
+
+  // `zoom` is either a boolean or a config object; an object always enables the interaction.
+  const enabled = zoom !== false;
+  const rotationAllowed: MapRotationAxis =
+    typeof zoom === 'object' ? (zoom.rotationAllowed ?? 'both') : 'both';
+  const translationAllowed: MapTranslationAxis =
+    typeof zoom === 'object' ? (zoom.translationAllowed ?? 'both') : 'both';
 
   const isControlled = view !== undefined;
 
@@ -45,6 +58,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
           ...store.state.geoProjectionZoom,
           zoomLevel: newView.zoomLevel,
           center: newView.center,
+          translation: newView.translation,
         });
       }
       onZoomChange?.(newView);
@@ -101,12 +115,32 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         dragCurrentPoint.current![0] + delta.x,
         dragCurrentPoint.current![1] + delta.y,
       ];
-      const center = getRotation(projection, geoPoint.current!, dragCurrentPoint.current!);
+      const center = getRotation(
+        projection,
+        geoPoint.current!,
+        dragCurrentPoint.current!,
+        1,
+        rotationAllowed,
+      );
 
-      // const center = getRotation(projection, delta.x, delta.y, drawingAreaCenter());
+      const rotate = projection.rotate();
+      projection.rotate([-center![0], -center![1]]);
+      const translation = getTranslation(
+        store,
+        projection,
+        geoPoint.current!,
+        dragCurrentPoint.current!,
+        translationAllowed,
+      );
+
+      projection.rotate(rotate);
 
       if (center) {
-        applyView({ zoomLevel: store.state.geoProjectionZoom.zoomLevel ?? 1, center });
+        applyView({
+          zoomLevel: store.state.geoProjectionZoom.zoomLevel ?? 1,
+          center,
+          translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
+        });
       }
     },
   });
@@ -124,12 +158,24 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       if (!geoPoint) {
         return;
       }
-      const center = getRotation(projection, geoPoint, [point.x, point.y], factor);
+      const center = getRotation(projection, geoPoint, [point.x, point.y], factor, rotationAllowed);
+
+      const rotate = projection.rotate();
+      projection.rotate([-center![0], -center![1]]);
+      const translation = getTranslation(
+        store,
+        projection,
+        geoPoint,
+        [point.x, point.y],
+        translationAllowed,
+      );
+      projection.rotate(rotate);
 
       if (center) {
         applyView({
           zoomLevel: (store.state.geoProjectionZoom.zoomLevel ?? 1) * factor,
           center,
+          translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
         });
       }
     },
@@ -147,12 +193,30 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       if (!geoPoint) {
         return;
       }
-      const center = getRotation(projection, geoPoint, [point.x, point.y], 1 + deltaScale);
+      const center = getRotation(
+        projection,
+        geoPoint,
+        [point.x, point.y],
+        1 + deltaScale,
+        rotationAllowed,
+      );
 
-      if (center) {
+      const rotate = projection.rotate();
+      projection.rotate([-center![0], -center![1]]);
+      const translation = getTranslation(
+        store,
+        projection,
+        geoPoint,
+        [point.x, point.y],
+        translationAllowed,
+      );
+      projection.rotate(rotate);
+
+      if (center || translation) {
         applyView({
           zoomLevel: (store.state.geoProjectionZoom.zoomLevel ?? 1) * (1 + deltaScale),
-          center,
+          center: center ?? store.state.geoProjectionZoom.center ?? [0, 0],
+          translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
         });
       }
     },
@@ -201,8 +265,13 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     // Notify so controlled consumers and listeners learn about the reset (fit view: zoomLevel 1).
     const projection = getProjection();
     const center = projection?.invert?.([drawingAreaCenter().x, drawingAreaCenter().y]);
+
     if (center) {
-      onZoomChange?.({ zoomLevel: 1, center: center as [number, number] });
+      onZoomChange?.({
+        zoomLevel: 1,
+        center: center as [number, number],
+        translation: [0, 0],
+      });
     }
   }, [store, isControlled, getProjection, drawingAreaCenter, onZoomChange]);
 
@@ -234,5 +303,6 @@ useGeoProjectionZoom.getInitialState = (params) => ({
   geoProjectionZoom: {
     zoomLevel: params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1,
     center: params.view?.center ?? params.initialView?.center ?? [0, 0],
+    translation: params.view?.translation ?? params.initialView?.translation ?? [0, 0],
   },
 });
