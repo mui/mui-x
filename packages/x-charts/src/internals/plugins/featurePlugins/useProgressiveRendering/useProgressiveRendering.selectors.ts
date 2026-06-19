@@ -16,7 +16,7 @@ import type { RendererType } from '../../../../ScatterChart';
 /** Auto mode switches to the progressive renderer above this total point count. */
 const PROGRESSIVE_POINT_THRESHOLD = 20000;
 
-/** Target reveal commits. Progressive wall time ≈ `(C + 1) / 2` × a sync render. */
+/** Target reveal commits. Progressive wall time ≈ `(nb_commits + 1) / 2` × a sync render. */
 const TARGET_PROGRESSIVE_COMMITS = 5;
 
 /** Min per-tick reveal budget (total points). Avoids tiny React-bound commits. */
@@ -127,7 +127,7 @@ export function getRevealedBatchCount(
   revealed: number,
   isInteracting: boolean | undefined,
 ): number {
-  const effectiveRevealed = isInteracting ? Math.min(1, total) : revealed;
+  const effectiveRevealed = isInteracting ? 1 : revealed;
   return Math.min(effectiveRevealed, total);
 }
 
