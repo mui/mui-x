@@ -89,9 +89,8 @@ export const selectorChartAxisZoomData = createSelector(
   (zoomMap, axisId: AxisId) => zoomMap?.get(axisId),
 );
 
-const selectorChartSamplingState = (
-  state: ChartState<[], [UseChartCartesianAxisSignature]>,
-) => state.sampling;
+const selectorChartSamplingState = (state: ChartState<[], [UseChartCartesianAxisSignature]>) =>
+  state.sampling;
 
 export const selectorChartZoomOptionsLookup = createSelectorMemoized(
   selectorChartRawXAxis,

@@ -73,7 +73,11 @@ export default function ChartsXHighlight(props: {
       const zoom = zoomMap?.get(axisId);
       const bucketSize =
         samplingEnabled && data && zoom
-          ? getSamplingBucketSize(zoom.end - zoom.start, getSamplingMinSpan(data.length, width), data.length)
+          ? getSamplingBucketSize(
+              zoom.end - zoom.start,
+              getSamplingMinSpan(data.length, width),
+              data.length,
+            )
           : 1;
       if (bucketSize > 1 && data) {
         const index = data.indexOf(value);

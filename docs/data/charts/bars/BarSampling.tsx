@@ -30,7 +30,15 @@ export default function BarSampling() {
         label={`Sampling ${sampling ? 'on' : 'off'} (${POINTS} bars — zoom in fully to reach the unsampled data)`}
       />
       <BarChartPro
-        xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}
+        xAxis={[
+          {
+            scaleType: 'band',
+            data: categories,
+            zoom: true,
+            disableTicks: true,
+            tickLabelInterval: (value, index) => Math.floor(index % 200) === 0,
+          },
+        ]}
         series={[{ data, label: 'Value' }]}
         height={300}
         sampling={sampling}
