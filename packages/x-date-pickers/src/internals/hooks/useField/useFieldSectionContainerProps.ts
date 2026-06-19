@@ -12,6 +12,8 @@ export function useFieldSectionContainerProps(
 ): UseFieldSectionContainerPropsReturnValue {
   const {
     stateResponse: {
+      // States and derived states
+      parsedSelectedSections,
       // Methods to update the states
       setSelectedSections,
     },
@@ -26,9 +28,19 @@ export function useFieldSectionContainerProps(
         return;
       }
 
+      // For pointer input the `mousedown` handler already selected the section
+      // before this click bubbles, so bail to avoid a redundant
+      // `onSelectedSectionsChange` invocation. On the non-pointer paths
+      // (programmatic `element.click()`, some AT activations) `mousedown`
+      // didn't run, so `parsedSelectedSections` won't match yet and selection
+      // proceeds normally.
+      if (parsedSelectedSections === sectionIndex) {
+        return;
+      }
+
       setSelectedSections(sectionIndex);
     },
-    [disabled, setSelectedSections],
+    [disabled, parsedSelectedSections, setSelectedSections],
   );
   return React.useCallback(
     (sectionIndex) => ({

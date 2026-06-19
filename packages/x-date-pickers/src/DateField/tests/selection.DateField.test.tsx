@@ -177,16 +177,39 @@ describe('<DateField /> - Selection', () => {
       expect(consumer.lastCall.firstArg.type).to.equal('mousedown');
     });
 
+    it('should not fire `onSelectedSectionsChange` more than once per section click', () => {
+      // The `mousedown` handler now selects the section authoritatively for
+      // pointer input, in addition to the section's own focus/click handlers.
+      // The section container's `onClick` deduplicates against the resulting
+      // selection so the public callback fires the same number of times as
+      // before this handler existed: twice for a click on a new section
+      // (mousedown + focus), once for a click on the already-selected section.
+      const onSelectedSectionsChange = spy();
+      const view = renderWithProps({ onSelectedSectionsChange });
+
+      const year = view.getSection(2);
+      fireEvent.mouseDown(year);
+      fireEvent.click(year);
+      expect(onSelectedSectionsChange.args).to.deep.equal([[2], [2]]);
+
+      // Clicking the already-selected section fires exactly once.
+      onSelectedSectionsChange.resetHistory();
+      fireEvent.mouseDown(year);
+      fireEvent.click(year);
+      expect(onSelectedSectionsChange.args).to.deep.equal([[2]]);
+    });
+
     it('should preserve the all-sections selection when clicking the sections container', async () => {
       const view = renderWithProps({});
       await view.selectSection('month');
       await view.user.keyboard('{Control>}a{/Control}');
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
-      // mousedown's closest-section path must early-return when the field is
-      // in 'all' mode so the Ctrl+A cursor-positioning click-handler keeps
-      // its semantics. Fire both mousedown and click so the 0-tick
-      // containerClickTimeout in `handleClick` is also exercised.
+      // `mousedown`'s closest-section path must early-return when the field is
+      // in 'all' mode so the Ctrl+A behavior is preserved. This asserts the
+      // synchronous outcome only: `handleClick`'s 'all' branch schedules its
+      // cursor-positioning work in a 0-tick `setTimeout` that `fireEvent`
+      // does not flush, so 'all' stays selected within the assertion window.
       const sectionsContainer = view.getSectionsContainer();
       fireEvent.mouseDown(sectionsContainer);
       fireEvent.click(sectionsContainer);

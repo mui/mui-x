@@ -263,13 +263,13 @@ export function useFieldRootProps(
     }
     event.preventDefault();
     setFocused(true);
-    // Skip the redundant state update if the selected section is already the
-    // target, so userland `onSelectedSectionsChange` doesn't fire twice (once
-    // from here on mousedown, again from the section container's `onClick`
-    // on the click bubble).
-    if (parsedIndex !== parsedSelectedSections) {
-      setSelectedSections(parsedIndex);
-    }
+    // `mousedown` is now authoritative for pointer section selection. The
+    // section container's own `onClick` deduplicates against the resulting
+    // `parsedSelectedSections` on the click bubble (see
+    // `useFieldSectionContainerProps`), so we always select here and let that
+    // guard absorb the redundant call -- matching the pre-PR
+    // `onSelectedSectionsChange` invocation count.
+    setSelectedSections(parsedIndex);
   });
 
   const handleInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
