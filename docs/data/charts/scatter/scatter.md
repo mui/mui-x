@@ -62,11 +62,11 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "ScatterClick.js"}}
-
 When `hitAreaRadius` is `"item"`, the user must click directly on the point, and the mouse event comes from that element.
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
+
+{{"demo": "ScatterClick.js"}}
 
 ## Bubble chart
 
@@ -174,6 +174,8 @@ The main thread stays responsive while a large dataset is being drawn.
 
 The example below renders 20,000 points.
 Use the buttons to compare the single and progressive renderers: the spinner keeps animating and "first paint" stays low with the progressive renderer, while the single renderer blocks the main thread until every point is drawn.
+Zoom and pan the chart to see the progressive renderer keep only the first level painted while you interact, then fill in the rest once the interaction settles.
+The first level is the first N points of each series, so it is representative only when the data is unordered; data sorted along an axis may show a partial cloud until the interaction settles.
 
 {{"demo": "ScatterAsyncRenderer.js"}}
 

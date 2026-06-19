@@ -9,10 +9,19 @@ import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import type { ChartsRotationAxisProps, D3Scale } from '../models/axis';
+import type {
+  ChartsRotationAxisProps,
+  ChartsAxisSlots,
+  ChartsAxisSlotProps,
+  D3Scale,
+} from '../models/axis';
 import { useUtilityClasses } from './chartsRotationAxisClasses';
 import { createGetLabelTextAnchors } from '../ChartsRadiusAxis/createGetLabelTextAnchors';
 import { getLabelTransform } from './getLabelTransform';
+
+export interface ChartsRotationAxisSlots extends ChartsAxisSlots {}
+
+export interface ChartsRotationAxisSlotProps extends ChartsAxisSlotProps {}
 
 /* Gap between a tick and its label. */
 const TICK_LABEL_GAP = 3;
@@ -26,6 +35,7 @@ function ChartsRotationAxis(props: ChartsRotationAxisProps) {
   const {
     disableLine,
     disableTicks,
+    disableTickLabel,
     position = 'outside',
     tickLabelPosition = position === 'outside' ? 'after' : 'before',
     tickPosition = position === 'outside' ? 'after' : 'before',
@@ -124,17 +134,19 @@ function ChartsRotationAxis(props: ChartsRotationAxisProps) {
                 className={classes.tick}
               />
             )}
-            <text
-              x={labelX}
-              y={labelY}
-              fill={stroke}
-              fontSize={12}
-              className={classes.tickLabel}
-              pointerEvents="none"
-              {...getLabelTextAnchors(labelDx, labelDy, tickLabelPosition)}
-            >
-              {formattedValue}
-            </text>
+            {!disableTickLabel && (
+              <text
+                x={labelX}
+                y={labelY}
+                fill={stroke}
+                fontSize={12}
+                className={classes.tickLabel}
+                pointerEvents="none"
+                {...getLabelTextAnchors(labelDx, labelDy, tickLabelPosition)}
+              >
+                {formattedValue}
+              </text>
+            )}
           </g>
         );
       })}
@@ -142,7 +154,7 @@ function ChartsRotationAxis(props: ChartsRotationAxisProps) {
   );
 }
 
-ChartsRotationAxis.propTypes = {
+ChartsRotationAxis.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -166,6 +178,11 @@ ChartsRotationAxis.propTypes = {
    * @default false
    */
   disableLine: PropTypes.bool,
+  /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel: PropTypes.bool,
   /**
    * If true, the ticks are disabled.
    * @default false
