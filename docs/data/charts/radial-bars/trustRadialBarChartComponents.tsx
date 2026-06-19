@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useDrawingArea, useRotationAxis, useRadiusAxis } from '@mui/x-charts/hooks';
 import { ChartsTooltipContainer, useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
+import { usePolarGeometry } from '@mui/x-charts/hooks';
 import {
   euAverageTrust2025,
   europeanYouthTrust,
@@ -278,28 +278,4 @@ export interface PolarGeometry {
   radiusScale: (value: number) => number;
   // Polar (0 = up, clockwise) to local cartesian, relative to the center.
   point: (radius: number, angle: number) => readonly [number, number];
-}
-
-/**
- * Reads the polar scales through chart hooks and exposes helpers to place
- * custom SVG relative to the chart center. Returns `null` before the scales
- * are ready.
- */
-export function usePolarGeometry(): PolarGeometry | null {
-  const { left, top, width, height } = useDrawingArea();
-  const rotationAxis = useRotationAxis();
-  const radiusAxis = useRadiusAxis();
-
-  if (!rotationAxis || !radiusAxis) {
-    return null;
-  }
-
-  return {
-    cx: left + width / 2,
-    cy: top + height / 2,
-    angleScale: rotationAxis.scale as (value: string) => number | undefined,
-    bandwidth: (rotationAxis.scale as { bandwidth: () => number }).bandwidth(),
-    radiusScale: radiusAxis.scale as (value: number) => number,
-    point: (radius, angle) => [radius * Math.sin(angle), -radius * Math.cos(angle)],
-  };
 }
