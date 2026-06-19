@@ -1,0 +1,238 @@
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import {
+  type ExtendedFeatureCollection,
+  type GeoProjection,
+  type GeoPath,
+  type GeoConicProjection,
+  geoPath,
+} from '@mui/x-charts-vendor/d3-geo';
+import type {
+  D3NamedProjection,
+  GeoProjectionInput,
+  UseGeoProjectionSignature,
+  UseGeoProjectionState,
+} from './useGeoProjection.types';
+import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
+import type { UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
+import type { GeoTooltipPosition } from '../../corePlugins/useChartSeriesConfig';
+import type { ChartState } from '../../models/chart';
+
+
+const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
+  return 'parallels' in projection && typeof projection.parallels === 'function';
+};
+
+
+export const selectorChartGeoProjectionState = (
+  state: ChartState<[], [UseGeoProjectionSignature]>,
+): UseGeoProjectionState['geoProjection'] | undefined => state.geoProjection;
+
+const selectorChartGeoProjectionZoomState = (state: ChartState<[], [UseGeoProjectionZoomSignature]>) => state.geoProjectionZoom;
+
+export const selectorChartGeoData: (
+  state: ChartState<[], [UseGeoProjectionSignature]>,
+) => ExtendedFeatureCollection | null = createSelector(
+  selectorChartGeoProjectionState,
+  (geoProjection) => geoProjection?.geoData ?? null,
+);
+
+export const selectorChartGeoFeatureKey = createSelector(
+  selectorChartGeoProjectionState,
+  (geoProjection) => geoProjection?.geoFeatureKey ?? 'name',
+);
+
+export const selectorChartRawProjection = createSelector(
+  selectorChartGeoProjectionState,
+  (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
+);
+
+export const selectorChartProjectionFactory = createSelector(
+  selectorChartGeoProjectionState,
+  (geoProjection): Record<D3NamedProjection, (() => GeoProjection) | undefined> | null =>
+    geoProjection?.factories ?? null,
+);
+
+export const selectorChartZoomLevel = createSelector(
+  selectorChartGeoProjectionZoomState,
+  (geoProjectionZoom): number | null => geoProjectionZoom?.zoomLevel ?? 1,
+);
+const selectorChartCenter = createSelectorMemoized(
+  selectorChartGeoProjectionZoomState,
+  (geoProjectionZoom): [number, number] | null => geoProjectionZoom?.center ?? [0, 0],
+);
+const selectorChartTranslation = createSelectorMemoized(
+  selectorChartGeoProjectionZoomState,
+  (geoProjectionZoom): [number, number] | null => geoProjectionZoom?.translation ?? [0, 0],
+);
+
+const selectorChartParallels = createSelectorMemoized(
+  selectorChartGeoProjectionState,
+  selectorChartCenter,
+  (geoProjection, center): [number, number] =>
+    geoProjection?.parallels ?? (center ? [-center[1] - 15, -center[1] + 15] : [30, 30]),
+);
+/**
+ * Map a feature's `properties.name` to its index in `geoData.features`,
+ * for fast lookup by name when joining series rows to features.
+ *
+ * Features without a string `properties.name` are skipped; on duplicates,
+ * the first occurrence wins.
+ */
+export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
+  selectorChartGeoData,
+  selectorChartGeoFeatureKey,
+  (geoData, geoFeatureKey): ReadonlyMap<string, number[]> => {
+    const map = new Map<string, number[]>();
+    if (!geoData) {
+      return map;
+    }
+    geoData.features.forEach((feature, index) => {
+      const name =
+        typeof geoFeatureKey === 'function'
+          ? geoFeatureKey(feature)
+          : feature.properties?.[geoFeatureKey];
+      if (typeof name !== 'string') {
+        return;
+      }
+      if (map.has(name)) {
+        map.get(name)!.push(index);
+        return;
+      }
+      map.set(name, [index]);
+    });
+    return map;
+  },
+);
+
+const selectorResolveProjection = createSelectorMemoized(
+  selectorChartRawProjection,
+  selectorChartProjectionFactory,
+  selectorChartParallels, (
+    projectionInput,
+    projectionFactory,
+    parallels,
+  ): GeoProjection | null => {
+  if (typeof projectionInput !== 'string') {
+    return projectionInput;
+  }
+  const factory = projectionFactory?.[projectionInput];
+  if (!factory) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(
+        `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
+        `Expected one of: ${Object.keys(projectionFactory ?? {}).join(', ')}.`,
+      );
+    }
+    return null;
+  }
+  const projection = factory();
+  if (isConicProjection(projection)) {
+    projection.parallels(parallels);
+  }
+  return projection;
+})
+
+
+const selectorFitScale = createSelector(
+  selectorChartGeoData,
+  selectorChartDrawingArea,
+  selectorResolveProjection,
+  (geoData, drawingArea, projection): number | null => {
+    if (!geoData || !projection) {
+      return null;
+    }
+
+    const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
+    const currentScale = projection.scale();
+    return Math.min(
+      currentScale * (drawingArea.width / (x1 - x0)),
+      currentScale * (drawingArea.height / (y1 - y0)),
+    );
+  },
+);
+
+/**
+ * Resolves the raw `projection` input into a ready-to-use `GeoProjection` instance,
+ * fitted to the chart's drawing area then zoomed/panned according to the current view.
+ *
+ * - String inputs (e.g. `'mercator'`) are mapped to the matching d3-geo factory.
+ * - `GeoProjection` instances are used as-is, then fitted.
+ * - The projection is first fitted to the data (the `zoomLevel === 1` baseline), then its
+ *   scale is multiplied by `zoomLevel` and its translation is offset so `center` lands at the
+ *   center of the drawing area. Keeping the view as `{ zoomLevel, center }` means the absolute
+ *   scale/translation are derived here, never stored — so they stay correct across resizes.
+ * - Returns `null` when no projection is registered or the name is unknown.
+ */
+export const selectorChartProjection = createSelectorMemoized(
+  selectorResolveProjection,
+  selectorChartGeoData,
+  selectorChartCenter,
+  selectorChartTranslation,
+  selectorChartZoomLevel,
+  selectorChartDrawingArea,
+  selectorFitScale,
+  (
+    projection,
+    geoData,
+    center,
+    translation,
+    zoomLevel,
+    drawingArea,
+    fitScale,
+  ): GeoProjection | null => {
+    if (!projection) {
+      return null;
+    }
+
+    if (!geoData || fitScale == null) {
+      return projection;
+    }
+
+    if (center) {
+      projection.rotate?.([-center[0], -center[1]]);
+    }
+
+    // `fitScale` is the `zoomLevel === 1` reference scale, computed independently in
+    // `selectorFitScale` so it stays stable across pan/zoom transforms.
+    projection.scale(zoomLevel != null && zoomLevel !== 1 ? fitScale * zoomLevel : fitScale);
+
+    // Conic projections are positioned via `rotate`; `center` panning is not applied.
+    if (isConicProjection(projection)) {
+      return projection;
+    }
+
+    projection.translate([
+      drawingArea.left + drawingArea.width / 2 + (translation?.[0] ?? 0) * drawingArea.width,
+      drawingArea.top + drawingArea.height / 2 + (translation?.[1] ?? 0) * drawingArea.height,
+    ]);
+
+    return projection;
+  },
+);
+
+/**
+ * Resolves the raw `projection` input into a ready-to-use `GeoPath` instance
+ * fitted to the chart's drawing area.
+ */
+export const selectorChartGeoPath = createSelectorMemoized(
+  selectorChartProjection,
+  (projection): GeoPath | null => {
+    if (!projection) {
+      return null;
+    }
+    return geoPath(projection);
+  },
+);
+
+export const selectorGeoTooltipPosition = createSelectorMemoized(
+  selectorChartGeoData,
+  selectorChartProjection,
+  selectorChartGeoFeatureIndexesByName,
+  (geoData, projection, featureIndexesByName): GeoTooltipPosition => {
+    return {
+      geoData,
+      projection,
+      featureIndexesByName,
+    };
+  },
+);

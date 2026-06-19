@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
-import { type ChartPlugin, selectorChartDrawingArea } from '@mui/x-charts/internals';
+import { type ChartPlugin } from '@mui/x-charts/internals';
 import {
   useDragGesture,
   useWheelGesture,
@@ -10,13 +10,15 @@ import {
 } from '@mui/x-charts-pro/internals';
 import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { selectorChartProjection } from '../useGeoProjection/useGeoProjection.selectors';
-import { type UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
+import type {
+  MapTranslationAxis,
+  MapRotationAxis,
+  MapZoomView,
+  UseGeoProjectionZoomSignature
+} from './useGeoProjectionZoom.types';
 import {
   getRotation,
   getTranslation,
-  type MapTranslationAxis,
-  type MapRotationAxis,
-  type MapZoomView,
 } from './mapZoom.utils';
 
 /** Multiplicative zoom step applied per wheel tick. */
@@ -45,10 +47,6 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     [store],
   );
 
-  const drawingAreaCenter = React.useCallback(() => {
-    const { left, top, width, height } = selectorChartDrawingArea(store.state);
-    return { x: left + width / 2, y: top + height / 2 };
-  }, [store]);
 
   // The view is the source of truth, stored directly: no pixel <-> view conversion on write/read.
   const applyView = React.useCallback(

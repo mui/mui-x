@@ -189,7 +189,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   );
 });
 
-ScatterChart.propTypes = {
+ScatterChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -542,6 +542,7 @@ ScatterChart.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -549,6 +550,7 @@ ScatterChart.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

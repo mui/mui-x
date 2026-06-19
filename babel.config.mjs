@@ -26,15 +26,6 @@ export default function getBabelConfig(api) {
     },
   ]);
 
-  const removePropTypesPlugin = baseConfig.plugins.find(
-    (p) => p[2] === 'babel-plugin-transform-react-remove-prop-types',
-  );
-  if (removePropTypesPlugin) {
-    removePropTypesPlugin[1] ??= {};
-    removePropTypesPlugin[1].mode = 'unsafe-wrap';
-    removePropTypesPlugin[1].ignoreFilenames ??= [];
-    removePropTypesPlugin[1].ignoreFilenames.push('DataGrid.tsx', 'DataGridPro.tsx');
-  }
   const displayNamePlugin = baseConfig.plugins.find(
     (p) => p[2] === '@mui/internal-babel-plugin-display-name',
   );

@@ -6,6 +6,7 @@ import type { GeoPremiumPluginSignatures } from '../ChartsGeoDataProviderPremium
 
 export type PremiumPluginsPerSeriesType = Omit<ProPluginsPerSeriesType, 'bar'> & {
   bar: BarChartPremiumPluginSignatures;
+  rangeBar: BarChartPremiumPluginSignatures;
   mapShape: GeoPremiumPluginSignatures;
 };
 
@@ -19,7 +20,7 @@ export type PremiumPluginsPerSeriesType = Omit<ProPluginsPerSeriesType, 'bar'> &
 export type ChartPremiumApi<
   ChartType extends keyof PremiumPluginsPerSeriesType | undefined = undefined,
   Signatures extends readonly ChartAnyPluginSignature[] =
-  ChartType extends keyof PremiumPluginsPerSeriesType
-  ? PremiumPluginsPerSeriesType[ChartType]
-  : AllPluginSignatures,
+    ChartType extends keyof PremiumPluginsPerSeriesType
+      ? PremiumPluginsPerSeriesType[ChartType]
+      : AllPluginSignatures,
 > = ChartPublicAPI<Signatures>;

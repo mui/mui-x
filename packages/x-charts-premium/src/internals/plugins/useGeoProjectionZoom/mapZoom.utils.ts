@@ -1,38 +1,7 @@
 import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { type ChartUsedStore, selectorChartDrawingArea } from '@mui/x-charts/internals';
+import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom.types';
 
-/**
- * Which rotation axes a pan/zoom gesture may move:
- * - `'both'`: rotate freely along longitude and latitude.
- * - `'long'`: rotate along longitude only (lock the north–south tilt).
- * - `'lat'`: rotate along latitude only (lock the east–west spin).
- * - `'none'`: lock both axes.
- */
-export type MapRotationAxis = 'both' | 'lat' | 'long' | 'none';
-
-export type MapTranslationAxis = 'both' | 'x' | 'y' | 'none';
-
-/**
- * Public, resolution-independent representation of the map view.
- *
- * Unlike the raw projection `scale`/`translate` (both in SVG pixels, tied to the drawing-area
- * size), a view survives a resize: `zoomLevel` is a ratio and `center` is a geographic coordinate.
- */
-export interface MapZoomView {
-  /**
-   * The zoom level, as a multiple of the scale that fits the data in the drawing area.
-   * `1` means the whole dataset fits the drawing area; `2` means twice as close.
-   */
-  zoomLevel: number;
-  /**
-   * The geographic coordinate `[longitude, latitude]` displayed at the center of the drawing area.
-   */
-  center: [number, number];
-  /**
-   * The map translation in percentage of the drawing area.
-   */
-  translation: [number, number];
-}
 
 const DEG = Math.PI / 180;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
