@@ -1,6 +1,5 @@
-import type { ChartPluginSignature } from "../../models/plugin";
-import type { UseGeoProjectionSignature } from "../useGeoProjection/useGeoProjection.types";
-
+import type { ChartPluginSignature } from '../../models/plugin';
+import type { UseGeoProjectionSignature } from '../useGeoProjection/useGeoProjection.types';
 
 /**
  * Which rotation axes a pan/zoom gesture may move:
@@ -87,7 +86,7 @@ export interface UseGeoProjectionZoomParameters {
   onZoomChange?: (view: MapZoomView) => void;
 }
 
-interface UseGeoProjectionZoomDefaultizedParameters extends UseGeoProjectionZoomParameters {
+export interface UseGeoProjectionZoomDefaultizedParameters extends UseGeoProjectionZoomParameters {
   zoom: boolean | MapZoomOptions;
   minScaleRatio: number;
   maxScaleRatio: number;
@@ -111,9 +110,9 @@ export interface UseGeoProjectionZoomPublicApi {
   resetZoom: () => void;
 }
 
-export interface UseGeoProjectionZoomInstance extends UseGeoProjectionZoomPublicApi { }
+export interface UseGeoProjectionZoomInstance extends UseGeoProjectionZoomPublicApi {}
 
-interface UseGeoProjectionZoomState {
+export interface UseGeoProjectionZoomState {
   geoProjectionZoom: {
     /**
      * The zoom level, as a multiple of the scale that fits the data in the drawing area.

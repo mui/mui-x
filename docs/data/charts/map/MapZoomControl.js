@@ -67,7 +67,7 @@ function isConicProjection(projection) {
   );
 }
 
-export default function MapZoomOptions() {
+export default function MapZoomControl() {
   const [projection, setProjection] = React.useState('naturalEarth1');
   const apiRef = useChartPremiumApiRef();
 

@@ -10,5 +10,7 @@ export {
   GEO_PREMIUM_PLUGINS,
   type GeoPremiumPluginSignatures,
 } from './ChartsGeoDataProviderPremium.plugins';
-export type { MapZoomOptions } from '../internals/plugins/useGeoProjectionZoom/useGeoProjectionZoom.types';
-export type { MapZoomView } from '../internals/plugins/useGeoProjectionZoom/mapZoom.utils';
+export type {
+  MapZoomView,
+  MapZoomOptions,
+} from '../internals/plugins/useGeoProjectionZoom/useGeoProjectionZoom.types';

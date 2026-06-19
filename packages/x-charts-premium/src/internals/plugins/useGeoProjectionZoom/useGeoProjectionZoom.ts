@@ -14,12 +14,9 @@ import type {
   MapTranslationAxis,
   MapRotationAxis,
   MapZoomView,
-  UseGeoProjectionZoomSignature
+  UseGeoProjectionZoomSignature,
 } from './useGeoProjectionZoom.types';
-import {
-  getRotation,
-  getTranslation,
-} from './mapZoom.utils';
+import { getRotation, getTranslation } from './mapZoom.utils';
 
 /** Multiplicative zoom step applied per wheel tick. */
 const WHEEL_ZOOM_STEP = 1.1;
@@ -46,7 +43,6 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     (): GeoProjection | null => selectorChartProjection(store.state),
     [store],
   );
-
 
   // The view is the source of truth, stored directly: no pixel <-> view conversion on write/read.
   const applyView = React.useCallback(

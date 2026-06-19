@@ -54,7 +54,7 @@ export default function ZoomMap() {
                 min: 0,
                 max: 100,
                 color: ['#e3f2fd', '#0d47a1'],
-                unownedColor: '#f5f5f5',
+                unknownColor: '#f5f5f5',
               },
             },
           ]}

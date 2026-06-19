@@ -2,7 +2,6 @@ import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { type ChartUsedStore, selectorChartDrawingArea } from '@mui/x-charts/internals';
 import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom.types';
 
-
 const DEG = Math.PI / 180;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
