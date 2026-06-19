@@ -2,7 +2,10 @@ import { TreeViewValidItem, TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
 import type { MinimalTreeViewParameters, MinimalTreeViewState } from '../../MinimalTreeViewStore';
 
-export const TREE_VIEW_ROOT_PARENT_ID = '__TREE_VIEW_ROOT_PARENT_ID__';
+// Internal sentinel used as the lookup key for the virtual root parent.
+// Kept intentionally short (it ships in the bundle) while remaining unlikely
+// to collide with a user-provided item id.
+export const TREE_VIEW_ROOT_PARENT_ID = '@@root';
 
 export const buildSiblingIndexes = (siblings: string[]) => {
   const siblingsIndexLookup: { [itemId: string]: number } = {};
