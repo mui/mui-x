@@ -141,9 +141,6 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     },
   };
 
-  const { rowCount } = params;
-  const { rowHeight } = dimensions;
-
   const rowsMeta = {
     currentPageTotalHeight,
     positions,
