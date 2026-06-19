@@ -1,4 +1,5 @@
 import {
+  MIN_ELEMENT_SIZE_PX,
   buildSamplingPyramid,
   getSamplingMinSpan,
   selectSamplingLevelByZoom,
@@ -89,16 +90,17 @@ describe('selectSamplingLevelByZoom', () => {
 });
 
 describe('getSamplingMinSpan (screen + data driven level count)', () => {
-  // 800px / 4px = 200 bars capacity.
+  it('is 100% when the data exactly fills the view at the minimum element size', () => {
+    expect(getSamplingMinSpan(400, 400 * MIN_ELEMENT_SIZE_PX)).to.equal(100);
+  });
+
   it('shrinks the min zoom span as the data grows', () => {
-    expect(getSamplingMinSpan(400, 800)).to.equal(50);
-    expect(getSamplingMinSpan(4000, 800)).to.equal(5);
+    expect(getSamplingMinSpan(800, 800)).to.equal(getSamplingMinSpan(400, 800) / 2);
   });
 
   it('grows the min zoom span as the available size shrinks', () => {
     // Narrower chart fits fewer bars, so fewer levels are needed.
-    expect(getSamplingMinSpan(4000, 800)).to.equal(5);
-    expect(getSamplingMinSpan(4000, 400)).to.equal(2.5);
+    expect(getSamplingMinSpan(4000, 400)).to.equal(getSamplingMinSpan(4000, 800) / 2);
   });
 
   it('yields more (coarser) levels at full zoom-out for more data', () => {

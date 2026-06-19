@@ -47,6 +47,14 @@ export function buildSamplingPyramid(stacked: readonly [number, number][]): Samp
   return { dataLength, levels };
 }
 
+/** Level index from the zoom span: 0 at max zoom (`currentSpan === minSpan`), +1 per span doubling. */
+function levelIndexFromSpan(currentSpan: number, minSpan: number): number {
+  if (!(currentSpan > 0) || !(minSpan > 0)) {
+    return 0;
+  }
+  return Math.max(0, Math.round(Math.log2(currentSpan / minSpan)));
+}
+
 /**
  * Picks the level from the zoom span: max zoom (`currentSpan === minSpan`) → no sampling (`null`);
  * each span doubling → bucket size ×2. Clamped to the pyramid depth.
@@ -57,9 +65,21 @@ export function selectSamplingLevelByZoom(
   pyramid: SamplingPyramid,
 ): SamplingLevel | null {
   const { levels } = pyramid;
-  if (!(currentSpan > 0) || !(minSpan > 0) || levels.length === 0) {
-    return null;
+  const levelIndex = levelIndexFromSpan(currentSpan, minSpan);
+  return levelIndex <= 0 || levels.length === 0
+    ? null
+    : levels[Math.min(levelIndex, levels.length) - 1];
+}
+
+/** Active bucket size for the given span (`1` = no sampling) — matches {@link selectSamplingLevelByZoom}. */
+export function getSamplingBucketSize(
+  currentSpan: number,
+  minSpan: number,
+  dataLength: number,
+): number {
+  const levelIndex = levelIndexFromSpan(currentSpan, minSpan);
+  if (levelIndex <= 0 || dataLength <= 1) {
+    return 1;
   }
-  const levelIndex = Math.round(Math.log2(currentSpan / minSpan));
-  return levelIndex <= 0 ? null : levels[Math.min(levelIndex, levels.length) - 1];
+  return 2 ** Math.min(levelIndex, Math.ceil(Math.log2(dataLength)));
 }

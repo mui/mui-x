@@ -4,8 +4,12 @@ import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { useStore } from '../internals/store/useStore';
 import {
+  getSamplingBucketSize,
+  getSamplingMinSpan,
   selectorChartsHighlightXAxisValue,
+  selectorChartSamplingState,
   selectorChartXAxis,
+  selectorChartZoomMap,
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useDrawingArea } from '../hooks';
@@ -23,11 +27,13 @@ export default function ChartsXHighlight(props: {
 }) {
   const { type, classes } = props;
 
-  const { top, height } = useDrawingArea();
+  const { top, height, width } = useDrawingArea();
 
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const axisXValues = store.use(selectorChartsHighlightXAxisValue);
   const xAxes = store.use(selectorChartXAxis);
+  const samplingEnabled = store.use(selectorChartSamplingState)?.enabled ?? false;
+  const zoomMap = store.use(selectorChartZoomMap);
 
   if (axisXValues.length === 0) {
     return null;
@@ -55,13 +61,36 @@ export default function ChartsXHighlight(props: {
       }
     }
 
+    // When the bars are sampled, widen the band highlight to cover the whole merged bucket.
+    let bandStart = 0;
+    let bandSize = 0;
+    if (isXScaleOrdinal) {
+      const step = xScale.step();
+      bandStart = xScale(value)! - (step - xScale.bandwidth()) / 2;
+      bandSize = step;
+
+      const data = xAxis.data;
+      const zoom = zoomMap?.get(axisId);
+      const bucketSize =
+        samplingEnabled && data && zoom
+          ? getSamplingBucketSize(zoom.end - zoom.start, getSamplingMinSpan(data.length, width), data.length)
+          : 1;
+      if (bucketSize > 1 && data) {
+        const index = data.indexOf(value);
+        if (index >= 0) {
+          const bucketStart = Math.floor(index / bucketSize) * bucketSize;
+          const bucketEnd = Math.min(bucketStart + bucketSize - 1, data.length - 1);
+          bandStart = xScale(data[bucketStart])! - (step - xScale.bandwidth()) / 2;
+          bandSize = (bucketEnd - bucketStart + 1) * step;
+        }
+      }
+    }
+
     return (
       <React.Fragment key={`${axisId}-${value}`}>
         {isXScaleOrdinal && xScale(value) !== undefined && (
           <ChartsAxisHighlightPath
-            d={`M ${xScale(value)! - (xScale.step() - xScale.bandwidth()) / 2} ${
-              top
-            } l ${xScale.step()} 0 l 0 ${height} l ${-xScale.step()} 0 Z`}
+            d={`M ${bandStart} ${top} l ${bandSize} 0 l 0 ${height} l ${-bandSize} 0 Z`}
             className={classes.root}
             ownerState={{ axisHighlight: 'band' }}
           />
