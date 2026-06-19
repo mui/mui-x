@@ -260,11 +260,19 @@ export function Clock(inProps: ClockProps) {
   };
 
   const setTime = (event: PointerEvent | React.PointerEvent, isFinish: PickerSelectionState) => {
+    const mask = squareMaskRef.current;
+    // The document-level listeners can briefly outlive the mask during unmount:
+    // React detaches refs before the cleanup effect removes the listeners, so a
+    // pointer event firing in that window would otherwise dereference a null ref.
+    if (!mask) {
+      return;
+    }
+
     // Resolve the pointer coordinates relative to the clock mask rather than from
     // `offsetX`/`offsetY`: the `pointermove`/`pointerup` listeners live on the
     // document (see `handlePointerDown`), so the event target can be any element
     // once the pointer leaves the clock.
-    const rect = squareMaskRef.current!.getBoundingClientRect();
+    const rect = mask.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const offsetY = event.clientY - rect.top;
 
