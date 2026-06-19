@@ -164,7 +164,11 @@ the `fade` option decides which items are dimmed
 
 ## Zoom
 
-{{"demo": "ZoomMap.js"}}
+### Interaction
+
+{{"demo": "MapZoomOptions.js"}}
+
+### Control
 
 ## Managing visibility from the legend
 

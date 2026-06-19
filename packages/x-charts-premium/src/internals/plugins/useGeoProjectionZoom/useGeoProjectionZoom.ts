@@ -260,20 +260,16 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         ...store.state.geoProjectionZoom,
         zoomLevel: 1,
         center: [0, 0],
-      });
-    }
-    // Notify so controlled consumers and listeners learn about the reset (fit view: zoomLevel 1).
-    const projection = getProjection();
-    const center = projection?.invert?.([drawingAreaCenter().x, drawingAreaCenter().y]);
-
-    if (center) {
-      onZoomChange?.({
-        zoomLevel: 1,
-        center: center as [number, number],
         translation: [0, 0],
       });
     }
-  }, [store, isControlled, getProjection, drawingAreaCenter, onZoomChange]);
+
+    onZoomChange?.({
+      zoomLevel: 1,
+      center: [0, 0],
+      translation: [0, 0],
+    });
+  }, [store, isControlled, onZoomChange]);
 
   const publicAPI = { zoomIn, zoomOut, resetZoom };
 
