@@ -65,6 +65,9 @@ export default withDeploymentConfig({
   experimental: {
     esmExternals: undefined,
   },
+  typescript: {
+    tsconfigPath: './tsconfig.json',
+  },
   transpilePackages: [
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
     '@mui/internal-core-docs',
