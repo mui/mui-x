@@ -164,7 +164,12 @@ describe('<DataGridPremium /> - Export Excel', () => {
                   field: 'actions',
                   type: 'actions',
                   getActions: () => [
-                    <GridActionsCellItem icon={<Icon />} onClick={undefined} label="Delete" />,
+                    <GridActionsCellItem
+                      key={1}
+                      icon={<Icon />}
+                      onClick={undefined}
+                      label="Delete"
+                    />,
                   ],
                 },
               ]}

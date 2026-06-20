@@ -230,7 +230,7 @@ function ChartsToolbarPro({
   return <Toolbar {...other}>{children}</Toolbar>;
 }
 
-ChartsToolbarPro.propTypes = {
+ChartsToolbarPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

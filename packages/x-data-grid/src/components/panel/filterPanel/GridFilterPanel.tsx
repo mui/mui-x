@@ -305,7 +305,7 @@ const GridFilterPanel = forwardRef<HTMLDivElement, GridFilterPanelProps>(
   },
 );
 
-GridFilterPanel.propTypes = {
+GridFilterPanel.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

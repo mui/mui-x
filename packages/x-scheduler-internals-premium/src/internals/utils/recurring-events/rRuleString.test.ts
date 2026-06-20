@@ -115,6 +115,46 @@ describe('recurring-events/rRuleString', () => {
       );
     });
 
+    it('should throw when FREQ has an unsupported value', () => {
+      expect(() => parseRRule(adapter, 'FREQ=HOURLY', 'default')).to.throw(
+        'MUI X Scheduler: Invalid FREQ value "HOURLY". The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. Provide a supported frequency value.',
+      );
+    });
+
+    it('should throw when the object input has an unsupported freq value', () => {
+      expect(() =>
+        parseRRule(adapter, { freq: 'HOURLY' as SchedulerEventRecurrenceRule['freq'] }, 'default'),
+      ).to.throw(
+        'MUI X Scheduler: Invalid FREQ value "HOURLY". The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. Provide a supported frequency value.',
+      );
+    });
+
+    it('should reject a non-canonical object freq instead of normalizing it', () => {
+      expect(() =>
+        parseRRule(adapter, { freq: 'daily' as SchedulerEventRecurrenceRule['freq'] }, 'default'),
+      ).to.throw(
+        'MUI X Scheduler: Invalid FREQ value "daily". The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. Provide a supported frequency value.',
+      );
+    });
+
+    it('should throw a dedicated message when the object input has no freq value', () => {
+      expect(() => parseRRule(adapter, {} as SchedulerEventRecurrenceRule, 'default')).to.throw(
+        'MUI X Scheduler: The recurrence rule must include a FREQ value. The frequency (DAILY, WEEKLY, MONTHLY, or YEARLY) is required for recurrence rules. Provide a freq value.',
+      );
+    });
+
+    it('should throw when the object freq matches a prototype key', () => {
+      expect(() =>
+        parseRRule(
+          adapter,
+          { freq: 'toString' as SchedulerEventRecurrenceRule['freq'] },
+          'default',
+        ),
+      ).to.throw(
+        'MUI X Scheduler: Invalid FREQ value "toString". The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. Provide a supported frequency value.',
+      );
+    });
+
     it('should throw when the RRULE contains unsupported properties', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;FOO=bar', 'default')).to.throw(
         'MUI X Scheduler: Unsupported RRULE property "FOO". Supported properties are: FREQ, INTERVAL, BYDAY, BYMONTHDAY, BYMONTH, UNTIL, COUNT. Remove or replace the unsupported property.',
