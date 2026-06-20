@@ -29,11 +29,13 @@ const defaultProps = {
 };
 
 function makeWrapper(props: Partial<typeof defaultProps> = {}) {
-  return ({ children }: { children: React.ReactElement }) => (
-    <RadarChart {...defaultProps} {...props}>
-      {children}
-    </RadarChart>
-  );
+  return function wrapper({ children }: { children: React.ReactElement }) {
+    return (
+      <RadarChart {...defaultProps} {...props}>
+        {children}
+      </RadarChart>
+    );
+  };
 }
 
 const options: any = { wrapper: makeWrapper() };
