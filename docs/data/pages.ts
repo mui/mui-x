@@ -825,6 +825,10 @@ const pages: MuiPage[] = [
                   { pathname: '/x/react-charts/hooks/use-scale', title: 'Scale' },
                   { pathname: '/x/react-charts/hooks/use-axes', title: 'Axis' },
                   { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
+                  {
+                    pathname: '/x/react-charts/hooks/use-polar-geometry',
+                    title: 'usePolarGeometry',
+                  },
                 ],
               },
               { pathname: '/x/react-charts/plugins', title: 'Plugins' },

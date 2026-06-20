@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { usePolarGeometry } from '@mui/x-charts/hooks';
 import { RadialBarChart, RadialBarPlot } from '@mui/x-charts-premium/RadialBarChart';
 import { ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
@@ -56,7 +55,7 @@ function PolarGeometryOverlay() {
 /**
  * Simple demo: Radial bar chart with custom geometry overlay
  */
-export function UsePolarGeometryExample() {
+export default function UsePolarGeometry() {
   return (
     <RadialBarChart
       dataset={trustData}

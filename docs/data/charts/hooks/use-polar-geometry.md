@@ -30,7 +30,7 @@ function PolarGeometryOverlay() {
 }
 ```
 
-{{"demo": "UsePolarGeometryExample.js"}}
+{{"demo": "UsePolarGeometry.js"}}
 
 ## Return value
 
