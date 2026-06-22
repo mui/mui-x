@@ -1,0 +1,31 @@
+{
+  "props": {
+    "className": { "type": { "name": "string" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "MarkerLabelPlot",
+  "imports": [
+    "import { MarkerLabelPlot } from '@mui/x-charts/ScatterChart';",
+    "import { MarkerLabelPlot } from '@mui/x-charts';",
+    "import { MarkerLabelPlot } from '@mui/x-charts-pro';",
+    "import { MarkerLabelPlot } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    {
+      "name": "markerLabel",
+      "description": "The component that renders the marker label.",
+      "default": "MarkerLabel",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiMarkerLabelPlot",
+  "filename": "/packages/x-charts/src/ScatterChart/MarkerLabel/MarkerLabelPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>"
+}

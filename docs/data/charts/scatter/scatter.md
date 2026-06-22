@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterChartPremium, ScatterPlot, ScatterPlotPremium, HighlightedScatterMark, ChartsGrid, ChartsWrapper
+components: ScatterChart, ScatterChartPro, ScatterChartPremium, ScatterPlot, ScatterPlotPremium, HighlightedScatterMark, MarkerLabelPlot, ChartsGrid, ChartsWrapper
 ---
 
 # Charts - Scatter
@@ -210,7 +210,7 @@ The example below renders 200,000 points.
 
 Use `ChartsDataProvider` to supply `series`, `xAxis`, and `yAxis` when composing a custom chart.
 
-In addition to the shared components described in [Composition](/x/react-charts/composition/), you can use `ScatterPlot` to draw the scatter points.
+In addition to the shared components described in [Composition](/x/react-charts/composition/), you can use `ScatterPlot` to draw the scatter points and `MarkerLabelPlot` to draw their labels.
 
 Here's how the scatter chart is composed:
 
@@ -224,6 +224,7 @@ Here's how the scatter chart is composed:
       <g data-drawing-container>
         {/* Elements able to overflow the drawing area. */}
         <ScatterPlot />
+        <MarkerLabelPlot />
       </g>
       <FocusedScatterMark />
       <ChartsOverlay />

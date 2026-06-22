@@ -363,6 +363,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'MarkElement',
   },
   {
+    pathname: '/x/api/charts/marker-label-plot',
+    title: 'MarkerLabelPlot',
+  },
+  {
     pathname: '/x/api/charts/mark-plot',
     title: 'MarkPlot',
   },

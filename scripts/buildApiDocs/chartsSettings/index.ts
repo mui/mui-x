@@ -103,7 +103,6 @@ export default chartsApiPages;
       'x-charts/src/ScatterChart/BatchScatter.tsx',
       'x-charts/src/ScatterChart/MarkerLabel/MarkerLabel.tsx',
       'x-charts/src/ScatterChart/MarkerLabel/MarkerLabelItem.tsx',
-      'x-charts/src/ScatterChart/MarkerLabel/MarkerLabelPlot.tsx',
       'x-charts/src/BarChart/BatchBarPlot.tsx',
       'x-charts/src/BarChart/IndividualBarPlot.tsx',
       'x-charts/src/ChartsAxisHighlightValue/ChartsAxisHighlightValueItem.tsx',

@@ -8,6 +8,7 @@ import { useXAxes, useYAxes } from '../../hooks';
 import { useZAxes } from '../../hooks/useZAxis';
 import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
 import { useChartsContext } from '../../context/ChartsProvider';
+import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import getMarkerSize from '../seriesConfig/getMarkerSize';
 import { useUtilityClasses } from '../scatterClasses';
 import {
@@ -49,6 +50,7 @@ function MarkerLabelPlot(props: MarkerLabelPlotProps) {
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
   const { instance } = useChartsContext();
+  const getHighlightState = useItemHighlightStateGetter();
   const classes = useUtilityClasses();
 
   if (seriesData === undefined) {
@@ -98,14 +100,20 @@ function MarkerLabelPlot(props: MarkerLabelPlotProps) {
                 return null;
               }
 
+              const highlightState = getHighlightState({
+                type: 'scatter',
+                seriesId: id,
+                dataIndex,
+              });
+
               return (
                 <MarkerLabelItem
                   key={point.id ?? dataIndex}
-                  seriesId={id}
-                  dataIndex={dataIndex}
                   x={x}
                   y={y}
                   text={text}
+                  isHighlighted={highlightState === 'highlighted'}
+                  isFaded={highlightState === 'faded'}
                   slots={slots}
                   slotProps={slotProps}
                 />
@@ -118,7 +126,7 @@ function MarkerLabelPlot(props: MarkerLabelPlotProps) {
   );
 }
 
-MarkerLabelPlot.propTypes = {
+MarkerLabelPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

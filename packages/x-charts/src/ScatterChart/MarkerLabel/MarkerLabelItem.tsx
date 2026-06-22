@@ -4,8 +4,6 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useUtilityClasses } from '../scatterClasses';
 import { type ScatterClasses } from '../scatterClasses';
-import { useItemHighlightState } from '../../hooks/useItemHighlightState';
-import { type SeriesId } from '../../models/seriesType/common';
 import { MarkerLabel, type MarkerLabelOwnerState, type MarkerLabelProps } from './MarkerLabel';
 
 export interface MarkerLabelSlots {
@@ -22,8 +20,6 @@ export interface MarkerLabelSlotProps {
 
 export type MarkerLabelItemProps = {
   classes?: Partial<ScatterClasses>;
-  seriesId: SeriesId;
-  dataIndex: number;
   slotProps?: MarkerLabelSlotProps;
   slots?: MarkerLabelSlots;
   /**
@@ -38,18 +34,18 @@ export type MarkerLabelItemProps = {
    * The resolved label to display.
    */
   text: string;
+  /**
+   * If `true`, the label is highlighted.
+   */
+  isHighlighted: boolean;
+  /**
+   * If `true`, the label is faded.
+   */
+  isFaded: boolean;
 };
 
 function MarkerLabelItem(props: MarkerLabelItemProps) {
-  const { seriesId, classes: innerClasses, dataIndex, slots, slotProps, x, y, text } = props;
-
-  const highlightState = useItemHighlightState({
-    type: 'scatter',
-    seriesId,
-    dataIndex,
-  });
-  const isHighlighted = highlightState === 'highlighted';
-  const isFaded = highlightState === 'faded';
+  const { classes: innerClasses, slots, slotProps, x, y, text, isHighlighted, isFaded } = props;
 
   const ownerState: MarkerLabelOwnerState = {
     classes: innerClasses,
@@ -65,7 +61,6 @@ function MarkerLabelItem(props: MarkerLabelItemProps) {
     additionalProps: {
       x,
       y,
-      isFaded,
       className: classes.label,
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
@@ -86,8 +81,8 @@ MarkerLabelItem.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
-  dataIndex: PropTypes.number.isRequired,
-  seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  isFaded: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
   text: PropTypes.string.isRequired,
