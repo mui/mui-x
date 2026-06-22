@@ -36,7 +36,7 @@ export default function BarSampling() {
             data: categories,
             zoom: true,
             disableTicks: true,
-            tickLabelInterval: (value, index) => Math.floor(index % 200) === 0,
+            tickSpacing: 60,
           },
         ]}
         series={[{ data, label: 'Value' }]}
