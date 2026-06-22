@@ -5,7 +5,11 @@
 .cursor
 .claude/settings.local.json
 .claude/worktrees/
+.claude/agents/
+.claude/helpers/
+.claude/commands/
 .claude/scheduled_tasks.lock
+.claude-flow
 .junie
 
 __diff_output__

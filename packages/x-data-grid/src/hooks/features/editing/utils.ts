@@ -9,7 +9,7 @@ export const getDefaultCellValue = (colDef: GridColDef) => {
     case 'number':
       return undefined;
     case 'singleSelect':
-      return null;
+      return '';
     case 'string':
     default:
       return '';
