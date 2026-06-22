@@ -1024,7 +1024,7 @@ describe('<DataGrid /> - Keyboard', () => {
             value: 'active',
           });
           expect(cell).to.equal('');
-          expect(deletedValue).to.equal(null);
+          expect(deletedValue).to.equal('');
         });
       });
     };

@@ -52,6 +52,42 @@ const chatPkg = loadPkg('./packages/x-chat');
 
 const pickersAdaptersDeps = getPickerAdapterDeps();
 
+// Generated once and shared by both the webpack and turbopack pipelines.
+const releaseInfo = generateReleaseInfo();
+
+// Serializable markdown-loader options, shared by webpack and turbopack.
+// `ignoreLanguagePages` (a function) is added only on the webpack side since
+// turbopack requires loader options to be serializable.
+const markdownLoaderOptions = {
+  workspaceRoot: WORKSPACE_ROOT,
+  languagesInProgress: [],
+  env: {
+    SOURCE_CODE_REPO,
+    LIB_VERSION: pkg.version,
+  },
+};
+
+// `string-replace-loader` rules applied to all first-party `.ts`/`.tsx` files.
+// All `search` values are strings (not RegExp), keeping the options serializable
+// for turbopack.
+const stringReplaceRules = [
+  {
+    search: '__RELEASE_INFO__',
+    replace: releaseInfo,
+    flags: 'g',
+  },
+  {
+    search: '__ALLOW_TEST_LICENSES__',
+    replace: 'false',
+    flags: 'g',
+  },
+  {
+    search: String.raw`\(process\.env\s*(as any\s*)?\)\.MUI_VERSION`,
+    replace: JSON.stringify(pkg.version),
+    flags: 'g',
+  },
+];
+
 let localSettings = {};
 try {
   // eslint-disable-next-line import/extensions
@@ -64,6 +100,9 @@ export default withDeploymentConfig({
   reactStrictMode: true,
   experimental: {
     esmExternals: undefined,
+  },
+  typescript: {
+    tsconfigPath: './tsconfig.json',
   },
   transpilePackages: [
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
@@ -88,6 +127,29 @@ export default withDeploymentConfig({
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
     MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
+  },
+  turbopack: {
+    resolveExtensions: ['.mjs', '.tsx', '.ts', '.jsx', '.js', '.json'],
+    rules: {
+      // `.md?muiMarkdown` → markdown loader (mirrors the webpack `oneOf` branch).
+      // `as: '*.js'` hands the emitted JS back to turbopack's own pipeline.
+      '*.md': [
+        {
+          condition: { query: /[?&]muiMarkdown(?=&|$)/ },
+          loaders: [{ loader: '@mui/internal-markdown/loader', options: markdownLoaderOptions }],
+          as: '*.js',
+        },
+      ],
+      // Token replacement that webpack does via `string-replace-loader`.
+      // `{ not: 'foreign' }` keeps it off node_modules; the tokens only live in
+      // first-party source (`docs/` and `packages/*/src`).
+      '*.{ts,tsx}': [
+        {
+          condition: { not: 'foreign' },
+          loaders: [{ loader: 'string-replace-loader', options: { multiple: stringReplaceRules } }],
+        },
+      ],
+    },
   },
   // @ts-ignore
   webpack: (config, options) => {
@@ -123,13 +185,10 @@ export default withDeploymentConfig({
                   {
                     loader: '@mui/internal-markdown/loader',
                     options: {
-                      workspaceRoot: WORKSPACE_ROOT,
+                      ...markdownLoaderOptions,
+                      // Function form is allowed under webpack; turbopack requires
+                      // serializable options so it's omitted there.
                       ignoreLanguagePages: () => false,
-                      languagesInProgress: [],
-                      env: {
-                        SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
-                        LIB_VERSION: options.config.env.LIB_VERSION,
-                      },
                     },
                   },
                 ],
@@ -140,21 +199,7 @@ export default withDeploymentConfig({
             test: /\.(ts|tsx)$/,
             loader: 'string-replace-loader',
             options: {
-              multiple: [
-                {
-                  search: '__RELEASE_INFO__',
-                  replace: generateReleaseInfo(),
-                },
-                {
-                  search: '__ALLOW_TEST_LICENSES__',
-                  replace: 'false',
-                },
-                {
-                  search: String.raw`\(process\.env\s*(as any\s*)?\)\.MUI_VERSION`,
-                  replace: JSON.stringify(pkg.version),
-                  flags: 'g',
-                },
-              ],
+              multiple: stringReplaceRules,
             },
           },
         ]),
