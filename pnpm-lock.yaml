@@ -361,7 +361,7 @@ importers:
         specifier: 0.2.0
         version: 0.2.0(@babel/core@7.29.7)
       concurrently:
-        specifier: ^10.0.3
+        specifier: 10.0.3
         version: 10.0.3
       cross-env:
         specifier: 'catalog:'
