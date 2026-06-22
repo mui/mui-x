@@ -71,6 +71,8 @@ export { parseFormula, createFormulaParser } from './formulaParser';
 
 export { serializeFormulaAst } from './formulaSerializer';
 
+export { offsetFormulaReferences } from './formulaOffset';
+
 export type {
   FormulaBoundDependencies,
   FormulaColumnIntervalDependency,

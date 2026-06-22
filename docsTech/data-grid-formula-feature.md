@@ -24,6 +24,8 @@ The feature ships in 6 independently mergeable iterations:
 - **I5** — formula-editor autocomplete: completion vocabulary + caret context engine, adapter token
   sourcing, the suggestion dropdown (headless `useAutocomplete` + `Popper`), and signature help (D20).
 - **I6** — polish: docs expansion, a11y, generated artifacts.
+- **I7** — fill-handle reference adjustment: dragging (or Ctrl+D/Ctrl+R filling) a formula copies it
+  with its relative references shifted for each target cell, Excel-style (D21).
 
 ## Locked design decisions
 
@@ -359,6 +361,30 @@ true)` → reposition caret via `setSelectionRange`; function/special-form token
   tier (value-position → functions + same-row columns high, operators suppressed; operator-position →
   operators high). Frequency/recency deferred.
 - **Signature help.** When the caret is inside a function's parens, surface its `signature`.
+
+**D21. Fill-handle reference adjustment (I7).** Dragging a formula cell via the cell-selection fill
+handle (`cellSelectionFillHandle`), or the Ctrl+D/Ctrl+R fill shortcuts, copies the formula with its
+relative references shifted by the source→target positional delta (Excel semantics): `=A1*B1` filled
+down becomes `=A2*B2`. Pure engine primitive `offsetFormulaReferences(ast, rowDelta, columnDelta,
+context)` (`engine/formulaOffset.ts`) mirrors `buildColumnSelector`/`buildRowSelector`: stable
+selectors (`COLUMN("f")`/`ROW(id)`, from relative refs) re-anchor to the field/row at
+`position + delta`; positional selectors (`COLUMN_POSITION`/`ROW_POSITION`, from `$`-absolute) never
+shift; same-row `fieldRef` and `COLUMN_VALUES` shift only on horizontal fill; overshoot past the last
+row/column → positional selector → `#REF!`; underflow past position 1 keeps the original reference
+(the 1-based store has no representable position < 1 — the parser rejects `ROW_POSITION(0)`). Adapter
+glue `getFilledFormulaSource(apiRef, source, target)` (`gridFormulaFill.ts`) gates on eligibility:
+the **target** column must be `allowFormulas` (else the caller copies the evaluated value — a `=…`
+string must never land in a plain column), and the **source** must be a live formula
+(`getCellFormulaResult(...) !== null`, which also rejects a literal `=text` in a non-formula column;
+`getCellFormula` alone is naive). Deltas use the live `gridFormulaA1PositionContextSelector`
+(sorted + filtered visible order), so offsets match A1 display, paste adjustment and `ROW_POSITION`.
+The adjusted source is fully canonical, so feeding it back through the column's `pastedValueParser`
+(`convertA1ToCanonicalPaste`) is a no-op — canonical formulas carry no A1 tokens — so there is no
+double-adjustment whether `formulaA1Notation` is on or off. Always-on (no opt-out prop) and built-in
+(no public fill callback) per the v1 product decision; wired at every fill site in
+`useGridCellSelection.ts` (drag `applyFill` plus the six Ctrl+D/Ctrl+R sites), reusing the existing
+`CellValueUpdater` write path so column editability, `valueSetter`, `processRowUpdate` and undo/redo
+are unchanged.
 
 **Invariant (all iterations): formula source lives only in row data; every cache and state slice is
 derived.** This is what keeps undo/redo, `processRowUpdate`, and controlled-rows scenarios working

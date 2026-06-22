@@ -155,6 +155,8 @@ export default function FormulaBasic() {
         showCellVerticalBorder
         showColumnVerticalBorder
         density="compact"
+        showToolbar
+        disablePivoting
       />
     </div>
   );

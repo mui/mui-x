@@ -6,4 +6,6 @@
   showCellVerticalBorder
   showColumnVerticalBorder
   density="compact"
+  showToolbar
+  disablePivoting
 />

@@ -101,6 +101,19 @@ The dropdown is on by default.
 While it is open, <kbd class="key">Down</kbd> and <kbd class="key">Up</kbd> move the highlight, <kbd class="key">Enter</kbd> and <kbd class="key">Tab</kbd> accept the highlighted suggestion, and <kbd class="key">Escape</kbd> closes it—so those keys do not commit the edit or move between cells until the dropdown is closed.
 Pass `disableFormulaAutocomplete` prop to turn the dropdown off.
 
+### Fill handle
+
+When the [cell selection](/x/react-data-grid/cell-selection/#fill-handle) fill handle is enabled (`cellSelection` and `cellSelectionFillHandle`), dragging a formula cell—or using the <kbd class="key">Ctrl</kbd>+<kbd class="key">D</kbd> (fill down) and <kbd class="key">Ctrl</kbd>+<kbd class="key">R</kbd> (fill right) shortcuts—copies the formula and adjusts its references for each target cell, the way a spreadsheet does.
+
+{{"demo": "FormulaFillHandle.js", "bg": "inline", "defaultCodeOpen": false}}
+
+- **Relative references shift** by the distance the cell moved: a formula written as `=A1 * B1` in A1 notation becomes `=A2 * B2` one row down, and same-row field references such as `=price * quantity` move to the next column when filled sideways.
+- **Absolute references stay fixed**: positional references (the `$A$1` form, stored as `COLUMN_POSITION`/`ROW_POSITION`) are never shifted.
+- Offsets are measured in the current **sorted and filtered** view order, so a fill respects the rows as they are displayed.
+- A reference that would move past the first row or column keeps its original target; one that moves past the last row or column resolves to `#REF!`.
+
+Filling a formula into a column that is **not** `allowFormulas` copies the source cell's evaluated value instead of the formula, so a `=…` string is never stored in a plain column.
+
 ## Custom functions
 
 Provide custom functions with the `formulaFunctions` prop.
