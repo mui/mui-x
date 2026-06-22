@@ -127,35 +127,42 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   },
 );
 
-const selectorResolveProjection = createSelectorMemoized(
-  selectorChartRawProjection,
-  selectorChartProjectionFactory,
-  selectorChartParallels,
-  function selectorResolveProjection(
-    projectionInput,
-    projectionFactory,
-    parallels,
-  ): GeoProjection | null {
-    if (typeof projectionInput !== 'string') {
-      return projectionInput;
+/**
+ * Builds a *fresh* `GeoProjection` instance from the raw projection input.
+ *
+ * This is intentionally not a memoized selector: callers mutate the returned projection (to fit,
+ * scale, translate, rotate it). Returning a shared instance would mean mutations leak between
+ * consumers and, worse, that a recomputed view keeps the same object reference — so store
+ * subscribers comparing with `Object.is` would not detect the change and the map would render one
+ * update behind.
+ */
+function resolveProjectionInstance(
+  projectionInput: GeoProjectionInput | null,
+  projectionFactory: Record<D3NamedProjection, (() => GeoProjection) | undefined> | null,
+  parallels: [number, number],
+): GeoProjection | null {
+  if (projectionInput === null) {
+    return null;
+  }
+  if (typeof projectionInput !== 'string') {
+    return projectionInput;
+  }
+  const factory = projectionFactory?.[projectionInput];
+  if (!factory) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(
+        `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
+          `Expected one of: ${Object.keys(projectionFactory ?? {}).join(', ')}.`,
+      );
     }
-    const factory = projectionFactory?.[projectionInput];
-    if (!factory) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error(
-          `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-            `Expected one of: ${Object.keys(projectionFactory ?? {}).join(', ')}.`,
-        );
-      }
-      return null;
-    }
-    const projection = factory();
-    if (isConicProjection(projection)) {
-      projection.parallels(parallels);
-    }
-    return projection;
-  },
-);
+    return null;
+  }
+  const projection = factory();
+  if (isConicProjection(projection)) {
+    projection.parallels(parallels);
+  }
+  return projection;
+}
 
 const selectorFitScale = createSelector(
   selectorChartRawProjection,
@@ -175,27 +182,9 @@ const selectorFitScale = createSelector(
       return null;
     }
 
-    let projection: GeoProjection | null = null;
-    if (typeof projectionInput !== 'string') {
-      projection = projectionInput;
-    }
-    const factory = projectionFactory?.[projectionInput as D3NamedProjection];
-    if (!factory) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error(
-          `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-            `Expected one of: ${Object.keys(projectionFactory ?? {}).join(', ')}.`,
-        );
-      }
-      return null;
-    }
-    projection = factory();
-
+    const projection = resolveProjectionInstance(projectionInput, projectionFactory, parallels);
     if (projection === null) {
       return null;
-    }
-    if (isConicProjection(projection)) {
-      projection.parallels(parallels);
     }
 
     const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
@@ -220,7 +209,9 @@ const selectorFitScale = createSelector(
  * - Returns `null` when no projection is registered or the name is unknown.
  */
 export const selectorChartProjection = createSelectorMemoized(
-  selectorResolveProjection,
+  selectorChartRawProjection,
+  selectorChartProjectionFactory,
+  selectorChartParallels,
   selectorChartGeoData,
   selectorChartCenter,
   selectorChartTranslation,
@@ -228,7 +219,9 @@ export const selectorChartProjection = createSelectorMemoized(
   selectorChartDrawingArea,
   selectorFitScale,
   function selectorChartProjection(
-    projection,
+    projectionInput,
+    projectionFactory,
+    parallels,
     geoData,
     center,
     translation,
@@ -236,6 +229,10 @@ export const selectorChartProjection = createSelectorMemoized(
     drawingArea,
     fitScale,
   ): GeoProjection | null {
+    // A fresh projection is built on every recompute (i.e. whenever any input below changes). The
+    // view transform mutates it in place, so reusing a shared instance would return the same object
+    // reference and store subscribers would render one update behind.
+    const projection = resolveProjectionInstance(projectionInput, projectionFactory, parallels);
     if (!projection) {
       return null;
     }
