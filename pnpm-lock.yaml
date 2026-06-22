@@ -70,7 +70,7 @@ catalogs:
       specifier: 9.1.1
       version: 9.1.1
     '@mui/utils':
-      specifier: ^9.0.1
+      specifier: ^9.1.1
       version: 9.1.1
     '@mui/x-internal-exceljs-fork':
       specifier: 5.0.0
@@ -361,7 +361,7 @@ importers:
         specifier: 0.2.0
         version: 0.2.0(@babel/core@7.29.7)
       concurrently:
-        specifier: ^10.0.3
+        specifier: 10.0.3
         version: 10.0.3
       cross-env:
         specifier: 'catalog:'
@@ -2467,8 +2467,8 @@ importers:
         specifier: npm:@mui/x-license@7.29.1
         version: '@mui/x-license@7.29.1(@types/react@19.2.15)(react@19.2.6)'
       x-license-v8:
-        specifier: npm:@mui/x-license@8.26.0
-        version: '@mui/x-license@8.26.0(@types/react@19.2.15)(react@19.2.6)'
+        specifier: npm:@mui/x-license@8.29.0
+        version: '@mui/x-license@8.29.0(@types/react@19.2.15)(react@19.2.6)'
     devDependencies:
       vitest:
         specifier: 'catalog:'
@@ -4512,8 +4512,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-internals@8.26.0':
-    resolution: {integrity: sha512-B9OZau5IQUvIxwpJZhoFJKqRpmWf5r0yMmSXjQuqb5WuqM755EuzWJOenY48denGoENzMLT8hQpA0hRTeU2IPA==}
+  '@mui/x-internals@8.29.0':
+    resolution: {integrity: sha512-xlqq765k39g6vkVGIypOBlsdYGawIP0JdSh+qqrkUCIIN39AUZRNMA/nGH0nSkhVHMHcCSDWBM5/6+6BLfc7Mg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4538,14 +4538,14 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-license@8.26.0':
-    resolution: {integrity: sha512-TcYLQXVRSaKjm9zyAxW3bi/+sGR2afsc32oG9ufBBiuNMvRZDghUZj7cKrem4VEKpC4Afsw2du9euv88TVUE1w==}
+  '@mui/x-license@8.29.0':
+    resolution: {integrity: sha512-DPJrE0Z8oV20bHevm58iJbBFZmU/8srRyjTt6FLKF1AOpmYxHjYDzDuln8ovRMnYMbtXU5FHxgLu9f22nj+npA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-telemetry@8.20.0':
-    resolution: {integrity: sha512-lmtcx620eryHY4uvVSV8F1IC0h2O6VY4Zifkbtq1LFHz75hUvE3JrERhABlo5qfQhZJEZuMTTxC2NDVCcAUI7Q==}
+  '@mui/x-telemetry@8.29.0':
+    resolution: {integrity: sha512-U2fDXtC6Y5z1HwQGS4z+nKl/Eui/spNVdQITTZDKojNLTs4ql/sMxIoetz49CY2Rs9F/51UrXcnT1qLDLsdaHA==}
     engines: {node: '>=14.0.0'}
 
   '@napi-rs/keyring-darwin-arm64@1.3.0':
@@ -13740,7 +13740,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-internals@8.26.0(@types/react@19.2.15)(react@19.2.6)':
+  '@mui/x-internals@8.29.0(@types/react@19.2.15)(react@19.2.6)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@mui/utils': 7.3.11(@types/react@19.2.15)(react@19.2.6)
@@ -13775,17 +13775,17 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-license@8.26.0(@types/react@19.2.15)(react@19.2.6)':
+  '@mui/x-license@8.29.0(@types/react@19.2.15)(react@19.2.6)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@mui/utils': 7.3.11(@types/react@19.2.15)(react@19.2.6)
-      '@mui/x-internals': 8.26.0(@types/react@19.2.15)(react@19.2.6)
-      '@mui/x-telemetry': 8.20.0
+      '@mui/x-internals': 8.29.0(@types/react@19.2.15)(react@19.2.6)
+      '@mui/x-telemetry': 8.29.0
       react: 19.2.6
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-telemetry@8.20.0':
+  '@mui/x-telemetry@8.29.0':
     dependencies:
       '@babel/runtime': 7.29.7
       '@fingerprintjs/fingerprintjs': 3.4.2
