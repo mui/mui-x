@@ -310,11 +310,12 @@ The WebGL renderer has the same trade-offs as the batch renderer, plus a few add
 ### Sampling [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 When a `BarChartPro` has more bars than the drawing area can show without making them
-too thin, the bars are automatically subsampled.
+too thin, the bars are automatically sampled.
 Levels of detail are precomputed for each zoom level, so panning and zooming stay smooth
 and bar sizes transition gradually.
 
-This requires no configuration. Zoom in to progressively reveal more bars.
+Sampling is enabled by default and needs no configuration. Zoom in to progressively reveal more bars.
+Set the `sampling` prop to `false` to always render every bar.
 
 {{"demo": "BarSampling.js"}}
 

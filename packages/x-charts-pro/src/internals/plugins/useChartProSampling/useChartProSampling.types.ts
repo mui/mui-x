@@ -7,7 +7,7 @@ import {
 
 export interface UseChartProSamplingParameters {
   /**
-   * If `true`, elements too small to render individually are subsampled.
+   * If `true`, elements too small to render individually are sampled.
    * @default true
    */
   sampling?: boolean;

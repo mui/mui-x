@@ -76,7 +76,7 @@ export function createGetBarDimensions(params: {
   };
 }
 
-/** Like {@link createGetBarDimensions}, but for a subsampled bucket spanning several categories. */
+/** Like {@link createGetBarDimensions}, but for a sampled bucket spanning several categories. */
 export function createGetBucketBarDimensions(params: {
   verticalLayout: boolean;
   xAxisConfig: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
