@@ -172,6 +172,8 @@
   { "name": "ChartsReferenceLineClassKey", "kind": "TypeAlias" },
   { "name": "ChartsReferenceLineProps", "kind": "TypeAlias" },
   { "name": "ChartsRotationAxisProps", "kind": "Interface" },
+  { "name": "ChartsRotationAxisSlotProps", "kind": "Interface" },
+  { "name": "ChartsRotationAxisSlots", "kind": "Interface" },
   { "name": "ChartsSurface", "kind": "Variable" },
   { "name": "chartsSurfaceClasses", "kind": "Variable" },
   { "name": "ChartsSurfaceClasses", "kind": "Interface" },

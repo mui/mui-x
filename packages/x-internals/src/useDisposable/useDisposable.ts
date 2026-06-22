@@ -24,19 +24,15 @@ interface ReactSharedInternalsLike {
   ReactCurrentOwner?: { current?: { mode?: number } | null } | null;
 }
 
+// Bracket-access the internals keys: a static `React.__SECRET_INTERNALS_…`
+// member access is resolved by webpack as a named ESM import, which errors
+// when the key isn't exported (React 19 drops `__SECRET_INTERNALS_…`).
+const ReactWithInternals = React as unknown as Record<string, ReactSharedInternalsLike | undefined>;
 const ReactInternals: ReactSharedInternalsLike | undefined =
   // eslint-disable-next-line no-underscore-dangle
-  (
-    React as unknown as {
-      __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?: ReactSharedInternalsLike;
-    }
-  ).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE ??
+  ReactWithInternals.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE ??
   // eslint-disable-next-line no-underscore-dangle
-  (
-    React as unknown as {
-      __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?: ReactSharedInternalsLike;
-    }
-  ).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  ReactWithInternals.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
 function isInStrictMode(): boolean {
   try {
