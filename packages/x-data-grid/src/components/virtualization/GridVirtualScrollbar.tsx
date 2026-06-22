@@ -5,6 +5,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { iOSMediaQuery } from '@mui/x-internals/platform';
 import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
@@ -50,6 +51,13 @@ const Scrollbar = styled('div', {
     zIndex: 70,
   },
   '--size': scrollbarSizeCssExpression,
+
+  // [iOS-scrollbar-swap]
+  // On iOS, native scrollbars of the `GridVirtualScroller` are shown instead,
+  // so hide these to avoid a duplicate thumb.
+  [iOSMediaQuery]: {
+    display: 'none',
+  },
 });
 
 const ScrollbarVertical = styled(Scrollbar, {

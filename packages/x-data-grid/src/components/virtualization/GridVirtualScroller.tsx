@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { iOSMediaQuery } from '@mui/x-internals/platform';
 import {
   gridHasBottomFillerSelector,
   gridHasScrollXSelector,
@@ -66,6 +67,17 @@ const Scroller = styled('div', {
   flexDirection: 'column',
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
+  },
+  // [iOS-scrollbar-swap]
+  // On iOS, virtual scrollbars do not show a thumb unless the user scrolls the element directly:
+  // https://github.com/mui/mui-x/issues/22386
+  // So keep this scroller's own native scrollbars and hide the ones in `GridVirtualScrollbar`
+  // instead to avoid a duplicate thumb.
+  [iOSMediaQuery]: {
+    scrollbarWidth: 'auto',
+    '&::-webkit-scrollbar': {
+      display: 'block',
+    },
   },
 
   '@media print': {
