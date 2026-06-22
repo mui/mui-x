@@ -152,8 +152,8 @@ Set `experimentalFeatures.progressiveRendering` to `true` to get the renderer ch
 | :--------------------------------------------------------------------------------------------------- | :------------- | :-- | :----------- | :----------------------- | :--------------------------------- |
 | `svg-single`                                                                                         | `circle`       | Yes | Yes          | Blocks until fully drawn | Small datasets                     |
 | `svg-progressive`                                                                                    | `circle`       | Yes | Yes          | Stays responsive         | Large datasets that still need CSS |
-| `svg-batch`                                                                                          | grouped `path` | No  | Limited      | Stays responsive         | Very large datasets                |
-| `webgl` [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') | WebGL canvas   | No  | No           | Stays responsive         | Massive datasets                   |
+| `svg-batch`                                                                                          | grouped `path` | No  | Limited      | Blocks until fully drawn | Very large datasets                |
+| `webgl` [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') | WebGL canvas   | No  | No           | Blocks until fully drawn | Massive datasets                   |
 
 **CSS**: whether you can style individual points with CSS selectors.
 
