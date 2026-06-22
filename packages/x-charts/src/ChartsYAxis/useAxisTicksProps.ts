@@ -68,5 +68,6 @@ export function useAxisTicksProps(inProps: ChartsYAxisProps) {
     Tick,
     TickLabel,
     axisTickLabelProps,
+    reverse,
   };
 }

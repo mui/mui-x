@@ -102,9 +102,19 @@ ChartsYAxis.propTypes /* remove-proptypes */ = {
    * Defines which ticks get its label displayed. Its value can be:
    * - 'auto' In such case, labels are displayed if they do not overlap with the previous one.
    * - a filtering function of the form (value, index) => boolean. Warning: the index is tick index, not data ones.
-   * @default 'auto'
+   *
+   * Unlike the x-axis, the overlap-avoidance behavior is opt-in: by default all labels are displayed.
+   * Set this to 'auto' to hide labels that overlap.
+   * @default undefined
    */
   tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+  /**
+   * The minimum gap in pixels between two tick labels.
+   * If two tick labels are closer than this minimum gap, one of them will be hidden.
+   * Only applied when `tickLabelInterval` is set to 'auto'.
+   * @default 4
+   */
+  tickLabelMinGap: PropTypes.number,
   /**
    * The placement of ticks label. Can be the middle of the band, or the tick position.
    * Only used if scale is 'band'.

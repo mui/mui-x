@@ -7,7 +7,7 @@ import { type TickItem } from '../hooks/useTicks';
 import { type ChartsYAxisProps } from '../models';
 
 export function shortenLabels(
-  visibleLabels: TickItem[],
+  visibleLabels: Set<TickItem>,
   drawingArea: Pick<ChartDrawingArea, 'top' | 'height' | 'bottom'>,
   maxWidth: number,
   isRtl: boolean,
