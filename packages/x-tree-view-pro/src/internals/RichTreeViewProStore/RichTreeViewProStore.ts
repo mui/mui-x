@@ -18,9 +18,8 @@ export class RichTreeViewProStore<
 
   public itemsReordering = new TreeViewItemsReorderingPlugin(this);
 
-  public disposeEffect = () => {
+  public mountEffect = () => {
     this.lazyLoading.initEffect();
-    return this.timeoutManager.clearAll;
   };
 
   public constructor(parameters: RichTreeViewProStoreParameters<R, Multiple>) {
