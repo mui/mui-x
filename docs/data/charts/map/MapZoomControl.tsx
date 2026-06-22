@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -21,7 +22,6 @@ import {
   Graticule,
 } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-
 import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 
 const countries = topojsonFeature(
@@ -71,6 +71,13 @@ const projectionGroups: { label: string; projections: D3NamedProjection[] }[] = 
   },
 ];
 
+const cities = [
+  // { name: 'New York', coordinates: [-74.006, 40.7128] },
+  { name: 'Tokyo', coordinates: [139.6917, 35.6895] },
+  { name: 'Sydney', coordinates: [151.2093, -33.8688] },
+  { name: 'Rio', coordinates: [-43.1729, -22.9068] },
+];
+
 function isConicProjection(projection: D3NamedProjection) {
   return (
     projection === 'conicConformal' ||
@@ -113,11 +120,10 @@ export default function MapZoomControl() {
           <ChartsSurface>
             <Graticule stroke="#90caf9" strokeWidth={0.5} />
             <GeoDataPlot fill="#e3f2fd" stroke="#a7a7a7" strokeWidth={0.5} />
-          </ChartsSurface>  
+          </ChartsSurface>
         </ChartsGeoDataProviderPremium>
-        <p>{JSON.stringify(view)}</p>
       </Box>
-      <Stack spacing={2} sx={{ minWidth: 200 }}>
+      <Stack spacing={2} sx={{ minWidth: 200, maxWidth: 300 }}>
         <TextField
           select
           label="projection"
@@ -137,7 +143,29 @@ export default function MapZoomControl() {
         </TextField>
 
         <div>
-          <Typography gutterBottom>Center (longitude, latitude)</Typography>
+          <Typography gutterBottom variant="caption">
+            Center (longitude, latitude)
+          </Typography>
+          <ButtonGroup
+            variant="outlined"
+            aria-label="outlined button group"
+            fullWidth
+          >
+            {cities.map(({ name, coordinates }) => (
+              <Button
+                size="small"
+                key={name}
+                onClick={() => {
+                  return setView((prev) => ({
+                    ...prev,
+                    center: coordinates as [number, number],
+                  }));
+                }}
+              >
+                {name}
+              </Button>
+            ))}
+          </ButtonGroup>
           <Slider
             value={view.center[0]}
             min={-180}
@@ -170,7 +198,7 @@ export default function MapZoomControl() {
           />
         </div>
         <div>
-          <Typography gutterBottom>
+          <Typography gutterBottom variant="caption">
             Translation (x, y as fraction of the drawing area)
           </Typography>
           <Slider
@@ -205,7 +233,9 @@ export default function MapZoomControl() {
           />
         </div>
         <div>
-          <Typography gutterBottom>Zoom Level</Typography>
+          <Typography gutterBottom variant="caption">
+            Zoom Level
+          </Typography>
           <Slider
             value={view.zoomLevel}
             min={0.1}
@@ -224,6 +254,8 @@ export default function MapZoomControl() {
             onClick={() => {
               apiRef.current?.resetZoom();
             }}
+            size="small"
+            variant="outlined"
           >
             Reset zoom
           </Button>

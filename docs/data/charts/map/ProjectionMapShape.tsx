@@ -4,15 +4,10 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ListSubheader from '@mui/material/ListSubheader';
-import Slider from '@mui/material/Slider';
-import Typography from '@mui/material/Typography';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import USATopology from 'us-atlas/states-10m.json';
+import { useChartPremiumApiRef } from '@mui/x-charts-premium/hooks';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import {
   D3NamedProjection,
@@ -69,16 +64,6 @@ const projectionGroups: { label: string; projections: D3NamedProjection[] }[] = 
   },
 ];
 
-function isCylindrical(projection: D3NamedProjection) {
-  return (
-    projection === 'equirectangular' ||
-    projection === 'mercator' ||
-    projection === 'transverseMercator' ||
-    projection === 'equalEarth' ||
-    projection === 'naturalEarth1'
-  );
-}
-
 function isConicProjection(projection: D3NamedProjection) {
   return (
     projection === 'conicConformal' ||
@@ -89,27 +74,12 @@ function isConicProjection(projection: D3NamedProjection) {
   );
 }
 
-const cities = [
-  // { name: 'New York', coordinates: [-74.006, 40.7128] },
-  { name: 'Tokyo', coordinates: [139.6917, 35.6895] },
-  { name: 'Sydney', coordinates: [151.2093, -33.8688] },
-  { name: 'Rio', coordinates: [-43.1729, -22.9068] },
-];
-
 export default function ProjectionMapShape() {
   const [projection, setProjection] =
     React.useState<D3NamedProjection>('naturalEarth1');
 
-  const [autoRotation, setAutoRotation] = React.useState(true);
-  const [rotation, setRotation] = React.useState<[number, number]>([0, 0]);
+  const apiRef = useChartPremiumApiRef<'mapShape'>();
 
-  const [autoTranslation, setAutoTranslation] = React.useState(true);
-  const [translation, setTranslation] = React.useState<[number, number]>([300, 300]);
-
-  const [autoScale, setAutoScale] = React.useState(true);
-  const [scale, setScale] = React.useState(100);
-
-  const usaProjection = projection === 'albersUsa';
   return (
     <Stack
       direction={{ xs: 'column', md: 'row' }}
@@ -120,11 +90,9 @@ export default function ProjectionMapShape() {
         <ChartsGeoDataProviderPremium
           geoData={isConicProjection(projection) ? USAStates : countries}
           projection={projection}
-          {...(!autoRotation && { rotate: rotation })}
-          {...(!autoTranslation && { translate: translation })}
-          {...(!autoScale && { scale })}
           zoom={{ rotationAllowed: 'long', translationAllowed: 'both' }}
           height={360}
+          apiRef={apiRef}
         >
           <ChartsSurface>
             <Graticule stroke="#90caf9" strokeWidth={0.5} />
@@ -139,13 +107,7 @@ export default function ProjectionMapShape() {
           value={projection}
           onChange={(event) => {
             setProjection(event.target.value as D3NamedProjection);
-            if ('transverseMercator' === event.target.value) {
-              setRotation((prev) => [prev[0], 0]);
-              return;
-            }
-            if (isCylindrical(event.target.value as D3NamedProjection)) {
-              setRotation((prev) => [0, prev[1]]);
-            }
+            apiRef.current?.resetZoom();
           }}
         >
           {projectionGroups.flatMap(({ label, projections }) => [
@@ -157,153 +119,6 @@ export default function ProjectionMapShape() {
             )),
           ])}
         </TextField>
-
-        <div>
-          <Typography gutterBottom>
-            Rotation: {autoRotation ? 'auto' : `(${rotation[0]}°, ${rotation[1]}°)`}
-          </Typography>
-          {usaProjection ? (
-            <Typography variant="caption">
-              Rotation is not available for the Albers USA projection.
-            </Typography>
-          ) : (
-            <React.Fragment>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    size="small"
-                    checked={autoRotation}
-                    onChange={(event) => setAutoRotation(event.target.checked)}
-                  />
-                }
-                label={`auto rotation`}
-              />
-              {autoRotation ? null : (
-                <div>
-                  <ButtonGroup
-                    variant="outlined"
-                    aria-label="outlined button group"
-                    fullWidth
-                  >
-                    {cities.map(({ name, coordinates }) => (
-                      <Button
-                        size="small"
-                        key={name}
-                        onClick={() => {
-                          if ('transverseMercator' === projection) {
-                            return setRotation([0, -coordinates[1]]);
-                          }
-                          if (isCylindrical(projection)) {
-                            return setRotation([-coordinates[0], 0]);
-                          }
-                          return setRotation([-coordinates[0], -coordinates[1]]);
-                        }}
-                        disabled={usaProjection}
-                      >
-                        {name}
-                      </Button>
-                    ))}
-                  </ButtonGroup>
-                  <Slider
-                    value={rotation[0]}
-                    min={-180}
-                    max={180}
-                    step={10}
-                    marks={[{ value: 0, label: '' }]}
-                    aria-label="longitude"
-                    size="small"
-                    onChange={(_, value: number) =>
-                      setRotation((prev) => [value, prev[1]])
-                    }
-                    valueLabelDisplay="auto"
-                    disabled={usaProjection}
-                  />
-                  <Slider
-                    value={rotation[1]}
-                    min={-180}
-                    max={180}
-                    step={10}
-                    marks={[{ value: 0, label: '' }]}
-                    aria-label="latitude"
-                    size="small"
-                    onChange={(_, value: number) =>
-                      setRotation((prev) => [prev[0], value])
-                    }
-                    valueLabelDisplay="auto"
-                    disabled={usaProjection}
-                  />
-                </div>
-              )}
-            </React.Fragment>
-          )}
-        </div>
-        <div>
-          <Typography gutterBottom>
-            Translate:{' '}
-            {autoTranslation ? 'auto' : `(${translation[0]}, ${translation[1]})`}
-          </Typography>
-          <FormControlLabel
-            control={
-              <Checkbox
-                size="small"
-                checked={autoTranslation}
-                onChange={(event) => setAutoTranslation(event.target.checked)}
-              />
-            }
-            label={`auto translation`}
-          />
-          {autoTranslation ? null : (
-            <div>
-              <Slider
-                value={translation[0]}
-                min={-100}
-                max={500}
-                step={10}
-                aria-label="translate x"
-                size="small"
-                onChange={(_, value: number) =>
-                  setTranslation((prev) => [value, prev[1]])
-                }
-                valueLabelDisplay="auto"
-              />
-              <Slider
-                value={translation[1]}
-                min={-100}
-                max={500}
-                step={10}
-                aria-label="translate y"
-                size="small"
-                onChange={(_, value: number) =>
-                  setTranslation((prev) => [prev[0], value])
-                }
-                valueLabelDisplay="auto"
-              />
-            </div>
-          )}
-        </div>
-        <div>
-          <Typography gutterBottom>Scale: {autoScale ? 'auto' : scale}</Typography>
-          <FormControlLabel
-            control={
-              <Checkbox
-                size="small"
-                checked={autoScale}
-                onChange={(event) => setAutoScale(event.target.checked)}
-              />
-            }
-            label={`auto scale`}
-          />
-          <Slider
-            value={scale}
-            min={100}
-            max={1500}
-            step={100}
-            size="small"
-            disabled={autoScale}
-            onChange={(_, value) => setScale(value as number)}
-            valueLabelDisplay="auto"
-          />
-        </div>
       </Stack>
     </Stack>
   );

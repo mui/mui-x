@@ -53,11 +53,6 @@ so use them to style the background layer.
 ## Modifying the projection
 
 The `projection` prop accepts either a d3-geo projection name or a `GeoProjection` instance.
-You can modify it with props
-
-- `translate: [tx, ty]` Translate the projected map in the SVG
-- `rotate: [lambda, phi, gamma]` Rotate the coordinate before applying the projection. To center the map on a coordinate (long, lat), use `rotate={[-long, -lat]}`.
-- `scale: number` Set zoom scale. If not provided, the scale is chosen to fit the `geoData` in the drawing area. Notice that some projection can lead to infinite coordinates and then degenerated render.
 
 {{"demo": "ProjectionMapShape.js"}}
 
@@ -211,9 +206,28 @@ the `fade` option decides which items are dimmed
 
 ### Interaction
 
+Set prop `zoom` to `true` to enable zoom interactions.
+This props also accept a configuration objects.
+
+The zoom interaction modifies the projection center such that the user pointer stay on top of the same geographical coordinate during the gesture.
+If modifying the center does not succeed, it modifies the translation.
+
+The zoom object has two properties to limit this behavior:
+
+- `rotationAllowed`: `'both' | 'long' | 'lat' | 'none'` Limit how the center can be modified
+- `translationAllowed`: `'both' | 'x' | 'y' | 'none'` Limit how the translation can be modified
+
 {{"demo": "MapZoomOptions.js"}}
 
 ### Control
+
+The maps have a `view` and `onZoomChange` props that allow to controll the zoom.
+
+The view is made of three properties:
+
+- `zoomLevel`: `number` A scaling ratio such that `1` correspond to the scale where every object fit in the drawing area.
+- `center`: `[number, number]` The long/lat coordinates in degree of the point at the center of the projection.
+- `translation`: `[number, number]` The translation of the map as a ratio of the drawing area.
 
 {{"demo": "MapZoomControl.js"}}
 

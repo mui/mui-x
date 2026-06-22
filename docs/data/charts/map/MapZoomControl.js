@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -56,6 +57,13 @@ const projectionGroups = [
   },
 ];
 
+const cities = [
+  // { name: 'New York', coordinates: [-74.006, 40.7128] },
+  { name: 'Tokyo', coordinates: [139.6917, 35.6895] },
+  { name: 'Sydney', coordinates: [151.2093, -33.8688] },
+  { name: 'Rio', coordinates: [-43.1729, -22.9068] },
+];
+
 function isConicProjection(projection) {
   return (
     projection === 'conicConformal' ||
@@ -100,7 +108,7 @@ export default function MapZoomControl() {
           </ChartsSurface>
         </ChartsGeoDataProviderPremium>
       </Box>
-      <Stack spacing={2} sx={{ minWidth: 200 }}>
+      <Stack spacing={2} sx={{ minWidth: 200, maxWidth: 300 }}>
         <TextField
           select
           label="projection"
@@ -120,7 +128,29 @@ export default function MapZoomControl() {
         </TextField>
 
         <div>
-          <Typography gutterBottom>Center (longitude, latitude)</Typography>
+          <Typography gutterBottom variant="caption">
+            Center (longitude, latitude)
+          </Typography>
+          <ButtonGroup
+            variant="outlined"
+            aria-label="outlined button group"
+            fullWidth
+          >
+            {cities.map(({ name, coordinates }) => (
+              <Button
+                size="small"
+                key={name}
+                onClick={() => {
+                  return setView((prev) => ({
+                    ...prev,
+                    center: coordinates,
+                  }));
+                }}
+              >
+                {name}
+              </Button>
+            ))}
+          </ButtonGroup>
           <Slider
             value={view.center[0]}
             min={-180}
@@ -153,7 +183,7 @@ export default function MapZoomControl() {
           />
         </div>
         <div>
-          <Typography gutterBottom>
+          <Typography gutterBottom variant="caption">
             Translation (x, y as fraction of the drawing area)
           </Typography>
           <Slider
@@ -188,7 +218,9 @@ export default function MapZoomControl() {
           />
         </div>
         <div>
-          <Typography gutterBottom>Zoom Level</Typography>
+          <Typography gutterBottom variant="caption">
+            Zoom Level
+          </Typography>
           <Slider
             value={view.zoomLevel}
             min={0.1}
@@ -207,6 +239,8 @@ export default function MapZoomControl() {
             onClick={() => {
               apiRef.current?.resetZoom();
             }}
+            size="small"
+            variant="outlined"
           >
             Reset zoom
           </Button>

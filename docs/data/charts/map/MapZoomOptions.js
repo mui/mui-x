@@ -94,7 +94,7 @@ export default function MapZoomOptions() {
           </ChartsSurface>
         </ChartsGeoDataProviderPremium>
       </Box>
-      <Stack spacing={2} sx={{ minWidth: 200 }}>
+      <Stack spacing={2} sx={{ minWidth: 200, maxWidth: 300 }}>
         <TextField
           select
           label="projection"
@@ -114,44 +114,57 @@ export default function MapZoomOptions() {
         </TextField>
 
         <div>
-          <Typography gutterBottom>Rotation</Typography>
-          <ToggleButtonGroup
-            value={rotationAllowed}
-            exclusive
-            onChange={(_, value) => {
-              if (value !== null) {
-                setRotationAllowed(value);
-              }
-            }}
-          >
-            <ToggleButton value="both">both</ToggleButton>
-            <ToggleButton value="long">longitude</ToggleButton>
-            <ToggleButton value="lat">latitude</ToggleButton>
-            <ToggleButton value="none">none</ToggleButton>
-          </ToggleButtonGroup>
+          <Typography gutterBottom variant="caption">
+            Rotation
+          </Typography>
+          <div>
+            <ToggleButtonGroup
+              value={rotationAllowed}
+              exclusive
+              size="small"
+              onChange={(_, value) => {
+                if (value !== null) {
+                  setRotationAllowed(value);
+                }
+              }}
+            >
+              <ToggleButton value="both">both</ToggleButton>
+              <ToggleButton value="long">longitude</ToggleButton>
+              <ToggleButton value="lat">latitude</ToggleButton>
+              <ToggleButton value="none">none</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
         </div>
         <div>
-          <Typography gutterBottom>Translation</Typography>
-          <ToggleButtonGroup
-            value={translationAllowed}
-            exclusive
-            onChange={(_, value) => {
-              if (value !== null) {
-                setTranslationAllowed(value);
-              }
-            }}
-          >
-            <ToggleButton value="both">both</ToggleButton>
-            <ToggleButton value="x">x</ToggleButton>
-            <ToggleButton value="y">y</ToggleButton>
-            <ToggleButton value="none">none</ToggleButton>
-          </ToggleButtonGroup>
+          <Typography gutterBottom variant="caption">
+            Translation
+          </Typography>
+          <div>
+            <ToggleButtonGroup
+              value={translationAllowed}
+              exclusive
+              size="small"
+              onChange={(_, value) => {
+                if (value !== null) {
+                  setTranslationAllowed(value);
+                }
+              }}
+            >
+              <ToggleButton value="both">both</ToggleButton>
+              <ToggleButton value="x">x</ToggleButton>
+              <ToggleButton value="y">y</ToggleButton>
+              <ToggleButton value="none">none</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
         </div>
+
         <div>
           <Button
             onClick={() => {
               apiRef.current?.resetZoom();
             }}
+            size="small"
+            variant="outlined"
           >
             Reset zoom
           </Button>
