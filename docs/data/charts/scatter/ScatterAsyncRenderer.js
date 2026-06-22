@@ -2,6 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import Chance from 'chance';
 
@@ -65,18 +66,25 @@ function MainThreadSpinner() {
   }, []);
 
   return (
-    <div
-      ref={ref}
-      aria-label="main thread activity"
-      style={{
-        width: 16,
-        height: 16,
-        borderRadius: '50%',
-        border: '2px solid currentColor',
-        borderTopColor: 'transparent',
-        opacity: 0.6,
-      }}
-    />
+    <Tooltip
+      title="Animated on the main thread. It keeps spinning smoothly while the main thread is free, and stutters or freezes when the renderer blocks it — watch it while switching modes."
+      arrow
+    >
+      <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
+        <div
+          ref={ref}
+          aria-label="main thread activity"
+          style={{
+            width: 16,
+            height: 16,
+            borderRadius: '50%',
+            border: '2px solid currentColor',
+            borderTopColor: 'transparent',
+            opacity: 0.6,
+          }}
+        />
+      </Stack>
+    </Tooltip>
   );
 }
 
