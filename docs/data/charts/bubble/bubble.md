@@ -77,7 +77,7 @@ When you do, make the choice explicit in the copy so the size encoding is not mi
 
 ## Labels
 
-You can show a text label next to each scatter point with the `markerLabel` series property.
+You can show a text label on top of to each scatter point with the `markerLabel` series property.
 
 Set `markerLabel` to `'label'` to read the label from the `label` field of each data point.
 When using a `dataset`, map a column to it with `datasetKeys.label`.
