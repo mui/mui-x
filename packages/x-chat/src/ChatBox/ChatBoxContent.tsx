@@ -206,7 +206,8 @@ const ChatBoxConversationOverlay = styled('div', {
 // conversations pane. Marking it keeps ChatLayout's pane resolution unambiguous —
 // once any sibling (the thread view) is marked, every direct child must be marked
 // or ChatLayout warns about a mixed/undeterminable set.
-markChatLayoutPane(ChatBoxConversationOverlay, 'conversations');
+// `markChatLayoutPane` mutates the component in place and returns it; the return is discarded here.
+void markChatLayoutPane(ChatBoxConversationOverlay, 'conversations');
 
 const ChatBoxConversationOverlayBackdrop = styled('div', {
   name: 'MuiChatBox',
@@ -632,7 +633,7 @@ function createMarkedConversationListComponent(
       return <Component ref={ref} {...props} />;
     },
   );
-  markChatLayoutPane(MarkedConversationList, 'conversations');
+  void markChatLayoutPane(MarkedConversationList, 'conversations');
   return MarkedConversationList as typeof ChatConversationList;
 }
 
@@ -692,6 +693,9 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const isNarrow = resolvedLayoutMode !== 'standard';
   const isMobileSplitView = resolvedLayoutMode === 'split';
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  if (drawerOpen && (!isNarrow || isMobileSplitView)) {
+    setDrawerOpen(false);
+  }
   const drawerCloseButtonRef = React.useRef<HTMLButtonElement | null>(null);
   const drawerOpenerRef = React.useRef<HTMLElement | null>(null);
   const wasDrawerOpenRef = React.useRef(false);
@@ -758,12 +762,6 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const handleBackClick = React.useCallback(() => {
     void setActiveConversation(undefined);
   }, [setActiveConversation]);
-
-  React.useEffect(() => {
-    if (!isNarrow || isMobileSplitView) {
-      setDrawerOpen(false);
-    }
-  }, [isMobileSplitView, isNarrow]);
 
   React.useLayoutEffect(() => {
     if (drawerOpen) {

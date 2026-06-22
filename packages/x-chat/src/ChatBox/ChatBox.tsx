@@ -113,7 +113,8 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     (node: HTMLDivElement | null) => {
       setRootElement(node);
       if (typeof ref === 'function') {
-        ref(node);
+        // Legacy callback-ref forwarding; a React 19 cleanup return is not propagated here.
+        void ref(node);
       } else if (ref) {
         (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
       }
@@ -193,7 +194,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   );
 }) as ChatBoxComponent;
 
-ChatBox.propTypes = {
+ChatBox.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
