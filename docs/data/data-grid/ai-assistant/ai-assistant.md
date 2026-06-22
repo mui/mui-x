@@ -6,16 +6,20 @@ title: Ask Your Table - AI Assistant
 
 <p class="description">Translate natural language into Data Grid views.</p>
 
-:::info
-The AI Assistant requires a prompt processing backend to interpret natural language queries.
-You can [build your own service](#with-a-custom-service) using any AI provider—no additional add-on is required beyond the Premium license.
-Alternatively, MUI offers a [hosted processing service](#with-muis-service) as a paid add-on.
-Visit the [MUI Console](https://console.mui.com) to grab a free API key or manage your plan.
-:::
-
 The AI Assistant feature lets users interact with the Data Grid component using natural language.
 Type a prompt like "sort by name", "show amounts larger than 1000", or even make more complex queries like "which customers brought the most revenue the past year" in the prompt input field and the Data Grid will update accordingly.
 In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#browser_compatibility), users can also prompt the assistant using their voice.
+
+## Get your API key
+
+The AI Assistant requires a prompt processing backend to interpret natural language queries.
+The fastest way to start is with MUI's hosted processing service.
+Premium license holders get starter credits to try the AI Assistant at no additional cost beyond their license.
+Usage beyond the included credits may require a paid plan, managed from the Console.
+
+[Get a free API key in the MUI Console](https://console.mui.com)
+
+You can also [build your own service](#with-a-custom-service) with any AI provider.
 
 To enable this feature on the Data Grid, pass the `aiAssistant` prop and use the `GridAiAssistantPanel` component for `aiAssistantPanel` slot:
 
@@ -76,7 +80,7 @@ You can use MUI's processing service or build your own.
 
 The Data Grid provides all the necessary elements for integration with MUI's service.
 
-1. Get an API key from the [MUI Console](https://console.mui.com)—a free tier is available, and you can manage your plan there as well.
+1. Get a free API key from the [MUI Console](https://console.mui.com).
 
    :::warning
    Do not expose the API key to the public.
