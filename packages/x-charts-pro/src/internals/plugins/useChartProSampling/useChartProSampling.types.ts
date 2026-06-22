@@ -1,5 +1,6 @@
 import {
   type SamplingState,
+  type SamplingMethod,
   type ChartPluginSignature,
   type UseChartCartesianAxisSignature,
   type UseChartSeriesSignature,
@@ -7,14 +8,20 @@ import {
 
 export interface UseChartProSamplingParameters {
   /**
-   * If `true`, elements too small to render individually are sampled.
-   * @default true
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every element (no sampling).
+   * - `'minmax'`: keep the min and max per bucket.
+   * - `'m4'`: pixel-accurate—keep the first, min, max, and last per bucket (line series).
+   * - `'lttb'`: Largest-Triangle-Three-Buckets, preserves the visual shape (line series).
+   *
+   * Bar series sample with a min/max envelope for any value other than `'none'`.
+   * @default 'none'
    */
-  sampling?: boolean;
+  sampling?: SamplingMethod;
 }
 
 export interface UseChartProSamplingDefaultizedParameters {
-  sampling: boolean;
+  sampling: SamplingMethod;
 }
 
 export interface UseChartProSamplingState {

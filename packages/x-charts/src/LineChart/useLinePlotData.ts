@@ -1,12 +1,30 @@
+'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import {
+  type ComputedAxisConfig,
+  getSamplingMinSpan,
+  selectLineSampledIndices,
+  type LineSamplingData,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import {
+  selectorChartSamplingState,
+  selectorChartSamplingPyramids,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
+import { selectorChartZoomMap } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import { useStore } from '../internals/store/useStore';
 import { getCurveFactory } from '../internals/getCurve';
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
-import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
+import {
+  getValueToPositionMapper,
+  useDrawingArea,
+  useLineSeriesContext,
+  useXAxes,
+  useYAxes,
+} from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { type SeriesId } from '../models/seriesType/common';
 
@@ -16,6 +34,8 @@ interface LinePlotDataPoint {
   color: string;
   gradientId?: string;
   hidden: boolean;
+  /** Skip the path animation: morphing between different sampled point counts looks wrong. */
+  isSampled: boolean;
 }
 
 export function useLinePlotData(
@@ -26,6 +46,21 @@ export function useLinePlotData(
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const getGradientId = useChartGradientIdBuilder();
+
+  const drawingArea = useDrawingArea();
+  const store = useStore();
+  const samplingState = store.use(selectorChartSamplingState);
+  const sampledSeries = store.use(selectorChartSamplingPyramids);
+  const zoomMap = store.use(selectorChartZoomMap);
+
+  // Skip the line animation while sampling is on, and for the one render after it turns off:
+  // both directions morph the path between different point counts, which looks wrong.
+  const samplingEnabled = samplingState?.enabled ?? false;
+  const wasSamplingEnabled = React.useRef(samplingEnabled);
+  const skipSamplingAnimation = samplingEnabled || wasSamplingEnabled.current;
+  React.useEffect(() => {
+    wasSamplingEnabled.current = samplingEnabled;
+  }, [samplingEnabled]);
 
   // This memo prevents odd line chart behavior when hydrating.
   const allData = React.useMemo(() => {
@@ -90,36 +125,55 @@ export function useLinePlotData(
 
         const shouldExpand = curve?.includes('step') && !strictStepCurve && isOrdinalScale(xScale);
 
+        // Sampling reduces the rendered points to a zoom-appropriate subset. Only the plain
+        // (non-step) path is sampled; step expansion and null gaps fall back to the full render.
+        const built = sampledSeries[seriesId] as LineSamplingData | undefined;
+        const zoom = zoomMap?.get(xAxisId);
+        let sampledIndices: Int32Array | null = null;
+        if (samplingState?.enabled && built && zoom && !shouldExpand && xData) {
+          sampledIndices = selectLineSampledIndices(
+            built,
+            zoom.end - zoom.start,
+            getSamplingMinSpan(built.dataLength, drawingArea.width),
+            samplingState.lineAlgorithm,
+          );
+        }
+
         const formattedData: {
           x: any;
           y: [number, number];
           nullData: boolean;
           isExtension?: boolean;
-        }[] =
-          xData?.flatMap((x, index) => {
-            const nullData = data[index] == null;
-            if (shouldExpand) {
-              const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
-              if (!nullData && (index === 0 || data[index - 1] == null)) {
-                rep.unshift({
-                  x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
-                  y: visibleStackedData[index],
-                  nullData,
-                  isExtension: true,
-                });
+        }[] = sampledIndices
+          ? Array.from(sampledIndices, (index) => ({
+              x: xData![index],
+              y: visibleStackedData[index],
+              nullData: data[index] == null,
+            }))
+          : (xData?.flatMap((x, index) => {
+              const nullData = data[index] == null;
+              if (shouldExpand) {
+                const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
+                if (!nullData && (index === 0 || data[index - 1] == null)) {
+                  rep.unshift({
+                    x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
+                    y: visibleStackedData[index],
+                    nullData,
+                    isExtension: true,
+                  });
+                }
+                if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
+                  rep.push({
+                    x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
+                    y: visibleStackedData[index],
+                    nullData,
+                    isExtension: true,
+                  });
+                }
+                return rep;
               }
-              if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
-                rep.push({
-                  x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
-                  y: visibleStackedData[index],
-                  nullData,
-                  isExtension: true,
-                });
-              }
-              return rep;
-            }
-            return { x, y: visibleStackedData[index], nullData };
-          }) ?? [];
+              return { x, y: visibleStackedData[index], nullData };
+            }) ?? []);
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
         const hidden = series[seriesId].hidden;
@@ -147,12 +201,25 @@ export function useLinePlotData(
           d,
           seriesId,
           hidden: series[seriesId].hidden,
+          isSampled: skipSamplingAnimation,
         });
       }
     }
 
     return linePlotData;
-  }, [seriesData, defaultXAxisId, defaultYAxisId, xAxes, yAxes, getGradientId]);
+  }, [
+    seriesData,
+    defaultXAxisId,
+    defaultYAxisId,
+    xAxes,
+    yAxes,
+    getGradientId,
+    drawingArea,
+    samplingState,
+    sampledSeries,
+    zoomMap,
+    skipSamplingAnimation,
+  ]);
 
   return allData;
 }

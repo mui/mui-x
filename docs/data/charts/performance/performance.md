@@ -110,3 +110,40 @@ This trades item-level interactivity for the ability to render hundreds of thous
 ```
 
 See [Bar charts—WebGL renderer](/x/react-charts/bars/#webgl-renderer), [Scatter charts—WebGL renderer](/x/react-charts/scatter/#webgl-renderer), and [Heatmap—WebGL renderer](/x/react-charts/heatmap/#webgl-renderer) for details and demos.
+
+## Sampling [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+When a zoomable chart has more data than the drawing area can show without making elements
+too small, the data can be reduced to a zoom-appropriate level of detail before rendering.
+Levels are precomputed per zoom level, so panning and zooming stay smooth and the chart only
+draws as many elements as the view can resolve.
+
+`BarChartPro` and `LineChartPro` accept a `sampling` prop that selects the method:
+
+- `'none'` (default): render every element.
+- `'minmax'`: keep the min and max of each bucket.
+- `'m4'`: pixel-accurate—keep the first, min, max, and last point of each bucket (line series).
+- `'lttb'`: [Largest-Triangle-Three-Buckets](https://skemman.is/handle/1946/15343), keeps one representative point per bucket to preserve the shape (line series).
+
+Zoom in to progressively reveal more detail; sampling turns off once the view can resolve every element.
+
+### Bar sampling
+
+Bars are merged into buckets that keep each range's value envelope, so spikes and troughs survive.
+Any method other than `'none'` enables it (bars always use a min/max envelope).
+
+```jsx
+<BarChartPro series={series} sampling="minmax" />
+```
+
+{{"demo": "BarSampling.js"}}
+
+### Line sampling
+
+Lines support all three algorithms; pick the one that best fits your data.
+
+```jsx
+<LineChartPro series={series} sampling="m4" />
+```
+
+{{"demo": "LineSampling.js"}}

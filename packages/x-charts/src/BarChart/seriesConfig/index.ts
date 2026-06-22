@@ -7,6 +7,7 @@ import keyboardFocusHandler from './bar/keyboardFocusHandler';
 import tooltipGetter, { axisTooltipGetter } from './bar/tooltip';
 import tooltipItemPositionGetter from './bar/tooltipPosition';
 import { getSeriesWithDefaultValues } from './bar/getSeriesWithDefaultValues';
+import { barSampler } from './sampler';
 import { selectorBarItemAtPosition } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
@@ -27,6 +28,7 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
   getItemAtPosition: selectorBarItemAtPosition,
+  sampler: barSampler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
   descriptionGetter,

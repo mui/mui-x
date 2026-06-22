@@ -21,6 +21,7 @@ describe('<BarChartPro /> - Sampling', () => {
         width={2000}
         height={200}
         margin={0}
+        sampling="minmax"
         skipAnimation
       />,
     );
@@ -38,6 +39,7 @@ describe('<BarChartPro /> - Sampling', () => {
         width={200}
         height={200}
         margin={0}
+        sampling="minmax"
         skipAnimation
       />,
     );
@@ -47,7 +49,7 @@ describe('<BarChartPro /> - Sampling', () => {
     expect(rendered).to.be.lessThan(dataLength / 2);
   });
 
-  it('renders every bar when sampling is disabled', () => {
+  it('renders every bar when sampling is disabled (default)', () => {
     const dataLength = 256;
     const { container } = render(
       <BarChartPro
@@ -57,7 +59,7 @@ describe('<BarChartPro /> - Sampling', () => {
         width={200}
         height={200}
         margin={0}
-        sampling={false}
+        sampling="none"
         skipAnimation
       />,
     );

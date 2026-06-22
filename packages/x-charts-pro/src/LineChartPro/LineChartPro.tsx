@@ -77,7 +77,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, sampling, ...other } = props;
   const {
     chartsWrapperProps,
     chartsContainerProps,
@@ -110,7 +110,10 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartsDataProviderPro<'line', LineChartProPluginSignatures> {...chartsDataProviderProProps}>
+    <ChartsDataProviderPro<'line', LineChartProPluginSignatures>
+      {...chartsDataProviderProProps}
+      sampling={sampling}
+    >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}

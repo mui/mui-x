@@ -23,7 +23,10 @@ import {
   selectSamplingLevelByZoom,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling';
 import { selectorChartSamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
-import type { SamplingPyramidLookup } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
+import type {
+  SampledSeriesLookup,
+  SamplingPyramid,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
 import { selectorChartZoomMap } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { ZoomData } from '../internals/plugins/featurePlugins/useChartCartesianAxis/zoom.types';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
@@ -73,7 +76,7 @@ export function processBarDataForPlot(
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
   defaultXAxisId: AxisId,
   defaultYAxisId: AxisId,
-  samplingPyramids: SamplingPyramidLookup = {},
+  samplingPyramids: SampledSeriesLookup = {},
   zoomMap?: Map<AxisId, ZoomData>,
 ) {
   const masks: Record<string, MaskData> = {};
@@ -191,7 +194,7 @@ export function processBarDataForPlot(
         maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
       });
 
-      const pyramid = samplingPyramids[seriesId];
+      const pyramid = samplingPyramids[seriesId] as SamplingPyramid | undefined;
       const baseAxisId = verticalLayout ? xAxisId : yAxisId;
       const zoom = zoomMap?.get(baseAxisId);
       const availableSize = verticalLayout ? drawingArea.width : drawingArea.height;
@@ -214,7 +217,7 @@ export function processBarDataForPlot(
         });
 
         const { bucketSize, min, max } = activeLevel;
-        const maxIndex = pyramid.dataLength - 1;
+        const maxIndex = pyramid!.dataLength - 1;
         for (let j = 0; j < min.length; j += 1) {
           const startIndex = j * bucketSize;
           const endIndex = Math.min(startIndex + bucketSize - 1, maxIndex);

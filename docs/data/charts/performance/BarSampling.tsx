@@ -16,32 +16,24 @@ const data = Array.from({ length: POINTS }, (_, index) => {
 const categories = Array.from({ length: POINTS }, (_, index) => `#${index}`);
 
 export default function BarSampling() {
-  const [sampling, setSampling] = React.useState(true);
+  const [enabled, setEnabled] = React.useState(true);
 
   return (
     <Stack sx={{ width: '100%' }} spacing={1}>
       <FormControlLabel
         control={
           <Switch
-            checked={sampling}
-            onChange={(event) => setSampling(event.target.checked)}
+            checked={enabled}
+            onChange={(event) => setEnabled(event.target.checked)}
           />
         }
-        label={`Sampling ${sampling ? 'on' : 'off'} (${POINTS} bars — zoom in fully to reach the unsampled data)`}
+        label={`Sampling ${enabled ? 'on' : 'off'} (${POINTS} bars — zoom in fully to reach the unsampled data)`}
       />
       <BarChartPro
-        xAxis={[
-          {
-            scaleType: 'band',
-            data: categories,
-            zoom: true,
-            disableTicks: true,
-            tickSpacing: 60,
-          },
-        ]}
+        xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}
         series={[{ data, label: 'Value' }]}
         height={300}
-        sampling={sampling}
+        sampling={enabled ? 'minmax' : 'none'}
       />
     </Stack>
   );

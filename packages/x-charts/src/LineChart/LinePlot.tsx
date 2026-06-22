@@ -81,7 +81,7 @@ function LinePlot(props: LinePlotProps) {
 
   return (
     <LinePlotRoot className={clsx(classes.linePlot, className)} {...other}>
-      {completedData.map(({ d, seriesId, color, gradientId, hidden }) => {
+      {completedData.map(({ d, seriesId, color, gradientId, hidden, isSampled }) => {
         return (
           <LineElement
             key={seriesId}
@@ -90,7 +90,7 @@ function LinePlot(props: LinePlotProps) {
             color={color}
             gradientId={gradientId}
             hidden={hidden}
-            skipAnimation={skipAnimation}
+            skipAnimation={skipAnimation || isSampled}
             slots={slots}
             slotProps={slotProps}
             onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}

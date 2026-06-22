@@ -104,7 +104,7 @@ export function getSamplingLevel(pyramid: SamplingPyramid, index: number): Sampl
 }
 
 /** Level index from the zoom span: 0 at max zoom (`currentSpan === minSpan`), +1 per span doubling. */
-function levelIndexFromSpan(currentSpan: number, minSpan: number): number {
+export function levelIndexFromSpan(currentSpan: number, minSpan: number): number {
   if (!(currentSpan > 0) || !(minSpan > 0)) {
     return 0;
   }
