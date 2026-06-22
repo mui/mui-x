@@ -20,13 +20,55 @@
       "name": "area",
       "description": "The component that renders the area.",
       "default": "AnimatedArea",
-      "class": null
+      "class": "MuiLineChart-area"
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "areaPlot",
+      "className": "MuiLineChart-areaPlot",
+      "description": "Styles applied to the AreaPlot root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlight",
+      "className": "MuiLineChart-highlight",
+      "description": "Styles applied to the highlight element.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiLineChart-line",
+      "description": "Styles applied to the line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "linePlot",
+      "className": "MuiLineChart-linePlot",
+      "description": "Styles applied to the LinePlot root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiLineChart-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markAnimate",
+      "className": "MuiLineChart-markAnimate",
+      "description": "Styles applied to a mark element when it is animated.",
+      "isGlobal": false
+    },
+    {
+      "key": "markPlot",
+      "className": "MuiLineChart-markPlot",
+      "description": "Styles applied to the MarkPlot root element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiAreaElement",
   "filename": "/packages/x-charts/src/LineChart/AreaElement.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>"
 }

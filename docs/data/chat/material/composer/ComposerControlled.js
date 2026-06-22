@@ -15,7 +15,16 @@ export default function ComposerControlled() {
   const [value, setValue] = React.useState('');
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1,
+        width: '100%',
+        maxWidth: 520,
+        mx: 'auto',
+      }}
+    >
       <Typography variant="body2" color="text.secondary">
         Composer value: {value ? `"${value}"` : '(empty)'}
       </Typography>

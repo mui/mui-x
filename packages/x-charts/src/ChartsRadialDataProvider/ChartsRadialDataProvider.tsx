@@ -75,7 +75,7 @@ function ChartsRadialDataProvider<
   );
 }
 
-ChartsRadialDataProvider.propTypes = {
+ChartsRadialDataProvider.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -88,6 +88,14 @@ ChartsRadialDataProvider.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
+  dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.any,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -142,4 +150,4 @@ ChartsRadialDataProvider.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { ChartsRadialDataProvider as Unstable_ChartsRadialDataProvider };
+export { ChartsRadialDataProvider };

@@ -56,7 +56,8 @@ export interface GridDataSourceBaseOptions {
   cacheOptions?: GridDataSourceCacheDefaultConfig;
   fetchRowChildren?: (
     parents: GridRowId[],
-    options?: GridDataSourceFetchRowChildrenOptions,
+    fetchParams: GridGetRowsParams[],
+    showChildrenLoading?: boolean,
   ) => void;
   clearDataSourceState?: () => void;
   handleEditRow?: (params: GridUpdateRowParams, updatedRow: GridRowModel) => void;

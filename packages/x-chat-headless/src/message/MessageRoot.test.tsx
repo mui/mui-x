@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import { ChatRoot } from '../chat/ChatRoot';
 import { ChatVariantProvider } from '../chat/internals/ChatVariantContext';
+import { useChatStore } from '../hooks/useChatStore';
 import type { MessageActionsProps } from './MessageActions';
 import { MessageActions } from './MessageActions';
 import { MessageAuthorLabel } from './MessageAuthorLabel';
@@ -19,6 +20,12 @@ import { MessageRoot } from './MessageRoot';
 import { createToolPartRenderer } from './parts/ToolPart';
 
 const { render } = createRenderer();
+
+let storeRef: ReturnType<typeof useChatStore> | null = null;
+function StoreCapture() {
+  storeRef = useChatStore();
+  return null;
+}
 
 function createAdapter(): ChatAdapter {
   return {
@@ -136,6 +143,10 @@ const errorMessage: ChatMessage = {
   id: 'm3',
   role: 'assistant',
   status: 'error',
+  // A createdAt timestamp keeps MessageMeta renderable for the error state.
+  // Without a timestamp, the meta footer still renders the generic error label
+  // when no message-specific runtime error is available.
+  createdAt: '2026-03-14T10:00:00.000Z',
   parts: [
     {
       type: 'text',
@@ -398,6 +409,25 @@ describe('MessageRoot', () => {
     expect(screen.getByText('Bearbeitet')).not.to.equal(null);
   });
 
+  it('prefers roleDisplayNames over locale-driven author fallback labels', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[{ id: 'm-author', role: 'assistant', parts: [] }]}
+        roleDisplayNames={{ assistant: 'Support bot' }}
+      >
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m-author">
+            <MessageAuthorLabel />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('Support bot')).not.to.equal(null);
+    expect(screen.queryByText('Assistant')).to.equal(null);
+  });
+
   it('supports replacing all compound root slots and passes ownerState through them', () => {
     render(
       <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
@@ -459,6 +489,43 @@ describe('MessageRoot', () => {
     expect(screen.getByTestId('custom-message-meta')).to.have.attribute('data-status', 'error');
   });
 
+  it('renders the "Error" status label when no message-specific error is available', () => {
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[errorMessage]}>
+        <MessageRoot messageId="m3">
+          <MessageMeta data-testid="meta" />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('Error')).not.to.equal(null);
+  });
+
+  it('keeps the "Error" status label when a message-specific error is available', () => {
+    storeRef = null;
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[errorMessage]}>
+        <StoreCapture />
+        <MessageRoot messageId="m3">
+          <MessageMeta />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    act(() => {
+      storeRef!.setMessageError('m3', {
+        code: 'STREAM_ERROR',
+        message: 'Connection dropped',
+        source: 'stream',
+        recoverable: true,
+        retryable: true,
+        details: { messageId: 'm3' },
+      });
+    });
+
+    expect(screen.getByText('Error')).not.to.equal(null);
+  });
+
   it('hides the avatar for grouped follow-up messages in compact variant', () => {
     render(
       <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
@@ -483,6 +550,38 @@ describe('MessageRoot', () => {
     );
 
     expect(screen.queryByRole('img')).to.equal(null);
+  });
+
+  it('drops the internal groupAuthorName prop instead of leaking it to the DOM', () => {
+    // The headless MessageGroup clones `groupAuthorName` onto compact group
+    // children for the Material ChatMessage to place in its grid. A headless
+    // MessageRoot owns its own layout and must drop it — forwarding this non-DOM
+    // prop to the root element would trigger a React "unrecognized prop" warning.
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      render(
+        <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
+          <MessageRoot
+            messageId="m1"
+            groupAuthorName={<span data-testid="leaked-author">Assistant</span>}
+          >
+            <MessageContent />
+          </MessageRoot>
+        </ChatRoot>,
+      );
+
+      // No "does not recognize the `groupAuthorName` prop" warning was emitted…
+      const leaked = spy.mock.calls.some((args) =>
+        args.some((arg) => typeof arg === 'string' && /groupAuthorName/i.test(arg)),
+      );
+      expect(leaked).to.equal(false);
+      // …and the injected element is not rendered by the headless root.
+      expect(screen.queryByTestId('leaked-author')).to.equal(null);
+      // The root element carries no leaked attribute either.
+      expect(screen.getByRole('article').hasAttribute('groupauthorname')).to.equal(false);
+    } finally {
+      spy.mockRestore();
+    }
   });
 
   it('tolerates missing messages and empty meta without crashing', () => {
@@ -601,8 +700,8 @@ describe('ToolPart', () => {
       </ChatRoot>,
     );
 
-    // Default locale: messageToolInputLabel → 'Input'
-    expect(screen.getByText('Input')).not.to.equal(null);
+    // Default locale: messageToolInputLabel → 'Tool called'
+    expect(screen.getByText('Tool called')).not.to.equal(null);
   });
 
   it('shows output section when output-available with output defined', () => {
@@ -614,8 +713,8 @@ describe('ToolPart', () => {
       </ChatRoot>,
     );
 
-    // Default locale: messageToolOutputLabel → 'Output'
-    expect(screen.getByText('Output')).not.to.equal(null);
+    // Default locale: messageToolOutputLabel → 'Tool result'
+    expect(screen.getByText('Tool result')).not.to.equal(null);
   });
 
   it('shows inline content for long payloads', () => {
@@ -647,7 +746,7 @@ describe('ToolPart', () => {
     const strong = screen.getByTestId('content').querySelector('strong');
 
     expect(strong).not.to.equal(null);
-    expect(strong!.textContent).to.equal('Input');
+    expect(strong!.textContent).to.equal('Tool called');
   });
 
   it('shows inline content for short payloads', () => {
@@ -679,7 +778,7 @@ describe('ToolPart', () => {
     const strong = screen.getByTestId('content').querySelector('strong');
 
     expect(strong).not.to.equal(null);
-    expect(strong!.textContent).to.equal('Input');
+    expect(strong!.textContent).to.equal('Tool called');
   });
 
   it('shows error text when output-error with errorText', () => {
@@ -799,6 +898,89 @@ describe('ToolPart', () => {
     expect(denyButton).to.have.property('disabled', false);
   });
 
+  it('responds with the approvalId when the invocation carries one', async () => {
+    const addToolApprovalResponse = vi.fn(async () => {});
+    const approvalMessage: ChatMessage = {
+      id: 't10',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'dynamic-tool',
+          toolInvocation: {
+            toolCallId: 'tc10',
+            toolName: 'delete-files',
+            state: 'approval-requested',
+            input: { path: '/tmp/cache' },
+            approvalId: 'approval-10',
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot
+        adapter={{ ...createAdapter(), addToolApprovalResponse }}
+        initialMessages={[approvalMessage]}
+      >
+        <MessageRoot messageId="t10">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    const approveButton = screen.getByRole('button', { name: 'Approve' });
+
+    await act(async () => {
+      approveButton.click();
+    });
+
+    expect(addToolApprovalResponse).toHaveBeenCalledWith({
+      id: 'approval-10',
+      approved: true,
+    });
+  });
+
+  it('falls back to the toolCallId when no approvalId is set', async () => {
+    const addToolApprovalResponse = vi.fn(async () => {});
+    const approvalMessage: ChatMessage = {
+      id: 't11',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'dynamic-tool',
+          toolInvocation: {
+            toolCallId: 'tc11',
+            toolName: 'delete-files',
+            state: 'approval-requested',
+            input: { path: '/tmp/cache' },
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot
+        adapter={{ ...createAdapter(), addToolApprovalResponse }}
+        initialMessages={[approvalMessage]}
+      >
+        <MessageRoot messageId="t11">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    const denyButton = screen.getByRole('button', { name: 'Deny' });
+
+    await act(async () => {
+      denyButton.click();
+    });
+
+    expect(addToolApprovalResponse).toHaveBeenCalledWith({
+      id: 'tc11',
+      approved: false,
+    });
+  });
+
   it('createToolPartRenderer produces a valid renderer function', () => {
     // eslint-disable-next-line testing-library/render-result-naming-convention -- not a render result
     const partFactory = createToolPartRenderer({ className: 'custom-tool' });
@@ -822,7 +1004,64 @@ describe('MessageAuthorLabel', () => {
     expect(screen.getByTestId('author-label')).to.have.text('Assistant');
   });
 
-  it('falls back to author id when no displayName', () => {
+  it('resolves the displayName from members when the message only provides an author id', () => {
+    const messageWithId: ChatMessage = {
+      id: 'm-id',
+      role: 'assistant',
+      parts: [{ type: 'text', text: 'Hi' }],
+      author: { id: 'bot-123' },
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[messageWithId]}
+        members={[
+          {
+            id: 'bot-123',
+            displayName: 'Member Bot',
+          },
+        ]}
+      >
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m-id">
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('author-label')).to.have.text('Member Bot');
+  });
+
+  it('uses getMessageAuthorDisplayName when provided', () => {
+    const messageWithMetadata: ChatMessage = {
+      id: 'm-meta',
+      role: 'assistant',
+      metadata: {
+        actorName: 'Getter Bot',
+      } as any,
+      parts: [{ type: 'text', text: 'Hi' }],
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[messageWithMetadata]}
+        getMessageAuthorDisplayName={(message) => (message.metadata as any)?.actorName}
+      >
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m-meta">
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('author-label')).to.have.text('Getter Bot');
+  });
+
+  it('falls back to a role-based default when only the author id is available', () => {
     const messageWithId: ChatMessage = {
       id: 'm-id',
       role: 'assistant',
@@ -840,10 +1079,10 @@ describe('MessageAuthorLabel', () => {
       </ChatRoot>,
     );
 
-    expect(screen.getByTestId('author-label')).to.have.text('bot-123');
+    expect(screen.getByTestId('author-label')).to.have.text('Assistant');
   });
 
-  it('falls back to role when no author info', () => {
+  it('falls back to a role-based default when no author info exists', () => {
     render(
       <ChatRoot adapter={createAdapter()} initialMessages={[minimalMessage]}>
         <ChatVariantProvider variant="compact">
@@ -854,7 +1093,7 @@ describe('MessageAuthorLabel', () => {
       </ChatRoot>,
     );
 
-    expect(screen.getByTestId('author-label')).to.have.text('user');
+    expect(screen.getByTestId('author-label')).to.have.text('User');
   });
 
   it('returns null when variant is default', () => {
@@ -881,6 +1120,81 @@ describe('MessageAuthorLabel', () => {
     );
 
     expect(screen.queryByTestId('author-label')).to.equal(null);
+  });
+});
+
+describe('Resolved author data', () => {
+  it('resolves avatar and aria-label from members when the message only provides an author id', () => {
+    const memberMessage: ChatMessage = {
+      id: 'm-member',
+      role: 'assistant',
+      parts: [{ type: 'text', text: 'Hello from member' }],
+      author: { id: 'bot-456' },
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[memberMessage]}
+        members={[
+          {
+            id: 'bot-456',
+            displayName: 'Support Bot',
+            avatarUrl: 'https://example.com/member-bot.png',
+          },
+        ]}
+      >
+        <MessageRoot messageId="m-member">
+          <MessageAvatar />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByAltText('Support Bot')).to.have.attribute(
+      'src',
+      'https://example.com/member-bot.png',
+    );
+    expect(screen.getByRole('article', { name: 'Message from Support Bot' })).not.to.equal(null);
+  });
+
+  it('uses getter-derived author id and avatar url', () => {
+    const metadataMessage: ChatMessage = {
+      id: 'm-getters',
+      role: 'assistant',
+      metadata: {
+        actorId: 'bot-getter',
+        actorAvatarUrl: 'https://example.com/getter-bot.png',
+      } as any,
+      parts: [{ type: 'text', text: 'Hi from metadata' }],
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[metadataMessage]}
+        members={[
+          {
+            id: 'bot-getter',
+            displayName: 'Getter Bot',
+          },
+        ]}
+        getMessageAuthorId={(message) => (message.metadata as any)?.actorId}
+        getMessageAuthorAvatarUrl={(message) => (message.metadata as any)?.actorAvatarUrl}
+      >
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m-getters">
+            <MessageAvatar />
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByAltText('Getter Bot')).to.have.attribute(
+      'src',
+      'https://example.com/getter-bot.png',
+    );
+    expect(screen.getByTestId('author-label')).to.have.text('Getter Bot');
   });
 });
 
@@ -1006,5 +1320,127 @@ describe('MessageMeta', () => {
 
     // fullMessage has editedAt set
     expect(screen.getByText('Edited')).not.to.equal(null);
+  });
+});
+
+describe('isOwnMessage derivation', () => {
+  // Stamps ownerState.isOwnMessage onto a data attribute so we can assert
+  // the resolved value across the matrix of currentUser / author / role inputs.
+  // `forwardRef` because `MessageRoot` refs its root slot; a plain function
+  // component trips React 18's "cannot be given refs" warning (React 19 doesn't).
+  const OwnershipProbe = React.forwardRef(function OwnershipProbe(
+    props: MessageRootProps & { ownerState?: { isOwnMessage?: boolean } },
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    const { children, messageId, isGrouped, ownerState, slotProps, slots, ...other } = props;
+    void messageId;
+    void isGrouped;
+    void slotProps;
+    void slots;
+
+    return (
+      <div
+        ref={ref}
+        data-testid="ownership-probe"
+        data-is-own={String(Boolean(ownerState?.isOwnMessage))}
+        {...other}
+      >
+        {children}
+      </div>
+    );
+  });
+
+  function renderProbe(args: {
+    message: ChatMessage;
+    currentUser?: { id: string };
+    members?: Array<{ id: string; displayName?: string }>;
+    getMessageAuthorId?: (message: ChatMessage) => string | undefined;
+  }) {
+    return render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[args.message]}
+        {...(args.currentUser ? { currentUser: args.currentUser } : {})}
+        {...(args.members ? { members: args.members } : {})}
+        {...(args.getMessageAuthorId ? { getMessageAuthorId: args.getMessageAuthorId } : {})}
+      >
+        <MessageRoot messageId={args.message.id} slots={{ root: OwnershipProbe }} />
+      </ChatRoot>,
+    );
+  }
+
+  it('marks the message as own when currentUser.id matches the author id', () => {
+    renderProbe({
+      message: {
+        id: 'm-own',
+        role: 'user',
+        author: { id: 'me' },
+        parts: [{ type: 'text', text: 'Hi' }],
+      },
+      currentUser: { id: 'me' },
+      members: [
+        { id: 'me', displayName: 'Me' },
+        { id: 'alice', displayName: 'Alice' },
+      ],
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'true');
+  });
+
+  it("does not mark role:'user' messages from other users as own (Alice case)", () => {
+    renderProbe({
+      message: {
+        id: 'm-alice',
+        role: 'user',
+        author: { id: 'alice' },
+        parts: [{ type: 'text', text: 'Hi from Alice' }],
+      },
+      currentUser: { id: 'me' },
+      members: [
+        { id: 'me', displayName: 'Me' },
+        { id: 'alice', displayName: 'Alice' },
+      ],
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'false');
+  });
+
+  it("falls back to role==='user' as own when no currentUser is configured", () => {
+    renderProbe({
+      message: {
+        id: 'm-fallback-user',
+        role: 'user',
+        parts: [{ type: 'text', text: 'Plain user message' }],
+      },
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'true');
+  });
+
+  it("treats role==='assistant' as not own when no currentUser is configured", () => {
+    renderProbe({
+      message: {
+        id: 'm-fallback-assistant',
+        role: 'assistant',
+        parts: [{ type: 'text', text: 'Plain assistant message' }],
+      },
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'false');
+  });
+
+  it('uses getMessageAuthorId to identify the current user', () => {
+    renderProbe({
+      message: {
+        id: 'm-getter',
+        role: 'user',
+        metadata: { actorId: 'me' } as any,
+        parts: [{ type: 'text', text: 'From metadata' }],
+      },
+      currentUser: { id: 'me' },
+      getMessageAuthorId: (message) => (message.metadata as any)?.actorId,
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'true');
   });
 });

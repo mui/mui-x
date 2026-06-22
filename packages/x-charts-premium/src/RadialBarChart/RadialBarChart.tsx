@@ -172,7 +172,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
   );
 });
 
-RadialBarChart.propTypes = {
+RadialBarChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -251,12 +251,12 @@ RadialBarChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']),
+        type: PropTypes.oneOf(['radialBar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']).isRequired,
+        type: PropTypes.oneOf(['radialBar']),
       }),
     ]).isRequired,
   ),
@@ -272,11 +272,11 @@ RadialBarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
   ]),
   /**
@@ -310,12 +310,12 @@ RadialBarChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']),
+        type: PropTypes.oneOf(['radialBar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']).isRequired,
+        type: PropTypes.oneOf(['radialBar']),
       }),
     ]).isRequired,
   ),
@@ -413,11 +413,11 @@ RadialBarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
   ]),
   /**
@@ -426,4 +426,4 @@ RadialBarChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadialBarChart as Unstable_RadialBarChart };
+export { RadialBarChart };

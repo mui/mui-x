@@ -12,6 +12,7 @@ import {
   RadarSeriesMarks,
   type RadarChartSlotProps,
   type RadarChartSlots,
+  FocusedRadarMark,
 } from '@mui/x-charts/RadarChart';
 import { useThemeProps } from '@mui/material/styles';
 import { useRadarChartProps } from '@mui/x-charts/internals';
@@ -101,6 +102,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
           <RadarSeriesArea />
           {highlight === 'axis' && <RadarAxisHighlight />}
           <RadarSeriesMarks />
+          <FocusedRadarMark />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
@@ -110,7 +112,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
   );
 });
 
-RadarChartPro.propTypes = {
+RadarChartPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -209,11 +211,11 @@ RadarChartPro.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
   /**
@@ -324,7 +326,6 @@ RadarChartPro.propTypes = {
     labelGap: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
       PropTypes.arrayOf(
         PropTypes.shape({
           max: PropTypes.number,
@@ -332,6 +333,7 @@ RadarChartPro.propTypes = {
           name: PropTypes.string.isRequired,
         }),
       ),
+      PropTypes.arrayOf(PropTypes.string),
     ]).isRequired,
     startAngle: PropTypes.number,
   }).isRequired,
@@ -391,11 +393,11 @@ RadarChartPro.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
   /**

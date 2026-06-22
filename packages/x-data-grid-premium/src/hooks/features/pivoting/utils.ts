@@ -262,7 +262,10 @@ export const createPivotPropsFromRows = ({
           colValue = String(colValue);
         }
 
-        const formattedHeaderName = apiRef.current.getRowFormattedValue(row, column) || colValue;
+        // Coerce to a string because of React 18's prop-type check
+        const formattedHeaderName = String(
+          apiRef.current.getRowFormattedValue(row, column) || colValue,
+        );
         columnGroupPath.push(colValue);
         const groupId = columnGroupPath.join(COLUMN_GROUP_ID_SEPARATOR);
 

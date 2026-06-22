@@ -13,6 +13,8 @@ import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
 import {
+  ErrorContainer,
+  SharedComponentsStyledContext,
   eventDialogSlots,
   EventDialogStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
@@ -45,12 +47,10 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     titleHeaderCell: ['titleHeaderCell'],
     eventsHeaderCell: ['eventsHeaderCell'],
     eventsHeaderCellContent: ['eventsHeaderCellContent'],
-    titleSubGrid: ['titleSubGrid'],
-    eventsSubGridWrapper: ['eventsSubGridWrapper'],
-    eventsSubGrid: ['eventsSubGrid'],
-    eventsSubGridRow: ['eventsSubGridRow'],
+    eventsCell: ['eventsCell'],
     titleCellRow: ['titleCellRow'],
     titleCell: ['titleCell'],
+    titleCellContent: ['titleCellContent'],
     titleCellLegendColor: ['titleCellLegendColor'],
     currentTimeIndicator: ['currentTimeIndicator'],
     currentTimeIndicatorCircle: ['currentTimeIndicatorCircle'],
@@ -59,6 +59,10 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     eventRecurringIcon: ['eventRecurringIcon'],
+    eventSkeleton: ['eventSkeleton'],
+    errorContainer: ['errorContainer'],
+    errorAlert: ['errorAlert'],
+    errorMessage: ['errorMessage'],
     ...eventDialogSlots,
   };
 
@@ -123,25 +127,30 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
     [schedulerId, classes, mergedLocaleText],
   );
 
+  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
+
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventTimelinePremiumRoot
-            ref={forwardedRef}
-            className={clsx(classes.root, className)}
-            {...other}
-          >
-            <EventTimelinePremiumContent />
-            {watermark}
-          </EventTimelinePremiumRoot>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <EventTimelinePremiumRoot
+              ref={forwardedRef}
+              className={clsx(classes.root, className)}
+              {...other}
+            >
+              <EventTimelinePremiumContent />
+              <ErrorContainer />
+              {watermark}
+            </EventTimelinePremiumRoot>
+          </SharedComponentsStyledContext.Provider>
         </EventDialogStyledContext.Provider>
       </EventTimelinePremiumStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;
 
-EventTimelinePremium.propTypes = {
+EventTimelinePremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -193,7 +202,7 @@ EventTimelinePremium.propTypes = {
    */
   dataSource: PropTypes.shape({
     getEvents: PropTypes.func.isRequired,
-    updateEvents: PropTypes.func.isRequired,
+    persistEvents: PropTypes.func.isRequired,
   }),
   /**
    * The locale object from `date-fns` used to format dates.
@@ -209,6 +218,7 @@ EventTimelinePremium.propTypes = {
    */
   defaultPreferences: PropTypes.shape({
     ampm: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The preset initially displayed in the timeline.
@@ -267,6 +277,12 @@ EventTimelinePremium.propTypes = {
     'red',
     'teal',
   ]),
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
       duration: PropTypes.number,
@@ -296,10 +312,6 @@ EventTimelinePremium.propTypes = {
    */
   onEventsChange: PropTypes.func,
   /**
-   * Event handler called when the preferences change.
-   */
-  onPreferencesChange: PropTypes.func,
-  /**
    * Event handler called when the preset changes.
    */
   onPresetChange: PropTypes.func,
@@ -316,6 +328,7 @@ EventTimelinePremium.propTypes = {
    */
   preferences: PropTypes.shape({
     ampm: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The preset currently displayed in the timeline.
@@ -351,6 +364,11 @@ EventTimelinePremium.propTypes = {
    * The resources the events can be assigned to.
    */
   resources: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default true
+   */
+  shouldEventRequireResource: PropTypes.bool,
   /**
    * Whether the component should display the current time indicator.
    * @default true

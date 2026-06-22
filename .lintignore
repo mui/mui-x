@@ -1,6 +1,7 @@
 /.git
 pnpm-lock.yaml
 netlify/functions
+/examples
 /docs/.next
 /docs/export
 /docs/pages/playground/
@@ -13,6 +14,13 @@ CHANGELOG.md
 dist
 node_modules
 .nyc_output
+
+# TODO: fix lint violations and remove these ignores
+/CHANGELOG.v8.md
+/changelogOld/CHANGELOG.v4.md
+/changelogOld/CHANGELOG.v5.md
+/changelogOld/CHANGELOG.v6.md
+/changelogOld/CHANGELOG.v7.md
 
 # These come from crowdin.
 # If we would commit changes crowdin would immediately try to revert.

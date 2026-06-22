@@ -41,7 +41,7 @@ const DateTimePicker = React.forwardRef(function DateTimePicker(
   return <MobileDateTimePicker ref={ref} {...(other as MobileDateTimePickerProps)} />;
 }) as DateTimePickerComponent;
 
-DateTimePicker.propTypes = {
+DateTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -304,7 +304,7 @@ DateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

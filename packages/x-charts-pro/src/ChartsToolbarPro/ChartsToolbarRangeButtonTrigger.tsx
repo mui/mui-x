@@ -15,10 +15,14 @@ import {
 import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import {
   type UseChartProZoomSignature,
-  selectorChartActiveRangeButtonKey,
+  selectorChartAxisZoomData,
   selectorChartCanZoomOut,
 } from '../internals/plugins/useChartProZoom';
-import { type RangeButtonValue, rangeButtonValueToZoom } from './rangeButtonValueToZoom';
+import {
+  type RangeButtonValue,
+  getRangeButtonDomainParams,
+  rangeButtonValueToZoom,
+} from './rangeButtonValueToZoom';
 
 export interface ChartsToolbarRangeButtonTriggerProps {
   /**
@@ -29,7 +33,7 @@ export interface ChartsToolbarRangeButtonTriggerProps {
    * The range value. Specifies how far back from the end of the data to zoom.
    *
    * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
-   * - `[start, end]` — An absolute date range.
+   * - `[start, end]` — An absolute date range, or a range between two ordinal (band/point) axis values.
    * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
    * - `null` — Resets zoom to show all data.
    */
@@ -64,7 +68,6 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const activeRangeButtonKey = store.use(selectorChartActiveRangeButtonKey);
   const canZoomOut = store.use(selectorChartCanZoomOut);
   const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
   const rawXAxes = store.use(selectorChartRawXAxis);
@@ -81,54 +84,52 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     return rawXAxes.find((axis) => zoomOptionsLookup[axis.id] !== undefined)?.id;
   }, [axisIdProp, rawXAxes, zoomOptionsLookup]);
 
-  // Determine if the resolved axis is ordinal (band/point) to use index-based domain.
+  const currentAxisZoom = store.use(selectorChartAxisZoomData, resolvedAxisId as AxisId);
+
   const resolvedAxis = React.useMemo(
     () => rawXAxes?.find((axis) => axis.id === resolvedAxisId),
     [rawXAxes, resolvedAxisId],
   );
-  const isOrdinal = resolvedAxis?.scaleType === 'band' || resolvedAxis?.scaleType === 'point';
+  // Use isValueNull instead of value === null to avoid unnecessary re-renders when value is a new function/object on each render.
+  const isValueNull = value === null;
 
-  // Get the full domain for the target axis, ignoring the current zoom.
-  // For ordinal axes (band/point), use index-based range since domain values are categories.
-  const axisDomain = React.useMemo(() => {
-    if (resolvedAxisId === undefined) {
+  // Build the range conversion params for the target axis, ignoring the current zoom.
+  const domainParams = React.useMemo(() => {
+    if (resolvedAxisId === undefined || resolvedAxis === undefined) {
       return undefined;
     }
-    const domainDef = domains[resolvedAxisId];
-    if (!domainDef || domainDef.domain.length < 2) {
-      return undefined;
+    return getRangeButtonDomainParams(resolvedAxis, domains[resolvedAxisId]?.domain);
+  }, [resolvedAxisId, resolvedAxis, domains]);
+
+  // Destructure so that returning a new object from rangeButtonValueToZoom doesn't cause unnecessary re-renders in handleClick.
+  const { start: startZoom, end: endZoom } = React.useMemo(() => {
+    if (domainParams === undefined) {
+      return { start: undefined, end: undefined };
     }
-    if (isOrdinal) {
-      return { min: 0, max: domainDef.domain.length - 1 };
-    }
-    const min = domainDef.domain[0];
-    const max = domainDef.domain[domainDef.domain.length - 1];
-    return { min: Number(min), max: Number(max) };
-  }, [resolvedAxisId, domains, isOrdinal]);
+    return rangeButtonValueToZoom(value, domainParams);
+  }, [domainParams, value]);
 
   const handleClick = React.useCallback(() => {
-    if (resolvedAxisId === undefined || !axisDomain) {
+    if (resolvedAxisId === undefined || startZoom === undefined || endZoom === undefined) {
       return;
     }
-    const zoom = rangeButtonValueToZoom(value, {
-      scaleType: resolvedAxis?.scaleType ?? 'linear',
-      data: resolvedAxis?.data,
-      domain: axisDomain,
-    });
     instance.setAxisZoomData(resolvedAxisId, {
       axisId: resolvedAxisId,
-      start: zoom.start,
-      end: zoom.end,
+      start: startZoom,
+      end: endZoom,
     });
-    instance.setActiveRangeButtonKey(label);
-  }, [resolvedAxisId, resolvedAxis, axisDomain, value, instance, label]);
+  }, [resolvedAxisId, startZoom, endZoom, instance]);
 
-  // Determine if this button is selected.
-  // When explicitly clicked, activeRangeButtonKey matches the label.
-  // When no button has been clicked and zoom is at full range, the null-value button is active.
-  const isActive =
-    activeRangeButtonKey === label ||
-    (activeRangeButtonKey === null && value === null && !canZoomOut);
+  // A button is selected when the current zoom range matches its computed range.
+  const isActive = React.useMemo(() => {
+    if (startZoom === undefined || endZoom === undefined) {
+      return isValueNull && !canZoomOut;
+    }
+    const start = currentAxisZoom?.start ?? 0;
+    const end = currentAxisZoom?.end ?? 100;
+    const epsilon = 0.01;
+    return Math.abs(start - startZoom) < epsilon && Math.abs(end - endZoom) < epsilon;
+  }, [startZoom, endZoom, isValueNull, currentAxisZoom, canZoomOut]);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
     ...slotProps.baseToggleButton,
@@ -143,7 +144,7 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarRangeButtonTrigger.propTypes = {
+ChartsToolbarRangeButtonTrigger.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -170,12 +171,13 @@ ChartsToolbarRangeButtonTrigger.propTypes = {
    * The range value. Specifies how far back from the end of the data to zoom.
    *
    * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
-   * - `[start, end]` — An absolute date range.
+   * - `[start, end]` — An absolute date range, or a range between two ordinal (band/point) axis values.
    * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
    * - `null` — Resets zoom to show all data.
    */
   value: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+    PropTypes.arrayOf(PropTypes.string.isRequired),
     PropTypes.func,
     PropTypes.shape({
       step: PropTypes.number,

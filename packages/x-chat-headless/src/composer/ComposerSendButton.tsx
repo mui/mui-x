@@ -64,7 +64,7 @@ export const ComposerSendButton = React.forwardRef(function ComposerSendButton(
       aria-label={rootProps['aria-label'] ?? localeText.composerSendButtonLabel}
       disabled={
         Boolean(rootProps.disabled) ||
-        !ownerState.hasValue ||
+        (!ownerState.hasValue && ownerState.attachmentCount === 0) ||
         ownerState.isStreaming ||
         ownerState.disabled
       }

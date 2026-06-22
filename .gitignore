@@ -8,6 +8,7 @@
 .claude/agents/
 .claude/helpers/
 .claude/commands/
+.claude/scheduled_tasks.lock
 .claude-flow
 .junie
 

@@ -1,7 +1,20 @@
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
-import { type ChartRootSelector } from '../../utils/selectors';
-import type { UseChartExperimentalFeaturesSignature } from './useChartExperimentalFeature.types';
+import { type ChartState } from '../../models/chart';
+import type {
+  ChartExperimentalFeatures,
+  UseChartExperimentalFeaturesSignature,
+} from './useChartExperimentalFeature.types';
 
-export const selectorChartExperimentalFeaturesState: ChartRootSelector<
-  UseChartExperimentalFeaturesSignature<ChartSeriesType>
-> = (state) => state.experimentalFeatures;
+/**
+ * Reads the value of a single experimental feature flag from the store.
+ *
+ * @example
+ * const enabled = store.use(
+ *   selectorChartExperimentalFeaturesState,
+ *   'progressiveRendering',
+ * );
+ */
+export const selectorChartExperimentalFeaturesState = <K extends keyof ChartExperimentalFeatures>(
+  state: ChartState<[UseChartExperimentalFeaturesSignature<ChartSeriesType>]>,
+  featureName: K,
+): ChartExperimentalFeatures[K] | undefined => state.experimentalFeatures?.[featureName];

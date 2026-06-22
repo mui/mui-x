@@ -33,7 +33,7 @@ If your data is stored in an array of objects, you can use the `dataset` helper 
 It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
 
 Scatter series use a different pattern than other charts: use the `datasetKeys` property with an object that has required `x` and `y` keys.
-You can also include optional `id` and `z` keys.
+You can also include optional `id`, `colorValue`, and `sizeValue` keys.
 
 See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
@@ -62,50 +62,26 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "ScatterClick.js"}}
-
 When `hitAreaRadius` is `"item"`, the user must click directly on the point, and the mouse event comes from that element.
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
 
+{{"demo": "ScatterClick.js"}}
+
+## Bubble chart
+
+Scatter chart supports size and color scales to represent two additional values per mark.
+
+Those are configured with
+
+- `sizeValue`/`colorValue` provide the marks data (either directly in the `data` or with the `datasetKeys`)
+- `sizeAxisId`/`colorAxisId` series property indicate the `zAxis` scale to be used.
+
+See the [Bubble chart](/x/react-charts/bubble/) page for demos and details.
+
+{{"demo": "../bubble/BubbleChartCO2Emissions.js"}}
+
 ## Styling
-
-### Color scale
-
-As with other charts, you can modify the [series colors](/x/react-charts/styling/#colors) either directly, or with the color palette.
-
-You can also modify the color by using the axes' `colorMap`, which maps values to colors.
-Scatter charts use the following, in order of priority:
-
-1. The z-axis color
-2. The y-axis color
-3. The x-axis color
-4. The series color
-
-:::info
-The z-axis is a third axis that lets you style scatter points by a value other than position.
-Pass it with the `zAxis` prop.
-
-The mapped value can come from the `z` property on each series data point, or from the z-axis data.
-You can set the z value in three ways:
-
-```jsx
-<ScatterChart
-  // First option
-  series={[{ data: [{ id: 0, x: 1, y: 1, z: 5 }] }]}
-  // Second option
-  zAxis={[{ data: [5] }]}
-  // Third option
-  dataset={[{ price: 5 }]}
-  zAxis={[{ dataKey: 'price' }]}
-/>
-```
-
-:::
-
-See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
-
-{{"demo": "ColorScale.js"}}
 
 ### Grid
 
@@ -142,6 +118,8 @@ To keep the legend and tooltip in sync with the custom shape, set the `labelMark
 Use the `markerSize` prop on each series to set the size of scatter points.
 For circles, `markerSize` is the radius in pixels.
 
+See the [Bubble chart page](/x/react-charts/bubble/) to modify mark size based on their value.
+
 {{"demo": "ScatterCustomSize.js"}}
 
 ## Plot customization
@@ -157,10 +135,53 @@ See [Custom components](/x/react-charts/components/) for more ways to customize 
 
 ## Performance
 
-Scatter charts can have many points, which can slow down rendering.
-By default, points are drawn with SVG `circle` elements, which may be slow for large datasets.
+### SVG batch rendering
 
-Set the `renderer` prop to `"svg-batch"` to draw circles in a more efficient way.
+Scatter charts can have many points, which can slow down rendering.
+By default, points are drawn with SVG `circle` elements, which can be slow for large datasets.
+
+The `renderer` prop selects how points are drawn.
+The `renderer` prop selects how points are drawn.
+The default value is set to `'svg-single'`.
+
+Set `experimentalFeatures.progressiveRendering` to `true` to get the renderer chosen automatically based on the number of points: `'svg-progressive'` is used when above 2.000 points, `'svg-single'` otherwise.
+
+### Choosing a renderer
+
+| `renderer`                                                                                           | Element drawn  | CSS | Interactions | Blocking                 | Best for                           |
+| :--------------------------------------------------------------------------------------------------- | :------------- | :-- | :----------- | :----------------------- | :--------------------------------- |
+| `svg-single`                                                                                         | `circle`       | Yes | Yes          | Blocks until fully drawn | Small datasets                     |
+| `svg-progressive`                                                                                    | `circle`       | Yes | Yes          | Stays responsive         | Large datasets that still need CSS |
+| `svg-batch`                                                                                          | grouped `path` | No  | Limited      | Stays responsive         | Very large datasets                |
+| `webgl` [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') | WebGL canvas   | No  | No           | Stays responsive         | Massive datasets                   |
+
+**CSS**: whether you can style individual points with CSS selectors.
+
+**Interactions**: whether per-point interactions such as `onItemClick` work.
+
+**Blocking**: whether the main thread is blocked until every point is drawn.
+
+### Single renderer
+
+`renderer="svg-single"` draws one `circle` element per point in a single synchronous pass.
+CSS styling, the `marker` slot, and per-item interactions all work, but the main thread is blocked until every point is drawn, so it is only suited to small datasets.
+
+### Progressive renderer
+
+`renderer="svg-progressive"` also draws one `circle` element per point, keeping CSS styling, the `marker` slot, and per-item interactions.
+The difference is that the series and axes are processed off the render path, and the points are split into batches whose groups mount immediately and paint progressively over several animation frames.
+The main thread stays responsive while a large dataset is being drawn.
+
+The example below renders 20,000 points.
+Use the buttons to compare the single and progressive renderers: the spinner keeps animating and "first paint" stays low with the progressive renderer, while the single renderer blocks the main thread until every point is drawn.
+Zoom and pan the chart to see the progressive renderer keep only the first level painted while you interact, then fill in the rest once the interaction settles.
+The first level is the first N points of each series, so it is representative only when the data is unordered; data sorted along an axis may show a partial cloud until the interaction settles.
+
+{{"demo": "ScatterAsyncRenderer.js"}}
+
+### Batch renderer
+
+`renderer="svg-batch"` draws circles grouped into `path` elements, which is more efficient for very large datasets.
 This has some trade-offs:
 
 - You cannot style individual circles with CSS
@@ -169,7 +190,7 @@ This has some trade-offs:
 
 Behavior also differs in a few ways:
 
-- Rendering order may change, so overlapping circles can appear at different depths than with the default renderer
+- Rendering order can change, so overlapping circles can appear at different depths than with the other renderers
 - When `disableHitArea` is `true`, `onItemClick` does not run, because it depends on the hit area logic
 
 The example below uses the `renderer` prop to render 16,000 points with better performance.

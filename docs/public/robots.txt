@@ -1,3 +1,2 @@
 User-agent: *
 Allow: /
-Disallow: /x/react-scheduler/

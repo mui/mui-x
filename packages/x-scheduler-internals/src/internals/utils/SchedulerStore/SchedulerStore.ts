@@ -1,3 +1,8 @@
+import {
+  DisposableStack,
+  disposeSymbol,
+  unwrapSuppressedErrors,
+} from '@mui/x-internals/disposable';
 import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
@@ -9,7 +14,7 @@ import {
   SchedulerResourceId,
   TemporalSupportedObject,
   SchedulerEventUpdatedProperties,
-  RecurringEventUpdateScope,
+  RecurringEventScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
@@ -18,6 +23,7 @@ import {
   SchedulerState,
   SchedulerParameters,
   UpdateRecurringEventParameters,
+  DeleteRecurringEventParameters,
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   UpdateEventsParameters,
@@ -74,9 +80,14 @@ export class SchedulerStore<
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
-  protected timeoutManager = new TimeoutManager();
+  protected readonly disposables = new DisposableStack();
 
-  private eventManager = new EventManager();
+  // Registered first via field init so they're disposed last (LIFO): plugins
+  // added by subclasses in their constructors dispose first, then the store's
+  // own resources.
+  protected timeoutManager = this.disposables.use(new TimeoutManager());
+
+  private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
 
   public constructor(
     parameters: Parameters,
@@ -87,10 +98,10 @@ export class SchedulerStore<
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
-    const schedulerInitialState: SchedulerState<TEvent> = {
+    const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource
-        ? MOCK_EVENT_STATE
+        ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
         : buildEventsState(
             parameters,
             adapter,
@@ -104,7 +115,7 @@ export class SchedulerStore<
       editedEventId: null,
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
-      pendingUpdateRecurringEventParameters: null,
+      pendingRecurringEventOperation: null,
       visibleResources:
         parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
       visibleDate:
@@ -221,7 +232,10 @@ export class SchedulerStore<
         ),
       );
     }
-    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
+    // Recompute "now" only when the display timezone changes; the minute timer maintains it otherwise.
+    if (newSchedulerState.displayTimezone !== this.state.displayTimezone) {
+      newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
+    }
 
     if (
       parameters.resources !== this.parameters.resources ||
@@ -244,10 +258,54 @@ export class SchedulerStore<
   };
 
   /**
-   * Returns a cleanup function that need to be called when the store is destroyed.
+   * Disposes the store synchronously. The React consumer (`useDisposable`)
+   * handles the StrictMode double-invocation by suppressing the simulated
+   * unmount, so this method does not need to defer the teardown itself.
    */
-  public disposeEffect = () => {
-    return this.timeoutManager.clearAll;
+  [disposeSymbol](): void {
+    if (this.disposables.disposed) {
+      return;
+    }
+    try {
+      this.disposables.dispose();
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          'MUI X Scheduler: error while disposing the store.',
+          ...unwrapSuppressedErrors(error),
+        );
+      }
+    }
+  }
+
+  /**
+   * Removes the error with the given key from `state.errors`.
+   * The key is the one carried by the matching `StoredError` entry.
+   */
+  public dismissError = (key: string) => {
+    this.set(
+      'errors',
+      this.state.errors.filter((entry) => entry.key !== key),
+    );
+  };
+
+  private nextErrorKey = 0;
+
+  /**
+   * Appends an error to `state.errors`, wrapping non-Error rejections to preserve
+   * the original payload via `cause`. The store owns the key counter so uniqueness
+   * is enforced in one place. Does not dedupe — pushing the same `Error` instance
+   * twice produces two entries (intentional; e.g. a retried failure that should
+   * re-display after the previous one was dismissed).
+   * @internal
+   */
+  public pushError = (error: unknown) => {
+    const wrapped =
+      error instanceof Error
+        ? error
+        : /* minify-error-disabled */ new Error(String(error), { cause: error });
+    this.nextErrorKey += 1;
+    this.set('errors', [...this.state.errors, { error: wrapped, key: String(this.nextErrorKey) }]);
   };
 
   /**
@@ -273,19 +331,20 @@ export class SchedulerStore<
    */
   public publishEvent = <E extends SchedulerEvents>(
     name: E,
-    params: SchedulerEventParameters<E>,
+    params: SchedulerEventParameters<TEvent, E>,
   ) => {
     this.eventManager.emit(name, params);
   };
 
   /**
-   * Subscribe to an event emitted by the store.
+   * Subscribe to an event emitted by the store. Returns an unsubscribe function.
    */
   public subscribeEvent = <E extends SchedulerEvents>(
     eventName: E,
-    handler: SchedulerEventListener<E>,
-  ) => {
+    handler: SchedulerEventListener<TEvent, E>,
+  ): (() => void) => {
     this.eventManager.on(eventName, handler);
+    return () => this.eventManager.removeListener(eventName, handler);
   };
 
   protected setVisibleDate = ({
@@ -318,34 +377,48 @@ export class SchedulerStore<
 
     const updated = new Map(updatedParam.map((ev) => [ev.id, ev]));
     const deleted = new Set(deletedParam);
+
+    if (process.env.NODE_ENV !== 'production') {
+      for (const id of deleted) {
+        if (updated.has(id)) {
+          warnOnce([
+            `MUI X Scheduler: id "${String(id)}" appears in both \`deleted\` and \`updated\`.`,
+            'These two arrays must be disjoint, otherwise the order of operations is undefined.',
+          ]);
+        }
+      }
+    }
     const originalEventIds = schedulerEventSelectors.idList(this.state);
     const originalEventModelLookup = schedulerEventSelectors.modelLookup(this.state);
     const newEvents: TEvent[] = [];
+    const updatedEvents: TEvent[] = [];
 
     if (deleted.size > 0 || updated.size > 0) {
       for (const eventId of originalEventIds) {
         if (deleted.has(eventId)) {
           continue;
         }
-        const processedEvent = updated.has(eventId)
-          ? this.state.processedEventLookup.get(eventId)
-          : undefined;
-        const newEvent = updated.has(eventId)
-          ? getUpdatedEventModelFromChanges<TEvent>(
-              originalEventModelLookup.get(eventId),
-              updated.get(eventId)!,
-              this.state.eventModelStructure,
-              this.state.adapter,
-              processedEvent!.modelInBuiltInFormat,
-            )
-          : originalEventModelLookup.get(eventId);
-        newEvents.push(newEvent);
+        if (updated.has(eventId)) {
+          const processedEvent = this.state.processedEventLookup.get(eventId);
+          const newEvent = getUpdatedEventModelFromChanges<TEvent>(
+            originalEventModelLookup.get(eventId),
+            updated.get(eventId)!,
+            this.state.eventModelStructure,
+            this.state.adapter,
+            processedEvent!.modelInBuiltInFormat,
+          );
+          newEvents.push(newEvent);
+          updatedEvents.push(newEvent);
+        } else {
+          newEvents.push(originalEventModelLookup.get(eventId));
+        }
       }
     } else {
       newEvents.push(...schedulerEventSelectors.modelList(this.state));
     }
 
     const createdIds: SchedulerEventId[] = [];
+    const createdEvents: TEvent[] = [];
     for (const createdEvent of created) {
       const response = createEventModel(
         createdEvent,
@@ -353,6 +426,7 @@ export class SchedulerStore<
         this.state.adapter,
       );
       newEvents.push(response.model);
+      createdEvents.push(response.model);
       createdIds.push(response.id);
     }
 
@@ -362,8 +436,8 @@ export class SchedulerStore<
     queueMicrotask(() =>
       this.publishEvent('eventsUpdated', {
         deleted: deletedParam ?? [],
-        updated,
-        created: createdIds,
+        updated: updatedEvents,
+        created: createdEvents,
         newEvents,
       }),
     );
@@ -451,63 +525,90 @@ export class SchedulerStore<
       }
       return;
     }
-    this.set('pendingUpdateRecurringEventParameters', params);
+    this.set('pendingRecurringEventOperation', { kind: 'update', ...params });
   };
 
   /**
-   * Applies the update to a recurring event after the user selects a scope.
-   * @param scope The selected update scope, or null if canceled.
+   * Opens the recurring scope dialog to delete a recurring event.
    */
-  public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
-    const { recurringEventsPlugin, pendingUpdateRecurringEventParameters, adapter } = this.state;
-    if (recurringEventsPlugin == null || pendingUpdateRecurringEventParameters == null) {
+  public deleteRecurringEvent = (params: DeleteRecurringEventParameters) => {
+    if (this.state.recurringEventsPlugin == null) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X Scheduler: Recurring event deletions are a premium feature.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
+      return;
+    }
+    this.set('pendingRecurringEventOperation', { kind: 'delete', ...params });
+  };
+
+  /**
+   * Applies the pending recurring event operation after the user selects a scope.
+   * @param scope The selected scope, or null if canceled.
+   */
+  public selectRecurringEventScope = (scope: RecurringEventScope | null) => {
+    const { recurringEventsPlugin, pendingRecurringEventOperation, adapter } = this.state;
+    if (recurringEventsPlugin == null || pendingRecurringEventOperation == null) {
       return;
     }
 
-    this.set('pendingUpdateRecurringEventParameters', null);
+    this.set('pendingRecurringEventOperation', null);
     if (scope == null) {
       return;
     }
 
-    const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
-    const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
+    const { occurrenceStart, onSubmit } = pendingRecurringEventOperation;
+    const eventId =
+      pendingRecurringEventOperation.kind === 'update'
+        ? pendingRecurringEventOperation.changes.id
+        : pendingRecurringEventOperation.eventId;
+    const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     if (!original.dataTimezone.rrule) {
       throw new Error(
-        'MUI X Scheduler: The original event is not recurring and cannot be updated with updateRecurringEvent(). ' +
-          'This method is designed for recurring events with recurrence rules. ' +
-          'Use updateEvent() instead to update non-recurring events.',
+        'MUI X Scheduler: The event targeted by the recurring scope dialog is not recurring. ' +
+          'Recurring scope changes require an event with a recurrence rule. ' +
+          'Use updateEvent() or deleteEvent() for non-recurring events.',
       );
     }
 
     // IMPORTANT:
-    // Recurring updates are pattern-based, not instant-based.
+    // Recurring changes are pattern-based, not instant-based.
     // Using the raw instant here would incorrectly shift the recurring rule
     // depending on the user's display timezone. We therefore convert the
-    // occurrence to the event's dataTimezone before applying the update.
-
-    const changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
-      adapter,
-      originalEvent: original,
-      changes,
-    });
-
+    // occurrence to the event's dataTimezone before applying the change.
     const occurrenceStartInDataTimezone = adapter.setTimezone(
       occurrenceStart,
       original.dataTimezone.timezone,
     );
 
-    const updatedEvents = recurringEventsPlugin.updateRecurringEvent(
-      adapter,
-      original,
-      occurrenceStartInDataTimezone,
-      changesInDataTimezone,
-      scope,
-    );
+    let updatedEvents: UpdateEventsParameters;
+    if (pendingRecurringEventOperation.kind === 'delete') {
+      updatedEvents = recurringEventsPlugin.deleteRecurringEvent(
+        adapter,
+        original,
+        occurrenceStartInDataTimezone,
+        scope,
+      );
+    } else {
+      const changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
+        adapter,
+        originalEvent: original,
+        changes: pendingRecurringEventOperation.changes,
+      });
+      updatedEvents = recurringEventsPlugin.updateRecurringEvent(
+        adapter,
+        original,
+        occurrenceStartInDataTimezone,
+        changesInDataTimezone,
+        scope,
+      );
+    }
     this.updateEvents(updatedEvents);
 
-    const submit = onSubmit;
-    if (submit) {
-      queueMicrotask(() => submit());
+    if (onSubmit) {
+      queueMicrotask(() => onSubmit());
     }
   };
 
@@ -580,7 +681,9 @@ export class SchedulerStore<
 
     if (copiedEvent.action === 'cut') {
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
-      return this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      const result = this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      this.set('copiedEvent', null);
+      return result;
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;

@@ -374,13 +374,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   }, [hasFocus, cellMode, apiRef]);
 
   if (isCellRowSpanned) {
-    return (
-      <div
-        data-colindex={colIndex}
-        role="presentation"
-        style={{ width: 'var(--width)', ...style }}
-      />
-    );
+    return <div data-colindex={colIndex} role="none" style={{ width: 'var(--width)', ...style }} />;
   }
 
   let handleFocus = other.onFocus;
@@ -484,7 +478,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   );
 });
 
-GridCell.propTypes = {
+GridCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

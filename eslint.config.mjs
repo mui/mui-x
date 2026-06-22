@@ -6,12 +6,16 @@ import {
   EXTENSION_TEST_FILE,
   EXTENSION_TS,
 } from '@mui/internal-code-infra/eslint';
-import eslintPluginConsistentName from 'eslint-plugin-consistent-default-export-name';
+import { fixupPluginRules } from '@eslint/compat';
+import eslintPluginConsistentNameRaw from 'eslint-plugin-consistent-default-export-name';
 import eslintPluginJsdoc from 'eslint-plugin-jsdoc';
 import eslintPluginMuiX from 'eslint-plugin-mui-x';
 import { defineConfig } from 'eslint/config';
 import * as path from 'node:path';
 import * as url from 'node:url';
+import remarkConfig from './.remarkrc.mjs';
+
+const eslintPluginConsistentName = fixupPluginRules(eslintPluginConsistentNameRaw);
 
 const filename = url.fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -112,7 +116,13 @@ export default defineConfig(
     baseDirectory: dirname,
     enableReactCompiler: isAnyReactCompilerPluginEnabled,
     materialUi: true,
+    markdown: true,
   }),
+  // eslint-plugin-mdx loads `.remarkrc.mjs` itself, but ESLint doesn't know
+  // that file is a config dependency, so `--cache` doesn't invalidate when
+  // it changes. Embedding the imported value in a setting puts its content
+  // into the resolved-config hash, forcing cache invalidation on edits.
+  { settings: { remarkConfig } },
   {
     name: 'MUI X Overrides',
     files: [`**/*${EXTENSION_TS}`],
@@ -134,6 +144,17 @@ export default defineConfig(
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
       'react/react-in-jsx-scope': 'off',
+
+      // TODO: re-enable. Temporarily disabled after the eslint-plugin-react-hooks
+      // 7.1 bump (via @mui/internal-code-infra) introduced this rule, which flags
+      // existing code that needs to be addressed separately.
+      'react-hooks/set-state-in-effect': 'off',
+
+      // Modern browsers imply rel="noopener" for target="_blank", so no rel is required.
+      // See https://github.com/mui/material-ui/pull/40447
+      // TODO move to mui/mui-public.
+      'react/jsx-no-target-blank': 'off',
+
       'import/no-relative-packages': 'error',
       'import/no-restricted-paths': [
         'error',
@@ -193,6 +214,8 @@ export default defineConfig(
       'react-hooks/preserve-manual-memoization': 'off',
       'react-hooks/purity': 'off',
       'react-hooks/static-components': 'off',
+
+      'mui/no-presentation-role': 'error',
 
       // TODO(@Janpot) Fix issues and turn back on
       'mui/consistent-production-guard': 'off',
@@ -322,12 +345,14 @@ export default defineConfig(
     rules: {
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
 
   {
     files: [`test/regressions/**/*${EXTENSION_TS}`],
     rules: {
+      'react-hooks/set-state-in-effect': 'off',
       'react/jsx-filename-extension': 'off',
     },
   },
@@ -365,6 +390,10 @@ export default defineConfig(
     },
     rules: {
       'consistent-default-export-name/default-export-match-filename': ['error'],
+      // `role="none"` is an alias for `role="presentation"`, but aria-query treats
+      // them differently and reports `aria-hidden` as unsupported on `none`.
+      // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090
+      'jsx-a11y/role-supports-aria-props': 'off',
     },
   },
 

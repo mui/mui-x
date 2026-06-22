@@ -6,11 +6,19 @@ import { EventCalendarProvider as UnstyledEventCalendarProvider } from '@mui/x-s
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { EventDialogStyledContext } from './event-dialog/EventDialogStyledContext';
+import { SharedComponentsStyledContext } from './SharedComponentsStyledContext';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../constants/defaultLocaleText';
+import { responsiveTypographyContainerQueries } from '../constants/responsiveTypography';
 
 /**
  * Root wrapper for standalone views that provides CSS variable tokens.
  * This ensures event colors work correctly outside of EventCalendar.
+ *
+ * The @container queries spread below redefine the effective typography
+ * vars on this slot when the surrounding ResponsiveTypographyContainer
+ * (which Standalone*View components wrap their tree in) crosses a tier
+ * threshold. display:contents doesn't block custom-property inheritance,
+ * so descendants pick up the retargeted values.
  */
 const StandaloneViewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -22,6 +30,7 @@ const StandaloneViewRoot = styled('div', {
   '*, *::before, *::after': {
     boxSizing: 'inherit',
   },
+  ...responsiveTypographyContainerQueries,
 }));
 
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(
@@ -46,12 +55,15 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
     }),
     [schedulerId],
   );
+  const sharedComponentsStyledValue = React.useMemo(() => ({ classes: eventCalendarClasses }), []);
 
   return (
     <UnstyledEventCalendarProvider {...other}>
       <EventCalendarStyledContext.Provider value={calendarStyledValue}>
         <EventDialogStyledContext.Provider value={dialogStyledValue}>
-          <StandaloneViewRoot>{children}</StandaloneViewRoot>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledValue}>
+            <StandaloneViewRoot>{children}</StandaloneViewRoot>
+          </SharedComponentsStyledContext.Provider>
         </EventDialogStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
     </UnstyledEventCalendarProvider>
