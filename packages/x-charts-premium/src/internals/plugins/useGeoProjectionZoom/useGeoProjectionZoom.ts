@@ -102,28 +102,30 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     },
     onPan: (delta) => {
       const projection = getProjection();
-      if (!projection) {
+      if (!projection || dragCurrentPoint.current === null || geoPoint.current === null) {
         return;
       }
       dragCurrentPoint.current = [
-        dragCurrentPoint.current![0] + delta.x,
-        dragCurrentPoint.current![1] + delta.y,
+        dragCurrentPoint.current[0] + delta.x,
+        dragCurrentPoint.current[1] + delta.y,
       ];
       const center = getRotation(
         projection,
-        geoPoint.current!,
-        dragCurrentPoint.current!,
+        geoPoint.current,
+        dragCurrentPoint.current,
         1,
         rotationAllowed,
       );
 
       const rotate = projection.rotate();
-      projection.rotate([-center![0], -center![1]]);
+      if (center) {
+        projection.rotate([-center[0], -center[1]]);
+      }
       const translation = getTranslation(
         store,
         projection,
-        geoPoint.current!,
-        dragCurrentPoint.current!,
+        geoPoint.current,
+        dragCurrentPoint.current,
         translationAllowed,
       );
 
@@ -152,10 +154,16 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       if (!geoPoint) {
         return;
       }
-      const center = getRotation(projection, geoPoint, [point.x, point.y], factor, rotationAllowed);
 
       const rotate = projection.rotate();
-      projection.rotate([-center![0], -center![1]]);
+      const scale = projection.scale();
+      const center = getRotation(projection, geoPoint, [point.x, point.y], factor, rotationAllowed);
+      if (center) {
+        projection.rotate([-center[0], -center[1]]);
+      }
+      if (factor !== 1) {
+        projection.scale(scale * factor);
+      }
       const translation = getTranslation(
         store,
         projection,
@@ -164,6 +172,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         translationAllowed,
       );
       projection.rotate(rotate);
+      projection.scale(scale);
 
       if (center) {
         applyView({
@@ -194,9 +203,14 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         1 + deltaScale,
         rotationAllowed,
       );
-
+      const scale = projection.scale();
       const rotate = projection.rotate();
-      projection.rotate([-center![0], -center![1]]);
+      if (center) {
+        projection.rotate([-center![0], -center![1]]);
+      }
+      if (deltaScale !== 0) {
+        projection.scale(scale * (1 + deltaScale));
+      }
       const translation = getTranslation(
         store,
         projection,
@@ -205,6 +219,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         translationAllowed,
       );
       projection.rotate(rotate);
+      projection.scale(scale);
 
       if (center || translation) {
         applyView({
