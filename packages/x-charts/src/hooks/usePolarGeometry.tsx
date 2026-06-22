@@ -29,8 +29,7 @@ import { useRotationAxis, useRadiusAxis } from './useAxis';
  * ```
  *
  * @returns The polar geometry helpers, or `null` if the chart scales are
- * not ready, the rotation axis is not a band or point scale, or the
- * radius axis is not a continuous scale.
+ * not ready.
  */
 export function usePolarGeometry(): PolarGeometry | null {
   const { left, top, width, height } = useDrawingArea();
@@ -44,25 +43,11 @@ export function usePolarGeometry(): PolarGeometry | null {
   const angleScale = rotationAxis.scale;
   const radiusScale = radiusAxis.scale;
 
-  if (!('bandwidth' in angleScale)) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('usePolarGeometry: rotation axis must use a band or point scale.');
-    }
-    return null;
-  }
-
-  if ('bandwidth' in radiusScale) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('usePolarGeometry: radius axis must use a continuous scale.');
-    }
-    return null;
-  }
-
   return {
     cx: left + width / 2,
     cy: top + height / 2,
     angleScale,
-    bandwidth: angleScale.bandwidth(),
+    bandwidth: 'bandwidth' in angleScale ? angleScale.bandwidth() : 0,
     radiusScale,
     point: (radius, angle) => [radius * Math.sin(angle), -radius * Math.cos(angle)],
   };
@@ -71,8 +56,8 @@ export function usePolarGeometry(): PolarGeometry | null {
 export interface PolarGeometry {
   cx: number;
   cy: number;
-  angleScale: (rotationAxis: string) => number | undefined;
+  angleScale: any;
   bandwidth: number;
-  radiusScale: (radius: number) => number;
+  radiusScale: any;
   point: (radius: number, angle: number) => [number, number];
 }
