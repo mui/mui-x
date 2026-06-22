@@ -14,11 +14,10 @@ const viVNDialog: Partial<EventDialogLocaleText> = {
   // dateTimeSectionLabel: 'Date & time',
   // resourceColorSectionLabel: 'Resource & color',
   // allDayLabel: 'All Day',
-  // closeButtonAriaLabel: 'Close modal',
+  // closeButtonAriaLabel: 'Close',
   // closeButtonLabel: 'Close',
   // deleteEvent: 'Delete event',
   // descriptionLabel: 'Description',
-  // editDisabledNotice: 'Editing is currently unavailable for recurrent events',
   // endDateLabel: 'End date',
   // endTimeLabel: 'End time',
   // eventTitleAriaLabel: 'Event title',
@@ -38,9 +37,11 @@ const viVNDialog: Partial<EventDialogLocaleText> = {
   // recurrenceEveryLabel: 'Every',
   // recurrenceRepeatLabel: 'Repeat',
   // recurrenceTabLabel: 'Recurrence',
-  // recurrenceMainSelectCustomLabel: 'Select your recurrence pattern',
+  // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
-  // recurrenceWeeklyPresetLabel: weekday => `Repeats weekly on ${weekday}`,
+  // recurrenceWeeklyPresetLabel: ({
+  //   weekdayName
+  // }) => `Repeats weekly on ${weekdayName}`,
   // recurrenceMonthlyFrequencyLabel: 'months',
   // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
   // recurrenceMonthlyLastWeekAriaLabel: weekDay => `${weekDay} of the last week of the month`,
@@ -52,29 +53,26 @@ const viVNDialog: Partial<EventDialogLocaleText> = {
   // recurrenceYearlyFrequencyLabel: 'years',
   // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
   // noResourceAriaLabel: 'No specific resource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   // resourceLabel: 'Resource',
-  // saveChanges: 'Save changes',
+  // requiredResourceError: 'A resource is required.',
+  // saveChanges: 'Save',
   // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   // startDateLabel: 'Start date',
   // startTimeLabel: 'Start time',
-  // ScopeDialog
-  // all: 'All events in the series',
+  // RecurringScopeDialog
+  // all: 'All events',
   // cancel: 'Cancel',
   // confirm: 'Confirm',
   // onlyThis: 'Only this event',
   // radioGroupAriaLabel: 'Editing recurring events scope',
   // thisAndFollowing: 'This and following events',
   // title: 'Apply this change to:',
-  // General
-  // loading: 'Loading...',
 };
 
 const viVNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  // hideEventsLabel: resourceName => `Hide events for ${resourceName}`,
+  // ResourcesTree
   // resourcesLabel: 'Resources',
-  // resourcesLegendSectionLabel: 'Resource legend',
-  // showEventsLabel: resourceName => `Show events for ${resourceName}`,
   // ViewSwitcher
   // agenda: 'Agenda',
   // day: 'Day',
@@ -99,9 +97,12 @@ const viVNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // showWeekNumber: 'Show week number',
   // timeFormat: 'Time format',
   // viewSpecificOptions: view => `${view} view options`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
   // WeekView
   // allDay: 'All day',
-  // MonthView
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
@@ -114,6 +115,8 @@ const viVNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // miniCalendarLabel: 'Calendar',
   // miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   // miniCalendarGoToNextMonth: 'Show next month in calendar',
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

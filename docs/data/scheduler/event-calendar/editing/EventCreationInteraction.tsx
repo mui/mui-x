@@ -18,7 +18,7 @@ export default function EventCreationInteraction() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
-        eventCreation={{ interaction: 'click' }}
+        eventCreation={{ interaction: 'double-click' }}
       />
     </div>
   );

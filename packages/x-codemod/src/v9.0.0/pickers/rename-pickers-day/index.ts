@@ -1,0 +1,100 @@
+import path from 'path';
+import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import readFile from '../../../util/readFile';
+
+export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
+  const j = api.jscodeshift;
+  const root = j(file.source);
+
+  const printOptions = options.printOptions || {
+    quote: 'single',
+    trailingComma: true,
+  };
+
+  const renames = {
+    PickersDay: 'PickerDay',
+    PickersDayProps: 'PickerDayProps',
+    pickersDayClasses: 'pickerDayClasses',
+    PickersDayClassKey: 'PickerDayClassKey',
+    PickersDaySlots: 'PickerDaySlots',
+    PickersDaySlotProps: 'PickerDaySlotProps',
+    PickersDayOwnerState: 'PickerDayOwnerState',
+  };
+
+  const renameKeys = Object.keys(renames);
+
+  // Rename imports and usages
+  renameKeys.forEach((oldName) => {
+    const newName = renames[oldName as keyof typeof renames];
+    root.find(j.Identifier, { name: oldName }).forEach((keyPath) => {
+      // Avoid renaming property keys in objects unless they are shorthand or identifiers in other contexts
+      if (
+        keyPath.parent.value.type === 'Property' &&
+        keyPath.parent.value.key === keyPath.node &&
+        !keyPath.parent.value.shorthand
+      ) {
+        return;
+      }
+      // Avoid renaming member expressions like something.PickersDay
+      if (
+        keyPath.parent.value.type === 'MemberExpression' &&
+        keyPath.parent.value.property === keyPath.node &&
+        !keyPath.parent.value.computed
+      ) {
+        return;
+      }
+
+      j(keyPath).replaceWith(j.identifier(newName));
+    });
+  });
+
+  // Rename theme components in createTheme / theme augmentation
+  root.find(j.Identifier, { name: 'MuiPickersDay' }).forEach((keyPath) => {
+    j(keyPath).replaceWith(j.identifier('MuiPickerDay'));
+  });
+
+  // Also handle string literals and template literals for MuiPickersDay if any (e.g. in theme overrides or sx)
+  const replaceClass = (value: string) => value.replace(/MuiPickersDay\b/g, 'MuiPickerDay');
+
+  root.find(j.StringLiteral).forEach((keyPath) => {
+    if (keyPath.value.value.includes('MuiPickersDay')) {
+      j(keyPath).replaceWith(j.stringLiteral(replaceClass(keyPath.value.value)));
+    }
+  });
+
+  root.find(j.TemplateLiteral).forEach((keyPath) => {
+    keyPath.value.quasis.forEach((quasi) => {
+      if (quasi.value.raw.includes('MuiPickersDay')) {
+        quasi.value.raw = replaceClass(quasi.value.raw);
+      }
+      if (quasi.value.cooked && quasi.value.cooked.includes('MuiPickersDay')) {
+        quasi.value.cooked = replaceClass(quasi.value.cooked);
+      }
+    });
+  });
+
+  // Update import sources if they point to PickersDay (though usually they point to @mui/x-date-pickers)
+  root.find(j.ImportDeclaration).forEach((importPath) => {
+    if (typeof importPath.value.source.value === 'string') {
+      if (importPath.value.source.value.includes('/PickersDay')) {
+        importPath.value.source.value = importPath.value.source.value.replace(
+          '/PickersDay',
+          '/PickerDay',
+        );
+      }
+    }
+  });
+
+  return root.toSource(printOptions);
+}
+
+export const testConfig = () => ({
+  name: 'rename-pickers-day',
+  specFiles: [
+    {
+      name: 'rename PickersDay to PickerDay and related types',
+      actual: readFile(path.join(import.meta.dirname, 'actual.spec.tsx')),
+      expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
+    },
+  ],
+});

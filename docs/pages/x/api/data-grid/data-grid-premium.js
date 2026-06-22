@@ -1,7 +1,8 @@
 import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
+import { ApiPage } from '@mui/internal-core-docs/ApiPage';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
+import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
+import translation from 'docs/translations/api-docs/data-grid/data-grid-premium/data-grid-premium.json';
 import jsonPageContent from './data-grid-premium.json';
 
 export default function Page(props) {
@@ -10,12 +11,7 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/data-grid-premium',
-    false,
-    /\.\/data-grid-premium.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
 
   return { props: { descriptions } };
 }

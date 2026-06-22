@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventCalendar, EventCalendarPremium
 ---
 
 # Event Calendar - Resources
 
-<p class="description">Define the properties of your events.</p>
+<p class="description">Organize events by assigning them to resources in the Event Calendar.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Define resources
 
@@ -79,16 +80,25 @@ return (
 
 :::
 
+## Require a resource
+
+By default, an event on the Event Calendar can be saved without a resource — the edit dialog includes a "No resource" option in the resource picker.
+Set `shouldEventRequireResource` to `true` to make the resource mandatory: the "No resource" option is hidden and the form cannot be submitted with an empty resource.
+
+```tsx
+<EventCalendar shouldEventRequireResource />
+```
+
 ## Resource properties
 
 ### Color
 
 Use the `eventColor` property to define a resource's color.
-Here is the list of all the available color palettes:
+The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
+:::info
 Event colors can also be defined on the event or at the component levels.
 The effective color resolves in the following order:
 
@@ -136,9 +146,7 @@ const resource = {
 };
 ```
 
-:::success
-Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-calendar/drag-interactions/).
-:::
+See [Drag interactions](/x/react-scheduler/event-calendar/drag-interactions/) for details.
 
 ### Read-only
 
@@ -151,9 +159,7 @@ const resource = {
 };
 ```
 
-:::success
-Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-calendar/editing/#read-only).
-:::
+See [Editing—Read-only](/x/react-scheduler/event-calendar/editing/#read-only) for details.
 
 ## Store data in custom properties
 

@@ -87,23 +87,22 @@ export default function InfoCard(props: InfoCardProps) {
         {Icon}
         <Typography
           gutterBottom
-          fontWeight="semiBold"
           component="h3"
-          color="text.primary"
           variant="body2"
+          sx={{ fontWeight: 'semiBold', color: 'text.primary' }}
         >
           {title}
         </Typography>
       </Stack>
       {description && typeof description === 'string' && (
-        <Typography color="text.secondary" variant="body2">
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {description}
         </Typography>
       )}
       {description &&
         typeof description === 'object' &&
         description.map((item, index) => (
-          <Typography color="text.secondary" variant="body2" key={index}>
+          <Typography variant="body2" key={index} sx={{ color: 'text.secondary' }}>
             {item}
           </Typography>
         ))}

@@ -22,7 +22,6 @@ describe('<MobileTimeRangePicker /> - Describe Conformance', () => {
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      'propsSpread',
     ],
   }));
 });

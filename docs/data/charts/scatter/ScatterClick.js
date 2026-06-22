@@ -3,11 +3,11 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 
 const scatterChartsParams = {
   series: [
@@ -50,10 +50,23 @@ const scatterChartsParams = {
       },
     },
   ],
-  height: 400,
+  height: 300,
 };
 
+function getHitRadius(option) {
+  switch (option) {
+    case 'item':
+      return 'item';
+    case 'infinite':
+      return undefined;
+    case '50px':
+      return 50;
+    default:
+      return undefined;
+  }
+}
 export default function ScatterClick() {
+  const [option, setOption] = React.useState('infinite');
   const [data, setData] = React.useState();
 
   const { ...other } = data ?? {};
@@ -61,40 +74,61 @@ export default function ScatterClick() {
     ...other,
   };
   return (
-    <Stack
-      direction={{ xs: 'column', md: 'row' }}
-      spacing={{ xs: 0, md: 4 }}
-      sx={{ width: '100%' }}
-    >
-      <Box sx={{ flexGrow: 1 }}>
-        <ScatterChart {...scatterChartsParams} onItemClick={(_, d) => setData(d)} />
-      </Box>
-      <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Typography>Click on the chart</Typography>
-          <IconButton
-            aria-label="reset"
-            size="small"
-            onClick={() => setData(undefined)}
-          >
-            <UndoOutlinedIcon fontSize="small" />
-          </IconButton>
-        </Box>
-        <HighlightedCode
-          code={
-            dataDisplayed
-              ? JSON.stringify(dataDisplayed, null, 1)
-              : '// The data will appear here'
+    <Stack direction="column" spacing={1} sx={{ width: '100%' }}>
+      <ToggleButtonGroup
+        value={option}
+        size="small"
+        exclusive
+        onChange={(event, newValue) => {
+          if (newValue !== null) {
+            setOption(newValue);
           }
-          language="json"
-          copyButtonHidden
-        />
+        }}
+      >
+        <ToggleButton value="item">item</ToggleButton>
+        <ToggleButton value="infinite">infinite</ToggleButton>
+        <ToggleButton value="50px">50px</ToggleButton>
+      </ToggleButtonGroup>
+
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={{ xs: 0, md: 4 }}
+        sx={{ width: '100%' }}
+      >
+        <Box sx={{ flexGrow: 1 }}>
+          <ScatterChart
+            {...scatterChartsParams}
+            hitAreaRadius={getHitRadius(option)}
+            onItemClick={(_, d) => setData(d)}
+          />
+        </Box>
+        <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography>Click on the chart</Typography>
+            <IconButton
+              aria-label="reset"
+              size="small"
+              onClick={() => setData(undefined)}
+            >
+              <UndoOutlinedIcon fontSize="small" />
+            </IconButton>
+          </Box>
+          <HighlightedCode
+            code={
+              dataDisplayed
+                ? JSON.stringify(dataDisplayed, null, 1)
+                : '// The data will appear here'
+            }
+            language="json"
+            copyButtonHidden
+          />
+        </Stack>
       </Stack>
     </Stack>
   );

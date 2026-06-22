@@ -35,6 +35,9 @@
     "autosizeOptions": { "description": "The options for autosize when user-initiated." },
     "cellModesModel": { "description": "Controls the modes of the cells." },
     "cellSelection": { "description": "If <code>true</code>, the cell selection mode is enabled." },
+    "cellSelectionFillHandle": {
+      "description": "If <code>true</code>, a fill handle is shown at the bottom-right corner of the cell selection. Dragging the fill handle fills target cells with the values from selected cells. Requires <code>cellSelection</code> to be enabled."
+    },
     "cellSelectionModel": { "description": "Set the cell selection model of the grid." },
     "chartsIntegration": {
       "description": "If <code>true</code>, the charts integration feature is enabled."
@@ -1154,6 +1157,31 @@
       "nodeName": "the cell element",
       "conditions": "the cell is in edit mode"
     },
+    "cell--fillPreview": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is in the fill preview range"
+    },
+    "cell--fillPreviewBottom": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the bottom edge of the fill preview range"
+    },
+    "cell--fillPreviewLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the left edge of the fill preview range"
+    },
+    "cell--fillPreviewRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the right edge of the fill preview range"
+    },
+    "cell--fillPreviewTop": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the top edge of the fill preview range"
+    },
     "cell--flex": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell element in flex display mode"
@@ -1207,6 +1235,11 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "<code>align=\"right\"</code>"
+    },
+    "cell--withFillHandle": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it displays the fill handle"
     },
     "cell--withLeftBorder": {
       "description": "Styles applied the cell if <code>showColumnVerticalBorder={true}</code>."
@@ -1438,6 +1471,26 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the edit long text cell value element"
     },
+    "editMultiSelectCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell root element"
+    },
+    "editMultiSelectCellChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each chip in the edit multi-select cell"
+    },
+    "editMultiSelectCellOverflow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overflow &quot;+N&quot; chip in the edit multi-select cell"
+    },
+    "editMultiSelectCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell popper content"
+    },
+    "editMultiSelectCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell popup"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1543,6 +1596,26 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the menu icon element",
       "conditions": "the menu is open"
+    },
+    "multiSelectCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell root element"
+    },
+    "multiSelectCellChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each chip in the multi-select cell"
+    },
+    "multiSelectCellOverflow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overflow &quot;+N&quot; chip in the multi-select cell"
+    },
+    "multiSelectCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell popper content"
+    },
+    "multiSelectCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell expand popup"
     },
     "overlay": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1929,6 +2002,7 @@
     "baseLinearProgress": "The custom LinearProgress component used in the grid.",
     "baseMenuItem": "The custom MenuItem component used in the grid.",
     "baseMenuList": "The custom MenuList component used in the grid.",
+    "baseModal": "The custom Modal component used in the grid.",
     "basePagination": "The custom Pagination component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",

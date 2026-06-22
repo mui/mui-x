@@ -125,6 +125,51 @@ function DefaultMultipleValueContent({
   );
 }
 
+DefaultMultipleValueContent.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  item: PropTypes.shape({
+    color: PropTypes.string.isRequired,
+    identifier: PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }).isRequired,
+    label: PropTypes.string,
+    markShape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']),
+    markType: PropTypes.oneOfType([
+      PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
+      PropTypes.func,
+    ]),
+    values: PropTypes.arrayOf(
+      PropTypes.shape({
+        formattedValue: PropTypes.string,
+        label: PropTypes.string,
+        markShape: PropTypes.oneOf([
+          'circle',
+          'cross',
+          'diamond',
+          'square',
+          'star',
+          'triangle',
+          'wye',
+        ]),
+        markType: PropTypes.oneOfType([
+          PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
+          PropTypes.func,
+        ]),
+        value: PropTypes.number.isRequired,
+      }),
+    ).isRequired,
+  }).isRequired,
+} as any;
+
 interface DefaultSingleValueContentProps<
   T extends ChartSeriesType,
 > extends ItemTooltipContentProps<T> {
@@ -138,6 +183,10 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
   const { color, label, formattedValue, markType, markShape } = item;
 
   const classes = useUtilityClasses(propClasses);
+
+  if (formattedValue == null || typeof formattedValue !== 'string') {
+    return null;
+  }
 
   return (
     <ChartsTooltipRow
@@ -163,7 +212,34 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
   );
 }
 
-ChartsItemTooltipContent.propTypes = {
+DefaultSingleValueContent.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  item: PropTypes.shape({
+    color: PropTypes.string.isRequired,
+    formattedValue: PropTypes.any.isRequired,
+    identifier: PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+    }).isRequired,
+    label: PropTypes.string,
+    markShape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']),
+    markType: PropTypes.oneOfType([
+      PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
+      PropTypes.func,
+    ]),
+    value: PropTypes.any.isRequired,
+  }).isRequired,
+} as any;
+
+ChartsItemTooltipContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

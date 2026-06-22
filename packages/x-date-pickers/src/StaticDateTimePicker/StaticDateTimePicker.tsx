@@ -134,7 +134,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   return renderPicker();
 }) as StaticDateTimePickerComponent;
 
-StaticDateTimePicker.propTypes = {
+StaticDateTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -181,7 +181,7 @@ StaticDateTimePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -341,7 +341,7 @@ StaticDateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

@@ -1,4 +1,13 @@
-import { CalendarView } from '@mui/x-scheduler-headless/models';
+import { CalendarView } from '@mui/x-scheduler-internals/models';
+
+export type SchedulerWeekday =
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday';
 
 export interface EventDialogLocaleText {
   // EventDialog
@@ -10,7 +19,6 @@ export interface EventDialogLocaleText {
   closeButtonLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
-  editDisabledNotice: string;
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
@@ -32,7 +40,10 @@ export interface EventDialogLocaleText {
   recurrenceTabLabel: string;
   recurrenceMainSelectCustomLabel: string;
   recurrenceWeeklyFrequencyLabel: string;
-  recurrenceWeeklyPresetLabel: (weekday: string) => string;
+  recurrenceWeeklyPresetLabel: (params: {
+    weekday: SchedulerWeekday;
+    weekdayName: string;
+  }) => string;
   recurrenceMonthlyDayOfMonthLabel: (dayNumber: number) => string;
   recurrenceMonthlyFrequencyLabel: string;
   recurrenceMonthlyLastWeekAriaLabel: (weekDay: string) => string;
@@ -44,13 +55,15 @@ export interface EventDialogLocaleText {
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   noResourceAriaLabel: string;
+  selectColorAriaLabel: (color: string) => string;
   resourceLabel: string;
+  requiredResourceError: string;
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;
   startTimeLabel: string;
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: string;
   cancel: string;
   confirm: string;
@@ -58,17 +71,11 @@ export interface EventDialogLocaleText {
   radioGroupAriaLabel: string;
   thisAndFollowing: string;
   title: string;
-
-  // General
-  loading: string;
 }
 
 export interface EventCalendarLocaleText extends EventDialogLocaleText {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName: string) => string;
+  // ResourcesTree
   resourcesLabel: string;
-  resourcesLegendSectionLabel: string;
-  showEventsLabel: (resourceName: string) => string;
 
   // ViewSwitcher
   agenda: string;
@@ -96,6 +103,10 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   showWeekNumber: string;
   timeFormat: string;
   viewSpecificOptions: (view: CalendarView) => string;
+  startWeekOn: string;
+  weekdaySunday: string;
+  weekdayMonday: string;
+  weekdaySaturday: string;
 
   // WeekView
   allDay: string;
@@ -115,6 +126,9 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   miniCalendarLabel: string;
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
+
+  // Main calendar region
+  calendarContentAriaLabel: string;
 
   // Timeline title sub grid
   timelineResourceTitleHeader: string;

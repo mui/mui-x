@@ -1,0 +1,13 @@
+{
+  "props": {},
+  "name": "ChatMessageMeta",
+  "imports": [
+    "import { ChatMessageMeta } from '@mui/x-chat/ChatMessage';",
+    "import { ChatMessageMeta } from '@mui/x-chat';"
+  ],
+  "classes": [],
+  "muiName": "MuiChatMessageMeta",
+  "filename": "/packages/x-chat/src/ChatMessage/ChatMessageMeta.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>"
+}

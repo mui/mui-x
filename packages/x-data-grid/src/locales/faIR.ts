@@ -68,7 +68,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'عملگرها',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'یا',
-  filterPanelColumns: 'ستون‌ها',
+  filterPanelColumn: 'ستون‌ها',
   filterPanelInputLabel: 'مقدار',
   filterPanelInputPlaceholder: 'فیلتر مقدار',
 

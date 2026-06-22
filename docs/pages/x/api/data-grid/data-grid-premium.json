@@ -40,6 +40,7 @@
     },
     "cellModesModel": { "type": { "name": "object" } },
     "cellSelection": { "type": { "name": "bool" }, "default": "false" },
+    "cellSelectionFillHandle": { "type": { "name": "bool" }, "default": "false" },
     "cellSelectionModel": { "type": { "name": "object" } },
     "chartsIntegration": { "type": { "name": "bool" }, "default": "false" },
     "checkboxColDef": {
@@ -107,7 +108,10 @@
     },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
+      }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -1064,6 +1068,12 @@
       "class": null
     },
     {
+      "name": "baseModal",
+      "description": "The custom Modal component used in the grid.",
+      "default": "Modal",
+      "class": null
+    },
+    {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
@@ -1816,6 +1826,36 @@
       "isGlobal": false
     },
     {
+      "key": "cell--fillPreview",
+      "className": "MuiDataGridPremium-cell--fillPreview",
+      "description": "Styles applied to the cell element when it is in the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewBottom",
+      "className": "MuiDataGridPremium-cell--fillPreviewBottom",
+      "description": "Styles applied to the cell element if it is at the bottom edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewLeft",
+      "className": "MuiDataGridPremium-cell--fillPreviewLeft",
+      "description": "Styles applied to the cell element if it is at the left edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewRight",
+      "className": "MuiDataGridPremium-cell--fillPreviewRight",
+      "description": "Styles applied to the cell element if it is at the right edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewTop",
+      "className": "MuiDataGridPremium-cell--fillPreviewTop",
+      "description": "Styles applied to the cell element if it is at the top edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--flex",
       "className": "MuiDataGridPremium-cell--flex",
       "description": "Styles applied to the cell element in flex display mode.",
@@ -1879,6 +1919,12 @@
       "key": "cell--textRight",
       "className": "MuiDataGridPremium-cell--textRight",
       "description": "Styles applied to the cell element if `align=\"right\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--withFillHandle",
+      "className": "MuiDataGridPremium-cell--withFillHandle",
+      "description": "Styles applied to the cell element when it displays the fill handle.",
       "isGlobal": false
     },
     {
@@ -2224,6 +2270,36 @@
       "isGlobal": false
     },
     {
+      "key": "editMultiSelectCell",
+      "className": "MuiDataGridPremium-editMultiSelectCell",
+      "description": "Styles applied to the edit multi-select cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellChip",
+      "className": "MuiDataGridPremium-editMultiSelectCellChip",
+      "description": "Styles applied to each chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellOverflow",
+      "className": "MuiDataGridPremium-editMultiSelectCellOverflow",
+      "description": "Styles applied to the overflow \"+N\" chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopperContent",
+      "className": "MuiDataGridPremium-editMultiSelectCellPopperContent",
+      "description": "Styles applied to the edit multi-select cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopup",
+      "className": "MuiDataGridPremium-editMultiSelectCellPopup",
+      "description": "Styles applied to the edit multi-select cell popup.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGridPremium-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -2389,6 +2465,36 @@
       "key": "menuOpen",
       "className": "MuiDataGridPremium-menuOpen",
       "description": "Styles applied to the menu icon element if the menu is open.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCell",
+      "className": "MuiDataGridPremium-multiSelectCell",
+      "description": "Styles applied to the multi-select cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellChip",
+      "className": "MuiDataGridPremium-multiSelectCellChip",
+      "description": "Styles applied to each chip in the multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellOverflow",
+      "className": "MuiDataGridPremium-multiSelectCellOverflow",
+      "description": "Styles applied to the overflow \"+N\" chip in the multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellPopperContent",
+      "className": "MuiDataGridPremium-multiSelectCellPopperContent",
+      "description": "Styles applied to the multi-select cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellPopup",
+      "className": "MuiDataGridPremium-multiSelectCellPopup",
+      "description": "Styles applied to the multi-select cell expand popup.",
       "isGlobal": false
     },
     {
@@ -2948,6 +3054,5 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>"
 }

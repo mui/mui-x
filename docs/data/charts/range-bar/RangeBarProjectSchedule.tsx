@@ -309,7 +309,7 @@ function HappeningTooltip() {
 
   return (
     <TooltipContainer>
-      <Typography fontWeight="bold">{happening.x}</Typography>
+      <Typography sx={{ fontWeight: 'bold' }}>{happening.x}</Typography>
       <Typography>
         {importantHappeningsLabels[dataIndex].split('\n').map((line, index) => (
           <React.Fragment key={index}>
@@ -324,9 +324,16 @@ function HappeningTooltip() {
 
 function Legend({ series }: { series: { label: string; color: string }[] }) {
   return (
-    <Stack direction="row" flexWrap="wrap" columnGap={2} justifyContent="center">
+    <Stack
+      direction="row"
+      sx={{ flexWrap: 'wrap', columnGap: 2, justifyContent: 'center' }}
+    >
       {series.map((aSeries, index) => (
-        <Stack key={index} alignItems="center" direction="row" marginBottom={0.5}>
+        <Stack
+          key={index}
+          direction="row"
+          sx={{ alignItems: 'center', marginBottom: 0.5 }}
+        >
           <div
             style={{
               width: 16,

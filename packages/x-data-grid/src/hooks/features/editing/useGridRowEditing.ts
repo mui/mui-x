@@ -541,7 +541,7 @@ export const useGridRowEditing = (
         delete prevRowValuesLookup.current[id];
       };
 
-      if (ignoreModifications && apiRef.current.getRow(id)) {
+      if (ignoreModifications) {
         finishRowEditMode();
         return;
       }
@@ -604,7 +604,7 @@ export const useGridRowEditing = (
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
-          } else {
+          } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
                 'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',

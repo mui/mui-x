@@ -101,18 +101,24 @@ function EditCountry(props) {
           {option.label}
         </Box>
       )}
-      renderInput={(params) => (
-        <InputBase
-          autoFocus
-          fullWidth
-          id={params.id}
-          inputProps={{
-            ...params.inputProps,
-            autoComplete: 'new-password', // disable autocomplete and autofill
-          }}
-          {...params.InputProps}
-        />
-      )}
+      renderInput={(params) => {
+        const { ref, ...htmlInputProps } = params.slotProps.htmlInput;
+        return (
+          <InputBase
+            autoFocus
+            fullWidth
+            id={params.id}
+            {...params.slotProps.input}
+            inputRef={ref}
+            slotProps={{
+              input: {
+                ...htmlInputProps,
+                autoComplete: 'new-password', // disable autocomplete and autofill
+              },
+            }}
+          />
+        );
+      }}
     />
   );
 }

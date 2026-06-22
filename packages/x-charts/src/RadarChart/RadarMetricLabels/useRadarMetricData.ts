@@ -1,14 +1,10 @@
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useRadiusAxes, useRotationAxis } from '../../hooks/useAxis';
-import { type ChartsRotationAxisProps, type PolarAxisDefaultized } from '../../models/axis';
+import { type ChartsRotationAxisProps, type ComputedAxis } from '../../models/axis';
 import { rad2deg } from '../../internals/angleConversion';
 
 export function useRadarMetricData() {
-  const rotationAxis = useRotationAxis() as PolarAxisDefaultized<
-    'point',
-    any,
-    ChartsRotationAxisProps
-  >;
+  const rotationAxis = useRotationAxis() as ComputedAxis<'point', any, ChartsRotationAxisProps>;
   const { scale: rotationScale, valueFormatter, labelGap = 10 } = rotationAxis;
   const { radiusAxis } = useRadiusAxes();
   const drawingArea = useDrawingArea();

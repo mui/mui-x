@@ -1,21 +1,26 @@
 {
   "name": "@mui/x-scheduler-premium",
-  "version": "0.0.1-alpha.0",
-  "private": true,
-  "description": "The Premium plan edition of the scheduler components (MUI X).",
+  "version": "9.0.0-beta.2",
   "author": "MUI Team",
+  "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
+    "./models": "./src/models/index.ts",
+    "./agenda-view-premium": "./src/agenda-view-premium/index.ts",
+    "./day-view-premium": "./src/day-view-premium/index.ts",
     "./event-calendar-premium": "./src/event-calendar-premium/index.ts",
     "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
+    "./month-view-premium": "./src/month-view-premium/index.ts",
     "./use-event-calendar-premium-api-ref": "./src/use-event-calendar-premium-api-ref/index.ts",
     "./use-event-timeline-premium-api-ref": "./src/use-event-timeline-premium-api-ref/index.ts",
+    "./week-view-premium": "./src/week-view-premium/index.ts",
     "./locales": "./src/locales/index.ts",
-    "./theme-augmentation": "./src/theme-augmentation/index.ts"
+    "./theme-augmentation": "./src/theme-augmentation/index.ts",
+    "./internals": "./src/internals/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -49,20 +54,24 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/react": "^1.0.0",
-    "@base-ui/utils": "^0.2.3",
-    "@mui/x-scheduler": "workspace:*",
-    "@mui/x-scheduler-headless": "workspace:*",
-    "@mui/x-scheduler-headless-premium": "workspace:*",
-    "@mui/x-internals": "workspace:*",
-    "@mui/x-license": "workspace:*",
-    "clsx": "catalog:"
+    "@base-ui/react": "catalog:",
+    "@base-ui/utils": "catalog:",
+    "@mui/utils": "catalog:",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-license": "workspace:^",
+    "@mui/x-scheduler": "workspace:^",
+    "@mui/x-scheduler-internals": "workspace:^",
+    "@mui/x-scheduler-internals-premium": "workspace:^",
+    "@mui/x-virtualizer": "workspace:^",
+    "clsx": "catalog:",
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/icons-material": "^7.3.0 || ^9.0.0",
+    "@mui/material": "^7.3.0 || ^9.0.0",
+    "@mui/system": "^7.3.0 || ^9.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
@@ -75,6 +84,7 @@
     }
   },
   "devDependencies": {
+    "@mui/icons-material": "catalog:",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",

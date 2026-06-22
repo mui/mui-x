@@ -10,7 +10,7 @@ import { ChartsXAxis } from '@mui/x-charts-pro/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts-pro/ChartsYAxis';
 import { ChartsTooltip } from '@mui/x-charts-pro/ChartsTooltip';
 import { ChartsGrid } from '@mui/x-charts-pro/ChartsGrid';
-import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
+import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import { ChartsClipPath } from '@mui/x-charts-pro/ChartsClipPath';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLegend } from '@mui/x-charts-pro/ChartsLegend';
@@ -110,10 +110,9 @@ export default function ReferenceOverview() {
   const clipPathId = React.useId();
   return (
     <Box sx={{ width: '100%' }}>
-      <Typography textAlign="center">
+      <Typography sx={{ textAlign: 'center' }}>
         US unemployment rate comparison with GDP per capita
       </Typography>
-
       <ChartsDataProviderPro
         height={300}
         dataset={usaUnemploymentAndGdp}
@@ -202,17 +201,14 @@ export default function ReferenceOverview() {
           <ChartsXAxis />
           <ChartsYAxis axisId="unemployment-axis" label="Unemployment Rate" />
           <ChartsYAxis axisId="gdp-axis" label="GDP per capita in US$" />
-          <ChartZoomSlider />
+          <ChartsZoomSlider />
         </ChartsSurface>
         <ChartsTooltip />
       </ChartsDataProviderPro>
-
       <Typography
         variant="caption"
         component="p"
-        color="text.secondary"
-        textAlign="left"
-        sx={{ pt: 1 }}
+        sx={{ color: 'text.secondary', textAlign: 'left', pt: 1 }}
       >
         Source: FRED
       </Typography>

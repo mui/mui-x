@@ -13,10 +13,11 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 export const GRID_DEFAULT_STRATEGY = 'none';
 
-export const GRID_STRATEGIES_PROCESSORS: {
+const GRID_STRATEGIES_PROCESSORS: {
   [P in GridStrategyProcessorName]: GridStrategyGroupValue;
 } = {
-  dataSourceRowsUpdate: GridStrategyGroup.DataSource,
+  dataSourceRootRowsUpdate: GridStrategyGroup.DataSource,
+  dataSourceNestedRowsUpdate: GridStrategyGroup.DataSource,
   rowTreeCreation: GridStrategyGroup.RowTree,
   filtering: GridStrategyGroup.RowTree,
   sorting: GridStrategyGroup.RowTree,

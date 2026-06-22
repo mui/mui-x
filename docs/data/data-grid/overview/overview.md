@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 <p class="description">A fast and extensible React data table and React data grid, with filtering, sorting, aggregation, and more.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader"}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Overview
 
@@ -61,7 +61,7 @@ It includes all of the main features listed in the navigation menu, such as edit
 
 {{"demo": "DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## Pro version [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+### Pro version [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 ```js
 import { DataGridPro } from '@mui/x-data-grid-pro';

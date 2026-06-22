@@ -7,16 +7,17 @@ import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
+import type { BarPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface BarElementSlots {
   /**
    * The component that renders the bar.
    * @default BarElementPath
    */
-  bar?: React.JSXElementConstructor<BarProps>;
+  bar?: React.JSXElementConstructor<BarProps & BarPropsOverrides>;
 }
 export interface BarElementSlotProps {
-  bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
+  bar?: SlotComponentPropsFromProps<BarProps, BarPropsOverrides, BarElementOwnerState>;
 }
 
 export type BarElementProps = Omit<
@@ -74,16 +75,7 @@ function BarElement(props: BarElementProps) {
   const highlightState = useItemHighlightState(itemIdentifier);
   const isHighlighted = highlightState === 'highlighted';
   const isFaded = highlightState === 'faded';
-  const isFocused = useIsItemFocused(
-    React.useMemo(
-      () => ({
-        type: 'bar',
-        seriesId,
-        dataIndex,
-      }),
-      [seriesId, dataIndex],
-    ),
-  );
+  const isFocused = useIsItemFocused(itemIdentifier);
 
   const ownerState: BarElementOwnerState = {
     seriesId,
@@ -129,13 +121,14 @@ function BarElement(props: BarElementProps) {
   return <Bar {...barProps} />;
 }
 
-BarElement.propTypes = {
+BarElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
+  hidden: PropTypes.bool,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   seriesId: PropTypes.string.isRequired,
   skipAnimation: PropTypes.bool.isRequired,

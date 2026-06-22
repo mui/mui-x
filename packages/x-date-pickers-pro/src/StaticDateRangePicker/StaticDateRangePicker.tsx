@@ -68,7 +68,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
   return renderPicker();
 }) as StaticDateRangePickerComponent;
 
-StaticDateRangePicker.propTypes = {
+StaticDateRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -131,7 +131,7 @@ StaticDateRangePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -247,7 +247,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
+   * @default () => "…"
    */
   renderLoading: PropTypes.func,
   /**

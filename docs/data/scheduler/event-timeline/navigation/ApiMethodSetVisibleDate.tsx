@@ -31,7 +31,7 @@ export default function ApiMethodSetVisibleDate() {
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          defaultView="months"
+          defaultPreset="monthAndYear"
         />
       </div>
     </Stack>

@@ -4,7 +4,7 @@ import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import {
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   describeJalaliAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
@@ -69,6 +69,7 @@ describe('<AdapterMomentJalaali />', () => {
       describe(`test with the locale "${localeKey}"`, () => {
         const { render, adapter } = createPickerRenderer({
           adapterName: 'moment-jalaali',
+          Adapter: AdapterMomentJalaali,
           locale: localeObject,
         });
 
@@ -78,18 +79,17 @@ describe('<AdapterMomentJalaali />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({});
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
           const view = renderWithProps({
-            enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

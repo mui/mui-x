@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import { InfoCard } from '@mui/docs/InfoCard';
+import { InfoCard } from '@mui/internal-core-docs/InfoCard';
 import ChatBubbleRoundedIcon from '@mui/icons-material/ChatBubble';
 import DashboardCustomizeRoundedIcon from '@mui/icons-material/DashboardCustomizeRounded';
 import ExtensionRoundedIcon from '@mui/icons-material/Extension';
@@ -73,7 +73,11 @@ const content = [
 
 export default function ChartFeaturesGrid() {
   return (
-    <Box mb={12}>
+    <Box
+      sx={{
+        mb: 12,
+      }}
+    >
       <Grid container spacing={2}>
         {content.map(({ icon, title, link }) => (
           <Grid key={title} size={{ xs: 12, sm: 6, lg: 3 }}>

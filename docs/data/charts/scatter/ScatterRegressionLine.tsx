@@ -17,8 +17,8 @@ const dollarFormatter = new Intl.NumberFormat('en-US', {
 
 export default function ScatterRegressionLine() {
   return (
-    <Stack width="100%">
-      <Typography variant="h6" component="span" textAlign="center">
+    <Stack sx={{ width: '100%' }}>
+      <Typography variant="h6" component="span" sx={{ textAlign: 'center' }}>
         Relation between Weight and Price of Diamonds
       </Typography>
       <ScatterChart
@@ -45,7 +45,6 @@ export default function ScatterRegressionLine() {
       >
         <RegressionLine seriesId="diamonds" />
       </ScatterChart>
-
       <Typography variant="caption">Source: OpenML</Typography>
     </Stack>
   );
@@ -56,10 +55,16 @@ function RegressionLine({ seriesId }: { seriesId: string }) {
   const palette = rainbowSurgePalette(theme.palette.mode);
   const stroke = palette[2];
   const allSeries = useSeries();
-  const series = allSeries.scatter!.series[seriesId]!;
-  const xScale = useXScale(series.xAxisId!);
-  const yScale = useYScale(series.yAxisId!);
+  // Scatter's series processor is async, so `allSeries.scatter` is `undefined`
+  // until it settles. Keep hooks unconditional and bail out of rendering only.
+  const series = allSeries.scatter?.series[seriesId];
+  const xScale = useXScale(series?.xAxisId ?? undefined);
+  const yScale = useYScale(series?.yAxisId ?? undefined);
   const clipPathId = `linear-regression-clip-${useId()}`;
+
+  if (!series) {
+    return null;
+  }
 
   const { m, b } = linearRegression(series.data ?? []);
 

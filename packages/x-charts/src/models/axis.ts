@@ -14,9 +14,18 @@ import type {
 } from '@mui/x-charts-vendor/d3-scale';
 import { type SxProps } from '@mui/system/styleFunctionSx';
 import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import { type DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
+import type {
+  AxisLinePropsOverrides,
+  AxisTickPropsOverrides,
+  AxisTickLabelPropsOverrides,
+  AxisLabelPropsOverrides,
+  XAxisPropsOverrides,
+  YAxisPropsOverrides,
+} from './chartsSlotsComponentsProps';
 import type { ChartsTextProps } from '../ChartsText';
 import type {
   ContinuousColorConfig,
@@ -25,6 +34,7 @@ import type {
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
 import { type ChartsTypeFeatureFlags } from './featureFlags';
+import { type ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
 export type AxisId = string | number;
 
@@ -57,41 +67,45 @@ export interface ChartsAxisSlots {
    * Custom component for the axis main line.
    * @default 'line'
    */
-  axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisLine?: React.JSXElementConstructor<
+    React.SVGAttributes<SVGPathElement> & AxisLinePropsOverrides
+  >;
   /**
    * Custom component for the axis tick.
    * @default 'line'
    */
-  axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisTick?: React.JSXElementConstructor<
+    React.SVGAttributes<SVGPathElement> & AxisTickPropsOverrides
+  >;
   /**
    * Custom component for tick label.
    * @default ChartsText
    */
-  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps & AxisTickLabelPropsOverrides>;
   /**
    * Custom component for axis label.
    * @default ChartsText
    */
-  axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisLabel?: React.JSXElementConstructor<ChartsTextProps & AxisLabelPropsOverrides>;
   /**
    * Custom component for the x-axis.
    * @default ChartsXAxis
    */
-  xAxis?: React.JSXElementConstructor<ChartsXAxisProps>;
+  xAxis?: React.JSXElementConstructor<ChartsXAxisProps & XAxisPropsOverrides>;
   /**
    * Custom component for the y-axis.
    * @default ChartsYAxis
    */
-  yAxis?: React.JSXElementConstructor<ChartsYAxisProps>;
+  yAxis?: React.JSXElementConstructor<ChartsYAxisProps & YAxisPropsOverrides>;
 }
 
 export interface ChartsAxisSlotProps {
-  axisLine?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTickLabel?: Partial<ChartsTextProps>;
-  axisLabel?: Partial<ChartsTextProps>;
-  xAxis?: Partial<ChartsXAxisProps>;
-  yAxis?: Partial<ChartsYAxisProps>;
+  axisLine?: Partial<React.SVGAttributes<SVGPathElement>> & AxisLinePropsOverrides;
+  axisTick?: Partial<React.SVGAttributes<SVGPathElement>> & AxisTickPropsOverrides;
+  axisTickLabel?: Partial<ChartsTextProps> & AxisTickLabelPropsOverrides;
+  axisLabel?: Partial<ChartsTextProps> & AxisLabelPropsOverrides;
+  xAxis?: Partial<ChartsXAxisProps> & XAxisPropsOverrides;
+  yAxis?: Partial<ChartsYAxisProps> & YAxisPropsOverrides;
 }
 
 export interface ChartsAxisProps extends TickParams {
@@ -174,51 +188,45 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   tickLabelMinGap?: number;
 }
 
-type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends ChartsXAxisProps
-  ? {
-      /**
-       * Position of the axis.
-       *
-       * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
-       *
-       * Set to 'none' to hide the axis.
-       *
-       * The first axis in the list will always have a default position.
-       */
-      position?: 'top' | 'bottom' | 'none';
-      /**
-       * The height of the axis.
-       * Set to `'auto'` to automatically calculate the height based on tick label measurements.
-       * @default 45 if an axis label is provided, 25 otherwise.
-       */
-      height?: number | 'auto';
-    }
-  : AxisProps extends ChartsYAxisProps
-    ? {
-        /**
-         * Position of the axis.
-         *
-         * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
-         *
-         * Set to 'none' to hide the axis.
-         *
-         * The first axis in the list will always have a default position.
-         */
-        position?: 'left' | 'right' | 'none';
-        /**
-         * The width of the axis.
-         * Set to `'auto'` to automatically calculate the width based on tick label measurements.
-         * @default 65 if an axis label is provided, 45 otherwise.
-         */
-        width?: number | 'auto';
-      }
-    : {
-        position?: 'top' | 'bottom' | 'left' | 'right' | 'none';
-        height?: number | 'auto';
-        width?: number | 'auto';
-      };
+export type ChartsCartesianAxisProps = ChartsXAxisProps | ChartsYAxisProps;
+export type ChartsRadialAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps;
 
-export interface ChartsRotationAxisProps extends ChartsAxisProps {
+type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
+  /**
+   * Position of the axis.
+   *
+   * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+   *
+   * Set to 'none' to hide the axis.
+   *
+   * The first axis in the list will always have a default position.
+   */
+  position?:
+    | (AxisProps extends ChartsXAxisProps ? 'top' | 'bottom' : 'none')
+    | (AxisProps extends ChartsYAxisProps ? 'left' | 'right' : 'none')
+    | 'none';
+
+  /**
+   * The height of the axis.
+   * Set to `'auto'` to automatically calculate the height based on tick label measurements.
+   * @default 45 if an axis label is provided, 25 otherwise.
+   */
+  height?: AxisProps extends ChartsXAxisProps ? number | 'auto' : never;
+  /**
+   * The width of the axis.
+   * Set to `'auto'` to automatically calculate the width based on tick label measurements.
+   * @default 65 if an axis label is provided, 45 otherwise.
+   */
+  width?: AxisProps extends ChartsYAxisProps ? number | 'auto' : never;
+};
+
+export interface ChartsRotationAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+  axis?: 'rotation';
+  /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
   /**
    * The start angle (in deg).
    */
@@ -231,17 +239,74 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
    * The gap between the axis and the label.
    */
   labelGap?: number;
+  /**
+   * The position of the rotation axis.
+   * It can be 'inside' or 'outside'.
+   * @default 'outside'
+   */
+  position?: 'inside' | 'outside' | 'none';
+  /**
+   * Set the position of the tick labels relative to the axis line.
+   * `'after'` places them outside the arc, `'before'` inside.
+   * @default position === 'outside' ? 'after' : 'before'
+   */
+  tickLabelPosition?: 'after' | 'before';
+  /**
+   * Set the position of the tick relative to the axis line.
+   * `'after'` places them outside the arc, `'before'` inside.
+   * @default position === 'outside' ? 'after' : 'before'
+   */
+  tickPosition?: 'after' | 'before';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsRadialAxisClasses>;
 }
 
-export interface ChartsRadiusAxisProps extends ChartsAxisProps {
+export interface ChartsRadiusAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
+  axis?: 'radius';
+  /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
   /**
    * The minimal radius.
+   * Can be a number (in pixels), a pixel string (for example `'20px'`), or a percentage string
+   * (for example `'20%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default 0
    */
-  minRadius?: number;
+  minRadius?: number | string;
   /**
    * The maximal radius.
+   * Can be a number (in pixels), a pixel string (for example `'80px'`), or a percentage string
+   * (for example `'80%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default '100%'
    */
-  maxRadius?: number;
+  maxRadius?: number | string;
+  /**
+   * The position of the axis in polar coordinates.
+   * It can be 'start', 'end', or a specific angle in degrees.
+   * @default 'start'
+   */
+  position?: 'start' | 'end' | number | 'none';
+  /**
+   * Set the position of the tick labels relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * Using `'auto'` sets it to `'before'` if position is `'start'` and `'after'` otherwise.
+   * @default 'auto'
+   */
+  tickLabelPosition?: 'center' | 'after' | 'before' | 'auto';
+  /**
+   * Set the position of the tick relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * @default position === 'start' ? 'before' : 'after'
+   */
+  tickPosition?: 'after' | 'before';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsRadialAxisClasses>;
 }
 
 export type ScaleName = keyof AxisScaleConfig;
@@ -513,6 +578,14 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    */
   dataKey?: string;
   /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the axis value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {V} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => V;
+  /**
    * Formats the axis value.
    * @param {V} value The value to format.
    * @param {AxisValueFormatterContext} context The rendering context of the value.
@@ -541,15 +614,23 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
     | 'strict'
     | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
   /**
+   * Defines the series used to compute the axis domain.
+   * @default "all"
+   */
+  domainSeries?: 'all' | 'visible';
+  /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
   ignoreTooltip?: boolean;
 };
 
+/**
+ * Use this type for advanced typing. For basic usage, use `RotationAxis` or `RadiusAxis`.
+ */
 export type PolarAxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
+  AxisProps extends ChartsRadialAxisProps = ChartsRadialAxisProps,
 > = {
   /**
    * The offset of the axis in pixels. It can be used to move the axis from its default position.
@@ -562,15 +643,16 @@ export type PolarAxisConfig<
   MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
+  TickParams &
   AxisConfigExtension;
 
 /**
- * Use this type for advanced typing. For basic usage, use `XAxis`, `YAxis`, `RotationAxis` or `RadiusAxis`.
+ * Use this type for advanced typing. For basic usage, use `XAxis` or `YAxis`.
  */
 export type AxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+  AxisProps extends ChartsCartesianAxisProps = ChartsCartesianAxisProps,
 > = {
   /**
    * The offset of the axis in pixels. It can be used to move the axis from its default position.
@@ -592,7 +674,7 @@ export interface AxisConfigExtension {}
 export type PolarAxisDefaultized<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
+  AxisProps extends ChartsAxisProps = ChartsRadialAxisProps,
 > = Omit<PolarAxisConfig<S, V, AxisProps>, 'scaleType'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
@@ -605,23 +687,25 @@ export type PolarAxisDefaultized<
 export type ComputedAxis<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
-  AxisScaleConfig[S] &
-  AxisScaleComputedConfig[S] & {
-    /**
-     * An indication of the expected number of ticks.
-     */
-    tickNumber: number;
-    /**
-     * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
-     */
-    triggerTooltip?: boolean;
-  } & (AxisProps extends ChartsXAxisProps
-    ? AxisSideConfig<AxisProps> & { height: number }
-    : AxisProps extends ChartsYAxisProps
-      ? AxisSideConfig<AxisProps> & { width: number }
-      : AxisSideConfig<AxisProps>);
+  AxisProps extends ChartsAxisProps = ChartsCartesianAxisProps,
+> = AxisProps extends any
+  ? MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
+      AxisScaleConfig[S] &
+      AxisScaleComputedConfig[S] & {
+        /**
+         * An indication of the expected number of ticks.
+         */
+        tickNumber: number;
+        /**
+         * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
+         */
+        triggerTooltip?: boolean;
+        /** @ignore - internal. True when a rotation axis covers a full circle. */
+        isFullCircle?: boolean;
+      } & AxisProps &
+      (AxisProps extends ChartsXAxisProps ? AxisSideConfig<AxisProps> & { height: number } : {}) &
+      (AxisProps extends ChartsYAxisProps ? AxisSideConfig<AxisProps> & { width: number } : {})
+  : never;
 
 export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
   S,
@@ -636,26 +720,49 @@ export type ComputedYAxis<S extends ScaleName = ScaleName, V = any> = ComputedAx
 >;
 
 export function isBandScaleConfig(
+  scaleConfig: PolarAxisConfig<ScaleName>,
+): scaleConfig is PolarAxisConfig<'band'> & { scaleType: 'band' };
+
+export function isBandScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
-): scaleConfig is AxisConfig<'band'> & { scaleType: 'band' } {
+): scaleConfig is AxisConfig<'band'> & { scaleType: 'band' };
+export function isBandScaleConfig(scaleConfig: AxisConfig<ScaleName> | PolarAxisConfig<ScaleName>) {
   return scaleConfig.scaleType === 'band';
 }
+export function isPointScaleConfig(
+  scaleConfig: PolarAxisConfig<ScaleName>,
+): scaleConfig is PolarAxisConfig<'point'> & { scaleType: 'point' };
 
 export function isPointScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
-): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' } {
+): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' };
+export function isPointScaleConfig(
+  scaleConfig: AxisConfig<ScaleName> | PolarAxisConfig<ScaleName>,
+) {
   return scaleConfig.scaleType === 'point';
 }
 
 export function isContinuousScaleConfig(
+  scaleConfig: PolarAxisConfig<ScaleName>,
+): scaleConfig is PolarAxisConfig<ContinuousScaleName>;
+export function isContinuousScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
-): scaleConfig is AxisConfig<ContinuousScaleName> {
+): scaleConfig is AxisConfig<ContinuousScaleName>;
+export function isContinuousScaleConfig(
+  scaleConfig: AxisConfig<ScaleName> | PolarAxisConfig<ScaleName>,
+) {
   return scaleConfig.scaleType !== 'point' && scaleConfig.scaleType !== 'band';
 }
 
 export function isSymlogScaleConfig(
+  scaleConfig: PolarAxisConfig<ScaleName>,
+): scaleConfig is PolarAxisConfig<'symlog'> & { scaleType: 'symlog' };
+export function isSymlogScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
-): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' } {
+): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' };
+export function isSymlogScaleConfig(
+  scaleConfig: AxisConfig<ScaleName> | PolarAxisConfig<ScaleName>,
+) {
   return scaleConfig.scaleType === 'symlog';
 }
 
@@ -707,10 +814,10 @@ export type YAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleNam
   ? MakeOptional<AxisConfig<S, V, ChartsYAxisProps>, 'id'>
   : never;
 export type RotationAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
-  ? AxisConfig<S, V, ChartsRotationAxisProps>
+  ? MakeOptional<PolarAxisConfig<S, V, ChartsRotationAxisProps>, 'id'>
   : never;
-export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'linear'
-  ? AxisConfig<S, V, ChartsRadiusAxisProps>
+export type RadiusAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? MakeOptional<PolarAxisConfig<S, V, ChartsRadiusAxisProps>, 'id'>
   : never;
 
 /**
@@ -719,7 +826,7 @@ export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'line
 export type DefaultedAxis<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+  AxisProps extends ChartsAxisProps = ChartsCartesianAxisProps,
 > = AxisConfig<S, V, AxisProps> & {
   zoom: DefaultizedZoomOptions | undefined;
 };

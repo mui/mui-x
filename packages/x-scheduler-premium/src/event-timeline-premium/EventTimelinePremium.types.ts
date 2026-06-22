@@ -3,8 +3,8 @@ import { Theme } from '@mui/material/styles';
 import {
   EventTimelinePremiumParameters,
   EventTimelinePremiumStore,
-} from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
-import type { SchedulerPublicAPI } from '@mui/x-scheduler-headless/internals';
+} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 
@@ -17,6 +17,11 @@ export type EventTimelinePremiumApiRef<
 
 export interface EventTimelinePremiumProps<TEvent extends object, TResource extends object>
   extends React.HTMLAttributes<HTMLDivElement>, EventTimelinePremiumParameters<TEvent, TResource> {
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default true
+   */
+  shouldEventRequireResource?: boolean;
   /**
    * Override or extend the styles applied to the component.
    */

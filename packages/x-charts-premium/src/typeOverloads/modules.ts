@@ -5,6 +5,9 @@ import type {
   SeriesId,
   ComputedXAxis,
   ComputedYAxis,
+  PolarAxisDefaultized,
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
 } from '@mui/x-charts/internals';
 import type {
   RangeBarValueType,
@@ -13,6 +16,16 @@ import type {
   OHLCItemIdentifier,
   OHLCSeriesType,
   OHLCValueType,
+  RadialLineSeriesType,
+  DefaultizedRadialLineSeriesType,
+  RadialLineItemIdentifier,
+  RadialBarSeriesType,
+  DefaultizedRadialBarSeriesType,
+  RadialBarItemIdentifier,
+  MapShapeSeriesType,
+  DefaultizedMapShapeSeriesType,
+  MapShapeItemIdentifier,
+  MapShapeValueType,
 } from '../models';
 import type {
   DefaultizedRangeBarSeriesType,
@@ -51,7 +64,8 @@ declare module '@mui/x-charts/internals' {
     };
     ohlc: {
       seriesInput: DefaultizedProps<OHLCSeriesType, 'id'> &
-        MakeRequired<SeriesColor<OHLCValueType | null>, 'color'>;
+        MakeRequired<SeriesColor<OHLCValueType | null>, 'color'> &
+        Pick<DefaultizedOHLCSeriesType, 'upColor' | 'downColor'>;
       series: DefaultizedOHLCSeriesType;
       seriesLayout: {};
       seriesProp: OHLCSeriesType;
@@ -70,6 +84,70 @@ declare module '@mui/x-charts/internals' {
         type: 'ohlc';
         seriesId: SeriesId;
         dataIndex?: number;
+      };
+    };
+    radialLine: {
+      seriesInput: DefaultizedProps<RadialLineSeriesType, 'id'> &
+        MakeRequired<SeriesColor<number | null>, 'color'>;
+      series: DefaultizedRadialLineSeriesType;
+      seriesLayout: {};
+      seriesProp: RadialLineSeriesType;
+      itemIdentifier: RadialLineItemIdentifier;
+      itemIdentifierWithData: RadialLineItemIdentifier;
+      valueType: number | null;
+      canBeStacked: true;
+      axisType: 'polar';
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: RadialLineItemIdentifier;
+        rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+        radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+        series: DefaultizedRadialLineSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'radialLine';
+        seriesId: SeriesId;
+        dataIndex?: number;
+      };
+    };
+    mapShape: {
+      seriesInput: DefaultizedProps<MapShapeSeriesType, 'id'> &
+        MakeRequired<SeriesColor<MapShapeValueType>, 'color'>;
+      series: DefaultizedMapShapeSeriesType;
+      seriesLayout: {};
+      seriesProp: MapShapeSeriesType;
+      itemIdentifier: MapShapeItemIdentifier;
+      itemIdentifierWithData: MapShapeItemIdentifier;
+      valueType: MapShapeValueType;
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: MapShapeItemIdentifier;
+        series: DefaultizedMapShapeSeriesType;
+      };
+      highlightIdentifier: MapShapeItemIdentifier;
+    };
+    radialBar: {
+      seriesInput: DefaultizedProps<RadialBarSeriesType, 'id'> &
+        MakeRequired<SeriesColor<number | null>, 'color'>;
+      series: DefaultizedRadialBarSeriesType;
+      seriesLayout: {};
+      seriesProp: RadialBarSeriesType;
+      itemIdentifier: RadialBarItemIdentifier;
+      itemIdentifierWithData: RadialBarItemIdentifier;
+      valueType: number | null;
+      canBeStacked: true;
+      axisType: 'polar';
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: RadialBarItemIdentifier;
+        rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+        radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+        series: DefaultizedRadialBarSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'radialBar';
+        seriesId: SeriesId;
+        dataIndex: number;
       };
     };
   }

@@ -91,6 +91,8 @@ export class AdapterDateFns
     /* v8 ignore start */
     if (process.env.NODE_ENV !== 'production') {
       if (typeof addDays !== 'function') {
+        // TODO: fix mui/no-guarded-throw
+        // eslint-disable-next-line mui/no-guarded-throw
         throw new Error(
           [
             'MUI: This adapter is only compatible with `date-fns` v2.x package versions.',

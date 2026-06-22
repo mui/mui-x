@@ -74,7 +74,7 @@ const heILGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'אופרטור',
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
-  filterPanelColumns: 'עמודות',
+  filterPanelColumn: 'עמודות',
   filterPanelInputLabel: 'ערך',
   filterPanelInputPlaceholder: 'ערך מסנן',
 

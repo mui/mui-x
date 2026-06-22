@@ -1,0 +1,16 @@
+{
+  "name": "@mui-x-internal/x-license-compat",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Cross-major compatibility tests for @mui/x-license. Older majors are pinned as npm aliases; the current major uses the workspace dep. Each is exercised against the license-key formats we still issue so we catch wire-format regressions.",
+  "dependencies": {
+    "@mui/x-license": "workspace:^",
+    "x-license-v5": "npm:@mui/x-license-pro@5.17.12",
+    "x-license-v6": "npm:@mui/x-license-pro@6.10.2",
+    "x-license-v7": "npm:@mui/x-license@7.29.1",
+    "x-license-v8": "npm:@mui/x-license@8.29.0"
+  },
+  "devDependencies": {
+    "vitest": "catalog:"
+  }
+}

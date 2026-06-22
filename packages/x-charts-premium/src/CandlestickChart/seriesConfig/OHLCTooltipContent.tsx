@@ -7,6 +7,9 @@ import {
 } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import { useChartsTooltipUtilityClasses } from '@mui/x-charts/internals';
+import { type OHLCField } from '../../models';
+
+const OHLC_FIELDS: OHLCField[] = ['open', 'high', 'low', 'close'];
 
 export function OHLCTooltipContent(
   props: AxisTooltipContentProps<'ohlc'> | ItemTooltipContentProps<'ohlc'>,
@@ -27,42 +30,20 @@ export function OHLCTooltipContent(
     return null;
   }
 
-  const [open, high, low, close] = item.value;
+  const { value, formattedValue } = item;
 
   return (
     <React.Fragment>
-      <ChartsTooltipRow className={classes.row}>
-        <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-          {localeText.open}
-        </ChartsTooltipCell>
-        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-          {open}
-        </ChartsTooltipCell>
-      </ChartsTooltipRow>
-      <ChartsTooltipRow className={classes.row}>
-        <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-          {localeText.high}
-        </ChartsTooltipCell>
-        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-          {high}
-        </ChartsTooltipCell>
-      </ChartsTooltipRow>
-      <ChartsTooltipRow className={classes.row}>
-        <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-          {localeText.low}
-        </ChartsTooltipCell>
-        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-          {low}
-        </ChartsTooltipCell>
-      </ChartsTooltipRow>
-      <ChartsTooltipRow className={classes.row}>
-        <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
-          {localeText.close}
-        </ChartsTooltipCell>
-        <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
-          {close}
-        </ChartsTooltipCell>
-      </ChartsTooltipRow>
+      {OHLC_FIELDS.map((field) => (
+        <ChartsTooltipRow key={field} className={classes.row}>
+          <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+            {localeText[field]}
+          </ChartsTooltipCell>
+          <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+            {formattedValue[field] ?? value[field]}
+          </ChartsTooltipCell>
+        </ChartsTooltipRow>
+      ))}
     </React.Fragment>
   );
 }

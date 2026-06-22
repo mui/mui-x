@@ -63,7 +63,6 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
         focused: pickerContext.open ? true : undefined,
         format: pickerContext.fieldFormat,
         formatDensity: fieldPrivateContext.formatDensity,
-        enableAccessibleFieldDOMStructure: fieldPrivateContext.enableAccessibleFieldDOMStructure,
         selectedSections: fieldPrivateContext.selectedSections,
         onSelectedSectionsChange: fieldPrivateContext.onSelectedSectionsChange,
         fieldRef: handleFieldRef,

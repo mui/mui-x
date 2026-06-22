@@ -10,6 +10,7 @@ import { useStore } from '../internals/store/useStore';
 import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
 import { type SeriesId } from '../models/seriesType/common';
 import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { AreaPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface AreaElementOwnerState {
   seriesId: SeriesId;
@@ -25,11 +26,11 @@ export interface AreaElementSlots {
    * The component that renders the area.
    * @default AnimatedArea
    */
-  area?: React.JSXElementConstructor<AnimatedAreaProps>;
+  area?: React.JSXElementConstructor<AnimatedAreaProps & AreaPropsOverrides>;
 }
 
 export interface AreaElementSlotProps {
-  area?: SlotComponentPropsFromProps<AnimatedAreaProps, {}, AreaElementOwnerState>;
+  area?: SlotComponentPropsFromProps<AnimatedAreaProps, AreaPropsOverrides, AreaElementOwnerState>;
 }
 
 export interface AreaElementProps
@@ -75,7 +76,8 @@ function AreaElement(props: AreaElementProps) {
   const store = useStore();
   const enablePositionBasedPointerInteraction = store.use(
     selectorChartExperimentalFeaturesState,
-  )?.enablePositionBasedPointerInteraction;
+    'enablePositionBasedPointerInteraction',
+  );
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
   const interactionProps = useInteractionItemProps(identifier);
   const highlightState = useItemHighlightState(identifier);
@@ -112,7 +114,7 @@ function AreaElement(props: AreaElementProps) {
   return <Area {...other} {...areaProps} />;
 }
 
-AreaElement.propTypes = {
+AreaElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

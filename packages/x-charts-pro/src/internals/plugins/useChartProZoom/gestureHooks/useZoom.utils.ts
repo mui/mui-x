@@ -29,11 +29,11 @@ export const zoomAtPoint = (
   let maxSpillover = 0;
 
   if (newMinRange < MIN_RANGE) {
-    minSpillover = Math.abs(newMinRange);
+    minSpillover = MIN_RANGE - newMinRange;
     newMinRange = MIN_RANGE;
   }
   if (newMaxRange > MAX_RANGE) {
-    maxSpillover = Math.abs(newMaxRange - MAX_RANGE);
+    maxSpillover = newMaxRange - MAX_RANGE;
     newMaxRange = MAX_RANGE;
   }
 
@@ -45,7 +45,7 @@ export const zoomAtPoint = (
   newMinRange -= maxSpillover;
 
   newMinRange = Math.min(MAX_RANGE - MIN_ALLOWED_SPAN, Math.max(MIN_RANGE, newMinRange));
-  newMaxRange = Math.max(MIN_ALLOWED_SPAN, Math.min(MAX_RANGE, newMaxRange));
+  newMaxRange = Math.max(MIN_RANGE + MIN_ALLOWED_SPAN, Math.min(MAX_RANGE, newMaxRange));
 
   return [newMinRange, newMaxRange];
 };

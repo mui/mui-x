@@ -39,7 +39,7 @@ export const getDensePickerTheme = (mode: PaletteMode): ThemeOptions => ({
     fontSize: 13,
   },
   components: {
-    MuiDateRangePickerDay2: {
+    MuiDateRangePickerDay: {
       styleOverrides: {
         root: {
           '--PickerDay-horizontalMargin': '8px',

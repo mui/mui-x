@@ -81,7 +81,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',
-  filterPanelColumns: 'Sloupce',
+  filterPanelColumn: 'Sloupce',
   filterPanelInputLabel: 'Hodnota',
   filterPanelInputPlaceholder: 'Hodnota filtru',
 

@@ -5,7 +5,7 @@ import telemetryContext from '../context';
 
 vi.mock('../context', () => ({
   default: {
-    config: { isInitialized: true, runtimeProjectIdResolved: false },
+    config: { isInitialized: true, runtimePackageNameHashResolved: false },
     traits: {
       machineId: 'test-machine-id',
       projectId: null,
@@ -21,7 +21,7 @@ function nodeHash(input: string): string {
   return createHash('sha256').update(input).digest('hex');
 }
 
-describe.runIf(isJSDOM)('getRuntimeProjectId', () => {
+describe.runIf(isJSDOM)('getRuntimePackageHash', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
@@ -37,8 +37,8 @@ describe.runIf(isJSDOM)('getRuntimeProjectId', () => {
   it('should return hashed npm_package_name when set', async () => {
     vi.stubEnv('npm_package_name', 'test-app');
 
-    const { getRuntimeProjectId } = await import('./get-context');
-    const result = await getRuntimeProjectId();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBe(nodeHash('test-app'));
   });
@@ -53,8 +53,8 @@ describe.runIf(isJSDOM)('getRuntimeProjectId', () => {
       }),
     );
 
-    const { getRuntimeProjectId } = await import('./get-context');
-    const result = await getRuntimeProjectId();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBe(nodeHash('fetched-app'));
     expect(fetchSpy).toHaveBeenCalledWith('/package.json');
@@ -65,8 +65,8 @@ describe.runIf(isJSDOM)('getRuntimeProjectId', () => {
 
     fetchSpy.mockRejectedValueOnce(new Error('Network error'));
 
-    const { getRuntimeProjectId } = await import('./get-context');
-    const result = await getRuntimeProjectId();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBeNull();
   });
@@ -76,8 +76,8 @@ describe.runIf(isJSDOM)('getRuntimeProjectId', () => {
 
     fetchSpy.mockResolvedValueOnce(new Response('Not Found', { status: 404 }));
 
-    const { getRuntimeProjectId } = await import('./get-context');
-    const result = await getRuntimeProjectId();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBeNull();
   });
@@ -92,21 +92,25 @@ describe.runIf(isJSDOM)('getRuntimeProjectId', () => {
       }),
     );
 
-    const { getRuntimeProjectId } = await import('./get-context');
-    const result = await getRuntimeProjectId();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const result = await getRuntimePackageHash();
 
     expect(result).toBeNull();
   });
 });
 
-describe.runIf(isJSDOM)('getTelemetryContext projectId fallback', () => {
+describe.runIf(isJSDOM)('getTelemetryContext runtimePackageNameHash', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     fetchSpy = vi.fn();
     vi.stubGlobal('fetch', fetchSpy);
     telemetryContext.traits.projectId = null;
-    telemetryContext.config.runtimeProjectIdResolved = false;
+    telemetryContext.traits.repoHash = null;
+    telemetryContext.traits.runtimePackageNameHash = null;
+    telemetryContext.traits.postinstallPackageNameHash = null;
+    telemetryContext.traits.rootPathHash = null;
+    telemetryContext.config.runtimePackageNameHashResolved = false;
   });
 
   afterEach(() => {
@@ -114,37 +118,63 @@ describe.runIf(isJSDOM)('getTelemetryContext projectId fallback', () => {
     vi.unstubAllGlobals();
   });
 
-  it('should not repeatedly call getRuntimeProjectId when it returns null', async () => {
+  it('should not repeatedly call getRuntimePackageHash when it returns null', async () => {
     vi.stubEnv('npm_package_name', '');
     fetchSpy.mockResolvedValue(new Response('Not Found', { status: 404 }));
 
     const { default: getTelemetryContext } = await import('./get-context');
 
     const ctx1 = await getTelemetryContext();
-    expect(ctx1.traits.projectId).toBeNull();
+    expect(ctx1.traits.runtimePackageNameHash).toBeNull();
 
     const ctx2 = await getTelemetryContext();
-    expect(ctx2.traits.projectId).toBeNull();
+    expect(ctx2.traits.runtimePackageNameHash).toBeNull();
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should not override existing projectId', async () => {
+  it('should always resolve runtimePackageNameHash even when projectId is set', async () => {
     telemetryContext.traits.projectId = 'existing-hash';
-    vi.stubEnv('npm_package_name', 'should-not-use');
+    telemetryContext.traits.repoHash = 'existing-hash';
+    vi.stubEnv('npm_package_name', 'my-app');
 
     const { default: getTelemetryContext } = await import('./get-context');
     const ctx = await getTelemetryContext();
 
+    expect(ctx.traits.runtimePackageNameHash).toBe(nodeHash('my-app'));
+    // projectId stays as repoHash since it takes priority
     expect(ctx.traits.projectId).toBe('existing-hash');
   });
 
-  it('should set projectId from runtime fallback when postinstall did not set it', async () => {
+  it('should set projectId from runtimePackageNameHash when no repoHash', async () => {
     vi.stubEnv('npm_package_name', 'fallback-app');
 
     const { default: getTelemetryContext } = await import('./get-context');
     const ctx = await getTelemetryContext();
 
+    expect(ctx.traits.runtimePackageNameHash).toBe(nodeHash('fallback-app'));
     expect(ctx.traits.projectId).toBe(nodeHash('fallback-app'));
+  });
+
+  it('should prefer repoHash over runtimePackageNameHash for projectId', async () => {
+    telemetryContext.traits.repoHash = 'repo-hash-value';
+    vi.stubEnv('npm_package_name', 'my-app');
+
+    const { default: getTelemetryContext } = await import('./get-context');
+    const ctx = await getTelemetryContext();
+
+    expect(ctx.traits.runtimePackageNameHash).toBe(nodeHash('my-app'));
+    expect(ctx.traits.projectId).toBe('repo-hash-value');
+  });
+
+  it('should prefer runtimePackageNameHash over postinstallPackageNameHash for projectId', async () => {
+    telemetryContext.traits.postinstallPackageNameHash = 'root-name-hash';
+    vi.stubEnv('npm_package_name', 'app-name');
+
+    const { default: getTelemetryContext } = await import('./get-context');
+    const ctx = await getTelemetryContext();
+
+    expect(ctx.traits.runtimePackageNameHash).toBe(nodeHash('app-name'));
+    expect(ctx.traits.projectId).toBe(nodeHash('app-name'));
   });
 });

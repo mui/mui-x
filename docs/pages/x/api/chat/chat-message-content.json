@@ -1,0 +1,23 @@
+{
+  "props": {
+    "afterContent": { "type": { "name": "node" } },
+    "partProps": {
+      "type": {
+        "name": "shape",
+        "description": "{ dynamic-tool?: { className?: string, defaultExpanded?: object, slotProps?: object, slots?: object, toolSlotProps?: object, toolSlots?: object }, file?: { className?: string, slotProps?: object, slots?: object }, reasoning?: { className?: string, slotProps?: object, slots?: object }, source-document?: { className?: string, slotProps?: object, slots?: object }, source-url?: { className?: string, slotProps?: object, slots?: object }, text?: { renderText?: func }, tool?: { className?: string, defaultExpanded?: object, slotProps?: object, slots?: object, toolSlotProps?: object, toolSlots?: object } }"
+      }
+    }
+  },
+  "name": "ChatMessageContent",
+  "imports": [
+    "import { ChatMessageContent } from '@mui/x-chat/ChatMessage';",
+    "import { ChatMessageContent } from '@mui/x-chat';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatMessageContent",
+  "filename": "/packages/x-chat/src/ChatMessage/ChatMessageContent.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/ai-and-agents/reasoning/\">Chat - Reasoning</a></li>\n<li><a href=\"/x/react-chat/ai-and-agents/step-tracking/\">Chat - Step Tracking</a></li>\n<li><a href=\"/x/react-chat/ai-and-agents/tool-calling/\">Chat - Tool calling</a></li>\n<li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-parts/custom-parts/\">Chat - Custom parts</a></li>\n<li><a href=\"/x/react-chat/display/message-parts/files-and-images/\">Chat - Files and images</a></li>\n<li><a href=\"/x/react-chat/display/message-parts/sources-and-citations/\">Chat - Sources and citations</a></li>\n<li><a href=\"/x/react-chat/display/message-parts/text-and-markdown/\">Chat - Text and markdown</a></li></ul>"
+}

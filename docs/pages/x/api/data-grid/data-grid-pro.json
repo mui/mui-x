@@ -78,7 +78,10 @@
     },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
+      }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -859,6 +862,12 @@
       "class": null
     },
     {
+      "name": "baseModal",
+      "description": "The custom Modal component used in the grid.",
+      "default": "Modal",
+      "class": null
+    },
+    {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
@@ -1359,6 +1368,36 @@
       "isGlobal": false
     },
     {
+      "key": "cell--fillPreview",
+      "className": "MuiDataGridPro-cell--fillPreview",
+      "description": "Styles applied to the cell element when it is in the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewBottom",
+      "className": "MuiDataGridPro-cell--fillPreviewBottom",
+      "description": "Styles applied to the cell element if it is at the bottom edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewLeft",
+      "className": "MuiDataGridPro-cell--fillPreviewLeft",
+      "description": "Styles applied to the cell element if it is at the left edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewRight",
+      "className": "MuiDataGridPro-cell--fillPreviewRight",
+      "description": "Styles applied to the cell element if it is at the right edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--fillPreviewTop",
+      "className": "MuiDataGridPro-cell--fillPreviewTop",
+      "description": "Styles applied to the cell element if it is at the top edge of the fill preview range.",
+      "isGlobal": false
+    },
+    {
       "key": "cell--flex",
       "className": "MuiDataGridPro-cell--flex",
       "description": "Styles applied to the cell element in flex display mode.",
@@ -1422,6 +1461,12 @@
       "key": "cell--textRight",
       "className": "MuiDataGridPro-cell--textRight",
       "description": "Styles applied to the cell element if `align=\"right\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--withFillHandle",
+      "className": "MuiDataGridPro-cell--withFillHandle",
+      "description": "Styles applied to the cell element when it displays the fill handle.",
       "isGlobal": false
     },
     {
@@ -1773,6 +1818,36 @@
       "isGlobal": false
     },
     {
+      "key": "editMultiSelectCell",
+      "className": "MuiDataGridPro-editMultiSelectCell",
+      "description": "Styles applied to the edit multi-select cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellChip",
+      "className": "MuiDataGridPro-editMultiSelectCellChip",
+      "description": "Styles applied to each chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellOverflow",
+      "className": "MuiDataGridPro-editMultiSelectCellOverflow",
+      "description": "Styles applied to the overflow \"+N\" chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopperContent",
+      "className": "MuiDataGridPro-editMultiSelectCellPopperContent",
+      "description": "Styles applied to the edit multi-select cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopup",
+      "className": "MuiDataGridPro-editMultiSelectCellPopup",
+      "description": "Styles applied to the edit multi-select cell popup.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGridPro-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -1938,6 +2013,36 @@
       "key": "menuOpen",
       "className": "MuiDataGridPro-menuOpen",
       "description": "Styles applied to the menu icon element if the menu is open.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCell",
+      "className": "MuiDataGridPro-multiSelectCell",
+      "description": "Styles applied to the multi-select cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellChip",
+      "className": "MuiDataGridPro-multiSelectCellChip",
+      "description": "Styles applied to each chip in the multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellOverflow",
+      "className": "MuiDataGridPro-multiSelectCellOverflow",
+      "description": "Styles applied to the overflow \"+N\" chip in the multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellPopperContent",
+      "className": "MuiDataGridPro-multiSelectCellPopperContent",
+      "description": "Styles applied to the multi-select cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellPopup",
+      "className": "MuiDataGridPro-multiSelectCellPopup",
+      "description": "Styles applied to the multi-select cell expand popup.",
       "isGlobal": false
     },
     {
@@ -2509,6 +2614,5 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>"
 }

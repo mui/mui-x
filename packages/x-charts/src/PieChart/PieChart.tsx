@@ -170,7 +170,7 @@ const PieChart = React.forwardRef(function PieChart(
   );
 });
 
-PieChart.propTypes = {
+PieChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -252,11 +252,11 @@ PieChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['pie']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
     }),
   ]),
   /**
@@ -388,11 +388,11 @@ PieChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['pie']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
     }),
   ]),
   /**

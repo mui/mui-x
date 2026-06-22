@@ -73,7 +73,7 @@ function RadarAxis(props: RadarAxisProps) {
   );
 }
 
-RadarAxis.propTypes = {
+RadarAxis.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -87,6 +87,10 @@ RadarAxis.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * The number of divisions with label.
    * @default 1

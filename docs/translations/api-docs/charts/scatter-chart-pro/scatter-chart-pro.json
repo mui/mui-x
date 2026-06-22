@@ -55,7 +55,7 @@
       "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
     "initialZoom": {
-      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
+      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it.<br>Each entry is either explicit zoom percentages (<code>{ axisId, start, end }</code>) or a range value (<code>{ axisId, value }</code>) resolved against the axis domain."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
@@ -125,7 +125,7 @@
       }
     },
     "renderer": {
-      "description": "The type of renderer to use for the scatter plot. - <code>svg-single</code>: Renders every scatter item in a <code>&lt;circle /&gt;</code> element. - <code>svg-batch</code>: Batch renders scatter items in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/scatter/#performance\">https://mui.com/x/react-charts/scatter/#performance</a>"
+      "description": "The type of renderer to use for the scatter plot. - <code>svg-single</code>: Renders every scatter item in a <code>&lt;circle /&gt;</code> element, synchronously. - <code>svg-progressive</code>: Renders every scatter item in a <code>&lt;circle /&gt;</code> element, in progressive batches that paint over several animation frames to keep the main thread responsive. - <code>svg-batch</code>: Batch renders scatter items in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/scatter/#performance\">https://mui.com/x/react-charts/scatter/#performance</a><br>When not set, defaults to <code>svg-single</code>. Enable the <code>progressiveRendering</code> experimental feature to auto-select <code>svg-progressive</code> above an internal point-count threshold; this will become the default in the next major version."
     },
     "series": {
       "description": "The series to display in the scatter chart. An array of <a href='/x/api/charts/scatter-series/'>ScatterSeries</a> objects."
@@ -168,6 +168,8 @@
     "baseMenuItem": "",
     "baseMenuList": "",
     "basePopper": "",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
+    "baseToggleButtonGroup": "",
     "baseTooltip": "",
     "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
     "legend": "Custom rendering of the legend.",

@@ -6,113 +6,120 @@ components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMa
 
 # Charts - Radar
 
-<p class="description">Radar lets you compare multivariate data in a 2D chart.</p>
+<p class="description">Use radar charts to compare multiple variables on axes arranged in a circle.</p>
 
-## Basics
+## Overview
 
-Radar charts series should contain a `data` property containing an array of values.
+A radar chart plots data across multiple axes that radiate from a center, so you can compare values across metrics.
+Use it to compare profiles or scores across several dimensions (for example, product attributes or skills).
 
-Radar charts also require a `radar` prop with a `metrics` property containing an array of string or objects.
-Each item of this array define a metric of the radar.
+The demo below shows a basic radar chart with one series.
 
 {{"demo": "BasicRadar.js"}}
 
+## Basics
+
+A radar chart series must include a `data` property with an array of values.
+
+The series must also include a `radar` object with a `metrics` array.
+Each entry in `metrics` is a string or an object that defines one axis of the chart.
+
 ## Multi-series
 
-You can plot multiple series on the same radar chart.
+You can plot multiple series on the same radar.
 
 {{"demo": "MultiSeriesRadar.js"}}
 
 ## Series options
 
-Radar series support `hideMark` and `fillArea` parameter to modify the rendering of the series.
+Set `hideMark` and `fillArea` on a radar series to change how it renders.
 
 {{"demo": "DemoRadarVisualisation.js"}}
 
 ## Metrics
 
-The `metrics` property of `radar` takes an array with one item per corner of the radar.
-This item can either be:
+The `metrics` property of `radar` takes an array with one item per axis (corner) of the chart.
+Each item can be:
 
-- A string used as the axis label. The other properties are populated from the data.
-- An object with the following properties:
-  - `name`: The label associated to the axis.
-  - `min`: The minimum value along this direction (by default 0).
-  - `max`: The maximum value along this direction (by default the maximum value along this direction).
+- A string (used as the axis label). Other properties come from the data.
+- An object with:
+  - `name`: the axis label
+  - `min`: minimum value for this axis (default 0)
+  - `max`: maximum value for this axis (default is the max value in the data)
 
-{{"demo": "RadarAxis.js" }}
+{{"demo": "RadarAxis.js"}}
 
 ## Grid
 
-The radar chart displays a grid behind the series that can be configured with:
+The radar chart draws a grid behind the series.
+Configure it with:
 
-- `startAngle` The rotation angle of the entire chart in degrees.
-- `divisions` The number of divisions of the grid.
-- `shape` The grid shape that can be `circular` or `sharp`.
-- `stripeColor` The callback that defines stripe colors. Set it to `null` to remove stripes.
+- `startAngle`: rotation of the entire chart in degrees
+- `divisions`: number of grid divisions
+- `shape`: `circular` or `sharp`
+- `stripeColor`: callback that returns stripe colors. Set to `null` to remove stripes.
 
-{{"demo": "DemoRadar.js" }}
+{{"demo": "DemoRadar.js"}}
 
 ## Axis values
 
-You can add labels to metrics with the `<RadarAxis />`.
-This component requires a `metric` prop and can be configured with:
+Add labels to metrics with `RadarAxis`.
+It needs a `metric` prop and can be configured with:
 
-- `angle` The angle used to display labels. By default it's the one associated to the given metric.
-- `labelOrientation` The orientation strategy. Either horizontal labels with moving anchor point, or label rotating with the axis.
-- `divisions` The number of labels to display.
-- `textAnchor`/`dominantBaseline` The label placement. Can either be a string, or a function with the `angle` value (in degree) as an argument.
+- `angle`: angle for the label (default is the metric's angle)
+- `labelOrientation`: horizontal with moving anchor, or rotating with the axis
+- `divisions`: number of labels
+- `textAnchor` / `dominantBaseline`: label placement (string or function that receives the angle in degrees)
 
-{{"demo": "DemoRadarAxis.js" }}
+{{"demo": "DemoRadarAxis.js"}}
 
 ## Highlight
 
 ### Axis highlight
 
-By default the radar highlight values of a same axis.
-With composition you can add this behavior with the `<RadarAxisHighlight />` component.
+By default, the radar chart highlights all values on the same axis.
+If you're composing a custom component, add `RadarAxisHighlight` to get this behavior.
 
-{{"demo": "DemoRadarAxisHighlight.js" }}
+{{"demo": "DemoRadarAxisHighlight.js"}}
 
 ### Series highlight
 
-To set the highlight on series, use the `highlight` prop with `'series'` value.
-This highlight can be controlled with `highlightedItem` value and `onHighlightChange` callback.
+Set the `highlight` prop to `'series'` to highlight by series.
+Control it with `highlightedItem` and `onHighlightChange`.
 
-With composition you can pass those props to the `RadarDataProvider`.
+If you're composing a custom component, pass these props to `RadarDataProvider`.
 
-This demo shows a controlled highlight.
-Notice the impact of the series order in the highlight interaction.
-The UK series is the last item of the `series` prop.
-Such that its area renders on top of the others.
-Otherwise, the other area would catch the pointer event, making it impossible to highlight it.
+The demo below shows controlled highlight with several overlapping country series.
+Place the series you want to be most interactive last in the `series` array, since later series render on top and receive pointer events first in overlapping regions.
 
-{{"demo": "DemoRadarSeriesHighlight.js" }}
+{{"demo": "DemoRadarSeriesHighlight.js"}}
 
 ### Disabling highlight
 
-To remove highlight, set the `highlight` prop to `'none'`.
+Set the `highlight` prop to `'none'` to turn off highlighting.
 
 ## Tooltip
 
-Like other charts, the radar chart [tooltip](/x/react-charts/tooltip/) can be customized with slots.
-The `trigger` prop of the `tooltip` slot accepts the following values:
+You can customize the radar tooltip with slots.
+See [Tooltip](/x/react-charts/tooltip/) for details.
 
-- `'axis'`—the user's mouse position is associated with a metric. The tooltip displays data about all series along this specific metric.
-- `'item'`—when the user's mouse hovers over a radar area, the tooltip displays data about this series.
-- `'none'`—disable the tooltip.
+The `trigger` prop of the tooltip slot accepts:
 
-{{"demo": "RadarTooltip.js" }}
+- `'axis'`: mouse position maps to a metric. The tooltip shows data for all series on that metric.
+- `'item'`: when the pointer is over a radar area, the tooltip shows data for that series.
+- `'none'`: tooltip is off.
 
-## Click event
+{{"demo": "RadarTooltip.js"}}
 
-Radar charts provides multiple click handlers:
+## Click events
 
-- `onAreaClick` for click on a specific area.
-- `onMarkClick` for click on a specific mark.
-- `onAxisClick` for a click anywhere in the chart
+Radar charts provide several click handlers:
 
-They all provide the following signature.
+- `onAreaClick` for clicks on a specific area
+- `onMarkClick` for clicks on a specific mark
+- `onAxisClick` for clicks anywhere in the chart
+
+Each handler uses this signature:
 
 ```js
 const clickHandler = (
@@ -124,40 +131,37 @@ const clickHandler = (
 {{"demo": "RadarClick.js"}}
 
 :::info
-There is a slight difference between the `event` of `onAxisClick` and the others:
-
-- For `onAxisClick` it's a native mouse event emitted by the svg component.
-- For others, it's a React synthetic mouse event emitted by the area, line, or mark component.
-
+The `event` passed to `onAxisClick` differs from the others.
+`onAxisClick` receives the native mouse event from the SVG element.
+The other handlers receive a React synthetic mouse event from the area, mark, or line component.
 :::
 
 ## Composition
 
-Use the `<RadarDataProvider />` to provide `series` and `radar` props for composition.
+Use `RadarDataProvider` to provide the `series` and `radar` props for composition.
 
-In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
+In addition to the shared chart components available for [composition](/x/react-charts/composition/), you can use:
 
 - For axes:
-  - `<RadarGrid />` renders the grid and stripes.
-  - `<RadarMetricLabels />` renders metric labels around the grid.
+  - `RadarGrid`: grid and stripes
+  - `RadarMetricLabels`: metric labels around the grid
 - For data:
-  - `<RadarSeriesPlot />` renders series (the area and the marks) on top of each other.
-  - `<RadarSeriesArea />` renders the series area.
-  - `<RadarSeriesMarks />` renders series marks.
+  - `RadarSeriesPlot`: area and marks stacked
+  - `RadarSeriesArea`: area only
+  - `RadarSeriesMarks`: marks only
 - For interaction:
-  - `<RadarAxisHighlight />` renders line and marks along the highlighted axis.
-  - `<FocusedRadarMark />` renders the focus visual element when using keyboard navigation.
+  - `RadarAxisHighlight`: line and marks along the highlighted axis
+  - `FocusedRadarMark`: focus indicator for keyboard navigation
 
 :::info
-The `<RadarSeriesPlot />` renders all series together, such that the area of the second series is on top of the marks of the first one.
+`RadarSeriesPlot` draws all series together, so the second series area is on top of the first series marks.
 
-The `<RadarSeriesArea />` and `<RadarSeriesMarks />` components make it possible to render all marks on top of all areas.
-You can also use them to render components between the areas and the marks.
+`RadarSeriesArea` and `RadarSeriesMarks` let you draw all marks above all areas, or insert components between areas and marks.
 :::
 
-{{"demo": "CompositionExample.js" }}
+{{"demo": "CompositionExample.js"}}
 
-Here's how the Radar Chart is composed:
+Here's how the radar chart is composed:
 
 ```jsx
 <RadarDataProvider>

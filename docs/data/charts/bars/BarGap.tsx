@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography';
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { balanceSheet, addLabels } from './netflixsBalanceSheet';
 

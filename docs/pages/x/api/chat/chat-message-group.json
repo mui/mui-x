@@ -1,0 +1,20 @@
+{
+  "props": {
+    "groupKey": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.id ?? message.role ?? ''"
+    }
+  },
+  "name": "ChatMessageGroup",
+  "imports": [
+    "import { ChatMessageGroup } from '@mui/x-chat/ChatMessage';",
+    "import { ChatMessageGroup } from '@mui/x-chat';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatMessageGroup",
+  "filename": "/packages/x-chat/src/ChatMessage/ChatMessageGroup.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>"
+}

@@ -160,9 +160,13 @@ export const useGridPrintExport = (
       const gridMain: HTMLElement | null = gridClone.querySelector(`.${gridClasses.main}`);
       gridMain!.style.overflow = 'visible';
 
-      gridClone.querySelector<HTMLElement>(
+      const renderZone = gridClone.querySelector<HTMLElement>(
         `.${gridClasses.virtualScrollerRenderZone}`,
-      )!.style.position = 'static';
+      )!;
+      renderZone.style.position = 'static';
+      renderZone.style.transform = '';
+      const contentFiller = gridClone.querySelector<HTMLElement>(`.${gridClasses.contentFiller}`)!;
+      contentFiller.style.display = 'none';
 
       virtualScrollerContent.style.flexBasis = 'auto';
 

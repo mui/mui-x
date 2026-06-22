@@ -7,13 +7,24 @@ import {
   selectorChartZoomOptionsLookup,
   createZoomLookup,
   selectorChartAxisZoomOptionsLookup,
+  selectorChartXAxisWithDomains,
+  selectorChartYAxisWithDomains,
 } from '@mui/x-charts/internals';
 import debounce from '@mui/utils/debounce';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useEventCallback } from '@mui/material/utils';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import {
+  getRangeButtonDomainParams,
+  rangeButtonValueToZoom,
+} from '../../../ChartsToolbarPro/rangeButtonValueToZoom';
 import { calculateZoom } from './calculateZoom';
-import { type UseChartProZoomSignature } from './useChartProZoom.types';
+import {
+  type InitialZoom,
+  type InitialZoomRange,
+  type UseChartProZoomSignature,
+} from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
@@ -24,6 +35,14 @@ import { useZoomOnBrush } from './gestureHooks/useZoomOnBrush';
 import { useZoomOnDoubleTapReset } from './gestureHooks/useZoomOnDoubleTapReset';
 import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
 import { initializeZoomData } from './initializeZoomData';
+import { useRegisterZoomGestures } from './gestureHooks/useRegisterZoomGestures';
+
+/**
+ * Type guard for `initialZoom` entries provided as a range value.
+ */
+function isInitialZoomRange(entry: InitialZoom): entry is InitialZoomRange {
+  return 'value' in entry;
+}
 
 export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginData) => {
   const { store, params } = pluginData;
@@ -81,6 +100,68 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     });
     removeIsInteracting();
   }, [store, paramsZoomData, removeIsInteracting]);
+
+  // Resolve `initialZoom` entries provided as range values (e.g. `{ axisId, value: { unit: 'month' } }`).
+  // These depend on the computed axis domains, which are only available after the first render
+  // (unless the user provides explicit `width`/`height`), so they are resolved once on mount.
+  // A layout effect avoids a visible unzoomed frame.
+  const hasResolvedInitialZoomRanges = React.useRef(false);
+  useEnhancedEffect(() => {
+    if (hasResolvedInitialZoomRanges.current) {
+      // `initialZoom` is only read on mount, like the rest of the initial zoom state.
+      return;
+    }
+    hasResolvedInitialZoomRanges.current = true;
+
+    if (paramsZoomData !== undefined) {
+      // The zoom is controlled, `initialZoom` is ignored.
+      return;
+    }
+
+    const rangeEntries = (params.initialZoom ?? []).filter(isInitialZoomRange);
+    if (rangeEntries.length === 0) {
+      return;
+    }
+
+    const { axes: xAxes, domains: xDomains } = selectorChartXAxisWithDomains(store.state);
+    const { axes: yAxes, domains: yDomains } = selectorChartYAxisWithDomains(store.state);
+
+    const resolvedZoom = new Map<AxisId, ZoomData>();
+    rangeEntries.forEach((entry) => {
+      const xAxis = xAxes?.find((axis) => axis.id === entry.axisId);
+      const axis = xAxis ?? yAxes?.find((candidate) => candidate.id === entry.axisId);
+
+      if (!axis) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(
+            `MUI X Charts: \`initialZoom\` references the axis with id "${entry.axisId}", which does not exist.\n` +
+              'The range cannot be resolved. Provide an `axisId` that matches a chart axis.',
+          );
+        }
+        return;
+      }
+
+      const domain = (xAxis ? xDomains : yDomains)[entry.axisId]?.domain;
+      const domainParams = getRangeButtonDomainParams(axis, domain);
+      if (!domainParams) {
+        return;
+      }
+
+      const { start, end } = rangeButtonValueToZoom(entry.value, domainParams);
+      resolvedZoom.set(entry.axisId, { axisId: entry.axisId, start, end });
+    });
+
+    if (resolvedZoom.size === 0) {
+      return;
+    }
+
+    store.set('zoom', {
+      ...store.state.zoom,
+      isInteracting: true,
+      zoomData: store.state.zoom.zoomData.map((zoom) => resolvedZoom.get(zoom.axisId) ?? zoom),
+    });
+    removeIsInteracting();
+  }, [store, paramsZoomData, params.initialZoom, removeIsInteracting]);
 
   const setZoomDataCallback = React.useCallback(
     (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
@@ -165,6 +246,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   }, [removeIsInteracting]);
 
   // Add events
+  useRegisterZoomGestures(pluginData);
+
   usePanOnDrag(pluginData, setZoomDataCallback);
 
   usePanOnPressAndDrag(pluginData, setZoomDataCallback);
@@ -228,9 +311,15 @@ useChartProZoom.getInitialState = (params) => {
     ...createZoomLookup('x')(defaultizedXAxis),
     ...createZoomLookup('y')(defaultizedYAxis),
   };
+  // Range-value entries of `initialZoom` are resolved after the first render, once the axis
+  // domains are computed. Only the explicit `ZoomData` entries are applied to the initial state.
   const userZoomData =
     // eslint-disable-next-line no-nested-ternary
-    zoomData !== undefined ? zoomData : initialZoom !== undefined ? initialZoom : undefined;
+    zoomData !== undefined
+      ? zoomData
+      : initialZoom !== undefined
+        ? initialZoom.filter((entry): entry is ZoomData => !isInitialZoomRange(entry))
+        : undefined;
 
   return {
     zoom: {

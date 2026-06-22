@@ -13,8 +13,9 @@ import {
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { GridMultiSelectMeasurer } from '../components/cell/GridMultiSelectMeasurer';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import type { DataGridProProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps, DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
@@ -23,7 +24,7 @@ import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration<GridPrivateApiPro> = {
+const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedProps> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
@@ -72,6 +73,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         ref={ref}
       >
         {watermark}
+        <GridMultiSelectMeasurer />
       </GridRoot>
     </GridContextProvider>
   );
@@ -93,7 +95,7 @@ interface DataGridProComponent {
  */
 export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
-DataGridProRaw.propTypes = {
+DataGridProRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -403,6 +405,7 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**

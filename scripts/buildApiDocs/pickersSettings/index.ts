@@ -1,10 +1,15 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docsx/config';
-import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
-import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
-import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
+import {
+  ProjectSettings,
+  ComponentReactApi,
+  HookReactApi,
+  findApiPages,
+} from '@mui/internal-api-docs-builder';
+import { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
+import generatePickersClassName from './generatePickersClassName';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
@@ -46,7 +51,7 @@ export const projectPickersSettings: ProjectSettings = {
       .filter((page): page is PageType => page !== null)
       .sort((a: PageType, b: PageType) => a.title.localeCompare(b.title));
 
-    return `import type { MuiPage } from '@mui/docs/MuiPage';
+    return `import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const datePickersApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
 export default datePickersApiPages;
@@ -72,7 +77,7 @@ export default datePickersApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/date-pickers',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/date-pickers',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/date-pickers',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [
@@ -89,7 +94,7 @@ export default datePickersApiPages;
   sortingStrategies: {
     slotsSort: (a, b) => a.name.localeCompare(b.name),
   },
-  generateClassName: generateUtilityClass,
+  generateClassName: generatePickersClassName,
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [
     ...getNonComponentFolders(),

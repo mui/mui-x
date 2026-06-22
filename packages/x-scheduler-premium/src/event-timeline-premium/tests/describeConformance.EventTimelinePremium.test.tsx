@@ -19,8 +19,8 @@ describe('<EventTimelinePremium /> - Describe Conformance', () => {
       resources={[{ id: 'resource-1', title: 'Engineering' }]}
       events={[]}
       visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-      view="days"
-      views={['days']}
+      preset="dayAndMonth"
+      presets={['dayAndMonth']}
     />,
     () => ({
       classes,

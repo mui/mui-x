@@ -1,49 +1,94 @@
 import * as React from 'react';
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
-import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { timelineEvents, timelineResources, timelineDefaultVisibleDate } from './data';
+import {
+  CustomThemeName,
+  DemoThemeSelector,
+  SchedulerDemoThemeProvider,
+} from './DemoThemeSelector';
+import LicenseCard from '../LicenseCard';
 
-const viewOptions: EventTimelinePremiumView[] = ['time', 'days', 'weeks', 'months', 'years'];
+const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [
+  { value: 'dayAndHour', label: 'Time' },
+  { value: 'dayAndMonth', label: 'Days' },
+  { value: 'dayAndWeek', label: 'Weeks' },
+  { value: 'monthAndYear', label: 'Months' },
+  { value: 'year', label: 'Years' },
+];
 
 export default function TimelineDemo() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(timelineEvents);
-  const [view, setView] = React.useState<EventTimelinePremiumView>('months');
+  const [preset, setPreset] = React.useState<EventTimelinePremiumPreset>('monthAndYear');
+  const [selectedTheme, setSelectedTheme] = React.useState<CustomThemeName>('default');
   const apiRef = useEventTimelinePremiumApiRef();
 
-  const handleViewChange = (event: SelectChangeEvent) => {
-    setView(event.target.value as EventTimelinePremiumView);
+  const handlePresetChange = (event: SelectChangeEvent) => {
+    setPreset(event.target.value as EventTimelinePremiumPreset);
   };
 
   return (
-    <Paper
-      variant="outlined"
-      elevation={0}
-      sx={{ height: 600, width: '100%', p: 1, display: 'flex', flexDirection: 'column', gap: 1 }}
-    >
-      <Select value={view} onChange={handleViewChange} size="small" sx={{ width: 140 }}>
-        {viewOptions.map((value) => (
-          <MenuItem key={value} value={value}>
-            {value.charAt(0).toUpperCase() + value.slice(1)}
-          </MenuItem>
-        ))}
-      </Select>
+    <Stack>
+      <SchedulerDemoThemeProvider selectedTheme={selectedTheme}>
+        <Stack spacing={1} sx={{ height: 600, width: '100%', mb: 6 }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            <DemoThemeSelector
+              ariaLabel="Timeline demo theme"
+              selectedTheme={selectedTheme}
+              onThemeChange={(event) => {
+                setSelectedTheme(event.target.value as CustomThemeName);
+              }}
+            />
+            <Select
+              aria-label="Timeline scale"
+              value={preset}
+              onChange={handlePresetChange}
+              size="small"
+              sx={{ width: 140 }}
+            >
+              {presetOptions.map(({ value, label }) => (
+                <MenuItem key={value} value={value}>
+                  {label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Stack>
 
-      <EventTimelinePremium
-        apiRef={apiRef}
-        events={events}
-        onEventsChange={setEvents}
-        resources={timelineResources}
-        defaultVisibleDate={timelineDefaultVisibleDate}
-        view={view}
-        onViewChange={setView}
-        areEventsResizable
-        areEventsDraggable
-      />
-    </Paper>
+          <Box sx={{ minHeight: 0, flexGrow: 1 }}>
+            <EventTimelinePremium
+              apiRef={apiRef}
+              events={events}
+              onEventsChange={setEvents}
+              resources={timelineResources}
+              defaultVisibleDate={timelineDefaultVisibleDate}
+              preset={preset}
+              onPresetChange={setPreset}
+              areEventsResizable
+              areEventsDraggable
+            />
+          </Box>
+        </Stack>
+      </SchedulerDemoThemeProvider>
+      <Stack direction="row" spacing={2} sx={{ flexDirection: { xs: 'column', md: 'row' }, mb: 6 }}>
+        <LicenseCard
+          plan="premium"
+          title="Premium-only component"
+          description="A horizontal resource timeline for scheduling resources, where each resource is displayed as a row, and allocations are continuous bars across time. Included in the Premium license, no separate purchase required."
+        />
+      </Stack>
+    </Stack>
   );
 }

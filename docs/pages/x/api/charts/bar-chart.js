@@ -1,6 +1,7 @@
 import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+import { ApiPage } from '@mui/internal-core-docs/ApiPage';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
+import translation from 'docs/translations/api-docs/charts/bar-chart/bar-chart.json';
 import jsonPageContent from './bar-chart.json';
 
 export default function Page(props) {
@@ -9,12 +10,7 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/bar-chart',
-    false,
-    /\.\/bar-chart.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
 
   return { props: { descriptions } };
 }

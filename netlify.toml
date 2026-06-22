@@ -8,7 +8,11 @@
 [build.environment]
   NODE_VERSION = "24.14"
   PNPM_FLAGS = "--frozen-lockfile"
-  NODE_OPTIONS = "--max-old-space-size=4096"
+  NODE_OPTIONS = "--max-old-space-size=6144"
+  # Cap the Next.js docs build worker count (read by `withDocsInfra`, which
+  # otherwise defaults to `os.availableParallelism()`) to avoid OOM during the
+  # static export build.
+  NEXT_PARALLELISM = "3"
 
 # disabled because of https://github.com/mui/mui-public/issues/809
 # TODO: Re-enable after either:

@@ -12,7 +12,12 @@ import type {
   AxisItemIdentifier,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import type { ZoomData, ZoomOptions, ZoomSliderShowTooltip } from './zoom.types';
+import type {
+  ZoomData,
+  ZoomOptions,
+  ZoomSliderPreviewOptions,
+  ZoomSliderShowTooltip,
+} from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 import type { UseChartBrushSignature } from '../useChartBrush';
@@ -97,9 +102,10 @@ export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = Sca
 
 export interface DefaultedZoomSliderOptions extends Omit<
   NonNullable<Required<ZoomOptions['slider']>>,
-  'showTooltip'
+  'showTooltip' | 'preview'
 > {
   showTooltip: ZoomSliderShowTooltip;
+  preview: boolean | ZoomSliderPreviewOptions;
 }
 
 export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slider'>> {

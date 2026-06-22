@@ -41,12 +41,22 @@ const scatterChartsParams = {
       },
     }),
   ),
-  xAxis: [{ min: 0, label: 'Electricity Generation (GWh)' }],
-  yAxis: [{ min: 0, width: 60, label: 'Life-cycle Carbon Intensity (gCO₂eq/kWh)' }],
+  xAxis: [
+    { min: 0, label: 'Electricity Generation (GWh)', domainSeries: 'visible' },
+  ],
+  yAxis: [
+    {
+      min: 0,
+      width: 60,
+      label: 'Life-cycle Carbon Intensity (gCO₂eq/kWh)',
+      domainSeries: 'visible',
+    },
+  ],
   height: 400,
   colors: schemePaired,
   slotProps: {
     legend: {
+      toggleVisibilityOnClick: true,
       position: { vertical: 'bottom' },
       sx: { justifyContent: 'center' },
     },
@@ -89,8 +99,7 @@ function ElectricityTooltipContent() {
     <Paper sx={{ p: 1.5 }} elevation={4}>
       <Typography
         variant="subtitle2"
-        justifyContent={'space-between'}
-        display="flex"
+        sx={{ justifyContent: 'space-between', display: 'flex' }}
       >
         {item.label} {flags[item.identifier.seriesId]}
       </Typography>

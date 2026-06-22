@@ -6,6 +6,7 @@ import { PickersLayout } from '../../../PickersLayout';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
+import { extractRootForwardedProps } from '../../utils/utils';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -15,18 +16,12 @@ import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePi
  */
 export const useMobilePicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseMobilePickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseMobilePickerProps<TView, any, TExternalProps>,
 >({
   props,
   steps,
   ...pickerParams
-}: UseMobilePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseMobilePickerParams<TView, TExternalProps>) => {
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 
   const getStepNavigation = createNonRangePickerStepNavigation({ steps });
@@ -52,6 +47,7 @@ export const useMobilePicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
+    externalForwardedProps: extractRootForwardedProps(props),
     additionalProps: {
       // Forwarded props
       ...(isToolbarHidden && { id: labelId }),

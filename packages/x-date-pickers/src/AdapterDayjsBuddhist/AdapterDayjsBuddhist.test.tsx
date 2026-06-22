@@ -3,7 +3,7 @@ import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjsBuddhist } from '@mui/x-date-pickers/AdapterDayjsBuddhist';
 import {
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   describeBuddhistAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
@@ -37,6 +37,7 @@ describe('<AdapterDayjsBuddhist />', () => {
     describe('with Thai locale', () => {
       const { render, adapter } = createPickerRenderer({
         adapterName: 'dayjs-buddhist',
+        Adapter: AdapterDayjsBuddhist,
         locale: { code: 'th' },
       });
 
@@ -47,12 +48,11 @@ describe('<AdapterDayjsBuddhist />', () => {
 
       it('should have well formatted value', () => {
         const view = renderWithProps({
-          enableAccessibleFieldDOMStructure: true,
           value: adapter.date(testDate),
         });
 
         // Thai locale uses 24h format (no meridiem)
-        expectFieldValueV7(view.getSectionsContainer(), '15/05/2561 09:35');
+        expectFieldValue(view.getSectionsContainer(), '15/05/2561 09:35');
       });
     });
   });

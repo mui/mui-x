@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
+components: BarChart, BarChartPro, BarElement, BarPlot, BarPlotPremium, ChartsGrid, BarLabel
 ---
 
 # Charts - Bars
@@ -38,7 +38,7 @@ If your data is stored in an array of objects, you can use the `dataset` helper 
 It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
 
 You can reuse this data when defining the series and axes by using the `dataKey` property.
-For example, `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+For example, `xAxis={[{ dataKey: 'x' }]}` or `series={[{ dataKey: 'y' }]}`.
 
 {{"demo": "BarsDataset.js"}}
 
@@ -94,7 +94,7 @@ You can test all configuration options in the following demo:
 ### Date axis
 
 If your band axis represents dates that are sorted and evenly spaced (as is typical), you can set `ordinalTimeTicks` to pick certain date frequencies.
-This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
+This modifies the [tick management](/x/react-charts/axis-ticks/#ordinal-tick-management).
 
 Instead of one tick per band, the axis renders ticks according to the provided frequencies and the tick number.
 
@@ -120,7 +120,7 @@ You can work around this limitation by using a [symlog scale](/x/react-charts/ax
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) for details.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 
@@ -219,6 +219,15 @@ The example below positions the labels above the bars they refer to.
 
 {{"demo": "LabelsAboveBars.js"}}
 
+### Stack total labels
+
+The `barLabel` property only has access to a single bar, so it can't display a stack's total.
+To show it, render a custom component as a child of the chart container.
+
+The example below sums the series with the [`useBarSeries`](/x/react-charts/hooks/use-series/) hook and positions each total with the [`useXScale`](/x/react-charts/hooks/use-scale/) and [`useYScale`](/x/react-charts/hooks/use-scale/) scales.
+
+{{"demo": "StackTotalLabels.js"}}
+
 ## Click events
 
 Bar charts provide two click handlers:
@@ -275,8 +284,11 @@ When you set `skipAnimation` to `true`, the chart renders without animations.
 
 ## Performance
 
+### SVG batch rendering
+
 By default, each bar is drawn as an SVG `rect` element.
 With many bars, this can slow down rendering.
+
 To render bars more efficiently, you can set the `renderer` prop to `"svg-batch"`.
 This has some trade-offs:
 
@@ -290,6 +302,19 @@ This has some trade-offs:
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
 
 {{"demo": "BarBatchRenderer.js"}}
+
+### WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+For even larger datasets, `BarChartPremium` supports a WebGL renderer that draws all bars from a single `<canvas>` element.
+Set the `renderer` prop to `"webgl"` to enable it.
+
+The WebGL renderer has the same trade-offs as the batch renderer, plus a few additional ones:
+
+- Per-bar DOM elements are not rendered, so custom slots that rely on them (such as a custom `bar` slot) are not applied.
+- The WebGL canvas only draws the bar shapes. Axes, grid, highlights, focus outlines, and bar labels continue to rely on SVG.
+- Requires a browser with WebGL 2 support.
+
+{{"demo": "WebGLBars.js"}}
 
 ## Composition
 
@@ -310,6 +335,7 @@ Here's how the bar chart is composed:
         <ChartsOverlay />
         <ChartsAxisHighlight />
         <FocusedBar />
+        <FocusedScatterMark />
       </g>
       <ChartsAxis />
       <ChartsClipPath id={clipPathId} />

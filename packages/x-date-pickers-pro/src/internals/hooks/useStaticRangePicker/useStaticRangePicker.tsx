@@ -8,6 +8,7 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
+  extractRootForwardedProps,
   mergeSx,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -63,6 +64,7 @@ export const useStaticRangePicker = <
     <PickerRangePositionContext.Provider value={rangePositionResponse}>
       <PickerProvider {...providerProps}>
         <Layout
+          {...extractRootForwardedProps(props)}
           {...slotProps?.layout}
           slots={slots}
           slotProps={slotProps}

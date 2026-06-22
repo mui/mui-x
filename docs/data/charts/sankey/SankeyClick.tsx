@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { SankeyChart, SankeyItemIdentifier } from '@mui/x-charts-pro/SankeyChart';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 
 const getCircularReplacer = () => {
   const seen = new WeakSet();

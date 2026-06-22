@@ -7,7 +7,7 @@ import { PickerProvider } from '../../components/PickerProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import { mergeSx } from '../../utils/utils';
+import { extractRootForwardedProps, mergeSx } from '../../utils/utils';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
 const PickerStaticLayout = styled(PickersLayout, {
@@ -51,6 +51,7 @@ export const useStaticPicker = <
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
       <Layout
+        {...extractRootForwardedProps(props)}
         {...slotProps?.layout}
         slots={slots}
         slotProps={slotProps}

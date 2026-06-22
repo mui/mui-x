@@ -1,7 +1,12 @@
 import * as React from 'react';
-import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
+import { Button } from '@base-ui/react/button';
+import {
+  SchedulerEventOccurrence,
+  SchedulerProcessedDate,
+} from '@mui/x-scheduler-internals/models';
 
-export interface EventItemProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EventItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick'> {
+  onClick?: Button.Props['onClick'];
   /**
    * The event occurrence to render.
    */

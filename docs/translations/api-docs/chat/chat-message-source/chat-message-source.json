@@ -1,0 +1,16 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "href": { "description": "The URL this source links to." },
+    "index": { "description": "1-based position number displayed as a muted badge." },
+    "title": {
+      "description": "Display title for the source. Falls back to <code>href</code> when omitted."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "index": "The numeric index badge.",
+    "link": "The anchor link.",
+    "root": "The root list item element."
+  }
+}

@@ -29,9 +29,9 @@ describe('<DigitalClock /> - Describe Value', () => {
         expect(selectedItem).to.have.text(formatFullTimeValue(adapterToUse, expectedValue));
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value, { user }) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 30);
-      digitalClockHandler.setViewValue(adapterToUse, newValue);
+      await digitalClockHandler.setViewValue(user, adapterToUse, newValue);
 
       return newValue;
     },

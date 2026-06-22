@@ -72,7 +72,7 @@ function GridDetailPanel(props: GridDetailPanelProps) {
     <DetailPanel
       ref={ref}
       ownerState={ownerState}
-      role="presentation"
+      role="none"
       style={{ height }}
       className={className}
     >

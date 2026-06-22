@@ -28,7 +28,13 @@ export function ChartThumbnailCard({ title, ChartComponent, link, aspectRatio = 
           justifyContent: 'space-between',
         }}
       >
-        <Typography fontFamily={'IBM Plex Sans'} variant="body1" color="text.primary">
+        <Typography
+          variant="body1"
+          sx={{
+            fontFamily: 'IBM Plex Sans',
+            color: 'text.primary',
+          }}
+        >
           {title}
         </Typography>
         {link && (
@@ -36,7 +42,6 @@ export function ChartThumbnailCard({ title, ChartComponent, link, aspectRatio = 
             <IconButton
               component="a"
               href={link}
-              rel="noopener noreferrer"
               size="small"
               sx={{
                 width: 32,

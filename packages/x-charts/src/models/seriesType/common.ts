@@ -1,7 +1,7 @@
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
 import type { AxisId } from '../axis';
-import type { ChartSeriesType, HighlightScope } from './config';
+import type { ChartSeriesType, ChartsSeriesConfig, HighlightScope } from './config';
 
 /**
  * The unique identifier of a series.
@@ -39,21 +39,20 @@ export interface SeriesColor<TValue> {
   colorGetter?: (data: ColorCallbackValue<TValue>) => string;
 }
 
-export interface CommonSeriesType<
-  TValue,
-  SeriesType extends ChartSeriesType,
-> extends SeriesColor<TValue> {
+export interface CommonSeriesType<SeriesType extends ChartSeriesType> extends SeriesColor<
+  ChartsSeriesConfig[SeriesType]['valueType']
+> {
   /**
    * The id of this series.
    */
   id?: SeriesId;
   /**
    * Formatter used to render values in tooltip or other data display.
-   * @param {TValue} value The series' value to render.
+   * @param {ChartsSeriesConfig[SeriesType]['valueType']} value The series' value to render.
    * @param {SeriesValueFormatterContext} context The rendering context of the value.
    * @returns {string | null} The string to display or null if the value should not be shown.
    */
-  valueFormatter?: SeriesValueFormatter<TValue>;
+  valueFormatter?: SeriesValueFormatter<ChartsSeriesConfig[SeriesType]['valueType']>;
   /**
    * The scope to apply when the series is highlighted.
    */
@@ -77,6 +76,17 @@ export type CartesianSeriesType = {
    * The id of the y-axis used to render the series.
    */
   yAxisId?: AxisId;
+};
+
+export type RadialSeriesType = {
+  /**
+   * The id of the rotation-axis used to render the series.
+   */
+  rotationAxisId?: AxisId;
+  /**
+   * The id of the radius-axis used to render the series.
+   */
+  radiusAxisId?: AxisId;
 };
 
 export type StackableSeriesType = {

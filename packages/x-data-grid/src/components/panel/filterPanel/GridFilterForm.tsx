@@ -520,7 +520,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           size="small"
           labelId={columnSelectLabelId}
           id={columnSelectId}
-          label={apiRef.current.getLocaleText('filterPanelColumns')}
+          label={apiRef.current.getLocaleText('filterPanelColumn')}
           value={selectedField ?? ''}
           onChange={changeColumn}
           native={isBaseSelectNative}
@@ -594,7 +594,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
   },
 );
 
-GridFilterForm.propTypes = {
+GridFilterForm.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

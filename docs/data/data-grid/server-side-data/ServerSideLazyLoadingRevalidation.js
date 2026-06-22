@@ -100,15 +100,17 @@ function FlashOnChange({ children, changeId, align = 'left', fontWeight, sx }) {
   return (
     <Typography
       variant="body2"
-      display="flex"
-      alignItems="center"
-      justifyContent={align === 'right' ? 'flex-end' : 'flex-start'}
-      height="100%"
-      paddingRight="10px"
-      paddingLeft="10px"
-      width="100%"
-      fontWeight={fontWeight}
       sx={[
+        {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+          height: '100%',
+          paddingRight: '10px',
+          paddingLeft: '10px',
+          width: '100%',
+          fontWeight,
+        },
         (theme) => ({
           position: 'relative',
           width: 'calc(100% + 20px)',
@@ -221,9 +223,20 @@ function ServerSideLazyLoadingRevalidation() {
       <Stack
         direction="row"
         spacing={1}
-        alignItems="center"
-        justifyContent="space-between"
+        sx={{
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}
       >
+        {useCache && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => apiRef.current?.dataSource.cache.clear()}
+          >
+            Clear cache
+          </Button>
+        )}
         <FormControlLabel
           control={
             <Switch
@@ -234,15 +247,6 @@ function ServerSideLazyLoadingRevalidation() {
           }
           label="Use cache"
         />
-        {useCache && (
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => apiRef.current?.dataSource.cache.clear()}
-          >
-            Clear cache
-          </Button>
-        )}
       </Stack>
       <div style={{ width: '100%', height: 360 }}>
         <DataGridPro

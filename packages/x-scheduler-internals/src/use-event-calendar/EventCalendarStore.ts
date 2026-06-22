@@ -1,0 +1,295 @@
+import { warn } from '@base-ui/utils/warn';
+import { warnOnce } from '@mui/x-internals/warning';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import {
+  EventCalendarPreferences,
+  CalendarView,
+  EventCalendarViewConfig,
+  TemporalSupportedObject,
+  EventCalendarPreferencesMenuConfig,
+} from '../models';
+import { Adapter } from '../use-adapter/useAdapter.types';
+import {
+  DEFAULT_SCHEDULER_PREFERENCES,
+  SchedulerParametersToStateMapper,
+  SchedulerStore,
+  SchedulerInstanceName,
+} from '../internals/utils/SchedulerStore';
+import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
+import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
+import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
+
+export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
+export const DEFAULT_VIEW: CalendarView = 'week';
+export const DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE = false;
+
+export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
+  ...DEFAULT_SCHEDULER_PREFERENCES,
+  showWeekends: true,
+  showWeekNumber: false,
+  showEmptyDaysInAgenda: true,
+  isSidePanelOpen: true,
+};
+export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
+  toggleWeekendVisibility: true,
+  toggleWeekNumberVisibility: true,
+  toggleEmptyDaysInAgenda: true,
+  toggleAmpm: true,
+  toggleWeekStartsOn: false,
+};
+
+const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
+  parameters: EventCalendarParameters<TEvent, TResource>,
+) => {
+  const views = parameters.views ?? DEFAULT_VIEWS;
+  if (process.env.NODE_ENV !== 'production' && views.length === 0) {
+    // TODO: fix mui/no-guarded-throw
+    // eslint-disable-next-line mui/no-guarded-throw
+    throw new Error(
+      `MUI X Scheduler: EventCalendar received an empty \`views\` prop. ` +
+        `This leaves the calendar without any view to render. ` +
+        `Pass at least one view, or omit the prop to use the default set. ` +
+        `See https://mui.com/x/react-scheduler/event-calendar/views/ for more details.`,
+    );
+  }
+  return { views };
+};
+
+function warnIfShouldEventRequireResourceMisconfigured(
+  shouldEventRequireResource: boolean,
+  resources: readonly unknown[] | undefined,
+) {
+  if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
+    warnOnce([
+      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+    ]);
+  }
+}
+
+const mapper: SchedulerParametersToStateMapper<
+  EventCalendarState,
+  EventCalendarParameters<any, any>
+> = {
+  getInitialState: (schedulerInitialState, parameters) => {
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    return {
+      ...schedulerInitialState,
+      ...deriveStateFromParameters(parameters),
+      preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
+      preferencesMenuConfig:
+        parameters.preferencesMenuConfig === false
+          ? parameters.preferencesMenuConfig
+          : {
+              ...DEFAULT_PREFERENCES_MENU_CONFIG,
+              ...parameters.preferencesMenuConfig,
+            },
+      viewConfig: null,
+      view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+      shouldEventRequireResource,
+    };
+  },
+  updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const newState: Partial<EventCalendarState> = {
+      ...newSchedulerState,
+      ...deriveStateFromParameters(parameters),
+      shouldEventRequireResource,
+    };
+
+    updateModel(newState, 'view', 'defaultView');
+    updateModel(newState, 'preferences', 'defaultPreferences');
+    return newState;
+  },
+};
+
+/**
+ * Base class that can be extended by premium stores.
+ * Accepts instanceName as a parameter to allow subclasses to provide their own instance name.
+ */
+export class ExtendableEventCalendarStore<
+  TEvent extends object,
+  TResource extends object,
+> extends SchedulerStore<
+  TEvent,
+  TResource,
+  EventCalendarState,
+  EventCalendarParameters<TEvent, TResource>
+> {
+  public constructor(
+    parameters: EventCalendarParameters<TEvent, TResource>,
+    adapter: Adapter,
+    instanceName: SchedulerInstanceName,
+    recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
+  ) {
+    super(parameters, adapter, instanceName, mapper, recurringEventsPlugin);
+
+    if (process.env.NODE_ENV !== 'production') {
+      // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
+      this.assertViewValidity(this.state.view);
+      this.subscribe((state) => {
+        this.assertViewValidity(state.view);
+        return null;
+      });
+    }
+  }
+
+  private assertViewValidity(view: CalendarView) {
+    const views = this.state.views;
+    if (!views.includes(view)) {
+      throw new Error(
+        `MUI X Scheduler: EventCalendar received the view "${view}", which is not part of the \`views\` prop (received: ${views.join(', ')}). ` +
+          `This leaves the calendar in an inconsistent state where the current view is not one of the allowed options. ` +
+          `Add "${view}" to the \`views\` prop, or pass a view that is already included. ` +
+          `See https://mui.com/x/react-scheduler/event-calendar/views/ for more details.`,
+      );
+    }
+  }
+
+  private setVisibleDateAndView = (
+    visibleDate: TemporalSupportedObject,
+    view: CalendarView,
+    event: React.UIEvent,
+  ) => {
+    const {
+      visibleDate: visibleDateProp,
+      view: viewProp,
+      onVisibleDateChange,
+      onViewChange,
+    } = this.parameters;
+
+    const hasVisibleDateChange = visibleDate !== this.state.visibleDate;
+    const hasViewChange = view !== this.state.view;
+    if (!hasVisibleDateChange && !hasViewChange) {
+      return;
+    }
+
+    this.assertViewValidity(view);
+    const eventDetails = createChangeEventDetails('none', event.nativeEvent);
+
+    if (hasVisibleDateChange) {
+      onVisibleDateChange?.(visibleDate, eventDetails);
+    }
+    if (hasViewChange) {
+      onViewChange?.(view, eventDetails);
+    }
+
+    if (eventDetails.isCanceled) {
+      return;
+    }
+
+    const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
+    const canSetView = viewProp === undefined && hasViewChange;
+    if (canSetVisibleDate || canSetView) {
+      this.update({
+        ...(canSetVisibleDate ? { visibleDate } : undefined),
+        ...(canSetView ? { view } : undefined),
+      });
+    }
+  };
+
+  private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
+    const siblingVisibleDateGetter = this.state.viewConfig?.siblingVisibleDateGetter;
+    if (!siblingVisibleDateGetter) {
+      warn(
+        'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+      );
+      return;
+    }
+
+    this.setVisibleDate({
+      visibleDate: siblingVisibleDateGetter({ delta, state: this.state }),
+      event,
+    });
+  };
+
+  /**
+   * Sets the view of the calendar.
+   */
+  public setView = (view: CalendarView, event: Event) => {
+    const { view: viewProp, onViewChange } = this.parameters;
+    if (process.env.NODE_ENV !== 'production' && viewProp !== undefined && !onViewChange) {
+      warn(
+        'MUI X Scheduler: EventCalendar is controlled (received a `view` prop) but `onViewChange` is not provided. View changes will be silently ignored.',
+      );
+    }
+    if (view !== this.state.view) {
+      this.assertViewValidity(view);
+
+      const eventDetails = createChangeEventDetails('none', event);
+      onViewChange?.(view, eventDetails);
+
+      if (!eventDetails.isCanceled && viewProp === undefined) {
+        this.set('view', view);
+      }
+    }
+  };
+
+  /**
+   * Goes to the previous visible date span based on the current view.
+   */
+  public goToPreviousVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(-1, event);
+
+  /**
+   * Goes to the next visible date span based on the current view.
+   */
+  public goToNextVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(1, event);
+
+  /**
+   * Goes to a specific day and set the view to 'day'.
+   */
+  public switchToDay = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+    this.setVisibleDateAndView(visibleDate, 'day', event);
+  };
+
+  /**
+   * Updates some preferences of the calendar.
+   */
+  public setPreferences = (partialPreferences: Partial<EventCalendarPreferences>, event: Event) => {
+    const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
+
+    const updated = {
+      ...this.state.preferences,
+      ...partialPreferences,
+    };
+
+    const eventDetails = createChangeEventDetails('none', event);
+    onPreferencesChange?.(updated, eventDetails);
+
+    if (!eventDetails.isCanceled && preferencesProp === undefined) {
+      this.set('preferences', updated);
+    }
+  };
+
+  /**
+   * Sets the method used to determine the previous / next visible date.
+   * Returns the cleanup function.
+   */
+  public setViewConfig = (config: EventCalendarViewConfig) => {
+    this.set('viewConfig', config);
+    return () => this.set('viewConfig', null);
+  };
+
+  public buildPublicAPI() {
+    return {
+      ...super.buildPublicAPI(),
+    };
+  }
+}
+
+/**
+ * Store for the EventCalendar component.
+ */
+export class EventCalendarStore<
+  TEvent extends object,
+  TResource extends object,
+> extends ExtendableEventCalendarStore<TEvent, TResource> {
+  public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
+    super(parameters, adapter, 'EventCalendarStore');
+  }
+}

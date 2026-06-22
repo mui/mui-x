@@ -167,7 +167,8 @@ describe('<DataGrid /> - Slots', () => {
     }).toErrorDev([
       reactMajor >= 19 &&
         'MUI X Data Grid: useGridRootProps should only be used inside a Data Grid component. The component must be a child of DataGrid, DataGridPro, or DataGridPremium. Ensure your component is properly nested within a Data Grid.',
-      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay2)> component',
+      // `ForwardRef(GridOverlay)` on newer `@vitejs/plugin-react`, `ForwardRef(GridOverlay2)` on older ones.
+      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay',
     ]);
   });
 

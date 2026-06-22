@@ -81,7 +81,6 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     width,
     height,
     margin,
-    colors,
     dataset,
     xAxis: xAxisWithDefault,
     yAxis,

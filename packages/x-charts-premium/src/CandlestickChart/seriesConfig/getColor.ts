@@ -12,15 +12,28 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
       }
 
       const value = bandValues[dataIndex];
-      const color = value === null ? getSeriesColor({ value, dataIndex }) : bandColorScale(value);
+      const color = bandColorScale(value);
 
-      if (color === null) {
+      if (typeof color !== 'string') {
         return getSeriesColor({ value, dataIndex });
       }
 
       return color;
     };
   }
+
+  if (series.colorGetter) {
+    return (dataIndex?: number) => {
+      if (dataIndex === undefined) {
+        return series.color;
+      }
+
+      const value = series.data[dataIndex];
+      return getSeriesColor({ value, dataIndex });
+    };
+  }
+
+  const { upColor, downColor } = series;
 
   return (dataIndex?: number) => {
     if (dataIndex === undefined) {
@@ -29,7 +42,12 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
 
     const value = series.data[dataIndex];
 
-    return getSeriesColor({ value, dataIndex });
+    if (value === null) {
+      return series.color;
+    }
+
+    const [open, , , close] = value;
+    return close >= open ? upColor : downColor;
   };
 };
 

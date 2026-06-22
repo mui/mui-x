@@ -27,14 +27,11 @@ const ChartsLayerContainerDiv = styled('div', {
 })<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
-  // This is a hack to let the content expand a bit when possible, but not overflow when the container is too small.
-  aspectRatio: '1 / 1',
   display: 'flex',
   position: 'relative',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  overflow: 'hidden',
   touchAction: 'pan-y',
   userSelect: 'none',
   gridArea: 'chart',
@@ -99,10 +96,13 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     }
 
     return (
+      // `role="none"` is an alias for `role="presentation"`, but aria-query treats them differently.
+      // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090
+      // eslint-disable-next-line jsx-a11y/role-supports-aria-props
       <ChartsLayerContainerDiv
         ref={handleRef}
         ownerState={{ width: propsWidth, height: propsHeight }}
-        role="presentation"
+        role="none"
         aria-label={title}
         aria-describedby={desc ? descId : undefined}
         className={clsx(classes.root, className)}
@@ -132,7 +132,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
   },
 );
 
-ChartsLayerContainer.propTypes = {
+ChartsLayerContainer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

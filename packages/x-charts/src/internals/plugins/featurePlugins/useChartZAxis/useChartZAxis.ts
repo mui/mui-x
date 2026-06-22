@@ -6,6 +6,7 @@ import { type DatasetType } from '../../../../models/seriesType/config';
 import { type UseChartZAxisSignature } from './useChartZAxis.types';
 import { type ZAxisConfig, type ZAxisDefaultized } from '../../../../models/z-axis';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
+import { getSizeScale, getOrdinalSizeScale } from '../../../sizeScale';
 
 function addDefaultId(axisConfig: MakeOptional<ZAxisConfig, 'id'>, defaultId: string): ZAxisConfig {
   if (axisConfig.id !== undefined) {
@@ -35,6 +36,24 @@ function processColorMap(axisConfig: ZAxisConfig) {
   };
 }
 
+function processSizeMap(axisConfig: ZAxisConfig) {
+  if (!axisConfig.sizeMap) {
+    return axisConfig;
+  }
+
+  return {
+    ...axisConfig,
+    sizeScale:
+      axisConfig.sizeMap.type === 'ordinal'
+        ? getOrdinalSizeScale({ values: axisConfig.data, ...axisConfig.sizeMap })
+        : getSizeScale(
+            axisConfig.sizeMap.type === 'continuous'
+              ? { min: axisConfig.min, max: axisConfig.max, ...axisConfig.sizeMap }
+              : axisConfig.sizeMap,
+          ),
+  };
+}
+
 function getZAxisState(
   zAxis?: readonly MakeOptional<ZAxisConfig, 'id'>[],
   dataset?: Readonly<DatasetType>,
@@ -49,25 +68,31 @@ function getZAxisState(
   zAxis.forEach((axisConfig, index) => {
     const dataKey = axisConfig.dataKey;
     const defaultizedId = axisConfig.id ?? `defaultized-z-axis-${index}`;
-    if (dataKey === undefined || axisConfig.data !== undefined) {
-      zAxisLookup[defaultizedId] = processColorMap(addDefaultId(axisConfig, defaultizedId));
+    if (axisConfig.data !== undefined || (dataKey === undefined && !axisConfig.valueGetter)) {
+      zAxisLookup[defaultizedId] = processSizeMap(
+        processColorMap(addDefaultId(axisConfig, defaultizedId)),
+      );
       axisIds.push(defaultizedId);
       return;
     }
     if (dataset === undefined) {
       throw new Error(
-        'MUI X Charts: The z-axis uses `dataKey` but no `dataset` is provided. ' +
-          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
+        'MUI X Charts: The z-axis uses `dataKey` or `valueGetter` but no `dataset` is provided. ' +
+          'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
           'Either provide a dataset prop or use the data property directly on the z-axis.',
       );
     }
-    zAxisLookup[defaultizedId] = processColorMap(
-      addDefaultId(
-        {
-          ...axisConfig,
-          data: dataset.map((d) => d[dataKey]),
-        },
-        defaultizedId,
+    zAxisLookup[defaultizedId] = processSizeMap(
+      processColorMap(
+        addDefaultId(
+          {
+            ...axisConfig,
+            data: axisConfig.valueGetter
+              ? dataset.map((d) => axisConfig.valueGetter!(d))
+              : dataset.map((d) => d[dataKey!]),
+          },
+          defaultizedId,
+        ),
       ),
     );
     axisIds.push(defaultizedId);

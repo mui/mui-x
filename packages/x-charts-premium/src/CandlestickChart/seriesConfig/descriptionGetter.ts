@@ -14,11 +14,17 @@ const descriptionGetter: DescriptionGetter<'ohlc'> = (params) => {
       scale: xAxis.scale,
     }) ?? '';
 
+  const { dataIndex } = identifier;
+
   return localeText.ohlcDescription({
     open: value?.[0] ?? null,
     high: value?.[1] ?? null,
     low: value?.[2] ?? null,
     close: value?.[3] ?? null,
+    formattedOpen: value ? series.valueFormatter(value[0], { dataIndex, field: 'open' }) : null,
+    formattedHigh: value ? series.valueFormatter(value[1], { dataIndex, field: 'high' }) : null,
+    formattedLow: value ? series.valueFormatter(value[2], { dataIndex, field: 'low' }) : null,
+    formattedClose: value ? series.valueFormatter(value[3], { dataIndex, field: 'close' }) : null,
     date,
     formattedDate,
     seriesLabel: label,

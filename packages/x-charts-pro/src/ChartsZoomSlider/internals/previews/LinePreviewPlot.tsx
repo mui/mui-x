@@ -9,13 +9,18 @@ import {
 } from '@mui/x-charts/internals';
 import type { PreviewPlotProps } from './PreviewPlot.types';
 
-interface LinePreviewPlotProps extends Pick<PreviewPlotProps, 'axisId'> {}
+interface LinePreviewPlotProps extends Pick<PreviewPlotProps, 'axisId' | 'seriesIds'> {}
 
-export function LinePreviewPlot({ axisId }: LinePreviewPlotProps) {
+export function LinePreviewPlot({ axisId, seriesIds }: LinePreviewPlotProps) {
   const completedData = useLinePreviewData(axisId);
+  const seriesIdsSet = seriesIds ? new Set(seriesIds) : undefined;
+
   return (
     <g>
       {completedData.map(({ d, seriesId, color, gradientId }) => {
+        if (seriesIdsSet && !seriesIdsSet.has(seriesId)) {
+          return null;
+        }
         return (
           <PreviewLineElement
             key={seriesId}

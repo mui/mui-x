@@ -358,6 +358,12 @@ export type PaletteName = keyof typeof eventColorTokens;
  * Generates palette variants for MUI styled components.
  * Use with styled components: `variants: getPaletteVariants(theme)`
  */
+/**
+ * Returns the focus-visible background style for grid cells (day cells, time columns, month cells).
+ */
+export const getCellFocusBackground = (theme: Theme) =>
+  theme.alpha((theme.vars || theme).palette.primary.light, 0.12);
+
 export const getPaletteVariants = (theme: Theme) => {
   return Object.entries(eventColorTokens).map(([colorName, colorValues]) => ({
     props: { 'data-palette': colorName as PaletteName },

@@ -32,7 +32,7 @@ const ChartsToolbarZoomOutTrigger = React.forwardRef<
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const disabled = store.use(selectorChartCanZoomOut);
+  const disabled = !store.use(selectorChartCanZoomOut);
 
   const element = useComponentRenderer(slots.baseButton, render, {
     ...slotProps.baseButton,
@@ -45,7 +45,7 @@ const ChartsToolbarZoomOutTrigger = React.forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarZoomOutTrigger.propTypes = {
+ChartsToolbarZoomOutTrigger.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

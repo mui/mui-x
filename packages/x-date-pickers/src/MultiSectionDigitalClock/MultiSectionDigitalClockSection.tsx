@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -107,9 +107,10 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
     marginTop: 4,
   },
   '&:hover': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.hoverOpacity,
+    ),
   },
   '&.Mui-selected': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
@@ -119,9 +120,10 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
     },
   },
   '&.Mui-focusVisible': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.focusOpacity,
+    ),
   },
 }));
 

@@ -17,7 +17,7 @@ export default function BasicDragAndDrop() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="months"
+        defaultPreset="monthAndYear"
       />
     </div>
   );

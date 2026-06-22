@@ -89,23 +89,27 @@ function FlashOnChange({
   return (
     <Typography
       variant="body2"
-      display="flex"
-      alignItems="center"
-      justifyContent={align === 'right' ? 'flex-end' : 'flex-start'}
-      height="100%"
-      paddingRight="10px"
-      paddingLeft="10px"
-      width="100%"
-      fontWeight={fontWeight === 'bold' ? 'bold' : undefined}
-      sx={(theme) => ({
-        position: 'relative',
-        width: 'calc(100% + 20px)',
-        left: '-10px',
-        transition: 'background-color 500ms ease',
-        backgroundColor: flash
-          ? alpha(theme.palette.warning.main, 0.22)
-          : 'transparent',
-      })}
+      sx={[
+        {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+          height: '100%',
+          paddingRight: '10px',
+          paddingLeft: '10px',
+          width: '100%',
+          fontWeight: fontWeight === 'bold' ? 'bold' : undefined,
+        },
+        (theme) => ({
+          position: 'relative',
+          width: 'calc(100% + 20px)',
+          left: '-10px',
+          transition: 'background-color 500ms ease',
+          backgroundColor: flash
+            ? alpha(theme.palette.warning.main, 0.22)
+            : 'transparent',
+        }),
+      ]}
     >
       {children}
     </Typography>
@@ -160,8 +164,10 @@ function ServerSideLazyLoadingFullyReplaced() {
       <Stack
         direction="row"
         spacing={1}
-        alignItems="center"
-        justifyContent="space-between"
+        sx={{
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
       >
         <FormControlLabel
           control={

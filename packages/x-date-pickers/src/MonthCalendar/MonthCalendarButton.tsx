@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -70,14 +70,16 @@ const DefaultMonthButton = styled('button', {
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.action.active,
+      (theme.vars || theme).palette.action.hoverOpacity,
+    ),
   },
   '&:hover': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.action.active,
+      (theme.vars || theme).palette.action.hoverOpacity,
+    ),
   },
   '&:disabled': {
     cursor: 'auto',
