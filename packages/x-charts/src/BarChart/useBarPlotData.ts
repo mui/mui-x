@@ -235,7 +235,28 @@ export function processBarDataForPlot(
           numberOfGroups: stackingGroups.length,
         });
 
-        for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
+        // Narrow to the visible index window so panning/zoom doesn't compute every off-screen bar.
+        // `firstIndex`/`lastIndex` bound the band axis range; the cull in `registerResult` stays
+        // exact. A 1-bucket margin covers grouped-bar offsets and partial edge bars.
+        const baseData = baseScaleConfig.data!;
+        const dataLength = baseData.length;
+        let firstIndex = 0;
+        let lastIndex = dataLength - 1;
+        if (dataLength > 1) {
+          const baseScale = baseScaleConfig.scale;
+          const p0 = baseScale(baseData[0])!;
+          const slope = baseScale(baseData[1])! - p0; // signed px per index (handles reversed axis)
+          if (slope !== 0) {
+            const winLo = verticalLayout ? xMin : yMin;
+            const winHi = verticalLayout ? xMax : yMax;
+            const ia = (winLo - p0) / slope;
+            const ib = (winHi - p0) / slope;
+            firstIndex = Math.max(0, Math.floor(Math.min(ia, ib)) - 1);
+            lastIndex = Math.min(dataLength - 1, Math.ceil(Math.max(ia, ib)) + 1);
+          }
+        }
+
+        for (let dataIndex = firstIndex; dataIndex <= lastIndex; dataIndex += 1) {
           const barDimensions = getBarDimensions(dataIndex, groupIndex);
 
           if (barDimensions == null) {
