@@ -108,7 +108,7 @@
     "babel-plugin-react-remove-properties": "catalog:",
     "babel-plugin-search-and-replace": "1.1.1",
     "babel-plugin-transform-replace-expressions": "0.2.0",
-    "concurrently": "^10.0.3",
+    "concurrently": "10.0.3",
     "cross-env": "catalog:",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
