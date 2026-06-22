@@ -2,7 +2,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const PREFERS_REDUCED_MOTION = '@media (prefers-reduced-motion: reduce)';
 
-// TODO(v10): Remove user-agent sniffing. The Android branch is dead and the iOS branch is becoming
+// TODO v10: Remove user-agent sniffing. The Android branch is dead and the iOS branch is becoming
 // irrelevant.
 // https://github.com/mui/mui-x/pull/22710#discussion_r3377072061
 
