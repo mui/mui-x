@@ -6,13 +6,16 @@ import {
   EXTENSION_TEST_FILE,
   EXTENSION_TS,
 } from '@mui/internal-code-infra/eslint';
-import eslintPluginConsistentName from 'eslint-plugin-consistent-default-export-name';
+import { fixupPluginRules } from '@eslint/compat';
+import eslintPluginConsistentNameRaw from 'eslint-plugin-consistent-default-export-name';
 import eslintPluginJsdoc from 'eslint-plugin-jsdoc';
 import eslintPluginMuiX from 'eslint-plugin-mui-x';
 import { defineConfig } from 'eslint/config';
 import * as path from 'node:path';
 import * as url from 'node:url';
 import remarkConfig from './.remarkrc.mjs';
+
+const eslintPluginConsistentName = fixupPluginRules(eslintPluginConsistentNameRaw);
 
 const filename = url.fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -294,7 +297,7 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: dirname,
-        project: ['./tsconfig.json'],
+        projectService: true,
       },
     },
   },
@@ -332,6 +335,32 @@ export default defineConfig(
         },
       ],
       'mui/disallow-react-api-in-server-components': 'error',
+    },
+  },
+
+  // Catch leaked subscriptions: call statements whose returned cleanup /
+  // unsubscribe function is discarded. Type-aware, so it needs TypeScript type
+  // information (same `projectService` setup as `mui-x/no-direct-state-access` above).
+  {
+    files: [`packages/*/src/**/*${EXTENSION_TS}`],
+    ignores: [
+      '**/*.d.ts',
+      `**/*.spec${EXTENSION_TS}`,
+      `**/*.test${EXTENSION_TS}`,
+      // Codemods are jscodeshift AST transforms with no runtime subscriptions;
+      // the only hits are chai assertions in a test-style file.
+      'packages/x-codemod/**',
+      // Vendored copy of Base UI internals — keep in sync with upstream, don't edit.
+      'packages/x-scheduler-internals/src/base-ui-copy/**',
+    ],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: dirname,
+        projectService: true,
+      },
+    },
+    rules: {
+      'mui/no-floating-cleanup': 'error',
     },
   },
 
