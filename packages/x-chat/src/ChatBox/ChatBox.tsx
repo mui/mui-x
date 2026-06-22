@@ -113,7 +113,8 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     (node: HTMLDivElement | null) => {
       setRootElement(node);
       if (typeof ref === 'function') {
-        ref(node);
+        // Legacy callback-ref forwarding; a React 19 cleanup return is not propagated here.
+        void ref(node);
       } else if (ref) {
         (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
       }

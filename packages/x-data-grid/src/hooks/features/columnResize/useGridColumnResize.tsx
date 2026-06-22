@@ -36,7 +36,10 @@ import {
   useGridSelector,
   useOnMount,
 } from '../../utils';
-import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
+import {
+  gridRenderContextSelector,
+  gridVirtualizationColumnEnabledSelector,
+} from '../virtualization';
 import { createControllablePromise } from '../../../utils/createControllablePromise';
 import type { ControllablePromise } from '../../../utils/createControllablePromise';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -46,6 +49,7 @@ import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
 import { gridColumnsStateSelector } from '../columns';
 import { gridDimensionsSelector } from '../dimensions';
 import { gridHeaderFilteringEnabledSelector } from '../headerFiltering';
+import { gridVisibleRowsSelector } from '../pagination';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridColumnResizeParams } from '../../../models/params/gridColumnResizeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -56,6 +60,30 @@ import { gridResizingColumnFieldSelector } from './columnResizeSelector';
 type AutosizeOptionsRequired = Required<GridAutosizeOptions>;
 
 type ResizeDirection = keyof typeof GridColumnHeaderSeparatorSides;
+
+function isRenderContextReadyForAutosizeOnMount(apiRef: RefObject<GridPrivateApiCommunity>) {
+  const dimensions = gridDimensionsSelector(apiRef);
+  if (!dimensions.isReady) {
+    return false;
+  }
+
+  const { rows } = gridVisibleRowsSelector(apiRef);
+  if (rows.length === 0) {
+    return true;
+  }
+
+  const renderContext = gridRenderContextSelector(apiRef);
+  if (renderContext.lastRowIndex <= renderContext.firstRowIndex) {
+    return false;
+  }
+
+  // If all rows fit in the viewport, wait for them all; otherwise we can only measure the rendered rows.
+  if (!dimensions.hasScrollY) {
+    return renderContext.firstRowIndex === 0 && renderContext.lastRowIndex >= rows.length;
+  }
+
+  return true;
+}
 
 function trackFinger(event: any, currentTouchId: number | undefined): CursorCoordinates | boolean {
   if (currentTouchId !== undefined && event.changedTouches) {
@@ -846,10 +874,52 @@ export const useGridColumnResize = (
 
   useOnMount(() => {
     if (props.autosizeOnMount) {
-      Promise.resolve().then(() => {
+      let frameHandle: number | undefined;
+      let unsubscribeStateChange: (() => void) | undefined;
+      let unsubscribeRenderedRowsIntervalChange: (() => void) | undefined;
+
+      const cleanupListeners = () => {
+        unsubscribeStateChange?.();
+        unsubscribeRenderedRowsIntervalChange?.();
+        unsubscribeStateChange = undefined;
+        unsubscribeRenderedRowsIntervalChange = undefined;
+      };
+
+      const runAutosize = () => {
+        frameHandle = undefined;
+        cleanupListeners();
         apiRef.current.autosizeColumns(props.autosizeOptions);
-      });
+      };
+
+      const scheduleAutosize = () => {
+        if (frameHandle === undefined) {
+          frameHandle = requestAnimationFrame(runAutosize);
+        }
+      };
+
+      const checkRenderContext = () => {
+        if (isRenderContextReadyForAutosizeOnMount(apiRef)) {
+          scheduleAutosize();
+        }
+      };
+
+      unsubscribeStateChange = apiRef.current.subscribeEvent('stateChange', checkRenderContext);
+      unsubscribeRenderedRowsIntervalChange = apiRef.current.subscribeEvent(
+        'renderedRowsIntervalChange',
+        checkRenderContext,
+      );
+
+      checkRenderContext();
+
+      return () => {
+        cleanupListeners();
+        if (frameHandle !== undefined) {
+          cancelAnimationFrame(frameHandle);
+        }
+      };
     }
+
+    return undefined;
   });
 
   useGridNativeEventListener(

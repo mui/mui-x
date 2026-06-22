@@ -13,6 +13,7 @@ import type {
   ChartsRadialAxisProps,
 } from '@mui/x-charts/internals';
 import type { SeriesId } from '@mui/x-charts/models';
+import getColor from './seriesConfig/getColor';
 
 interface ProcessedRadialBarData {
   seriesId: SeriesId;
@@ -100,6 +101,8 @@ function processRadialBarDataForPlot(
         const rotationOrigin = rotationAxisConfig.scale(0) ?? 0;
         const radiusOrigin = radiusAxisConfig.scale(0) ?? 0;
 
+        const colorGetter = getColor(seriesItem, rotationAxisConfig, radiusAxisConfig);
+
         const { barWidth: bandSlice, offset } = getBandSize(
           baseScale.bandwidth(),
           stackingGroups.length,
@@ -136,7 +139,7 @@ function processRadialBarDataForPlot(
             seriesId,
             dataIndex,
             hidden: seriesItem.hidden,
-            color: seriesItem.color,
+            color: colorGetter(dataIndex),
             value: seriesValue,
             startAngle: verticalLayout ? baseStart : valueStart,
             endAngle: verticalLayout ? baseEnd : valueEnd,

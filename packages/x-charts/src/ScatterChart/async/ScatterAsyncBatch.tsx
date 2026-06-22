@@ -16,10 +16,7 @@ import type { UseChartTooltipSignature } from '../../internals/plugins/featurePl
 import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import type { UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import type { ScatterProps } from '../Scatter';
-import {
-  getScatterBatchView,
-  selectorScatterSeriesRenderData,
-} from './scatterRenderData.selectors';
+import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 export interface ScatterAsyncBatchProps extends Pick<
   ScatterProps,
@@ -27,16 +24,21 @@ export interface ScatterAsyncBatchProps extends Pick<
 > {
   series: DefaultizedScatterSeriesType;
   colorGetter: ColorGetter<'scatter'>;
-  /** First point index of this batch (inclusive). */
+  /** First `dataIndex` this batch renders. */
   start: number;
-  /** Last point index of this batch (exclusive). */
-  end: number;
+  /** Stride between rendered `dataIndex`es, so the batch is a uniform sample. */
+  step: number;
   /**
-   * Whether this batch is allowed to render its markers yet. `ScatterAsync`
-   * ramps this up batch by batch across animation frames for a progressive
-   * paint. When `false` the `<g>` still mounts but stays empty.
+   * Whether this batch may render its markers yet. Ramped batch by batch across
+   * frames for the progressive paint. When `false` the `<g>` mounts empty.
    */
   revealed: boolean;
+  /**
+   * Whether a zoom/pan interaction is in progress. While interacting, per-marker
+   * highlight state and interaction handlers are skipped: useless mid-drag and
+   * the dominant per-frame cost.
+   */
+  isInteracting?: boolean;
 }
 
 /**
@@ -50,8 +52,9 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
     slots,
     slotProps,
     start,
-    end,
+    step,
     revealed,
+    isInteracting,
     classes: inClasses,
   } = props;
 
@@ -87,17 +90,20 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
     return <g data-series={series.id} className={classes.series} />;
   }
 
-  const view = getScatterBatchView(renderData, start, end);
+  const { coords, count } = renderData;
 
   const markers: React.ReactNode[] = [];
-  const nLocal = view.length / 3;
-  for (let local = 0; local < nLocal; local += 1) {
-    const x = view[local * 3];
-    const y = view[local * 3 + 1];
-    const dataIndex = view[local * 3 + 2];
+  const safeStep = Math.max(1, step);
+  for (let dataIndex = start; dataIndex < count; dataIndex += safeStep) {
+    // Skip off-screen points (kept in-array to keep batches stable across pan).
+    if (coords[dataIndex * 3 + 2] === 0) {
+      continue;
+    }
+    const x = coords[dataIndex * 3];
+    const y = coords[dataIndex * 3 + 1];
 
     const dataPoint = { x, y, dataIndex, seriesId: series.id, type: 'scatter' as const };
-    const highlightState = getHighlightState(dataPoint);
+    const highlightState = isInteracting ? 'none' : getHighlightState(dataPoint);
     const isItemHighlighted = highlightState === 'highlighted';
     const isItemFaded = highlightState === 'faded';
 
@@ -122,7 +128,9 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
         }
         data-highlighted={isItemHighlighted || undefined}
         data-faded={isItemFaded || undefined}
-        {...(skipInteractionHandlers ? undefined : getInteractionItemProps(instance, dataPoint))}
+        {...(skipInteractionHandlers || isInteracting
+          ? undefined
+          : getInteractionItemProps(instance, dataPoint))}
         {...markerProps}
       />,
     );
@@ -135,8 +143,7 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
   );
 }
 
-// Memoized so a reveal tick (which re-renders every `ScatterAsync`) only
-// re-renders the one batch whose `revealed` prop changed.
+// Memoized so a reveal tick only re-renders the batch whose `revealed` changed.
 const ScatterAsyncBatch = React.memo(ScatterAsyncBatchComponent);
 
 export { ScatterAsyncBatch };

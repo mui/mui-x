@@ -44,7 +44,7 @@ export const useKeepGroupedColumnsHidden = (
   );
 
   React.useEffect(() => {
-    props.apiRef.current?.subscribeEvent('rowGroupingModelChange', (newModel) => {
+    return props.apiRef.current?.subscribeEvent('rowGroupingModelChange', (newModel) => {
       const columnVisibilityModel = updateColumnVisibilityModel(
         gridColumnVisibilityModelSelector(props.apiRef),
         newModel,
