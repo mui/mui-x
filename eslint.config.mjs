@@ -6,13 +6,16 @@ import {
   EXTENSION_TEST_FILE,
   EXTENSION_TS,
 } from '@mui/internal-code-infra/eslint';
-import eslintPluginConsistentName from 'eslint-plugin-consistent-default-export-name';
+import { fixupPluginRules } from '@eslint/compat';
+import eslintPluginConsistentNameRaw from 'eslint-plugin-consistent-default-export-name';
 import eslintPluginJsdoc from 'eslint-plugin-jsdoc';
 import eslintPluginMuiX from 'eslint-plugin-mui-x';
 import { defineConfig } from 'eslint/config';
 import * as path from 'node:path';
 import * as url from 'node:url';
 import remarkConfig from './.remarkrc.mjs';
+
+const eslintPluginConsistentName = fixupPluginRules(eslintPluginConsistentNameRaw);
 
 const filename = url.fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
