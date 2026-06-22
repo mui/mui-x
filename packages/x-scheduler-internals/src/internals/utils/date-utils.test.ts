@@ -1,5 +1,11 @@
 import { adapter } from 'test/utils/scheduler';
-import { mergeDateAndTime, getStartOfWeek, getEndOfWeek, getWeekNumber } from './date-utils';
+import {
+  mergeDateAndTime,
+  normalizeAllDayBounds,
+  getStartOfWeek,
+  getEndOfWeek,
+  getWeekNumber,
+} from './date-utils';
 import { TemporalAdapter } from '../../base-ui-copy/types';
 
 const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
@@ -17,6 +23,41 @@ describe('date-utils', () => {
       expect(adapter.getMinutes(merged)).to.equal(45);
       expect(adapter.getSeconds(merged)).to.equal(27);
       expect(adapter.getMilliseconds(merged)).to.equal(123);
+    });
+  });
+
+  describe('normalizeAllDayBounds', () => {
+    const start = adapter.date('2025-01-08T09:00:00.000Z', 'default');
+    const end = adapter.date('2025-01-08T18:00:00.000Z', 'default');
+
+    it('returns the bounds unchanged when allDay is false', () => {
+      const result = normalizeAllDayBounds(adapter, start, end, false);
+      expect(adapter.getHours(result.start)).to.equal(9);
+      expect(adapter.getHours(result.end)).to.equal(18);
+    });
+
+    it('returns the bounds unchanged when allDay is undefined', () => {
+      const result = normalizeAllDayBounds(adapter, start, end, undefined);
+      expect(adapter.getHours(result.start)).to.equal(9);
+      expect(adapter.getHours(result.end)).to.equal(18);
+    });
+
+    it('snaps an all-day event to the whole day', () => {
+      const result = normalizeAllDayBounds(adapter, start, end, true);
+      expect(adapter.getHours(result.start)).to.equal(0);
+      expect(adapter.getMinutes(result.start)).to.equal(0);
+      expect(adapter.getHours(result.end)).to.equal(23);
+      expect(adapter.getMinutes(result.end)).to.equal(59);
+      expect(adapter.getSeconds(result.end)).to.equal(59);
+    });
+
+    it('preserves the span when flattening a multi-day all-day event', () => {
+      const multiDayEnd = adapter.date('2025-01-10T18:00:00.000Z', 'default');
+      const result = normalizeAllDayBounds(adapter, start, multiDayEnd, true);
+      expect(adapter.getDate(result.start)).to.equal(8);
+      expect(adapter.getHours(result.start)).to.equal(0);
+      expect(adapter.getDate(result.end)).to.equal(10);
+      expect(adapter.getHours(result.end)).to.equal(23);
     });
   });
 

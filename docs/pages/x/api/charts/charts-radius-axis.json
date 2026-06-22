@@ -4,11 +4,18 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "disableLine": { "type": { "name": "bool" }, "default": "false" },
+    "disableTickLabel": { "type": { "name": "bool" }, "default": "false" },
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "string" } },
     "labelStyle": { "type": { "name": "object" } },
-    "maxRadius": { "type": { "name": "number" } },
-    "minRadius": { "type": { "name": "number" } },
+    "maxRadius": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "'100%'"
+    },
+    "minRadius": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "default": "0"
+    },
     "position": {
       "type": {
         "name": "union",
