@@ -26,6 +26,8 @@ The feature ships in 6 independently mergeable iterations:
 - **I6** — polish: docs expansion, a11y, generated artifacts.
 - **I7** — fill-handle reference adjustment: dragging (or Ctrl+D/Ctrl+R filling) a formula copies it
   with its relative references shifted for each target cell, Excel-style (D21).
+- **I8** — Excel formula export: with `escapeFormulas: false`, live formula cells export as real
+  Excel formulas with references re-anchored to the exported sheet's coordinates (D22).
 
 ## Locked design decisions
 
@@ -290,8 +292,10 @@ re-evaluation necessarily re-reads the 100k-cell column; "incremental" means
 dirty-subgraph-only, not incremental aggregation.
 
 **D18. Ecosystem semantics (v1).** Clipboard copy: evaluated value. Paste: `=`-strings into
-`allowFormulas` columns become formulas; stable refs paste unadjusted. CSV/Excel export: evaluated
-values; `escapeFormulas: true` default retained. Undo/redo: free (raw row replay). Row grouping:
+`allowFormulas` columns become formulas; stable refs paste unadjusted. CSV export: evaluated values.
+Excel export: evaluated values by default; with `escapeFormulas: false`, live formulas export as
+real Excel formulas (I8/D22). `escapeFormulas: true` default retained. Undo/redo: free (raw row
+replay). Row grouping:
 keys from evaluated values. Tree data: works on data rows. `dataSource`: warn + disable. Errors
 render as code strings; error results sort/filter as code strings. Only error codes are
 user-visible strings (locale-neutral) — no `GridLocaleText` additions in v1. Formula bar: out of
@@ -385,6 +389,38 @@ double-adjustment whether `formulaA1Notation` is on or off. Always-on (no opt-ou
 `useGridCellSelection.ts` (drag `applyFill` plus the six Ctrl+D/Ctrl+R sites), reusing the existing
 `CellValueUpdater` write path so column editability, `valueSetter`, `processRowUpdate` and undo/redo
 are unchanged.
+
+**D22. Excel formula export (I8).** When `escapeFormulas: false`, live formula cells export as real
+Excel formulas (`cell.value = { formula, result }`) instead of evaluated values; the default
+(`escapeFormulas: true`) keeps the prior value-only export and the CSV-injection escaping. Reusing
+`escapeFormulas` rather than adding a prop is consistent — that flag already governs whether
+`=`-content may be live in the export. Pure engine converter `serializeFormulaAstToExcel(ast,
+context)` (`engine/formulaExcel.ts`) walks the canonical AST to an Excel A1 string, mirroring the
+serializer's minimal parenthesization. It cannot reuse the A1 display serializer, which renders
+positional refs from their literal canonical index and emits the grid's inverted-`$` dialect.
+References resolve in two stages: a positional (`$`-absolute) ref → identity via the live
+`gridFormulaA1PositionContextSelector` (as `bindFormulaDependencies` resolves it), then identity →
+**export** coordinate (export column order → `columnIndexToLetters`; export row index + header-row
+offset). Mirrors the grid's relative/absolute distinction: stable → relative (`B2`), positional →
+absolute (`$B$2`) — identical computed value, `$` only governs Excel copy/fill. `COLUMN_VALUES` → a
+bounded data range (`B2:B<lastDataRow>`, no header); a reference to a cell outside the export bakes
+Excel's `#REF!` with the cached result `{ error: '#REF!' }`; engine-only error codes map to the
+nearest Excel sentinel (`#CYCLE!`→`#REF!`, `#ERROR!`→`#VALUE!`). Adapter `gridFormulaExcelExport.ts`
+builds a per-export layout (`createFormulaExcelExportLayout`, returns `null` when no exported column
+is `allowFormulas` → zero overhead) and per-cell `getCellExcelFormula` (gated on
+`getCellFormulaResult(...) !== null`). Wired in `serializeRowUnsafe` (additive — the existing value
+path is the fallback) and applied in `addSerializedRowToWorksheet`, the single cell-writer shared by
+the sync and web-worker paths, so the descriptor is computed on the main thread (where `apiRef`
+lives) and travels in `SerializedRow.formulas` to the worker. The worker forces `includeHeaders:
+true` and reads raw `includeColumnGroupsHeaders`, so its layout matches the sheet it writes. Parsing
+reuses the grid's interning parser (`apiRef.current.caches.formula.parser`) so export is all cache
+hits; date-valued results get the same local→UTC reconstruction as the plain date path (the sheet is
+timezone-naive). _Limitations:_ header rows injected by `exceljsPreProcess` shift the baked A1 row
+numbers; and `COLUMN_VALUES`/`RANGE` emit a single contiguous A1 range over all exported rows, but
+the cached aggregate covers data rows only (the position context excludes group/pinned rows) — when
+the export interleaves group/pinned rows, a contiguous range cannot express the data-only set, so a
+manual Excel recalc may diverge (the cached result stays correct), consistent with the
+non-Excel-function recalc caveat.
 
 **Invariant (all iterations): formula source lives only in row data; every cache and state slice is
 derived.** This is what keeps undo/redo, `processRowUpdate`, and controlled-rows scenarios working

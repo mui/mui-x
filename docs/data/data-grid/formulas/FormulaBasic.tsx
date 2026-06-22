@@ -150,6 +150,7 @@ export default function FormulaBasic() {
       <DataGridPremium
         rows={rows}
         columns={columns}
+        rowSelection={false}
         initialState={{ aggregation: { model: { total: 'sum' } } }}
         formulaA1Notation
         showCellVerticalBorder
@@ -157,6 +158,14 @@ export default function FormulaBasic() {
         density="compact"
         showToolbar
         disablePivoting
+        cellSelection
+        slotProps={{
+          toolbar: {
+            excelOptions: {
+              escapeFormulas: false,
+            },
+          },
+        }}
       />
     </div>
   );

@@ -74,6 +74,13 @@ export { serializeFormulaAst } from './formulaSerializer';
 export { offsetFormulaReferences } from './formulaOffset';
 
 export type {
+  ExcelFormulaErrorCode,
+  FormulaExcelSerializeContext,
+  FormulaExcelSerializeResult,
+} from './formulaExcel';
+export { serializeFormulaAstToExcel, mapFormulaErrorCodeToExcel } from './formulaExcel';
+
+export type {
   FormulaBoundDependencies,
   FormulaColumnIntervalDependency,
   FormulaStaticDependencies,

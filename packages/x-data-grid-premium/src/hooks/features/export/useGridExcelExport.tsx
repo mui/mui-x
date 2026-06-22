@@ -29,6 +29,7 @@ import {
 } from './serializer/excelSerializer';
 import { GridExcelExportMenuItem } from '../../../components';
 import type { SerializedRow } from './serializer/utils';
+import { createFormulaExcelExportLayout } from '../formula/gridFormulaExcelExport';
 
 /**
  * @requires useGridColumns (state)
@@ -143,13 +144,30 @@ export const useGridExcelExport = (
 
       const serializedColumns = serializeColumns(exportedColumns, options.columnsStyles || {});
 
+      // Mirror the worker's own header logic so the formula A1 row numbers line
+      // up with the sheet it builds: the worker always writes the column-header
+      // row (`includeHeaders` is not forwarded and defaults to `true` there) and
+      // writes group headers only when `includeColumnGroupsHeaders` is truthy.
+      const formulaExport =
+        (options.escapeFormulas ?? true)
+          ? null
+          : createFormulaExcelExportLayout(apiRef, exportedColumns, exportedRowIds, {
+              includeHeaders: true,
+              includeColumnGroupsHeaders: Boolean(options.includeColumnGroupsHeaders),
+            });
+
       apiRef.current.resetColSpan();
       const serializedRows: SerializedRow[] = [];
       for (let i = 0; i < exportedRowIds.length; i += 1) {
         const id = exportedRowIds[i];
-        const serializedRow = serializeRowUnsafe(id, exportedColumns, apiRef, valueOptionsData, {
-          escapeFormulas: options.escapeFormulas ?? true,
-        });
+        const serializedRow = serializeRowUnsafe(
+          id,
+          exportedColumns,
+          apiRef,
+          valueOptionsData,
+          { escapeFormulas: options.escapeFormulas ?? true },
+          formulaExport,
+        );
         serializedRows.push(serializedRow);
       }
       apiRef.current.resetColSpan();

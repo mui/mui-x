@@ -114,6 +114,47 @@ When the [cell selection](/x/react-data-grid/cell-selection/#fill-handle) fill h
 
 Filling a formula into a column that is **not** `allowFormulas` copies the source cell's evaluated value instead of the formula, so a `=…` string is never stored in a plain column.
 
+## Excel export
+
+By default, [Excel export](/x/react-data-grid/export/#excel-export) writes the **evaluated value** of each formula cell.
+To export the formulas themselves—as real Excel formulas that the spreadsheet recalculates—set `escapeFormulas: false`.
+
+Pass it through the toolbar's `excelOptions` so the built-in **Export** button uses it:
+
+```tsx
+<DataGridPremium
+  showToolbar
+  slotProps={{
+    toolbar: {
+      excelOptions: { escapeFormulas: false },
+    },
+  }}
+/>
+```
+
+Or pass it directly when exporting through the API:
+
+```tsx
+apiRef.current.exportDataAsExcel({ escapeFormulas: false });
+```
+
+Whether `formulaA1Notation` is passed or not, the formula references are rewritten to Excel A1 notation that points at each cell's position in the **exported sheet**, accounting for header rows and the exported column and row order.
+Relative references stay relative (`B2`) and absolute references stay absolute (`$B$2`), matching the grid.
+
+- A reference to a cell **outside the export**—a filtered-out row, or a column removed with `disableExport` or the `fields` option—is marked as `#REF!` error.
+- Functions are exported unchanged: a function that Excel does not recognize keeps its cached value but shows `#NAME?` if the spreadsheet recalculates.
+- `COLUMN_VALUES` and `RANGE` export as contiguous A1 ranges. When the export includes grouped or pinned rows, those ranges also cover them, so the value is correct but a manual recalculation in Excel can differ.
+- CSV export always writes evaluated values.
+
+The following demo uses the `escapeFormulas: false` option to export the formulas as live formulas. Try exporting the grid as Excel file and opening it in Excel to observe the live formulas.
+
+{{"demo": "FormulaExcelExport.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+`escapeFormulas` defaults to `true` to prevent [CSV and Excel formula injection](https://owasp.org/www-community/attacks/CSV_Injection): any string value that starts with `=`, `+`, `-`, or `@` is written as text.
+Setting it to `false` exports grid formulas as live formulas, but also lets such strings in other columns run as formulas in Excel—only turn it off for trusted data.
+:::
+
 ## Custom functions
 
 Provide custom functions with the `formulaFunctions` prop.
