@@ -1,7 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import {
   type ExtendedFeatureCollection,
-  type GeoFeature,
   type GeoProjection,
   type GeoPath,
   type GeoConicProjection,
@@ -102,7 +101,9 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   selectorChartGeoFeatureKey,
   function selectorChartGeoFeatureIndexesByName(
     geoData: ExtendedFeatureCollection | null,
-    geoFeatureKey: string | ((feature: GeoFeature) => string),
+    geoFeatureKey:
+      | string
+      | ((feature: ExtendedFeatureCollection['features'][number]) => string | null),
   ): ReadonlyMap<string, number[]> {
     const map = new Map<string, number[]>();
     if (!geoData) {
@@ -157,12 +158,44 @@ const selectorResolveProjection = createSelectorMemoized(
 );
 
 const selectorFitScale = createSelector(
+  selectorChartRawProjection,
+  selectorChartProjectionFactory,
+  selectorChartParallels,
   selectorChartGeoData,
   selectorChartDrawingArea,
-  selectorResolveProjection,
-  function selectorFitScale(geoData, drawingArea, projection): number | null {
-    if (!geoData || !projection) {
+
+  function selectorFitScale(
+    projectionInput,
+    projectionFactory,
+    parallels,
+    geoData,
+    drawingArea,
+  ): number | null {
+    if (!geoData || projectionInput === null) {
       return null;
+    }
+
+    let projection: GeoProjection | null = null;
+    if (typeof projectionInput !== 'string') {
+      projection = projectionInput;
+    }
+    const factory = projectionFactory?.[projectionInput as D3NamedProjection];
+    if (!factory) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
+            `Expected one of: ${Object.keys(projectionFactory ?? {}).join(', ')}.`,
+        );
+      }
+      return null;
+    }
+    projection = factory();
+
+    if (projection === null) {
+      return null;
+    }
+    if (isConicProjection(projection)) {
+      projection.parallels(parallels);
     }
 
     const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
