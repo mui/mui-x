@@ -7,7 +7,7 @@ import Chance from 'chance';
 
 const NUMBER_OF_SERIES = 3;
 
-const POINT_COUNT = 20000;
+const POINT_COUNT = 40000;
 
 // Gaussian-ish blobs so the progressive, batched paint is easy to see. Points
 // are split into `NUMBER_OF_SERIES` contiguous series, each offset into its
