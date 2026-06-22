@@ -1,4 +1,4 @@
-import type { SamplingBucket, SamplingLevel, SamplingPyramid } from './sampling.types';
+import type { SamplingLevel, SamplingPyramid } from './sampling.types';
 
 /** Smallest element size (px) allowed before sampling kicks in. */
 export const MIN_ELEMENT_SIZE_PX = 6;
@@ -11,57 +11,96 @@ export function getSamplingMinSpan(dataLength: number, availableSizePx: number):
   return (100 * availableSizePx) / (MIN_ELEMENT_SIZE_PX * dataLength);
 }
 
+const EMPTY_PYRAMID_OFFSETS = new Int32Array(1);
+
 /**
  * Builds the LOD pyramid for one series from its stacked `[base, top]` values. Each bucket keeps
  * the min base / max top of its range (min/max envelope, so spikes and troughs survive).
  * Other aggregations to consider if needed: max (peak only), average, stride (keep the first).
- * Level 0 (no merge) is implicit; `levels[i].bucketSize === 2 ** (i + 1)`.
+ *
+ * Stored flat: all levels concatenated into one `min` and one `max` `Float64Array`, with
+ * `offsets` marking level boundaries. Level 0 (no merge) is implicit; bucket indices are derived
+ * (`j * bucketSize`) rather than stored.
  */
 export function buildSamplingPyramid(stacked: readonly [number, number][]): SamplingPyramid {
   const dataLength = stacked.length;
-  const levels: SamplingLevel[] = [];
 
-  if (dataLength > 1) {
-    const maxLevel = Math.ceil(Math.log2(dataLength));
+  if (dataLength <= 1) {
+    return {
+      dataLength,
+      min: new Float64Array(0),
+      max: new Float64Array(0),
+      offsets: EMPTY_PYRAMID_OFFSETS,
+    };
+  }
 
-    // Level 1 (bucketSize 2) merges adjacent raw points; the only level that scans raw data.
-    const firstBuckets: SamplingBucket[] = [];
-    for (let startIndex = 0; startIndex < dataLength; startIndex += 2) {
-      const endIndex = Math.min(startIndex + 1, dataLength - 1);
-      let low = stacked[startIndex][0];
-      let high = stacked[startIndex][1];
-      if (endIndex > startIndex) {
-        low = Math.min(low, stacked[endIndex][0]);
-        high = Math.max(high, stacked[endIndex][1]);
+  const levelCount = Math.ceil(Math.log2(dataLength));
+
+  // Level start offsets into the shared buffers; each level halves the previous count (round up).
+  const offsets = new Int32Array(levelCount + 1);
+  for (let levelIndex = 0, count = dataLength; levelIndex < levelCount; levelIndex += 1) {
+    count = Math.ceil(count / 2);
+    offsets[levelIndex + 1] = offsets[levelIndex] + count;
+  }
+
+  const min = new Float64Array(offsets[levelCount]);
+  const max = new Float64Array(offsets[levelCount]);
+
+  // Level 0 (bucketSize 2) merges adjacent raw points; the only level that scans raw data.
+  for (let j = 0, startIndex = 0; startIndex < dataLength; j += 1, startIndex += 2) {
+    const endIndex = startIndex + 1;
+    let bucketMin = stacked[startIndex][0];
+    let bucketMax = stacked[startIndex][1];
+    if (endIndex < dataLength) {
+      if (stacked[endIndex][0] < bucketMin) {
+        bucketMin = stacked[endIndex][0];
       }
-      firstBuckets.push({ startIndex, endIndex, low, high });
+      if (stacked[endIndex][1] > bucketMax) {
+        bucketMax = stacked[endIndex][1];
+      }
     }
-    levels.push({ bucketSize: 2, buckets: firstBuckets });
+    min[j] = bucketMin;
+    max[j] = bucketMax;
+  }
 
-    // Higher levels merge pairs of buckets from the level below (min/max are associative, so the
-    // result is identical to re-scanning raw data). n/2 + n/4 + ... visits total → O(n) build.
-    for (let levelIndex = 2; levelIndex <= maxLevel; levelIndex += 1) {
-      const prevBuckets = levels[levelIndex - 2].buckets;
-      const buckets: SamplingBucket[] = [];
-      for (let i = 0; i < prevBuckets.length; i += 2) {
-        const left = prevBuckets[i];
-        const right = prevBuckets[i + 1];
-        if (right === undefined) {
-          buckets.push(left);
-        } else {
-          buckets.push({
-            startIndex: left.startIndex,
-            endIndex: right.endIndex,
-            low: left.low < right.low ? left.low : right.low,
-            high: left.high > right.high ? left.high : right.high,
-          });
-        }
+  // Higher levels merge pairs of buckets from the level below, reading/writing the shared buffers
+  // by offset (min/max are associative, so the result equals re-scanning raw data).
+  // n/2 + n/4 + ... visits total → O(n) build.
+  for (let levelIndex = 1; levelIndex < levelCount; levelIndex += 1) {
+    const prevStart = offsets[levelIndex - 1];
+    const prevCount = offsets[levelIndex] - prevStart;
+    const start = offsets[levelIndex];
+    for (let i = 0, j = 0; i < prevCount; i += 2, j += 1) {
+      const a = prevStart + i;
+      const w = start + j;
+      if (i + 1 >= prevCount) {
+        min[w] = min[a];
+        max[w] = max[a];
+      } else {
+        const b = a + 1;
+        min[w] = min[a] < min[b] ? min[a] : min[b];
+        max[w] = max[a] > max[b] ? max[a] : max[b];
       }
-      levels.push({ bucketSize: 2 ** levelIndex, buckets });
     }
   }
 
-  return { dataLength, levels };
+  return { dataLength, min, max, offsets };
+}
+
+/** Number of stored levels (finest `bucketSize 2` to coarsest). */
+export function getSamplingLevelCount(pyramid: SamplingPyramid): number {
+  return pyramid.offsets.length - 1;
+}
+
+/** Ephemeral view of stored level `index` (0-based; `bucketSize === 2 ** (index + 1)`). */
+export function getSamplingLevel(pyramid: SamplingPyramid, index: number): SamplingLevel {
+  const start = pyramid.offsets[index];
+  const end = pyramid.offsets[index + 1];
+  return {
+    bucketSize: 2 ** (index + 1),
+    min: pyramid.min.subarray(start, end),
+    max: pyramid.max.subarray(start, end),
+  };
 }
 
 /** Level index from the zoom span: 0 at max zoom (`currentSpan === minSpan`), +1 per span doubling. */
@@ -81,11 +120,11 @@ export function selectSamplingLevelByZoom(
   minSpan: number,
   pyramid: SamplingPyramid,
 ): SamplingLevel | null {
-  const { levels } = pyramid;
+  const levelCount = getSamplingLevelCount(pyramid);
   const levelIndex = levelIndexFromSpan(currentSpan, minSpan);
-  return levelIndex <= 0 || levels.length === 0
+  return levelIndex <= 0 || levelCount === 0
     ? null
-    : levels[Math.min(levelIndex, levels.length) - 1];
+    : getSamplingLevel(pyramid, Math.min(levelIndex, levelCount) - 1);
 }
 
 /** Active bucket size for the given span (`1` = no sampling) — matches {@link selectSamplingLevelByZoom}. */

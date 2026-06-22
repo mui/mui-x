@@ -213,10 +213,17 @@ export function processBarDataForPlot(
           numberOfGroups: stackingGroups.length,
         });
 
-        for (const bucket of activeLevel.buckets) {
+        const { bucketSize, min, max } = activeLevel;
+        const maxIndex = pyramid.dataLength - 1;
+        for (let j = 0; j < min.length; j += 1) {
+          const startIndex = j * bucketSize;
+          const endIndex = Math.min(startIndex + bucketSize - 1, maxIndex);
           registerResult(
-            makeResult(bucket.startIndex, getBucketBarDimensions(bucket, groupIndex)),
-            bucket.startIndex,
+            makeResult(
+              startIndex,
+              getBucketBarDimensions(startIndex, endIndex, min[j], max[j], groupIndex),
+            ),
+            startIndex,
           );
         }
       } else {

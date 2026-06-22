@@ -1,6 +1,5 @@
 import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
-import type { SamplingBucket } from './plugins/featurePlugins/useChartCartesianAxis/sampling.types';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
 
@@ -92,9 +91,15 @@ export function createGetBucketBarDimensions(params: {
   const step = baseScale.step();
   const valueScale = verticalLayout ? yAxisConfig.scale : xAxisConfig.scale;
 
-  return function getBucketBarDimensions(bucket: SamplingBucket, groupIndex: number) {
-    const spanStart = baseScale(baseScaleConfig.data![bucket.startIndex])!;
-    const bucketCount = bucket.endIndex - bucket.startIndex + 1;
+  return function getBucketBarDimensions(
+    startIndex: number,
+    endIndex: number,
+    min: number,
+    max: number,
+    groupIndex: number,
+  ) {
+    const spanStart = baseScale(baseScaleConfig.data![startIndex])!;
+    const bucketCount = endIndex - startIndex + 1;
     const bucketStride = bucketCount * step;
 
     // Keep the gap between buckets proportional to the bucket (same ratio as an unsampled chart),
@@ -110,7 +115,7 @@ export function createGetBucketBarDimensions(params: {
     );
     const barOffset = groupIndex * (barWidth + offset);
 
-    const valueCoordinates = [valueScale(bucket.low)!, valueScale(bucket.high)!];
+    const valueCoordinates = [valueScale(min)!, valueScale(max)!];
     const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
 
     let barSize = maxValueCoord - minValueCoord;

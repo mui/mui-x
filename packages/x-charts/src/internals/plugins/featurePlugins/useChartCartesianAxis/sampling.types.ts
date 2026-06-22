@@ -1,30 +1,33 @@
 import type { SeriesId } from '../../../../models/seriesType/common';
 
-/** One aggregated bucket, in value space (stays valid across zoom). */
-export interface SamplingBucket {
-  /** First original data index covered by the bucket. */
-  startIndex: number;
-  /** Last original data index covered by the bucket (inclusive). */
-  endIndex: number;
-  /** Lower stacked value of the bucket. */
-  low: number;
-  /** Upper stacked value of the bucket. */
-  high: number;
-}
-
-/** One level of detail. */
+/**
+ * Ephemeral view of one level of detail: `subarray` views into the pyramid buffers plus its
+ * bucket size. Built on demand by {@link selectSamplingLevelByZoom}, never stored.
+ * Bucket `j` covers indices `[j * bucketSize, min((j + 1) * bucketSize - 1, dataLength - 1)]`
+ * and the `[min, max]` value envelope of that range (so spikes and troughs survive merging).
+ */
 export interface SamplingLevel {
   /** Elements merged per bucket (power of two, `>= 2`). */
   bucketSize: number;
-  /** Buckets ordered by `startIndex`. */
-  buckets: SamplingBucket[];
+  /** Minimum value per bucket. */
+  min: Float64Array;
+  /** Maximum value per bucket. */
+  max: Float64Array;
 }
 
-/** Precomputed LOD pyramid for one series. `levels[i].bucketSize === 2 ** (i + 1)`. */
+/**
+ * Precomputed LOD pyramid for one series, stored as flat typed arrays (no per-level or per-bucket
+ * objects). All levels are concatenated finest (`bucketSize 2`) to coarsest into `min`/`max`;
+ * `offsets[i]..offsets[i + 1]` is level `i` (bucketSize `2 ** (i + 1)`). `offsets.length - 1` levels.
+ */
 export interface SamplingPyramid {
   dataLength: number;
-  /** Ordered finest (`bucketSize 2`) to coarsest. */
-  levels: SamplingLevel[];
+  /** All levels' minimum values, concatenated finest to coarsest. */
+  min: Float64Array;
+  /** All levels' maximum values, same order. */
+  max: Float64Array;
+  /** Level start offsets into `min`/`max`; length `levelCount + 1`, last entry `=== min.length`. */
+  offsets: Int32Array;
 }
 
 /** State slice set by the pro `useChartProSampling` plugin; absent in community. */

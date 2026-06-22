@@ -1,6 +1,8 @@
 import {
   MIN_ELEMENT_SIZE_PX,
   buildSamplingPyramid,
+  getSamplingLevel,
+  getSamplingLevelCount,
   getSamplingMinSpan,
   selectSamplingLevelByZoom,
 } from './sampling';
@@ -21,45 +23,42 @@ const stacked: [number, number][] = [
 ];
 
 describe('buildSamplingPyramid', () => {
+  const bucketSizes = (pyramid: ReturnType<typeof buildSamplingPyramid>) =>
+    Array.from(
+      { length: getSamplingLevelCount(pyramid) },
+      (_, i) => getSamplingLevel(pyramid, i).bucketSize,
+    );
+
   it('stores one level per power-of-two bucket size, starting at 2', () => {
     const pyramid = buildSamplingPyramid(stacked);
 
     expect(pyramid.dataLength).to.equal(8);
-    expect(pyramid.levels.map((level) => level.bucketSize)).to.deep.equal([2, 4, 8]);
+    expect(bucketSizes(pyramid)).to.deep.equal([2, 4, 8]);
   });
 
   it('aggregates each bucket with the min/max envelope', () => {
     const pyramid = buildSamplingPyramid(stacked);
 
-    expect(pyramid.levels[0].buckets).to.deep.equal([
-      { startIndex: 0, endIndex: 1, low: 0, high: 5 },
-      { startIndex: 2, endIndex: 3, low: 0, high: 8 },
-      { startIndex: 4, endIndex: 5, low: 0, high: 7 },
-      { startIndex: 6, endIndex: 7, low: 0, high: 6 },
-    ]);
-    expect(pyramid.levels[2].buckets).to.deep.equal([
-      { startIndex: 0, endIndex: 7, low: 0, high: 8 },
-    ]);
+    expect(Array.from(getSamplingLevel(pyramid, 0).min)).to.deep.equal([0, 0, 0, 0]);
+    expect(Array.from(getSamplingLevel(pyramid, 0).max)).to.deep.equal([5, 8, 7, 6]);
+    expect(Array.from(getSamplingLevel(pyramid, 2).min)).to.deep.equal([0]);
+    expect(Array.from(getSamplingLevel(pyramid, 2).max)).to.deep.equal([8]);
   });
 
   it('clamps the last bucket when the length is not a power of two', () => {
     const pyramid = buildSamplingPyramid(stacked.slice(0, 5));
 
-    expect(pyramid.levels.map((level) => level.bucketSize)).to.deep.equal([2, 4, 8]);
-    expect(pyramid.levels[0].buckets.at(-1)).to.deep.equal({
-      startIndex: 4,
-      endIndex: 4,
-      low: 0,
-      high: 3,
-    });
-    expect(pyramid.levels[2].buckets).to.deep.equal([
-      { startIndex: 0, endIndex: 4, low: 0, high: 8 },
-    ]);
+    expect(bucketSizes(pyramid)).to.deep.equal([2, 4, 8]);
+    // Last level-0 bucket covers the lone trailing point (index 4): min 0, max 3.
+    expect(getSamplingLevel(pyramid, 0).min.at(-1)).to.equal(0);
+    expect(getSamplingLevel(pyramid, 0).max.at(-1)).to.equal(3);
+    expect(Array.from(getSamplingLevel(pyramid, 2).min)).to.deep.equal([0]);
+    expect(Array.from(getSamplingLevel(pyramid, 2).max)).to.deep.equal([8]);
   });
 
   it('produces no levels for one or zero data points', () => {
-    expect(buildSamplingPyramid([]).levels).to.have.length(0);
-    expect(buildSamplingPyramid([[0, 1]]).levels).to.have.length(0);
+    expect(getSamplingLevelCount(buildSamplingPyramid([]))).to.equal(0);
+    expect(getSamplingLevelCount(buildSamplingPyramid([[0, 1]]))).to.equal(0);
   });
 });
 
