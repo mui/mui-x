@@ -2,29 +2,25 @@ import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useZAxis } from '@mui/x-charts-premium/hooks';
 import { irisData } from '../dataset/irisDataset';
 
 const species = ['Setosa', 'Versicolor', 'Virginica'];
 const speciesColors = ['#2e7d32', '#ed6c02', '#9c27b0'];
-const predictionColors = {
-  Setosa: '#2e7d32',
-  Versicolor: '#ed6c02',
-  Virginica: '#9c27b0',
-};
+const speciesPredictionColors = ['#5aa35e', '#be7f4b', '#ba68c9'];
 
-/**
- * A custom marker that visualizes additional dimensions of the dataset.
- * Fill color represents the actual species, stroke color represents the
- * predicted species, bubble size represents petal length, and stroke
- * width represents prediction confidence.
- */
 function IrisMarker(props) {
   const { x, y, color, size, isHighlighted, isFaded, dataIndex, ...other } = props;
-  const datum = irisData[dataIndex];
-  const r = (isHighlighted ? 1.2 : 1) * size;
-  const strokeWidth = 0.5 + (datum.confidence / 100) * 2.5;
-  const strokeColor = predictionColors[datum.prediction] ?? '#666';
 
+  // Get and use color/size scale to determine stroke color and width based on prediction and confidence z-axes.
+  const predictionAxis = useZAxis('prediction');
+  const confidenceAxis = useZAxis('confidence');
+  const strokeWidth =
+    confidenceAxis?.sizeScale?.(confidenceAxis.data?.[dataIndex]) ?? 0;
+  const strokeColor =
+    predictionAxis?.colorScale?.(predictionAxis.data?.[dataIndex]) ?? 'gray';
+
+  const r = (isHighlighted ? 1.2 : 1) * size;
   return (
     <circle
       cx={0}
@@ -90,7 +86,26 @@ export default function ScatterZAxis() {
               type: 'continuous',
               min: 1,
               max: 7,
-              size: [4, 16],
+              size: [3, 10],
+            },
+          },
+          {
+            id: 'prediction',
+            dataKey: 'prediction',
+            colorMap: {
+              type: 'ordinal',
+              values: species,
+              colors: speciesPredictionColors,
+            },
+          },
+          {
+            id: 'confidence',
+            dataKey: 'confidence',
+            sizeMap: {
+              type: 'continuous',
+              min: Math.min(...irisData.map((item) => item.confidence)),
+              max: 100,
+              size: [0.5, 3],
             },
           },
         ]}
