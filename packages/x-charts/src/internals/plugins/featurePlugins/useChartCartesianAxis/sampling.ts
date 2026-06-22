@@ -1,4 +1,4 @@
-import type { SamplingLevel, SamplingPyramid } from './sampling.types';
+import type { ActiveSamplingLevel, SamplingPyramid } from './sampling.types';
 
 /** Smallest element size (px) allowed before sampling kicks in. */
 export const MIN_ELEMENT_SIZE_PX = 6;
@@ -14,22 +14,25 @@ export function getSamplingMinSpan(dataLength: number, availableSizePx: number):
 const EMPTY_PYRAMID_OFFSETS = new Int32Array(1);
 
 /**
- * Builds the LOD pyramid for one series from its stacked `[base, top]` values. Each bucket keeps
- * the min base / max top of its range (min/max envelope, so spikes and troughs survive).
- * Other aggregations to consider if needed: max (peak only), average, stride (keep the first).
+ * Builds the LOD pyramid for one series from its low/high value channels (for bars: the stacked
+ * `[base, top]` channels; for lines: the displayed `y` for both). Each bucket keeps the original
+ * index of its min (over `low`) and max (over `high`) — a min/max envelope, so spikes and troughs
+ * survive. Consumers read the values back from their own series data by index.
  *
- * Stored flat: all levels concatenated into one `min` and one `max` `Float64Array`, with
- * `offsets` marking level boundaries. Level 0 (no merge) is implicit; bucket indices are derived
- * (`j * bucketSize`) rather than stored.
+ * Stored flat: all levels concatenated into `argMin`/`argMax`, with `offsets` marking level
+ * boundaries. Level 0 (no merge) is implicit; bucket indices are derived (`j * bucketSize`).
  */
-export function buildSamplingPyramid(stacked: readonly [number, number][]): SamplingPyramid {
-  const dataLength = stacked.length;
+export function buildSamplingPyramid(
+  low: ArrayLike<number>,
+  high: ArrayLike<number>,
+): SamplingPyramid {
+  const dataLength = low.length;
 
   if (dataLength <= 1) {
     return {
       dataLength,
-      min: new Float64Array(0),
-      max: new Float64Array(0),
+      argMin: new Int32Array(0),
+      argMax: new Int32Array(0),
       offsets: EMPTY_PYRAMID_OFFSETS,
     };
   }
@@ -43,29 +46,28 @@ export function buildSamplingPyramid(stacked: readonly [number, number][]): Samp
     offsets[levelIndex + 1] = offsets[levelIndex] + count;
   }
 
-  const min = new Float64Array(offsets[levelCount]);
-  const max = new Float64Array(offsets[levelCount]);
+  const argMin = new Int32Array(offsets[levelCount]);
+  const argMax = new Int32Array(offsets[levelCount]);
 
   // Level 0 (bucketSize 2) merges adjacent raw points; the only level that scans raw data.
-  for (let j = 0, startIndex = 0; startIndex < dataLength; j += 1, startIndex += 2) {
-    const endIndex = startIndex + 1;
-    let bucketMin = stacked[startIndex][0];
-    let bucketMax = stacked[startIndex][1];
-    if (endIndex < dataLength) {
-      if (stacked[endIndex][0] < bucketMin) {
-        bucketMin = stacked[endIndex][0];
+  for (let j = 0, i = 0; i < dataLength; j += 1, i += 2) {
+    const next = i + 1;
+    let lo = i;
+    let hi = i;
+    if (next < dataLength) {
+      if (low[next] < low[i]) {
+        lo = next;
       }
-      if (stacked[endIndex][1] > bucketMax) {
-        bucketMax = stacked[endIndex][1];
+      if (high[next] > high[i]) {
+        hi = next;
       }
     }
-    min[j] = bucketMin;
-    max[j] = bucketMax;
+    argMin[j] = lo;
+    argMax[j] = hi;
   }
 
-  // Higher levels merge pairs of buckets from the level below, reading/writing the shared buffers
-  // by offset (min/max are associative, so the result equals re-scanning raw data).
-  // n/2 + n/4 + ... visits total → O(n) build.
+  // Higher levels merge pairs of buckets from the level below (argMin/argMax are associative via
+  // value compare, so the result equals re-scanning raw data). n/2 + n/4 + ... → O(n) build.
   for (let levelIndex = 1; levelIndex < levelCount; levelIndex += 1) {
     const prevStart = offsets[levelIndex - 1];
     const prevCount = offsets[levelIndex] - prevStart;
@@ -74,33 +76,22 @@ export function buildSamplingPyramid(stacked: readonly [number, number][]): Samp
       const a = prevStart + i;
       const w = start + j;
       if (i + 1 >= prevCount) {
-        min[w] = min[a];
-        max[w] = max[a];
+        argMin[w] = argMin[a];
+        argMax[w] = argMax[a];
       } else {
         const b = a + 1;
-        min[w] = min[a] < min[b] ? min[a] : min[b];
-        max[w] = max[a] > max[b] ? max[a] : max[b];
+        argMin[w] = low[argMin[a]] <= low[argMin[b]] ? argMin[a] : argMin[b];
+        argMax[w] = high[argMax[a]] >= high[argMax[b]] ? argMax[a] : argMax[b];
       }
     }
   }
 
-  return { dataLength, min, max, offsets };
+  return { dataLength, argMin, argMax, offsets };
 }
 
 /** Number of stored levels (finest `bucketSize 2` to coarsest). */
 export function getSamplingLevelCount(pyramid: SamplingPyramid): number {
   return pyramid.offsets.length - 1;
-}
-
-/** Ephemeral view of stored level `index` (0-based; `bucketSize === 2 ** (index + 1)`). */
-export function getSamplingLevel(pyramid: SamplingPyramid, index: number): SamplingLevel {
-  const start = pyramid.offsets[index];
-  const end = pyramid.offsets[index + 1];
-  return {
-    bucketSize: 2 ** (index + 1),
-    min: pyramid.min.subarray(start, end),
-    max: pyramid.max.subarray(start, end),
-  };
 }
 
 /** Level index from the zoom span: 0 at max zoom (`currentSpan === minSpan`), +1 per span doubling. */
@@ -112,19 +103,25 @@ export function levelIndexFromSpan(currentSpan: number, minSpan: number): number
 }
 
 /**
- * Picks the level from the zoom span: max zoom (`currentSpan === minSpan`) → no sampling (`null`);
- * each span doubling → bucket size ×2. Clamped to the pyramid depth.
+ * Picks the active level from the zoom span: max zoom (`currentSpan === minSpan`) → no sampling
+ * (`null`); each span doubling → bucket size ×2. Clamped to the pyramid depth.
  */
-export function selectSamplingLevelByZoom(
+export function selectSamplingLevel(
+  pyramid: SamplingPyramid,
   currentSpan: number,
   minSpan: number,
-  pyramid: SamplingPyramid,
-): SamplingLevel | null {
+): ActiveSamplingLevel | null {
   const levelCount = getSamplingLevelCount(pyramid);
   const levelIndex = levelIndexFromSpan(currentSpan, minSpan);
-  return levelIndex <= 0 || levelCount === 0
-    ? null
-    : getSamplingLevel(pyramid, Math.min(levelIndex, levelCount) - 1);
+  if (levelIndex <= 0 || levelCount === 0) {
+    return null;
+  }
+  const storedLevel = Math.min(levelIndex, levelCount) - 1;
+  return {
+    bucketSize: 2 ** (storedLevel + 1),
+    start: pyramid.offsets[storedLevel],
+    end: pyramid.offsets[storedLevel + 1],
+  };
 }
 
 /** Active bucket size for the given span (`1` = no sampling) — matches {@link selectSamplingLevelByZoom}. */

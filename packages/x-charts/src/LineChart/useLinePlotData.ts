@@ -8,7 +8,7 @@ import {
   type ComputedAxisConfig,
   getSamplingMinSpan,
   selectLineSampledIndices,
-  type LineSamplingData,
+  type SamplingPyramid,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartSamplingState,
@@ -127,7 +127,7 @@ export function useLinePlotData(
 
         // Sampling reduces the rendered points to a zoom-appropriate subset. Only the plain
         // (non-step) path is sampled; step expansion and null gaps fall back to the full render.
-        const built = sampledSeries[seriesId] as LineSamplingData | undefined;
+        const built = sampledSeries[seriesId] as SamplingPyramid | undefined;
         const zoom = zoomMap?.get(xAxisId);
         let sampledIndices: Int32Array | null = null;
         if (samplingState?.enabled && built && zoom && !shouldExpand && xData) {
@@ -136,6 +136,7 @@ export function useLinePlotData(
             zoom.end - zoom.start,
             getSamplingMinSpan(built.dataLength, drawingArea.width),
             samplingState.lineAlgorithm,
+            () => Float64Array.from(visibleStackedData, (point) => point[1]),
           );
         }
 

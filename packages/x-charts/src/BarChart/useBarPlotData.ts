@@ -20,7 +20,7 @@ import { useChartId } from '../hooks/useChartId';
 import { useStore } from '../internals/store/useStore';
 import {
   getSamplingMinSpan,
-  selectSamplingLevelByZoom,
+  selectSamplingLevel,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling';
 import { selectorChartSamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
 import type {
@@ -200,10 +200,10 @@ export function processBarDataForPlot(
       const availableSize = verticalLayout ? drawingArea.width : drawingArea.height;
       const activeLevel =
         pyramid && zoom
-          ? selectSamplingLevelByZoom(
+          ? selectSamplingLevel(
+              pyramid,
               zoom.end - zoom.start,
               getSamplingMinSpan(pyramid.dataLength, availableSize),
-              pyramid,
             )
           : null;
 
@@ -216,15 +216,20 @@ export function processBarDataForPlot(
           numberOfGroups: stackingGroups.length,
         });
 
-        const { bucketSize, min, max } = activeLevel;
+        const { bucketSize, start, end } = activeLevel;
+        const { argMin, argMax } = pyramid!;
+        const stacked = series[seriesId].visibleStackedData;
         const maxIndex = pyramid!.dataLength - 1;
-        for (let j = 0; j < min.length; j += 1) {
-          const startIndex = j * bucketSize;
+        for (let j = start; j < end; j += 1) {
+          const bucket = j - start;
+          const startIndex = bucket * bucketSize;
           const endIndex = Math.min(startIndex + bucketSize - 1, maxIndex);
+          const low = stacked[argMin[j]][0];
+          const high = stacked[argMax[j]][1];
           registerResult(
             makeResult(
               startIndex,
-              getBucketBarDimensions(startIndex, endIndex, min[j], max[j], groupIndex),
+              getBucketBarDimensions(startIndex, endIndex, low, high, groupIndex),
             ),
             startIndex,
           );
