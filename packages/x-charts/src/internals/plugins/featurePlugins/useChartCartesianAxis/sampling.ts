@@ -23,24 +23,41 @@ export function buildSamplingPyramid(stacked: readonly [number, number][]): Samp
 
   if (dataLength > 1) {
     const maxLevel = Math.ceil(Math.log2(dataLength));
-    for (let levelIndex = 1; levelIndex <= maxLevel; levelIndex += 1) {
-      const bucketSize = 2 ** levelIndex;
-      const buckets: SamplingBucket[] = [];
-      for (let startIndex = 0; startIndex < dataLength; startIndex += bucketSize) {
-        const endIndex = Math.min(startIndex + bucketSize - 1, dataLength - 1);
-        let low = Infinity;
-        let high = -Infinity;
-        for (let i = startIndex; i <= endIndex; i += 1) {
-          if (stacked[i][0] < low) {
-            low = stacked[i][0];
-          }
-          if (stacked[i][1] > high) {
-            high = stacked[i][1];
-          }
-        }
-        buckets.push({ startIndex, endIndex, low, high });
+
+    // Level 1 (bucketSize 2) merges adjacent raw points; the only level that scans raw data.
+    const firstBuckets: SamplingBucket[] = [];
+    for (let startIndex = 0; startIndex < dataLength; startIndex += 2) {
+      const endIndex = Math.min(startIndex + 1, dataLength - 1);
+      let low = stacked[startIndex][0];
+      let high = stacked[startIndex][1];
+      if (endIndex > startIndex) {
+        low = Math.min(low, stacked[endIndex][0]);
+        high = Math.max(high, stacked[endIndex][1]);
       }
-      levels.push({ bucketSize, buckets });
+      firstBuckets.push({ startIndex, endIndex, low, high });
+    }
+    levels.push({ bucketSize: 2, buckets: firstBuckets });
+
+    // Higher levels merge pairs of buckets from the level below (min/max are associative, so the
+    // result is identical to re-scanning raw data). n/2 + n/4 + ... visits total → O(n) build.
+    for (let levelIndex = 2; levelIndex <= maxLevel; levelIndex += 1) {
+      const prevBuckets = levels[levelIndex - 2].buckets;
+      const buckets: SamplingBucket[] = [];
+      for (let i = 0; i < prevBuckets.length; i += 2) {
+        const left = prevBuckets[i];
+        const right = prevBuckets[i + 1];
+        if (right === undefined) {
+          buckets.push(left);
+        } else {
+          buckets.push({
+            startIndex: left.startIndex,
+            endIndex: right.endIndex,
+            low: left.low < right.low ? left.low : right.low,
+            high: left.high > right.high ? left.high : right.high,
+          });
+        }
+      }
+      levels.push({ bucketSize: 2 ** levelIndex, buckets });
     }
   }
 
