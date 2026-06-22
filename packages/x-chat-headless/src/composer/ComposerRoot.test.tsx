@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import { useChatComposer } from '../hooks/useChatComposer';
 import { useChatStore } from '../hooks/useChatStore';
 import { ChatRoot } from '../chat/ChatRoot';
+import { ComposerAttachmentList } from './ComposerAttachmentList';
 import type { ComposerAttachButtonProps } from './ComposerAttachButton';
 import { ComposerAttachButton } from './ComposerAttachButton';
 import { ComposerHelperText } from './ComposerHelperText';
@@ -828,5 +829,41 @@ describe('ComposerTextArea', () => {
     const input = screen.getByRole('textbox', { name: 'Custom label' });
 
     expect(input).to.have.attribute('placeholder', 'Custom placeholder');
+  });
+});
+
+describe('ComposerAttachmentList', () => {
+  it('renders outside a ChatComposer when the store has attachments', () => {
+    let store!: ReturnType<typeof useChatStore>;
+    function CaptureStore() {
+      store = useChatStore();
+      return null;
+    }
+
+    render(
+      <ChatRoot adapter={createAdapter()}>
+        <CaptureStore />
+        {/* No ComposerRoot/ChatComposer ancestor — standalone/custom-layout case. */}
+        <ComposerAttachmentList data-testid="attachment-list">
+          <span data-testid="attachment-content">items</span>
+        </ComposerAttachmentList>
+      </ChatRoot>,
+    );
+
+    // Empty store → the list does not mount.
+    expect(screen.queryByTestId('attachment-list')).to.equal(null);
+
+    act(() => {
+      store.addComposerAttachment({
+        localId: 'a1',
+        file: new File(['x'], 'note.txt', { type: 'text/plain' }),
+        status: 'uploaded',
+      });
+    });
+
+    // With a store attachment, the list renders even without a ChatComposer —
+    // it gates on the store (source of truth), not the ComposerContext default.
+    expect(screen.getByTestId('attachment-list')).not.to.equal(null);
+    expect(screen.getByTestId('attachment-content')).not.to.equal(null);
   });
 });

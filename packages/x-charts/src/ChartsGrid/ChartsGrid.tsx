@@ -84,7 +84,7 @@ function ChartsGrid(inProps: ChartsGridProps) {
   );
 }
 
-ChartsGrid.propTypes = {
+ChartsGrid.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -93,6 +93,10 @@ ChartsGrid.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Displays horizontal grid.
    */

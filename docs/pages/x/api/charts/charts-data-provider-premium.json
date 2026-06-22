@@ -5,6 +5,7 @@
       "default": "rainbowSurgePalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "experimentalFeatures": { "type": { "name": "any" } },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },
     "localeText": { "type": { "name": "object" } },
@@ -62,6 +63,5 @@
   "muiName": "MuiChartsDataProviderPremium",
   "filename": "/packages/x-charts-premium/src/ChartsDataProviderPremium/ChartsDataProviderPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li>\n<li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li>\n<li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>"
 }

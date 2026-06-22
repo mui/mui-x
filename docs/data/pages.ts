@@ -36,6 +36,7 @@ const schedulerPages: MuiPage[] = [
         children: [
           { pathname: '/x/react-scheduler/timezone', title: 'Timezones' },
           { pathname: '/x/react-scheduler/recurring-events', plan: 'premium' },
+          { pathname: '/x/react-scheduler/accessibility', title: 'Accessibility' },
         ],
       },
       {
@@ -105,6 +106,7 @@ const schedulerPages: MuiPage[] = [
 
 const pages: MuiPage[] = [
   {
+    // This is the full url because we want users (on the older version of the docs) to always go to the latest version's content.
     pathname: 'https://mui.com/x/whats-new/',
     title: "What's new in MUI X",
   },
@@ -904,20 +906,48 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-chat', title: 'Overview' },
       { pathname: '/x/react-chat/quickstart', title: 'Quickstart' },
+      { pathname: '/x/react-chat/all-components', title: 'Components' },
+      { pathname: '/x/react-chat/accessibility', title: 'Accessibility' },
       {
         pathname: '/x/react-chat/main-features',
         subheader: 'Main features',
         children: [
           { pathname: '/x/react-chat/basics/chatbox', title: 'ChatBox' },
           {
-            pathname: '/x/react-chat/backend/adapters',
-            title: 'Adapters',
+            pathname: '/x/react-chat/backend',
+            title: 'Backend Connection',
+            children: [
+              { pathname: '/x/react-chat/backend/adapters', title: 'Adapters' },
+              { pathname: '/x/react-chat/behavior/streaming', title: 'Streaming' },
+              {
+                pathname: '/x/react-chat/backend/built-in-adapters',
+                title: 'Built-in adapters',
+                children: [
+                  {
+                    pathname: '/x/react-chat/backend/built-in-adapters/echo-adapter',
+                    title: 'Echo',
+                  },
+                  {
+                    pathname: '/x/react-chat/backend/built-in-adapters/ai-sdk-adapter',
+                    title: 'Vercel AI SDK',
+                  },
+                ],
+              },
+              {
+                pathname: '/x/react-chat/backend/building-an-adapter',
+                title: 'Building an Adapter',
+              },
+              {
+                pathname: '/x/react-chat/backend/real-time-adapters',
+                title: 'Real-Time Adapters',
+              },
+              {
+                pathname: '/x/react-chat/backend/controlled-state',
+                title: 'Controlled State',
+              },
+            ],
           },
-          { pathname: '/x/react-chat/behavior/streaming' },
-          {
-            pathname: '/x/react-chat/behavior/error-handling',
-            title: 'Error handling',
-          },
+          { pathname: '/x/react-chat/behavior/error-handling', title: 'Error Handling' },
         ],
       },
       {
@@ -925,14 +955,16 @@ const pages: MuiPage[] = [
         subheader: 'Customization',
         children: [
           {
-            pathname: '/x/react-chat/customization/slots-and-composition',
-            title: 'Slots and composition',
+            pathname: '/x/react-chat/customization/overview',
+            title: 'Overview',
           },
-          { pathname: '/x/react-chat/customization/styling', title: 'Styling' },
-          { pathname: '/x/react-chat/customization/tailwind', title: 'Tailwind CSS' },
           {
-            pathname: '/x/react-chat/customization/localization',
-            title: 'Localization',
+            pathname: '/x/react-chat/customization/look-and-feel',
+            title: 'Look & Feel',
+          },
+          {
+            pathname: '/x/react-chat/customization/structure',
+            title: 'Structure',
           },
         ],
       },
@@ -941,16 +973,13 @@ const pages: MuiPage[] = [
         subheader: 'Advanced features',
         children: [
           {
-            pathname: '/x/react-chat/building-blocks',
+            pathname: '/x/react-chat/basics',
             title: 'Building Blocks',
             children: [
               { pathname: '/x/react-chat/basics/messages', title: 'Messages' },
               { pathname: '/x/react-chat/basics/composer', title: 'Composer' },
+              { pathname: '/x/react-chat/basics/conversation', title: 'Conversation' },
               { pathname: '/x/react-chat/basics/layout', title: 'Layout' },
-              {
-                pathname: '/x/react-chat/basics/variants-and-density',
-                title: 'Variants and density',
-              },
             ],
           },
           {
@@ -962,24 +991,30 @@ const pages: MuiPage[] = [
                 title: 'Message appearance',
               },
               {
-                pathname: '/x/react-chat/display/message-parts/text-and-markdown',
-                title: 'Text & Markdown',
-              },
-              {
-                pathname: '/x/react-chat/display/message-parts/code-blocks',
-                title: 'Code Blocks',
-              },
-              {
-                pathname: '/x/react-chat/display/message-parts/files-and-images',
-                title: 'Files & Images',
-              },
-              {
-                pathname: '/x/react-chat/display/message-parts/sources-and-citations',
-                title: 'Sources & Citations',
-              },
-              {
-                pathname: '/x/react-chat/display/message-parts/custom-parts',
-                title: 'Custom Parts',
+                pathname: '/x/react-chat/display/message-parts-group',
+                title: 'Message Parts',
+                children: [
+                  {
+                    pathname: '/x/react-chat/display/message-parts/text-and-markdown',
+                    title: 'Text & Markdown',
+                  },
+                  {
+                    pathname: '/x/react-chat/display/message-parts/code-blocks',
+                    title: 'Code Blocks',
+                  },
+                  {
+                    pathname: '/x/react-chat/display/message-parts/files-and-images',
+                    title: 'Files & Images',
+                  },
+                  {
+                    pathname: '/x/react-chat/display/message-parts/sources-and-citations',
+                    title: 'Sources & Citations',
+                  },
+                  {
+                    pathname: '/x/react-chat/display/message-parts/custom-parts',
+                    title: 'Custom Parts',
+                  },
+                ],
               },
               {
                 pathname: '/x/react-chat/display/message-actions',
@@ -989,14 +1024,22 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-chat/display/loading-and-empty-states',
                 title: 'Loading and empty states',
               },
+              {
+                pathname: '/x/react-chat/display/unread-marker',
+                title: 'Unread Marker',
+              },
+              {
+                pathname: '/x/react-chat/display/date-divider',
+                title: 'Date Divider',
+              },
             ],
           },
           {
             pathname: '/x/react-chat/behavior',
             title: 'Behavior',
             children: [
-              { pathname: '/x/react-chat/behavior/attachments', title: 'Attachments' },
               { pathname: '/x/react-chat/behavior/suggestions', title: 'Suggestions' },
+              { pathname: '/x/react-chat/behavior/attachments', title: 'Attachments' },
               { pathname: '/x/react-chat/behavior/scrolling', title: 'Scrolling' },
               {
                 pathname: '/x/react-chat/behavior/typing-indicators',
@@ -1052,40 +1095,19 @@ const pages: MuiPage[] = [
               },
             ],
           },
-          {
-            pathname: '/x/react-chat/backend',
-            title: 'Backend integration',
-            children: [
-              { pathname: '/x/react-chat/backend/building-an-adapter' },
-              {
-                pathname: '/x/react-chat/backend/real-time-adapters',
-                title: 'Real-time adapters',
-              },
-              { pathname: '/x/react-chat/backend/controlled-state' },
-            ],
-          },
-          {
-            pathname: '/x/react-chat/demos',
-            title: 'Demos',
-            children: [
-              { pathname: '/x/react-chat/demos/ai-assistant', title: 'AI assistant' },
-              { pathname: '/x/react-chat/demos/team-messaging' },
-              { pathname: '/x/react-chat/demos/customer-support' },
-            ],
-          },
         ],
       },
       {
         pathname: '/x/react-chat/resources',
-        subheader: 'Resources',
+        subheader: 'Reference',
         children: [
           {
             pathname: '/x/react-chat/resources/hooks',
-            title: 'Hooks Reference',
+            title: 'Hooks',
           },
           {
             pathname: '/x/react-chat/resources/selectors',
-            title: 'Selectors Reference',
+            title: 'Selectors',
           },
           {
             pathname: '/x/react-chat/resources/events-and-callbacks',
