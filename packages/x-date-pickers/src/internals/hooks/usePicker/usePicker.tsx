@@ -237,7 +237,7 @@ export const usePicker = <
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
       pickerVariant: variant,
-      isPickerCompact: !!(props as any).compact,
+      isPickerCompact: props.compact ?? false,
       isPickerStaticVariant: viewContainerRole === null,
     }),
     [
@@ -250,7 +250,7 @@ export const usePicker = <
       viewContainerRole,
       props.disabled,
       props.readOnly,
-      (props as any).compact,
+      props.compact,
     ],
   );
 

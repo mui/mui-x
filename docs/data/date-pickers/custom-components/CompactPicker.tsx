@@ -13,13 +13,13 @@ export default function CompactPicker() {
           <Typography variant="caption" color="text.secondary">
             Default
           </Typography>
-          <StaticDatePicker />
+          <StaticDatePicker views={['year', 'month', 'day']} />
         </Stack>
         <Stack spacing={1}>
           <Typography variant="caption" color="text.secondary">
             Compact
           </Typography>
-          <StaticDatePicker compact />
+          <StaticDatePicker compact views={['year', 'month', 'day']} />
         </Stack>
       </Stack>
     </LocalizationProvider>

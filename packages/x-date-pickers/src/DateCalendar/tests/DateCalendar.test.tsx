@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { screen, waitFor } from '@mui/internal-test-utils';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { DateCalendar, dateCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay } from '@mui/x-date-pickers/PickerDay';
+import {
+  DIALOG_WIDTH,
+  DIALOG_WIDTH_COMPACT,
+  DAY_SIZE,
+  DAY_SIZE_COMPACT,
+} from '@mui/x-date-pickers/internals';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
@@ -646,6 +652,58 @@ describe('<DateCalendar />', () => {
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 days * 2 (because dev mode)
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(8);
+    });
+  });
+
+  describe('Compact', () => {
+    it('should use the default dimensions when `compact` is not set', () => {
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
+
+      const root = screen.getByRole('grid').closest(`.${dateCalendarClasses.root}`);
+      expect(root).to.have.style('width', `${DIALOG_WIDTH}px`);
+
+      const day = screen.getAllByRole('gridcell')[0];
+      expect(getComputedStyle(day).getPropertyValue('--PickerDay-size')).to.equal(`${DAY_SIZE}px`);
+    });
+
+    it('should use the compact dimensions when `compact` is `true`', () => {
+      render(<DateCalendar compact defaultValue={adapterToUse.date('2019-01-01')} />);
+
+      const root = screen.getByRole('grid').closest(`.${dateCalendarClasses.root}`);
+      expect(root).to.have.style('width', `${DIALOG_WIDTH_COMPACT}px`);
+
+      const day = screen.getAllByRole('gridcell')[0];
+      expect(getComputedStyle(day).getPropertyValue('--PickerDay-size')).to.equal(
+        `${DAY_SIZE_COMPACT}px`,
+      );
+    });
+
+    it('should use the compact dimensions on the year view', async () => {
+      render(
+        <DateCalendar
+          compact
+          defaultValue={adapterToUse.date('2019-01-01')}
+          views={['year', 'month', 'day']}
+          openTo="year"
+        />,
+      );
+
+      const yearButton = await screen.findByRole('radio', { name: '2019', checked: true });
+      expect(yearButton).to.have.style('width', '60px');
+    });
+
+    it('should use the compact dimensions on the month view', async () => {
+      render(
+        <DateCalendar
+          compact
+          defaultValue={adapterToUse.date('2019-01-01')}
+          views={['year', 'month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const monthButton = await screen.findByRole('radio', { name: 'January', checked: true });
+      expect(monthButton).to.have.style('width', '60px');
     });
   });
 });

@@ -325,6 +325,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     gridLabelId,
     slots,
     slotProps,
+    compact,
   };
 
   const prevOpenViewRef = React.useRef(view);
@@ -394,7 +395,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
               {...calendarState}
               {...baseDateValidationProps}
               {...commonViewProps}
-              compact={compact}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               hasFocus={hasFocus}
               onFocusedDayChange={(focusedDate) =>
