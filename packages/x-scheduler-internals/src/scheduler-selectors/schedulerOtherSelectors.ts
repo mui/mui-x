@@ -14,10 +14,6 @@ export const schedulerOtherSelectors = {
       editedEventId != null && editedEventId === eventId,
   ),
   /**
-   * The occurrence currently being edited (an existing occurrence or a creation draft), or `null`.
-   */
-  editingOccurrence: createSelector((state: State) => state.editingOccurrence),
-  /**
    * The occurrence currently being edited, with the live resize preview applied, or `null`.
    * During a resize the new start/end live on the `internal-resize` placeholder (the occurrence
    * only updates on pointer-up), so surfaces bound to the editing occurrence read this to preview
@@ -46,16 +42,6 @@ export const schedulerOtherSelectors = {
       };
     },
   ),
-  /**
-   * The key of the occurrence currently being edited, or `null` when nothing is being edited.
-   */
-  editingOccurrenceKey: createSelector(
-    (state: State) => state.editingOccurrence?.occurrence.key ?? null,
-  ),
-  /**
-   * Returns `true` when an occurrence is currently being edited.
-   */
-  isEditing: createSelector((state: State) => state.editingOccurrence != null),
   visibleDate: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,

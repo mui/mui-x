@@ -65,7 +65,7 @@ const CompactDayTimeGridContainer = React.forwardRef(function CompactDayTimeGrid
 
   return (
     <DayTimeGridInternalRenderersContext.Provider value={COMPACT_RENDERERS}>
-      <ArmedOccurrenceProvider armedKey={armedKey} onDisarm={onClose}>
+      <ArmedOccurrenceProvider armedKey={armedKey}>
         <CompactDayTimeGridRoot>
           <CompactDayTimeGridContent ref={contentRef}>
             <DayTimeGrid ref={forwardedRef} {...props} />

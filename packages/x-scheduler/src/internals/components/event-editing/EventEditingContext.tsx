@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { createModal } from '../create-modal';
 import { CompactEventEditingProviderProps, EventEditingTriggerProps } from './EventEditing.types';
@@ -55,10 +54,7 @@ export function CompactEventEditingProvider(props: CompactEventEditingProviderPr
       render={() => null}
       anchored={false}
       onOpen={(occurrence) => {
-        store.startEditing(
-          occurrence,
-          schedulerOccurrencePlaceholderSelectors.isCreating(store.state) ? 'creation' : 'event',
-        );
+        store.startEditing(occurrence);
       }}
       onClose={() => {
         store.stopEditing();

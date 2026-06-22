@@ -37,10 +37,6 @@ export interface SchedulerEditingState {
    * The occurrence being edited — an existing occurrence or a creation draft.
    */
   occurrence: SchedulerRenderableEventOccurrence;
-  /**
-   * Where the editing was initiated: editing an existing event vs. creating a new one.
-   */
-  source: 'event' | 'creation';
 }
 
 export interface SchedulerState<TEvent extends object = any> {

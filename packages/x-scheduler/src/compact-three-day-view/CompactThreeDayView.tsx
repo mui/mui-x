@@ -18,6 +18,6 @@ export const CompactThreeDayView = React.memo(
     // Feature hooks
     const { days } = useEventCalendarView(COMPACT_THREE_DAY_VIEW_CONFIG);
 
-    return <CompactDayTimeGrid ref={forwardedRef} days={days} {...props} />;
+    return <CompactDayTimeGrid ref={forwardedRef} {...props} days={days} />;
   }),
 );

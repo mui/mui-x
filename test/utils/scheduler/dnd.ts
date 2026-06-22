@@ -239,18 +239,29 @@ export function getResizeHandle(eventElement: HTMLElement, side: 'start' | 'end'
 /**
  * Stubs the pointer-capture methods the resize handler relies on, since JSDOM doesn't implement
  * `setPointerCapture` / `hasPointerCapture` / `releasePointerCapture`.
+ *
+ * The stubs track captured pointer ids so `hasPointerCapture` reflects prior `setPointerCapture` /
+ * `releasePointerCapture` calls. A constant `false` would short-circuit the handler's capture-release
+ * and unmount-mid-gesture teardown branches (both guarded behind `hasPointerCapture`), leaving them
+ * untested.
  */
 function ensurePointerCaptureMethods(element: HTMLElement): void {
   const target = element as any;
-  if (typeof target.setPointerCapture !== 'function') {
-    target.setPointerCapture = () => {};
+  if (
+    typeof target.setPointerCapture === 'function' &&
+    typeof target.hasPointerCapture === 'function' &&
+    typeof target.releasePointerCapture === 'function'
+  ) {
+    return;
   }
-  if (typeof target.releasePointerCapture !== 'function') {
-    target.releasePointerCapture = () => {};
-  }
-  if (typeof target.hasPointerCapture !== 'function') {
-    target.hasPointerCapture = () => false;
-  }
+  const capturedPointers = new Set<number>();
+  target.setPointerCapture = (pointerId: number) => {
+    capturedPointers.add(pointerId);
+  };
+  target.releasePointerCapture = (pointerId: number) => {
+    capturedPointers.delete(pointerId);
+  };
+  target.hasPointerCapture = (pointerId: number) => capturedPointers.has(pointerId);
 }
 
 function createPointerEvent(

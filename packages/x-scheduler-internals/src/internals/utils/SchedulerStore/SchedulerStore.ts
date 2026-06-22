@@ -747,11 +747,8 @@ export class SchedulerStore<
    * This only records *what* is being edited; opening the editing surface (dialog or drawer) is
    * handled separately.
    */
-  public startEditing = (
-    occurrence: SchedulerRenderableEventOccurrence,
-    source: 'event' | 'creation' = 'event',
-  ) => {
-    this.set('editingOccurrence', { occurrence, source });
+  public startEditing = (occurrence: SchedulerRenderableEventOccurrence) => {
+    this.set('editingOccurrence', { occurrence });
   };
 
   /**

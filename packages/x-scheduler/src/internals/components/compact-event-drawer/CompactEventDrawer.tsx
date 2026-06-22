@@ -68,8 +68,9 @@ const CompactEventDrawerContent = styled('div', {
  * expands it to a peek height showing the read-only summary; tapping the drawer expands it to full
  * height and swaps in the editing form (read-only events keep the summary).
  *
- * It reuses the desktop dialog's `FormContent` / `ReadonlyContent` so the editing experience matches
- * across platforms, and renders the shared `recurringScopeDialog` renderer for the scope confirmation.
+ * It reuses the desktop dialog's `FormContent` and the `CompactReadonlyContent` summary so the
+ * editing experience matches across platforms, and renders the shared `recurringScopeDialog`
+ * renderer for the scope confirmation.
  */
 export function CompactEventDrawer() {
   const store = useEventCalendarStoreContext();

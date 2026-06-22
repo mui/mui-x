@@ -116,7 +116,15 @@ export namespace CalendarGridTimeEventResizeHandler {
   export interface State extends useEventResizeHandler.State {}
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {}
+    extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {
+    /**
+     * How the resize gesture is initiated.
+     * - `'native'`: native drag-and-drop API (best for mouse/desktop).
+     * - `'pointer'`: pointer events, so a plain touch + drag starts the resize (best for touch).
+     * @default 'native'
+     */
+    interaction?: 'native' | 'pointer';
+  }
 
   export interface DragData extends CalendarGridTimeEvent.SharedDragData {
     source: 'CalendarGridTimeEventResizeHandler';

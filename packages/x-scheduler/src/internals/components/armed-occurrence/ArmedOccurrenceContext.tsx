@@ -11,30 +11,20 @@ export interface ArmedOccurrenceContextValue {
    * The key of the currently armed occurrence, or `null` when nothing is armed.
    */
   armedKey: string | null;
-  /**
-   * Disarms the currently armed occurrence (if any).
-   */
-  disarm: () => void;
 }
 
 const ArmedOccurrenceContext = React.createContext<ArmedOccurrenceContextValue | null>(null);
 
 export function ArmedOccurrenceProvider(props: {
   armedKey: string | null;
-  onDisarm: () => void;
   children: React.ReactNode;
 }) {
-  const { armedKey, onDisarm, children } = props;
-  const value = React.useMemo<ArmedOccurrenceContextValue>(
-    () => ({ armedKey, disarm: onDisarm }),
-    [armedKey, onDisarm],
-  );
+  const { armedKey, children } = props;
+  const value = React.useMemo<ArmedOccurrenceContextValue>(() => ({ armedKey }), [armedKey]);
   return (
     <ArmedOccurrenceContext.Provider value={value}>{children}</ArmedOccurrenceContext.Provider>
   );
 }
-
-const noop = () => {};
 
 /**
  * Reads the arming state for a single occurrence. Safe to call outside a provider (e.g. desktop
@@ -44,6 +34,5 @@ export function useArmedOccurrence(occurrenceKey: string) {
   const context = React.useContext(ArmedOccurrenceContext);
   return {
     isArmed: context != null && context.armedKey === occurrenceKey,
-    disarm: context?.disarm ?? noop,
   };
 }

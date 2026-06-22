@@ -23,11 +23,10 @@ export function useDisarmOnOutsidePointer(parameters: {
       return undefined;
     }
     const onClickCapture = (event: MouseEvent) => {
-      if (
-        ignoreSelector &&
-        event.target instanceof Element &&
-        event.target.closest(ignoreSelector)
-      ) {
+      // Read the real target from the composed path so detection still works when the click
+      // originates inside a shadow root (where `event.target` resolves to the host element).
+      const target = event.composedPath()[0];
+      if (ignoreSelector && target instanceof Element && target.closest(ignoreSelector)) {
         return;
       }
       // Swallow the click so it reaches neither a create handler nor an event's open trigger.

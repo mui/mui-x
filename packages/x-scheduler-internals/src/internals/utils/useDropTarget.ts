@@ -201,11 +201,11 @@ export namespace useDropTarget {
 /**
  * Applies the data from the placeholder occurrence to the event it represents.
  */
-export async function applyInternalDragOrResizeOccurrencePlaceholder(
+export function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
   placeholder: SchedulerOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
-): Promise<void> {
+): void {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
 

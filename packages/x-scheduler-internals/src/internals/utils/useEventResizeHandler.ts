@@ -56,13 +56,6 @@ export namespace useEventResizeHandler {
      * The date to edit when dragging the resize handler.
      */
     side: SchedulerEventSide;
-    /**
-     * How the resize gesture is initiated.
-     * - `'native'`: native drag-and-drop API (best for mouse/desktop).
-     * - `'pointer'`: pointer events, so a plain touch + drag starts the resize (best for touch).
-     * @default 'native'
-     */
-    interaction?: 'native' | 'pointer';
   }
 
   export interface Parameters extends PublicParameters {

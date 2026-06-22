@@ -6,10 +6,7 @@ import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  schedulerEventSelectors,
-  schedulerOccurrencePlaceholderSelectors,
-} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
 import { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
@@ -178,10 +175,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
           />
         )}
         onOpen={(occurrence) => {
-          store.startEditing(
-            occurrence,
-            schedulerOccurrencePlaceholderSelectors.isCreating(store.state) ? 'creation' : 'event',
-          );
+          store.startEditing(occurrence);
         }}
         onClose={() => {
           store.stopEditing();

@@ -56,6 +56,12 @@ export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
 
   const showPlaceholder = isCreating && !occurrence.title;
 
+  // Stop the tap from also reaching the drawer root, which would expand the drawer instead of closing it.
+  const handleClose = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onClose();
+  };
+
   return (
     <React.Fragment>
       <CompactReadonlyContentHeader>
@@ -72,7 +78,7 @@ export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
           size="small"
           edge="end"
           aria-label={localeText.closeButtonAriaLabel}
-          onClick={onClose}
+          onClick={handleClose}
         >
           <CloseRounded fontSize="small" />
         </IconButton>

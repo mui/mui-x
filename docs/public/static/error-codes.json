@@ -205,7 +205,7 @@
   "204": "MUI X Charts: OHLC series with id='%s' has incomplete datasetKeys.\nProperties %s are missing.",
   "205": "MUI X Scheduler: useEventCalendarStyledContext must be used within an EventCalendarStyledContext.Provider. The component requires access to calendar styling and locale information. Ensure the component is rendered inside an EventCalendar component.",
   "206": "MUI X Scheduler: `%s` is missing. Hook must be placed within its Provider.",
-  "207": "MUI X Scheduler: useEventDialogStyledContext must be used within an EventDialogStyledContext.Provider. The component requires access to dialog styling and locale information. Ensure the component is rendered inside an EventDialog component.",
+  "207": "MUI X Scheduler: useEventEditingStyledContext must be used within an EventEditingStyledContext.Provider. The component requires access to the editing surface styling and locale information. Ensure the component is rendered inside an EventCalendar (or premium) provider.",
   "208": "MUI X Scheduler: Unsupported variant provided to DayGridEvent component. The DayGridEvent component only supports specific variant values. Check the component documentation for supported variants.",
   "209": "MUI X Scheduler: Unsupported variant provided to EventItem component. The EventItem component only supports specific variant values. Check the component documentation for supported variants.",
   "210": "MUI X Scheduler: Event with id=\"%s\" was not found. The requested event does not exist in the scheduler state. Verify the event id is correct and the event has been added.",
