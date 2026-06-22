@@ -215,6 +215,8 @@ the `fade` option decides which items are dimmed
 
 ### Control
 
+{{"demo": "MapZoomControl.js"}}
+
 ## Managing visibility from the legend
 
 When `toggleVisibilityOnClick` is set on the `ChartsLegend`, clicking on a series toggles

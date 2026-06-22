@@ -71,6 +71,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       ...store.state.geoProjectionZoom,
       zoomLevel: view.zoomLevel,
       center: view.center,
+      translation: view.translation,
     });
   }, [store, view]);
 

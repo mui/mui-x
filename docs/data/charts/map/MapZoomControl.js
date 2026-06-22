@@ -2,12 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ListSubheader from '@mui/material/ListSubheader';
 import Typography from '@mui/material/Typography';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import USATopology from 'us-atlas/states-10m.json';
@@ -71,8 +70,11 @@ export default function MapZoomControl() {
   const [projection, setProjection] = React.useState('naturalEarth1');
   const apiRef = useChartPremiumApiRef();
 
-  const [rotationAllowed, setRotationAllowed] = React.useState('both');
-  const [translationAllowed, setTranslationAllowed] = React.useState('both');
+  const [view, setView] = React.useState({
+    zoomLevel: 1,
+    center: [0, 0],
+    translation: [0, 0],
+  });
 
   return (
     <Stack
@@ -85,7 +87,11 @@ export default function MapZoomControl() {
           geoData={isConicProjection(projection) ? USAStates : countries}
           projection={projection}
           apiRef={apiRef}
-          zoom={{ rotationAllowed, translationAllowed }}
+          zoom
+          view={view}
+          onZoomChange={(newView) => {
+            setView(newView);
+          }}
           height={360}
         >
           <ChartsSurface>
@@ -114,38 +120,87 @@ export default function MapZoomControl() {
         </TextField>
 
         <div>
-          <Typography gutterBottom>Rotation</Typography>
-          <ToggleButtonGroup
-            value={rotationAllowed}
-            exclusive
-            onChange={(_, value) => {
-              if (value !== null) {
-                setRotationAllowed(value);
-              }
+          <Typography gutterBottom>Center (longitude, latitude)</Typography>
+          <Slider
+            value={view.center[0]}
+            min={-180}
+            max={180}
+            step={1}
+            size="small"
+            valueLabelDisplay="auto"
+            aria-label="center longitude"
+            onChange={(event, value) => {
+              setView((prev) => ({
+                ...prev,
+                center: [value, prev.center[1]],
+              }));
             }}
-          >
-            <ToggleButton value="both">both</ToggleButton>
-            <ToggleButton value="long">longitude</ToggleButton>
-            <ToggleButton value="lat">latitude</ToggleButton>
-            <ToggleButton value="none">none</ToggleButton>
-          </ToggleButtonGroup>
+          />
+          <Slider
+            value={view.center[1]}
+            min={-90}
+            max={90}
+            step={1}
+            size="small"
+            valueLabelDisplay="auto"
+            aria-label="center latitude"
+            onChange={(event, value) => {
+              setView((prev) => ({
+                ...prev,
+                center: [prev.center[0], value],
+              }));
+            }}
+          />
         </div>
         <div>
-          <Typography gutterBottom>Translation</Typography>
-          <ToggleButtonGroup
-            value={translationAllowed}
-            exclusive
-            onChange={(_, value) => {
-              if (value !== null) {
-                setTranslationAllowed(value);
-              }
+          <Typography gutterBottom>
+            Translation (x, y as fraction of the drawing area)
+          </Typography>
+          <Slider
+            value={view.translation[0]}
+            min={-1}
+            max={1}
+            step={0.01}
+            size="small"
+            valueLabelDisplay="auto"
+            aria-label="translation x"
+            onChange={(event, value) => {
+              setView((prev) => ({
+                ...prev,
+                translation: [value, prev.translation[1]],
+              }));
             }}
-          >
-            <ToggleButton value="both">both</ToggleButton>
-            <ToggleButton value="x">x</ToggleButton>
-            <ToggleButton value="y">y</ToggleButton>
-            <ToggleButton value="none">none</ToggleButton>
-          </ToggleButtonGroup>
+          />
+          <Slider
+            value={view.translation[1]}
+            min={-1}
+            max={1}
+            step={0.01}
+            size="small"
+            valueLabelDisplay="auto"
+            aria-label="translation y"
+            onChange={(event, value) => {
+              setView((prev) => ({
+                ...prev,
+                translation: [prev.translation[0], value],
+              }));
+            }}
+          />
+        </div>
+        <div>
+          <Typography gutterBottom>Zoom Level</Typography>
+          <Slider
+            value={view.zoomLevel}
+            min={0.1}
+            max={8}
+            step={0.2}
+            size="small"
+            valueLabelDisplay="auto"
+            aria-label="zoom level"
+            onChange={(event, value) => {
+              setView((prev) => ({ ...prev, zoomLevel: value }));
+            }}
+          />
         </div>
         <div>
           <Button
