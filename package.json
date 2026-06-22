@@ -72,6 +72,7 @@
     "@babel/plugin-transform-object-rest-spread": "7.29.7",
     "@babel/traverse": "catalog:",
     "@babel/types": "7.29.7",
+    "@base-ui/utils": "catalog:",
     "@emotion/cache": "catalog:",
     "@eslint/compat": "2.1.0",
     "@inquirer/prompts": "8.5.1",
