@@ -8,7 +8,7 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 export default function CompactPicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack direction="row" spacing={4} flexWrap="wrap" useFlexGap>
+      <Stack direction="row" spacing={4} useFlexGap>
         <Stack spacing={1}>
           <Typography variant="caption" color="text.secondary">
             Default
