@@ -164,7 +164,9 @@ function RenderTimers(props) {
 }
 
 export default function ScatterAsyncRenderer() {
-  const [mode, setMode] = React.useState('sync');
+  // Default to progressive so first paint on docs load does not block the
+  // main thread while rendering all points at once.
+  const [mode, setMode] = React.useState('async');
   const series = mode === 'sync' ? syncSeries : asyncSeries;
 
   const containerRef = React.useRef(null);
