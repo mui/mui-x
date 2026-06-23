@@ -12,5 +12,6 @@
   showToolbar
   slots={{
     aiAssistantPanel: GridAiAssistantPanel,
+    aiAssistantIcon: BlueAiAssistantIcon,
   }}
 />
