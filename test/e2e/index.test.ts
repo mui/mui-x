@@ -660,7 +660,6 @@ async function initializeEnvironment(
           await page.getByRole('button', { name: 'Choose date' }).click();
           await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
           await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
@@ -674,7 +673,6 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
           await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
@@ -695,7 +693,14 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          // The hidden `<input>` is the surface under test here, so we focus
+          // it directly. With the current focus-delegation design, the focus
+          // moves through to the first section on the first focus; the
+          // subsequent `fill()` then sees `focused === true` in React state
+          // and skips the re-entrant section-selection that would otherwise
+          // race with the value setter. Tracked for refactor in
+          // https://github.com/mui/mui-x/issues/22592.
+          await input.focus();
           await input.fill('02/12/2020');
 
           expect(
@@ -723,7 +728,6 @@ async function initializeEnvironment(
           const daySection = page.getByRole(`spinbutton`, { name: 'Day' });
           const yearSection = page.getByRole(`spinbutton`, { name: 'Year' });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await monthSection.fill('04');
           await daySection.fill('11');
           await yearSection.fill('2022');

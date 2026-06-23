@@ -19,6 +19,7 @@ export interface PickersInputPropsUsedByField extends Pick<
   areAllSectionsEmpty: boolean;
 
   onClick: React.MouseEventHandler<HTMLDivElement>;
+  onMouseDown: React.MouseEventHandler<HTMLDivElement>;
   onKeyDown: React.EventHandler<MuiEvent<React.KeyboardEvent<HTMLDivElement>>>;
   onInput: React.FormEventHandler<HTMLDivElement>;
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;

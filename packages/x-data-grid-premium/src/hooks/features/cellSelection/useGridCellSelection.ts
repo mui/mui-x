@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -303,8 +304,7 @@ export const useGridCellSelection = (
     (params, event) => {
       // Skip if the click comes from the right-button or, only on macOS, Ctrl is pressed
       // Fix for https://github.com/mui/mui-x/pull/6567#issuecomment-1329155578
-      const isMacOs = window.navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-      if (event.button !== 0 || (event.ctrlKey && isMacOs)) {
+      if (event.button !== 0 || (event.ctrlKey && platform.os.mac)) {
         return;
       }
 
