@@ -138,7 +138,10 @@ function initializeProgram(
 
   gl.linkProgram(program);
 
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    !gl.getProgramParameter(program, gl.LINK_STATUS)
+  ) {
     console.error(`Program linking failed: ${gl.getProgramInfoLog(program)}`);
     console.error(`Vertex shader info-log: ${gl.getShaderInfoLog(vertexShader)}`);
     console.error(`Fragment shader info-log: ${gl.getShaderInfoLog(fragmentShader)}`);
