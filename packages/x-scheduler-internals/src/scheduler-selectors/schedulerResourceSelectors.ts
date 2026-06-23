@@ -130,6 +130,14 @@ export const schedulerResourceSelectors = {
     (state: State, resourceId: SchedulerResourceId) =>
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   ),
+  resourceHasChildren: createSelector(
+    (state: State, resourceId: SchedulerResourceId) =>
+      (state.resourceChildrenIdLookup.get(resourceId)?.length ?? 0) > 0,
+  ),
+  isResourceCollapsed: createSelector(
+    (state: State, resourceId: SchedulerResourceId) =>
+      state.collapsedResources[resourceId] === true,
+  ),
   resourceParentIdLookup: resourceParentIdLookupSelector,
   resourceDepthLookup: resourceDepthLookupSelector,
   resourceDepth: createSelector(

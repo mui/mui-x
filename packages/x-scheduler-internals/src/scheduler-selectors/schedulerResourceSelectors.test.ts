@@ -789,5 +789,50 @@ storeClasses.forEach((storeClass) => {
         expect(result).to.equal('blue');
       });
     });
+
+    describe('resourceHasChildren', () => {
+      it('should return true for a resource with children', () => {
+        const resources = [
+          {
+            id: 'parent',
+            title: 'Parent',
+            children: [{ id: 'child', title: 'Child' }],
+          },
+          { id: 'leaf', title: 'Leaf' },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        expect(schedulerResourceSelectors.resourceHasChildren(state, 'parent')).to.equal(true);
+      });
+
+      it('should return false for a leaf resource', () => {
+        const resources = [
+          {
+            id: 'parent',
+            title: 'Parent',
+            children: [{ id: 'child', title: 'Child' }],
+          },
+          { id: 'leaf', title: 'Leaf' },
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        expect(schedulerResourceSelectors.resourceHasChildren(state, 'leaf')).to.equal(false);
+      });
+    });
+
+    describe('isResourceCollapsed', () => {
+      it('should return false by default', () => {
+        const resources = [{ id: 'parent', title: 'Parent' }];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        expect(schedulerResourceSelectors.isResourceCollapsed(state, 'parent')).to.equal(false);
+      });
+
+      it('should return true when registered as collapsed', () => {
+        const resources = [{ id: 'parent', title: 'Parent' }];
+        const state = new storeClass.Value(
+          { events: [], resources, defaultCollapsedResources: { parent: true } },
+          adapter,
+        ).state;
+        expect(schedulerResourceSelectors.isResourceCollapsed(state, 'parent')).to.equal(true);
+      });
+    });
   });
 });
