@@ -23,9 +23,8 @@ export const selectorChartSamplingState: ChartRootSelector<
 > = (state) => state.sampling;
 
 /**
- * Built sampling structures per series, keyed by series id. Rebuilt only on data change (memoized).
- * Iterates every series type whose `seriesConfig` registers a `sampler` (bar, line, …); the
- * type-specific plot hook reads the structure back and renders the active level of detail.
+ * Built sampling structures keyed by series id. Memoized, so rebuilt only on data change. Builds
+ * only for series types that are enabled and register a `sampler`; the plot hook reads them back.
  */
 export const selectorChartSamplingPyramids = createSelectorMemoized(
   selectorChartSamplingState,
@@ -66,9 +65,8 @@ export const selectorChartSamplingPyramids = createSelectorMemoized(
 );
 
 /**
- * Merged bucket size per band axis, used to widen the axis highlight over a sampled bucket.
- * Returns `1` (no entry) when sampling is off or no sampler is registered (community build).
- * The bucket-size math lives in the pro sampler; community only reads the resulting integers.
+ * Merged bucket size per band axis, to widen the axis highlight over a sampled bucket. Empty when
+ * sampling is off or no sampler is registered. The math lives in pro; community reads the integers.
  */
 export const selectorChartHighlightBucketSize = createSelectorMemoized(
   selectorChartSamplingState,

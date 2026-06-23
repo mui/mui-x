@@ -27,10 +27,7 @@ export const useChartsContainerProProps = <
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
   props: ChartsContainerProProps<SeriesType, TSignatures>,
-  /**
-   * Maps a type-specific chart's single `sampling` method to the provider's per-series-type
-   * {@link SamplingConfig}. Omit for charts without sampling.
-   */
+  /** Maps a chart's single `sampling` method to the provider's per-type config. Omit if unsupported. */
   samplingOptions?: { seriesType: SeriesType; method: SamplingMethod | undefined },
 ): UseChartsContainerProPropsReturnValue<SeriesType, TSignatures> => {
   const {

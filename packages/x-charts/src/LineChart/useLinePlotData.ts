@@ -55,8 +55,8 @@ export function useLinePlotData(
   const zoomOptions = store.use(selectorChartZoomOptionsLookup);
   const sampler = store.use(selectorChartSeriesConfig).line?.sampler;
 
-  // Skip the line animation while sampling is on, and for the one render after it turns off:
-  // both directions morph the path between different point counts, which looks wrong.
+  // Skip the line animation while sampling is on, plus the first render after it turns off: the
+  // point count changes, so the path would morph.
   const lineMethod = samplingState?.methods.line;
   const samplingEnabled = lineMethod != null && lineMethod !== 'none';
   const wasSamplingEnabled = React.useRef(samplingEnabled);
@@ -128,13 +128,12 @@ export function useLinePlotData(
 
         const shouldExpand = curve?.includes('step') && !strictStepCurve && isOrdinalScale(xScale);
 
-        // Sampling reduces the rendered points to a zoom-appropriate subset. Only the plain
-        // (non-step) path is sampled; step expansion and null gaps fall back to the full render.
+        // Only the plain (non-step) path is sampled; step expansion falls back to the full render.
         const built = sampledSeries[seriesId];
         const zoom = zoomMap?.get(xAxisId);
         let sampledBuckets: SampledBucket[] | null = null;
         if (samplingEnabled && built && zoom && !shouldExpand && xData) {
-          // The sampler (pro) owns all sampling math; community flattens its buckets into a polyline.
+          // Pro owns the sampling math; community flattens the buckets into a polyline.
           sampledBuckets =
             sampler?.sample?.({
               built,
@@ -155,7 +154,7 @@ export function useLinePlotData(
 
         let formattedData: FormattedPoint[];
         if (sampledBuckets) {
-          // Sampling already reduced the series to the indices to render; flatten them.
+          // Buckets already hold the indices to render; flatten them.
           formattedData = sampledBuckets.flatMap((bucket) =>
             Array.from(bucket.indices, (index) => ({
               x: xData![index],

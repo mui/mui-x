@@ -100,12 +100,12 @@ declare module '@mui/x-charts/internals' {
   }
 
   interface BarSeriesExtension {
-    /** Sampling method accepted by the bar series `sampling` prop. */
+    /** Bar `sampling` method. */
     samplingMethod: BarSamplingMethod;
   }
 
   interface LineSeriesExtension {
-    /** Sampling method accepted by the line series `sampling` prop. */
+    /** Line `sampling` method. */
     samplingMethod: SamplingMethod;
   }
 
