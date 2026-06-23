@@ -26,7 +26,7 @@ const RAW_LEVEL_SPAN_FACTOR = Math.SQRT2;
  */
 export const MAX_RENDERED_POINTS = 2000;
 
-/** Levels of sampling needed to bring `visiblePoints` under {@link MAX_RENDERED_POINTS} (0 if under). */
+/** Levels of sampling needed to bring `visiblePoints` under `MAX_RENDERED_POINTS` (0 if under). */
 function pointCapLevel(visiblePoints: number): number {
   return visiblePoints > MAX_RENDERED_POINTS
     ? Math.ceil(Math.log2(visiblePoints / MAX_RENDERED_POINTS))
@@ -117,10 +117,10 @@ export function getSamplingLevelCount(pyramid: SamplingPyramid): number {
 /**
  * Level-of-detail index for the current zoom:
  * - Level 0 (no sampling, raw) at the deepest zoom (`currentSpan <= minSpan * RAW_LEVEL_SPAN_FACTOR`),
- *   whatever the bar size — fully zoomed in shows every point, up to {@link MAX_RENDERED_POINTS}.
+ *   whatever the bar size — fully zoomed in shows every point, up to `MAX_RENDERED_POINTS`.
  * - Above that, the level is screen-defined: bucket size keeps elements at least
  *   `MIN_ELEMENT_SIZE_PX` wide (+1 per span doubling past that pixel threshold).
- * - The {@link MAX_RENDERED_POINTS} cap applies at every zoom: a view with too many points is always
+ * - The `MAX_RENDERED_POINTS` cap applies at every zoom: a view with too many points is always
  *   sampled, even in the raw zone where the screen rule alone would render it untouched.
  */
 function levelIndexFor(
@@ -170,7 +170,7 @@ export function selectSamplingLevel(
 
 /**
  * Active bucket size (`1` = no sampling) for an axis with no built pyramid (the axis highlight).
- * Matches {@link selectSamplingLevel}'s `bucketSize`, derived from `dataLength` + screen + `minSpan`.
+ * Matches `selectSamplingLevel`'s `bucketSize`, derived from `dataLength` + screen + `minSpan`.
  */
 export function getSamplingBucketSize(
   currentSpan: number,

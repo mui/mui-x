@@ -8,7 +8,7 @@ import type { SamplingPyramid } from './sampling.pyramid.types';
  * series types: lines flatten the indices into a polyline, bars draw one merged rect per bucket.
  *
  * `minmax` (default; bars use it) keeps {min, max} per bucket; `m4` also brackets them with the
- * bucket's first/last (pixel-accurate); both read the shared {@link SamplingPyramid}. `lttb` ignores
+ * bucket's first/last (pixel-accurate); both read the shared `SamplingPyramid`. `lttb` ignores
  * the pyramid and reduces on demand to one point per bucket (plus endpoints), reading raw values
  * from `getValues` (called only for `lttb`) as a single whole-range bucket.
  */

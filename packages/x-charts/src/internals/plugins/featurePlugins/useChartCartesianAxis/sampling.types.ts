@@ -62,7 +62,10 @@ export interface SampleContext {
   minSpan: number;
   /** Line algorithm; omitted for bars. */
   algorithm?: LineSamplingAlgorithm;
-  /** Lazy raw values, read only for `lttb`. */
+  /**
+   * Lazy raw values, read only for `lttb`.
+   * @returns {ArrayLike<number>} The raw values.
+   */
   getValues?: () => ArrayLike<number>;
 }
 
@@ -85,10 +88,23 @@ export interface SamplingStrategy<
   SeriesType extends ChartSeriesType = ChartSeriesType,
   TBuilt = unknown,
 > {
-  /** Build the sampled structure for one series, or `null` if it can't be sampled. */
+  /**
+   * Build the sampled structure for one series.
+   * @param {ChartSeriesDefaultized<SeriesType>} series The processed series.
+   * @returns {TBuilt | null} The built structure, or `null` if it can't be sampled.
+   */
   build: (series: ChartSeriesDefaultized<SeriesType>) => TBuilt | null;
-  /** Active level of detail as buckets for the current zoom, or `null` to render raw. */
+  /**
+   * Active level of detail as buckets for the current zoom.
+   * @param {SampleContext} context The sampling inputs.
+   * @returns {SampledBucket[] | null} The buckets, or `null` to render raw.
+   */
   sample?: (context: SampleContext) => SampledBucket[] | null;
-  /** Merged bucket size at a zoom span (`>= 1`; `1` = no merge), for axis-highlight widening. */
+  /**
+   * Merged bucket size at a zoom span (`>= 1`; `1` = no merge), for axis-highlight widening.
+   * @param {number} span The zoom span (`end - start`).
+   * @param {AxisSamplingContext} context The axis inputs.
+   * @returns {number} The bucket size.
+   */
   bucketSizeAt?: (span: number, context: AxisSamplingContext) => number;
 }
