@@ -290,6 +290,8 @@ export function Clock(inProps: ClockProps) {
   const stopTracking = () => {
     isMoving.current = false;
     activePointerIdRef.current = null;
+    // Idempotent: the cleanup clears its own ref, so calling `stopTracking` twice
+    // (e.g. a `pointercancel` racing a `pointerup`) is a safe no-op.
     removeDragListenersRef.current?.();
   };
 
@@ -318,9 +320,11 @@ export function Clock(inProps: ClockProps) {
   });
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    // Ignore secondary buttons, secondary multi-touch pointers and interactions
-    // that can't change the value.
-    if (event.button !== 0 || event.isPrimary === false || disabled || readOnly) {
+    // Ignore secondary buttons (middle = 1, right = 2), secondary multi-touch
+    // pointers and interactions that can't change the value. `> 0` rather than
+    // `!== 0` keeps the gesture permissive when `event.button` is left unset by a
+    // synthetic event (some test environments), matching `useDragRange`.
+    if (event.button > 0 || event.isPrimary === false || disabled || readOnly) {
       return;
     }
 

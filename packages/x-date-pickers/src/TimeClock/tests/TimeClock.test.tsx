@@ -587,6 +587,87 @@ describe('<TimeClock />', () => {
       expect(selectionState).to.equal('partial');
       expect(handleViewChange.callCount).to.equal(1);
     });
+
+    it('should drop the gesture without committing when the pointer is cancelled', () => {
+      const handleChange = spy();
+      const handleViewChange = spy();
+      render(
+        <TimeClock
+          ampm={false}
+          value={adapterToUse.date('2018-01-01')}
+          onChange={handleChange}
+          onViewChange={handleViewChange}
+        />,
+      );
+
+      const clock = screen.getByTestId('clock');
+      const rect = clock.getBoundingClientRect();
+      const toClientCoords = ({ offsetX, offsetY }: { offsetX: number; offsetY: number }) => ({
+        clientX: rect.left + offsetX,
+        clientY: rect.top + offsetY,
+      });
+
+      // Press, drag, then let the user agent interrupt the gesture (`pointercancel`).
+      fireEvent.pointerDown(clock, {
+        pointerId: 1,
+        button: 0,
+        isPrimary: true,
+        ...toClientCoords(hourOffset['13:--']),
+      });
+      fireEvent.pointerMove(document.body, {
+        pointerId: 1,
+        ...toClientCoords(hourOffset['19:--']),
+      });
+      fireEvent.pointerCancel(document.body, {
+        pointerId: 1,
+        ...toClientCoords(hourOffset['19:--']),
+      });
+
+      // The interrupted gesture must not commit (no `finish`) nor advance the view.
+      expect(handleChange.lastCall.args[1]).to.equal('shallow');
+      expect(handleViewChange.callCount).to.equal(0);
+    });
+
+    it('should recover and commit when a new pointerdown supersedes a gesture whose pointerup was lost', () => {
+      const handleChange = spy();
+      const handleViewChange = spy();
+      render(
+        <TimeClock
+          ampm={false}
+          value={adapterToUse.date('2018-01-01')}
+          onChange={handleChange}
+          onViewChange={handleViewChange}
+        />,
+      );
+
+      const clock = screen.getByTestId('clock');
+      const rect = clock.getBoundingClientRect();
+      const toClientCoords = ({ offsetX, offsetY }: { offsetX: number; offsetY: number }) => ({
+        clientX: rect.left + offsetX,
+        clientY: rect.top + offsetY,
+      });
+
+      // First gesture never receives its `pointerup` (lost release).
+      fireEvent.pointerDown(clock, {
+        pointerId: 1,
+        button: 0,
+        isPrimary: true,
+        ...toClientCoords(hourOffset['13:--']),
+      });
+      // A fresh pointerdown supersedes it and must still commit correctly.
+      fireEvent.pointerDown(clock, {
+        pointerId: 2,
+        button: 0,
+        isPrimary: true,
+        ...toClientCoords(hourOffset['19:--']),
+      });
+      fireEvent.pointerUp(document.body, { pointerId: 2, ...toClientCoords(hourOffset['19:--']) });
+
+      const [date, selectionState] = handleChange.lastCall.args;
+      expect(date).toEqualDateTime(new Date(2018, 0, 1, 19));
+      expect(selectionState).to.equal('partial');
+      expect(handleViewChange.callCount).to.equal(1);
+    });
   });
 
   describe('default value', () => {
