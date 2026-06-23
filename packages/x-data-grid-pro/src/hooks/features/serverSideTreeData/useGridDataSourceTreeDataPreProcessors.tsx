@@ -20,6 +20,7 @@ import {
 import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
+  updateTreeDataGroupingColumn,
 } from '../treeData/gridTreeDataGroupColDef';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { getParentPath, skipFiltering, skipSorting } from './utils';
@@ -99,29 +100,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
       if (!props.dataSource) {
         return columnsState;
       }
-      const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
-
-      const shouldHaveGroupingColumn = props.treeData;
-      const prevGroupingColumn = columnsState.lookup[groupingColDefField];
-
-      if (shouldHaveGroupingColumn) {
-        const newGroupingColumn = getGroupingColDef();
-        if (prevGroupingColumn) {
-          newGroupingColumn.width = prevGroupingColumn.width;
-          newGroupingColumn.flex = prevGroupingColumn.flex;
-        }
-        columnsState.lookup[groupingColDefField] = newGroupingColumn;
-        if (prevGroupingColumn == null) {
-          columnsState.orderedFields = [groupingColDefField, ...columnsState.orderedFields];
-        }
-      } else if (!shouldHaveGroupingColumn && prevGroupingColumn) {
-        delete columnsState.lookup[groupingColDefField];
-        columnsState.orderedFields = columnsState.orderedFields.filter(
-          (field) => field !== groupingColDefField,
-        );
-      }
-
-      return columnsState;
+      return updateTreeDataGroupingColumn(columnsState, getGroupingColDef, props.treeData);
     },
     [props.treeData, props.dataSource, getGroupingColDef],
   );
