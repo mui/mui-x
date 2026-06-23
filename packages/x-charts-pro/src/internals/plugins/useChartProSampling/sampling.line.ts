@@ -51,7 +51,7 @@ export function sampleBuckets(
       ? [startIndex, extremaFirst, extremaLast, endIndex]
       : [extremaFirst, extremaLast];
 
-    // Dedup ascending within the bucket (extrema can coincide, or equal the bucket ends for `m4`).
+    // Drop duplicates, ascending, within the bucket (extrema can coincide, or equal ends for `m4`).
     const indices: number[] = [];
     let prev = -1;
     for (let k = 0; k < ordered.length; k += 1) {

@@ -1,4 +1,5 @@
 import {
+  MAX_RENDERED_POINTS,
   MIN_ELEMENT_SIZE_PX,
   buildSamplingPyramid,
   getSamplingLevelCount,
@@ -113,9 +114,33 @@ describe('selectSamplingLevel — level 0 (raw) at the deepest zoom', () => {
     expect(selectSamplingLevel(pyramid, 15, tinyScreen, 10)).to.not.equal(null);
   });
 
-  it('renders raw at minSpan whatever the (sub-pixel) element size', () => {
-    const large = buildSamplingPyramid(makeValues(4000), makeValues(4000));
+  it('renders raw at minSpan when the visible point count is under the cap', () => {
+    const large = buildSamplingPyramid(
+      makeValues(MAX_RENDERED_POINTS),
+      makeValues(MAX_RENDERED_POINTS),
+    );
     expect(selectSamplingLevel(large, 10, tinyScreen, 10)).to.equal(null);
+  });
+});
+
+describe('selectSamplingLevel — MAX_RENDERED_POINTS cap (samples even in the raw zone)', () => {
+  it('samples the deepest zoom when more than the cap is visible, whatever the element size', () => {
+    // 4x the cap fully in view, deepest zoom (span === minSpan): raw rule alone would render it all.
+    const count = MAX_RENDERED_POINTS * 4;
+    const pyramid = buildSamplingPyramid(makeValues(count), makeValues(count));
+    const tinyScreen = (1 * MIN_ELEMENT_SIZE_PX * count) / 100; // screen threshold 1 -> never samples
+    const level = selectSamplingLevel(pyramid, 100, tinyScreen, 100); // span 100, minSpan 100 -> raw zone
+    expect(level).to.not.equal(null);
+    // 4x over the cap -> 2 levels up -> bucket size 4 -> length / 4 === cap rendered.
+    expect(level!.bucketSize).to.equal(4);
+    expect(count / level!.bucketSize).to.equal(MAX_RENDERED_POINTS);
+  });
+
+  it('stays raw when the visible point count is at or under the cap', () => {
+    const atCap = makeValues(MAX_RENDERED_POINTS);
+    const pyramid = buildSamplingPyramid(atCap, atCap);
+    const tinyScreen = (1 * MIN_ELEMENT_SIZE_PX * MAX_RENDERED_POINTS) / 100;
+    expect(selectSamplingLevel(pyramid, 100, tinyScreen, 100)).to.equal(null);
   });
 });
 

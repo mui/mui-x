@@ -127,6 +127,8 @@ draws as many elements as the view can resolve.
 
 Zoom in to progressively reveal more detail; sampling turns off once the view can resolve every element.
 
+Sampling also keeps a hard ceiling on the number of rendered elements (2,000). Once the view fits under it, the chart renders every visible element untouched; while a zoomed-in view still holds more than that, it stays sampled even when each element would be wide enough to draw on its own—so a very dense dataset never floods the renderer at any zoom level.
+
 ### Bar sampling
 
 Bars are merged into buckets that keep each range's value envelope, so spikes and troughs survive.

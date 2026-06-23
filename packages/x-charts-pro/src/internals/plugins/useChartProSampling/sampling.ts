@@ -20,6 +20,20 @@ const EMPTY_PYRAMID_OFFSETS = new Int32Array(1);
 const RAW_LEVEL_SPAN_FACTOR = Math.SQRT2;
 
 /**
+ * Hard ceiling on rendered elements, independent of zoom. Even at the deepest zoom (where elements
+ * would be wide enough to skip screen sampling), a view with more than this many points is still
+ * sampled enough levels to get under the cap — too many elements hurts performance whatever the size.
+ */
+export const MAX_RENDERED_POINTS = 2000;
+
+/** Levels of sampling needed to bring `visiblePoints` under {@link MAX_RENDERED_POINTS} (0 if under). */
+function pointCapLevel(visiblePoints: number): number {
+  return visiblePoints > MAX_RENDERED_POINTS
+    ? Math.ceil(Math.log2(visiblePoints / MAX_RENDERED_POINTS))
+    : 0;
+}
+
+/**
  * Builds the LOD pyramid for one series from its low/high value channels (for bars: the stacked
  * `[base, top]` channels; for lines: the displayed `y` for both). Each bucket keeps the original
  * index of its min (over `low`) and max (over `high`) — a min/max envelope, so spikes and troughs
@@ -103,9 +117,11 @@ export function getSamplingLevelCount(pyramid: SamplingPyramid): number {
 /**
  * Level-of-detail index for the current zoom:
  * - Level 0 (no sampling, raw) at the deepest zoom (`currentSpan <= minSpan * RAW_LEVEL_SPAN_FACTOR`),
- *   whatever the bar size — fully zoomed in always shows every point.
+ *   whatever the bar size — fully zoomed in shows every point, up to {@link MAX_RENDERED_POINTS}.
  * - Above that, the level is screen-defined: bucket size keeps elements at least
  *   `MIN_ELEMENT_SIZE_PX` wide (+1 per span doubling past that pixel threshold).
+ * - The {@link MAX_RENDERED_POINTS} cap applies at every zoom: a view with too many points is always
+ *   sampled, even in the raw zone where the screen rule alone would render it untouched.
  */
 function levelIndexFor(
   currentSpan: number,
@@ -113,14 +129,18 @@ function levelIndexFor(
   availableSizePx: number,
   minSpan: number,
 ): number {
-  if (!(currentSpan > 0) || currentSpan <= minSpan * RAW_LEVEL_SPAN_FACTOR) {
+  if (!(currentSpan > 0)) {
     return 0;
+  }
+  const capLevel = pointCapLevel((dataLength * Math.min(currentSpan, 100)) / 100);
+  if (currentSpan <= minSpan * RAW_LEVEL_SPAN_FACTOR) {
+    return capLevel; // raw zone, but still bounded by the point cap
   }
   const screenMinSpan = getSamplingMinSpan(dataLength, availableSizePx);
   if (!(screenMinSpan > 0)) {
-    return 0;
+    return capLevel;
   }
-  return Math.max(0, Math.round(Math.log2(currentSpan / screenMinSpan)));
+  return Math.max(capLevel, Math.round(Math.log2(currentSpan / screenMinSpan)));
 }
 
 /**
