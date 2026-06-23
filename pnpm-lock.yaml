@@ -34,8 +34,8 @@ catalogs:
       specifier: ^1.5.0
       version: 1.5.0
     '@base-ui/utils':
-      specifier: ^0.2.9
-      version: 0.2.9
+      specifier: ^0.3.0
+      version: 0.3.0
     '@date-fns/tz':
       specifier: ^1.5.0
       version: 1.5.0
@@ -70,7 +70,7 @@ catalogs:
       specifier: 9.1.1
       version: 9.1.1
     '@mui/utils':
-      specifier: ^9.0.1
+      specifier: ^9.1.1
       version: 9.1.1
     '@mui/x-internal-exceljs-fork':
       specifier: 5.0.0
@@ -255,6 +255,9 @@ importers:
       '@babel/types':
         specifier: 7.29.7
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
@@ -277,8 +280,8 @@ importers:
         specifier: 1.0.9-canary.81
         version: 1.0.9-canary.81(@types/node@22.19.19)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.0.3)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
       '@mui/internal-code-infra':
-        specifier: 0.0.4-canary.64
-        version: 0.0.4-canary.64(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.19)(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.15)(prettier@3.8.3)(stylelint@17.12.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8)
+        specifier: 0.0.4-canary.66
+        version: 0.0.4-canary.66(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.19)(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.15)(prettier@3.8.3)(stylelint@17.12.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
         version: 9.1.2-canary.0(b296b1cdd39953f5604212bc0a0595d1)
@@ -361,7 +364,7 @@ importers:
         specifier: 0.2.0
         version: 0.2.0(@babel/core@7.29.7)
       concurrently:
-        specifier: ^10.0.3
+        specifier: 10.0.3
         version: 10.0.3
       cross-env:
         specifier: 'catalog:'
@@ -1179,6 +1182,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.15)(react@19.2.6)
@@ -1294,6 +1300,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.15)(react@19.2.6)
@@ -1587,6 +1596,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
     publishDirectory: build
 
   packages/x-internals:
@@ -1596,7 +1608,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.1.1(@types/react@19.2.15)(react@19.2.6)
@@ -1666,7 +1678,7 @@ importers:
         version: 1.5.0(@date-fns/tz@1.5.0)(@types/react@19.2.15)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.15)(react@19.2.6)
@@ -1737,7 +1749,7 @@ importers:
         version: 1.5.0(@date-fns/tz@1.5.0)(@types/react@19.2.15)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@date-fns/tz':
         specifier: 'catalog:'
         version: 1.5.0
@@ -1793,7 +1805,7 @@ importers:
         version: 1.5.0(@date-fns/tz@1.5.0)(@types/react@19.2.15)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
@@ -1840,7 +1852,7 @@ importers:
         version: 1.5.0(@date-fns/tz@1.5.0)(@types/react@19.2.15)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.15)(react@19.2.6)
@@ -1940,7 +1952,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.15)(react@19.2.6)
@@ -1996,7 +2008,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.2.15)(react@19.2.6)
@@ -2068,6 +2080,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.1.1(@types/react@19.2.15)(react@19.2.6)
@@ -2099,7 +2114,7 @@ importers:
         version: 7.29.7
       '@base-ui/utils':
         specifier: 'catalog:'
-        version: 0.2.9(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
@@ -2467,8 +2482,8 @@ importers:
         specifier: npm:@mui/x-license@7.29.1
         version: '@mui/x-license@7.29.1(@types/react@19.2.15)(react@19.2.6)'
       x-license-v8:
-        specifier: npm:@mui/x-license@8.26.0
-        version: '@mui/x-license@8.26.0(@types/react@19.2.15)(react@19.2.6)'
+        specifier: npm:@mui/x-license@8.29.0
+        version: '@mui/x-license@8.29.0(@types/react@19.2.15)(react@19.2.6)'
     devDependencies:
       vitest:
         specifier: 'catalog:'
@@ -3225,6 +3240,16 @@ packages:
 
   '@base-ui/utils@0.2.9':
     resolution: {integrity: sha512-x/PDDCYzoqPpjrdyb3VcyylTI2IjUXEtYDGi5foh7KsnmNJIIaVwA2GLgDH1dps1GgXiJbA60hM+AyuTfQzIvw==}
+    peerDependencies:
+      '@types/react': ^17 || ^18 || ^19
+      react: ^17 || ^18 || ^19
+      react-dom: ^17 || ^18 || ^19
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@base-ui/utils@0.3.0':
+    resolution: {integrity: sha512-IbZYmvB99kna6u75q8SPCV5LU+bxRzuBHIsimMf1S2Iy10K7qUuZrS2FP3RFZ17ROzt0YXxxJd70QRcnAKWpcw==}
     peerDependencies:
       '@types/react': ^17 || ^18 || ^19
       react: ^17 || ^18 || ^19
@@ -4273,8 +4298,8 @@ packages:
     resolution: {integrity: sha512-omgJCN/8RNOpO3FF0/ilW0PaImjDXeqDZStIGSaf6BEH1L7VwcXU7812ivHzMtTwLh8et/pq7q07j0j46B31JA==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.4-canary.64':
-    resolution: {integrity: sha512-z/5cg2UA0BPwCMsF1WXJ1UOzyDvo0LwQPKm/DTf/pZtGcLlSg6vVWFQ8/mKIIMJ87TKH5YfKiNgZuC083idTNg==}
+  '@mui/internal-code-infra@0.0.4-canary.66':
+    resolution: {integrity: sha512-dPm/mwzVzCCeBexrVKtpdcDKWAQk5KW/eII7wl0mIqfq6lcZKPizUJuz57A3rmUUvXKh37UCbj38LbnlQtFrQg==}
     hasBin: true
     peerDependencies:
       '@next/eslint-plugin-next': '*'
@@ -4512,8 +4537,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-internals@8.26.0':
-    resolution: {integrity: sha512-B9OZau5IQUvIxwpJZhoFJKqRpmWf5r0yMmSXjQuqb5WuqM755EuzWJOenY48denGoENzMLT8hQpA0hRTeU2IPA==}
+  '@mui/x-internals@8.29.0':
+    resolution: {integrity: sha512-xlqq765k39g6vkVGIypOBlsdYGawIP0JdSh+qqrkUCIIN39AUZRNMA/nGH0nSkhVHMHcCSDWBM5/6+6BLfc7Mg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4538,14 +4563,14 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-license@8.26.0':
-    resolution: {integrity: sha512-TcYLQXVRSaKjm9zyAxW3bi/+sGR2afsc32oG9ufBBiuNMvRZDghUZj7cKrem4VEKpC4Afsw2du9euv88TVUE1w==}
+  '@mui/x-license@8.29.0':
+    resolution: {integrity: sha512-DPJrE0Z8oV20bHevm58iJbBFZmU/8srRyjTt6FLKF1AOpmYxHjYDzDuln8ovRMnYMbtXU5FHxgLu9f22nj+npA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-telemetry@8.20.0':
-    resolution: {integrity: sha512-lmtcx620eryHY4uvVSV8F1IC0h2O6VY4Zifkbtq1LFHz75hUvE3JrERhABlo5qfQhZJEZuMTTxC2NDVCcAUI7Q==}
+  '@mui/x-telemetry@8.29.0':
+    resolution: {integrity: sha512-U2fDXtC6Y5z1HwQGS4z+nKl/Eui/spNVdQITTZDKojNLTs4ql/sMxIoetz49CY2Rs9F/51UrXcnT1qLDLsdaHA==}
     engines: {node: '>=14.0.0'}
 
   '@napi-rs/keyring-darwin-arm64@1.3.0':
@@ -12380,6 +12405,17 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.15
 
+  '@base-ui/utils@0.3.0(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+    dependencies:
+      '@babel/runtime': 7.29.7
+      '@floating-ui/utils': 0.2.11
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
+      reselect: 5.2.0
+      use-sync-external-store: 1.6.0(react@19.2.6)
+    optionalDependencies:
+      '@types/react': 19.2.15
+
   '@bcoe/v8-coverage@1.0.2': {}
 
   '@blazediff/core@1.9.1': {}
@@ -13315,7 +13351,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.4-canary.64(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.19)(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.15)(prettier@3.8.3)(stylelint@17.12.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8)':
+  '@mui/internal-code-infra@0.0.4-canary.66(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.19)(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.15)(prettier@3.8.3)(stylelint@17.12.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8)':
     dependencies:
       '@argos-ci/core': 6.0.1
       '@babel/cli': 7.29.7(@babel/core@7.29.7)
@@ -13740,7 +13776,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-internals@8.26.0(@types/react@19.2.15)(react@19.2.6)':
+  '@mui/x-internals@8.29.0(@types/react@19.2.15)(react@19.2.6)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@mui/utils': 7.3.11(@types/react@19.2.15)(react@19.2.6)
@@ -13775,17 +13811,17 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-license@8.26.0(@types/react@19.2.15)(react@19.2.6)':
+  '@mui/x-license@8.29.0(@types/react@19.2.15)(react@19.2.6)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@mui/utils': 7.3.11(@types/react@19.2.15)(react@19.2.6)
-      '@mui/x-internals': 8.26.0(@types/react@19.2.15)(react@19.2.6)
-      '@mui/x-telemetry': 8.20.0
+      '@mui/x-internals': 8.29.0(@types/react@19.2.15)(react@19.2.6)
+      '@mui/x-telemetry': 8.29.0
       react: 19.2.6
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-telemetry@8.20.0':
+  '@mui/x-telemetry@8.29.0':
     dependencies:
       '@babel/runtime': 7.29.7
       '@fingerprintjs/fingerprintjs': 3.4.2

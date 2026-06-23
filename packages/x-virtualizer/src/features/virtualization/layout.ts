@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
-import * as platform from '@mui/x-internals/platform';
+import { platform } from '@base-ui/utils/platform';
 import { Store, createSelectorMemoized } from '@mui/x-internals/store';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
@@ -106,7 +106,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
         // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-        tabIndex: platform.isFirefox ? -1 : undefined,
+        tabIndex: platform.engine.gecko ? -1 : undefined,
       }),
     ),
 
@@ -269,7 +269,7 @@ export class LayoutList extends Layout<ListElements> {
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
         // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-        tabIndex: platform.isFirefox ? -1 : undefined,
+        tabIndex: platform.engine.gecko ? -1 : undefined,
       }),
     ),
 
