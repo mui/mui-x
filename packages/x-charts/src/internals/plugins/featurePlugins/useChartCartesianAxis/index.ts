@@ -13,7 +13,5 @@ export * from './computeAxisValue';
 export * from './createZoomLookup';
 export * from './zoom.types';
 export * from './sampling.selectors';
-export * from './sampling';
-export * from './sampling.line';
 export type * from './sampling.types';
 export { computeAxisAutoSize } from './computeAxisAutoSize';

@@ -1,38 +1,12 @@
 import type { SeriesId } from '../../../../models/seriesType/common';
 import type { ChartSeriesType, ChartSeriesDefaultized } from '../../../../models/seriesType/config';
-
-/**
- * The active level of detail for the current zoom: the slice `[start, end)` of the pyramid's
- * `argMin`/`argMax` arrays plus its bucket size. Bucket `j` (`j` from `0`) covers indices
- * `[j * bucketSize, min((j + 1) * bucketSize - 1, dataLength - 1)]`.
- */
-export interface ActiveSamplingLevel {
-  /** Elements merged per bucket (power of two, `>= 2`). */
-  bucketSize: number;
-  /** Start offset into `argMin`/`argMax`. */
-  start: number;
-  /** End offset (exclusive) into `argMin`/`argMax`. */
-  end: number;
-}
-
-/**
- * Precomputed LOD pyramid for one series, shared by every chart type and sampling method.
- * Stored as flat typed arrays (no per-level or per-bucket objects): for each bucket it keeps the
- * original index of the minimum (`argMin`, over the low channel) and the maximum (`argMax`, over
- * the high channel). Consumers read the values back from their own series data by index.
- *
- * All levels are concatenated finest (`bucketSize 2`) to coarsest; `offsets[i]..offsets[i + 1]` is
- * level `i` (bucketSize `2 ** (i + 1)`), and there are `offsets.length - 1` levels.
- */
-export interface SamplingPyramid {
-  dataLength: number;
-  /** Index of the per-bucket minimum (low channel), concatenated finest to coarsest. */
-  argMin: Int32Array;
-  /** Index of the per-bucket maximum (high channel), same order. */
-  argMax: Int32Array;
-  /** Level start offsets into `argMin`/`argMax`; length `levelCount + 1`. */
-  offsets: Int32Array;
-}
+import type {
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  ComputedAxis,
+  ScaleName,
+} from '../../../../models/axis';
+import type { ZoomData } from './zoom.types';
 
 /** Line sampling algorithms. `m4` is pixel-accurate; `minmax` is its 2-point subset; `lttb` keeps shape. */
 export type LineSamplingAlgorithm = 'm4' | 'minmax' | 'lttb';
@@ -51,19 +25,65 @@ export interface SamplingState {
   lineAlgorithm: LineSamplingAlgorithm;
 }
 
-/** Bar pyramids keyed by series id. */
-export type SamplingPyramidLookup = Record<SeriesId, SamplingPyramid>;
-
 /** Built sampling structures keyed by series id (type depends on each series' strategy). */
 export type SampledSeriesLookup = Record<SeriesId, unknown>;
 
+/** Render-ready sampled bar (pixel-space rect) for one bucket. */
+export interface SampledBar {
+  /** Representative original index (today `bucket * bucketSize`). */
+  dataIndex: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/** Inputs the bar sampler needs to produce {@link SampledBar}s for one series. */
+export interface BarSampleContext {
+  /** Opaque built structure for this series (the strategy's `TBuilt`; the pyramid lives in pro). */
+  built: unknown;
+  series: ChartSeriesDefaultized<'bar'>;
+  /** Zoom of the base band axis; `undefined` => the sampler returns `null`. */
+  zoom: ZoomData | undefined;
+  /** Pixel extent perpendicular to the value axis: `drawingArea.width` (vertical) else `.height`. */
+  availableSize: number;
+  verticalLayout: boolean;
+  xAxisConfig: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
+  yAxisConfig: ComputedAxis<ScaleName, any, ChartsYAxisProps>;
+  numberOfGroups: number;
+  groupIndex: number;
+}
+
+/** Inputs the line sampler needs to produce the indices to render for one series. */
+export interface LineSampleContext {
+  built: unknown;
+  zoom: ZoomData | undefined;
+  /** `drawingArea.width`. */
+  availableSize: number;
+  algorithm: LineSamplingAlgorithm;
+  /**
+   * Lazy raw y channel; invoked by the sampler only for `lttb`.
+   * @returns {ArrayLike<number>} The raw y values.
+   */
+  getValues: () => ArrayLike<number>;
+}
+
+/** Axis-level math inputs (no per-series built struct needed). */
+export interface AxisSamplingContext {
+  /** `axis.data.length`. */
+  dataLength: number;
+  /** Pixel extent along the band axis: width (x) / height (y). */
+  availableSize: number;
+}
+
 /**
- * Per-series-type sampling strategy, registered in `ChartSeriesTypeConfig.sampler`. Builds a
- * sampled representation from the processed series; the type-specific plot hook consumes it.
+ * Per-series-type sampling strategy, registered in `ChartSeriesTypeConfig.sampler`. The strategy
+ * owns both building the LOD structure and consuming it into render-ready output, so all sampling
+ * algorithm code lives in the pro package; community plot hooks/selectors only call these methods
+ * through the (pro-injected) `seriesConfig.sampler` reference.
  *
- * `TBuilt` is the strategy's structure (e.g. {@link SamplingPyramid} for the min/max LOD strategy
- * shared by bar and line). Strategies that can't merge across zoom levels (e.g. LTTB) build the
- * raw input they need and reduce on demand inside their plot hook.
+ * `TBuilt` is opaque to community (`unknown` at the registration site); the pro implementation
+ * narrows it inside each method.
  */
 export interface SamplingStrategy<
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -75,4 +95,29 @@ export interface SamplingStrategy<
    * @returns {TBuilt | null} The built structure, or `null` when the series can't be sampled.
    */
   build: (series: ChartSeriesDefaultized<SeriesType>) => TBuilt | null;
+  /**
+   * Render-ready sampled bars for the current zoom, or `null` to fall back to the raw render.
+   * @param {BarSampleContext} context The bar sampling inputs.
+   * @returns {SampledBar[] | null} The bars to draw, or `null`.
+   */
+  sampleBars?: (context: BarSampleContext) => SampledBar[] | null;
+  /**
+   * Ascending original indices to draw for the current zoom, or `null` for the full render.
+   * @param {LineSampleContext} context The line sampling inputs.
+   * @returns {Int32Array | null} The indices to draw, or `null`.
+   */
+  sampleLineIndices?: (context: LineSampleContext) => Int32Array | null;
+  /**
+   * Merged bucket size at the given zoom span (`>= 1`; `1` = no merge), for axis-highlight widening.
+   * @param {number} span The zoom span (`end - start`).
+   * @param {AxisSamplingContext} context The axis sampling inputs.
+   * @returns {number} The bucket size.
+   */
+  bucketSizeAt?: (span: number, context: AxisSamplingContext) => number;
+  /**
+   * Sampling-derived min zoom span for an axis, or `null` to leave `minSpan` untouched.
+   * @param {AxisSamplingContext} context The axis sampling inputs.
+   * @returns {number | null} The min span, or `null`.
+   */
+  minSpanFor?: (context: AxisSamplingContext) => number | null;
 }

@@ -4,17 +4,13 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import {
-  type ComputedAxisConfig,
-  getSamplingMinSpan,
-  selectLineSampledIndices,
-  type SamplingPyramid,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartSamplingState,
   selectorChartSamplingPyramids,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
 import { selectorChartZoomMap } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useStore } from '../internals/store/useStore';
 import { getCurveFactory } from '../internals/getCurve';
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
@@ -52,6 +48,7 @@ export function useLinePlotData(
   const samplingState = store.use(selectorChartSamplingState);
   const sampledSeries = store.use(selectorChartSamplingPyramids);
   const zoomMap = store.use(selectorChartZoomMap);
+  const sampler = store.use(selectorChartSeriesConfig).line?.sampler;
 
   // Skip the line animation while sampling is on, and for the one render after it turns off:
   // both directions morph the path between different point counts, which looks wrong.
@@ -127,17 +124,19 @@ export function useLinePlotData(
 
         // Sampling reduces the rendered points to a zoom-appropriate subset. Only the plain
         // (non-step) path is sampled; step expansion and null gaps fall back to the full render.
-        const built = sampledSeries[seriesId] as SamplingPyramid | undefined;
+        const built = sampledSeries[seriesId];
         const zoom = zoomMap?.get(xAxisId);
         let sampledIndices: Int32Array | null = null;
         if (samplingState?.enabled && built && zoom && !shouldExpand && xData) {
-          sampledIndices = selectLineSampledIndices(
-            built,
-            zoom.end - zoom.start,
-            getSamplingMinSpan(built.dataLength, drawingArea.width),
-            samplingState.lineAlgorithm,
-            () => Float64Array.from(visibleStackedData, (point) => point[1]),
-          );
+          // The sampler (pro) owns all sampling math; community only renders its indices.
+          sampledIndices =
+            sampler?.sampleLineIndices?.({
+              built,
+              zoom,
+              availableSize: drawingArea.width,
+              algorithm: samplingState.lineAlgorithm,
+              getValues: () => Float64Array.from(visibleStackedData, (point) => point[1]),
+            }) ?? null;
         }
 
         const formattedData: {
@@ -219,6 +218,7 @@ export function useLinePlotData(
     samplingState,
     sampledSeries,
     zoomMap,
+    sampler,
     skipSamplingAnimation,
   ]);
 

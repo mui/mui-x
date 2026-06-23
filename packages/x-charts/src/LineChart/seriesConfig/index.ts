@@ -15,12 +15,10 @@ import {
   createIsFaded,
 } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import descriptionGetter from './descriptionGetter';
-import { lineSampler } from './sampler';
 
 export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   colorProcessor: getColor,
   seriesProcessor,
-  sampler: lineSampler,
   legendGetter,
   tooltipGetter,
   tooltipItemPositionGetter,

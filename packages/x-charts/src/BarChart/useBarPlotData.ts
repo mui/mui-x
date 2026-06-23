@@ -11,22 +11,16 @@ import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
-import {
-  createGetBarDimensions,
-  createGetBucketBarDimensions,
-} from '../internals/createGetBarDimensions';
+import { createGetBarDimensions } from '../internals/createGetBarDimensions';
 import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import { useStore } from '../internals/store/useStore';
-import {
-  getSamplingMinSpan,
-  selectSamplingLevel,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling';
 import { selectorChartSamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
 import type {
   SampledSeriesLookup,
-  SamplingPyramid,
+  SamplingStrategy,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { selectorChartZoomMap } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { ZoomData } from '../internals/plugins/featurePlugins/useChartCartesianAxis/zoom.types';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
@@ -52,6 +46,7 @@ export function useBarPlotData(
   const store = useStore();
   const samplingPyramids = store.use(selectorChartSamplingPyramids);
   const zoomMap = store.use(selectorChartZoomMap);
+  const sampler = store.use(selectorChartSeriesConfig).bar?.sampler;
 
   return processBarDataForPlot(
     drawingArea,
@@ -64,6 +59,7 @@ export function useBarPlotData(
     defaultYAxisId,
     samplingPyramids,
     zoomMap,
+    sampler,
   );
 }
 
@@ -78,6 +74,7 @@ export function processBarDataForPlot(
   defaultYAxisId: AxisId,
   samplingPyramids: SampledSeriesLookup = {},
   zoomMap?: Map<AxisId, ZoomData>,
+  sampler?: SamplingStrategy<'bar'>,
 ) {
   const masks: Record<string, MaskData> = {};
 
@@ -194,44 +191,36 @@ export function processBarDataForPlot(
         maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
       });
 
-      const pyramid = samplingPyramids[seriesId] as SamplingPyramid | undefined;
+      const pyramid = samplingPyramids[seriesId];
       const baseAxisId = verticalLayout ? xAxisId : yAxisId;
       const zoom = zoomMap?.get(baseAxisId);
       const availableSize = verticalLayout ? drawingArea.width : drawingArea.height;
-      const activeLevel =
-        pyramid && zoom
-          ? selectSamplingLevel(
-              pyramid,
-              zoom.end - zoom.start,
-              getSamplingMinSpan(pyramid.dataLength, availableSize),
-            )
+      // The sampler (pro) owns all sampling math; community only renders its output.
+      const sampledBars =
+        pyramid && zoom && sampler?.sampleBars
+          ? sampler.sampleBars({
+              built: pyramid,
+              series: series[seriesId],
+              zoom,
+              availableSize,
+              verticalLayout,
+              xAxisConfig,
+              yAxisConfig,
+              numberOfGroups: stackingGroups.length,
+              groupIndex,
+            })
           : null;
 
-      if (activeLevel) {
-        const getBucketBarDimensions = createGetBucketBarDimensions({
-          verticalLayout,
-          xAxisConfig,
-          yAxisConfig,
-          series: series[seriesId],
-          numberOfGroups: stackingGroups.length,
-        });
-
-        const { bucketSize, start, end } = activeLevel;
-        const { argMin, argMax } = pyramid!;
-        const stacked = series[seriesId].visibleStackedData;
-        const maxIndex = pyramid!.dataLength - 1;
-        for (let j = start; j < end; j += 1) {
-          const bucket = j - start;
-          const startIndex = bucket * bucketSize;
-          const endIndex = Math.min(startIndex + bucketSize - 1, maxIndex);
-          const low = stacked[argMin[j]][0];
-          const high = stacked[argMax[j]][1];
+      if (sampledBars) {
+        for (const bar of sampledBars) {
           registerResult(
-            makeResult(
-              startIndex,
-              getBucketBarDimensions(startIndex, endIndex, low, high, groupIndex),
-            ),
-            startIndex,
+            makeResult(bar.dataIndex, {
+              x: bar.x,
+              y: bar.y,
+              width: bar.width,
+              height: bar.height,
+            }),
+            bar.dataIndex,
           );
         }
       } else {

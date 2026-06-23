@@ -1,5 +1,6 @@
+import type { LineSamplingAlgorithm } from '@mui/x-charts/internals';
 import { selectSamplingLevel } from './sampling';
-import type { LineSamplingAlgorithm, SamplingPyramid } from './sampling.types';
+import type { SamplingPyramid } from './sampling.pyramid.types';
 
 /**
  * Original indices to render for the current zoom, sorted ascending, or `null` for no sampling.

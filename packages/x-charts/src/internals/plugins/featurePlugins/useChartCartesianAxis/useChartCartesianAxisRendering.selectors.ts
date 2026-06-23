@@ -15,7 +15,6 @@ import {
 } from './createAxisFilterMapper';
 import { type ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
-import { getSamplingMinSpan } from './sampling';
 import {
   type AxisId,
   type ChartsAxisProps,
@@ -97,25 +96,29 @@ export const selectorChartZoomOptionsLookup = createSelectorMemoized(
   selectorChartRawYAxis,
   selectorChartSamplingState,
   selectorChartDrawingArea,
-  function selectorChartZoomOptionsLookup(xAxis, yAxis, sampling, drawingArea) {
+  selectorChartSeriesConfig,
+  function selectorChartZoomOptionsLookup(xAxis, yAxis, sampling, drawingArea, seriesConfig) {
     const lookup = {
       ...createZoomLookup('x')(xAxis),
       ...createZoomLookup('y')(yAxis),
     };
 
     // Sampling lowers min span (from band-axis size) so the data is reachable unsampled.
+    // The min-span math lives in the pro sampler; community only applies the returned value.
     // Recomputed on resize, not on zoom.
-    if (sampling?.enabled) {
+    const minSpanFor =
+      seriesConfig.bar?.sampler?.minSpanFor ?? seriesConfig.line?.sampler?.minSpanFor;
+    if (sampling?.enabled && minSpanFor) {
       const applyMinSpan = (
         axes: ReadonlyArray<{ id: AxisId; data?: readonly unknown[] }> | undefined,
-        availableSizePx: number,
+        availableSize: number,
       ) => {
         axes?.forEach((axis) => {
           const options = lookup[axis.id];
           const dataLength = axis.data?.length;
           if (options && dataLength) {
-            const minSpan = getSamplingMinSpan(dataLength, availableSizePx);
-            if (minSpan < options.minSpan) {
+            const minSpan = minSpanFor({ dataLength, availableSize });
+            if (minSpan != null && minSpan < options.minSpan) {
               lookup[axis.id] = { ...options, minSpan };
             }
           }

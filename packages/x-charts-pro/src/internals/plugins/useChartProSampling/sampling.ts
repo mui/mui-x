@@ -1,4 +1,4 @@
-import type { ActiveSamplingLevel, SamplingPyramid } from './sampling.types';
+import type { ActiveSamplingLevel, SamplingPyramid } from './sampling.pyramid.types';
 
 /** Smallest element size (px) allowed before sampling kicks in. */
 export const MIN_ELEMENT_SIZE_PX = 6;
@@ -124,7 +124,7 @@ export function selectSamplingLevel(
   };
 }
 
-/** Active bucket size for the given span (`1` = no sampling) — matches {@link selectSamplingLevelByZoom}. */
+/** Active bucket size for the given span (`1` = no sampling) — matches {@link selectSamplingLevel}. */
 export function getSamplingBucketSize(
   currentSpan: number,
   minSpan: number,

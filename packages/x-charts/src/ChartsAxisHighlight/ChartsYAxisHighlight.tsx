@@ -4,12 +4,9 @@ import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { useStore } from '../internals/store/useStore';
 import {
-  getSamplingBucketSize,
-  getSamplingMinSpan,
   selectorChartsHighlightYAxisValue,
-  selectorChartSamplingState,
+  selectorChartHighlightBucketSize,
   selectorChartYAxis,
-  selectorChartZoomMap,
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useDrawingArea } from '../hooks';
@@ -27,13 +24,12 @@ export default function ChartsYHighlight(props: {
 }) {
   const { type, classes } = props;
 
-  const { left, width, height } = useDrawingArea();
+  const { left, width } = useDrawingArea();
 
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const axisYValues = store.use(selectorChartsHighlightYAxisValue);
   const yAxes = store.use(selectorChartYAxis);
-  const samplingEnabled = store.use(selectorChartSamplingState)?.enabled ?? false;
-  const zoomMap = store.use(selectorChartZoomMap);
+  const bucketSizeByAxis = store.use(selectorChartHighlightBucketSize);
 
   if (axisYValues.length === 0) {
     return null;
@@ -69,15 +65,7 @@ export default function ChartsYHighlight(props: {
       bandSize = step;
 
       const data = yAxis.data;
-      const zoom = zoomMap?.get(axisId);
-      const bucketSize =
-        samplingEnabled && data && zoom
-          ? getSamplingBucketSize(
-              zoom.end - zoom.start,
-              getSamplingMinSpan(data.length, height),
-              data.length,
-            )
-          : 1;
+      const bucketSize = bucketSizeByAxis.get(axisId) ?? 1;
       if (bucketSize > 1 && data) {
         const index = data.indexOf(value);
         if (index >= 0) {
