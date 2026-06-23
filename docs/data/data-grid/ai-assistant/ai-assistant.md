@@ -14,7 +14,7 @@ In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechR
 AI Assistant demos use a limited version of MUI's hosted processing service.
 :::
 
-{{"demo": "AssistantWithExamples.js", "bg": "inline"}}
+{{"demo": "AssistantWithExamples.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Get started
 
