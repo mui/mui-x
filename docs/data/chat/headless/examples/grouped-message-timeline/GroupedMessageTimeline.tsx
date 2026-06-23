@@ -9,16 +9,16 @@ import {
   createTimeWindowGroupKey,
 } from '@mui/x-chat/headless';
 import type { GroupKeyFn } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,
   groupedTimelineMessages,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 import {
   demoLocaleText,
   demoSlotProps,
   DemoToolbarButton,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 export default function GroupedMessageTimeline() {
   const [windowMs, setWindowMs] = React.useState(5 * 60_000);
@@ -111,12 +111,12 @@ export default function GroupedMessageTimeline() {
                 <Message.Root
                   messageId={id}
                   slotProps={{
-                    root: demoSlotProps.messageRoot,
+                    root: demoSlotProps.message,
                   }}
                 >
                   <Message.Avatar
                     slotProps={{
-                      avatar: demoSlotProps.messageAvatar,
+                      avatar: demoSlotProps.avatar,
                       image: demoSlotProps.messageAvatarImage,
                     }}
                   />
@@ -129,9 +129,9 @@ export default function GroupedMessageTimeline() {
                     <Message.Meta
                       slotProps={{
                         meta: ((ownerState: any) => ({
-                          ...demoSlotProps.messageMeta(ownerState),
+                          ...demoSlotProps.meta(ownerState),
                           style: {
-                            ...demoSlotProps.messageMeta(ownerState).style,
+                            ...demoSlotProps.meta(ownerState).style,
                             marginBottom: 4,
                           },
                         })) as any,
@@ -202,7 +202,7 @@ export default function GroupedMessageTimeline() {
         />
         <Composer.Root
           slotProps={{
-            root: demoSlotProps.composerRoot,
+            root: demoSlotProps.composer,
           }}
         >
           <Composer.TextArea
@@ -216,7 +216,7 @@ export default function GroupedMessageTimeline() {
             <Composer.SendButton
               data-variant="primary"
               slotProps={{
-                sendButton: demoSlotProps.composerSendButton,
+                sendButton: demoSlotProps.send,
               }}
             >
               Send

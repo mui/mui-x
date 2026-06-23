@@ -5,7 +5,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void",
+        "type": "function(event: MouseEvent | React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
@@ -51,6 +51,5 @@
   "muiName": "MuiBarPlot",
   "filename": "/packages/x-charts/src/BarChart/BarPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demos</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demos</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>"
 }

@@ -14,14 +14,7 @@ export default defineConfig({
     alias: [
       ...alias,
       {
-        find: '@mui/internal-core-docs',
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../../node_modules/@mui/monorepo/packages-internal/core-docs/src',
-        ),
-      },
-      {
-        find: 'docsx',
+        find: 'docs',
         replacement: path.resolve(import.meta.dirname, '../../docs'),
       },
     ],
@@ -83,5 +76,6 @@ export default defineConfig({
     globals: true,
     testTimeout: 20000,
     hookTimeout: 20000,
+    maxConcurrency: 4,
   },
 });

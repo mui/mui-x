@@ -3,11 +3,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -15,7 +15,16 @@ export default function ComposerControlled() {
   const [value, setValue] = React.useState('');
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1,
+        width: '100%',
+        maxWidth: 520,
+        mx: 'auto',
+      }}
+    >
       <Typography variant="body2" color="text.secondary">
         Composer value: {value ? `"${value}"` : '(empty)'}
       </Typography>

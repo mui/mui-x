@@ -1,4 +1,4 @@
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
 

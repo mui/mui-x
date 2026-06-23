@@ -12,7 +12,7 @@ import {
   demoConversations,
   demoThreads,
   demoUsers,
-} from 'docsx/data/chat/core/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 function createRealtimeSyncAdapter() {
   let onEventRef = null;

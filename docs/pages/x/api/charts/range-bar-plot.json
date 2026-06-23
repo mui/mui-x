@@ -8,6 +8,10 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
+    "renderer": {
+      "type": { "name": "enum", "description": "'svg-single'<br>&#124;&nbsp;'webgl'" },
+      "default": "'svg-single'"
+    },
     "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
     "slotProps": {
       "type": { "name": "shape", "description": "RangeBarPlotSlotProps" },
@@ -42,6 +46,5 @@
   "muiName": "MuiRangeBarPlot",
   "filename": "/packages/x-charts-premium/src/BarChartPremium/RangeBar/RangeBarPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>"
 }

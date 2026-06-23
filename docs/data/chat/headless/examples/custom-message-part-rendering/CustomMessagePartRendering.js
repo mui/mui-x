@@ -9,15 +9,15 @@ import {
   getDefaultMessagePartRenderer,
 } from '@mui/x-chat/headless';
 
-import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   demoLocaleText,
   demoSlotProps,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 import {
   demoUsers,
   partRenderingMessages,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 
 const partRenderers = {
   reasoning: ({ part }) => (
@@ -171,12 +171,12 @@ export default function CustomMessagePartRendering() {
                 <Message.Root
                   messageId={id}
                   slotProps={{
-                    root: demoSlotProps.messageRoot,
+                    root: demoSlotProps.message,
                   }}
                 >
                   <Message.Avatar
                     slotProps={{
-                      avatar: demoSlotProps.messageAvatar,
+                      avatar: demoSlotProps.avatar,
                       image: demoSlotProps.messageAvatarImage,
                     }}
                   />
@@ -187,7 +187,7 @@ export default function CustomMessagePartRendering() {
                   />
                   <Message.Meta
                     slotProps={{
-                      meta: demoSlotProps.messageMeta,
+                      meta: demoSlotProps.meta,
                     }}
                   />
                 </Message.Root>
@@ -197,7 +197,7 @@ export default function CustomMessagePartRendering() {
         />
         <Composer.Root
           slotProps={{
-            root: demoSlotProps.composerRoot,
+            root: demoSlotProps.composer,
           }}
         >
           <Composer.TextArea
@@ -211,7 +211,7 @@ export default function CustomMessagePartRendering() {
             <Composer.SendButton
               data-variant="primary"
               slotProps={{
-                sendButton: demoSlotProps.composerSendButton,
+                sendButton: demoSlotProps.send,
               }}
             >
               Send

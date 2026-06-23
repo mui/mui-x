@@ -12,7 +12,10 @@
       }
     },
     "renderer": {
-      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "type": {
+        "name": "enum",
+        "description": "'svg-batch'<br>&#124;&nbsp;'svg-progressive'<br>&#124;&nbsp;'svg-single'"
+      },
       "default": "'svg-single'"
     },
     "slotProps": {
@@ -43,10 +46,34 @@
     },
     { "name": "scatter", "description": "", "class": null }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "focusedMark",
+      "className": "MuiScatterChart-focusedMark",
+      "description": "Styles applied to the focused scatter mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlightedMark",
+      "className": "MuiScatterChart-highlightedMark",
+      "description": "Styles applied to the highlighted scatter mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiScatterChart-root",
+      "description": "Styles applied to the scatter plot element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiScatterChart-series",
+      "description": "Styles applied to the group surrounding a series' scatter elements.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiScatterPlot",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>"
 }

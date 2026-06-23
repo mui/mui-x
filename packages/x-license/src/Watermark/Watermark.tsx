@@ -57,6 +57,11 @@ function Watermark(props: WatermarkProps) {
       }}
     >
       {getLicenseErrorMessage(licenseStatus.status)}
+      {process.env.NODE_ENV !== 'production' && (
+        <div style={{ fontSize: 12, letterSpacing: 1, marginTop: 8 }}>
+          Open the browser console for details on how to resolve this.
+        </div>
+      )}
     </div>
   );
 }

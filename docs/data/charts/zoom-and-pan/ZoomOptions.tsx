@@ -1,5 +1,5 @@
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 
 const knobs = {
   panning: {

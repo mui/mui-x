@@ -6,7 +6,7 @@ import {
   EventBuilder,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
-import { screen, within } from '@mui/internal-test-utils';
+import { screen, within, waitFor } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
@@ -24,6 +24,15 @@ describe('<MonthView />', () => {
     events,
     resources: [],
   };
+
+  const manyEvents = [
+    EventBuilder.new().singleDay('2025-05-01T08:00:00Z').title('Event 1').build(),
+    EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Event 2').build(),
+    EventBuilder.new().singleDay('2025-05-01T10:00:00Z').title('Event 3').build(),
+    EventBuilder.new().singleDay('2025-05-01T11:00:00Z').title('Event 4').build(),
+    EventBuilder.new().singleDay('2025-05-01T12:00:00Z').title('Event 5').build(),
+    EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event 6').build(),
+  ];
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
@@ -96,14 +105,6 @@ describe('<MonthView />', () => {
   });
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
-    const manyEvents = [
-      EventBuilder.new().singleDay('2025-05-01T08:00:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:09:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:11:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T13:09:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T15:09:00Z').build(),
-    ];
-
     render(
       <EventCalendarProvider events={manyEvents} resources={[]}>
         <EventDialogProvider>
@@ -112,6 +113,79 @@ describe('<MonthView />', () => {
       </EventCalendarProvider>,
     );
     expect(screen.getByText(/more/i)).not.to.equal(null);
+  });
+
+  describe('Event keyboard accessibility in "more events" popover', () => {
+    async function renderAndOpenPopover() {
+      const { user } = render(
+        <EventCalendarProvider events={manyEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+      const moreButton = await screen.findByRole('button', { name: /more/i });
+      await user.click(moreButton);
+      const popover = await screen.findByRole('presentation');
+      return { user, popover };
+    }
+
+    it('should have tabindex and role="button" on events in the popover', async () => {
+      const { popover } = await renderAndOpenPopover();
+
+      const eventButtons = within(popover).getAllByRole('button');
+      expect(eventButtons.length).to.be.greaterThan(0);
+
+      eventButtons.forEach((button) => {
+        expect(button).to.have.attribute('tabindex', '0');
+        expect(button).to.have.attribute('role', 'button');
+      });
+    });
+
+    it('should allow Enter key to activate events in the popover', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      firstEventButton.focus();
+      expect(firstEventButton).to.equal(document.activeElement);
+
+      await user.keyboard('{Enter}');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+    });
+
+    it('should allow Space key to activate events in the popover', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      firstEventButton.focus();
+      expect(firstEventButton).to.equal(document.activeElement);
+
+      await user.keyboard(' ');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+    });
+
+    it('should reference resolvable header IDs in each event aria-labelledby', async () => {
+      const { popover } = await renderAndOpenPopover();
+
+      const eventButtons = within(popover).getAllByRole('button');
+      expect(eventButtons.length).to.be.greaterThan(0);
+
+      eventButtons.forEach((button) => {
+        const tokens = (button.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
+        expect(tokens.length).to.be.greaterThan(0);
+        tokens.forEach((token) => {
+          expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(
+            null,
+          );
+        });
+      });
+    });
   });
 
   describe('All day events', () => {
@@ -335,6 +409,166 @@ describe('<MonthView />', () => {
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
+    });
+  });
+
+  describe('aria semantics', () => {
+    it('should set aria-rowcount and aria-colcount on the grid root and aria indexes on cells', () => {
+      render(
+        <EventCalendarProvider {...standaloneDefaults}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const grid = screen.getByRole('grid');
+      expect(grid.getAttribute('aria-colcount')).to.equal('7');
+      const rowCountAttr = Number(grid.getAttribute('aria-rowcount'));
+      expect(rowCountAttr).to.be.greaterThan(1);
+
+      const headerRow = within(grid)
+        .getAllByRole('row')
+        .find((row) => row.getAttribute('aria-rowindex') === '1');
+      expect(headerRow).not.to.equal(undefined);
+
+      const headerCells = within(headerRow!).getAllByRole('columnheader');
+      expect(headerCells.length).to.equal(7);
+      headerCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 1));
+      });
+
+      const dataRows = within(grid)
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+      dataRows.forEach((row, weekIdx) => {
+        expect(row.getAttribute('aria-rowindex')).to.equal(String(weekIdx + 2));
+        const dayCells = within(row).getAllByRole('gridcell');
+        dayCells.forEach((cell, dayIdx) => {
+          expect(cell.getAttribute('aria-colindex')).to.equal(String(dayIdx + 1));
+        });
+      });
+    });
+
+    it('should keep aria-colcount=7 when showWeekNumber=true and reference the week number via aria-labelledby', () => {
+      render(
+        <EventCalendarProvider
+          {...standaloneDefaults}
+          defaultPreferences={{ showWeekNumber: true }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const grid = screen.getByRole('grid');
+      expect(grid.getAttribute('aria-colcount')).to.equal('7');
+
+      const headerRow = within(grid)
+        .getAllByRole('row')
+        .find((row) => row.getAttribute('aria-rowindex') === '1');
+      const headerCells = within(headerRow!).getAllByRole('columnheader');
+      expect(headerCells.length).to.equal(7);
+      headerCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 1));
+      });
+
+      const weekNumberLabels = document.querySelectorAll<HTMLElement>(
+        `.${eventCalendarClasses.monthViewWeekNumberCell}`,
+      );
+      expect(weekNumberLabels.length).to.be.greaterThan(0);
+      weekNumberLabels.forEach((label) => {
+        expect(label.getAttribute('aria-hidden')).to.equal('true');
+        expect(label.getAttribute('role')).to.equal(null);
+        expect(label.id).to.have.length.greaterThan(0);
+      });
+
+      const dataRows = within(grid)
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+      dataRows.forEach((row, weekIdx) => {
+        const dayCells = within(row).getAllByRole('gridcell');
+        expect(dayCells.length).to.equal(7);
+        dayCells.forEach((cell, dayIdx) => {
+          expect(cell.getAttribute('aria-colindex')).to.equal(String(dayIdx + 1));
+          const labelledBy = cell.getAttribute('aria-labelledby') ?? '';
+          expect(labelledBy.split(' ')).to.include(weekNumberLabels[weekIdx].id);
+        });
+      });
+    });
+  });
+
+  describe('weekStartsOn preference', () => {
+    it('should start each week row on Monday when weekStartsOn=1', () => {
+      // May 2025: With weekStartsOn=1 the first week row starts on Monday Apr 28.
+      // All week rows must have exactly 7 cells and the first cell of each row must be a Monday.
+      render(
+        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 1 }}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const grid = screen.getByRole('grid');
+      const dataRows = within(grid)
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+
+      // Every row must have exactly 7 gridcells — not 6 (the old getWeekNumber bug).
+      dataRows.forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.length).to.equal(7);
+      });
+    });
+
+    it('should start each week row on Sunday when weekStartsOn=0', () => {
+      render(
+        <EventCalendarProvider {...standaloneDefaults} defaultPreferences={{ weekStartsOn: 0 }}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const grid = screen.getByRole('grid');
+      const dataRows = within(grid)
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+
+      dataRows.forEach((row) => {
+        const cells = within(row).getAllByRole('gridcell');
+        expect(cells.length).to.equal(7);
+      });
+    });
+
+    it('should display correct ISO week numbers when weekStartsOn=1 and showWeekNumber=true', () => {
+      // May 2025 week 1 starts Mon Apr 28.
+      // ISO week containing May 1 (Thu) = week 18.
+      render(
+        <EventCalendarProvider
+          {...standaloneDefaults}
+          defaultPreferences={{ weekStartsOn: 1, showWeekNumber: true }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      // ISO week 18 of 2025: Mon Apr 28 – Sun May 4 (contains May 1).
+      // The week number label for that row must be "18".
+      const weekLabels = screen
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1')
+        .map((row) => {
+          const label = row.querySelector('[aria-hidden="true"]');
+          return label ? label.textContent : null;
+        })
+        .filter(Boolean);
+
+      expect(weekLabels[0]).to.equal('18');
     });
   });
 });

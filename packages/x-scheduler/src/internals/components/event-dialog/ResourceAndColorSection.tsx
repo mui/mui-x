@@ -9,16 +9,19 @@ import ListSubheader from '@mui/material/ListSubheader';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
-import { EVENT_COLORS } from '@mui/x-scheduler-headless/constants';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { Toggle } from '@base-ui/react/toggle';
+import { ToggleGroup } from '@base-ui/react/toggle-group';
+import { EVENT_COLORS } from '@mui/x-scheduler-internals/constants';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerOtherSelectors,
   schedulerResourceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
@@ -53,9 +56,9 @@ const ResourceMenuColorDot = styled('span', {
   },
 }));
 
-const ColorSelectionContainer = styled('div', {
+const ResourceMenuColorToggleGroup = styled(ToggleGroup, {
   name: 'MuiEventDialog',
-  slot: 'ColorSelectionContainer',
+  slot: 'ResourceMenuColorToggleGroup',
 })(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
@@ -63,9 +66,9 @@ const ColorSelectionContainer = styled('div', {
   borderRadius: theme.shape.borderRadius,
 }));
 
-const ResourceMenuColorRadioButton = styled('button', {
+const ResourceMenuColorToggle = styled(Toggle, {
   name: 'MuiEventDialog',
-  slot: 'ResourceMenuColorRadioButton',
+  slot: 'ResourceMenuColorToggle',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   width: 24,
   height: 24,
@@ -88,8 +91,9 @@ interface ResourceSelectProps {
   readOnly?: boolean;
   resourceId: string | null;
   onResourceChange: (value: SchedulerResourceId) => void;
-  onColorChange: (value: SchedulerEventColor) => void;
+  onColorChange: (value: SchedulerEventColor | null) => void;
   color: SchedulerEventColor | null;
+  error?: string;
 }
 
 interface ResourceSelectAdornmentProps {
@@ -103,6 +107,7 @@ interface ResourceOptionType {
   isGroupRoot: boolean;
   indentLevel: number;
   showDivider: boolean;
+  hidden?: boolean;
 }
 
 function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
@@ -126,10 +131,10 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
 }
 
 export default function ResourceAndColorSection(props: ResourceSelectProps) {
-  const { readOnly, resourceId, onResourceChange, onColorChange, color } = props;
+  const { readOnly, resourceId, onResourceChange, onColorChange, color, error } = props;
 
   // Context hooks
-  const { classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -137,13 +142,24 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   const resourceDepthLookup = useStore(store, schedulerResourceSelectors.resourceDepthLookup);
   const childrenIdLookup = useStore(store, schedulerResourceSelectors.childrenIdLookup);
   const eventDefaultColor = useStore(store, schedulerOtherSelectors.defaultEventColor);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     const hasNesting = resources.some(
       (resource) => (childrenIdLookup.get(resource.id)?.length ?? 0) > 0,
     );
 
+    const firstTopLevelIndex = resources.findIndex(
+      (resource) => (resourceDepthLookup.get(resource.id) ?? 0) === 0,
+    );
     return [
+      // The no-resource option must stay in the rendered options list so MUI Select's
+      // `value=""` keeps matching a MenuItem when an event has no resource yet — otherwise
+      // MUI logs an "out-of-range value" warning. It's hidden from the menu when
+      // `shouldEventRequireResource` is `true` so the user can't pick it.
       {
         label: localeText.labelNoResource,
         value: null,
@@ -151,17 +167,24 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
         isGroupRoot: false,
         indentLevel: 0,
         showDivider: false,
+        hidden: shouldEventRequireResource,
       },
-      ...resources.map((resource) => {
+      ...resources.map((resource, index) => {
         const depth = resourceDepthLookup.get(resource.id) ?? 0;
         const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
+        const isTopLevel = depth === 0;
+        // Skip the divider above the first top-level group when nothing precedes it visually
+        // (the no-resource option is hidden).
+        const isFirstTopLevel = index === firstTopLevelIndex;
+        const showDivider =
+          hasNesting && isTopLevel && (!isFirstTopLevel || !shouldEventRequireResource);
         return {
           label: resource.title,
           value: resource.id,
           eventColor: resource.eventColor ?? eventDefaultColor,
-          isGroupRoot: depth === 0 && hasChildren,
+          isGroupRoot: isTopLevel && hasChildren,
           indentLevel: Math.max(0, depth - 1),
-          showDivider: hasNesting && depth === 0,
+          showDivider,
         };
       }),
     ];
@@ -171,6 +194,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
     childrenIdLookup,
     localeText.labelNoResource,
     eventDefaultColor,
+    shouldEventRequireResource,
   ]);
 
   const resource = React.useMemo(
@@ -186,23 +210,37 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
     onResourceChange((value === NO_RESOURCE_VALUE ? null : value) as SchedulerResourceId);
   };
 
+  const errorId = `${schedulerId}-resource-error`;
+
   return (
     <React.Fragment>
-      <FormControl size="small" fullWidth>
-        <InputLabel id="resource-select-label">{localeText.resourceLabel}</InputLabel>
+      <FormControl size="small" fullWidth error={!!error}>
+        <InputLabel id={`${schedulerId}-resource-select-label`}>
+          {localeText.resourceLabel}
+        </InputLabel>
         <Select
-          labelId="resource-select-label"
+          labelId={`${schedulerId}-resource-select-label`}
           label={localeText.resourceLabel}
           value={resourceId ?? NO_RESOURCE_VALUE}
           displayEmpty
           onChange={handleChange}
           readOnly={readOnly}
+          aria-describedby={error ? errorId : undefined}
           startAdornment={
             <InputAdornment position="start">
               <ResourceSelectAdornment resource={resource} />
             </InputAdornment>
           }
-          renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
+          renderValue={() => {
+            if (resource) {
+              return resource.label;
+            }
+            // `resourceId == null` means the resource is unset, not invalid.
+            if (resourceId == null) {
+              return localeText.labelNoResource;
+            }
+            return localeText.labelInvalidResource;
+          }}
         >
           {resourcesOptions.flatMap((resourceOption) => {
             const items: React.ReactNode[] = [];
@@ -228,7 +266,12 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
                 value={resourceOption.value ?? NO_RESOURCE_VALUE}
                 aria-label={resourceOption.label}
                 className={classes.eventDialogResourceMenuItem}
-                style={{ '--resource-indent': resourceOption.indentLevel } as React.CSSProperties}
+                style={
+                  {
+                    '--resource-indent': resourceOption.indentLevel,
+                    ...(resourceOption.hidden && { display: 'none' }),
+                  } as React.CSSProperties
+                }
               >
                 <ListItemIcon>
                   <ResourceMenuColorDot
@@ -244,24 +287,34 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
             return items;
           })}
         </Select>
+        {error && (
+          <FormHelperText id={errorId} role="alert">
+            {error}
+          </FormHelperText>
+        )}
       </FormControl>
-      <ColorSelectionContainer role="radiogroup" aria-label={localeText.colorPickerLabel}>
+      <ResourceMenuColorToggleGroup
+        value={color ? [color] : []}
+        onValueChange={(values) => {
+          const next = values[values.length - 1] as SchedulerEventColor | undefined;
+          onColorChange(next ?? null);
+        }}
+        aria-label={localeText.colorPickerLabel}
+        disabled={readOnly}
+        className={classes.eventDialogResourceMenuColorToggleGroup}
+      >
         {EVENT_COLORS.map((colorOption) => (
-          <ResourceMenuColorRadioButton
+          <ResourceMenuColorToggle
             key={colorOption}
-            type="button"
-            role="radio"
-            aria-checked={color === colorOption}
-            disabled={readOnly}
-            onClick={() => onColorChange(colorOption)}
-            aria-label={`Select ${colorOption} as event color`}
+            value={colorOption}
+            aria-label={localeText.selectColorAriaLabel(colorOption)}
             data-palette={colorOption}
-            className={classes.eventDialogResourceMenuColorRadioButton}
+            className={classes.eventDialogResourceMenuColorToggle}
           >
             {color === colorOption && <CheckIcon fontSize="small" />}
-          </ResourceMenuColorRadioButton>
+          </ResourceMenuColorToggle>
         ))}
-      </ColorSelectionContainer>
+      </ResourceMenuColorToggleGroup>
     </React.Fragment>
   );
 }

@@ -63,6 +63,7 @@ export const useField = <
     sectionListRef: sectionListRefProp,
     onBlur,
     onClick,
+    onMouseDown,
     onFocus,
     onInput,
     onPaste,
@@ -163,13 +164,30 @@ export const useField = <
   });
 
   const handleRootBlur = useEventCallback((event: React.FocusEvent<HTMLDivElement>) => {
-    onBlur?.(event);
     rootProps.onBlur(event);
+    // Skip the user callback when focus is only moving to another element inside the field
+    // (e.g. the section that gains focus after the focusable root gives it up).
+    const next = event.relatedTarget;
+    if (domGetters.isReady() && next instanceof Node && domGetters.getRoot().contains(next)) {
+      return;
+    }
+    onBlur?.(event);
   });
 
   const handleRootFocus = useEventCallback((event: React.FocusEvent<HTMLDivElement>) => {
-    onFocus?.(event);
     rootProps.onFocus(event);
+    // Skip the user callback when focus is only arriving from another element inside the field
+    // (e.g. the focusable root receiving it before it is forwarded to a section, and the section
+    // focus event bubbling back up to the root).
+    const previous = event.relatedTarget;
+    if (
+      domGetters.isReady() &&
+      previous instanceof Node &&
+      domGetters.getRoot().contains(previous)
+    ) {
+      return;
+    }
+    onFocus?.(event);
   });
 
   const handleRootClick = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
@@ -180,6 +198,23 @@ export const useField = <
     }
     onClick?.(event);
     rootProps.onClick(event);
+  });
+
+  const handleRootMouseDown = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    // The `isDefaultPrevented` check skips mousedowns that have already been
+    // suppressed before this handler runs -- in particular, propagated events
+    // from the clear / open buttons whose own handlers `preventDefault`, and
+    // capture-phase parents that intentionally block field interactions.
+    // Userland `onMouseDown` calling `event.preventDefault()` does *not*
+    // suppress `rootProps.onMouseDown` here: the prevent fires *after* this
+    // check, and `rootProps.onMouseDown` is the section-selection mechanism
+    // for the field -- letting consumers disable it inline would leave the
+    // field unable to focus a section on click.
+    if (event.isDefaultPrevented()) {
+      return;
+    }
+    onMouseDown?.(event);
+    rootProps.onMouseDown(event);
   });
 
   const handleRootPaste = useEventCallback((event: React.ClipboardEvent<HTMLDivElement>) => {
@@ -285,6 +320,7 @@ Learn more about the field accessible DOM structure on the MUI documentation: ht
     ...rootProps,
     onBlur: handleRootBlur,
     onClick: handleRootClick,
+    onMouseDown: handleRootMouseDown,
     onFocus: handleRootFocus,
     onInput: handleRootInput,
     onPaste: handleRootPaste,

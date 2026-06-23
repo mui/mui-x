@@ -11,7 +11,7 @@ import {
   mockElementBounds,
   getResizeHandle,
 } from 'test/utils/scheduler';
-import { SchedulerResource } from '@mui/x-scheduler-headless/models';
+import { SchedulerResource } from '@mui/x-scheduler-internals/models';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
@@ -23,7 +23,7 @@ const resources: SchedulerResource[] = [engineering, design];
  */
 function getEventRow(resourceId: string): HTMLElement {
   const row = document.querySelector<HTMLElement>(
-    `.MuiEventTimeline-eventsSubGridRow[data-resource-id="${resourceId}"]`,
+    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
   );
   if (!row) {
     throw new Error(`Could not find event row for resource "${resourceId}"`);
@@ -36,7 +36,7 @@ function getEventRow(resourceId: string): HTMLElement {
  */
 function mockAllEventRowBounds() {
   const rows = document.querySelectorAll<HTMLElement>(
-    `.MuiEventTimeline-eventsSubGridRow[data-drop-target-for-element]`,
+    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
   );
   for (const row of rows) {
     mockElementBounds(row, { left: 0, width: 6720, height: 40 });
@@ -62,8 +62,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        view="days"
-        views={['days']}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -103,8 +103,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        view="days"
-        views={['days']}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -147,8 +147,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        view="days"
-        views={['days']}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -195,8 +195,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        view="days"
-        views={['days']}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -212,7 +212,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const sameRow = getEventRow(engineering.id);
 
     // Drag the start handle to an earlier position on the timeline.
-    // The "days" view shows 56 days in 6720px (≈5px per hour).
+    // The "dayAndMonth" preset shows 56 days in 6720px (≈5px per hour).
     // The event at 09:00 is at ~pixel 45. Use targetClientX=20 (~04:00).
     await act(async () => {
       simulateDragAndDrop({

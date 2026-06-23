@@ -15,8 +15,24 @@ interface LineExperimentalFeatures {
   enablePositionBasedPointerInteraction?: boolean;
 }
 
+interface ScatterExperimentalFeatures {
+  /**
+   * Enables automatic progressive (batched) rendering for scatter series.
+   *
+   * When enabled and the `renderer` prop is left unset, the chart switches to
+   * the `svg-progressive` renderer above an internal point-count threshold,
+   * painting points over several animation frames to keep the main thread
+   * responsive. When disabled, the unset `renderer` keeps the synchronous
+   * `svg-single` renderer. Setting `renderer` explicitly is unaffected.
+   *
+   * This behavior will become the default in the next major version.
+   */
+  progressiveRendering?: boolean;
+}
+
 export type ChartExperimentalFeatures<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  'line' extends SeriesType ? LineExperimentalFeatures : {};
+  ('line' extends SeriesType ? LineExperimentalFeatures : {}) &
+    ('scatter' extends SeriesType ? ScatterExperimentalFeatures : {});
 
 export interface UseChartExperimentalFeaturesParameters<
   SeriesType extends ChartSeriesType = ChartSeriesType,

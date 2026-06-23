@@ -2,9 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { SxProps, Theme } from '@mui/system';
 import IconButton from '@mui/material/IconButton';
 import { ScrollToBottomAffordance, type ScrollToBottomAffordanceProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatScrollToBottomAffordanceUtilityClasses,
   type ChatScrollToBottomAffordanceClasses,
@@ -14,6 +16,7 @@ const useThemeProps = createUseThemeProps('MuiChatScrollToBottomAffordance');
 
 export interface ChatScrollToBottomAffordanceProps extends ScrollToBottomAffordanceProps {
   className?: string;
+  sx?: SxProps<Theme>;
   classes?: Partial<ChatScrollToBottomAffordanceClasses>;
 }
 
@@ -47,7 +50,6 @@ const ChatScrollToBottomAffordanceStyled = styled(IconButton, {
 function DefaultScrollToBottomIcon() {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
@@ -63,7 +65,7 @@ const ChatScrollToBottomAffordance = React.forwardRef<
   ChatScrollToBottomAffordanceProps
 >(function ChatScrollToBottomAffordance(inProps, ref) {
   const props = useThemeProps({ props: inProps, name: 'MuiChatScrollToBottomAffordance' });
-  const { slots, slotProps, className, classes: classesProp, ...other } = props;
+  const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
   const classes = useChatScrollToBottomAffordanceUtilityClasses(classesProp);
 
   return (
@@ -77,17 +79,20 @@ const ChatScrollToBottomAffordance = React.forwardRef<
       }}
       slotProps={{
         ...slotProps,
-        root: {
-          size: 'small',
-          className: clsx(classes.root, className),
-          ...(slotProps?.root as object),
-        } as any,
+        root: mergeSlotProps(
+          {
+            size: 'small',
+            className: clsx(classes.root, className),
+            sx,
+          },
+          slotProps?.root,
+        ) as any,
       }}
     />
   );
 });
 
-ChatScrollToBottomAffordance.propTypes = {
+ChatScrollToBottomAffordance.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -97,6 +102,11 @@ ChatScrollToBottomAffordance.propTypes = {
   scrollBehavior: PropTypes.oneOf(['auto', 'instant', 'smooth']),
   slotProps: PropTypes.object,
   slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatScrollToBottomAffordance };

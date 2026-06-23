@@ -64,12 +64,11 @@ function LineHighlightElement(props: LineHighlightElementProps) {
   );
 }
 
-LineHighlightElement.propTypes = {
+LineHighlightElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   seriesId: PropTypes.string.isRequired,
   shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
     .isRequired,

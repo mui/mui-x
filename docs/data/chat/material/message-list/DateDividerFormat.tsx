@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -56,6 +56,7 @@ export default function DateDividerFormat() {
       initialActiveConversationId={conversation.id}
       initialConversations={[conversation]}
       initialMessages={messages}
+      features={{ dateDivider: true }}
       slotProps={{
         dateDivider: {
           formatDate: (date: Date) =>

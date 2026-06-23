@@ -87,7 +87,7 @@ See the linked pages for full options.
 ### Axes
 
 You can configure heatmap axes like other chart axes.
-See [Axis—Customization](/x/react-charts/axis/#axis-customization) for details.
+See [Axis customization](/x/react-charts/axis-customization/) for details.
 
 ### Tooltip
 
@@ -116,12 +116,7 @@ Use the `cell` slot to replace the default cell shape or add labels.
 
 {{"demo": "CustomItem.js"}}
 
-## WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
-
-:::info
-This feature is in preview.
-It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
+## WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 Heatmaps can have many cells, which can slow down rendering.
 Set the `renderer` prop to `'webgl'` for better performance with large datasets.

@@ -12,18 +12,18 @@ import type { ChatAdapter } from '@mui/x-chat/headless';
 import {
   createTextResponseChunks,
   createChunkStream,
-} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+} from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 import {
   demoLocaleText,
   demoSlotProps,
   palette,
   AttachmentPreviewList,
   DemoToolbarButton,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 const agent = demoUsers.agent;
 
@@ -97,12 +97,12 @@ function ComposerDemoBody() {
             <Message.Root
               messageId={id}
               slotProps={{
-                root: demoSlotProps.messageRoot,
+                root: demoSlotProps.message,
               }}
             >
               <Message.Avatar
                 slotProps={{
-                  avatar: demoSlotProps.messageAvatar,
+                  avatar: demoSlotProps.avatar,
                   image: demoSlotProps.messageAvatarImage,
                 }}
               />
@@ -156,7 +156,7 @@ function ComposerDemoBody() {
               />
               <Message.Meta
                 slotProps={{
-                  meta: demoSlotProps.messageMeta,
+                  meta: demoSlotProps.meta,
                 }}
               />
             </Message.Root>
@@ -165,7 +165,7 @@ function ComposerDemoBody() {
       />
       <Composer.Root
         slotProps={{
-          root: demoSlotProps.composerRoot,
+          root: demoSlotProps.composer,
         }}
       >
         <AttachmentPreviewList />
@@ -223,7 +223,7 @@ function ComposerDemoBody() {
           <Composer.SendButton
             data-variant="primary"
             slotProps={{
-              sendButton: demoSlotProps.composerSendButton,
+              sendButton: demoSlotProps.send,
             }}
           >
             Send message

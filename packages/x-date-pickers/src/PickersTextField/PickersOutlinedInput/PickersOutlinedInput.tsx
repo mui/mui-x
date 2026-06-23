@@ -46,16 +46,13 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
       borderStyle: 'solid',
       borderWidth: 2,
     },
+    [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
+      borderColor: (theme.vars || theme).palette.error.main,
+    },
     [`&.${pickersOutlinedInputClasses.disabled}`]: {
       [`& .${pickersOutlinedInputClasses.notchedOutline}`]: {
         borderColor: (theme.vars || theme).palette.action.disabled,
       },
-      '*': {
-        color: (theme.vars || theme).palette.action.disabled,
-      },
-    },
-    [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
-      borderColor: (theme.vars || theme).palette.error.main,
     },
     variants: Object.keys((theme.vars ?? theme).palette)
       // @ts-ignore
@@ -138,23 +135,29 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
         ...inSlots,
       }}
       slotProps={inSlotProps}
-      renderSuffix={(state) => (
-        <Outline
-          shrink={Boolean(notched || state.adornedStart || state.focused || state.filled)}
-          notched={Boolean(notched || state.adornedStart || state.focused || state.filled)}
-          className={classes.notchedOutline}
-          label={
-            label != null && label !== '' && muiFormControl?.required ? (
-              <React.Fragment>
-                {label}
-                &thinsp;{'*'}
-              </React.Fragment>
-            ) : (
-              label
-            )
-          }
-        />
-      )}
+      renderSuffix={(state) => {
+        const isNotched =
+          typeof notched !== 'undefined'
+            ? notched
+            : Boolean(state.adornedStart || state.focused || state.filled);
+        return (
+          <Outline
+            shrink={isNotched}
+            notched={isNotched}
+            className={classes.notchedOutline}
+            label={
+              label != null && label !== '' && muiFormControl?.required ? (
+                <React.Fragment>
+                  {label}
+                  &thinsp;{'*'}
+                </React.Fragment>
+              ) : (
+                label
+              )
+            }
+          />
+        );
+      }}
       label={label}
       classes={classes}
       ref={ref as any}
@@ -162,7 +165,7 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
   );
 });
 
-PickersOutlinedInput.propTypes = {
+PickersOutlinedInput.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -224,6 +227,7 @@ PickersOutlinedInput.propTypes = {
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,

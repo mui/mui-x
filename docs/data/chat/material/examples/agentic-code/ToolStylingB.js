@@ -7,7 +7,7 @@ import {
   randomId,
   splitText,
   syncConversationPreview,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/material/examples/shared/demoUtils';
 
 // ── Avatar helper ─────────────────────────────────────────────────────────────
 
@@ -555,6 +555,7 @@ export default function ToolStylingB() {
       activeConversationId={activeId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {
           setActiveId(nextId);

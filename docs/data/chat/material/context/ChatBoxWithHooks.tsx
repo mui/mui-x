@@ -4,19 +4,17 @@ import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import { ChatBox } from '@mui/x-chat';
 import { useChatStatus } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
 function StreamingBadge() {
   const { isStreaming } = useChatStatus();
-  return isStreaming ? (
-    <Chip label="Responding..." color="info" size="small" />
-  ) : null;
+  return isStreaming ? <Chip label="Responding…" color="info" size="small" /> : null;
 }
 
 export default function ChatBoxWithHooks() {

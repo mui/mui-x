@@ -8,16 +8,16 @@ import {
   MessageGroup,
   MessageList,
 } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 import {
   demoLocaleText,
   demoSlotProps,
   demoSurfaceStyles,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 const adapter = createEchoAdapter();
 
@@ -85,12 +85,12 @@ export default function MinimalUnstyledShell() {
                 <Message.Root
                   messageId={id}
                   slotProps={{
-                    root: demoSlotProps.messageRoot,
+                    root: demoSlotProps.message,
                   }}
                 >
                   <Message.Avatar
                     slotProps={{
-                      avatar: demoSlotProps.messageAvatar,
+                      avatar: demoSlotProps.avatar,
                       image: demoSlotProps.messageAvatarImage,
                     }}
                   />
@@ -101,7 +101,7 @@ export default function MinimalUnstyledShell() {
                   />
                   <Message.Meta
                     slotProps={{
-                      meta: demoSlotProps.messageMeta,
+                      meta: demoSlotProps.meta,
                     }}
                   />
                 </Message.Root>
@@ -110,7 +110,7 @@ export default function MinimalUnstyledShell() {
           />
           <Composer.Root
             slotProps={{
-              root: demoSlotProps.composerRoot,
+              root: demoSlotProps.composer,
             }}
           >
             <Composer.TextArea
@@ -124,7 +124,7 @@ export default function MinimalUnstyledShell() {
               <Composer.SendButton
                 data-variant="primary"
                 slotProps={{
-                  sendButton: demoSlotProps.composerSendButton,
+                  sendButton: demoSlotProps.send,
                 }}
               >
                 Send

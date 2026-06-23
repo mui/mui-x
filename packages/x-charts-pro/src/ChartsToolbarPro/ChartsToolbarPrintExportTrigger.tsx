@@ -59,7 +59,7 @@ const ChartsToolbarPrintExportTrigger = forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarPrintExportTrigger.propTypes = {
+ChartsToolbarPrintExportTrigger.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -82,6 +82,7 @@ ChartsToolbarPrintExportTrigger.propTypes = {
    * A function to customize the rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
   tabIndex: PropTypes.number,
 } as any;

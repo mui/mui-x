@@ -15,7 +15,7 @@ export default function DefaultVisibleDate() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="months"
+        defaultPreset="monthAndYear"
       />
     </div>
   );

@@ -39,6 +39,5 @@
   "muiName": "MuiChatScrollToBottomAffordance",
   "filename": "/packages/x-chat/src/ChatIndicators/ChatScrollToBottomAffordance.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/behavior/scrolling/\">Chat - Scrolling</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/scrolling/\">Chat - Scrolling</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li></ul>"
 }

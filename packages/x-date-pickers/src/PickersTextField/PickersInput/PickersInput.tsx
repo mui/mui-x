@@ -66,7 +66,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
             background: 'red',
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '""',
             position: 'absolute',
             right: 0,
@@ -91,7 +91,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
             borderBottom: `1px solid ${bottomLineColor}`,
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '"\\00a0"',
             position: 'absolute',
             right: 0,
@@ -181,7 +181,7 @@ const PickersInput = React.forwardRef(function PickersInput(
   );
 });
 
-PickersInput.propTypes = {
+PickersInput.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -243,6 +243,7 @@ PickersInput.propTypes = {
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,

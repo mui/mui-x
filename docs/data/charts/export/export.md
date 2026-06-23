@@ -107,6 +107,19 @@ If you don't want to manually add elements to the chart export, you can create a
 See [Exporting composed charts](#exporting-composed-charts) below for more information.
 :::
 
+### Hide elements from export
+
+Mark any element with the `data-hide-on-export` attribute to exclude it from image and print exports.
+The attribute works on any HTML or SVG element in the chart tree.
+
+{{"demo": "ExportChartHideOnExport.js"}}
+
+To hide an internal MUI X Charts component (such as the legend) that you do not render directly, forward the attribute through `slotProps`:
+
+```tsx
+<BarChartPro slotProps={{ legend: { 'data-hide-on-export': true } as any }} />
+```
+
 ## Copy styles
 
 The styles of the page the chart belongs to are copied to the export iframe by default.
@@ -154,5 +167,13 @@ If the format is not supported by the browser, `exportAsImage()` falls back to `
 
 For lossy formats such as `image/jpeg` and `image/webp`, the options object accepts the `quality` property which sets a numerical value between 0 and 1.
 The default is 0.9.
+
+You can also pass a `pixelRatio` to control the scale at which the chart is rasterized.
+Higher values produce sharper images at the cost of a larger file size.
+When omitted, the export uses the larger of `window.devicePixelRatio` and `2`, guaranteeing a minimum 2x resolution on standard-DPI displays without regressing higher-DPI exports.
+
+```tsx
+apiRef.current?.exportAsImage({ pixelRatio: 3 });
+```
 
 {{"demo": "ExportChartAsImage.js"}}

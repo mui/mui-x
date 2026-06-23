@@ -2,8 +2,9 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { iOSMediaQuery } from '@mui/x-internals/platform';
 import clsx from 'clsx';
-import { Virtualization } from '@mui/x-virtualizer';
+import { LayoutDataGrid, Virtualization } from '@mui/x-virtualizer';
 import {
   gridHasBottomFillerSelector,
   gridHasScrollXSelector,
@@ -70,6 +71,17 @@ const Scroller = styled('div', {
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
   },
+  // [iOS-scrollbar-swap]
+  // On iOS, virtual scrollbars do not show a thumb unless the user scrolls the element directly:
+  // https://github.com/mui/mui-x/issues/22386
+  // So keep this scroller's own native scrollbars and hide the ones in `GridVirtualScrollbar`
+  // instead to avoid a duplicate thumb.
+  [iOSMediaQuery]: {
+    scrollbarWidth: 'auto',
+    '&::-webkit-scrollbar': {
+      display: 'block',
+    },
+  },
 
   '@media print': {
     overflow: 'hidden',
@@ -91,11 +103,6 @@ const Viewport = styled('div', {
     top: 0,
     left: 0,
     overflow: 'hidden',
-
-    scrollbarWidth: 'none' /* Firefox */,
-    '&::-webkit-scrollbar': {
-      display: 'none' /* Safari and Chrome */,
-    },
   },
 });
 
@@ -129,23 +136,24 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
 
   const hasContentFiller = layoutMode === 'uncontrolled' && loadingOverlayVariant !== 'skeleton';
 
-  const {
-    getContainerProps,
-    getScrollerProps,
-    getScrollerContentProps,
-    getViewportProps,
-    getContentProps,
-    getPositionerProps,
-    getScrollbarVerticalProps,
-    getScrollbarHorizontalProps,
-    getRows,
-    getScrollAreaProps,
-    getContainerVerticalProps,
-  } = virtualizer.api.getters;
+  const containerProps = virtualizer.store.use(LayoutDataGrid.selectors.containerProps);
+  const scrollerProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollerProps);
+  const scrollerContentProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollerContentProps);
+  const viewportProps = virtualizer.store.use(LayoutDataGrid.selectors.viewportProps);
+  const contentProps = virtualizer.store.use(LayoutDataGrid.selectors.contentProps);
+  const positionerProps = virtualizer.store.use(LayoutDataGrid.selectors.positionerProps);
+  const scrollbarVerticalProps = virtualizer.store.use(
+    LayoutDataGrid.selectors.scrollbarVerticalProps,
+  );
+  const scrollbarHorizontalProps = virtualizer.store.use(
+    LayoutDataGrid.selectors.scrollbarHorizontalProps,
+  );
+  const scrollAreaProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollAreaProps);
+  const containerVerticalProps = virtualizer.store.use(
+    LayoutDataGrid.selectors.containerVerticalProps,
+  );
 
-  const rows = getRows(undefined, gridRowTreeSelector(apiRef));
-
-  const containerVerticalProps = getContainerVerticalProps();
+  const rows = virtualizer.api.getters.getRows(undefined, gridRowTreeSelector(apiRef));
 
   return (
     <Container
@@ -153,16 +161,16 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         classes.root,
         layoutMode === 'controlled' && gridClasses['virtualizer--layoutControlled'],
       )}
-      {...getContainerProps()}
+      {...containerProps}
       ownerState={ownerState}
     >
-      <GridScrollArea scrollDirection="left" {...getScrollAreaProps()} />
-      <GridScrollArea scrollDirection="right" {...getScrollAreaProps()} />
-      <GridScrollArea scrollDirection="up" {...getScrollAreaProps()} />
-      <GridScrollArea scrollDirection="down" {...getScrollAreaProps()} />
-      <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
-        <Content {...getScrollerContentProps()}>
-          <Viewport {...getViewportProps()}>
+      <GridScrollArea scrollDirection="left" {...scrollAreaProps} />
+      <GridScrollArea scrollDirection="right" {...scrollAreaProps} />
+      <GridScrollArea scrollDirection="up" {...scrollAreaProps} />
+      <GridScrollArea scrollDirection="down" {...scrollAreaProps} />
+      <Scroller className={classes.scroller} {...scrollerProps} ownerState={ownerState}>
+        <Content {...scrollerContentProps}>
+          <Viewport {...viewportProps}>
             <TopContainer {...containerVerticalProps}>
               {!rootProps.listView && <GridHeaders />}
               <rootProps.slots.pinnedRows position="top" />
@@ -177,14 +185,12 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
               </GridOverlayWrapper>
             )}
 
-            <RenderZone role="rowgroup" {...getPositionerProps()}>
+            <RenderZone role="rowgroup" {...positionerProps}>
               {rows}
               {<rootProps.slots.detailPanels />}
             </RenderZone>
 
-            {hasContentFiller && (
-              <div className={gridClasses.contentFiller} {...getContentProps()} />
-            )}
+            {hasContentFiller && <div className={gridClasses.contentFiller} {...contentProps} />}
 
             {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
 
@@ -199,7 +205,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           {rootProps.pinnedColumnsSectionSeparator?.endsWith('shadow') && (
             <ScrollShadows position="horizontal" />
           )}
-          <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
+          <Scrollbar position="horizontal" {...scrollbarHorizontalProps} />
         </React.Fragment>
       )}
       {hasScrollY && (
@@ -207,7 +213,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           {rootProps.pinnedRowsSectionSeparator?.endsWith('shadow') && (
             <ScrollShadows position="vertical" />
           )}
-          <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
+          <Scrollbar position="vertical" {...scrollbarVerticalProps} />
         </React.Fragment>
       )}
       {hasScrollX && hasScrollY && <ScrollbarCorner aria-hidden="true" />}

@@ -18,6 +18,5 @@
   "muiName": "MuiAnimatedArea",
   "filename": "/packages/x-charts/src/LineChart/AnimatedArea.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>"
 }

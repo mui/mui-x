@@ -179,6 +179,7 @@ export {
 export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,
+  extractRootForwardedProps,
   getActiveElement,
   onSpaceOrEnter,
   mergeSx,

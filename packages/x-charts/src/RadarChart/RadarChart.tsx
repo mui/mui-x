@@ -127,7 +127,7 @@ const RadarChart = React.forwardRef(function RadarChart(
   );
 });
 
-RadarChart.propTypes = {
+RadarChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -223,11 +223,11 @@ RadarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
   /**
@@ -338,7 +338,6 @@ RadarChart.propTypes = {
     labelGap: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
       PropTypes.arrayOf(
         PropTypes.shape({
           max: PropTypes.number,
@@ -346,6 +345,7 @@ RadarChart.propTypes = {
           name: PropTypes.string.isRequired,
         }),
       ),
+      PropTypes.arrayOf(PropTypes.string),
     ]).isRequired,
     startAngle: PropTypes.number,
   }).isRequired,
@@ -405,11 +405,11 @@ RadarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
   /**

@@ -1,11 +1,11 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
-import {
-  type CartesianSeriesType,
-  type CommonDefaultizedProps,
-  type CommonSeriesType,
-  type SeriesId,
-  type StackableSeriesType,
+import type {
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  SeriesId,
+  StackableSeriesType,
 } from './common';
 import { type DatasetElementType } from './config';
 import { type CurveType } from '../curve';
@@ -35,9 +35,10 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 
 export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
 
-export interface LineSeriesType
-  extends CommonSeriesType<number | null, 'line'>, CartesianSeriesType, StackableSeriesType {
-  type: 'line';
+/**
+ * @internal The series type shared by the line and radialLine charts
+ */
+export interface CommonLineSeriesType {
   /**
    * Data associated to the line.
    */
@@ -63,22 +64,19 @@ export interface LineSeriesType
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
-   * The type of curve to use for the line.
-   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
-   * @default 'monotoneX'
-   */
-  curve?: CurveType;
-  /**
    * If `true`, step curve starts and end at the first and last point.
    * By default the line is extended to fill the space before and after.
    */
   strictStepCurve?: boolean;
   /**
    * Define which items of the series should display a mark.
-   * If can be a boolean that applies to all items.
+   * It can be a boolean that applies to all items.
+   * It can be `'start'` or `'end'` to only display a mark on the first or last item. Such marks reuse
+   * the line highlight element, so they are replaced by the highlighted item when the pointer
+   * highlights a value.
    * Or a callback that gets some item properties and returns true if the item should be displayed.
    */
-  showMark?: boolean | ((params: ShowMarkParams) => boolean);
+  showMark?: boolean | 'start' | 'end' | ((params: ShowMarkParams) => boolean);
   /**
    * The shape of the mark elements.
    * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
@@ -97,11 +95,6 @@ export interface LineSeriesType
    */
   connectNulls?: boolean;
   /**
-   * Defines how stacked series handle negative values.
-   * @default 'none'
-   */
-  stackOffset?: StackOffsetType;
-  /**
    * The value of the line at the base of the series area.
    *
    * - `'min'` the area will fill the space **under** the line.
@@ -111,6 +104,22 @@ export interface LineSeriesType
    * @default 0
    */
   baseline?: number | 'min' | 'max';
+}
+
+export interface LineSeriesType
+  extends CommonSeriesType<'line'>, CartesianSeriesType, StackableSeriesType, CommonLineSeriesType {
+  type: 'line';
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'none'
+   */
+  stackOffset?: StackOffsetType;
+  /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   * @default 'monotoneX'
+   */
+  curve?: CurveType;
 }
 
 /**

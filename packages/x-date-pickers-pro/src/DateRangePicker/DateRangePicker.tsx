@@ -41,7 +41,7 @@ const DateRangePicker = React.forwardRef(function DateRangePicker(
   return <MobileDateRangePicker ref={ref} {...other} />;
 }) as DatePickerComponent;
 
-DateRangePicker.propTypes = {
+DateRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -276,7 +276,7 @@ DateRangePicker.propTypes = {
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
+   * @default () => "…"
    */
   renderLoading: PropTypes.func,
   /**

@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/3e5ffed8f8d4b9cd2eb2119f8b68089c0be12701/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/f5b3498d2fb7a68d366ab7db1f94434b32c4b94d/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -57,6 +57,7 @@ default-job: &default-job
     BASE_BRANCH: master
   working_directory: /tmp/mui
   executor: code-infra/mui-node
+  resource_class: medium.gen2
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -83,7 +84,7 @@ commands:
 jobs:
   test_unit:
     <<: *default-job
-    resource_class: large
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps:
@@ -93,10 +94,10 @@ jobs:
           command: |
             # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
             pnpm exec concurrently \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=1/4" \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=2/4" \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=3/4" \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=4/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=1/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=2/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=3/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=4/4" \
               || TEST_EXIT_CODE=$?
             pnpm exec vitest run --merge-reports
             # Reports merged, we can now exit with the stored code
@@ -107,8 +108,8 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.58.2-noble
-    resource_class: large
+      playwright-img-version: v1.60.0-noble
+    resource_class: xlarge.gen2
     steps:
       - checkout
       - install-deps:
@@ -148,10 +149,12 @@ jobs:
       - install-deps
       - code-infra/eslint
       - code-infra/stylelint
-      - code-infra/markdownlint
       - code-infra/valelint
   test_static:
     <<: *default-job
+    environment:
+      <<: *default-environment
+      NODE_OPTIONS: --max-old-space-size=3584
     steps:
       - checkout
       - install-deps
@@ -200,7 +203,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
-    resource_class: medium+
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps
@@ -219,14 +222,15 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.58.2-noble
+      playwright-img-version: v1.60.0-noble
+    resource_class: medium
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build
+          command: pnpm release:build --concurrency 4
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -234,7 +238,8 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.58.2-noble
+      playwright-img-version: v1.60.0-noble
+    resource_class: medium
     steps:
       - checkout
       - install-deps
@@ -245,45 +250,71 @@ jobs:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_package:
     <<: *default-job
+    resource_class: medium
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
-          name: Prepare danger on PRs
-          command: pnpm danger ci
-          environment:
-            DANGER_COMMAND: prepareBundleSizeReport
-      - run:
           name: Build packages
           command: pnpm release:build
       - code-infra/upload-size-snapshot
-      - run:
-          name: Run danger on PRs
-          command: pnpm danger ci --fail-on-errors
-          environment:
-            DANGER_COMMAND: reportBundleSize
   test_regressions:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.58.2-noble
+      playwright-img-version: v1.60.0-noble
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
-      - run:
-          name: Build packages
-          command: pnpm release:build
+          command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
       - run:
           name: Upload screenshots to Argos CI
           command: pnpm test:argos
+  test_charts_benchmark:
+    <<: *default-job
+    executor:
+      name: code-infra/mui-node-browser
+      playwright-img-version: v1.60.0-noble
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Skip when no charts changes
+          command: |
+            if [ "$CIRCLE_BRANCH" = "master" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
+              echo "On $CIRCLE_BRANCH; running benchmarks."
+              exit 0
+            fi
+            BASE="${BASE_BRANCH:-master}"
+            git fetch --no-tags --depth=50 origin "$BASE"
+            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
+              'packages/x-charts*' \
+              'test/performance-charts' \
+              '.circleci/config.yml')
+            if [ -n "$CHANGED" ]; then
+              echo "Relevant changes detected; running benchmarks:"
+              echo "$CHANGED"
+              exit 0
+            fi
+            echo "No changes to packages/x-charts*, test/performance-charts, or CircleCI config; halting job."
+            circleci-agent step halt
+      - install-deps
+      - run:
+          name: Build charts packages
+          command: pnpm --filter "@mui/x-charts-premium..." build
+      - run:
+          name: Run charts benchmarks
+          environment:
+            BENCHMARK_UPLOAD: 'true'
+          command: pnpm test:charts-benchmark
 
 workflows:
   pipeline:
@@ -305,6 +336,8 @@ workflows:
       - test_regressions:
           <<: *default-context
       - test_package:
+          <<: *default-context
+      - test_charts_benchmark:
           <<: *default-context
   e2e-website:
     when:

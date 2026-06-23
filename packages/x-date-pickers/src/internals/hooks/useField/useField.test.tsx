@@ -1,4 +1,11 @@
-import { getSectionVisibleValue, parseSelectedSections } from './useField.utils';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DEFAULT_LOCALE } from '@mui/x-date-pickers/locales';
+import {
+  getSectionVisibleValue,
+  getSectionsBoundaries,
+  parseSelectedSections,
+} from './useField.utils';
+import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 
 const COMMON_PROPERTIES = {
   startSeparator: '',
@@ -59,6 +66,84 @@ describe('useField utility functions', () => {
   describe('parseSelectedSections', () => {
     it('should return null when selectedSections is not available in sections', () => {
       expect(parseSelectedSections('year', [])).to.equal(null);
+    });
+  });
+
+  describe('getSectionsBoundaries', () => {
+    const adapter = new AdapterDateFns();
+    const boundaries = getSectionsBoundaries(adapter, DEFAULT_LOCALIZED_DIGITS, 'default');
+
+    it('should return correct boundaries for "h" format (hour 1-12)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'h', contentType: 'digit' });
+      expect(result.minimum).to.equal(1);
+      expect(result.maximum).to.equal(12);
+    });
+
+    it('should return correct boundaries for "hh" format (hour 1-12, padded)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'hh', contentType: 'digit' });
+      expect(result.minimum).to.equal(1);
+      expect(result.maximum).to.equal(12);
+    });
+
+    it('should return correct boundaries for "K" format (hour 0-11)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'K', contentType: 'digit' });
+      expect(result.minimum).to.equal(0);
+      expect(result.maximum).to.equal(11);
+    });
+
+    it('should return correct boundaries for "KK" format (hour 0-11, padded)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'KK', contentType: 'digit' });
+      expect(result.minimum).to.equal(0);
+      expect(result.maximum).to.equal(11);
+    });
+
+    it('should return correct boundaries for "H" format (hour 0-23)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'H', contentType: 'digit' });
+      expect(result.minimum).to.equal(0);
+      expect(result.maximum).to.equal(23);
+    });
+
+    it('should return correct boundaries for "HH" format (hour 0-23, padded)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'HH', contentType: 'digit' });
+      expect(result.minimum).to.equal(0);
+      expect(result.maximum).to.equal(23);
+    });
+
+    it('should return correct boundaries for "k" format (hour 1-24)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'k', contentType: 'digit' });
+      expect(result.minimum).to.equal(1);
+      expect(result.maximum).to.equal(24);
+    });
+
+    it('should return correct boundaries for "kk" format (hour 1-24, padded)', () => {
+      const result = boundaries.hours({ currentDate: null, format: 'kk', contentType: 'digit' });
+      expect(result.minimum).to.equal(1);
+      expect(result.maximum).to.equal(24);
+    });
+  });
+
+  describe('buildSectionsFromFormat – formatTokenMap section parsing', () => {
+    const adapter = new AdapterDateFns();
+    const BASE_PARAMS = {
+      adapter,
+      formatDensity: 'dense' as const,
+      isRtl: false,
+      shouldRespectLeadingZeros: false,
+      localeText: DEFAULT_LOCALE,
+      localizedDigits: DEFAULT_LOCALIZED_DIGITS,
+      date: null,
+    };
+
+    it('should parse "KK:mm aa" into [hours, minutes, meridiem] sections', () => {
+      const sections = buildSectionsFromFormat({ ...BASE_PARAMS, format: 'KK:mm aa' });
+      expect(sections.map((s) => s.type)).to.deep.equal(['hours', 'minutes', 'meridiem']);
+      expect(sections[0].format).to.equal('KK');
+    });
+
+    it('should parse "kk:mm" into [hours, minutes] sections', () => {
+      const sections = buildSectionsFromFormat({ ...BASE_PARAMS, format: 'kk:mm' });
+      expect(sections.map((s) => s.type)).to.deep.equal(['hours', 'minutes']);
+      expect(sections[0].format).to.equal('kk');
     });
   });
 });

@@ -102,6 +102,10 @@ const chatApiPages: MuiPage[] = [
     title: 'ChatMessageContent',
   },
   {
+    pathname: '/x/api/chat/chat-message-error',
+    title: 'ChatMessageError',
+  },
+  {
     pathname: '/x/api/chat/chat-message-group',
     title: 'ChatMessageGroup',
   },
@@ -140,6 +144,10 @@ const chatApiPages: MuiPage[] = [
   {
     pathname: '/x/api/chat/chat-scroll-to-bottom-affordance',
     title: 'ChatScrollToBottomAffordance',
+  },
+  {
+    pathname: '/x/api/chat/chat-streaming-indicator',
+    title: 'ChatStreamingIndicator',
   },
   {
     pathname: '/x/api/chat/chat-suggestions',
@@ -266,6 +274,10 @@ const chatApiPages: MuiPage[] = [
     title: 'MessageContent',
   },
   {
+    pathname: '/x/api/chat/message-error',
+    title: 'MessageError',
+  },
+  {
     pathname: '/x/api/chat/message-group',
     title: 'MessageGroup',
   },
@@ -300,6 +312,10 @@ const chatApiPages: MuiPage[] = [
   {
     pathname: '/x/api/chat/source-url-part',
     title: 'SourceUrlPart',
+  },
+  {
+    pathname: '/x/api/chat/streaming-indicator',
+    title: 'StreamingIndicator',
   },
   {
     pathname: '/x/api/chat/suggestion-item',

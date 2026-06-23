@@ -14,6 +14,11 @@ import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
+// Max time between hasScrollY flips that still counts as the same render
+// chain. Feedback loops (#20539) flip within one browser frame; user-paced
+// resize (#22510) flips are separated by ResizeObserver ticks + resizeThrottleMs.
+const OSCILLATION_FLIP_WINDOW_MS = 100;
+
 export type DimensionsParams = {
   rowHeight: number;
   columnsTotalWidth?: number;
@@ -92,19 +97,56 @@ export namespace Dimensions {
 }
 
 function initializeState(params: ParamsWithDefaults): Dimensions.State {
+  const { rowCount, rows, getRowHeight, dimensions: dimensionsParams } = params;
+  const {
+    columnsTotalWidth,
+    rowHeight,
+    autoHeight,
+    minimalContentHeight,
+    topPinnedHeight,
+    bottomPinnedHeight,
+  } = dimensionsParams;
+
+  // Calculate the initial content height and row positions so the
+  // initial render gets the correct size.
+  const positions: number[] = [];
+  let currentPageTotalHeight = 0;
+  if (getRowHeight && rows.length > 0) {
+    for (let i = 0; i < rows.length; i += 1) {
+      positions.push(currentPageTotalHeight);
+      const height = getRowHeight(rows[i]);
+      currentPageTotalHeight += typeof height === 'number' ? height : rowHeight;
+    }
+  } else {
+    for (let i = 0; i < rowCount; i += 1) {
+      positions.push(i * rowHeight);
+    }
+    currentPageTotalHeight = rowCount * rowHeight;
+  }
+
+  // Reflect the pinned zone sizes in the container heights at initialization, mirroring
+  // `updateDimensions`. The pinned rows' measured height is still 0 in `rowsMeta`
+  // below (pinned rows are measured later), so each container height is just its static
+  // pinned size.
+  const topContainerHeight = topPinnedHeight;
+  const bottomContainerHeight = bottomPinnedHeight;
+
   const dimensions = {
     ...EMPTY_DIMENSIONS,
-    ...params.dimensions,
-    autoHeight: params.dimensions.autoHeight,
-    minimalContentHeight: params.dimensions.minimalContentHeight,
+    ...dimensionsParams,
+    autoHeight,
+    minimalContentHeight,
+    topContainerHeight,
+    bottomContainerHeight,
+    contentSize: {
+      width: columnsTotalWidth,
+      height: roundToDecimalPlaces(currentPageTotalHeight, 1),
+    },
   };
 
-  const { rowCount } = params;
-  const { rowHeight } = dimensions;
-
   const rowsMeta = {
-    currentPageTotalHeight: rowCount * rowHeight,
-    positions: Array.from({ length: rowCount }, (_, i) => i * rowHeight),
+    currentPageTotalHeight,
+    positions,
     pinnedTopRowsTotalHeight: 0,
     pinnedBottomRowsTotalHeight: 0,
   };
@@ -122,15 +164,18 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
-  // Vertical scrollbar oscillation detector.
-  // Counts consecutive hasScrollY flips that happen with no row-height change.
-  // After 2 flips it is certainly a layout feedback loop, so every further flip
-  // is forced to false (no scrollbar). The counter resets when row heights change.
+  // Vertical scrollbar oscillation detector. Counts consecutive hasScrollY
+  // flips with no row-height change. After 2 flips within
+  // OSCILLATION_FLIP_WINDOW_MS it is a layout feedback loop, so hasScrollY is
+  // forced off. The counter resets on row-height changes or when the previous
+  // flip is older than the window (user-paced resize, not a loop).
   // Only vertical scrollbar can oscillate because column widths are never 'auto'.
   // https://github.com/mui/mui-x/issues/20539
+  // https://github.com/mui/mui-x/issues/22510
   const scrollYOscillation = React.useRef({
     counter: 0,
     heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
+    lastFlipTimestamp: 0,
   });
 
   const {
@@ -162,7 +207,18 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
       // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
       // https://github.com/mui/mui-x/issues/15721
-      const scrollbarSize = measureScrollbarSize(containerNode, params.dimensions.scrollbarSize);
+      // Prefer measuring on a virtual-scrollbar widget when the layout exposes
+      // one, because its `scrollbar-width` / `::-webkit-scrollbar` styling may
+      // differ from the rest of the document and is what actually drives the
+      // size we care about for layout math.
+      const scrollbarMeasurementNode =
+        layout.refs.scrollbarVertical?.current ??
+        layout.refs.scrollbarHorizontal?.current ??
+        containerNode;
+      const scrollbarSize = measureScrollbarSize(
+        scrollbarMeasurementNode,
+        params.dimensions.scrollbarSize,
+      );
 
       const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
       const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
@@ -220,11 +276,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           }
         }
 
-        // Detect vertical scrollbar oscillation.
-        // Track consecutive hasScrollY flips with no row-height change.
-        // Once confirmed (≥ 2 flips), force hasScrollY off — the scrollbar is
-        // not genuinely needed, it is a layout feedback loop caused by stale
-        // rootSize or the horizontal scrollbar's height cascading.
+        // Detect vertical scrollbar oscillation — caused by stale rootSize or
+        // the horizontal scrollbar's height cascading. See scrollYOscillation.
         {
           const osc = scrollYOscillation.current;
           const heightsChanged =
@@ -242,6 +295,12 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           }
 
           if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
+            // performance.now is monotonic; Date.now can jump (NTP, clock change).
+            const now = performance.now();
+            if (now - osc.lastFlipTimestamp > OSCILLATION_FLIP_WINDOW_MS) {
+              osc.counter = 0;
+            }
+            osc.lastFlipTimestamp = now;
             if (!heightsChanged) {
               osc.counter += 1;
             }
@@ -312,6 +371,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     [
       store,
       layout.refs.container,
+      layout.refs.scrollbarHorizontal,
+      layout.refs.scrollbarVertical,
       params.dimensions.scrollbarSize,
       params.dimensions.autoHeight,
       params.dimensions.minimalContentHeight,
@@ -645,12 +706,39 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
     return cachedSize;
   }
 
+  const htmlElement = element as HTMLElement;
+
+  // First, try measuring `element` directly. When `element` is a scroll widget
+  // that already has overflowing content (the typical case for the timeline's
+  // virtual scrollbars), its rendered scrollbar reflects whatever
+  // `scrollbar-width` / `::-webkit-scrollbar` styling is applied to *this*
+  // element, which is exactly what we need.
+  const directSize = Math.max(
+    htmlElement.offsetWidth - htmlElement.clientWidth,
+    htmlElement.offsetHeight - htmlElement.clientHeight,
+  );
+  if (directSize > 0) {
+    scrollbarSizeCache.set(element, directSize);
+    return directSize;
+  }
+
+  // Fall back to a probe div appended to `element`. `scrollbar-width` is not
+  // inherited, so copy it from the target element's computed style; otherwise
+  // a parent that opts into `scrollbar-width: thin` would still be measured
+  // with default scrollbar size.
   const doc = ownerDocument(element);
+  const view = doc.defaultView;
   const scrollDiv = doc.createElement('div');
   scrollDiv.style.width = '99px';
   scrollDiv.style.height = '99px';
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.overflow = 'scroll';
+  if (view) {
+    const computed = view.getComputedStyle(htmlElement);
+    if (computed.scrollbarWidth) {
+      scrollDiv.style.scrollbarWidth = computed.scrollbarWidth;
+    }
+  }
   scrollDiv.className = 'scrollDiv';
   element.appendChild(scrollDiv);
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;

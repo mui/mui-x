@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -41,7 +41,9 @@ export default function SlotBasicReplacement() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      slots={{ messageAvatar: CustomAvatar }}
+      slots={{
+        messageAvatar: CustomAvatar,
+      }}
       sx={{
         height: 500,
         border: '1px solid',

@@ -13,18 +13,18 @@ import {
   cloneConversations,
   cloneThreadMap,
   syncConversationPreview,
-} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+} from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,
   inboxConversations,
   inboxThreads,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 import {
   demoLocaleText,
   demoSlotProps,
   DemoToolbarButton,
   demoSurfaceStyles,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 export default function TwoPaneInbox() {
   const [activeConversationId, setActiveConversationId] = React.useState('triage');
@@ -156,12 +156,12 @@ export default function TwoPaneInbox() {
                 <Message.Root
                   messageId={id}
                   slotProps={{
-                    root: demoSlotProps.messageRoot,
+                    root: demoSlotProps.message,
                   }}
                 >
                   <Message.Avatar
                     slotProps={{
-                      avatar: demoSlotProps.messageAvatar,
+                      avatar: demoSlotProps.avatar,
                       image: demoSlotProps.messageAvatarImage,
                     }}
                   />
@@ -172,7 +172,7 @@ export default function TwoPaneInbox() {
                   />
                   <Message.Meta
                     slotProps={{
-                      meta: demoSlotProps.messageMeta,
+                      meta: demoSlotProps.meta,
                     }}
                   />
                 </Message.Root>
@@ -181,7 +181,7 @@ export default function TwoPaneInbox() {
           />
           <Composer.Root
             slotProps={{
-              root: demoSlotProps.composerRoot,
+              root: demoSlotProps.composer,
             }}
           >
             <Composer.TextArea
@@ -195,7 +195,7 @@ export default function TwoPaneInbox() {
               <Composer.SendButton
                 data-variant="primary"
                 slotProps={{
-                  sendButton: demoSlotProps.composerSendButton,
+                  sendButton: demoSlotProps.send,
                 }}
               >
                 Send reply

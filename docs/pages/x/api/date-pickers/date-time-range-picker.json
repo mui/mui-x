@@ -135,7 +135,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => \"...\"",
+      "default": "() => \"…\"",
       "signature": {
         "type": "function() => ReactNode",
         "describedArgs": [],
@@ -390,12 +390,11 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiDateTimeRangePicker",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateTimeRangePicker/DateTimeRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>"
 }

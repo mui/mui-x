@@ -58,6 +58,7 @@ describe('<AdapterDateFnsJalali />', () => {
       describe(`test with the "${localeKey}" locale`, () => {
         const { render, adapter } = createPickerRenderer({
           adapterName: 'date-fns-jalali',
+          Adapter: AdapterDateFnsJalali,
           locale: localeObject,
         });
 

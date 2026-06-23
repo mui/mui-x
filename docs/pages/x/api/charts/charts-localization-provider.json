@@ -16,6 +16,5 @@
   "muiName": "MuiChartsLocalizationProvider",
   "filename": "/packages/x-charts/src/ChartsLocalizationProvider/ChartsLocalizationProvider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/localization/\">Charts - Localization</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/localization/\">Charts - Localization</a></li></ul>"
 }

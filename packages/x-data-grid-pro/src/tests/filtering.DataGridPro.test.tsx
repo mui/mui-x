@@ -422,8 +422,8 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
-    expect(screen.queryByRole('button', { name: 'Remove all' })).not.to.equal(null);
+    expect(screen.queryByRole('button', { name: /Add filter/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /Remove all/i })).not.to.equal(null);
   });
 
   it('should hide `Remove all` in filter panel when `disableRemoveAllButton` is `true`', () => {
@@ -442,8 +442,8 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(screen.queryByRole('button', { name: 'Add filter' })).not.to.equal(null);
-    expect(screen.queryByRole('button', { name: 'Remove all' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /Add filter/i })).not.to.equal(null);
+    expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
   });
 
   it('should allow multiple filter and changing the logicOperator', () => {
@@ -585,7 +585,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(onFilterModelChange.callCount).to.equal(0);
-    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: /Add filter/i }));
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
@@ -601,7 +601,7 @@ describe('<DataGridPro /> - Filter', () => {
     );
     apiRef.current?.subscribeEvent('filterModelChange', listener);
     expect(listener.callCount).to.equal(0);
-    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: /Add filter/i }));
     expect(listener.callCount).to.equal(1);
     expect(listener.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
@@ -1392,6 +1392,246 @@ describe('<DataGridPro /> - Filter', () => {
       expect(screen.queryByRole('button', { name: /Remove all/i })).not.to.equal(null);
       setProps({ filterModel: newModel });
       expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
+    });
+  });
+
+  describe('column type: multiSelect', () => {
+    function TestCaseMultiSelect(props: Partial<DataGridProProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={[
+              { id: 1, tags: ['React', 'TypeScript'] },
+              { id: 2, tags: ['Vue', 'JavaScript'] },
+              { id: 3, tags: ['React', 'JavaScript'] },
+              { id: 4, tags: [] },
+              { id: 5, tags: null },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 200,
+                valueOptions: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'],
+              },
+            ]}
+            autoHeight={isJSDOM}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    describe('filtering operators', () => {
+      it('should filter with operator "contains"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: ['React'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
+      });
+
+      it('should filter with operator "contains" with multiple values (OR semantics)', () => {
+        // contains [A, B] matches rows whose array contains A OR B (not AND).
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: ['React', 'Vue'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+        ]);
+      });
+
+      it('should filter with operator "contains" with empty array', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: [] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+          '',
+          '',
+        ]);
+      });
+
+      it('should filter with operator "contains" and object valueOptions', () => {
+        render(
+          <TestCaseMultiSelect
+            rows={[
+              { id: 1, tags: ['fe', 'be'] },
+              { id: 2, tags: ['be'] },
+              { id: 3, tags: [] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 250,
+                valueOptions: [
+                  { value: 'fe', label: 'Frontend' },
+                  { value: 'be', label: 'Backend' },
+                ],
+              },
+            ]}
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: ['fe'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['FrontendBackend']);
+      });
+
+      it('should filter with operator "doesNotContain"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'doesNotContain', value: ['React'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['VueJavaScript', '', '']);
+      });
+
+      it('should filter with operator "doesNotContain" with multiple values', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'doesNotContain', value: ['React', 'Vue'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['', '']);
+      });
+
+      it('should filter with operator "isEmpty"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'isEmpty' }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['', '']);
+      });
+
+      it('should filter with operator "isNotEmpty"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'isNotEmpty' }],
+            }}
+          />,
+        );
+        // Chips render without separator in text content
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+        ]);
+      });
+    });
+
+    it('should quick filter by formatted value', () => {
+      render(
+        <TestCaseMultiSelect
+          filterModel={{
+            items: [],
+            quickFilterValues: ['React'],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
+    });
+
+    it('should reorder chips so the matched filter value comes first', () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['React', 'TypeScript', 'JavaScript'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              width: 400,
+              valueOptions: ['React', 'TypeScript', 'JavaScript'],
+            },
+          ]}
+          getRowHeight={() => 'auto'}
+          filterModel={{
+            items: [{ field: 'tags', operator: 'contains', value: ['JavaScript'] }],
+          }}
+        />,
+      );
+      const chips = document.querySelectorAll(`.${gridClasses.multiSelectCellChip}`);
+      expect(chips[0]).to.have.text('JavaScript');
+    });
+
+    describe('header filter', () => {
+      it('should apply OR-semantics multi-value contains filter when selecting two options', async () => {
+        const { user } = render(<TestCaseMultiSelect headerFilters />);
+        const filterCell = getColumnHeaderCell(0, 1);
+        const select = within(filterCell).getByRole('combobox');
+        await user.click(select);
+
+        const listbox = await screen.findByRole('listbox');
+        await user.click(within(listbox).getByRole('option', { name: 'React' }));
+        await user.click(within(listbox).getByRole('option', { name: 'Vue' }));
+        await user.keyboard('{Escape}');
+
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'ReactTypeScript',
+            'VueJavaScript',
+            'ReactJavaScript',
+          ]);
+        });
+      });
+
+      it('should join object option labels in renderValue', async () => {
+        const { user } = render(
+          <TestCaseMultiSelect
+            rows={[{ id: 1, tags: ['fe', 'be'] }]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 250,
+                valueOptions: [
+                  { value: 'fe', label: 'Frontend' },
+                  { value: 'be', label: 'Backend' },
+                ],
+              },
+            ]}
+            headerFilters
+          />,
+        );
+        const filterCell = getColumnHeaderCell(0, 1);
+        const select = within(filterCell).getByRole('combobox');
+        await user.click(select);
+
+        const listbox = await screen.findByRole('listbox');
+        await user.click(within(listbox).getByRole('option', { name: 'Frontend' }));
+        await user.click(within(listbox).getByRole('option', { name: 'Backend' }));
+        await user.keyboard('{Escape}');
+
+        await waitFor(() => {
+          expect(select.textContent).to.equal('Frontend, Backend');
+        });
+      });
     });
   });
 });

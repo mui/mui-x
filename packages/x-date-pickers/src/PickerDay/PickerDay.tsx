@@ -277,7 +277,7 @@ const PickerDayRaw = React.forwardRef(function PickerDay(
   );
 });
 
-PickerDayRaw.propTypes = {
+PickerDayRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -482,6 +482,13 @@ PickerDayRaw.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The HTML [`type`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#type)
+   * attribute applied to `button` and `a` elements.
+   * Ignored when rendering non-native buttons.
+   * @default 'button'
+   */
+  type: PropTypes.string,
 } as any;
 
 /**

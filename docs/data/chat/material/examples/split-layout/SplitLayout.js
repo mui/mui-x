@@ -9,24 +9,19 @@ import {
   ChatComposerSendButton,
   ChatComposerTextArea,
   ChatComposerToolbar,
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useMessageIds, ChatRoot } from '@mui/x-chat/headless';
+import { ChatRoot } from '@mui/x-chat/headless';
 
 import {
   createChunkStream,
   createTextResponseChunks,
   randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const CONVERSATION_ID = 'split-conv';
 
@@ -72,7 +67,6 @@ const initialMessages = [
 function SendIcon() {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
@@ -83,25 +77,11 @@ function SendIcon() {
   );
 }
 
-// Left column — message display. Must be inside ChatRoot to call useMessageIds().
+// Left column — message display, sourced from the shared ChatRoot context.
 function MessagePane() {
-  const messageIds = useMessageIds();
-
-  const renderItem = React.useCallback(
-    (params) => (
-      <ChatMessageGroup key={params.id} messageId={params.id}>
-        <ChatMessage messageId={params.id}>
-          <ChatMessageAvatar />
-          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
-        </ChatMessage>
-      </ChatMessageGroup>
-    ),
-    [],
-  );
-
   return (
     <ChatConversation sx={{ borderRight: '1px solid', borderColor: 'divider' }}>
-      <ChatMessageList renderItem={renderItem} items={messageIds} />
+      <ChatMessageList />
     </ChatConversation>
   );
 }

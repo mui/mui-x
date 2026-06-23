@@ -1,4 +1,5 @@
-import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
+import { expectFieldValue } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
@@ -13,8 +14,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     view.setProps({ value: adapter.date('2019-01-01') });
     expectFieldValue(view.getSectionsContainer(), 'Escaped 2019');
-
-    view.unmount();
   });
 
   it('should support escaped characters between sections separator', () => {
@@ -28,8 +27,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     view.setProps({ value: adapter.date('2019-01-01') });
     expectFieldValue(view.getSectionsContainer(), 'January Escaped 2019');
-
-    view.unmount();
   });
 
   // If your start character and end character are equal
@@ -45,8 +42,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     view.setProps({ value: adapter.date('2019-01-01') });
     expectFieldValue(view.getSectionsContainer(), 'January Escaped [ 2019');
-
-    view.unmount();
   });
 
   it('should support several escaped parts', () => {
@@ -60,8 +55,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     view.setProps({ value: adapter.date('2019-01-01') });
     expectFieldValue(view.getSectionsContainer(), 'Escaped January Escaped 2019');
-
-    view.unmount();
   });
 
   it('should support format with only escaped parts', () => {
@@ -72,8 +65,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     });
 
     expectFieldValue(view.getSectionsContainer(), 'Escaped Escaped');
-
-    view.unmount();
   });
 
   it('should support format without separators', () => {
@@ -94,8 +85,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     view.setProps({ value: adapter.date('2019-01-01') });
     expectFieldValue(view.getSectionsContainer(), '01 / 01 / 2019');
-
-    view.unmount();
   });
 
   it('should add spaces around `.` when `formatDensity = "spacious"`', () => {
@@ -109,8 +98,6 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     view.setProps({ value: adapter.date('2019-01-01') });
     expectFieldValue(view.getSectionsContainer(), '01 . 01 . 2019');
-
-    view.unmount();
   });
 
   it('should add spaces around `-` when `formatDensity = "spacious"`', () => {
@@ -124,7 +111,5 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     view.setProps({ value: adapter.date('2019-01-01') });
     expectFieldValue(view.getSectionsContainer(), '01 - 01 - 2019');
-
-    view.unmount();
   });
 });

@@ -83,7 +83,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker(
   return renderPicker();
 }) as DesktopDatePickerComponent;
 
-DesktopDatePicker.propTypes = {
+DesktopDatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -302,7 +302,7 @@ DesktopDatePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

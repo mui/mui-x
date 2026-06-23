@@ -63,7 +63,8 @@ export function useMarkPlotData(
           hidden,
         } = series[seriesId];
 
-        if (!showMark) {
+        // `'start'` and `'end'` marks are rendered by the `LineHighlightPlot` using the highlight element.
+        if (!showMark || showMark === 'start' || showMark === 'end') {
           continue;
         }
 
@@ -77,6 +78,8 @@ export function useMarkPlotData(
 
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
+            // TODO: fix mui/no-guarded-throw
+            // eslint-disable-next-line mui/no-guarded-throw
             throw new Error(
               `MUI X Charts: ${
                 xAxisId === DEFAULT_X_AXIS_KEY

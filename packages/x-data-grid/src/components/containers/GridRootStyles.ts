@@ -1,6 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type { CSSInterpolation } from '@mui/system';
-import { styled } from '@mui/material/styles';
+import { styled, css } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c, gridClassesOverrides } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';
@@ -41,14 +41,18 @@ export const GridRootStyles = styled('div', {
     // Root overrides
     const overrides = [styles.root];
     gridClassesOverrides.root.forEach((key) => {
-      overrides.push({ [`&.${c[key]}`]: styles[key] });
+      if (styles[key] !== undefined) {
+        overrides.push({ [`&.${c[key]}`]: styles[key] });
+      }
     });
 
     // Child element overrides
     // - Only declare overrides here for class names that are not applied to `styled` components.
     // - For `styled` components, declare overrides in the component itself.
     gridClassesOverrides.children.forEach((key) => {
-      overrides.push({ [`& .${c[key]}`]: styles[key] });
+      if (styles[key] !== undefined) {
+        overrides.push({ [`& .${c[key]}`]: styles[key] });
+      }
     });
     return overrides;
   },
@@ -184,13 +188,23 @@ export const GridRootStyles = styled('div', {
     minHeight: 0,
     flexDirection: 'column',
     overflow: 'hidden',
-    overflowAnchor: 'none', // Keep the same scrolling position
     transform: 'translate(0, 0)', // Create a stacking context to keep scrollbars from showing on top
 
-    [`.${c.main} > *:first-child${ignoreSsrWarning}`]: {
-      borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
-      borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
+    [`& .${c.virtualScroller}`]: {
+      overflowAnchor: 'none', // Keep the same scrolling position
     },
+
+    // Use `css` tagged template so the ignore-comment remains a sibling of the
+    // `:first-child` rule in the stylis AST. Previously, the comment was embedded
+    // in the object-key selector, which got separated from the rule during
+    // pre-serialization when `styleOverrides` were applied, re-triggering Emotion's
+    // unsafe-selector SSR warning. https://github.com/emotion-js/emotion/issues/1105
+    [`.${c.main}`]: css`
+      & > *:first-child ${ignoreSsrWarning} {
+        border-top-left-radius: var(--unstable_DataGrid-radius);
+        border-top-right-radius: var(--unstable_DataGrid-radius);
+      }
+    `,
     [`&.${c.autoHeight}`]: {
       height: 'auto',
     },
@@ -219,6 +233,16 @@ export const GridRootStyles = styled('div', {
       [`& .${c['columnHeader--filter']}`]: {
         flex: 'none !important',
         width: 'unset !important',
+      },
+      [`& .${c.multiSelectCell}`]: {
+        width: 'max-content',
+        overflow: 'visible',
+      },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
       },
     },
     [`&.${c.withSidePanel}`]: {
@@ -576,6 +600,25 @@ export const GridRootStyles = styled('div', {
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
       whiteSpace: 'initial',
       lineHeight: 'inherit',
+    },
+    [`& .${c['row--dynamicHeight']}`]: {
+      [`& .${c.multiSelectCell}, .${c.editMultiSelectCell}`]: {
+        flexWrap: 'wrap',
+      },
+    },
+    [`& .${c.cell}[aria-rowspan]:not([aria-rowspan="1"])`]: {
+      [`& .${c.multiSelectCell}`]: {
+        alignItems: 'flex-start',
+        alignContent: 'flex-start',
+        flexWrap: 'wrap',
+        paddingTop: 8,
+      },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
+      },
     },
     [`& .${c.cellEmpty}`]: {
       flex: 1,

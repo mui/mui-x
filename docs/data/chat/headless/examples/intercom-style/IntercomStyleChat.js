@@ -11,7 +11,7 @@ import {
 import {
   createEchoAdapter,
   formatMessageTime,
-} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+} from 'docs/data/chat/headless/examples/shared/demoUtils';
 
 // ---------------------------------------------------------------------------
 // Intercom-style brand tokens
@@ -446,7 +446,7 @@ export default function IntercomStyleChat() {
       <Composer.Root slots={{ root: IntercomComposerRoot }}>
         <Composer.TextArea
           aria-label="Message"
-          placeholder="Message..."
+          placeholder="Message…"
           slots={{ input: IntercomTextArea }}
         />
         <div

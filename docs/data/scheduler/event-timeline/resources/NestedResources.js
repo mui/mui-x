@@ -16,7 +16,7 @@ export default function NestedResources() {
         onEventsChange={setEvents}
         defaultVisibleDate={defaultVisibleDate}
         resources={resources}
-        defaultView="weeks"
+        defaultPreset="dayAndWeek"
       />
     </div>
   );

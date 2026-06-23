@@ -34,7 +34,7 @@ See the [Dataset](/x/react-charts/dataset/) page for more details.
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) for details.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
 ### Border radius
 
@@ -93,6 +93,15 @@ Animation works similarly to bar charts.
 See [Bars—Animation](/x/react-charts/bars/#animation) for details.
 
 {{"demo": "RangeBarAnimation.js"}}
+
+## Performance
+
+For larger datasets, `BarChartPremium` supports a WebGL renderer that draws all range bars from a single `<canvas>` element.
+Set the `renderer` prop to `"webgl"` to enable it.
+
+The same trade-offs as the bar chart [WebGL renderer](/x/react-charts/bars/#webgl-renderer) apply.
+
+{{"demo": "WebGLRangeBars.js"}}
 
 ## Composition
 

@@ -1,0 +1,11 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "area": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the area element" },
+    "areaPlot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AreaPlot root element"
+    }
+  }
+}

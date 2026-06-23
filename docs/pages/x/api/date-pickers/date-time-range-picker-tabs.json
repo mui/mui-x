@@ -46,6 +46,5 @@
   "muiName": "MuiDateTimeRangePickerTabs",
   "filename": "/packages/x-date-pickers-pro/src/DateTimeRangePicker/DateTimeRangePickerTabs.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
 }

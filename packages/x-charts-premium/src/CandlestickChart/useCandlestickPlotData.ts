@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import {
@@ -17,10 +18,26 @@ const HIGHLIGHT_BRIGHTNESS = 1.2;
 export interface CandlestickPlotData {
   candleCenters: Float32Array;
   candleHeights: Float32Array;
-  candleColors: Float32Array;
+  /* RGBA, 1 byte per channel; shader reads normalized [0, 1] floats. Uint8Clamped lets us
+   * apply the highlight brightness multiplier without manual saturation. */
+  candleColors: Uint8ClampedArray;
   wickCenters: Float32Array;
   wickHeights: Float32Array;
-  wickColors: Float32Array;
+  wickColors: Uint8ClampedArray;
+}
+
+type PositionsPool = {
+  candleCenters: Float32Array;
+  candleHeights: Float32Array;
+  wickCenters: Float32Array;
+  wickHeights: Float32Array;
+};
+
+function ensurePoolFloat32(pool: Float32Array | undefined, n: number) {
+  if (pool && pool.length >= n) {
+    return pool;
+  }
+  return new Float32Array(n);
 }
 
 export function useCandlestickPlotData(
@@ -39,45 +56,127 @@ export function useCandlestickPlotData(
   );
   const colorGetter = React.useMemo(() => getColor(series, undefined), [series]);
 
-  return React.useMemo(() => {
-    const candleCenters = new Float32Array(series.data.length * 2);
-    const candleHeights = new Float32Array(series.data.length);
-    // Two wicks per candle: upper (candle top → high) and lower (candle bottom → low)
-    const wickCenters = new Float32Array(series.data.length * 2 * 2);
-    const wickHeights = new Float32Array(series.data.length * 2);
-    const candleColors = new Float32Array(series.data.length * 4);
-    const wickColors = new Float32Array(series.data.length * 2 * 4);
-    const xDomain = xScale.domain();
+  /* Colors only change when the series, color getter, or highlight state changes.
+   * Cache them so zoom-only renders return the same Uint8ClampedArray refs and the
+   * GL upload short-circuit can skip re-uploading colors.
+   * `parseColor` returns bytes in [0, 255]. Uint8Clamped rounds + clamps automatically,
+   * so brightness multiplications can't overflow. */
+  const colors = React.useMemo(() => {
+    const candleColors = new Uint8ClampedArray(series.data.length * 4);
+    const wickColors = new Uint8ClampedArray(series.data.length * 2 * 4);
+
+    const [wickR, wickG, wickB, wickA] = wickColor;
 
     for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
       const datum = series.data[dataIndex];
 
       if (datum === null) {
-        // Set alpha to 0 to hide the candle and both wicks
-        candleColors[dataIndex * 4 + 3] = 0.0;
-        wickColors[dataIndex * 2 * 4 + 3] = 0.0;
-        wickColors[(dataIndex * 2 + 1) * 4 + 3] = 0.0;
+        /* Alpha 0 hides the candle and both wicks; src-alpha blending makes RGB irrelevant. */
+        candleColors[dataIndex * 4 + 3] = 0;
+        wickColors[dataIndex * 2 * 4 + 3] = 0;
+        wickColors[(dataIndex * 2 + 1) * 4 + 3] = 0;
         continue;
       }
 
-      // Can't return undefined because we're calling it with a value from the domain
+      const candleColor = parseColor(colorGetter(dataIndex));
+      candleColors[dataIndex * 4] = candleColor[0];
+      candleColors[dataIndex * 4 + 1] = candleColor[1];
+      candleColors[dataIndex * 4 + 2] = candleColor[2];
+      candleColors[dataIndex * 4 + 3] = candleColor[3];
+
+      for (let w = 0; w < 2; w += 1) {
+        const wickIdx = (dataIndex * 2 + w) * 4;
+        wickColors[wickIdx] = wickR;
+        wickColors[wickIdx + 1] = wickG;
+        wickColors[wickIdx + 2] = wickB;
+        wickColors[wickIdx + 3] = wickA;
+      }
+
+      const highlightState = getHighlightState({
+        type: 'ohlc',
+        seriesId: series.id,
+        dataIndex,
+      });
+
+      if (highlightState === 'highlighted') {
+        /* Mimics CSS's filter: brightness(1.2): multiplies RGB by 1.2 without touching alpha. */
+        candleColors[dataIndex * 4] = candleColors[dataIndex * 4] * HIGHLIGHT_BRIGHTNESS;
+        candleColors[dataIndex * 4 + 1] = candleColors[dataIndex * 4 + 1] * HIGHLIGHT_BRIGHTNESS;
+        candleColors[dataIndex * 4 + 2] = candleColors[dataIndex * 4 + 2] * HIGHLIGHT_BRIGHTNESS;
+
+        for (let w = 0; w < 2; w += 1) {
+          const wickIdx = (dataIndex * 2 + w) * 4;
+          wickColors[wickIdx] = wickColors[wickIdx] * HIGHLIGHT_BRIGHTNESS;
+          wickColors[wickIdx + 1] = wickColors[wickIdx + 1] * HIGHLIGHT_BRIGHTNESS;
+          wickColors[wickIdx + 2] = wickColors[wickIdx + 2] * HIGHLIGHT_BRIGHTNESS;
+        }
+      } else if (highlightState === 'faded') {
+        candleColors[dataIndex * 4 + 3] = candleColors[dataIndex * 4 + 3] * FADE_OPACITY;
+        for (let w = 0; w < 2; w += 1) {
+          const aIdx = (dataIndex * 2 + w) * 4 + 3;
+          wickColors[aIdx] = wickColors[aIdx] * FADE_OPACITY;
+        }
+      }
+    }
+
+    return { candleColors, wickColors };
+  }, [colorGetter, wickColor, getHighlightState, series.data, series.id]);
+
+  /* Positions change every zoom/drag. Pool the typed arrays in a ref so we don't
+   * allocate ~1.5 MB per frame at large series sizes; hand out fresh subarray views
+   * so the upload short-circuit still fires. */
+  const positionsPoolRef = React.useRef<PositionsPool | null>(null);
+
+  const positions = React.useMemo(() => {
+    const n = series.data.length;
+    const pool = positionsPoolRef.current;
+    const candleCenters = ensurePoolFloat32(pool?.candleCenters, n * 2);
+    const candleHeights = ensurePoolFloat32(pool?.candleHeights, n);
+    const wickCenters = ensurePoolFloat32(pool?.wickCenters, n * 2 * 2);
+    const wickHeights = ensurePoolFloat32(pool?.wickHeights, n * 2);
+    positionsPoolRef.current = { candleCenters, candleHeights, wickCenters, wickHeights };
+
+    /* Hoist drawing-area offsets into scalars so the loop body doesn't re-read them. */
+    const left = drawingArea.left;
+    const top = drawingArea.top;
+    const xDomain = xScale.domain();
+
+    for (let dataIndex = 0; dataIndex < n; dataIndex += 1) {
+      const datum = series.data[dataIndex];
+
+      if (datum === null) {
+        /* Pool is reused, so zero out stale values from previous frames. */
+        candleHeights[dataIndex] = 0;
+        candleCenters[dataIndex * 2] = 0;
+        candleCenters[dataIndex * 2 + 1] = 0;
+        wickHeights[dataIndex * 2] = 0;
+        wickHeights[dataIndex * 2 + 1] = 0;
+        wickCenters[dataIndex * 2 * 2] = 0;
+        wickCenters[dataIndex * 2 * 2 + 1] = 0;
+        wickCenters[(dataIndex * 2 + 1) * 2] = 0;
+        wickCenters[(dataIndex * 2 + 1) * 2 + 1] = 0;
+        continue;
+      }
+
       const scaledX = xScale(xDomain[dataIndex])!;
+      const open = datum[0];
+      const high = datum[1];
+      const low = datum[2];
+      const close = datum[3];
 
-      const [open, high, low, close] = datum;
-
-      const x = scaledX - drawingArea.left;
+      const x = scaledX - left;
       const scaledOpen = yScale(open);
       const scaledClose = yScale(close);
-      const candleBottom = Math.min(scaledOpen, scaledClose) - drawingArea.top;
-      const candleTop = Math.max(scaledOpen, scaledClose) - drawingArea.top;
-      const wickBottom = yScale(low) - drawingArea.top;
-      const wickTop = yScale(high) - drawingArea.top;
+      const candleBottom = Math.min(scaledOpen, scaledClose) - top;
+      const candleTop = Math.max(scaledOpen, scaledClose) - top;
+      const wickBottom = yScale(low) - top;
+      const wickTop = yScale(high) - top;
 
       candleCenters[dataIndex * 2] = x;
       candleCenters[dataIndex * 2 + 1] = (candleTop + candleBottom) / 2;
       candleHeights[dataIndex] = candleTop - candleBottom;
 
-      // We have two wicks per candle so that when a candle is faded the wick isn't visible behind the candle body.
+      /* Two wicks per candle so a faded candle body doesn't have a wick poking through it. */
       const upperWickIndex = dataIndex * 2;
       wickCenters[upperWickIndex * 2] = x;
       wickCenters[upperWickIndex * 2 + 1] = (wickTop + candleBottom) / 2;
@@ -87,64 +186,27 @@ export function useCandlestickPlotData(
       wickCenters[lowerWickIndex * 2] = x;
       wickCenters[lowerWickIndex * 2 + 1] = (candleTop + wickBottom) / 2;
       wickHeights[lowerWickIndex] = candleTop - wickBottom;
-
-      const candleColor = parseColor(colorGetter(dataIndex));
-
-      candleColors[dataIndex * 4] = candleColor[0];
-      candleColors[dataIndex * 4 + 1] = candleColor[1];
-      candleColors[dataIndex * 4 + 2] = candleColor[2];
-      candleColors[dataIndex * 4 + 3] = candleColor[3];
-
-      for (let w = 0; w < 2; w += 1) {
-        const wickIdx = (dataIndex * 2 + w) * 4;
-        wickColors[wickIdx] = wickColor[0];
-        wickColors[wickIdx + 1] = wickColor[1];
-        wickColors[wickIdx + 2] = wickColor[2];
-        wickColors[wickIdx + 3] = wickColor[3];
-      }
-
-      const identifier = { type: 'ohlc', seriesId: series.id, dataIndex } as const;
-      const highlightState = getHighlightState(identifier);
-      const highlighted = highlightState === 'highlighted';
-      const faded = highlightState === 'faded';
-
-      if (highlighted) {
-        // Mimics CSS's filter: brightness(1.2), which multiplies the RGB values by 1.2, without affecting the alpha channel
-        candleColors[dataIndex * 4] *= HIGHLIGHT_BRIGHTNESS;
-        candleColors[dataIndex * 4 + 1] *= HIGHLIGHT_BRIGHTNESS;
-        candleColors[dataIndex * 4 + 2] *= HIGHLIGHT_BRIGHTNESS;
-
-        for (let w = 0; w < 2; w += 1) {
-          const wickIdx = (dataIndex * 2 + w) * 4;
-          wickColors[wickIdx] *= HIGHLIGHT_BRIGHTNESS;
-          wickColors[wickIdx + 1] *= HIGHLIGHT_BRIGHTNESS;
-          wickColors[wickIdx + 2] *= HIGHLIGHT_BRIGHTNESS;
-        }
-      } else if (faded) {
-        candleColors[dataIndex * 4 + 3] *= FADE_OPACITY;
-        for (let w = 0; w < 2; w += 1) {
-          wickColors[(dataIndex * 2 + w) * 4 + 3] *= FADE_OPACITY;
-        }
-      }
     }
 
+    /* Subarrays share the pool's ArrayBuffer but have new identity, which lets the GL
+     * upload short-circuit detect that the data has actually changed this frame. */
     return {
-      candleCenters,
-      candleHeights,
-      candleColors,
-      wickCenters,
-      wickHeights,
-      wickColors,
+      candleCenters: candleCenters.subarray(0, n * 2),
+      candleHeights: candleHeights.subarray(0, n),
+      wickCenters: wickCenters.subarray(0, n * 2 * 2),
+      wickHeights: wickHeights.subarray(0, n * 2),
     };
-  }, [
-    colorGetter,
-    drawingArea.left,
-    drawingArea.top,
-    getHighlightState,
-    wickColor,
-    series.data,
-    series.id,
-    xScale,
-    yScale,
-  ]);
+  }, [drawingArea.left, drawingArea.top, series.data, xScale, yScale]);
+
+  return React.useMemo(
+    () => ({
+      candleCenters: positions.candleCenters,
+      candleHeights: positions.candleHeights,
+      candleColors: colors.candleColors,
+      wickCenters: positions.wickCenters,
+      wickHeights: positions.wickHeights,
+      wickColors: colors.wickColors,
+    }),
+    [positions, colors],
+  );
 }

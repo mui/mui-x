@@ -190,7 +190,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   return renderPicker();
 }) as DesktopDateRangePickerComponent;
 
-DesktopDateTimeRangePicker.propTypes = {
+DesktopDateTimeRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -464,7 +464,7 @@ DesktopDateTimeRangePicker.propTypes = {
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
+   * @default () => "…"
    */
   renderLoading: PropTypes.func,
   /**
