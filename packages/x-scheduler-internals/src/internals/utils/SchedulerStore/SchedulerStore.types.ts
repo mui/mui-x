@@ -87,6 +87,12 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   visibleResources: Record<SchedulerResourceId, boolean>;
   /**
+   * Collapse status for each resource.
+   * A resource is expanded unless it is registered here with a `true` value.
+   * Collapsing a resource hides its descendant rows in the timeline.
+   */
+  collapsedResources: Record<SchedulerResourceId, boolean>;
+  /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
   areEventsDraggable: boolean;
@@ -250,6 +256,24 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   onVisibleResourcesChange?: (
     visibleResources: Record<SchedulerResourceId, boolean>,
+    eventDetails: SchedulerChangeEventDetails,
+  ) => void;
+  /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   * Only applies to the timeline view.
+   */
+  collapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange?: (
+    collapsedResources: Record<SchedulerResourceId, boolean>,
     eventDetails: SchedulerChangeEventDetails,
   ) => void;
   /**
