@@ -41,7 +41,16 @@ export interface MarkerLabelPlotProps {
 const MarkerLabelPlotRoot = styled('g', {
   name: 'MuiMarkerLabelPlot',
   slot: 'Root',
-})();
+})(({ theme }) => ({
+  '& text': {
+    ...theme?.typography?.body2,
+    stroke: 'none',
+    fill: (theme.vars || theme)?.palette?.text?.primary,
+    textAnchor: 'middle',
+    dominantBaseline: 'central',
+    pointerEvents: 'none',
+  },
+}));
 
 function MarkerLabelPlot(props: MarkerLabelPlotProps) {
   const { className, slots, slotProps } = props;
