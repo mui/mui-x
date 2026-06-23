@@ -3,12 +3,7 @@ import {
   type SampledBar,
   createGetBucketBarDimensions,
 } from '@mui/x-charts/internals';
-import {
-  buildSamplingPyramid,
-  getSamplingMinSpan,
-  getSamplingBucketSize,
-  selectSamplingLevel,
-} from './sampling';
+import { buildSamplingPyramid, getSamplingBucketSize, selectSamplingLevel } from './sampling';
 import type { SamplingPyramid } from './sampling.pyramid.types';
 
 /** Min/max LOD pyramid over the bar's stacked `[base, top]` envelope (min base, max top). */
@@ -25,7 +20,12 @@ export const barSampler: SamplingStrategy<'bar', SamplingPyramid> = {
     if (!zoom) {
       return null;
     }
-    const level = selectSamplingLevel(pyramid, zoom.end - zoom.start, context.availableSize);
+    const level = selectSamplingLevel(
+      pyramid,
+      zoom.end - zoom.start,
+      context.availableSize,
+      context.minSpan,
+    );
     if (!level) {
       return null;
     }
@@ -63,7 +63,5 @@ export const barSampler: SamplingStrategy<'bar', SamplingPyramid> = {
   },
 
   bucketSizeAt: (span, context) =>
-    getSamplingBucketSize(span, context.dataLength, context.availableSize),
-
-  minSpanFor: (context) => getSamplingMinSpan(context.dataLength, context.availableSize),
+    getSamplingBucketSize(span, context.dataLength, context.availableSize, context.minSpan),
 };

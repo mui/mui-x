@@ -12,10 +12,11 @@ export function selectLineSampledIndices(
   pyramid: SamplingPyramid,
   currentSpan: number,
   availableSizePx: number,
+  minSpan: number,
   algorithm: LineSamplingAlgorithm,
   getValues: () => ArrayLike<number>,
 ): Int32Array | null {
-  const level = selectSamplingLevel(pyramid, currentSpan, availableSizePx);
+  const level = selectSamplingLevel(pyramid, currentSpan, availableSizePx, minSpan);
   if (!level) {
     return null;
   }

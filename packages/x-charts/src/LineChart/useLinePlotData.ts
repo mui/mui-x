@@ -9,7 +9,10 @@ import {
   selectorChartSamplingState,
   selectorChartSamplingPyramids,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
-import { selectorChartZoomMap } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import {
+  selectorChartZoomMap,
+  selectorChartZoomOptionsLookup,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useStore } from '../internals/store/useStore';
 import { getCurveFactory } from '../internals/getCurve';
@@ -48,6 +51,7 @@ export function useLinePlotData(
   const samplingState = store.use(selectorChartSamplingState);
   const sampledSeries = store.use(selectorChartSamplingPyramids);
   const zoomMap = store.use(selectorChartZoomMap);
+  const zoomOptions = store.use(selectorChartZoomOptionsLookup);
   const sampler = store.use(selectorChartSeriesConfig).line?.sampler;
 
   // Skip the line animation while sampling is on, and for the one render after it turns off:
@@ -134,6 +138,7 @@ export function useLinePlotData(
               built,
               zoom,
               availableSize: drawingArea.width,
+              minSpan: zoomOptions[xAxisId]?.minSpan ?? 0,
               algorithm: samplingState.lineAlgorithm,
               getValues: () => Float64Array.from(visibleStackedData, (point) => point[1]),
             }) ?? null;
@@ -218,6 +223,7 @@ export function useLinePlotData(
     samplingState,
     sampledSeries,
     zoomMap,
+    zoomOptions,
     sampler,
     skipSamplingAnimation,
   ]);

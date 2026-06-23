@@ -69,36 +69,53 @@ describe('buildSamplingPyramid', () => {
   });
 });
 
-describe('selectSamplingLevel', () => {
+describe('selectSamplingLevel (screen-defined levels, minSpan = 0)', () => {
   const pyramid = buildSamplingPyramid(values, values); // levels: bucketSize 2, 4, 8
+  const noMinSpan = 0; // isolate the screen-defined behaviour
 
-  it('returns null at max zoom (span === minSpan)', () => {
-    expect(selectSamplingLevel(pyramid, 10, pxFor(10))).to.equal(null);
-    expect(selectSamplingLevel(pyramid, 13, pxFor(10))).to.equal(null);
+  it('returns null at max zoom (elements wide enough)', () => {
+    expect(selectSamplingLevel(pyramid, 10, pxFor(10), noMinSpan)).to.equal(null);
+    expect(selectSamplingLevel(pyramid, 13, pxFor(10), noMinSpan)).to.equal(null);
   });
 
   it('picks a coarser level (bucket size x2) for each doubling of the span', () => {
-    expect(selectSamplingLevel(pyramid, 20, pxFor(10))?.bucketSize).to.equal(2);
-    expect(selectSamplingLevel(pyramid, 40, pxFor(10))?.bucketSize).to.equal(4);
-    expect(selectSamplingLevel(pyramid, 80, pxFor(10))?.bucketSize).to.equal(8);
+    expect(selectSamplingLevel(pyramid, 20, pxFor(10), noMinSpan)?.bucketSize).to.equal(2);
+    expect(selectSamplingLevel(pyramid, 40, pxFor(10), noMinSpan)?.bucketSize).to.equal(4);
+    expect(selectSamplingLevel(pyramid, 80, pxFor(10), noMinSpan)?.bucketSize).to.equal(8);
   });
 
   it('exposes the level slice as [start, end) offsets into argMin/argMax', () => {
-    const level = selectSamplingLevel(pyramid, 40, pxFor(10))!; // bucketSize 4 -> level index 1
+    const level = selectSamplingLevel(pyramid, 40, pxFor(10), noMinSpan)!; // bucketSize 4
     expect(level.start).to.equal(pyramid.offsets[1]);
     expect(level.end).to.equal(pyramid.offsets[2]);
   });
 
   it('clamps to the coarsest level when fully zoomed out', () => {
-    expect(selectSamplingLevel(pyramid, 100, pxFor(10))?.bucketSize).to.equal(8);
+    expect(selectSamplingLevel(pyramid, 100, pxFor(10), noMinSpan)?.bucketSize).to.equal(8);
   });
 
   it('returns null for non-positive spans or a zero-size / empty pyramid', () => {
-    expect(selectSamplingLevel(pyramid, 0, pxFor(10))).to.equal(null);
-    expect(selectSamplingLevel(pyramid, 50, 0)).to.equal(null); // zero px -> min-span 0 -> no sampling
-    expect(selectSamplingLevel(buildSamplingPyramid(f64([5]), f64([5])), 50, pxFor(10))).to.equal(
-      null,
-    );
+    expect(selectSamplingLevel(pyramid, 0, pxFor(10), noMinSpan)).to.equal(null);
+    expect(selectSamplingLevel(pyramid, 50, 0, noMinSpan)).to.equal(null); // zero px -> no sampling
+    expect(
+      selectSamplingLevel(buildSamplingPyramid(f64([5]), f64([5])), 50, pxFor(10), noMinSpan),
+    ).to.equal(null);
+  });
+});
+
+describe('selectSamplingLevel — level 0 (raw) at the deepest zoom', () => {
+  const pyramid = buildSamplingPyramid(values, values);
+  const tinyScreen = pxFor(1); // screen threshold 1, so minSpan drives level 0
+
+  it('renders raw a half-octave above minSpan (wiggle room), then samples', () => {
+    // RAW_LEVEL_SPAN_FACTOR = sqrt(2) ≈ 1.414, so level 0 covers span up to ~14.14 at minSpan 10.
+    expect(selectSamplingLevel(pyramid, 14, tinyScreen, 10)).to.equal(null);
+    expect(selectSamplingLevel(pyramid, 15, tinyScreen, 10)).to.not.equal(null);
+  });
+
+  it('renders raw at minSpan whatever the (sub-pixel) element size', () => {
+    const large = buildSamplingPyramid(makeValues(4000), makeValues(4000));
+    expect(selectSamplingLevel(large, 10, tinyScreen, 10)).to.equal(null);
   });
 });
 
@@ -119,8 +136,8 @@ describe('getSamplingMinSpan (screen + data driven level count)', () => {
     const small = buildSamplingPyramid(makeValues(400), makeValues(400));
     const large = buildSamplingPyramid(makeValues(4000), makeValues(4000));
 
-    const smallTop = selectSamplingLevel(small, 100, 800);
-    const largeTop = selectSamplingLevel(large, 100, 800);
+    const smallTop = selectSamplingLevel(small, 100, 800, 0);
+    const largeTop = selectSamplingLevel(large, 100, 800, 0);
 
     expect(largeTop!.bucketSize).to.be.greaterThan(smallTop!.bucketSize);
   });
@@ -128,6 +145,6 @@ describe('getSamplingMinSpan (screen + data driven level count)', () => {
   it('reaches the unsampled level at max zoom for any data size', () => {
     const large = buildSamplingPyramid(makeValues(4000), makeValues(4000));
     // At max zoom the span equals the screen-derived min span.
-    expect(selectSamplingLevel(large, getSamplingMinSpan(4000, 800), 800)).to.equal(null);
+    expect(selectSamplingLevel(large, getSamplingMinSpan(4000, 800), 800, 0)).to.equal(null);
   });
 });

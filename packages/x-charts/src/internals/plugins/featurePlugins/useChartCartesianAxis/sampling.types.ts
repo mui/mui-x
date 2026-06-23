@@ -47,6 +47,8 @@ export interface BarSampleContext {
   zoom: ZoomData | undefined;
   /** Pixel extent perpendicular to the value axis: `drawingArea.width` (vertical) else `.height`. */
   availableSize: number;
+  /** The base axis zoom `minSpan` (deepest zoom); level 0 (`span ≈ minSpan`) renders raw. */
+  minSpan: number;
   verticalLayout: boolean;
   xAxisConfig: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
   yAxisConfig: ComputedAxis<ScaleName, any, ChartsYAxisProps>;
@@ -60,6 +62,8 @@ export interface LineSampleContext {
   zoom: ZoomData | undefined;
   /** `drawingArea.width`. */
   availableSize: number;
+  /** The x-axis zoom `minSpan` (deepest zoom); level 0 (`span ≈ minSpan`) renders raw. */
+  minSpan: number;
   algorithm: LineSamplingAlgorithm;
   /**
    * Lazy raw y channel; invoked by the sampler only for `lttb`.
@@ -74,6 +78,8 @@ export interface AxisSamplingContext {
   dataLength: number;
   /** Pixel extent along the band axis: width (x) / height (y). */
   availableSize: number;
+  /** The axis zoom `minSpan` (deepest zoom). */
+  minSpan: number;
 }
 
 /**
@@ -114,10 +120,4 @@ export interface SamplingStrategy<
    * @returns {number} The bucket size.
    */
   bucketSizeAt?: (span: number, context: AxisSamplingContext) => number;
-  /**
-   * Sampling-derived min zoom span for an axis, or `null` to leave `minSpan` untouched.
-   * @param {AxisSamplingContext} context The axis sampling inputs.
-   * @returns {number | null} The min span, or `null`.
-   */
-  minSpanFor?: (context: AxisSamplingContext) => number | null;
 }

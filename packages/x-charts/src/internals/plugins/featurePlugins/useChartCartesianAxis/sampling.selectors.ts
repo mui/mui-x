@@ -11,6 +11,7 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
   selectorChartZoomMap,
+  selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
 
 const EMPTY_PYRAMIDS: SampledSeriesLookup = {};
@@ -71,6 +72,7 @@ export const selectorChartHighlightBucketSize = createSelectorMemoized(
   selectorChartXAxis,
   selectorChartYAxis,
   selectorChartDrawingArea,
+  selectorChartZoomOptionsLookup,
   selectorChartSeriesConfig,
   function selectorChartHighlightBucketSize(
     samplingState,
@@ -78,6 +80,7 @@ export const selectorChartHighlightBucketSize = createSelectorMemoized(
     xAxis,
     yAxis,
     drawingArea,
+    zoomOptions,
     seriesConfig,
   ): Map<AxisId, number> {
     if (!samplingState?.enabled) {
@@ -99,10 +102,15 @@ export const selectorChartHighlightBucketSize = createSelectorMemoized(
       axes.axisIds.forEach((axisId) => {
         const data = axes.axis[axisId].data;
         const zoom = zoomMap?.get(axisId);
-        if (data && zoom) {
+        const minSpan = zoomOptions[axisId]?.minSpan;
+        if (data && zoom && minSpan != null) {
           bucketSizes.set(
             axisId,
-            bucketSizeAt(zoom.end - zoom.start, { dataLength: data.length, availableSize }),
+            bucketSizeAt(zoom.end - zoom.start, {
+              dataLength: data.length,
+              availableSize,
+              minSpan,
+            }),
           );
         }
       });

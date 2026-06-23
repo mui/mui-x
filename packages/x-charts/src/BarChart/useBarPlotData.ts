@@ -21,7 +21,10 @@ import type {
   SamplingStrategy,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { selectorChartZoomMap } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import {
+  selectorChartZoomMap,
+  selectorChartZoomOptionsLookup,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { ZoomData } from '../internals/plugins/featurePlugins/useChartCartesianAxis/zoom.types';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
@@ -46,6 +49,7 @@ export function useBarPlotData(
   const store = useStore();
   const samplingPyramids = store.use(selectorChartSamplingPyramids);
   const zoomMap = store.use(selectorChartZoomMap);
+  const zoomOptions = store.use(selectorChartZoomOptionsLookup);
   const sampler = store.use(selectorChartSeriesConfig).bar?.sampler;
 
   return processBarDataForPlot(
@@ -60,6 +64,7 @@ export function useBarPlotData(
     samplingPyramids,
     zoomMap,
     sampler,
+    zoomOptions,
   );
 }
 
@@ -75,6 +80,7 @@ export function processBarDataForPlot(
   samplingPyramids: SampledSeriesLookup = {},
   zoomMap?: Map<AxisId, ZoomData>,
   sampler?: SamplingStrategy<'bar'>,
+  zoomOptions?: Record<AxisId, { minSpan: number }>,
 ) {
   const masks: Record<string, MaskData> = {};
 
@@ -195,6 +201,7 @@ export function processBarDataForPlot(
       const baseAxisId = verticalLayout ? xAxisId : yAxisId;
       const zoom = zoomMap?.get(baseAxisId);
       const availableSize = verticalLayout ? drawingArea.width : drawingArea.height;
+      const minSpan = zoomOptions?.[baseAxisId]?.minSpan ?? 0;
       // The sampler (pro) owns all sampling math; community only renders its output.
       const sampledBars =
         pyramid && zoom && sampler?.sampleBars
@@ -203,6 +210,7 @@ export function processBarDataForPlot(
               series: series[seriesId],
               zoom,
               availableSize,
+              minSpan,
               verticalLayout,
               xAxisConfig,
               yAxisConfig,

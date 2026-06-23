@@ -15,19 +15,19 @@ describe('selectLineSampledIndices', () => {
   const getValues = () => values;
 
   it('returns null at max zoom (no sampling)', () => {
-    expect(selectLineSampledIndices(pyramid, 10, px, 'm4', getValues)).to.equal(null);
+    expect(selectLineSampledIndices(pyramid, 10, px, 0, 'm4', getValues)).to.equal(null);
   });
 
   it('minmax keeps the two extrema indices per bucket, sorted', () => {
     // span/minSpan = 2 -> level 0 (bucketSize 2)
-    const indices = selectLineSampledIndices(pyramid, 20, px, 'minmax', getValues);
+    const indices = selectLineSampledIndices(pyramid, 20, px, 0, 'minmax', getValues);
     // buckets [3,1] [4,8] [5,2] [6,7] -> sorted [min,max] per bucket
     expect(Array.from(indices!)).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7]);
   });
 
   it('m4 keeps first/min/max/last per bucket (deduped, sorted)', () => {
     // span/minSpan = 4 -> level 1 (bucketSize 4): buckets [0..3] [4..7]
-    const indices = selectLineSampledIndices(pyramid, 40, px, 'm4', getValues);
+    const indices = selectLineSampledIndices(pyramid, 40, px, 0, 'm4', getValues);
     // bucket 0: first 0, min idx1, max idx3, last 3 -> [0,1,3]
     // bucket 1: first 4, min idx5, max idx7, last 7 -> [4,5,7]
     expect(Array.from(indices!)).to.deep.equal([0, 1, 3, 4, 5, 7]);
@@ -36,7 +36,7 @@ describe('selectLineSampledIndices', () => {
   it('lttb reduces to roughly dataLength / bucketSize points incl. endpoints', () => {
     const big = f64(Array.from({ length: 64 }, (_, i) => Math.sin(i)));
     const bigPyramid = buildSamplingPyramid(big, big);
-    const indices = selectLineSampledIndices(bigPyramid, 40, pxFor(10, 64), 'lttb', () => big); // level 1 -> ~16
+    const indices = selectLineSampledIndices(bigPyramid, 40, pxFor(10, 64), 0, 'lttb', () => big); // level 1 -> ~16
     expect(indices!.length).to.equal(16);
     expect(indices![0]).to.equal(0);
     expect(indices![indices!.length - 1]).to.equal(63);
@@ -48,9 +48,9 @@ describe('selectLineSampledIndices', () => {
       called += 1;
       return values;
     };
-    selectLineSampledIndices(pyramid, 40, px, 'm4', spy);
+    selectLineSampledIndices(pyramid, 40, px, 0, 'm4', spy);
     expect(called).to.equal(0);
-    selectLineSampledIndices(pyramid, 40, px, 'lttb', spy);
+    selectLineSampledIndices(pyramid, 40, px, 0, 'lttb', spy);
     expect(called).to.equal(1);
   });
 });

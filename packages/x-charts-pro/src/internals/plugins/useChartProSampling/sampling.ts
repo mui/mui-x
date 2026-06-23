@@ -14,6 +14,12 @@ export function getSamplingMinSpan(dataLength: number, availableSizePx: number):
 const EMPTY_PYRAMID_OFFSETS = new Int32Array(1);
 
 /**
+ * Level 0 (raw) extends this factor above `minSpan` before the first sampled level kicks in — a
+ * half-octave of wiggle room so the deepest zoom stays unsampled without a knife-edge transition.
+ */
+const RAW_LEVEL_SPAN_FACTOR = Math.SQRT2;
+
+/**
  * Builds the LOD pyramid for one series from its low/high value channels (for bars: the stacked
  * `[base, top]` channels; for lines: the displayed `y` for both). Each bucket keeps the original
  * index of its min (over `low`) and max (over `high`) — a min/max envelope, so spikes and troughs
@@ -95,29 +101,42 @@ export function getSamplingLevelCount(pyramid: SamplingPyramid): number {
 }
 
 /**
- * Level index from the zoom span and screen: 0 at max zoom (data fills the view at the minimum
- * element size), +1 per span doubling. The min-span intermediate stays internal.
+ * Level-of-detail index for the current zoom:
+ * - Level 0 (no sampling, raw) at the deepest zoom (`currentSpan <= minSpan * RAW_LEVEL_SPAN_FACTOR`),
+ *   whatever the bar size — fully zoomed in always shows every point.
+ * - Above that, the level is screen-defined: bucket size keeps elements at least
+ *   `MIN_ELEMENT_SIZE_PX` wide (+1 per span doubling past that pixel threshold).
  */
-function levelIndexFor(currentSpan: number, dataLength: number, availableSizePx: number): number {
-  const minSpan = getSamplingMinSpan(dataLength, availableSizePx);
-  if (!(currentSpan > 0) || !(minSpan > 0)) {
+function levelIndexFor(
+  currentSpan: number,
+  dataLength: number,
+  availableSizePx: number,
+  minSpan: number,
+): number {
+  if (!(currentSpan > 0) || currentSpan <= minSpan * RAW_LEVEL_SPAN_FACTOR) {
     return 0;
   }
-  return Math.max(0, Math.round(Math.log2(currentSpan / minSpan)));
+  const screenMinSpan = getSamplingMinSpan(dataLength, availableSizePx);
+  if (!(screenMinSpan > 0)) {
+    return 0;
+  }
+  return Math.max(0, Math.round(Math.log2(currentSpan / screenMinSpan)));
 }
 
 /**
- * Picks the active level from the zoom span: max zoom → no sampling (`null`); each span doubling →
- * bucket size ×2. Clamped to the pyramid depth. `bucketSize === 2 ** clampedLevel`, and the level's
- * buckets are `offsets[clampedLevel - 1 .. clampedLevel]`.
+ * Picks the active level from the zoom span: level 0 (deepest zoom, `span <= minSpan`, or elements
+ * still wide enough) → no sampling (`null`, raw 1:1); each level up → bucket size ×2, chosen so
+ * sampled elements stay at least `MIN_ELEMENT_SIZE_PX` wide. Clamped to the pyramid depth.
+ * `bucketSize === 2 ** clampedLevel`, level buckets `offsets[clampedLevel - 1 .. clampedLevel]`.
  */
 export function selectSamplingLevel(
   pyramid: SamplingPyramid,
   currentSpan: number,
   availableSizePx: number,
+  minSpan: number,
 ): ActiveSamplingLevel | null {
   const levelCount = pyramid.offsets.length - 1;
-  const levelIndex = levelIndexFor(currentSpan, pyramid.dataLength, availableSizePx);
+  const levelIndex = levelIndexFor(currentSpan, pyramid.dataLength, availableSizePx, minSpan);
   if (levelIndex <= 0 || levelCount === 0) {
     return null;
   }
@@ -131,14 +150,15 @@ export function selectSamplingLevel(
 
 /**
  * Active bucket size (`1` = no sampling) for an axis with no built pyramid (the axis highlight).
- * Matches {@link selectSamplingLevel}'s `bucketSize`, derived from `dataLength` alone.
+ * Matches {@link selectSamplingLevel}'s `bucketSize`, derived from `dataLength` + screen + `minSpan`.
  */
 export function getSamplingBucketSize(
   currentSpan: number,
   dataLength: number,
   availableSizePx: number,
+  minSpan: number,
 ): number {
-  const levelIndex = levelIndexFor(currentSpan, dataLength, availableSizePx);
+  const levelIndex = levelIndexFor(currentSpan, dataLength, availableSizePx, minSpan);
   if (levelIndex <= 0 || dataLength <= 1) {
     return 1;
   }

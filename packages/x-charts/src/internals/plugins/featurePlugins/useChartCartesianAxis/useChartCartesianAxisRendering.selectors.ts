@@ -88,48 +88,14 @@ export const selectorChartAxisZoomData = createSelector(
   (zoomMap, axisId: AxisId) => zoomMap?.get(axisId),
 );
 
-const selectorChartSamplingState = (state: ChartState<[], [UseChartCartesianAxisSignature]>) =>
-  state.sampling;
-
 export const selectorChartZoomOptionsLookup = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorChartRawYAxis,
-  selectorChartSamplingState,
-  selectorChartDrawingArea,
-  selectorChartSeriesConfig,
-  function selectorChartZoomOptionsLookup(xAxis, yAxis, sampling, drawingArea, seriesConfig) {
-    const lookup = {
+  function selectorChartZoomOptionsLookup(xAxis, yAxis) {
+    return {
       ...createZoomLookup('x')(xAxis),
       ...createZoomLookup('y')(yAxis),
     };
-
-    // Sampling lowers min span (from band-axis size) so the data is reachable unsampled.
-    // The min-span math lives in the pro sampler; community only applies the returned value.
-    // Recomputed on resize, not on zoom.
-    const minSpanFor =
-      seriesConfig.bar?.sampler?.minSpanFor ?? seriesConfig.line?.sampler?.minSpanFor;
-    if (sampling?.enabled && minSpanFor) {
-      const applyMinSpan = (
-        axes: ReadonlyArray<{ id: AxisId; data?: readonly unknown[] }> | undefined,
-        availableSize: number,
-      ) => {
-        axes?.forEach((axis) => {
-          const options = lookup[axis.id];
-          const dataLength = axis.data?.length;
-          if (options && dataLength) {
-            const minSpan = minSpanFor({ dataLength, availableSize });
-            if (minSpan != null && minSpan < options.minSpan) {
-              lookup[axis.id] = { ...options, minSpan };
-            }
-          }
-        });
-      };
-
-      applyMinSpan(xAxis, drawingArea.width);
-      applyMinSpan(yAxis, drawingArea.height);
-    }
-
-    return lookup;
   },
 );
 
