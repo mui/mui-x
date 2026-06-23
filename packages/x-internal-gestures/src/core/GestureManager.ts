@@ -175,12 +175,10 @@ export class GestureManager<
    * @param gesture - The gesture instance to use as a template
    */
   private addGestureTemplate(gesture: Gesture<GestureName>): void {
-    if (this.gestureTemplates.has(gesture.name)) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn(
-          `Gesture template with name "${gesture.name}" already exists. It will be overwritten.`,
-        );
-      }
+    if (this.gestureTemplates.has(gesture.name) && process.env.NODE_ENV !== 'production') {
+      console.warn(
+        `Gesture template with name "${gesture.name}" already exists. It will be overwritten.`,
+      );
     }
     this.gestureTemplates.set(gesture.name, gesture);
   }
