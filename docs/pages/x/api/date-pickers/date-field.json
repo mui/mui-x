@@ -1,6 +1,7 @@
 {
   "props": {
     "areAllSectionsEmpty": { "type": { "name": "bool" } },
+    "autoComplete": { "type": { "name": "string" } },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
     "clearable": { "type": { "name": "bool" }, "default": "false" },
     "clearButtonPosition": {

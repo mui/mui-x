@@ -119,6 +119,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     fullWidth,
     id: idProp,
     name,
+    autoComplete,
     // Props used by FormHelperText
     helperText,
     // Props used by InputLabel
@@ -242,6 +243,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           sectionListRef={sectionListRef}
           label={label}
           name={name}
+          autoComplete={autoComplete}
           role="group"
           aria-labelledby={inputLabelId}
           aria-describedby={helperTextId}
@@ -279,6 +281,12 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  /**
+   * This prop helps users to fill forms faster, especially on mobile devices.
+   * The name can be confusing, as it's more like an autofill.
+   * You can learn more about it [following the specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill).
+   */
+  autoComplete: PropTypes.string,
   className: PropTypes.string,
   /**
    * The color of the component.

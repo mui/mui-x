@@ -30,6 +30,24 @@ describe('<PickersTextField /> - slot forwarding', () => {
     expect(screen.getByTestId('html-input')).not.to.equal(null);
   });
 
+  it('should forward the `autoComplete` prop to the underlying <input>', () => {
+    render(<PickersTextField {...STUB_PROPS} autoComplete="bday" />);
+
+    expect(document.querySelector('input')).to.have.attribute('autocomplete', 'bday');
+  });
+
+  it('should let `slotProps.htmlInput.autoComplete` override the `autoComplete` prop', () => {
+    render(
+      <PickersTextField
+        {...STUB_PROPS}
+        autoComplete="bday"
+        slotProps={{ htmlInput: { autoComplete: 'off' } as any }}
+      />,
+    );
+
+    expect(document.querySelector('input')).to.have.attribute('autocomplete', 'off');
+  });
+
   it('should merge `slotProps.input.slotProps.sectionContent` onto each section content element', () => {
     render(
       <PickersTextField

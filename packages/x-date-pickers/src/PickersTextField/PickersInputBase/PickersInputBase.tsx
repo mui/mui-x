@@ -340,6 +340,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     onKeyDown,
     fullWidth,
     name,
+    autoComplete,
     readOnly,
     inputRef,
     sectionListRef,
@@ -499,6 +500,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         : null}
       <HtmlInputComponent
         name={name}
+        autoComplete={autoComplete}
         className={classes.input}
         value={value}
         onChange={onChange}
@@ -536,6 +538,12 @@ PickersInputBase.propTypes /* remove-proptypes */ = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  /**
+   * This prop helps users to fill forms faster, especially on mobile devices.
+   * The name can be confusing, as it's more like an autofill.
+   * You can learn more about it [following the specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill).
+   */
+  autoComplete: PropTypes.string,
   classes: PropTypes.object,
   className: PropTypes.string,
   /**

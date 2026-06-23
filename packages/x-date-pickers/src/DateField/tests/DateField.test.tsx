@@ -24,6 +24,14 @@ describe('<DateField />', () => {
       expect(screen.getByRole('group', { description: 'field-helper' })).not.to.equal(null);
     });
 
+    it('should forward `slotProps.textField.autoComplete` to the hidden <input>', () => {
+      render(<DateField slotProps={{ textField: { autoComplete: 'bday' } }} />);
+
+      expect(screen.getByRole('textbox', { hidden: true }))
+        .attribute('autocomplete')
+        .to.equal('bday');
+    });
+
     it('should respect the `slotProps.textField.slotProps.htmlInput`', () => {
       render(
         <DateField

@@ -72,6 +72,12 @@ SingleInputTimeRangeField.propTypes /* remove-proptypes */ = {
    */
   areAllSectionsEmpty: PropTypes.bool,
   /**
+   * This prop helps users to fill forms faster, especially on mobile devices.
+   * The name can be confusing, as it's more like an autofill.
+   * You can learn more about it [following the specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill).
+   */
+  autoComplete: PropTypes.string,
+  /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
    */

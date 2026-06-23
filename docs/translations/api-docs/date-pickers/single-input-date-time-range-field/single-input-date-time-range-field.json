@@ -5,6 +5,9 @@
     "areAllSectionsEmpty": {
       "description": "Is <code>true</code> if the current values equals the empty value. For a single item value, it means that <code>value === null</code> For a range value, it means that <code>value === [null, null]</code>"
     },
+    "autoComplete": {
+      "description": "This prop helps users to fill forms faster, especially on mobile devices. The name can be confusing, as it&#39;s more like an autofill. You can learn more about it <a href=\"https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill\">following the specification</a>."
+    },
     "autoFocus": {
       "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount."
     },

@@ -51,6 +51,12 @@ export interface PickersInputPropsUsedByField extends Pick<
    * Name attribute of the `input` element.
    */
   name?: string;
+  /**
+   * This prop helps users to fill forms faster, especially on mobile devices.
+   * The name can be confusing, as it's more like an autofill.
+   * You can learn more about it [following the specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill).
+   */
+  autoComplete?: string;
 
   /**
    * Pass a ref to the `input` element.
