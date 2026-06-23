@@ -122,9 +122,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartsDataProviderPro<'line', LineChartProPluginSignatures>
-      {...chartsDataProviderProProps}
-    >
+    <ChartsDataProviderPro<'line', LineChartProPluginSignatures> {...chartsDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -461,12 +459,10 @@ LineChartPro.propTypes /* remove-proptypes */ = {
   onZoomChange: PropTypes.func,
   /**
    * Sampling method used to render large datasets when zoomed out.
-   * - `'none'`: render every element (no sampling).
+   * - `'none'`: render every point (no sampling).
    * - `'minmax'`: keep the min and max per bucket.
-   * - `'m4'`: pixel-accurate—keep the first, min, max, and last per bucket (line series).
-   * - `'lttb'`: Largest-Triangle-Three-Buckets, preserves the visual shape (line series).
-   *
-   * Bar series sample with a min/max envelope for any value other than `'none'`.
+   * - `'m4'`: pixel-accurate—keep the first, min, max, and last per bucket.
+   * - `'lttb'`: Largest-Triangle-Three-Buckets, preserves the visual shape.
    * @default 'none'
    */
   sampling: PropTypes.oneOf(['lttb', 'm4', 'minmax', 'none']),

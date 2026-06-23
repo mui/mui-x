@@ -1,10 +1,6 @@
 'use client';
 import * as React from 'react';
-import {
-  type ChartPlugin,
-  type SamplingConfig,
-  type SamplingState,
-} from '@mui/x-charts/internals';
+import { type ChartPlugin, type SamplingConfig, type SamplingState } from '@mui/x-charts/internals';
 import { type UseChartProSamplingSignature } from './useChartProSampling.types';
 
 /** Toggles sampling. Pyramids and level selection live in community selectors. */
