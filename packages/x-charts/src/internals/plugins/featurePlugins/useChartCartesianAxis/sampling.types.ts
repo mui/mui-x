@@ -60,7 +60,7 @@ export interface SampleContext {
   availableSize: number;
   /** Axis zoom `minSpan`; level 0 (`span ≈ minSpan`) renders raw. */
   minSpan: number;
-  /** Line algorithm; omitted for bars. */
+  /** Line algorithm. Omitted for bars, which always use the default min/max envelope. */
   algorithm?: LineSamplingAlgorithm;
   /**
    * Lazy raw values, read only for `lttb`.
