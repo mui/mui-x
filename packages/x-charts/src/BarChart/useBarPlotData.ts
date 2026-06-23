@@ -213,15 +213,7 @@ export function processBarDataForPlot(
 
       if (sampledBars) {
         for (const bar of sampledBars) {
-          registerResult(
-            makeResult(bar.dataIndex, {
-              x: bar.x,
-              y: bar.y,
-              width: bar.width,
-              height: bar.height,
-            }),
-            bar.dataIndex,
-          );
+          registerResult(makeResult(bar.dataIndex, bar), bar.dataIndex);
         }
       } else {
         const getBarDimensions = createGetBarDimensions({

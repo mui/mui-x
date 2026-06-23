@@ -94,8 +94,12 @@ export function getSamplingLevelCount(pyramid: SamplingPyramid): number {
   return pyramid.offsets.length - 1;
 }
 
-/** Level index from the zoom span: 0 at max zoom (`currentSpan === minSpan`), +1 per span doubling. */
-export function levelIndexFromSpan(currentSpan: number, minSpan: number): number {
+/**
+ * Level index from the zoom span and screen: 0 at max zoom (data fills the view at the minimum
+ * element size), +1 per span doubling. The min-span intermediate stays internal.
+ */
+function levelIndexFor(currentSpan: number, dataLength: number, availableSizePx: number): number {
+  const minSpan = getSamplingMinSpan(dataLength, availableSizePx);
   if (!(currentSpan > 0) || !(minSpan > 0)) {
     return 0;
   }
@@ -103,34 +107,38 @@ export function levelIndexFromSpan(currentSpan: number, minSpan: number): number
 }
 
 /**
- * Picks the active level from the zoom span: max zoom (`currentSpan === minSpan`) → no sampling
- * (`null`); each span doubling → bucket size ×2. Clamped to the pyramid depth.
+ * Picks the active level from the zoom span: max zoom → no sampling (`null`); each span doubling →
+ * bucket size ×2. Clamped to the pyramid depth. `bucketSize === 2 ** clampedLevel`, and the level's
+ * buckets are `offsets[clampedLevel - 1 .. clampedLevel]`.
  */
 export function selectSamplingLevel(
   pyramid: SamplingPyramid,
   currentSpan: number,
-  minSpan: number,
+  availableSizePx: number,
 ): ActiveSamplingLevel | null {
-  const levelCount = getSamplingLevelCount(pyramid);
-  const levelIndex = levelIndexFromSpan(currentSpan, minSpan);
+  const levelCount = pyramid.offsets.length - 1;
+  const levelIndex = levelIndexFor(currentSpan, pyramid.dataLength, availableSizePx);
   if (levelIndex <= 0 || levelCount === 0) {
     return null;
   }
-  const storedLevel = Math.min(levelIndex, levelCount) - 1;
+  const clampedLevel = Math.min(levelIndex, levelCount);
   return {
-    bucketSize: 2 ** (storedLevel + 1),
-    start: pyramid.offsets[storedLevel],
-    end: pyramid.offsets[storedLevel + 1],
+    bucketSize: 2 ** clampedLevel,
+    start: pyramid.offsets[clampedLevel - 1],
+    end: pyramid.offsets[clampedLevel],
   };
 }
 
-/** Active bucket size for the given span (`1` = no sampling) — matches {@link selectSamplingLevel}. */
+/**
+ * Active bucket size (`1` = no sampling) for an axis with no built pyramid (the axis highlight).
+ * Matches {@link selectSamplingLevel}'s `bucketSize`, derived from `dataLength` alone.
+ */
 export function getSamplingBucketSize(
   currentSpan: number,
-  minSpan: number,
   dataLength: number,
+  availableSizePx: number,
 ): number {
-  const levelIndex = levelIndexFromSpan(currentSpan, minSpan);
+  const levelIndex = levelIndexFor(currentSpan, dataLength, availableSizePx);
   if (levelIndex <= 0 || dataLength <= 1) {
     return 1;
   }

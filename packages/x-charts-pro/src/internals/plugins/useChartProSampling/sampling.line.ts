@@ -11,11 +11,11 @@ import type { SamplingPyramid } from './sampling.pyramid.types';
 export function selectLineSampledIndices(
   pyramid: SamplingPyramid,
   currentSpan: number,
-  minSpan: number,
+  availableSizePx: number,
   algorithm: LineSamplingAlgorithm,
   getValues: () => ArrayLike<number>,
 ): Int32Array | null {
-  const level = selectSamplingLevel(pyramid, currentSpan, minSpan);
+  const level = selectSamplingLevel(pyramid, currentSpan, availableSizePx);
   if (!level) {
     return null;
   }

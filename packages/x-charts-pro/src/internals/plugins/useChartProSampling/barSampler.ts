@@ -25,11 +25,7 @@ export const barSampler: SamplingStrategy<'bar', SamplingPyramid> = {
     if (!zoom) {
       return null;
     }
-    const level = selectSamplingLevel(
-      pyramid,
-      zoom.end - zoom.start,
-      getSamplingMinSpan(pyramid.dataLength, context.availableSize),
-    );
+    const level = selectSamplingLevel(pyramid, zoom.end - zoom.start, context.availableSize);
     if (!level) {
       return null;
     }
@@ -67,11 +63,7 @@ export const barSampler: SamplingStrategy<'bar', SamplingPyramid> = {
   },
 
   bucketSizeAt: (span, context) =>
-    getSamplingBucketSize(
-      span,
-      getSamplingMinSpan(context.dataLength, context.availableSize),
-      context.dataLength,
-    ),
+    getSamplingBucketSize(span, context.dataLength, context.availableSize),
 
   minSpanFor: (context) => getSamplingMinSpan(context.dataLength, context.availableSize),
 };

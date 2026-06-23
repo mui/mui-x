@@ -26,18 +26,14 @@ export const lineSampler: SamplingStrategy<'line', SamplingPyramid> = {
     return selectLineSampledIndices(
       pyramid,
       zoom.end - zoom.start,
-      getSamplingMinSpan(pyramid.dataLength, context.availableSize),
+      context.availableSize,
       context.algorithm,
       context.getValues,
     );
   },
 
   bucketSizeAt: (span, context) =>
-    getSamplingBucketSize(
-      span,
-      getSamplingMinSpan(context.dataLength, context.availableSize),
-      context.dataLength,
-    ),
+    getSamplingBucketSize(span, context.dataLength, context.availableSize),
 
   minSpanFor: (context) => getSamplingMinSpan(context.dataLength, context.availableSize),
 };
