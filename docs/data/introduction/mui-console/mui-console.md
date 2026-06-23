@@ -12,7 +12,7 @@ The [MUI Console](https://console.mui.com) is the central workspace for managing
 Use it to handle operational tasks such as:
 
 - Managing commercial licenses, renewals, upgrades, and service add-ons.
-- Reviewing license status and seat assignments.
+- Reviewing license status and account details.
 - Accessing MUI Recipes and managing usage for AI-powered workflows.
 - Creating, viewing, and rotating API keys for AI assistance services, including the [Data Grid AI Assistant](/x/react-data-grid/ai-assistant/).
 
