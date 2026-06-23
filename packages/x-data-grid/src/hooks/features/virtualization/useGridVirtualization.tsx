@@ -2,14 +2,14 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { type Virtualization, type LayoutDataGrid, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
-import { isJSDOM } from '../../../utils/isJSDOM';
+import { platform } from '@base-ui/utils/platform';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridEventPriority } from '../../utils';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
-const HAS_LAYOUT = !isJSDOM;
+const HAS_LAYOUT = !platform.env.jsdom;
 
 type RootProps = DataGridProcessedProps;
 
