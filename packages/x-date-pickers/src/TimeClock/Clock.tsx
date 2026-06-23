@@ -5,6 +5,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
 import { ClockPointer } from './ClockPointer';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
@@ -238,6 +240,9 @@ export function Clock(inProps: ClockProps) {
     clockMeridiemMode: meridiemMode,
   };
   const isMoving = React.useRef(false);
+  const activePointerIdRef = React.useRef<number | null>(null);
+  const squareMaskRef = React.useRef<HTMLDivElement>(null);
+  const removeDragListenersRef = React.useRef<(() => void) | undefined>(undefined);
   const classes = useUtilityClasses(classesProp, ownerState);
 
   const isSelectedTimeDisabled = isTimeDisabled(viewValue, type);
@@ -254,15 +259,22 @@ export function Clock(inProps: ClockProps) {
     onChange(newValue, isFinish);
   };
 
-  const setTime = (event: MouseEvent | React.TouchEvent, isFinish: PickerSelectionState) => {
-    let { offsetX, offsetY } = event as MouseEvent;
-
-    if (offsetX === undefined) {
-      const rect = ((event as React.TouchEvent).target as HTMLElement).getBoundingClientRect();
-
-      offsetX = (event as React.TouchEvent).changedTouches[0].clientX - rect.left;
-      offsetY = (event as React.TouchEvent).changedTouches[0].clientY - rect.top;
+  const setTime = (event: PointerEvent | React.PointerEvent, isFinish: PickerSelectionState) => {
+    const mask = squareMaskRef.current;
+    // The document-level listeners can briefly outlive the mask during unmount:
+    // React detaches refs before the cleanup effect removes the listeners, so a
+    // pointer event firing in that window would otherwise dereference a null ref.
+    if (!mask) {
+      return;
     }
+
+    // Resolve the pointer coordinates relative to the clock mask rather than from
+    // `offsetX`/`offsetY`: the `pointermove`/`pointerup` listeners live on the
+    // document (see `handlePointerDown`), so the event target can be any element
+    // once the pointer leaves the clock.
+    const rect = mask.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const offsetY = event.clientY - rect.top;
 
     const newSelectedValue =
       type === 'seconds' || type === 'minutes'
@@ -272,32 +284,69 @@ export function Clock(inProps: ClockProps) {
     handleValueChange(newSelectedValue, isFinish);
   };
 
-  const handleTouchSelection = (event: React.TouchEvent) => {
-    isMoving.current = true;
-    setTime(event, 'shallow');
+  // Pointer events are the single source of truth for mouse, touch and pen. The
+  // move/up/cancel listeners are attached to the document so a drag keeps
+  // tracking and commits even when the pointer is released outside the clock.
+  const stopTracking = () => {
+    isMoving.current = false;
+    activePointerIdRef.current = null;
+    // Idempotent: the cleanup clears its own ref, so calling `stopTracking` twice
+    // (e.g. a `pointercancel` racing a `pointerup`) is a safe no-op.
+    removeDragListenersRef.current?.();
   };
 
-  const handleTouchEnd = (event: React.TouchEvent) => {
-    if (isMoving.current) {
-      setTime(event, 'finish');
-      isMoving.current = false;
+  const handleDocumentPointerMove = useEventCallback((event: PointerEvent) => {
+    if (event.pointerId !== activePointerIdRef.current) {
+      return;
     }
     event.preventDefault();
-  };
+    setTime(event, 'shallow');
+  });
 
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    // event.buttons & PRIMARY_MOUSE_BUTTON
-    if (event.buttons > 0) {
-      setTime(event.nativeEvent, 'shallow');
+  const handleDocumentPointerUp = useEventCallback((event: PointerEvent) => {
+    if (event.pointerId !== activePointerIdRef.current) {
+      return;
     }
-  };
+    stopTracking();
+    setTime(event, 'finish');
+  });
 
-  const handleMouseUp = (event: React.MouseEvent) => {
-    if (isMoving.current) {
-      isMoving.current = false;
+  const handleDocumentPointerCancel = useEventCallback((event: PointerEvent) => {
+    if (event.pointerId !== activePointerIdRef.current) {
+      return;
+    }
+    // The gesture was interrupted by the user agent: drop it without committing.
+    stopTracking();
+  });
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    // Ignore secondary buttons (middle = 1, right = 2), secondary multi-touch
+    // pointers and interactions that can't change the value. `> 0` rather than
+    // `!== 0` keeps the gesture permissive when `event.button` is left unset by a
+    // synthetic event (some test environments), matching `useDragRange`.
+    if (event.button > 0 || event.isPrimary === false || disabled || readOnly) {
+      return;
     }
 
-    setTime(event.nativeEvent, 'finish');
+    // A fresh primary pointerdown ends any previous gesture whose pointerup was
+    // lost, fully resetting its state before starting the new one.
+    stopTracking();
+
+    isMoving.current = true;
+    activePointerIdRef.current = event.pointerId;
+
+    const doc = ownerDocument(squareMaskRef.current);
+    doc.addEventListener('pointermove', handleDocumentPointerMove);
+    doc.addEventListener('pointerup', handleDocumentPointerUp);
+    doc.addEventListener('pointercancel', handleDocumentPointerCancel);
+    removeDragListenersRef.current = () => {
+      doc.removeEventListener('pointermove', handleDocumentPointerMove);
+      doc.removeEventListener('pointerup', handleDocumentPointerUp);
+      doc.removeEventListener('pointercancel', handleDocumentPointerCancel);
+      removeDragListenersRef.current = undefined;
+    };
+
+    setTime(event.nativeEvent, 'shallow');
   };
 
   const isPointerBetweenTwoClockValues = type === 'hours' ? false : viewValue % 5 !== 0;
@@ -313,6 +362,9 @@ export function Clock(inProps: ClockProps) {
       listboxRef.current!.focus();
     }
   }, [autoFocus]);
+
+  // Clean up the document-level pointer listeners if the clock unmounts mid-drag.
+  React.useEffect(() => () => removeDragListenersRef.current?.(), []);
 
   const clampValue = (newValue: number) => Math.max(minViewValue, Math.min(maxViewValue, newValue));
 
@@ -365,11 +417,8 @@ export function Clock(inProps: ClockProps) {
       <ClockClock className={classes.clock}>
         <ClockSquareMask
           data-testid="clock"
-          onTouchMove={handleTouchSelection}
-          onTouchStart={handleTouchSelection}
-          onTouchEnd={handleTouchEnd}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
+          ref={squareMaskRef}
+          onPointerDown={handlePointerDown}
           ownerState={ownerState}
           className={classes.squareMask}
         />
