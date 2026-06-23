@@ -53,7 +53,7 @@ export interface BarChartPremiumProps
     >,
     Omit<
       ChartsContainerPremiumProps<'bar', BarChartPremiumPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'sampling'
     >,
     Pick<BarPlotPremiumProps, 'renderer'> {
   /**
@@ -96,7 +96,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPremium' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, sampling, ...other } = props;
 
   const {
     chartsWrapperProps,
@@ -116,14 +116,17 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'bar' | 'rangeBar',
     BarChartPremiumPluginSignatures
-  >({
-    ...chartsContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: BAR_CHART_PREMIUM_PLUGINS,
-  });
+  >(
+    {
+      ...chartsContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: BAR_CHART_PREMIUM_PLUGINS,
+    },
+    { seriesType: 'bar', method: sampling },
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -484,6 +487,13 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
    * @default 'svg-single'
    */
   renderer: PropTypes.oneOf(['svg-batch', 'svg-single', 'webgl']),
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every bar (no sampling).
+   * - `'minmax'`: keep the min and max per bucket and draw one merged bar.
+   * @default 'none'
+   */
+  sampling: PropTypes.oneOf(['minmax', 'none']),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] or [[RangeBarSeries]] objects.

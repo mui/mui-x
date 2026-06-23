@@ -1,6 +1,10 @@
 'use client';
 import * as React from 'react';
-import { type ChartPlugin, type SamplingMethod } from '@mui/x-charts/internals';
+import {
+  type ChartPlugin,
+  type SamplingConfig,
+  type SamplingState,
+} from '@mui/x-charts/internals';
 import { type UseChartProSamplingSignature } from './useChartProSampling.types';
 
 /** Toggles sampling. Pyramids and level selection live in community selectors. */
@@ -22,11 +26,20 @@ export const useChartProSampling: ChartPlugin<UseChartProSamplingSignature> = ({
   return {};
 };
 
-/** Maps the public `sampling` method to the internal state (`enabled` + line algorithm). */
-function toSamplingState(sampling: SamplingMethod) {
+/** Maps the per-series-type `sampling` config to the internal state (per-type methods + line algorithm). */
+function toSamplingState(sampling: SamplingConfig = {}): SamplingState {
+  const methods: SamplingState['methods'] = {};
+  if (sampling.bar && sampling.bar !== 'none') {
+    methods.bar = sampling.bar;
+  }
+  if (sampling.line && sampling.line !== 'none') {
+    methods.line = sampling.line;
+  }
+  const lineAlgorithm = sampling.line && sampling.line !== 'none' ? sampling.line : 'm4';
   return {
-    enabled: sampling !== 'none',
-    lineAlgorithm: sampling === 'none' ? ('m4' as const) : sampling,
+    enabled: Object.keys(methods).length > 0,
+    methods,
+    lineAlgorithm,
   };
 }
 
@@ -36,7 +49,7 @@ useChartProSampling.params = {
 
 useChartProSampling.getDefaultizedParams = ({ params }) => ({
   ...params,
-  sampling: params.sampling ?? 'none',
+  sampling: params.sampling ?? {},
 });
 
 useChartProSampling.getInitialState = ({ sampling }) => ({

@@ -20,7 +20,7 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { useLineChartProps } from '@mui/x-charts/internals';
+import { useLineChartProps, type SamplingMethod } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import {
@@ -48,8 +48,17 @@ export interface LineChartProProps
     Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartsContainerProProps<'line', LineChartProPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'sampling'
     > {
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every point (no sampling).
+   * - `'minmax'`: keep the min and max per bucket.
+   * - `'m4'`: pixel-accurate—keep the first, min, max, and last per bucket.
+   * - `'lttb'`: Largest-Triangle-Three-Buckets, preserves the visual shape.
+   * @default 'none'
+   */
+  sampling?: SamplingMethod;
   /**
    * Overridable component slots.
    * @default {}
@@ -97,14 +106,17 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'line',
     LineChartProPluginSignatures
-  >({
-    ...chartsContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: LINE_CHART_PRO_PLUGINS,
-  });
+  >(
+    {
+      ...chartsContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: LINE_CHART_PRO_PLUGINS,
+    },
+    { seriesType: 'line', method: sampling },
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -112,7 +124,6 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   return (
     <ChartsDataProviderPro<'line', LineChartProPluginSignatures>
       {...chartsDataProviderProProps}
-      sampling={sampling}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
@@ -448,6 +459,17 @@ LineChartPro.propTypes /* remove-proptypes */ = {
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange: PropTypes.func,
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every element (no sampling).
+   * - `'minmax'`: keep the min and max per bucket.
+   * - `'m4'`: pixel-accurate—keep the first, min, max, and last per bucket (line series).
+   * - `'lttb'`: Largest-Triangle-Three-Buckets, preserves the visual shape (line series).
+   *
+   * Bar series sample with a min/max envelope for any value other than `'none'`.
+   * @default 'none'
+   */
+  sampling: PropTypes.oneOf(['lttb', 'm4', 'minmax', 'none']),
   /**
    * The series to display in the line chart.
    * An array of [[LineSeries]] objects.

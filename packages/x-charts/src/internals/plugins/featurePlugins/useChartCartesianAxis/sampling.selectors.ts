@@ -42,6 +42,10 @@ export const selectorChartSamplingPyramids = createSelectorMemoized(
 
     let sampled: SampledSeriesLookup | undefined;
     (Object.keys(processedSeries) as ChartSeriesType[]).forEach((seriesType) => {
+      const method = samplingState.methods[seriesType];
+      if (!method || method === 'none') {
+        return;
+      }
       const sampler = seriesConfig[seriesType]?.sampler;
       const typeData = processedSeries[seriesType];
       if (!sampler || !typeData) {

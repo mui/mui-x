@@ -1,7 +1,10 @@
 'use client';
+import * as React from 'react';
 import {
   type ChartAnyPluginSignature,
   type ChartSeriesType,
+  type SamplingConfig,
+  type SamplingMethod,
   useChartsContainerProps,
   type UseChartsContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
@@ -24,6 +27,11 @@ export const useChartsContainerProProps = <
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(
   props: ChartsContainerProProps<SeriesType, TSignatures>,
+  /**
+   * Maps a type-specific chart's single `sampling` method to the provider's per-series-type
+   * {@link SamplingConfig}. Omit for charts without sampling.
+   */
+  samplingOptions?: { seriesType: SeriesType; method: SamplingMethod | undefined },
 ): UseChartsContainerProPropsReturnValue<SeriesType, TSignatures> => {
   const {
     initialZoom,
@@ -35,6 +43,16 @@ export const useChartsContainerProProps = <
     ...baseProps
   } = props as ChartsContainerProProps<SeriesType, AllPluginSignatures<SeriesType>>;
 
+  const samplingMethod = samplingOptions?.method;
+  const samplingSeriesType = samplingOptions?.seriesType;
+  const samplingConfig = React.useMemo(
+    () =>
+      samplingMethod
+        ? ({ [samplingSeriesType as ChartSeriesType]: samplingMethod } as SamplingConfig)
+        : undefined,
+    [samplingMethod, samplingSeriesType],
+  );
+
   const { chartsDataProviderProps, chartsSurfaceProps, children } =
     useChartsContainerProps<SeriesType>(baseProps);
 
@@ -45,6 +63,7 @@ export const useChartsContainerProProps = <
     onZoomChange,
     zoomInteractionConfig,
     apiRef,
+    sampling: samplingConfig,
     plugins: plugins ?? DEFAULT_PLUGINS,
   } as unknown as ChartsDataProviderProProps<SeriesType, TSignatures>;
 

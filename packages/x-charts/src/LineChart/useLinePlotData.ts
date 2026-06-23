@@ -57,7 +57,8 @@ export function useLinePlotData(
 
   // Skip the line animation while sampling is on, and for the one render after it turns off:
   // both directions morph the path between different point counts, which looks wrong.
-  const samplingEnabled = samplingState?.enabled ?? false;
+  const lineMethod = samplingState?.methods.line;
+  const samplingEnabled = lineMethod != null && lineMethod !== 'none';
   const wasSamplingEnabled = React.useRef(samplingEnabled);
   const skipSamplingAnimation = samplingEnabled || wasSamplingEnabled.current;
   React.useEffect(() => {
@@ -132,7 +133,7 @@ export function useLinePlotData(
         const built = sampledSeries[seriesId];
         const zoom = zoomMap?.get(xAxisId);
         let sampledBuckets: SampledBucket[] | null = null;
-        if (samplingState?.enabled && built && zoom && !shouldExpand && xData) {
+        if (samplingEnabled && built && zoom && !shouldExpand && xData) {
           // The sampler (pro) owns all sampling math; community flattens its buckets into a polyline.
           sampledBuckets =
             sampler?.sample?.({
@@ -140,7 +141,7 @@ export function useLinePlotData(
               zoom,
               availableSize: drawingArea.width,
               minSpan: zoomOptions[xAxisId]?.minSpan ?? 0,
-              algorithm: samplingState.lineAlgorithm,
+              algorithm: samplingState?.lineAlgorithm ?? 'm4',
               getValues: () => Float64Array.from(visibleStackedData, (point) => point[1]),
             }) ?? null;
         }
@@ -224,6 +225,7 @@ export function useLinePlotData(
     getGradientId,
     drawingArea,
     samplingState,
+    samplingEnabled,
     sampledSeries,
     zoomMap,
     zoomOptions,

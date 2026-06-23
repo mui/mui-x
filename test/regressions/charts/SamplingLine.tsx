@@ -22,13 +22,7 @@ const ZOOMS = [
   { label: '90-100', start: 90, end: 100 },
 ];
 
-function Cell({
-  sampling,
-  zoom,
-}: {
-  sampling: SamplingMethod;
-  zoom: (typeof ZOOMS)[number];
-}) {
+function Cell({ sampling, zoom }: { sampling: SamplingMethod; zoom: (typeof ZOOMS)[number] }) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Typography variant="caption">{`${sampling} · ${zoom.label}`}</Typography>

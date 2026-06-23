@@ -1,5 +1,9 @@
 import type { SeriesId } from '../../../../models/seriesType/common';
-import type { ChartSeriesType, ChartSeriesDefaultized } from '../../../../models/seriesType/config';
+import type {
+  ChartSeriesType,
+  ChartSeriesDefaultized,
+  ChartsSeriesConfig,
+} from '../../../../models/seriesType/config';
 import type { ZoomData } from './zoom.types';
 
 /** Line sampling algorithms. `m4` is pixel-accurate; `minmax` is its 2-point subset; `lttb` keeps shape. */
@@ -12,10 +16,31 @@ export type LineSamplingAlgorithm = 'm4' | 'minmax' | 'lttb';
  */
 export type SamplingMethod = 'none' | LineSamplingAlgorithm;
 
+/**
+ * Sampling method for bar series. Bars always use a min/max envelope, so only
+ * `'none'` (disabled) and `'minmax'` are meaningful; line-only algorithms are excluded.
+ */
+export type BarSamplingMethod = 'none' | 'minmax';
+
+/**
+ * Per-series-type sampling configuration — the shape of the `sampling` prop on
+ * `ChartsDataProviderPro`. Derived from each series type's `samplingMethod`, contributed by the
+ * pro package through the per-type series-config extensions (e.g. `BarSeriesExtension`). Series
+ * types without a `samplingMethod` (or in a community-only build) are absent.
+ */
+export type SamplingConfig = {
+  [K in keyof ChartsSeriesConfig as ChartsSeriesConfig[K] extends { samplingMethod: any }
+    ? K
+    : never]?: ChartsSeriesConfig[K] extends { samplingMethod: infer M } ? M : never;
+};
+
 /** State slice set by the pro `useChartProSampling` plugin; absent in community. */
 export interface SamplingState {
+  /** True when at least one series type has sampling enabled. */
   enabled: boolean;
-  /** Algorithm used for line series. @default 'm4' */
+  /** Enabled method per series type; absent/`'none'` means the type isn't sampled. */
+  methods: Partial<Record<ChartSeriesType, SamplingMethod>>;
+  /** Algorithm used for line series; `'m4'` fallback when line sampling is off. */
   lineAlgorithm: LineSamplingAlgorithm;
 }
 

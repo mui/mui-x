@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
-type SamplingMethod = 'none' | 'minmax' | 'm4' | 'lttb';
+type SamplingMethod = 'none' | 'minmax';
 
 // Deterministic peaky signal so sampling differences (min/max envelope per
 // bucket, dropped bars) are visible in the screenshot.
@@ -24,13 +24,7 @@ const ZOOMS = [
   { label: '90-100', start: 90, end: 100 },
 ];
 
-function Cell({
-  sampling,
-  zoom,
-}: {
-  sampling: SamplingMethod;
-  zoom: (typeof ZOOMS)[number];
-}) {
+function Cell({ sampling, zoom }: { sampling: SamplingMethod; zoom: (typeof ZOOMS)[number] }) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Typography variant="caption">{`${sampling} · ${zoom.label}`}</Typography>
