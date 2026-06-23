@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { ScatterChart, ScatterMarkerProps } from '@mui/x-charts/ScatterChart';
 import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
-import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useZAxis } from '@mui/x-charts-premium/hooks';
 import { irisData } from '../dataset/irisDataset';
@@ -12,19 +12,6 @@ import { irisData } from '../dataset/irisDataset';
 const species = ['Setosa', 'Versicolor', 'Virginica'];
 const speciesColors = ['#2e7d32', '#ed6c02', '#9c27b0'];
 const speciesPredictionColors = ['#5aa35e', '#be7f4b', '#ba68c9'];
-
-const TooltipPaper = styled('div', {
-  name: 'Tooltip',
-  slot: 'Paper',
-})(({ theme }) => {
-  return {
-    padding: theme.spacing(1),
-    backgroundColor: (theme.vars || theme).palette.background.paper,
-    color: (theme.vars || theme).palette.text.primary,
-    borderRadius: (theme.vars || theme).shape?.borderRadius,
-    border: `solid ${(theme.vars || theme).palette.divider} 1px`,
-  };
-});
 
 function IrisMarker(props: ScatterMarkerProps) {
   const { x, y, color, size, isHighlighted, isFaded, dataIndex, ...other } = props;
@@ -68,7 +55,15 @@ function IrisAnnotation() {
   );
 }
 
-function CustomTooltip() {
+function IrisTooltip() {
+  return (
+    <ChartsTooltipContainer trigger="item">
+      <IrisTooltipContent />
+    </ChartsTooltipContainer>
+  );
+}
+
+function IrisTooltipContent() {
   const item = useItemTooltip<'scatter'>();
 
   function numberFormatter(value: number | string | undefined) {
@@ -87,64 +82,62 @@ function CustomTooltip() {
   }
 
   return (
-    <ChartsTooltipContainer trigger="item">
-      <TooltipPaper>
+    <Paper sx={{ p: 1.5 }} elevation={4}>
+      <Box
+        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 1 }}
+      >
         <Box
-          sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 1 }}
-        >
-          <Box
-            sx={{
-              width: 20,
-              height: 20,
-              backgroundColor: item?.color,
-              borderRadius: 1,
-              mr: 2,
-            }}
-          />
-          <Typography sx={{ fontWeight: 600 }}>{dataItem.species}</Typography>
+          sx={{
+            width: 20,
+            height: 20,
+            backgroundColor: item?.color,
+            borderRadius: 1,
+            mr: 2,
+          }}
+        />
+        <Typography sx={{ fontWeight: 600 }}>{dataItem.species}</Typography>
+      </Box>
+      <Divider sx={{ my: 1 }} />
+      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 0.75 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="caption">Sepal Length:</Typography>
+          <Typography variant="caption" sx={{ fontWeight: 500 }}>
+            {numberFormatter(dataItem.sepalLength)} cm
+          </Typography>
         </Box>
-        <Divider sx={{ my: 1 }} />
-        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 0.75 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="caption">Sepal Length:</Typography>
-            <Typography variant="caption" sx={{ fontWeight: 500 }}>
-              {numberFormatter(dataItem.sepalLength)} cm
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="caption">Sepal Width:</Typography>
-            <Typography variant="caption" sx={{ fontWeight: 500 }}>
-              {numberFormatter(dataItem.sepalWidth)} cm
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="caption">Petal Length:</Typography>
-            <Typography variant="caption" sx={{ fontWeight: 500 }}>
-              {numberFormatter(dataItem.petalLength)} cm
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="caption">Petal Width:</Typography>
-            <Typography variant="caption" sx={{ fontWeight: 500 }}>
-              {numberFormatter(dataItem.petalWidth)} cm
-            </Typography>
-          </Box>
-          <Divider sx={{ my: 0.5 }} />
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="caption">Predicted:</Typography>
-            <Typography variant="caption" sx={{ fontWeight: 500 }}>
-              {dataItem.prediction}
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="caption">Confidence:</Typography>
-            <Typography variant="caption" sx={{ fontWeight: 500 }}>
-              {numberFormatter(dataItem.confidence)}%
-            </Typography>
-          </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="caption">Sepal Width:</Typography>
+          <Typography variant="caption" sx={{ fontWeight: 500 }}>
+            {numberFormatter(dataItem.sepalWidth)} cm
+          </Typography>
         </Box>
-      </TooltipPaper>
-    </ChartsTooltipContainer>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="caption">Petal Length:</Typography>
+          <Typography variant="caption" sx={{ fontWeight: 500 }}>
+            {numberFormatter(dataItem.petalLength)} cm
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="caption">Petal Width:</Typography>
+          <Typography variant="caption" sx={{ fontWeight: 500 }}>
+            {numberFormatter(dataItem.petalWidth)} cm
+          </Typography>
+        </Box>
+        <Divider sx={{ my: 0.5 }} />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="caption">Predicted:</Typography>
+          <Typography variant="caption" sx={{ fontWeight: 500 }}>
+            {dataItem.prediction}
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="caption">Confidence:</Typography>
+          <Typography variant="caption" sx={{ fontWeight: 500 }}>
+            {numberFormatter(dataItem.confidence)}%
+          </Typography>
+        </Box>
+      </Box>
+    </Paper>
   );
 }
 
@@ -206,7 +199,7 @@ export default function ScatterZAxis() {
             },
           },
         ]}
-        slots={{ marker: IrisMarker, tooltip: CustomTooltip }}
+        slots={{ marker: IrisMarker, tooltip: IrisTooltip }}
       ></ScatterChart>
       <IrisAnnotation />
     </Stack>
