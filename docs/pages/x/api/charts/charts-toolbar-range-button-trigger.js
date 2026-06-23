@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
+import translation from 'docs/translations/api-docs/charts/charts-toolbar-range-button-trigger/charts-toolbar-range-button-trigger.json';
 import jsonPageContent from './charts-toolbar-range-button-trigger.json';
 
 export default function Page(props) {
@@ -9,12 +10,7 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/charts-toolbar-range-button-trigger',
-    false,
-    /\.\/charts-toolbar-range-button-trigger.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
 
   return { props: { descriptions } };
 }

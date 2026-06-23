@@ -174,7 +174,8 @@ export function buildInterfacePages(
     const layoutProp = isDataGrid ? '{...layoutConfig} ' : '';
     const jsContent = `import * as React from 'react';
 import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-${layoutImport}import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+${layoutImport}import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
+import translation from 'docs/translations/api-docs/${entry.folder}/${slug}/${slug}.json';
 import jsonPageContent from './${slug}.json';
 
 export default function Page(props) {
@@ -183,12 +184,7 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/${entry.folder}/${slug}',
-    false,
-    /\\.\\/${slug}.*\\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
   return { props: { descriptions } };
 }
 `;

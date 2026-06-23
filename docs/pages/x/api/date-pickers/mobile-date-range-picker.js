@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
+import translation from 'docs/translations/api-docs/date-pickers/mobile-date-range-picker/mobile-date-range-picker.json';
 import jsonPageContent from './mobile-date-range-picker.json';
 
 export default function Page(props) {
@@ -9,12 +10,7 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/mobile-date-range-picker',
-    false,
-    /\.\/mobile-date-range-picker.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
 
   return { props: { descriptions } };
 }

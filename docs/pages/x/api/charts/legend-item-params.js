@@ -1,6 +1,7 @@
 import * as React from 'react';
 import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
+import translation from 'docs/translations/api-docs/charts/legend-item-params/legend-item-params.json';
 import jsonPageContent from './legend-item-params.json';
 
 export default function Page(props) {
@@ -9,11 +10,6 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/charts/legend-item-params',
-    false,
-    /\.\/legend-item-params.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
   return { props: { descriptions } };
 }

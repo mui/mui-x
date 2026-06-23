@@ -1,7 +1,8 @@
 import * as React from 'react';
 import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
 import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
+import translation from 'docs/translations/api-docs/data-grid/grid-filter-operator/grid-filter-operator.json';
 import jsonPageContent from './grid-filter-operator.json';
 
 export default function Page(props) {
@@ -12,11 +13,6 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/grid-filter-operator',
-    false,
-    /\.\/grid-filter-operator.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
   return { props: { descriptions } };
 }

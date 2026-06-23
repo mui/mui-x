@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
 import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
+import translation from 'docs/translations/api-docs/data-grid/charts-panel-trigger/charts-panel-trigger.json';
 import jsonPageContent from './charts-panel-trigger.json';
 
 export default function Page(props) {
@@ -10,12 +11,7 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/data-grid/charts-panel-trigger',
-    false,
-    /\.\/charts-panel-trigger.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
 
   return { props: { descriptions } };
 }

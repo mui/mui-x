@@ -48,8 +48,9 @@ export function generateComponentFiles(api: ComponentApi): FileWrite[] {
 
   const jsContent = `import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
-${layoutImport}import jsonPageContent from './${slug}.json';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
+${layoutImport}import translation from '${translationDir}/${slug}.json';
+import jsonPageContent from './${slug}.json';
 
 export default function Page(props) {
   const { descriptions } = props;
@@ -57,12 +58,7 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/${api.section}/${slug}',
-    false,
-    /\\.\\/${slug}.*\\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
 
   return { props: { descriptions } };
 }
