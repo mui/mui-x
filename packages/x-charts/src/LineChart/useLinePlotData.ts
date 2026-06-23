@@ -146,20 +146,26 @@ export function useLinePlotData(
             }) ?? null;
         }
 
-        const formattedData: {
+        type FormattedPoint = {
           x: any;
           y: [number, number];
           nullData: boolean;
           isExtension?: boolean;
-        }[] = sampledBuckets
-          ? sampledBuckets.flatMap((bucket) =>
-              Array.from(bucket.indices, (index) => ({
-                x: xData![index],
-                y: visibleStackedData[index],
-                nullData: data[index] == null,
-              })),
-            )
-          : (xData?.flatMap((x, index) => {
+        };
+
+        let formattedData: FormattedPoint[];
+        if (sampledBuckets) {
+          // Sampling already reduced the series to the indices to render; flatten them.
+          formattedData = sampledBuckets.flatMap((bucket) =>
+            Array.from(bucket.indices, (index) => ({
+              x: xData![index],
+              y: visibleStackedData[index],
+              nullData: data[index] == null,
+            })),
+          );
+        } else {
+          formattedData =
+            xData?.flatMap((x, index) => {
               const nullData = data[index] == null;
               if (shouldExpand) {
                 const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
@@ -182,17 +188,13 @@ export function useLinePlotData(
                 return rep;
               }
               return { x, y: visibleStackedData[index], nullData };
-            }) ?? []);
+            }) ?? [];
+        }
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
         const hidden = series[seriesId].hidden;
 
-        const linePath = d3Line<{
-          x: any;
-          y: [number, number];
-          nullData: boolean;
-          isExtension?: boolean;
-        }>()
+        const linePath = d3Line<FormattedPoint>()
           .x((d) => (d.isExtension ? d.x : xPosition(d.x)))
           .defined((d) => connectNulls || !d.nullData || !!d.isExtension)
           .y((d) => {
