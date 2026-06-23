@@ -23,7 +23,6 @@ export interface LineClasses {
 
 export type LineClassKey = keyof LineClasses;
 
-
 function getLineUtilityClass(slot: string) {
   return generateUtilityClass('MuiLineChart', slot);
 }
