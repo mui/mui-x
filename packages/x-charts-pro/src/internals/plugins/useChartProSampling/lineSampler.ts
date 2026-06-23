@@ -1,6 +1,6 @@
 import { type SamplingStrategy } from '@mui/x-charts/internals';
 import { buildSamplingPyramid, getSamplingBucketSize } from './sampling';
-import { selectLineSampledIndices } from './sampling.line';
+import { sample } from './sampling.line';
 import type { SamplingPyramid } from './sampling.pyramid.types';
 
 /**
@@ -17,21 +17,7 @@ export const lineSampler: SamplingStrategy<'line', SamplingPyramid> = {
     return buildSamplingPyramid(y, y);
   },
 
-  sampleLineIndices: (context) => {
-    const pyramid = context.built as SamplingPyramid;
-    const { zoom } = context;
-    if (!zoom) {
-      return null;
-    }
-    return selectLineSampledIndices(
-      pyramid,
-      zoom.end - zoom.start,
-      context.availableSize,
-      context.minSpan,
-      context.algorithm,
-      context.getValues,
-    );
-  },
+  sample,
 
   bucketSizeAt: (span, context) =>
     getSamplingBucketSize(span, context.dataLength, context.availableSize, context.minSpan),

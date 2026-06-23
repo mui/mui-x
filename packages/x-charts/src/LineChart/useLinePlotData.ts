@@ -9,6 +9,7 @@ import {
   selectorChartSamplingState,
   selectorChartSamplingPyramids,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
+import type { SampledBucket } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
 import {
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
@@ -130,11 +131,11 @@ export function useLinePlotData(
         // (non-step) path is sampled; step expansion and null gaps fall back to the full render.
         const built = sampledSeries[seriesId];
         const zoom = zoomMap?.get(xAxisId);
-        let sampledIndices: Int32Array | null = null;
+        let sampledBuckets: SampledBucket[] | null = null;
         if (samplingState?.enabled && built && zoom && !shouldExpand && xData) {
-          // The sampler (pro) owns all sampling math; community only renders its indices.
-          sampledIndices =
-            sampler?.sampleLineIndices?.({
+          // The sampler (pro) owns all sampling math; community flattens its buckets into a polyline.
+          sampledBuckets =
+            sampler?.sample?.({
               built,
               zoom,
               availableSize: drawingArea.width,
@@ -149,12 +150,14 @@ export function useLinePlotData(
           y: [number, number];
           nullData: boolean;
           isExtension?: boolean;
-        }[] = sampledIndices
-          ? Array.from(sampledIndices, (index) => ({
-              x: xData![index],
-              y: visibleStackedData[index],
-              nullData: data[index] == null,
-            }))
+        }[] = sampledBuckets
+          ? sampledBuckets.flatMap((bucket) =>
+              Array.from(bucket.indices, (index) => ({
+                x: xData![index],
+                y: visibleStackedData[index],
+                nullData: data[index] == null,
+              })),
+            )
           : (xData?.flatMap((x, index) => {
               const nullData = data[index] == null;
               if (shouldExpand) {

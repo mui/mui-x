@@ -11,7 +11,10 @@ import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
-import { createGetBarDimensions } from '../internals/createGetBarDimensions';
+import {
+  createGetBarDimensions,
+  createGetBucketBarDimensions,
+} from '../internals/createGetBarDimensions';
 import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import { useStore } from '../internals/store/useStore';
@@ -202,26 +205,33 @@ export function processBarDataForPlot(
       const zoom = zoomMap?.get(baseAxisId);
       const availableSize = verticalLayout ? drawingArea.width : drawingArea.height;
       const minSpan = zoomOptions?.[baseAxisId]?.minSpan ?? 0;
-      // The sampler (pro) owns all sampling math; community only renders its output.
-      const sampledBars =
-        pyramid && zoom && sampler?.sampleBars
-          ? sampler.sampleBars({
-              built: pyramid,
-              series: series[seriesId],
-              zoom,
-              availableSize,
-              minSpan,
-              verticalLayout,
-              xAxisConfig,
-              yAxisConfig,
-              numberOfGroups: stackingGroups.length,
-              groupIndex,
-            })
+      // The sampler (pro) owns the level-of-detail math; community renders one merged rect per
+      // bucket, spanning its index range with the bucket's min-base/max-top envelope.
+      const sampledBuckets =
+        pyramid && zoom && sampler?.sample
+          ? sampler.sample({ built: pyramid, zoom, availableSize, minSpan })
           : null;
 
-      if (sampledBars) {
-        for (const bar of sampledBars) {
-          registerResult(makeResult(bar.dataIndex, bar), bar.dataIndex);
+      if (sampledBuckets) {
+        const getBucketBarDimensions = createGetBucketBarDimensions({
+          verticalLayout,
+          xAxisConfig,
+          yAxisConfig,
+          series: series[seriesId],
+          numberOfGroups: stackingGroups.length,
+        });
+        const stacked = series[seriesId].visibleStackedData;
+
+        for (const { startIndex, endIndex, indices } of sampledBuckets) {
+          let low = Infinity;
+          let high = -Infinity;
+          for (let k = 0; k < indices.length; k += 1) {
+            const point = stacked[indices[k]];
+            low = Math.min(low, point[0]);
+            high = Math.max(high, point[1]);
+          }
+          const dimensions = getBucketBarDimensions(startIndex, endIndex, low, high, groupIndex);
+          registerResult(makeResult(startIndex, dimensions), startIndex);
         }
       } else {
         const getBarDimensions = createGetBarDimensions({

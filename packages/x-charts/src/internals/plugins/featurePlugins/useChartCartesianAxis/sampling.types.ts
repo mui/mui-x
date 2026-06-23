@@ -1,11 +1,5 @@
 import type { SeriesId } from '../../../../models/seriesType/common';
 import type { ChartSeriesType, ChartSeriesDefaultized } from '../../../../models/seriesType/config';
-import type {
-  ChartsXAxisProps,
-  ChartsYAxisProps,
-  ComputedAxis,
-  ScaleName,
-} from '../../../../models/axis';
 import type { ZoomData } from './zoom.types';
 
 /** Line sampling algorithms. `m4` is pixel-accurate; `minmax` is its 2-point subset; `lttb` keeps shape. */
@@ -28,48 +22,40 @@ export interface SamplingState {
 /** Built sampling structures keyed by series id (type depends on each series' strategy). */
 export type SampledSeriesLookup = Record<SeriesId, unknown>;
 
-/** Render-ready sampled bar (pixel-space rect) for one bucket. */
-export interface SampledBar {
-  /** Representative original index (today `bucket * bucketSize`). */
-  dataIndex: number;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+/**
+ * One bucket of the active level of detail: the original-index range it covers plus the ascending
+ * original indices to actually render for it. Line series flatten `indices` into a polyline; bar
+ * series draw one merged rect spanning `[startIndex, endIndex]` from the envelope of `indices`.
+ */
+export interface SampledBucket {
+  /** First original index covered by the bucket. */
+  startIndex: number;
+  /** Last original index covered by the bucket (inclusive). */
+  endIndex: number;
+  /** Ascending original indices to render for the bucket. */
+  indices: Int32Array;
 }
 
-/** Inputs the bar sampler needs to produce {@link SampledBar}s for one series. */
-export interface BarSampleContext {
+/**
+ * Inputs the sampler needs to produce {@link SampledBucket}s for one series. Series-type-agnostic:
+ * bar series omit `algorithm`/`getValues` (they always use a min/max envelope).
+ */
+export interface SampleContext {
   /** Opaque built structure for this series (the strategy's `TBuilt`; the pyramid lives in pro). */
   built: unknown;
-  series: ChartSeriesDefaultized<'bar'>;
-  /** Zoom of the base band axis; `undefined` => the sampler returns `null`. */
+  /** Zoom of the sampled axis; `undefined` => the sampler returns `null`. */
   zoom: ZoomData | undefined;
-  /** Pixel extent perpendicular to the value axis: `drawingArea.width` (vertical) else `.height`. */
+  /** Pixel extent along the sampled axis (band axis for bars, x-axis for lines). */
   availableSize: number;
-  /** The base axis zoom `minSpan` (deepest zoom); level 0 (`span ≈ minSpan`) renders raw. */
+  /** The axis zoom `minSpan` (deepest zoom); level 0 (`span ≈ minSpan`) renders raw. */
   minSpan: number;
-  verticalLayout: boolean;
-  xAxisConfig: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
-  yAxisConfig: ComputedAxis<ScaleName, any, ChartsYAxisProps>;
-  numberOfGroups: number;
-  groupIndex: number;
-}
-
-/** Inputs the line sampler needs to produce the indices to render for one series. */
-export interface LineSampleContext {
-  built: unknown;
-  zoom: ZoomData | undefined;
-  /** `drawingArea.width`. */
-  availableSize: number;
-  /** The x-axis zoom `minSpan` (deepest zoom); level 0 (`span ≈ minSpan`) renders raw. */
-  minSpan: number;
-  algorithm: LineSamplingAlgorithm;
+  /** Line algorithm; omitted (min/max envelope) for bar series. */
+  algorithm?: LineSamplingAlgorithm;
   /**
-   * Lazy raw y channel; invoked by the sampler only for `lttb`.
-   * @returns {ArrayLike<number>} The raw y values.
+   * Lazy raw value channel; invoked by the sampler only for `lttb`.
+   * @returns {ArrayLike<number>} The raw values.
    */
-  getValues: () => ArrayLike<number>;
+  getValues?: () => ArrayLike<number>;
 }
 
 /** Axis-level math inputs (no per-series built struct needed). */
@@ -102,17 +88,12 @@ export interface SamplingStrategy<
    */
   build: (series: ChartSeriesDefaultized<SeriesType>) => TBuilt | null;
   /**
-   * Render-ready sampled bars for the current zoom, or `null` to fall back to the raw render.
-   * @param {BarSampleContext} context The bar sampling inputs.
-   * @returns {SampledBar[] | null} The bars to draw, or `null`.
+   * The active level of detail as buckets for the current zoom, or `null` to render raw.
+   * Series-type-agnostic: bar and line both consume {@link SampledBucket}s.
+   * @param {SampleContext} context The sampling inputs.
+   * @returns {SampledBucket[] | null} The buckets to render, or `null`.
    */
-  sampleBars?: (context: BarSampleContext) => SampledBar[] | null;
-  /**
-   * Ascending original indices to draw for the current zoom, or `null` for the full render.
-   * @param {LineSampleContext} context The line sampling inputs.
-   * @returns {Int32Array | null} The indices to draw, or `null`.
-   */
-  sampleLineIndices?: (context: LineSampleContext) => Int32Array | null;
+  sample?: (context: SampleContext) => SampledBucket[] | null;
   /**
    * Merged bucket size at the given zoom span (`>= 1`; `1` = no merge), for axis-highlight widening.
    * @param {number} span The zoom span (`end - start`).

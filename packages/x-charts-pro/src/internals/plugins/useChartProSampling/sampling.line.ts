@@ -1,65 +1,85 @@
-import type { LineSamplingAlgorithm } from '@mui/x-charts/internals';
+import type { LineSamplingAlgorithm, SampleContext, SampledBucket } from '@mui/x-charts/internals';
 import { selectSamplingLevel } from './sampling';
 import type { SamplingPyramid } from './sampling.pyramid.types';
 
 /**
- * Original indices to render for the current zoom, sorted ascending, or `null` for no sampling.
- * `m4` keeps {first, min, max, last} per bucket (pixel-accurate); `minmax` keeps {min, max}; both
- * read the shared {@link SamplingPyramid}. `lttb` ignores the pyramid and reduces on demand to one
- * point per bucket (plus endpoints), reading raw values from `getValues` (called only for `lttb`).
+ * The active level of detail as buckets for the current zoom, or `null` for no sampling. Each bucket
+ * carries its original-index span plus the ascending indices to render. The same output feeds both
+ * series types: lines flatten the indices into a polyline, bars draw one merged rect per bucket.
+ *
+ * `minmax` (default; bars use it) keeps {min, max} per bucket; `m4` also brackets them with the
+ * bucket's first/last (pixel-accurate); both read the shared {@link SamplingPyramid}. `lttb` ignores
+ * the pyramid and reduces on demand to one point per bucket (plus endpoints), reading raw values
+ * from `getValues` (called only for `lttb`) as a single whole-range bucket.
  */
-export function selectLineSampledIndices(
+export function sampleBuckets(
   pyramid: SamplingPyramid,
   currentSpan: number,
   availableSizePx: number,
   minSpan: number,
-  algorithm: LineSamplingAlgorithm,
-  getValues: () => ArrayLike<number>,
-): Int32Array | null {
+  algorithm: LineSamplingAlgorithm = 'minmax',
+  getValues?: () => ArrayLike<number>,
+): SampledBucket[] | null {
   const level = selectSamplingLevel(pyramid, currentSpan, availableSizePx, minSpan);
   if (!level) {
     return null;
   }
 
   const { bucketSize, start, end } = level;
+  const maxIndex = pyramid.dataLength - 1;
 
   if (algorithm === 'lttb') {
-    return largestTriangleThreeBuckets(getValues(), Math.ceil(pyramid.dataLength / bucketSize));
+    const indices = largestTriangleThreeBuckets(
+      getValues!(),
+      Math.ceil(pyramid.dataLength / bucketSize),
+    );
+    return [{ startIndex: 0, endIndex: maxIndex, indices }];
   }
 
   const { argMin, argMax } = pyramid;
-  const maxIndex = pyramid.dataLength - 1;
   const withEnds = algorithm === 'm4';
-
-  // At most 4 indices per bucket; collect then sort/dedup per bucket to keep global ascending order.
-  const indices: number[] = [];
-  let prev = -1;
-  const push = (index: number) => {
-    if (index !== prev) {
-      indices.push(index);
-      prev = index;
-    }
-  };
+  const buckets: SampledBucket[] = [];
 
   for (let j = start; j < end; j += 1) {
     const bucket = j - start;
+    const startIndex = bucket * bucketSize;
+    const endIndex = Math.min(startIndex + bucketSize - 1, maxIndex);
     // Extrema in ascending index order; `m4` also brackets them with the bucket's first/last.
     const extremaFirst = Math.min(argMin[j], argMax[j]);
     const extremaLast = Math.max(argMin[j], argMax[j]);
     const ordered = withEnds
-      ? [
-          bucket * bucketSize,
-          extremaFirst,
-          extremaLast,
-          Math.min((bucket + 1) * bucketSize - 1, maxIndex),
-        ]
+      ? [startIndex, extremaFirst, extremaLast, endIndex]
       : [extremaFirst, extremaLast];
+
+    // Dedup ascending within the bucket (extrema can coincide, or equal the bucket ends for `m4`).
+    const indices: number[] = [];
+    let prev = -1;
     for (let k = 0; k < ordered.length; k += 1) {
-      push(ordered[k]);
+      if (ordered[k] !== prev) {
+        indices.push(ordered[k]);
+        prev = ordered[k];
+      }
     }
+    buckets.push({ startIndex, endIndex, indices: Int32Array.from(indices) });
   }
 
-  return Int32Array.from(indices);
+  return buckets;
+}
+
+/** Shared `sample` for every series type; the per-type build feeds the channels into the pyramid. */
+export function sample(context: SampleContext): SampledBucket[] | null {
+  const { zoom } = context;
+  if (!zoom) {
+    return null;
+  }
+  return sampleBuckets(
+    context.built as SamplingPyramid,
+    zoom.end - zoom.start,
+    context.availableSize,
+    context.minSpan,
+    context.algorithm,
+    context.getValues,
+  );
 }
 
 /**
