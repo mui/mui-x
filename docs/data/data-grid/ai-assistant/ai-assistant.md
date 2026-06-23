@@ -23,7 +23,7 @@ The fastest way to start is with MUI's hosted processing service.
 Premium license holders get starter credits to try the AI Assistant at no additional cost beyond their license.
 Usage beyond the included credits may require a paid plan, managed from the Console.
 
-[Get a free API key in the MUI Console](https://console.mui.com)
+[Get a free API key in MUI Console](https://console.mui.com)
 
 A small server-side proxy is required to keep your API key private.
 The browser sends prompts to your endpoint, and your endpoint forwards them to MUI's service with the API key.
