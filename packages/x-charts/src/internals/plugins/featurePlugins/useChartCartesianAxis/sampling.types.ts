@@ -40,8 +40,6 @@ export interface SamplingState {
   enabled: boolean;
   /** Enabled method per series type; absent/`'none'` means the type isn't sampled. */
   methods: Partial<Record<ChartSeriesType, SamplingMethod>>;
-  /** Algorithm used for line series; `'m4'` fallback when line sampling is off. */
-  lineAlgorithm: LineSamplingAlgorithm;
 }
 
 /** Built sampling structures keyed by series id (type depends on each series' strategy). */

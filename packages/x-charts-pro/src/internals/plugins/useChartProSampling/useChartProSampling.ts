@@ -26,7 +26,7 @@ export const useChartProSampling: ChartPlugin<UseChartProSamplingSignature> = ({
   return {};
 };
 
-/** Maps the per-series-type `sampling` config to the internal state (per-type methods + line algorithm). */
+/** Maps the per-series-type `sampling` config to the internal state (enabled methods per type). */
 function toSamplingState(sampling: SamplingConfig = {}): SamplingState {
   const methods: SamplingState['methods'] = {};
   if (sampling.bar && sampling.bar !== 'none') {
@@ -35,11 +35,9 @@ function toSamplingState(sampling: SamplingConfig = {}): SamplingState {
   if (sampling.line && sampling.line !== 'none') {
     methods.line = sampling.line;
   }
-  const lineAlgorithm = sampling.line && sampling.line !== 'none' ? sampling.line : 'm4';
   return {
     enabled: Object.keys(methods).length > 0,
     methods,
-    lineAlgorithm,
   };
 }
 

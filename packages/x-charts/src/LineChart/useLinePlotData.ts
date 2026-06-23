@@ -141,7 +141,7 @@ export function useLinePlotData(
               zoom,
               availableSize: drawingArea.width,
               minSpan: zoomOptions[xAxisId]?.minSpan ?? 0,
-              algorithm: samplingState?.lineAlgorithm ?? 'm4',
+              algorithm: lineMethod,
               getValues: () => Float64Array.from(visibleStackedData, (point) => point[1]),
             }) ?? null;
         }
@@ -224,8 +224,8 @@ export function useLinePlotData(
     yAxes,
     getGradientId,
     drawingArea,
-    samplingState,
     samplingEnabled,
+    lineMethod,
     sampledSeries,
     zoomMap,
     zoomOptions,
