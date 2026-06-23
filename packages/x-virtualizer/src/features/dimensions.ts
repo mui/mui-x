@@ -701,43 +701,47 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
     return 0;
   }
 
-  const cachedSize = scrollbarSizeCache.get(element);
-  if (cachedSize !== undefined) {
-    return cachedSize;
-  }
-
   const htmlElement = element as HTMLElement;
+  const doc = ownerDocument(element);
+  const view = doc.defaultView;
+  const computed = view?.getComputedStyle(htmlElement);
 
   // First, try measuring `element` directly. When `element` is a scroll widget
   // that already has overflowing content (the typical case for the timeline's
   // virtual scrollbars), its rendered scrollbar reflects whatever
   // `scrollbar-width` / `::-webkit-scrollbar` styling is applied to *this*
   // element, which is exactly what we need.
+  //
+  // The scrollbar size can change when the browser zoom or display scale changes while the element stays mounted.
+  const canScrollY = computed?.overflowY === 'auto' || computed?.overflowY === 'scroll';
+  const canScrollX = computed?.overflowX === 'auto' || computed?.overflowX === 'scroll';
+  const hasScrollY = canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight;
+  const hasScrollX = canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth;
   const directSize = Math.max(
-    htmlElement.offsetWidth - htmlElement.clientWidth,
-    htmlElement.offsetHeight - htmlElement.clientHeight,
+    hasScrollY ? htmlElement.offsetWidth - htmlElement.clientWidth : 0,
+    hasScrollX ? htmlElement.offsetHeight - htmlElement.clientHeight : 0,
   );
-  if (directSize > 0) {
-    scrollbarSizeCache.set(element, directSize);
-    return directSize;
+
+  if (hasScrollY || hasScrollX) {
+    return Math.max(0, directSize);
+  }
+
+  const cachedSize = scrollbarSizeCache.get(element);
+  if (cachedSize !== undefined) {
+    return cachedSize;
   }
 
   // Fall back to a probe div appended to `element`. `scrollbar-width` is not
   // inherited, so copy it from the target element's computed style; otherwise
   // a parent that opts into `scrollbar-width: thin` would still be measured
   // with default scrollbar size.
-  const doc = ownerDocument(element);
-  const view = doc.defaultView;
   const scrollDiv = doc.createElement('div');
   scrollDiv.style.width = '99px';
   scrollDiv.style.height = '99px';
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.overflow = 'scroll';
-  if (view) {
-    const computed = view.getComputedStyle(htmlElement);
-    if (computed.scrollbarWidth) {
-      scrollDiv.style.scrollbarWidth = computed.scrollbarWidth;
-    }
+  if (computed?.scrollbarWidth) {
+    scrollDiv.style.scrollbarWidth = computed.scrollbarWidth;
   }
   scrollDiv.className = 'scrollDiv';
   element.appendChild(scrollDiv);
