@@ -169,6 +169,9 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
   // `WebkitUserModify` on WebKit breaks Playwright's `fill()` editability
   // check, so we gate on a Chromium-only CSS property (`-webkit-app-region`,
   // a Blink/Electron extension WebKit never adopted) via `@supports`.
+  // The WebKit exclusion is empirical, not guaranteed across versions: the
+  // regression guard is the WebKit `fill()` cases in the browser e2e suite,
+  // which would fail if a future WebKit started matching this `@supports`.
   '@supports (-webkit-app-region: drag)': {
     [`.${pickersInputBaseClasses.root}:not(:focus-within) &`]: {
       WebkitUserModify: 'read-only',
