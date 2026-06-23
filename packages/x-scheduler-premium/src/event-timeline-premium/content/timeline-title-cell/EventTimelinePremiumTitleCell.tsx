@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
+import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 import { useStore } from '@base-ui/utils/store';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
@@ -74,6 +76,42 @@ const ResourceLegendColor = styled('span', {
   backgroundColor: 'var(--event-surface-accent)',
 });
 
+const ResourceCollapseToggle = styled('button', {
+  name: 'MuiEventTimeline',
+  slot: 'TitleCellCollapseToggle',
+})(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 0,
+  width: 20,
+  height: 20,
+  flexShrink: 0,
+  border: 'none',
+  background: 'transparent',
+  cursor: 'pointer',
+  color: 'inherit',
+  borderRadius: theme.shape.borderRadius,
+  '&:focus-visible': {
+    outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+    outlineOffset: 1,
+  },
+  '& > svg': {
+    fontSize: 18,
+  },
+}));
+
+// Reserves the toggle's footprint on leaf resources so the legend colors and
+// titles stay aligned in a single column regardless of whether a row can collapse.
+const ResourceCollapseSpacer = styled('span', {
+  name: 'MuiEventTimeline',
+  slot: 'TitleCellCollapseSpacer',
+})({
+  width: 20,
+  height: 20,
+  flexShrink: 0,
+});
+
 export default function EventTimelinePremiumTitleCell(props: { resourceId: SchedulerResourceId }) {
   const { resourceId } = props;
 
@@ -87,6 +125,8 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
   const resource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
   const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resourceId);
+  const hasChildren = useStore(store, schedulerResourceSelectors.resourceHasChildren, resourceId);
+  const isCollapsed = useStore(store, schedulerResourceSelectors.isResourceCollapsed, resourceId);
   const pinnedLeftOffset = virtualizerStore.use(Virtualization.selectors.pinnedLeftOffsetSelector);
 
   // Ref hooks
@@ -124,6 +164,18 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       data-palette={eventColor}
     >
       <EventTimelinePremiumTitleCellContent ref={contentRef} className={classes.titleCellContent}>
+        {hasChildren ? (
+          <ResourceCollapseToggle
+            type="button"
+            aria-expanded={!isCollapsed}
+            aria-label={`${isCollapsed ? 'Expand' : 'Collapse'} ${resource!.title}`}
+            onClick={(event) => store.toggleResourceCollapse(resourceId, event.nativeEvent)}
+          >
+            {isCollapsed ? <ChevronRightRounded /> : <ExpandMoreRounded />}
+          </ResourceCollapseToggle>
+        ) : (
+          <ResourceCollapseSpacer aria-hidden />
+        )}
         <ResourceLegendColor className={classes.titleCellLegendColor} />
         {resource!.title}
       </EventTimelinePremiumTitleCellContent>

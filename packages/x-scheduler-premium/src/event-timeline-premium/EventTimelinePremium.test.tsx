@@ -97,6 +97,47 @@ describe('<EventTimelinePremium />', () => {
     });
   });
 
+  describe('collapsible resources', () => {
+    const nestedResources: SchedulerResource[] = [
+      {
+        id: 'parent',
+        title: 'Parent',
+        children: [{ id: 'child', title: 'Child' }],
+      },
+    ];
+
+    it('should not render a collapse toggle for a leaf resource', () => {
+      renderTimeline({ resources: nestedResources, events: [] });
+
+      expect(screen.queryByRole('button', { name: /child/i })).to.equal(null);
+    });
+
+    it('should collapse a parent resource and hide its children when the toggle is clicked', async () => {
+      const { user } = renderTimeline({ resources: nestedResources, events: [] });
+
+      expect(screen.getByText('Child')).not.to.equal(null);
+
+      const toggle = screen.getByRole('button', { name: /collapse parent/i });
+      await user.click(toggle);
+
+      expect(screen.queryByText('Child')).to.equal(null);
+    });
+
+    it('should toggle collapse with the keyboard', async () => {
+      const { user } = renderTimeline({ resources: nestedResources, events: [] });
+
+      const toggle = screen.getByRole('button', { name: /collapse parent/i });
+      act(() => {
+        toggle.focus();
+      });
+      await user.keyboard('{Enter}');
+
+      await waitFor(() => {
+        expect(screen.queryByText('Child')).to.equal(null);
+      });
+    });
+  });
+
   describe('events', () => {
     it('should render all visible events', () => {
       renderTimeline();
