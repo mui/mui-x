@@ -177,7 +177,7 @@ export const EventItem = React.forwardRef(function EventItem(
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
+  const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
   // State hooks
   const id = useId(idProp);
