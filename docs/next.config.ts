@@ -149,6 +149,14 @@ export default withDeploymentConfig({
           loaders: [{ loader: 'string-replace-loader', options: { multiple: stringReplaceRules } }],
         },
       ],
+      // API page description JSON (imported only by generated API pages) → render
+      // the markdown to HTML at build time.
+      '**/translations/api-docs/**/*.json': [
+        {
+          loaders: [{ loader: '@mui/internal-markdown/apiPageTranslationLoader' }],
+          as: '*.js',
+        },
+      ],
     },
   },
   // @ts-ignore
@@ -201,6 +209,13 @@ export default withDeploymentConfig({
             options: {
               multiple: stringReplaceRules,
             },
+          },
+          {
+            // API page description JSON (`translations/api-docs/**`, imported only by
+            // generated API pages) → render the markdown to HTML at build time.
+            test: /translations[\\/]api-docs[\\/].*\.json$/,
+            type: 'javascript/auto',
+            use: [{ loader: '@mui/internal-markdown/apiPageTranslationLoader' }],
           },
         ]),
       },
