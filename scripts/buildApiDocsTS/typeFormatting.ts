@@ -91,12 +91,9 @@ export function formatPropType(
   depth: number = 0,
   visited: Visited = new Set(),
 ): PropTypeInfo {
-  return withVisited(
-    type,
-    visited,
-    () => formatPropTypeInner(type, checker, depth, visited),
-    { name: '{}' },
-  );
+  return withVisited(type, visited, () => formatPropTypeInner(type, checker, depth, visited), {
+    name: '{}',
+  });
 }
 
 function formatPropTypeInner(
@@ -314,12 +311,7 @@ function formatObjectType(
 // Short string representation (used inside descriptions)
 // ---------------------------------------------------------------------------
 
-function toShort(
-  type: ts.Type,
-  checker: ts.TypeChecker,
-  depth: number,
-  visited: Visited,
-): string {
+function toShort(type: ts.Type, checker: ts.TypeChecker, depth: number, visited: Visited): string {
   if (depth > 4) {
     return 'any';
   }

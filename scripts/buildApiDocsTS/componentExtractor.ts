@@ -328,7 +328,9 @@ export function extractComponentApi(
 
   const warnings: string[] = [];
   if (defaultsFallback) {
-    warnings.push('conformance options could not be parsed — spread/themeDefaultProps defaulted to true');
+    warnings.push(
+      'conformance options could not be parsed — spread/themeDefaultProps defaulted to true',
+    );
   }
   return { kind: 'ok', api: result, warnings: warnings.length ? warnings : undefined };
 }
@@ -698,10 +700,7 @@ function buildClassInfos(
  * sub-components like HeatmapCell (styled with the parent's namespace
  * 'MuiHeatmap') from being mis-labeled.
  */
-export function extractMuiName(
-  sourceFile: ts.SourceFile,
-  componentName: string,
-): string {
+export function extractMuiName(sourceFile: ts.SourceFile, componentName: string): string {
   let themePropsName: string | undefined;
   const styledNames: string[] = [];
 
@@ -776,10 +775,7 @@ function getNameOptionFromCall(call: ts.CallExpression): string | undefined {
  * Walks the source file for a top-level declaration with the given name and
  * inspects its JSDoc via `ts.getJSDocTags`.
  */
-export function hasIgnoreOnDefinition(
-  sourceFile: ts.SourceFile,
-  componentName: string,
-): boolean {
+export function hasIgnoreOnDefinition(sourceFile: ts.SourceFile, componentName: string): boolean {
   for (const stmt of sourceFile.statements) {
     // function Foo() {}
     if (ts.isFunctionDeclaration(stmt) && stmt.name?.text === componentName) {
@@ -876,7 +872,10 @@ export function parseConformanceTest(componentFilePath: string): {
   // The file mentions describeConformance but we couldn't parse its options object
   // (hand-rolled adaptation, computed callback, etc.). Default to "assumed conformant"
   // so we match the old output, but flag it so the pipeline can surface a warning.
-  const isEmpty = info.forwardsRefTo === undefined && info.spread === undefined && info.themeDefaultProps === undefined;
+  const isEmpty =
+    info.forwardsRefTo === undefined &&
+    info.spread === undefined &&
+    info.themeDefaultProps === undefined;
   if (isEmpty) {
     return {
       info: { spread: true, themeDefaultProps: true },
@@ -907,10 +906,7 @@ function extractConformanceInfoFromAst(sourceFile: ts.SourceFile): ConformanceIn
       node.expression.text === 'describeConformance'
     ) {
       const callback = node.arguments[1];
-      if (
-        callback &&
-        (ts.isArrowFunction(callback) || ts.isFunctionExpression(callback))
-      ) {
+      if (callback && (ts.isArrowFunction(callback) || ts.isFunctionExpression(callback))) {
         const optionsObj = findReturnedObjectLiteral(callback);
         if (optionsObj) {
           result = readConformanceObject(optionsObj);
