@@ -59,6 +59,14 @@
         "describedArgs": []
       }
     },
+    "onMouseDown": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(event: MouseEvent<HTMLDivElement, MouseEvent>) => void",
+        "describedArgs": []
+      }
+    },
     "onPaste": {
       "type": { "name": "func" },
       "required": true,
@@ -137,5 +145,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/PickersTextField/PickersTextField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>",
+  "cssComponent": false
 }

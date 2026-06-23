@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "alwaysVisible": {
+      "description": "By default, suggestions only render when the active thread has no messages\n(treating them as an empty-state affordance). Set to <code>true</code> to render the\nsuggestions regardless of message count — e.g. as a \"next prompt\" row above\nthe composer in an active conversation."
+    },
     "autoSubmit": { "description": "Whether to auto-submit when a suggestion is clicked." },
     "slotProps": { "description": "" },
     "slots": { "description": "" },

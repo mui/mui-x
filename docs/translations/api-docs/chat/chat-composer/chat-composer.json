@@ -7,6 +7,9 @@
     "classes": { "description": "" },
     "disabled": { "description": "" },
     "features": { "description": "Feature flags to control composer capabilities." },
+    "onSubmit": {
+      "description": "Handler invoked when the form is submitted.<br><br>Native form submission is always prevented before this handler runs.\nCall <code>event.preventDefault()</code> from inside the handler to also suppress the\ncomposer's own <code>submit()</code> action; otherwise the composer submits as usual\nafter the handler returns."
+    },
     "slotProps": { "description": "" },
     "slots": { "description": "" },
     "variant": {

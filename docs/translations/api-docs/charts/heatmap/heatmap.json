@@ -39,7 +39,7 @@
       "description": "This prop is used to help implement the accessibility logic.\nIf you don't provide this prop. It falls back to a randomly generated id."
     },
     "initialZoom": {
-      "description": "The list of zoom data related to each axis.\nUsed to initialize the zoom in a specific configuration without controlling it."
+      "description": "The list of zoom data related to each axis.\nUsed to initialize the zoom in a specific configuration without controlling it.<br><br>Each entry is either explicit zoom percentages (<code>{ axisId, start, end }</code>) or a\nrange value (<code>{ axisId, value }</code>) resolved against the axis domain."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
@@ -130,6 +130,8 @@
     "baseMenuItem": "",
     "baseMenuList": "",
     "basePopper": "",
+    "baseToggleButton": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+    "baseToggleButtonGroup": "",
     "baseTooltip": "",
     "cell": "The component that renders the heatmap cell.",
     "exportIcon": "Icon displayed on the toolbar's export button.",

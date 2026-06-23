@@ -53,7 +53,7 @@
     },
     "valueFormatter": {
       "type": {
-        "description": "(value: { id?: number | string | undefined, value: number, label?: (location: 'legend' | 'section' | 'tooltip') =&gt; string | undefined | string | undefined, color?: string | undefined, labelMarkType?: 'circle' | 'line' | 'line+mark' | 'square' | ComponentClass&lt;ChartsLabelCustomMarkProps, any&gt; | FunctionComponent&lt;ChartsLabelCustomMarkProps&gt; | undefined }, context: { dataIndex: number }) =&gt; null | string"
+        "description": "(value: MakeRequired&lt;FunnelValueType, 'id' | 'color'&gt;, context: { dataIndex: number }) =&gt; null | string"
       }
     },
     "variant": {

@@ -13,6 +13,11 @@
       "type": { "name": "shape", "description": "DefaultizedScatterSeriesType" },
       "required": true
     },
+    "sizeGetter": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(dataIndex: number) => number", "describedArgs": [] }
+    },
     "xScale": {
       "type": {
         "name": "union",
@@ -84,6 +89,12 @@
       "key": "focusedMark",
       "className": "MuiScatter-focusedMark",
       "description": "Styles applied to the focused scatter mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlightedMark",
+      "className": "MuiScatter-highlightedMark",
+      "description": "Styles applied to the highlighted scatter mark element.",
       "isGlobal": false
     }
   ],

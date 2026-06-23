@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
-import translation from 'docs/translations/api-docs/chat/composer-send-button/composer-send-button.json';
+import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 import jsonPageContent from './composer-send-button.json';
 
 export default function Page(props) {
@@ -10,7 +9,12 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const descriptions = mapApiPageTranslation(translation);
+  const req = require.context(
+    'docsx/translations/api-docs/chat/composer-send-button',
+    false,
+    /\.\/composer-send-button.*\.json$/,
+  );
+  const descriptions = mapApiPageTranslations(req);
 
   return { props: { descriptions } };
 }

@@ -1,9 +1,5 @@
 {
   "props": {
-    "classes": {
-      "type": { "name": "shape", "description": "Partial<ChatMessageClasses>" },
-      "additionalInfo": { "cssApi": true }
-    },
     "slotProps": { "type": { "name": "shape", "description": "MessageAvatarSlotProps" } },
     "slots": {
       "type": { "name": "shape", "description": "Partial<MessageAvatarSlots>" },
@@ -23,6 +19,6 @@
   "muiName": "MuiChatMessageAvatar",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAvatar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>",
   "cssComponent": false
 }

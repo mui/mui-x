@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
-import translation from 'docs/translations/api-docs/chat/conversation-list-timestamp/conversation-list-timestamp.json';
+import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 import jsonPageContent from './conversation-list-timestamp.json';
 
 export default function Page(props) {
@@ -10,7 +9,12 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const descriptions = mapApiPageTranslation(translation);
+  const req = require.context(
+    'docsx/translations/api-docs/chat/conversation-list-timestamp',
+    false,
+    /\.\/conversation-list-timestamp.*\.json$/,
+  );
+  const descriptions = mapApiPageTranslations(req);
 
   return { props: { descriptions } };
 }

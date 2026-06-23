@@ -4,7 +4,6 @@
     "afterContent": {
       "description": "Content rendered inside the bubble after the message parts.\nUseful for placing inline metadata (e.g. timestamp, status) inside the bubble."
     },
-    "classes": { "description": "" },
     "partProps": {
       "description": "Props forwarded to the built-in unstyled part renderer components.\nUse this to pass <code>slots</code> and <code>slotProps</code> to individual part type renderers."
     },

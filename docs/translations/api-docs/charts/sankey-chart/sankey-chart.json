@@ -109,7 +109,7 @@
   "slotDescriptions": {
     "baseButton": "",
     "baseIconButton": "",
-    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
+    "baseToggleButton": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
     "baseToggleButtonGroup": "",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",

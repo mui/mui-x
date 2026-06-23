@@ -13,11 +13,12 @@
       },
       "required": true
     },
+    "axis": { "type": { "description": "'x' | 'y'" } },
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
     "className": { "type": { "description": "string" } },
     "colorMap": {
       "type": {
-        "description": "{ type: 'continuous', min?: Date | number | undefined, max?: Date | number | undefined, color: (t: number) =&gt; string | readonly [string, string] } | { type: 'ordinal', values?: readonly (string | number | Date)[] | undefined, colors: string[], unknownColor?: string | undefined } | { type: 'piecewise', thresholds: (number | Date)[], colors: string[] }"
+        "description": "{ type: 'continuous', min?: Date | number | undefined, max?: Date | number | undefined, color: (t: number) =&gt; string | readonly [string, string], unknownColor?: string | undefined } | { type: 'ordinal', values?: readonly (string | number | Date)[] | undefined, colors: string[], unknownColor?: string | undefined } | { type: 'piecewise', thresholds: (number | Date)[], colors: string[], unknownColor?: string | undefined }"
       }
     },
     "data": { "type": { "description": "readonly V[]" } },
@@ -29,8 +30,9 @@
         "description": "'nice' | 'strict' | (min: number | { valueOf: () =&gt; number }, max: number | { valueOf: () =&gt; number }) =&gt; { min: number | { valueOf(): number; }, max: number | { valueOf(): number; } }"
       }
     },
+    "domainSeries": { "type": { "description": "'all' | 'visible'" }, "default": "\"all\"" },
     "height": {
-      "type": { "description": "'auto' | number" },
+      "type": { "description": "AxisProps extends ChartsXAxisProps ? number | 'auto' : never" },
       "default": "45 if an axis label is provided, 25 otherwise."
     },
     "hideTooltip": { "type": { "description": "boolean" } },
@@ -38,12 +40,14 @@
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextStyle" } },
     "offset": { "type": { "description": "number" }, "default": "0" },
-    "position": { "type": { "description": "'bottom' | 'none' | 'top'" } },
+    "position": {
+      "type": {
+        "description": "'none' | AxisProps extends ChartsXAxisProps ? 'top' | 'bottom' : 'none' | AxisProps extends ChartsYAxisProps ? 'left' | 'right' : 'none'"
+      }
+    },
     "reverse": { "type": { "description": "boolean" } },
     "slotProps": {
-      "type": {
-        "description": "{ axisLine?: Partial&lt;SVGAttributes&lt;SVGPathElement&gt;&gt; | undefined, axisTick?: Partial&lt;SVGAttributes&lt;SVGPathElement&gt;&gt; | undefined, axisTickLabel?: Partial&lt;ChartsTextProps&gt; | undefined, axisLabel?: Partial&lt;ChartsTextProps&gt; | undefined, xAxis?: Partial&lt;ChartsXAxisProps&gt; | undefined, yAxis?: Partial&lt;ChartsYAxisProps&gt; | undefined }"
-      },
+      "type": { "description": "Partial&lt;ChartsAxisSlotProps&gt;" },
       "default": "{}"
     },
     "slots": { "type": { "description": "Partial&lt;ChartsAxisSlots&gt;" }, "default": "{}" },
@@ -74,6 +78,10 @@
     },
     "valueGetter": {
       "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; V" }
+    },
+    "width": {
+      "type": { "description": "AxisProps extends ChartsYAxisProps ? number | 'auto' : never" },
+      "default": "65 if an axis label is provided, 45 otherwise."
     },
     "zoom": {
       "type": {

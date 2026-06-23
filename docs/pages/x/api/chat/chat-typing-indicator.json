@@ -27,5 +27,6 @@
   "muiName": "MuiChatTypingIndicator",
   "filename": "/packages/x-chat/src/ChatIndicators/ChatTypingIndicator.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/behavior/typing-indicators/\">Chat - Typing indicators</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/typing-indicators/\">Chat - Typing indicators</a></li></ul>",
+  "cssComponent": false
 }

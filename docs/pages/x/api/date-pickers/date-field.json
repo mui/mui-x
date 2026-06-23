@@ -84,6 +84,13 @@
         "describedArgs": []
       }
     },
+    "onMouseDown": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent<HTMLDivElement, MouseEvent>) => void",
+        "describedArgs": []
+      }
+    },
     "onPaste": {
       "type": { "name": "func" },
       "signature": {
@@ -204,5 +211,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateField/DateField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-field/\">Date Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-field/\">Date Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
+  "cssComponent": false
 }

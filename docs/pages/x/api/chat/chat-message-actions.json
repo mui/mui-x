@@ -1,8 +1,16 @@
 {
   "props": {
-    "classes": {
-      "type": { "name": "shape", "description": "Partial<ChatMessageClasses>" },
-      "additionalInfo": { "cssApi": true }
+    "extraActions": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ disabled?: bool, icon?: any<br>&#124;&nbsp;bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;element<br>&#124;&nbsp;number<br>&#124;&nbsp;string<br>&#124;&nbsp;{ catch: func, finally: func, then: func }<br>&#124;&nbsp;{ children: {}, key: string, props: any, type: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any }<br>&#124;&nbsp;{}, id: string, label: string, onClick: func }&gt;"
+      }
+    },
+    "message": {
+      "type": {
+        "name": "shape",
+        "description": "{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: ChatMessageMetadata, parts: Array&lt;{ data: any, id?: string, transient?: bool, type: any }<br>&#124;&nbsp;{ filename?: string, mediaType: string, type: 'file', url: string }<br>&#124;&nbsp;{ sourceId: string, text?: string, title?: string, type: 'source-document' }<br>&#124;&nbsp;{ sourceId: string, title?: string, type: 'source-url', url: string }<br>&#124;&nbsp;{ state?: any<br>&#124;&nbsp;any, text: string, type: 'reasoning' }<br>&#124;&nbsp;{ state?: any<br>&#124;&nbsp;any, text: string, type: 'text' }<br>&#124;&nbsp;{ toolInvocation: ChatDynamicToolInvocation<string>, type: 'dynamic-tool' }<br>&#124;&nbsp;{ toolInvocation: ChatToolInvocation<string>, type: 'tool' }<br>&#124;&nbsp;{ type: 'step-start' }&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }"
+      }
     },
     "slotProps": { "type": { "name": "shape", "description": "MessageActionsSlotProps" } },
     "slots": {
@@ -20,6 +28,6 @@
   "muiName": "MuiChatMessageActions",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageActions.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-actions/\">Chat - Message Actions</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-actions/\">Chat - Message actions</a></li></ul>",
   "cssComponent": false
 }

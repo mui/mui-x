@@ -44,7 +44,7 @@
     },
     "showMark": {
       "type": {
-        "description": "(params: { index: number, x: number, y: number, position: Date | number, value: number }) =&gt; boolean | boolean"
+        "description": "'end' | 'start' | (params: { index: number, x: number, y: number, position: Date | number, value: number }) =&gt; boolean | boolean"
       }
     },
     "stack": { "type": { "description": "string" } },

@@ -73,6 +73,7 @@
     "onFocus": { "description": "" },
     "onInput": { "description": "" },
     "onKeyDown": { "description": "" },
+    "onMouseDown": { "description": "" },
     "onPaste": { "description": "" },
     "onSelectedSectionsChange": {
       "description": "Callback fired when the selected sections change.",

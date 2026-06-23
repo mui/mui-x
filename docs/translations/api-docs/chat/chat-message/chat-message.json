@@ -56,10 +56,31 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the date divider element"
     },
+    "dateDividerLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal rule on each side of the date divider label"
+    },
+    "dateDividerLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formatted day label inside the date divider"
+    },
     "roleUser": { "description": "Applied when the message role is 'user'" },
     "roleAssistant": { "description": "Applied when the message role is 'assistant'" },
     "streaming": { "description": "Applied while the message is streaming" },
-    "error": { "description": "Applied when the message has an error status" }
+    "error": { "description": "Applied when the message has an error status" },
+    "noAvatar": {
+      "description": "Applied when the avatar slot is hidden (`slots.avatar: null`) so the grid drops the avatar track."
+    }
   },
-  "slotDescriptions": { "root": "" }
+  "slotDescriptions": {
+    "actions": "The actions component, rendered under the bubble.\nReceives `{ messageId }` as props.\nPass `null` to hide actions entirely; omit to render only `extraActions`\n(from `slotProps.actions`) if provided.",
+    "authorName": "The author-name label. Rendered by the surrounding `ChatMessageGroup`\n(default variant: above the bubble; compact variant: inside the message\ngrid). Forwarded through `slots.message.authorName` from `ChatBox`. Pass\n`null` to hide.",
+    "avatar": "The avatar component. Pass `null` to hide it and collapse the avatar grid track.\nFunction form receives the message context and may return `null` for per-message hiding,\nbut the grid track is only dropped when the slot itself is `null`.",
+    "content": "The bubble component that renders message content.",
+    "error": "The error component rendered under the bubble when status === 'error'.\nPass `null` to hide the error surface entirely (no component is mounted).",
+    "inlineMeta": "The inline meta component (default variant; rendered inside the bubble). Pass `null` to hide it.",
+    "meta": "The external meta component (compact variant). Pass `null` to hide it.",
+    "root": "The styled root element.",
+    "streamingIndicator": "The animated streaming indicator, rendered inside the bubble (after the\nstreamed parts) while this assistant message has `status: 'streaming'`.\nPass `null` to hide it."
+  }
 }

@@ -17,6 +17,13 @@
         "description": "{ attachments?: bool<br>&#124;&nbsp;bool<br>&#124;&nbsp;{ acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func } }"
       }
     },
+    "onSubmit": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: FormEvent<HTMLFormElement>) => void",
+        "describedArgs": []
+      }
+    },
     "slotProps": { "type": { "name": "shape", "description": "ComposerRootSlotProps" } },
     "slots": {
       "type": { "name": "shape", "description": "Partial<ComposerRootSlots>" },

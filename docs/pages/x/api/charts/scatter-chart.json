@@ -45,7 +45,9 @@
       "deprecated": true,
       "deprecationInfo": "Use <code>disableHitArea</code> instead."
     },
-    "experimentalFeatures": { "type": { "name": "{}" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ progressiveRendering?: bool }" }
+    },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -116,7 +118,10 @@
       }
     },
     "renderer": {
-      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "type": {
+        "name": "enum",
+        "description": "'svg-batch'<br>&#124;&nbsp;'svg-progressive'<br>&#124;&nbsp;'svg-single'"
+      },
       "default": "'svg-single'"
     },
     "seriesConfig": {
@@ -165,7 +170,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number, valueGetter?: func }&gt;"
+        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number, sizeMap?: { interpolator?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, size: readonly [number, number], type: 'continuous' }<br>&#124;&nbsp;{ max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, size: func, type: 'continuous' }<br>&#124;&nbsp;{ sizes: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ sizes: Array&lt;any&gt;, type: 'ordinal', unknownSize?: number, values?: Array&lt;any&gt; }, valueGetter?: func }&gt;"
       }
     }
   },
@@ -205,6 +210,12 @@
     },
     { "name": "baseButton", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null },
+    {
+      "name": "baseToggleButton",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "class": null
+    },
+    { "name": "baseToggleButtonGroup", "description": "", "class": null },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
@@ -279,6 +290,12 @@
       "className": "MuiScatterChart-focusedMark",
       "description": "Styles applied to the focused scatter mark element.",
       "isGlobal": false
+    },
+    {
+      "key": "highlightedMark",
+      "className": "MuiScatterChart-highlightedMark",
+      "description": "Styles applied to the highlighted scatter mark element.",
+      "isGlobal": false
     }
   ],
   "spread": true,
@@ -287,6 +304,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/dataset/\">Charts - Dataset</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/bubble/\">Charts - Bubble</a></li>\n<li><a href=\"/x/react-charts/dataset/\">Charts - Dataset</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
   "cssComponent": false
 }

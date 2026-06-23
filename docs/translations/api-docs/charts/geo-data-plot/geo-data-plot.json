@@ -1,9 +1,10 @@
 {
-  "componentDescription": "Renders the registered `geoData` as SVG paths, using the registered `projection`",
+  "componentDescription": "",
   "propDescriptions": {
     "fill": { "description": "Fill color applied to every feature path." },
     "stroke": { "description": "Stroke color applied to every feature path." },
     "strokeWidth": { "description": "Stroke width applied to every feature path." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

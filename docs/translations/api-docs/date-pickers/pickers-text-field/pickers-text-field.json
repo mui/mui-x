@@ -20,6 +20,7 @@
     "onFocus": { "description": "" },
     "onInput": { "description": "" },
     "onKeyDown": { "description": "" },
+    "onMouseDown": { "description": "" },
     "onPaste": { "description": "" },
     "sectionListRef": { "description": "" },
     "value": { "description": "" },

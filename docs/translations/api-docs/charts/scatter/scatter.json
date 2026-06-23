@@ -6,6 +6,9 @@
       "description": "Function to get the color of a scatter item given its data index.\nThe data index argument is optional. If not provided, the color for the entire series is returned.\nIf provided, the color for the specific scatter item is returned."
     },
     "series": { "description": "" },
+    "sizeGetter": {
+      "description": "Function to get the marker size of a scatter item given its data index."
+    },
     "xScale": { "description": "" },
     "yScale": { "description": "" },
     "classes": { "description": "" },
@@ -40,6 +43,10 @@
     "focusedMark": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the focused scatter mark element"
+    },
+    "highlightedMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the highlighted scatter mark element"
     }
   },
   "slotDescriptions": { "marker": "The component that renders the marker for a scatter point." }

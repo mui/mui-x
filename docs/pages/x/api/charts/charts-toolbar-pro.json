@@ -3,11 +3,20 @@
     "imageExportOptions": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func, quality?: number, type: string }&gt;"
+        "description": "Array&lt;{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func, pixelRatio?: number, quality?: number, type: string }&gt;"
       }
     },
     "printOptions": {
       "type": { "name": "shape", "description": "ChartsToolbarPrintExportOptions" }
+    },
+    "rangeButtons": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ label: string, value: [Date, Date]<br>&#124;&nbsp;[string, string]<br>&#124;&nbsp;func<br>&#124;&nbsp;{ step?: number, unit: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any<br>&#124;&nbsp;any<br>&#124;&nbsp;any<br>&#124;&nbsp;any<br>&#124;&nbsp;any<br>&#124;&nbsp;any<br>&#124;&nbsp;any } }&gt;"
+      }
+    },
+    "rangeButtonsAxisId": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" }
     }
   },
   "name": "ChartsToolbarPro",

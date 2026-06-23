@@ -1,15 +1,26 @@
 {
   "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatStreamingIndicatorClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "index": { "type": { "name": "number" } },
+    "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "message": {
       "type": {
         "name": "shape",
-        "description": "{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: object, parts: Array&lt;{ data: any, id?: string, transient?: bool, type: object }<br>&#124;&nbsp;{ filename?: string, mediaType: string, type: 'file', url: string }<br>&#124;&nbsp;{ sourceId: string, text?: string, title?: string, type: 'source-document' }<br>&#124;&nbsp;{ sourceId: string, title?: string, type: 'source-url', url: string }<br>&#124;&nbsp;{ state?: 'done'<br>&#124;&nbsp;'streaming', text: string, type: 'reasoning' }<br>&#124;&nbsp;{ state?: 'done'<br>&#124;&nbsp;'streaming', text: string, type: 'text' }<br>&#124;&nbsp;{ toolInvocation: { approval?: object, approvalId?: string, callProviderMetadata?: object, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'dynamic-tool' }<br>&#124;&nbsp;{ toolInvocation: { approval?: object, approvalId?: string, callProviderMetadata?: object, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'tool' }<br>&#124;&nbsp;{ type: 'step-start' }&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }"
+        "description": "{ author?: { avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }, conversationId?: string, createdAt?: string, editedAt?: string, id: string, metadata?: ChatMessageMetadata, parts: Array&lt;{ data: any, id?: string, transient?: bool, type: any }<br>&#124;&nbsp;{ filename?: string, mediaType: string, type: 'file', url: string }<br>&#124;&nbsp;{ sourceId: string, text?: string, title?: string, type: 'source-document' }<br>&#124;&nbsp;{ sourceId: string, title?: string, type: 'source-url', url: string }<br>&#124;&nbsp;{ state?: any<br>&#124;&nbsp;any, text: string, type: 'reasoning' }<br>&#124;&nbsp;{ state?: any<br>&#124;&nbsp;any, text: string, type: 'text' }<br>&#124;&nbsp;{ toolInvocation: ChatDynamicToolInvocation<string>, type: 'dynamic-tool' }<br>&#124;&nbsp;{ toolInvocation: ChatToolInvocation<string>, type: 'tool' }<br>&#124;&nbsp;{ type: 'step-start' }&gt;, role: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user', status?: 'cancelled'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'pending'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'sending'<br>&#124;&nbsp;'sent'<br>&#124;&nbsp;'streaming', updatedAt?: string }"
       }
     },
     "messageId": { "type": { "name": "string" } },
     "mode": {
-      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;bool" },
+      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;bool<br>&#124;&nbsp;bool" },
       "default": "'auto'"
+    },
+    "slotProps": { "type": { "name": "shape", "description": "StreamingIndicatorSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<StreamingIndicatorSlots>" },
+      "additionalInfo": { "slotsApi": true }
     }
   },
   "name": "ChatStreamingIndicator",
@@ -17,13 +28,8 @@
     "import { ChatStreamingIndicator } from '@mui/x-chat/ChatIndicators';",
     "import { ChatStreamingIndicator } from '@mui/x-chat';"
   ],
+  "slots": [{ "name": "root", "description": "", "class": "MuiChatStreamingIndicator-root" }],
   "classes": [
-    {
-      "key": "bubble",
-      "className": "MuiChatStreamingIndicator-bubble",
-      "description": "Styles applied to the waiting-phase typing bubble.",
-      "isGlobal": false
-    },
     {
       "key": "root",
       "className": "MuiChatStreamingIndicator-root",
@@ -35,12 +41,17 @@
       "className": "MuiChatStreamingIndicator-row",
       "description": "Styles applied to the waiting-phase assistant row wrapper.",
       "isGlobal": false
+    },
+    {
+      "key": "bubble",
+      "className": "MuiChatStreamingIndicator-bubble",
+      "description": "Styles applied to the waiting-phase typing bubble.",
+      "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatStreamingIndicator",
   "filename": "/packages/x-chat/src/ChatIndicators/ChatStreamingIndicator.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/behavior/streaming/\">Chat - Streaming</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/streaming/\">Chat - Streaming</a></li></ul>",
+  "cssComponent": false
 }

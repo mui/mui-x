@@ -10,7 +10,7 @@
       "required": true
     },
     "classes": {
-      "type": { "name": "shape", "description": "Partial<LineClasses>" },
+      "type": { "name": "shape", "description": "Partial<Pick<LineClasses, 'mark'>>" },
       "additionalInfo": { "cssApi": true }
     },
     "hidden": { "type": { "name": "bool" }, "default": "false" },

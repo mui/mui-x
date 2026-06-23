@@ -20,5 +20,6 @@
   "muiName": "MuiChatComposerToolbar",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerToolbar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li>\n<li><a href=\"/x/react-chat/material/composer/\">Chat - Composer</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li>\n<li><a href=\"/x/react-chat/material/composer/\">Chat - Composer</a></li></ul>",
+  "cssComponent": false
 }

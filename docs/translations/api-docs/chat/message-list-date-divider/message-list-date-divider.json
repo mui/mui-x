@@ -5,6 +5,19 @@
     "formatDate": { "description": "" },
     "index": { "description": "" },
     "items": { "description": "" },
+    "shouldShowDivider": {
+      "description": "Decides whether the divider renders above the message, replacing the\nbuilt-in rule when provided. <code>date</code>/<code>previousDate</code> are the parsed\n<code>createdAt</code> values (<code>null</code> when missing or invalid); <code>previousMessage</code>\nis <code>null</code> for the first message in the list.",
+      "typeDescriptions": {
+        "params": {
+          "name": "params",
+          "description": "The parameters used to decide whether to render the divider."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "<code>true</code> to render the divider above the message."
+        }
+      }
+    },
     "slotProps": { "description": "" },
     "slots": { "description": "" }
   },

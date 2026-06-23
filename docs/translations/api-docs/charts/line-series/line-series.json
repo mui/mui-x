@@ -35,7 +35,7 @@
       "description": "The shape of the mark elements.\nUsing 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.\nBy default, each series has a different shape, cycling through `'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, `'wye'`.\nIf there are more than 7 series, the shapes will repeat."
     },
     "showMark": {
-      "description": "Define which items of the series should display a mark.\nIf can be a boolean that applies to all items.\nOr a callback that gets some item properties and returns true if the item should be displayed."
+      "description": "Define which items of the series should display a mark.\nIt can be a boolean that applies to all items.\nIt can be `'start'` or `'end'` to only display a mark on the first or last item. Such marks reuse\nthe line highlight element, so they are replaced by the highlighted item when the pointer\nhighlights a value.\nOr a callback that gets some item properties and returns true if the item should be displayed."
     },
     "stack": {
       "description": "The key that identifies the stacking group.\nSeries with the same `stack` property will be stacked together."

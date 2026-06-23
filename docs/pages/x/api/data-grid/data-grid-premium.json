@@ -1005,6 +1005,12 @@
       "class": null
     },
     {
+      "name": "baseModal",
+      "description": "The custom Modal component used in the grid.",
+      "default": "Modal",
+      "class": null
+    },
+    {
       "name": "basePagination",
       "description": "The custom Pagination component used in the grid.",
       "default": "Pagination",

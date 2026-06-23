@@ -20,7 +20,7 @@
     },
     "disableSelection": { "description": "Whether selection is disabled." },
     "domStructure": {
-      "description": "When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).\nWhen equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).\nNested DOM structure is not compatible with collapse / expansion animations."
+      "description": "When <code>'flat'</code>, the tree is rendered as a flat list (children are rendered as siblings of their parent).\nWhen <code>'nested'</code>, children are rendered inside their parent's groupTransition slot.\nCollapse/expansion animations that rely on the groupTransition slot only work with the nested DOM structure."
     },
     "expandedItems": {
       "description": "Expanded item ids.\nUsed when the item's expansion is controlled."

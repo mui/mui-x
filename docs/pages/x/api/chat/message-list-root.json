@@ -15,17 +15,22 @@
       },
       "default": "true"
     },
+    "enableRovingFocus": { "type": { "name": "bool" }, "default": "true" },
     "estimatedItemSize": { "type": { "name": "number" } },
     "getItemKey": {
       "type": { "name": "func" },
       "signature": { "type": "function(id: string, index: number) => Key", "describedArgs": [] }
     },
     "items": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "onReachBottom": {
+      "type": { "name": "func" },
+      "signature": { "type": "function() => void", "describedArgs": [] }
+    },
     "onReachTop": {
       "type": { "name": "func" },
       "signature": { "type": "function() => void", "describedArgs": [] }
     },
-    "overlay": { "type": { "name": "node" } },
+    "overlay": { "type": { "name": "node" }, "default": "null" },
     "slotProps": { "type": { "name": "shape", "description": "MessageListRootSlotProps" } },
     "slots": {
       "type": { "name": "shape", "description": "Partial<MessageListRootSlots>" },
@@ -44,12 +49,17 @@
     { "name": "messageListOverlay", "description": "", "class": null },
     { "name": "messageListScrollbar", "description": "", "class": null },
     { "name": "messageListScrollbarThumb", "description": "", "class": null },
-    { "name": "messageListScroller", "description": "", "class": null }
+    { "name": "messageListScroller", "description": "", "class": null },
+    {
+      "name": "messageListStatus",
+      "description": "The visually-hidden `role=\"status\"` element announcing streaming\ntransitions (\"Assistant is responding\" / \"Response complete\") to screen\nreaders. Pass `null`-rendering component to silence the announcements.",
+      "class": null
+    }
   ],
   "classes": [],
   "muiName": "MuiMessageListRoot",
   "filename": "/packages/x-chat-headless/src/message-list/MessageListRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/message-list/\">Chat - Headless message list</a></li>\n<li><a href=\"/x/react-chat/material/message-list/\">Chat - Message list</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/message-list/\">Chat - Headless message list</a></li></ul>",
   "cssComponent": false
 }

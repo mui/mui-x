@@ -5,11 +5,21 @@
     "autoScroll": {
       "description": "Controls automatic scrolling to the bottom when new messages arrive or\nstreaming content grows, as long as the user is within <code>buffer</code> pixels of\nthe bottom.<br><br>- <code>true</code> – enable with the default buffer (150 px).\n- <code>{ buffer: number }</code> – enable with a custom threshold.\n- <code>false</code> – disable (the scroll-to-bottom affordance is still available).<br><br>Scrolling when the *user* sends a message is always active."
     },
+    "enableRovingFocus": {
+      "description": "Whether the message list manages a roving tabindex over its messages:\nthe list is a single Tab stop, ArrowUp/ArrowDown (plus Home/End) move\nfocus between messages, Enter drills into a message's interior controls\nand Escape returns to the message.<br><br>Disable when rendering fully custom rows that manage focus themselves."
+    },
     "estimatedItemSize": { "description": "" },
     "getItemKey": { "description": "" },
     "items": { "description": "" },
-    "onReachTop": { "description": "" },
-    "overlay": { "description": "" },
+    "onReachBottom": {
+      "description": "Callback fired when the viewport enters the bottom zone of the list — within\n<code>autoScroll.buffer</code> pixels (150 by default; <code>estimatedItemSize</code> when <code>autoScroll</code>\nis disabled) of the bottom edge. Fires once per entry: it does not fire again until\nthe user scrolls away from the bottom and back. Entries caused by programmatic\nscrolls (<code>scrollToBottom()</code>, the scroll-to-bottom affordance, the forced scroll\nafter the user sends a message) count. It does not fire on mount, while the list\nstays pinned to the bottom during streaming, when new messages arrive while already\nat the bottom, or when the conversation (item set) is switched. Growing the buffer\nso that it newly encloses the current position counts as entering the zone."
+    },
+    "onReachTop": {
+      "description": "Callback fired when the viewport enters the top zone of the list — within\n<code>estimatedItemSize</code> pixels (84 by default) of the top edge. Fires once per\nentry: it does not fire again until the user scrolls away from the top,\npast the threshold, and back. It is coupled to history loading: it only\nfires when more history is available and no history page load is in\nflight, right before the next page is requested."
+    },
+    "overlay": {
+      "description": "Floating layer rendered above the message list, anchored to its bottom edge; pointer-transparent."
+    },
     "slotProps": { "description": "" },
     "slots": { "description": "" }
   },
@@ -20,6 +30,7 @@
     "messageListOverlay": "",
     "messageListScrollbar": "",
     "messageListScrollbarThumb": "",
-    "messageListScroller": ""
+    "messageListScroller": "",
+    "messageListStatus": "The visually-hidden `role=\"status\"` element announcing streaming\ntransitions (\"Assistant is responding\" / \"Response complete\") to screen\nreaders. Pass `null`-rendering component to silence the announcements."
   }
 }

@@ -5,9 +5,12 @@
     "part": {
       "type": {
         "name": "union",
-        "description": "{ toolInvocation: { approval?: { approved: bool, reason?: string }, callProviderMetadata?: Record<string, unknown>, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'dynamic-tool' }<br>&#124;&nbsp;{ toolInvocation: { approval?: { approved: bool, reason?: string }, callProviderMetadata?: Record<string, unknown>, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'tool' }"
+        "description": "{ toolInvocation: { approval?: { approved: bool, reason?: string }, approvalId?: string, callProviderMetadata?: Record<string, unknown>, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'dynamic-tool' }<br>&#124;&nbsp;{ toolInvocation: { approval?: { approved: bool, reason?: string }, approvalId?: string, callProviderMetadata?: Record<string, unknown>, errorText?: string, input?: any, output?: any, preliminary?: bool, providerExecuted?: bool, state: 'approval-requested'<br>&#124;&nbsp;'approval-responded'<br>&#124;&nbsp;'input-available'<br>&#124;&nbsp;'input-streaming'<br>&#124;&nbsp;'output-available'<br>&#124;&nbsp;'output-denied'<br>&#124;&nbsp;'output-error', title?: string, toolCallId: string, toolName: string }, type: 'tool' }"
       },
       "required": true
+    },
+    "defaultExpanded": {
+      "type": { "name": "shape", "description": "Record<string, ChatToolExpand | undefined>" }
     },
     "onToolCall": {
       "type": { "name": "func" },
@@ -44,6 +47,7 @@
     { "name": "root", "description": "", "class": null },
     { "name": "section", "description": "", "class": null },
     { "name": "sectionContent", "description": "", "class": null },
+    { "name": "sectionSummary", "description": "", "class": null },
     { "name": "state", "description": "", "class": null },
     { "name": "title", "description": "", "class": null }
   ],

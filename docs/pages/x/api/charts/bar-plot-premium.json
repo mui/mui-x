@@ -1,7 +1,6 @@
 {
   "props": {
     "borderRadius": { "type": { "name": "number" } },
-    "className": { "type": { "name": "string" } },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
@@ -17,9 +16,12 @@
       "default": "'svg-single'"
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "BarPlotPremiumSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "BarPlotPremiumSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     }
@@ -47,5 +49,6 @@
   "muiName": "MuiBarPlotPremium",
   "filename": "/packages/x-charts-premium/src/BarChartPremium/BarPlotPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "cssComponent": false
 }

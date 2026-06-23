@@ -5,6 +5,7 @@
     "id": { "description": "" },
     "options": { "description": "The options to apply on the image export." },
     "render": { "description": "A function to customize the rendering of the component." },
+    "size": { "description": "" },
     "style": { "description": "" },
     "tabIndex": { "description": "" }
   },

@@ -7,6 +7,13 @@
       }
     },
     "disabled": { "type": { "name": "bool" } },
+    "onSubmit": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: FormEvent<HTMLFormElement>) => void",
+        "describedArgs": []
+      }
+    },
     "slotProps": { "type": { "name": "shape", "description": "ComposerRootSlotProps" } },
     "slots": {
       "type": { "name": "shape", "description": "Partial<ComposerRootSlots>" },
@@ -24,6 +31,6 @@
   "muiName": "MuiComposerRoot",
   "filename": "/packages/x-chat-headless/src/composer/ComposerRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/composer/\">Chat - Headless composer</a></li>\n<li><a href=\"/x/react-chat/material/composer/\">Chat - Composer</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/composer/\">Chat - Headless composer</a></li></ul>",
   "cssComponent": false
 }

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
-import translation from 'docs/translations/api-docs/date-pickers/pickers-section-list/pickers-section-list.json';
+import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 import jsonPageContent from './pickers-section-list.json';
 
 export default function Page(props) {
@@ -10,7 +9,12 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const descriptions = mapApiPageTranslation(translation);
+  const req = require.context(
+    'docsx/translations/api-docs/date-pickers/pickers-section-list',
+    false,
+    /\.\/pickers-section-list.*\.json$/,
+  );
+  const descriptions = mapApiPageTranslations(req);
 
   return { props: { descriptions } };
 }

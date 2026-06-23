@@ -21,6 +21,31 @@
         "description": "'comfortable'<br>&#124;&nbsp;'compact'<br>&#124;&nbsp;'standard'"
       }
     },
+    "features": { "type": { "name": "shape", "description": "{ typingSignal?: bool }" } },
+    "getMessageAuthorAvatarUrl": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.avatarUrl",
+      "signature": {
+        "type": "function(message: ChatMessage) => string | undefined",
+        "describedArgs": []
+      }
+    },
+    "getMessageAuthorDisplayName": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.displayName",
+      "signature": {
+        "type": "function(message: ChatMessage) => string | undefined",
+        "describedArgs": []
+      }
+    },
+    "getMessageAuthorId": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.id",
+      "signature": {
+        "type": "function(message: ChatMessage) => string | undefined",
+        "describedArgs": []
+      }
+    },
     "initialActiveConversationId": { "type": { "name": "string" } },
     "initialComposerValue": { "type": { "name": "string" } },
     "initialConversations": {
@@ -101,6 +126,12 @@
         "description": "{ dynamic-tool?: func, file?: func, reasoning?: func, source-document?: func, source-url?: func, step-start?: func, text?: func, tool?: func }"
       }
     },
+    "roleDisplayNames": {
+      "type": {
+        "name": "shape",
+        "description": "{ assistant?: string, system?: string, user?: string }"
+      }
+    },
     "slotProps": { "type": { "name": "shape", "description": "ChatRootSlotProps" } },
     "slots": {
       "type": { "name": "shape", "description": "Partial<ChatRootSlots>" },
@@ -124,6 +155,6 @@
   "muiName": "MuiChatRoot",
   "filename": "/packages/x-chat-headless/src/chat/ChatRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/customization/headless/\">Chat - Headless Components</a></li>\n<li><a href=\"/x/react-chat/customization/localization/\">Chat - Localization</a></li>\n<li><a href=\"/x/react-chat/customization/tailwind/\">Chat - Tailwind CSS</a></li>\n<li><a href=\"/x/react-chat/headless/composition/\">Chat - Headless composition</a></li>\n<li><a href=\"/x/react-chat/material/customization/\">Chat - Customization</a></li>\n<li><a href=\"/x/react-chat/material/slot-overrides/\">Chat - Slot overrides</a></li>\n<li><a href=\"/x/react-chat/overview/\">MUI X Chat</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/composition/\">Chat - Headless composition</a></li></ul>",
   "cssComponent": false
 }

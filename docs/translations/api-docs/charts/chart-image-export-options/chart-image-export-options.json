@@ -11,6 +11,9 @@
     "onBeforeExport": {
       "description": "Callback function that is called before the export is triggered.\nIt can be used to modify the iframe or perform any other actions before the export, such as updating styles,\nremoving elements, etc."
     },
+    "pixelRatio": {
+      "description": "The pixel ratio used when rasterizing the chart to a canvas. Higher values produce\nsharper images at the cost of a larger file size."
+    },
     "quality": {
       "description": "The quality of the image to be exported between 0 and 1. This is only applicable for lossy formats, such as\n'image/jpeg' and 'image/webp'. 'image/png' does not support this option."
     },

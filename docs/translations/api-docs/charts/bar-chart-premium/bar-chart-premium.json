@@ -50,7 +50,7 @@
       "description": "List of initially hidden series and/or items.\nUsed for uncontrolled state.<br><br>Different chart types use different keys."
     },
     "initialZoom": {
-      "description": "The list of zoom data related to each axis.\nUsed to initialize the zoom in a specific configuration without controlling it."
+      "description": "The list of zoom data related to each axis.\nUsed to initialize the zoom in a specific configuration without controlling it.<br><br>Each entry is either explicit zoom percentages (<code>{ axisId, start, end }</code>) or a\nrange value (<code>{ axisId, value }</code>) resolved against the axis domain."
     },
     "layout": { "description": "The direction of the bar elements." },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
@@ -122,7 +122,7 @@
     },
     "plugins": { "description": "Array of plugins used to add features to the chart." },
     "renderer": {
-      "description": "The type of renderer to use for the bar plot.\n- <code>svg-single</code>: Renders every bar in a <code><rect /></code> element.\n- <code>svg-batch</code>: Batch renders bars in <code><path /></code> elements for better performance with large datasets, at the cost of some limitations.\n               Read more: https://mui.com/x/react-charts/bars/#performance"
+      "description": "The type of renderer to use for the bar plot.\n- <code>svg-single</code>: Renders every bar in a <code><rect /></code> element.\n- <code>svg-batch</code>: Batch renders bars in <code><path /></code> elements for better performance with large datasets, at the cost of some limitations.\n- <code>webgl</code>: Renders bars using WebGL for better performance with very large datasets, at the cost of some limitations.\n               Read more: https://mui.com/x/react-charts/bars/#performance"
     },
     "seriesConfig": {
       "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
@@ -167,6 +167,8 @@
     "baseMenuItem": "",
     "baseMenuList": "",
     "basePopper": "",
+    "baseToggleButton": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+    "baseToggleButtonGroup": "",
     "baseTooltip": "",
     "exportIcon": "Icon displayed on the toolbar's export button.",
     "legend": "Custom rendering of the legend.",

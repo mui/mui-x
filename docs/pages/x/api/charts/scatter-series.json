@@ -8,15 +8,16 @@
   "properties": {
     "type": { "type": { "description": "'scatter'" }, "required": true },
     "color": { "type": { "description": "string" } },
+    "colorAxisId": { "type": { "description": "string" } },
     "colorGetter": {
       "type": {
-        "description": "(data: { value: null | { x: number, y: number, z?: any, id?: string | number | undefined }, dataIndex: number }) =&gt; string"
+        "description": "(data: { value: { x: number, y: number, colorValue?: any, sizeValue?: any, z?: any, id?: number | string | undefined }, dataIndex: number }) =&gt; string"
       }
     },
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
       "type": {
-        "description": "{ x: string, y: string, z?: string | undefined, id?: string | undefined }"
+        "description": "{ x: string, y: string, colorValue?: string | undefined, sizeValue?: string | undefined, z?: string | undefined, id?: string | undefined }"
       }
     },
     "highlightScope": {
@@ -35,14 +36,15 @@
     },
     "markerSize": { "type": { "description": "number" } },
     "preview": { "type": { "description": "{ markerSize?: number | undefined }" } },
+    "sizeAxisId": { "type": { "description": "string" } },
     "valueFormatter": {
       "type": {
-        "description": "(value: null | { x: number, y: number, z?: any, id?: number | string | undefined }, context: { dataIndex: number }) =&gt; null | string"
+        "description": "(value: { x: number, y: number, colorValue?: any, sizeValue?: any, z?: any, id?: number | string | undefined }, context: { dataIndex: number }) =&gt; null | string"
       }
     },
     "valueGetter": {
       "type": {
-        "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; { x: number, y: number, z?: any, id?: number | string | undefined }"
+        "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; { x: number, y: number, colorValue?: any, sizeValue?: any, z?: any, id?: number | string | undefined }"
       }
     },
     "xAxisId": { "type": { "description": "number | string" } },

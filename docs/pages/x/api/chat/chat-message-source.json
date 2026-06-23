@@ -61,6 +61,6 @@
   "muiName": "MuiChatMessageSource",
   "filename": "/packages/x-chat/src/ChatMessageSources/ChatMessageSource.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-parts/sources-and-citations/\">Chat - Sources & Citations</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-parts/sources-and-citations/\">Chat - Sources and citations</a></li></ul>",
   "cssComponent": false
 }

@@ -174,5 +174,6 @@
   "muiName": "MuiPieChartPro",
   "filename": "/packages/x-charts-pro/src/PieChartPro/PieChartPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li></ul>",
+  "cssComponent": false
 }

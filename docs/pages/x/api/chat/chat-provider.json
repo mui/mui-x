@@ -15,6 +15,31 @@
         "description": "{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: ChatUserMetadata, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }"
       }
     },
+    "features": { "type": { "name": "shape", "description": "{ typingSignal?: bool }" } },
+    "getMessageAuthorAvatarUrl": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.avatarUrl",
+      "signature": {
+        "type": "function(message: ChatMessage) => string | undefined",
+        "describedArgs": []
+      }
+    },
+    "getMessageAuthorDisplayName": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.displayName",
+      "signature": {
+        "type": "function(message: ChatMessage) => string | undefined",
+        "describedArgs": []
+      }
+    },
+    "getMessageAuthorId": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.id",
+      "signature": {
+        "type": "function(message: ChatMessage) => string | undefined",
+        "describedArgs": []
+      }
+    },
     "initialActiveConversationId": { "type": { "name": "string" } },
     "initialComposerValue": { "type": { "name": "string" } },
     "initialConversations": {
@@ -94,6 +119,12 @@
         "description": "{ dynamic-tool?: func, file?: func, reasoning?: func, source-document?: func, source-url?: func, step-start?: func, text?: func, tool?: func }"
       }
     },
+    "roleDisplayNames": {
+      "type": {
+        "name": "shape",
+        "description": "{ assistant?: string, system?: string, user?: string }"
+      }
+    },
     "storeClass": {
       "type": { "name": "shape", "description": "ChatStoreConstructor<Cursor>" },
       "default": "ChatStore"
@@ -110,5 +141,6 @@
   "muiName": "MuiChatProvider",
   "filename": "/packages/x-chat-headless/src/ChatProvider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/\">Chat - Headless</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/\">Chat - Headless</a></li></ul>",
+  "cssComponent": false
 }

@@ -4,6 +4,9 @@
     "index": { "description": "" },
     "message": { "description": "" },
     "part": { "description": "" },
+    "defaultExpanded": {
+      "description": "Default expanded state of each tool card (and its <code>input</code>/<code>output</code> sections),\nkeyed by <code>toolInvocation.toolName</code> with a <code>'*'</code> fallback. Each value is either a\nstatic <code>boolean</code> (applied to the card and its sections) or a resolver\n<code>(ownerState) => boolean | undefined</code>.<br><br>A resolver returning a <code>boolean</code> drives the disclosure on every state\ntransition (return <code>false</code> to collapse a card when its tool ends); returning\n<code>undefined</code> — or omitting the tool — keeps the built-in default. The resolver\ncontrols *expansion* only; section *visibility* stays gated by the tool state\n(e.g. the output section appears only once output is available)."
+    },
     "onToolCall": { "description": "" },
     "slotProps": { "description": "" },
     "slots": { "description": "" },
@@ -25,6 +28,7 @@
     "root": "",
     "section": "",
     "sectionContent": "",
+    "sectionSummary": "",
     "state": "",
     "title": ""
   }

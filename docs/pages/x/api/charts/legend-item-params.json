@@ -19,7 +19,7 @@
     "seriesId": { "type": { "description": "string" }, "required": true },
     "type": {
       "type": {
-        "description": "'bar' | 'funnel' | 'heatmap' | 'line' | 'ohlc' | 'pie' | 'radar' | 'rangeBar' | 'sankey' | 'scatter'"
+        "description": "'bar' | 'funnel' | 'heatmap' | 'line' | 'mapShape' | 'ohlc' | 'pie' | 'radar' | 'radialBar' | 'radialLine' | 'rangeBar' | 'sankey' | 'scatter'"
       },
       "required": true
     },

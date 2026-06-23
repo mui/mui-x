@@ -107,7 +107,7 @@
       }
     },
     "renderer": {
-      "description": "The type of renderer to use for the scatter plot.\n- <code>svg-single</code>: Renders every scatter item in a <code><circle /></code> element.\n- <code>svg-batch</code>: Batch renders scatter items in <code><path /></code> elements for better performance with large datasets, at the cost of some limitations.\n               Read more: https://mui.com/x/react-charts/scatter/#performance"
+      "description": "The type of renderer to use for the scatter plot.\n- <code>svg-single</code>: Renders every scatter item in a <code><circle /></code> element, synchronously.\n- <code>svg-progressive</code>: Renders every scatter item in a <code><circle /></code> element, in progressive batches that paint over several animation frames to keep the main thread responsive.\n- <code>svg-batch</code>: Batch renders scatter items in <code><path /></code> elements for better performance with large datasets, at the cost of some limitations.\n               Read more: https://mui.com/x/react-charts/scatter/#performance<br><br>When not set, defaults to <code>svg-single</code>. Enable the <code>progressiveRendering</code> experimental feature to auto-select <code>svg-progressive</code> above an internal point-count threshold; this will become the default in the next major version."
     },
     "seriesConfig": {
       "description": "The configuration for the series types.\nThis is used to define how each series type should be processed, colored, and displayed."
@@ -151,6 +151,10 @@
     "focusedMark": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the focused scatter mark element"
+    },
+    "highlightedMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the highlighted scatter mark element"
     }
   },
   "slotDescriptions": {
@@ -160,6 +164,8 @@
     "axisTickLabel": "Custom component for tick label.",
     "baseButton": "",
     "baseIconButton": "",
+    "baseToggleButton": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+    "baseToggleButtonGroup": "",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "marker": "The component that renders the marker for a scatter point.",

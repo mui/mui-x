@@ -18,7 +18,9 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "any" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "ChartExperimentalFeatures<SeriesType>" }
+    },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
@@ -101,19 +103,19 @@
     "radiusAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;AxisConfig<'linear', any, ChartsRadiusAxisProps>&gt;"
+        "description": "Array&lt;MakeOptional<PolarAxisConfig<'band', any, ChartsRadiusAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'linear', any, ChartsRadiusAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'log', any, ChartsRadiusAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'point', any, ChartsRadiusAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'pow', any, ChartsRadiusAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'sqrt', any, ChartsRadiusAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'symlog', any, ChartsRadiusAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'time', any, ChartsRadiusAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'utc', any, ChartsRadiusAxisProps>, 'id'>&gt;"
       }
     },
     "rotationAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;AxisConfig<'band', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'linear', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'log', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'point', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'pow', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'sqrt', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'symlog', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'time', any, ChartsRotationAxisProps><br>&#124;&nbsp;AxisConfig<'utc', any, ChartsRotationAxisProps>&gt;"
+        "description": "Array&lt;MakeOptional<PolarAxisConfig<'band', any, ChartsRotationAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'linear', any, ChartsRotationAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'log', any, ChartsRotationAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'point', any, ChartsRotationAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'pow', any, ChartsRotationAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'sqrt', any, ChartsRotationAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'symlog', any, ChartsRotationAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'time', any, ChartsRotationAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<PolarAxisConfig<'utc', any, ChartsRotationAxisProps>, 'id'>&gt;"
       }
     },
     "series": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, 'id'>> | RadarSeriesType | HeatmapSeriesType | FunnelSeriesType | SankeySeriesType | RangeBarSeriesType | OHLCSeriesType&gt;"
+        "description": "Array&lt;BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType<MakeOptional<PieValueType, 'id'>> | RadarSeriesType | HeatmapSeriesType | FunnelSeriesType | SankeySeriesType | RangeBarSeriesType | OHLCSeriesType | RadialLineSeriesType | MapShapeSeriesType | RadialBarSeriesType&gt;"
       }
     },
     "seriesConfig": {
@@ -154,7 +156,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number, valueGetter?: func }&gt;"
+        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number, sizeMap?: { interpolator?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, size: readonly [number, number], type: 'continuous' }<br>&#124;&nbsp;{ max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, size: func, type: 'continuous' }<br>&#124;&nbsp;{ sizes: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ sizes: Array&lt;any&gt;, type: 'ordinal', unknownSize?: number, values?: Array&lt;any&gt; }, valueGetter?: func }&gt;"
       }
     }
   },
@@ -169,7 +171,13 @@
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
-    { "name": "baseIconButton", "description": "", "class": null }
+    { "name": "baseIconButton", "description": "", "class": null },
+    {
+      "name": "baseToggleButton",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "class": null
+    },
+    { "name": "baseToggleButtonGroup", "description": "", "class": null }
   ],
   "classes": [],
   "muiName": "MuiChartsContainer",

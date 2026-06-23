@@ -46,5 +46,6 @@
   "muiName": "MuiGaugeContainer",
   "filename": "/packages/x-charts/src/Gauge/GaugeContainer.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/gauge/\">Charts - Gauge</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/gauge/\">Charts - Gauge</a></li></ul>",
+  "cssComponent": false
 }

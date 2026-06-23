@@ -35,5 +35,6 @@
   "muiName": "MuiPickersSectionList",
   "filename": "/packages/x-date-pickers/src/PickersSectionList/PickersSectionList.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>",
+  "cssComponent": false
 }

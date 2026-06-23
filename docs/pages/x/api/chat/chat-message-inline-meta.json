@@ -1,14 +1,42 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "shape", "description": "MessageMetaSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageMetaSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatMessageInlineMeta",
   "imports": [
     "import { ChatMessageInlineMeta } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageInlineMeta } from '@mui/x-chat';"
   ],
-  "slots": [],
+  "slots": [
+    { "name": "edited", "description": "", "class": null },
+    { "name": "meta", "description": "", "class": "MuiChatMessage-meta" },
+    { "name": "status", "description": "", "class": null },
+    {
+      "name": "streamingProgress",
+      "description": "The root element of the streaming progress indicator.\nRendered by Base UI `Progress.Root` when `message.status === 'streaming'`.\nProvides `role=\"progressbar\"` and `aria-valuetext` for screen readers.",
+      "default": "ProgressRoot (Base UI Progress.Root wrapper)",
+      "class": null
+    },
+    {
+      "name": "streamingProgressIndicator",
+      "description": "The animated indicator bar inside the streaming progress track.",
+      "class": null
+    },
+    {
+      "name": "streamingProgressTrack",
+      "description": "The track element wrapping the streaming progress indicator.",
+      "class": null
+    },
+    { "name": "timestamp", "description": "", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiChatMessageInlineMeta",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageInlineMeta.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>",
+  "cssComponent": false
 }

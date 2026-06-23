@@ -130,5 +130,6 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-charts/src/ChartsLegend/ContinuousColorLegend.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
+  "cssComponent": false
 }

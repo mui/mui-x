@@ -32,47 +32,6 @@
     "slots": { "description": "Overridable component slots." },
     "tabIndex": { "description": "" }
   },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
-    "minLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the list item that renders the `minLabel`"
-    },
-    "maxLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the list item that renders the `maxLabel`"
-    },
-    "item": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the list items" },
-    "vertical": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend in column layout"
-    },
-    "horizontal": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend in row layout"
-    },
-    "start": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels before the color marks"
-    },
-    "end": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels after the color marks"
-    },
-    "extremes": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels on the extremes of the color marks"
-    },
-    "inlineStart": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels inlined before the color marks"
-    },
-    "inlineEnd": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with the labels inlined after the color marks"
-    },
-    "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the marks" },
-    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" }
-  },
+  "classDescriptions": {},
   "slotDescriptions": { "legend": "Custom rendering of the legend." }
 }
