@@ -820,6 +820,7 @@ ChatConversationList.propTypes /* remove-proptypes */ = {
 // primitive, not this wrapper). Without it, a split layout with the list visible and
 // no active conversation — a single unmarked child — falls back to the thread pane,
 // skipping the `conversationsPane` slot/styles.
-markChatLayoutPane(ChatConversationList, 'conversations');
+// `markChatLayoutPane` mutates the component in place and returns it; the return is discarded here.
+void markChatLayoutPane(ChatConversationList, 'conversations');
 
 export { ChatConversationList };

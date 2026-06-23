@@ -6,7 +6,7 @@ import useTimeout from '@mui/utils/useTimeout';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { integer } from '@mui/x-internals/types';
-import * as platform from '@mui/x-internals/platform';
+import { platform } from '@base-ui/utils/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
 import useRefCallback from '../../utils/useRefCallback';
@@ -155,9 +155,9 @@ function initializeState(params: ParamsWithDefaults) {
 
   const state: Virtualization.State<typeof params.layout> = {
     virtualization: {
-      enabled: !platform.isJSDOM,
-      enabledForRows: !platform.isJSDOM,
-      enabledForColumns: !platform.isJSDOM,
+      enabled: !platform.env.jsdom,
+      enabledForRows: !platform.env.jsdom,
+      enabledForColumns: !platform.env.jsdom,
       renderContext,
       props: (params.layout.constructor as typeof Layout).elements.reduce(
         (acc, key) => (acc[key as string], acc),
