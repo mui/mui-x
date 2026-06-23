@@ -21,6 +21,11 @@ export interface ChatComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessage'];
     variants?: ComponentsVariants<Theme>['MuiChatMessage'];
   };
+  MuiChatMessageError?: {
+    defaultProps?: ComponentsProps['MuiChatMessageError'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessageError'];
+    variants?: ComponentsVariants<Theme>['MuiChatMessageError'];
+  };
   MuiChatMessageList?: {
     defaultProps?: ComponentsProps['MuiChatMessageList'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessageList'];
@@ -40,6 +45,11 @@ export interface ChatComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChatConversationList'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatConversationList'];
     variants?: ComponentsVariants<Theme>['MuiChatConversationList'];
+  };
+  MuiChatStreamingIndicator?: {
+    defaultProps?: ComponentsProps['MuiChatStreamingIndicator'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatStreamingIndicator'];
+    variants?: ComponentsVariants<Theme>['MuiChatStreamingIndicator'];
   };
   MuiChatTypingIndicator?: {
     defaultProps?: ComponentsProps['MuiChatTypingIndicator'];

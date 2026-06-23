@@ -288,7 +288,7 @@ describe('<DataGridPro /> - Events params', () => {
             {
               field: 'actions',
               type: 'actions',
-              getActions: () => [<GridActionsCellItem icon={<span />} label="print" />],
+              getActions: () => [<GridActionsCellItem key={1} icon={<span />} label="print" />],
             },
           ]}
         />,

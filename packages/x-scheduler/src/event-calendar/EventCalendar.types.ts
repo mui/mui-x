@@ -2,6 +2,7 @@ import { SxProps } from '@mui/system/styleFunctionSx';
 import { Theme } from '@mui/material/styles';
 import {
   EventCalendarParameters,
+  EventCalendarSchedulerParametersOverrides,
   EventCalendarStore,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
@@ -14,12 +15,13 @@ export type EventCalendarApiRef<
 > = React.RefObject<Partial<SchedulerPublicAPI<EventCalendarStore<TEvent, TResource>>> | undefined>;
 
 export interface EventCalendarProps<TEvent extends object, TResource extends object>
-  extends React.HTMLAttributes<HTMLDivElement>, EventCalendarParameters<TEvent, TResource> {
-  /**
-   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
-   * @default false
-   */
-  shouldEventRequireResource?: boolean;
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
+    Omit<
+      EventCalendarParameters<TEvent, TResource>,
+      keyof EventCalendarSchedulerParametersOverrides
+    >,
+    EventCalendarSchedulerParametersOverrides {
   /**
    * Override or extend the styles applied to the component.
    */

@@ -45,15 +45,20 @@ describe('<EventTimelinePremiumHeader />', () => {
     presets?: EventTimelinePremiumPreset[];
     defaultPreferences?: { ampm: boolean };
   }) {
+    // The grid is virtualized; sizing the host wide enough to fit the largest preset
+    // (1096 days × 6px = 6576px plus the title column) keeps every header cell mounted
+    // so the structural assertions can inspect them all without simulating scrolls.
     return render(
-      <EventTimelinePremium
-        resources={[engineering]}
-        events={[]}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset={options.preset}
-        presets={options.presets ?? [options.preset]}
-        defaultPreferences={options.defaultPreferences}
-      />,
+      <div style={{ width: 10000, height: 2000 }}>
+        <EventTimelinePremium
+          resources={[engineering]}
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          preset={options.preset}
+          presets={options.presets ?? [options.preset]}
+          defaultPreferences={options.defaultPreferences}
+        />
+      </div>,
     );
   }
 
@@ -70,7 +75,8 @@ describe('<EventTimelinePremiumHeader />', () => {
         renderHeader({ preset });
 
         const grid = screen.getByRole('grid');
-        expect(grid.style.getPropertyValue('--unit-width')).to.equal(`${tickWidth}px`);
+        const container = grid.closest('section')!;
+        expect(container.style.getPropertyValue('--unit-width')).to.equal(`${tickWidth}px`);
         // The grid root sets `--unit-count` from `presetConfig.tickCount`; assert it matches
         // the sum of header cell spans so a regression in either path is caught independently.
         expect(grid.style.getPropertyValue('--unit-count')).to.equal(String(totalTicks));

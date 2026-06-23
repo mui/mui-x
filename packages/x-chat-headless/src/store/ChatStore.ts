@@ -3,17 +3,29 @@ import type {
   ChatConversation,
   ChatDraftAttachment,
   ChatMessage,
+  ChatMessageAuthorGetterProps,
+  ChatRole,
   ChatUser,
 } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type { ChatInternalState } from '../types/chat-state';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export interface ChatStoreParameters<Cursor = string> {
-  /** All participants in the chat. The current (local) user is derived as the first member with `role === 'user'`, unless `currentUser` is provided explicitly. */
+export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorGetterProps {
+  /**
+   * Known chat participants.
+   * Used to derive the local user / assistant user when explicit props are omitted,
+   * and to enrich message authors by resolved author id at render time.
+   */
   members?: ChatUser[];
-  /** The local user sending messages. If omitted, derived from `members` by finding the entry with `role === 'user'`. */
+  /**
+   * The local user sending messages.
+   * If omitted, derived from `members` by finding the entry with `role === 'user'`.
+   * Also used to enrich message authors when a rendered message resolves to `currentUser.id`.
+   */
   currentUser?: ChatUser;
+  /** Locale-driven fallback labels for messages without explicit author information. */
+  roleDisplayNames?: Partial<Record<ChatRole, string>>;
   messages?: ChatMessage[];
   /** The initial messages when uncontrolled. Ignored after initialization and when `messages` is provided. */
   initialMessages?: ChatMessage[];
@@ -23,6 +35,8 @@ export interface ChatStoreParameters<Cursor = string> {
   initialConversations?: ChatConversation[];
   onConversationsChange?: (conversations: ChatConversation[]) => void;
   activeConversationId?: string;
+  /** Internal flag used to distinguish a controlled `undefined` active conversation from an uncontrolled model. */
+  activeConversationIdControlled?: boolean;
   /** The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided. */
   initialActiveConversationId?: string;
   onActiveConversationChange?: (conversationId: string | undefined) => void;
@@ -77,6 +91,26 @@ function normalizeById<T extends { id: string }>(
   return { ids, byId };
 }
 
+function pruneMessageErrorsById(
+  messageErrorsById: Record<string, ChatError | undefined>,
+  messageIds: string[],
+): Record<string, ChatError | undefined> {
+  if (messageIds.length === 0) {
+    return {};
+  }
+
+  const allowedIds = new Set(messageIds);
+  const nextMessageErrorsById: Record<string, ChatError | undefined> = {};
+
+  for (const [messageId, error] of Object.entries(messageErrorsById)) {
+    if (allowedIds.has(messageId) && error != null) {
+      nextMessageErrorsById[messageId] = error;
+    }
+  }
+
+  return nextMessageErrorsById;
+}
+
 /**
  * Returns `prevIds` when the two arrays contain the same strings in the same
  * order, avoiding a new reference that would trigger downstream re-renders
@@ -111,11 +145,13 @@ function deriveStateFromParameters<Cursor = string>(parameters: ChatStoreParamet
   return {
     conversationIds,
     conversationsById,
-    activeConversationId: applyModelInitialValue(
-      parameters.activeConversationId,
-      parameters.initialActiveConversationId,
-      undefined,
-    ),
+    activeConversationId: parameters.activeConversationIdControlled
+      ? parameters.activeConversationId
+      : applyModelInitialValue(
+          parameters.activeConversationId,
+          parameters.initialActiveConversationId,
+          undefined,
+        ),
     messageIds,
     messagesById,
     composerValue: applyModelInitialValue(
@@ -184,10 +220,13 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       activeConversationId,
       messageIds,
       messagesById,
+      messageErrorsById: {},
       typingByConversation: {},
       activeStreamAbortController: null,
       isStreaming: false,
+      streamingConversationId: undefined,
       hasMoreHistory: false,
+      isLoadingHistory: false,
       historyCursor: undefined,
       composerValue,
       composerIsComposing: false,
@@ -209,6 +248,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       const { ids: messageIds, byId: messagesById } = normalizeById(parameters.messages);
       newState.messageIds = stableIds(this.state.messageIds, messageIds);
       newState.messagesById = messagesById;
+      newState.messageErrorsById = pruneMessageErrorsById(this.state.messageErrorsById, messageIds);
       this.dirtyControlledModels.delete('messages');
     }
 
@@ -226,7 +266,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     if (
-      parameters.activeConversationId !== undefined &&
+      parameters.activeConversationIdControlled &&
       (parameters.activeConversationId !== this.parameters.activeConversationId ||
         this.dirtyControlledModels.has('activeConversationId'))
     ) {
@@ -250,12 +290,18 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
   /**
    * Returns a cleanup function to be used as a React effect teardown.
    * Called by `useChatInstance` when the store instance changes or the component unmounts.
-   * Currently a no-op; extend this when the store manages subscriptions or timers
-   * that need explicit teardown on disposal.
    */
   public disposeEffect = (): (() => void) => {
     return () => {
-      // TODO: cancel any pending store subscriptions or timers here
+      this.state.activeStreamAbortController?.abort();
+
+      if (this.state.activeStreamAbortController || this.state.isStreaming) {
+        this.update({
+          activeStreamAbortController: null,
+          isStreaming: false,
+          streamingConversationId: undefined,
+        });
+      }
     };
   };
 
@@ -314,13 +360,16 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       return;
     }
 
-    const { [id]: removedMessage, ...messagesById } = this.state.messagesById;
-    void removedMessage;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { [id]: _removedMessage, ...messagesById } = this.state.messagesById;
+    const nextMessageErrorsById = { ...this.state.messageErrorsById };
+    delete nextMessageErrorsById[id];
 
     this.dirtyControlledModels.add('messages');
     this.update({
       messageIds: this.state.messageIds.filter((messageId) => messageId !== id),
       messagesById,
+      messageErrorsById: nextMessageErrorsById,
     });
   };
 
@@ -344,9 +393,11 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     this.dirtyControlledModels.add('messages');
+    const messageIds = [...nextMessageIds, ...this.state.messageIds];
     this.update({
-      messageIds: [...nextMessageIds, ...this.state.messageIds],
+      messageIds,
       messagesById: nextMessagesById,
+      messageErrorsById: pruneMessageErrorsById(this.state.messageErrorsById, messageIds),
     });
   };
 
@@ -357,6 +408,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.update({
       messageIds,
       messagesById,
+      messageErrorsById: pruneMessageErrorsById(this.state.messageErrorsById, messageIds),
     });
   };
 
@@ -409,8 +461,8 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       return;
     }
 
-    const { [id]: removedConversation, ...conversationsById } = this.state.conversationsById;
-    void removedConversation;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { [id]: _removedConversation, ...conversationsById } = this.state.conversationsById;
 
     this.dirtyControlledModels.add('conversations');
     this.update({
@@ -480,8 +532,17 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     });
   };
 
-  public setStreaming = (value: boolean) => {
-    this.set('isStreaming', value);
+  public setStreaming = (value: boolean, conversationId?: string) => {
+    this.update({
+      isStreaming: value,
+      // Without a conversation id the stream is unscoped: the indicator gating
+      // treats `undefined` as "show regardless of the active conversation".
+      streamingConversationId: value ? conversationId : undefined,
+    });
+  };
+
+  public setHistoryLoading = (value: boolean) => {
+    this.set('isLoadingHistory', value);
   };
 
   public setActiveStreamAbortController = (value: AbortController | null) => {
@@ -490,6 +551,36 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
 
   public setError = (error: ChatError | null) => {
     this.set('error', error);
+  };
+
+  public setMessageError = (messageId: string, error: ChatError | null) => {
+    const currentError = this.state.messageErrorsById[messageId];
+
+    if (currentError === error) {
+      return;
+    }
+
+    const nextMessageErrorsById = { ...this.state.messageErrorsById };
+
+    if (error == null) {
+      delete nextMessageErrorsById[messageId];
+    } else {
+      nextMessageErrorsById[messageId] = error;
+    }
+
+    this.set('messageErrorsById', nextMessageErrorsById);
+  };
+
+  public clearMessageError = (messageId: string) => {
+    this.setMessageError(messageId, null);
+  };
+
+  public clearAllMessageErrors = () => {
+    if (Object.keys(this.state.messageErrorsById).length === 0) {
+      return;
+    }
+
+    this.set('messageErrorsById', {});
   };
 
   public setHistoryState = ({
@@ -510,11 +601,22 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.update({
       messageIds: [],
       messagesById: {},
+      messageErrorsById: {},
       activeStreamAbortController: null,
       isStreaming: false,
+      streamingConversationId: undefined,
       hasMoreHistory: false,
+      isLoadingHistory: false,
       historyCursor: undefined,
       error: null,
     });
   };
+}
+
+/**
+ * Narrows the one intentional cursor-erasure boundary used by helpers that
+ * operate only on message/conversation state and never touch history cursors.
+ */
+export function asCursorAgnosticChatStore<Cursor>(store: ChatStore<Cursor>): ChatStore<unknown> {
+  return store as unknown as ChatStore<unknown>;
 }

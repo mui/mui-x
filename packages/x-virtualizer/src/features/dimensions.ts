@@ -97,15 +97,47 @@ export namespace Dimensions {
 }
 
 function initializeState(params: ParamsWithDefaults): Dimensions.State {
-  const { rowCount, dimensions: dimensionsParams } = params;
-  const { columnsTotalWidth, rowHeight, autoHeight, minimalContentHeight } = dimensionsParams;
-  const currentPageTotalHeight = rowCount * rowHeight;
+  const { rowCount, rows, getRowHeight, dimensions: dimensionsParams } = params;
+  const {
+    columnsTotalWidth,
+    rowHeight,
+    autoHeight,
+    minimalContentHeight,
+    topPinnedHeight,
+    bottomPinnedHeight,
+  } = dimensionsParams;
+
+  // Calculate the initial content height and row positions so the
+  // initial render gets the correct size.
+  const positions: number[] = [];
+  let currentPageTotalHeight = 0;
+  if (getRowHeight && rows.length > 0) {
+    for (let i = 0; i < rows.length; i += 1) {
+      positions.push(currentPageTotalHeight);
+      const height = getRowHeight(rows[i]);
+      currentPageTotalHeight += typeof height === 'number' ? height : rowHeight;
+    }
+  } else {
+    for (let i = 0; i < rowCount; i += 1) {
+      positions.push(i * rowHeight);
+    }
+    currentPageTotalHeight = rowCount * rowHeight;
+  }
+
+  // Reflect the pinned zone sizes in the container heights at initialization, mirroring
+  // `updateDimensions`. The pinned rows' measured height is still 0 in `rowsMeta`
+  // below (pinned rows are measured later), so each container height is just its static
+  // pinned size.
+  const topContainerHeight = topPinnedHeight;
+  const bottomContainerHeight = bottomPinnedHeight;
 
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...dimensionsParams,
     autoHeight,
     minimalContentHeight,
+    topContainerHeight,
+    bottomContainerHeight,
     contentSize: {
       width: columnsTotalWidth,
       height: roundToDecimalPlaces(currentPageTotalHeight, 1),
@@ -114,7 +146,7 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 
   const rowsMeta = {
     currentPageTotalHeight,
-    positions: Array.from({ length: rowCount }, (_, i) => i * rowHeight),
+    positions,
     pinnedTopRowsTotalHeight: 0,
     pinnedBottomRowsTotalHeight: 0,
   };
@@ -175,7 +207,18 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
       // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
       // https://github.com/mui/mui-x/issues/15721
-      const scrollbarSize = measureScrollbarSize(containerNode, params.dimensions.scrollbarSize);
+      // Prefer measuring on a virtual-scrollbar widget when the layout exposes
+      // one, because its `scrollbar-width` / `::-webkit-scrollbar` styling may
+      // differ from the rest of the document and is what actually drives the
+      // size we care about for layout math.
+      const scrollbarMeasurementNode =
+        layout.refs.scrollbarVertical?.current ??
+        layout.refs.scrollbarHorizontal?.current ??
+        containerNode;
+      const scrollbarSize = measureScrollbarSize(
+        scrollbarMeasurementNode,
+        params.dimensions.scrollbarSize,
+      );
 
       const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
       const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
@@ -328,6 +371,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     [
       store,
       layout.refs.container,
+      layout.refs.scrollbarHorizontal,
+      layout.refs.scrollbarVertical,
       params.dimensions.scrollbarSize,
       params.dimensions.autoHeight,
       params.dimensions.minimalContentHeight,
@@ -661,12 +706,39 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
     return cachedSize;
   }
 
+  const htmlElement = element as HTMLElement;
+
+  // First, try measuring `element` directly. When `element` is a scroll widget
+  // that already has overflowing content (the typical case for the timeline's
+  // virtual scrollbars), its rendered scrollbar reflects whatever
+  // `scrollbar-width` / `::-webkit-scrollbar` styling is applied to *this*
+  // element, which is exactly what we need.
+  const directSize = Math.max(
+    htmlElement.offsetWidth - htmlElement.clientWidth,
+    htmlElement.offsetHeight - htmlElement.clientHeight,
+  );
+  if (directSize > 0) {
+    scrollbarSizeCache.set(element, directSize);
+    return directSize;
+  }
+
+  // Fall back to a probe div appended to `element`. `scrollbar-width` is not
+  // inherited, so copy it from the target element's computed style; otherwise
+  // a parent that opts into `scrollbar-width: thin` would still be measured
+  // with default scrollbar size.
   const doc = ownerDocument(element);
+  const view = doc.defaultView;
   const scrollDiv = doc.createElement('div');
   scrollDiv.style.width = '99px';
   scrollDiv.style.height = '99px';
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.overflow = 'scroll';
+  if (view) {
+    const computed = view.getComputedStyle(htmlElement);
+    if (computed.scrollbarWidth) {
+      scrollDiv.style.scrollbarWidth = computed.scrollbarWidth;
+    }
+  }
   scrollDiv.className = 'scrollDiv';
   element.appendChild(scrollDiv);
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;

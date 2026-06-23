@@ -47,6 +47,28 @@ describe('ChatDateDivider', () => {
     expect(document.querySelector('.MuiChatMessage-dateDivider')).not.toBe(null);
   });
 
+  it('emits dateDividerLine and dateDividerLabel sub-slot classes at a boundary', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'user',
+            parts: [{ type: 'text', text: 'Yesterday' }],
+            createdAt: yesterday,
+          },
+          { id: 'm2', role: 'user', parts: [{ type: 'text', text: 'Today' }], createdAt: today },
+        ]}
+      >
+        <ChatDateDivider messageId="m2" />
+      </ChatRoot>,
+    );
+
+    expect(document.querySelectorAll('.MuiChatMessage-dateDividerLine')).to.have.length(2);
+    expect(document.querySelectorAll('.MuiChatMessage-dateDividerLabel')).to.have.length(1);
+  });
+
   it('does not render a date divider when all messages are from the same day', () => {
     const now = new Date().toISOString();
     const slightlyLater = new Date(Date.now() + 60 * 1000).toISOString();
