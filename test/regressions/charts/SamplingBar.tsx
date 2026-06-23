@@ -36,7 +36,7 @@ function Cell({
       <Typography variant="caption">{`${sampling} · ${zoom.label}`}</Typography>
       <BarChartPro
         series={[{ data }]}
-        xAxis={[{ data: xData, zoom: true, id: 'x' }]}
+        xAxis={[{ data: xData, zoom: true, id: 'x', tickSpacing: 80 }]}
         yAxis={[{ position: 'none' }]}
         width={300}
         height={160}
