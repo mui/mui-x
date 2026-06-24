@@ -115,6 +115,12 @@ See the [Date format and localization](/x/react-date-pickers/adapters-locale/) a
 
 See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.
 
+## Year Range Picker
+
+There isn't a dedicated `YearRangePicker` component, but the same result can be composed today using two `DatePicker` components restricted to the `year` view, with `minDate`/`maxDate` tying them together so the end year can't be set before the start year:
+
+{{"demo": "YearRangePicker.js", "bg": "inline"}}
+
 ## Month Range Picker 🚧
 
 :::warning
