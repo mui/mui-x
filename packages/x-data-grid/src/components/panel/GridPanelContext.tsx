@@ -1,10 +1,17 @@
 'use client';
 import * as React from 'react';
 
+export interface GridPanelTrigger {
+  setRef: (instance: HTMLElement | null) => void;
+  element: HTMLElement | null;
+}
+
 export interface GridPanelContextValue {
-  columnsPanelTriggerRef: React.RefObject<HTMLButtonElement | null>;
-  filterPanelTriggerRef: React.RefObject<HTMLButtonElement | null>;
-  aiAssistantPanelTriggerRef: React.RefObject<HTMLButtonElement | null>;
+  triggers: {
+    filterPanel: GridPanelTrigger;
+    aiAssistantPanel: GridPanelTrigger;
+    columnsPanel: GridPanelTrigger;
+  };
 }
 
 export const GridPanelContext = React.createContext<GridPanelContextValue | undefined>(undefined);
@@ -20,12 +27,47 @@ export function useGridPanelContext() {
 }
 
 export function GridPanelContextProvider({ children }: { children: React.ReactNode }) {
-  const columnsPanelTriggerRef = React.useRef<HTMLButtonElement>(null);
-  const filterPanelTriggerRef = React.useRef<HTMLButtonElement>(null);
-  const aiAssistantPanelTriggerRef = React.useRef<HTMLButtonElement>(null);
-  const value = React.useMemo(
-    () => ({ columnsPanelTriggerRef, filterPanelTriggerRef, aiAssistantPanelTriggerRef }),
-    [],
+  const [triggerElements, setTriggerElements] = React.useState<{
+    columnsPanel: HTMLElement | null;
+    filterPanel: HTMLElement | null;
+    aiAssistantPanel: HTMLElement | null;
+  }>({
+    columnsPanel: null,
+    filterPanel: null,
+    aiAssistantPanel: null,
+  });
+
+  const setColumnsPanelTrigger = React.useCallback<GridPanelTrigger['setRef']>((instance) => {
+    setTriggerElements((prev) => ({ ...prev, columnsPanel: instance }));
+  }, []);
+
+  const setFilterPanelTrigger = React.useCallback<GridPanelTrigger['setRef']>((instance) => {
+    setTriggerElements((prev) => ({ ...prev, filterPanel: instance }));
+  }, []);
+
+  const setAiAssistantPanelTrigger = React.useCallback<GridPanelTrigger['setRef']>((instance) => {
+    setTriggerElements((prev) => ({ ...prev, aiAssistantPanel: instance }));
+  }, []);
+
+  const value = React.useMemo<GridPanelContextValue>(
+    () => ({
+      triggers: {
+        columnsPanel: {
+          element: triggerElements.columnsPanel,
+          setRef: setColumnsPanelTrigger,
+        },
+        filterPanel: {
+          element: triggerElements.filterPanel,
+          setRef: setFilterPanelTrigger,
+        },
+        aiAssistantPanel: {
+          element: triggerElements.aiAssistantPanel,
+          setRef: setAiAssistantPanelTrigger,
+        },
+      },
+    }),
+    [triggerElements, setColumnsPanelTrigger, setFilterPanelTrigger, setAiAssistantPanelTrigger],
   );
+
   return <GridPanelContext.Provider value={value}>{children}</GridPanelContext.Provider>;
 }
