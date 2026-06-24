@@ -4,14 +4,9 @@ productId: x-charts
 components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, RadialLineChart, RadialMarkPlot, RadialLinePlot, RadialAreaPlot, RadialLineHighlightPlot
 ---
 
-# Charts - Radial Lines [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
+# Charts - Radial Lines [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Use radial line charts to show trends along periodic values.</p>
-
-:::warning
-This feature is in preview.
-It is ready for production use, and its API, visuals, and behavior may change in future minor or patch releases.
-:::
 
 ## Basics
 

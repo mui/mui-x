@@ -13,7 +13,7 @@ import {
   gridClasses,
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM, isOSX } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
@@ -416,9 +416,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
 
       // Add a new cell range to the selection
-      const isMac = window.navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-
-      await user.keyboard(isMac ? '{Meta>}' : '{Control>}');
+      await user.keyboard(isOSX ? '{Meta>}' : '{Control>}');
       await user.pointer([
         // touch the screen at element1
         { keys: '[MouseLeft>]', target: getCell(2, 0) },
@@ -427,7 +425,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
         // release the touch pointer at the last position (element2)
         { keys: '[/MouseLeft]' },
       ]);
-      await user.keyboard(isMac ? '{/Meta}' : '{/Control}');
+      await user.keyboard(isOSX ? '{/Meta}' : '{/Control}');
 
       expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({
         '0': { id: true },

@@ -18,7 +18,7 @@ export interface AreaElementOwnerState {
   gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  classes?: Partial<LineClasses>;
+  classes?: Partial<Pick<LineClasses, 'area'>>;
 }
 
 export interface AreaElementSlots {
@@ -76,7 +76,8 @@ function AreaElement(props: AreaElementProps) {
   const store = useStore();
   const enablePositionBasedPointerInteraction = store.use(
     selectorChartExperimentalFeaturesState,
-  )?.enablePositionBasedPointerInteraction;
+    'enablePositionBasedPointerInteraction',
+  );
   const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
   const interactionProps = useInteractionItemProps(identifier);
   const highlightState = useItemHighlightState(identifier);
@@ -91,7 +92,7 @@ function AreaElement(props: AreaElementProps) {
     isFaded,
     isHighlighted,
   };
-  const classes = useLineUtilityClasses();
+  const classes = useLineUtilityClasses(ownerState);
 
   const Area = slots?.area ?? AnimatedArea;
   const areaProps = useSlotProps({
@@ -113,7 +114,7 @@ function AreaElement(props: AreaElementProps) {
   return <Area {...other} {...areaProps} />;
 }
 
-AreaElement.propTypes = {
+AreaElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useZAxes } from '@mui/x-charts/hooks';
 import { useGeoData } from '../hooks/useGeoData';
 import { useGeoPath } from '../hooks/useGeoPath';
@@ -30,7 +31,7 @@ export interface MapShapePlotProps {
 /**
  * Renders series mapShape items.
  */
-export function MapShapePlot(props: MapShapePlotProps) {
+function MapShapePlot(props: MapShapePlotProps) {
   const { className, fill, stroke = 'none', strokeWidth = 1 } = props;
   const geoData = useGeoData();
   const path = useGeoPath();
@@ -73,7 +74,8 @@ export function MapShapePlot(props: MapShapePlotProps) {
                   {featureIndexes.map((featureIndex) => {
                     const feature = geoData.features[featureIndex];
                     const d = path(feature);
-                    if (!d) {
+                    const color = fill ?? colorGetter(dataIndex);
+                    if (!d || color === null) {
                       return null;
                     }
                     return (
@@ -82,7 +84,7 @@ export function MapShapePlot(props: MapShapePlotProps) {
                         seriesId={id}
                         dataIndex={dataIndex}
                         d={d}
-                        color={fill ?? colorGetter(dataIndex)}
+                        color={color}
                         stroke={stroke}
                         strokeWidth={strokeWidth}
                       />
@@ -98,3 +100,27 @@ export function MapShapePlot(props: MapShapePlotProps) {
     </g>
   );
 }
+
+MapShapePlot.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+  /**
+   * Fill color applied to every feature path. Overrides item and series colors.
+   */
+  fill: PropTypes.string,
+  /**
+   * Stroke color applied to every feature path.
+   * @default 'none'
+   */
+  stroke: PropTypes.string,
+  /**
+   * Stroke width applied to every feature path.
+   * @default 1
+   */
+  strokeWidth: PropTypes.number,
+} as any;
+
+export { MapShapePlot };

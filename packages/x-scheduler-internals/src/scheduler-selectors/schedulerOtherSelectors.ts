@@ -1,15 +1,15 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { SchedulerEventId } from '../models';
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
   /**
-   * Returns `true` if the event with the given ID is the currently active event.
+   * Returns `true` if the occurrence with the given key is the currently active occurrence.
    */
-  isEditedEvent: createSelector(
-    (state: State) => state.editedEventId,
-    (editedEventId, eventId: SchedulerEventId | undefined) => editedEventId === eventId,
+  isEditedOccurrence: createSelector(
+    (state: State) => state.editedOccurrenceKey,
+    (editedOccurrenceKey, occurrenceKey: string | undefined) =>
+      editedOccurrenceKey === occurrenceKey,
   ),
   visibleDate: createSelectorMemoized(
     (state: State) => state.adapter,
@@ -18,7 +18,7 @@ export const schedulerOtherSelectors = {
     (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
   ),
   isRecurringScopeDialogOpen: createSelector(
-    (state: State) => state.pendingUpdateRecurringEventParameters != null,
+    (state: State) => state.pendingRecurringEventOperation != null,
   ),
   /**
    * The default event color used when no color is specified on the event or its resource.

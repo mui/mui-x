@@ -223,7 +223,7 @@ export function AttachmentPreviewList() {
 // ---------------------------------------------------------------------------
 
 export const demoSlotProps = {
-  messageRoot: (ownerState) => ({
+  message: (ownerState) => ({
     style: {
       display: 'grid',
       gridTemplateColumns:
@@ -233,7 +233,7 @@ export const demoSlotProps = {
       alignItems: 'start',
     },
   }),
-  messageAvatar: (ownerState) => ({
+  avatar: (ownerState) => ({
     style: {
       width: 32,
       height: 32,
@@ -250,7 +250,7 @@ export const demoSlotProps = {
   messageAvatarImage: {
     style: { width: 20, height: 20, filter: 'grayscale(1) invert(1)' },
   },
-  messageContent: {
+  content: {
     style: { display: 'contents' },
   },
   messageBubble: (ownerState) => ({
@@ -268,7 +268,7 @@ export const demoSlotProps = {
       maxWidth: '90%',
     },
   }),
-  messageMeta: (ownerState) => ({
+  meta: (ownerState) => ({
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -322,7 +322,7 @@ export const demoSlotProps = {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-  composerRoot: {
+  composer: {
     style: {
       display: 'grid',
       gap: 10,
@@ -347,7 +347,7 @@ export const demoSlotProps = {
       boxSizing: 'border-box',
     },
   },
-  composerSendButton: (ownerState) => ({
+  send: (ownerState) => ({
     style: {
       border: `1px solid ${palette.accent}`,
       background: palette.accent,

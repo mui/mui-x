@@ -178,7 +178,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
                 cause: originalError as Error,
               }),
             );
-          } else {
+          } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
                 'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
@@ -357,7 +357,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
               cause: errorThrown as Error,
             }),
           );
-        } else {
+        } else if (process.env.NODE_ENV !== 'production') {
           warnOnce(
             [
               'MUI X: A call to `dataSource.updateRow()` threw an error which was not handled because `onDataSourceError()` is missing.',

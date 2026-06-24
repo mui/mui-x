@@ -1,8 +1,16 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { EventDialogClasses, eventDialogClassKeys } from '@mui/x-scheduler/internals';
+import {
+  EventDialogClasses,
+  eventDialogClassKeys,
+  ErrorContainerClasses,
+  errorContainerClassKeys,
+  EventSkeletonClasses,
+  eventSkeletonClassKeys,
+} from '@mui/x-scheduler/internals';
 
-export interface EventTimelinePremiumClasses extends EventDialogClasses {
+export interface EventTimelinePremiumClasses
+  extends EventDialogClasses, ErrorContainerClasses, EventSkeletonClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the content section element. */
@@ -49,14 +57,6 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   eventLinesClamp: string;
   /** Styles applied to event recurring icon elements. */
   eventRecurringIcon: string;
-  /** Styles applied to event skeleton elements rendered while events are loading. */
-  eventSkeleton: string;
-  /** Styles applied to the error container element. */
-  errorContainer: string;
-  /** Styles applied to error alert elements. */
-  errorAlert: string;
-  /** Styles applied to error message elements. */
-  errorMessage: string;
 }
 
 export type EventTimelinePremiumClassKey = keyof EventTimelinePremiumClasses;
@@ -91,10 +91,8 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'eventResizeHandler',
     'eventLinesClamp',
     'eventRecurringIcon',
-    'eventSkeleton',
-    'errorContainer',
-    'errorAlert',
-    'errorMessage',
+    ...errorContainerClassKeys,
+    ...eventSkeletonClassKeys,
     ...eventDialogClassKeys,
   ],
 );

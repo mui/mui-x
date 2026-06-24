@@ -319,6 +319,57 @@ describe('<DataGrid /> - Cells', () => {
           expect(expandButton).to.have.attribute('aria-expanded', 'false');
         });
 
+        // Regression test for https://github.com/mui/mui-x/issues/22382
+        it('should not submit a surrounding form when clicking the expand button', async () => {
+          const handleSubmit = spy((event: React.FormEvent) => {
+            event.preventDefault();
+          });
+
+          const { user } = render(
+            <form onSubmit={handleSubmit}>
+              <div style={{ width: 300, height: 300 }}>
+                <DataGrid {...longTextBaselineProps} />
+              </div>
+            </form>,
+          );
+
+          const cell = getCell(0, 0);
+          await user.click(cell);
+
+          const expandButton = cell.querySelector<HTMLButtonElement>(
+            'button[aria-haspopup="dialog"]',
+          );
+          expect(expandButton).not.to.equal(null);
+          await user.click(expandButton!);
+
+          expect(handleSubmit.callCount).to.equal(0);
+        });
+
+        it('should not submit a surrounding form when clicking the collapse button', async () => {
+          const handleSubmit = spy((event: React.FormEvent) => {
+            event.preventDefault();
+          });
+
+          const { user } = render(
+            <form onSubmit={handleSubmit}>
+              <div style={{ width: 300, height: 300 }}>
+                <DataGrid {...longTextBaselineProps} />
+              </div>
+            </form>,
+          );
+
+          const cell = getCell(0, 0);
+          await openLongTextViewPopup(cell, user, 'spacebar');
+
+          const popup = document.querySelector('.MuiDataGrid-longTextCellPopup')!;
+          const collapseButton = popup.querySelector('button')!;
+          // `fireEvent` (not `user.click`) because the popup keeps `pointer-events: none`
+          // until its open transition settles, which never happens under jsdom.
+          fireEvent.click(collapseButton);
+
+          expect(handleSubmit.callCount).to.equal(0);
+        });
+
         it('should render custom content via renderContent prop', async () => {
           const customRenderContent = spy((value: string | null) => (
             <span data-testid="custom-content">Custom: {value}</span>

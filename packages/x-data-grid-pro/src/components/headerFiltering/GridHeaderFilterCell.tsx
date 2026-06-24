@@ -39,6 +39,7 @@ import {
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { inputBaseClasses } from '@mui/material/InputBase';
+import { GridFilterInputMultipleMultiSelect } from '../panel/filterPanel/GridFilterInputMultipleMultiSelect';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
@@ -138,6 +139,7 @@ const DEFAULT_INPUT_COMPONENTS: {
   dateTime: GridFilterInputDate,
   boolean: GridFilterInputBoolean,
   singleSelect: GridFilterInputSingleSelect,
+  multiSelect: GridFilterInputMultipleMultiSelect,
   actions: null,
   custom: null,
   longText: GridFilterInputValue,
@@ -442,7 +444,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
   );
 });
 
-GridHeaderFilterCell.propTypes = {
+GridHeaderFilterCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
