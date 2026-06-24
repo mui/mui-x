@@ -51,7 +51,7 @@ const seriesProcessor: SeriesProcessor<'mapShape'> = (
       ...input,
       data: data.map((item) => ({
         ...item,
-        hidden: !isItemVisible?.({ type: 'mapShape', seriesId, dataIndex: item.name }),
+        hidden: !isItemVisible?.({ type: 'mapShape', seriesId, name: item.name }),
       })),
       hidden: !isItemVisible?.({ type: 'mapShape', seriesId }),
       valueFormatter: input.valueFormatter ?? defaultValueFormatter,

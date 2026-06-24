@@ -4,7 +4,7 @@ const identifierCleaner: IdentifierCleaner<'mapShape'> = (identifier) => {
   return {
     type: identifier.type,
     seriesId: identifier.seriesId,
-    dataIndex: identifier.dataIndex,
+    name: identifier.name,
   };
 };
 

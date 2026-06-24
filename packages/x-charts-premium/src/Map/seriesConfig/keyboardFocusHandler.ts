@@ -10,8 +10,7 @@ import type { FocusedItemIdentifier } from '@mui/x-charts/models';
  *
  * Because the `mapShape` identifier is keyed by the feature `name` (a string)
  * rather than a numeric `dataIndex`, the generic `createCommonKeyboardFocusHandler`
- * (which steps a numeric index) can't be used. We step by data-array position
- * internally and emit the `name` at the landing position.
+ * (which steps a numeric index) can't be used
  *
  * `ArrowRight`/`ArrowLeft` move to the next/previous shape of the focused series,
  * `ArrowUp`/`ArrowDown` move between series.
@@ -30,7 +29,7 @@ const getSeriesData = (state: MapState, seriesId: FocusedItemIdentifier<'mapShap
 const toFocusedItem = (
   seriesId: FocusedItemIdentifier<'mapShape'>['seriesId'],
   name: string,
-): FocusedItemIdentifier<'mapShape'> => ({ type: 'mapShape', seriesId, dataIndex: name });
+): FocusedItemIdentifier<'mapShape'> => ({ type: 'mapShape', seriesId, name });
 
 /** First focusable shape across all map series. */
 function getFirstItem(state: MapState): FocusedItemIdentifier<'mapShape'> | null {
@@ -54,7 +53,7 @@ function stepWithinSeries(
   direction: 1 | -1,
 ): FocusedItemIdentifier<'mapShape'> | null {
   const data = getSeriesData(state, currentItem.seriesId);
-  const current = data.findIndex((d) => d.name === currentItem.dataIndex);
+  const current = data.findIndex((d) => d.name === currentItem.name);
   if (current === -1) {
     return getFirstItem(state);
   }

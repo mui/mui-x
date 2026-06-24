@@ -7,7 +7,8 @@ import { useItemHighlightState } from '../hooks';
 
 export type MapShapeProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
   seriesId: SeriesId;
-  dataIndex: string;
+  dataIndex: number;
+  name: string;
   d: string;
   color: string;
 };
@@ -22,11 +23,11 @@ const MapShapeRoot = styled('path', {
 });
 
 function MapShape(props: MapShapeProps) {
-  const { seriesId, dataIndex, d, color, onClick, ...other } = props;
+  const { seriesId, dataIndex, name, d, color, onClick, ...other } = props;
 
   const identifier = React.useMemo(
-    () => ({ type: 'mapShape' as const, seriesId, dataIndex }),
-    [seriesId, dataIndex],
+    () => ({ type: 'mapShape' as const, seriesId, name }),
+    [seriesId, name],
   );
   const interactionProps = useInteractionItemProps(identifier);
   const highlightState = useItemHighlightState(identifier);

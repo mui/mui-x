@@ -1,15 +1,15 @@
 import { getLabel, type TooltipGetter } from '@mui/x-charts/internals';
 
 const tooltipGetter: TooltipGetter<'mapShape'> = ({ series, getColor, identifier }) => {
-  if (!identifier || identifier.dataIndex === undefined) {
+  if (!identifier || identifier.name === undefined) {
     return null;
   }
 
-  const point = series.data.find((d) => d.name === identifier.dataIndex);
+  const point = series.data.find((d) => d.name === identifier.name);
   if (point == null) {
     return null;
   }
-  const color = getColor(identifier.dataIndex);
+  const color = getColor(identifier.name);
   if (color === null) {
     return null;
   }
