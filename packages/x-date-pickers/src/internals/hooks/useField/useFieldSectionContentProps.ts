@@ -253,7 +253,9 @@ function getSectionValueText(
           adapter.startOfYear(adapter.date()),
           Number(section.value),
         );
-        return adapter.isValid(dateWithDay) ? adapter.format(dateWithDay, 'dayOfMonthFull') : '';
+        // Announce a cardinal day (e.g. "2"), not a locale ordinal (e.g. French "2eme").
+        // See https://github.com/mui/mui-x/issues/22915.
+        return adapter.isValid(dateWithDay) ? adapter.format(dateWithDay, 'dayOfMonth') : '';
       }
       return section.value;
     case 'weekDay':

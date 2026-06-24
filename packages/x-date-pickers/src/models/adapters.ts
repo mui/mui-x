@@ -28,6 +28,8 @@ export interface AdapterFormats {
    * The day of the month with letters.
    * @example "2nd"
    */
+  // TODO v10: Remove. No longer read since the day field `aria-valuetext` uses `dayOfMonth` (cardinal).
+  // See https://github.com/mui/mui-x/issues/22915.
   dayOfMonthFull: string;
   /**
    * The name of the day of the week.
