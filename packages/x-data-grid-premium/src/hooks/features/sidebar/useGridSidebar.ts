@@ -1,12 +1,14 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import {
-  type GridStateInitializer,
-  type GridPipeProcessor,
   useGridApiMethod,
   useGridRegisterPipeProcessor,
-  type GridRestoreStatePreProcessingContext,
   useGridEventPriority,
+} from '@mui/x-data-grid-pro/internals';
+import type {
+  GridStateInitializer,
+  GridPipeProcessor,
+  GridRestoreStatePreProcessingContext,
 } from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';

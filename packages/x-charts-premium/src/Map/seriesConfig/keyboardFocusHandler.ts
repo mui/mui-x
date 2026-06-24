@@ -1,7 +1,5 @@
-import {
-  createCommonKeyboardFocusHandler,
-  type KeyboardFocusHandler,
-} from '@mui/x-charts/internals';
+import { createCommonKeyboardFocusHandler } from '@mui/x-charts/internals';
+import type { KeyboardFocusHandler } from '@mui/x-charts/internals';
 
 const mapShapeSeriesTypes = new Set(['mapShape'] as const);
 

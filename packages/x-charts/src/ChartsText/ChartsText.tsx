@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
-import { useIsHydrated } from '../hooks/useIsHydrated';
+import { useIsHydrated } from '@mui/x-internals/useIsHydrated';
+import { getWordsByLines } from '../internals/getWordsByLines';
+import type { GetWordsByLinesParams } from '../internals/getWordsByLines';
 
 export interface ChartsTextProps
   extends

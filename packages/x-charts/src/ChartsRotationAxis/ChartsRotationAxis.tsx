@@ -5,14 +5,21 @@ import { useTheme } from '@mui/material/styles';
 import { useTicks } from '../hooks/useTicks';
 import { useRadiusAxis, useRotationAxis } from '../hooks/useAxis';
 import { useChartsContext } from '../context/ChartsProvider';
-import {
-  selectorChartPolarCenter,
-  type UseChartPolarAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import type { ChartsRotationAxisProps, D3Scale } from '../models/axis';
+import { selectorChartPolarCenter } from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import type {
+  ChartsRotationAxisProps,
+  ChartsAxisSlots,
+  ChartsAxisSlotProps,
+  D3Scale,
+} from '../models/axis';
 import { useUtilityClasses } from './chartsRotationAxisClasses';
 import { createGetLabelTextAnchors } from '../ChartsRadiusAxis/createGetLabelTextAnchors';
 import { getLabelTransform } from './getLabelTransform';
+
+export interface ChartsRotationAxisSlots extends ChartsAxisSlots {}
+
+export interface ChartsRotationAxisSlotProps extends ChartsAxisSlotProps {}
 
 /* Gap between a tick and its label. */
 const TICK_LABEL_GAP = 3;

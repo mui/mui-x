@@ -1,14 +1,8 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
 
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridRowsProp,
-  useGridApiRef,
-  getGroupRowIdFromPath,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef, getGroupRowIdFromPath } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridPremiumProps {

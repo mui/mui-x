@@ -3,12 +3,13 @@ import type { RefObject } from '@mui/x-internals/types';
 import {
   useGridEvent,
   gridRowMaximumTreeDepthSelector,
-  type GridEventListener,
   gridExpandedSortedRowIdsSelector,
   gridRowTreeSelector,
   gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid';
-import { useGridRegisterPipeProcessor, type GridPipeProcessor } from '@mui/x-data-grid/internals';
+import type { GridEventListener } from '@mui/x-data-grid';
+import { useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
+import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { ReorderValidationContext } from '../rowReorder/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';

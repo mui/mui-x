@@ -8,25 +8,25 @@ const occurrence = (id: string) => ({ id, key: id }) as any;
 
 storeClasses.forEach((storeClass) => {
   describe(`schedulerOtherSelectors - ${storeClass.name}`, () => {
-    describe('isEditedEvent', () => {
-      it('should return false when no event is active', () => {
+    describe('isEditedOccurrence', () => {
+      it('should return false when no occurrence is active', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
+        expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(false);
       });
 
-      it('should return true when the given event ID matches the active event', () => {
+      it('should return true when the given occurrence key matches the active occurrence', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.startEditing(occurrence('event-1'));
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);
       });
 
-      it('should return false when a different event is active', () => {
+      it('should return false when a different occurrence is active', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.startEditing(occurrence('event-2'));
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
       });
 
-      it('should return false after the active event is cleared', () => {
+      it('should distinguish occurrences of the same recurring event', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.startEditing(occurrence('event-1'));
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);

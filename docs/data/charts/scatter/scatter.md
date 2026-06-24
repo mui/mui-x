@@ -152,8 +152,8 @@ Set `experimentalFeatures.progressiveRendering` to `true` to get the renderer ch
 | :--------------------------------------------------------------------------------------------------- | :------------- | :-- | :----------- | :----------------------- | :--------------------------------- |
 | `svg-single`                                                                                         | `circle`       | Yes | Yes          | Blocks until fully drawn | Small datasets                     |
 | `svg-progressive`                                                                                    | `circle`       | Yes | Yes          | Stays responsive         | Large datasets that still need CSS |
-| `svg-batch`                                                                                          | grouped `path` | No  | Limited      | Stays responsive         | Very large datasets                |
-| `webgl` [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') | WebGL canvas   | No  | No           | Stays responsive         | Massive datasets                   |
+| `svg-batch`                                                                                          | grouped `path` | No  | Limited      | Blocks until fully drawn | Very large datasets                |
+| `webgl` [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') | WebGL canvas   | No  | No           | Blocks until fully drawn | Massive datasets                   |
 
 **CSS**: whether you can style individual points with CSS selectors.
 
@@ -174,6 +174,8 @@ The main thread stays responsive while a large dataset is being drawn.
 
 The example below renders 20,000 points.
 Use the buttons to compare the single and progressive renderers: the spinner keeps animating and "first paint" stays low with the progressive renderer, while the single renderer blocks the main thread until every point is drawn.
+Zoom and pan the chart to see the progressive renderer keep only the first level painted while you interact, then fill in the rest once the interaction settles.
+The first level is the first N points of each series, so it is representative only when the data is unordered; data sorted along an axis may show a partial cloud until the interaction settles.
 
 {{"demo": "ScatterAsyncRenderer.js"}}
 

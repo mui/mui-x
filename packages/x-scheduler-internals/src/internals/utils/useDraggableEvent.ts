@@ -46,7 +46,7 @@ export function useDraggableEvent(
   const event = useStore(store, schedulerEventSelectors.processedEvent, eventId)!;
 
   // Feature hooks
-  const { state: eventState } = useEvent({ start, end, eventId });
+  const { state: eventState } = useEvent({ start, end, occurrenceKey });
 
   const preview = useDragPreview({
     type: 'internal-event',

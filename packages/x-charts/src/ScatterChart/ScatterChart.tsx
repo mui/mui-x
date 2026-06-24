@@ -2,34 +2,34 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
-import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
-import {
-  ScatterPlot,
-  type ScatterPlotProps,
-  type ScatterPlotSlotProps,
-  type ScatterPlotSlots,
-} from './ScatterPlot';
-import { type ChartsContainerProps } from '../ChartsContainer';
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
+import type { ChartsSlots, ChartsSlotProps } from '../internals/material';
+import { ScatterPlot } from './ScatterPlot';
+import type { ScatterPlotProps, ScatterPlotSlotProps, ScatterPlotSlots } from './ScatterPlot';
+import type { ChartsContainerProps } from '../ChartsContainer';
 import { ChartsAxis } from '../ChartsAxis';
-import { type ScatterSeriesType } from '../models/seriesType/scatter';
-import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip';
-import {
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
+import type { ScatterSeriesType } from '../models/seriesType/scatter';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsTooltipProps } from '../ChartsTooltip';
+import type {
+  ChartsTooltipSlots,
+  ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
 import type { TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsOverlay } from '../ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '../ChartsOverlay';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { type ChartsAxisSlots, type ChartsAxisSlotProps } from '../models/axis';
-import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import type { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import { ChartsGrid } from '../ChartsGrid';
+import type { ChartsGridProps } from '../ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 import { ChartsDataProvider } from '../ChartsDataProvider';
@@ -542,6 +542,7 @@ ScatterChart.propTypes /* remove-proptypes */ = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -549,6 +550,7 @@ ScatterChart.propTypes /* remove-proptypes */ = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

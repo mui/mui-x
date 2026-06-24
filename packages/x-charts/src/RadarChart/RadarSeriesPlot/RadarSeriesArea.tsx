@@ -1,9 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { type RadarSeriesAreaProps } from './RadarSeriesPlot.types';
+import type { RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
-import { useUtilityClasses, type RadarClasses } from '../radarClasses';
+import { useUtilityClasses } from '../radarClasses';
+import type { RadarClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';

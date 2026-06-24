@@ -4,19 +4,21 @@ import {
   GestureManager,
   MoveGesture,
   PanGesture,
-  type PinchGesture,
-  type PressAndDragGesture,
   PressGesture,
-  type TapAndDragGesture,
   TapGesture,
-  type TurnWheelGesture,
 } from '@mui/x-internal-gestures/core';
-import { type ChartPlugin } from '../../models';
-import {
-  type RegisterGestures,
-  type UseChartInteractionListenerSignature,
-  type AddInteractionListener,
-  type UpdateZoomInteractionListeners,
+import type {
+  PinchGesture,
+  PressAndDragGesture,
+  TapAndDragGesture,
+  TurnWheelGesture,
+} from '@mui/x-internal-gestures/core';
+import type { ChartPlugin } from '../../models';
+import type {
+  RegisterGestures,
+  UseChartInteractionListenerSignature,
+  AddInteractionListener,
+  UpdateZoomInteractionListeners,
 } from './useChartInteractionListener.types';
 
 const preventDefault = (event: Event) => event.preventDefault();
