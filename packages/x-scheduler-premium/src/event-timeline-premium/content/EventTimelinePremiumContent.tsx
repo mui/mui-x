@@ -33,6 +33,7 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   EventDialogProvider,
   EventDialogTrigger,
+  EventSkeleton,
   useEventDialogContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
@@ -42,7 +43,6 @@ import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
-import { EventTimelinePremiumSkeleton } from './event-skeleton';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import {
   EventTimelinePremiumVirtualizerContext,
@@ -168,7 +168,6 @@ const EventTimelinePremiumEventsHeaderCellContent = styled('div', {
   height: '100%',
   width: 'calc(var(--unit-count) * var(--unit-width))',
   minWidth: '100%',
-  transform: 'translateX(calc(-1 * var(--events-scroll-left, 0) * 1px))',
 });
 
 const EventTimelinePremiumScrollerContent = styled('div', {
@@ -218,7 +217,6 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   alignContent: 'start',
   zIndex: 1,
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  transform: 'translateX(calc(-1 * var(--events-scroll-left, 0) * 1px))',
   '&:focus-visible': {
     outline: 'none',
     backgroundColor: getCellFocusBackground(theme),
@@ -589,7 +587,7 @@ function EventRowContent({
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   if (isLoading) {
-    return <EventTimelinePremiumSkeleton />;
+    return <EventSkeleton data-variant="timeline-row" />;
   }
 
   return (
@@ -871,7 +869,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           '--header-height': `${headerHeight}px`,
           '--filler-height': `${fillerHeight}px`,
           '--has-scroll-x': Number(hasBottomScrollbar),
-          '--has-scroll-y': Number(hasScrollY),
         } as React.CSSProperties
       }
     >

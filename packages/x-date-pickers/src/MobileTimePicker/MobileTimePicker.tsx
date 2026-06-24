@@ -5,11 +5,12 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
-import { MobileTimePickerProps } from './MobileTimePicker.types';
-import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import type { MobileTimePickerProps } from './MobileTimePicker.types';
+import type { TimePickerViewRenderers } from '../TimePicker/shared';
+import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateTime } from '../validation';
-import { PickerOwnerState, TimeView } from '../models';
+import type { PickerOwnerState, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
@@ -84,7 +85,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker(
   return renderPicker();
 }) as MobileTimePickerComponent;
 
-MobileTimePicker.propTypes = {
+MobileTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

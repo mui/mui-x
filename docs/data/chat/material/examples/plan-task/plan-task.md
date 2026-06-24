@@ -1,30 +1,29 @@
 ---
-title: Chat - Plan & task
+title: Chat - Plan and task
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Plan & task
+# Chat - Plan and task
 
-<p class="description">Show a live task list inside a tool call by providing a custom component through <code>partRenderers</code>.</p>
+<p class="description">Render a live, animated task list inside a tool call to surface multi-step agent progress in the conversation.</p>
 
-Send any message and watch the agent plan animate through each step inside the conversation.
+The demo below shows the agent plan animating through each step inside the conversation:
 
 {{"demo": "PlanTask.js", "bg": "inline"}}
 
-## How it works
+## Rendering tasks inside a tool call
 
-When a tool call named `run_tasks` arrives, the default JSON accordion is replaced by a
-collapsible task list. Each step animates through `pending → running → done` and the
-list collapses automatically when all steps finish.
+When a tool call named `run_tasks` arrives, the default JSON accordion is replaced by a collapsible task list.
+Each step animates through `pending → running → done`, and the list collapses automatically when all steps finish.
 
-The whole UI is a plain React component — no dedicated package export required.
+The whole UI is a plain React component—no dedicated package export required.
 
 ## Providing a custom tool renderer
 
-Supply a `partRenderers` map to `ChatBox`. Each key is a message part type; the
-`dynamic-tool` key lets you intercept any tool call and render whatever you want:
+Supply a `partRenderers` map to `ChatBox`.
+Each key is a message part type, and the `dynamic-tool` key lets you intercept any tool call and render a custom UI:
 
 ```tsx
 const partRenderers: ChatPartRendererMap = {
@@ -41,8 +40,7 @@ const partRenderers: ChatPartRendererMap = {
 
 ## Animating steps from outside the renderer
 
-The renderer is a plain function closed over component state, so you can drive it
-from any external source — a WebSocket, server-sent events, or a timer:
+The renderer is a plain function closed over component state, so you can drive it from any external source—a WebSocket, server-sent events, or a timer:
 
 ```tsx
 const [tasks, setTasks] = React.useState(initialTasks);
@@ -59,8 +57,7 @@ const partRenderers = React.useMemo(
 );
 ```
 
-Call `setTasks` with updated statuses from your stream handler and the task list
-re-renders automatically inside the message.
+Call `setTasks` with updated statuses from your stream handler, and the task list re-renders automatically inside the message.
 
 ## API
 

@@ -31,7 +31,11 @@
       }
     },
     "sizeAxisId": { "type": { "description": "string" } },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "valueFormatter": {
+      "type": {
+        "description": "SeriesValueFormatter&lt;ChartsSeriesConfig[SeriesType]['valueType']&gt;"
+      }
+    },
     "valueGetter": {
       "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; ScatterValueType" }
     },

@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/023c96ed6ca37cdb1ff687787e61257c0960285a/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/f5b3498d2fb7a68d366ab7db1f94434b32c4b94d/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -152,6 +152,9 @@ jobs:
       - code-infra/valelint
   test_static:
     <<: *default-job
+    environment:
+      <<: *default-environment
+      NODE_OPTIONS: --max-old-space-size=3584
     steps:
       - checkout
       - install-deps
@@ -227,7 +230,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build --concurrency 5
+          command: pnpm release:build --concurrency 4
       - run:
           name: Run e2e tests
           command: pnpm test:e2e

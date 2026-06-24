@@ -2,47 +2,36 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
-import {
-  useChartsContainerProps,
-  type ChartsSlots,
-  type ChartsSlotProps,
-} from '@mui/x-charts/internals';
-import {
-  Unstable_ChartsRadialGrid as ChartsRadialGrid,
-  type ChartsRadialGridProps,
-} from '@mui/x-charts/ChartsRadialGrid';
+import type { MakeOptional } from '@mui/x-internals/types';
+import { useChartsContainerProps } from '@mui/x-charts/internals';
+import type { ChartsSlots, ChartsSlotProps } from '@mui/x-charts/internals';
+import { Unstable_ChartsRadialGrid as ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
+import type { ChartsRadialGridProps } from '@mui/x-charts/ChartsRadialGrid';
 import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
 import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
-import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
-import {
-  ChartsTooltip,
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
-} from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { ChartsClipPath } from '../ChartsClipPath';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlots,
-  type ChartsOverlaySlotProps,
+import { ChartsOverlay } from '../ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlots,
+  ChartsOverlaySlotProps,
 } from '../ChartsOverlay';
-import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
+import type { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
 import { radialBarSeriesConfig } from './seriesConfig';
-import {
-  ChartsRadialDataProviderPremium,
-  type ChartsRadialDataProviderPremiumProps,
-} from '../ChartsRadialDataProviderPremium';
+import { ChartsRadialDataProviderPremium } from '../ChartsRadialDataProviderPremium';
+import type { ChartsRadialDataProviderPremiumProps } from '../ChartsRadialDataProviderPremium';
 import type { RadialBarSeriesType } from '../models/seriesType/radialBar';
-import { type RadialBarChartPluginSignatures } from './RadialBarChart.plugins';
+import type { RadialBarChartPluginSignatures } from './RadialBarChart.plugins';
 import { RadialBarPlot } from './RadialBarPlot';
 import { useRadialBarChartProps } from './useRadialBarChartProps';
-import {
-  Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
-  type ChartsRadialAxisHighlightProps,
-} from '../ChartsRadialAxisHighlight';
+import { Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight } from '../ChartsRadialAxisHighlight';
+import type { ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
 
 export type RadialBarSeries = MakeOptional<RadialBarSeriesType, 'type'>;
 
@@ -172,7 +161,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
   );
 });
 
-RadialBarChart.propTypes = {
+RadialBarChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -426,4 +415,4 @@ RadialBarChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadialBarChart as Unstable_RadialBarChart };
+export { RadialBarChart };

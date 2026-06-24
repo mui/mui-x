@@ -2,49 +2,37 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
-import {
-  AreaPlot,
-  type AreaPlotProps,
-  type AreaPlotSlotProps,
-  type AreaPlotSlots,
-} from './AreaPlot';
-import {
-  LinePlot,
-  type LinePlotProps,
-  type LinePlotSlotProps,
-  type LinePlotSlots,
-} from './LinePlot';
-import { type ChartsContainerProps } from '../ChartsContainer';
-import {
-  MarkPlot,
-  type MarkPlotProps,
-  type MarkPlotSlotProps,
-  type MarkPlotSlots,
-} from './MarkPlot';
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { ChartsSlots, ChartsSlotProps } from '../internals/material';
+import { AreaPlot } from './AreaPlot';
+import type { AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
+import { LinePlot } from './LinePlot';
+import type { LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
+import type { ChartsContainerProps } from '../ChartsContainer';
+import { MarkPlot } from './MarkPlot';
+import type { MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
 import { ChartsAxis } from '../ChartsAxis/ChartsAxis';
-import { type LineSeriesType } from '../models/seriesType/line';
+import type { LineSeriesType } from '../models/seriesType/line';
 import { ChartsTooltip } from '../ChartsTooltip';
-import {
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
+import type {
+  ChartsTooltipSlots,
+  ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
-import { type ChartsAxisSlotProps, type ChartsAxisSlots } from '../models/axis';
-import {
-  LineHighlightPlot,
-  type LineHighlightPlotSlots,
-  type LineHighlightPlotSlotProps,
-} from './LineHighlightPlot';
-import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import type { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
+import { LineHighlightPlot } from './LineHighlightPlot';
+import type { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from './LineHighlightPlot';
+import { ChartsGrid } from '../ChartsGrid';
+import type { ChartsGridProps } from '../ChartsGrid';
+import { ChartsOverlay } from '../ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { useLineChartProps } from './useLineChartProps';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
@@ -208,7 +196,7 @@ const LineChart = React.forwardRef(function LineChart(
   );
 });
 
-LineChart.propTypes = {
+LineChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

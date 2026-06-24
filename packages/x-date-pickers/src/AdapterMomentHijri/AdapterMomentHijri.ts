@@ -1,7 +1,8 @@
 /* v8 ignore next */
-import defaultHMoment, { Moment } from 'moment-hijri';
+import type { Moment } from 'moment-hijri';
+import defaultHMoment from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
-import {
+import type {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,
@@ -206,6 +207,10 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
 
   public getDate = (value: Moment) => {
     return value.iDate();
+  };
+
+  public getDaysInMonth = (value: Moment) => {
+    return this.moment.iDaysInMonth(value.iYear(), value.iMonth());
   };
 
   public setYear = (value: Moment, year: number) => {

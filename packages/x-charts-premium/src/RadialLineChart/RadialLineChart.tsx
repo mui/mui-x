@@ -2,52 +2,41 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  useChartsContainerProps,
-  type ChartsSlots,
-  type ChartsSlotProps,
-} from '@mui/x-charts/internals';
-import {
-  Unstable_ChartsRadialGrid as ChartsRadialGrid,
-  type ChartsRadialGridProps,
-} from '@mui/x-charts/ChartsRadialGrid';
-import {
-  Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
-  type ChartsRadialAxisHighlightProps,
-} from '@mui/x-charts/ChartsRadialAxisHighlight';
-import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
-import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
-import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
+import { useChartsContainerProps } from '@mui/x-charts/internals';
+import type { ChartsSlots, ChartsSlotProps } from '@mui/x-charts/internals';
+import { ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
+import type { ChartsRadialGridProps } from '@mui/x-charts/ChartsRadialGrid';
+import { ChartsRadialAxisHighlight } from '@mui/x-charts/ChartsRadialAxisHighlight';
+import type { ChartsRadialAxisHighlightProps } from '@mui/x-charts/ChartsRadialAxisHighlight';
+import { ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
+import { ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
-import {
-  ChartsTooltip,
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
-} from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { type RadialLineChartPluginSignatures } from './RadialLineChart.plugins';
+import type { RadialLineChartPluginSignatures } from './RadialLineChart.plugins';
 import { RadialLinePlot } from './RadialLinePlot';
 import { RadialMarkPlot } from './RadialMarkPlot';
 import { RadialAreaPlot } from './RadialAreaPlot';
 import { ChartsClipPath } from '../ChartsClipPath';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlots,
-  type ChartsOverlaySlotProps,
+import { ChartsOverlay } from '../ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlots,
+  ChartsOverlaySlotProps,
 } from '../ChartsOverlay';
-import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
+import type { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
 import { useRadialLineChartProps } from './useRadialLineChartProps';
 import { radialLineSeriesConfig } from './seriesConfig';
-import {
-  RadialLineHighlightPlot,
-  type RadialLineHighlightPlotSlots,
-  type RadialLineHighlightPlotSlotProps,
+import { RadialLineHighlightPlot } from './RadialLineHighlightPlot';
+import type {
+  RadialLineHighlightPlotSlots,
+  RadialLineHighlightPlotSlotProps,
 } from './RadialLineHighlightPlot';
-import {
-  ChartsRadialDataProviderPremium,
-  type ChartsRadialDataProviderPremiumProps,
-} from '../ChartsRadialDataProviderPremium';
+import { ChartsRadialDataProviderPremium } from '../ChartsRadialDataProviderPremium';
+import type { ChartsRadialDataProviderPremiumProps } from '../ChartsRadialDataProviderPremium';
 import type { RadialLineSeriesType } from '../models/seriesType/radialLine';
 
 export interface RadialLineChartSlots
@@ -185,7 +174,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
   );
 });
 
-RadialLineChart.propTypes = {
+RadialLineChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -443,4 +432,4 @@ RadialLineChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadialLineChart as Unstable_RadialLineChart };
+export { RadialLineChart };

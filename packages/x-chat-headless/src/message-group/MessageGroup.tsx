@@ -208,31 +208,28 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   return (
     <Group {...groupProps}>
       {defaultAuthorName}
-      {children ? (
+      {children !== undefined ? (
         // When custom children are provided (e.g. from DefaultMessageItem),
         // pass `isGrouped` via cloneElement so the inner MessageRoot/ChatMessage
         // receives the correct grouping state for its context.
-        // In compact mode, also inject the author name element into the
-        // children so it appears inside the CSS grid (sharing a row with the avatar).
-        // We wrap in a Fragment to avoid duplicate-key warnings.
         React.Children.map(children, (child) => {
-          if (!React.isValidElement(child) || typeof child.type === 'string') {
+          if (
+            !React.isValidElement(child) ||
+            typeof child.type === 'string' ||
+            child.type === React.Fragment ||
+            !('messageId' in (child.props as Record<string, unknown>))
+          ) {
             return child;
           }
           const clone = child as React.ReactElement<Record<string, unknown>>;
-          if (compactAuthorName) {
-            const existingChildren = (clone.props as { children?: React.ReactNode }).children;
-            return React.cloneElement(clone, {
-              isGrouped: !isFirst,
-              children: (
-                <React.Fragment>
-                  {compactAuthorName}
-                  {existingChildren}
-                </React.Fragment>
-              ),
-            });
-          }
-          return React.cloneElement(clone, { isGrouped: !isFirst });
+          // In compact mode the author label shares the message's CSS grid. Pass
+          // it as a dedicated `groupAuthorName` prop rather than merging it into
+          // the child's `children`, so a consumer's own custom `children` stay
+          // intact (and render children-only) even in compact mode.
+          return React.cloneElement(clone, {
+            isGrouped: !isFirst,
+            ...(compactAuthorName ? { groupAuthorName: compactAuthorName } : {}),
+          });
         })
       ) : (
         <MessageRoot isGrouped={!isFirst} messageId={messageId}>

@@ -11,6 +11,7 @@ import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
 import { EventCalendarProps } from './EventCalendar.types';
 import { EventDialogProvider } from '../internals/components/event-dialog';
+import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
 import { EventCalendarStyledContext } from './EventCalendarStyledContext';
 import { EventDialogStyledContext } from '../internals/components/event-dialog/EventDialogStyledContext';
@@ -53,20 +54,24 @@ const EventCalendar = React.forwardRef(function EventCalendar<
     [schedulerId, classes, mergedLocaleText],
   );
 
+  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
+
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventDialogProvider>
-            <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-          </EventDialogProvider>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <EventDialogProvider>
+              <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+            </EventDialogProvider>
+          </SharedComponentsStyledContext.Provider>
         </EventDialogStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarComponent;
 
-EventCalendar.propTypes = {
+EventCalendar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -189,6 +194,12 @@ EventCalendar.propTypes = {
     'red',
     'teal',
   ]),
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
       duration: PropTypes.number,
@@ -248,7 +259,7 @@ EventCalendar.propTypes = {
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig: PropTypes.oneOfType([
     PropTypes.oneOf([false]),

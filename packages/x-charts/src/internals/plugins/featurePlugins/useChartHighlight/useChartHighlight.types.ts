@@ -1,13 +1,13 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 import type {
   HighlightItemIdentifierWithType,
   HighlightItemIdentifier,
   SeriesItemIdentifier,
   SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type ChartPluginSignature } from '../../models';
-import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import type { ChartPluginSignature } from '../../models';
+import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
 export type HighlightUpdateSource = 'pointer' | 'keyboard';
 

@@ -1,11 +1,7 @@
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPro,
-  type GridApi,
-  useGridApiRef,
-  type DataGridProProps,
-} from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 

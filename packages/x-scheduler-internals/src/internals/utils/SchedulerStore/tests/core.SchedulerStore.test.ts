@@ -152,6 +152,34 @@ storeClasses.forEach((storeClass) => {
 
         expect(store.state.visibleDate).toEqualDateTime(visibleDate);
       });
+
+      it('should keep the same `nowUpdatedEveryMinute` reference when a non-timezone parameter changes', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const before = store.state.nowUpdatedEveryMinute;
+
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, showCurrentTimeIndicator: false },
+          adapter,
+        );
+
+        expect(store.state.nowUpdatedEveryMinute).to.equal(before);
+      });
+
+      it('should recompute `nowUpdatedEveryMinute` when the display timezone changes', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, displayTimezone: 'default' },
+          adapter,
+        );
+        const before = store.state.nowUpdatedEveryMinute;
+
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, displayTimezone: 'America/New_York' },
+          adapter,
+        );
+
+        expect(store.state.nowUpdatedEveryMinute).to.not.equal(before);
+        expect(adapter.getTimezone(store.state.nowUpdatedEveryMinute)).to.equal('America/New_York');
+      });
     });
   });
 });

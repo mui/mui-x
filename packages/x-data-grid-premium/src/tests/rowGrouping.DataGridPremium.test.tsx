@@ -1,5 +1,5 @@
 import { config } from 'react-transition-group';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   microtasks,
@@ -12,14 +12,12 @@ import {
 } from 'test/utils/helperFn';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  type GridApi,
   GridPreferencePanelsValue,
-  type GridRowsProp,
   useGridApiRef,
   GridLogicOperator,
 } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -401,6 +399,69 @@ describe('<DataGridPremium /> - Row grouping', () => {
         '',
       ]);
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
+    });
+  });
+
+  describe('colDef: multiSelect', () => {
+    const multiSelectRows: GridRowsProp = [
+      { id: 0, tags: ['React', 'TypeScript'] },
+      { id: 1, tags: ['TypeScript', 'React'] },
+      { id: 2, tags: ['React', 'Node.js'] },
+    ];
+
+    it('groups rows sharing the same set of values (order-insensitive by default)', () => {
+      render(
+        <Test
+          rows={multiSelectRows}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript', 'Node.js'],
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['tags'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      // ['React', 'TypeScript'] and ['TypeScript', 'React'] share the same sorted key → one group.
+      expect(getColumnValues(0)).to.deep.equal([
+        'React,TypeScript (2)',
+        '',
+        '',
+        'Node.js,React (1)',
+        '',
+      ]);
+    });
+
+    it('uses user-provided groupingValueGetter to override the default order-insensitive behavior', () => {
+      render(
+        <Test
+          rows={multiSelectRows}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript', 'Node.js'],
+              groupingValueGetter: (value: (string | number)[]) =>
+                !Array.isArray(value) || value.length === 0 ? null : value.join('|'),
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['tags'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      // Order-sensitive custom getter → ['React','TypeScript'] and ['TypeScript','React'] split.
+      expect(getColumnValues(0)).to.deep.equal([
+        'React|TypeScript (1)',
+        '',
+        'TypeScript|React (1)',
+        '',
+        'React|Node.js (1)',
+        '',
+      ]);
     });
   });
 

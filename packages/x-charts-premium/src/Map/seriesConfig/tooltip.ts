@@ -1,4 +1,5 @@
-import { getLabel, type TooltipGetter } from '@mui/x-charts/internals';
+import { getLabel } from '@mui/x-charts/internals';
+import type { TooltipGetter } from '@mui/x-charts/internals';
 
 const tooltipGetter: TooltipGetter<'mapShape'> = ({ series, getColor, identifier }) => {
   if (!identifier || identifier.dataIndex === undefined) {
@@ -9,13 +10,17 @@ const tooltipGetter: TooltipGetter<'mapShape'> = ({ series, getColor, identifier
   if (point == null) {
     return null;
   }
+  const color = getColor(identifier.dataIndex);
+  if (color === null) {
+    return null;
+  }
 
   const label = getLabel(point.label ?? point.name, 'tooltip');
   const formattedValue = series.valueFormatter(point, { dataIndex: identifier.dataIndex });
 
   return {
     identifier,
-    color: getColor(identifier.dataIndex),
+    color,
     label,
     value: point,
     formattedValue,

@@ -83,7 +83,7 @@ const EventItemTitle = styled('span', {
   margin: 0,
   color: (theme.vars || theme).palette.text.primary,
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)',
   lineHeight: 1.43,
   '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
@@ -177,7 +177,7 @@ export const EventItem = React.forwardRef(function EventItem(
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
+  const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
   // State hooks
   const id = useId(idProp);

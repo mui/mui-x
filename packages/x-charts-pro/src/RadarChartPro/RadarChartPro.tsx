@@ -3,15 +3,18 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   RadarAxisHighlight,
-  type RadarChartProps,
   RadarDataProvider,
-  type RadarDataProviderProps,
   RadarGrid,
   RadarMetricLabels,
   RadarSeriesArea,
   RadarSeriesMarks,
-  type RadarChartSlotProps,
-  type RadarChartSlots,
+  FocusedRadarMark,
+} from '@mui/x-charts/RadarChart';
+import type {
+  RadarChartProps,
+  RadarDataProviderProps,
+  RadarChartSlotProps,
+  RadarChartSlots,
 } from '@mui/x-charts/RadarChart';
 import { useThemeProps } from '@mui/material/styles';
 import { useRadarChartProps } from '@mui/x-charts/internals';
@@ -20,16 +23,14 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import {
-  RADAR_CHART_PRO_PLUGINS,
-  type RadarChartProPluginSignatures,
-} from './RadarChartPro.plugins';
+import { RADAR_CHART_PRO_PLUGINS } from './RadarChartPro.plugins';
+import type { RadarChartProPluginSignatures } from './RadarChartPro.plugins';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 
 export interface RadarChartProSlots
   extends Omit<RadarChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
@@ -101,6 +102,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
           <RadarSeriesArea />
           {highlight === 'axis' && <RadarAxisHighlight />}
           <RadarSeriesMarks />
+          <FocusedRadarMark />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
@@ -110,7 +112,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
   );
 });
 
-RadarChartPro.propTypes = {
+RadarChartPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
