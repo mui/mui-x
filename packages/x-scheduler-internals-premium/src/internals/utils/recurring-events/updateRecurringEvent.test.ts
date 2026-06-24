@@ -1,5 +1,5 @@
 import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
-import {
+import type {
   SchedulerEventUpdatedProperties,
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
