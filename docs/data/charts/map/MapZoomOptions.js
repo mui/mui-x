@@ -67,6 +67,16 @@ function isConicProjection(projection) {
   );
 }
 
+function isCylindricalProjection(projection) {
+  return (
+    projection === 'equirectangular' ||
+    projection === 'mercator' ||
+    projection === 'transverseMercator' ||
+    projection === 'equalEarth' ||
+    projection === 'naturalEarth1'
+  );
+}
+
 export default function MapZoomOptions() {
   const [projection, setProjection] = React.useState('naturalEarth1');
   const apiRef = useChartPremiumApiRef();
@@ -101,6 +111,17 @@ export default function MapZoomOptions() {
           value={projection}
           onChange={(event) => {
             setProjection(event.target.value);
+            apiRef.current?.resetZoom();
+            if (
+              isConicProjection(event.target.value) ||
+              isCylindricalProjection(event.target.value)
+            ) {
+              setRotationAllowed('long');
+              setTranslationAllowed('y');
+            } else {
+              setRotationAllowed('both');
+              setTranslationAllowed('none');
+            }
           }}
         >
           {projectionGroups.flatMap(({ label, projections }) => [

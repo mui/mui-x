@@ -217,6 +217,8 @@ The zoom object has two properties to limit this behavior:
 - `rotationAllowed`: `'both' | 'long' | 'lat' | 'none'` Limit how the center can be modified
 - `translationAllowed`: `'both' | 'x' | 'y' | 'none'` Limit how the translation can be modified
 
+In most cases, the configuration `{ translationAllowed: 'y', rotationAllowed: 'long' }` it the more appropriate.
+
 {{"demo": "MapZoomOptions.js"}}
 
 ### Control
@@ -225,7 +227,7 @@ The maps have a `view` and `onZoomChange` props that allow to controll the zoom.
 
 The view is made of three properties:
 
-- `zoomLevel`: `number` A scaling ratio such that `1` correspond to the scale where every object fit in the drawing area.
+- `zoomLevel`: `number` A scaling ratio such that `1` correspond to the scale where all objects fit in the drawing area.
 - `center`: `[number, number]` The long/lat coordinates in degree of the point at the center of the projection.
 - `translation`: `[number, number]` The translation of the map as a ratio of the drawing area.
 

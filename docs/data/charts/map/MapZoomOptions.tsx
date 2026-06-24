@@ -79,6 +79,16 @@ function isConicProjection(projection: D3NamedProjection) {
   );
 }
 
+function isCylindricalProjection(projection: D3NamedProjection) {
+  return (
+    projection === 'equirectangular' ||
+    projection === 'mercator' ||
+    projection === 'transverseMercator' ||
+    projection === 'equalEarth' ||
+    projection === 'naturalEarth1'
+  );
+}
+
 export default function MapZoomOptions() {
   const [projection, setProjection] =
     React.useState<D3NamedProjection>('naturalEarth1');
@@ -118,6 +128,17 @@ export default function MapZoomOptions() {
           value={projection}
           onChange={(event) => {
             setProjection(event.target.value as D3NamedProjection);
+            apiRef.current?.resetZoom();
+            if (
+              isConicProjection(event.target.value as D3NamedProjection) ||
+              isCylindricalProjection(event.target.value as D3NamedProjection)
+            ) {
+              setRotationAllowed('long');
+              setTranslationAllowed('y');
+            } else {
+              setRotationAllowed('both');
+              setTranslationAllowed('none');
+            }
           }}
         >
           {projectionGroups.flatMap(({ label, projections }) => [
