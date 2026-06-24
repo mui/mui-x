@@ -1,7 +1,14 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { GridEditInputCell } from '@mui/x-data-grid-pro';
+import {
+  GridEditInputCell,
+  renderEditInputCell,
+  renderEditDateCell,
+  renderEditBooleanCell,
+  renderEditSingleSelectCell,
+  renderEditLongTextCell,
+} from '@mui/x-data-grid-pro';
 import type { GridColDef, GridRenderEditCellParams } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -9,12 +16,35 @@ import { isEscapedFormulaSource, isFormulaSource } from '../hooks/features/formu
 import { gridCellFormulaResultSelector } from '../hooks/features/formula/gridFormulaSelectors';
 import { convertCanonicalToA1Display } from '../hooks/features/formula/gridFormulaA1Transforms';
 import { GridFormulaAutocomplete } from './GridFormulaAutocomplete';
+import { GridFormulaReferenceBackdrop } from './GridFormulaReferenceBackdrop';
 
 export interface GridFormulaEditCellProps extends GridRenderEditCellParams {
   /**
    * The edit component the column would render without formula support.
    */
   originalRenderEditCell?: GridColDef['renderEditCell'];
+}
+
+/**
+ * The built-in edit-cell renderers a column type can default to (string/number,
+ * date/dateTime, boolean, singleSelect, longText). The column-type merge replaces
+ * `renderEditCell` rather than stacking it (`gridColumnsUtils.ts`), so the value
+ * reaching the formula wrapper is exactly one of these defaults or a function the
+ * user supplied — on the column directly or through a custom column `type`. A
+ * supplied function reads as custom and must win, even for `=` values.
+ */
+const BUILT_IN_EDIT_RENDERERS = new Set<GridColDef['renderEditCell']>([
+  renderEditInputCell,
+  renderEditDateCell,
+  renderEditBooleanCell,
+  renderEditSingleSelectCell,
+  renderEditLongTextCell,
+]);
+
+// Not a type predicate: its false case includes the built-in renderers, which
+// are non-null, so a predicate would wrongly narrow the value to `undefined`.
+function isUserCustomEditCellRenderer(renderEditCell: GridColDef['renderEditCell']): boolean {
+  return renderEditCell != null && !BUILT_IN_EDIT_RENDERERS.has(renderEditCell);
 }
 
 function isFormulaEditValue(value: unknown): boolean {
@@ -41,6 +71,10 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
   const rootProps = useGridRootProps();
   const a1NotationEnabled =
     rootProps.formulaA1Notation && !rootProps.disableFormulas && !rootProps.dataSource;
+  // A custom editor (column `renderEditCell` or a custom column `type`) owns
+  // editing for the column, including `=` formula values — our formula text input
+  // never replaces it.
+  const isUserCustomEditor = isUserCustomEditCellRenderer(originalRenderEditCell);
 
   const rawValue = apiRef.current.getRow(id)?.[field];
   const rawIsFormula = isFormulaEditValue(rawValue);
@@ -98,9 +132,12 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
     }
     // A1 mode: seed the editor with the A1 rendering of the canonical source and
     // record it so an unchanged commit restores the canonical (no re-freeze).
-    // Escaped literals (`'=…`) are never transformed.
+    // Escaped literals (`'=…`) are never transformed. A custom editor is seeded
+    // the canonical source instead: A1 is our editor's display convention, and
+    // the wrapped `valueSetter`'s A1→canonical step is a no-op on canonical text,
+    // so a custom editor that commits the seeded value round-trips losslessly.
     let seededValue = rawValue;
-    if (a1NotationEnabled && isFormulaSource(rawValue)) {
+    if (a1NotationEnabled && isFormulaSource(rawValue) && !isUserCustomEditor) {
       const display = convertCanonicalToA1Display(rawValue, apiRef);
       cache.lastA1Seed = { id, field, display, canonical: rawValue };
       seededValue = display;
@@ -113,19 +150,46 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
     });
   });
 
+  // Turn on reference highlighting whenever our formula input renders. Set here
+  // (not on the editor's own mount) and cleared on `cellEditStop`, so the in-grid
+  // overlay survives the editing cell being virtualized out. Custom editors and
+  // plain-cell edits never reach this branch, so they get no highlighting.
+  const highlightActive = showFormulaInput && !isUserCustomEditor;
+  useEnhancedEffect(() => {
+    if (highlightActive) {
+      apiRef.current.setFormulaActiveEdit({ id, field });
+    }
+    // Intentionally no cleanup: only `cellEditStop` clears the signal.
+  }, [apiRef, highlightActive, id, field]);
+
+  // A custom editor wins for every value, formulas included (the effect above
+  // seeded the canonical source into edit state, so it edits the formula, not
+  // its evaluated result). This is also the highlighting gate: highlighting is
+  // intrinsic to our formula input below, so a custom editor gets none.
+  if (isUserCustomEditor) {
+    return originalRenderEditCell!(params);
+  }
+
   if (!showFormulaInput && originalRenderEditCell) {
     return originalRenderEditCell(params);
   }
 
   // The suggestion dropdown is on by default; the opt-out (and `dataSource`)
-  // falls back to the plain text input.
+  // falls back to the plain text input. The fallback commits without a debounce
+  // so the colored backdrop, which reads the edit state, never lags the typed text.
   const autocompleteEnabled =
     !rootProps.disableFormulaAutocomplete && !rootProps.disableFormulas && !rootProps.dataSource;
-  if (autocompleteEnabled) {
-    return <GridFormulaAutocomplete {...params} />;
-  }
+  const editor = autocompleteEnabled ? (
+    <GridFormulaAutocomplete {...params} />
+  ) : (
+    <GridEditInputCell {...params} colDef={{ ...colDef, type: 'string' }} debounceMs={0} />
+  );
 
-  return <GridEditInputCell {...params} colDef={{ ...colDef, type: 'string' }} />;
+  return (
+    <GridFormulaReferenceBackdrop ownerCell={{ id, field }} a1Notation={Boolean(a1NotationEnabled)}>
+      {editor}
+    </GridFormulaReferenceBackdrop>
+  );
 }
 
 export { GridFormulaEditCell };

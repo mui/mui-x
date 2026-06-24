@@ -8,8 +8,11 @@ import {
   DataGridPremium,
   type DataGridPremiumProps,
   type GridApi,
+  type GridColDef,
   type GridFormulaFunctionDefinition,
+  type GridRenderEditCellParams,
   GRID_FORMULA_FUNCTIONS,
+  useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
@@ -30,6 +33,47 @@ const baselineProps: DataGridPremiumProps = {
     { field: 'total', type: 'number', allowFormulas: true, editable: true },
   ],
 };
+
+/**
+ * A minimal user-supplied editor: a plain text input writing straight to the
+ * edit state. It edits whatever it is seeded — the source for formula cells.
+ */
+function CustomFormulaEditor(props: GridRenderEditCellParams) {
+  const apiRef = useGridApiContext();
+  const ref = React.useRef<HTMLInputElement>(null);
+  React.useLayoutEffect(() => {
+    if (props.hasFocus) {
+      ref.current?.focus();
+    }
+  }, [props.hasFocus]);
+  return (
+    <input
+      ref={ref}
+      data-testid="custom-editor"
+      value={(props.value as string | undefined) ?? ''}
+      onChange={(event) =>
+        apiRef.current.setEditCellValue({
+          id: props.id,
+          field: props.field,
+          value: event.target.value,
+        })
+      }
+    />
+  );
+}
+
+const customEditorColumns: GridColDef[] = [
+  { field: 'item' },
+  { field: 'price', type: 'number' },
+  { field: 'quantity', type: 'number' },
+  {
+    field: 'total',
+    type: 'number',
+    allowFormulas: true,
+    editable: true,
+    renderEditCell: (params) => <CustomFormulaEditor {...params} />,
+  },
+];
 
 describe('<DataGridPremium /> - Formulas', () => {
   const { render: originalRender } = createRenderer();
@@ -1691,6 +1735,103 @@ describe('<DataGridPremium /> - Formulas', () => {
         expect(getColumnValues(3).length).to.be.greaterThan(0);
       });
       expect(getColumnValues(3)[0]).to.equal('=price * quantity');
+    });
+  });
+
+  describe('custom edit cell renderer', () => {
+    it('should use a custom renderEditCell even for formula values', async () => {
+      const { user } = await render(<Test columns={customEditorColumns} />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCell(0, 3).querySelector('[data-testid="custom-editor"]')).not.to.equal(null);
+      });
+    });
+
+    it('should seed the custom editor with the formula source, not the evaluated value', async () => {
+      const { user } = await render(<Test columns={customEditorColumns} />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+      });
+    });
+
+    it('should preserve the formula when a custom editor commits it unchanged', async () => {
+      const { user } = await render(
+        <Test columns={customEditorColumns} processRowUpdate={(newRow) => newRow} />,
+      );
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+      });
+
+      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      await microtasks();
+
+      expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+      expect(getColumnValues(3)).to.deep.equal(['6', '5', '8']);
+    });
+
+    it('should commit a new formula edited through a custom editor', async () => {
+      const { user } = await render(<Test columns={customEditorColumns} />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+      });
+
+      fireEvent.change(getCellInput(0, 3), { target: { value: '=price + quantity' } });
+      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      await microtasks();
+
+      expect(apiRef.current!.getRow(0).total).to.equal('=price + quantity');
+      expect(getColumnValues(3)).to.deep.equal(['5', '5', '8']);
+    });
+
+    it('should keep our formula text input for built-in column editors', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+      });
+      expect(getCell(0, 3).querySelector('[data-testid="custom-editor"]')).to.equal(null);
+    });
+
+    it('should seed the canonical source (not A1) into a custom editor in A1 mode', async () => {
+      const { user } = await render(
+        <Test
+          formulaA1Notation
+          columns={customEditorColumns}
+          rows={[
+            { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=REF(COLUMN("price"), ROW(0))' },
+          ]}
+        />,
+      );
+      // A1 on shifts data columns right by one (row-number column at index 0).
+      await user.dblClick(getCell(0, 4));
+      await waitFor(() => {
+        expect(getCellInput(0, 4).value).to.equal('=REF(COLUMN("price"), ROW(0))');
+      });
+    });
+
+    it('should round-trip the canonical source committed from a custom editor in A1 mode', async () => {
+      const { user } = await render(
+        <Test
+          formulaA1Notation
+          processRowUpdate={(newRow) => newRow}
+          columns={customEditorColumns}
+          rows={[
+            { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=REF(COLUMN("price"), ROW(0))' },
+          ]}
+        />,
+      );
+      await user.dblClick(getCell(0, 4));
+      await waitFor(() => {
+        expect(getCellInput(0, 4).value).to.equal('=REF(COLUMN("price"), ROW(0))');
+      });
+
+      fireEvent.keyDown(getCellInput(0, 4), { key: 'Enter' });
+      await microtasks();
+
+      expect(apiRef.current!.getRow(0).total).to.equal('=REF(COLUMN("price"), ROW(0))');
     });
   });
 
