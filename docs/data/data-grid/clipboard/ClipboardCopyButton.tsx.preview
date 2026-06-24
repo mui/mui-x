@@ -1,0 +1,10 @@
+<Button
+  sx={{ alignSelf: 'flex-start' }}
+  variant="outlined"
+  onClick={() => navigator.clipboard.writeText(getSelectionAsText(apiRef))}
+>
+  Copy selection
+</Button>
+<div style={{ height: 400 }}>
+  <DataGridPremium apiRef={apiRef} checkboxSelection cellSelection {...data} />
+</div>
