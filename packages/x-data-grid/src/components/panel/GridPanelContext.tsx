@@ -50,17 +50,26 @@ export function GridPanelContextProvider({ children }: { children: React.ReactNo
     [],
   );
 
-  const setColumnsPanelTrigger = React.useCallback<GridPanelTrigger['setRef']>((instance) => {
-    updateTriggerElement('columnsPanel', instance);
-  }, [updateTriggerElement]);
+  const setColumnsPanelTrigger = React.useCallback<GridPanelTrigger['setRef']>(
+    (instance) => {
+      updateTriggerElement('columnsPanel', instance);
+    },
+    [updateTriggerElement],
+  );
 
-  const setFilterPanelTrigger = React.useCallback<GridPanelTrigger['setRef']>((instance) => {
-    updateTriggerElement('filterPanel', instance);
-  }, [updateTriggerElement]);
+  const setFilterPanelTrigger = React.useCallback<GridPanelTrigger['setRef']>(
+    (instance) => {
+      updateTriggerElement('filterPanel', instance);
+    },
+    [updateTriggerElement],
+  );
 
-  const setAiAssistantPanelTrigger = React.useCallback<GridPanelTrigger['setRef']>((instance) => {
-    updateTriggerElement('aiAssistantPanel', instance);
-  }, [updateTriggerElement]);
+  const setAiAssistantPanelTrigger = React.useCallback<GridPanelTrigger['setRef']>(
+    (instance) => {
+      updateTriggerElement('aiAssistantPanel', instance);
+    },
+    [updateTriggerElement],
+  );
 
   const value = React.useMemo<GridPanelContextValue>(
     () => ({
