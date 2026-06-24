@@ -41,7 +41,7 @@ describe('<CompactDayView />', () => {
     expect(headerCells.length).to.equal(1);
   });
 
-  it('should render only the event title (touch variant) without time elements', () => {
+  it('should render the event title', () => {
     const event = EventBuilder.new()
       .title('Compact Event')
       .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
@@ -50,9 +50,7 @@ describe('<CompactDayView />', () => {
     renderWithProviders(<CompactDayView />, [event]);
 
     expect(screen.getAllByText('Compact Event').length).to.be.greaterThan(0);
-
-    const root = getDayTimeGrid();
-    const timeElements = root.querySelectorAll(`.${eventCalendarClasses.timeGridEventTime}`);
-    expect(timeElements.length).to.equal(0);
+    // On touch the time is hidden by CSS (`@media (pointer: coarse)`) rather than removed from the
+    // DOM, so there is nothing device-specific left to assert in JSDOM.
   });
 });

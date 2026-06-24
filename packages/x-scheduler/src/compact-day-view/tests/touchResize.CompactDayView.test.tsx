@@ -49,12 +49,14 @@ describe('CompactDayView - touch resize', () => {
     return eventElement;
   }
 
-  it('does not show resize handles until the event is armed', () => {
+  it('arms the event only once it is tapped', () => {
     renderResizableEvent();
     const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
-    expect(
-      eventElement.querySelector(`.${eventCalendarClasses.timeGridEventResizeHandler}`),
-    ).to.equal(null);
+    // Resize handles are always in the DOM; the coarse-pointer styles reveal them only while the
+    // event is armed. In JSDOM (no CSS) the armed state is observable through `data-armed`.
+    expect(eventElement).not.to.have.attribute('data-armed');
+    fireEvent.click(eventElement);
+    expect(eventElement).to.have.attribute('data-armed');
   });
 
   it('resizes the end of an armed event to a later time', async () => {

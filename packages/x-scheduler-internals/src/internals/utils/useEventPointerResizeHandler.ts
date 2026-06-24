@@ -146,6 +146,12 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
     };
 
     const onPointerDown = (event: PointerEvent) => {
+      // A mouse resizes through the native drag-and-drop handler (which shares this handle), so let
+      // a mouse press fall through to it untouched. Touch and pen resize here instead, since native
+      // HTML drag-and-drop doesn't start from a touch.
+      if (event.pointerType === 'mouse') {
+        return;
+      }
       // Ignore secondary mouse buttons; touch and pen always report button 0.
       if (event.button !== 0 || activePointerId !== null) {
         return;

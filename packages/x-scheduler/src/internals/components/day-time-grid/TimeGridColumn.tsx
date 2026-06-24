@@ -15,7 +15,7 @@ import { EventSkeleton } from '../event-skeleton';
 import { EventEditingTrigger, useEventEditingContext } from '../event-editing';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
-import { useDayTimeGridInternalRenderers } from './DayTimeGridInternalRenderersContext';
+import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -127,7 +127,6 @@ function ColumnInteractiveLayer({
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
-  const { timeGridEvent: TimeGridEvent } = useDayTimeGridInternalRenderers();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);

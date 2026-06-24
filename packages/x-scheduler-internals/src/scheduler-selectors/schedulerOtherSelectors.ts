@@ -14,6 +14,16 @@ export const schedulerOtherSelectors = {
       editedEventId != null && editedEventId === eventId,
   ),
   /**
+   * Returns `true` if the occurrence with the given key is the one currently being edited.
+   * Unlike {@link isEditedEvent}, this is occurrence-precise, so editing one occurrence of a
+   * recurring series does not match its other occurrences.
+   */
+  isEditedOccurrence: createSelector(
+    (state: State) => state.editingOccurrence?.occurrence.key ?? null,
+    (editedOccurrenceKey, occurrenceKey: string | undefined) =>
+      editedOccurrenceKey != null && editedOccurrenceKey === occurrenceKey,
+  ),
+  /**
    * The occurrence currently being edited, with the live resize preview applied, or `null`.
    * During a resize the new start/end live on the `internal-resize` placeholder (the occurrence
    * only updates on pointer-up), so surfaces bound to the editing occurrence read this to preview

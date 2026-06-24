@@ -10,8 +10,8 @@ const WEEK_VIEW_CONFIG = createDayTimeGridViewConfig(7);
 /**
  * A Week View to use inside the Event Calendar.
  *
- * Renders the desktop event variant, which `DayTimeGrid` resolves from the default value of
- * `DayTimeGridInternalRenderersContext` — no provider is needed here.
+ * Events adapt to the device on their own (click on a mouse, touch on a touch screen), so no
+ * view-level configuration is needed here.
  */
 export const WeekView = React.memo(
   React.forwardRef(function WeekView(

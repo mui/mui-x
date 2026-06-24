@@ -30,7 +30,6 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       style,
       // Internal props
       side,
-      interaction = 'native',
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
@@ -42,8 +41,6 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
 
     // Ref hooks
     const ref = React.useRef<HTMLDivElement>(null);
-
-    const isPointerInteraction = interaction === 'pointer';
 
     // Feature hooks
     const getDragData = useStableCallback((input) => ({
@@ -78,7 +75,9 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       };
     });
 
-    // Computed once and passed to whichever resize handler is active.
+    // Computed once and shared by both resize handlers. They run together: the native
+    // drag-and-drop handler serves the mouse, and the pointer handler serves touch/pen (it
+    // ignores mouse presses), so a single handle resizes from whatever pointer the user has.
     const enabled = isResizeHandlerEnabled({
       side,
       doesEventStartBeforeCollectionStart: contextValue.doesEventStartBeforeCollectionStart,
@@ -88,7 +87,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
     const { state } = useEventResizeHandler({
       ref,
       side,
-      enabled: enabled && !isPointerInteraction,
+      enabled,
       getDragData,
       canDrag: contextValue.canDrag,
     });
@@ -96,7 +95,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
     useEventPointerResizeHandler({
       ref,
       side,
-      enabled: enabled && isPointerInteraction,
+      enabled,
       surfaceType: 'time-grid',
       getDateAtPointer,
       getResizeSession,
@@ -116,15 +115,7 @@ export namespace CalendarGridTimeEventResizeHandler {
   export interface State extends useEventResizeHandler.State {}
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {
-    /**
-     * How the resize gesture is initiated.
-     * - `'native'`: native drag-and-drop API (best for mouse/desktop).
-     * - `'pointer'`: pointer events, so a plain touch + drag starts the resize (best for touch).
-     * @default 'native'
-     */
-    interaction?: 'native' | 'pointer';
-  }
+    extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {}
 
   export interface DragData extends CalendarGridTimeEvent.SharedDragData {
     source: 'CalendarGridTimeEventResizeHandler';
