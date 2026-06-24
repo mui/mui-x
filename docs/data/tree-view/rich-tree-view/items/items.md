@@ -271,6 +271,12 @@ const itemElement = apiRef.current.getItemDOMElement(
 
 {{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}
 
+### Get the root DOM element
+
+There's no `apiRef` method for this. `RichTreeView` (and `SimpleTreeView`) forward their `ref` directly to the root `<ul>` element, so a regular `ref` is enough:
+
+{{"demo": "RootElementRef.js", "defaultCodeOpen": false}}
+
 ### Get the current item tree
 
 Use the `getItemTree()` API method to get the current item tree.
