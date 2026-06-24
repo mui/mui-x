@@ -232,6 +232,7 @@ SingleInputTimeRangeField.propTypes /* remove-proptypes */ = {
   onFocus: PropTypes.func,
   onInput: PropTypes.func,
   onKeyDown: PropTypes.func,
+  onMouseDown: PropTypes.func,
   onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.

@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
-import { isJSDOM } from '@mui/x-internals/platform';
+import { isJSDOM } from 'test/utils/skipIf';
 import telemetryContext from '../context';
 import { getTelemetryEnvConfig } from './config';
 
