@@ -1,0 +1,36 @@
+{
+  "props": {
+    "index": { "type": { "name": "number" }, "required": true },
+    "message": { "type": { "name": "{}" }, "required": true },
+    "part": { "type": { "name": "{}" }, "required": true },
+    "onToolCall": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnToolCallPayload) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "SourceUrlPartSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<SourceUrlPartSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "SourceUrlPart",
+  "imports": [
+    "import { SourceUrlPart } from '@mui/x-chat-headless/message';",
+    "import { SourceUrlPart } from '@mui/x-chat-headless';",
+    "import { SourceUrlPart } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "icon", "description": "", "class": null },
+    { "name": "link", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiSourceUrlPart",
+  "filename": "/packages/x-chat-headless/src/message/parts/SourceUrlPart.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

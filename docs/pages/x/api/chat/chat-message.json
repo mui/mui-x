@@ -1,0 +1,190 @@
+{
+  "props": {
+    "messageId": { "type": { "name": "string" }, "required": true },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatMessageClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "isGrouped": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "shape", "description": "ChatMessageSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ChatMessageSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "ChatMessage",
+  "imports": [
+    "import { ChatMessage } from '@mui/x-chat/ChatMessage';",
+    "import { ChatMessage } from '@mui/x-chat';"
+  ],
+  "slots": [
+    {
+      "name": "actions",
+      "description": "The actions component, rendered under the bubble.\nReceives `{ messageId }` as props.\nPass `null` to hide actions entirely; omit to render only `extraActions`\n(from `slotProps.actions`) if provided.",
+      "class": "MuiChatMessage-actions"
+    },
+    {
+      "name": "authorName",
+      "description": "The author-name label. Rendered by the surrounding `ChatMessageGroup`\n(default variant: above the bubble; compact variant: inside the message\ngrid). Forwarded through `slots.message.authorName` from `ChatBox`. Pass\n`null` to hide.",
+      "class": null
+    },
+    {
+      "name": "avatar",
+      "description": "The avatar component. Pass `null` to hide it and collapse the avatar grid track.\nFunction form receives the message context and may return `null` for per-message hiding,\nbut the grid track is only dropped when the slot itself is `null`.",
+      "class": "MuiChatMessage-avatar"
+    },
+    {
+      "name": "content",
+      "description": "The bubble component that renders message content.",
+      "class": "MuiChatMessage-content"
+    },
+    {
+      "name": "error",
+      "description": "The error component rendered under the bubble when status === 'error'.\nPass `null` to hide the error surface entirely (no component is mounted).",
+      "class": "Mui-error"
+    },
+    {
+      "name": "inlineMeta",
+      "description": "The inline meta component (default variant; rendered inside the bubble). Pass `null` to hide it.",
+      "class": "MuiChatMessage-inlineMeta"
+    },
+    {
+      "name": "meta",
+      "description": "The external meta component (compact variant). Pass `null` to hide it.",
+      "class": "MuiChatMessage-meta"
+    },
+    { "name": "root", "description": "The styled root element.", "class": "MuiChatMessage-root" },
+    {
+      "name": "streamingIndicator",
+      "description": "The animated streaming indicator, rendered inside the bubble (after the\nstreamed parts) while this assistant message has `status: 'streaming'`.\nPass `null` to hide it.",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChatMessage-root",
+      "description": "Styles applied to the message root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "avatar",
+      "className": "MuiChatMessage-avatar",
+      "description": "Styles applied to the message avatar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "authorLabel",
+      "className": "MuiChatMessage-authorLabel",
+      "description": "Styles applied to the message author label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "content",
+      "className": "MuiChatMessage-content",
+      "description": "Styles applied to the message content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "bubble",
+      "className": "MuiChatMessage-bubble",
+      "description": "Styles applied to the message bubble element inside content.",
+      "isGlobal": false
+    },
+    {
+      "key": "meta",
+      "className": "MuiChatMessage-meta",
+      "description": "Styles applied to the message meta element.",
+      "isGlobal": false
+    },
+    {
+      "key": "actions",
+      "className": "MuiChatMessage-actions",
+      "description": "Styles applied to the message actions element.",
+      "isGlobal": false
+    },
+    {
+      "key": "group",
+      "className": "MuiChatMessage-group",
+      "description": "Styles applied to the message group element.",
+      "isGlobal": false
+    },
+    {
+      "key": "groupAuthorName",
+      "className": "MuiChatMessage-groupAuthorName",
+      "description": "Class applied to the group author name element.",
+      "isGlobal": false
+    },
+    {
+      "key": "groupTimestamp",
+      "className": "MuiChatMessage-groupTimestamp",
+      "description": "Class applied to the group timestamp element (compact variant only).",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineMetaSpacer",
+      "className": "MuiChatMessage-inlineMetaSpacer",
+      "description": "Styles applied to the inline meta spacer element (default variant).",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineMeta",
+      "className": "MuiChatMessage-inlineMeta",
+      "description": "Styles applied to the inline meta container element (default variant).",
+      "isGlobal": false
+    },
+    {
+      "key": "dateDivider",
+      "className": "MuiChatMessage-dateDivider",
+      "description": "Styles applied to the date divider element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dateDividerLine",
+      "className": "MuiChatMessage-dateDividerLine",
+      "description": "Styles applied to the horizontal rule on each side of the date divider label.",
+      "isGlobal": false
+    },
+    {
+      "key": "dateDividerLabel",
+      "className": "MuiChatMessage-dateDividerLabel",
+      "description": "Styles applied to the formatted day label inside the date divider.",
+      "isGlobal": false
+    },
+    {
+      "key": "roleUser",
+      "className": "MuiChatMessage-roleUser",
+      "description": "Applied when the message role is 'user'",
+      "isGlobal": false
+    },
+    {
+      "key": "roleAssistant",
+      "className": "MuiChatMessage-roleAssistant",
+      "description": "Applied when the message role is 'assistant'",
+      "isGlobal": false
+    },
+    {
+      "key": "streaming",
+      "className": "MuiChatMessage-streaming",
+      "description": "Applied while the message is streaming",
+      "isGlobal": false
+    },
+    {
+      "key": "error",
+      "className": "Mui-error",
+      "description": "Applied when the message has an error status",
+      "isGlobal": true
+    },
+    {
+      "key": "noAvatar",
+      "className": "MuiChatMessage-noAvatar",
+      "description": "Applied when the avatar slot is hidden (`slots.avatar: null`) so the grid drops the avatar track.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChatMessage",
+  "filename": "/packages/x-chat/src/ChatMessage/ChatMessage.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

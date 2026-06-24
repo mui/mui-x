@@ -1,11 +1,34 @@
 {
-  "props": {},
+  "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatMessageErrorClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "MessageErrorSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<MessageErrorSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatMessageError",
   "imports": [
     "import { ChatMessageError } from '@mui/x-chat/ChatMessageError';",
     "import { ChatMessageError } from '@mui/x-chat';"
   ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The root element of the per-message error primitive.\nRendered with `role=\"alert\"` so screen readers announce the error.",
+      "class": "MuiChatMessageError-root"
+    }
+  ],
   "classes": [
+    {
+      "key": "root",
+      "className": "MuiChatMessageError-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
     {
       "key": "message",
       "className": "MuiChatMessageError-message",
@@ -17,18 +40,11 @@
       "className": "MuiChatMessageError-retryButton",
       "description": "Styles applied to the retry button.",
       "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChatMessageError-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
     }
   ],
-  "spread": true,
-  "themeDefaultProps": null,
   "muiName": "MuiChatMessageError",
   "filename": "/packages/x-chat/src/ChatMessageError/ChatMessageError.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/behavior/error-handling/\">Chat - Error handling</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/error-handling/\">Chat - Error handling</a></li></ul>",
+  "cssComponent": false
 }

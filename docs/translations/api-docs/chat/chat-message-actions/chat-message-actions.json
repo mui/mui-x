@@ -2,11 +2,14 @@
   "componentDescription": "",
   "propDescriptions": {
     "extraActions": {
-      "description": "Declarative action buttons appended after <code>children</code>. Lets consumers add actions without replacing the <code>messageActions</code> slot component."
+      "description": "Declarative action buttons appended after <code>children</code>. Lets consumers add\nactions without replacing the <code>messageActions</code> slot component."
     },
     "message": {
-      "description": "The message this bar belongs to. Injected by <code>ChatMessage</code> (from its existing <code>useMessage</code> subscription); pass explicitly in standalone usage."
-    }
+      "description": "The message this bar belongs to. Injected by <code>ChatMessage</code> (from its\nexisting <code>useMessage</code> subscription); pass explicitly in standalone usage."
+    },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": { "actions": "" }
 }

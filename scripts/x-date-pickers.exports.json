@@ -173,7 +173,7 @@
   { "name": "pickerDayClasses", "kind": "Variable" },
   { "name": "PickerDayClassKey", "kind": "TypeAlias" },
   { "name": "PickerDayOwnerState", "kind": "Interface" },
-  { "name": "PickerDayOwnerStateBase", "kind": "ImportSpecifier" },
+  { "name": "PickerDayOwnerStateBase", "kind": "Interface" },
   { "name": "PickerDayProps", "kind": "Interface" },
   { "name": "PickerFieldSlotProps", "kind": "TypeAlias" },
   { "name": "PickerLayoutOwnerState", "kind": "Interface" },

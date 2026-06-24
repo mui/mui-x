@@ -1,20 +1,61 @@
 {
   "props": {
-    "colorGetter": { "type": { "name": "func" }, "required": true },
-    "sizeGetter": { "type": { "name": "func" }, "required": true },
+    "color": { "type": { "name": "string" }, "required": true },
+    "colorGetter": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(dataIndex: number | undefined) => string",
+        "describedArgs": []
+      }
+    },
+    "series": {
+      "type": { "name": "shape", "description": "DefaultizedScatterSeriesType" },
+      "required": true
+    },
+    "sizeGetter": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(dataIndex: number) => number", "describedArgs": [] }
+    },
+    "xScale": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func"
+      },
+      "required": true
+    },
+    "yScale": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func<br>&#124;&nbsp;func"
+      },
+      "required": true
+    },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ScatterClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "ScatterSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "ScatterSlots" },
+      "additionalInfo": { "slotsApi": true }
     }
   },
   "name": "Scatter",
   "imports": [
     "import { Scatter } from '@mui/x-charts/ScatterChart';",
     "import { Scatter } from '@mui/x-charts';",
+    "import { Scatter } from '@mui/x-charts-pro/ScatterChart';",
     "import { Scatter } from '@mui/x-charts-pro';",
+    "import { Scatter } from '@mui/x-charts-premium/ScatterChart';",
     "import { Scatter } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -22,32 +63,38 @@
       "name": "marker",
       "description": "The component that renders the marker for a scatter point.",
       "default": "ScatterMarker",
-      "class": "MuiScatterChart-marker"
+      "class": "MuiScatter-marker"
     }
   ],
   "classes": [
     {
-      "key": "focusedMark",
-      "className": "MuiScatterChart-focusedMark",
-      "description": "Styles applied to the focused scatter mark element.",
-      "isGlobal": false
-    },
-    {
-      "key": "highlightedMark",
-      "className": "MuiScatterChart-highlightedMark",
-      "description": "Styles applied to the highlighted scatter mark element.",
-      "isGlobal": false
-    },
-    {
       "key": "root",
-      "className": "MuiScatterChart-root",
+      "className": "MuiScatter-root",
       "description": "Styles applied to the scatter plot element.",
       "isGlobal": false
     },
     {
       "key": "series",
-      "className": "MuiScatterChart-series",
+      "className": "MuiScatter-series",
       "description": "Styles applied to the group surrounding a series' scatter elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "marker",
+      "className": "MuiScatter-marker",
+      "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer.",
+      "isGlobal": false
+    },
+    {
+      "key": "focusedMark",
+      "className": "MuiScatter-focusedMark",
+      "description": "Styles applied to the focused scatter mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlightedMark",
+      "className": "MuiScatter-highlightedMark",
+      "description": "Styles applied to the highlighted scatter mark element.",
       "isGlobal": false
     }
   ],
@@ -55,5 +102,5 @@
   "filename": "/packages/x-charts/src/ScatterChart/Scatter.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
-  "deprecated": true
+  "cssComponent": false
 }

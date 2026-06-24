@@ -1,7 +1,7 @@
 {
   "props": {
     "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;ScatterSeries&gt;" },
       "required": true
     },
     "axesGap": { "type": { "name": "number" }, "default": "0" },
@@ -26,7 +26,9 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
-    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "dataset": {
+      "type": { "name": "arrayOf", "description": "Array&lt;DatasetElementType<unknown>&gt;" }
+    },
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableClosestPoint": {
@@ -72,7 +74,7 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -100,13 +102,7 @@
         "describedArgs": ["highlightedItem"]
       }
     },
-    "onItemClick": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
-        "describedArgs": ["event", "scatterItemIdentifier"]
-      }
-    },
+    "onItemClick": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;func" } },
     "onTooltipAxisChange": {
       "type": { "name": "func" },
       "signature": {
@@ -128,11 +124,20 @@
       },
       "default": "'svg-single'"
     },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'scatter'>"
+      }
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ScatterChartSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "ScatterChartSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -150,12 +155,22 @@
       }
     },
     "width": { "type": { "name": "number" } },
-    "xAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "yAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "xAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;MakeOptional<AxisConfig<'band', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsXAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsXAxisProps>, 'id'>&gt;"
+      }
+    },
+    "yAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;MakeOptional<AxisConfig<'band', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'linear', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'log', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'point', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'pow', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'sqrt', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'symlog', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'time', any, ChartsYAxisProps>, 'id'><br>&#124;&nbsp;MakeOptional<AxisConfig<'utc', any, ChartsYAxisProps>, 'id'>&gt;"
+      }
+    },
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }, data?: array, dataKey?: string, id?: string, max?: number, min?: number, sizeMap?: { interpolator?: 'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'sqrt', max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, size: Array&lt;number&gt;, type: 'continuous' }<br>&#124;&nbsp;{ max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, size: func, type: 'continuous' }<br>&#124;&nbsp;{ sizes: Array&lt;number&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ sizes: Array&lt;number&gt;, type: 'ordinal', unknownSize?: number, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }, valueGetter?: func }&gt;"
+        "description": "Array&lt;{ colorMap?: { color: any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, type: 'continuous', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;any&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;any&gt; }, data?: Array&lt;any&gt;, dataKey?: string, id?: string, max?: number, min?: number, sizeMap?: { interpolator?: any<br>&#124;&nbsp;any<br>&#124;&nbsp;any, max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, size: readonly [number, number], type: 'continuous' }<br>&#124;&nbsp;{ max?: any<br>&#124;&nbsp;any, min?: any<br>&#124;&nbsp;any, size: func, type: 'continuous' }<br>&#124;&nbsp;{ sizes: Array&lt;any&gt;, thresholds: Array&lt;any&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ sizes: Array&lt;any&gt;, type: 'ordinal', unknownSize?: number, values?: Array&lt;any&gt; }, valueGetter?: func }&gt;"
       }
     }
   },
@@ -163,7 +178,9 @@
   "imports": [
     "import { ScatterChart } from '@mui/x-charts/ScatterChart';",
     "import { ScatterChart } from '@mui/x-charts';",
+    "import { ScatterChart } from '@mui/x-charts-pro/ScatterChart';",
     "import { ScatterChart } from '@mui/x-charts-pro';",
+    "import { ScatterChart } from '@mui/x-charts-premium/ScatterChart';",
     "import { ScatterChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
@@ -215,7 +232,7 @@
       "name": "marker",
       "description": "The component that renders the marker for a scatter point.",
       "default": "ScatterMarker",
-      "class": null
+      "class": "MuiScatterChart-marker"
     },
     {
       "name": "noDataOverlay",
@@ -249,12 +266,44 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiScatterChart-root",
+      "description": "Styles applied to the scatter plot element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiScatterChart-series",
+      "description": "Styles applied to the group surrounding a series' scatter elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "marker",
+      "className": "MuiScatterChart-marker",
+      "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer.",
+      "isGlobal": false
+    },
+    {
+      "key": "focusedMark",
+      "className": "MuiScatterChart-focusedMark",
+      "description": "Styles applied to the focused scatter mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlightedMark",
+      "className": "MuiScatterChart-highlightedMark",
+      "description": "Styles applied to the highlighted scatter mark element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiScatterChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bubble/\">Charts - Bubble</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/bubble/\">Charts - Bubble</a></li>\n<li><a href=\"/x/react-charts/dataset/\">Charts - Dataset</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
+  "cssComponent": false
 }

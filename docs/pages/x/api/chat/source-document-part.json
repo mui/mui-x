@@ -1,0 +1,36 @@
+{
+  "props": {
+    "index": { "type": { "name": "number" }, "required": true },
+    "message": { "type": { "name": "{}" }, "required": true },
+    "part": { "type": { "name": "{}" }, "required": true },
+    "onToolCall": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(payload: ChatOnToolCallPayload) => void | Promise<void>",
+        "describedArgs": []
+      }
+    },
+    "slotProps": { "type": { "name": "shape", "description": "SourceDocumentPartSlotProps" } },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<SourceDocumentPartSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "SourceDocumentPart",
+  "imports": [
+    "import { SourceDocumentPart } from '@mui/x-chat-headless/message';",
+    "import { SourceDocumentPart } from '@mui/x-chat-headless';",
+    "import { SourceDocumentPart } from '@mui/x-chat';"
+  ],
+  "slots": [
+    { "name": "excerpt", "description": "", "class": null },
+    { "name": "root", "description": "", "class": null },
+    { "name": "title", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiSourceDocumentPart",
+  "filename": "/packages/x-chat-headless/src/message/parts/SourceDocumentPart.tsx",
+  "inheritance": null,
+  "demos": "",
+  "cssComponent": false
+}

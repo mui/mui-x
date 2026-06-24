@@ -21,12 +21,16 @@
   "imports": [
     "import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';",
     "import { ChartsWrapper } from '@mui/x-charts';",
+    "import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';",
     "import { ChartsWrapper } from '@mui/x-charts-pro';",
+    "import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';",
     "import { ChartsWrapper } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiChartsWrapper",
   "filename": "/packages/x-charts/src/ChartsWrapper/ChartsWrapper.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>",
+  "cssComponent": false
 }

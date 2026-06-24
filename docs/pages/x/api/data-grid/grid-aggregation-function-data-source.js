@@ -1,8 +1,8 @@
 import * as React from 'react';
-import InterfaceApiPage from 'docs/src/modules/components/InterfaceApiPage';
-import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
+import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
+import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
 import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
-import translation from 'docs/translations/api-docs/data-grid/grid-aggregation-function-data-source.json';
+import translation from 'docs/translations/api-docs/data-grid/grid-aggregation-function-data-source/grid-aggregation-function-data-source.json';
 import jsonPageContent from './grid-aggregation-function-data-source.json';
 
 export default function Page(props) {

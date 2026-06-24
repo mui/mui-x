@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
 import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
-import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
+import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
 import translation from 'docs/translations/api-docs/data-grid/data-grid/data-grid.json';
 import jsonPageContent from './data-grid.json';
 

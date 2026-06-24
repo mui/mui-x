@@ -1,16 +1,23 @@
 {
   "componentDescription": "",
-  "deprecationInfo": "The <code>Scatter</code> component is an internal implementation detail of <code>ScatterPlot</code> and will be removed from the public API in v10. Use <code>ScatterPlot</code> instead.<br>Demos:<br>- <a href=\"https://mui.com/x/react-charts/scatter/\">Scatter</a> - <a href=\"https://mui.com/x/react-charts/scatter-demo/\">Scatter demonstration</a><br>API:<br>- <a href=\"https://mui.com/x/api/charts/scatter/\">Scatter API</a>",
   "propDescriptions": {
+    "color": { "description": "" },
     "colorGetter": {
-      "description": "Function to get the color of a scatter item given its data index. The data index argument is optional. If not provided, the color for the entire series is returned. If provided, the color for the specific scatter item is returned."
+      "description": "Function to get the color of a scatter item given its data index.\nThe data index argument is optional. If not provided, the color for the entire series is returned.\nIf provided, the color for the specific scatter item is returned."
     },
+    "series": { "description": "" },
+    "sizeGetter": {
+      "description": "Function to get the marker size of a scatter item given its data index."
+    },
+    "xScale": { "description": "" },
+    "yScale": { "description": "" },
+    "classes": { "description": "" },
     "onItemClick": {
       "description": "Callback fired when clicking on a scatter item.",
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+          "description": "Mouse event recorded on the <code><svg/></code> element."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",
@@ -18,11 +25,21 @@
         }
       }
     },
-    "sizeGetter": {
-      "description": "Function to get the marker size of a scatter item given its data index."
-    }
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
   },
   "classDescriptions": {
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scatter plot element"
+    },
+    "series": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group surrounding a series' scatter elements"
+    },
+    "marker": {
+      "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer."
+    },
     "focusedMark": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the focused scatter mark element"
@@ -30,14 +47,6 @@
     "highlightedMark": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the highlighted scatter mark element"
-    },
-    "root": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the scatter plot element"
-    },
-    "series": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the group surrounding a series&#39; scatter elements"
     }
   },
   "slotDescriptions": { "marker": "The component that renders the marker for a scatter point." }

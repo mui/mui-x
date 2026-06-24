@@ -4,8 +4,8 @@
   "properties": [
     {
       "name": "autosizeColumns",
-      "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available.",
-      "type": "(options?: GridAutosizeOptions) => Promise<void>"
+      "description": "Auto-size the columns of the grid based on the cells' content and the space available.",
+      "type": "(options?: undefined | { columns?: string[] | undefined, includeHeaders?: false | true | undefined, includeHeaderFilters?: false | true | undefined, includeOutliers?: false | true | undefined, outliersFactor?: number | undefined, expand?: false | true | undefined, disableColumnVirtualization?: false | true | undefined }) => Promise<void>"
     }
   ]
 }

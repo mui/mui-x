@@ -12,9 +12,7 @@
       },
       "default": "'end'"
     },
-    "value": {
-      "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
-    },
+    "value": { "type": { "name": "shape", "description": "string | number | Date" } },
     "valueFormatter": {
       "type": { "name": "func" },
       "signature": {
@@ -28,12 +26,47 @@
   "imports": [
     "import { ChartsAxisHighlightValue } from '@mui/x-charts/ChartsAxisHighlightValue';",
     "import { ChartsAxisHighlightValue } from '@mui/x-charts';",
+    "import { ChartsAxisHighlightValue } from '@mui/x-charts-pro/ChartsAxisHighlightValue';",
     "import { ChartsAxisHighlightValue } from '@mui/x-charts-pro';",
+    "import { ChartsAxisHighlightValue } from '@mui/x-charts-premium/ChartsAxisHighlightValue';",
     "import { ChartsAxisHighlightValue } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "slots": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChartsAxisHighlightValue-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "top",
+      "className": "MuiChartsAxisHighlightValue-top",
+      "description": "Styles applied to the top axis highlight.",
+      "isGlobal": false
+    },
+    {
+      "key": "bottom",
+      "className": "MuiChartsAxisHighlightValue-bottom",
+      "description": "Styles applied to the bottom axis highlight.",
+      "isGlobal": false
+    },
+    {
+      "key": "left",
+      "className": "MuiChartsAxisHighlightValue-left",
+      "description": "Styles applied to the left axis highlight.",
+      "isGlobal": false
+    },
+    {
+      "key": "right",
+      "className": "MuiChartsAxisHighlightValue-right",
+      "description": "Styles applied to the right axis highlight.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiChartsAxisHighlightValue",
   "filename": "/packages/x-charts/src/ChartsAxisHighlightValue/ChartsAxisHighlightValue.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/highlighting/\">Charts - Highlighting</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/highlighting/\">Charts - Highlighting</a></li></ul>",
+  "cssComponent": false
 }

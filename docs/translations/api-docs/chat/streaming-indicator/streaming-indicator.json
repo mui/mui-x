@@ -1,15 +1,19 @@
 {
   "componentDescription": "Animated \"response in flight\" indicator. Outside a message it covers the\nwaiting phase (request sent, no assistant message yet); inside a message it\nrenders while that assistant message is streaming.",
   "propDescriptions": {
+    "index": { "description": "" },
+    "items": { "description": "" },
     "message": {
-      "description": "The assistant message to reflect. Falls back to the surrounding <code>MessageContext</code> when omitted (the default when mounted inside a chat message). When a message is in scope, the indicator renders only while that message is an assistant message with <code>status: &#39;streaming&#39;</code>."
+      "description": "The assistant message to reflect. Falls back to the surrounding\n<code>MessageContext</code> when omitted (the default when mounted inside a chat\nmessage). When a message is in scope, the indicator renders only while\nthat message is an assistant message with <code>status: 'streaming'</code>."
     },
     "messageId": {
-      "description": "Row contract shared with the divider slots: when <code>index</code>/<code>items</code> are provided, the indicator self-suppresses on every row except the last one."
+      "description": "Row contract shared with the divider slots: when <code>index</code>/<code>items</code> are\nprovided, the indicator self-suppresses on every row except the last one."
     },
     "mode": {
-      "description": "<p>Controls when the indicator renders.</p>\n<ul>\n<li><code>&#39;auto&#39;</code> – shown only in assistant-backed conversations (auto-detected).</li>\n<li><code>true</code> – always shown while a response is in flight.</li>\n<li><code>false</code> – never shown.</li>\n</ul>\n"
-    }
+      "description": "Controls when the indicator renders.\n- <code>'auto'</code> – shown only in assistant-backed conversations (auto-detected).\n- <code>true</code> – always shown while a response is in flight.\n- <code>false</code> – never shown."
+    },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
   },
   "classDescriptions": {},
   "slotDescriptions": { "root": "" }

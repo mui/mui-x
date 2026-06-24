@@ -19,12 +19,16 @@
   "imports": [
     "import { RadarGrid } from '@mui/x-charts/RadarChart';",
     "import { RadarGrid } from '@mui/x-charts';",
+    "import { RadarGrid } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarGrid } from '@mui/x-charts-pro';",
+    "import { RadarGrid } from '@mui/x-charts-premium/RadarChart';",
     "import { RadarGrid } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiRadarGrid",
   "filename": "/packages/x-charts/src/RadarChart/RadarGrid/RadarGrid.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
+  "cssComponent": false
 }

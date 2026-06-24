@@ -1,19 +1,25 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" },
     "variant": {
-      "description": "The visual variant of the conversation list. - <code>&#39;default&#39;</code> – shows avatar, title, preview, timestamp, and unread badge. - <code>&#39;compact&#39;</code> – shows only a small unread indicator, the title, and an actions button."
+      "description": "The visual variant of the conversation list.\n- <code>'default'</code> – shows avatar, title, preview, timestamp, and unread badge.\n- <code>'compact'</code> – shows only a small unread indicator, the title, and an actions button."
     }
   },
   "classDescriptions": {
-    "compact": { "description": "Applied when variant=&quot;compact&quot;" },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversation list root element"
+    },
+    "scroller": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scroller element"
+    },
     "item": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the list item element"
-    },
-    "itemActions": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item actions element"
     },
     "itemAvatar": {
       "description": "Styles applied to {{nodeName}}.",
@@ -23,32 +29,44 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the item content element"
     },
-    "itemFocused": { "description": "Applied to a focused conversation item" },
-    "itemPreview": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item preview element"
-    },
-    "itemSelected": { "description": "Applied to a selected conversation item" },
-    "itemTimestamp": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the item timestamp element"
-    },
     "itemTitle": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the item title element"
     },
-    "itemUnread": { "description": "Applied to an unread conversation item" },
+    "itemPreview": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item preview element"
+    },
+    "itemTimestamp": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item timestamp element"
+    },
     "itemUnreadBadge": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the item unread badge element"
     },
-    "root": {
+    "itemActions": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the conversation list root element"
+      "nodeName": "the item actions element"
     },
-    "scroller": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the scroller element"
-    }
+    "itemSelected": { "description": "Applied to a selected conversation item" },
+    "itemUnread": { "description": "Applied to an unread conversation item" },
+    "itemFocused": { "description": "Applied to a focused conversation item" },
+    "compact": { "description": "Applied when variant=\"compact\"" }
+  },
+  "slotDescriptions": {
+    "item": "",
+    "itemActions": "",
+    "itemAvatar": "",
+    "itemContent": "",
+    "preview": "",
+    "root": "",
+    "scrollbar": "",
+    "scrollbarThumb": "",
+    "scroller": "",
+    "timestamp": "",
+    "title": "",
+    "unreadBadge": "",
+    "viewport": ""
   }
 }

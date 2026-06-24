@@ -1,16 +1,12 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<TimeRangePickerTabsClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "hidden": {
       "type": { "name": "bool" },
       "default": "`window.innerHeight < 667` for `DesktopTimeRangePicker` and `MobileTimeRangePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticTimeRangePicker`"
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     },
     "timeIcon": { "type": { "name": "element" }, "default": "Time" }
   },
@@ -19,6 +15,7 @@
     "import { TimeRangePickerTabs } from '@mui/x-date-pickers-pro/TimeRangePicker';",
     "import { TimeRangePickerTabs } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [],
   "classes": [
     {
       "key": "root",
@@ -36,5 +33,6 @@
   "muiName": "MuiTimeRangePickerTabs",
   "filename": "/packages/x-date-pickers-pro/src/TimeRangePicker/TimeRangePickerTabs.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-range-picker/\">Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-range-picker/\">Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

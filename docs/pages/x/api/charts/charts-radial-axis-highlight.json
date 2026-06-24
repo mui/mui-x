@@ -1,12 +1,28 @@
 {
-  "props": {},
+  "props": {
+    "radius": {
+      "type": {
+        "name": "enum",
+        "description": "'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none'"
+      }
+    },
+    "rotation": {
+      "type": {
+        "name": "enum",
+        "description": "'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none'"
+      }
+    }
+  },
   "name": "ChartsRadialAxisHighlight",
   "imports": [
     "import { ChartsRadialAxisHighlight } from '@mui/x-charts/ChartsRadialAxisHighlight';",
     "import { ChartsRadialAxisHighlight } from '@mui/x-charts';",
+    "import { ChartsRadialAxisHighlight } from '@mui/x-charts-pro/ChartsRadialAxisHighlight';",
     "import { ChartsRadialAxisHighlight } from '@mui/x-charts-pro';",
+    "import { ChartsRadialAxisHighlight } from '@mui/x-charts-premium/ChartsRadialAxisHighlight';",
     "import { ChartsRadialAxisHighlight } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [
     {
       "key": "root",
@@ -18,5 +34,6 @@
   "muiName": "MuiChartsRadialAxisHighlight",
   "filename": "/packages/x-charts/src/ChartsRadialAxisHighlight/ChartsRadialAxisHighlight.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li></ul>",
+  "cssComponent": false
 }

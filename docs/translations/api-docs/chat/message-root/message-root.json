@@ -1,6 +1,11 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "messageId": { "description": "" },
+    "isGrouped": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
+  },
   "classDescriptions": {},
   "slotDescriptions": { "root": "" }
 }

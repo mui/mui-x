@@ -1,7 +1,12 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "classes": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
+  },
   "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
     "message": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message text element"
@@ -9,7 +14,9 @@
     "retryButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the retry button"
-    },
-    "root": { "description": "Styles applied to the root element." }
+    }
+  },
+  "slotDescriptions": {
+    "root": "The root element of the per-message error primitive.\nRendered with `role=\"alert\"` so screen readers announce the error."
   }
 }

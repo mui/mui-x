@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "data": { "description": "" },
+    "outerRadius": { "description": "The radius between circle center and the end of the arc." },
+    "seriesId": { "description": "The id of this series." },
     "arcLabelRadius": {
       "description": "The radius between circle center and the arc label in px."
     },
@@ -23,9 +26,7 @@
         "item": { "name": "item", "description": "The pie item." }
       }
     },
-    "outerRadius": { "description": "The radius between circle center and the end of the arc." },
     "paddingAngle": { "description": "The padding angle (deg) between two arcs." },
-    "seriesId": { "description": "The id of this series." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }

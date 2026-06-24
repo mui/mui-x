@@ -1,7 +1,20 @@
 {
-  "componentDescription": "A button for performing actions from the toolbar.\nIt renders the `baseIconButton` slot.",
+  "componentDescription": "",
   "propDescriptions": {
-    "render": { "description": "A function to customize rendering of the component." }
+    "color": { "description": "" },
+    "disabled": { "description": "" },
+    "edge": { "description": "" },
+    "id": { "description": "" },
+    "label": { "description": "" },
+    "material": { "description": "" },
+    "render": { "description": "A function to customize rendering of the component." },
+    "role": { "description": "" },
+    "size": { "description": "" },
+    "style": { "description": "" },
+    "tabIndex": { "description": "" },
+    "title": { "description": "" },
+    "touchRippleRef": { "description": "" }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

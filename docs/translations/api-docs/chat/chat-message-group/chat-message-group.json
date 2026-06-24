@@ -1,9 +1,26 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "messageId": { "description": "" },
     "groupKey": {
-      "description": "A function that maps a message to a group key. Messages that resolve to the same key are visually grouped (shared avatar, author name, etc.). Use <code>createTimeWindowGroupKey(windowMs)</code> to replicate time-window-based grouping."
-    }
+      "description": "A function that maps a message to a group key.\nMessages that resolve to the same key are visually grouped (shared avatar, author name, etc.).\nUse <code>createTimeWindowGroupKey(windowMs)</code> to replicate time-window-based grouping."
+    },
+    "index": { "description": "" },
+    "items": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "messageActions": "Actions row component (receives `{ messageId }`). Pass `null` to hide\nactions entirely; omit to render only the declarative `extraActions` from\n`slotProps.messageActions` if provided.",
+    "messageAuthorName": "Author name label rendered by the group wrapper (default variant: above the\nbubble; compact variant: inside the message grid). Pass `null` to hide.",
+    "messageAvatar": "Avatar component. Pass `null` to hide the avatar entirely and drop the\nreserved avatar grid track.",
+    "messageContent": "The message bubble component.",
+    "messageError": "Error card shown under the bubble when the message status is `error`.\nPass `null` to hide the error surface entirely (no component is mounted).",
+    "messageGroup": "The per-author group wrapper around consecutive messages.",
+    "messageInlineMeta": "Inline meta rendered inside the bubble (default variant). Pass `null` to hide.",
+    "messageMeta": "External meta (compact variant). Pass `null` to hide.",
+    "messageRoot": "Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta\ntree still renders inside it.",
+    "streamingIndicator": "The animated dots shown while an assistant response is in flight: as a\ntrailing row while waiting for the response to start, then inside the\nassistant bubble while it streams. Controlled by\n`features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it."
+  }
 }

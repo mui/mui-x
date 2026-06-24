@@ -1,50 +1,27 @@
 {
-  "props": {},
+  "props": {
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<ChatConversationClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "ConversationHeaderActionsSlotProps" }
+    },
+    "slots": {
+      "type": { "name": "shape", "description": "Partial<ConversationHeaderActionsSlots>" },
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ChatConversationHeaderActions",
   "imports": [
     "import { ChatConversationHeaderActions } from '@mui/x-chat/ChatConversation';",
     "import { ChatConversationHeaderActions } from '@mui/x-chat';"
   ],
-  "classes": [
-    {
-      "key": "header",
-      "className": "MuiChatConversationHeaderActions-header",
-      "description": "Styles applied to the conversation header element.",
-      "isGlobal": false
-    },
-    {
-      "key": "headerActions",
-      "className": "MuiChatConversationHeaderActions-headerActions",
-      "description": "Styles applied to the conversation header actions element.",
-      "isGlobal": false
-    },
-    {
-      "key": "headerInfo",
-      "className": "MuiChatConversationHeaderActions-headerInfo",
-      "description": "Styles applied to the conversation header info element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChatConversationHeaderActions-root",
-      "description": "Styles applied to the conversation root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "subtitle",
-      "className": "MuiChatConversationHeaderActions-subtitle",
-      "description": "Styles applied to the conversation subtitle element.",
-      "isGlobal": false
-    },
-    {
-      "key": "title",
-      "className": "MuiChatConversationHeaderActions-title",
-      "description": "Styles applied to the conversation title element.",
-      "isGlobal": false
-    }
-  ],
+  "slots": [{ "name": "actions", "description": "", "class": null }],
+  "classes": [],
   "muiName": "MuiChatConversationHeaderActions",
   "filename": "/packages/x-chat/src/ChatConversation/ChatConversationHeaderActions.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/material/thread/\">Chat - Thread</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/conversation-header/\">Chat - Conversation header</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-chat/material/thread/\">Chat - Thread</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/conversation-header/\">Chat - Conversation header</a></li></ul>",
+  "cssComponent": false
 }

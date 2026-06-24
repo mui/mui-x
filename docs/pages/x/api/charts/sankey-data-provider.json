@@ -1,12 +1,16 @@
 {
   "props": {
+    "series": {
+      "type": { "name": "arrayOf", "description": "Array&lt;SankeySeriesType&gt;" },
+      "required": true
+    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
     "desc": { "type": { "name": "string" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": { "type": { "name": "{}" } },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {
@@ -15,7 +19,7 @@
       }
     },
     "id": { "type": { "name": "string" } },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -36,7 +40,12 @@
         "describedArgs": ["tooltipItem"]
       }
     },
-    "seriesConfig": { "type": { "name": "object" } },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'sankey'>"
+      }
+    },
     "title": { "type": { "name": "string" } },
     "tooltipItem": {
       "type": {
@@ -49,11 +58,15 @@
   "name": "SankeyDataProvider",
   "imports": [
     "import { SankeyDataProvider } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyDataProvider } from '@mui/x-charts-pro';"
+    "import { SankeyDataProvider } from '@mui/x-charts-pro';",
+    "import { SankeyDataProvider } from '@mui/x-charts-premium/SankeyChart';",
+    "import { SankeyDataProvider } from '@mui/x-charts-premium';"
   ],
+  "slots": [],
   "classes": [],
   "muiName": "MuiSankeyDataProvider",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyDataProvider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

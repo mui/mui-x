@@ -1,14 +1,17 @@
 {
   "props": {
-    "series": { "type": { "name": "object" }, "required": true },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "series": { "type": { "name": "shape", "description": "SankeySeries" }, "required": true },
+    "classes": {
+      "type": { "name": "shape", "description": "Partial<SankeyClasses>" },
+      "additionalInfo": { "cssApi": true }
+    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
     "desc": { "type": { "name": "string" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": { "type": { "name": "{}" } },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {
@@ -18,7 +21,7 @@
     },
     "id": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -53,9 +56,18 @@
         "describedArgs": ["tooltipItem"]
       }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'sankey'>"
+      }
+    },
+    "slotProps": {
+      "type": { "name": "shape", "description": "SankeyChartSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "SankeyChartSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -71,7 +83,9 @@
   "name": "SankeyChart",
   "imports": [
     "import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';",
-    "import { SankeyChart } from '@mui/x-charts-pro';"
+    "import { SankeyChart } from '@mui/x-charts-pro';",
+    "import { SankeyChart } from '@mui/x-charts-premium/SankeyChart';",
+    "import { SankeyChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
@@ -109,45 +123,9 @@
   ],
   "classes": [
     {
-      "key": "link",
-      "className": "MuiSankeyChart-link",
-      "description": "Styles applied to an individual link element.",
-      "isGlobal": false
-    },
-    {
-      "key": "linkLabel",
-      "className": "MuiSankeyChart-linkLabel",
-      "description": "Styles applied to an individual link label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "linkLabels",
-      "className": "MuiSankeyChart-linkLabels",
-      "description": "Styles applied to the link label container.",
-      "isGlobal": false
-    },
-    {
-      "key": "links",
-      "className": "MuiSankeyChart-links",
-      "description": "Styles applied to the links container.",
-      "isGlobal": false
-    },
-    {
-      "key": "node",
-      "className": "MuiSankeyChart-node",
-      "description": "Styles applied to an individual node element.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodeLabel",
-      "className": "MuiSankeyChart-nodeLabel",
-      "description": "Styles applied to an individual node label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "nodeLabels",
-      "className": "MuiSankeyChart-nodeLabels",
-      "description": "Styles applied to the node label container.",
+      "key": "root",
+      "className": "MuiSankeyChart-root",
+      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
@@ -157,14 +135,51 @@
       "isGlobal": false
     },
     {
-      "key": "root",
-      "className": "MuiSankeyChart-root",
-      "description": "Styles applied to the root element.",
+      "key": "nodeLabels",
+      "className": "MuiSankeyChart-nodeLabels",
+      "description": "Styles applied to the node label container.",
+      "isGlobal": false
+    },
+    {
+      "key": "links",
+      "className": "MuiSankeyChart-links",
+      "description": "Styles applied to the links container.",
+      "isGlobal": false
+    },
+    {
+      "key": "linkLabels",
+      "className": "MuiSankeyChart-linkLabels",
+      "description": "Styles applied to the link label container.",
+      "isGlobal": false
+    },
+    {
+      "key": "node",
+      "className": "MuiSankeyChart-node",
+      "description": "Styles applied to an individual node element.",
+      "isGlobal": false
+    },
+    {
+      "key": "link",
+      "className": "MuiSankeyChart-link",
+      "description": "Styles applied to an individual link element.",
+      "isGlobal": false
+    },
+    {
+      "key": "nodeLabel",
+      "className": "MuiSankeyChart-nodeLabel",
+      "description": "Styles applied to an individual node label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "linkLabel",
+      "className": "MuiSankeyChart-linkLabel",
+      "description": "Styles applied to an individual link label element.",
       "isGlobal": false
     }
   ],
   "muiName": "MuiSankeyChart",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

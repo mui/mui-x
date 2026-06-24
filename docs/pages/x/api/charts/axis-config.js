@@ -1,15 +1,12 @@
 import * as React from 'react';
-import InterfaceApiPage from 'docs/src/modules/components/InterfaceApiPage';
-import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
+import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
 import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
-import translation from 'docs/translations/api-docs/charts/axis-config.json';
+import translation from 'docs/translations/api-docs/charts/axis-config/axis-config.json';
 import jsonPageContent from './axis-config.json';
 
 export default function Page(props) {
   const { descriptions } = props;
-  return (
-    <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />
-  );
+  return <InterfaceApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
 export async function getStaticProps() {

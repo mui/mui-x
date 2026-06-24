@@ -1,12 +1,13 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "" },
     "onItemClick": {
-      "description": "Callback fired when a marker is clicked directly. For closest-point clicks (the <code>ScatterChart</code> default), pass <code>onItemClick</code> to the chart container instead.",
+      "description": "Callback fired when a marker is clicked directly.\nFor closest-point clicks (the <code>ScatterChart</code> default), pass <code>onItemClick</code> to the chart container instead.",
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+          "description": "Mouse event recorded on the <code><svg/></code> element."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",
@@ -15,29 +16,12 @@
       }
     },
     "renderer": {
-      "description": "The type of renderer to use for the scatter plot. - <code>svg-single</code>: Renders every scatter item in a <code>&lt;circle /&gt;</code> element, synchronously. - <code>svg-progressive</code>: Renders every scatter item in a <code>&lt;circle /&gt;</code> element, in progressive batches that paint over several animation frames to keep the main thread responsive. - <code>svg-batch</code>: Batch renders scatter items in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/scatter/#performance\">https://mui.com/x/react-charts/scatter/#performance</a><br>When not set, defaults to <code>svg-single</code>. Enable the <code>progressiveRendering</code> experimental feature to auto-select <code>svg-progressive</code> above an internal point-count threshold; this will become the default in the next major version."
+      "description": "The type of renderer to use for the scatter plot.\n- <code>svg-single</code>: Renders every scatter item in a <code><circle /></code> element, synchronously.\n- <code>svg-progressive</code>: Renders every scatter item in a <code><circle /></code> element, in progressive batches that paint over several animation frames to keep the main thread responsive.\n- <code>svg-batch</code>: Batch renders scatter items in <code><path /></code> elements for better performance with large datasets, at the cost of some limitations.\n               Read more: https://mui.com/x/react-charts/scatter/#performance<br><br>When not set, defaults to <code>svg-single</code>. Enable the <code>progressiveRendering</code> experimental feature to auto-select <code>svg-progressive</code> above an internal point-count threshold; this will become the default in the next major version."
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
-  "classDescriptions": {
-    "focusedMark": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the focused scatter mark element"
-    },
-    "highlightedMark": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the highlighted scatter mark element"
-    },
-    "root": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the scatter plot element"
-    },
-    "series": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the group surrounding a series&#39; scatter elements"
-    }
-  },
+  "classDescriptions": {},
   "slotDescriptions": {
     "marker": "The component that renders the marker for a scatter point.",
     "scatter": ""

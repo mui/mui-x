@@ -1,24 +1,28 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "adapter": { "description": "" },
+    "activeConversationId": { "description": "" },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "composerValue": { "description": "" },
+    "conversations": { "description": "" },
     "currentUser": {
-      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === &#39;user&#39;</code>. Also used to enrich message authors when a rendered message resolves to <code>currentUser.id</code>."
+      "description": "The local user sending messages.\nIf omitted, derived from <code>members</code> by finding the entry with <code>role === 'user'</code>.\nAlso used to enrich message authors when a rendered message resolves to <code>currentUser.id</code>."
     },
     "density": {
-      "description": "The vertical spacing density of chat messages. - <code>&#39;compact&#39;</code> – Reduced vertical spacing between messages. - <code>&#39;standard&#39;</code> – Default spacing. - <code>&#39;comfortable&#39;</code> – Increased vertical spacing between messages."
+      "description": "The vertical spacing density of chat messages.\n- <code>'compact'</code> – Reduced vertical spacing between messages.\n- <code>'standard'</code> – Default spacing.\n- <code>'comfortable'</code> – Increased vertical spacing between messages."
     },
     "features": {
       "description": "Feature flags to enable or disable built-in ChatBox behaviours."
     },
     "getMessageAuthorAvatarUrl": {
-      "description": "Used to determine the avatar URL for a given message author. Falls back to <code>message.author?.avatarUrl</code>, then to the matched member&#39;s <code>avatarUrl</code>."
+      "description": "Used to determine the avatar URL for a given message author.\nFalls back to <code>message.author?.avatarUrl</code>, then to the matched member's <code>avatarUrl</code>."
     },
     "getMessageAuthorDisplayName": {
-      "description": "Used to determine the display name for a given message author. Falls back to <code>message.author?.displayName</code>, then to the matched member&#39;s <code>displayName</code>."
+      "description": "Used to determine the display name for a given message author.\nFalls back to <code>message.author?.displayName</code>, then to the matched member's <code>displayName</code>."
     },
     "getMessageAuthorId": {
-      "description": "Used to determine the author id for a given message. The resolved id is used to match message authors against <code>currentUser</code>, <code>members</code>, and active conversation participants."
+      "description": "Used to determine the author id for a given message.\nThe resolved id is used to match message authors against <code>currentUser</code>,\n<code>members</code>, and active conversation participants."
     },
     "initialActiveConversationId": {
       "description": "The initial active conversation ID when uncontrolled. Ignored after initialization and when <code>activeConversationId</code> is provided."
@@ -33,14 +37,25 @@
       "description": "The initial messages when uncontrolled. Ignored after initialization and when <code>messages</code> is provided."
     },
     "layoutMode": {
-      "description": "Forces the responsive layout mode instead of deriving it from the container width. When omitted, ChatBox chooses the mode automatically using <code>layoutModeBreakpoints</code>."
+      "description": "Forces the responsive layout mode instead of deriving it from the container width.\nWhen omitted, ChatBox chooses the mode automatically using <code>layoutModeBreakpoints</code>."
     },
     "layoutModeBreakpoints": {
       "description": "Container-width breakpoints used when <code>layoutMode</code> is not provided."
     },
+    "localeText": { "description": "" },
     "members": {
-      "description": "Known chat participants. Used to derive the local user / assistant user when explicit props are omitted, and to enrich message authors by resolved author id at render time."
+      "description": "Known chat participants.\nUsed to derive the local user / assistant user when explicit props are omitted,\nand to enrich message authors by resolved author id at render time."
     },
+    "messages": { "description": "" },
+    "onActiveConversationChange": { "description": "" },
+    "onComposerValueChange": { "description": "" },
+    "onConversationsChange": { "description": "" },
+    "onData": { "description": "" },
+    "onError": { "description": "" },
+    "onFinish": { "description": "" },
+    "onMessagesChange": { "description": "" },
+    "onToolCall": { "description": "" },
+    "partRenderers": { "description": "" },
     "roleDisplayNames": {
       "description": "Locale-driven fallback labels for messages without explicit author information."
     },
@@ -48,58 +63,72 @@
       "description": "Props forwarded to each slot. Mirrors the flat keys of <code>slots</code>."
     },
     "slots": {
-      "description": "The components used for each slot inside the ChatBox. Keys are flat and prefixed by area:<br>- Layout — <code>root</code>, <code>layout</code>, <code>conversationsPane</code>, <code>threadPane</code>. - Conversation — <code>conversationRoot</code>, <code>conversationList</code>, <code>conversationHeader</code>,   <code>conversationHeaderInfo</code>, <code>conversationTitle</code>, <code>conversationSubtitle</code>,   <code>conversationHeaderActions</code>. - Message list — <code>messageList</code>, <code>messageGroup</code>, <code>dateDivider</code>, <code>unreadMarker</code>,   <code>streamingIndicator</code>. The divider slots render only when the matching   <code>features.dateDivider</code> / <code>features.unreadMarker</code> flag is enabled; the   streaming indicator renders by default (<code>features.streamingIndicator: &#39;auto&#39;</code>)   and accepts <code>null</code> to hide it. - Message — <code>messageRoot</code>, <code>messageAvatar</code>, <code>messageContent</code>, <code>messageMeta</code>,   <code>messageInlineMeta</code>, <code>messageError</code>, <code>messageActions</code>, <code>messageAuthorName</code>.   Pass <code>null</code> to a presentational slot (<code>messageAvatar</code>, <code>messageMeta</code>,   <code>messageInlineMeta</code>, <code>messageActions</code>, <code>messageAuthorName</code>) to hide it and   collapse the surrounding layout. - Composer — <code>composerRoot</code>, <code>composerInput</code>, <code>composerSendButton</code>,   <code>composerAttachButton</code>, <code>composerAttachmentList</code>, <code>composerToolbar</code>,   <code>composerHelperText</code>. Pass <code>null</code> to <code>composerSendButton</code> /   <code>composerAttachButton</code> to hide the button. - Widgets — <code>typingIndicator</code>, <code>scrollToBottom</code>, <code>suggestions</code>, <code>emptyState</code>.<br><code>*Root</code> slots (<code>conversationRoot</code>, <code>messageRoot</code>, <code>composerRoot</code>) are wrapper-only: they swap the styled element while the default children still render inside."
+      "description": "The components used for each slot inside the ChatBox. Keys are flat and\nprefixed by area:<br><br>- Layout — <code>root</code>, <code>layout</code>, <code>conversationsPane</code>, <code>threadPane</code>.\n- Conversation — <code>conversationRoot</code>, <code>conversationList</code>, <code>conversationHeader</code>,\n  <code>conversationHeaderInfo</code>, <code>conversationTitle</code>, <code>conversationSubtitle</code>,\n  <code>conversationHeaderActions</code>.\n- Message list — <code>messageList</code>, <code>messageGroup</code>, <code>dateDivider</code>, <code>unreadMarker</code>,\n  <code>streamingIndicator</code>. The divider slots render only when the matching\n  <code>features.dateDivider</code> / <code>features.unreadMarker</code> flag is enabled; the\n  streaming indicator renders by default (<code>features.streamingIndicator: 'auto'</code>)\n  and accepts <code>null</code> to hide it.\n- Message — <code>messageRoot</code>, <code>messageAvatar</code>, <code>messageContent</code>, <code>messageMeta</code>,\n  <code>messageInlineMeta</code>, <code>messageError</code>, <code>messageActions</code>, <code>messageAuthorName</code>.\n  Pass <code>null</code> to a presentational slot (<code>messageAvatar</code>, <code>messageMeta</code>,\n  <code>messageInlineMeta</code>, <code>messageActions</code>, <code>messageAuthorName</code>) to hide it and\n  collapse the surrounding layout.\n- Composer — <code>composerRoot</code>, <code>composerInput</code>, <code>composerSendButton</code>,\n  <code>composerAttachButton</code>, <code>composerAttachmentList</code>, <code>composerToolbar</code>,\n  <code>composerHelperText</code>. Pass <code>null</code> to <code>composerSendButton</code> /\n  <code>composerAttachButton</code> to hide the button.\n- Widgets — <code>typingIndicator</code>, <code>scrollToBottom</code>, <code>suggestions</code>, <code>emptyState</code>.<br><br><code>*Root</code> slots (<code>conversationRoot</code>, <code>messageRoot</code>, <code>composerRoot</code>) are\nwrapper-only: they swap the styled element while the default children still\nrender inside."
     },
     "storeClass": { "description": "The store class to use for this provider." },
     "streamFlushInterval": {
       "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."
     },
     "suggestions": {
-      "description": "Prompt suggestions displayed in the empty state. Clicking a suggestion pre-fills the composer."
+      "description": "Prompt suggestions displayed in the empty state.\nClicking a suggestion pre-fills the composer."
     },
     "suggestionsAutoSubmit": {
       "description": "Whether clicking a suggestion automatically submits the message."
     },
     "variant": {
-      "description": "The visual layout variant of the chat. - <code>&#39;default&#39;</code> – Standard layout with avatars, individual timestamps, and full spacing. - <code>&#39;compact&#39;</code> – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing."
+      "description": "The visual layout variant of the chat.\n- <code>'default'</code> – Standard layout with avatars, individual timestamps, and full spacing.\n- <code>'compact'</code> – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the root element" },
+    "layout": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the layout element"
+    },
+    "conversationsPane": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversations pane element"
+    },
+    "threadPane": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the thread pane element"
+    }
+  },
   "slotDescriptions": {
-    "composerAttachButton": "Attach button. Pass <code>null</code> to hide just the button while keeping the rest of the attachment pipeline (drag/drop, paste). Use <code>features.attachments: false</code> to disable attachments entirely.",
+    "composerAttachButton": "Attach button. Pass `null` to hide just the button while keeping the rest of\nthe attachment pipeline (drag/drop, paste). Use `features.attachments: false`\nto disable attachments entirely.",
     "composerAttachmentList": "The pending-attachment preview list.",
     "composerHelperText": "The helper / disclaimer text below the input.",
     "composerInput": "The auto-resizing text input.",
-    "composerRoot": "Styled root of <code>&lt;ChatComposer&gt;</code> (wrapper-only); the default attach/input/send/ toolbar render inside it.",
-    "composerSendButton": "Send button. Pass <code>null</code> to hide it; the form still submits on Enter.",
+    "composerRoot": "Styled root of `<ChatComposer>` (wrapper-only); the default attach/input/send/\ntoolbar render inside it.",
+    "composerSendButton": "Send button. Pass `null` to hide it; the form still submits on Enter.",
     "composerToolbar": "The composer toolbar (button row).",
     "conversationHeader": "The header bar rendered above the message list.",
     "conversationHeaderActions": "The actions area on the trailing side of the header.",
     "conversationHeaderInfo": "The title + subtitle group inside the header.",
     "conversationList": "The conversation-list sidebar component.",
-    "conversationRoot": "Styled root of <code>&lt;ChatConversation&gt;</code> (wrapper-only); the default header, message list and composer continue to render inside it.",
+    "conversationRoot": "Styled root of `<ChatConversation>` (wrapper-only); the default header,\nmessage list and composer continue to render inside it.",
     "conversationsPane": "Container for the conversation-list sidebar (or drawer on narrow widths).",
     "conversationSubtitle": "The conversation subtitle element (participants, status, etc.).",
     "conversationTitle": "The conversation title element.",
-    "dateDivider": "The date separator rendered between message groups. Only rendered when <code>features.dateDivider</code> is enabled. Pass <code>null</code> to hide it.",
+    "dateDivider": "The date separator rendered between message groups. Only rendered when\n`features.dateDivider` is enabled. Pass `null` to hide it.",
     "emptyState": "Custom content rendered when the thread has no messages.",
     "layout": "Wrapper that arranges the conversations pane and the thread pane.",
-    "messageActions": "Actions row component (receives <code>{ messageId }</code>). Pass <code>null</code> to hide actions entirely; omit to render only the declarative <code>extraActions</code> from <code>slotProps.messageActions</code> if provided.",
-    "messageAuthorName": "Author name label rendered by the group wrapper (default variant: above the bubble; compact variant: inside the message grid). Pass <code>null</code> to hide.",
-    "messageAvatar": "Avatar component. Pass <code>null</code> to hide the avatar entirely and drop the reserved avatar grid track.",
+    "messageActions": "Actions row component (receives `{ messageId }`). Pass `null` to hide\nactions entirely; omit to render only the declarative `extraActions` from\n`slotProps.messageActions` if provided.",
+    "messageAuthorName": "Author name label rendered by the group wrapper (default variant: above the\nbubble; compact variant: inside the message grid). Pass `null` to hide.",
+    "messageAvatar": "Avatar component. Pass `null` to hide the avatar entirely and drop the\nreserved avatar grid track.",
     "messageContent": "The message bubble component.",
-    "messageError": "Error card shown under the bubble when the message status is <code>error</code>. Pass <code>null</code> to hide the error surface entirely (no component is mounted).",
+    "messageError": "Error card shown under the bubble when the message status is `error`.\nPass `null` to hide the error surface entirely (no component is mounted).",
     "messageGroup": "The per-author group wrapper around consecutive messages.",
-    "messageInlineMeta": "Inline meta rendered inside the bubble (default variant). Pass <code>null</code> to hide.",
-    "messageList": "Styled scrollable root element of <code>&lt;ChatMessageList&gt;</code> (wrapper-only). The default message rows render inside it, so a plain element such as <code>&#39;section&#39;</code> wraps the list rather than replacing it.",
-    "messageMeta": "External meta (compact variant). Pass <code>null</code> to hide.",
-    "messageRoot": "Styled root of <code>&lt;ChatMessage&gt;</code> (wrapper-only); the default avatar/content/meta tree still renders inside it.",
-    "root": "The outermost <code>ChatBox</code> container element.",
+    "messageInlineMeta": "Inline meta rendered inside the bubble (default variant). Pass `null` to hide.",
+    "messageList": "Styled scrollable root element of `<ChatMessageList>` (wrapper-only). The\ndefault message rows render inside it, so a plain element such as `'section'`\nwraps the list rather than replacing it.",
+    "messageMeta": "External meta (compact variant). Pass `null` to hide.",
+    "messageRoot": "Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta\ntree still renders inside it.",
+    "root": "The outermost `ChatBox` container element.",
     "scrollToBottom": "The floating scroll-to-bottom button.",
-    "streamingIndicator": "The animated dots shown while an assistant response is in flight: as a trailing row while waiting for the response to start, then inside the assistant bubble while it streams. Controlled by <code>features.streamingIndicator</code> (<code>&#39;auto&#39;</code> by default). Pass <code>null</code> to hide it.",
+    "streamingIndicator": "The animated dots shown while an assistant response is in flight: as a\ntrailing row while waiting for the response to start, then inside the\nassistant bubble while it streams. Controlled by\n`features.streamingIndicator` (`'auto'` by default). Pass `null` to hide it.",
     "suggestions": "The prompt-suggestion chips.",
     "threadPane": "Container for the active thread — the message list plus the composer.",
     "typingIndicator": "The animated typing indicator shown while the assistant responds.",
-    "unreadMarker": "The &quot;new messages&quot; marker. Only rendered when <code>features.unreadMarker</code> is enabled. Pass <code>null</code> to hide it."
+    "unreadMarker": "The \"new messages\" marker. Only rendered when `features.unreadMarker` is\nenabled. Pass `null` to hide it."
   }
 }

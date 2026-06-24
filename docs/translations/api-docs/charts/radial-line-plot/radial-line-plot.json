@@ -1,11 +1,6 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
-  "classDescriptions": {
-    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the line element" },
-    "linePlot": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the LinePlot root element"
-    }
-  }
+  "propDescriptions": { "classes": { "description": "" } },
+  "classDescriptions": {},
+  "slotDescriptions": {}
 }

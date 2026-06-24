@@ -1,0 +1,104 @@
+{
+  "interfaceDescription": "Column Definition interface used for columns with the `singleSelect` type.",
+  "propertiesDescriptions": {
+    "field": {
+      "description": "The unique identifier of the column. Used to map with [[GridRowModel]] values."
+    },
+    "getOptionLabel": {
+      "description": "Used to determine the label displayed for a given value option."
+    },
+    "getOptionValue": { "description": "Used to determine the value used for a value option." },
+    "type": { "description": "The type of the column." },
+    "aggregable": { "description": "If `true`, the cells of the column can be aggregated based." },
+    "align": { "description": "Align cell content." },
+    "availableAggregationFunctions": {
+      "description": "Limit the aggregation function usable on this column.\nBy default, the column will have all the aggregation functions that are compatible with its type."
+    },
+    "cellClassName": { "description": "Class name added to cells in this column." },
+    "chartable": {
+      "description": "If `false`, the column will not be available for charts integration."
+    },
+    "colSpan": { "description": "Number of columns a cell should span." },
+    "description": {
+      "description": "The tooltip text shown when the column header name is truncated."
+    },
+    "disableColumnMenu": {
+      "description": "If `true`, the column menu is disabled for this column."
+    },
+    "disableExport": { "description": "If `true`, this column will not be included in exports." },
+    "disableReorder": { "description": "If `true`, this column cannot be reordered." },
+    "display": {
+      "description": "Display mode for the cell:\n - 'text': For text-based cells (default)\n - 'flex': For cells with HTMLElement children"
+    },
+    "editable": { "description": "If `true`, the cells of the column are editable." },
+    "examples": {
+      "description": "Example values that can be used by the grid to get more context about the column."
+    },
+    "filterable": { "description": "If `true`, the column is filterable." },
+    "filterOperators": { "description": "Allows setting the filter operators for this column." },
+    "flex": { "description": "The flex grow factor of the column. Must be a positive number." },
+    "getApplyQuickFilterFn": {
+      "description": "The callback that generates a filtering function for a given quick filter value.\nThis function can return `null` to skip filtering for this value and column."
+    },
+    "getSortComparator": {
+      "description": "Provide an alternative comparator function for sorting.\nTakes precedence over `sortComparator`."
+    },
+    "groupable": {
+      "description": "If `true`, the rows can be grouped based on this column values (pro-plan only).\nOnly available in DataGridPremium.\nTODO: Use module augmentation to move it to `@mui/x-data-grid-premium` (need to modify how we handle column types default values)."
+    },
+    "groupingValueGetter": {
+      "description": "Function that transforms a complex cell value into a key that be used for grouping the rows.\nNot supported with the server-side row grouping. Use `dataSource.getGroupKey()` instead."
+    },
+    "groupingValueSetter": {
+      "description": "Function that takes a grouping value and updates the row data accordingly.\nThis is the inverse operation of `groupingValueGetter`."
+    },
+    "headerAlign": { "description": "Align column header content." },
+    "headerClassName": { "description": "Class name added to the column header cell." },
+    "headerName": { "description": "The title displayed in the column header cell." },
+    "hideable": { "description": "If `false`, removes the option to hide this column." },
+    "hideSortIcons": { "description": "Toggle the visibility of the sort icons." },
+    "maxWidth": { "description": "The maximum width of the column in pixels." },
+    "minWidth": { "description": "The minimum width of the column in pixels." },
+    "pastedValueParser": {
+      "description": "Function that takes the clipboard-pasted value and converts it to a value used internally."
+    },
+    "pinnable": {
+      "description": "If `false`, the menu items for column pinning menu will not be rendered.\nOnly available in DataGridPro.\nTODO: Use module augmentation to move it to `@mui/x-data-grid-pro` (need to modify how we handle column types default values)."
+    },
+    "pivotable": {
+      "description": "If `false`, the column will not be available for pivoting in the pivot panel."
+    },
+    "preProcessEditCellProps": {
+      "description": "Callback fired when the edit props of the cell changes.\nProcesses the props before being saved into the state."
+    },
+    "renderCell": { "description": "Override the component rendered as cell for this column." },
+    "renderEditCell": {
+      "description": "Override the component rendered in edit cell mode for this column."
+    },
+    "renderHeader": { "description": "Override the component rendered in the column header cell." },
+    "renderHeaderFilter": {
+      "description": "Allows to render a component in the column header filter cell."
+    },
+    "resizable": { "description": "If `false`, disables resizing for this column." },
+    "rowSpanValueGetter": {
+      "description": "Function that returns a specific value to be used in row spanning."
+    },
+    "sortable": { "description": "If `false`, disables sorting for this column." },
+    "sortComparator": { "description": "A comparator function used to sort rows." },
+    "sortingOrder": { "description": "The order of the sorting sequence." },
+    "valueFormatter": { "description": "Formats the cell value before rendering." },
+    "valueGetter": {
+      "description": "Function that returns specific data to render in the cell instead of using the field value."
+    },
+    "valueOptions": {
+      "description": "To be used in combination with `type: 'singleSelect'`. This is an array (or a function returning an array) of the possible cell values and labels."
+    },
+    "valueParser": {
+      "description": "Function that takes the user-entered value and converts it to a value used internally."
+    },
+    "valueSetter": {
+      "description": "Function that customizes how the entered value is stored in the row.\nOnly works with cell/row editing."
+    },
+    "width": { "description": "The width of the column in pixels." }
+  }
+}

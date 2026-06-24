@@ -1,18 +1,65 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "adapter": { "description": "" },
+    "activeConversationId": { "description": "" },
+    "composerValue": { "description": "" },
+    "conversations": { "description": "" },
+    "currentUser": {
+      "description": "The local user sending messages.\nIf omitted, derived from <code>members</code> by finding the entry with <code>role === 'user'</code>.\nAlso used to enrich message authors when a rendered message resolves to <code>currentUser.id</code>."
+    },
     "density": {
-      "description": "The vertical spacing density of chat messages. When provided, wraps descendant components with <code>ChatDensityProvider</code>. - <code>&#39;compact&#39;</code> – Reduced vertical spacing between messages. - <code>&#39;standard&#39;</code> – Default spacing. - <code>&#39;comfortable&#39;</code> – Increased vertical spacing between messages."
+      "description": "The vertical spacing density of chat messages.\nWhen provided, wraps descendant components with <code>ChatDensityProvider</code>.\n- <code>'compact'</code> – Reduced vertical spacing between messages.\n- <code>'standard'</code> – Default spacing.\n- <code>'comfortable'</code> – Increased vertical spacing between messages."
     },
     "features": {
       "description": "Runtime feature flags for the chat controller (e.g. outbound typing signals)."
     },
+    "getMessageAuthorAvatarUrl": {
+      "description": "Used to determine the avatar URL for a given message author.\nFalls back to <code>message.author?.avatarUrl</code>, then to the matched member's <code>avatarUrl</code>."
+    },
+    "getMessageAuthorDisplayName": {
+      "description": "Used to determine the display name for a given message author.\nFalls back to <code>message.author?.displayName</code>, then to the matched member's <code>displayName</code>."
+    },
+    "getMessageAuthorId": {
+      "description": "Used to determine the author id for a given message.\nThe resolved id is used to match message authors against <code>currentUser</code>,\n<code>members</code>, and active conversation participants."
+    },
+    "initialActiveConversationId": {
+      "description": "The initial active conversation ID when uncontrolled. Ignored after initialization and when <code>activeConversationId</code> is provided."
+    },
+    "initialComposerValue": {
+      "description": "The initial composer value when uncontrolled. Ignored after initialization and when <code>composerValue</code> is provided."
+    },
+    "initialConversations": {
+      "description": "The initial conversations when uncontrolled. Ignored after initialization and when <code>conversations</code> is provided."
+    },
+    "initialMessages": {
+      "description": "The initial messages when uncontrolled. Ignored after initialization and when <code>messages</code> is provided."
+    },
+    "localeText": { "description": "" },
+    "members": {
+      "description": "Known chat participants.\nUsed to derive the local user / assistant user when explicit props are omitted,\nand to enrich message authors by resolved author id at render time."
+    },
+    "messages": { "description": "" },
+    "onActiveConversationChange": { "description": "" },
+    "onComposerValueChange": { "description": "" },
+    "onConversationsChange": { "description": "" },
+    "onData": { "description": "" },
+    "onError": { "description": "" },
+    "onFinish": { "description": "" },
+    "onMessagesChange": { "description": "" },
+    "onToolCall": { "description": "" },
+    "partRenderers": { "description": "" },
+    "roleDisplayNames": {
+      "description": "Locale-driven fallback labels for messages without explicit author information."
+    },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" },
     "storeClass": { "description": "The store class to use for this provider." },
     "streamFlushInterval": {
       "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."
     },
     "variant": {
-      "description": "The visual layout variant of the chat. When provided, wraps descendant components with <code>ChatVariantProvider</code> so message and conversation components can respond to the variant. - <code>&#39;default&#39;</code> – Standard layout with avatars, individual timestamps, and full spacing. - <code>&#39;compact&#39;</code> – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing."
+      "description": "The visual layout variant of the chat.\nWhen provided, wraps descendant components with <code>ChatVariantProvider</code>\nso message and conversation components can respond to the variant.\n- <code>'default'</code> – Standard layout with avatars, individual timestamps, and full spacing.\n- <code>'compact'</code> – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing."
     }
   },
   "classDescriptions": {},

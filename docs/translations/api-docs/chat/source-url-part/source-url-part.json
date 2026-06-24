@@ -1,0 +1,13 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "index": { "description": "" },
+    "message": { "description": "" },
+    "part": { "description": "" },
+    "onToolCall": { "description": "" },
+    "slotProps": { "description": "" },
+    "slots": { "description": "" }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "icon": "", "link": "", "root": "" }
+}

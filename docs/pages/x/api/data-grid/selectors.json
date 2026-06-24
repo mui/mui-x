@@ -11,11 +11,7 @@
     "category": "Aggregation",
     "description": "Get the aggregation model, containing the aggregation function of each column.\nIf a column is not in the model, it is not aggregated."
   },
-  {
-    "name": "gridAggregationStateSelector",
-    "returnType": "GridAggregationState",
-    "description": ""
-  },
+  { "name": "gridAggregationStateSelector", "returnType": "GridAggregationState" },
   {
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef[]",
@@ -28,21 +24,12 @@
     "category": "Columns",
     "description": "Get an array of column fields in the order rendered on screen."
   },
-  { "name": "gridColumnGroupsHeaderMaxDepthSelector", "returnType": "number", "description": "" },
-  {
-    "name": "gridColumnGroupsHeaderStructureSelector",
-    "returnType": "GridGroupingStructure[][]",
-    "description": ""
-  },
-  {
-    "name": "gridColumnGroupsLookupSelector",
-    "returnType": "GridColumnGroupLookup",
-    "description": ""
-  },
+  { "name": "gridColumnGroupsHeaderMaxDepthSelector", "returnType": "number" },
+  { "name": "gridColumnGroupsHeaderStructureSelector", "returnType": "GridGroupingStructure[][]" },
+  { "name": "gridColumnGroupsLookupSelector", "returnType": "GridColumnGroupLookup" },
   {
     "name": "gridColumnGroupsUnwrappedModelSelector",
-    "returnType": "{ [columnField: string]: string[] }",
-    "description": ""
+    "returnType": "{ [columnField: string]: string[]; }"
   },
   {
     "name": "gridColumnLookupSelector",
@@ -50,26 +37,16 @@
     "category": "Columns",
     "description": "Get the columns as a lookup (an object containing the field for keys and the definition for values)."
   },
-  { "name": "gridColumnMenuSelector", "returnType": "GridColumnMenuState", "description": "" },
+  { "name": "gridColumnMenuSelector", "returnType": "GridColumnMenuState" },
   {
     "name": "gridColumnPositionsSelector",
     "returnType": "number[]",
     "category": "Visible Columns",
     "description": "Get the left position in pixel of each visible columns relative to the left of the first column."
   },
-  { "name": "gridColumnReorderDragColSelector", "returnType": "string", "description": "" },
-  {
-    "name": "gridColumnReorderSelector",
-    "returnType": "GridColumnReorderState",
-    "description": ""
-  },
-  { "name": "gridColumnResizeSelector", "returnType": "GridColumnResizeState", "description": "" },
-  {
-    "name": "gridColumnVisibilityModelSelector",
-    "returnType": "GridColumnVisibilityModel",
-    "category": "Visible Columns",
-    "description": "Get the column visibility model, containing the visibility status of each column.\nIf a column is not registered in the model, it is visible."
-  },
+  { "name": "gridColumnReorderDragColSelector", "returnType": "string" },
+  { "name": "gridColumnReorderSelector", "returnType": "GridColumnReorderState" },
+  { "name": "gridColumnResizeSelector", "returnType": "GridColumnResizeState" },
   {
     "name": "gridColumnsStateSelector",
     "returnType": "GridColumnsState",
@@ -83,29 +60,21 @@
     "description": "Get the summed width of all the visible columns."
   },
   {
-    "name": "gridDataRowIdsSelector",
-    "returnType": "GridRowId[]",
-    "category": "Rows",
-    "description": ""
+    "name": "gridColumnVisibilityModelSelector",
+    "returnType": "GridColumnVisibilityModel",
+    "category": "Visible Columns",
+    "description": "Get the column visibility model, containing the visibility status of each column.\nIf a column is not registered in the model, it is visible."
   },
-  { "name": "gridDensityFactorSelector", "returnType": "number", "description": "" },
-  { "name": "gridDensitySelector", "returnType": "GridDensity", "description": "" },
-  {
-    "name": "gridDetailPanelExpandedRowIdsSelector",
-    "returnType": "Set<GridRowId>",
-    "description": ""
-  },
+  { "name": "gridDataRowIdsSelector", "returnType": "GridRowId[]", "category": "Rows" },
+  { "name": "gridDensityFactorSelector", "returnType": "number" },
+  { "name": "gridDensitySelector", "returnType": "GridDensity" },
+  { "name": "gridDetailPanelExpandedRowIdsSelector", "returnType": "Set<GridRowId>" },
   {
     "name": "gridDetailPanelExpandedRowsContentCacheSelector",
-    "returnType": "Record<GridRowId, ReactNode>",
-    "description": ""
+    "returnType": "Record<GridRowId, ReactNode>"
   },
-  { "name": "gridDimensionsSelector", "returnType": "GridDimensions", "description": "" },
-  {
-    "name": "gridEditCellStateSelector",
-    "returnType": "GridEditCellProps<any>",
-    "description": ""
-  },
+  { "name": "gridDimensionsSelector", "returnType": "GridDimensions" },
+  { "name": "gridEditCellStateSelector", "returnType": "GridEditCellProps<any>" },
   {
     "name": "gridEditRowsStateSelector",
     "returnType": "GridEditingState",
@@ -128,12 +97,6 @@
     "returnType": "GridRowId[]",
     "category": "Filtering",
     "description": "Get the id of the rows accessible after the filtering process.\nDoes not contain the collapsed children."
-  },
-  {
-    "name": "gridFilterModelSelector",
-    "returnType": "GridFilterModel",
-    "category": "Filtering",
-    "description": "Get the current filter model."
   },
   {
     "name": "gridFilterableColumnDefinitionsSelector",
@@ -184,41 +147,26 @@
     "description": "Get the amount of top level rows accessible after the filtering process."
   },
   {
-    "name": "gridFocusCellSelector",
-    "returnType": "GridCellCoordinates | null",
-    "description": ""
+    "name": "gridFilterModelSelector",
+    "returnType": "GridFilterModel",
+    "category": "Filtering",
+    "description": "Get the current filter model."
   },
+  { "name": "gridFocusCellSelector", "returnType": "GridCellCoordinates | null" },
   {
     "name": "gridFocusColumnGroupHeaderSelector",
-    "returnType": "GridColumnGroupIdentifier | null",
-    "description": ""
+    "returnType": "GridColumnGroupIdentifier | null"
   },
-  {
-    "name": "gridFocusColumnHeaderFilterSelector",
-    "returnType": "GridColumnIdentifier | null",
-    "description": ""
-  },
-  {
-    "name": "gridFocusColumnHeaderSelector",
-    "returnType": "GridColumnIdentifier | null",
-    "description": ""
-  },
-  { "name": "gridFocusStateSelector", "returnType": "GridFocusState", "description": "" },
-  {
-    "name": "gridHeaderFilteringEditFieldSelector",
-    "returnType": "string | null",
-    "description": ""
-  },
-  { "name": "gridHeaderFilteringEnabledSelector", "returnType": "boolean", "description": "" },
-  { "name": "gridHeaderFilteringMenuSelector", "returnType": "string | null", "description": "" },
-  {
-    "name": "gridHeaderFilteringStateSelector",
-    "returnType": "GridHeaderFilteringState",
-    "description": ""
-  },
-  { "name": "gridHistoryCanRedoSelector", "returnType": "boolean", "description": "" },
-  { "name": "gridHistoryCanUndoSelector", "returnType": "boolean", "description": "" },
-  { "name": "gridHistoryEnabledSelector", "returnType": "boolean", "description": "" },
+  { "name": "gridFocusColumnHeaderFilterSelector", "returnType": "GridColumnIdentifier | null" },
+  { "name": "gridFocusColumnHeaderSelector", "returnType": "GridColumnIdentifier | null" },
+  { "name": "gridFocusStateSelector", "returnType": "GridFocusState" },
+  { "name": "gridHeaderFilteringEditFieldSelector", "returnType": "string | null" },
+  { "name": "gridHeaderFilteringEnabledSelector", "returnType": "boolean" },
+  { "name": "gridHeaderFilteringMenuSelector", "returnType": "string | null" },
+  { "name": "gridHeaderFilteringStateSelector", "returnType": "GridHeaderFilteringState" },
+  { "name": "gridHistoryCanRedoSelector", "returnType": "boolean" },
+  { "name": "gridHistoryCanUndoSelector", "returnType": "boolean" },
+  { "name": "gridHistoryEnabledSelector", "returnType": "boolean" },
   {
     "name": "gridPageCountSelector",
     "returnType": "number",
@@ -269,7 +217,7 @@
   },
   {
     "name": "gridPaginationRowRangeSelector",
-    "returnType": "{ firstRowIndex: number; lastRowIndex: number } | null",
+    "returnType": "{ firstRowIndex: number; lastRowIndex: number; } | null",
     "category": "Pagination",
     "description": "Get the index of the first and the last row to include in the current page if the pagination is enabled."
   },
@@ -279,84 +227,43 @@
     "category": "Visible Columns",
     "description": "Get the visible pinned columns model."
   },
-  { "name": "gridPivotModelSelector", "returnType": "GridPivotModel", "description": "" },
-  {
-    "name": "gridPreferencePanelStateSelector",
-    "returnType": "GridPreferencePanelState",
-    "description": ""
-  },
+  { "name": "gridPivotModelSelector", "returnType": "GridPivotModel" },
+  { "name": "gridPreferencePanelStateSelector", "returnType": "GridPreferencePanelState" },
   {
     "name": "gridQuickFilterValuesSelector",
     "returnType": "any[] | undefined",
     "category": "Filtering",
     "description": "Get the current quick filter values."
   },
-  { "name": "gridResizingColumnFieldSelector", "returnType": "string", "description": "" },
-  { "name": "gridRowCountSelector", "returnType": "number", "description": "" },
-  {
-    "name": "gridRowGroupingModelSelector",
-    "returnType": "GridRowGroupingModel",
-    "description": ""
-  },
-  { "name": "gridRowGroupingNameSelector", "returnType": "string", "description": "" },
-  { "name": "gridRowGroupingSanitizedModelSelector", "returnType": "string[]", "description": "" },
+  { "name": "gridResizingColumnFieldSelector", "returnType": "string" },
+  { "name": "gridRowCountSelector", "returnType": "number" },
+  { "name": "gridRowGroupingModelSelector", "returnType": "GridRowGroupingModel" },
+  { "name": "gridRowGroupingNameSelector", "returnType": "string" },
+  { "name": "gridRowGroupingSanitizedModelSelector", "returnType": "string[]" },
   {
     "name": "gridRowIdSelector",
     "returnType": "GridRowId",
     "description": "Get the row id for a given row"
   },
-  { "name": "gridRowIsEditingSelector", "returnType": "boolean", "description": "" },
-  { "name": "gridRowMaximumTreeDepthSelector", "returnType": "number", "description": "" },
-  {
-    "name": "gridRowNodeSelector",
-    "returnType": "GridTreeNode",
-    "category": "Rows",
-    "description": ""
-  },
-  { "name": "gridRowSelectionCountSelector", "returnType": "number", "description": "" },
-  {
-    "name": "gridRowSelectionIdsSelector",
-    "returnType": "Map<GridRowId, GridValidRowModel>",
-    "description": ""
-  },
-  {
-    "name": "gridRowSelectionManagerSelector",
-    "returnType": "RowSelectionManager",
-    "description": ""
-  },
-  {
-    "name": "gridRowSelectionStateSelector",
-    "returnType": "GridRowSelectionModel",
-    "description": ""
-  },
-  {
-    "name": "gridRowSelector",
-    "returnType": "GridValidRowModel",
-    "category": "Rows",
-    "description": ""
-  },
-  { "name": "gridRowTreeDepthsSelector", "returnType": "GridTreeDepths", "description": "" },
-  { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig", "description": "" },
-  { "name": "gridRowsLoadingSelector", "returnType": "boolean | undefined", "description": "" },
-  {
-    "name": "gridRowsLookupSelector",
-    "returnType": "GridRowIdToModelLookup<GridValidRowModel>",
-    "description": ""
-  },
-  { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState", "description": "" },
+  { "name": "gridRowIsEditingSelector", "returnType": "boolean" },
+  { "name": "gridRowMaximumTreeDepthSelector", "returnType": "number" },
+  { "name": "gridRowNodeSelector", "returnType": "GridTreeNode", "category": "Rows" },
+  { "name": "gridRowSelectionCountSelector", "returnType": "number" },
+  { "name": "gridRowSelectionIdsSelector", "returnType": "Map<GridRowId, GridValidRowModel>" },
+  { "name": "gridRowSelectionManagerSelector", "returnType": "RowSelectionManager" },
+  { "name": "gridRowSelectionStateSelector", "returnType": "GridRowSelectionModel" },
+  { "name": "gridRowSelector", "returnType": "GridValidRowModel", "category": "Rows" },
+  { "name": "gridRowsLoadingSelector", "returnType": "boolean | undefined" },
+  { "name": "gridRowsLookupSelector", "returnType": "GridRowIdToModelLookup<GridValidRowModel>" },
+  { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState" },
+  { "name": "gridRowTreeDepthsSelector", "returnType": "GridTreeDepths" },
+  { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig" },
   {
     "name": "gridSidebarContentSelector",
-    "returnType": "{ sidebarId: string | undefined; labelId: string | undefined; value: GridSidebarValue | undefined }",
-    "description": ""
+    "returnType": "{ sidebarId: string | undefined; labelId: string | undefined; value: GridSidebarValue | undefined; }"
   },
-  { "name": "gridSidebarOpenSelector", "returnType": "boolean", "description": "" },
-  { "name": "gridSidebarStateSelector", "returnType": "GridSidebarState", "description": "" },
-  {
-    "name": "gridSortModelSelector",
-    "returnType": "GridSortModel",
-    "category": "Sorting",
-    "description": "Get the current sorting model."
-  },
+  { "name": "gridSidebarOpenSelector", "returnType": "boolean" },
+  { "name": "gridSidebarStateSelector", "returnType": "GridSidebarState" },
   {
     "name": "gridSortedRowEntriesSelector",
     "returnType": "GridRowEntry<GridValidRowModel>[]",
@@ -370,27 +277,20 @@
     "description": "Get the id of the rows after the sorting process."
   },
   {
-    "name": "gridTabIndexCellSelector",
-    "returnType": "GridCellCoordinates | null",
-    "description": ""
+    "name": "gridSortModelSelector",
+    "returnType": "GridSortModel",
+    "category": "Sorting",
+    "description": "Get the current sorting model."
   },
+  { "name": "gridTabIndexCellSelector", "returnType": "GridCellCoordinates | null" },
   {
     "name": "gridTabIndexColumnGroupHeaderSelector",
-    "returnType": "GridColumnGroupIdentifier | null",
-    "description": ""
+    "returnType": "GridColumnGroupIdentifier | null"
   },
-  {
-    "name": "gridTabIndexColumnHeaderFilterSelector",
-    "returnType": "GridColumnIdentifier | null",
-    "description": ""
-  },
-  {
-    "name": "gridTabIndexColumnHeaderSelector",
-    "returnType": "GridColumnIdentifier | null",
-    "description": ""
-  },
-  { "name": "gridTabIndexStateSelector", "returnType": "GridTabIndexState", "description": "" },
-  { "name": "gridTopLevelRowCountSelector", "returnType": "number", "description": "" },
+  { "name": "gridTabIndexColumnHeaderFilterSelector", "returnType": "GridColumnIdentifier | null" },
+  { "name": "gridTabIndexColumnHeaderSelector", "returnType": "GridColumnIdentifier | null" },
+  { "name": "gridTabIndexStateSelector", "returnType": "GridTabIndexState" },
+  { "name": "gridTopLevelRowCountSelector", "returnType": "number" },
   {
     "name": "gridVirtualizationColumnEnabledSelector",
     "returnType": "boolean",
@@ -430,13 +330,13 @@
   },
   {
     "name": "gridVisiblePinnedColumnDefinitionsSelector",
-    "returnType": "{ left: GridStateColDef[]; right: GridStateColDef[] }",
+    "returnType": "{ left: GridStateColDef[]; right: GridStateColDef[]; }",
     "category": "Visible Columns",
     "description": "Get the visible pinned columns."
   },
   {
     "name": "gridVisibleRowsSelector",
-    "returnType": "{ rows: GridRowEntry<GridValidRowModel>[]; range: { firstRowIndex: number; lastRowIndex: number } | null; rowIdToIndexMap: Map<GridRowId, number> }",
+    "returnType": "{ rows: GridRowEntry<GridValidRowModel>[]; range: { firstRowIndex: number; lastRowIndex: number; } | null; rowIdToIndexMap: Map<GridRowId, number>; }",
     "category": "Pagination",
     "description": "Get the rows, range and rowIndex lookup map after filtering and sorting.\nDoes not contain the collapsed children."
   }

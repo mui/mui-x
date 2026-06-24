@@ -1,7 +1,7 @@
 {
   "props": {
     "series": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "type": { "name": "arrayOf", "description": "Array&lt;FunnelSeries&gt;" },
       "required": true
     },
     "axisHighlight": {
@@ -17,7 +17,7 @@
     "categoryAxis": {
       "type": {
         "name": "union",
-        "description": "{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'linear', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'log', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'pow', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'sqrt', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'symlog', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'time', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'utc', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: object, tickSize?: number }"
+        "description": "{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: ChartsTextStyle, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'linear', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: ChartsTextStyle, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'log', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: ChartsTextStyle, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'pow', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: ChartsTextStyle, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'sqrt', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: ChartsTextStyle, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'symlog', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: ChartsTextStyle, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'time', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: ChartsTextStyle, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'utc', size?: 'auto'<br>&#124;&nbsp;number, tickLabelStyle?: ChartsTextStyle, tickSize?: number }"
       },
       "default": "{ position: 'none' }"
     },
@@ -28,7 +28,7 @@
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": { "type": { "name": "{}" } },
     "gap": { "type": { "name": "number" }, "default": "0" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
@@ -52,7 +52,7 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "localeText": { "type": { "name": "object" } },
+    "localeText": { "type": { "name": "shape", "description": "Partial<ChartsLocaleText>" } },
     "margin": {
       "type": {
         "name": "union",
@@ -94,10 +94,19 @@
         "describedArgs": ["tooltipItem"]
       }
     },
+    "seriesConfig": {
+      "type": {
+        "name": "shape",
+        "description": "ChartSeriesConfig<any> & ChartSeriesConfig<'funnel'>"
+      }
+    },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slotProps": {
+      "type": { "name": "shape", "description": "FunnelChartSlotProps" },
+      "default": "{}"
+    },
     "slots": {
-      "type": { "name": "object" },
+      "type": { "name": "shape", "description": "FunnelChartSlots" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
@@ -113,7 +122,9 @@
   "name": "FunnelChart",
   "imports": [
     "import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';",
-    "import { FunnelChart } from '@mui/x-charts-pro';"
+    "import { FunnelChart } from '@mui/x-charts-pro';",
+    "import { FunnelChart } from '@mui/x-charts-premium/FunnelChart';",
+    "import { FunnelChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
@@ -203,12 +214,44 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiFunnelChart-root",
+      "description": "Styles applied to the funnel plot element.",
+      "isGlobal": false
+    },
+    {
+      "key": "section",
+      "className": "MuiFunnelChart-section",
+      "description": "Styles applied to an individual funnel section element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sectionFilled",
+      "className": "MuiFunnelChart-sectionFilled",
+      "description": "Styles applied to a funnel section element if `variant=\"filled\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sectionOutlined",
+      "className": "MuiFunnelChart-sectionOutlined",
+      "description": "Styles applied to a funnel section element if `variant=\"outlined\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sectionLabel",
+      "className": "MuiFunnelChart-sectionLabel",
+      "description": "Styles applied to a funnel section label element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiFunnelChart",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts-pro/src/FunnelChart/FunnelChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/pyramid/\">Charts - Pyramid <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/pyramid/\">Charts - Pyramid <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

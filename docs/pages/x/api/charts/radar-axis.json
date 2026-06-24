@@ -1,7 +1,13 @@
 {
   "props": {
     "angle": { "type": { "name": "number" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "classes": {
+      "type": {
+        "name": "shape",
+        "description": "Partial<Pick<RadarClasses, 'axisLine' | 'axisLabel' | 'axisRoot'>>"
+      },
+      "additionalInfo": { "cssApi": true }
+    },
     "className": { "type": { "name": "string" } },
     "divisions": { "type": { "name": "number" }, "default": "1" },
     "dominantBaseline": {
@@ -26,33 +32,16 @@
   "imports": [
     "import { RadarAxis } from '@mui/x-charts/RadarChart';",
     "import { RadarAxis } from '@mui/x-charts';",
+    "import { RadarAxis } from '@mui/x-charts-pro/RadarChart';",
     "import { RadarAxis } from '@mui/x-charts-pro';",
+    "import { RadarAxis } from '@mui/x-charts-premium/RadarChart';",
     "import { RadarAxis } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "axisLabel",
-      "className": "MuiRadarChart-axisLabel",
-      "description": "Styles applied to every radar axis label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "axisLine",
-      "className": "MuiRadarChart-axisLine",
-      "description": "Styles applied to the radar axis line element.",
-      "isGlobal": false
-    },
-    {
-      "key": "axisRoot",
-      "className": "MuiRadarChart-axisRoot",
-      "description": "Styles applied to the radar axis root element.",
-      "isGlobal": false
-    }
-  ],
-  "spread": true,
-  "themeDefaultProps": null,
+  "slots": [],
+  "classes": [],
   "muiName": "MuiRadarAxis",
   "filename": "/packages/x-charts/src/RadarChart/RadarAxis/RadarAxis.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
+  "cssComponent": false
 }
