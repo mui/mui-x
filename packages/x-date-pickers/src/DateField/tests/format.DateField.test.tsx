@@ -113,8 +113,8 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     expectFieldValue(view.getSectionsContainer(), '01 - 01 - 2019');
   });
 
-  // The day section's `aria-valuetext` exposes a cardinal day number, never a
-  // locale ordinal (e.g. "1"/"21", not "1st"/"21st" or French "1er"/"21eme").
+  // For a digit day section, `aria-valuetext` exposes a cardinal day number, not a
+  // locale ordinal (e.g. "1"/"21", not "1st"/"21st" or French "1er"/"21ème").
   // Regression test for https://github.com/mui/mui-x/issues/22915.
   it('should expose the day as a cardinal number in aria-valuetext', () => {
     const view = renderWithProps({

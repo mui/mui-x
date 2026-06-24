@@ -253,7 +253,7 @@ function getSectionValueText(
           adapter.startOfYear(adapter.date()),
           Number(section.value),
         );
-        // Announce a cardinal day (e.g. "2"), not a locale ordinal (e.g. French "2eme").
+        // Announce a cardinal day (e.g. "2"), not a locale ordinal (e.g. French "2ème").
         // See https://github.com/mui/mui-x/issues/22915.
         return adapter.isValid(dateWithDay) ? adapter.format(dateWithDay, 'dayOfMonth') : '';
       }
