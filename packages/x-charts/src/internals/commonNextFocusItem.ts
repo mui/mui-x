@@ -31,8 +31,8 @@ function isSeriesHidden(
 }
 
 export function createGetNextIndexFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'mapShape'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'mapShape'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -109,8 +109,8 @@ export function createGetNextIndexFocusedItem<
 }
 
 export function createGetPreviousIndexFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'mapShape'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'mapShape'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -187,8 +187,8 @@ export function createGetPreviousIndexFocusedItem<
 }
 
 export function createGetNextSeriesFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'mapShape'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'mapShape'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -244,8 +244,8 @@ export function createGetNextSeriesFocusedItem<
 }
 
 export function createGetPreviousSeriesFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'mapShape'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'mapShape'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
