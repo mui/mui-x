@@ -118,15 +118,27 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     [isCurrentDay],
   );
 
+  // Visible hour window of the column, as minute offsets from midnight.
+  // With the default full-day column these are `0` and `1440`.
+  const { dayStartMinute, dayEndMinute } = React.useMemo(() => {
+    const startOfDayMs = adapter.getTime(adapter.startOfDay(start));
+    return {
+      dayStartMinute: Math.round((adapter.getTime(start) - startOfDayMs) / 60000),
+      dayEndMinute: Math.round((adapter.getTime(end) - startOfDayMs) / 60000),
+    };
+  }, [adapter, start, end]);
+
   const contextValue: CalendarGridTimeColumnContext = React.useMemo(
     () => ({
       start,
       end,
+      dayStartMinute,
+      dayEndMinute,
       index,
       hasFocus,
       getCursorPositionInElementMs,
     }),
-    [start, end, index, hasFocus, getCursorPositionInElementMs],
+    [start, end, dayStartMinute, dayEndMinute, index, hasFocus, getCursorPositionInElementMs],
   );
 
   const keyboardProps = {

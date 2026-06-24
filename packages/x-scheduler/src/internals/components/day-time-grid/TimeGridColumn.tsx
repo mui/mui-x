@@ -75,12 +75,24 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
 }));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, showCurrentTimeIndicator, index, colIndex } = props;
+  const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
   const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
-  const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
-  const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
+  const start = React.useMemo(
+    () =>
+      startTime === 0
+        ? adapter.startOfDay(day.value)
+        : adapter.setHours(adapter.startOfDay(day.value), startTime),
+    [adapter, day, startTime],
+  );
+  const end = React.useMemo(
+    () =>
+      endTime === 24
+        ? adapter.endOfDay(day.value)
+        : adapter.setHours(adapter.startOfDay(day.value), endTime),
+    [adapter, day, endTime],
+  );
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
     occurrences: day.withoutPosition,
     maxSpan: Infinity,
@@ -182,6 +194,14 @@ interface TimeGridColumnProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   index: number;
   colIndex: number;
+  /**
+   * The first hour displayed in the column (whole hour between 0 and 24).
+   */
+  startTime: number;
+  /**
+   * The last hour displayed in the column (whole hour between 0 and 24).
+   */
+  endTime: number;
   showCurrentTimeIndicator: boolean;
 }
 

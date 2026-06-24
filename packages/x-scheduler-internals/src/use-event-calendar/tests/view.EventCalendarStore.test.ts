@@ -164,23 +164,25 @@ describe('View - EventCalendarStore', () => {
     });
   });
 
-  describe('Method: setViewConfig', () => {
-    it('should set config and cleanup to null', () => {
+  describe('Method: setViewDefinition', () => {
+    it('should set definition and cleanup to null', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
       const siblingVisibleDateGetter = spy(
         ({ state }: { state: EventCalendarState }) => state.visibleDate,
       );
-      const cleanup = store.setViewConfig({
+      const cleanup = store.setViewDefinition({
         siblingVisibleDateGetter,
         visibleDaysSelector: () => [],
       });
 
-      expect(store.state.viewConfig?.siblingVisibleDateGetter).to.equal(siblingVisibleDateGetter);
+      expect(store.state.viewDefinition?.siblingVisibleDateGetter).to.equal(
+        siblingVisibleDateGetter,
+      );
 
       cleanup();
 
-      expect(store.state.viewConfig).to.equal(null);
+      expect(store.state.viewDefinition).to.equal(null);
     });
   });
 });

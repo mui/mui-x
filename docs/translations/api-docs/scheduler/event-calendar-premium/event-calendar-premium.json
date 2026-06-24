@@ -77,6 +77,9 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "view": { "description": "The view currently displayed in the calendar." },
+    "viewConfig": {
+      "description": "Configuration applied to each view, keyed by the view name. For the <code>day</code> and <code>week</code> views, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid."
+    },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
       "description": "The date currently used to determine the visible date range."
