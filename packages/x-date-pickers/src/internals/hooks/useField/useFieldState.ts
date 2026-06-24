@@ -91,7 +91,7 @@ export const useFieldState = <
     valueRef.current = value;
   }, [value]);
 
-  const { hasValidationError } = useValidation({
+  const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     props: internalPropsWithDefaults,
     validator,
     timezone,
@@ -350,20 +350,32 @@ export const useFieldState = <
         fieldValueManager.getDateFromSection(state.referenceValue as any, section)!,
         true,
       );
-
+      const newValue = fieldValueManager.updateDateInValue(value, section, mergedDate);
       if (activeDate == null) {
-        cleanActiveDateSectionsIfValueNullTimeout.start(0, () => {
-          if (valueRef.current === value) {
-            setState((prevState) => ({
-              ...prevState,
-              sections: fieldValueManager.clearDateSections(state.sections, section),
-              tempValueStrAndroid: null,
-            }));
-          }
-        });
+        const hasValidationErrorOnNewValue = validator.valueManager.hasError(
+          getValidationErrorForNewValue(newValue),
+        );
+
+        if (hasValidationErrorOnNewValue) {
+          setState((prevState) => ({
+            ...prevState,
+            sections: newSections,
+            tempValueStrAndroid: null,
+          }));
+        } else {
+          cleanActiveDateSectionsIfValueNullTimeout.start(0, () => {
+            if (valueRef.current === value) {
+              setState((prevState) => ({
+                ...prevState,
+                sections: fieldValueManager.clearDateSections(state.sections, section),
+                tempValueStrAndroid: null,
+              }));
+            }
+          });
+        }
       }
 
-      return publishValue(fieldValueManager.updateDateInValue(value, section, mergedDate));
+      return publishValue(newValue);
     }
 
     /**
