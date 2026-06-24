@@ -7,7 +7,7 @@ import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '@mui/x-date-pickers/internals'
 import refType from '@mui/utils/refType';
 import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
-import { DateRangePickerProps } from './DateRangePicker.types';
+import type { DateRangePickerProps } from './DateRangePicker.types';
 
 type DatePickerComponent = ((
   props: DateRangePickerProps & React.RefAttributes<HTMLDivElement>,

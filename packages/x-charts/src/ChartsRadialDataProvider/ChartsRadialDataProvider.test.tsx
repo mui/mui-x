@@ -2,7 +2,7 @@ import * as React from 'react';
 import { vi } from 'vitest';
 import { createRenderer } from '@mui/internal-test-utils';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
-import { type ChartsLocaleText } from '@mui/x-charts/locales';
+import type { ChartsLocaleText } from '@mui/x-charts/locales';
 import { Unstable_ChartsRadialDataProvider as ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
 import { useChartsSlots } from '../context/ChartsSlotsContext';
 import { useStore } from '../internals/store/useStore';

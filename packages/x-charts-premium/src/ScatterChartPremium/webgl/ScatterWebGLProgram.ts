@@ -1,6 +1,6 @@
 import { compileShader, logWebGLErrors } from '../../utils/webgl/utils';
 import { scatterVertexShader, scatterFragmentShader } from './shaders';
-import { type ScatterWebGLPlotData } from './useScatterWebGLPlotData';
+import type { ScatterWebGLPlotData } from './useScatterWebGLPlotData';
 
 const QUAD_VERTICES = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 

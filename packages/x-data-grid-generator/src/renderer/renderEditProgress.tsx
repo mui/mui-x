@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { type GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
-import Slider, { type SliderProps, sliderClasses } from '@mui/material/Slider';
+import { useGridApiContext } from '@mui/x-data-grid-premium';
+import type { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
+import Slider, { sliderClasses } from '@mui/material/Slider';
+import type { SliderProps } from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
 import debounce from '@mui/utils/debounce';
 import { alpha, styled } from '@mui/material/styles';

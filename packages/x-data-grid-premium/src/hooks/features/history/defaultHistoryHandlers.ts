@@ -1,12 +1,14 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
-  type GridCellEditStopParams,
-  type GridRowEditStopParams,
-  type GridEvents,
   gridVisibleRowsSelector,
   gridVisibleColumnFieldsSelector,
   gridColumnFieldsSelector,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridCellEditStopParams,
+  GridRowEditStopParams,
+  GridEvents,
 } from '@mui/x-data-grid-pro';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';

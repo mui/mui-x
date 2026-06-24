@@ -7,7 +7,7 @@ import { selectorChartExperimentalFeaturesState } from '../internals/plugins/cor
 import { useStore } from '../internals/store/useStore';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { lineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
-import { type MarkElementOwnerState } from './MarkElement';
+import type { MarkElementOwnerState } from './MarkElement';
 
 type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref'> & {

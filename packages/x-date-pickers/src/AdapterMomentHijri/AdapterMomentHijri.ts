@@ -1,7 +1,8 @@
 /* v8 ignore next */
-import defaultHMoment, { Moment } from 'moment-hijri';
+import type { Moment } from 'moment-hijri';
+import defaultHMoment from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
-import {
+import type {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,
