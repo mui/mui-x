@@ -1,13 +1,13 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { UseFieldStateReturnValue } from './useFieldState';
-import { FieldSection, MuiPickersAdapter } from '../../../models';
-import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
+import type { UseFieldStateReturnValue } from './useFieldState';
+import type { FieldSection, MuiPickersAdapter } from '../../../models';
+import type { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
 import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
-import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
-import { FieldRangeSection, PickerAnyManager } from '../../models';
-import { PickersSectionElement } from '../../../PickersSectionList';
+import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
+import type { FieldRangeSection, PickerAnyManager } from '../../models';
+import type { PickersSectionElement } from '../../../PickersSectionList';
 
 /**
  * Generate the props to pass to the content element of each section of the field.

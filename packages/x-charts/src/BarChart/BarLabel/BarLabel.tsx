@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useAnimateBarLabel } from '../../hooks/animation/useAnimateBarLabel';
-import { type BarLabelOwnerState } from './BarLabel.types';
+import type { BarLabelOwnerState } from './BarLabel.types';
 import {
   ANIMATION_DURATION_MS,
   ANIMATION_TIMING_FUNCTION,

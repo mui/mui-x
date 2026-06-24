@@ -1,11 +1,9 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { type ChartOptionalRootSelector } from '../../utils/selectors';
-import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
-import {
-  type ProcessedSeries,
-  selectorChartSeriesProcessed,
-} from '../../corePlugins/useChartSeries';
+import type { ChartOptionalRootSelector } from '../../utils/selectors';
+import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -13,11 +11,7 @@ import {
 import type { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { FocusedItemIdentifier } from '../../../../models/seriesType';
-import {
-  type AxisId,
-  type AxisItemIdentifier,
-  type ChartsAxisProps,
-} from '../../../../models/axis';
+import type { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (
   state,

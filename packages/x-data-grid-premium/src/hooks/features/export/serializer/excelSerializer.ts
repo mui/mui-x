@@ -1,21 +1,15 @@
 import type * as Excel from '@mui/x-internal-exceljs-fork';
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  type GridRowId,
-  type GridColDef,
-  type GridApi,
-  type ValueOptions,
-  GRID_DATE_COL_DEF,
-  GRID_DATETIME_COL_DEF,
-  type GridValidRowModel,
+import { GRID_DATE_COL_DEF, GRID_DATETIME_COL_DEF } from '@mui/x-data-grid-pro';
+import type {
+  GridRowId,
+  GridColDef,
+  GridApi,
+  ValueOptions,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
-import {
-  type GridStateColDef,
-  type GridSingleSelectColDef,
-  isObject,
-  isSingleSelectColDef,
-  gridHasColSpanSelector,
-} from '@mui/x-data-grid/internals';
+import { isObject, isSingleSelectColDef, gridHasColSpanSelector } from '@mui/x-data-grid/internals';
+import type { GridStateColDef, GridSingleSelectColDef } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
 import type { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
@@ -24,10 +18,8 @@ import {
   addSerializedRowToWorksheet,
   createValueOptionsSheetIfNeeded,
   getExcelJs,
-  type SerializedColumns,
-  type SerializedRow,
-  type ValueOptionsData,
 } from './utils';
+import type { SerializedColumns, SerializedRow, ValueOptionsData } from './utils';
 
 export type { ExcelExportInitEvent } from './utils';
 

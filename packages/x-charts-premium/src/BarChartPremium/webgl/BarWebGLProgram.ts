@@ -1,6 +1,6 @@
 import { compileShader, logWebGLErrors, uploadQuadBuffer } from '../../utils/webgl/utils';
 import { barFragmentShaderSource, barVertexShaderSource } from './shaders';
-import { type BarWebGLPlotData } from './useBarWebGLPlotData';
+import type { BarWebGLPlotData } from './useBarWebGLPlotData';
 
 interface InstancedBuffer {
   buffer: WebGLBuffer;

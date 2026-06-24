@@ -17,7 +17,8 @@ function setRef(ref: React.Ref<unknown>, value: unknown) {
     return;
   }
   if (typeof ref === 'function') {
-    ref(value);
+    // Legacy callback-ref forwarding; a React 19 cleanup return is not propagated here.
+    void ref(value);
     return;
   }
 

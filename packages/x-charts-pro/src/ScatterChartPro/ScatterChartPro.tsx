@@ -3,36 +3,34 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
-import {
-  FocusedScatterMark,
-  type ScatterChartProps,
-  type ScatterChartSlotProps,
-  type ScatterChartSlots,
-  ScatterPlot,
+import { FocusedScatterMark, ScatterPlot } from '@mui/x-charts/ScatterChart';
+import type {
+  ScatterChartProps,
+  ScatterChartSlotProps,
+  ScatterChartSlots,
 } from '@mui/x-charts/ScatterChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import type { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import type { TooltipPropsOverrides } from '@mui/x-charts/models';
 import { useScatterChartProps, MarkerLabelPlot } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
-import { type ChartsContainerProProps } from '../ChartsContainerPro/ChartsContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro/ChartsContainerPro';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
-import {
-  SCATTER_CHART_PRO_PLUGINS,
-  type ScatterChartProPluginSignatures,
-} from './ScatterChartPro.plugins';
-import {
-  type ChartsToolbarProSlots,
-  type ChartsToolbarProSlotProps,
+import { SCATTER_CHART_PRO_PLUGINS } from './ScatterChartPro.plugins';
+import type { ScatterChartProPluginSignatures } from './ScatterChartPro.plugins';
+import type {
+  ChartsToolbarProSlots,
+  ChartsToolbarProSlotProps,
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface ScatterChartProSlots

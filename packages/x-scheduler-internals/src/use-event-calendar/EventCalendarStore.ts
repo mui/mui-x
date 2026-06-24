@@ -132,10 +132,12 @@ export class ExtendableEventCalendarStore<
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
       this.assertViewValidity(this.state.view);
-      this.subscribe((state) => {
-        this.assertViewValidity(state.view);
-        return null;
-      });
+      this.disposables.defer(
+        this.subscribe((state) => {
+          this.assertViewValidity(state.view);
+          return null;
+        }),
+      );
     }
   }
 

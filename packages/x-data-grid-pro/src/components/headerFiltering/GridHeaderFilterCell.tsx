@@ -8,26 +8,26 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import {
-  type GridFilterItem,
-  type GridFilterOperator,
-  type GridHeaderFilterEventLookup,
-  type GridColDef,
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
   useGridSelector,
   GridFilterInputValue,
   GridFilterInputDate,
   GridFilterInputBoolean,
-  type GridColType,
   GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
   gridClasses,
 } from '@mui/x-data-grid';
+import type {
+  GridFilterItem,
+  GridFilterOperator,
+  GridHeaderFilterEventLookup,
+  GridColDef,
+  GridColType,
+} from '@mui/x-data-grid';
 import {
   PinnedColumnPosition,
-  type GridStateColDef,
-  type GridFilterInputValueProps,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
@@ -36,6 +36,7 @@ import {
   usePinnedScrollOffset,
   vars,
 } from '@mui/x-data-grid/internals';
+import type { GridStateColDef, GridFilterInputValueProps } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { inputBaseClasses } from '@mui/material/InputBase';

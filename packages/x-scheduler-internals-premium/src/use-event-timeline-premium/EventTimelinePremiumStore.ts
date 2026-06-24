@@ -140,10 +140,12 @@ export class EventTimelinePremiumStore<
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
       this.assertPresetValidity(this.state.preset);
-      this.subscribe((state) => {
-        this.assertPresetValidity(state.preset);
-        return null;
-      });
+      this.disposables.defer(
+        this.subscribe((state) => {
+          this.assertPresetValidity(state.preset);
+          return null;
+        }),
+      );
     }
 
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));

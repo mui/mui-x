@@ -2,10 +2,8 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useRotationScale } from '../../hooks/useScale';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
-import {
-  selectorChartPolarCenter,
-  type UseChartPolarAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import { selectorChartPolarCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { isOrdinalScale } from '../../internals/scaleGuards';
 import { degToRad } from '../../internals/degToRad';
 import { clampAngle } from '../../internals/clampAngle';

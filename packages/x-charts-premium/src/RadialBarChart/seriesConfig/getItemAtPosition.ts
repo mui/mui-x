@@ -1,7 +1,4 @@
 import {
-  type ChartState,
-  type ProcessedSeries,
-  type UseChartPolarAxisSignature,
   selectorAllSeriesOfType,
   selectorChartPolarCenter,
   selectorChartRadiusAxis,
@@ -9,6 +6,11 @@ import {
   getBandIndex,
   clampAngleRad,
   generateSvg2rotation,
+} from '@mui/x-charts/internals';
+import type {
+  ChartState,
+  ProcessedSeries,
+  UseChartPolarAxisSignature,
 } from '@mui/x-charts/internals';
 import type { SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 

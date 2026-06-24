@@ -1,6 +1,6 @@
 import { useHeatmapProps } from '@mui/x-charts-pro/internals';
-import { type HeatmapPremiumProps } from './HeatmapPremium';
-import { type HeatmapPlotPremiumProps } from './HeatmapPlotPremium';
+import type { HeatmapPremiumProps } from './HeatmapPremium';
+import type { HeatmapPlotPremiumProps } from './HeatmapPlotPremium';
 
 export type UseHeatmapPremiumProps = HeatmapPremiumProps;
 
