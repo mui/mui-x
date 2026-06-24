@@ -23,7 +23,10 @@ export interface GridPanelClasses {
   paper: string;
 }
 
-export interface GridPanelProps extends Omit<GridSlotProps['basePopper'], 'ref'> {
+export interface GridPanelProps extends Pick<
+  GridSlotProps['basePopper'],
+  'id' | 'className' | 'target' | 'flip' | 'placement' | 'target' | 'transition' | 'focusTrap'
+> {
   ref?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   /**
@@ -131,23 +134,10 @@ GridPanel.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  clickAwayMouseEvent: PropTypes.oneOf([
-    'onClick',
-    'onMouseDown',
-    'onMouseUp',
-    'onPointerDown',
-    'onPointerUp',
-    false,
-  ]),
-  clickAwayTouchEvent: PropTypes.oneOf(['onTouchEnd', 'onTouchStart', false]),
   flip: PropTypes.bool,
   focusTrap: PropTypes.bool,
   id: PropTypes.string,
-  onClickAway: PropTypes.func,
   onClose: PropTypes.func,
-  onDidHide: PropTypes.func,
-  onDidShow: PropTypes.func,
-  onExited: PropTypes.func,
   open: PropTypes.bool.isRequired,
   /**
    * @default 'bottom'
@@ -169,8 +159,6 @@ GridPanel.propTypes /* remove-proptypes */ = {
     'top-start',
     'top',
   ]),
-  role: PropTypes.string,
-  style: PropTypes.object,
   target: PropTypes /* @typescript-to-proptypes-ignore */.any,
   transition: PropTypes.bool,
 } as any;
