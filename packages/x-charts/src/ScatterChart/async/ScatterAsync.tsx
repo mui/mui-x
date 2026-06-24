@@ -1,18 +1,16 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type ScatterProps } from '../Scatter';
+import type { ScatterProps } from '../Scatter';
 import { ScatterAsyncBatch } from './ScatterAsyncBatch';
 import { useStore } from '../../internals/store/useStore';
 import {
   selectorProgressiveBatchSize,
   selectorProgressiveSeriesRevealedBatches,
-  type UseProgressiveRenderingSignature,
 } from '../../internals/plugins/featurePlugins/useProgressiveRendering';
-import {
-  selectorChartZoomIsInteracting,
-  type UseChartCartesianAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseProgressiveRenderingSignature } from '../../internals/plugins/featurePlugins/useProgressiveRendering';
+import { selectorChartZoomIsInteracting } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartCartesianAxisSignature } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 /** Per-series points sampled while interacting; the rest fills in on settle. */

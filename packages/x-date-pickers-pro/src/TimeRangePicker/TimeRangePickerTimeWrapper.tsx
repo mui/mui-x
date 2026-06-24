@@ -1,5 +1,5 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
-import {
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type {
   PickerSelectionState,
   PickerViewRenderer,
   TimeViewWithMeridiem,
@@ -7,7 +7,7 @@ import {
   PickerRangeValue,
   PickerViewsRendererProps,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { isRangeValid } from '../internals/utils/date-utils';
 import { calculateRangeChange, resolveReferenceDate } from '../internals/utils/date-range-manager';

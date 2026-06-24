@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ScatterPlot,
-  type RendererType,
-  type ScatterPlotProps,
-  type ScatterPlotSlots,
-  type ScatterPlotSlotProps,
+import { ScatterPlot } from '@mui/x-charts/ScatterChart';
+import type {
+  RendererType,
+  ScatterPlotProps,
+  ScatterPlotSlots,
+  ScatterPlotSlotProps,
 } from '@mui/x-charts/ScatterChart';
 import { ScatterWebGLPlot } from './webgl/ScatterWebGLPlot';
 
