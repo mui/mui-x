@@ -180,9 +180,12 @@ The loading overlay is rendered on top of the previous rows, which prevents the 
 
 {{"demo": "ServerSideDataGridKeepPreviousData.js", "bg": "inline"}}
 
+If the request fails, the previous rows remain visible, but the pagination, sorting, and filtering controls already reflect the new request.
+The displayed rows might therefore not match the current query state, so handle the error through the [`onDataSourceError`](/x/react-data-grid/server-side-data/#error-handling) callback.
+
 :::warning
 `dataSourceKeepPreviousData` only applies to flat data.
-For [tree data](/x/react-data-grid/server-side-data/tree-data/) and [row grouping](/x/react-data-grid/server-side-data/row-grouping/), the Data Grid always resets the rows on refetch — otherwise the existing tree would be merged on top of the new response and rows could render in stale order ([#21619](https://github.com/mui/mui-x/pull/21619)).
+For [tree data](/x/react-data-grid/server-side-data/tree-data/) and [row grouping](/x/react-data-grid/server-side-data/row-grouping/), the Data Grid always resets the rows on refetch—otherwise the existing tree would be merged on top of the new response and rows could render in stale order ([#21619](https://github.com/mui/mui-x/pull/21619)).
 :::
 
 ## Data caching

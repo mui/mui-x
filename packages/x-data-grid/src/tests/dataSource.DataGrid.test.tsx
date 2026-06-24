@@ -536,7 +536,75 @@ describe('<DataGrid /> - Data source', () => {
       await waitFor(() => {
         expect(getRows.callCount).to.equal(2);
       });
+      // The previous row stays visible and the loading overlay is shown on top of it.
       expect(localApiRef.current?.getRowsCount()).to.equal(1);
+      expect(localApiRef.current?.state.rows.loading).to.equal(true);
+
+      await act(async () => {
+        resolve(deferredResponse);
+      });
+
+      await waitFor(() => {
+        expect(localApiRef.current?.getRow(2)).not.to.equal(null);
+      });
+    });
+
+    it('should clear the rows during the fetch when disabled (default)', async () => {
+      const { promise, resolve } = Promise.withResolvers<GridGetRowsResponse>();
+      const initialResponse: GridGetRowsResponse = {
+        rows: [{ id: 1, value: 'first' }],
+        rowCount: 2,
+      };
+      const deferredResponse: GridGetRowsResponse = {
+        rows: [{ id: 2, value: 'second' }],
+        rowCount: 2,
+      };
+      let resolvedFirst = false;
+      const getRows = spy(() => {
+        if (!resolvedFirst) {
+          resolvedFirst = true;
+          return Promise.resolve(initialResponse);
+        }
+        return promise;
+      });
+      const dataSource: GridDataSource = { getRows };
+      let localApiRef: RefObject<GridApi | null> = { current: null };
+      function Test(props: Partial<DataGridProps>) {
+        localApiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              apiRef={localApiRef}
+              columns={[{ field: 'value' }]}
+              dataSource={dataSource}
+              dataSourceCache={null}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 1 }, rowCount: 0 },
+              }}
+              pagination
+              pageSizeOptions={[1]}
+              disableVirtualization
+              {...props}
+            />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Test />);
+
+      await waitFor(() => {
+        expect(localApiRef.current?.getRowsCount()).to.equal(1);
+      });
+
+      act(() => {
+        setProps({ paginationModel: { page: 1, pageSize: 1 } });
+      });
+
+      await waitFor(() => {
+        expect(getRows.callCount).to.equal(2);
+      });
+      // Without the prop, the previous rows are cleared while the new page is fetched.
+      expect(localApiRef.current?.getRowsCount()).to.equal(0);
 
       await act(async () => {
         resolve(deferredResponse);
