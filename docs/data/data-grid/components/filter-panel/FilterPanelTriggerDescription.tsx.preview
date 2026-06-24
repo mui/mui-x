@@ -1,0 +1,14 @@
+<DataGrid
+  {...data}
+  loading={loading}
+  slots={{ toolbar: CustomToolbar }}
+  showToolbar
+  initialState={{
+    ...data.initialState,
+    filter: {
+      filterModel: {
+        items: [{ field: 'quantity', operator: '>', value: '50000' }],
+      },
+    },
+  }}
+/>
