@@ -101,6 +101,19 @@ The dropdown is on by default.
 While it is open, <kbd class="key">Down</kbd> and <kbd class="key">Up</kbd> move the highlight, <kbd class="key">Enter</kbd> and <kbd class="key">Tab</kbd> accept the highlighted suggestion, and <kbd class="key">Escape</kbd> closes it—so those keys do not commit the edit or move between cells until the dropdown is closed.
 Pass `disableFormulaAutocomplete` prop to turn the dropdown off.
 
+### Reference highlighting
+
+While editing a formula, each distinct cell, range, or column reference is shown in its own color in the editor, and the cells it points to are outlined in the grid with a matching dashed rectangle—so it is easy to see what a formula reads.
+
+{{"demo": "FormulaReferenceHighlighting.js", "bg": "inline", "defaultCodeOpen": false}}
+
+- Colors are keyed on the **resolved target**, so two references to the same cell share a color, and a reference repeated in the formula is outlined once.
+- A reference that cannot be resolved—a hidden column, a filtered-out row, or the edited cell itself—is left uncolored and is not outlined.
+- Highlighting works in both the canonical and the A1 (`formulaA1Notation`) syntax. It is most legible in A1 notation, where references are compact tokens such as `B5` or `A1:B5`.
+- It is on by default in the built-in formula editor. A column with a custom `renderEditCell` keeps full control of its editor and is not highlighted.
+
+The reference colors are exposed as the `--DataGrid-formulaRefColor-0` … CSS variables on the grid root and can be overridden in a theme.
+
 ### Fill handle
 
 When the [cell selection](/x/react-data-grid/cell-selection/#fill-handle) fill handle is enabled (`cellSelection` and `cellSelectionFillHandle`), dragging a formula cell—or using the <kbd class="key">Ctrl</kbd>+<kbd class="key">D</kbd> (fill down) and <kbd class="key">Ctrl</kbd>+<kbd class="key">R</kbd> (fill right) shortcuts—copies the formula and adjusts its references for each target cell, the way a spreadsheet does.

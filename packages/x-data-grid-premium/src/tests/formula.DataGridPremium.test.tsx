@@ -1835,6 +1835,312 @@ describe('<DataGridPremium /> - Formulas', () => {
     });
   });
 
+  describe('reference highlighting', () => {
+    const TOKEN_CLASS = '.MuiDataGrid-formulaReferenceToken';
+    const OVERLAY_CLASS = '.MuiDataGrid-formulaReferenceOverlay';
+    const RECT_CLASS = '.MuiDataGrid-formulaReferenceHighlight';
+
+    const tokens = () => Array.from(document.querySelectorAll<HTMLElement>(TOKEN_CLASS));
+    const rects = () => Array.from(document.querySelectorAll<HTMLElement>(RECT_CLASS));
+
+    it('colors each distinct reference token in the editor', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+      });
+      await waitFor(() => {
+        expect(tokens()).to.have.length(2);
+      });
+      // Distinct targets → distinct palette colors.
+      expect(tokens()[0].style.color).to.equal('var(--DataGrid-formulaRefColor-0)');
+      expect(tokens()[1].style.color).to.equal('var(--DataGrid-formulaRefColor-1)');
+    });
+
+    it('outlines each referenced cell in the grid', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(rects()).to.have.length(2);
+      });
+    });
+
+    it('shares one color between a token and its cell outline', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(tokens()).to.have.length(2);
+        expect(rects()).to.have.length(2);
+      });
+      // `price` is the first token and the first outline — same shared color var.
+      expect(rects()[0].style.borderColor).to.equal(tokens()[0].style.color);
+    });
+
+    it('draws a single outline for a repeated reference', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+      });
+      fireEvent.change(getCellInput(0, 3), { target: { value: '=price + price' } });
+      await waitFor(() => {
+        expect(tokens()).to.have.length(2);
+        expect(rects()).to.have.length(1);
+      });
+    });
+
+    it('never highlights the cell being edited (self-reference)', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+      });
+      fireEvent.change(getCellInput(0, 3), { target: { value: '=total + price' } });
+      await waitFor(() => {
+        // Only `price` is colored and outlined; `total` is the edited cell.
+        expect(tokens()).to.have.length(1);
+        expect(rects()).to.have.length(1);
+      });
+    });
+
+    it('clears the highlighting when editing stops', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(rects()).to.have.length(2);
+      });
+      fireEvent.keyDown(getCellInput(0, 3), { key: 'Escape' });
+      await microtasks();
+      expect(document.querySelector(OVERLAY_CLASS)).to.equal(null);
+      expect(tokens()).to.have.length(0);
+    });
+
+    it('does not highlight a column with a custom editor', async () => {
+      const { user } = await render(<Test columns={customEditorColumns} />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCell(0, 3).querySelector('[data-testid="custom-editor"]')).not.to.equal(null);
+      });
+      expect(document.querySelector(OVERLAY_CLASS)).to.equal(null);
+      expect(tokens()).to.have.length(0);
+    });
+
+    it('does not highlight a plain non-formula edit', async () => {
+      const { user } = await render(<Test />);
+      // Row 2 `total` holds a plain number; double-click opens the number editor.
+      await user.dblClick(getCell(2, 3));
+      await microtasks();
+      expect(document.querySelector(OVERLAY_CLASS)).to.equal(null);
+      expect(tokens()).to.have.length(0);
+    });
+
+    it('does not highlight a reference to a filtered-out row', async () => {
+      const { user } = await render(
+        <Test
+          rows={[
+            { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=REF(COLUMN("price"), ROW(1))' },
+            { id: 1, item: 'Banana', price: 1, quantity: 5, total: 5 },
+          ]}
+          filterModel={{ items: [{ field: 'item', operator: 'equals', value: 'Apple' }] }}
+        />,
+      );
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellInput(0, 3).value).to.contain('REF(');
+      });
+      // Row 1 is filtered out → its cell cannot be resolved → no token, no outline.
+      expect(tokens()).to.have.length(0);
+      expect(rects()).to.have.length(0);
+    });
+
+    it.skipIf(isJSDOM)('aligns a cell outline with the referenced cell', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(rects()).to.have.length(2);
+      });
+      // The first reference (`price`) outlines the price cell of the edited row.
+      const priceCell = getCell(0, 1).getBoundingClientRect();
+      const outline = rects()[0].getBoundingClientRect();
+      expect(Math.abs(outline.left - priceCell.left)).to.be.lessThan(2);
+      expect(Math.abs(outline.top - priceCell.top)).to.be.lessThan(2);
+      expect(Math.abs(outline.width - priceCell.width)).to.be.lessThan(2);
+      expect(Math.abs(outline.height - priceCell.height)).to.be.lessThan(2);
+    });
+
+    it.skipIf(isJSDOM)('repositions outlines after a vertical scroll', async () => {
+      const manyRows = Array.from({ length: 60 }, (_, index) => ({
+        id: index,
+        item: `Item ${index}`,
+        price: index + 1,
+        quantity: 2,
+        total: index === 0 ? '=REF(COLUMN("price"), ROW(40))' : index + 1,
+      }));
+      const { user } = await render(<Test rows={manyRows} autoHeight={false} />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(rects()).to.have.length(1);
+      });
+      apiRef.current!.scrollToIndexes({ rowIndex: 40, colIndex: 1 });
+      await waitFor(() => {
+        const target = getCell(40, 1).getBoundingClientRect();
+        const outline = rects()[0].getBoundingClientRect();
+        expect(Math.abs(outline.top - target.top)).to.be.lessThan(2);
+      });
+    });
+
+    it.skipIf(isJSDOM)(
+      'keeps outlines aligned with cells during native scroll (no lag)',
+      async () => {
+        const manyRows = Array.from({ length: 60 }, (_, index) => ({
+          id: index,
+          item: `Item ${index}`,
+          price: index + 1,
+          quantity: 2,
+          total: index === 0 ? '=REF(COLUMN("price"), ROW(5))' : index + 1,
+        }));
+        const { user } = await render(<Test rows={manyRows} autoHeight={false} />);
+        await user.dblClick(getCell(0, 3));
+        await waitFor(() => {
+          expect(rects()).to.have.length(1);
+        });
+        const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+        // Scroll synchronously: a content-space overlay moves with the cell in the
+        // same frame (no scroll listener). A JS-repositioned overlay would lag here.
+        scroller.scrollTop = 40;
+        const cell = getCell(5, 1).getBoundingClientRect();
+        const outline = rects()[0].getBoundingClientRect();
+        expect(Math.abs(outline.top - cell.top)).to.be.lessThan(2);
+        expect(Math.abs(outline.left - cell.left)).to.be.lessThan(2);
+      },
+    );
+
+    it.skipIf(isJSDOM)('keeps the colored backdrop scrolled with the input', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      const input = getCellInput(0, 3);
+      await waitFor(() => {
+        expect(input.value).to.equal('=price * quantity');
+      });
+      fireEvent.change(input, {
+        target: { value: '=price * quantity + price * quantity + price * quantity' },
+      });
+      input.scrollLeft = 40;
+      fireEvent.scroll(input);
+      const backdropText = document.querySelector<HTMLElement>(
+        '.MuiDataGrid-formulaReferenceBackdrop > div',
+      )!;
+      await waitFor(() => {
+        expect(backdropText.scrollLeft).to.equal(input.scrollLeft);
+      });
+    });
+
+    // The formula column is `type: 'number'`, so its editing cell carries
+    // `cell--textRight` (`text-align: right`). The real input resets that to
+    // `start`, but the mirror `<div>` would inherit `right` and fling the colored
+    // text to the opposite edge from the caret — most visible on a short value
+    // like a freshly typed `=`. The backdrop must align like the input.
+    it.skipIf(isJSDOM)(
+      'aligns the colored backdrop like the input in a right-aligned column',
+      async () => {
+        const { user } = await render(<Test />);
+        await user.dblClick(getCell(0, 3));
+        const input = getCellInput(0, 3);
+        await waitFor(() => {
+          expect(input.value).to.equal('=price * quantity');
+        });
+        const backdropText = document.querySelector<HTMLElement>(
+          '.MuiDataGrid-formulaReferenceBackdrop > div',
+        )!;
+        // The mirror must not inherit the number column's right alignment.
+        expect(getComputedStyle(backdropText).textAlign).to.equal(
+          getComputedStyle(input).textAlign,
+        );
+
+        // Behaviorally: a short formula's colored token sits at the input's text
+        // start (left padding), next to the caret — not pushed to the far edge.
+        fireEvent.change(input, { target: { value: '=price' } });
+        await waitFor(() => {
+          expect(tokens()).to.have.length(1);
+        });
+        const token = tokens()[0].getBoundingClientRect();
+        const inputRect = input.getBoundingClientRect();
+        expect(token.left - inputRect.left).to.be.lessThan(inputRect.width / 2);
+      },
+    );
+
+    // The mirror approach makes the input text transparent so the colors show
+    // through. Without a matching `::selection` rule the selected text would also
+    // be transparent — selecting in the editor would highlight nothing readable
+    // and the colored mirror would ghost through the native highlight. The input
+    // must paint an opaque, legible selection over its own (otherwise invisible)
+    // text.
+    it.skipIf(isJSDOM)('paints a readable text selection in the editor', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      const input = getCellInput(0, 3);
+      await waitFor(() => {
+        expect(input.value).to.equal('=price * quantity');
+      });
+      const transparent = 'rgba(0, 0, 0, 0)';
+      // The mechanism: the input's own text is transparent (mirror shows through).
+      expect(getComputedStyle(input).color).to.equal(transparent);
+      // The fix: selected text is opaque (readable) over an opaque highlight.
+      const selection = getComputedStyle(input, '::selection');
+      expect(selection.color).not.to.equal(transparent);
+      expect(selection.backgroundColor).not.to.equal(transparent);
+    });
+
+    // The mirror is a separate element from the real input, so their text metrics
+    // must match exactly or the colored glyphs drift from the caret. The input
+    // otherwise inherits MUI's body `letter-spacing` (~0.13px/char) while the
+    // mirror has `normal`; over this 55-char formula that drifts ~7px. Both are
+    // pinned to `letter-spacing: normal` + `font-variant-ligatures: none`.
+    it.skipIf(isJSDOM)('keeps the colored mirror glyph-aligned with the input text', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      const input = getCellInput(0, 3);
+      await waitFor(() => {
+        expect(input.value).to.equal('=price * quantity');
+      });
+      fireEvent.change(input, {
+        target: { value: '=price * quantity + price * quantity + price * quantity' },
+      });
+      await waitFor(() => {
+        expect(tokens().length).to.be.greaterThan(0);
+      });
+      const backdropText = document.querySelector<HTMLElement>(
+        '.MuiDataGrid-formulaReferenceBackdrop > div',
+      )!;
+      // Same string + identical metrics → identical rendered width.
+      expect(Math.abs(input.scrollWidth - backdropText.scrollWidth)).to.be.lessThan(2);
+    });
+
+    // The absolute, flex-centered mirror and the in-flow, browser-centered input
+    // round their vertical text position ~0.5px apart (a device pixel on Retina —
+    // the colored text sits above/below the caret). The backdrop measures the
+    // input's real text line-box top and translates itself onto it.
+    it.skipIf(isJSDOM)('vertically aligns the colored mirror onto the input text', async () => {
+      const { user } = await render(<Test rowHeight={64} />);
+      await user.dblClick(getCell(0, 3));
+      const input = getCellInput(0, 3);
+      await waitFor(() => {
+        expect(input.value).to.equal('=price * quantity');
+      });
+      const backdropText = document.querySelector<HTMLElement>(
+        '.MuiDataGrid-formulaReferenceBackdrop > div',
+      )!;
+      // The sync ran (it applies a translateY correction).
+      expect(backdropText.style.transform).to.match(/translateY/);
+      // The mirror's text now sits exactly on the input's centered text line box.
+      const lineHeight = parseFloat(getComputedStyle(input).lineHeight);
+      const ir = input.getBoundingClientRect();
+      const inputTextTop = ir.top + (ir.height - lineHeight) / 2;
+      const mirrorTop = backdropText.getBoundingClientRect().top;
+      expect(Math.abs(inputTextTop - mirrorTop)).to.be.lessThan(1);
+    });
+  });
+
   describe('A1 notation', () => {
     const LETTER_CLASS = '.MuiDataGrid-formulaColumnHeaderLetter';
     const ROW_NUMBER_FIELD = '__formula_row_number__';

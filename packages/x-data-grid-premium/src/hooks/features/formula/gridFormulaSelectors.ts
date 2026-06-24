@@ -17,6 +17,14 @@ export const gridFormulaLookupSelector = createSelector(
 );
 
 /**
+ * Get the cell whose formula references are currently highlighted, or `null`.
+ */
+export const gridFormulaActiveEditSelector = createSelector(
+  gridFormulaStateSelector,
+  (formulaState) => formulaState.activeEdit,
+);
+
+/**
  * Get the evaluated result of one formula cell, or `null` when the cell does
  * not hold a formula. Presence in the lookup is the masking criterion — a
  * formula evaluating to `null` still returns a result entry.

@@ -56,8 +56,23 @@ export type GridFormulaLookup = {
   };
 };
 
+/**
+ * The cell whose formula our built-in editor is currently editing.
+ */
+export interface GridFormulaActiveEdit {
+  id: GridRowId;
+  field: string;
+}
+
 export interface GridFormulaState {
   lookup: GridFormulaLookup;
+  /**
+   * The cell whose formula references are highlighted, or `null`. Set when our
+   * formula editor renders and cleared on `cellEditStop`; it outlives the
+   * editing cell being virtualized out (so the in-grid reference overlay
+   * persists) and is never set for a column with a custom editor.
+   */
+  activeEdit: GridFormulaActiveEdit | null;
 }
 
 /**
@@ -257,4 +272,10 @@ export interface GridFormulaPrivateApi {
    * Runs a full formula evaluation pass and refreshes dependent features.
    */
   applyFormulaEvaluation: () => void;
+  /**
+   * Sets (or clears with `null`) the cell whose formula references are
+   * highlighted in the editor and outlined in the grid.
+   * @param {GridFormulaActiveEdit | null} cell The cell being edited, or `null` to clear.
+   */
+  setFormulaActiveEdit: (cell: GridFormulaActiveEdit | null) => void;
 }

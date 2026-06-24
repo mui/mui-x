@@ -41,11 +41,15 @@ const ZERO_SPAN: FormulaSourceSpan = { start: 0, end: 0 };
 
 // `$?` column letters, `$?` row digits, with a boundary that rejects a longer
 // identifier (`LOG10X`) or a call (`LOG10(`).
-const CELL_REF_REGEX = /^(\$?)([A-Za-z]+)(\$?)([0-9]+)(?![A-Za-z0-9_(])/;
+// These tokenization primitives are exported so the reference highlighter
+// (`formulaReferences.ts`) scans A1 text with the exact same rules the commit
+// transform uses — the highlight and the committed canonical can never disagree
+// about what is a reference.
+export const CELL_REF_REGEX = /^(\$?)([A-Za-z]+)(\$?)([0-9]+)(?![A-Za-z0-9_(])/;
 // Column letters with the same boundary, for `A:A` whole-column ranges.
 const COLUMN_LETTERS_REGEX = /^(\$?)([A-Za-z]+)(?![A-Za-z0-9_(])/;
-const IDENTIFIER_REGEX = /^[A-Za-z_][A-Za-z0-9_]*/;
-const WHITESPACE_REGEX = /^\s+/;
+export const IDENTIFIER_REGEX = /^[A-Za-z_][A-Za-z0-9_]*/;
+export const WHITESPACE_REGEX = /^\s+/;
 
 /**
  * 1-based column index to bijective base-26 letters: `1` → `"A"`, `26` → `"Z"`,
@@ -122,7 +126,7 @@ export interface A1TransformResult {
   changed: boolean;
 }
 
-interface ParsedRef {
+export interface ParsedRef {
   columnAbsolute: boolean;
   letters: string;
   rowAbsolute: boolean;
@@ -169,7 +173,7 @@ function buildRowSelector(
   return { kind: 'position', index: position >= 1 ? position : ref.rowNumber };
 }
 
-function buildCellRefNode(
+export function buildCellRefNode(
   ref: ParsedRef,
   context: FormulaPositionContext,
   columnOffset: number,
@@ -183,7 +187,7 @@ function buildCellRefNode(
   };
 }
 
-function readParsedRef(match: RegExpExecArray): ParsedRef {
+export function readParsedRef(match: RegExpExecArray): ParsedRef {
   return {
     columnAbsolute: match[1] === '$',
     letters: match[2],
@@ -204,7 +208,7 @@ function skipInlineWhitespace(expression: string, from: number): number {
  * Advances past a `"`-delimited string literal (with `""` escapes), returning the
  * index just after the closing quote (or the end of the input when unterminated).
  */
-function scanStringLiteral(expression: string, start: number): number {
+export function scanStringLiteral(expression: string, start: number): number {
   let index = start + 1;
   while (index < expression.length) {
     if (expression[index] === '"') {
@@ -223,7 +227,7 @@ function scanStringLiteral(expression: string, start: number): number {
  * After a cell reference at `afterFirst`, matches an optional `: <cellRef>` tail
  * that turns it into a `RANGE`.
  */
-function matchRangeTail(
+export function matchRangeTail(
   expression: string,
   afterFirst: number,
 ): { endRef: ParsedRef; end: number } | null {
@@ -243,7 +247,7 @@ function matchRangeTail(
  * Matches a whole-column range `A:A`. Only same-column ranges map to a single
  * `COLUMN_VALUES`; mixed columns return `null` and are copied verbatim.
  */
-function matchColumnRange(
+export function matchColumnRange(
   expression: string,
   start: number,
 ): { letters: string; absolute: boolean; end: number } | null {
@@ -263,7 +267,7 @@ function matchColumnRange(
   return { letters: first[2], absolute: first[1] === '$', end: index + second[0].length };
 }
 
-function buildColumnValuesNode(
+export function buildColumnValuesNode(
   range: { letters: string; absolute: boolean },
   context: FormulaPositionContext,
   columnOffset: number,

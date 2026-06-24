@@ -28,6 +28,7 @@ import type {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { Sidebar } from '../components/sidebar';
+import { GridFormulaReferenceOverlay } from '../components/GridFormulaReferenceOverlay';
 import { useGridAriaAttributesPremium } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributesPremium } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
@@ -129,6 +130,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
       >
         {watermark}
         <GridMultiSelectMeasurer />
+        <GridFormulaReferenceOverlay />
       </GridRoot>
     </GridContextProvider>
   );

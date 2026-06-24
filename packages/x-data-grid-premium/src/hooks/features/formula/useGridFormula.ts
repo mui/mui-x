@@ -37,11 +37,16 @@ import {
   buildFormulaPositionSnapshotFromState,
 } from './gridFormulaPositionContext';
 import type {
+  GridFormulaActiveEdit,
   GridFormulaApi,
   GridFormulaLookup,
   GridFormulaPrivateApi,
 } from './gridFormulaInterfaces';
-import { gridCellFormulaResultSelector, gridFormulaLookupSelector } from './gridFormulaSelectors';
+import {
+  gridCellFormulaResultSelector,
+  gridFormulaActiveEditSelector,
+  gridFormulaLookupSelector,
+} from './gridFormulaSelectors';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 import {
   areColumnsSignaturesEqual,
@@ -83,7 +88,7 @@ export const formulaStateInitializer: GridStateInitializer<
     }).lookup;
   }
 
-  return { ...state, formula: { lookup } };
+  return { ...state, formula: { lookup, activeEdit: null } };
 };
 
 export const useGridFormula = (
@@ -287,6 +292,26 @@ export const useGridFormula = (
     apiRef.current.applyFormulaEvaluation();
   }, [apiRef]);
 
+  const setFormulaActiveEdit = React.useCallback<GridFormulaPrivateApi['setFormulaActiveEdit']>(
+    (cell) => {
+      const current = gridFormulaActiveEditSelector(apiRef);
+      const unchanged =
+        cell === null
+          ? current === null
+          : current !== null && current.id === cell.id && current.field === cell.field;
+      // The editor effect re-asserts the same cell on every (re)mount — skip the
+      // redundant state write so virtualization remounts do not churn renders.
+      if (unchanged) {
+        return;
+      }
+      apiRef.current.setState((state) => ({
+        ...state,
+        formula: { ...state.formula, activeEdit: cell as GridFormulaActiveEdit | null },
+      }));
+    },
+    [apiRef],
+  );
+
   const formulaApi: GridFormulaApi = {
     setCellFormula,
     getCellFormula,
@@ -297,6 +322,7 @@ export const useGridFormula = (
 
   const formulaPrivateApi: GridFormulaPrivateApi = {
     applyFormulaEvaluation,
+    setFormulaActiveEdit,
   };
 
   useGridApiMethod(apiRef, formulaApi, 'public');
@@ -387,6 +413,10 @@ export const useGridFormula = (
     // A1 seed is consumed by the commit parser; clear it so it cannot affect a
     // later edit of the same cell.
     cache.lastA1Seed = null;
+    // Turn off reference highlighting (the editor set it on mount; this is the
+    // only thing that clears it — the editor unmounting from virtualization
+    // must not).
+    apiRef.current.setFormulaActiveEdit(null);
   }, [apiRef]);
 
   // Arm the A1 paste origin: the first cell of the batch sets it, the rest

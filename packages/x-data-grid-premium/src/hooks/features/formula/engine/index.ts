@@ -83,10 +83,22 @@ export { serializeFormulaAstToExcel, mapFormulaErrorCodeToExcel } from './formul
 export type {
   FormulaBoundDependencies,
   FormulaColumnIntervalDependency,
+  FormulaRangeRectangle,
   FormulaStaticDependencies,
   FormulaWholeColumnDependency,
 } from './formulaDependencies';
-export { extractFormulaDependencies, bindFormulaDependencies } from './formulaDependencies';
+export {
+  extractFormulaDependencies,
+  bindFormulaDependencies,
+  resolveFormulaRangeRectangle,
+} from './formulaDependencies';
+
+export type { FormulaRawReference, FormulaReferenceNode } from './formulaReferences';
+export {
+  buildFormulaReferences,
+  collectCanonicalReferences,
+  scanA1References,
+} from './formulaReferences';
 
 export type {
   FormulaFunctionArg,
