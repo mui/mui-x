@@ -17,6 +17,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
+import { getCaretOffset, setCaretOffset } from '../components/formulaEditorCaret';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
@@ -97,6 +98,19 @@ describe('<DataGridPremium /> - Formulas', () => {
 
   function getCellInput(rowIndex: number, colIndex: number) {
     return getCell(rowIndex, colIndex).querySelector('input')!;
+  }
+
+  function getCellEditable(rowIndex: number, colIndex: number) {
+    return getCell(rowIndex, colIndex).querySelector<HTMLElement>('[contenteditable]')!;
+  }
+
+  // The formula editor is a `contenteditable`, not an `<input>`: it has no
+  // `.value` and no `change` event. Set the whole value by replacing the text and
+  // firing the `input` event the editor listens to (works in jsdom and chromium).
+  function setEditableValue(rowIndex: number, colIndex: number, value: string) {
+    const editable = getCellEditable(rowIndex, colIndex);
+    editable.textContent = value;
+    fireEvent.input(editable);
   }
 
   describe('rendering', () => {
@@ -1337,14 +1351,19 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
     });
 
-    it('should render a text input for formulas even on number columns', async () => {
+    it('should render the formula editor for formulas even on number columns', async () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
-      expect(getCellInput(0, 3).type).to.equal('text');
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      // A number column would otherwise render a number `<input>`; the formula
+      // editor is a contenteditable instead.
+      expect(getCell(0, 3).querySelector('input')).to.equal(null);
     });
 
     it('should keep the default editor for plain cells of `allowFormulas` columns', async () => {
@@ -1358,10 +1377,10 @@ describe('<DataGridPremium /> - Formulas', () => {
       const cell = getCell(0, 3);
       await user.dblClick(cell);
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
 
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
       expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
@@ -1372,7 +1391,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test editMode="row" />);
       const cell = getCell(0, 3);
       await user.dblClick(cell);
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
       expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
@@ -1383,11 +1402,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
 
-      fireEvent.change(getCellInput(0, 3), { target: { value: '=price + 100' } });
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Escape' });
+      setEditableValue(0, 3, '=price + 100');
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Escape' });
       await microtasks();
 
       expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
@@ -1398,11 +1417,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
 
-      fireEvent.change(getCellInput(0, 3), { target: { value: '=price + quantity' } });
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      setEditableValue(0, 3, '=price + quantity');
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
       expect(apiRef.current!.getRow(0).total).to.equal('=price + quantity');
@@ -1413,11 +1432,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
 
-      fireEvent.change(getCellInput(0, 3), { target: { value: '42' } });
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      setEditableValue(0, 3, '42');
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
       expect(apiRef.current!.getRow(0).total).to.equal(42);
@@ -1429,11 +1448,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
 
-      fireEvent.change(getCellInput(0, 3), { target: { value: '=1 +' } });
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      setEditableValue(0, 3, '=1 +');
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
       expect(apiRef.current!.getRow(0).total).to.equal('=1 +');
@@ -1447,18 +1466,18 @@ describe('<DataGridPremium /> - Formulas', () => {
       fireEvent.keyDown(cell, { key: '=' });
       await microtasks();
 
-      expect(getCellInput(2, 3).type).to.equal('text');
+      expect(getCellEditable(2, 3)).not.to.equal(null);
     });
 
     it('should clear a formula when committing an emptied editor', async () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
 
-      fireEvent.change(getCellInput(0, 3), { target: { value: '' } });
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      setEditableValue(0, 3, '');
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
       expect(apiRef.current!.getCellFormula(0, 'total')).to.equal(null);
@@ -1471,10 +1490,10 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal("'=not a formula");
+        expect(getCellEditable(0, 3).textContent).to.equal("'=not a formula");
       });
 
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
       expect(apiRef.current!.getRow(0).total).to.equal("'=not a formula");
@@ -1488,7 +1507,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       fireEvent.keyDown(cell, { key: '5' });
       await microtasks();
 
-      expect(getCellInput(0, 3).value).not.to.equal('=price * quantity');
+      expect(getCellEditable(0, 3).textContent).not.to.equal('=price * quantity');
     });
 
     it('should pass the formula source to processRowUpdate', async () => {
@@ -1496,11 +1515,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test processRowUpdate={processRowUpdate} />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
 
-      fireEvent.change(getCellInput(0, 3), { target: { value: '=price + 1' } });
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      setEditableValue(0, 3, '=price + 1');
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
       expect(processRowUpdate.lastCall.args[0].total).to.equal('=price + 1');
@@ -1515,11 +1534,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
 
-      fireEvent.change(getCellInput(0, 3), { target: { value: '=price + 1' } });
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      setEditableValue(0, 3, '=price + 1');
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
       expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
@@ -1530,11 +1549,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
 
-      fireEvent.change(getCellInput(0, 3), { target: { value: '=price + quantity' } });
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+      setEditableValue(0, 3, '=price + quantity');
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
       expect(getColumnValues(3)).to.deep.equal(['5', '5', '8']);
 
@@ -1786,11 +1805,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(3)).to.deep.equal(['5', '5', '8']);
     });
 
-    it('should keep our formula text input for built-in column editors', async () => {
+    it('should keep our formula editor for built-in column editors', async () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
       expect(getCell(0, 3).querySelector('[data-testid="custom-editor"]')).to.equal(null);
     });
@@ -1847,7 +1866,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
       await waitFor(() => {
         expect(tokens()).to.have.length(2);
@@ -1880,9 +1899,9 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
-      fireEvent.change(getCellInput(0, 3), { target: { value: '=price + price' } });
+      setEditableValue(0, 3, '=price + price');
       await waitFor(() => {
         expect(tokens()).to.have.length(2);
         expect(rects()).to.have.length(1);
@@ -1893,9 +1912,9 @@ describe('<DataGridPremium /> - Formulas', () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
-      fireEvent.change(getCellInput(0, 3), { target: { value: '=total + price' } });
+      setEditableValue(0, 3, '=total + price');
       await waitFor(() => {
         // Only `price` is colored and outlined; `total` is the edited cell.
         expect(tokens()).to.have.length(1);
@@ -1909,7 +1928,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       await waitFor(() => {
         expect(rects()).to.have.length(2);
       });
-      fireEvent.keyDown(getCellInput(0, 3), { key: 'Escape' });
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Escape' });
       await microtasks();
       expect(document.querySelector(OVERLAY_CLASS)).to.equal(null);
       expect(tokens()).to.have.length(0);
@@ -1946,7 +1965,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       await user.dblClick(getCell(0, 3));
       await waitFor(() => {
-        expect(getCellInput(0, 3).value).to.contain('REF(');
+        expect(getCellEditable(0, 3).textContent).to.contain('REF(');
       });
       // Row 1 is filtered out → its cell cannot be resolved → no token, no outline.
       expect(tokens()).to.have.length(0);
@@ -2015,130 +2034,235 @@ describe('<DataGridPremium /> - Formulas', () => {
       },
     );
 
-    it.skipIf(isJSDOM)('keeps the colored backdrop scrolled with the input', async () => {
-      const { user } = await render(<Test />);
-      await user.dblClick(getCell(0, 3));
-      const input = getCellInput(0, 3);
+    it('colors A1 references in the editor', async () => {
+      const { user } = await render(
+        <Test
+          formulaA1Notation
+          rows={[
+            { id: 0, item: 'Apple', price: 2, quantity: 3, total: '=REF(COLUMN("price"), ROW(0))' },
+          ]}
+        />,
+      );
+      // A1 on shifts data columns right by one (row-number column at index 0).
+      await user.dblClick(getCell(0, 4));
       await waitFor(() => {
-        expect(input.value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 4).textContent).to.equal('=B1');
       });
-      fireEvent.change(input, {
-        target: { value: '=price * quantity + price * quantity + price * quantity' },
-      });
-      input.scrollLeft = 40;
-      fireEvent.scroll(input);
-      const backdropText = document.querySelector<HTMLElement>(
-        '.MuiDataGrid-formulaReferenceBackdrop > div',
-      )!;
-      await waitFor(() => {
-        expect(backdropText.scrollLeft).to.equal(input.scrollLeft);
-      });
+      // The A1 reference `B1` is colored as one token.
+      expect(tokens()).to.have.length(1);
+      expect(tokens()[0].textContent).to.equal('B1');
+      expect(tokens()[0].style.color).to.equal('var(--DataGrid-formulaRefColor-0)');
     });
 
-    // The formula column is `type: 'number'`, so its editing cell carries
-    // `cell--textRight` (`text-align: right`). The real input resets that to
-    // `start`, but the mirror `<div>` would inherit `right` and fling the colored
-    // text to the opposite edge from the caret — most visible on a short value
-    // like a freshly typed `=`. The backdrop must align like the input.
+    // The whole point of the single-layer editor: caret, native selection and the
+    // colors share one element, so there is nothing to keep aligned. These run in
+    // a real browser — jsdom has no layout, caret geometry or text selection.
+    it.skipIf(isJSDOM)('keeps the caret put when typing in the middle of a formula', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      const editable = getCellEditable(0, 3);
+      await waitFor(() => {
+        expect(editable.textContent).to.equal('=price * quantity');
+      });
+
+      // Place the caret right before `quantity` (offset 9) and type a character.
+      act(() => setCaretOffset(editable, 9));
+      await user.keyboard('z');
+
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * zquantity');
+      });
+      // The character landed at the caret (not the end), and the caret sits just
+      // after it — the classic contenteditable "jump to end" bug does not happen.
+      expect(getCaretOffset(getCellEditable(0, 3))).to.equal(10);
+    });
+
+    it.skipIf(isJSDOM)('shows a native, colored text selection over a token', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      const editable = getCellEditable(0, 3);
+      await waitFor(() => {
+        expect(tokens()).to.have.length(2);
+      });
+
+      // Select the first colored token (`price`) natively.
+      const token = tokens()[0];
+      const range = document.createRange();
+      range.selectNodeContents(token);
+      const selection = document.getSelection()!;
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      // The selected text IS the colored token text — there is no separate
+      // transparent layer and no backdrop mirror.
+      expect(selection.toString()).to.equal('price');
+      expect(document.querySelector('.MuiDataGrid-formulaReferenceBackdrop')).to.equal(null);
+      const transparent = 'rgba(0, 0, 0, 0)';
+      expect(getComputedStyle(editable).color).not.to.equal(transparent);
+      expect(getComputedStyle(token).color).not.to.equal(transparent);
+    });
+
     it.skipIf(isJSDOM)(
-      'aligns the colored backdrop like the input in a right-aligned column',
+      'aligns the formula to the start edge in a right-aligned column',
       async () => {
+        // `total` is `type: 'number'` (right-aligned). A formula must read from the
+        // start edge regardless, like a string — not be pushed to the far edge.
         const { user } = await render(<Test />);
         await user.dblClick(getCell(0, 3));
-        const input = getCellInput(0, 3);
+        const editable = getCellEditable(0, 3);
         await waitFor(() => {
-          expect(input.value).to.equal('=price * quantity');
+          expect(editable.textContent).to.equal('=price * quantity');
         });
-        const backdropText = document.querySelector<HTMLElement>(
-          '.MuiDataGrid-formulaReferenceBackdrop > div',
-        )!;
-        // The mirror must not inherit the number column's right alignment.
-        expect(getComputedStyle(backdropText).textAlign).to.equal(
-          getComputedStyle(input).textAlign,
-        );
-
-        // Behaviorally: a short formula's colored token sits at the input's text
-        // start (left padding), next to the caret — not pushed to the far edge.
-        fireEvent.change(input, { target: { value: '=price' } });
+        setEditableValue(0, 3, '=price');
         await waitFor(() => {
           expect(tokens()).to.have.length(1);
         });
+        // The single short token sits near the start (left) edge of the editor.
         const token = tokens()[0].getBoundingClientRect();
-        const inputRect = input.getBoundingClientRect();
-        expect(token.left - inputRect.left).to.be.lessThan(inputRect.width / 2);
+        const box = editable.getBoundingClientRect();
+        expect(token.left - box.left).to.be.lessThan(box.width / 2);
       },
     );
 
-    // The mirror approach makes the input text transparent so the colors show
-    // through. Without a matching `::selection` rule the selected text would also
-    // be transparent — selecting in the editor would highlight nothing readable
-    // and the colored mirror would ghost through the native highlight. The input
-    // must paint an opaque, legible selection over its own (otherwise invisible)
-    // text.
-    it.skipIf(isJSDOM)('paints a readable text selection in the editor', async () => {
+    it.skipIf(isJSDOM)('keeps the colored token on the editable text line', async () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
-      const input = getCellInput(0, 3);
+      const editable = getCellEditable(0, 3);
       await waitFor(() => {
-        expect(input.value).to.equal('=price * quantity');
+        expect(tokens()).to.have.length(2);
       });
-      const transparent = 'rgba(0, 0, 0, 0)';
-      // The mechanism: the input's own text is transparent (mirror shows through).
-      expect(getComputedStyle(input).color).to.equal(transparent);
-      // The fix: selected text is opaque (readable) over an opaque highlight.
-      const selection = getComputedStyle(input, '::selection');
-      expect(selection.color).not.to.equal(transparent);
-      expect(selection.backgroundColor).not.to.equal(transparent);
+      // Single layer: the colored token sits within the editable's own text line
+      // (no vertical drift between a token layer and a caret layer).
+      const line = editable.getBoundingClientRect();
+      const token = tokens()[0].getBoundingClientRect();
+      expect(token.top).to.be.greaterThanOrEqual(line.top - 2);
+      expect(token.bottom).to.be.lessThanOrEqual(line.bottom + 2);
     });
 
-    // The mirror is a separate element from the real input, so their text metrics
-    // must match exactly or the colored glyphs drift from the caret. The input
-    // otherwise inherits MUI's body `letter-spacing` (~0.13px/char) while the
-    // mirror has `normal`; over this 55-char formula that drifts ~7px. Both are
-    // pinned to `letter-spacing: normal` + `font-variant-ligatures: none`.
-    it.skipIf(isJSDOM)('keeps the colored mirror glyph-aligned with the input text', async () => {
+    it.skipIf(isJSDOM)('commits on Enter without inserting a newline', async () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
-      const input = getCellInput(0, 3);
       await waitFor(() => {
-        expect(input.value).to.equal('=price * quantity');
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
       });
-      fireEvent.change(input, {
-        target: { value: '=price * quantity + price * quantity + price * quantity' },
-      });
-      await waitFor(() => {
-        expect(tokens().length).to.be.greaterThan(0);
-      });
-      const backdropText = document.querySelector<HTMLElement>(
-        '.MuiDataGrid-formulaReferenceBackdrop > div',
-      )!;
-      // Same string + identical metrics → identical rendered width.
-      expect(Math.abs(input.scrollWidth - backdropText.scrollWidth)).to.be.lessThan(2);
+
+      await user.keyboard('{Enter}');
+      await microtasks();
+
+      // The edit committed (the editor unmounted) and no newline was inserted.
+      expect(getCellEditable(0, 3)).to.equal(null);
+      expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
     });
 
-    // The absolute, flex-centered mirror and the in-flow, browser-centered input
-    // round their vertical text position ~0.5px apart (a device pixel on Retina —
-    // the colored text sits above/below the caret). The backdrop measures the
-    // input's real text line-box top and translates itself onto it.
-    it.skipIf(isJSDOM)('vertically aligns the colored mirror onto the input text', async () => {
-      const { user } = await render(<Test rowHeight={64} />);
+    it.skipIf(isJSDOM)('strips newlines from a pasted multi-line value', async () => {
+      const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));
-      const input = getCellInput(0, 3);
+      const editable = getCellEditable(0, 3);
       await waitFor(() => {
-        expect(input.value).to.equal('=price * quantity');
+        expect(editable.textContent).to.equal('=price * quantity');
       });
-      const backdropText = document.querySelector<HTMLElement>(
-        '.MuiDataGrid-formulaReferenceBackdrop > div',
-      )!;
-      // The sync ran (it applies a translateY correction).
-      expect(backdropText.style.transform).to.match(/translateY/);
-      // The mirror's text now sits exactly on the input's centered text line box.
-      const lineHeight = parseFloat(getComputedStyle(input).lineHeight);
-      const ir = input.getBoundingClientRect();
-      const inputTextTop = ir.top + (ir.height - lineHeight) / 2;
-      const mirrorTop = backdropText.getBoundingClientRect().top;
-      expect(Math.abs(inputTextTop - mirrorTop)).to.be.lessThan(1);
+
+      const pasteEvent = new Event('paste', { bubbles: true, cancelable: true });
+      // @ts-ignore the editor reads `text/plain` off the clipboard data.
+      pasteEvent.clipboardData = { getData: () => 'a\nb' };
+      act(() => {
+        editable.dispatchEvent(pasteEvent);
+      });
+
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.contain('ab');
+      });
+      // The pasted newline never makes it into the single-line editor.
+      expect(getCellEditable(0, 3).textContent).not.to.contain('\n');
     });
+
+    it.skipIf(isJSDOM)('commits an IME composition exactly once, on compositionend', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      const editable = getCellEditable(0, 3);
+      await waitFor(() => {
+        expect(editable.textContent).to.equal('=price * quantity');
+      });
+
+      // The committed edit-state value (not the manually-set DOM) is the source of
+      // truth here — it changes only when the editor actually commits.
+      const editValue = () =>
+        (unwrapPrivateAPI(apiRef.current!).state.editRows as Record<string, any>)[0]?.total?.value;
+      expect(editValue()).to.equal('=price * quantity');
+
+      // A composition mutates the DOM mid-flight; committing then (which rebuilds the
+      // DOM) would abort the composition, so the editor must defer until it ends.
+      fireEvent.compositionStart(editable);
+      editable.textContent = '=price * quantityあ';
+      fireEvent.input(editable);
+      // Still composing: the mid-flight input did NOT commit.
+      expect(editValue()).to.equal('=price * quantity');
+
+      // compositionend commits the composed text exactly once.
+      fireEvent.compositionEnd(editable, { data: 'あ' });
+      await waitFor(() => {
+        expect(editValue()).to.equal('=price * quantityあ');
+      });
+      expect(getCellEditable(0, 3).textContent).to.equal('=price * quantityあ');
+    });
+
+    it.skipIf(isJSDOM)('shows and accepts a function suggestion', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      const editable = getCellEditable(0, 3);
+      await waitFor(() => {
+        expect(editable.textContent).to.equal('=price * quantity');
+      });
+
+      // Replace the formula with a partial function name.
+      await user.keyboard('{Control>}a{/Control}');
+      await user.keyboard('=SU');
+
+      await waitFor(() => {
+        const listbox = document.querySelector('[role="listbox"]');
+        expect(listbox).not.to.equal(null);
+        expect(listbox!.textContent).to.contain('SUM');
+      });
+
+      await user.keyboard('{Enter}');
+
+      // Accepting `SUM` inserts `SUM(` and parks the caret inside the parens.
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('=SUM(');
+      });
+      expect(getCaretOffset(getCellEditable(0, 3))).to.equal(5);
+    });
+
+    it.skipIf(isJSDOM)(
+      'closes the popup on the first Escape and cancels on the second',
+      async () => {
+        const { user } = await render(<Test />);
+        await user.dblClick(getCell(0, 3));
+        const editable = getCellEditable(0, 3);
+        await waitFor(() => {
+          expect(editable.textContent).to.equal('=price * quantity');
+        });
+
+        await user.keyboard('{Control>}a{/Control}');
+        await user.keyboard('=SU');
+        await waitFor(() => {
+          expect(document.querySelector('[role="listbox"]')).not.to.equal(null);
+        });
+
+        // First Escape closes the list but keeps editing.
+        await user.keyboard('{Escape}');
+        await waitFor(() => {
+          expect(document.querySelector('[role="listbox"]')).to.equal(null);
+        });
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+
+        // Second Escape cancels the edit (no commit of the partial formula).
+        await user.keyboard('{Escape}');
+        await microtasks();
+        expect(getCellEditable(0, 3)).to.equal(null);
+        expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+      },
+    );
   });
 
   describe('A1 notation', () => {
@@ -2241,9 +2365,8 @@ describe('<DataGridPremium /> - Formulas', () => {
         const { user } = await render(<Test formulaA1Notation processRowUpdate={(row) => row} />);
         const cell = getCell(0, 4);
         await user.dblClick(cell);
-        const input = cell.querySelector('input')!;
-        fireEvent.change(input, { target: { value: '=B1' } });
-        fireEvent.keyDown(input, { key: 'Enter' });
+        setEditableValue(0, 4, '=B1');
+        fireEvent.keyDown(getCellEditable(0, 4), { key: 'Enter' });
         await microtasks();
 
         // B = price (column 2), row 1 = id 0 → frozen to the stable reference.
@@ -2255,18 +2378,17 @@ describe('<DataGridPremium /> - Formulas', () => {
         const { user } = await render(<Test formulaA1Notation processRowUpdate={(row) => row} />);
         const cell = getCell(0, 4);
         await user.dblClick(cell);
-        const input = cell.querySelector('input')!;
 
         // `valueParser` runs on every keystroke and its result is what the user
         // sees — converting A1→canonical there surfaced `=REF(...)` mid-edit.
-        fireEvent.change(input, { target: { value: '=A2' } });
-        expect(input.value).to.equal('=A2');
+        setEditableValue(0, 4, '=A2');
+        expect(getCellEditable(0, 4).textContent).to.equal('=A2');
 
-        fireEvent.change(input, { target: { value: '=A2 + B1' } });
-        expect(input.value).to.equal('=A2 + B1');
+        setEditableValue(0, 4, '=A2 + B1');
+        expect(getCellEditable(0, 4).textContent).to.equal('=A2 + B1');
 
         // The freeze to canonical happens at commit, never before.
-        fireEvent.keyDown(input, { key: 'Enter' });
+        fireEvent.keyDown(getCellEditable(0, 4), { key: 'Enter' });
         await microtasks();
         const stored = apiRef.current!.getRow(0).total as string;
         expect(stored).to.contain('REF(');
@@ -2291,7 +2413,7 @@ describe('<DataGridPremium /> - Formulas', () => {
         );
         await user.dblClick(getCell(0, 4));
         await waitFor(() => {
-          expect(getCell(0, 4).querySelector('input')!.value).to.equal('=B1');
+          expect(getCellEditable(0, 4).textContent).to.equal('=B1');
         });
       });
 
@@ -2314,9 +2436,9 @@ describe('<DataGridPremium /> - Formulas', () => {
         const cell = getCell(0, 4);
         await user.dblClick(cell);
         await waitFor(() => {
-          expect(cell.querySelector('input')!.value).to.equal('=B1');
+          expect(getCellEditable(0, 4).textContent).to.equal('=B1');
         });
-        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
+        fireEvent.keyDown(getCellEditable(0, 4), { key: 'Enter' });
         await microtasks();
 
         expect(apiRef.current!.getRow(0).total).to.equal('=REF(COLUMN("price"), ROW(0))');

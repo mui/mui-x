@@ -10,6 +10,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { getCaretOffset, setCaretOffset } from '../components/formulaEditorCaret';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
@@ -47,8 +48,8 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
     );
   }
 
-  function getCellInput(rowIndex: number, colIndex: number) {
-    return getCell(rowIndex, colIndex).querySelector('input')!;
+  function getCellEditable(rowIndex: number, colIndex: number) {
+    return getCell(rowIndex, colIndex).querySelector<HTMLElement>('[contenteditable]')!;
   }
 
   function getListbox() {
@@ -67,23 +68,24 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   }
 
   /**
-   * Sets the editor value and the caret position, then dispatches the change so
-   * the suggestion context is computed from a deterministic caret (jsdom does
-   * not always move the caret to the end on a programmatic value set).
+   * Sets the editor value and the caret position, then dispatches the input the
+   * editor listens to so the suggestion context is computed from a deterministic
+   * caret. The formula editor is a `contenteditable`: there is no `.value` and no
+   * `change` event, so the text is set directly and the caret placed explicitly
+   * (jsdom does not move the caret to the end on a programmatic value set).
    */
-  function typeFormula(input: HTMLInputElement, value: string, caret = value.length) {
-    // Pass the caret through the change event's target: `onChange` reads
-    // `event.target.selectionStart` (correct in real browsers), and jsdom does
-    // not otherwise maintain the caret on a programmatic value set.
-    fireEvent.change(input, { target: { value, selectionStart: caret, selectionEnd: caret } });
+  function typeFormula(editable: HTMLElement, value: string, caret = value.length) {
+    editable.textContent = value;
+    setCaretOffset(editable, caret);
+    fireEvent.input(editable);
   }
 
   it('opens a ranked dropdown when typing a function prefix', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=SU');
+    typeFormula(editable, '=SU');
 
     await waitFor(() => {
       expect(getListbox()).not.to.equal(null);
@@ -94,9 +96,9 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   it('suggests same-row field references', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=pr');
+    typeFormula(editable, '=pr');
 
     await waitFor(() => {
       expect(getOptionLabels().some((label) => label.startsWith('price'))).to.equal(true);
@@ -106,17 +108,17 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   it('inserts a function with an open parenthesis on Enter', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=SU');
+    typeFormula(editable, '=SU');
     await waitFor(() => {
       expect(getListbox()).not.to.equal(null);
     });
 
-    fireEvent.keyDown(input, { key: 'Enter' });
+    fireEvent.keyDown(editable, { key: 'Enter' });
     await microtasks();
 
-    expect(input.value).to.equal('=SUM(');
+    expect(getCellEditable(0, 3).textContent).to.equal('=SUM(');
     // The cell stays in edit mode (the popup captured Enter, no commit).
     expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
   });
@@ -124,29 +126,29 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   it('moves the highlight with ArrowDown instead of navigating the grid', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=t');
+    typeFormula(editable, '=t');
     await waitFor(() => {
       expect(getOptionLabels().length).to.be.greaterThan(1);
     });
 
     const firstActive = document.querySelector('li[data-focused="true"]');
-    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.keyDown(editable, { key: 'ArrowDown' });
     await microtasks();
     const secondActive = document.querySelector('li[data-focused="true"]');
 
     expect(secondActive).not.to.equal(firstActive);
     // Still editing the same cell — the grid did not move focus.
-    expect(getCellInput(0, 3)).to.equal(input);
+    expect(getCellEditable(0, 3)).to.equal(editable);
   });
 
   it('accepts the highlighted option on click', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=SU');
+    typeFormula(editable, '=SU');
     await waitFor(() => {
       expect(getListbox()).not.to.equal(null);
     });
@@ -155,27 +157,27 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
     fireEvent.click(option);
     await microtasks();
 
-    expect(input.value).to.equal('=SUM(');
+    expect(getCellEditable(0, 3).textContent).to.equal('=SUM(');
   });
 
   it('closes the popup on the first Escape and cancels the edit on the second', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=SU');
+    typeFormula(editable, '=SU');
     await waitFor(() => {
       expect(getListbox()).not.to.equal(null);
     });
 
-    fireEvent.keyDown(input, { key: 'Escape' });
+    fireEvent.keyDown(editable, { key: 'Escape' });
     await waitFor(() => {
       expect(getListbox()).to.equal(null);
     });
     // The edit is still active after the first Escape closed the popup.
-    expect(getCellInput(0, 3)).not.to.equal(null);
+    expect(getCellEditable(0, 3)).not.to.equal(null);
 
-    fireEvent.keyDown(getCellInput(0, 3), { key: 'Escape' });
+    fireEvent.keyDown(getCellEditable(0, 3), { key: 'Escape' });
     await microtasks();
     // The formula is unchanged and the editor closed.
     expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
@@ -184,10 +186,10 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   it('commits a completed formula on Enter without re-accepting a suggestion', async () => {
     const { user } = await render(<Test processRowUpdate={(row) => row} />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=price + quantity');
-    fireEvent.keyDown(input, { key: 'Enter' });
+    typeFormula(editable, '=price + quantity');
+    fireEvent.keyDown(editable, { key: 'Enter' });
     await microtasks();
 
     expect(apiRef.current!.getRow(0).total).to.equal('=price + quantity');
@@ -196,15 +198,15 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   it('keeps the accepted suggestion after the keystroke debounce window', async () => {
     const { user } = await render(<Test processRowUpdate={(row) => row} />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=quantit');
+    typeFormula(editable, '=quantit');
     await waitFor(() => {
       expect(getOptionLabels().some((label) => label.startsWith('quantity'))).to.equal(true);
     });
-    fireEvent.keyDown(input, { key: 'Enter' });
+    fireEvent.keyDown(editable, { key: 'Enter' });
     await microtasks();
-    expect(input.value).to.equal('=quantity');
+    expect(getCellEditable(0, 3).textContent).to.equal('=quantity');
 
     // Wait past the former 200ms keystroke-debounce window: a stranded debounce
     // timer would overwrite the accepted value with the partial token here.
@@ -212,7 +214,7 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
       setTimeout(resolve, 250);
     });
 
-    fireEvent.keyDown(getCellInput(0, 3), { key: 'Enter' });
+    fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
     await microtasks();
     expect(apiRef.current!.getRow(0).total).to.equal('=quantity');
   });
@@ -220,9 +222,9 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   it('shows signature help while the caret is inside a function call', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=ROUND(');
+    typeFormula(editable, '=ROUND(');
 
     await waitFor(() => {
       expect(document.body.textContent).to.contain('ROUND(value, [digits])');
@@ -232,9 +234,9 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   it('does not show the dropdown when `disableFormulaAutocomplete` is set', async () => {
     const { user } = await render(<Test disableFormulaAutocomplete />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=SU');
+    typeFormula(editable, '=SU');
     await microtasks();
 
     expect(getListbox()).to.equal(null);
@@ -244,10 +246,10 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
     const { user } = await render(<Test formulaA1Notation />);
     // The autogenerated row-number column shifts `total` to column index 4.
     await user.dblClick(getCell(0, 4));
-    const input = getCellInput(0, 4);
+    const editable = getCellEditable(0, 4);
 
     // "B" is the price column's letter.
-    typeFormula(input, '=B');
+    typeFormula(editable, '=B');
     await waitFor(() => {
       expect(getOptionLabels()).to.contain('B');
     });
@@ -257,19 +259,19 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
     const { user } = await render(<Test formulaA1Notation />);
     // The autogenerated row-number column shifts `total` to column index 4.
     await user.dblClick(getCell(0, 4));
-    const input = getCellInput(0, 4);
+    const editable = getCellEditable(0, 4);
 
-    typeFormula(input, '=SU');
+    typeFormula(editable, '=SU');
     await waitFor(() => {
       expect(getListbox()).not.to.equal(null);
     });
-    fireEvent.keyDown(input, { key: 'Enter' });
+    fireEvent.keyDown(editable, { key: 'Enter' });
     await microtasks();
-    expect(input.value).to.equal('=SUM(');
+    expect(getCellEditable(0, 4).textContent).to.equal('=SUM(');
 
     // Complete the call with an A1 whole-column reference and commit.
-    typeFormula(input, '=SUM(B:B)');
-    fireEvent.keyDown(input, { key: 'Enter' });
+    typeFormula(editable, '=SUM(B:B)');
+    fireEvent.keyDown(editable, { key: 'Enter' });
     await microtasks();
 
     expect(apiRef.current!.getRow(0).total).to.equal('=SUM(COLUMN_VALUES("price"))');
@@ -279,32 +281,32 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   it.skipIf(isJSDOM)('places the caret inside the inserted parentheses', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
-    typeFormula(input, '=SU');
+    typeFormula(editable, '=SU');
     await waitFor(() => {
       expect(getListbox()).not.to.equal(null);
     });
-    fireEvent.keyDown(input, { key: 'Enter' });
+    fireEvent.keyDown(editable, { key: 'Enter' });
     await microtasks();
 
-    expect(input.value).to.equal('=SUM(');
-    expect(input.selectionStart).to.equal(5);
+    expect(getCellEditable(0, 3).textContent).to.equal('=SUM(');
+    expect(getCaretOffset(getCellEditable(0, 3))).to.equal(5);
   });
 
   it.skipIf(isJSDOM)('splices a suggestion at the caret, preserving the suffix', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));
-    const input = getCellInput(0, 3);
+    const editable = getCellEditable(0, 3);
 
     // Caret right after "pr", before " + 1".
-    typeFormula(input, '=pr + 1', 3);
+    typeFormula(editable, '=pr + 1', 3);
     await waitFor(() => {
       expect(getOptionLabels().some((label) => label.startsWith('price'))).to.equal(true);
     });
-    fireEvent.keyDown(input, { key: 'Tab' });
+    fireEvent.keyDown(editable, { key: 'Tab' });
     await microtasks();
 
-    expect(input.value).to.equal('=price + 1');
+    expect(getCellEditable(0, 3).textContent).to.equal('=price + 1');
   });
 });

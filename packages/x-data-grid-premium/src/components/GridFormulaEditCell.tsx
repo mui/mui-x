@@ -2,7 +2,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
-  GridEditInputCell,
   renderEditInputCell,
   renderEditDateCell,
   renderEditBooleanCell,
@@ -15,8 +14,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { isEscapedFormulaSource, isFormulaSource } from '../hooks/features/formula/engine';
 import { gridCellFormulaResultSelector } from '../hooks/features/formula/gridFormulaSelectors';
 import { convertCanonicalToA1Display } from '../hooks/features/formula/gridFormulaA1Transforms';
-import { GridFormulaAutocomplete } from './GridFormulaAutocomplete';
-import { GridFormulaReferenceBackdrop } from './GridFormulaReferenceBackdrop';
+import { GridFormulaEditor } from './GridFormulaEditor';
 
 export interface GridFormulaEditCellProps extends GridRenderEditCellParams {
   /**
@@ -66,7 +64,7 @@ function areSeededValuesEqual(a: unknown, b: unknown): boolean {
  */
 function GridFormulaEditCell(props: GridFormulaEditCellProps) {
   const { originalRenderEditCell, ...params } = props;
-  const { id, field, value, colDef } = params;
+  const { id, field, value } = params;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const a1NotationEnabled =
@@ -174,21 +172,18 @@ function GridFormulaEditCell(props: GridFormulaEditCellProps) {
     return originalRenderEditCell(params);
   }
 
-  // The suggestion dropdown is on by default; the opt-out (and `dataSource`)
-  // falls back to the plain text input. The fallback commits without a debounce
-  // so the colored backdrop, which reads the edit state, never lags the typed text.
-  const autocompleteEnabled =
+  // The single-layer formula editor renders the colored references inline. The
+  // suggestion popup is on by default; the opt-out (`disableFormulaAutocomplete`)
+  // and `dataSource` render the same editor with coloring but no popup.
+  const suggestionsEnabled =
     !rootProps.disableFormulaAutocomplete && !rootProps.disableFormulas && !rootProps.dataSource;
-  const editor = autocompleteEnabled ? (
-    <GridFormulaAutocomplete {...params} />
-  ) : (
-    <GridEditInputCell {...params} colDef={{ ...colDef, type: 'string' }} debounceMs={0} />
-  );
 
   return (
-    <GridFormulaReferenceBackdrop ownerCell={{ id, field }} a1Notation={Boolean(a1NotationEnabled)}>
-      {editor}
-    </GridFormulaReferenceBackdrop>
+    <GridFormulaEditor
+      {...params}
+      a1Notation={Boolean(a1NotationEnabled)}
+      suggestionsEnabled={suggestionsEnabled}
+    />
   );
 }
 

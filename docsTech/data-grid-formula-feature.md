@@ -437,27 +437,39 @@ to a currently-visible target (hidden column / filtered row / out-of-bounds / se
 `unresolved`, no color, no rectangle), keys color on resolved identity (`createFormulaCellKey`;
 ranges by corner pair), and cycles a shared palette. Exposes
 `resolveFormulaRangeRectangle`/`FormulaRangeRectangle` from the engine barrel (additive). **Half A**
-(`GridFormulaReferenceBackdrop`) keeps the native `<input>` (so caret/selection/IME/a11y are
-untouched), makes its text transparent, and paints a colored mirror `<div>` behind it scrolled in
-lockstep and aligned like the input (`text-align: start` — a right-aligned `number` column sets
-`text-align: right` on the editing cell, which the input resets but the mirror would otherwise inherit,
-flinging the colored text to the opposite edge from the caret) — over both the autocomplete and the
-`GridEditInputCell` fallback (forced to `debounceMs={0}` so the mirror never lags). Because the
-input text is transparent, the input also carries an explicit opaque `::selection`
-(`primary.contrastText`/`primary.main`, plus `-webkit-text-fill-color`; system colors under
-forced-colors) — otherwise the default selection color is transparent too and selecting text in the
-editor highlights nothing readable while the colored mirror ghosts through the native highlight. This
-is the standard fix for the transparent-input-+-mirror technique (Monaco/CodeMirror5/Ace family);
-rewriting to a `contenteditable` of colored `<span>`s (AG Grid's approach) is deliberately avoided —
-it gives natively-correct colored selection but takes on manual caret save/restore, DOM↔string offset
-mapping, IME-composition guarding, and undo handling that our `<input>`-based autocomplete sidesteps.
-Because the mirror is a separate element, its text must track the input's exactly: both are pinned to
-`letter-spacing: normal` + `font-variant-ligatures: none` (the input otherwise inherits MUI's body
-letter-spacing and the colored glyphs drift ~0.13px/char from the caret), and the align effect
-additionally measures the input's real text-line-box top and `translateY`s the mirror onto it (the
-absolute, flex-centered mirror and the in-flow, browser-centered input round ~0.5px apart — a device
-pixel on Retina). Both alignment costs are inherent to the dual-layer technique and would vanish with
-the `contenteditable` single-layer rewrite.
+(`GridFormulaEditor`) is a **single-layer `contenteditable`** (AG Grid's approach) whose children _are_
+the colored reference-token `<span>`s — so the caret, the native (colored) text selection, and the
+colors share one element and there is nothing to keep aligned. It replaced the earlier dual-layer
+editor (a transparent native `<input>` + an `aria-hidden` colored mirror `<div>` painted behind it):
+keeping two text layers pixel-aligned across fonts/zoom/sub-pixel-rounding/DPR was structurally fragile
+(it needed `letter-spacing`/ligature pinning for ~0.13px/char horizontal drift, an opaque `::selection`
+that iOS Safari ignores entirely, and a measured `translateY` for a ~0.5px Retina vertical offset).
+The single layer makes all of that inherent. The editable has **no React-controlled children**; they
+are rebuilt imperatively in a `useEnhancedEffect` keyed on the memoized segments
+(`buildFormulaTextSegments` + `renderSegments`), so React never fights the caret. The cost of
+`contenteditable` is handled explicitly in a small pure-DOM module `formulaEditorCaret.ts`: caret
+save/restore around every rebuild via the Selection/Range API (`getCaretOffset` measures the offset
+with a range to `root.textContent`; `setCaretOffset` walks the text nodes — preserved on typing,
+parked at the end on entry/seeding); `normalizeSingleLine` strips `\r\n`; an IME-composition guard
+(`compositionstart` defers the rebuild, `compositionend` commits once) so DOM mutation never aborts a
+composition; and an explicit `paste` handler (`contenteditable="true"`, **not** `plaintext-only` —
+Firefox added that only in 136, below the FF 121 floor — inserting `text/plain` via
+`execCommand('insertText')` with a Range-insert fallback). Enter `preventDefault`s the newline but keeps
+propagating so the grid still commits; the autocomplete popup markup moved into this one component
+(the listbox a11y is hand-rolled, dropping the `useAutocomplete` dependency), and
+`disableFormulaAutocomplete`/`dataSource` render the same editor with coloring on and the popup off
+(no separate plain-`<input>` fallback). The editor writes `textContent` back with no debounce
+(`setEditCellValue({ unstable_skipValueParser: true })`), so the commit/`valueParser`/`valueSetter`
+A1→canonical path is unchanged. In-editor undo is out of scope (single-line; row-level undo via the
+commit path is unaffected). The editor renders **inline** in the cell (it replaces `GridEditInputCell`),
+matching the edit-input metrics. The editable is `text-align: start`, so a formula in a right-aligned
+(`type: 'number'`) column reads from the start edge (left/RTL-right) like a string rather than being
+flung to the far edge from the caret. The rebuild skips entirely on a no-op recolor (identical segments)
+and preserves the full selection (both edges) across a recolor that does change the spans, snapping the
+caret to the end only on the initial source seeding (and the focus effect collapses a stray select-all to
+the end on entry). _A floating popper that grows the editor with the formula (so a long formula is not
+cramped into one cell) was prototyped and reverted; it will be redone separately._ _Known minor caret
+follow-up: a backward (anchor-after-focus) selection is re-applied forward after a recolor._
 **Half B** (`GridFormulaReferenceOverlay`) is a `pointer-events:none`
 overlay component mounted as a `GridRoot` child in `DataGridPremium.tsx` (sibling of
 `GridMultiSelectMeasurer`, **no core change**) that **portals its DOM into `virtualScrollerRef.current`**
@@ -470,11 +482,12 @@ visibility / sort / filter) via its `useGridSelector` subscriptions, never on sc
 scroller's `z=0` layer so the sticky header (`z=40`) and pinned columns (`z=30`) paint over a rect
 scrolled underneath them while it paints over normal cells. One rect per distinct target; survives the
 editing cell being virtualized out (reads `gridEditCellStateSelector`, not the editor). Activation is grid state (`formula.activeEdit`,
-set by the editor when our input renders, cleared on `cellEditStop`), so a custom `renderEditCell`
-gets no highlighting (it never reaches our input) — the clean gate the prerequisite editor-routing fix
+set by the editor when it renders, cleared on `cellEditStop`), so a custom `renderEditCell`
+gets no highlighting (it never reaches our editor) — the clean gate the prerequisite editor-routing fix
 enables. The shared palette is CSS variables (`--DataGrid-formulaRefColor-*`, with a dark variant via
-`applyStyles`) so both halves map a `colorIndex` to one hue and a theme can recolor; forced-colors
-mode disables both layers (color is decorative — the token text is enough). _Limitations
+`applyStyles`) so both the editor tokens and the overlay rects map a `colorIndex` to one hue and a
+theme can recolor; under forced-colors the system overrides the token `color` (the token text stays
+readable — color is decorative) and the overlay hides itself. _Limitations
 (fast-follow):_ a reference targeting a **pinned column** draws no rectangle (sticky sub-layers +
 pin-seam straddle deferred); RTL non-pinned offsets ship but are browser-verified later; an off-screen
 reference (scrolled away, on another page, or in a collapsed tree/group) still colors the editor token
@@ -484,12 +497,10 @@ rows — the edge chip is the proper fast-follow); canonical mode colors the who
 `REF(...)`/`RANGE(...)` chunk (inner-identity coloring deferred); a canonical form typed in A1 mode is
 not scanned; and the in-grid overlay is disabled under the experimental
 `experimentalFeatures.virtualizerLayoutMode: 'controlled'` (it is portaled into the scroller and
-relies on the default native-scroll layout — the editor backdrop still works); and the editor's
-`::selection` recoloring works on all desktop targets but **iOS Safari ignores `::selection`**
-(verified against `caniuse-lite`/`.browserslistrc`), so on iOS the selected formula text stays
-invisible during an active touch-selection (editor still functional, colors show when not selecting) —
-inherent to the transparent-input technique; native colored selection on iOS would require the
-`contenteditable`-span rewrite. **Prerequisite:** the I2 editing routing now respects a user `renderEditCell` even for
+relies on the default native-scroll layout — the editor's coloring still works). The single-layer
+`contenteditable` editor makes the text selection native and colored on every target **including iOS
+Safari** (which ignores `::selection`), removing the dual-layer's iOS-selection limitation entirely.
+**Prerequisite:** the I2 editing routing now respects a user `renderEditCell` even for
 `=` values (built-in-renderer detection by identity, custom-editor-wins routing, canonical source
 seeding for custom editors) — independently valuable and the gate the highlighting relies on.
 

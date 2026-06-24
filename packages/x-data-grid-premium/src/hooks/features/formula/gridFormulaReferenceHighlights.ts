@@ -55,6 +55,16 @@ export interface FormulaReferenceModel {
 }
 
 /**
+ * One run of editor text: a colored reference token (`colorIndex !== null`) or a
+ * plain gap (`colorIndex === null`). Consumed by the editor to build its colored
+ * `<span>`s and text nodes.
+ */
+export interface FormulaTextSegment {
+  text: string;
+  colorIndex: number | null;
+}
+
+/**
  * Shared reference palette: one hue per distinct target, cycled. Light/dark
  * variants keep ≥3:1 contrast against row backgrounds (the dashed rectangle's
  * color is the only thing tying it to its editor token). Both render halves read
@@ -313,4 +323,43 @@ export function useGridFormulaReferenceModel(
       a1Notation,
     );
   }, [value, positionContext, ownerId, ownerField, a1Notation]);
+}
+
+/**
+ * Splits the editor text into colored reference runs and plain gaps. References
+ * are non-overlapping distinct tokens; an out-of-order or overlapping span is
+ * skipped defensively so the segment text always reconstructs the value exactly.
+ * Shared by the editor's imperative DOM rebuild (`renderSegments`).
+ */
+export function buildFormulaTextSegments(
+  value: string,
+  references: FormulaReference[],
+): FormulaTextSegment[] {
+  const colored = references
+    .filter((reference) => reference.colorIndex !== null)
+    .flatMap((reference) =>
+      reference.spans.map((span) => ({
+        start: span.start,
+        end: span.end,
+        colorIndex: reference.colorIndex,
+      })),
+    )
+    .sort((a, b) => a.start - b.start);
+
+  const segments: FormulaTextSegment[] = [];
+  let cursor = 0;
+  for (const span of colored) {
+    if (span.start < cursor || span.end > value.length) {
+      continue;
+    }
+    if (span.start > cursor) {
+      segments.push({ text: value.slice(cursor, span.start), colorIndex: null });
+    }
+    segments.push({ text: value.slice(span.start, span.end), colorIndex: span.colorIndex });
+    cursor = span.end;
+  }
+  if (cursor < value.length) {
+    segments.push({ text: value.slice(cursor), colorIndex: null });
+  }
+  return segments;
 }
