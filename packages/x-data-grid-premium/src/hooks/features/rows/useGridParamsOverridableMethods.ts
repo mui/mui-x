@@ -22,7 +22,7 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
     (row, colDef) =>
       gridCellAggregationResultSelector(apiRef, {
         id: gridRowIdSelector(apiRef, row),
-        field: colDef.field,
+        field: colDef?.field,
       })?.value ?? communityMethods.getRowValue(row, colDef),
     [apiRef, communityMethods],
   );
@@ -31,7 +31,7 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
     (row, colDef) => {
       const aggregationFormattedValue = gridCellAggregationResultSelector(apiRef, {
         id: gridRowIdSelector(apiRef, row),
-        field: colDef.field,
+        field: colDef?.field,
       })?.formattedValue;
 
       if (aggregationFormattedValue !== undefined) {

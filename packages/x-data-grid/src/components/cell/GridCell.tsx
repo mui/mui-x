@@ -13,7 +13,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useStore } from '@mui/x-internals/store';
 import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
+import { focusElement } from '../../utils/focusElement';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { GridCellModes } from '../../models';
 import type { GridCellEventLookup, GridEvents, GridRowId, GridEditCellProps } from '../../models';
@@ -359,13 +359,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
 
-      if (doesSupportPreventScroll()) {
-        elementToFocus.focus({ preventScroll: true });
-      } else {
-        const scrollPosition = apiRef.current.getScrollPosition();
-        elementToFocus.focus();
-        apiRef.current.scroll(scrollPosition);
-      }
+      focusElement(elementToFocus, apiRef);
     }
   }, [hasFocus, cellMode, apiRef]);
 

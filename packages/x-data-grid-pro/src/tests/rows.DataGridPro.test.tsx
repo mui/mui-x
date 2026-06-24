@@ -978,4 +978,24 @@ describe('<DataGridPro /> - Rows', () => {
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
   });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', () => {
+    const apiRef = React.createRef<GridApi>();
+    render(
+      <div style={{ width: 400, height: 300 }}>
+        <DataGridPro
+          apiRef={apiRef}
+          rows={[
+            { id: 1, name: 'a' },
+            { id: 2, name: 'b' },
+          ]}
+          columns={[{ field: 'name' }]}
+        />
+      </div>,
+    );
+
+    expect(() => apiRef.current!.getCellParams(1, 'does-not-exist')).not.to.throw();
+    expect(apiRef.current!.getCellParams(1, 'does-not-exist').value).to.equal(undefined);
+  });
 });

@@ -30,8 +30,8 @@ export const gridAggregationLookupSelector = createSelector(
 export const gridCellAggregationResultSelector = createSelector(
   gridRowTreeSelector,
   gridAggregationLookupSelector,
-  (rowTree, aggregationLookup, { id, field }: { id: GridRowId; field: string }) => {
-    if (!aggregationLookup) {
+  (rowTree, aggregationLookup, { id, field }: { id: GridRowId; field: string | undefined }) => {
+    if (!aggregationLookup || field === undefined) {
       return null;
     }
 

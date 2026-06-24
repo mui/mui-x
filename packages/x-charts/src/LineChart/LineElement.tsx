@@ -20,7 +20,7 @@ export interface LineElementOwnerState {
   gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  classes?: Partial<LineClasses>;
+  classes?: Partial<Pick<LineClasses, 'line'>>;
   /** If `true`, the line is hidden. */
   hidden?: boolean;
 }

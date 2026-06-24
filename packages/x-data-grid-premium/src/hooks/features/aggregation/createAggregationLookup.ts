@@ -212,6 +212,8 @@ export const createAggregationLookup = ({
   for (let i = 0; i < aggregatedFields.length; i += 1) {
     const field = aggregatedFields[i];
     const column = columnsLookup[field];
+    // `column` can be `undefined` if the field has no matching column; `getRowValue`
+    // tolerates that and returns `undefined`, which is filtered out when aggregating.
     const valueGetter = (row: any) => apiRef.current.getRowValue(row, column);
     valueGetters[field] = valueGetter;
   }

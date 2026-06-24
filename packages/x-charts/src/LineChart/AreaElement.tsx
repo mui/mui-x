@@ -20,7 +20,7 @@ export interface AreaElementOwnerState {
   gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  classes?: Partial<LineClasses>;
+  classes?: Partial<Pick<LineClasses, 'area'>>;
 }
 
 export interface AreaElementSlots {
@@ -94,7 +94,7 @@ function AreaElement(props: AreaElementProps) {
     isFaded,
     isHighlighted,
   };
-  const classes = useLineUtilityClasses();
+  const classes = useLineUtilityClasses(ownerState);
 
   const Area = slots?.area ?? AnimatedArea;
   const areaProps = useSlotProps({
