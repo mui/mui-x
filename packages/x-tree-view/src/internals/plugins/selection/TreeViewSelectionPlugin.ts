@@ -248,7 +248,9 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     let newSelectedItems = selectionSelectors.selectedItems(this.store.state).slice();
 
     if (Object.keys(this.lastSelectedRange).length === 0) {
-      newSelectedItems.push(nextItem);
+      if (!newSelectedItems.includes(nextItem)) {
+        newSelectedItems.push(nextItem);
+      }
       this.lastSelectedRange = { [currentItem]: true, [nextItem]: true };
     } else {
       if (!this.lastSelectedRange[currentItem]) {
@@ -259,7 +261,9 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
         newSelectedItems = newSelectedItems.filter((id) => id !== currentItem);
         delete this.lastSelectedRange[currentItem];
       } else {
-        newSelectedItems.push(nextItem);
+        if (!newSelectedItems.includes(nextItem)) {
+          newSelectedItems.push(nextItem);
+        }
         this.lastSelectedRange[nextItem] = true;
       }
     }
