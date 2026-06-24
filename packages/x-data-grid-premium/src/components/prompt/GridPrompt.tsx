@@ -5,8 +5,8 @@ import {
   gridClasses,
   gridColumnLookupSelector,
   useGridSelector,
-  type GridSingleSelectColDef,
 } from '@mui/x-data-grid-pro';
+import type { GridSingleSelectColDef } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 

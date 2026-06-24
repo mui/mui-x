@@ -5,8 +5,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { DesktopDateTimePicker } from '../DesktopDateTimePicker';
-import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTimePicker';
-import { DateTimePickerProps } from './DateTimePicker.types';
+import type { MobileDateTimePickerProps } from '../MobileDateTimePicker';
+import { MobileDateTimePicker } from '../MobileDateTimePicker';
+import type { DateTimePickerProps } from './DateTimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type DateTimePickerComponent = ((

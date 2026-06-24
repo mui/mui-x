@@ -1,21 +1,21 @@
-import {
-  type Gesture,
-  type MoveEvent,
-  type PanEvent,
-  type PanGestureOptions,
-  type PinchEvent,
-  type PinchGestureOptions,
-  type PressEvent,
-  type TapEvent,
-  type TurnWheelEvent,
-  type PressAndDragEvent,
-  type PressAndDragGestureOptions,
-  type TapAndDragEvent,
-  type TapAndDragGestureOptions,
-  type TapGestureOptions,
-  type TurnWheelGestureOptions,
+import type {
+  Gesture,
+  MoveEvent,
+  PanEvent,
+  PanGestureOptions,
+  PinchEvent,
+  PinchGestureOptions,
+  PressEvent,
+  TapEvent,
+  TurnWheelEvent,
+  PressAndDragEvent,
+  PressAndDragGestureOptions,
+  TapAndDragEvent,
+  TapAndDragGestureOptions,
+  TapGestureOptions,
+  TurnWheelGestureOptions,
 } from '@mui/x-internal-gestures/core';
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models';
 
 export type ChartInteraction =
   | 'pan'

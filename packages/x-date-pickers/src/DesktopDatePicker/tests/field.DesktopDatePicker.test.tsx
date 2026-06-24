@@ -1,4 +1,5 @@
-import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import type { DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
   buildFieldInteractions,

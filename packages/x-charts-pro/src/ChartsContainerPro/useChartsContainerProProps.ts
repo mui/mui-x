@@ -1,13 +1,14 @@
 'use client';
-import {
-  type ChartAnyPluginSignature,
-  type ChartSeriesType,
-  useChartsContainerProps,
-  type UseChartsContainerPropsReturnValue,
+import { useChartsContainerProps } from '@mui/x-charts/internals';
+import type {
+  ChartAnyPluginSignature,
+  ChartSeriesType,
+  UseChartsContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
 import type { ChartsDataProviderProProps } from '../ChartsDataProviderPro';
 import type { ChartsContainerProProps } from './ChartsContainerPro';
-import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type UseChartsContainerProPropsReturnValue<
   SeriesType extends ChartSeriesType,
