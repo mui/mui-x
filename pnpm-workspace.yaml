@@ -122,3 +122,6 @@ overrides:
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
   caniuse-lite: ^1.0.30001793
+  # Pin nanoid to a version with provenance to avoid pnpm trust downgrade error on 3.3.14 (possible package takeover)
+  # @TODO: Remove this override once postcss resolves to a trusted nanoid version on its own
+  nanoid: 3.3.15
