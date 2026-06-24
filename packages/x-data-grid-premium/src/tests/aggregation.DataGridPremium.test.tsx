@@ -1236,4 +1236,12 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(0)).to.deep.equal([]);
     });
   });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', async () => {
+    await render(<Test />);
+
+    expect(() => apiRef.current!.getCellParams(0, 'does-not-exist')).not.to.throw();
+    expect(apiRef.current!.getCellParams(0, 'does-not-exist').value).to.equal(undefined);
+  });
 });
