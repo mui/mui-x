@@ -1,12 +1,10 @@
 import 'docs/src/bootstrap';
 // --- Post bootstrap -----
 import * as React from 'react';
-import type { DocsAppProps } from '@mui/internal-core-docs/DocsApp';
 import {
   DocsApp,
-  createGetInitialProps,
   printConsoleBanner,
-  reportWebVitals,
+  reportWebVitals as _reportWebVitals,
 } from '@mui/internal-core-docs/DocsApp';
 import { ThemeProvider } from '@mui/internal-core-docs/ThemeContext';
 import findActivePage from '@mui/internal-core-docs/findActivePage';
@@ -20,15 +18,26 @@ import xPages from 'docs/data/pages'; // DO NOT REMOVE
 import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import {
-  LANGUAGES,
-  LANGUAGES_SSR,
-  LANGUAGES_IGNORE_PAGES,
-  LANGUAGES_IN_PROGRESS,
-} from '@mui/internal-core-docs/constants';
-import { DocsConfig } from '@mui/internal-core-docs/DocsProvider';
+import { DEFAULT_DOCS_CONFIG, DocsConfig } from '@mui/internal-core-docs/DocsProvider';
+import { fontClasses as _fontClasses } from '@mui/internal-core-docs/nextFonts';
 
-export { fontClasses } from '@mui/internal-core-docs/nextFonts';
+import translationsJson from '../translations/translations.json';
+import translationsZhJson from '../translations/translations-zh.json';
+
+// Workaround: turbopack's pages-router Custom App detection misfires when
+// `_app.tsx` re-exports an imported binding (`export ... from`, or
+// `import { x }; export { x }`), which makes turbopack reject the file as the
+// Custom App. Re-export as fresh local bindings instead.
+// Related issue - https://github.com/vercel/next.js/issues/93162
+export const fontClasses = _fontClasses;
+
+// require.context is webpack-only and unsupported by turbopack, so build the
+// translations map statically. Mirrors `mapTranslations` (filename → language).
+const translations: Translations = {
+  en: translationsJson,
+  zh: translationsZhJson,
+};
+const allVersions: VersionEntry[] = [];
 
 // Enable telemetry for internal purposes
 muiXTelemetrySettings.enableTelemetry();
@@ -47,7 +56,7 @@ function getMuiPackageVersion(packageName: string, commitRef?: string) {
   return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
 
-function usePageData(pageProps: DocsAppProps['pageProps']) {
+function usePageData() {
   const router = useRouter();
   const { productId: productIdRaw, productCategoryId } = getProductInfoFromUrl(router.asPath);
   const { canonicalAs } = pathnameToLanguage(router.asPath);
@@ -68,7 +77,6 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
 
   return React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(xPages, router.pathname);
-    const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
     const productIdMap: Record<string, { subpath: string; version: string | undefined }> = {
       introduction: { subpath: '/x/introduction', version: process.env.LIB_VERSION },
       'x-data-grid': { subpath: '/x/react-data-grid', version: process.env.DATA_GRID_VERSION },
@@ -88,12 +96,12 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
           return {
             current: true,
             text: `v${version}`,
-            href: `${languagePrefix}${productIdMap[id].subpath}/`,
+            href: `${productIdMap[id].subpath}/`,
           };
         }
         return {
           text: version,
-          href: `https://${version}.mui.com${languagePrefix}${productIdMap[id].subpath}/`,
+          href: `https://${version}.mui.com${productIdMap[id].subpath}/`,
         };
       });
 
@@ -102,7 +110,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
       name: 'MUI X',
       versions: [
         ...getVersionOptions('introduction', [process.env.LIB_VERSION!, 'v8', 'v7', 'v6', 'v5']),
-        { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+        { text: 'v4', href: `https://v4.mui.com/components/data-grid/` },
       ],
     };
 
@@ -118,7 +126,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
             'v6',
             'v5',
           ]),
-          { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+          { text: 'v4', href: `https://v4.mui.com/components/data-grid/` },
         ],
       };
     } else if (productId === 'x-date-pickers') {
@@ -134,7 +142,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
           ]),
           {
             text: 'v5',
-            href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
+            href: `https://v5.mui.com/x/react-date-pickers/getting-started/`,
           },
         ],
       };
@@ -152,7 +160,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
           ...getVersionOptions('x-tree-view', [process.env.TREE_VIEW_VERSION!, 'v8', 'v7']),
           {
             text: 'v6',
-            href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+            href: `https://v6.mui.com/x/react-tree-view/getting-started`,
           },
         ],
       };
@@ -192,7 +200,7 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
       productId,
       productCategoryId,
     };
-  }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
+  }, [productId, productCategoryId, router.pathname]);
 }
 
 const CSB_CONFIG = {
@@ -246,10 +254,7 @@ const CSB_CONFIG = {
 };
 
 const DOCS_CONFIG: DocsConfig = {
-  LANGUAGES,
-  LANGUAGES_SSR,
-  LANGUAGES_IN_PROGRESS,
-  LANGUAGES_IGNORE_PAGES,
+  ...DEFAULT_DOCS_CONFIG,
 };
 
 function useThemeWrapper() {
@@ -262,9 +267,24 @@ function useThemeWrapper() {
 export default function MyApp(
   props: AppProps<{ userLanguage: string; translations: Translations; versions: VersionEntry[] }>,
 ) {
-  const { Component, pageProps } = props;
+  const { Component } = props;
+  const pageProps = React.useMemo(() => {
+    const {
+      userLanguage = 'en',
+      translations: pageTranslations = translations,
+      versions = allVersions,
+      ...otherPageProps
+    } = props.pageProps;
+
+    return {
+      ...otherPageProps,
+      userLanguage,
+      translations: pageTranslations,
+      versions,
+    };
+  }, [props.pageProps]);
   const { activePage, activePageParents, productIdentifier, productId, productCategoryId } =
-    usePageData(pageProps);
+    usePageData();
   const ThemeWrapper = useThemeWrapper();
 
   return (
@@ -287,9 +307,6 @@ export default function MyApp(
   );
 }
 
-MyApp.getInitialProps = createGetInitialProps({
-  translationsContext: require.context('../translations', false, /\.\/translations.*\.json$/),
-  versions: [],
-});
-
-export { reportWebVitals };
+// See note above about turbopack re-export detection — wrap rather than
+// `export { reportWebVitals }` so _app.tsx stays the Custom App.
+export const reportWebVitals: typeof _reportWebVitals = (...args) => _reportWebVitals(...args);

@@ -9,17 +9,15 @@ const getColor: ColorProcessor<'mapShape'> = (series, _mainAxis, _secondaryAxis,
         return series.color;
       }
       const item = series.data[dataIndex];
-      if (item === undefined) {
-        return series.color;
+
+      if (item.color !== undefined) {
+        return item.color;
       }
       const scaleInput = item.colorValue ?? item.value;
-      if (scaleInput != null) {
-        const color = colorScale(scaleInput);
-        if (color !== null) {
-          return color;
-        }
-      }
-      return item.color ?? series.color;
+
+      const color = colorScale(scaleInput);
+
+      return color;
     };
   }
 
