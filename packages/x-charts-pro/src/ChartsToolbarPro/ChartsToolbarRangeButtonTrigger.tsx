@@ -4,25 +4,25 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   useChartsContext,
-  type ChartsSlotProps,
   useChartsSlots,
-  type UseChartCartesianAxisSignature,
   selectorChartRawXAxis,
   selectorChartXAxisWithDomains,
   selectorChartZoomOptionsLookup,
-  type AxisId,
 } from '@mui/x-charts/internals';
-import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type {
+  ChartsSlotProps,
+  UseChartCartesianAxisSignature,
+  AxisId,
+} from '@mui/x-charts/internals';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import {
-  type UseChartProZoomSignature,
   selectorChartAxisZoomData,
   selectorChartCanZoomOut,
 } from '../internals/plugins/useChartProZoom';
-import {
-  type RangeButtonValue,
-  getRangeButtonDomainParams,
-  rangeButtonValueToZoom,
-} from './rangeButtonValueToZoom';
+import type { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import { getRangeButtonDomainParams, rangeButtonValueToZoom } from './rangeButtonValueToZoom';
+import type { RangeButtonValue } from './rangeButtonValueToZoom';
 
 export interface ChartsToolbarRangeButtonTriggerProps {
   /**
@@ -144,7 +144,7 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarRangeButtonTrigger.propTypes = {
+ChartsToolbarRangeButtonTrigger.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

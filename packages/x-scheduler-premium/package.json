@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-premium",
-  "version": "9.0.0-beta.0",
+  "version": "9.0.0-beta.2",
   "author": "MUI Team",
   "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
@@ -9,6 +9,7 @@
   },
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
+    "./models": "./src/models/index.ts",
     "./agenda-view-premium": "./src/agenda-view-premium/index.ts",
     "./day-view-premium": "./src/day-view-premium/index.ts",
     "./event-calendar-premium": "./src/event-calendar-premium/index.ts",

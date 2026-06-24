@@ -11,25 +11,24 @@ import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
+import type { PickersInputBaseClasses } from './pickersInputBaseClasses';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
-  PickersInputBaseClasses,
 } from './pickersInputBaseClasses';
-import { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersSectionElement, PickersSectionListSlotProps } from '../../PickersSectionList';
 import {
   Unstable_PickersSectionList as PickersSectionList,
   Unstable_PickersSectionListRoot as PickersSectionListRoot,
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
-  PickersSectionElement,
-  PickersSectionListSlotProps,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../../models/fields';
-import { PickerOwnerState } from '../../models/pickers';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerOwnerState } from '../../models/pickers';
 
 function mergePickersInputBaseSectionContentSlotProps(
   consumerSlotProps: PickersSectionListSlotProps['sectionContent'],
@@ -164,6 +163,20 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
   letterSpacing: 'inherit',
   width: 'fit-content',
   outline: 'none',
+  // Disables Chromium's focus-delegation onto contenteditable descendants
+  // while the field is not focused. The bug is Chromium-only, and applying
+  // `WebkitUserModify` on WebKit breaks Playwright's `fill()` editability
+  // check, so we gate on a Chromium-only CSS property (`-webkit-app-region`,
+  // a Blink/Electron extension WebKit never adopted) via `@supports`.
+  // The WebKit exclusion is empirical, not guaranteed across versions: the
+  // regression guard is the WebKit `fill()` cases in the browser e2e suite,
+  // which would fail if a future WebKit started matching this `@supports`.
+  '@supports (-webkit-app-region: drag)': {
+    [`.${pickersInputBaseClasses.root}:not(:focus-within) &`]: {
+      WebkitUserModify: 'read-only',
+      userSelect: 'none',
+    },
+  },
 }));
 
 const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparator, {
@@ -511,7 +524,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   );
 });
 
-PickersInputBase.propTypes = {
+PickersInputBase.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -572,6 +585,7 @@ PickersInputBase.propTypes = {
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,

@@ -39,7 +39,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Ricorrenza',
   recurrenceMainSelectCustomLabel: 'Ricorrenza',
   recurrenceWeeklyFrequencyLabel: 'settimane',
-  recurrenceWeeklyPresetLabel: (weekday) => `Si ripete ogni settimana il ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Si ripete ogni settimana il ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'mesi',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Giorno ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} dell'ultima settimana del mese`,
@@ -51,6 +51,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'anni',
   recurrenceYearlyPresetLabel: (date) => `Si ripete ogni anno il ${date}`,
   noResourceAriaLabel: 'Nessuna risorsa specifica',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Risorsa',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salva',
@@ -105,8 +106,6 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Tutto il giorno',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} altri..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} successivo`,
   previousTimeSpan: (timeSpan) => `${timeSpan} precedente`,
@@ -121,6 +120,9 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendario',
   miniCalendarGoToPreviousMonth: 'Mostra il mese precedente nel calendario',
   miniCalendarGoToNextMonth: 'Mostra il mese successivo nel calendario',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titolo risorsa',

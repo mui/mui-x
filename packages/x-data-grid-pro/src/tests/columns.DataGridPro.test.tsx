@@ -1,15 +1,20 @@
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
   gridClasses,
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
-  type GridApi,
-  type GridAutosizeOptions,
+} from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridApi,
+  GridAutosizeOptions,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
@@ -368,6 +373,14 @@ describe('<DataGridPro /> - Columns', () => {
         ]),
       );
 
+      // `rowsSet` refreshes the resize hook's cell refs inside a rAF. Flush it so
+      // the new row joins the next resize step instead of racing the pointer move.
+      await act(async () => {
+        await new Promise((resolve) => {
+          requestAnimationFrame(() => resolve(undefined));
+        });
+      });
+
       // Verify that the new rows are added with the resized width
       expect(getCell(0, 0).getBoundingClientRect().width).to.equal(150);
       expect(getCell(1, 0).getBoundingClientRect().width).to.equal(150);
@@ -632,6 +645,63 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await waitFor(() => {
         expect(getWidths()).to.deep.equal([152, 174]);
+      });
+    });
+
+    // Regression test for https://github.com/mui/mui-x/issues/22505
+    it('should wait for all rows to be rendered on mount when rows fit the viewport', async () => {
+      const shortValue = 'Nike';
+      const wideValue = 'Lululemon Athletica International Collection';
+
+      function DeferredCellContent({ value }: { value: string }) {
+        const [showValue, setShowValue] = React.useState(value === shortValue);
+
+        React.useEffect(() => {
+          if (!showValue) {
+            // Hack to make the test fail similar to https://github.com/mui/mui-x/issues/22505
+            // in our test env. We reveal the wide value a couple of microtasks after mount, so
+            // that the unfixed code (which autosizes on the first microtask) misses it. The
+            // commit is flushed synchronously so the wide value is reliably in the DOM before
+            // the autosize `requestAnimationFrame` fires, regardless of the React version's
+            // scheduler (a plain `setState` here is committed after the frame on React 18).
+            Promise.resolve().then(() => {
+              Promise.resolve().then(() => ReactDOM.flushSync(() => setShowValue(true)));
+            });
+          }
+        }, [showValue]);
+
+        return <span>{showValue ? value : shortValue}</span>;
+      }
+
+      const autosizeRows = [
+        { id: 0, brand: 'Nike' },
+        { id: 1, brand: 'Adidas' },
+        { id: 2, brand: 'Puma' },
+        { id: 3, brand: 'Reebok' },
+        { id: 4, brand: 'Asics' },
+        { id: 5, brand: 'New Balance' },
+        { id: 6, brand: wideValue },
+      ];
+      const autosizeColumns: GridColDef[] = [
+        {
+          field: 'brand',
+          renderCell: ({ value }) => <DeferredCellContent value={value} />,
+        },
+      ];
+
+      render(
+        <Test
+          rows={autosizeRows}
+          columns={autosizeColumns}
+          autosizeOnMount
+          autosizeOptions={{ columns: ['brand'], includeOutliers: true }}
+        />,
+      );
+
+      await waitFor(() => {
+        const wideCell = getCell(6, 0);
+        expect(wideCell.textContent).to.equal(wideValue);
+        expect(wideCell.scrollWidth).to.be.at.most(wideCell.clientWidth);
       });
     });
 

@@ -5,7 +5,8 @@ import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { ToolbarContext } from './ToolbarContext';
@@ -236,7 +237,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
   return <ToolbarContext.Provider value={contextValue}>{element}</ToolbarContext.Provider>;
 });
 
-Toolbar.propTypes = {
+Toolbar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

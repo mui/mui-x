@@ -150,7 +150,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   );
 }) as EventTimelinePremiumComponent;
 
-EventTimelinePremium.propTypes = {
+EventTimelinePremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -311,10 +311,6 @@ EventTimelinePremium.propTypes = {
    * Callback fired when some event of the calendar change.
    */
   onEventsChange: PropTypes.func,
-  /**
-   * Event handler called when the preferences change.
-   */
-  onPreferencesChange: PropTypes.func,
   /**
    * Event handler called when the preset changes.
    */

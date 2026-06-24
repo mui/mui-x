@@ -1,12 +1,9 @@
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridApi,
-  useGridApiRef,
-  DataGridPro,
-  type DataGridProProps,
-} from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { type SinonSpy, spy } from 'sinon';
+import { spy } from 'sinon';
+import type { SinonSpy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 

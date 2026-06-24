@@ -4,14 +4,12 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import {
   AreaPlot,
-  type LineChartProps,
-  type LineChartSlots,
-  type LineChartSlotProps,
   LineHighlightPlot,
   LinePlot,
   MarkPlot,
   FocusedLineMark,
 } from '@mui/x-charts/LineChart';
+import type { LineChartProps, LineChartSlots, LineChartSlotProps } from '@mui/x-charts/LineChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -23,17 +21,18 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
-import { LINE_CHART_PRO_PLUGINS, type LineChartProPluginSignatures } from './LineChartPro.plugins';
+import { LINE_CHART_PRO_PLUGINS } from './LineChartPro.plugins';
+import type { LineChartProPluginSignatures } from './LineChartPro.plugins';
 
 export interface LineChartProSlots
   extends Omit<LineChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
@@ -140,7 +139,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   );
 });
 
-LineChartPro.propTypes = {
+LineChartPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -536,6 +535,7 @@ LineChartPro.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -543,6 +543,7 @@ LineChartPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

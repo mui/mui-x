@@ -3,10 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { type BarElementSlotProps, type BarElementSlots } from './BarElement';
-import { type BarItemIdentifier } from '../models';
+import type { BarElementSlotProps, BarElementSlots } from './BarElement';
+import type { BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel/BarLabelItem';
+import type { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
@@ -15,7 +15,7 @@ import { barClasses, useUtilityClasses } from './barClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { IndividualBarPlot } from './IndividualBarPlot';
 import { BatchBarPlot } from './BatchBarPlot';
-import { type RendererType } from '../ScatterChart';
+import type { RendererType } from '../ScatterChart';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -129,7 +129,7 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
   );
 }
 
-BarPlot.propTypes = {
+BarPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

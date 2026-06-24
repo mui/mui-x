@@ -1,17 +1,18 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type ChartSeriesType } from '../models/seriesType/config';
-import {
-  ChartsDataProvider,
-  type ChartsDataProviderProps,
-  type ChartsDataProviderSlotProps,
-  type ChartsDataProviderSlots,
+import type { ChartSeriesType } from '../models/seriesType/config';
+import { ChartsDataProvider } from '../ChartsDataProvider';
+import type {
+  ChartsDataProviderProps,
+  ChartsDataProviderSlotProps,
+  ChartsDataProviderSlots,
 } from '../ChartsDataProvider';
 import { useChartsContainerProps } from './useChartsContainerProps';
-import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
-import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { ChartsSurface } from '../ChartsSurface';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export interface ChartsContainerSlots extends ChartsDataProviderSlots {}
 
@@ -68,7 +69,7 @@ const ChartsContainer = React.forwardRef(function ChartsContainer<
 
 // @ts-ignore
 
-ChartsContainer.propTypes = {
+ChartsContainer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -395,6 +396,7 @@ ChartsContainer.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -402,6 +404,7 @@ ChartsContainer.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "9.4.0",
+  "version": "9.6.0",
   "author": "MUI Team",
   "description": "The Community plan edition of the MUI X Data Grid components.",
   "license": "MIT",
@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:^",
     "@mui/x-virtualizer": "workspace:*",

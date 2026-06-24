@@ -6,6 +6,7 @@ import { SxProps, Theme } from '@mui/system';
 import { ComposerAttachButton, type ComposerAttachButtonProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerAttachButton');
 
@@ -69,23 +70,25 @@ const ChatComposerAttachButton = React.forwardRef<HTMLButtonElement, ChatCompose
         ref={ref}
         {...other}
         slots={{
-          attachButton: slots?.attachButton ?? ChatComposerAttachButtonStyled,
           ...slots,
+          attachButton: slots?.attachButton ?? ChatComposerAttachButtonStyled,
         }}
         slotProps={{
           ...slotProps,
-          attachButton: {
-            className: clsx(classes.attachButton, className),
-            sx,
-            ...(slotProps?.attachButton as object),
-          } as any,
+          attachButton: mergeSlotProps(
+            {
+              className: clsx(classes.attachButton, className),
+              sx,
+            },
+            slotProps?.attachButton,
+          ) as any,
         }}
       />
     );
   },
 );
 
-ChatComposerAttachButton.propTypes = {
+ChatComposerAttachButton.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

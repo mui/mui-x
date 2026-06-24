@@ -36,7 +36,10 @@
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ enablePositionBasedPointerInteraction?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ enablePositionBasedPointerInteraction?: bool, progressiveRendering?: bool }"
+      }
     },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
@@ -203,6 +206,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/SparkLineChart/SparkLineChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/sparkline/\">Charts - Sparkline</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/sparkline/\">Charts - Sparkline</a></li></ul>"
 }

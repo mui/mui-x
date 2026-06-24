@@ -2,14 +2,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import { GridRoot, GridContextProvider, type GridValidRowModel } from '@mui/x-data-grid';
+import { GridRoot, GridContextProvider } from '@mui/x-data-grid';
+import type { GridValidRowModel } from '@mui/x-data-grid';
 import {
-  type GridConfiguration,
   validateProps,
   useGridApiInitialization,
   useGridParamsOverridableMethods,
   useIsCellEditable,
 } from '@mui/x-data-grid/internals';
+import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
@@ -96,7 +97,7 @@ interface DataGridProComponent {
  */
 export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
-DataGridProRaw.propTypes = {
+DataGridProRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

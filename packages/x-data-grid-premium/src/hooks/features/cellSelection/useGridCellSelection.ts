@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
+import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
-  type GridPipeProcessor,
-  type GridStateInitializer,
   getGridCellElement,
   getTotalHeaderHeight,
   getVisibleRows,
@@ -15,23 +14,26 @@ import {
   serializeCellValue,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridPipeProcessor, GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import {
   useGridEvent,
   useGridApiMethod,
-  type GridEventListener,
-  type GridEventLookup,
   GRID_ACTIONS_COLUMN_TYPE,
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
-  type GridCellCoordinates,
-  type GridRowId,
   gridClasses,
   gridFocusCellSelector,
-  type GridCellParams,
   GRID_REORDER_COL_DEF,
   gridSortedRowIdsSelector,
   gridDimensionsSelector,
   GridCellModes,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridEventListener,
+  GridEventLookup,
+  GridCellCoordinates,
+  GridRowId,
+  GridCellParams,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import type { GridCellSelectionApi } from './gridCellSelectionInterfaces';
@@ -303,8 +305,7 @@ export const useGridCellSelection = (
     (params, event) => {
       // Skip if the click comes from the right-button or, only on macOS, Ctrl is pressed
       // Fix for https://github.com/mui/mui-x/pull/6567#issuecomment-1329155578
-      const isMacOs = window.navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-      if (event.button !== 0 || (event.ctrlKey && isMacOs)) {
+      if (event.button !== 0 || (event.ctrlKey && platform.os.mac)) {
         return;
       }
 

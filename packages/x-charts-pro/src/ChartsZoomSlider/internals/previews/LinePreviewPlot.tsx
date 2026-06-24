@@ -1,12 +1,11 @@
 import * as React from 'react';
 import {
-  type AxisId,
   useStore,
   useLinePlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  type SeriesId,
 } from '@mui/x-charts/internals';
+import type { AxisId, SeriesId } from '@mui/x-charts/internals';
 import type { PreviewPlotProps } from './PreviewPlot.types';
 
 interface LinePreviewPlotProps extends Pick<PreviewPlotProps, 'axisId' | 'seriesIds'> {}

@@ -13,15 +13,17 @@ import type {
 } from '@mui/x-data-grid-pro';
 import {
   passFilterLogic,
-  type GridAggregatedFilterItemApplier,
-  type GridAggregatedFilterItemApplierResult,
-  type GridColumnRawLookup,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   getRowGroupingCriteriaFromGroupingField,
   isGroupingColumn,
   GridStrategyGroup,
   getRowValue,
   RowGroupingStrategy,
+} from '@mui/x-data-grid-pro/internals';
+import type {
+  GridAggregatedFilterItemApplier,
+  GridAggregatedFilterItemApplierResult,
+  GridColumnRawLookup,
 } from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {

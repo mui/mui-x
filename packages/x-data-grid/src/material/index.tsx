@@ -9,7 +9,8 @@ import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
-import MUIInputBase, { type InputBaseProps as MUIInputBaseProps } from '@mui/material/InputBase';
+import MUIInputBase from '@mui/material/InputBase';
+import type { InputBaseProps as MUIInputBaseProps } from '@mui/material/InputBase';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
@@ -29,7 +30,8 @@ import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
-import MUIPopper, { type PopperProps as MUIPopperProps } from '@mui/material/Popper';
+import MUIPopper from '@mui/material/Popper';
+import type { PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
@@ -586,9 +588,8 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-function BasePopper(props: P['basePopper']) {
+const BasePopper = forwardRef<any, P['basePopper']>(function BasePopper(props, ref) {
   const {
-    ref,
     open,
     children,
     className,
@@ -677,11 +678,12 @@ function BasePopper(props: P['basePopper']) {
       modifiers={modifiers}
       {...other}
       {...material}
+      ref={ref}
     >
       {content}
     </MUIPopper>
   );
-}
+});
 
 function wrappers(props: PopperProps, content: any) {
   return focusTrapWrapper(props, clickAwayWrapper(props, content));

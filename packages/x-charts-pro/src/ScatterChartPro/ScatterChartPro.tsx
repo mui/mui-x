@@ -3,36 +3,34 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
-import {
-  FocusedScatterMark,
-  type ScatterChartProps,
-  type ScatterChartSlotProps,
-  type ScatterChartSlots,
-  ScatterPlot,
+import { FocusedScatterMark, ScatterPlot } from '@mui/x-charts/ScatterChart';
+import type {
+  ScatterChartProps,
+  ScatterChartSlotProps,
+  ScatterChartSlots,
 } from '@mui/x-charts/ScatterChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import type { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import type { TooltipPropsOverrides } from '@mui/x-charts/models';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
-import { type ChartsContainerProProps } from '../ChartsContainerPro/ChartsContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro/ChartsContainerPro';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
-import {
-  SCATTER_CHART_PRO_PLUGINS,
-  type ScatterChartProPluginSignatures,
-} from './ScatterChartPro.plugins';
-import {
-  type ChartsToolbarProSlots,
-  type ChartsToolbarProSlotProps,
+import { SCATTER_CHART_PRO_PLUGINS } from './ScatterChartPro.plugins';
+import type { ScatterChartProPluginSignatures } from './ScatterChartPro.plugins';
+import type {
+  ChartsToolbarProSlots,
+  ChartsToolbarProSlotProps,
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface ScatterChartProSlots
@@ -142,7 +140,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   );
 });
 
-ScatterChartPro.propTypes = {
+ScatterChartPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -223,7 +221,9 @@ ScatterChartPro.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    progressiveRendering: PropTypes.bool,
+  }),
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -442,13 +442,15 @@ ScatterChartPro.propTypes = {
   onZoomChange: PropTypes.func,
   /**
    * The type of renderer to use for the scatter plot.
-   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element, synchronously.
+   * - `svg-progressive`: Renders every scatter item in a `<circle />` element, in progressive batches that paint over several animation frames to keep the main thread responsive.
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/scatter/#performance
    *
+   * When not set, defaults to `svg-single`. Enable the `progressiveRendering` experimental feature to auto-select `svg-progressive` above an internal point-count threshold; this will become the default in the next major version.
    * @default 'svg-single'
    */
-  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-progressive', 'svg-single']),
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
@@ -540,6 +542,7 @@ ScatterChartPro.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -547,6 +550,7 @@ ScatterChartPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

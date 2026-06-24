@@ -1,15 +1,15 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
-import {
+import type {
   BaseDatePickerProps,
   BaseDatePickerSlots,
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
-import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
+import type { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDatePickerSlots
   extends BaseDatePickerSlots, MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}

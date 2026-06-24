@@ -5,20 +5,19 @@ import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   GridRoot,
   GridContextProvider,
-  type GridValidRowModel,
   gridRowIdSelector,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
+import type { GridValidRowModel } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
-  type PropValidator,
   validateProps,
-  type GridConfiguration,
   useGridApiInitialization,
   getRowValue,
   GridMultiSelectMeasurer,
 } from '@mui/x-data-grid-pro/internals';
+import type { PropValidator, GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
@@ -136,7 +135,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   );
 });
 
-DataGridPremiumRaw.propTypes = {
+DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

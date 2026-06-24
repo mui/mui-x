@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
-import { useIsHydrated } from '../hooks/useIsHydrated';
+import { useIsHydrated } from '@mui/x-internals/useIsHydrated';
+import { getWordsByLines } from '../internals/getWordsByLines';
+import type { GetWordsByLinesParams } from '../internals/getWordsByLines';
 
 export interface ChartsTextProps
   extends
@@ -71,7 +72,7 @@ function ChartsText(props: ChartsTextProps) {
   );
 }
 
-ChartsText.propTypes = {
+ChartsText.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -1,9 +1,10 @@
 'use client';
 import PropTypes from 'prop-types';
-import { type SxProps, type Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
-import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { useUtilityClasses } from './chartsTooltipClasses';
+import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import {
   ChartsTooltipCell,
   ChartsTooltipPaper,
@@ -14,11 +15,8 @@ import { useAxesTooltip } from './useAxesTooltip';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartSeriesConfigGetter } from '../internals/plugins/corePlugins/useChartSeries';
-import {
-  type CartesianChartSeriesType,
-  type PolarChartSeriesType,
-} from '../models/seriesType/config';
-import { type AxisTooltipContentProps } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { CartesianChartSeriesType, PolarChartSeriesType } from '../models/seriesType/config';
+import type { AxisTooltipContentProps } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 export interface ChartsAxisTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -136,7 +134,7 @@ function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesTyp
   );
 }
 
-ChartsAxisTooltipContent.propTypes = {
+DefaultContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -145,17 +143,40 @@ ChartsAxisTooltipContent.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  item: PropTypes.shape({
+    color: PropTypes.string.isRequired,
+    formattedLabel: PropTypes.string,
+    formattedValue: PropTypes.object.isRequired,
+    markShape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']),
+    markType: PropTypes.oneOfType([
+      PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
+      PropTypes.func,
+    ]),
+    seriesId: PropTypes.string.isRequired,
+    value: PropTypes.any.isRequired,
+  }).isRequired,
+} as any;
+
+ChartsAxisTooltipContent.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
   /**
    * The sort in which series items are displayed in the tooltip.
    * When set to `none`, series are sorted as they are provided in the series property. Otherwise they are sorted by their value.
    * @default 'none'
    */
-  sort: PropTypes.oneOf(['none', 'asc', 'desc']),
+  sort: PropTypes.oneOf(['asc', 'desc', 'none']),
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChartsAxisTooltipContent };

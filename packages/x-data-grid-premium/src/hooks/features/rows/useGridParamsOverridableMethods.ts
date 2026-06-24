@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { gridRowIdSelector, type GridParamsApi } from '@mui/x-data-grid-pro';
+import { gridRowIdSelector } from '@mui/x-data-grid-pro';
+import type { GridParamsApi } from '@mui/x-data-grid-pro';
 import { useGridParamsOverridableMethods as useGridParamsOverridableMethodsCommunity } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import { gridCellAggregationResultSelector } from '../aggregation/gridAggregationSelectors';
@@ -31,12 +32,12 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
       const id = gridRowIdSelector(apiRef, row);
       const aggregationValue = gridCellAggregationResultSelector(apiRef, {
         id,
-        field: colDef.field,
+        field: colDef?.field,
       })?.value;
       if (aggregationValue != null) {
         return aggregationValue;
       }
-      const formulaResult = gridCellFormulaResultSelector(apiRef, { id, field: colDef.field });
+      const formulaResult = gridCellFormulaResultSelector(apiRef, { id, field: colDef?.field });
       if (formulaResult != null) {
         return formulaResult.type === 'error' ? formulaResult.code : formulaResult.value;
       }
@@ -49,7 +50,7 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
     (row, colDef) => {
       const aggregationFormattedValue = gridCellAggregationResultSelector(apiRef, {
         id: gridRowIdSelector(apiRef, row),
-        field: colDef.field,
+        field: colDef?.field,
       })?.formattedValue;
 
       if (aggregationFormattedValue !== undefined) {
@@ -58,7 +59,7 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
 
       const formulaResult = gridCellFormulaResultSelector(apiRef, {
         id: gridRowIdSelector(apiRef, row),
-        field: colDef.field,
+        field: colDef?.field,
       });
       if (formulaResult?.type === 'error') {
         // Error codes are the user-visible representation — they bypass the

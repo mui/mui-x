@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "9.4.0",
+  "version": "9.6.0",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Data Grid Components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-data-grid": "workspace:^",
     "@mui/x-data-grid-pro": "workspace:^",

@@ -12,11 +12,11 @@ import type {
   ScaleSymLog,
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
-import { type SxProps } from '@mui/system/styleFunctionSx';
-import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
-import { type DatasetElementType } from './seriesType/config';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { HasProperty, MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
+import type { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import type {
   AxisLinePropsOverrides,
@@ -33,8 +33,8 @@ import type {
   PiecewiseColorConfig,
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
-import { type ChartsTypeFeatureFlags } from './featureFlags';
-import { type ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
+import type { ChartsTypeFeatureFlags } from './featureFlags';
+import type { ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
 export type AxisId = string | number;
 
@@ -220,8 +220,13 @@ type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
   width?: AxisProps extends ChartsYAxisProps ? number | 'auto' : never;
 };
 
-export interface ChartsRotationAxisProps extends ChartsAxisProps {
+export interface ChartsRotationAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'rotation';
+  /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
   /**
    * The start angle (in deg).
    */
@@ -258,16 +263,27 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
   classes?: Partial<ChartsRadialAxisClasses>;
 }
 
-export interface ChartsRadiusAxisProps extends ChartsAxisProps {
+export interface ChartsRadiusAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'radius';
   /**
-   * The minimal radius.
+   * If true, the tick labels are not rendered.
+   * @default false
    */
-  minRadius?: number;
+  disableTickLabel?: boolean;
+  /**
+   * The minimal radius.
+   * Can be a number (in pixels), a pixel string (for example `'20px'`), or a percentage string
+   * (for example `'20%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default 0
+   */
+  minRadius?: number | string;
   /**
    * The maximal radius.
+   * Can be a number (in pixels), a pixel string (for example `'80px'`), or a percentage string
+   * (for example `'80%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default '100%'
    */
-  maxRadius?: number;
+  maxRadius?: number | string;
   /**
    * The position of the axis in polar coordinates.
    * It can be 'start', 'end', or a specific angle in degrees.

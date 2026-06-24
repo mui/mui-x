@@ -134,9 +134,9 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   readOnly: boolean;
   /**
-   * Pending parameters to use when the user selects the scope of a recurring event update.
+   * Pending operation to apply when the user selects the scope in the recurring scope dialog.
    */
-  pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
+  pendingRecurringEventOperation: PendingRecurringEventOperation | null;
   /**
    * Preferences for the scheduler.
    */
@@ -162,10 +162,10 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The ID of the event currently active (e.g. open in the event dialog).
-   * `null` when no event is active.
+   * The key of the occurrence currently active (e.g. open in the event dialog).
+   * `null` when no occurrence is active.
    */
-  editedEventId: SchedulerEventId | null;
+  editedOccurrenceKey: string | null;
   /**
    * The event that has been copied or cut, if any.
    */
@@ -369,6 +369,31 @@ export type UpdateRecurringEventParameters = {
    */
   onSubmit?: () => void;
 };
+
+/**
+ * Parameters for deleting a recurring event.
+ */
+export type DeleteRecurringEventParameters = {
+  /**
+   * The start date of the occurrence affected by the deletion.
+   */
+  occurrenceStart: TemporalSupportedObject;
+  /**
+   * The id of the recurring event to delete.
+   */
+  eventId: SchedulerEventId;
+  /**
+   * Callback fired when the user submits the recurring scope dialog.
+   */
+  onSubmit?: () => void;
+};
+
+/**
+ * A recurring event operation waiting for the user to pick a scope in the recurring scope dialog.
+ */
+export type PendingRecurringEventOperation =
+  | ({ kind: 'update' } & UpdateRecurringEventParameters)
+  | ({ kind: 'delete' } & DeleteRecurringEventParameters);
 
 /**
  * Mapper between a Scheduler instance's state and parameters.

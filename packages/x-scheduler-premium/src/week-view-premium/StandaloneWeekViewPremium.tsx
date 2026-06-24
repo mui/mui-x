@@ -44,7 +44,7 @@ const StandaloneWeekViewPremium = React.forwardRef(function StandaloneWeekViewPr
   );
 }) as StandaloneWeekViewPremiumComponent;
 
-StandaloneWeekViewPremium.propTypes = {
+StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -213,7 +213,7 @@ StandaloneWeekViewPremium.propTypes = {
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig: PropTypes.oneOfType([
     PropTypes.oneOf([false]),

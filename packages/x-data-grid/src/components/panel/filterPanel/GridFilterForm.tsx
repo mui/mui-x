@@ -14,7 +14,8 @@ import {
 } from '../../../hooks/features/columns/gridColumnsSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
-import { type GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
+import { GridLogicOperator } from '../../../models/gridFilterItem';
+import type { GridFilterItem } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -594,7 +595,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
   },
 );
 
-GridFilterForm.propTypes = {
+GridFilterForm.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

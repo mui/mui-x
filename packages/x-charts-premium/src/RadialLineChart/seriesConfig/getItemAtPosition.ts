@@ -1,19 +1,23 @@
 import { getValueToPositionMapper } from '@mui/x-charts/hooks';
 import {
-  type ChartState,
-  type ProcessedSeries,
-  type UseChartPolarAxisSignature,
-  type ComputedAxis,
-  type ChartsRadiusAxisProps,
-  type ChartsRotationAxisProps,
   selectorAllSeriesOfType,
   selectorChartPolarCenter,
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
   getRotationAxisIndex,
   isOrdinalScale,
+  evaluateCurveAtAngle,
+  clampAngleRad,
+  getAsNumber,
 } from '@mui/x-charts/internals';
-import { evaluateCurveAtAngle, clampAngleRad, getAsNumber } from '@mui/x-charts/internals';
+import type {
+  ChartState,
+  ProcessedSeries,
+  UseChartPolarAxisSignature,
+  ComputedAxis,
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+} from '@mui/x-charts/internals';
 import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
 /**
