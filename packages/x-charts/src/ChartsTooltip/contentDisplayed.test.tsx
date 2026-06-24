@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
-import { BarChart, type BarChartProps, barClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
+import type { BarChartProps } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCenter } from 'test/utils/charts/getCenter';
 import { onTestFinished } from 'vitest';

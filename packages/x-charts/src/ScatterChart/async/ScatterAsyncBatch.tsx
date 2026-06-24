@@ -2,22 +2,20 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { type DefaultizedScatterSeriesType } from '../../models/seriesType/scatter';
+import type { DefaultizedScatterSeriesType } from '../../models/seriesType/scatter';
 import { getInteractionItemProps } from '../../hooks/useInteractionItemProps';
 import { useStore } from '../../internals/store/useStore';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
-import {
-  selectorChartsIsVoronoiEnabled,
-  type UseChartClosestPointSignature,
-} from '../../internals/plugins/featurePlugins/useChartClosestPoint';
+import { selectorChartsIsVoronoiEnabled } from '../../internals/plugins/featurePlugins/useChartClosestPoint';
+import type { UseChartClosestPointSignature } from '../../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from '../ScatterMarker';
 import type { ColorGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useUtilityClasses } from '../scatterClasses';
 import { useChartsContext } from '../../context/ChartsProvider';
-import { type UseChartTooltipSignature } from '../../internals/plugins/featurePlugins/useChartTooltip';
-import { type UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
-import { type UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
-import { type ScatterProps } from '../Scatter';
+import type { UseChartTooltipSignature } from '../../internals/plugins/featurePlugins/useChartTooltip';
+import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import type { UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import type { ScatterProps } from '../Scatter';
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 export interface ScatterAsyncBatchProps extends Pick<

@@ -1,8 +1,5 @@
-import {
-  isBandScale,
-  isOrdinalScale,
-  type TooltipItemPositionGetter,
-} from '@mui/x-charts/internals';
+import { isBandScale, isOrdinalScale } from '@mui/x-charts/internals';
+import type { TooltipItemPositionGetter } from '@mui/x-charts/internals';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'ohlc'> = (params) => {
   const { series, identifier, axesConfig, placement } = params;

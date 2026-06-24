@@ -5,10 +5,9 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  type GridRenderCellParams,
-  type GridGroupNode,
   gridRowMaximumTreeDepthSelector,
 } from '@mui/x-data-grid-pro';
+import type { GridRenderCellParams, GridGroupNode } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';

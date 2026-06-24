@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { type ChartUsedInstance } from '@mui/x-charts/internals';
+import type { ChartUsedInstance } from '@mui/x-charts/internals';
 import {
   PanGesture,
   PinchGesture,

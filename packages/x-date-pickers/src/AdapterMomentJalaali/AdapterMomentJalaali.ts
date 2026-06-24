@@ -1,7 +1,8 @@
 /* v8 ignore next */
-import defaultJMoment, { Moment } from 'moment-jalaali';
+import type { Moment } from 'moment-jalaali';
+import defaultJMoment from 'moment-jalaali';
 import { AdapterMoment } from '../AdapterMoment';
-import {
+import type {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,

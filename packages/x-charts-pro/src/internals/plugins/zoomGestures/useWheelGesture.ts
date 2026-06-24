@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { getChartPoint } from '@mui/x-charts/internals';
-import { type KeyboardKey } from '@mui/x-internal-gestures/core';
-import { type ChartPoint, type GestureInstance } from './zoomGestures.types';
+import type { KeyboardKey } from '@mui/x-internal-gestures/core';
+import type { ChartPoint, GestureInstance } from './zoomGestures.types';
 
 export interface UseWheelGestureOptions {
   /** Whether the gesture is active. */

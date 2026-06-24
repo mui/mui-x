@@ -475,6 +475,7 @@
   { "name": "MapZoomOptions", "kind": "Interface" },
   { "name": "MapZoomView", "kind": "Interface" },
   { "name": "MarkElement", "kind": "Function" },
+  { "name": "MarkElementOwnerState", "kind": "Interface" },
   { "name": "MarkElementProps", "kind": "TypeAlias" },
   { "name": "MarkerPropsOverrides", "kind": "Interface" },
   { "name": "MarkPlot", "kind": "Function" },

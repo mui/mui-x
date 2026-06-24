@@ -1,6 +1,6 @@
-import { type GeoProjection, type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
-import { type ChartPluginSignature } from '../../models/plugin';
-import { type UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
+import type { GeoProjection, ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { ChartPluginSignature } from '../../models/plugin';
+import type { UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
 
 export type D3NamedProjection =
   | 'azimuthalEqualArea'
