@@ -1,7 +1,7 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { warnOnce } from '@mui/x-internals/warning';
-import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
+import { applyStyles, copyCanvasesContent, createExportIframe, triggerDownload } from './common';
 import { type ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
@@ -141,11 +141,4 @@ export async function exportImage(
   triggerDownload(url, fileName || document.title);
 
   URL.revokeObjectURL(url);
-}
-
-function triggerDownload(url: string, name: string) {
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = name;
-  a.click();
 }

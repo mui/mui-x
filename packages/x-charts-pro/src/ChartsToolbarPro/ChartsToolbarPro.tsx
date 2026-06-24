@@ -29,6 +29,10 @@ import {
   type ChartsToolbarImageExportOptions,
   ChartsToolbarImageExportTrigger,
 } from './ChartsToolbarImageExportTrigger';
+import {
+  type ChartsToolbarSvgExportOptions,
+  ChartsToolbarSvgExportTrigger,
+} from './ChartsToolbarSvgExportTrigger';
 
 export type {
   RangeButtonFunctionParams,
@@ -55,6 +59,7 @@ export interface RangeButtonConfig {
 export interface ChartsToolbarProProps extends ChartsToolbarProps {
   printOptions?: ChartsToolbarPrintExportOptions;
   imageExportOptions?: ChartsToolbarImageExportOptions[];
+  svgExportOptions?: ChartsToolbarSvgExportOptions;
   /**
    * Configuration for range buttons shown in the toolbar.
    * Each button zooms the chart to a predefined time range from the end of the data.
@@ -87,6 +92,7 @@ const RangeButtonGroup = styled(ToggleButtonGroup, {
 function ChartsToolbarPro({
   printOptions,
   imageExportOptions: rawImageExportOptions,
+  svgExportOptions,
   rangeButtons,
   rangeButtonsAxisId,
   ...other
@@ -100,7 +106,11 @@ function ChartsToolbarPro({
   const exportMenuTriggerId = useId();
   const isZoomEnabled = store.use(selectorChartZoomIsEnabled);
   const imageExportOptionList = rawImageExportOptions ?? DEFAULT_IMAGE_EXPORT_OPTIONS;
-  const showExportMenu = !printOptions?.disableToolbarButton || imageExportOptionList.length > 0;
+
+  const showExportMenu =
+    !printOptions?.disableToolbarButton ||
+    imageExportOptionList.length > 0 ||
+    !svgExportOptions?.disableToolbarButton;
 
   const children: Array<React.JSX.Element> = [];
 
@@ -217,6 +227,15 @@ function ChartsToolbarPro({
                 {localeText.toolbarExportImage(imageExportOptions.type)}
               </ChartsToolbarImageExportTrigger>
             ))}
+            {!svgExportOptions?.disableToolbarButton && (
+              <ChartsToolbarSvgExportTrigger
+                render={<MenuItem dense {...slotProps?.baseMenuItem} />}
+                options={svgExportOptions}
+                onClick={closeExportMenu}
+              >
+                {localeText.toolbarExportSvg}
+              </ChartsToolbarSvgExportTrigger>
+            )}
           </MenuList>
         </ChartsMenu>
       </React.Fragment>,

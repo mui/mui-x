@@ -1,3 +1,13 @@
+/**
+ * Triggers a browser download for the given object URL.
+ */
+export function triggerDownload(url: string, name: string) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  a.click();
+}
+
 export function createExportIframe(title?: string): HTMLIFrameElement {
   const iframeEl = document.createElement('iframe');
   iframeEl.style.position = 'absolute';

@@ -181,6 +181,7 @@ RadialBarChart.propTypes /* remove-proptypes */ = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      exportAsSvg: PropTypes.func.isRequired,
     }),
   }),
   /**
