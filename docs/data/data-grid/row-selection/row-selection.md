@@ -174,6 +174,13 @@ This API should only be used as a last resort when the Data Grid's built-in prop
 
 {{"demo": "RowSelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
+### Access the selection from another callback
+
+The `GridCallbackDetails` object passed as the second argument to callbacks like `onFilterModelChange` exposes an `api` property, which is the same object as `apiRef.current`.
+To read the row selection (or any other piece of state) from inside such a callback, pass `{ current: details.api }` to the relevant selector, such as `gridRowSelectionIdsSelector`:
+
+{{"demo": "RowSelectionFromCallback.js", "bg": "inline", "disableAd": true}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

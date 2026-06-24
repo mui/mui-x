@@ -1,0 +1,16 @@
+<DataGridPro
+  checkboxSelection
+  onRowSelectionModelChange={(
+    newRowSelectionModel: GridRowSelectionModel,
+    details: GridCallbackDetails,
+  ) => {
+    logSelectionAndFilter(details);
+  }}
+  onFilterModelChange={(
+    newFilterModel: GridFilterModel,
+    details: GridCallbackDetails,
+  ) => {
+    logSelectionAndFilter(details);
+  }}
+  {...data}
+/>
