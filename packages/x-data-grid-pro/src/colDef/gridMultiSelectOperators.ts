@@ -13,55 +13,56 @@ const parseObjectValue = (value: unknown) => {
  * Returns filter operators for the `multiSelect` column type.
  * Operators: contains, doesNotContain, isEmpty, isNotEmpty
  */
-export const getGridMultiSelectOperators = () => [
-  {
-    value: 'contains',
-    getApplyFilterFn: (filterItem) => {
-      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
-        return null;
-      }
-      const filterSet = new Set(filterItem.value.map(parseObjectValue));
-      return (cellValue): boolean => {
-        if (!Array.isArray(cellValue)) {
-          return false;
+export const getGridMultiSelectOperators = () =>
+  [
+    {
+      value: 'contains',
+      getApplyFilterFn: (filterItem) => {
+        if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
+          return null;
         }
-        return cellValue.some((val) => filterSet.has(parseObjectValue(val)));
-      };
+        const filterSet = new Set(filterItem.value.map(parseObjectValue));
+        return (cellValue): boolean => {
+          if (!Array.isArray(cellValue)) {
+            return false;
+          }
+          return cellValue.some((val) => filterSet.has(parseObjectValue(val)));
+        };
+      },
+      InputComponent: GridFilterInputMultipleMultiSelect,
     },
-    InputComponent: GridFilterInputMultipleMultiSelect,
-  },
-  {
-    value: 'doesNotContain',
-    getApplyFilterFn: (filterItem) => {
-      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
-        return null;
-      }
-      const filterSet = new Set(filterItem.value.map(parseObjectValue));
-      return (cellValue): boolean => {
-        if (!Array.isArray(cellValue)) {
-          return true;
+    {
+      value: 'doesNotContain',
+      getApplyFilterFn: (filterItem) => {
+        if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
+          return null;
         }
-        return !cellValue.some((val) => filterSet.has(parseObjectValue(val)));
-      };
+        const filterSet = new Set(filterItem.value.map(parseObjectValue));
+        return (cellValue): boolean => {
+          if (!Array.isArray(cellValue)) {
+            return true;
+          }
+          return !cellValue.some((val) => filterSet.has(parseObjectValue(val)));
+        };
+      },
+      InputComponent: GridFilterInputMultipleMultiSelect,
     },
-    InputComponent: GridFilterInputMultipleMultiSelect,
-  },
-  {
-    value: 'isEmpty',
-    getApplyFilterFn: () => {
-      return (cellValue): boolean => {
-        return !cellValue || !Array.isArray(cellValue) || cellValue.length === 0;
-      };
+    {
+      value: 'isEmpty',
+      getApplyFilterFn: () => {
+        return (cellValue): boolean => {
+          return !cellValue || !Array.isArray(cellValue) || cellValue.length === 0;
+        };
+      },
+      requiresFilterValue: false,
     },
-    requiresFilterValue: false,
-  },
-  {
-    value: 'isNotEmpty',
-    getApplyFilterFn: () => {
-      return (cellValue): boolean => {
-        return Array.isArray(cellValue) && cellValue.length > 0;
-      };
+    {
+      value: 'isNotEmpty',
+      getApplyFilterFn: () => {
+        return (cellValue): boolean => {
+          return Array.isArray(cellValue) && cellValue.length > 0;
+        };
+      },
+      requiresFilterValue: false,
     },
-    requiresFilterValue: false,
-  },
-] as const satisfies GridFilterOperator[];
+  ] as const satisfies GridFilterOperator[];
