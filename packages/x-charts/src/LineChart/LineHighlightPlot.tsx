@@ -125,19 +125,23 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
           const yScale = yAxis[yAxisId].scale;
           const xData = xAxis[xAxisId].data;
 
-          if (xData === undefined) {
-            throw new Error(
-              `MUI X Charts: ${
-                xAxisId === DEFAULT_X_AXIS_KEY
-                  ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisId}"`
-              } should have a data property to be able to display a line plot. ` +
-                'The x-axis data defines the positions for each point in the line. ' +
-                'Provide a data array to the x-axis configuration.',
-            );
+          if (process.env.NODE_ENV !== 'production') {
+            if (xData === undefined) {
+              // TODO: fix mui/no-guarded-throw
+              // eslint-disable-next-line mui/no-guarded-throw
+              throw new Error(
+                `MUI X Charts: ${
+                  xAxisId === DEFAULT_X_AXIS_KEY
+                    ? 'The first `xAxis`'
+                    : `The x-axis with id "${xAxisId}"`
+                } should have a data property to be able to display a line plot. ` +
+                  'The x-axis data defines the positions for each point in the line. ' +
+                  'Provide a data array to the x-axis configuration.',
+              );
+            }
           }
 
-          const x = xScale(xData[highlightedIndex]);
+          const x = xScale(xData![highlightedIndex]);
           const y = yScale(visibleStackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
           if (!instance.isPointInside(x, y)) {
             return null;
