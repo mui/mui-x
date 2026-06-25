@@ -9,163 +9,108 @@ import type { FocusedItemIdentifier } from '@mui/x-charts/models';
 /**
  * Keyboard navigation for the map series.
  *
- * The `mapShape` identifier is keyed by the feature `name` (a string), so the
- * generic `createCommonKeyboardFocusHandler` (which steps a numeric index) cannot
- * be reused. The focus is stepped by data-array position internally, while the `name`
- * at the landing position is emitted. Hidden shapes and hidden or empty series are skipped.
+ * The `mapShape` identifier is keyed by the feature `name` (a string), so the generic
+ * `createCommonKeyboardFocusHandler` (which steps a numeric index) cannot be reused.
  *
- * `ArrowRight` and `ArrowLeft` move to the next or previous visible shape of the focused series.
- * `ArrowUp` and `ArrowDown` move between series.
+ * Navigation runs on a flattened list of the currently visible shapes, grouped by series.
+ * Hidden shapes and hidden or empty series are excluded up front, so a key press never has
+ * to special-case visibility — it is a simple, bounds-checked move on that list:
+ *
+ * - `ArrowRight` and `ArrowLeft` step within the focused series.
+ * - `ArrowUp` and `ArrowDown` move to the first shape of the next or previous series.
  */
 
 type MapState = Pick<ChartState<[UseChartKeyboardNavigationSignature], [], 'mapShape'>, 'series'>;
 
-// Read the processed series (not `defaultizedSeries`) because that is where the
-// per-item/per-series `hidden` flags are populated by the series processor.
-const getMapSeries = (state: MapState) =>
-  selectorChartSeriesProcessed(state as ChartState<[UseChartKeyboardNavigationSignature], []>)
-    .mapShape;
+type SeriesId = FocusedItemIdentifier<'mapShape'>['seriesId'];
 
-type MapSeries = NonNullable<ReturnType<typeof getMapSeries>>;
+/** A series with at least one visible shape, holding its visible shape names in order. */
+type VisibleSeries = { seriesId: SeriesId; names: string[] };
 
-const toFocusedItem = (
-  seriesId: FocusedItemIdentifier<'mapShape'>['seriesId'],
-  name: string,
-): FocusedItemIdentifier<'mapShape'> => ({ type: 'mapShape', seriesId, name });
+/** A location in the visible list: the series index and the shape index within it. */
+type Position = { series: number; shape: number };
 
-/**
- * Returns the first non-hidden index in `data`, starting at `start` and moving by `step`.
- * Returns `null` if the edge of the array is reached before a visible item is found.
- */
-function nextVisibleIndex(
-  data: readonly { hidden: boolean }[],
-  start: number,
-  step: 1 | -1,
-): number | null {
-  for (let i = start; i >= 0 && i < data.length; i += step) {
-    if (!data[i].hidden) {
-      return i;
-    }
-  }
-  return null;
-}
+const toFocusedItem = (seriesId: SeriesId, name: string): FocusedItemIdentifier<'mapShape'> => ({
+  type: 'mapShape',
+  seriesId,
+  name,
+});
 
 /**
- * Returns the name of the first visible shape of a series.
- * Returns `null` if the series is hidden, empty, or contains only hidden shapes.
+ * Returns the visible shapes grouped by series, in navigation order.
+ *
+ * Reads the processed series (not `defaultizedSeries`) because that is where the per-item
+ * and per-series `hidden` flags are populated by the series processor.
  */
-function firstVisibleName(
-  mapSeries: MapSeries,
-  seriesId: FocusedItemIdentifier<'mapShape'>['seriesId'],
-): string | null {
-  const series = mapSeries.series[seriesId];
-  if (!series || series.hidden) {
-    return null;
-  }
-  const index = nextVisibleIndex(series.data, 0, 1);
-  return index === null ? null : series.data[index].name;
-}
-
-/**
- * Returns the first focusable shape across all visible map series, or `null` if none is visible.
- */
-function getFirstItem(state: MapState): FocusedItemIdentifier<'mapShape'> | null {
-  const mapSeries = getMapSeries(state);
+function getVisibleSeries(state: MapState): VisibleSeries[] {
+  const mapSeries = selectorChartSeriesProcessed(
+    state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+  ).mapShape;
   if (!mapSeries) {
-    return null;
+    return [];
   }
+
+  const visible: VisibleSeries[] = [];
   for (const seriesId of mapSeries.seriesOrder) {
-    const name = firstVisibleName(mapSeries, seriesId);
-    if (name !== null) {
-      return toFocusedItem(seriesId, name);
+    const series = mapSeries.series[seriesId];
+    if (!series || series.hidden) {
+      continue;
+    }
+    const names = series.data.filter((shape) => !shape.hidden).map((shape) => shape.name);
+    if (names.length > 0) {
+      visible.push({ seriesId, names });
     }
   }
-  return null;
+  return visible;
 }
 
-/**
- * Returns `currentItem` while it still points to a visible shape, otherwise the first
- * visible shape across all series. Prevents focus from staying on a shape that became
- * hidden (for example through the legend) between two key presses.
- */
-function keepVisibleOrFirst(
+/** Returns the position of `currentItem` in the visible list, or `null` if it is no longer visible. */
+function locate(
+  visible: VisibleSeries[],
   currentItem: FocusedItemIdentifier<'mapShape'>,
-  state: MapState,
-): FocusedItemIdentifier<'mapShape'> | null {
-  const series = getMapSeries(state)?.series[currentItem.seriesId];
-  const isVisible =
-    !!series && !series.hidden && series.data.some((d) => d.name === currentItem.name && !d.hidden);
-  return isVisible ? currentItem : getFirstItem(state);
+): Position | null {
+  const series = visible.findIndex((entry) => entry.seriesId === currentItem.seriesId);
+  if (series === -1) {
+    return null;
+  }
+  const shape = visible[series].names.indexOf(currentItem.name);
+  return shape === -1 ? null : { series, shape };
 }
 
-/**
- * Moves the focus within the current series by `direction`, skipping hidden shapes.
- * When no visible shape is available in that direction, the focus stays on the current
- * shape while it remains visible, and otherwise falls back to the first visible shape.
- */
-function stepWithinSeries(
-  currentItem: FocusedItemIdentifier<'mapShape'>,
-  state: MapState,
-  direction: 1 | -1,
-): FocusedItemIdentifier<'mapShape'> | null {
-  const series = getMapSeries(state)?.series[currentItem.seriesId];
-  if (!series || series.hidden) {
-    return keepVisibleOrFirst(currentItem, state);
-  }
-  const current = series.data.findIndex((d) => d.name === currentItem.name);
-  if (current === -1) {
-    return getFirstItem(state);
-  }
-  const next = nextVisibleIndex(series.data, current + direction, direction);
-  return next === null
-    ? keepVisibleOrFirst(currentItem, state)
-    : toFocusedItem(currentItem.seriesId, series.data[next].name);
-}
-
-/**
- * Moves the focus to the first visible shape of the next or previous visible series,
- * depending on `direction`.
- */
-function stepBetweenSeries(
-  currentItem: FocusedItemIdentifier<'mapShape'>,
-  state: MapState,
-  direction: 1 | -1,
-): FocusedItemIdentifier<'mapShape'> | null {
-  const mapSeries = getMapSeries(state);
-  if (!mapSeries) {
-    return currentItem;
-  }
-  const order = mapSeries.seriesOrder;
-  const position = order.indexOf(currentItem.seriesId);
-  if (position === -1) {
-    return getFirstItem(state) ?? currentItem;
-  }
-  for (let i = position + direction; i >= 0 && i < order.length; i += direction) {
-    const name = firstVisibleName(mapSeries, order[i]);
-    if (name !== null) {
-      return toFocusedItem(order[i], name);
-    }
-  }
-  return keepVisibleOrFirst(currentItem, state);
-}
+/** Maps each handled key to the next position, or `null` to stay put at a boundary. */
+const MOVES: Record<string, (position: Position, visible: VisibleSeries[]) => Position | null> = {
+  ArrowRight: ({ series, shape }, visible) => ({
+    series,
+    shape: Math.min(shape + 1, visible[series].names.length - 1),
+  }),
+  ArrowLeft: ({ series, shape }) => ({ series, shape: Math.max(shape - 1, 0) }),
+  ArrowUp: ({ series }, visible) =>
+    series + 1 < visible.length ? { series: series + 1, shape: 0 } : null,
+  ArrowDown: ({ series }) => (series - 1 >= 0 ? { series: series - 1, shape: 0 } : null),
+};
 
 const keyboardFocusHandler: KeyboardFocusHandler<'mapShape', 'mapShape'> = (event) => {
-  switch (event.key) {
-    case 'ArrowRight':
-      return (currentItem, state) =>
-        currentItem ? stepWithinSeries(currentItem, state, 1) : getFirstItem(state);
-    case 'ArrowLeft':
-      return (currentItem, state) =>
-        currentItem ? stepWithinSeries(currentItem, state, -1) : getFirstItem(state);
-    case 'ArrowUp':
-      return (currentItem, state) =>
-        currentItem ? stepBetweenSeries(currentItem, state, 1) : getFirstItem(state);
-    case 'ArrowDown':
-      return (currentItem, state) =>
-        currentItem ? stepBetweenSeries(currentItem, state, -1) : getFirstItem(state);
-    default:
-      return null;
+  const move = MOVES[event.key];
+  if (!move) {
+    return null;
   }
+
+  return (currentItem, state) => {
+    const visible = getVisibleSeries(state);
+    if (visible.length === 0) {
+      return null;
+    }
+
+    // No focus yet, or the focused shape is no longer visible: start from the first shape.
+    const position = currentItem && locate(visible, currentItem);
+    if (!position) {
+      return toFocusedItem(visible[0].seriesId, visible[0].names[0]);
+    }
+
+    // `null` means a boundary was reached, so the focus stays on the current shape.
+    const next = move(position, visible) ?? position;
+    return toFocusedItem(visible[next.series].seriesId, visible[next.series].names[next.shape]);
+  };
 };
 
 export default keyboardFocusHandler;
