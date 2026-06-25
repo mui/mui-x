@@ -102,6 +102,7 @@ Internal changes.
 - [code-infra] Reduce Netlify build parallelism to 2 (#22925) @LukasTy
 - [code-infra] Use Turbopack for docs in dev (#22882) @brijeshb42
 - [docs-infra] Pre-render API page descriptions (#22919) @brijeshb42
+- [code-infra] Add infra bot to `if` condition (#22951) @michelengelen
 - [internal] Use @base-ui/utils/platform for platform detection (#22710) @romgrk
 - [internal] Enforce top-level type imports (#22679) @Janpot
 
