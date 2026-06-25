@@ -149,3 +149,7 @@ Lines support all three algorithms; pick the one that best fits your data.
 ```
 
 {{"demo": "LineSampling.js"}}
+
+A line series that contains any `null` value skips sampling entirely and renders every point, so gaps stay exact.
+
+{{"demo": "LineSamplingNulls.js"}}

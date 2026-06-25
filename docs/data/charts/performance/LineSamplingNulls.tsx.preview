@@ -1,0 +1,16 @@
+<FormControlLabel
+  control={
+    <Switch checked={hasGaps} onChange={(event) => setHasGaps(event.target.checked)} />
+  }
+  label="Insert null gaps"
+/>
+<Typography variant="caption" color="text.secondary">
+  Sampling is set to <code>m4</code>. A series containing any <code>null</code> value skips
+  sampling entirely and renders every point, so gaps stay exact.
+</Typography>
+<LineChartPro
+  xAxis={[{ data: xData, zoom: true }]}
+  series={[{ data, label: 'Generation (MW)', showMark: false }]}
+  height={300}
+  sampling="m4"
+/>
