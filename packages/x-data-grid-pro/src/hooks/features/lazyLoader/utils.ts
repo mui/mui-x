@@ -1,5 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
+import { gridRowNodeSelector } from '@mui/x-data-grid';
+import type { GridRowEntry } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 interface GridRowRenderContext {

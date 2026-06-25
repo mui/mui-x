@@ -1,12 +1,9 @@
 'use client';
 import * as React from 'react';
-import { type ChartDrawingArea } from '@mui/x-charts/hooks';
-import {
-  type BorderRadiusSide,
-  selectorChartsHighlightStateCallback,
-  useStore,
-} from '@mui/x-charts/internals';
-import { type SeriesId } from '@mui/x-charts/models';
+import type { ChartDrawingArea } from '@mui/x-charts/hooks';
+import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
+import type { BorderRadiusSide } from '@mui/x-charts/internals';
+import type { SeriesId } from '@mui/x-charts/models';
 import { parseColor } from '../../utils/webgl/parseColor';
 
 export interface WebGLBarLikeItem {

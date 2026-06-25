@@ -1,5 +1,6 @@
-import { type CartesianExtremumGetter, findMinMax } from '@mui/x-charts/internals';
-import { type RangeBarValueType } from '../../../models';
+import { findMinMax } from '@mui/x-charts/internals';
+import type { CartesianExtremumGetter } from '@mui/x-charts/internals';
+import type { RangeBarValueType } from '../../../models';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
   if (direction === 'x') {

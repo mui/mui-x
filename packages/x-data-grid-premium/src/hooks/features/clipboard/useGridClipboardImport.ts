@@ -1,31 +1,33 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import {
-  type GridColDef,
-  type GridRowId,
-  type GridValidRowModel,
   GRID_CHECKBOX_SELECTION_FIELD,
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
-  type GridRowModel,
   useGridEventPriority,
   useGridEvent,
-  type GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowSelectionIdsSelector,
   gridRowSelectionCountSelector,
 } from '@mui/x-data-grid';
+import type {
+  GridColDef,
+  GridRowId,
+  GridValidRowModel,
+  GridRowModel,
+  GridEventListener,
+} from '@mui/x-data-grid';
 import {
   getRowIdFromRowModel,
   getActiveElement,
-  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   getPublicApiRef,
   isPasteShortcut,
   useGridLogger,
   isEventTargetInPortal,
 } from '@mui/x-data-grid/internals';
+import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import debounce from '@mui/utils/debounce';

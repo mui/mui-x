@@ -2,17 +2,19 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
   gridClasses,
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
-  type GridApi,
-  type GridAutosizeOptions,
-  type GridColDef,
+} from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridApi,
+  GridAutosizeOptions,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';

@@ -3,13 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import {
-  AreaElement,
-  type AreaElementProps,
-  type AreaElementSlotProps,
-  type AreaElementSlots,
-} from './AreaElement';
-import { type LineItemIdentifier } from '../models/seriesType/line';
+import { AreaElement } from './AreaElement';
+import type { AreaElementProps, AreaElementSlotProps, AreaElementSlots } from './AreaElement';
+import type { LineItemIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';

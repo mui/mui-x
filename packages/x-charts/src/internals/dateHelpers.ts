@@ -1,6 +1,7 @@
-import { type NumberValue, scaleTime } from '@mui/x-charts-vendor/d3-scale';
-import { type AxisConfig } from '../models';
-import { type ChartsAxisProps } from '../models/axis';
+import { scaleTime } from '@mui/x-charts-vendor/d3-scale';
+import type { NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import type { AxisConfig } from '../models';
+import type { ChartsAxisProps } from '../models/axis';
 
 /**
  * Checks if the provided data array contains Date objects.

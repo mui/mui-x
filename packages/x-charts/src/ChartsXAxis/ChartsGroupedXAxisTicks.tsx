@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { type ChartsXAxisProps, type AxisGroup } from '../models/axis';
+import type { ChartsXAxisProps, AxisGroup } from '../models/axis';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { useChartsContext } from '../context/ChartsProvider/useChartsContext';
 import { TICK_LABEL_GAP } from './utilities';
