@@ -46,7 +46,9 @@ const seriesProcessor: SeriesProcessor<'mapShape'> = (
     data.forEach((item, index) => {
       if (lookupByName.has(item.name)) {
         throw new Error(
-          `MUI X Charts: Series "${seriesId}" Has duplicated name "${item.name}". Please ensure that each data entry has a unique name.`,
+          `MUI X Charts: Series "${seriesId}" has a duplicated name "${item.name}".\n` +
+            `Map shapes are identified by their name, so duplicates cannot be told apart for coloring, tooltips, and highlighting.\n` +
+            `Ensure each data entry has a unique name.`,
         );
       }
       lookupByName.set(item.name, index);
