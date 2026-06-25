@@ -84,8 +84,24 @@ function getFirstItem(state: MapState): FocusedItemIdentifier<'mapShape'> | null
 }
 
 /**
+ * Returns `currentItem` while it still points to a visible shape, otherwise the first
+ * visible shape across all series. Prevents focus from staying on a shape that became
+ * hidden (for example through the legend) between two key presses.
+ */
+function keepVisibleOrFirst(
+  currentItem: FocusedItemIdentifier<'mapShape'>,
+  state: MapState,
+): FocusedItemIdentifier<'mapShape'> | null {
+  const series = getMapSeries(state)?.series[currentItem.seriesId];
+  const isVisible =
+    !!series && !series.hidden && series.data.some((d) => d.name === currentItem.name && !d.hidden);
+  return isVisible ? currentItem : getFirstItem(state);
+}
+
+/**
  * Moves the focus within the current series by `direction`, skipping hidden shapes.
- * Returns the current item unchanged when a boundary is reached, since cycling is disabled.
+ * When no visible shape is available in that direction, the focus stays on the current
+ * shape while it remains visible, and otherwise falls back to the first visible shape.
  */
 function stepWithinSeries(
   currentItem: FocusedItemIdentifier<'mapShape'>,
@@ -93,15 +109,17 @@ function stepWithinSeries(
   direction: 1 | -1,
 ): FocusedItemIdentifier<'mapShape'> | null {
   const series = getMapSeries(state)?.series[currentItem.seriesId];
-  if (!series) {
-    return currentItem;
+  if (!series || series.hidden) {
+    return keepVisibleOrFirst(currentItem, state);
   }
   const current = series.data.findIndex((d) => d.name === currentItem.name);
   if (current === -1) {
     return getFirstItem(state);
   }
   const next = nextVisibleIndex(series.data, current + direction, direction);
-  return next === null ? currentItem : toFocusedItem(currentItem.seriesId, series.data[next].name);
+  return next === null
+    ? keepVisibleOrFirst(currentItem, state)
+    : toFocusedItem(currentItem.seriesId, series.data[next].name);
 }
 
 /**
@@ -128,7 +146,7 @@ function stepBetweenSeries(
       return toFocusedItem(order[i], name);
     }
   }
-  return currentItem;
+  return keepVisibleOrFirst(currentItem, state);
 }
 
 const keyboardFocusHandler: KeyboardFocusHandler<'mapShape', 'mapShape'> = (event) => {
