@@ -10,12 +10,7 @@ import {
 } from '@mui/x-charts-pro/internals';
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { selectorChartProjection } from '../useGeoProjection/useGeoProjection.selectors';
-import type {
-  MapTranslationAxis,
-  MapRotationAxis,
-  MapZoomView,
-  UseGeoProjectionZoomSignature,
-} from './useGeoProjectionZoom.types';
+import type { MapZoomView, UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
 import { getRotation, getTranslation } from './mapZoom.utils';
 
 /** Multiplicative zoom step applied per wheel tick. */
@@ -28,15 +23,18 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   instance,
   params,
 }) => {
-  const { zoom, minZoomLevel, maxZoomLevel, maxGap, onZoomChange, view } = params;
+  const { zoom, onZoomChange, view } = params;
+
+  const {
+    minZoomLevel = 1,
+    maxZoomLevel = 8,
+    maxGap = 0,
+    rotationAllowed = 'both',
+    translationAllowed = 'both',
+  } = typeof zoom === 'object' ? zoom : {};
 
   // `zoom` is either a boolean or a config object; an object always enables the interaction.
   const enabled = zoom !== false;
-  const rotationAllowed: MapRotationAxis =
-    typeof zoom === 'object' ? (zoom.rotationAllowed ?? 'both') : 'both';
-  const translationAllowed: MapTranslationAxis =
-    typeof zoom === 'object' ? (zoom.translationAllowed ?? 'both') : 'both';
-
   const isControlled = view !== undefined;
 
   const getProjection = React.useCallback(
@@ -286,9 +284,6 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 
 useGeoProjectionZoom.params = {
   zoom: true,
-  minZoomLevel: true,
-  maxZoomLevel: true,
-  maxGap: true,
   initialView: true,
   view: true,
   onZoomChange: true,
@@ -297,9 +292,6 @@ useGeoProjectionZoom.params = {
 useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
   ...params,
   zoom: params.zoom ?? false,
-  minZoomLevel: params.minZoomLevel ?? 1,
-  maxZoomLevel: params.maxZoomLevel ?? 8,
-  maxGap: params.maxGap ?? 0,
 });
 
 useGeoProjectionZoom.getInitialState = (params) => ({

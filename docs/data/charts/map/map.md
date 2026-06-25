@@ -219,6 +219,11 @@ The zoom object has two properties to limit this behavior:
 
 In most cases, the configuration `{ translationAllowed: 'y', rotationAllowed: 'long' }` it the more appropriate.
 
+You can also modify the zoom result with:
+
+- `minZoomLevel`/`maxZoomLevel`: Clamp the `zoomLevel` between those two values.
+- `maxGap`: The maximal gap between the map and the drawing area as a ratio of the drawing area size. For example `maxGap=0.2` means the map need to fill at list 80% of the drawing area.
+
 {{"demo": "MapZoomOptions.js"}}
 
 ### Control

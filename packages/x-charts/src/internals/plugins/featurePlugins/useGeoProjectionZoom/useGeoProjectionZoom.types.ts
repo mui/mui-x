@@ -50,15 +50,6 @@ export interface MapZoomOptions {
    * @default 'both'
    */
   translationAllowed?: MapTranslationAxis;
-}
-
-export interface UseGeoProjectionZoomParameters {
-  /**
-   * If `true`, the map can be panned (drag) and zoomed (wheel / pinch).
-   * Pass a {@link MapZoomOptions} object to fine-tune the interaction, e.g. restrict rotation axes.
-   * @default false
-   */
-  zoom?: boolean | MapZoomOptions;
   /**
    * The minimum zoom level, as a multiple of the scale that fits the data in the drawing area.
    * @default 1
@@ -77,6 +68,15 @@ export interface UseGeoProjectionZoomParameters {
    * @default 0
    */
   maxGap?: number;
+}
+
+export interface UseGeoProjectionZoomParameters {
+  /**
+   * If `true`, the map can be panned (drag) and zoomed (wheel / pinch).
+   * Pass a {@link MapZoomOptions} object to fine-tune the interaction, e.g. restrict rotation axes.
+   * @default false
+   */
+  zoom?: boolean | MapZoomOptions;
   /**
    * The view to apply on mount, when the zoom is not controlled.
    * Use this to seed the map at a specific zoom level and center without controlling it.
@@ -96,9 +96,6 @@ export interface UseGeoProjectionZoomParameters {
 
 export interface UseGeoProjectionZoomDefaultizedParameters extends UseGeoProjectionZoomParameters {
   zoom: boolean | MapZoomOptions;
-  minZoomLevel: number;
-  maxZoomLevel: number;
-  maxGap: number;
 }
 
 /**
