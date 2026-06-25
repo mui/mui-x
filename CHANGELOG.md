@@ -40,7 +40,7 @@ Same changes as in `@mui/x-data-grid-pro@9.7.0`.
 
 - [fields] Announce cardinal day in the day section `aria-valuetext` (#22922) @LukasTy
 - [fields] Avoid focusing the field on blank space clicks (#22285) @LukasTy
-- [pickers] Commit TimeClock value when the drag ends outside the clock (#22877) @LukasTy
+- [pickers] Commit `TimeClock` value when the drag ends outside the clock (#22877) @LukasTy
 - [pickers] Respect explicit `notched` prop on the outlined PickersTextField (#22875) @LukasTy
 
 #### `@mui/x-date-pickers-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -58,7 +58,7 @@ Same changes as in `@mui/x-date-pickers@9.7.0`.
 - [charts] Stable progressive scatter batching + responsive zoom/pan (#22862) @JCQuintas
 - [charts] Strip dev-only console diagnostics from production (#22917) @sai6855
 - [docs] Fix scatter renderer table blocking column (#22904) @JCQuintas
-- [docs] Make ScatterAsyncRenderer button bar responsive (#22905) @JCQuintas
+- [docs] Make `ScatterAsyncRenderer` button bar responsive (#22905) @JCQuintas
 
 #### `@mui/x-charts-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
