@@ -32,7 +32,7 @@ export type TimeRangePickerTimeWrapperProps<
     selectionState: PickerSelectionState,
     selectedView: TimeViewWithMeridiem,
   ) => void;
-  viewRenderer: PickerViewRenderer<PickerRangeValue, TComponentProps> | null;
+  viewRenderer?: PickerViewRenderer<PickerRangeValue, TComponentProps> | null;
   openTo?: TimeViewWithMeridiem;
 };
 
