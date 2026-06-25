@@ -32,6 +32,8 @@ export default defineConfig(async () => {
     datePickersProComponents,
     treeViewComponents,
     treeViewProComponents,
+    schedulerComponents,
+    schedulerPremiumComponents,
   ] = await Promise.all([
     findComponents('x-charts', '@mui/x-charts'),
     findComponents('x-charts-pro', '@mui/x-charts-pro'),
@@ -40,6 +42,8 @@ export default defineConfig(async () => {
     findComponents('x-date-pickers-pro', '@mui/x-date-pickers-pro'),
     findComponents('x-tree-view', '@mui/x-tree-view'),
     findComponents('x-tree-view-pro', '@mui/x-tree-view-pro'),
+    findComponents('x-scheduler', '@mui/x-scheduler'),
+    findComponents('x-scheduler-premium', '@mui/x-scheduler-premium'),
   ]);
 
   // Return the complete entrypoints configuration
@@ -73,6 +77,10 @@ export default defineConfig(async () => {
       ...treeViewProComponents,
       '@mui/x-license',
       '@mui/x-license/internals',
+      '@mui/x-scheduler',
+      ...schedulerComponents,
+      '@mui/x-scheduler-premium',
+      ...schedulerPremiumComponents,
     ],
     upload: !!process.env.CI,
     replace: {

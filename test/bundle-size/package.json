@@ -15,6 +15,8 @@
     "@mui/x-date-pickers-pro": "workspace:^",
     "@mui/x-license": "workspace:^",
     "@mui/x-tree-view": "workspace:^",
-    "@mui/x-tree-view-pro": "workspace:^"
+    "@mui/x-tree-view-pro": "workspace:^",
+    "@mui/x-scheduler": "workspace:^",
+    "@mui/x-scheduler-premium": "workspace:^"
   }
 }
