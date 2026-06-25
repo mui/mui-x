@@ -4,10 +4,9 @@ import { getThemeProps } from '@mui/system';
 import {
   DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   GRID_DEFAULT_LOCALE_TEXT,
-  type DataGridProProps,
   GridSignature,
-  type GridEvents,
 } from '@mui/x-data-grid-pro';
+import type { DataGridProProps, GridEvents } from '@mui/x-data-grid-pro';
 import { computeSlots } from '@mui/x-data-grid-pro/internals';
 import type {
   DataGridPremiumProps,

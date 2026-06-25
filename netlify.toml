@@ -12,7 +12,7 @@
   # Cap the Next.js docs build worker count (read by `withDocsInfra`, which
   # otherwise defaults to `os.availableParallelism()`) to avoid OOM during the
   # static export build.
-  NEXT_PARALLELISM = "4"
+  NEXT_PARALLELISM = "2"
 
 # disabled because of https://github.com/mui/mui-public/issues/809
 # TODO: Re-enable after either:

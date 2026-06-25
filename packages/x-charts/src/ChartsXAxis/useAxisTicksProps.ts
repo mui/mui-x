@@ -2,8 +2,9 @@
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
-import { type ChartsXAxisProps } from '../models/axis';
-import { ChartsText, type ChartsTextProps } from '../ChartsText';
+import type { ChartsXAxisProps } from '../models/axis';
+import { ChartsText } from '../ChartsText';
+import type { ChartsTextProps } from '../ChartsText';
 import { useXAxes } from '../hooks/useAxis';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { invertTextAnchor } from '../internals/invertTextAnchor';

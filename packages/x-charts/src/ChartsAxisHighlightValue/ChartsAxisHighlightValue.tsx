@@ -1,8 +1,8 @@
 'use client';
 import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { type SxProps } from '@mui/material/styles';
-import { type AxisId } from '../models/axis';
+import type { SxProps } from '@mui/material/styles';
+import type { AxisId } from '../models/axis';
 import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
 import { useAxisHighlightValue } from './useAxisHighlightValue';
 import { ChartsAxisHighlightValueItem } from './ChartsAxisHighlightValueItem';

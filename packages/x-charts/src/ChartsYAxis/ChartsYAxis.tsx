@@ -1,11 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import { warnOnce } from '@mui/x-internals/warning';
-import {
-  type ChartsYAxisProps,
-  type ChartsAxisSlots,
-  type ChartsAxisSlotProps,
-} from '../models/axis';
+import type { ChartsYAxisProps, ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import { useYAxes } from '../hooks';
 import { ChartsYAxisImpl } from './ChartsYAxisImpl';
 

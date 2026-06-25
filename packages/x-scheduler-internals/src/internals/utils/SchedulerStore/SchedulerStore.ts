@@ -112,7 +112,7 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      editedEventId: null,
+      editedOccurrenceKey: null,
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingRecurringEventOperation: null,
@@ -742,11 +742,11 @@ export class SchedulerStore<
   };
 
   /**
-   * Sets the ID of the currently active event (e.g. open in the event dialog).
-   * Pass `null` to clear the active event.
+   * Sets the key of the currently active occurrence (e.g. open in the event dialog).
+   * Pass `null` to clear the active occurrence.
    */
-  public setEditedEventId = (eventId: SchedulerEventId | null) => {
-    this.set('editedEventId', eventId);
+  public setEditedOccurrenceKey = (occurrenceKey: string | null) => {
+    this.set('editedOccurrenceKey', occurrenceKey);
   };
 
   /**

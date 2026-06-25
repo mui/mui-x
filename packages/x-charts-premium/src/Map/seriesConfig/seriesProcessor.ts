@@ -1,9 +1,5 @@
-import {
-  type SeriesProcessor,
-  type SeriesId,
-  type ChartSeriesDefaultized,
-  incompleteDatasetKeysError,
-} from '@mui/x-charts/internals';
+import { incompleteDatasetKeysError } from '@mui/x-charts/internals';
+import type { SeriesProcessor, SeriesId, ChartSeriesDefaultized } from '@mui/x-charts/internals';
 import type { MapShapeValueType } from '../../models/seriesType/mapShape';
 
 const defaultValueFormatter = ((v) =>

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { getSymbol } from '@mui/x-charts/internals';
 import { useRadialLinePlotData } from './useRadialLinePlotData';
-import { type RadialLineClasses, useUtilityClasses } from './radialLineClasses';
+import { useUtilityClasses } from './radialLineClasses';
+import type { RadialLineClasses } from './radialLineClasses';
 import { useItemHighlightStateGetter } from '../hooks';
 
 const RadialMarkPlotRoot = styled('g', {

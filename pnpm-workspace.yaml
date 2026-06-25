@@ -15,19 +15,19 @@ catalog:
   '@babel/runtime': ^7.29.7
   '@babel/traverse': ^7.29.7
   '@base-ui/react': ^1.5.0
-  '@base-ui/utils': ^0.2.9
+  '@base-ui/utils': ^0.3.0
   '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.1.1
   '@mui/internal-test-utils': 2.0.18-canary.25
-  '@mui/internal-core-docs': 9.0.2-canary.2
+  '@mui/internal-core-docs': 9.1.2-canary.2
   '@mui/material': 9.1.1
   '@mui/stylis-plugin-rtl': 9.1.1
   '@mui/system': 9.1.1
   '@mui/types': 9.1.1
-  '@mui/utils': ^9.0.1
+  '@mui/utils': ^9.1.1
   '@mui/x-internal-exceljs-fork': 5.0.0
   '@playwright/test': 1.60.0
   '@react-spring/web': ^10.1.0
@@ -92,6 +92,9 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
   - '@base-ui/*'
+  # nanoid@3.3.14 fails the no-downgrade trust policy (no provenance); this forces the attested 3.3.15.
+  # Removable from 2026-06-25, once 3.3.15 ages past minimumReleaseAge.
+  - 'nanoid@3.3.15'
 trustPolicy: no-downgrade
 # Skip trust-policy checks for packages published more than 365 days ago.
 # Some widely-used legacy packages (notably semver@6.x — pulled in by @babel/core@7.x — plus
@@ -122,6 +125,3 @@ overrides:
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
   caniuse-lite: ^1.0.30001793
-
-patchedDependencies:
-  eslint-plugin-consistent-default-export-name@0.0.15: patches/eslint-plugin-consistent-default-export-name@0.0.15.patch
