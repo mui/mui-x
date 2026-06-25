@@ -1,11 +1,11 @@
 import {
-  type GrowableBuffer,
   attachShader,
   compileShader,
   createGrowableBuffer,
   logWebGLErrors,
   uploadGrowableBuffer,
 } from '../../utils/webgl/utils';
+import type { GrowableBuffer } from '../../utils/webgl/utils';
 import {
   heatmapFragmentShaderSourceNoBorderRadius,
   heatmapFragmentShaderSourceWithBorderRadius,

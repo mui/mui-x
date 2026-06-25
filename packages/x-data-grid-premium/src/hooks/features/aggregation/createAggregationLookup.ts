@@ -1,15 +1,18 @@
 import type { RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
-  type GridRowId,
-  type GridGroupNode,
-  type GridLeafNode,
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
   gridRowsLookupSelector,
-  type GridColumnLookup,
 } from '@mui/x-data-grid-pro';
-import { getVisibleRows, type GridAggregationPosition } from '@mui/x-data-grid-pro/internals';
+import type {
+  GridRowId,
+  GridGroupNode,
+  GridLeafNode,
+  GridColumnLookup,
+} from '@mui/x-data-grid-pro';
+import { getVisibleRows } from '@mui/x-data-grid-pro/internals';
+import type { GridAggregationPosition } from '@mui/x-data-grid-pro/internals';
 import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {

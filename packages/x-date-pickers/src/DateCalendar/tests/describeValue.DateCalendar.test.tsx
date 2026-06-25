@@ -1,7 +1,7 @@
 import { screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { pickerDayClasses } from '@mui/x-date-pickers/PickerDay';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { adapterToUse, createPickerRenderer, describeValue } from 'test/utils/pickers';
 
 describe('<DateCalendar /> - Describe Value', () => {

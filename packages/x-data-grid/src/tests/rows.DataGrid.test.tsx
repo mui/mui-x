@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -16,16 +16,18 @@ import Portal from '@mui/material/Portal';
 import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import {
   DataGrid,
-  type DataGridProps,
   GridActionsCellItem,
-  type GridRowIdGetter,
-  type GridRowClassNameParams,
-  type GridRowModel,
-  type GridRenderCellParams,
   useGridApiRef,
-  type GridApi,
   gridClasses,
   GridActionsCell,
+} from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridRowIdGetter,
+  GridRowClassNameParams,
+  GridRowModel,
+  GridRenderCellParams,
+  GridApi,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
@@ -41,7 +43,7 @@ import Dialog from '@mui/material/Dialog';
 import { isJSDOM } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
-import { type GridApiCommunity } from '../models/api/gridApiCommunity';
+import type { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();

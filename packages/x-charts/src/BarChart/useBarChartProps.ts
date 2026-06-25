@@ -1,19 +1,20 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { type BarChartProps, type BarSeries } from './BarChart';
+import type { BarChartProps, BarSeries } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { type ChartsContainerProps } from '../ChartsContainer';
-import { type BarPlotProps } from './BarPlot';
-import { type ChartsGridProps } from '../ChartsGrid';
-import { type ChartsClipPathProps } from '../ChartsClipPath';
-import { type ChartsOverlayProps } from '../ChartsOverlay';
-import { type ChartsAxisProps } from '../ChartsAxis';
-import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { type ChartsLegendSlotExtension } from '../ChartsLegend';
+import type { ChartsContainerProps } from '../ChartsContainer';
+import type { BarPlotProps } from './BarPlot';
+import type { ChartsGridProps } from '../ChartsGrid';
+import type { ChartsClipPathProps } from '../ChartsClipPath';
+import type { ChartsOverlayProps } from '../ChartsOverlay';
+import type { ChartsAxisProps } from '../ChartsAxis';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import type { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
-import { BAR_CHART_PLUGINS, type BarChartPluginSignatures } from './BarChart.plugins';
+import { BAR_CHART_PLUGINS } from './BarChart.plugins';
+import type { BarChartPluginSignatures } from './BarChart.plugins';
 
 export interface UseBarChartPropsExtensions {}
 

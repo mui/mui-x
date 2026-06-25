@@ -1,4 +1,4 @@
-import { type useGeoProjectionTypes } from '@mui/x-charts/internals';
+import type { useGeoProjectionTypes } from '@mui/x-charts/internals';
 
 export * from './GeoDataPlot';
 export * from './MapShapePlot';

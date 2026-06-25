@@ -1,6 +1,6 @@
-import { FieldSectionContentType, FieldSectionType } from './fields';
-import { PickersTimezone } from './timezone';
-import { PickerValidDate } from './pickers';
+import type { FieldSectionContentType, FieldSectionType } from './fields';
+import type { PickersTimezone } from './timezone';
+import type { PickerValidDate } from './pickers';
 
 export interface AdapterFormats {
   // Token formats

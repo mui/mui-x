@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
+import { useGridSelector } from '@mui/x-data-grid-pro';
+import type { GridColumnMenuItemProps } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
