@@ -1,6 +1,7 @@
 import type { ColorProcessor } from '@mui/x-charts/internals';
 
 const getColor: ColorProcessor<'mapShape'> = (series, _mainAxis, _secondaryAxis, zAxis) => {
+  const lookupByName = new Map(series.data.map((d) => [d.name, d]));
   const colorScale = zAxis?.colorScale;
 
   if (colorScale) {
@@ -8,8 +9,7 @@ const getColor: ColorProcessor<'mapShape'> = (series, _mainAxis, _secondaryAxis,
       if (name == null) {
         return series.color;
       }
-      const item = series.data.find((d) => d.name === name);
-
+      const item = lookupByName.get(name);
       if (!item) {
         return series.color;
       }
@@ -29,7 +29,7 @@ const getColor: ColorProcessor<'mapShape'> = (series, _mainAxis, _secondaryAxis,
     if (name == null) {
       return series.color;
     }
-    const item = series.data.find((d) => d.name === name);
+    const item = lookupByName.get(name);
     return item?.color ?? series.color;
   };
 };
