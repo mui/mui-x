@@ -198,5 +198,13 @@ describe('<DataGridPremium /> - Row grouping', () => {
         2,
       ]);
     });
+
+    it('should return an empty array when the groupId does not exist in the tree', () => {
+      render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
+
+      const groupId = getGroupRowIdFromPath([{ field: 'category1', key: 'Cat Z' }]);
+      expect(apiRef.current?.getRowGroupChildren({ groupId })).to.deep.equal([]);
+      expect(apiRef.current?.getRowGroupChildren({ groupId, applySorting: true })).to.deep.equal([]);
+    });
   });
 });
