@@ -1,4 +1,4 @@
-import type { GrowableBuffer } from './utils'
+import type { GrowableBuffer } from './utils';
 import { createGrowableBuffer, uploadGrowableBuffer } from './utils';
 
 export interface InstancedAttribute {
