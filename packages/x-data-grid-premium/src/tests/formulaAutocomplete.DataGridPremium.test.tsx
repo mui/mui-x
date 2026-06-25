@@ -1,14 +1,10 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, microtasks } from 'test/utils/helperFn';
 import { describe, expect, it } from 'vitest';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCaretOffset, setCaretOffset } from '../components/formulaEditorCaret';
 

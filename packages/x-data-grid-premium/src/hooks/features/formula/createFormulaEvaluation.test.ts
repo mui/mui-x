@@ -1,11 +1,8 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridColDef, GridRowId, GridValidRowModel } from '@mui/x-data-grid-pro';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import {
-  computeFullFormulaPass,
-  computeRowsDiffFormulaPass,
-  type FormulaPassContext,
-} from './createFormulaEvaluation';
+import { computeFullFormulaPass, computeRowsDiffFormulaPass } from './createFormulaEvaluation';
+import type { FormulaPassContext } from './createFormulaEvaluation';
 import { createFormulaInternalCache, GRID_FORMULA_FUNCTIONS } from './gridFormulaUtils';
 
 /**

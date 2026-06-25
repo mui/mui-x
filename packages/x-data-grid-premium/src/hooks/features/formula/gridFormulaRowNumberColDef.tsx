@@ -1,4 +1,5 @@
-import { type GridColDef, GRID_STRING_COL_DEF } from '@mui/x-data-grid-pro';
+import { GRID_STRING_COL_DEF } from '@mui/x-data-grid-pro';
+import type { GridColDef } from '@mui/x-data-grid-pro';
 import { renderFormulaRowNumberCell } from '../../../components/GridFormulaRowNumberCell';
 import { GRID_FORMULA_ROW_NUMBER_FIELD } from './gridFormulaPositionContext';
 

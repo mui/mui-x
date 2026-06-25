@@ -1,15 +1,9 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { getCell } from 'test/utils/helperFn';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridColDef,
-  useGridApiRef,
-  gridClasses,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef, gridClasses } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
 /**

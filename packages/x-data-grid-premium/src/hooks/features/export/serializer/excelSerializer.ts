@@ -22,8 +22,8 @@ import {
 import {
   createFormulaExcelExportLayout,
   getCellExcelFormula,
-  type FormulaExcelExportLayout,
 } from '../../formula/gridFormulaExcelExport';
+import type { FormulaExcelExportLayout } from '../../formula/gridFormulaExcelExport';
 import type { SerializedColumns, SerializedRow, ValueOptionsData } from './utils';
 
 export type { ExcelExportInitEvent } from './utils';

@@ -1,19 +1,22 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
-import { spy, type SinonSpy } from 'sinon';
+import { spy } from 'sinon';
+import type { SinonSpy } from 'sinon';
 import { onTestFinished } from 'vitest';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridColDef,
-  type GridFormulaFunctionDefinition,
-  type GridRenderEditCellParams,
   GRID_FORMULA_FUNCTIONS,
   useGridApiContext,
   useGridApiRef,
+} from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridColDef,
+  GridFormulaFunctionDefinition,
+  GridRenderEditCellParams,
 } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';

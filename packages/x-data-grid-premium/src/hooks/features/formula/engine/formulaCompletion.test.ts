@@ -3,8 +3,8 @@ import {
   getFormulaCompletionContext,
   getFormulaCompletionTokens,
   rankFormulaCompletions,
-  type FormulaCompletionToken,
 } from './formulaCompletion';
+import type { FormulaCompletionToken } from './formulaCompletion';
 import { createFormulaFunctionRegistry, FORMULA_BUILT_IN_FUNCTIONS } from './formulaFunctions';
 
 describe('getFormulaCompletionTokens', () => {

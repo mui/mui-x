@@ -7,11 +7,13 @@ import {
   getFormulaExpression,
   mapFormulaErrorCodeToExcel,
   serializeFormulaAstToExcel,
-  type ExcelFormulaErrorCode,
-  type FormulaColumnSelector,
-  type FormulaPositionContext,
-  type FormulaRowId,
-  type FormulaRowSelector,
+} from './engine';
+import type {
+  ExcelFormulaErrorCode,
+  FormulaColumnSelector,
+  FormulaPositionContext,
+  FormulaRowId,
+  FormulaRowSelector,
 } from './engine';
 import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionContext';
 

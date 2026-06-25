@@ -15,8 +15,8 @@ import {
   gridPivotActiveSelector,
   GridStrategyGroup,
   RowGroupingStrategy,
-  type GridStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { GridStatePremium } from '../../../models/gridStatePremium';
@@ -30,8 +30,8 @@ import {
   computeFullFormulaPass,
   computePositionRebindFormulaPass,
   computeRowsDiffFormulaPass,
-  type FormulaPassContext,
 } from './createFormulaEvaluation';
+import type { FormulaPassContext } from './createFormulaEvaluation';
 import {
   buildFormulaPositionSnapshot,
   buildFormulaPositionSnapshotFromState,

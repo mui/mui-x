@@ -1,15 +1,10 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer } from '@mui/internal-test-utils';
 import { microtasks } from 'test/utils/helperFn';
 import { describe, expect, it } from 'vitest';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  GRID_FORMULA_FUNCTIONS,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, GRID_FORMULA_FUNCTIONS, useGridApiRef } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { getFormulaSuggestions, toFormulaFieldReference } from './gridFormulaAutocomplete';

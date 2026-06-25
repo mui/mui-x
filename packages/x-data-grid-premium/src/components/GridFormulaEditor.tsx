@@ -8,10 +8,8 @@ import { NotRendered, vars } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { FormulaCompletionToken } from '../hooks/features/formula/engine';
-import {
-  useGridFormulaAutocomplete,
-  type GridFormulaSuggestionState,
-} from '../hooks/features/formula/gridFormulaAutocomplete';
+import { useGridFormulaAutocomplete } from '../hooks/features/formula/gridFormulaAutocomplete';
+import type { GridFormulaSuggestionState } from '../hooks/features/formula/gridFormulaAutocomplete';
 import {
   buildFormulaTextSegments,
   getFormulaReferencePaletteStyles,
