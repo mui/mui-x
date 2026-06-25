@@ -25,7 +25,6 @@ The following team members contributed to this release:
 - [DataGrid] Deduplicate scroll-preserving focus logic (#22916) @sai6855
 - [DataGrid] Fix `singleSelect` clearing to use empty string instead of `null` (#22881) @michelengelen
 - [DataGrid] Wait for rows before reacting on `autosizeOnMount` (#22698) @MBilalShafi
-- [DataGrid] Fix panel placement jump on mount (#22930) @cherniavski
 
 #### `@mui/x-data-grid-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -43,7 +42,6 @@ Same changes as in `@mui/x-data-grid-pro@9.7.0`.
 - [fields] Avoid focusing the field on blank space clicks (#22285) @LukasTy
 - [pickers] Commit TimeClock value when the drag ends outside the clock (#22877) @LukasTy
 - [pickers] Respect explicit `notched` prop on the outlined PickersTextField (#22875) @LukasTy
-- [docs] Document e2e testing patterns for picker field components (#22565) @LukasTy
 
 #### `@mui/x-date-pickers-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
