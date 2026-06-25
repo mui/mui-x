@@ -73,6 +73,9 @@ function stepBetweenSeries(
   }
   const order = mapSeries.seriesOrder;
   const position = order.indexOf(currentItem.seriesId);
+  if (position === -1) {
+    return getFirstItem(state) ?? currentItem;
+  }
   for (let i = position + direction; i >= 0 && i < order.length; i += direction) {
     const data = mapSeries.series[order[i]]?.data;
     if (data && data.length > 0) {

@@ -10,6 +10,10 @@ const getColor: ColorProcessor<'mapShape'> = (series, _mainAxis, _secondaryAxis,
       }
       const item = series.data.find((d) => d.name === name);
 
+      if (!item) {
+        return series.color;
+      }
+
       if (item?.color !== undefined) {
         return item.color;
       }

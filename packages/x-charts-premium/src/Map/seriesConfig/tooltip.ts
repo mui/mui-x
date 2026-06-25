@@ -6,7 +6,8 @@ const tooltipGetter: TooltipGetter<'mapShape'> = ({ series, getColor, identifier
     return null;
   }
 
-  const point = series.data.find((d) => d.name === identifier.name);
+  const index = series.data.findIndex((d) => d.name === identifier.name);
+  const point = series.data[index];
   if (point == null) {
     return null;
   }
@@ -16,7 +17,6 @@ const tooltipGetter: TooltipGetter<'mapShape'> = ({ series, getColor, identifier
   }
 
   const label = getLabel(point.label ?? point.name, 'tooltip');
-  const index = series.data.findIndex((d) => d.name === point.name);
   const formattedValue = series.valueFormatter(point, { dataIndex: index });
 
   return {
