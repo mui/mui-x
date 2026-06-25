@@ -364,6 +364,21 @@ describe('createGenerateReactCodeTool', () => {
     await expect(tool.execute({ prompt: 'hi' })).rejects.toThrow(/HTTP 400/);
   });
 
+  it('surfaces the message from a standard Fastify error body (string `error` field)', async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(
+      makeJsonResponse(404, {
+        statusCode: 404,
+        error: 'Not Found',
+        message: 'Route POST:/v1/codegen/generate not found',
+      }),
+    );
+
+    const tool = createGenerateReactCodeTool({ recipesBackendBaseUrl: baseUrl, getToken, fetcher });
+    await expect(tool.execute({ prompt: 'hi' })).rejects.toThrow(
+      /Route POST:\/v1\/codegen\/generate not found/,
+    );
+  });
+
   it('invokes invalidateToken on 401 from the POST so the next call mints a fresh JWT', async () => {
     const invalidateToken = vi.fn();
     const fetcher = vi.fn().mockResolvedValueOnce(makeJsonResponse(401, { statusCode: 401 }));

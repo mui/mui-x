@@ -83,14 +83,17 @@ const backendErrorSchema = z.object({
       field: z.string().optional(),
     })
     .optional(),
-  // Fastify's default error responder nests the message under `error`. Without this, a bare
-  // 404 / 500 from Fastify (no custom handler) surfaces as the generic fallback instead of
-  // the actual upstream message.
+  // Fastify's default error responder sets `error` to the status text (a string, e.g. "Not Found"),
+  // while some custom responders nest `{ message }`. Accept both so a standard Fastify body still
+  // parses and its top-level `message` survives instead of falling back to the generic text.
   error: z
-    .object({
-      message: z.string().optional(),
-      statusCode: z.number().optional(),
-    })
+    .union([
+      z.string(),
+      z.object({
+        message: z.string().optional(),
+        statusCode: z.number().optional(),
+      }),
+    ])
     .optional(),
 });
 
@@ -128,7 +131,8 @@ function translateBackendError(
   if (status === 401) {
     return 'JWT rejected by recipes-backend. The token may have expired mid-run; retry.';
   }
-  const detail = body?.message ?? body?.error?.message;
+  const nestedError = typeof body?.error === 'object' ? body.error.message : undefined;
+  const detail = body?.message ?? nestedError;
   if (status >= 500) {
     return detail
       ? `Backend error (HTTP ${status}): ${detail}. Retry shortly.`

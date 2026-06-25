@@ -189,12 +189,17 @@ describe('urlListFetcher', () => {
 });
 
 describe('isPrivateHostname', () => {
-  it.each(['localhost', 'app.localhost', 'foo.local', 'svc.internal'])(
-    'treats %s as private',
-    (host) => {
-      expect(isPrivateHostname(host)).toBe(true);
-    },
-  );
+  it.each([
+    'localhost',
+    'app.localhost',
+    'foo.local',
+    'svc.internal',
+    'localhost.', // trailing DNS dot must not bypass the check
+    '127.0.0.1.',
+    'foo.local.',
+  ])('treats %s as private', (host) => {
+    expect(isPrivateHostname(host)).toBe(true);
+  });
 
   it.each([
     '127.0.0.1',
@@ -243,6 +248,12 @@ describe('createDocsUrlGuard', () => {
     const guard = createDocsUrlGuard([]);
     expect(guard('http://[::ffff:127.0.0.1]/')).toBe(false);
     expect(guard('http://[::ffff:192.168.1.5]/')).toBe(false);
+  });
+
+  it('blocks hosts with a trailing DNS dot', () => {
+    const guard = createDocsUrlGuard([]);
+    expect(guard('http://localhost.:5002/admin')).toBe(false);
+    expect(guard('http://127.0.0.1./')).toBe(false);
   });
 
   it('allows an explicitly configured origin even when it is localhost (dev backend)', () => {

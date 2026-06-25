@@ -14,7 +14,10 @@ const noopLogger: Logger = () => {};
  * so it's a guard, not a complete SSRF defense.
  */
 export function isPrivateHostname(hostname: string): boolean {
-  const host = hostname.toLowerCase().replace(/^\[|\]$/g, ''); // strip IPv6 brackets
+  const host = hostname
+    .toLowerCase()
+    .replace(/^\[|\]$/g, '') // strip IPv6 brackets
+    .replace(/\.$/, ''); // strip a trailing DNS dot, e.g. "localhost." / "127.0.0.1."
   if (
     host === 'localhost' ||
     host.endsWith('.localhost') ||
