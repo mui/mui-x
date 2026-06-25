@@ -4,12 +4,12 @@
 
 _Jun 25, 2026_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 TODO INSERT HIGHLIGHTS
 
 Special thanks go out to these community members for their valuable contributions:
-@Anexus5919, @code-infra-renovate[bot], @mustafajw07
+@Anexus5919, @mustafajw07
 
 The following team members contributed to this release:
 @alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @romgrk, @sai6855, @siriwatknp
@@ -18,8 +18,8 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.7.0`
 
-- [DataGrid] Fix Demo CustomColumnMenuGrid crashing (#22897) @sai6855
-- [DataGrid] Fix crash in `getRowValue` when `colDef` is undefined (#22838) @LukasTy
+- [DataGrid] Fix `CustomColumnMenuGrid` demo crashing (#22897) @sai6855
+- [DataGrid] Fix crash in `getRowValue` when `colDef` is `undefined` (#22838) @LukasTy
 - [DataGrid] Fix `longText` expand button submitting surrounding form (#22450) @siriwatknp
 - [DataGrid] Remove filename ignore list from `removePropTypesPlugin` in Babel config (#22727) @sai6855
 - [DataGrid] Deduplicate scroll-preserving focus logic (#22916) @sai6855
@@ -100,7 +100,7 @@ Internal changes.
 - [code-infra] Reduce Netlify build parallelism to 2 (#22925) @LukasTy
 - [code-infra] Use Turbopack for docs in dev (#22882) @brijeshb42
 - [docs-infra] Pre-render API page descriptions (#22919) @brijeshb42
-- [internal] Use @base-ui/utils/platform for platform detection (#22710) @romgrk
+- [internal] Use `@base-ui/utils/platform` for platform detection (#22710) @romgrk
 - [internal] Enforce top-level type imports (#22679) @Janpot
 
 ### Miscellaneous
