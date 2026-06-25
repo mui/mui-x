@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import type { z } from 'zod';
 import {
   DEFAULT_DOCS_BASE_URL,
   DEFAULT_MUI_BACKEND_BASE_URL,
@@ -15,9 +14,9 @@ import {
   SERVER_VERSION,
   STARTUP_ERROR_MESSAGE,
 } from './constants';
-import { buildCodegenHandler } from './codegen-handler';
 import { fetchRemotePackages } from './docs-packages';
 import { buildCombinedLogger } from './logger';
+import { registerCodegenTool } from './register-codegen-tool';
 import { registerDocsTools } from './register-docs-tools';
 
 const main = async () => {
@@ -69,20 +68,13 @@ const main = async () => {
   // Static tool only for registration metadata; per-call tool is built per request below.
   const codegenStatic = createGenerateReactCodeTool(baseCodegenOpts);
 
-  server.registerTool(
-    codegenStatic.publicName,
-    {
-      description: codegenStatic.description,
-      inputSchema: (codegenStatic.inputSchema as z.AnyZodObject).shape,
-    },
-    buildCodegenHandler({
-      codegenStatic,
-      createPerCallTool: ({ onProgress }) =>
-        createGenerateReactCodeTool({ ...baseCodegenOpts, onProgress }),
-      formatText: formatCodegenText,
-      log: logger,
-    }),
-  );
+  registerCodegenTool(server, {
+    codegenStatic,
+    createPerCallTool: ({ onProgress }) =>
+      createGenerateReactCodeTool({ ...baseCodegenOpts, onProgress }),
+    formatText: formatCodegenText,
+    logger,
+  });
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
