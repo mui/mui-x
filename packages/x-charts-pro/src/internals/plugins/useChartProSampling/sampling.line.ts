@@ -26,14 +26,43 @@ export function sampleBuckets(
   }
 
   const { bucketSize, start, end } = level;
+  const { nullIndices } = pyramid;
   const maxIndex = pyramid.dataLength - 1;
+  const nullLength = nullIndices?.length ?? 0;
+
+  // Builds one bucket's render indices: the ascending `candidates` (extrema/ends or the lttb points)
+  // with this bucket's null indices merged in, deduped, so the line breaks at gaps. `nullCursor`
+  // advances monotonically since buckets partition `[0, maxIndex]` left to right.
+  let nullCursor = 0;
+  const mergeBucket = (candidates: ArrayLike<number>, endIndex: number): Int32Array => {
+    const indices: number[] = [];
+    let c = 0;
+    while (c < candidates.length || (nullCursor < nullLength && nullIndices![nullCursor] <= endIndex)) {
+      const nextCandidate = c < candidates.length ? candidates[c] : Infinity;
+      const nextNull =
+        nullCursor < nullLength && nullIndices![nullCursor] <= endIndex
+          ? nullIndices![nullCursor]
+          : Infinity;
+      const next = Math.min(nextCandidate, nextNull);
+      if (indices[indices.length - 1] !== next) {
+        indices.push(next);
+      }
+      if (next === nextCandidate) {
+        c += 1;
+      }
+      if (next === nextNull) {
+        nullCursor += 1;
+      }
+    }
+    return Int32Array.from(indices);
+  };
 
   if (algorithm === 'lttb') {
     const indices = largestTriangleThreeBuckets(
       getValues!(),
       Math.ceil(pyramid.dataLength / bucketSize),
     );
-    return withNullBreaks([{ startIndex: 0, endIndex: maxIndex, indices }], pyramid.nullIndices);
+    return [{ startIndex: 0, endIndex: maxIndex, indices: mergeBucket(indices, maxIndex) }];
   }
 
   const { argMin, argMax } = pyramid;
@@ -45,67 +74,12 @@ export function sampleBuckets(
     const startIndex = bucket * bucketSize;
     const endIndex = Math.min(startIndex + bucketSize - 1, maxIndex);
     // Extrema in ascending index order; `m4` also brackets them with the bucket's first/last.
-    // Push ascending, skipping duplicates (extrema can coincide, or equal the ends for `m4`).
     const extremaFirst = Math.min(argMin[j], argMax[j]);
     const extremaLast = Math.max(argMin[j], argMax[j]);
-    const indices: number[] = [];
-    const pushUnique = (index: number) => {
-      if (indices[indices.length - 1] !== index) {
-        indices.push(index);
-      }
-    };
-    if (withEnds) {
-      pushUnique(startIndex);
-    }
-    pushUnique(extremaFirst);
-    pushUnique(extremaLast);
-    if (withEnds) {
-      pushUnique(endIndex);
-    }
-    buckets.push({ startIndex, endIndex, indices: Int32Array.from(indices) });
-  }
-
-  return withNullBreaks(buckets, pyramid.nullIndices);
-}
-
-/** Merges null indices into each bucket (ascending, deduped) so the line breaks at gaps. No-op without nulls. */
-function withNullBreaks(
-  buckets: SampledBucket[],
-  nullIndices: Int32Array | undefined,
-): SampledBucket[] {
-  if (!nullIndices || nullIndices.length === 0) {
-    return buckets;
-  }
-
-  let cursor = 0;
-  for (const bucket of buckets) {
-    while (cursor < nullIndices.length && nullIndices[cursor] < bucket.startIndex) {
-      cursor += 1;
-    }
-    if (cursor >= nullIndices.length || nullIndices[cursor] > bucket.endIndex) {
-      continue;
-    }
-
-    const merged: number[] = [];
-    const source = bucket.indices;
-    let s = 0;
-    let n = cursor;
-    while (s < source.length || (n < nullIndices.length && nullIndices[n] <= bucket.endIndex)) {
-      const nextSource = s < source.length ? source[s] : Infinity;
-      const nextNull =
-        n < nullIndices.length && nullIndices[n] <= bucket.endIndex ? nullIndices[n] : Infinity;
-      const next = Math.min(nextSource, nextNull);
-      if (merged[merged.length - 1] !== next) {
-        merged.push(next);
-      }
-      if (next === nextSource) {
-        s += 1;
-      }
-      if (next === nextNull) {
-        n += 1;
-      }
-    }
-    bucket.indices = Int32Array.from(merged);
+    const candidates = withEnds
+      ? [startIndex, extremaFirst, extremaLast, endIndex]
+      : [extremaFirst, extremaLast];
+    buckets.push({ startIndex, endIndex, indices: mergeBucket(candidates, endIndex) });
   }
 
   return buckets;
