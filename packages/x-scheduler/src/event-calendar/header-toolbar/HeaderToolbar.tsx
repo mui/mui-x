@@ -7,6 +7,7 @@ import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import MenuOpen from '@mui/icons-material/MenuOpen';
 import Menu from '@mui/icons-material/Menu';
+import Today from '@mui/icons-material/Today';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -22,6 +23,9 @@ import { ViewSwitcher } from './view-switcher';
 import { PreferencesMenu } from './preferences-menu';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 
+// Desktop vs. mobile toolbar elements (tagged `data-desktop-only` /
+// `data-mobile-only`) are both rendered for SSR safety; the calendar root
+// toggles them with the root container query — see `EventCalendarRootStyled`.
 const HeaderToolbarRoot = styled('header', {
   name: 'MuiEventCalendar',
   slot: 'HeaderToolbar',
@@ -106,6 +110,8 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
+  const { onMobileMenuClick, className, ...other } = props;
+
   const weekNumber = getWeekNumber(adapter, visibleDate, weekStartsOn);
   const showViewSwitcher = views.length > 1;
   const showWeekLabel = showWeekNumber && (view === 'week' || view === 'day');
@@ -114,11 +120,22 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
     <HeaderToolbarRoot
       ref={forwardedRef}
       data-single-primary-action={!showViewSwitcher}
-      {...props}
-      className={clsx(props.className, classes.headerToolbar)}
+      {...other}
+      className={clsx(className, classes.headerToolbar)}
     >
       <HeaderToolbarLeftElement className={classes.headerToolbarLeftElement}>
+        {/* Mobile: opens the side panel drawer. */}
         <IconButton
+          data-mobile-only
+          className={classes.headerToolbarMobileMenuButton}
+          aria-label={localeText.openMenu}
+          onClick={onMobileMenuClick}
+        >
+          <Menu />
+        </IconButton>
+        {/* Desktop: toggles the inline side panel. */}
+        <IconButton
+          data-desktop-only
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
           onClick={(event) =>
@@ -127,7 +144,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         >
           {isSidePanelOpen ? <MenuOpen /> : <Menu />}
         </IconButton>
-        <HeaderToolbarLabel aria-live="polite">
+        <HeaderToolbarLabel data-desktop-only aria-live="polite">
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
           {showWeekLabel && (
@@ -157,11 +174,26 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             <ChevronRight />
           </IconButton>
         </HeaderToolbarDateNavigator>
-        <Button onClick={store.goToToday}>{localeText.today}</Button>
+        {/* Mobile: today as an icon button replacing the desktop text button. */}
+        <IconButton
+          data-mobile-only
+          className={classes.headerToolbarMobileTodayButton}
+          onClick={store.goToToday}
+          aria-label={localeText.today}
+        >
+          <Today />
+        </IconButton>
+        <Button
+          data-desktop-only
+          className={classes.headerToolbarTodayButton}
+          onClick={store.goToToday}
+        >
+          {localeText.today}
+        </Button>
         {showViewSwitcher && (
-          <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
+          <ViewSwitcher data-desktop-only views={views} view={view} onViewChange={store.setView} />
         )}
-        <PreferencesMenu />
+        <PreferencesMenu data-desktop-only />
       </HeaderToolbarActions>
     </HeaderToolbarRoot>
   );

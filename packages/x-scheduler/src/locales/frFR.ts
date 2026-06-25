@@ -90,6 +90,10 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Fermer le panneau latéral',
   openSidePanel: 'Ouvrir le panneau latéral',
 
+  // SidePanelDrawer (small screens)
+  // back: 'Back',
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12 heures (1:00PM)',
   hour24h: '24 heures (13:00)',

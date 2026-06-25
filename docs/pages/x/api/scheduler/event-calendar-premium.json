@@ -797,6 +797,18 @@
       "isGlobal": false
     },
     {
+      "key": "headerToolbarMobileMenuButton",
+      "className": "MuiEventCalendarPremium-headerToolbarMobileMenuButton",
+      "description": "Styles applied to the header toolbar mobile menu button element (small screens).",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarMobileTodayButton",
+      "className": "MuiEventCalendarPremium-headerToolbarMobileTodayButton",
+      "description": "Styles applied to the header toolbar mobile today button element (small screens).",
+      "isGlobal": false
+    },
+    {
       "key": "headerToolbarNextButton",
       "className": "MuiEventCalendarPremium-headerToolbarNextButton",
       "description": "Styles applied to the header toolbar next button element.",
@@ -1118,6 +1130,84 @@
       "key": "sidePanelDivider",
       "className": "MuiEventCalendarPremium-sidePanelDivider",
       "description": "Styles applied to the side panel divider element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawer",
+      "className": "MuiEventCalendarPremium-sidePanelDrawer",
+      "description": "Styles applied to the side panel drawer root (popup) element (small screens).",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerBackButton",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerBackButton",
+      "description": "Styles applied to the side panel drawer back button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerBackdrop",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerBackdrop",
+      "description": "Styles applied to the side panel drawer backdrop element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerCloseButton",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerCloseButton",
+      "description": "Styles applied to the side panel drawer close button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerHeader",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerHeader",
+      "description": "Styles applied to the side panel drawer header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferences",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferences",
+      "description": "Styles applied to the side panel drawer preferences entry list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferencesButton",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferencesButton",
+      "description": "Styles applied to the side panel drawer preferences button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferencesList",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferencesList",
+      "description": "Styles applied to the side panel drawer preferences options list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerPreferencesPopup",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferencesPopup",
+      "description": "Styles applied to the side panel drawer nested preferences popup element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerTitle",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerTitle",
+      "description": "Styles applied to the side panel drawer title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerViewItem",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerViewItem",
+      "description": "Styles applied to side panel drawer view list item elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerViewList",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerViewList",
+      "description": "Styles applied to the side panel drawer view list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanelDrawerViewport",
+      "className": "MuiEventCalendarPremium-sidePanelDrawerViewport",
+      "description": "Styles applied to the side panel drawer viewport element.",
       "isGlobal": false
     },
     {

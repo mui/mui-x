@@ -90,10 +90,14 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   closeSidePanel: 'Close side panel',
   openSidePanel: 'Open side panel',
 
+  // SidePanelDrawer (small screens)
+  back: 'Back',
+  openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12-hour (1:00PM)',
   hour24h: '24-hour (13:00)',
-  preferencesMenu: 'Settings',
+  preferencesMenu: 'Preferences',
   showWeekends: 'Show weekends',
   showEmptyDaysInAgenda: 'Show empty days',
   showWeekNumber: 'Show week number',

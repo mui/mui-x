@@ -9,6 +9,52 @@ export const EVENT_CALENDAR_CONTAINER_NAME = 'mui-event-calendar-content';
 export const RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM = 550;
 export const RESPONSIVE_TYPOGRAPHY_BREAKPOINT_MD = 800;
 
+// Container declared on the calendar root (`EventCalendarRootStyled`). Unlike
+// `EVENT_CALENDAR_CONTAINER_NAME` — which lives on `ResponsiveTypographyContainer`
+// and only wraps the content area, so it reflects the *content* width (and shrinks
+// when the side panel opens) — this one wraps the whole calendar, so the header
+// toolbar and the side-panel drawer can react to the *overall* available width
+// with CSS only (no JS breakpoint detection, SSR-safe). It reuses the same
+// `RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM` so the mobile cutover stays in lockstep
+// with responsive typography. Nested containers with distinct names don't
+// conflict: typography `@container` rules still resolve to the content container,
+// while these resolve to the root.
+export const EVENT_CALENDAR_ROOT_CONTAINER_NAME = 'mui-event-calendar-root';
+
+// Single source for every `@container` width rule in the scheduler. Building the
+// at-rule strings from the shared breakpoint constants (instead of hand-writing
+// `@container … (width < 550px)` at each call site) keeps every breakpoint in
+// lockstep — it is what stops a stray hardcoded `550px` from silently drifting
+// out of sync with the typography tiers.
+const containerWidthBelow = (containerName: string, widthPx: number) =>
+  `@container ${containerName} (width < ${widthPx}px)`;
+const containerWidthFrom = (containerName: string, widthPx: number) =>
+  `@container ${containerName} (width >= ${widthPx}px)`;
+const containerWidthBetween = (containerName: string, minWidthPx: number, maxWidthPx: number) =>
+  `@container ${containerName} (${minWidthPx}px <= width < ${maxWidthPx}px)`;
+
+// Root-container queries — react to the *overall* calendar width to switch
+// between the "desktop" and "mobile" layouts. Tag any descendant of the calendar
+// root `data-desktop-only` (hidden below the breakpoint) or `data-mobile-only`
+// (hidden at/above it); the toggle rules live on `EventCalendarRootStyled`.
+export const eventCalendarRootMobileQuery = containerWidthBelow(
+  EVENT_CALENDAR_ROOT_CONTAINER_NAME,
+  RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
+);
+export const eventCalendarRootDesktopQuery = containerWidthFrom(
+  EVENT_CALENDAR_ROOT_CONTAINER_NAME,
+  RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
+);
+
+// Content-container query — reacts to the *content* width (which shrinks when the
+// side panel opens) at the same small-screen breakpoint. Used by slots that scale
+// with the room the views actually have, e.g. event cards and the day-number
+// circle, so they stay in sync with the responsive-typography tiers below.
+export const eventCalendarContentMobileQuery = containerWidthBelow(
+  EVENT_CALENDAR_CONTAINER_NAME,
+  RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
+);
+
 // Each token is declared in two layers:
 // 1. Three tier vars (`-sm`, `-md`, `-lg`) hold the per-tier font sizes.
 //    They are declared unconditionally on the `ResponsiveTypographyContainer`
@@ -75,25 +121,25 @@ export const responsiveTokens: CSSObject = {
 // inside every `Standalone*View`, so these queries fire in both cases — no
 // manual opt-in is required from the consumer.
 export const responsiveTypographyContainerQueries: CSSObject = {
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px)`]:
-    {
-      // fixed cell width
-      '--EventCalendar-size-fixedCellWidth': '54px',
-      // Typography
-      '--EventCalendar-fontSize-eventTitle': 'var(--EventCalendar-fontSize-eventTitle-sm)',
-      '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-sm)',
-      '--EventCalendar-fontSize-agendaDayNumber':
-        'var(--EventCalendar-fontSize-agendaDayNumber-sm)',
-      '--EventCalendar-fontSize-timeText': 'var(--EventCalendar-fontSize-timeText-sm)',
-      '--EventCalendar-fontSize-recurringIcon': 'var(--EventCalendar-fontSize-recurringIcon-sm)',
-    },
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px <= width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_MD}px)`]:
-    {
-      '--EventCalendar-fontSize-eventTitle': 'var(--EventCalendar-fontSize-eventTitle-md)',
-      '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-md)',
-      '--EventCalendar-fontSize-agendaDayNumber':
-        'var(--EventCalendar-fontSize-agendaDayNumber-md)',
-      '--EventCalendar-fontSize-timeText': 'var(--EventCalendar-fontSize-timeText-md)',
-      '--EventCalendar-fontSize-recurringIcon': 'var(--EventCalendar-fontSize-recurringIcon-md)',
-    },
+  [eventCalendarContentMobileQuery]: {
+    // fixed cell width
+    '--EventCalendar-size-fixedCellWidth': '54px',
+    // Typography
+    '--EventCalendar-fontSize-eventTitle': 'var(--EventCalendar-fontSize-eventTitle-sm)',
+    '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-sm)',
+    '--EventCalendar-fontSize-agendaDayNumber': 'var(--EventCalendar-fontSize-agendaDayNumber-sm)',
+    '--EventCalendar-fontSize-timeText': 'var(--EventCalendar-fontSize-timeText-sm)',
+    '--EventCalendar-fontSize-recurringIcon': 'var(--EventCalendar-fontSize-recurringIcon-sm)',
+  },
+  [containerWidthBetween(
+    EVENT_CALENDAR_CONTAINER_NAME,
+    RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
+    RESPONSIVE_TYPOGRAPHY_BREAKPOINT_MD,
+  )]: {
+    '--EventCalendar-fontSize-eventTitle': 'var(--EventCalendar-fontSize-eventTitle-md)',
+    '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-md)',
+    '--EventCalendar-fontSize-agendaDayNumber': 'var(--EventCalendar-fontSize-agendaDayNumber-md)',
+    '--EventCalendar-fontSize-timeText': 'var(--EventCalendar-fontSize-timeText-md)',
+    '--EventCalendar-fontSize-recurringIcon': 'var(--EventCalendar-fontSize-recurringIcon-md)',
+  },
 };

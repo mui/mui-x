@@ -12,7 +12,12 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { responsiveTypographyContainerQueries } from '../internals/constants/responsiveTypography';
+import {
+  EVENT_CALENDAR_ROOT_CONTAINER_NAME,
+  eventCalendarRootDesktopQuery,
+  eventCalendarRootMobileQuery,
+  responsiveTypographyContainerQueries,
+} from '../internals/constants/responsiveTypography';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { ErrorContainer } from '../internals/components/error-container';
 import { WeekView } from '../week-view/WeekView';
@@ -22,6 +27,7 @@ import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
 import { ResourcesTree } from './resources-tree';
 import { MiniCalendar } from './mini-calendar';
+import { SidePanelDrawer } from './side-panel-drawer';
 import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
 export interface EventCalendarRootProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -49,6 +55,27 @@ const EventCalendarRootStyled = styled('div', {
   minHeight: 0,
   overflow: 'hidden',
   fontFamily: theme.typography.fontFamily,
+
+  // Establishes the root container so the header toolbar and the side-panel
+  // drawer can react to the *overall* calendar width with CSS only (distinct
+  // from the content-scoped responsive-typography container one level down).
+  containerType: 'inline-size',
+  containerName: EVENT_CALENDAR_ROOT_CONTAINER_NAME,
+
+  // Calendar-wide desktop/mobile toggle: both layouts are always rendered (SSR
+  // safe) and switched purely with the root container query — no JS breakpoint
+  // detection. Any descendant tagged `data-desktop-only` is hidden in the mobile
+  // layout, and `data-mobile-only` in the desktop layout.
+  [eventCalendarRootMobileQuery]: {
+    '& [data-desktop-only]': {
+      display: 'none',
+    },
+  },
+  [eventCalendarRootDesktopQuery]: {
+    '& [data-mobile-only]': {
+      display: 'none',
+    },
+  },
 }));
 
 const EventCalendarSidePanel = styled('aside', {
@@ -66,6 +93,17 @@ const EventCalendarSidePanel = styled('aside', {
   maxHeight: '100%',
   overflowY: 'hidden',
 }));
+
+const EventCalendarSidePanelCollapse = styled(Collapse, {
+  name: 'MuiEventCalendar',
+  slot: 'SidePanelCollapse',
+})({
+  // The inline side panel is desktop-only; on small screens the drawer overlay
+  // takes its place.
+  [eventCalendarRootMobileQuery]: {
+    display: 'none',
+  },
+});
 
 const EventCalendarMainPanel = styled('div', {
   name: 'MuiEventCalendar',
@@ -116,6 +154,11 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
+
+    // The mobile drawer keeps its own state (default closed) rather than reusing
+    // `isSidePanelOpen` (default open), so it never covers the calendar on load.
+    const [isMobileDrawerOpen, setIsMobileDrawerOpen] = React.useState(false);
+
     let content: React.ReactNode;
 
     switch (view) {
@@ -144,10 +187,10 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
         {...other}
         ref={handleRootRef}
       >
-        <HeaderToolbar />
+        <HeaderToolbar onMobileMenuClick={() => setIsMobileDrawerOpen(true)} />
 
         <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
-          <Collapse
+          <EventCalendarSidePanelCollapse
             in={isSidePanelOpen}
             orientation="horizontal"
             className={classes.sidePanelCollapse}
@@ -157,7 +200,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
               <Divider className={classes.sidePanelDivider} />
               <ResourcesTree />
             </EventCalendarSidePanel>
-          </Collapse>
+          </EventCalendarSidePanelCollapse>
 
           <ResponsiveTypographyContainer>
             <EventCalendarContent
@@ -170,6 +213,11 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             </EventCalendarContent>
           </ResponsiveTypographyContainer>
         </EventCalendarMainPanel>
+        <SidePanelDrawer
+          open={isMobileDrawerOpen}
+          onClose={() => setIsMobileDrawerOpen(false)}
+          container={rootRef}
+        />
         <ErrorContainer />
         {children}
       </EventCalendarRootStyled>

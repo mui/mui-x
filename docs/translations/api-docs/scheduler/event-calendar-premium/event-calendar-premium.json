@@ -542,6 +542,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar left side element"
     },
+    "headerToolbarMobileMenuButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar mobile menu button element (small screens)"
+    },
+    "headerToolbarMobileTodayButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar mobile today button element (small screens)"
+    },
     "headerToolbarNextButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar next button element"
@@ -754,6 +762,58 @@
     "sidePanelDivider": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the side panel divider element"
+    },
+    "sidePanelDrawer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer root (popup) element (small screens)"
+    },
+    "sidePanelDrawerBackButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer back button element"
+    },
+    "sidePanelDrawerBackdrop": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer backdrop element"
+    },
+    "sidePanelDrawerCloseButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer close button element"
+    },
+    "sidePanelDrawerHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer header element"
+    },
+    "sidePanelDrawerPreferences": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer preferences entry list element"
+    },
+    "sidePanelDrawerPreferencesButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer preferences button element"
+    },
+    "sidePanelDrawerPreferencesList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer preferences options list element"
+    },
+    "sidePanelDrawerPreferencesPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer nested preferences popup element"
+    },
+    "sidePanelDrawerTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer title element"
+    },
+    "sidePanelDrawerViewItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "side panel drawer view list item elements"
+    },
+    "sidePanelDrawerViewList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer view list element"
+    },
+    "sidePanelDrawerViewport": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel drawer viewport element"
     },
     "standaloneEvent": {
       "description": "Styles applied to {{nodeName}}.",
