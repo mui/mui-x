@@ -163,13 +163,17 @@ Source layout:
 ```text
 packages/mcp/
 ├── src/
-│   ├── stdio.ts            # entry: server setup + tool registration
+│   ├── stdio.ts            # entry: builds the server and registers the tools
 │   ├── constants.ts        # shared constants (name, version, env vars, defaults)
-│   ├── docs-packages.ts    # fetchRemotePackages: the MUI docs catalog source
-│   ├── docs-handler.ts     # adapts the docs tools to MCP handlers
-│   ├── codegen-handler.ts  # adapts generateReactCode to an MCP handler
-│   ├── codegen-progress.ts # forwards codegen progress as MCP notifications
-│   └── logger.ts           # combined stderr + ~/.mui-mcp.log logger
+│   ├── logger.ts           # combined stderr + ~/.mui-mcp.log logger
+│   ├── docs/
+│   │   ├── packages.ts     # fetchRemotePackages: the MUI docs catalog source
+│   │   ├── handler.ts      # adapts the docs tools to MCP handlers
+│   │   └── register.ts     # builds + registers useMuiDocs / fetchDocs
+│   └── codegen/
+│       ├── handler.ts      # adapts generateReactCode to an MCP handler
+│       ├── progress.ts     # forwards codegen progress as MCP notifications
+│       └── register.ts     # builds + registers generateReactCode
 ├── dist/stdio.cjs          # build output, gitignored; what MCP clients spawn
 ├── tsdown.config.ts
 ├── package.json

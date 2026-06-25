@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fetchRemotePackages } from './docs-packages';
+import { fetchRemotePackages } from './packages';
 
 const PROD_DEFAULT = 'https://chat-backend.mui.com';
 const LIST_PATH = '/v1/public/packages/list';

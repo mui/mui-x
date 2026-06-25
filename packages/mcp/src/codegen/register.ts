@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { buildCodegenHandler } from './codegen-handler';
+import { buildCodegenHandler } from './handler';
 
 type Logger = (message: string, error?: unknown) => void;
 

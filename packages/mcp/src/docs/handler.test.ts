@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildDocsHandler } from './docs-handler';
+import { buildDocsHandler } from './handler';
 
 describe('buildDocsHandler', () => {
   it('wraps the tool result in MCP `content` shape (single text block)', async () => {

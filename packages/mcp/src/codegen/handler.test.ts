@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildCodegenHandler } from './codegen-handler';
+import { buildCodegenHandler } from './handler';
 
 const sampleResult = {
   threadId: 'chat-1',

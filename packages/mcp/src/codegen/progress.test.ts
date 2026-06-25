@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildCodegenProgressForwarder } from './codegen-progress';
+import { buildCodegenProgressForwarder } from './progress';
 
 const buildExtra = () => {
   const sendNotification = vi.fn().mockResolvedValue(undefined);

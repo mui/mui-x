@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { registerCodegenTool } from './register-codegen-tool';
+import { registerCodegenTool } from './register';
 
 type Server = Parameters<typeof registerCodegenTool>[0];
 type Deps = Parameters<typeof registerCodegenTool>[1];

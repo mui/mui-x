@@ -14,10 +14,10 @@ import {
   SERVER_VERSION,
   STARTUP_ERROR_MESSAGE,
 } from './constants';
-import { fetchRemotePackages } from './docs-packages';
+import { fetchRemotePackages } from './docs/packages';
 import { buildCombinedLogger } from './logger';
-import { registerCodegenTool } from './register-codegen-tool';
-import { registerDocsTools } from './register-docs-tools';
+import { registerCodegenTool } from './codegen/register';
+import { registerDocsTools } from './docs/register';
 
 const main = async () => {
   const {

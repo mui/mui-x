@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { registerDocsTools } from './register-docs-tools';
+import { registerDocsTools } from './register';
 
 type Server = Parameters<typeof registerDocsTools>[0];
 type Deps = Parameters<typeof registerDocsTools>[1];

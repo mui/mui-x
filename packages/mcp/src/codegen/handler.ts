@@ -1,4 +1,4 @@
-import { buildCodegenProgressForwarder } from './codegen-progress';
+import { buildCodegenProgressForwarder } from './progress';
 
 type CodegenResult = {
   threadId: string;
