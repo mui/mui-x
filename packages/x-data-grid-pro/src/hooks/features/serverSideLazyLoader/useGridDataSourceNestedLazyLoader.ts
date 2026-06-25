@@ -17,15 +17,17 @@ import {
   gridFilteredSortedRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowSelector,
-  type GridGroupNode,
-  type GridSkeletonRowNode,
-  type GridEventListener,
-  type GridRowId,
-  type GridRowModel,
-  type GridLeafNode,
-  type GridGetRowsResponse,
-  type GridDataSourceGroupNode,
-  type GridRowTreeConfig,
+} from '@mui/x-data-grid';
+import type {
+  GridGroupNode,
+  GridSkeletonRowNode,
+  GridEventListener,
+  GridRowId,
+  GridRowModel,
+  GridLeafNode,
+  GridGetRowsResponse,
+  GridDataSourceGroupNode,
+  GridRowTreeConfig,
 } from '@mui/x-data-grid';
 import {
   buildRootGroup,
@@ -35,8 +37,8 @@ import {
   useGridRegisterStrategyProcessor,
   runIf,
   DataSourceRowsUpdateStrategy,
-  type GridStrategyProcessor,
 } from '@mui/x-data-grid/internals';
+import type { GridStrategyProcessor } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';

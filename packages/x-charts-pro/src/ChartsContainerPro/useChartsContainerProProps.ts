@@ -1,16 +1,17 @@
 'use client';
 import * as React from 'react';
-import {
-  type ChartAnyPluginSignature,
-  type ChartSeriesType,
-  type SamplingConfig,
-  type SamplingMethod,
-  useChartsContainerProps,
-  type UseChartsContainerPropsReturnValue,
+import { useChartsContainerProps } from '@mui/x-charts/internals';
+import type {
+  ChartAnyPluginSignature,
+  ChartSeriesType,
+  SamplingConfig,
+  SamplingMethod,
+  UseChartsContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
 import type { ChartsDataProviderProProps } from '../ChartsDataProviderPro';
 import type { ChartsContainerProProps } from './ChartsContainerPro';
-import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type UseChartsContainerProPropsReturnValue<
   SeriesType extends ChartSeriesType,

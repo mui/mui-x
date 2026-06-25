@@ -1,23 +1,19 @@
 'use client';
 import PropTypes from 'prop-types';
-import {
-  ChartsProvider,
-  type ChartSeriesType,
-  type ChartAnyPluginSignature,
-  type ChartsProviderProps,
-  ChartsSlotsProvider,
-  type ChartSeriesConfig,
-  defaultSeriesConfig,
+import { ChartsProvider, ChartsSlotsProvider, defaultSeriesConfig } from '@mui/x-charts/internals';
+import type {
+  ChartSeriesType,
+  ChartAnyPluginSignature,
+  ChartsProviderProps,
+  ChartSeriesConfig,
 } from '@mui/x-charts/internals';
-import { type ChartsDataProviderProps } from '@mui/x-charts/ChartsDataProvider';
+import type { ChartsDataProviderProps } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/internals';
-import {
-  type ChartsSlotPropsPro,
-  type ChartsSlotsPro,
-  defaultSlotsMaterial,
-} from '../internals/material';
-import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import { defaultSlotsMaterial } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderProProps } from './useChartsDataProviderProProps';
 import { ChartsWatermark } from '../internals/ChartsWatermark';
 import { barSampler } from '../internals/plugins/useChartProSampling/barSampler';

@@ -1,14 +1,9 @@
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridColDef,
-  useGridApiRef,
-  DataGridPremium,
-  type GridApi,
-  type DataGridPremiumProps,
-  GridActionsCellItem,
-} from '@mui/x-data-grid-premium';
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGridPremium, GridActionsCellItem } from '@mui/x-data-grid-premium';
+import type { GridColDef, GridApi, DataGridPremiumProps } from '@mui/x-data-grid-premium';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
-import { spy, type SinonSpy } from 'sinon';
+import { spy } from 'sinon';
+import type { SinonSpy } from 'sinon';
 import Excel from '@mui/x-internal-exceljs-fork';
 import { spyApi } from 'test/utils/helperFn';
 

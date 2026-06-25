@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import reactMajor from '@mui/x-internals/reactMajor';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import { type SeriesId } from '../models/seriesType/common';
+import type { SeriesId } from '../models/seriesType/common';
 import { getSymbol } from '../internals/getSymbol';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 

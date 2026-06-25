@@ -8,18 +8,20 @@ import {
   waitFor,
   act,
 } from '@mui/internal-test-utils';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { getCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
-  type GridRowsProp,
-  type GridGroupNode,
-  type GridApi,
-  type GridDataSource,
-  type GridValidRowModel,
   gridRowTreeSelector,
   gridRowsLookupSelector,
+} from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridRowsProp,
+  GridGroupNode,
+  GridApi,
+  GridDataSource,
+  GridValidRowModel,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
