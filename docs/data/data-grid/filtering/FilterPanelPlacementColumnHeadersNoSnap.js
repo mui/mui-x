@@ -11,7 +11,11 @@ export default function FilterPanelPlacementColumnHeadersNoSnap() {
     rowLength: 100,
   });
 
-  const columnHeadersRef = React.useRef(null);
+  const [columnHeadersElement, setColumnHeadersElement] = React.useState(null);
+
+  const columnHeadersRef = React.useCallback((instance) => {
+    setColumnHeadersElement(instance);
+  }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -25,7 +29,7 @@ export default function FilterPanelPlacementColumnHeadersNoSnap() {
           },
           panel: {
             placement: 'bottom-start',
-            target: columnHeadersRef.current,
+            target: columnHeadersElement,
           },
         }}
       />

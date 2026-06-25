@@ -8,7 +8,7 @@
     },
     panel: {
       placement: 'bottom-start',
-      target: columnHeadersRef.current,
+      target: columnHeadersElement,
     },
   }}
 />
