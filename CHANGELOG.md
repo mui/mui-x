@@ -1,5 +1,116 @@
 # Changelog
 
+## 9.7.0
+
+_Jun 25, 2026_
+
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @code-infra-renovate[bot], @mustafajw07
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @romgrk, @sai6855, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.7.0`
+
+- [DataGrid] Fix Demo CustomColumnMenuGrid crashing (#22897) @sai6855
+- [DataGrid] Fix crash in `getRowValue` when `colDef` is undefined (#22838) @LukasTy
+- [DataGrid] Fix `longText` expand button submitting surrounding form (#22450) @siriwatknp
+- [DataGrid] Remove filename ignore list from `removePropTypesPlugin` in Babel config (#22727) @sai6855
+- [DataGrid] Deduplicate scroll-preserving focus logic (#22916) @sai6855
+- [DataGrid] Fix `singleSelect` clearing to use empty string instead of `null` (#22881) @michelengelen
+- [DataGrid] Wait for rows before reacting on `autosizeOnMount` (#22698) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.7.0`.
+
+#### `@mui/x-data-grid-premium@9.7.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.7.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.7.0`
+
+- [fields] Announce cardinal day in the day section `aria-valuetext` (#22922) @LukasTy
+- [fields] Avoid focusing the field on blank space clicks (#22285) @LukasTy
+- [pickers] Commit TimeClock value when the drag ends outside the clock (#22877) @LukasTy
+- [pickers] Respect explicit `notched` prop on the outlined PickersTextField (#22875) @LukasTy
+
+#### `@mui/x-date-pickers-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.7.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.7.0`
+
+- [charts] Add demo for displaying the sum of all values from the stacked series on top of the stacked bars (#22879) @sai6855
+- [charts] Add `zAxis` custom scatter component demo (#22746) @mustafajw07
+- [charts] Apply axis `colorMap` to radial bar fill (#22800) @JCQuintas
+- [charts] Simplify classes type (#22626) @alexfauquette
+- [charts] Stable progressive scatter batching + responsive zoom/pan (#22862) @JCQuintas
+- [charts] Strip dev-only console diagnostics from production (#22917) @sai6855
+- [docs] Fix scatter renderer table blocking column (#22904) @JCQuintas
+- [docs] Make ScatterAsyncRenderer button bar responsive (#22905) @JCQuintas
+
+#### `@mui/x-charts-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.7.0`.
+
+#### `@mui/x-charts-premium@9.7.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.7.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.7.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.7.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.3`
+
+- [scheduler] Highlight only the edited occurrence of a recurring event (#22873) @Anexus5919
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.3`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.7.0`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Fix react@^18 CI failing on nanoid trust-downgrade (#22923) @LukasTy
+- [code-infra] Reduce Netlify build parallelism to 2 (#22925) @LukasTy
+- [code-infra] Use Turbopack for docs in dev (#22882) @brijeshb42
+- [docs-infra] Pre-render API page descriptions (#22919) @brijeshb42
+- [internal] Use @base-ui/utils/platform for platform detection (#22710) @romgrk
+- [internal] Enforce top-level type imports (#22679) @Janpot
+
+### Miscellaneous
+
+- [internal] Bump MUI public packages (#22894) @code-infra-renovate[bot]
+- [internal] Pin dependencies (#22896) @code-infra-renovate[bot]
+- [internal] Enable mui/no-floating-cleanup and fix leaks (#22872) @romgrk
+- [infra] Update `.gitignore` to exclude `.claude` sub-directories (#22435) @michelengelen
+- [virtualizer] Improve the dimensions' initial state (#22885) @arminmeh
+
 ## 9.6.0
 
 _Jun 18, 2026_
@@ -115,7 +226,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.2`, plus:
 
 - [scheduler-premium] Expose premium model types through public API (#22798) @mustafajw07
 - [scheduler-premium] Remove non-functional `onPreferencesChange` prop from `EventTimelinePremium` (#22777) @rita-codes
-- [scheduler-premium] Validate the `FREQ` value in `parseRRule`] (#22786) @rita-codes 
+- [scheduler-premium] Validate the `FREQ` value in `parseRRule`] (#22786) @rita-codes
 
 ### Codemod
 
