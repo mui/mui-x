@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
-import { type ChartPlugin } from '@mui/x-charts/internals';
+import type { ChartPlugin } from '@mui/x-charts/internals';
 import {
   useDragGesture,
   useWheelGesture,
   usePinchGesture,
   useRegisterZoomGestures,
 } from '@mui/x-charts-pro/internals';
-import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
+import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { selectorChartProjection } from '../useGeoProjection/useGeoProjection.selectors';
 import type {
   MapTranslationAxis,
@@ -44,7 +44,13 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     [store],
   );
 
+  const clampZoomLevel = React.useCallback(
+    (zoomLevel: number) => Math.max(minScaleRatio, Math.min(maxScaleRatio, zoomLevel)),
+    [minScaleRatio, maxScaleRatio],
+  );
+
   // The view is the source of truth, stored directly: no pixel <-> view conversion on write/read.
+  // Callers are responsible for clamping `zoomLevel` (via `clampZoomLevel`) before applying it.
   const applyView = React.useCallback(
     (newView: MapZoomView) => {
       if (!isControlled) {
@@ -145,12 +151,21 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   useWheelGesture(instance, {
     enabled,
     onWheel: (point, event) => {
-      const factor = event.deltaY < 0 ? WHEEL_ZOOM_STEP : 1 / WHEEL_ZOOM_STEP;
-
       const projection = getProjection();
       if (!projection || !projection.invert) {
         return;
       }
+
+      // Clamp the target zoom first, then derive the factor actually applied. At the bounds the
+      // factor collapses to `1`, so wheeling further neither scales nor shifts the map.
+      const currentZoom = store.state.geoProjectionZoom.zoomLevel ?? 1;
+      const rawFactor = event.deltaY < 0 ? WHEEL_ZOOM_STEP : 1 / WHEEL_ZOOM_STEP;
+      const nextZoom = clampZoomLevel(currentZoom * rawFactor);
+      const factor = nextZoom / currentZoom;
+      if (factor === 1) {
+        return;
+      }
+
       const geoPoint = projection.invert([point.x, point.y]) as [number, number] | null;
       if (!geoPoint) {
         return;
@@ -162,9 +177,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       if (center) {
         projection.rotate([-center[0], -center[1]]);
       }
-      if (factor !== 1) {
-        projection.scale(scale * factor);
-      }
+      projection.scale(scale * factor);
       const translation = getTranslation(
         store,
         projection,
@@ -177,7 +190,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 
       if (center) {
         applyView({
-          zoomLevel: (store.state.geoProjectionZoom.zoomLevel ?? 1) * factor,
+          zoomLevel: nextZoom,
           center,
           translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
         });
@@ -193,25 +206,25 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         return;
       }
 
+      // Same clamp-then-derive-factor flow as the wheel, so pinch obeys the identical bounds.
+      const currentZoom = store.state.geoProjectionZoom.zoomLevel ?? 1;
+      const nextZoom = clampZoomLevel(currentZoom * (1 + deltaScale));
+      const factor = nextZoom / currentZoom;
+      if (factor === 1) {
+        return;
+      }
+
       const geoPoint = projection.invert([point.x, point.y]) as [number, number] | null;
       if (!geoPoint) {
         return;
       }
-      const center = getRotation(
-        projection,
-        geoPoint,
-        [point.x, point.y],
-        1 + deltaScale,
-        rotationAllowed,
-      );
+      const center = getRotation(projection, geoPoint, [point.x, point.y], factor, rotationAllowed);
       const scale = projection.scale();
       const rotate = projection.rotate();
       if (center) {
         projection.rotate([-center![0], -center![1]]);
       }
-      if (deltaScale !== 0) {
-        projection.scale(scale * (1 + deltaScale));
-      }
+      projection.scale(scale * factor);
       const translation = getTranslation(
         store,
         projection,
@@ -224,7 +237,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 
       if (center || translation) {
         applyView({
-          zoomLevel: (store.state.geoProjectionZoom.zoomLevel ?? 1) * (1 + deltaScale),
+          zoomLevel: nextZoom,
           center: center ?? store.state.geoProjectionZoom.center ?? [0, 0],
           translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
         });
@@ -232,54 +245,33 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     },
   });
 
-  const zoomIn = React.useCallback(
-    (factor = BUTTON_ZOOM_STEP, center?: [number, number]) => {
-      const currentZoom = store.state.geoProjectionZoom.zoomLevel ?? 1;
-      const nextZoom = Math.max(minScaleRatio, Math.min(maxScaleRatio, currentZoom * factor));
+  // Shared by both buttons: clamp through `applyView` (which also handles controlled mode and
+  // `onZoomChange`), keeping the current center/translation. Bail out when already at a bound so a
+  // click at the limit stays a no-op.
+  const zoomBy = React.useCallback(
+    (factor: number) => {
+      const current = store.state.geoProjectionZoom;
+      const currentZoom = current.zoomLevel ?? 1;
+      const nextZoom = clampZoomLevel(currentZoom * factor);
       if (nextZoom === currentZoom) {
         return;
       }
-      store.set('geoProjectionZoom', {
-        ...store.state.geoProjectionZoom,
+      applyView({
         zoomLevel: nextZoom,
-        center: center ?? store.state.geoProjectionZoom.center,
+        center: current.center ?? [0, 0],
+        translation: current.translation ?? [0, 0],
       });
     },
-    [store, minScaleRatio, maxScaleRatio],
+    [store, clampZoomLevel, applyView],
   );
 
-  const zoomOut = React.useCallback(
-    (factor = 1 / BUTTON_ZOOM_STEP, center?: [number, number]) => {
-      const currentZoom = store.state.geoProjectionZoom.zoomLevel ?? 1;
-      const nextZoom = Math.max(minScaleRatio, Math.min(maxScaleRatio, currentZoom * factor));
-      if (nextZoom === currentZoom) {
-        return;
-      }
-      store.set('geoProjectionZoom', {
-        ...store.state.geoProjectionZoom,
-        zoomLevel: nextZoom,
-        center: center ?? store.state.geoProjectionZoom.center,
-      });
-    },
-    [store, minScaleRatio, maxScaleRatio],
-  );
+  const zoomIn = React.useCallback(() => zoomBy(BUTTON_ZOOM_STEP), [zoomBy]);
+
+  const zoomOut = React.useCallback(() => zoomBy(1 / BUTTON_ZOOM_STEP), [zoomBy]);
 
   const resetZoom = React.useCallback(() => {
-    if (!isControlled) {
-      store.set('geoProjectionZoom', {
-        ...store.state.geoProjectionZoom,
-        zoomLevel: 1,
-        center: [0, 0],
-        translation: [0, 0],
-      });
-    }
-
-    onZoomChange?.({
-      zoomLevel: 1,
-      center: [0, 0],
-      translation: [0, 0],
-    });
-  }, [store, isControlled, onZoomChange]);
+    applyView({ zoomLevel: 1, center: [0, 0], translation: [0, 0] });
+  }, [applyView]);
 
   const publicAPI = { zoomIn, zoomOut, resetZoom };
 
