@@ -139,7 +139,7 @@ export const getTopLevelRowCount = ({
 
   return Math.max(
     rowCountProp,
-    rootGroupNode.children.length + (rootGroupNode?.footerId == null ? 0 : 1),
+    rootGroupNode.children.length + (rootGroupNode.footerId == null ? 0 : 1),
   );
 };
 
