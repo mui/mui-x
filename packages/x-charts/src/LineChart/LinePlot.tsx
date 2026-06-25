@@ -3,13 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import {
-  LineElement,
-  type LineElementProps,
-  type LineElementSlotProps,
-  type LineElementSlots,
-} from './LineElement';
-import { type LineItemIdentifier } from '../models/seriesType/line';
+import { LineElement } from './LineElement';
+import type { LineElementProps, LineElementSlotProps, LineElementSlots } from './LineElement';
+import type { LineItemIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
@@ -101,7 +97,7 @@ function LinePlot(props: LinePlotProps) {
   );
 }
 
-LinePlot.propTypes = {
+LinePlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

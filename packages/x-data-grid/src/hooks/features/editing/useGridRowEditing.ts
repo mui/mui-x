@@ -7,12 +7,11 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
-import {
-  GridEditModes,
-  GridRowModes,
-  type GridEditingState,
-  type GridEditCellProps,
-  type GridEditRowProps,
+import { GridEditModes, GridRowModes } from '../../../models/gridEditRowModel';
+import type {
+  GridEditingState,
+  GridEditCellProps,
+  GridEditRowProps,
 } from '../../../models/gridEditRowModel';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -38,10 +37,12 @@ import type { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
-  type GridRowEditStopParams,
-  type GridRowEditStartParams,
   GridRowEditStopReasons,
   GridRowEditStartReasons,
+} from '../../../models/params/gridRowParams';
+import type {
+  GridRowEditStopParams,
+  GridRowEditStartParams,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
@@ -604,7 +605,7 @@ export const useGridRowEditing = (
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
-          } else {
+          } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
                 'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',

@@ -1,24 +1,23 @@
 'use client';
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
-import {
-  getGridDefaultColumnTypes,
-  type GridGetRowsResponse,
-  type GridRowId,
-  type GridRowModel,
-  type GridColDef,
-  type GridInitialState,
-  type GridColumnVisibilityModel,
+import { getGridDefaultColumnTypes } from '@mui/x-data-grid-premium';
+import type {
+  GridGetRowsResponse,
+  GridRowId,
+  GridRowModel,
+  GridColDef,
+  GridInitialState,
+  GridColumnVisibilityModel,
 } from '@mui/x-data-grid-premium';
 import { extrapolateSeed, deepFreeze } from './useDemoData';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
 import type { GridColDefGenerator } from '../services/gridColDefGenerator';
-import { getRealGridData, type GridDemoData } from '../services/real-data-service';
-import {
-  addTreeDataOptionsToDemoData,
-  type AddPathToDemoDataOptions,
-} from '../services/tree-data-generator';
+import { getRealGridData } from '../services/real-data-service';
+import type { GridDemoData } from '../services/real-data-service';
+import { addTreeDataOptionsToDemoData } from '../services/tree-data-generator';
+import type { AddPathToDemoDataOptions } from '../services/tree-data-generator';
 import {
   loadServerRows,
   processTreeDataRows,
@@ -59,6 +58,7 @@ interface UseMockServerOptions {
   maxColumns?: number;
   visibleFields?: string[];
   editable?: boolean;
+  multiSelect?: boolean;
   treeData?: AddPathToDemoDataOptions;
   derivedColumns?: boolean;
 }
@@ -71,7 +71,7 @@ interface GridMockServerData {
 
 interface ColumnsOptions extends Pick<
   UseMockServerOptions,
-  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns'
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns' | 'multiSelect'
 > {}
 
 const GET_DEFAULT_DATASET_OPTIONS: UseMockServerOptions = {
@@ -97,6 +97,9 @@ const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] |
       throw new Error('MUI X: Unknown dataset');
   }
 
+  if (!options.multiSelect) {
+    columns = columns.filter((col) => col.type !== 'multiSelect');
+  }
   if (options.visibleFields) {
     columns = columns.map((col) => ({ ...col, hide: !options.visibleFields?.includes(col.field) }));
   }
@@ -196,6 +199,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       maxColumns: options.maxColumns,
       visibleFields: options.visibleFields,
       derivedColumns: options.derivedColumns,
+      multiSelect: options.multiSelect,
     });
   }, [
     options.dataSet,
@@ -203,6 +207,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     options.maxColumns,
     options.visibleFields,
     options.derivedColumns,
+    options.multiSelect,
   ]);
 
   const initialState = React.useMemo(

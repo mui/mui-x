@@ -97,15 +97,47 @@ export namespace Dimensions {
 }
 
 function initializeState(params: ParamsWithDefaults): Dimensions.State {
-  const { rowCount, dimensions: dimensionsParams } = params;
-  const { columnsTotalWidth, rowHeight, autoHeight, minimalContentHeight } = dimensionsParams;
-  const currentPageTotalHeight = rowCount * rowHeight;
+  const { rowCount, rows, getRowHeight, dimensions: dimensionsParams } = params;
+  const {
+    columnsTotalWidth,
+    rowHeight,
+    autoHeight,
+    minimalContentHeight,
+    topPinnedHeight,
+    bottomPinnedHeight,
+  } = dimensionsParams;
+
+  // Calculate the initial content height and row positions so the
+  // initial render gets the correct size.
+  const positions: number[] = [];
+  let currentPageTotalHeight = 0;
+  if (getRowHeight && rows.length > 0) {
+    for (let i = 0; i < rows.length; i += 1) {
+      positions.push(currentPageTotalHeight);
+      const height = getRowHeight(rows[i]);
+      currentPageTotalHeight += typeof height === 'number' ? height : rowHeight;
+    }
+  } else {
+    for (let i = 0; i < rowCount; i += 1) {
+      positions.push(i * rowHeight);
+    }
+    currentPageTotalHeight = rowCount * rowHeight;
+  }
+
+  // Reflect the pinned zone sizes in the container heights at initialization, mirroring
+  // `updateDimensions`. The pinned rows' measured height is still 0 in `rowsMeta`
+  // below (pinned rows are measured later), so each container height is just its static
+  // pinned size.
+  const topContainerHeight = topPinnedHeight;
+  const bottomContainerHeight = bottomPinnedHeight;
 
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...dimensionsParams,
     autoHeight,
     minimalContentHeight,
+    topContainerHeight,
+    bottomContainerHeight,
     contentSize: {
       width: columnsTotalWidth,
       height: roundToDecimalPlaces(currentPageTotalHeight, 1),
@@ -114,7 +146,7 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 
   const rowsMeta = {
     currentPageTotalHeight,
-    positions: Array.from({ length: rowCount }, (_, i) => i * rowHeight),
+    positions,
     pinnedTopRowsTotalHeight: 0,
     pinnedBottomRowsTotalHeight: 0,
   };

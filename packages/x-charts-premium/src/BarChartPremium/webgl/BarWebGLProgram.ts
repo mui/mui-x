@@ -11,7 +11,7 @@ import {
   uploadInstancedAttribute,
 } from '../../utils/webgl/instancedAttribute';
 import { barFragmentShaderSource, barVertexShaderSource } from './shaders';
-import { type BarWebGLPlotData } from './useBarWebGLPlotData';
+import type { BarWebGLPlotData } from './useBarWebGLPlotData';
 
 export class BarWebGLProgram {
   private readonly shaders: WebGLShader[];

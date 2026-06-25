@@ -1,14 +1,10 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridApi,
-  useGridApiRef,
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridColDef,
-} from '@mui/x-data-grid-premium';
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGridPremium } from '@mui/x-data-grid-premium';
+import type { GridApi, DataGridPremiumProps, GridColDef } from '@mui/x-data-grid-premium';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { type SinonSpy, spy, stub, type SinonStub } from 'sinon';
+import { spy, stub } from 'sinon';
+import type { SinonSpy, SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
@@ -1313,5 +1309,31 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(portalInput).toHaveFocus();
       },
     );
+
+    it('should wire pasted csv through pastedValueParser into a multiSelect array', async () => {
+      const columns: GridColDef[] = [
+        {
+          field: 'tags',
+          type: 'multiSelect',
+          editable: true,
+          width: 280,
+          valueOptions: ['React', 'TypeScript', 'Node.js'],
+        },
+      ];
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium apiRef={apiRef} columns={columns} rows={[{ id: 0, tags: ['React'] }]} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await user.click(cell);
+
+      paste(cell, 'React, TypeScript');
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).tags).to.deep.equal(['React', 'TypeScript']);
+      });
+    });
   });
 });

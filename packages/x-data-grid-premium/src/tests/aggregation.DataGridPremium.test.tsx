@@ -1,18 +1,21 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { type SinonSpy, spy } from 'sinon';
+import { spy } from 'sinon';
+import type { SinonSpy } from 'sinon';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
   GRID_AGGREGATION_FUNCTIONS,
-  type GridAggregationFunction,
-  type GridApi,
-  type GridRenderCellParams,
-  type GridGroupNode,
   useGridApiRef,
-  type GridColDef,
+} from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridAggregationFunction,
+  GridApi,
+  GridRenderCellParams,
+  GridGroupNode,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -1164,6 +1167,60 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
+  describe('colDef: multiSelect', () => {
+    it('should expose only `size` in the column menu Aggregation select', async () => {
+      const { user } = await render(
+        <Test
+          rows={[
+            { id: 0, tags: ['React'] },
+            { id: 1, tags: ['Vue'] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue'],
+            },
+          ]}
+        />,
+      );
+
+      await act(async () => apiRef.current?.showColumnMenu('tags'));
+      await user.click(screen.getByLabelText('Aggregation'));
+      const listbox = screen.getByRole('listbox', { name: 'Aggregation' });
+      const optionTexts = within(listbox)
+        .getAllByRole('option')
+        .map((o) => o.textContent);
+      // Listbox always renders an empty placeholder ("...") before the allowed functions.
+      expect(optionTexts).to.deep.equal(['...', 'size']);
+    });
+
+    it('should aggregate with `size` and render the count in the footer', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, tags: ['React'] },
+            { id: 1, tags: ['Vue', 'TypeScript'] },
+            { id: 2, tags: [] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue', 'TypeScript'],
+            },
+          ]}
+          initialState={{ aggregation: { model: { tags: 'size' } } }}
+        />,
+      );
+
+      const tagsValues = getColumnValues(1);
+      expect(tagsValues[tagsValues.length - 1]).to.equal('3');
+    });
+  });
+
   describe('"no rows" overlay', () => {
     it('should display "no rows" overlay and not show aggregation footer when there are no rows', async () => {
       await render(
@@ -1181,5 +1238,13 @@ describe('<DataGridPremium /> - Aggregation', () => {
       // Ensure aggregation footer is not present
       expect(getColumnValues(0)).to.deep.equal([]);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', async () => {
+    await render(<Test />);
+
+    expect(() => apiRef.current!.getCellParams(0, 'does-not-exist')).not.to.throw();
+    expect(apiRef.current!.getCellParams(0, 'does-not-exist').value).to.equal(undefined);
   });
 });

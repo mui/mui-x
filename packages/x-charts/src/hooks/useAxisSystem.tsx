@@ -1,9 +1,7 @@
 'use client';
 import { selectorChartRawXAxis } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import {
-  selectorChartRawRotationAxis,
-  type UseChartPolarAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import { selectorChartRawRotationAxis } from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useStore } from '../internals/store/useStore';
 
 /**

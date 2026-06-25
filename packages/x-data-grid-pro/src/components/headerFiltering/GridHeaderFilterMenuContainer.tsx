@@ -1,13 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  type GridFilterItem,
-  type GridFilterOperator,
-  type GridColDef,
-  useGridApiContext,
-  useGridSelector,
-} from '@mui/x-data-grid';
+import { useGridApiContext, useGridSelector } from '@mui/x-data-grid';
+import type { GridFilterItem, GridFilterOperator, GridColDef } from '@mui/x-data-grid';
 import refType from '@mui/utils/refType';
 import useId from '@mui/utils/useId';
 import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
@@ -96,7 +91,7 @@ function GridHeaderFilterMenuContainer(props: {
   );
 }
 
-GridHeaderFilterMenuContainer.propTypes = {
+GridHeaderFilterMenuContainer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

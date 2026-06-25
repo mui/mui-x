@@ -15,19 +15,19 @@ catalog:
   '@babel/runtime': ^7.29.7
   '@babel/traverse': ^7.29.7
   '@base-ui/react': ^1.5.0
-  '@base-ui/utils': ^0.2.9
+  '@base-ui/utils': ^0.3.0
   '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
-  '@mui/icons-material': 9.0.1
+  '@mui/icons-material': 9.1.1
   '@mui/internal-test-utils': 2.0.18-canary.25
-  '@mui/internal-core-docs': 9.0.2-canary.0
-  '@mui/material': 9.0.1
-  '@mui/stylis-plugin-rtl': 9.0.1
-  '@mui/system': 9.0.1
-  '@mui/types': 9.0.0
-  '@mui/utils': 9.0.1
+  '@mui/internal-core-docs': 9.1.2-canary.2
+  '@mui/material': 9.1.1
+  '@mui/stylis-plugin-rtl': 9.1.1
+  '@mui/system': 9.1.1
+  '@mui/types': 9.1.1
+  '@mui/utils': ^9.1.1
   '@mui/x-internal-exceljs-fork': 5.0.0
   '@playwright/test': 1.60.0
   '@react-spring/web': ^10.1.0
@@ -45,13 +45,14 @@ catalog:
   '@typescript-eslint/parser': ^8.59.4
   '@vitejs/plugin-react': ^6.0.2
   '@vitejs/plugin-react-swc': ^4.3.1
-  '@vitest/browser': ^4.1.7
-  '@vitest/browser-playwright': ^4.1.7
-  '@vitest/coverage-v8': ^4.1.7
-  '@vitest/ui': ^4.1.7
+  '@vitest/browser': ^4.1.8
+  '@vitest/browser-playwright': ^4.1.8
+  '@vitest/coverage-v8': ^4.1.8
+  '@vitest/ui': ^4.1.8
   babel-plugin-react-remove-properties: ^0.3.1
   chance: ^1.1.13
   clsx: ^2.1.1
+  core-js-pure: ^3.49.0
   cross-env: ^10.1.0
   csstype: ^3.2.3
   date-fns: ^4.2.1
@@ -81,7 +82,7 @@ catalog:
   tsx: ^4.22.3
   use-sync-external-store: ^1.6.0
   vite: ^8.0.14
-  vitest: ^4.1.7
+  vitest: ^4.1.8
   yargs: ^18.0.0
 
 engineStrict: true
@@ -91,6 +92,9 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
   - '@base-ui/*'
+  # nanoid@3.3.14 fails the no-downgrade trust policy (no provenance); this forces the attested 3.3.15.
+  # Removable from 2026-06-25, once 3.3.15 ages past minimumReleaseAge.
+  - 'nanoid@3.3.15'
 trustPolicy: no-downgrade
 # Skip trust-policy checks for packages published more than 365 days ago.
 # Some widely-used legacy packages (notably semver@6.x — pulled in by @babel/core@7.x — plus
@@ -104,6 +108,7 @@ trustPolicyIgnoreAfter: 525600
 enablePrePostScripts: true
 
 allowBuilds:
+  '@mui/x-charts-vendor': true
   '@swc/core': true
   '@vvago/vale': true
   esbuild: true
@@ -113,8 +118,10 @@ allowBuilds:
   '@mui/x-telemetry': false
   core-js: false
   msw: false
+  core-js-pure: false
 
 overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
+  caniuse-lite: ^1.0.30001793

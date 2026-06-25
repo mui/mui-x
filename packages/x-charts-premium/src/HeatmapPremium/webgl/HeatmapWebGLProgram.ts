@@ -1,5 +1,4 @@
 import {
-  type GrowableBuffer,
   bindQuadBuffer,
   createGrowableBuffer,
   linkProgram,
@@ -9,6 +8,7 @@ import {
   uploadQuadBuffer,
 } from '../../utils/webgl/utils';
 import { bindInstancedAttribute } from '../../utils/webgl/instancedAttribute';
+import type { GrowableBuffer } from '../../utils/webgl/utils';
 import {
   heatmapFragmentShaderSourceNoBorderRadius,
   heatmapFragmentShaderSourceWithBorderRadius,

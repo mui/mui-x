@@ -219,6 +219,15 @@ The example below positions the labels above the bars they refer to.
 
 {{"demo": "LabelsAboveBars.js"}}
 
+### Stack total labels
+
+The `barLabel` property only has access to a single bar, so it can't display a stack's total.
+To show it, render a custom component as a child of the chart container.
+
+The example below sums the series with the [`useBarSeries`](/x/react-charts/hooks/use-series/) hook and positions each total with the [`useXScale`](/x/react-charts/hooks/use-scale/) and [`useYScale`](/x/react-charts/hooks/use-scale/) scales.
+
+{{"demo": "StackTotalLabels.js"}}
+
 ## Click events
 
 Bar charts provide two click handlers:
@@ -326,6 +335,7 @@ Here's how the bar chart is composed:
         <ChartsOverlay />
         <ChartsAxisHighlight />
         <FocusedBar />
+        <FocusedScatterMark />
       </g>
       <ChartsAxis />
       <ChartsClipPath id={clipPathId} />

@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
+import { useInteractionItemProps } from '@mui/x-charts/internals';
+import type { SeriesId } from '@mui/x-charts/internals';
 import { useItemHighlightState } from '../hooks';
 
 export type MapShapeProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
@@ -48,5 +50,14 @@ function MapShape(props: MapShapeProps) {
     />
   );
 }
+
+MapShape.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  dataIndex: PropTypes.number.isRequired,
+  seriesId: PropTypes.string.isRequired,
+} as any;
 
 export { MapShape };

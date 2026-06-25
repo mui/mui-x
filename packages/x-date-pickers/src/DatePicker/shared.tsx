@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/types';
-import {
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type {
   DateCalendarSlots,
   DateCalendarSlotProps,
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar.types';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { DateValidationError, DateView } from '../models';
-import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
-import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
-import {
-  DatePickerToolbar,
-  DatePickerToolbarProps,
-  ExportedDatePickerToolbarProps,
-} from './DatePickerToolbar';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
-import { DateViewRendererProps } from '../dateViewRenderers';
-import { PickerValue } from '../internals/models';
-import { ValidateDatePropsToDefault } from '../validation/validateDate';
+import type { DateValidationError, DateView } from '../models';
+import type { BasePickerInputProps } from '../internals/models/props/basePickerProps';
+import type {
+  LocalizedComponent,
+  PickersInputLocaleText,
+} from '../locales/utils/pickersLocaleTextApi';
+import type { DatePickerToolbarProps, ExportedDatePickerToolbarProps } from './DatePickerToolbar';
+import { DatePickerToolbar } from './DatePickerToolbar';
+import type { PickerViewRendererLookup } from '../internals/hooks/usePicker';
+import type { DateViewRendererProps } from '../dateViewRenderers';
+import type { PickerValue } from '../internals/models';
+import type { ValidateDatePropsToDefault } from '../validation/validateDate';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 
 export interface BaseDatePickerSlots extends DateCalendarSlots {

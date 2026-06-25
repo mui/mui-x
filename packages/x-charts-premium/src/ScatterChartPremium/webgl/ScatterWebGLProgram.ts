@@ -11,7 +11,7 @@ import {
   uploadInstancedAttribute,
 } from '../../utils/webgl/instancedAttribute';
 import { scatterVertexShader, scatterFragmentShader } from './shaders';
-import { type ScatterWebGLPlotData } from './useScatterWebGLPlotData';
+import type { ScatterWebGLPlotData } from './useScatterWebGLPlotData';
 
 export class ScatterWebGLProgram {
   private readonly shaders: WebGLShader[];

@@ -2,14 +2,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import {
-  type ComputedPieRadius,
-  type DefaultizedPieSeriesType,
-  type DefaultizedPieValueType,
-  type PieSeriesType,
+import type {
+  ComputedPieRadius,
+  DefaultizedPieSeriesType,
+  DefaultizedPieValueType,
+  PieSeriesType,
 } from '../models/seriesType/pie';
 import { useTransformData } from './dataTransform/useTransformData';
-import { PieArcLabel, type PieArcLabelProps } from './PieArcLabel';
+import { PieArcLabel } from './PieArcLabel';
+import type { PieArcLabelProps } from './PieArcLabel';
 import { getLabel } from '../internals/getLabel';
 import type { PieArcLabelPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
@@ -156,7 +157,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
   );
 }
 
-PieArcLabelPlot.propTypes = {
+PieArcLabelPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -188,11 +189,12 @@ PieArcLabelPlot.propTypes = {
       color: PropTypes.string.isRequired,
       endAngle: PropTypes.number.isRequired,
       formattedValue: PropTypes.string.isRequired,
+      hidden: PropTypes.bool.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       labelMarkType: PropTypes.oneOfType([
-        PropTypes.oneOf(['circle', 'line', 'square']),
+        PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
         PropTypes.func,
       ]),
       padAngle: PropTypes.number.isRequired,
@@ -226,10 +228,6 @@ PieArcLabelPlot.propTypes = {
     paddingAngle: PropTypes.number,
   }),
   /**
-   * The id of this series.
-   */
-  seriesId: PropTypes.string.isRequired,
-  /**
    * The radius between circle center and the beginning of the arc.
    * @default 0
    */
@@ -243,6 +241,10 @@ PieArcLabelPlot.propTypes = {
    * @default 0
    */
   paddingAngle: PropTypes.number,
+  /**
+   * The id of this series.
+   */
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

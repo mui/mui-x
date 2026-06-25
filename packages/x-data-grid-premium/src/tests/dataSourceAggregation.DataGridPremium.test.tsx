@@ -1,17 +1,19 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridDataSource,
-  type GridGroupNode,
-  type GridGetRowsResponse,
   useGridApiRef,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
+} from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridDataSource,
+  GridGroupNode,
+  GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
@@ -179,7 +181,11 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
     await waitFor(() => {
       const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-      expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+      expect(footerRow?.id).to.deep.equal({
+        position: 'footer',
+        value: 10,
+        formattedValue: undefined,
+      });
     });
   });
 

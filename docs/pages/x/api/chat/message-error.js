@@ -1,20 +1,8 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import descriptions from 'docs/translations/api-docs/chat/message-error/message-error.json';
 import jsonPageContent from './message-error.json';
 
-export default function Page(props) {
-  const { descriptions } = props;
+export default function Page() {
   return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
-
-export async function getStaticProps() {
-  const req = require.context(
-    'docs/translations/api-docs/chat/message-error',
-    false,
-    /\.\/message-error.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

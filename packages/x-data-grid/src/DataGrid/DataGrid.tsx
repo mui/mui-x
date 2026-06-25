@@ -77,7 +77,7 @@ interface DataGridComponent {
  */
 export const DataGrid = React.memo(forwardRef(DataGridRaw)) as DataGridComponent;
 
-DataGridRaw.propTypes = {
+DataGridRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -97,13 +97,11 @@ DataGridRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and takes as much space as it needs to display all rows.
+   * Use it instead of a flex parent container approach, if:
+   * - you don't need to set a minimum or maximum height for the Data Grid
+   * - you want to avoid the scrollbar flickering when the content changes
    * @default false
-   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
-   * @example
-   * <div style={{ display: 'flex', flexDirection: 'column' }}>
-   *   <DataGrid />
-   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
@@ -123,6 +121,7 @@ DataGridRaw.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.string),
     disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
+    includeHeaderFilters: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
     outliersFactor: PropTypes.number,
@@ -132,14 +131,69 @@ DataGridRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   *
+   * @warning
+   * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+   * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+   * Overriding them without providing the same functionality will break the row selection.
+   */
+  checkboxColDef: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    colSpan: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+    description: PropTypes.string,
+    disableColumnMenu: PropTypes.bool,
+    disableExport: PropTypes.bool,
+    disableReorder: PropTypes.bool,
+    display: PropTypes.oneOf(['flex', 'text']),
+    editable: PropTypes.bool,
+    examples: PropTypes.array,
+    filterable: PropTypes.bool,
+    filterOperators: PropTypes.arrayOf(
+      PropTypes.shape({
+        getApplyFilterFn: PropTypes.func.isRequired,
+        getValueAsString: PropTypes.func,
+        headerLabel: PropTypes.string,
+        InputComponent: PropTypes.elementType,
+        InputComponentProps: PropTypes.object,
+        label: PropTypes.string,
+        requiresFilterValue: PropTypes.bool,
+        value: PropTypes.string.isRequired,
+      }),
+    ),
+    flex: PropTypes.number,
+    getApplyQuickFilterFn: PropTypes.func,
+    getSortComparator: PropTypes.func,
+    groupable: PropTypes.bool,
+    headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
+    headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    headerName: PropTypes.string,
+    hideable: PropTypes.bool,
+    hideSortIcons: PropTypes.bool,
+    maxWidth: PropTypes.number,
+    minWidth: PropTypes.number,
+    pinnable: PropTypes.bool,
+    preProcessEditCellProps: PropTypes.func,
+    renderCell: PropTypes.func,
+    renderEditCell: PropTypes.func,
+    renderHeader: PropTypes.func,
+    resizable: PropTypes.bool,
+    rowSpanValueGetter: PropTypes.func,
+    sortable: PropTypes.bool,
+    sortComparator: PropTypes.func,
+    sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
+    valueFormatter: PropTypes.func,
+    valueGetter: PropTypes.func,
+    valueParser: PropTypes.func,
+    valueSetter: PropTypes.func,
+    width: PropTypes.number,
+  }),
+  /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
-  /**
-   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
-   */
-  checkboxColDef: PropTypes.object,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -196,8 +250,8 @@ DataGridRaw.propTypes = {
     set: PropTypes.func.isRequired,
   }),
   /**
-   * If positive, the Data Grid will periodically revalidate data source rows by
-   * re-fetching them from the server when the cache entry has expired.
+   * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
+   * If the refetched rows are different from the current rows, the grid will update the rows.
    * Set to `0` to disable polling.
    * @default 0
    */
@@ -849,6 +903,15 @@ DataGridRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Sets the tab navigation behavior for the Data Grid.
+   * - "none": No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence.
+   * - "content": Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header.
+   * - "header": Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content.
+   * - "all": Combines the "content" and "header" behavior.
+   * @default "none"
+   */
+  tabNavigation: PropTypes.oneOf(['all', 'content', 'header', 'none']),
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

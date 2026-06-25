@@ -2,10 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  type BarChartProProps,
-  type BarChartProSlotProps,
-  type BarChartProSlots,
+import type {
+  BarChartProProps,
+  BarChartProSlotProps,
+  BarChartProSlots,
 } from '@mui/x-charts-pro/BarChartPro';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
@@ -14,7 +14,8 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
+import { FocusedBar } from '@mui/x-charts/BarChart';
+import type { BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -25,14 +26,11 @@ import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
-import { BarPlotPremium, type BarPlotPremiumProps } from './BarPlotPremium';
+import { BarPlotPremium } from './BarPlotPremium';
+import type { BarPlotPremiumProps } from './BarPlotPremium';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
-import {
-  type BarItemIdentifier,
-  type RangeBarItemIdentifier,
-  type RangeBarSeriesType,
-} from '../models';
+import type { BarItemIdentifier, RangeBarItemIdentifier, RangeBarSeriesType } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
 
@@ -171,7 +169,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   );
 });
 
-BarChartPremium.propTypes = {
+BarChartPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -575,6 +573,7 @@ BarChartPremium.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -582,6 +581,7 @@ BarChartPremium.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -600,12 +600,16 @@ BarChartPremium.propTypes = {
       min: PropTypes.number,
       sizeMap: PropTypes.oneOfType([
         PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          size: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.number.isRequired),
-            PropTypes.func,
-          ]).isRequired,
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({
