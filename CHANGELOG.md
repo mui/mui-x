@@ -106,7 +106,6 @@ Internal changes.
 
 ### Miscellaneous
 
-- [internal] Bump MUI public packages (#22894) @code-infra-renovate[bot]
 - [internal] Enable mui/no-floating-cleanup and fix leaks (#22872) @romgrk
 - [infra] Update `.gitignore` to exclude `.claude` sub-directories (#22435) @michelengelen
 - [virtualizer] Improve the dimensions' initial state (#22885) @arminmeh
