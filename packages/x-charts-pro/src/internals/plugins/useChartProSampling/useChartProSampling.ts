@@ -1,7 +1,7 @@
 'use client';
-import * as React from 'react';
-import { type ChartPlugin, type SamplingConfig, type SamplingState } from '@mui/x-charts/internals';
-import { type UseChartProSamplingSignature } from './useChartProSampling.types';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
+import type { ChartPlugin, SamplingConfig, SamplingState } from '@mui/x-charts/internals';
+import type { UseChartProSamplingSignature } from './useChartProSampling.types';
 
 /** Toggles sampling. Pyramids and level selection live in community selectors. */
 export const useChartProSampling: ChartPlugin<UseChartProSamplingSignature> = ({
@@ -9,13 +9,8 @@ export const useChartProSampling: ChartPlugin<UseChartProSamplingSignature> = ({
   store,
 }) => {
   const { sampling } = params;
-  const isFirstRender = React.useRef(true);
 
-  React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+  useEffectAfterFirstRender(() => {
     store.set('sampling', toSamplingState(sampling));
   }, [sampling, store]);
 

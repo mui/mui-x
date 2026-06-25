@@ -1,9 +1,9 @@
-import {
-  type SamplingState,
-  type SamplingConfig,
-  type ChartPluginSignature,
-  type UseChartCartesianAxisSignature,
-  type UseChartSeriesSignature,
+import type {
+  SamplingState,
+  SamplingConfig,
+  ChartPluginSignature,
+  UseChartCartesianAxisSignature,
+  UseChartSeriesSignature,
 } from '@mui/x-charts/internals';
 
 export interface UseChartProSamplingParameters {

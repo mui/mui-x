@@ -1,4 +1,4 @@
-import { type SamplingStrategy } from '@mui/x-charts/internals';
+import type { SamplingStrategy } from '@mui/x-charts/internals';
 import { buildSamplingPyramid, getSamplingBucketSize } from './sampling';
 import { sample } from './sampling.line';
 import type { SamplingPyramid } from './sampling.pyramid.types';

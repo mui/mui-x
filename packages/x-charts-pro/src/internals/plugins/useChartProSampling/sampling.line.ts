@@ -45,20 +45,22 @@ export function sampleBuckets(
     const startIndex = bucket * bucketSize;
     const endIndex = Math.min(startIndex + bucketSize - 1, maxIndex);
     // Extrema in ascending index order; `m4` also brackets them with the bucket's first/last.
+    // Push ascending, skipping duplicates (extrema can coincide, or equal the ends for `m4`).
     const extremaFirst = Math.min(argMin[j], argMax[j]);
     const extremaLast = Math.max(argMin[j], argMax[j]);
-    const ordered = withEnds
-      ? [startIndex, extremaFirst, extremaLast, endIndex]
-      : [extremaFirst, extremaLast];
-
-    // Drop duplicates, ascending, within the bucket (extrema can coincide, or equal ends for `m4`).
     const indices: number[] = [];
-    let prev = -1;
-    for (let k = 0; k < ordered.length; k += 1) {
-      if (ordered[k] !== prev) {
-        indices.push(ordered[k]);
-        prev = ordered[k];
+    const pushUnique = (index: number) => {
+      if (indices[indices.length - 1] !== index) {
+        indices.push(index);
       }
+    };
+    if (withEnds) {
+      pushUnique(startIndex);
+    }
+    pushUnique(extremaFirst);
+    pushUnique(extremaLast);
+    if (withEnds) {
+      pushUnique(endIndex);
     }
     buckets.push({ startIndex, endIndex, indices: Int32Array.from(indices) });
   }

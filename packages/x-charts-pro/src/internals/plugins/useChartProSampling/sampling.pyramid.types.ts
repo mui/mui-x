@@ -1,5 +1,3 @@
-import type { SeriesId } from '@mui/x-charts/internals';
-
 /**
  * The active level of detail for the current zoom: the slice `[start, end)` of the pyramid's
  * `argMin`/`argMax` arrays plus its bucket size. Bucket `j` (`j` from `0`) covers indices
@@ -32,6 +30,3 @@ export interface SamplingPyramid {
   /** Level start offsets into `argMin`/`argMax`; length `levelCount + 1`. */
   offsets: Int32Array;
 }
-
-/** Pyramids keyed by series id. */
-export type SamplingPyramidLookup = Record<SeriesId, SamplingPyramid>;
