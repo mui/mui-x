@@ -1,0 +1,12 @@
+<FormControlLabel
+  control={
+    <Switch checked={enabled} onChange={(event) => setEnabled(event.target.checked)} />
+  }
+  label={`Sampling ${enabled ? 'on' : 'off'} (${data.length.toLocaleString()} bars — zoom in to reach the raw data)`}
+/>
+<BarChartPro
+  xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}
+  series={[{ data, label: 'Trips' }]}
+  height={300}
+  sampling={enabled ? 'minmax' : 'none'}
+/>

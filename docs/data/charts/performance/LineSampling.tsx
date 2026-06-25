@@ -1,21 +1,14 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import { electricityGeneration2024Hourly } from '../dataset/electricityGeneration2024Hourly';
 
-// Deterministic but noisy dataset (slow trend + pseudo-random noise + rare spikes), the worst
-// case for sampling since neighbouring values barely correlate.
-function makeData(length: number) {
-  return Array.from({ length }, (_, index) => {
-    const hash = Math.sin(index * 12.9898) * 43758.5453;
-    const random = hash - Math.floor(hash);
-    const trend = Math.sin(index / (length / 12)) * 50;
-    const noise = (random - 0.5) * 30;
-    const spike = random > 0.997 ? 120 : 0;
-    return Math.round(trend + noise + spike);
-  });
-}
+// Real dataset: average electricity generation (MW) for every hour of 2024 (8,784 points).
+const data = electricityGeneration2024Hourly.DEU;
+const xData = data.map((_, index) => index);
 
 const METHODS = [
   { value: 'none', label: 'None' },
@@ -26,55 +19,30 @@ const METHODS = [
 
 type Method = (typeof METHODS)[number]['value'];
 
-const POINT_OPTIONS = [1_000, 10_000, 100_000] as const;
-// Rendering every point unsampled only stays smooth up to this size.
-const MAX_UNSAMPLED_POINTS = 10_000;
-
 export default function LineSampling() {
-  const [points, setPoints] = React.useState<number>(POINT_OPTIONS[1]);
-  const [method, setMethod] = React.useState<Method>('m4');
-
-  const data = React.useMemo(() => makeData(points), [points]);
-  const xData = React.useMemo(() => data.map((_, index) => index), [data]);
-
-  const noneDisabled = points > MAX_UNSAMPLED_POINTS;
-  const sampling = method === 'none' && noneDisabled ? 'm4' : method;
+  const [sampling, setSampling] = React.useState<Method>('m4');
 
   return (
     <Stack sx={{ width: '100%' }} spacing={1}>
       <ToggleButtonGroup
         size="small"
         exclusive
-        value={points}
-        onChange={(event, value) => value !== null && setPoints(value)}
-        aria-label="Number of points"
-      >
-        {POINT_OPTIONS.map((option) => (
-          <ToggleButton key={option} value={option}>
-            {option.toLocaleString()}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-      <ToggleButtonGroup
-        size="small"
-        exclusive
         value={sampling}
-        onChange={(event, value) => value !== null && setMethod(value)}
+        onChange={(event, value) => value !== null && setSampling(value)}
         aria-label="Sampling method"
       >
         {METHODS.map((option) => (
-          <ToggleButton
-            key={option.value}
-            value={option.value}
-            disabled={option.value === 'none' && noneDisabled}
-          >
+          <ToggleButton key={option.value} value={option.value}>
             {option.label}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
+      <Typography variant="caption" color="text.secondary">
+        {data.length.toLocaleString()} hourly points — zoom in to reach the raw data
+      </Typography>
       <LineChartPro
         xAxis={[{ data: xData, zoom: true }]}
-        series={[{ data, label: 'Value', showMark: false }]}
+        series={[{ data, label: 'Generation (MW)', showMark: false }]}
         height={300}
         sampling={sampling}
       />
