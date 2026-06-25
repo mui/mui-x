@@ -11,7 +11,7 @@ Type a prompt like "sort by name", "show amounts larger than 1000", or even make
 In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#browser_compatibility), users can also prompt the assistant using their voice.
 
 :::info
-AI Assistant demos use a limited version of MUI's hosted processing service.
+AI Assistant demos on this page use a limited version of MUI's hosted processing service.
 :::
 
 {{"demo": "AssistantWithExamples.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -127,7 +127,7 @@ You still need Data Grid Premium to use the AI Assistant UI and APIs in the grid
 The Data Grid exposes elements of the AI Assistant feature to integrate with your service:
 
 - The [`aiAssistant` API](/x/api/data-grid/grid-api/#grid-api-prop-aiAssistant) for processing the prompt results and updating state
-- The `unstable_gridDefaultPromptResolver()` method for passing the prompt and context to the processing service
+- The `unstable_gridDefaultPromptResolver()` function for passing the prompt and context to the processing service
 
 Integrate these elements with your custom components and methods to suit your specific use case.
 
