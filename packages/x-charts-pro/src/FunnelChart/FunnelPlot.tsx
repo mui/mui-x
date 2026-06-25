@@ -4,13 +4,14 @@ import clsx from 'clsx';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { cartesianSeriesTypes, useStore } from '@mui/x-charts/internals';
-import { type FunnelItemIdentifier } from './funnel.types';
+import type { FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
-import { type FunnelPlotSlotExtension } from './funnelPlotSlots.types';
+import type { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
 import { useUtilityClasses } from './funnelClasses';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
-import { getFunnelCurve, type Point } from './curves';
+import { getFunnelCurve } from './curves';
+import type { Point } from './curves';
 import { FunnelSectionLabel } from './FunnelSectionLabel';
 import {
   selectorChartXAxis,

@@ -1,10 +1,10 @@
 import getMarkerSize from './getMarkerSize';
 import { getSizeScale } from '../../internals/sizeScale';
-import {
-  type DefaultizedScatterSeriesType,
-  type ScatterValueType,
+import type {
+  DefaultizedScatterSeriesType,
+  ScatterValueType,
 } from '../../models/seriesType/scatter';
-import { type ZAxisDefaultized } from '../../models/z-axis';
+import type { ZAxisDefaultized } from '../../models/z-axis';
 
 function createSeries(
   data: (ScatterValueType | null)[],

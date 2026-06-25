@@ -1,11 +1,11 @@
-import {
+import type {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
-import { BasePickerProps } from '../../models/props/basePickerProps';
-import { UsePickerParameters, UsePickerProps } from '../usePicker';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
+import type { BasePickerProps } from '../../models/props/basePickerProps';
+import type { UsePickerParameters, UsePickerProps } from '../usePicker';
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import type { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseStaticPickerSlots extends ExportedPickersLayoutSlots<PickerValue> {}
 

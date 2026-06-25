@@ -2,28 +2,32 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
-import { BarPlot, type BarPlotProps, type BarPlotSlotProps, type BarPlotSlots } from './BarPlot';
-import { type ChartsContainerProps } from '../ChartsContainer';
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { ChartsSlotProps, ChartsSlots } from '../internals/material';
+import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
+import { BarPlot } from './BarPlot';
+import type { BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
+import type { ChartsContainerProps } from '../ChartsContainer';
 import { ChartsAxis } from '../ChartsAxis';
-import { type BarSeriesType } from '../models/seriesType/bar';
+import type { BarSeriesType } from '../models/seriesType/bar';
 import { ChartsTooltip } from '../ChartsTooltip';
-import {
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
+import type {
+  ChartsTooltipSlots,
+  ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
-import { type ChartsAxisSlots, type ChartsAxisSlotProps } from '../models/axis';
-import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import type { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
+import { ChartsGrid } from '../ChartsGrid';
+import type { ChartsGridProps } from '../ChartsGrid';
+import { ChartsOverlay } from '../ChartsOverlay/ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useBarChartProps } from './useBarChartProps';
 import { ChartsDataProvider } from '../ChartsDataProvider';
