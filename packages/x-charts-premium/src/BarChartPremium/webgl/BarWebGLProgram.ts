@@ -12,7 +12,7 @@ import { barFragmentShaderSource, barVertexShaderSource } from './shaders';
 import type { BarWebGLPlotData } from './useBarWebGLPlotData';
 
 export class BarWebGLProgram {
-  private readonly shaders: WebGLShader[];
+  private readonly shaders: WebGLShader[] = [];
 
   private readonly program: WebGLProgram;
   private readonly vao: WebGLVertexArrayObject;
@@ -31,7 +31,7 @@ export class BarWebGLProgram {
 
     const linked = linkProgram(gl, barVertexShaderSource, barFragmentShaderSource);
     this.program = linked.program;
-    this.shaders = linked.shaders;
+    this.shaders.push(...linked.shaders);
 
     this.uResolution = gl.getUniformLocation(this.program, 'u_resolution');
 

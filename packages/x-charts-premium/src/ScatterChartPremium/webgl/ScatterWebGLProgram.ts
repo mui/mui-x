@@ -12,7 +12,7 @@ import { scatterVertexShader, scatterFragmentShader } from './shaders';
 import type { ScatterWebGLPlotData } from './useScatterWebGLPlotData';
 
 export class ScatterWebGLProgram {
-  private readonly shaders: WebGLShader[];
+  private readonly shaders: WebGLShader[] = [];
   private readonly quadBuffer: WebGLBuffer;
 
   private readonly program: WebGLProgram;
@@ -27,7 +27,7 @@ export class ScatterWebGLProgram {
 
     const linked = linkProgram(gl, scatterVertexShader, scatterFragmentShader);
     this.program = linked.program;
-    this.shaders = linked.shaders;
+    this.shaders.push(...linked.shaders);
 
     this.quadBuffer = uploadQuadBuffer(gl);
     this.vao = gl.createVertexArray();
