@@ -217,7 +217,7 @@ The zoom object has two properties to limit this behavior:
 - `rotationAllowed`: `'both' | 'long' | 'lat' | 'none'` Limit how the center can be modified
 - `translationAllowed`: `'both' | 'x' | 'y' | 'none'` Limit how the translation can be modified
 
-In most cases, the configuration `{ translationAllowed: 'y', rotationAllowed: 'long' }` it the more appropriate.
+In most cases, the configuration `{ translationAllowed: 'y', rotationAllowed: 'long' }` is the more appropriate.
 
 You can also modify the zoom result with:
 
