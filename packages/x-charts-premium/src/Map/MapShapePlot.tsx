@@ -82,7 +82,7 @@ function MapShapePlot(props: MapShapePlotProps) {
                       <MapShape
                         key={featureIndex}
                         seriesId={id}
-                        name={item.name}
+                        featureName={item.name}
                         d={d}
                         color={color}
                         stroke={stroke}
