@@ -3,13 +3,11 @@ import {
   linkProgram,
   logWebGLErrors,
   setupStandardBlending,
+  uploadGrowableBuffer,
   uploadQuadBuffer,
 } from '../../utils/webgl/utils';
 import type { InstancedAttribute } from '../../utils/webgl/instancedAttribute';
-import {
-  createInstancedAttribute,
-  uploadInstancedAttribute,
-} from '../../utils/webgl/instancedAttribute';
+import { createInstancedAttribute } from '../../utils/webgl/instancedAttribute';
 import { scatterVertexShader, scatterFragmentShader } from './shaders';
 import type { ScatterWebGLPlotData } from './useScatterWebGLPlotData';
 
@@ -51,9 +49,9 @@ export class ScatterWebGLProgram {
 
   plot(plotData: ScatterWebGLPlotData) {
     const { gl } = this;
-    uploadInstancedAttribute(gl, this.centers, plotData.centers);
-    uploadInstancedAttribute(gl, this.sizes, plotData.sizes);
-    uploadInstancedAttribute(gl, this.colors, plotData.colors);
+    uploadGrowableBuffer(gl, this.centers.buffer, plotData.centers);
+    uploadGrowableBuffer(gl, this.sizes.buffer, plotData.sizes);
+    uploadGrowableBuffer(gl, this.colors.buffer, plotData.colors);
   }
 
   render(plotData: ScatterWebGLPlotData) {

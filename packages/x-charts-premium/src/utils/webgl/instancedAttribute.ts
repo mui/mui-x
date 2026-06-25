@@ -1,5 +1,5 @@
 import type { GrowableBuffer } from './utils';
-import { createGrowableBuffer, uploadGrowableBuffer } from './utils';
+import { createGrowableBuffer } from './utils';
 
 export interface InstancedAttribute {
   buffer: GrowableBuffer;
@@ -62,13 +62,4 @@ export function bindInstancedAttribute(
   gl.vertexAttribPointer(location, size, glType, normalized, 0, 0);
   gl.vertexAttribDivisor(location, 1);
   return { buffer, location, size, glType, normalized };
-}
-
-/** Uploads `data` to the attribute's GPU buffer, reusing the existing allocation when it fits. */
-export function uploadInstancedAttribute(
-  gl: WebGL2RenderingContext,
-  attr: InstancedAttribute,
-  data: ArrayBufferView,
-) {
-  uploadGrowableBuffer(gl, attr.buffer, data);
 }

@@ -3,13 +3,11 @@ import {
   linkProgram,
   logWebGLErrors,
   setupStandardBlending,
+  uploadGrowableBuffer,
   uploadQuadBuffer,
 } from '../../utils/webgl/utils';
 import type { InstancedAttribute } from '../../utils/webgl/instancedAttribute';
-import {
-  createInstancedAttribute,
-  uploadInstancedAttribute,
-} from '../../utils/webgl/instancedAttribute';
+import { createInstancedAttribute } from '../../utils/webgl/instancedAttribute';
 import { barFragmentShaderSource, barVertexShaderSource } from './shaders';
 import type { BarWebGLPlotData } from './useBarWebGLPlotData';
 
@@ -57,10 +55,10 @@ export class BarWebGLProgram {
 
   plot(plotData: BarWebGLPlotData) {
     const gl = this.gl;
-    uploadInstancedAttribute(gl, this.centers, plotData.centers);
-    uploadInstancedAttribute(gl, this.halfSizes, plotData.halfSizes);
-    uploadInstancedAttribute(gl, this.colors, plotData.colors);
-    uploadInstancedAttribute(gl, this.cornerRadii, plotData.cornerRadii);
+    uploadGrowableBuffer(gl, this.centers.buffer, plotData.centers);
+    uploadGrowableBuffer(gl, this.halfSizes.buffer, plotData.halfSizes);
+    uploadGrowableBuffer(gl, this.colors.buffer, plotData.colors);
+    uploadGrowableBuffer(gl, this.cornerRadii.buffer, plotData.cornerRadii);
     logWebGLErrors(gl);
   }
 
