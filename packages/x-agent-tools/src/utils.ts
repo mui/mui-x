@@ -80,6 +80,48 @@ export function wrapTool<SchemaInputT extends ZodObjectAny, SchemaOutputT extend
   return obj;
 }
 
+const MAX_REDIRECTS = 5;
+const REDIRECT_STATUSES = new Set([301, 302, 303, 307, 308]);
+
+class BlockedUrlError extends Error {
+  url: string;
+
+  constructor(url: string) {
+    super(`Blocked URL: ${url}`);
+    this.name = 'BlockedUrlError';
+    this.url = url;
+  }
+}
+
+// Fetch `startUrl`, following redirects manually so the URL guard runs on every hop. Without this a
+// public URL could 30x-redirect to localhost / metadata and slip past the guard, since `fetch`
+// follows redirects by default. With no guard set, defers to the fetcher's default behavior.
+async function fetchFollowingGuardedRedirects(
+  fetcher: typeof fetch,
+  startUrl: string,
+  isUrlAllowed?: (url: string) => boolean,
+): Promise<Response> {
+  if (!isUrlAllowed) {
+    return fetcher(startUrl);
+  }
+  let target = startUrl;
+  for (let redirects = 0; redirects <= MAX_REDIRECTS; redirects += 1) {
+    if (!isUrlAllowed(target)) {
+      throw new BlockedUrlError(target);
+    }
+    // eslint-disable-next-line no-await-in-loop -- redirects are sequential by nature.
+    const response = await fetcher(target, { redirect: 'manual' });
+    const location = REDIRECT_STATUSES.has(response.status)
+      ? response.headers.get('location')
+      : null;
+    if (!location) {
+      return response;
+    }
+    target = new URL(location, target).toString();
+  }
+  throw new Error(`Exceeded ${MAX_REDIRECTS} redirects`);
+}
+
 export function urlListFetcher(
   queue: PQueueType,
   fetcher: typeof fetch,
@@ -90,11 +132,6 @@ export function urlListFetcher(
   return Promise.all(
     urlList.map((url) =>
       queue.add(async () => {
-        if (isUrlAllowed && !isUrlAllowed(url)) {
-          logger(`Blocked fetch for disallowed URL: ${url}`);
-          return `Could not fetch ${url}: URL is not an allowed docs source (blocked for security).`;
-        }
-
         if (cache) {
           const cachedContent = cache.get(url);
           if (cachedContent !== null) {
@@ -103,7 +140,7 @@ export function urlListFetcher(
         }
 
         try {
-          const response = await fetcher(url);
+          const response = await fetchFollowingGuardedRedirects(fetcher, url, isUrlAllowed);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -121,6 +158,10 @@ export function urlListFetcher(
 
           return responseText;
         } catch (error) {
+          if (error instanceof BlockedUrlError) {
+            logger(`Blocked fetch for disallowed URL: ${error.url}`);
+            return `Could not fetch ${url}: URL is not an allowed docs source (blocked for security).`;
+          }
           logger(`Failed to fetch ${url}:`, error);
           // Self-identifying failure so the agent can tell which URL failed (and why) instead of
           // a generic blob mixed in with real docs.

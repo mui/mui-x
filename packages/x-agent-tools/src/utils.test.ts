@@ -6,6 +6,9 @@ import { wrapTool, urlListFetcher, isPrivateHostname, createDocsUrlGuard } from 
 
 const ok = (body: string): Response => new Response(body, { status: 200 });
 
+const redirectTo = (location: string): Response =>
+  new Response(null, { status: 302, headers: { location } });
+
 describe('wrapTool', () => {
   it('returns the tool object unchanged (it only carries type inference)', () => {
     const tool = {
@@ -137,7 +140,51 @@ describe('urlListFetcher', () => {
     const result = await urlListFetcher(queue, fetcher, ['https://allowed/page'], { isUrlAllowed });
 
     expect(result).toBe('doc');
-    expect(fetcher).toHaveBeenCalledWith('https://allowed/page');
+    // The guard follows redirects manually, so it fetches with `redirect: 'manual'`.
+    expect(fetcher).toHaveBeenCalledWith('https://allowed/page', { redirect: 'manual' });
+  });
+
+  it('blocks a redirect that points at a disallowed host (redirect SSRF)', async () => {
+    const queue = new PQueue({ concurrency: 1 });
+    const fetcher = vi.fn().mockResolvedValueOnce(redirectTo('http://localhost:5002/admin'));
+    const isUrlAllowed = (url: string) => url.startsWith('https://allowed/');
+
+    const result = await urlListFetcher(queue, fetcher, ['https://allowed/start'], {
+      isUrlAllowed,
+    });
+
+    expect(result).toContain('blocked for security');
+    // The redirect target (localhost) is never fetched.
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledWith('https://allowed/start', { redirect: 'manual' });
+  });
+
+  it('follows a redirect to an allowed host', async () => {
+    const queue = new PQueue({ concurrency: 1 });
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(redirectTo('https://allowed/final'))
+      .mockResolvedValueOnce(ok('final doc'));
+    const isUrlAllowed = (url: string) => url.startsWith('https://allowed/');
+
+    const result = await urlListFetcher(queue, fetcher, ['https://allowed/start'], {
+      isUrlAllowed,
+    });
+
+    expect(result).toBe('final doc');
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
+  it('gives up after too many redirects', async () => {
+    const queue = new PQueue({ concurrency: 1 });
+    const fetcher = vi.fn().mockResolvedValue(redirectTo('https://allowed/next'));
+    const isUrlAllowed = (url: string) => url.startsWith('https://allowed/');
+
+    const result = await urlListFetcher(queue, fetcher, ['https://allowed/start'], {
+      isUrlAllowed,
+    });
+
+    expect(result).toMatch(/Could not fetch .*redirects/i);
   });
 });
 
