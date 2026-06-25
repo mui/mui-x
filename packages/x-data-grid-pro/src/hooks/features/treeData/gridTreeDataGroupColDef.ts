@@ -5,7 +5,7 @@ import { GRID_TREE_DATA_GROUPING_FIELD } from '@mui/x-data-grid/internals';
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount
  */
-export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editable'> = {
+export const GRID_TREE_DATA_GROUPING_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   type: 'custom',
   sortable: false,
@@ -19,15 +19,12 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
     const rowNode = gridRowNodeSelector(apiRef, rowId);
     return rowNode?.type === 'group' || rowNode?.type === 'leaf' ? rowNode.groupingKey : undefined;
   },
-};
+} as const satisfies Omit<GridColDef, 'field' | 'editable'>;
 
 export { GRID_TREE_DATA_GROUPING_FIELD };
 
-export const GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
-  GridColDef,
-  'field' | 'editable' | 'groupable'
-> = {
+export const GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES = {
   field: GRID_TREE_DATA_GROUPING_FIELD,
   editable: false,
   groupable: false,
-};
+} as const satisfies Pick<GridColDef, 'field' | 'editable' | 'groupable'>;

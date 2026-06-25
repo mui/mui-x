@@ -48,9 +48,7 @@ function buildApplyFilterFn(
   };
 }
 
-export const getGridDateOperators = (
-  showTime?: boolean,
-): GridFilterOperator<any, Date, any, GridFilterInputDateProps>[] => [
+export const getGridDateOperators = (showTime?: boolean) => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {
@@ -132,4 +130,4 @@ export const getGridDateOperators = (
     },
     requiresFilterValue: false,
   },
-];
+] as const satisfies GridFilterOperator<any, Date, any, GridFilterInputDateProps>[];

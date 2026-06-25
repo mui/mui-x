@@ -24,12 +24,7 @@ export const getGridNumericQuickFilterFn: GetApplyQuickFilterFn<any, number | st
   };
 };
 
-export const getGridNumericOperators = (): GridFilterOperator<
-  any,
-  number | string | null,
-  any,
-  GridFilterInputValueProps & { type?: 'number' }
->[] => [
+export const getGridNumericOperators = () => [
   {
     value: '=',
     getApplyFilterFn: (filterItem) => {
@@ -138,6 +133,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
       };
     },
     requiresFilterValue: false,
+    InputComponent: undefined
   },
   {
     value: 'isNotEmpty',
@@ -147,6 +143,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
       };
     },
     requiresFilterValue: false,
+    InputComponent: undefined
   },
   {
     value: 'isAnyOf',
@@ -162,4 +159,9 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponent: GridFilterInputMultipleValue,
     InputComponentProps: { type: 'number' },
   },
-];
+] as const satisfies GridFilterOperator<
+  any,
+  number | string | null,
+  any,
+  GridFilterInputValueProps & { type?: 'number' }
+>[];

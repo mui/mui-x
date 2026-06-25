@@ -13,7 +13,7 @@ const parseObjectValue = (value: unknown) => {
  * Returns filter operators for the `multiSelect` column type.
  * Operators: contains, doesNotContain, isEmpty, isNotEmpty
  */
-export const getGridMultiSelectOperators = (): GridFilterOperator[] => [
+export const getGridMultiSelectOperators = () => [
   {
     value: 'contains',
     getApplyFilterFn: (filterItem) => {
@@ -64,4 +64,4 @@ export const getGridMultiSelectOperators = (): GridFilterOperator[] => [
     },
     requiresFilterValue: false,
   },
-];
+] as const satisfies GridFilterOperator[];

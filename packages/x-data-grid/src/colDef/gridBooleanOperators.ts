@@ -5,7 +5,7 @@ import {
 import type { GridFilterItem } from '../models/gridFilterItem';
 import type { GridFilterOperator } from '../models/gridFilterOperator';
 
-export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | null, any>[] => [
+export const getGridBooleanOperators = () => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
@@ -18,4 +18,4 @@ export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | nul
     },
     InputComponent: GridFilterInputBoolean,
   },
-];
+] as const satisfies GridFilterOperator<any, boolean | null, any>[];

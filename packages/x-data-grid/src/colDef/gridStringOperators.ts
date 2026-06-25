@@ -6,7 +6,7 @@ import type { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { removeDiacritics } from '../hooks/features/filter/gridFilterUtils';
 
-export const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
+export const getGridStringQuickFilterFn: GetApplyQuickFilterFn<any, any> = (value) => {
   if (!value) {
     return null;
   }
@@ -62,7 +62,7 @@ const createEmptyFilterFn = (negate: boolean) => () => {
 
 export const getGridStringOperators = (
   disableTrim: boolean = false,
-): GridFilterOperator<any, number | string | null, any>[] => [
+) => [
   {
     value: 'contains',
     getApplyFilterFn: createContainsFilterFn(disableTrim, false),
@@ -143,4 +143,4 @@ export const getGridStringOperators = (
     },
     InputComponent: GridFilterInputMultipleValue,
   },
-];
+] as const satisfies GridFilterOperator<any, number | string | null, any>[];

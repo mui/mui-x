@@ -10,7 +10,7 @@ const parseObjectValue = (value: unknown) => {
   return value.value;
 };
 
-export const getGridSingleSelectOperators = (): GridFilterOperator[] => [
+export const getGridSingleSelectOperators = () => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {
@@ -42,4 +42,4 @@ export const getGridSingleSelectOperators = (): GridFilterOperator[] => [
     },
     InputComponent: GridFilterInputMultipleSingleSelect,
   },
-];
+] as const satisfies GridFilterOperator[];
