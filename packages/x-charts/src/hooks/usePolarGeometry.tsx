@@ -4,32 +4,18 @@ import { useRotationAxis, useRadiusAxis } from './useAxis';
 /**
  * Provides access to the geometry of a polar chart.
  *
- * Returns the chart center coordinates, polar scales, band width
- * information, and helper utilities for positioning custom SVG
- * elements such as markers, reference lines, rings, and annotations.
- *
- * Example:
- *
+ * It can be used to position custom elements, and serves as helper to convert polar coordinates to xartesian coordinates 
+ * 
+ * @example
  * ```tsx
- * const geometry = usePolarGeometry();
+ * const geo = usePolarGeometry();
  *
- * if (!geometry) {
- *   return null;
- * }
+ * const [x, y] = geo.point(100, Math.PI / 2);
  *
- * const [x, y] = geometry.point(100, Math.PI / 2);
- *
- * return (
- *   <circle
- *     cx={geometry.cx + x}
- *     cy={geometry.cy + y}
- *     r={4}
- *   />
- * );
+ * return <circle cx={geo.cx + x} cy={geo.cy + y} r={4} />
  * ```
  *
- * @returns The polar geometry helpers, or `null` if the chart scales are
- * not ready.
+ * @returns The polar geometry helpers, or `null` if the chart scales are not ready.
  */
 export function usePolarGeometry(): PolarGeometry | null {
   const { left, top, width, height } = useDrawingArea();
