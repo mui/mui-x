@@ -4,10 +4,9 @@ import { sample } from './sampling.line';
 import type { SamplingPyramid } from './sampling.pyramid.types';
 
 /**
- * Min/max LOD pyramid over the line's displayed y values. Null-free series use a single channel
- * (`low === high === y`). When nulls exist, the min channel gets `+Inf` and the max channel `-Inf`
- * at those points so they're never picked as an extremum, and their indices are collected in
- * `nullIndices` for the sampler to merge back in so the line breaks at gaps instead of bridging them.
+ * Min/max LOD pyramid over the line's y values (single channel when null-free). Nulls get `+Inf`
+ * low / `-Inf` high so they never win an extremum, and go into `nullIndices` for the sampler to
+ * re-insert as line breaks.
  */
 export const lineSampler: SamplingStrategy<'line', SamplingPyramid> = {
   build: (series) => {
@@ -28,7 +27,7 @@ export const lineSampler: SamplingStrategy<'line', SamplingPyramid> = {
       return buildSamplingPyramid(values, values);
     }
 
-    // Split into two channels only when there are gaps: nulls lose both extrema comparisons.
+    // Two channels only when gaps exist: nulls lose both extrema comparisons.
     const low = values;
     const high = Float64Array.from(values);
     for (let i = 0; i < nullIndices.length; i += 1) {

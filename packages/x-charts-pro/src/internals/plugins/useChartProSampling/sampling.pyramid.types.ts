@@ -29,9 +29,6 @@ export interface SamplingPyramid {
   argMax: Int32Array;
   /** Level start offsets into `argMin`/`argMax`; length `levelCount + 1`. */
   offsets: Int32Array;
-  /**
-   * Ascending indices of null points, if any. Merged into the sampled output so the line breaks at
-   * gaps instead of bridging them. Absent when the series has no nulls.
-   */
+  /** Ascending null-point indices, merged back into the output as line breaks. Absent without nulls. */
   nullIndices?: Int32Array;
 }

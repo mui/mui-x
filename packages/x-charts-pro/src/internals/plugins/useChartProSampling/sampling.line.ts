@@ -68,10 +68,7 @@ export function sampleBuckets(
   return withNullBreaks(buckets, pyramid.nullIndices);
 }
 
-/**
- * Merges null indices into each bucket's rendered indices (ascending, deduped), so the polyline
- * includes the gap points and breaks instead of bridging them. No-op when the series has no nulls.
- */
+/** Merges null indices into each bucket (ascending, deduped) so the line breaks at gaps. No-op without nulls. */
 function withNullBreaks(
   buckets: SampledBucket[],
   nullIndices: Int32Array | undefined,
