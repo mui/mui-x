@@ -1,5 +1,6 @@
 import moment from 'moment';
-import jMoment, { Moment } from 'moment-jalaali';
+import type { Moment } from 'moment-jalaali';
+import jMoment from 'moment-jalaali';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import {
@@ -8,7 +9,7 @@ import {
   describeJalaliAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import type { AdapterFormats } from '@mui/x-date-pickers/models';
 import 'moment/locale/fa';
 
 describe('<AdapterMomentJalaali />', () => {

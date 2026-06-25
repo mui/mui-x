@@ -1,10 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridRowsProp,
-  gridClasses,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridRowsProp } from '@mui/x-data-grid-premium';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

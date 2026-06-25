@@ -1,10 +1,7 @@
-import {
-  type GridRowId,
-  type GridTreeNode,
-  GRID_ROOT_GROUP_ID,
-  type GridRowTreeConfig,
-} from '@mui/x-data-grid';
-import { buildRootGroup, type GridRowTreeCreationValue } from '@mui/x-data-grid/internals';
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type { GridRowId, GridTreeNode, GridRowTreeConfig } from '@mui/x-data-grid';
+import { buildRootGroup } from '@mui/x-data-grid/internals';
+import type { GridRowTreeCreationValue } from '@mui/x-data-grid/internals';
 import type { RowTreeBuilderNode, GridTreePathDuplicateHandler } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
 import type { DataGridProProps } from '../../models/dataGridProProps';

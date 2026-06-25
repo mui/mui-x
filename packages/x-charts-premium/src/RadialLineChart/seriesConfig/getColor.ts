@@ -1,4 +1,5 @@
-import { type ColorProcessor, resolveColorProcessor } from '@mui/x-charts/internals';
+import { resolveColorProcessor } from '@mui/x-charts/internals';
+import type { ColorProcessor } from '@mui/x-charts/internals';
 
 const getColor: ColorProcessor<'radialLine'> = (series, rotationAxis, radiusAxis) =>
   resolveColorProcessor({
