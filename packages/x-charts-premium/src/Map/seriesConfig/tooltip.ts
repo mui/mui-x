@@ -6,7 +6,10 @@ const tooltipGetter: TooltipGetter<'mapShape'> = ({ series, getColor, identifier
     return null;
   }
 
-  const index = series.data.findIndex((d) => d.name === identifier.name);
+  const index = series.lookupByName.get(identifier.name);
+  if (index === undefined) {
+    return null;
+  }
   const point = series.data[index];
   if (point == null) {
     return null;

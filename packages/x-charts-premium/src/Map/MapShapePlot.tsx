@@ -61,7 +61,7 @@ function MapShapePlot(props: MapShapePlotProps) {
         );
         return (
           <g key={id} data-series={id}>
-            {data.map((item, dataIndex) => {
+            {data.map((item) => {
               if (item.hidden) {
                 return null;
               }
@@ -82,7 +82,6 @@ function MapShapePlot(props: MapShapePlotProps) {
                       <MapShape
                         key={featureIndex}
                         seriesId={id}
-                        dataIndex={dataIndex}
                         name={item.name}
                         d={d}
                         color={color}

@@ -36,7 +36,12 @@ export function FocusedMapShape() {
     return null;
   }
 
-  const dataItem = seriesItem.data.find((d) => d.name === focusedItem.name);
+  const dataIndex = seriesItem.lookupByName.get(focusedItem.name);
+  if (dataIndex === undefined) {
+    return null;
+  }
+
+  const dataItem = seriesItem.data[dataIndex];
   if (!dataItem || dataItem.hidden) {
     return null;
   }

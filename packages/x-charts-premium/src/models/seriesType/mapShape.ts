@@ -113,4 +113,5 @@ export interface DefaultizedMapShapeSeriesType extends Omit<
 > {
   hidden: boolean;
   data: ReadonlyArray<DefaultizedMapShapeValueType>;
+  lookupByName: ReadonlyMap<string, number>;
 }
