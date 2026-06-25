@@ -199,7 +199,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
     name: 'generate_react_code',
     publicName: 'generateReactCode',
     description:
-      'Generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major.',
+      'generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major.',
     ...options.overrides,
     inputSchema,
     outputSchema,

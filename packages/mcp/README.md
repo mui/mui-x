@@ -1,14 +1,14 @@
 # `@mui/mcp`
 
-MUI's [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. Exposes MUI documentation and code-generation tools to any MCP-capable AI client (Claude Code, Cursor, Zed, Continue, etc.) so an agent can answer MUI questions with real, up-to-date docs and generate React + Material UI code.
+MUI's [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. Exposes MUI documentation and code-generation tools to any MCP-capable AI client (Claude Code, Cursor, Zed, Continue, etc.) so an agent can answer MUI questions with real, up-to-date docs and generate React + Material UI code.
 
 ## What it exposes
 
 Three stdio-based tools, backed by [@mui/x-agent-tools](../x-agent-tools/):
 
-- **`useMuiDocs(urlList)`** : returns the docs catalog (URLs + summaries) for one or more MUI packages (e.g. `@mui/material`, `@mui/x-data-grid`). Agents typically use this first to find the right docs page.
+- **`useMuiDocs(urlList)`** : returns the docs catalog (URLs + summaries) for one or more MUI packages (for example `@mui/material`, `@mui/x-data-grid`). Agents typically use this first to find the right docs page.
 - **`fetchDocs(urls)`** : fetches the full content of one or more docs URLs (typically taken from a `useMuiDocs` response).
-- **`generateReactCode({ prompt, threadId?, designContext?, muiPairing?, model? })`** : generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major (see [Targeting a MUI version](#targeting-a-mui-version)).
+- **`generateReactCode({ prompt, threadId?, designContext?, muiPairing?, model? })`** : generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major (see [Targeting a MUI version](#targeting-a-mui-version)).
 
 ## Quick start
 
@@ -91,7 +91,7 @@ Opens a web UI to call tools and inspect responses in isolation.
 
 ## Targeting a MUI version
 
-`generateReactCode` accepts a `muiPairing` field to target a specific MUI / MUI X major. The shape mirrors the version picker on recipes.mui.com:
+`generateReactCode` accepts a `muiPairing` field to target a specific MUI / MUI X major. The shape mirrors the version picker on recipes.mui.com:
 
 ```ts
 muiPairing: {
@@ -125,7 +125,7 @@ muiPairing: `v7` + `v8` (effective targeting)
 
 ### Boost agent tool selection in your project
 
-When prompts don't explicitly name `generateReactCode`, hosts like Claude Code Agent (WebStorm/Cursor) sometimes pick built-in file-edit tools instead of the MCP, even on prompts that are clearly about Material UI. To nudge selection in your project, drop the following into your repo's `CLAUDE.md` (or your host's equivalent project-config file):
+When prompts don't explicitly name `generateReactCode`, hosts like Claude Code Agent (WebStorm/Cursor) sometimes pick built-in file-edit tools instead of the MCP, even on prompts that are clearly about Material UI. To nudge selection in your project, drop the following into your repo's `CLAUDE.md` (or your host's equivalent project-config file):
 
 ```markdown
 ## Generating Material UI components
