@@ -62,11 +62,21 @@ export interface ZoomOptions {
    *
    * Useful to keep the zoom window meaningful regardless of the dataset size (the equivalent
    * percentage shrinks as the data grows).
+   *
+   * Inspired by ECharts' `minValueSpan`, but limited to a data-point count: it only applies to
+   * axes with a `data` array (band, point, and data-driven axes). It does not support an
+   * axis-value span on continuous value/time axes — see `maxSpanItems` for why.
    */
   minSpanItems?: number;
   /**
    * Restricts the maximum span as a number of data points, instead of a percentage.
    * Resolved against the axis `data` length, it takes precedence over `maxSpan`.
+   *
+   * Like `minSpanItems`, this is a data-point count, not an axis-value span. A value-unit span
+   * (ECharts' `maxValueSpan`) would need the computed axis domain (`max - min`) to convert to a
+   * percentage, which isn't available where zoom options are resolved (`createZoomLookup` runs on
+   * the raw axes, before the domain is computed). Supporting it would require resolving the span in
+   * a selector that has the computed scale, so it's intentionally left out of this iteration.
    */
   maxSpanItems?: number;
   /**

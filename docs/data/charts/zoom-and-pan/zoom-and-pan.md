@@ -58,6 +58,10 @@ Use `minSpanItems` and `maxSpanItems` to bound the zoom window by a number of da
 
 {{"demo": "ZoomSpanItems.js"}}
 
+:::warning
+These options take a **data-point count**, so they apply to axes that have a `data` array (band, point, and data-driven axes). They do not accept an axis-value span (a value range on a value axis, or a duration on a time axis, like ECharts' `minValueSpan`). Converting a value span to a percentage requires the computed axis domain, which isn't available where the zoom options are resolved, so it's left out for now.
+:::
+
 ## Zoom filtering
 
 Make the zoom of an axis affect one or more axes' extents by setting the `zoom.filterMode` prop on the axis config.
