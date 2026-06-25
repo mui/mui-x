@@ -204,7 +204,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
       const groupId = getGroupRowIdFromPath([{ field: 'category1', key: 'Cat Z' }]);
       expect(apiRef.current?.getRowGroupChildren({ groupId })).to.deep.equal([]);
-      expect(apiRef.current?.getRowGroupChildren({ groupId, applySorting: true })).to.deep.equal([]);
+      expect(apiRef.current?.getRowGroupChildren({ groupId, applySorting: true })).to.deep.equal(
+        [],
+      );
     });
   });
 });
