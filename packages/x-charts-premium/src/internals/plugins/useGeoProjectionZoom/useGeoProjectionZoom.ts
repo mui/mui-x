@@ -28,7 +28,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   instance,
   params,
 }) => {
-  const { zoom, minScaleRatio, maxScaleRatio, onZoomChange, view } = params;
+  const { zoom, minZoomLevel, maxZoomLevel, onZoomChange, view } = params;
 
   // `zoom` is either a boolean or a config object; an object always enables the interaction.
   const enabled = zoom !== false;
@@ -45,8 +45,8 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   );
 
   const clampZoomLevel = React.useCallback(
-    (zoomLevel: number) => Math.max(minScaleRatio, Math.min(maxScaleRatio, zoomLevel)),
-    [minScaleRatio, maxScaleRatio],
+    (zoomLevel: number) => Math.max(minZoomLevel, Math.min(maxZoomLevel, zoomLevel)),
+    [minZoomLevel, maxZoomLevel],
   );
 
   // The view is the source of truth, stored directly: no pixel <-> view conversion on write/read.
@@ -283,8 +283,8 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 
 useGeoProjectionZoom.params = {
   zoom: true,
-  minScaleRatio: true,
-  maxScaleRatio: true,
+  minZoomLevel: true,
+  maxZoomLevel: true,
   initialView: true,
   view: true,
   onZoomChange: true,
@@ -293,8 +293,8 @@ useGeoProjectionZoom.params = {
 useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
   ...params,
   zoom: params.zoom ?? false,
-  minScaleRatio: params.minScaleRatio ?? 1,
-  maxScaleRatio: params.maxScaleRatio ?? 8,
+  minZoomLevel: params.minZoomLevel ?? 1,
+  maxZoomLevel: params.maxZoomLevel ?? 8,
 });
 
 useGeoProjectionZoom.getInitialState = (params) => ({

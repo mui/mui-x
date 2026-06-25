@@ -63,12 +63,12 @@ export interface UseGeoProjectionZoomParameters {
    * The minimum zoom level, as a multiple of the scale that fits the data in the drawing area.
    * @default 1
    */
-  minScaleRatio?: number;
+  minZoomLevel?: number;
   /**
    * The maximum zoom level, as a multiple of the scale that fits the data in the drawing area.
    * @default 8
    */
-  maxScaleRatio?: number;
+  maxZoomLevel?: number;
   /**
    * The view to apply on mount, when the zoom is not controlled.
    * Use this to seed the map at a specific zoom level and center without controlling it.
@@ -88,8 +88,8 @@ export interface UseGeoProjectionZoomParameters {
 
 export interface UseGeoProjectionZoomDefaultizedParameters extends UseGeoProjectionZoomParameters {
   zoom: boolean | MapZoomOptions;
-  minScaleRatio: number;
-  maxScaleRatio: number;
+  minZoomLevel: number;
+  maxZoomLevel: number;
 }
 
 /**
