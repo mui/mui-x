@@ -52,8 +52,8 @@ catalogs:
       specifier: 9.1.1
       version: 9.1.1
     '@mui/internal-core-docs':
-      specifier: 9.1.2-canary.1
-      version: 9.1.2-canary.1
+      specifier: 9.1.2-canary.2
+      version: 9.1.2-canary.2
     '@mui/internal-test-utils':
       specifier: 2.0.18-canary.25
       version: 2.0.18-canary.25
@@ -287,7 +287,7 @@ importers:
         version: 0.0.4-canary.66(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.19)(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.15)(prettier@3.8.3)(stylelint@17.12.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.1.2-canary.1(b296b1cdd39953f5604212bc0a0595d1)
+        version: 9.1.2-canary.2(b296b1cdd39953f5604212bc0a0595d1)
       '@mui/internal-markdown':
         specifier: 3.0.11-canary.1
         version: 3.0.11-canary.1
@@ -509,7 +509,7 @@ importers:
         version: 9.1.1(@mui/material@9.1.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.1.2-canary.1(97fec607400060b7286de6a0fd9a68cb)
+        version: 9.1.2-canary.2(97fec607400060b7286de6a0fd9a68cb)
       '@mui/internal-docs-infra':
         specifier: ^0.12.1-canary.3
         version: 0.12.1-canary.3(@types/react@19.2.15)(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(prettier@3.8.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
@@ -4319,8 +4319,8 @@ packages:
       typescript:
         optional: true
 
-  '@mui/internal-core-docs@9.1.2-canary.1':
-    resolution: {integrity: sha512-LttD2AtEJ04NfSrBd8Sf8pzSl2bi7L0bxTBvykJweniyjCZVA4giReRmNX26ElC+plZoFE6a4clRrWTp2xZSOg==}
+  '@mui/internal-core-docs@9.1.2-canary.2':
+    resolution: {integrity: sha512-l9HV5I3S2a88lcKSM7BDSo6SnUnJwWsMqMeGctH4UcLfyEPvp2Gm5//VrHSI4y5VIItb9VDKtbXqVt8dVaYNzw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@base-ui/react': ^1
@@ -4374,6 +4374,9 @@ packages:
 
   '@mui/internal-markdown@3.0.11-canary.1':
     resolution: {integrity: sha512-2ZIb1NoCEaN2ClfsLpJaLSFggsIjVpEOGzdTvo8T958ayXeqwOCrpxmiW2tT0xf8J3Iy9TofbxZ5ayxDigONLw==}
+
+  '@mui/internal-markdown@3.0.11-canary.2':
+    resolution: {integrity: sha512-BrsZ1pVBtu6yrS2IV6FjElcokXOzC6f0DxFkcOIG7xKsUWGhVW3P29mYhKW8Ghjhb4VBtpzaYI6hYELJznEBag==}
 
   '@mui/internal-netlify-cache@0.0.3-canary.5':
     resolution: {integrity: sha512-3HiXaQ2x8nwwvXxMjXcy1uHVnhbCpWTAbyjkrpNeycJ2afSNnmHVLFq5Nu7K7QOJnYGwlcKjX9kBVGUv1aJp1w==}
@@ -13468,7 +13471,7 @@ snapshots:
       - supports-color
       - vitest
 
-  '@mui/internal-core-docs@9.1.2-canary.1(97fec607400060b7286de6a0fd9a68cb)':
+  '@mui/internal-core-docs@9.1.2-canary.2(97fec607400060b7286de6a0fd9a68cb)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@base-ui/react': 1.5.0(@date-fns/tz@1.5.0)(@types/react@19.2.15)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -13477,7 +13480,7 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.15)(react@19.2.6)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
       '@mui/icons-material': 9.1.1(@mui/material@9.1.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
-      '@mui/internal-markdown': 3.0.11-canary.1
+      '@mui/internal-markdown': 3.0.11-canary.2
       '@mui/material': 9.1.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/material-nextjs': 9.1.1(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/server@11.11.0)(@types/react@19.2.15)(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       '@mui/stylis-plugin-rtl': 9.1.1(stylis@4.4.0)
@@ -13502,7 +13505,7 @@ snapshots:
     optionalDependencies:
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
 
-  '@mui/internal-core-docs@9.1.2-canary.1(b296b1cdd39953f5604212bc0a0595d1)':
+  '@mui/internal-core-docs@9.1.2-canary.2(b296b1cdd39953f5604212bc0a0595d1)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@base-ui/react': 1.5.0(@date-fns/tz@1.5.0)(@types/react@19.2.15)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -13511,7 +13514,7 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.15)(react@19.2.6)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
       '@mui/icons-material': 9.1.1(@mui/material@9.1.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.15)(react@19.2.6)
-      '@mui/internal-markdown': 3.0.11-canary.1
+      '@mui/internal-markdown': 3.0.11-canary.2
       '@mui/material': 9.1.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react@19.2.6))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/material-nextjs': 9.1.1(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.15)(react@19.2.6))(@emotion/server@11.11.0)(@types/react@19.2.15)(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       '@mui/stylis-plugin-rtl': 9.1.1(stylis@4.4.0)
@@ -13587,6 +13590,13 @@ snapshots:
       typescript: 6.0.3
 
   '@mui/internal-markdown@3.0.11-canary.1':
+    dependencies:
+      '@babel/runtime': 7.29.7
+      es-toolkit: 1.46.1
+      marked: 18.0.3
+      prismjs: 1.30.0
+
+  '@mui/internal-markdown@3.0.11-canary.2':
     dependencies:
       '@babel/runtime': 7.29.7
       es-toolkit: 1.46.1
