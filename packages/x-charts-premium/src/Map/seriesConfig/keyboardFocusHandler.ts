@@ -1,6 +1,9 @@
-import type { ChartState, UseChartKeyboardNavigationSignature } from '@mui/x-charts/internals';
+import type {
+  ChartState,
+  UseChartKeyboardNavigationSignature,
+  KeyboardFocusHandler,
+} from '@mui/x-charts/internals';
 import type { FocusedItemIdentifier } from '@mui/x-charts/models';
-import type { KeyboardFocusHandler } from '@mui/x-charts/internals';
 
 /**
  * Keyboard navigation for the map series.
