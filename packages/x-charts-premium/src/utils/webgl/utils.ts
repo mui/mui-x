@@ -115,9 +115,6 @@ export interface LinkedProgram {
 /**
  * Compiles vertex + fragment shaders, attaches them, links the program, and returns
  * both the program and its shaders. Logs link/compile diagnostics in dev when linking fails.
- *
- * Per WebGL best-practices, the compile/link status is only consulted in development:
- * https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#dont_check_shader_compile_status_unless_linking_fails
  */
 export function linkProgram(
   gl: WebGL2RenderingContext,
@@ -132,6 +129,8 @@ export function linkProgram(
   gl.linkProgram(program);
 
   if (process.env.NODE_ENV !== 'production' && !gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    // WebGL best-practices: consult compile/link status only in dev mode
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#dont_check_shader_compile_status_unless_linking_fails
     console.error(`Program linking failed: ${gl.getProgramInfoLog(program)}`);
     console.error(`Vertex shader info-log: ${gl.getShaderInfoLog(vertexShader)}`);
     console.error(`Fragment shader info-log: ${gl.getShaderInfoLog(fragmentShader)}`);
