@@ -1,5 +1,6 @@
 {
   "name": "@mui/x-agent-tools",
+  "version": "0.2.0",
   "private": true,
   "main": "dist/index.cjs",
   "types": "dist/index.d.mts",

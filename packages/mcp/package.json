@@ -1,10 +1,26 @@
 {
   "name": "@mui/mcp",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "MUI Team",
   "description": "MUI MCP Server",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://github.com/mui/mui-x/tree/master/packages/mcp#readme",
   "bin": "dist/stdio.cjs",
   "types": "dist/stdio.d.cts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/mcp"
+  },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@mui/x-agent-tools": "workspace:*",

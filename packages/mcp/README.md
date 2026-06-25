@@ -163,9 +163,14 @@ Source layout:
 ```text
 packages/mcp/
 ├── src/
-│   ├── stdio.ts          # server setup + tool registration
-│   └── constants.ts      # shared constants (name, version, defaults)
-├── dist/stdio.cjs        # build output, gitignored; what MCP clients spawn
+│   ├── stdio.ts            # entry: server setup + tool registration
+│   ├── constants.ts        # shared constants (name, version, env vars, defaults)
+│   ├── docs-packages.ts    # fetchRemotePackages: the MUI docs catalog source
+│   ├── docs-handler.ts     # adapts the docs tools to MCP handlers
+│   ├── codegen-handler.ts  # adapts generateReactCode to an MCP handler
+│   ├── codegen-progress.ts # forwards codegen progress as MCP notifications
+│   └── logger.ts           # combined stderr + ~/.mui-mcp.log logger
+├── dist/stdio.cjs          # build output, gitignored; what MCP clients spawn
 ├── tsdown.config.ts
 ├── package.json
 └── tsconfig.json
@@ -178,18 +183,6 @@ Published to npm as [@mui/mcp](https://www.npmjs.com/package/@mui/mcp). End user
 ```json
 { "mcpServers": { "mui": { "command": "npx", "args": ["-y", "@mui/mcp"] } } }
 ```
-
-### Cutting a release
-
-Manual; no CI workflow. Requires `@mui` npm org publish access.
-
-1. Bump `version` in `package.json` (semver).
-2. Build cleanly: `pnpm --filter @mui/mcp build`.
-3. Sanity-check via MCP Inspector.
-4. Publish: `pnpm --filter @mui/mcp publish --access public`.
-5. Optional: `git tag mcp-vX.Y.Z && git push --tags`.
-
-No other package in this monorepo depends on `@mui/mcp`, so changes affect only the published version (no cascading PRs).
 
 ## Troubleshooting
 
