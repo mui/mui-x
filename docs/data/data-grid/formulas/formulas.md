@@ -116,7 +116,7 @@ The reference colors are exposed as the `--DataGrid-formulaRefColor-0` … CSS v
 
 ### Fill handle
 
-When the [cell selection](/x/react-data-grid/cell-selection/#fill-handle) fill handle is enabled (`cellSelection` and `cellSelectionFillHandle`), dragging a formula cell—or using the <kbd class="key">Ctrl</kbd>+<kbd class="key">D</kbd> (fill down) and <kbd class="key">Ctrl</kbd>+<kbd class="key">R</kbd> (fill right) shortcuts—copies the formula and adjusts its references for each target cell, the way a spreadsheet does.
+When the cell selection [fill handle](/x/react-data-grid/clipboard/#drag-to-fill) is enabled (`cellSelection` and `cellSelectionFillHandle`), dragging a formula cell—or using the <kbd class="key">Ctrl</kbd>+<kbd class="key">D</kbd> (fill down) and <kbd class="key">Ctrl</kbd>+<kbd class="key">R</kbd> (fill right) shortcuts—copies the formula and adjusts its references for each target cell, the way a spreadsheet does.
 
 {{"demo": "FormulaFillHandle.js", "bg": "inline", "defaultCodeOpen": false}}
 
