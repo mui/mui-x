@@ -17,8 +17,8 @@ export const createZoomLookup =
       );
       if (defaultizedZoom) {
         // Resolve the item-count span limits against the data length; they win over the percentages.
-        // Only a data-point count is supported (not a value/time-axis value span like ECharts'
-        // minValueSpan): a value span needs the computed domain, which isn't known here (raw axes).
+        // Only a data-point count is supported (not a value/time-axis value span): a value span
+        // needs the computed domain, which isn't known here (raw axes).
         const dataLength = Array.isArray(data) ? data.length : 0;
         if (dataLength > 0 && typeof zoom === 'object') {
           if (zoom.minSpanItems != null) {
