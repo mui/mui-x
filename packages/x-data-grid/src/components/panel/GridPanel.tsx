@@ -35,6 +35,8 @@ export interface GridPanelProps extends Pick<
   classes?: Partial<GridPanelClasses>;
   open: boolean;
   onClose?: () => void;
+  /** @default 'bottom-end' */
+  placement?: GridSlotProps['basePopper']['placement'];
 }
 
 export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('MuiDataGrid', [
@@ -62,7 +64,14 @@ const GridPanelContent = styled('div', {
 });
 
 const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, classes: classesProp, onClose, ...other } = props;
+  const {
+    children,
+    className,
+    classes: classesProp,
+    onClose,
+    placement = 'bottom-end',
+    ...other
+  } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
@@ -102,7 +111,7 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
     <GridPanelRoot
       as={rootProps.slots.basePopper}
       ownerState={rootProps}
-      placement="bottom-end"
+      placement={placement}
       className={clsx(classes.panel, className, variablesClass)}
       flip
       onDidShow={onDidShow}
@@ -140,7 +149,7 @@ GridPanel.propTypes /* remove-proptypes */ = {
   onClose: PropTypes.func,
   open: PropTypes.bool.isRequired,
   /**
-   * @default 'bottom'
+   * @default 'bottom-end'
    */
   placement: PropTypes.oneOf([
     'auto-end',
