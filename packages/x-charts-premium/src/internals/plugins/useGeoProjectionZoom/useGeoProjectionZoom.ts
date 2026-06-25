@@ -9,9 +9,12 @@ import {
   useRegisterZoomGestures,
 } from '@mui/x-charts-pro/internals';
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
-import { selectorChartProjection } from '../useGeoProjection/useGeoProjection.selectors';
+import {
+  selectorChartProjection,
+  selectorChartRawProjection,
+} from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapZoomView, UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
-import { getRotation, getTranslation } from './mapZoom.utils';
+import { getDefaultMapInteraction, getRotation, getTranslation } from './mapZoom.utils';
 
 /** Multiplicative zoom step applied per wheel tick. */
 const WHEEL_ZOOM_STEP = 1.1;
@@ -25,12 +28,14 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 }) => {
   const { zoom, onZoomChange, view } = params;
 
+  const interactionDefaults = getDefaultMapInteraction(selectorChartRawProjection(store.state));
+
   const {
     minZoomLevel = 1,
     maxZoomLevel = 8,
     maxGap = 0,
-    rotationAllowed = 'both',
-    translationAllowed = 'both',
+    rotationAllowed = interactionDefaults.rotationAllowed,
+    translationAllowed = interactionDefaults.translationAllowed,
   } = typeof zoom === 'object' ? zoom : {};
 
   // `zoom` is either a boolean or a config object; an object always enables the interaction.

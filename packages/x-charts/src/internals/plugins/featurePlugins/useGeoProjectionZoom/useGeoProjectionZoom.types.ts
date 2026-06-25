@@ -41,13 +41,11 @@ export interface MapZoomOptions {
   /**
    * Which axes the map can be rotated along while panning or zooming.
    * For example, `'long'` lets the map rotate east–west but locks the north–south tilt.
-   * @default 'both'
    */
   rotationAllowed?: MapRotationAxis;
   /**
    * Which axes the map can be translated along while panning or zooming.
    * For example, `'y'` lets the map translate vertically but locks the horizontal movement.
-   * @default 'both'
    */
   translationAllowed?: MapTranslationAxis;
   /**

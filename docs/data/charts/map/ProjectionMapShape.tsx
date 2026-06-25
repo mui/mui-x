@@ -90,7 +90,7 @@ export default function ProjectionMapShape() {
         <ChartsGeoDataProviderPremium
           geoData={isConicProjection(projection) ? USAStates : countries}
           projection={projection}
-          zoom={{ rotationAllowed: 'long', translationAllowed: 'both' }}
+          zoom
           height={360}
           apiRef={apiRef}
         >

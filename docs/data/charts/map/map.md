@@ -217,7 +217,10 @@ The zoom object has two properties to limit this behavior:
 - `rotationAllowed`: `'both' | 'long' | 'lat' | 'none'` Limit how the center can be modified
 - `translationAllowed`: `'both' | 'x' | 'y' | 'none'` Limit how the translation can be modified
 
-In most cases, the configuration `{ translationAllowed: 'y', rotationAllowed: 'long' }` is the more appropriate.
+By default, both are derived from the chosen projection so each map behaves as expected without extra configuration:
+
+- Globe-like (azimuthal) and conic projections rotate the sphere (`{ rotationAllowed: 'both', translationAllowed: 'none' }`).
+- Flat (cylindrical) projections pan and wrap east–west (`{ rotationAllowed: 'long', translationAllowed: 'both' }`).
 
 You can also modify the zoom result with:
 

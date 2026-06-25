@@ -1,12 +1,81 @@
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { geoPath } from '@mui/x-charts-vendor/d3-geo';
 import { selectorChartDrawingArea } from '@mui/x-charts/internals';
-import type { ChartUsedStore } from '@mui/x-charts/internals';
+import type { ChartUsedStore, useGeoProjectionTypes } from '@mui/x-charts/internals';
 import { selectorChartGeoData } from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom.types';
 
 const DEG = Math.PI / 180;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+type ProjectionFamily = 'azimuthal' | 'conic' | 'cylindrical';
+
+const PROJECTION_FAMILY: Record<useGeoProjectionTypes.D3NamedProjection, ProjectionFamily> = {
+  azimuthalEqualArea: 'azimuthal',
+  azimuthalEquidistant: 'azimuthal',
+  gnomonic: 'azimuthal',
+  orthographic: 'azimuthal',
+  stereographic: 'azimuthal',
+  conicConformal: 'conic',
+  conicEqualArea: 'conic',
+  conicEquidistant: 'conic',
+  albers: 'conic',
+  albersUsa: 'conic',
+  equirectangular: 'cylindrical',
+  mercator: 'cylindrical',
+  transverseMercator: 'cylindrical',
+  equalEarth: 'cylindrical',
+  naturalEarth1: 'cylindrical',
+};
+
+/**
+ * The interaction that feels natural for each projection family, used as the default for
+ * `rotationAllowed`/`translationAllowed` when the consumer does not set them explicitly.
+ */
+const FAMILY_INTERACTION: Record<
+  ProjectionFamily,
+  { rotationAllowed: MapRotationAxis; translationAllowed: MapTranslationAxis }
+> = {
+  azimuthal: { rotationAllowed: 'both', translationAllowed: 'none' },
+  conic: { rotationAllowed: 'both', translationAllowed: 'none' },
+  cylindrical: { rotationAllowed: 'long', translationAllowed: 'both' },
+};
+
+export function getProjectionFamily(
+  projection: useGeoProjectionTypes.GeoProjectionInput | null,
+): ProjectionFamily {
+  if (projection == null) {
+    return 'cylindrical'; // fallback to avoid useless edge cases
+  }
+  if (typeof projection === 'string') {
+    return PROJECTION_FAMILY[projection] ?? 'cylindrical';
+  }
+
+  // Try to guess if users provided custom projection
+
+  // Conic projections expose the `parallels` accessor (e.g. conicConformal, albers).
+  if ('parallels' in projection) {
+    return 'conic';
+  }
+  // Composite projections such as `albersUsa` stitch several conics together and so drop `rotate`
+  // (there is no single sphere to spin). Treat them like the conic family they are built from.
+  if (typeof projection.rotate !== 'function') {
+    return 'conic';
+  }
+  // Azimuthal projections clip the sphere to a disc, so their clip angle sits strictly between 0 and
+  // 180° (e.g. 90° for orthographic). Flat projections leave it at 0° (no clipping).
+  const clipAngle = projection.clipAngle?.();
+  if (typeof clipAngle === 'number' && clipAngle > 0 && clipAngle < 180) {
+    return 'azimuthal';
+  }
+  return 'cylindrical';
+}
+
+export function getDefaultMapInteraction(
+  projection: useGeoProjectionTypes.GeoProjectionInput | null,
+): { rotationAllowed: MapRotationAxis; translationAllowed: MapTranslationAxis } {
+  return FAMILY_INTERACTION[getProjectionFamily(projection)];
+}
 
 /**
  * The geographic `center` (`[longitude, latitude]`) such that, after scaling the projection by

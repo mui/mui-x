@@ -1,7 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
-import { geoMercator, geoOrthographic } from '@mui/x-charts-vendor/d3-geo';
-import { clampTranslationAxis, getRotation } from './mapZoom.utils';
+import {
+  geoConicConformal,
+  geoAlbersUsa,
+  geoMercator,
+  geoOrthographic,
+  geoStereographic,
+  geoAlbers,
+} from '@mui/x-charts-vendor/d3-geo';
+import { clampTranslationAxis, getProjectionFamily, getRotation } from './mapZoom.utils';
 
 const EXTENT: [[number, number], [number, number]] = [
   [0, 0],
@@ -123,6 +130,28 @@ describe('mapZoomUtils', () => {
       expect(clampTranslationAxis(99999, 0, box[0], box[1], area[0], area[1], Infinity)).to.equal(
         99999,
       );
+    });
+  });
+
+  describe('getProjectionFamily', () => {
+    it('conic detection', () => {
+      expect(getProjectionFamily(geoConicConformal())).to.deep.equal('conic');
+    });
+
+    it('conic detection for Albers', () => {
+      expect(getProjectionFamily(geoAlbers())).to.deep.equal('conic');
+    });
+
+    it('conic detection for Albers USA', () => {
+      expect(getProjectionFamily(geoAlbersUsa())).to.deep.equal('conic');
+    });
+
+    it('cylindrical detection for Mercator', () => {
+      expect(getProjectionFamily(geoMercator())).to.deep.equal('cylindrical');
+    });
+
+    it('azimuthal detection for Stereographic', () => {
+      expect(getProjectionFamily(geoStereographic())).to.deep.equal('azimuthal');
     });
   });
 });
