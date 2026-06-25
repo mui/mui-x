@@ -1,0 +1,7 @@
+<BarChartPro
+  height={300}
+  // Zoom window is bounded by item count, not a percentage: between 10 and 40 bars,
+  // independent of the dataset size.
+  xAxis={[{ data: categories, zoom: { minSpanItems: 10, maxSpanItems: 40 } }]}
+  series={[{ data, label: 'Value' }]}
+/>

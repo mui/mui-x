@@ -108,7 +108,8 @@ export interface DefaultedZoomSliderOptions extends Omit<
   preview: boolean | ZoomSliderPreviewOptions;
 }
 
-export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slider'>> {
+export interface DefaultizedZoomOptions
+  extends Required<Omit<ZoomOptions, 'slider' | 'minSpanItems' | 'maxSpanItems'>> {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   slider: DefaultedZoomSliderOptions;

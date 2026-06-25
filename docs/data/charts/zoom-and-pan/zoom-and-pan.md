@@ -46,9 +46,17 @@ The following options are available:
 - **step**: The step of the zooming function, which defines the granularity of the zoom
 - **minSpan**: Restricts the minimum span size
 - **maxSpan**: Restricts the maximum span size
+- **minSpanItems**: Restricts the minimum span as a number of data points
+- **maxSpanItems**: Restricts the maximum span as a number of data points
 - **panning**: Enables or disables panning
 
 {{"demo": "ZoomOptions.js", "hideToolbar": true, "bg": "playground"}}
+
+### Span limits by item count
+
+Use `minSpanItems` and `maxSpanItems` to bound the zoom window by a number of data points instead of a percentage. They are resolved against the axis `data` length and take precedence over `minSpan` and `maxSpan`, so the window stays meaningful no matter how large the dataset is.
+
+{{"demo": "ZoomSpanItems.js"}}
 
 ## Zoom filtering
 

@@ -97,7 +97,8 @@ declare module '@mui/x-charts/internals' {
     };
   }
 
-  interface DefaultizedZoomOptions extends Required<ZoomOptions> {
+  interface DefaultizedZoomOptions
+    extends Required<Omit<ZoomOptions, 'minSpanItems' | 'maxSpanItems'>> {
     axisId: AxisId;
     axisDirection: 'x' | 'y';
   }

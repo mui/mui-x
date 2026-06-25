@@ -57,6 +57,19 @@ export interface ZoomOptions {
    */
   maxSpan?: number;
   /**
+   * Restricts the minimum span as a number of data points, instead of a percentage.
+   * Resolved against the axis `data` length, it takes precedence over `minSpan`.
+   *
+   * Useful to keep the zoom window meaningful regardless of the dataset size (the equivalent
+   * percentage shrinks as the data grows).
+   */
+  minSpanItems?: number;
+  /**
+   * Restricts the maximum span as a number of data points, instead of a percentage.
+   * Resolved against the axis `data` length, it takes precedence over `maxSpan`.
+   */
+  maxSpanItems?: number;
+  /**
    * Set to `false` to disable panning. Useful when you want to pan programmatically,
    * or to show only a specific section of the chart.
    *
