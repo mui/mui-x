@@ -45,18 +45,6 @@ const main = async () => {
     version: SERVER_VERSION,
   });
 
-  // The docs tools need the docs catalog at startup; registerDocsTools isolates them so a
-  // docs-backend outage doesn't prevent `generateReactCode` (which doesn't need it) from registering.
-  await registerDocsTools(server, {
-    createUseMuiDocsTool,
-    createFetchDocTool,
-    getPackagesList: fetchRemotePackages,
-    isUrlAllowed,
-    logger,
-    concurrency: DOCS_FETCH_CONCURRENCY,
-    fetchDocsDescription: FETCH_DOCS_DESCRIPTION,
-  });
-
   // JWT client is eager; API key only resolved on first `getToken()`.
   const jwtClient = new CliJwtClient({ muiBackendBaseUrl });
   const baseCodegenOpts = {
@@ -68,6 +56,7 @@ const main = async () => {
   // Static tool only for registration metadata; per-call tool is built per request below.
   const codegenStatic = createGenerateReactCodeTool(baseCodegenOpts);
 
+  // Codegen needs no network at startup, so register it first and connect right away.
   registerCodegenTool(server, {
     codegenStatic,
     createPerCallTool: ({ onProgress }) =>
@@ -78,6 +67,19 @@ const main = async () => {
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
+
+  // Register the docs tools after connecting. They depend on the docs catalog, so a slow, cold, or
+  // unreachable backend now delays only the docs tools (they appear via tools/listChanged once
+  // ready) instead of blocking startup or `generateReactCode`.
+  await registerDocsTools(server, {
+    createUseMuiDocsTool,
+    createFetchDocTool,
+    getPackagesList: fetchRemotePackages,
+    isUrlAllowed,
+    logger,
+    concurrency: DOCS_FETCH_CONCURRENCY,
+    fetchDocsDescription: FETCH_DOCS_DESCRIPTION,
+  });
 };
 
 main().catch((error: unknown) => {

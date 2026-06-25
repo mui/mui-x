@@ -13,7 +13,8 @@
   "dependencies": {
     "zod": "^3.25.65",
     "p-queue": "^8.1.0",
-    "eventsource-parser": "^3.0.0"
+    "eventsource-parser": "^3.0.0",
+    "ipaddr.js": "^1.9.1"
   },
   "devDependencies": {
     "tsdown": "^0.18.3",

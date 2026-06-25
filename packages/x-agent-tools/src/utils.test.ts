@@ -164,6 +164,19 @@ describe('isPrivateHostname', () => {
   it.each(['mui.com', 'llms.mui.com', 'example.com', '8.8.8.8'])('treats %s as public', (host) => {
     expect(isPrivateHostname(host)).toBe(false);
   });
+
+  it.each([
+    '::ffff:127.0.0.1', // dotted IPv4-mapped loopback
+    '::ffff:7f00:1', // Node's normalized hex form of 127.0.0.1
+    '::ffff:c0a8:105', // 192.168.1.5
+    '::ffff:a9fe:a9fe', // 169.254.169.254 (cloud metadata)
+  ])('treats IPv4-mapped private address %s as private', (host) => {
+    expect(isPrivateHostname(host)).toBe(true);
+  });
+
+  it('treats an IPv4-mapped public address as public', () => {
+    expect(isPrivateHostname('::ffff:808:808')).toBe(false); // 8.8.8.8
+  });
 });
 
 describe('createDocsUrlGuard', () => {
@@ -177,6 +190,12 @@ describe('createDocsUrlGuard', () => {
     const guard = createDocsUrlGuard([]);
     expect(guard('http://localhost:5002/')).toBe(false);
     expect(guard('http://169.254.169.254/latest/meta-data/')).toBe(false);
+  });
+
+  it('blocks IPv4-mapped IPv6 loopback/private URLs', () => {
+    const guard = createDocsUrlGuard([]);
+    expect(guard('http://[::ffff:127.0.0.1]/')).toBe(false);
+    expect(guard('http://[::ffff:192.168.1.5]/')).toBe(false);
   });
 
   it('allows an explicitly configured origin even when it is localhost (dev backend)', () => {

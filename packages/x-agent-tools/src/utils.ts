@@ -1,4 +1,5 @@
 import type PQueueType from 'p-queue';
+import ipaddr from 'ipaddr.js';
 import type { LRUCache } from './cache';
 import { ChatTool, ZodObjectAny } from './types';
 
@@ -6,33 +7,29 @@ export type Logger = (message: string, error?: unknown) => void;
 
 const noopLogger: Logger = () => {};
 
-const PRIVATE_IPV4 = [
-  /^127\./, // loopback
-  /^10\./, // private
-  /^192\.168\./, // private
-  /^169\.254\./, // link-local (includes the 169.254.169.254 cloud-metadata endpoint)
-  /^172\.(1[6-9]|2\d|3[0-1])\./, // 172.16.0.0/12
-  /^0\./, // 0.0.0.0/8
-];
-
 /**
  * Best-effort check for hostnames that point at the local machine or a private network. Used to
  * block SSRF: a prompt-injected URL must not let the model reach localhost / internal services.
- * Hostname-based only (no DNS resolution), so it is a guard, not a complete SSRF defense.
+ * IP classification is delegated to `ipaddr.js`. This is hostname-based only (no DNS resolution),
+ * so it's a guard, not a complete SSRF defense.
  */
 export function isPrivateHostname(hostname: string): boolean {
   const host = hostname.toLowerCase().replace(/^\[|\]$/g, ''); // strip IPv6 brackets
-  if (host === 'localhost' || host.endsWith('.localhost')) {
+  if (
+    host === 'localhost' ||
+    host.endsWith('.localhost') ||
+    host.endsWith('.local') ||
+    host.endsWith('.internal')
+  ) {
     return true;
   }
-  if (host.endsWith('.local') || host.endsWith('.internal')) {
-    return true;
+  if (!ipaddr.isValid(host)) {
+    return false; // a regular public hostname (DNS-based rebinding is out of scope for this guard)
   }
-  // IPv6 loopback (::1), unspecified (::), unique-local (fc00::/7), link-local (fe80::/10)
-  if (host === '::1' || host === '::' || /^f[cd]/.test(host) || host.startsWith('fe80')) {
-    return true;
-  }
-  return PRIVATE_IPV4.some((re) => re.test(host));
+  // `process` converts IPv4-mapped IPv6 (e.g. ::ffff:127.0.0.1) to IPv4 first. Allow only normal
+  // public unicast; everything else (loopback, private, link-local, unique-local, reserved, CGNAT)
+  // is treated as private.
+  return ipaddr.process(host).range() !== 'unicast';
 }
 
 /**
