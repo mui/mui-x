@@ -81,8 +81,9 @@ export default function MapZoomOptions() {
   const [projection, setProjection] = React.useState('naturalEarth1');
   const apiRef = useChartPremiumApiRef();
 
-  const [rotationAllowed, setRotationAllowed] = React.useState('both');
-  const [translationAllowed, setTranslationAllowed] = React.useState('both');
+  const [rotationAllowed, setRotationAllowed] = React.useState('long');
+  const [translationAllowed, setTranslationAllowed] = React.useState('y');
+  const [maxGap, setMaxGap] = React.useState(0);
 
   return (
     <Stack
@@ -95,7 +96,7 @@ export default function MapZoomOptions() {
           geoData={isConicProjection(projection) ? USAStates : countries}
           projection={projection}
           apiRef={apiRef}
-          zoom={{ rotationAllowed, translationAllowed }}
+          zoom={{ rotationAllowed, translationAllowed, maxGap }}
           height={360}
         >
           <ChartsSurface>
@@ -175,6 +176,27 @@ export default function MapZoomOptions() {
               <ToggleButton value="x">x</ToggleButton>
               <ToggleButton value="y">y</ToggleButton>
               <ToggleButton value="none">none</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        </div>
+
+        <div>
+          <Typography gutterBottom variant="caption">
+            Max Gap
+          </Typography>
+          <div>
+            <ToggleButtonGroup
+              value={maxGap}
+              exclusive
+              size="small"
+              onChange={(_, value) => {
+                if (value !== null) {
+                  setMaxGap(value);
+                }
+              }}
+            >
+              <ToggleButton value={0}>0</ToggleButton>
+              <ToggleButton value={0.5}>0.5</ToggleButton>
             </ToggleButtonGroup>
           </div>
         </div>
