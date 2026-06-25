@@ -1,11 +1,12 @@
 import { useDrawingArea } from './useDrawingArea';
 import { useRotationAxis, useRadiusAxis } from './useAxis';
+import type { D3Scale } from '../models/axis';
 
 /**
  * Provides access to the geometry of a polar chart.
  *
- * It can be used to position custom elements, and serves as helper to convert polar coordinates to xartesian coordinates 
- * 
+ * It can be used to position custom elements, and serves as helper to convert polar coordinates to xartesian coordinates
+ *
  * @example
  * ```tsx
  * const geo = usePolarGeometry();
@@ -40,10 +41,32 @@ export function usePolarGeometry(): PolarGeometry | null {
 }
 
 export interface PolarGeometry {
+  /**
+   * The X coordinate of the chart center within the SVG.
+   */
   cx: number;
+  /**
+   * The Y coordinate of the chart center within the SVG.
+   */
   cy: number;
-  angleScale: any;
+  /**
+   * The scale that maps rotation axis values (e.g., category names) to angles in radians.
+   */
+  angleScale: D3Scale;
+  /**
+   * The angular width of each band on the rotation axis.
+   * Zero when the rotation axis uses a point scale instead of a band scale.
+   */
   bandwidth: number;
-  radiusScale: any;
+  /**
+   * The scale that maps data values to radii (distance from the chart center).
+   */
+  radiusScale: D3Scale;
+  /**
+   * Converts polar coordinates to Cartesian offsets relative to the chart center.
+   * @param {number} radius - Distance from the center.
+   * @param {number} angle - Angle in radians, measured clockwise from the top (12 o'clock).
+   * @returns {[number, number]} `[x, y]` offset from `[cx, cy]`.
+   */
   point: (radius: number, angle: number) => [number, number];
 }

@@ -5,6 +5,7 @@ import { useDrawingArea } from './useDrawingArea';
 import { useRotationAxis, useRadiusAxis } from './useAxis';
 import { RadarChart } from '../RadarChart';
 import { type RadarSeriesType } from '../models';
+import type { D3OrdinalScale } from '../models/axis';
 
 const mockSeries: RadarSeriesType[] = [
   {
@@ -97,14 +98,18 @@ describe('usePolarGeometry', () => {
   it('should return undefined from angleScale for a metric that does not exist', () => {
     const { result } = renderHook(() => usePolarGeometry(), options);
 
-    expect(result.current?.angleScale('not-a-real-metric')).to.equal(undefined);
+    expect(
+      (result.current?.angleScale as D3OrdinalScale | undefined)?.('not-a-real-metric'),
+    ).to.equal(undefined);
   });
 
   it('should evenly space consecutive metric angles by 2*PI / number of metrics', () => {
     const { result } = renderHook(() => usePolarGeometry(), options);
     const step = (2 * Math.PI) / metrics.length;
 
-    const angles = metrics.map((metric) => result.current?.angleScale(metric));
+    const angles = metrics.map((metric) =>
+      (result.current?.angleScale as D3OrdinalScale | undefined)?.(metric),
+    );
     expect(angles.every((angle) => typeof angle === 'number')).to.equal(true);
 
     for (let i = 1; i < angles.length; i += 1) {
@@ -130,8 +135,10 @@ describe('usePolarGeometry', () => {
     const { result: fewResult } = renderHook(() => usePolarGeometry(), fewOptions);
     const { result: manyResult } = renderHook(() => usePolarGeometry(), manyOptions);
 
-    const fewStep = fewResult.current!.angleScale('B')! - fewResult.current!.angleScale('A')!;
-    const manyStep = manyResult.current!.angleScale('B')! - manyResult.current!.angleScale('A')!;
+    const fewAngleScale = fewResult.current!.angleScale as D3OrdinalScale;
+    const manyAngleScale = manyResult.current!.angleScale as D3OrdinalScale;
+    const fewStep = fewAngleScale('B')! - fewAngleScale('A')!;
+    const manyStep = manyAngleScale('B')! - manyAngleScale('A')!;
 
     expect(manyStep).to.be.below(fewStep);
   });
