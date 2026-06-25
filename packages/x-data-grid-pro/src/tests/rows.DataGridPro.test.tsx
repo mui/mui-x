@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { vi } from 'vitest';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   $,
   $$,
@@ -15,14 +15,16 @@ import {
   getColumnHeaderCell,
 } from 'test/utils/helperFn';
 import {
-  type GridRowModel,
   useGridApiRef,
   DataGridPro,
-  type DataGridProProps,
-  type GridApi,
   gridFocusCellSelector,
   gridClasses,
-  type GridValidRowModel,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridRowModel,
+  DataGridProProps,
+  GridApi,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -975,5 +977,25 @@ describe('<DataGridPro /> - Rows', () => {
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', () => {
+    const apiRef = React.createRef<GridApi>();
+    render(
+      <div style={{ width: 400, height: 300 }}>
+        <DataGridPro
+          apiRef={apiRef}
+          rows={[
+            { id: 1, name: 'a' },
+            { id: 2, name: 'b' },
+          ]}
+          columns={[{ field: 'name' }]}
+        />
+      </div>,
+    );
+
+    expect(() => apiRef.current!.getCellParams(1, 'does-not-exist')).not.to.throw();
+    expect(apiRef.current!.getCellParams(1, 'does-not-exist').value).to.equal(undefined);
   });
 });

@@ -4,14 +4,13 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import {
-  type GridRenderCellParams,
-  type GridRowEventLookup,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,
   getDataGridUtilityClass,
   gridClasses,
 } from '@mui/x-data-grid';
+import type { GridRenderCellParams, GridRowEventLookup } from '@mui/x-data-grid';
 import { gridEditRowsStateSelector, isEventTargetInPortal, vars } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';

@@ -175,7 +175,7 @@ export class GestureManager<
    * @param gesture - The gesture instance to use as a template
    */
   private addGestureTemplate(gesture: Gesture<GestureName>): void {
-    if (this.gestureTemplates.has(gesture.name)) {
+    if (process.env.NODE_ENV !== 'production' && this.gestureTemplates.has(gesture.name)) {
       console.warn(
         `Gesture template with name "${gesture.name}" already exists. It will be overwritten.`,
       );
@@ -236,7 +236,9 @@ export class GestureManager<
   >(gestureName: GN, element: T, options: GestureNameToOptionsMap[GN]): void {
     const elementGestures = this.elementGestureMap.get(element);
     if (!elementGestures || !elementGestures.has(gestureName)) {
-      console.error(`Gesture "${gestureName}" not found on the provided element.`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(`Gesture "${gestureName}" not found on the provided element.`);
+      }
       return;
     }
 
@@ -273,7 +275,9 @@ export class GestureManager<
   >(gestureName: GN, element: T, state: GestureNameToStateMap[GN]): void {
     const elementGestures = this.elementGestureMap.get(element);
     if (!elementGestures || !elementGestures.has(gestureName)) {
-      console.error(`Gesture "${gestureName}" not found on the provided element.`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(`Gesture "${gestureName}" not found on the provided element.`);
+      }
       return;
     }
 
@@ -356,7 +360,9 @@ export class GestureManager<
     // Find the gesture template
     const gestureTemplate = this.gestureTemplates.get(gestureName);
     if (!gestureTemplate) {
-      console.error(`Gesture template "${gestureName}" not found.`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(`Gesture template "${gestureName}" not found.`);
+      }
       return false;
     }
 
@@ -368,7 +374,11 @@ export class GestureManager<
     // Check if this element already has this gesture registered
     const elementGestures = this.elementGestureMap.get(element)!;
     if (elementGestures.has(gestureName)) {
-      console.warn(`Element already has gesture "${gestureName}" registered. It will be replaced.`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          `Element already has gesture "${gestureName}" registered. It will be replaced.`,
+        );
+      }
       // Unregister the existing gesture first
       this.unregisterElement(gestureName, element);
     }

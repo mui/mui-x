@@ -28,7 +28,8 @@ import {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
 } from '../headerFiltering/gridHeaderFilteringSelectors';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
 import { getLeftColumnIndex, getRightColumnIndex, findNonRowSpannedCell } from './utils';
 import { createSelectorMemoized } from '../../../utils/createSelector';

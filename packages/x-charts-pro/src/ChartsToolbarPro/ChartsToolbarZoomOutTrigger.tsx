@@ -2,17 +2,12 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  useChartsContext,
-  type ChartsSlotProps,
-  useChartsSlots,
-  type UseChartCartesianAxisSignature,
-} from '@mui/x-charts/internals';
-import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
-import {
-  selectorChartCanZoomOut,
-  type UseChartProZoomSignature,
-} from '../internals/plugins/useChartProZoom';
+import { useChartsContext, useChartsSlots } from '@mui/x-charts/internals';
+import type { ChartsSlotProps, UseChartCartesianAxisSignature } from '@mui/x-charts/internals';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { selectorChartCanZoomOut } from '../internals/plugins/useChartProZoom';
+import type { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
 interface ChartsToolbarZoomOutTriggerProps {
   /**

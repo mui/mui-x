@@ -1,11 +1,11 @@
 import {
-  type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
   createIsFaded,
   polarSeriesTypes,
 } from '@mui/x-charts/internals';
+import type { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import legendGetter from './legend';
 import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';

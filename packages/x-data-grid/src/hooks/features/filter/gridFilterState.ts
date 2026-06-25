@@ -1,4 +1,5 @@
-import { type GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
+import { GridLogicOperator } from '../../../models/gridFilterItem';
+import type { GridFilterItem } from '../../../models/gridFilterItem';
 import type { GridFilterModel } from '../../../models/gridFilterModel';
 import type { GridRowId, GridRowModel, GridValidRowModel } from '../../../models/gridRows';
 import type { GridColDef } from '../../../models/colDef';
