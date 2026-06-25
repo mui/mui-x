@@ -25,7 +25,7 @@ export interface GridPanelClasses {
 
 export interface GridPanelProps extends Pick<
   GridSlotProps['basePopper'],
-  'id' | 'className' | 'target' | 'flip' | 'placement' | 'target' | 'transition' | 'focusTrap'
+  'id' | 'className' | 'target' | 'flip' | 'placement' | 'transition' | 'focusTrap'
 > {
   ref?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
