@@ -1,0 +1,21 @@
+{
+  "name": "@mui/x-agent-tools",
+  "private": true,
+  "main": "dist/index.cjs",
+  "types": "dist/index.d.mts",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "test": "vitest run --config vitest.config.node.mts"
+  },
+  "dependencies": {
+    "zod": "^3.25.65",
+    "p-queue": "^8.1.0",
+    "eventsource-parser": "^3.0.0"
+  },
+  "devDependencies": {
+    "tsdown": "^0.18.3",
+    "vitest": "catalog:"
+  }
+}
