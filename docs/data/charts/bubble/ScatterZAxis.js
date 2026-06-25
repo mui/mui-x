@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { useZAxis } from '@mui/x-charts-premium/hooks';
+import { useZAxis } from '@mui/x-charts/hooks';
 import { irisData } from '../dataset/irisDataset';
 
 const species = ['Setosa', 'Versicolor', 'Virginica'];
