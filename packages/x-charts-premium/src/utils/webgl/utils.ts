@@ -10,6 +10,15 @@ export function compileShader(
   return shader;
 }
 
+/**
+ * Enables alpha blending for transparency. These flags are global to the WebGL
+ * context, so each program only needs to set them once at construction.
+ */
+export function enableAlphaBlending(gl: WebGL2RenderingContext) {
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+}
+
 export function uploadQuadBuffer(gl: WebGL2RenderingContext) {
   const quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
@@ -45,6 +54,57 @@ export function attachShader(
   gl.attachShader(program, shader);
 
   return shader;
+}
+
+/**
+ * Compiles the vertex + fragment shaders, attaches them to a fresh program and
+ * links it. In development, logs the program/shader info-logs when linking
+ * fails (the link-status query stalls the pipeline, so it is dev-only).
+ */
+export function createLinkedProgram(
+  gl: WebGL2RenderingContext,
+  vertexShaderSource: string,
+  fragmentShaderSource: string,
+) {
+  const program = gl.createProgram();
+  const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
+  const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+
+  /* https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#dont_check_shader_compile_status_unless_linking_fails */
+  if (process.env.NODE_ENV !== 'production' && !gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error(`Program linking failed: ${gl.getProgramInfoLog(program)}`);
+    console.error(`Vertex shader info-log: ${gl.getShaderInfoLog(vertexShader)}`);
+    console.error(`Fragment shader info-log: ${gl.getShaderInfoLog(fragmentShader)}`);
+  }
+
+  return { program, vertexShader, fragmentShader };
+}
+
+/**
+ * Binds `buffer` to `name`'s attribute location and configures the vertex
+ * attribute pointer. A non-zero `divisor` makes the attribute instanced.
+ * Assumes the owning VAO is already bound.
+ */
+export function bindAttribute(
+  gl: WebGL2RenderingContext,
+  program: WebGLProgram,
+  name: string,
+  buffer: WebGLBuffer,
+  size: number,
+  divisor: number,
+  type: GLenum = gl.FLOAT,
+  normalized: boolean = false,
+) {
+  const location = gl.getAttribLocation(program, name);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.enableVertexAttribArray(location);
+  gl.vertexAttribPointer(location, size, type, normalized, 0, 0);
+  if (divisor !== 0) {
+    gl.vertexAttribDivisor(location, divisor);
+  }
 }
 
 export type GrowableBuffer = {

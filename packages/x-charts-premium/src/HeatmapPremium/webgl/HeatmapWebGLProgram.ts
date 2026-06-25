@@ -1,18 +1,18 @@
 import {
   type GrowableBuffer,
-  attachShader,
-  compileShader,
+  bindAttribute,
   createGrowableBuffer,
+  createLinkedProgram,
+  enableAlphaBlending,
   logWebGLErrors,
   uploadGrowableBuffer,
+  uploadQuadBuffer,
 } from '../../utils/webgl/utils';
 import {
   heatmapFragmentShaderSourceNoBorderRadius,
   heatmapFragmentShaderSourceWithBorderRadius,
   heatmapVertexShaderSource,
 } from './shaders';
-
-const QUAD_VERTICES = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
 export interface HeatmapPlotData {
   centers: Float32Array;
@@ -47,14 +47,9 @@ export class HeatmapWebGLProgram {
   private active: ProgramVariant;
 
   constructor(private gl: WebGL2RenderingContext) {
-    /* Enable blending for transparency
-     * These are global to the WebGL context and need to be set only once */
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    enableAlphaBlending(gl);
 
-    this.quadBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, QUAD_VERTICES, gl.STATIC_DRAW);
+    this.quadBuffer = uploadQuadBuffer(gl);
 
     this.centers = createGrowableBuffer(gl);
     this.colors = createGrowableBuffer(gl);
@@ -68,22 +63,11 @@ export class HeatmapWebGLProgram {
 
   private buildVariant(fragmentShaderSource: string): ProgramVariant {
     const gl = this.gl;
-    const program = gl.createProgram();
-
-    const vertexShader = compileShader(gl, heatmapVertexShaderSource, gl.VERTEX_SHADER);
-    gl.attachShader(program, vertexShader);
-    const fragmentShader = attachShader(gl, program, fragmentShaderSource, gl.FRAGMENT_SHADER);
-
-    gl.linkProgram(program);
-
-    /* https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#dont_check_shader_compile_status_unless_linking_fails */
-    if (process.env.NODE_ENV !== 'production') {
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error(`Program linking failed: ${gl.getProgramInfoLog(program)}`);
-        console.error(`Vertex shader info-log: ${gl.getShaderInfoLog(vertexShader)}`);
-        console.error(`Fragment shader info-log: ${gl.getShaderInfoLog(fragmentShader)}`);
-      }
-    }
+    const { program, vertexShader, fragmentShader } = createLinkedProgram(
+      gl,
+      heatmapVertexShaderSource,
+      fragmentShaderSource,
+    );
 
     this.shaders.push(vertexShader, fragmentShader);
 
@@ -162,24 +146,5 @@ export class HeatmapWebGLProgram {
     gl.deleteVertexArray(this.roundedVariant.vao);
 
     this.shaders.forEach((shader) => gl.deleteShader(shader));
-  }
-}
-
-function bindAttribute(
-  gl: WebGL2RenderingContext,
-  program: WebGLProgram,
-  name: string,
-  buffer: WebGLBuffer,
-  size: number,
-  divisor: number,
-  type: GLenum = gl.FLOAT,
-  normalized: boolean = false,
-) {
-  const location = gl.getAttribLocation(program, name);
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(location);
-  gl.vertexAttribPointer(location, size, type, normalized, 0, 0);
-  if (divisor !== 0) {
-    gl.vertexAttribDivisor(location, divisor);
   }
 }

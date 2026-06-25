@@ -1,15 +1,17 @@
 import {
   type GrowableBuffer,
-  compileShader,
+  bindAttribute,
   createGrowableBuffer,
+  createLinkedProgram,
+  enableAlphaBlending,
   logWebGLErrors,
   uploadGrowableBuffer,
+  uploadQuadBuffer,
 } from '../utils/webgl/utils';
 import { candleFragmentShader, candleVertexShader } from './candleShaders';
 import { wickFragmentShader, wickVertexShader } from './wickShaders';
 import { type CandlestickPlotData } from './useCandlestickPlotData';
 
-const QUAD_VERTICES = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 const WICK_VERTICES = new Float32Array([0, -1, 0, 1]);
 
 type CandleProgram = {
@@ -44,15 +46,10 @@ export class CandlestickWebGLProgram {
   private readonly wick: WickProgram;
 
   constructor(private gl: WebGL2RenderingContext) {
-    /* Enable blending for transparency
-     * These are global to the WebGL context and need to be set only once */
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    enableAlphaBlending(gl);
 
     /* Shared, write-once geometry buffers */
-    this.quadBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, QUAD_VERTICES, gl.STATIC_DRAW);
+    this.quadBuffer = uploadQuadBuffer(gl);
 
     this.wickGeometryBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.wickGeometryBuffer);
@@ -64,7 +61,7 @@ export class CandlestickWebGLProgram {
 
   private initCandleProgram(): CandleProgram {
     const gl = this.gl;
-    const { program, fragmentShader, vertexShader } = initializeProgram(
+    const { program, fragmentShader, vertexShader } = createLinkedProgram(
       gl,
       candleVertexShader,
       candleFragmentShader,
@@ -102,7 +99,7 @@ export class CandlestickWebGLProgram {
 
   private initWickProgram(): WickProgram {
     const gl = this.gl;
-    const { program, fragmentShader, vertexShader } = initializeProgram(
+    const { program, fragmentShader, vertexShader } = createLinkedProgram(
       gl,
       wickVertexShader,
       wickFragmentShader,
@@ -203,47 +200,3 @@ export class CandlestickWebGLProgram {
   }
 }
 
-function bindAttribute(
-  gl: WebGL2RenderingContext,
-  program: WebGLProgram,
-  name: string,
-  buffer: WebGLBuffer,
-  size: number,
-  divisor: number,
-  type: GLenum = gl.FLOAT,
-  normalized: boolean = false,
-) {
-  const location = gl.getAttribLocation(program, name);
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(location);
-  gl.vertexAttribPointer(location, size, type, normalized, 0, 0);
-  if (divisor !== 0) {
-    gl.vertexAttribDivisor(location, divisor);
-  }
-}
-
-function initializeProgram(
-  gl: WebGL2RenderingContext,
-  vertexShaderSource: string,
-  fragmentShaderSource: string,
-) {
-  const program = gl.createProgram();
-  const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
-  const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-
-  gl.linkProgram(program);
-
-  /* Only inspect link status when linking actually failed; the parameter call stalls the pipeline.
-   * https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#dont_check_shader_compile_status_unless_linking_fails */
-  if (process.env.NODE_ENV !== 'production') {
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error(`Program linking failed: ${gl.getProgramInfoLog(program)}`);
-      console.error(`Vertex shader info-log: ${gl.getShaderInfoLog(vertexShader)}`);
-      console.error(`Fragment shader info-log: ${gl.getShaderInfoLog(fragmentShader)}`);
-    }
-  }
-
-  return { program, vertexShader, fragmentShader };
-}
