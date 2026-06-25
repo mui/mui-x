@@ -5,8 +5,8 @@ import {
   setupStandardBlending,
   uploadQuadBuffer,
 } from '../../utils/webgl/utils';
+import type { InstancedAttribute } from '../../utils/webgl/instancedAttribute';
 import {
-  type InstancedAttribute,
   createInstancedAttribute,
   uploadInstancedAttribute,
 } from '../../utils/webgl/instancedAttribute';
