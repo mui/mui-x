@@ -28,8 +28,8 @@ export default function LineSamplingNulls() {
         label="Insert null gaps"
       />
       <Typography variant="caption" color="text.secondary">
-        Sampling is set to <code>m4</code>. A series containing any <code>null</code> value skips
-        sampling entirely and renders every point, so gaps stay exact.
+        Sampling is set to <code>m4</code>. Series with <code>null</code> values are still sampled;
+        the gaps are preserved, so the line breaks instead of bridging them.
       </Typography>
       <LineChartPro
         xAxis={[{ data: xData, zoom: true }]}

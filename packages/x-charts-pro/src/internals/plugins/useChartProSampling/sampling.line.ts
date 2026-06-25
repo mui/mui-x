@@ -33,7 +33,7 @@ export function sampleBuckets(
       getValues!(),
       Math.ceil(pyramid.dataLength / bucketSize),
     );
-    return [{ startIndex: 0, endIndex: maxIndex, indices }];
+    return withNullBreaks([{ startIndex: 0, endIndex: maxIndex, indices }], pyramid.nullIndices);
   }
 
   const { argMin, argMax } = pyramid;
@@ -63,6 +63,52 @@ export function sampleBuckets(
       pushUnique(endIndex);
     }
     buckets.push({ startIndex, endIndex, indices: Int32Array.from(indices) });
+  }
+
+  return withNullBreaks(buckets, pyramid.nullIndices);
+}
+
+/**
+ * Merges null indices into each bucket's rendered indices (ascending, deduped), so the polyline
+ * includes the gap points and breaks instead of bridging them. No-op when the series has no nulls.
+ */
+function withNullBreaks(
+  buckets: SampledBucket[],
+  nullIndices: Int32Array | undefined,
+): SampledBucket[] {
+  if (!nullIndices || nullIndices.length === 0) {
+    return buckets;
+  }
+
+  let cursor = 0;
+  for (const bucket of buckets) {
+    while (cursor < nullIndices.length && nullIndices[cursor] < bucket.startIndex) {
+      cursor += 1;
+    }
+    if (cursor >= nullIndices.length || nullIndices[cursor] > bucket.endIndex) {
+      continue;
+    }
+
+    const merged: number[] = [];
+    const source = bucket.indices;
+    let s = 0;
+    let n = cursor;
+    while (s < source.length || (n < nullIndices.length && nullIndices[n] <= bucket.endIndex)) {
+      const nextSource = s < source.length ? source[s] : Infinity;
+      const nextNull =
+        n < nullIndices.length && nullIndices[n] <= bucket.endIndex ? nullIndices[n] : Infinity;
+      const next = Math.min(nextSource, nextNull);
+      if (merged[merged.length - 1] !== next) {
+        merged.push(next);
+      }
+      if (next === nextSource) {
+        s += 1;
+      }
+      if (next === nextNull) {
+        n += 1;
+      }
+    }
+    bucket.indices = Int32Array.from(merged);
   }
 
   return buckets;

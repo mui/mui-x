@@ -75,6 +75,28 @@ describe('sampleBuckets', () => {
   });
 });
 
+describe('sampleBuckets with null gaps', () => {
+  // null at index 5: low +Inf / high -Inf so it's never picked as an extremum.
+  const low = f64([3, 1, 4, 8, 5, Infinity, 6, 7]);
+  const high = f64([3, 1, 4, 8, 5, -Infinity, 6, 7]);
+  const pyramid = buildSamplingPyramid(low, high);
+  pyramid.nullIndices = Int32Array.from([5]);
+  const px = pxFor(10, 8);
+
+  it('merges the null index into its bucket and excludes it from the envelope', () => {
+    // bucketSize 4: buckets [0..3] [4..7]; null idx 5 lands in the second bucket.
+    // Second bucket envelope is min idx4 / max idx7, plus the null break at 5.
+    const buckets = sampleBuckets(pyramid, 40, px, 0, 'minmax')!;
+    expect(Array.from(buckets[1].indices)).to.deep.equal([4, 5, 7]);
+    expect(flat(buckets)).to.deep.equal([1, 3, 4, 5, 7]);
+  });
+
+  it('breaks the lttb output at gaps too', () => {
+    const indices = flat(sampleBuckets(pyramid, 40, px, 0, 'lttb', () => low))!;
+    expect(indices).to.include(5);
+  });
+});
+
 describe('largestTriangleThreeBuckets', () => {
   it('returns all indices when threshold >= length', () => {
     expect(Array.from(largestTriangleThreeBuckets(f64([1, 2, 3]), 5))).to.deep.equal([0, 1, 2]);
