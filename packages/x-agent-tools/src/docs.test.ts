@@ -48,6 +48,20 @@ describe('createUseMuiDocsTool', () => {
     expect(tool.name).toBe('custom_name');
     expect(tool.description).toBe('custom description');
   });
+
+  it('enforces the injected isUrlAllowed guard before fetching', async () => {
+    const fetcher = vi.fn().mockResolvedValue(ok('secret'));
+    const tool = await createUseMuiDocsTool({
+      getPackagesList: async () => samplePackages,
+      fetcher,
+      isUrlAllowed: (url) => url.startsWith('https://llms.example/'),
+    });
+
+    const result = await tool.execute({ urlList: ['http://169.254.169.254/latest/meta-data/'] });
+
+    expect(result).toContain('blocked for security');
+    expect(fetcher).not.toHaveBeenCalled();
+  });
 });
 
 describe('createFetchDocTool', () => {
@@ -85,5 +99,18 @@ describe('createFetchDocTool', () => {
 
     expect(result).toBe('Could not fetch u1: network down');
     expect(logger).toHaveBeenCalledWith('Failed to fetch u1:', expect.any(Error));
+  });
+
+  it('enforces the injected isUrlAllowed guard before fetching', async () => {
+    const fetcher = vi.fn().mockResolvedValue(ok('secret'));
+    const tool = await createFetchDocTool({
+      fetcher,
+      isUrlAllowed: (url) => url.startsWith('https://allowed/'),
+    });
+
+    const result = await tool.execute({ urls: ['http://localhost:5002/admin'] });
+
+    expect(result).toContain('blocked for security');
+    expect(fetcher).not.toHaveBeenCalled();
   });
 });

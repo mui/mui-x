@@ -11,7 +11,11 @@ export const fetchRemotePackages = async (
   const data = await response.json();
 
   if (!Array.isArray(data) || !data.length) {
-    throw new Error('Packages list not found');
+    throw new Error(
+      `MUI X MCP: The MUI documentation catalog at ${packagesListUrl} returned no packages. ` +
+        `The docs tools (useMuiDocs, fetchDocs) cannot work without it. ` +
+        `Check that MUI_DOCS_BASE_URL points at a reachable backend that serves the package list, then retry.`,
+    );
   }
 
   return data;

@@ -29,14 +29,14 @@ describe('fetchRemotePackages', () => {
     expect(fetcher).toHaveBeenCalledWith(`http://localhost:5003${LIST_PATH}`);
   });
 
-  it('throws "Packages list not found" when the response is an empty array', async () => {
+  it('throws an actionable MUI X error when the response is an empty array', async () => {
     const fetcher = vi.fn().mockResolvedValue(json([]));
-    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/Packages list not found/);
+    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/MUI X MCP: .*returned no packages/);
   });
 
-  it('throws "Packages list not found" when the response is not an array', async () => {
+  it('throws an actionable MUI X error when the response is not an array', async () => {
     const fetcher = vi.fn().mockResolvedValue(json({ unexpected: 'shape' }));
-    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/Packages list not found/);
+    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/MUI X MCP: .*returned no packages/);
   });
 
   it('propagates network errors from the fetcher (host can decide to retry)', async () => {

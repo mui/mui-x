@@ -17,6 +17,7 @@ export async function createUseMuiDocsTool(options: {
   };
   cache?: boolean;
   logger?: Logger;
+  isUrlAllowed?: (url: string) => boolean;
 }) {
   const PQueue = await import('p-queue').then((m) => m.default);
   const queue = new PQueue({
@@ -28,7 +29,7 @@ export async function createUseMuiDocsTool(options: {
   const fetcher = options.fetcher ?? fetch;
   // The cache lives for the lifetime of this tool; the host owns it, not a module-level singleton.
   const cache = options.cache ? new LRUCache() : undefined;
-  const { logger } = options;
+  const { logger, isUrlAllowed } = options;
   const availablePackagesText = await options.getPackagesList().then((packages) => {
     return packages.map((it) => `[${it.name}@${it.version}](${it.llmsUrl})`).join('\n');
   });
@@ -53,7 +54,7 @@ export async function createUseMuiDocsTool(options: {
     }),
     outputSchema: z.string().describe('A string containing the fetched documentation content'),
     execute: async (input) => {
-      return urlListFetcher(queue, fetcher, input.urlList, { cache, logger });
+      return urlListFetcher(queue, fetcher, input.urlList, { cache, logger, isUrlAllowed });
     },
   });
 }
@@ -64,6 +65,7 @@ export async function createFetchDocTool(options: {
   queue?: QueueOptions;
   cache?: boolean;
   logger?: Logger;
+  isUrlAllowed?: (url: string) => boolean;
 }) {
   const fetcher = options.fetcher ?? fetch;
   const PQueue = await import('p-queue').then((m) => m.default);
@@ -75,7 +77,7 @@ export async function createFetchDocTool(options: {
 
   // The cache lives for the lifetime of this tool; the host owns it, not a module-level singleton.
   const cache = options.cache ? new LRUCache() : undefined;
-  const { logger } = options;
+  const { logger, isUrlAllowed } = options;
 
   return wrapTool({
     name: 'fetch_docs',
@@ -93,10 +95,10 @@ Use this tool after list_mui_doc_sources to:
     outputSchema: z
       .string()
       .describe(
-        'The concatenated list of all fetched documentation content converted to markdown, or an error message if the request fails or the URL is not from an allowed domain.',
+        'The concatenated list of all fetched documentation content converted to markdown, or an error message if the request fails or the URL is blocked (not an allowed docs source, e.g. a non-HTTP(S) or private/internal address).',
       ),
     execute: async (input) => {
-      return urlListFetcher(queue, fetcher, input.urls, { cache, logger });
+      return urlListFetcher(queue, fetcher, input.urls, { cache, logger, isUrlAllowed });
     },
   });
 }
