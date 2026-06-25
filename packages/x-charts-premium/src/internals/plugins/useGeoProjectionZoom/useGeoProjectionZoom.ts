@@ -28,7 +28,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   instance,
   params,
 }) => {
-  const { zoom, minZoomLevel, maxZoomLevel, onZoomChange, view } = params;
+  const { zoom, minZoomLevel, maxZoomLevel, maxGap, onZoomChange, view } = params;
 
   // `zoom` is either a boolean or a config object; an object always enables the interaction.
   const enabled = zoom !== false;
@@ -134,6 +134,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         geoPoint.current,
         dragCurrentPoint.current,
         translationAllowed,
+        maxGap,
       );
 
       projection.rotate(rotate);
@@ -184,6 +185,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         geoPoint,
         [point.x, point.y],
         translationAllowed,
+        maxGap,
       );
       projection.rotate(rotate);
       projection.scale(scale);
@@ -231,6 +233,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         geoPoint,
         [point.x, point.y],
         translationAllowed,
+        maxGap,
       );
       projection.rotate(rotate);
       projection.scale(scale);
@@ -285,6 +288,7 @@ useGeoProjectionZoom.params = {
   zoom: true,
   minZoomLevel: true,
   maxZoomLevel: true,
+  maxGap: true,
   initialView: true,
   view: true,
   onZoomChange: true,
@@ -295,6 +299,7 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
   zoom: params.zoom ?? false,
   minZoomLevel: params.minZoomLevel ?? 1,
   maxZoomLevel: params.maxZoomLevel ?? 8,
+  maxGap: params.maxGap ?? 0,
 });
 
 useGeoProjectionZoom.getInitialState = (params) => ({

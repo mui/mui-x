@@ -70,6 +70,14 @@ export interface UseGeoProjectionZoomParameters {
    */
   maxZoomLevel?: number;
   /**
+   * The maximal gap around the map while panning, expressed as a ratio of the drawing area size.
+   * For example:
+   * - `0` keeps the map's bounding box flush with (or covering) the drawing area.
+   * - `0.5` lets the user pan until at most half of the drawing area is empty on a given side.
+   * @default 0
+   */
+  maxGap?: number;
+  /**
    * The view to apply on mount, when the zoom is not controlled.
    * Use this to seed the map at a specific zoom level and center without controlling it.
    */
@@ -90,6 +98,7 @@ export interface UseGeoProjectionZoomDefaultizedParameters extends UseGeoProject
   zoom: boolean | MapZoomOptions;
   minZoomLevel: number;
   maxZoomLevel: number;
+  maxGap: number;
 }
 
 /**

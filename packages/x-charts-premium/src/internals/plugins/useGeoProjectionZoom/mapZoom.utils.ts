@@ -1,5 +1,8 @@
-import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
-import { type ChartUsedStore, selectorChartDrawingArea } from '@mui/x-charts/internals';
+import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
+import { geoPath } from '@mui/x-charts-vendor/d3-geo';
+import { selectorChartDrawingArea } from '@mui/x-charts/internals';
+import type { ChartUsedStore } from '@mui/x-charts/internals';
+import { selectorChartGeoData } from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom.types';
 
 const DEG = Math.PI / 180;
@@ -106,12 +109,32 @@ export function getRotation(
   return [lon, c1 / DEG];
 }
 
+export function clampTranslationAxis(
+  value: number,
+  init: number,
+  boundingBox0: number,
+  boundingBox1: number,
+  areaStart: number,
+  areaEnd: number,
+  gap: number,
+): number {
+  // Largest `value` keeping the leading-edge gap (`boundingBox0` shifted vs `areaStart`) within `gap`.
+  const max = areaStart - boundingBox0 + init + gap;
+  // Smallest `value` keeping the trailing-edge gap (`areaEnd` vs `boundingBox1` shifted) within `gap`.
+  const min = areaEnd - boundingBox1 + init - gap;
+  if (min > max) {
+    return (min + max) / 2;
+  }
+  return Math.min(max, Math.max(min, value));
+}
+
 export function getTranslation(
   store: ChartUsedStore<any>,
   projection: GeoProjection,
   geoPoint: [number, number],
   to: [number, number],
   translationAllowed: MapTranslationAxis = 'both',
+  maxGap: number = 0,
 ): [number, number] | null {
   if (!projection.invert) {
     return null;
@@ -135,8 +158,32 @@ export function getTranslation(
 
   const drawingArea = selectorChartDrawingArea(store.state);
 
-  const tx = initTranslation[0] + (allowX ? deltaX : 0);
-  const ty = initTranslation[1] + (allowY ? deltaY : 0);
+  let tx = initTranslation[0] + (allowX ? deltaX : 0);
+  let ty = initTranslation[1] + (allowY ? deltaY : 0);
+
+  // Clamp translation
+  const geoData = Number.isFinite(maxGap) ? selectorChartGeoData(store.state) : null;
+  if (geoData) {
+    const [[bx0, by0], [bx1, by1]] = geoPath(projection).bounds(geoData);
+    tx = clampTranslationAxis(
+      tx,
+      initTranslation[0],
+      bx0,
+      bx1,
+      drawingArea.left,
+      drawingArea.left + drawingArea.width,
+      maxGap * drawingArea.width,
+    );
+    ty = clampTranslationAxis(
+      ty,
+      initTranslation[1],
+      by0,
+      by1,
+      drawingArea.top,
+      drawingArea.top + drawingArea.height,
+      maxGap * drawingArea.height,
+    );
+  }
 
   return [
     (tx - drawingArea.left - drawingArea.width / 2) / drawingArea.width,
