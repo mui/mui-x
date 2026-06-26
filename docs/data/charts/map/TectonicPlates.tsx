@@ -127,8 +127,8 @@ export default function TectonicPlates() {
           ]}
         >
           <ChartsSurface>
-            <Graticule stroke="#b0bec5" strokeWidth={0.4} opacity={0.3} />
             <MapShapePlot />
+            <Graticule strokeWidth={0.4} opacity={0.1} />
           </ChartsSurface>
           <ChartsTooltip trigger="item" />
         </ChartsGeoDataProviderPremium>
