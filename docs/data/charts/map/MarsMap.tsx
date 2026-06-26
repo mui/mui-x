@@ -1,5 +1,7 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { MapImagePlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { useGeoPath } from '@mui/x-charts-premium/hooks';
@@ -25,6 +27,16 @@ function MarsFeatureMarkers() {
       {marsFeatures.map((feature) => {
         const point = projection([feature.lon, feature.lat]);
         if (!point) {
+          return null;
+        }
+        // Hide features on the hidden hemisphere: their coordinate does not
+        // round-trip back to itself through the projection.
+        const back = projection.invert?.(point);
+        if (
+          back &&
+          (Math.abs(back[0] - feature.lon) > 1 ||
+            Math.abs(back[1] - feature.lat) > 1)
+        ) {
           return null;
         }
         const [x, y] = point;
@@ -57,18 +69,35 @@ function MarsFeatureMarkers() {
   );
 }
 
+type ProjectionName = 'orthographic' | 'equirectangular';
+
 export default function MarsMap() {
+  const [projection, setProjection] = React.useState<ProjectionName>('orthographic');
+
   return (
-    <Box sx={{ width: '100%', maxWidth: 800 }}>
+    <Stack spacing={2} sx={{ width: '100%', maxWidth: 800 }}>
+      <ToggleButtonGroup
+        color="primary"
+        size="small"
+        exclusive
+        value={projection}
+        onChange={(_, value: ProjectionName | null) => value && setProjection(value)}
+        aria-label="projection"
+      >
+        <ToggleButton value="orthographic">orthographic</ToggleButton>
+        <ToggleButton value="equirectangular">equirectangular</ToggleButton>
+      </ToggleButtonGroup>
       <ChartsGeoDataProviderPremium
         geoData={marsRegions}
-        projection="equirectangular"
+        projection={projection}
+        rotate={projection === 'orthographic' ? [-70, -10] : [-70, 0]}
         height={360}
         series={[
           {
             type: 'mapShape',
             label: 'Elevation',
             data: marsData,
+            highlightScope: { highlight: 'item' },
             valueFormatter: (point) =>
               point.colorValue == null
                 ? 'No data'
@@ -99,6 +128,6 @@ export default function MarsMap() {
           sx={{ maxWidth: 150, mx: 'auto' }}
         />
       </ChartsGeoDataProviderPremium>
-    </Box>
+    </Stack>
   );
 }

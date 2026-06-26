@@ -27,7 +27,8 @@ export interface MapImagePlotProps extends React.SVGProps<SVGImageElement> {
 /**
  * Renders a raster base map (for example a satellite mosaic) under the series,
  * reprojected to match the chart's `projection` so it follows the geography
- * instead of being a flat rectangle.
+ * instead of being a flat rectangle. Pixels outside the projection's visible
+ * footprint are left transparent.
  *
  * The source image is assumed to be equirectangular; use `imageBounds` when it
  * does not cover the whole globe. Any other SVG image attribute is forwarded to
@@ -40,15 +41,21 @@ function MapImagePlot(props: MapImagePlotProps) {
   const [dataUrl, setDataUrl] = React.useState<string | null>(null);
 
   const projection = path?.projection?.() as GeoProjection | null | undefined;
-  const invert = projection?.invert;
 
   const [[west, south], [east, north]] = imageBounds ?? FULL_GLOBE;
 
   React.useEffect(() => {
-    if (!href || !invert || width <= 0 || height <= 0) {
+    if (
+      !href ||
+      !projection ||
+      typeof projection.invert !== 'function' ||
+      width <= 0 ||
+      height <= 0
+    ) {
       setDataUrl(null);
       return undefined;
     }
+    const { invert } = projection;
 
     let cancelled = false;
     const image = new Image();
@@ -87,12 +94,24 @@ function MapImagePlot(props: MapImagePlotProps) {
 
       for (let py = 0; py < outHeight; py += 1) {
         for (let px = 0; px < outWidth; px += 1) {
-          const coordinates = invert([left + px, top + py]);
+          const deviceX = left + px;
+          const deviceY = top + py;
+          const coordinates = invert([deviceX, deviceY]);
           if (!coordinates) {
             continue;
           }
           const [lon, lat] = coordinates;
           if (lon < west || lon > east || lat < south || lat > north) {
+            continue;
+          }
+          // Skip pixels hidden by the projection: if the coordinate does not
+          // project back to this pixel, it lies outside the visible footprint.
+          const reprojected = projection([lon, lat]);
+          if (
+            !reprojected ||
+            Math.abs(reprojected[0] - deviceX) > 0.5 ||
+            Math.abs(reprojected[1] - deviceY) > 0.5
+          ) {
             continue;
           }
           let sx = Math.floor(((lon - west) / (east - west)) * sourceWidth);
@@ -117,7 +136,7 @@ function MapImagePlot(props: MapImagePlotProps) {
     return () => {
       cancelled = true;
     };
-  }, [href, invert, left, top, width, height, west, south, east, north]);
+  }, [href, projection, left, top, width, height, west, south, east, north]);
 
   if (!dataUrl) {
     return null;
