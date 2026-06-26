@@ -112,7 +112,7 @@ export default function MapZoomControl() {
           apiRef={apiRef}
           zoom
           view={view}
-          onZoomChange={(newView) => {
+          onViewChange={(newView) => {
             setView(newView);
           }}
           height={360}

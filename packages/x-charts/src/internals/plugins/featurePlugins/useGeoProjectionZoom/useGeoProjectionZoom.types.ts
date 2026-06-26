@@ -82,14 +82,14 @@ export interface UseGeoProjectionZoomParameters {
   initialView?: MapZoomView;
   /**
    * The view to display, in controlled mode.
-   * When set, the component does not update the view on its own — drive it from `onZoomChange`.
+   * When set, the component does not update the view on its own — drive it from `onViewChange`.
    */
   view?: MapZoomView;
   /**
    * Callback fired when the map zoom or pan changes (including programmatic reset).
    * @param {MapZoomView} view The new zoom level and geographic center.
    */
-  onZoomChange?: (view: MapZoomView) => void;
+  onViewChange?: (view: MapZoomView) => void;
 }
 
 export interface UseGeoProjectionZoomDefaultizedParameters extends UseGeoProjectionZoomParameters {

@@ -26,7 +26,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   instance,
   params,
 }) => {
-  const { zoom, onZoomChange, view } = params;
+  const { zoom, onViewChange, view } = params;
 
   const interactionDefaults = getDefaultMapInteraction(selectorChartRawProjection(store.state));
 
@@ -64,9 +64,9 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
           translation: newView.translation,
         });
       }
-      onZoomChange?.(newView);
+      onViewChange?.(newView);
     },
-    [store, isControlled, onZoomChange],
+    [store, isControlled, onViewChange],
   );
 
   // In controlled mode, keep the store in sync with the `view` prop. The initial view is seeded in
@@ -252,7 +252,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   });
 
   // Shared by both buttons: clamp through `applyView` (which also handles controlled mode and
-  // `onZoomChange`), keeping the current center/translation. Bail out when already at a bound so a
+  // `onViewChange`), keeping the current center/translation. Bail out when already at a bound so a
   // click at the limit stays a no-op.
   const zoomBy = React.useCallback(
     (factor: number) => {
@@ -291,7 +291,7 @@ useGeoProjectionZoom.params = {
   zoom: true,
   initialView: true,
   view: true,
-  onZoomChange: true,
+  onViewChange: true,
 };
 
 useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({

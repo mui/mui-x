@@ -231,7 +231,7 @@ You can also modify the zoom result with:
 
 ### Control
 
-The maps have a `view` and `onZoomChange` props that allow to controll the zoom.
+The maps have a `view` and `onViewChange` props that allow to controll the zoom.
 
 The view is made of three properties:
 
