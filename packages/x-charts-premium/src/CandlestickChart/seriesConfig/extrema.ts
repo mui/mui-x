@@ -1,7 +1,7 @@
 import { findMinMax } from '@mui/x-charts/internals';
 import type { CartesianExtremumGetter } from '@mui/x-charts/internals';
 
-const getBaseExtremum: CartesianExtremumGetter<'ohlc'> = (params) => {
+export const getExtremumX: CartesianExtremumGetter<'ohlc'> = (params) => {
   const { axis, getFilters, isDefaultAxis } = params;
 
   const filter = getFilters?.({
@@ -14,7 +14,7 @@ const getBaseExtremum: CartesianExtremumGetter<'ohlc'> = (params) => {
   return findMinMax(data ?? []);
 };
 
-const getValueExtremum: CartesianExtremumGetter<'ohlc'> = (params) => {
+export const getExtremumY: CartesianExtremumGetter<'ohlc'> = (params) => {
   const { series, axis, getFilters, isDefaultAxis } = params;
 
   return Object.keys(series)
@@ -61,12 +61,4 @@ const getValueExtremum: CartesianExtremumGetter<'ohlc'> = (params) => {
       },
       [Infinity, -Infinity],
     );
-};
-
-export const getExtremumX: CartesianExtremumGetter<'ohlc'> = (params) => {
-  return getBaseExtremum(params);
-};
-
-export const getExtremumY: CartesianExtremumGetter<'ohlc'> = (params) => {
-  return getValueExtremum(params);
 };
