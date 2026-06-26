@@ -2,6 +2,9 @@ import type { LineSamplingAlgorithm, SampleContext, SampledBucket } from '@mui/x
 import { selectSamplingLevel } from './sampling';
 import type { SamplingPyramid } from './sampling.pyramid.types';
 
+/** Max points `m4` renders per bucket (first, min, max, last). Used to align the `lttb` budget. */
+const M4_POINTS_PER_BUCKET = 4;
+
 /**
  * The active level of detail as buckets for the current zoom, or `null` for no sampling. Each bucket
  * carries its original-index span plus the ascending indices to render. The same output feeds both
@@ -9,8 +12,9 @@ import type { SamplingPyramid } from './sampling.pyramid.types';
  *
  * `minmax` (default; bars use it) keeps {min, max} per bucket; `m4` also brackets them with the
  * bucket's first/last (pixel-accurate); both read the shared `SamplingPyramid`. `lttb` ignores
- * the pyramid and reduces on demand to one point per bucket (plus endpoints), reading raw values
- * from `getValues` (called only for `lttb`) as a single whole-range bucket.
+ * the pyramid and reduces on demand, reading raw values from `getValues` (called only for `lttb`)
+ * as a single whole-range bucket. Its budget matches the envelope methods' point density so it
+ * isn't visually sparser at the same zoom.
  */
 export function sampleBuckets(
   pyramid: SamplingPyramid,
@@ -61,9 +65,11 @@ export function sampleBuckets(
   };
 
   if (algorithm === 'lttb') {
+    // LTTB emits one point per bucket, vs up to `M4_POINTS_PER_BUCKET` for `m4`. Scale the budget
+    // by that factor so LTTB renders a comparable number of points and isn't sparser at the same zoom.
     const indices = largestTriangleThreeBuckets(
       getValues!(),
-      Math.ceil(pyramid.dataLength / bucketSize),
+      Math.ceil((M4_POINTS_PER_BUCKET * pyramid.dataLength) / bucketSize),
     );
     return [{ startIndex: 0, endIndex: maxIndex, indices: mergeBucket(indices, maxIndex) }];
   }
