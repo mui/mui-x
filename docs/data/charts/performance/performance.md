@@ -129,6 +129,10 @@ Zoom in to progressively reveal more detail; sampling turns off once the view ca
 
 Sampling also keeps a hard ceiling on the number of rendered elements (2,000). Once the view fits under it, the chart renders every visible element untouched; while a zoomed-in view still holds more than that, it stays sampled even when each element would be wide enough to draw on its own—so a very dense dataset never floods the renderer at any zoom level.
 
+:::info
+The zoom `minSpan` is a percentage, so the most zoomed-in view always renders about `dataLength × minSpan / 100` elements. On a very large dataset, keep the axis `zoom.minSpan` small so the deepest zoom doesn't render too many elements at once—this matters whether or not you use sampling.
+:::
+
 ### Bar sampling
 
 Bars are merged into buckets that keep each range's value envelope, so spikes and troughs survive.
