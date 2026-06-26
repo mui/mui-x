@@ -36,7 +36,7 @@ const main = async () => {
   const recipesBackendBaseUrl =
     process.env[RECIPES_BACKEND_BASE_URL_ENV] ?? DEFAULT_RECIPES_BACKEND_BASE_URL;
 
-  // Restrict the docs fetchers to public hosts (plus the configured backends, which may be
+  // Allowlist the docs fetchers to MUI docs origins plus the configured backends (which may be
   // localhost in dev), so a prompt-injected URL can't make this local server hit internal targets.
   const isUrlAllowed = createDocsUrlGuard([docsBaseUrl, recipesBackendBaseUrl, muiBackendBaseUrl]);
 

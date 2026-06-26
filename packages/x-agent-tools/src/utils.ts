@@ -1,5 +1,4 @@
 import type PQueueType from 'p-queue';
-import ipaddr from 'ipaddr.js';
 import type { LRUCache } from './cache';
 import { ChatTool, ZodObjectAny } from './types';
 
@@ -8,37 +7,25 @@ export type Logger = (message: string, error?: unknown) => void;
 const noopLogger: Logger = () => {};
 
 /**
- * Best-effort check for hostnames that point at the local machine or a private network. Used to
- * block SSRF: a prompt-injected URL must not let the model reach localhost / internal services.
- * IP classification is delegated to `ipaddr.js`. This is hostname-based only (no DNS resolution),
- * so it's a guard, not a complete SSRF defense.
+ * Hosts MUI serves docs and `llms.txt` from. This is a positive allowlist: only these hosts (plus
+ * the explicitly configured backends) are fetchable, which closes the whole SSRF class at once. An
+ * attacker-supplied host is never on the list, regardless of how it's spelled or what it resolves
+ * to (private IPs, IPv4-mapped, redirects, DNS rebinding), so it can't reach internal services.
  */
-export function isPrivateHostname(hostname: string): boolean {
-  const host = hostname
-    .toLowerCase()
-    .replace(/^\[|\]$/g, '') // strip IPv6 brackets
-    .replace(/\.$/, ''); // strip a trailing DNS dot, e.g. "localhost." / "127.0.0.1."
-  if (
-    host === 'localhost' ||
-    host.endsWith('.localhost') ||
-    host.endsWith('.local') ||
-    host.endsWith('.internal')
-  ) {
-    return true;
-  }
-  if (!ipaddr.isValid(host)) {
-    return false; // a regular public hostname (DNS-based rebinding is out of scope for this guard)
-  }
-  // `process` converts IPv4-mapped IPv6 (e.g. ::ffff:127.0.0.1) to IPv4 first. Allow only normal
-  // public unicast; everything else (loopback, private, link-local, unique-local, reserved, CGNAT)
-  // is treated as private.
-  return ipaddr.process(host).range() !== 'unicast';
+function isMuiDocsHost(host: string): boolean {
+  return (
+    host === 'mui.com' ||
+    host.endsWith('.mui.com') ||
+    // Netlify deploy previews: `<context>--material-ui-docs.netlify.app` (plus the base host).
+    host === 'material-ui-docs.netlify.app' ||
+    host.endsWith('--material-ui-docs.netlify.app')
+  );
 }
 
 /**
- * Build a URL guard for the docs fetchers. Allows http(s) URLs on any public host, plus the
- * explicitly trusted origins (the configured backends, which may be localhost during dev), and
- * rejects everything else, in particular private/internal hosts.
+ * Build a URL guard for the docs fetchers. Allows only http(s) URLs whose host is a MUI docs host
+ * or one of the explicitly configured backend origins (which may be localhost during dev); rejects
+ * everything else.
  */
 export function createDocsUrlGuard(allowedOrigins: Iterable<string>): (url: string) => boolean {
   const allowed = new Set<string>();
@@ -62,7 +49,8 @@ export function createDocsUrlGuard(allowedOrigins: Iterable<string>): (url: stri
     if (allowed.has(parsed.origin)) {
       return true;
     }
-    return !isPrivateHostname(parsed.hostname);
+    const host = parsed.hostname.toLowerCase().replace(/\.$/, ''); // strip a trailing DNS dot
+    return isMuiDocsHost(host);
   };
 }
 

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import PQueue from 'p-queue';
 import { z } from 'zod';
 import { LRUCache } from './cache';
-import { wrapTool, urlListFetcher, isPrivateHostname, createDocsUrlGuard } from './utils';
+import { wrapTool, urlListFetcher, createDocsUrlGuard } from './utils';
 
 const ok = (body: string): Response => new Response(body, { status: 200 });
 
@@ -188,72 +188,30 @@ describe('urlListFetcher', () => {
   });
 });
 
-describe('isPrivateHostname', () => {
-  it.each([
-    'localhost',
-    'app.localhost',
-    'foo.local',
-    'svc.internal',
-    'localhost.', // trailing DNS dot must not bypass the check
-    '127.0.0.1.',
-    'foo.local.',
-  ])('treats %s as private', (host) => {
-    expect(isPrivateHostname(host)).toBe(true);
-  });
-
-  it.each([
-    '127.0.0.1',
-    '10.1.2.3',
-    '192.168.0.1',
-    '169.254.169.254',
-    '172.16.0.1',
-    '::1',
-    'fe80::1',
-  ])('treats IP %s as private', (host) => {
-    expect(isPrivateHostname(host)).toBe(true);
-  });
-
-  it.each(['mui.com', 'llms.mui.com', 'example.com', '8.8.8.8'])('treats %s as public', (host) => {
-    expect(isPrivateHostname(host)).toBe(false);
-  });
-
-  it.each([
-    '::ffff:127.0.0.1', // dotted IPv4-mapped loopback
-    '::ffff:7f00:1', // Node's normalized hex form of 127.0.0.1
-    '::ffff:c0a8:105', // 192.168.1.5
-    '::ffff:a9fe:a9fe', // 169.254.169.254 (cloud metadata)
-  ])('treats IPv4-mapped private address %s as private', (host) => {
-    expect(isPrivateHostname(host)).toBe(true);
-  });
-
-  it('treats an IPv4-mapped public address as public', () => {
-    expect(isPrivateHostname('::ffff:808:808')).toBe(false); // 8.8.8.8
-  });
-});
-
 describe('createDocsUrlGuard', () => {
-  it('allows public http(s) URLs', () => {
-    const guard = createDocsUrlGuard([]);
-    expect(guard('https://llms.mui.com/material-ui/llms.txt')).toBe(true);
-    expect(guard('http://mui.com/x')).toBe(true);
+  it.each([
+    'https://llms.mui.com/material-ui/llms.txt',
+    'https://mui.com/x/react-data-grid/',
+    'http://mui.com/x',
+    'https://chat-backend.mui.com/v1/public/packages/list',
+    'https://material-ui-docs.netlify.app/material-ui/llms.txt',
+    'https://6a2a50fd--material-ui-docs.netlify.app/material-ui/llms.txt',
+  ])('allows MUI docs origin %s', (url) => {
+    expect(createDocsUrlGuard([])(url)).toBe(true);
   });
 
-  it('blocks private/internal hosts not in the allowlist', () => {
-    const guard = createDocsUrlGuard([]);
-    expect(guard('http://localhost:5002/')).toBe(false);
-    expect(guard('http://169.254.169.254/latest/meta-data/')).toBe(false);
-  });
-
-  it('blocks IPv4-mapped IPv6 loopback/private URLs', () => {
-    const guard = createDocsUrlGuard([]);
-    expect(guard('http://[::ffff:127.0.0.1]/')).toBe(false);
-    expect(guard('http://[::ffff:192.168.1.5]/')).toBe(false);
-  });
-
-  it('blocks hosts with a trailing DNS dot', () => {
-    const guard = createDocsUrlGuard([]);
-    expect(guard('http://localhost.:5002/admin')).toBe(false);
-    expect(guard('http://127.0.0.1./')).toBe(false);
+  it.each([
+    'http://localhost:5002/',
+    'http://127.0.0.1/admin',
+    'http://169.254.169.254/latest/meta-data/',
+    'http://[::ffff:127.0.0.1]/', // IPv4-mapped loopback
+    'http://localhost.:5002/admin', // trailing DNS dot
+    'https://example.com/', // arbitrary public host is NOT allowed under the allowlist
+    'https://evil-mui.com/', // lookalike
+    'https://mui.com.evil.com/', // suffix-spoof attempt
+    'https://evilmaterial-ui-docs.netlify.app/', // different netlify site, not a MUI preview
+  ])('blocks non-MUI host %s', (url) => {
+    expect(createDocsUrlGuard([])(url)).toBe(false);
   });
 
   it('allows an explicitly configured origin even when it is localhost (dev backend)', () => {

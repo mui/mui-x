@@ -95,7 +95,7 @@ Use this tool after list_mui_doc_sources to:
     outputSchema: z
       .string()
       .describe(
-        'The concatenated list of all fetched documentation content converted to markdown, or an error message if the request fails or the URL is blocked (not an allowed docs source, e.g. a non-HTTP(S) or private/internal address).',
+        'The concatenated list of all fetched documentation content converted to markdown, or an error message if the request fails or the URL is blocked (only MUI documentation origins are allowed).',
       ),
     execute: async (input) => {
       return urlListFetcher(queue, fetcher, input.urls, { cache, logger, isUrlAllowed });
