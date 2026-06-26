@@ -20,8 +20,6 @@ import type {
  * `ArrowRight`/`ArrowLeft` step within the focused series, `ArrowUp`/`ArrowDown` move between series.
  */
 
-type MapState = Pick<ChartState<[UseChartKeyboardNavigationSignature], [], 'mapShape'>, 'series'>;
-
 const mapShapeSeriesTypes = new Set(['mapShape'] as const);
 const allowCycles = false;
 const useCurrentSeriesMaxLength = true;
@@ -32,10 +30,6 @@ const commonFocusHandler = createCommonKeyboardFocusHandler(
   useCurrentSeriesMaxLength,
 );
 
-const getMapSeries = (state: MapState) =>
-  selectorChartSeriesProcessed(state as ChartState<[UseChartKeyboardNavigationSignature], []>)
-    .mapShape;
-
 const keyboardFocusHandler: KeyboardFocusHandler<'mapShape', 'mapShape'> = (event) => {
   const updateFocusedItem = commonFocusHandler(event);
   if (!updateFocusedItem) {
@@ -43,7 +37,9 @@ const keyboardFocusHandler: KeyboardFocusHandler<'mapShape', 'mapShape'> = (even
   }
 
   return (currentItem, state) => {
-    const mapSeries = getMapSeries(state);
+    const mapSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    ).mapShape;
 
     // name -> dataIndex
     const current = currentItem
