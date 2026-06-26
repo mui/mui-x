@@ -133,6 +133,12 @@ Sampling also keeps a hard ceiling on the number of rendered elements (2,000). O
 The zoom `minSpan` is a percentage, so the most zoomed-in view always renders about `dataLength × minSpan / 100` elements. On a very large dataset, keep the axis `zoom.minSpan` small so the deepest zoom doesn't render too many elements at once.
 :::
 
+### Comparing methods
+
+The same 8,784-point series rendered with each method at the same zoom. `'none'` is the reference (every point); the others approximate it with far fewer elements while preserving the overall shape.
+
+{{"demo": "SamplingMethodComparison.js"}}
+
 ### Bar sampling
 
 Bars are merged into buckets that keep each range's value envelope, so spikes and troughs survive.
