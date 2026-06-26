@@ -54,13 +54,13 @@ so use them to style the background layer.
 
 ## Adding a base map raster with `MapImagePlot`
 
-`MapImagePlot` renders an `<image>` stretched to the bounding box of the displayed `geoData`.
-Use it to draw a raster base map—such as a satellite mosaic or a scanned plan—under the
-series, without computing the projected bounds yourself.
+`MapImagePlot` draws a raster base map—such as a satellite mosaic—under the series.
+The image is reprojected to match the chart's `projection`, so it follows the geography
+instead of staying a flat rectangle, even when the projection curves the map.
 
-Pass the image URL through the `href` prop. Any other SVG image attribute is forwarded to
-the underlying element, and the computed `x`, `y`, `width`, and `height` can be overridden
-through props.
+Pass the image URL through the `href` prop. The source is assumed to be equirectangular and
+to cover the whole globe; use `imageBounds` (`[[west, south], [east, north]]`) when it covers
+a smaller extent.
 
 ```tsx
 <ChartsSurface>
@@ -69,8 +69,10 @@ through props.
 </ChartsSurface>
 ```
 
-The image is aligned to the same area the projection draws into, so it stays registered with
-the map as the chart resizes. See the [Mars demo](#mapping-any-geography) for it in action.
+:::warning
+Reprojection reads the image pixels on a canvas, so the source must be same-origin or served
+with CORS headers. See the [Mars demo](#mapping-any-geography) for it in action.
+:::
 
 ## Modifying the projection
 

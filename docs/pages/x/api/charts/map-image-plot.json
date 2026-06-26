@@ -1,7 +1,10 @@
 {
   "props": {
     "href": { "type": { "name": "string" } },
-    "preserveAspectRatio": { "type": { "name": "string" }, "default": "'none'" }
+    "imageBounds": {
+      "type": { "name": "arrayOf", "description": "Array&lt;Array&lt;number&gt;&gt;" },
+      "default": "[[-180, -90], [180, 90]]"
+    }
   },
   "name": "MapImagePlot",
   "imports": [

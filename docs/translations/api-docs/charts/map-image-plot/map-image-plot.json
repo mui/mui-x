@@ -1,9 +1,11 @@
 {
-  "componentDescription": "Renders an `<image>` stretched to the bounding box of the displayed `geoData`,\nto draw a base map raster (for example a satellite mosaic) under the series.\n\nThe computed `x`, `y`, `width`, and `height` can be overridden through props.\nAny other SVG image attribute is forwarded to the underlying element.",
+  "componentDescription": "Renders a raster base map (for example a satellite mosaic) under the series,\nreprojected to match the chart's `projection` so it follows the geography\ninstead of being a flat rectangle.\n\nThe source image is assumed to be equirectangular; use `imageBounds` when it\ndoes not cover the whole globe. Any other SVG image attribute is forwarded to\nthe underlying element.",
   "propDescriptions": {
-    "href": { "description": "URL of the image to render as the base map." },
-    "preserveAspectRatio": {
-      "description": "How the image is stretched to fill the map&#39;s bounding box."
+    "href": {
+      "description": "URL of the image to render as the base map. Must be same-origin (or CORS-enabled) so it can be reprojected on a canvas."
+    },
+    "imageBounds": {
+      "description": "Geographic extent the source image covers, as <code>[[west, south], [east, north]]</code>. The image is assumed to be in the equirectangular (plate carrée) projection."
     }
   },
   "classDescriptions": {}
