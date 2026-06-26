@@ -51,14 +51,14 @@ describe('sampleBuckets', () => {
     expect(flat(buckets)).to.deep.equal([0, 1, 3, 4, 5, 7]);
   });
 
-  it('lttb budget matches the m4 point density (4 per bucket), incl. endpoints', () => {
+  it('lttb budget matches the min/max point density (2 per bucket), incl. endpoints', () => {
     const big = f64(Array.from({ length: 64 }, (_, i) => Math.sin(i)));
     const bigPyramid = buildSamplingPyramid(big, big);
-    // span 80 -> level 3 (bucketSize 8) -> 8 buckets; lttb budget = 8 * 4 = 32.
+    // span 80 -> level 3 (bucketSize 8) -> 8 buckets; lttb budget = 8 * 2 = 16.
     const buckets = sampleBuckets(bigPyramid, 80, pxFor(10, 64), 0, 'lttb', () => big)!;
     expect(buckets).to.have.lengthOf(1); // lttb is one whole-range bucket
     const indices = flat(buckets)!;
-    expect(indices.length).to.equal(32);
+    expect(indices.length).to.equal(16);
     expect(indices[0]).to.equal(0);
     expect(indices[indices.length - 1]).to.equal(63);
   });

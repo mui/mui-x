@@ -2,8 +2,8 @@ import type { LineSamplingAlgorithm, SampleContext, SampledBucket } from '@mui/x
 import { selectSamplingLevel } from './sampling';
 import type { SamplingPyramid } from './sampling.pyramid.types';
 
-/** Max points `m4` renders per bucket (first, min, max, last). Used to align the `lttb` budget. */
-const M4_POINTS_PER_BUCKET = 4;
+/** Points the `minmax` envelope renders per bucket (min, max). Used to align the `lttb` budget. */
+const ENVELOPE_POINTS_PER_BUCKET = 2;
 
 /**
  * The active level of detail as buckets for the current zoom, or `null` for no sampling. Each bucket
@@ -65,11 +65,11 @@ export function sampleBuckets(
   };
 
   if (algorithm === 'lttb') {
-    // LTTB emits one point per bucket, vs up to `M4_POINTS_PER_BUCKET` for `m4`. Scale the budget
-    // by that factor so LTTB renders a comparable number of points and isn't sparser at the same zoom.
+    // LTTB emits one point per bucket, vs `ENVELOPE_POINTS_PER_BUCKET` for the min/max methods.
+    // Scale the budget by that factor so LTTB isn't sparser than them at the same zoom.
     const indices = largestTriangleThreeBuckets(
       getValues!(),
-      Math.ceil((M4_POINTS_PER_BUCKET * pyramid.dataLength) / bucketSize),
+      Math.ceil((ENVELOPE_POINTS_PER_BUCKET * pyramid.dataLength) / bucketSize),
     );
     return [{ startIndex: 0, endIndex: maxIndex, indices: mergeBucket(indices, maxIndex) }];
   }
