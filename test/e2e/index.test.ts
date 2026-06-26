@@ -371,7 +371,11 @@ async function initializeEnvironment(
 
           await page.keyboard.press('Enter');
 
-          expect(page.getByText('1/31/2025, 4:05:00 PM')).not.to.equal(null);
+          await waitFor(async () => {
+            expect(
+              await page.locator('[role="gridcell"][data-field="lastConnection"]').textContent(),
+            ).to.equal('1/31/2025, 4:05:00 PM');
+          });
         },
       );
 
