@@ -74,7 +74,11 @@ export default function ClipboardCopyButton() {
 
   return (
     <Stack sx={{ width: '100%' }} spacing={1}>
-      <Button sx={{ alignSelf: 'flex-start' }} variant="outlined" onClick={handleCopy}>
+      <Button
+        sx={{ alignSelf: 'flex-start' }}
+        variant="outlined"
+        onClick={handleCopy}
+      >
         Copy selection
       </Button>
       <div style={{ height: 400 }}>
@@ -87,9 +91,18 @@ export default function ClipboardCopyButton() {
         <Typography
           component="pre"
           variant="body2"
-          sx={{ m: 0, fontFamily: 'monospace', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+          sx={{
+            m: 0,
+            fontFamily: 'monospace',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-all',
+          }}
         >
-          {copiedText || <Typography component="span" color="text.disabled" variant="body2">Nothing copied yet</Typography>}
+          {copiedText || (
+            <Typography component="span" color="text.disabled" variant="body2">
+              Nothing copied yet
+            </Typography>
+          )}
         </Typography>
       </Paper>
     </Stack>
