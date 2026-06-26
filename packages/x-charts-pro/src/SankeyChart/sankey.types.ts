@@ -275,10 +275,6 @@ export interface DefaultizedSankeySeriesType extends DefaultizedProps<
   Omit<SankeySeriesType, 'data'>,
   'id' | 'valueFormatter'
 > {
-  // data: {
-  //   nodes: Map<SankeyNodeId, SankeyNode>;
-  //   links: readonly SankeyLink[];
-  // };
   data: SankeyLayout<false>;
   /**
    * Highlight scope for the series derived from nodeOptions and linksOptions

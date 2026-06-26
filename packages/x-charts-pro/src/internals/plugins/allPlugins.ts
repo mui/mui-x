@@ -6,14 +6,12 @@ import {
   useChartInteraction,
   useChartZAxis,
   useChartHighlight,
-  useChartPolarAxis,
   useChartBrush,
   useChartVisibilityManager,
   useProgressiveRendering,
 } from '@mui/x-charts/internals';
 import type {
   ChartSeriesType,
-  ConvertSignaturesIntoPlugins,
   UseChartCartesianAxisSignature,
   UseChartTooltipSignature,
   UseChartInteractionSignature,
@@ -44,24 +42,6 @@ export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeries
   UseProgressiveRenderingSignature,
 ];
 
-export type AllPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  ConvertSignaturesIntoPlugins<AllPluginSignatures<SeriesType>>;
-
-export const ALL_PLUGINS = [
-  useChartZAxis,
-  useChartBrush,
-  useChartTooltip,
-  useChartInteraction,
-  useChartCartesianAxis,
-  useChartPolarAxis,
-  useChartHighlight,
-  useChartVisibilityManager,
-  useChartProZoom,
-  useChartProExport,
-  useChartVisibilityManager,
-  useProgressiveRendering,
-];
-
 export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
@@ -76,9 +56,6 @@ export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSe
   UseChartVisibilityManagerSignature<SeriesType>,
   UseProgressiveRenderingSignature,
 ];
-
-export type DefaultPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  ConvertSignaturesIntoPlugins<DefaultPluginSignatures<SeriesType>>;
 
 export const DEFAULT_PLUGINS = [
   useChartZAxis,

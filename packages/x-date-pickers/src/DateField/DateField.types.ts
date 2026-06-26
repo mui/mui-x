@@ -32,8 +32,6 @@ export type DateFieldProps =
       slotProps?: DateFieldSlotProps;
     };
 
-export type DateFieldOwnerState = DateFieldProps;
-
 export interface DateFieldSlots extends PickerFieldUISlots {}
 
 export interface DateFieldSlotProps extends PickerFieldUISlotProps {}

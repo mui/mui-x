@@ -58,9 +58,6 @@ const MoreEventsPopover = createModal<MoreEventsData>({
   contextName: 'MoreEventsPopoverContext',
 });
 
-export const MoreEventsPopoverContext = MoreEventsPopover.Context;
-export const useMoreEventsPopoverContext = MoreEventsPopover.useContext;
-
 export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
   const { open, anchor, occurrences, day, onClose } = props;
 

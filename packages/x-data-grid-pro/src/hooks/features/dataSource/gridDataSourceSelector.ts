@@ -6,11 +6,6 @@ export const gridDataSourceStateSelector = createRootSelector(
   (state: GridStatePro) => state.dataSource,
 );
 
-export const gridDataSourceLoadingSelector = createSelector(
-  gridDataSourceStateSelector,
-  (dataSource) => dataSource.loading,
-);
-
 export const gridDataSourceLoadingIdSelector = createSelector(
   gridDataSourceStateSelector,
   (dataSource, id: GridRowId) => dataSource.loading[id] ?? false,
