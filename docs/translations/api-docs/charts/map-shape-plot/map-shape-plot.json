@@ -4,6 +4,9 @@
     "fill": {
       "description": "Fill color applied to every feature path. Overrides item and series colors."
     },
+    "seriesId": {
+      "description": "The id, or ids, of the series to render. If not provided, every <code>mapShape</code> series is rendered. Use it to render layers with different styles through multiple <code>MapShapePlot</code>."
+    },
     "stroke": { "description": "Stroke color applied to every feature path." },
     "strokeWidth": { "description": "Stroke width applied to every feature path." }
   },

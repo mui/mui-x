@@ -1,6 +1,9 @@
 {
   "props": {
     "fill": { "type": { "name": "string" } },
+    "seriesId": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" }
+    },
     "stroke": { "type": { "name": "string" }, "default": "'none'" },
     "strokeWidth": { "type": { "name": "number" }, "default": "1" }
   },

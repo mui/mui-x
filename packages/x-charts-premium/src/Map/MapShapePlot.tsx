@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import type { SeriesId } from '@mui/x-charts/models';
 import { useZAxes } from '@mui/x-charts/hooks';
 import { useGeoData } from '../hooks/useGeoData';
 import { useGeoPath } from '../hooks/useGeoPath';
@@ -26,16 +27,29 @@ export interface MapShapePlotProps {
    * @default 1
    */
   strokeWidth?: number;
+  /**
+   * The id, or ids, of the series to render.
+   * If not provided, every `mapShape` series is rendered.
+   * Use it to render layers with different styles through multiple `MapShapePlot`.
+   */
+  seriesId?: SeriesId | SeriesId[];
 }
 
 /**
  * Renders series mapShape items.
  */
 function MapShapePlot(props: MapShapePlotProps) {
-  const { className, fill, stroke = 'none', strokeWidth = 1 } = props;
+  const { className, fill, stroke = 'none', strokeWidth = 1, seriesId } = props;
   const geoData = useGeoData();
   const path = useGeoPath();
-  const series = useMapShapeSeries();
+  const allSeries = useMapShapeSeries();
+  const series = React.useMemo(() => {
+    if (seriesId === undefined) {
+      return allSeries;
+    }
+    const ids = Array.isArray(seriesId) ? seriesId : [seriesId];
+    return allSeries.filter((seriesItem) => ids.includes(seriesItem.id));
+  }, [allSeries, seriesId]);
   const featureIndexesByName = useGeoFeatureIndexesByName();
   const { zAxis, zAxisIds } = useZAxes();
 
@@ -111,6 +125,12 @@ MapShapePlot.propTypes /* remove-proptypes */ = {
    * Fill color applied to every feature path. Overrides item and series colors.
    */
   fill: PropTypes.string,
+  /**
+   * The id, or ids, of the series to render.
+   * If not provided, every `mapShape` series is rendered.
+   * Use it to render layers with different styles through multiple `MapShapePlot`.
+   */
+  seriesId: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
   /**
    * Stroke color applied to every feature path.
    * @default 'none'
