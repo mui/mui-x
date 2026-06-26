@@ -59,7 +59,7 @@ describe('LRUCache', () => {
     const cache = new LRUCache(HOUR_MS, 2);
     cache.set('a', 'A');
     cache.set('b', 'B'); // full: { a, b }
-    cache.set('b', 'B2'); // refresh existing key — must NOT drop 'a'
+    cache.set('b', 'B2'); // refresh existing key, must NOT drop 'a'
 
     expect(cache.get('a')).toBe('A');
     expect(cache.get('b')).toBe('B2');

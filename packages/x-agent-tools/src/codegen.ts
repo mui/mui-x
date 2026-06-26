@@ -457,7 +457,7 @@ async function pumpStream(
   const decoder = new TextDecoder();
   try {
     // ReadableStream is async-iterable in Node >=18; this loop is sequential by design
-    // (the next chunk depends on the current one finishing — streams aren't parallelizable).
+    // (the next chunk depends on the current one finishing; streams aren't parallelizable).
     for await (const value of body as unknown as AsyncIterable<Uint8Array>) {
       parser.feed(decoder.decode(value, { stream: true }));
     }

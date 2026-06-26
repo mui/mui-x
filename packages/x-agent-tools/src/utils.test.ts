@@ -227,6 +227,21 @@ describe('createDocsUrlGuard', () => {
     expect(guard('file:///etc/passwd')).toBe(false);
     expect(guard('not a url')).toBe(false);
   });
+
+  it('ignores a non-HTTP(S) configured origin (no opaque-origin bypass)', () => {
+    // A misconfigured file:// origin must not enter the allowlist; otherwise every other
+    // opaque-origin URL (which also serializes to "null") would be accepted.
+    const guard = createDocsUrlGuard(['file:///tmp/docs']);
+    expect(guard('file:///etc/passwd')).toBe(false);
+    expect(guard('data:text/html,<script>alert(1)</script>')).toBe(false);
+  });
+
+  it('logs each dropped configured origin (bad scheme or malformed)', () => {
+    const logger = vi.fn();
+    createDocsUrlGuard(['file:///tmp/docs', 'not a url', 'http://localhost:5003'], logger);
+    // file:// (unsupported scheme) and 'not a url' (malformed) are logged; the valid one isn't.
+    expect(logger).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe('absolutizeDocLinks', () => {

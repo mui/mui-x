@@ -36,10 +36,9 @@ const main = async () => {
   const recipesBackendBaseUrl =
     process.env[RECIPES_BACKEND_BASE_URL_ENV] ?? DEFAULT_RECIPES_BACKEND_BASE_URL;
 
-  // Allowlist the docs fetchers to MUI docs origins plus the configured docs base URL (which may be
-  // localhost in dev). The auth and codegen backends are intentionally excluded: the docs tools
-  // never fetch from them, so a prompt-injected URL can't make this server hit those internal APIs.
-  const isUrlAllowed = createDocsUrlGuard([docsBaseUrl]);
+  // Docs fetchers may only reach MUI docs origins + the configured docs base URL. The auth/codegen
+  // backends are excluded on purpose: the docs tools never fetch from them.
+  const isUrlAllowed = createDocsUrlGuard([docsBaseUrl], logger);
 
   const server = new McpServer({
     name: SERVER_NAME,

@@ -27,13 +27,23 @@ function isMuiDocsHost(host: string): boolean {
  * or one of the explicitly configured backend origins (which may be localhost during dev); rejects
  * everything else.
  */
-export function createDocsUrlGuard(allowedOrigins: Iterable<string>): (url: string) => boolean {
+export function createDocsUrlGuard(
+  allowedOrigins: Iterable<string>,
+  logger: Logger = noopLogger,
+): (url: string) => boolean {
   const allowed = new Set<string>();
   for (const origin of allowedOrigins) {
     try {
-      allowed.add(new URL(origin).origin);
+      const parsed = new URL(origin);
+      // Only http(s): opaque schemes (file:, data:, …) all serialize their origin to "null", so one
+      // bad entry would let every other opaque-origin URL match and bypass the https-only check.
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        allowed.add(parsed.origin);
+      } else {
+        logger(`Ignoring configured docs origin with unsupported scheme: ${origin}`);
+      }
     } catch {
-      // Ignore malformed configured origins rather than crashing the guard.
+      logger(`Ignoring malformed configured docs origin: ${origin}`);
     }
   }
   return (url) => {
