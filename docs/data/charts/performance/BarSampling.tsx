@@ -17,7 +17,10 @@ export default function BarSampling() {
     <Stack sx={{ width: '100%' }} spacing={1}>
       <FormControlLabel
         control={
-          <Switch checked={enabled} onChange={(event) => setEnabled(event.target.checked)} />
+          <Switch
+            checked={enabled}
+            onChange={(event) => setEnabled(event.target.checked)}
+          />
         }
         label={`Sampling ${enabled ? 'on' : 'off'} (${data.length.toLocaleString()} bars — zoom in to reach the raw data)`}
       />

@@ -37,7 +37,10 @@ export function sampleBuckets(
   const mergeBucket = (candidates: ArrayLike<number>, endIndex: number): Int32Array => {
     const indices: number[] = [];
     let c = 0;
-    while (c < candidates.length || (nullCursor < nullLength && nullIndices![nullCursor] <= endIndex)) {
+    while (
+      c < candidates.length ||
+      (nullCursor < nullLength && nullIndices![nullCursor] <= endIndex)
+    ) {
       const nextCandidate = c < candidates.length ? candidates[c] : Infinity;
       const nextNull =
         nullCursor < nullLength && nullIndices![nullCursor] <= endIndex

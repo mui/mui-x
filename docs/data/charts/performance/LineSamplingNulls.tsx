@@ -23,13 +23,17 @@ export default function LineSamplingNulls() {
     <Stack sx={{ width: '100%' }} spacing={1}>
       <FormControlLabel
         control={
-          <Switch checked={hasGaps} onChange={(event) => setHasGaps(event.target.checked)} />
+          <Switch
+            checked={hasGaps}
+            onChange={(event) => setHasGaps(event.target.checked)}
+          />
         }
         label="Insert null gaps"
       />
       <Typography variant="caption" color="text.secondary">
-        Sampling is set to <code>m4</code>. Series with <code>null</code> values are still sampled;
-        the gaps are preserved, so the line breaks instead of bridging them.
+        Sampling is set to <code>m4</code>. Series with <code>null</code> values are
+        still sampled; the gaps are preserved, so the line breaks instead of bridging
+        them.
       </Typography>
       <LineChartPro
         xAxis={[{ data: xData, zoom: true }]}
