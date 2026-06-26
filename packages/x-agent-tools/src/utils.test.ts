@@ -192,7 +192,6 @@ describe('createDocsUrlGuard', () => {
   it.each([
     'https://llms.mui.com/material-ui/llms.txt',
     'https://mui.com/x/react-data-grid/',
-    'http://mui.com/x',
     'https://chat-backend.mui.com/v1/public/packages/list',
     'https://material-ui-docs.netlify.app/material-ui/llms.txt',
     'https://6a2a50fd--material-ui-docs.netlify.app/material-ui/llms.txt',
@@ -201,6 +200,8 @@ describe('createDocsUrlGuard', () => {
   });
 
   it.each([
+    'http://mui.com/x', // built-in MUI hosts must be https, not cleartext
+    'http://llms.mui.com/material-ui/llms.txt',
     'http://localhost:5002/',
     'http://127.0.0.1/admin',
     'http://169.254.169.254/latest/meta-data/',

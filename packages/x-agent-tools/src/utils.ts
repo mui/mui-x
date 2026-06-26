@@ -43,11 +43,13 @@ export function createDocsUrlGuard(allowedOrigins: Iterable<string>): (url: stri
     } catch {
       return false;
     }
-    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-      return false;
-    }
+    // Explicitly configured backends are trusted as-is (they may be http://localhost in dev).
     if (allowed.has(parsed.origin)) {
       return true;
+    }
+    // Built-in MUI docs hosts must be https, so the first request can't be tampered with in transit.
+    if (parsed.protocol !== 'https:') {
+      return false;
     }
     const host = parsed.hostname.toLowerCase().replace(/\.$/, ''); // strip a trailing DNS dot
     return isMuiDocsHost(host);
