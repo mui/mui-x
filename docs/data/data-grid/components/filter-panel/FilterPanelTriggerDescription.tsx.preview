@@ -1,4 +1,4 @@
-<DataGrid
+<DataGridPro
   {...data}
   loading={loading}
   slots={{ toolbar: CustomToolbar }}

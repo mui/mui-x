@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
-  DataGrid,
+  DataGridPro,
   Toolbar,
   ToolbarButton,
   FilterPanelTrigger,
   gridFilterActiveItemsSelector,
   useGridApiContext,
   useGridSelector,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -54,7 +54,7 @@ export default function FilterPanelTriggerDescription() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
+      <DataGridPro
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
