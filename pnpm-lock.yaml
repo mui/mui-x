@@ -786,6 +786,9 @@ importers:
         specifier: ^3.25.65
         version: 3.25.76
     devDependencies:
+      '@types/node':
+        specifier: 22.19.19
+        version: 22.19.19
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
