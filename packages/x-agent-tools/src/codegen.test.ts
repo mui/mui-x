@@ -130,6 +130,25 @@ describe('createGenerateReactCodeTool', () => {
     expect(result.muiPairing).toEqual({ material: 'v7', muiX: 'v8' });
   });
 
+  it('accepts a future major in the 202 response (response pairing is not enum-validated)', async () => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(
+        makeJsonResponse(202, {
+          threadId: 'chat-1',
+          runId: 'msg-1',
+          // A major the request enum does not list yet; the backend may advance ahead of this client.
+          muiPairing: { material: 'v10', muiX: 'v10' },
+        }),
+      )
+      .mockResolvedValueOnce(makeSseResponse([sseFrame('[DONE]')]));
+
+    const tool = createGenerateReactCodeTool({ recipesBackendBaseUrl: baseUrl, getToken, fetcher });
+    const result = await tool.execute({ prompt: 'Build a card' });
+
+    expect(result.muiPairing).toEqual({ material: 'v10', muiX: 'v10' });
+  });
+
   it('formatCodegenText renders muiPairing in the footer when the result includes it', () => {
     const text = formatCodegenText({
       threadId: 'chat-1',

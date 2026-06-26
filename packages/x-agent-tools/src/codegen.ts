@@ -32,6 +32,13 @@ const muiPairingSchema = z.object({
   muiX: z.enum(['v5', 'v6', 'v7', 'v8', 'v9']).describe('MUI X products major version.'),
 });
 
+// Loose schema for the pairing the backend echoes back: plain strings tolerate a future major the
+// request enum doesn't list yet, so it can't reject an already-accepted generation.
+const muiPairingResponseSchema = z.object({
+  material: z.string(),
+  muiX: z.string(),
+});
+
 const inputSchema = z.object({
   prompt: z.string().min(1).describe('Natural-language brief for the codegen run.'),
   threadId: z
@@ -65,13 +72,13 @@ const outputSchema = z.object({
   explanation: z.string(),
   // Effective MUI / MUI X pairing applied by the backend (echoes the request, the locked
   // thread pairing, or the resolver's default). Surfaced in the footer for the user / agent.
-  muiPairing: muiPairingSchema.optional(),
+  muiPairing: muiPairingResponseSchema.optional(),
 });
 
 const generateResponseSchema = z.object({
   threadId: z.string(),
   runId: z.string(),
-  muiPairing: muiPairingSchema.optional(),
+  muiPairing: muiPairingResponseSchema.optional(),
 });
 
 const backendErrorSchema = z.object({
@@ -164,8 +171,8 @@ export type CodegenProgressEvent =
   | { kind: 'file'; filename: string; filesSeen: number }
   | { kind: 'done'; filesSeen: number };
 
-// Inferred from the local schema so the type and enum values can't drift.
-type MuiPairing = z.infer<typeof muiPairingSchema>;
+// From the response schema, so the footer renders whatever effective pairing the backend returns.
+type MuiPairing = z.infer<typeof muiPairingResponseSchema>;
 
 /** Serialize a codegen result into MCP text content: explanation + fenced files + threadId footer. */
 export function formatCodegenText(result: {
