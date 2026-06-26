@@ -227,7 +227,7 @@ See the [Export](/x/react-charts/export/) page for the complete documentation.
 ## Mapping any geography
 
 The provider is not tied to Earth: `geoData` accepts any GeoJSON `FeatureCollection`,
-so you can render any planetary body, a building floor plan, or any other custom geography.
+so you can render any planetary body or other custom geography.
 
 The demo below ships a GeoJSON of the 30 USGS Mars Chart quadrangles, colors them by
 mean elevation over a Viking surface mosaic, showing the Martian dichotomy between the
@@ -235,12 +235,6 @@ low northern plains and the high southern highlands. It also overlays notable
 landmarks and mission landing sites as projected markers.
 
 {{"demo": "MarsMap.js"}}
-
-The geography does not even have to be a planet. With a `geoIdentity` projection the
-coordinates are read as plain screen units, so the same components can render a building
-floor plan—here an angular studio drawn with thick black walls.
-
-{{"demo": "FloorPlanMap.js"}}
 
 ## Common practice
 

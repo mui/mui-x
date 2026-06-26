@@ -81,7 +81,7 @@ export default function MarsMap() {
               type: 'continuous',
               min: -6,
               max: 8,
-              color: ['#2c5d8a', '#d8b98c',],
+              color: ['#2c5d8a', '#d8b98c'],
             },
           },
         ]}
@@ -94,7 +94,10 @@ export default function MarsMap() {
           <MarsFeatureMarkers />
         </ChartsSurface>
         <ChartsTooltip trigger="item" />
-        <ContinuousColorLegend axisDirection="z" sx={{ maxWidth: 150, mx: 'auto' }} />
+        <ContinuousColorLegend
+          axisDirection="z"
+          sx={{ maxWidth: 150, mx: 'auto' }}
+        />
       </ChartsGeoDataProviderPremium>
     </Box>
   );
