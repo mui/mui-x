@@ -1,5 +1,10 @@
 {
-  "componentDescription": "Renders an `<image>` stretched to the bounding box of the displayed `geoData`.\nUseful to draw a base map raster (e.g. a satellite mosaic) under the series.\nPass `href` and any other SVG image attribute; computed `x`/`y`/`width`/\n`height` can be overridden through props.",
-  "propDescriptions": {},
+  "componentDescription": "Renders an `<image>` stretched to the bounding box of the displayed `geoData`,\nto draw a base map raster (for example a satellite mosaic) under the series.\n\nThe computed `x`, `y`, `width`, and `height` can be overridden through props.\nAny other SVG image attribute is forwarded to the underlying element.",
+  "propDescriptions": {
+    "href": { "description": "URL of the image to render as the base map." },
+    "preserveAspectRatio": {
+      "description": "How the image is stretched to fill the map&#39;s bounding box."
+    }
+  },
   "classDescriptions": {}
 }

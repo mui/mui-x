@@ -466,6 +466,7 @@
   { "name": "mangoFusionPaletteDark", "kind": "Variable" },
   { "name": "mangoFusionPaletteLight", "kind": "Variable" },
   { "name": "MapImagePlot", "kind": "Function" },
+  { "name": "MapImagePlotProps", "kind": "Interface" },
   { "name": "MapShape", "kind": "Function" },
   { "name": "MapShapeItemIdentifier", "kind": "TypeAlias" },
   { "name": "MapShapePlot", "kind": "Function" },

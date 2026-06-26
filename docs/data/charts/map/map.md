@@ -52,6 +52,26 @@ so use them to style the background layer.
 
 {{"demo": "GeoDataPlotDemo.js"}}
 
+## Adding a base map raster with `MapImagePlot`
+
+`MapImagePlot` renders an `<image>` stretched to the bounding box of the displayed `geoData`.
+Use it to draw a raster base map—such as a satellite mosaic or a scanned plan—under the
+series, without computing the projected bounds yourself.
+
+Pass the image URL through the `href` prop. Any other SVG image attribute is forwarded to
+the underlying element, and the computed `x`, `y`, `width`, and `height` can be overridden
+through props.
+
+```tsx
+<ChartsSurface>
+  <MapImagePlot href="/static/mars-viking.jpg" />
+  <MapShapePlot />
+</ChartsSurface>
+```
+
+The image is aligned to the same area the projection draws into, so it stays registered with
+the map as the chart resizes. See the [Mars demo](#mapping-any-geography) for it in action.
+
 ## Modifying the projection
 
 The `projection` prop accepts either a d3-geo projection name or a `GeoProjection` instance.

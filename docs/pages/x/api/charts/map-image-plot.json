@@ -1,5 +1,8 @@
 {
-  "props": {},
+  "props": {
+    "href": { "type": { "name": "string" } },
+    "preserveAspectRatio": { "type": { "name": "string" }, "default": "'none'" }
+  },
   "name": "MapImagePlot",
   "imports": [
     "import { MapImagePlot } from '@mui/x-charts-premium/Map';",
