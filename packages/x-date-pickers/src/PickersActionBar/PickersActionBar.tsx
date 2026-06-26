@@ -3,7 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
+import type { DialogActionsProps } from '@mui/material/DialogActions';
+import DialogActions from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { usePickerContext } from '../hooks';
 
@@ -117,7 +118,7 @@ function PickersActionBarComponent(props: PickersActionBarProps) {
   return <PickersActionBarRoot {...other}>{buttons}</PickersActionBarRoot>;
 }
 
-PickersActionBarComponent.propTypes = {
+PickersActionBarComponent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

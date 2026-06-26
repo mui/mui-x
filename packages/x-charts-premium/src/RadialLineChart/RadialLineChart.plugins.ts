@@ -1,21 +1,24 @@
 import {
   useChartZAxis,
-  type UseChartZAxisSignature,
   useChartPolarAxis,
-  type UseChartPolarAxisSignature,
   useChartTooltip,
-  type UseChartTooltipSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
   useChartKeyboardNavigation,
-  type UseChartKeyboardNavigationSignature,
   useChartVisibilityManager,
-  type UseChartVisibilityManagerSignature,
-  type ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
-import { useChartProExport, type UseChartProExportSignature } from '../plugins';
+import type {
+  UseChartZAxisSignature,
+  UseChartPolarAxisSignature,
+  UseChartTooltipSignature,
+  UseChartInteractionSignature,
+  UseChartHighlightSignature,
+  UseChartKeyboardNavigationSignature,
+  UseChartVisibilityManagerSignature,
+  ConvertSignaturesIntoPlugins,
+} from '@mui/x-charts/internals';
+import { useChartProExport } from '@mui/x-charts-pro/plugins';
+import type { UseChartProExportSignature } from '@mui/x-charts-pro/plugins';
 
 export type RadialLineChartPluginSignatures = [
   UseChartZAxisSignature,

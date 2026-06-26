@@ -15,6 +15,10 @@
       "matchPackageNames": ["@react-spring/**"]
     },
     {
+      "groupName": "Base UI",
+      "matchPackageNames": ["@base-ui/**"]
+    },
+    {
       "groupName": "bundling fixtures",
       "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "* * 1 1,7 *"
@@ -36,6 +40,13 @@
       "groupName": "fingerprintjs",
       "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
       "allowedVersions": "< 4.0.0"
+    },
+    {
+      "description": "Prevent major version updates of pinned older @mui/x-license versions in the cross-major compat tests.",
+      "matchFileNames": ["test/x-license-compat/package.json"],
+      "matchPackageNames": ["@mui/x-license", "@mui/x-license-pro"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     }
   ]
 }

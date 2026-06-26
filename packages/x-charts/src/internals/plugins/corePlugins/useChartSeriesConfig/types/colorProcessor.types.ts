@@ -18,7 +18,9 @@ export type ColorGetter<SeriesType extends ChartSeriesType> = SeriesType extends
   ? (dataIndex: number) => string
   : SeriesType extends 'heatmap'
     ? (value: number | null) => string
-    : (dataIndex?: number) => string;
+    : SeriesType extends 'mapShape'
+      ? (name?: string) => string | null
+      : (dataIndex?: number) => string;
 
 export type ColorProcessor<SeriesType extends ChartSeriesType> = (
   series: DefaultizedSeriesType<SeriesType>,

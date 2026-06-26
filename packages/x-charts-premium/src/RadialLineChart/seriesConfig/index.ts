@@ -1,11 +1,11 @@
 import {
-  type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
   createIsFaded,
   polarSeriesTypes,
 } from '@mui/x-charts/internals';
+import type { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import legendGetter from './legend';
 import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
@@ -16,6 +16,7 @@ import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
 import { radiusExtremumGetter, rotationExtremumGetter } from './extremums';
 import tooltipGetter from './tooltip';
+import getItemAtPosition from './getItemAtPosition';
 
 polarSeriesTypes.addType('radialLine');
 
@@ -29,7 +30,7 @@ export const radialLineSeriesConfig: ChartSeriesTypeConfig<'radialLine'> = {
   rotationExtremumGetter,
   radiusExtremumGetter,
   getSeriesWithDefaultValues,
-  // getItemAtPosition,
+  getItemAtPosition,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,

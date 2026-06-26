@@ -18,17 +18,20 @@
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "dataSource": {
-      "type": { "name": "shape", "description": "{ getEvents: func, updateEvents: func }" }
+      "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
     },
     "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
     "defaultPreferences": {
-      "type": { "name": "shape", "description": "{ ampm?: bool }" },
+      "type": {
+        "name": "shape",
+        "description": "{ ampm?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+      },
       "default": "{ ampm: true }"
     },
     "defaultPreset": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'dayAndHour'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
+        "description": "'dayAndHour'<br>&#124;&nbsp;'dayAndMonth'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
       },
       "default": "\"dayAndHour\""
     },
@@ -48,6 +51,12 @@
       },
       "default": "\"teal\""
     },
+    "eventCreation": {
+      "type": {
+        "name": "union",
+        "description": "{ duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+      }
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -55,28 +64,33 @@
     },
     "localeText": { "type": { "name": "object" } },
     "onEventsChange": { "type": { "name": "func" } },
-    "onPreferencesChange": { "type": { "name": "func" } },
     "onPresetChange": { "type": { "name": "func" } },
     "onVisibleDateChange": { "type": { "name": "func" } },
     "onVisibleResourcesChange": { "type": { "name": "func" } },
-    "preferences": { "type": { "name": "shape", "description": "{ ampm?: bool }" } },
+    "preferences": {
+      "type": {
+        "name": "shape",
+        "description": "{ ampm?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+      }
+    },
     "preset": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'dayAndHour'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
+        "description": "'dayAndHour'<br>&#124;&nbsp;'dayAndMonth'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
       }
     },
     "presets": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'day'<br>&#124;&nbsp;'dayAndHour'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'&gt;"
+        "description": "Array&lt;'dayAndHour'<br>&#124;&nbsp;'dayAndMonth'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'&gt;"
       },
-      "default": "[\"dayAndHour\", \"day\", \"dayAndWeek\", \"monthAndYear\", \"year\"]"
+      "default": "[\"dayAndHour\", \"dayAndMonth\", \"dayAndWeek\", \"monthAndYear\", \"year\"]"
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "resourceColumnLabel": { "type": { "name": "string" } },
     "resourceModelStructure": { "type": { "name": "object" } },
     "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "shouldEventRequireResource": { "type": { "name": "bool" }, "default": "true" },
     "showCurrentTimeIndicator": { "type": { "name": "bool" }, "default": "true" },
     "sx": {
       "type": {
@@ -113,45 +127,21 @@
       "isGlobal": false
     },
     {
-      "key": "daysHeader",
-      "className": "MuiEventTimelinePremium-daysHeader",
-      "description": "Styles applied to the days header root element.",
+      "key": "errorAlert",
+      "className": "MuiEventTimelinePremium-errorAlert",
+      "description": "Styles applied to the error alert element.",
       "isGlobal": false
     },
     {
-      "key": "daysHeaderCell",
-      "className": "MuiEventTimelinePremium-daysHeaderCell",
-      "description": "Styles applied to days header cell elements.",
+      "key": "errorContainer",
+      "className": "MuiEventTimelinePremium-errorContainer",
+      "description": "Styles applied to the error container element.",
       "isGlobal": false
     },
     {
-      "key": "daysHeaderDayNumber",
-      "className": "MuiEventTimelinePremium-daysHeaderDayNumber",
-      "description": "Styles applied to days header day number elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderMonthStart",
-      "className": "MuiEventTimelinePremium-daysHeaderMonthStart",
-      "description": "Styles applied to days header month start elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderMonthStartLabel",
-      "className": "MuiEventTimelinePremium-daysHeaderMonthStartLabel",
-      "description": "Styles applied to days header month start label elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderTime",
-      "className": "MuiEventTimelinePremium-daysHeaderTime",
-      "description": "Styles applied to days header time elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderWeekDay",
-      "className": "MuiEventTimelinePremium-daysHeaderWeekDay",
-      "description": "Styles applied to days header week day elements.",
+      "key": "errorMessage",
+      "className": "MuiEventTimelinePremium-errorMessage",
+      "description": "Styles applied to the error message element.",
       "isGlobal": false
     },
     {
@@ -365,9 +355,15 @@
       "isGlobal": false
     },
     {
-      "key": "eventDialogResourceMenuColorRadioButton",
-      "className": "MuiEventTimelinePremium-eventDialogResourceMenuColorRadioButton",
-      "description": "Styles applied to the event dialog resource menu color radio button element.",
+      "key": "eventDialogResourceMenuColorToggle",
+      "className": "MuiEventTimelinePremium-eventDialogResourceMenuColorToggle",
+      "description": "Styles applied to the event dialog resource menu color toggle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogResourceMenuColorToggleGroup",
+      "className": "MuiEventTimelinePremium-eventDialogResourceMenuColorToggleGroup",
+      "description": "Styles applied to the event dialog resource menu color toggle group element.",
       "isGlobal": false
     },
     {
@@ -392,6 +388,12 @@
       "key": "eventDialogSaveButton",
       "className": "MuiEventTimelinePremium-eventDialogSaveButton",
       "description": "Styles applied to the event dialog save button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogSectionFieldset",
+      "className": "MuiEventTimelinePremium-eventDialogSectionFieldset",
+      "description": "Styles applied to the event dialog section fieldset element.",
       "isGlobal": false
     },
     {
@@ -467,6 +469,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventsCell",
+      "className": "MuiEventTimelinePremium-eventsCell",
+      "description": "Styles applied to the events cell element in a body row.",
+      "isGlobal": false
+    },
+    {
       "key": "eventsHeaderCell",
       "className": "MuiEventTimelinePremium-eventsHeaderCell",
       "description": "Styles applied to the events header cell element.",
@@ -479,21 +487,9 @@
       "isGlobal": false
     },
     {
-      "key": "eventsSubGrid",
-      "className": "MuiEventTimelinePremium-eventsSubGrid",
-      "description": "Styles applied to the events sub-grid element.",
-      "isGlobal": false
-    },
-    {
-      "key": "eventsSubGridRow",
-      "className": "MuiEventTimelinePremium-eventsSubGridRow",
-      "description": "Styles applied to the events sub-grid row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "eventsSubGridWrapper",
-      "className": "MuiEventTimelinePremium-eventsSubGridWrapper",
-      "description": "Styles applied to the events sub-grid wrapper element.",
+      "key": "eventSkeleton",
+      "className": "MuiEventTimelinePremium-eventSkeleton",
+      "description": "Styles applied to the event skeleton element.",
       "isGlobal": false
     },
     {
@@ -503,27 +499,33 @@
       "isGlobal": false
     },
     {
+      "key": "header",
+      "className": "MuiEventTimelinePremium-header",
+      "description": "Styles applied to the generic header (wraps all level rows).",
+      "isGlobal": false
+    },
+    {
+      "key": "headerCell",
+      "className": "MuiEventTimelinePremium-headerCell",
+      "description": "Styles applied to each cell inside a header level row.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerCellLabel",
+      "className": "MuiEventTimelinePremium-headerCellLabel",
+      "description": "Styles applied to the label element inside a header cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerLevelRow",
+      "className": "MuiEventTimelinePremium-headerLevelRow",
+      "description": "Styles applied to each level row inside the generic header.",
+      "isGlobal": false
+    },
+    {
       "key": "headerRow",
       "className": "MuiEventTimelinePremium-headerRow",
-      "description": "Styles applied to the header row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "monthsHeader",
-      "className": "MuiEventTimelinePremium-monthsHeader",
-      "description": "Styles applied to the months header root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "monthsHeaderMonthLabel",
-      "className": "MuiEventTimelinePremium-monthsHeaderMonthLabel",
-      "description": "Styles applied to months header month label elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "monthsHeaderYearLabel",
-      "className": "MuiEventTimelinePremium-monthsHeaderYearLabel",
-      "description": "Styles applied to months header year label elements.",
+      "description": "Styles applied to the top row of the grid (contains the title and events headers).",
       "isGlobal": false
     },
     {
@@ -533,45 +535,15 @@
       "isGlobal": false
     },
     {
-      "key": "timeHeader",
-      "className": "MuiEventTimelinePremium-timeHeader",
-      "description": "Styles applied to the time header root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderCell",
-      "className": "MuiEventTimelinePremium-timeHeaderCell",
-      "description": "Styles applied to time header cell elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderCellsRow",
-      "className": "MuiEventTimelinePremium-timeHeaderCellsRow",
-      "description": "Styles applied to the time header cells row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderDayLabel",
-      "className": "MuiEventTimelinePremium-timeHeaderDayLabel",
-      "description": "Styles applied to the time header day label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderTimeCell",
-      "className": "MuiEventTimelinePremium-timeHeaderTimeCell",
-      "description": "Styles applied to time header time cell elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderTimeLabel",
-      "className": "MuiEventTimelinePremium-timeHeaderTimeLabel",
-      "description": "Styles applied to time header time label elements.",
-      "isGlobal": false
-    },
-    {
       "key": "titleCell",
       "className": "MuiEventTimelinePremium-titleCell",
       "description": "Styles applied to the title cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "titleCellContent",
+      "className": "MuiEventTimelinePremium-titleCellContent",
+      "description": "Styles applied to the title cell content wrapper element.",
       "isGlobal": false
     },
     {
@@ -591,54 +563,6 @@
       "className": "MuiEventTimelinePremium-titleHeaderCell",
       "description": "Styles applied to the title header cell element.",
       "isGlobal": false
-    },
-    {
-      "key": "titleSubGrid",
-      "className": "MuiEventTimelinePremium-titleSubGrid",
-      "description": "Styles applied to the title sub-grid element.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeader",
-      "className": "MuiEventTimelinePremium-weeksHeader",
-      "description": "Styles applied to the weeks header root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeaderCell",
-      "className": "MuiEventTimelinePremium-weeksHeaderCell",
-      "description": "Styles applied to weeks header cell elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeaderDayCell",
-      "className": "MuiEventTimelinePremium-weeksHeaderDayCell",
-      "description": "Styles applied to weeks header day cell elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeaderDayLabel",
-      "className": "MuiEventTimelinePremium-weeksHeaderDayLabel",
-      "description": "Styles applied to weeks header day label elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeaderDaysRow",
-      "className": "MuiEventTimelinePremium-weeksHeaderDaysRow",
-      "description": "Styles applied to the weeks header days row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "yearsHeader",
-      "className": "MuiEventTimelinePremium-yearsHeader",
-      "description": "Styles applied to the years header root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "yearsHeaderYearLabel",
-      "className": "MuiEventTimelinePremium-yearsHeaderYearLabel",
-      "description": "Styles applied to years header year label elements.",
-      "isGlobal": false
     }
   ],
   "spread": true,
@@ -647,6 +571,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/event-timeline-premium/EventTimelinePremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interaction</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interaction</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/lazy-loading/\">Event Timeline - Lazy loading events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>"
 }

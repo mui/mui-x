@@ -1,12 +1,19 @@
-import { screen, waitFor } from '@mui/internal-test-utils';
+import * as React from 'react';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import {
+  adapter,
   createSchedulerRenderer,
   EventBuilder,
   ResourceBuilder,
   withinMonthView,
   dateLocaleFr,
 } from 'test/utils/scheduler';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { ErrorContainer } from '../internals/components/error-container';
+import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import {
   changeTo24HoursFormat,
   changeTo12HoursFormat,
@@ -72,43 +79,87 @@ describe('EventCalendar', () => {
       />,
     );
 
-    // Resources are visible by default, so the checkboxes say "Hide events for ..."
-    // Use findByRole to wait for the component to fully render
-    const workResourceToggleButton = await screen.findByRole('checkbox', {
-      name: /Hide events for Work/i,
-    });
-    const sportResourceToggleButton = await screen.findByRole('checkbox', {
-      name: /Hide events for Sport/i,
-    });
+    const getCheckbox = (resourceName: RegExp) => {
+      const treeItem = screen.getByRole('treeitem', { name: resourceName });
+      return treeItem.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    };
+
+    await screen.findByRole('treeitem', { name: /Work/i });
+    expect(getCheckbox(/Work/i).checked).to.equal(true);
+    expect(getCheckbox(/Sport/i).checked).to.equal(true);
 
     expect(screen.queryByRole('button', { name: /Running/i })).not.to.equal(null);
     expect(screen.queryByRole('button', { name: /Weekly/i })).not.to.equal(null);
 
     // Hide Work resource
-    await user.click(workResourceToggleButton);
-    // Checkbox label changes to "Show events for ..." when hidden
+    await user.click(getCheckbox(/Work/i));
     await waitFor(() => {
-      expect(screen.queryByRole('checkbox', { name: /Show events for Work/i })).not.to.equal(null);
+      expect(getCheckbox(/Work/i).checked).to.equal(false);
     });
     expect(screen.queryByRole('button', { name: /Weekly/i })).to.equal(null);
 
-    // Show Work resource again (checkbox text should now be "Show events for Work")
-    const workResourceToggleButton2 = screen.getByRole('checkbox', {
-      name: /Show events for Work/i,
-    });
-    await user.click(workResourceToggleButton2);
+    // Show Work resource again
+    await user.click(getCheckbox(/Work/i));
     await waitFor(() => {
-      expect(screen.queryByRole('checkbox', { name: /Hide events for Work/i })).not.to.equal(null);
+      expect(getCheckbox(/Work/i).checked).to.equal(true);
     });
     expect(screen.getByRole('button', { name: /Weekly/i })).not.to.equal(null);
 
     // Hide Sport resource
-    await user.click(sportResourceToggleButton);
+    await user.click(getCheckbox(/Sport/i));
     await waitFor(() => {
-      expect(screen.queryByRole('checkbox', { name: /Show events for Sport/i })).not.to.equal(null);
+      expect(getCheckbox(/Sport/i).checked).to.equal(false);
     });
     expect(screen.queryByRole('button', { name: /Running/i })).to.equal(null);
   }, 10_000);
+
+  it.skipIf(isJSDOM)(
+    'should expose tree semantics and support keyboard navigation in the resource sidebar',
+    async () => {
+      const childResource = ResourceBuilder.new().id('running').title('Running').build();
+      const parentResource = ResourceBuilder.new()
+        .id('sport')
+        .title('Sport')
+        .children([childResource])
+        .build();
+
+      const childEvent = EventBuilder.new()
+        .title('Morning Run')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .resource(childResource)
+        .build();
+
+      const { user, container } = render(
+        <EventCalendar events={[childEvent]} resources={[parentResource]} />,
+      );
+      // Previous tests may have left their rendered DOM in `<body>`; scope
+      // queries to this render's container so we only see this test's tree.
+      const view = within(container);
+
+      const tree = await view.findByRole('tree');
+      expect(tree).not.to.equal(null);
+      const treeItems = view.getAllByRole('treeitem');
+      expect(treeItems.length).to.equal(2);
+
+      const runningTreeItem = view.getByRole('treeitem', { name: 'Running' });
+      const runningCheckbox = runningTreeItem.querySelector(
+        'input[type="checkbox"]',
+      ) as HTMLInputElement;
+      expect(runningCheckbox.checked).to.equal(true);
+
+      // ARIA tree pattern: focus the treeitem (a real user would Tab into the
+      // tree and use Arrow keys to land here) and use Space to toggle selection.
+      // The focus() call updates the TreeView's focus store, so wrap in act().
+      act(() => {
+        runningTreeItem.focus();
+      });
+      await user.keyboard(' ');
+      await waitFor(() => {
+        expect(runningCheckbox.checked).to.equal(false);
+      });
+      expect(view.queryByRole('button', { name: /Morning Run/i })).to.equal(null);
+    },
+  );
 
   describe('Preferences Menu', () => {
     it('should allow to show / hide the weekends using the UI in the week view', async () => {
@@ -207,9 +258,11 @@ describe('EventCalendar', () => {
     it('should allow to show / hide the week number using the UI in the month view', async () => {
       const { user } = render(<EventCalendar events={[]} defaultView="month" />);
 
-      // Week number should not be visible by default
-      const findWeekHeaders = () => screen.queryAllByRole('rowheader', { name: /week/i });
-      expect(await findWeekHeaders()).to.have.lengthOf(0);
+      // Week number should not be visible by default. Week-number labels are aria-hidden,
+      // so query by class instead of role.
+      const findWeekHeaders = () =>
+        document.querySelectorAll(`.${eventCalendarClasses.monthViewWeekNumberCell}`);
+      expect(findWeekHeaders()).to.have.lengthOf(0);
 
       // Show the week number
       await openPreferencesMenu(user);
@@ -217,7 +270,7 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(await findWeekHeaders()).to.have.lengthOf.above(0);
+      await waitFor(() => expect(findWeekHeaders().length).to.be.above(0));
 
       // Hide the week number again
       await openPreferencesMenu(user);
@@ -225,7 +278,7 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(await findWeekHeaders()).to.have.lengthOf(0);
+      await waitFor(() => expect(findWeekHeaders()).to.have.lengthOf(0));
     });
 
     it('should allow to change the time format using the UI in the week view', async () => {
@@ -385,6 +438,68 @@ describe('EventCalendar', () => {
       const eventElement = document.querySelector('.agenda-class');
       expect(eventElement).not.to.equal(null);
       expect(eventElement?.textContent).to.include('Agenda Event');
+    });
+  });
+
+  describe('ErrorContainer', () => {
+    function renderErrorContainer(initialErrors: Error[]) {
+      const store = new EventCalendarStore({ events: [] }, adapter);
+      store.set(
+        'errors',
+        initialErrors.map((error, index) => ({ error, key: String(index) })),
+      );
+
+      return {
+        store,
+        ...render(
+          <SchedulerStoreContext.Provider value={store as any}>
+            <SharedComponentsStyledContext.Provider value={{ classes: eventCalendarClasses }}>
+              <ErrorContainer />
+            </SharedComponentsStyledContext.Provider>
+          </SchedulerStoreContext.Provider>,
+        ),
+      };
+    }
+
+    it('should render multiple alerts when state.errors contains multiple errors', () => {
+      renderErrorContainer([new Error('First error'), new Error('Second error')]);
+
+      expect(document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length).to.equal(2);
+      expect(screen.getByText('First error')).not.to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should remove only the dismissed alert and keep the others', async () => {
+      const { user } = renderErrorContainer([new Error('First error'), new Error('Second error')]);
+
+      const closeButtons = screen.getAllByRole('button', { name: /close/i });
+      expect(closeButtons.length).to.equal(2);
+
+      await user.click(closeButtons[0]);
+
+      await waitFor(() => {
+        expect(document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length).to.equal(1);
+      });
+      expect(screen.queryByText('First error')).to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
+      const sharedError = new Error('Shared error');
+      const { store, user } = renderErrorContainer([sharedError]);
+
+      await user.click(screen.getByRole('button', { name: /close/i }));
+      await waitFor(() => {
+        expect(screen.queryByText('Shared error')).to.equal(null);
+      });
+
+      await act(async () => {
+        store.set('errors', [{ error: sharedError, key: 'fresh' }]);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Shared error')).not.to.equal(null);
+      });
     });
   });
 });

@@ -18,7 +18,7 @@ import {
   AXIS_AUTO_SIZE_TICK_LABEL_GAP,
   AXIS_AUTO_SIZE_GROUP_GAP,
 } from './autoSizeConstants';
-import { type DomainDefinition } from './domain';
+import type { DomainDefinition } from './domain';
 
 /**
  * Checks if an axis has groups defined.

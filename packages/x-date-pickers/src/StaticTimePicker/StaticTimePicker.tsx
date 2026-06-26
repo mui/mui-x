@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TimeView } from '../models';
-import { StaticTimePickerProps } from './StaticTimePicker.types';
-import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import type { TimeView } from '../models';
+import type { StaticTimePickerProps } from './StaticTimePicker.types';
+import type { TimePickerViewRenderers } from '../TimePicker/shared';
+import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
@@ -70,7 +71,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker(
   return renderPicker();
 }) as StaticTimePickerComponent;
 
-StaticTimePicker.propTypes = {
+StaticTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

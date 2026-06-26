@@ -4,14 +4,14 @@ import {
   resources,
   defaultVisibleDate,
   getEvents,
-  updateEvents,
+  persistEvents,
 } from './fakeServer';
 
 export default function BasicDataSource() {
   return (
     <div style={{ height: '700px', width: '100%' }}>
       <EventCalendarPremium
-        dataSource={{ getEvents, updateEvents }}
+        dataSource={{ getEvents, persistEvents }}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         defaultPreferences={{ isSidePanelOpen: false }}

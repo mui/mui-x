@@ -1,7 +1,8 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
+import { warnOnce } from '@mui/x-internals/warning';
 import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
-import { type ChartImageExportOptions } from './useChartProExport.types';
+import type { ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
 export const getDrawDocument = async () => {
@@ -29,11 +30,23 @@ export async function exportImage(
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
     nonce,
+    pixelRatio,
   } = params ?? {};
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    pixelRatio !== undefined &&
+    (!Number.isFinite(pixelRatio) || pixelRatio <= 0)
+  ) {
+    warnOnce(
+      'MUI X Charts: `pixelRatio` must be a finite number greater than 0 when exporting a chart as an image.',
+      'error',
+    );
+  }
+
   const drawDocumentPromise = getDrawDocument();
   const doc = ownerDocument(element);
 
-  const ratio = Math.max(window.devicePixelRatio || 1, 1);
+  const ratio = pixelRatio ?? Math.max(window.devicePixelRatio || 1, 1);
   const iframe = createExportIframe(fileName);
   /* We apply the min/max width and height to ensure the SVG doesn't resize in the export.
    * We apply to the original SVG so that the cloned tree will contain the styles and revert these
@@ -48,6 +61,7 @@ export async function exportImage(
   iframe.onload = async () => {
     const exportDoc = iframe.contentDocument!;
     const elementClone = element.cloneNode(true) as Element;
+    elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
     applyStyles(svg, previousStyles);
     exportDoc.body.replaceChildren(elementClone);
     exportDoc.body.style.margin = '0px';

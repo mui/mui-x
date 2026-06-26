@@ -1,14 +1,14 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
-import { type SeriesId } from '../models/seriesType/common';
-import {
-  type ChartSeriesDefaultized,
-  type CartesianChartSeriesType,
-  type ChartsSeriesConfig,
-  type PolarChartSeriesType,
+import type { SeriesId } from '../models/seriesType/common';
+import type {
+  ChartSeriesDefaultized,
+  CartesianChartSeriesType,
+  ChartsSeriesConfig,
+  PolarChartSeriesType,
 } from '../models/seriesType/config';
-import { type ComputedAxis, type PolarAxisDefaultized, type AxisId } from '../models/axis';
+import type { ComputedAxis, PolarAxisDefaultized, AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
 import { getLabel } from '../internals/getLabel';
 import { utcFormatter } from './utils';
@@ -26,16 +26,17 @@ import { useZAxes } from '../hooks/useZAxis';
 import {
   selectorChartsInteractionTooltipXAxes,
   selectorChartsInteractionTooltipYAxes,
-  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsLabelMarkProps } from '../ChartsLabel';
-import { selectorChartsInteractionTooltipRotationAxes } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { ChartsLabelMarkProps } from '../ChartsLabel';
+import {
+  selectorChartsInteractionTooltipRadiusAxes,
+  selectorChartsInteractionTooltipRotationAxes,
+} from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { isPolarSeriesType } from '../internals/isPolar';
 import { selectorIsItemVisibleGetter } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.selectors';
-import {
-  type ComposableCartesianChartSeriesType,
-  composableCartesianSeriesTypes,
-} from '../models/seriesType/composition';
+import { composableCartesianSeriesTypes } from '../models/seriesType/composition';
+import type { ComposableCartesianChartSeriesType } from '../models/seriesType/composition';
 import type { MarkShape } from '../models/seriesType';
 
 export interface UseAxesTooltipReturnValue<
@@ -58,7 +59,7 @@ export interface UseAxesTooltipParams {
    * The axis directions to consider.
    * If not defined, all directions are considered
    */
-  directions?: ('x' | 'y' | 'rotation')[];
+  directions?: ('x' | 'y' | 'rotation' | 'radius')[];
 }
 
 export interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
@@ -78,7 +79,7 @@ export interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSerie
 function defaultAxisTooltipConfig(
   axis: ComputedAxis | PolarAxisDefaultized,
   dataIndex: number,
-  axisDirection: 'x' | 'y' | 'rotation',
+  axisDirection: 'x' | 'y' | 'rotation' | 'radius',
 ): UseAxesTooltipReturnValue {
   const axisValue = axis.data?.[dataIndex] ?? null;
 
@@ -135,6 +136,7 @@ export function useAxesTooltip<
   const tooltipYAxes = store.use(selectorChartsInteractionTooltipYAxes);
 
   const tooltipRotationAxes = store.use(selectorChartsInteractionTooltipRotationAxes);
+  const tooltipRadiusAxes = store.use(selectorChartsInteractionTooltipRadiusAxes);
 
   const series = useSeries();
 
@@ -149,7 +151,12 @@ export function useAxesTooltip<
 
   const isItemVisible = store.use(selectorIsItemVisibleGetter);
 
-  if (tooltipXAxes.length === 0 && tooltipYAxes.length === 0 && tooltipRotationAxes.length === 0) {
+  if (
+    tooltipXAxes.length === 0 &&
+    tooltipYAxes.length === 0 &&
+    tooltipRotationAxes.length === 0 &&
+    tooltipRadiusAxes.length === 0
+  ) {
     return null;
   }
 
@@ -170,6 +177,12 @@ export function useAxesTooltip<
   if (directions === undefined || directions.includes('rotation')) {
     tooltipRotationAxes.forEach(({ axisId, dataIndex }) => {
       tooltipAxes.push(defaultAxisTooltipConfig(rotationAxis[axisId], dataIndex, 'rotation'));
+    });
+  }
+
+  if (directions === undefined || directions.includes('radius')) {
+    tooltipRadiusAxes.forEach(({ axisId, dataIndex }) => {
+      tooltipAxes.push(defaultAxisTooltipConfig(radiusAxis[axisId], dataIndex, 'radius'));
     });
   }
 
@@ -200,14 +213,17 @@ export function useAxesTooltip<
         );
         // Test if the series uses the default axis
         if (tooltipItemIndex >= 0) {
-          const zAxisId = 'zAxisId' in seriesToAdd ? seriesToAdd.zAxisId : zAxisIds[0];
+          const colorAxisId =
+            ('colorAxisId' in seriesToAdd && seriesToAdd.colorAxisId) ||
+            ('zAxisId' in seriesToAdd && seriesToAdd.zAxisId) ||
+            zAxisIds[0];
           const { dataIndex } = tooltipAxes[tooltipItemIndex];
           const color =
             colorProcessors[seriesType]?.(
               seriesToAdd,
               xAxis[providedXAxisId],
               yAxis[providedYAxisId],
-              zAxisId ? zAxis[zAxisId] : undefined,
+              colorAxisId ? zAxis[colorAxisId] : undefined,
             )(dataIndex) ?? '';
 
           const rawValue = seriesToAdd.data[dataIndex] ?? null;
@@ -270,7 +286,8 @@ export function useAxesTooltip<
 
         const tooltipItemIndex = tooltipAxes.findIndex(
           ({ axisDirection, axisId }) =>
-            axisDirection === 'rotation' && axisId === providedRotationAxisId,
+            (axisDirection === 'rotation' && axisId === providedRotationAxisId) ||
+            (axisDirection === 'radius' && axisId === providedRadiusAxisId),
         );
         // Test if the series uses the default axis
         if (tooltipItemIndex >= 0) {

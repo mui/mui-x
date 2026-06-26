@@ -5,6 +5,8 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
+{{"component": "modules/components/overview/scheduler/SchedulerFeedbackBanner.tsx"}}
+
 {{"component": "modules/components/overview/XLogo.tsx"}}
 
 # MUI X Scheduler
@@ -13,6 +15,17 @@ githubLabel: 'scope: scheduler'
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
-{{"component": "modules/components/overview/scheduler/mainDemo/MainDemo.tsx"}}
+## Event Calendar
+
+Start with the MIT-licensed Event Calendar for everyday scheduling, then unlock Premium features when your calendar workflows need recurrence or server-backed loading.
+
+{{"component": "modules/components/overview/scheduler/mainDemo/CalendarDemo.tsx"}}
+
+## Event Timeline [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+Use the Premium Event Timeline to plan long-running work across teams, resources, and date ranges.
+
+{{"component": "modules/components/overview/scheduler/mainDemo/TimelineDemo.tsx"}}
+
 {{"component": "modules/components/overview/scheduler/SchedulerFeaturesHighlight.tsx"}}
 {{"component": "modules/components/overview/scheduler/SchedulerCommunityOrPremium.tsx"}}

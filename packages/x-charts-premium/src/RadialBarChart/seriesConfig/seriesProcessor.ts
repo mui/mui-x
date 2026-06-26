@@ -45,6 +45,8 @@ function seriesProcessor(
         }
       });
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         `MUI X Charts: Radial bar series with id="${id}" has no data. ` +
           'The chart cannot render this series without data. ' +
@@ -57,6 +59,8 @@ function seriesProcessor(
         const dataKey = series[id].dataKey;
 
         if (!dataKey && !series[id].valueGetter) {
+          // TODO: fix mui/no-guarded-throw
+          // eslint-disable-next-line mui/no-guarded-throw
           throw new Error(
             `MUI X Charts: Radial bar series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
               'When using the dataset prop, each series must have a dataKey or valueGetter to identify which dataset values to use. ' +

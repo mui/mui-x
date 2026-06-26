@@ -1,7 +1,7 @@
-import { type ChartPluginSignature } from '../../models';
-import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { type SeriesId, type SeriesItemIdentifierWithType } from '../../../../models';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import type { ChartPluginSignature } from '../../models';
+import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { SeriesId, SeriesItemIdentifierWithType } from '../../../../models';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export type VisibilityIdentifier<SeriesType extends ChartSeriesType = ChartSeriesType> = Partial<
   SeriesItemIdentifierWithType<SeriesType>

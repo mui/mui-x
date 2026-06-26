@@ -1,17 +1,18 @@
 import {
   EventCalendarParameters,
   EventCalendarStore,
-} from '@mui/x-scheduler-headless/use-event-calendar';
+} from '@mui/x-scheduler-internals/use-event-calendar';
 import {
   EventTimelinePremiumParameters,
   EventTimelinePremiumStore,
-} from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
+} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { adapter } from './adapters';
+import { ResourceBuilder } from './resource-builder';
 
 export const DEFAULT_EVENT_CALENDAR_STATE = new EventCalendarStore({ events: [] }, adapter).state;
 
 export const DEFAULT_EVENT_TIMELINE_PREMIUM_STATE = new EventTimelinePremiumStore(
-  { events: [] },
+  { events: [], resources: [ResourceBuilder.new().build()] },
   adapter,
 ).state;
 

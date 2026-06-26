@@ -1,9 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { type RadarSeriesAreaProps } from './RadarSeriesPlot.types';
+import type { RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
-import { useUtilityClasses, type RadarClasses } from '../radarClasses';
+import { useUtilityClasses } from '../radarClasses';
+import type { RadarClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
@@ -57,6 +58,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
         return (
           <path
             key={id}
+            data-series={id}
             {...getPathProps({
               seriesId: id,
               points,
@@ -82,7 +84,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   );
 }
 
-RadarSeriesArea.propTypes = {
+RadarSeriesArea.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -91,6 +93,10 @@ RadarSeriesArea.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when an area is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

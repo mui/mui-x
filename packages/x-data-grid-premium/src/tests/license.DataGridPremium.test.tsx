@@ -1,7 +1,8 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { LicenseInfo } from '@mui/x-license';
-import { TEST_LICENSE_KEY_PRO, clearLicenseStatusCache } from '@mui/x-license/internals';
+import { clearLicenseStatusCache } from '@mui/x-license/internals';
+import { TEST_LICENSE_KEY_PRO } from 'test/utils/licenseKeys';
 
 describe('<DataGridPremium /> - License', () => {
   const { render } = createRenderer();

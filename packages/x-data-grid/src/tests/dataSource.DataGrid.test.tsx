@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGrid,
-  type DataGridProps,
-  type GridApi,
-  type GridDataSource,
-  type GridGetRowsParams,
-  type GridGetRowsResponse,
-  useGridApiRef,
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridApi,
+  GridDataSource,
+  GridGetRowsParams,
+  GridGetRowsResponse,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
@@ -271,6 +270,89 @@ describe('<DataGrid /> - Data source', () => {
       expect(pageChangeSpy.callCount).to.equal(2);
     });
 
+    it('should not apply a stale in-flight response after a cache-hit navigation', async () => {
+      // Regression coverage: when a cache-miss fetch is in flight and the user navigates
+      // to a page already in the cache, the resolved in-flight response must not overwrite
+      // the cached data we just applied.
+      const responses: Record<number, GridGetRowsResponse> = {
+        0: {
+          rows: [{ id: 'page-0-row' }],
+          rowCount: 2,
+        },
+        1: {
+          rows: [{ id: 'page-1-stale-row' }],
+          rowCount: 2,
+        },
+      };
+      const { promise: page1Promise, resolve: resolvePage1 } =
+        Promise.withResolvers<GridGetRowsResponse>();
+      const localApiRef = React.createRef<GridApi | null>() as RefObject<GridApi | null>;
+      let callIndex = 0;
+      const getRows = spy((params: GridGetRowsParams) => {
+        const index = callIndex;
+        callIndex += 1;
+        if (index === 0) {
+          return Promise.resolve(responses[0]);
+        }
+        if (params.start === 1) {
+          return page1Promise;
+        }
+        // Subsequent fetches should be served from the cache; if not, signal it.
+        return Promise.resolve({ rows: [{ id: 'unexpected' }], rowCount: 0 });
+      });
+      const dataSource: GridDataSource = {
+        getRows: getRows as unknown as GridDataSource['getRows'],
+      };
+      function Test(props: Partial<DataGridProps>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              apiRef={localApiRef}
+              columns={[{ field: 'id' }]}
+              dataSource={dataSource}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 1 }, rowCount: 0 },
+              }}
+              pagination
+              pageSizeOptions={[1]}
+              disableVirtualization
+              {...props}
+            />
+          </div>
+        );
+      }
+
+      render(<Test />);
+
+      await waitFor(() => {
+        expect(localApiRef.current?.getRow('page-0-row')).not.to.equal(null);
+      });
+
+      // Trigger a cache-miss fetch for page 1 (response is deferred).
+      act(() => {
+        localApiRef.current?.setPage(1);
+      });
+      await waitFor(() => {
+        expect(getRows.callCount).to.equal(2);
+      });
+
+      // Navigate back to page 0 which is now served by the cache.
+      act(() => {
+        localApiRef.current?.setPage(0);
+      });
+      await waitFor(() => {
+        expect(localApiRef.current?.getRow('page-0-row')).not.to.equal(null);
+      });
+
+      // Resolve the page 1 fetch after the cache-hit. The stale response must not overwrite
+      // the displayed page 0 data.
+      resolvePage1(responses[1]);
+      await page1Promise;
+
+      expect(localApiRef.current?.getRow('page-0-row')).not.to.equal(null);
+      expect(localApiRef.current?.getRow('page-1-stale-row')).to.equal(null);
+    });
+
     it('should bypass cache when "skipCache" is true', async () => {
       const testCache = new TestCache();
       render(<TestDataSource dataSourceCache={testCache} />);
@@ -322,6 +404,77 @@ describe('<DataGrid /> - Data source', () => {
 
       await waitFor(() => {
         expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      });
+    });
+  });
+
+  describe('No rows overlay flicker', () => {
+    it('should not render the "no rows" overlay between paginated re-fetches when the cache hits', async () => {
+      const NoRowsOverlay = spy(() => null);
+      render(<TestDataSource slots={{ noRowsOverlay: NoRowsOverlay }} />);
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+      NoRowsOverlay.resetHistory();
+
+      act(() => {
+        apiRef.current?.setPage(1);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+
+      act(() => {
+        apiRef.current?.setPage(0);
+      });
+
+      await waitFor(() => {
+        expect(apiRef.current?.getRowsCount()).to.be.greaterThan(0);
+      });
+
+      expect(NoRowsOverlay.callCount).to.equal(0);
+    });
+
+    it('should not render the "no rows" overlay between paginated re-fetches when the cache misses', async () => {
+      const NoRowsOverlay = spy(() => null);
+      render(<TestDataSource dataSourceCache={null} slots={{ noRowsOverlay: NoRowsOverlay }} />);
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+      NoRowsOverlay.resetHistory();
+
+      act(() => {
+        apiRef.current?.setPage(1);
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      await waitFor(() => {
+        expect(apiRef.current?.getRowsCount()).to.be.greaterThan(0);
+      });
+
+      expect(NoRowsOverlay.callCount).to.equal(0);
+    });
+
+    it('should still render the "no rows" overlay when the response contains zero rows', async () => {
+      const NoRowsOverlay = spy(() => null);
+      render(
+        <TestDataSource
+          dataSourceCache={null}
+          dataSetOptions={{ ...dataSetOptions, rowLength: 0 }}
+          slots={{ noRowsOverlay: NoRowsOverlay }}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+      await waitFor(() => {
+        expect(NoRowsOverlay.callCount).to.be.greaterThan(0);
       });
     });
   });
