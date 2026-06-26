@@ -1,7 +1,6 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import type { SeriesId } from '@mui/x-charts/internals';
 
 export interface FunnelClasses {
   /** Styles applied to the funnel plot element. */
@@ -17,15 +16,6 @@ export interface FunnelClasses {
 }
 
 export type FunnelClassKey = keyof FunnelClasses;
-
-export interface FunnelSectionOwnerState {
-  seriesId: SeriesId;
-  dataIndex: number;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<FunnelClasses>;
-}
 
 export function getFunnelUtilityClass(slot: string) {
   return generateUtilityClass('MuiFunnelChart', slot);

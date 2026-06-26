@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import {
-  TreeViewContextValue,
-  TreeViewItemPluginsRunner,
-  TreeViewStoreInContext,
-} from './TreeViewProvider.types';
+import { TreeViewContextValue, TreeViewItemPluginsRunner } from './TreeViewProvider.types';
 import {
   TreeViewItemPluginSlotPropsEnhancers,
   TreeViewItemPluginSlotPropsEnhancerParams,
@@ -136,12 +132,4 @@ export interface UseTreeViewBuildContextParameters<TStore extends TreeViewAnySto
   store: TStore;
   rootRef: React.RefObject<HTMLUListElement | null>;
   apiRef: React.RefObject<Partial<TreeViewPublicAPI<TStore>> | undefined> | undefined;
-}
-
-export interface UseTreeViewBuildContextReturnValue<TStore extends TreeViewAnyStore> {
-  publicAPI: TreeViewPublicAPI<TStore>;
-  store: TreeViewStoreInContext<TStore>;
-  rootRef: React.RefObject<HTMLUListElement | null>;
-  wrapItem: TreeItemWrapper<TStore>;
-  runItemPlugins: TreeViewItemPluginsRunner;
 }

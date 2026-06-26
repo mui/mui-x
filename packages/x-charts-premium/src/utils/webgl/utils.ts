@@ -20,18 +20,6 @@ export function uploadQuadBuffer(gl: WebGL2RenderingContext) {
   return buffer;
 }
 
-export function bindQuadBuffer(
-  gl: WebGL2RenderingContext,
-  program: WebGLProgram,
-  quadBuffer: WebGLBuffer,
-) {
-  gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
-
-  const aPosition = gl.getAttribLocation(program, 'a_position');
-  gl.enableVertexAttribArray(aPosition);
-  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-}
-
 export function attachShader(
   gl: WebGL2RenderingContext,
   program: WebGLProgram,

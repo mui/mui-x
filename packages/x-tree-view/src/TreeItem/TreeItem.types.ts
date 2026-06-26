@@ -4,7 +4,7 @@ import { Theme } from '@mui/material/styles';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { TransitionProps } from '@mui/material/transitions';
 import { SlotComponentProps } from '@mui/utils/types';
-import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
+import { UseTreeItemParameters } from '../useTreeItem';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
 import { TreeViewCancellableEventHandler } from '../models';
@@ -120,5 +120,3 @@ export interface TreeItemProps
    */
   onKeyDown?: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
-
-export interface TreeItemOwnerState extends Omit<TreeItemProps, 'disabled'>, UseTreeItemStatus {}
