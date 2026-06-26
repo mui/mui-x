@@ -1,9 +1,7 @@
 'use client';
 import { useStore } from '@mui/x-charts/internals';
-import {
-  selectorChartGeoFeatureIndexesByName,
-  type UseGeoProjectionSignature,
-} from '../internals/plugins/useGeoProjection';
+import { selectorChartGeoFeatureIndexesByName } from '../internals/plugins/useGeoProjection';
+import type { UseGeoProjectionSignature } from '../internals/plugins/useGeoProjection';
 
 /**
  * Get a map from `feature.properties.name` to the indices of that feature in `geoData.features`.

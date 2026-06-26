@@ -77,10 +77,10 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
   rowReorderStateInitializer,
-  type GridConfiguration,
   useFirstRender,
   registerMultiSelectColumnType,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';

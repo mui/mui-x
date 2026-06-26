@@ -2,21 +2,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import refType from '@mui/utils/refType';
+import type {
+  PickerViewRenderer,
+  TimeViewWithMeridiem,
+  PickerRangeValue,
+  PickerViewRendererLookup,
+  PickerRendererInterceptorProps,
+} from '@mui/x-date-pickers/internals';
 import {
   DIALOG_WIDTH,
   VIEW_HEIGHT,
   isInternalTimeView,
   isDatePickerView,
-  PickerViewRenderer,
-  TimeViewWithMeridiem,
   resolveDateTimeFormat,
-  PickerRangeValue,
-  PickerViewRendererLookup,
-  PickerRendererInterceptorProps,
   TIME_VIEWS,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import {
   renderDigitalClockTimeView,
@@ -29,17 +31,17 @@ import {
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
-import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
+import type { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../validation';
-import { DateTimeRangePickerView } from '../internals/models';
+import type { DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
-import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
 const STEPS: PickerRangeStep[] = [
   { views: ['day'], rangePosition: 'start' },

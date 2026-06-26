@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 // `multiSelect` is a Pro/Premium-only column type. Importing a Pro/Premium grid registers it in

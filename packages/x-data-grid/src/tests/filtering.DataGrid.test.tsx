@@ -1,12 +1,10 @@
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import {
-  DataGrid,
-  type DataGridProps,
-  GridToolbarFilterButton,
-  type GridColDef,
-  type GridFilterItem,
-  GridPreferencePanelsValue,
-  type GridFilterOperator,
+import { DataGrid, GridToolbarFilterButton, GridPreferencePanelsValue } from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridColDef,
+  GridFilterItem,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';

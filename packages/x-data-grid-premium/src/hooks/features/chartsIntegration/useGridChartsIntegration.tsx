@@ -3,26 +3,28 @@ import * as React from 'react';
 import debounce from '@mui/utils/debounce';
 import type { RefObject } from '@mui/x-internals/types';
 import {
-  type GridColDef,
   gridColumnGroupsLookupSelector,
   gridColumnGroupsUnwrappedModelSelector,
   gridRowIdSelector,
   gridRowNodeSelector,
   gridRowTreeSelector,
 } from '@mui/x-data-grid-pro';
+import type { GridColDef } from '@mui/x-data-grid-pro';
 import {
-  type GridStateInitializer,
   useGridApiMethod,
   useGridEvent,
   gridColumnLookupSelector,
   runIf,
   gridPivotActiveSelector,
-  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   gridColumnFieldsSelector,
   gridFilteredSortedDepthRowEntriesSelector,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  type GridRestoreStatePreProcessingContext,
+} from '@mui/x-data-grid-pro/internals';
+import type {
+  GridStateInitializer,
+  GridPipeProcessor,
+  GridRestoreStatePreProcessingContext,
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';

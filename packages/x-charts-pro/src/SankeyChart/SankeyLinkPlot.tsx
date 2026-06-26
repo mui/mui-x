@@ -5,7 +5,8 @@ import { styled } from '@mui/material/styles';
 import type { SankeyLinkIdentifierWithData } from './sankey.types';
 import { SankeyLinkElement } from './SankeyLinkElement';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
+import { useUtilityClasses } from './sankeyClasses';
+import type { SankeyClasses } from './sankeyClasses';
 
 export interface SankeyLinkPlotProps {
   /**

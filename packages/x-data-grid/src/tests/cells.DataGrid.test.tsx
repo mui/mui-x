@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, type GridValueFormatter, renderLongTextCell } from '@mui/x-data-grid';
+import { DataGrid, renderLongTextCell } from '@mui/x-data-grid';
+import type { GridApi, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -130,6 +131,21 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
     expect(getCell(0, 0)).to.have.text('');
+  });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', () => {
+    const apiRef = React.createRef<GridApi>();
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid {...baselineProps} apiRef={apiRef} columns={[{ field: 'brand' }]} />
+      </div>,
+    );
+
+    // `getColumn('unknown')` returns `undefined`, which used to crash `getRowValue`
+    // with "Cannot read properties of undefined (reading 'field')".
+    expect(() => apiRef.current!.getCellParams(0, 'unknown')).not.to.throw();
+    expect(apiRef.current!.getCellParams(0, 'unknown').value).to.equal(undefined);
   });
 
   it('should call the valueFormatter with the correct params', () => {

@@ -22,11 +22,8 @@ import {
   findRightPinnedHeadersBeforeCol,
   escapeOperandAttributeSelector,
 } from '../../../utils/domUtils';
-import {
-  type GridAutosizeOptions,
-  type GridColumnResizeApi,
-  DEFAULT_GRID_AUTOSIZE_OPTIONS,
-} from './gridColumnResizeApi';
+import { DEFAULT_GRID_AUTOSIZE_OPTIONS } from './gridColumnResizeApi';
+import type { GridAutosizeOptions, GridColumnResizeApi } from './gridColumnResizeApi';
 import type { CursorCoordinates } from '../../../models/cursorCoordinates';
 import type { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
@@ -43,10 +40,8 @@ import {
   gridRenderContextSelector,
   gridVirtualizationColumnEnabledSelector,
 } from '../virtualization';
-import {
-  type ControllablePromise,
-  createControllablePromise,
-} from '../../../utils/createControllablePromise';
+import { createControllablePromise } from '../../../utils/createControllablePromise';
+import type { ControllablePromise } from '../../../utils/createControllablePromise';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';

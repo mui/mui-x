@@ -4,15 +4,13 @@ import {
   scaleSequential,
   scaleSequentialSqrt,
   scaleSequentialLog,
-  type ScaleOrdinal,
-  type ScaleThreshold,
-  type ScaleSequential,
 } from '@mui/x-charts-vendor/d3-scale';
-import {
-  type ContinuousSizeConfig,
-  type PiecewiseSizeConfig,
-  type OrdinalSizeConfig,
-  type ContinuousSizeConfigWithFunctionInterpolator,
+import type { ScaleOrdinal, ScaleThreshold, ScaleSequential } from '@mui/x-charts-vendor/d3-scale';
+import type {
+  ContinuousSizeConfig,
+  PiecewiseSizeConfig,
+  OrdinalSizeConfig,
+  ContinuousSizeConfigWithFunctionInterpolator,
 } from '../models/sizeMapping';
 
 const isFunctionInterpolator = <Value extends number | Date>(

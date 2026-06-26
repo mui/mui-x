@@ -2,21 +2,21 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { type DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
-import { type D3Scale } from '../models/axis';
+import type { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
+import type { D3Scale } from '../models/axis';
 import { useUtilityClasses } from './scatterClasses';
 import type { ScatterClasses } from './scatterClasses';
 import { useChartsContext } from '../context/ChartsProvider';
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
-import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import type { ScatterSizeGetter } from './seriesConfig/getMarkerSize';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
   selectorChartSeriesUnfadedItem,
   selectorChartSeriesHighlightedItem,
-  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { appendAtKey } from '../internals/appendAtKey';
 
 export interface BatchScatterProps {
