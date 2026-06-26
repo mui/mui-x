@@ -8,31 +8,38 @@
     "url": "https://github.com/mui/mui-x/issues"
   },
   "homepage": "https://github.com/mui/mui-x/tree/master/packages/mcp#readme",
-  "bin": "dist/stdio.cjs",
-  "types": "dist/stdio.d.cts",
-  "files": [
-    "dist"
-  ],
+  "bin": "./src/stdio.ts",
+  "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mui/mui-x.git",
     "directory": "packages/mcp"
   },
-  "devDependencies": {
+  "dependencies": {
+    "@babel/runtime": "catalog:",
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "@mui/x-agent-tools": "workspace:*",
-    "zod": "^3.25.65",
-    "tsdown": "^0.18.3",
+    "@mui/x-agent-tools": "workspace:^",
+    "@mui/x-internals": "workspace:^",
+    "zod": "^3.25.65"
+  },
+  "devDependencies": {
     "rimraf": "catalog:",
     "vitest": "catalog:"
   },
   "scripts": {
-    "build": "pnpm run build:clean && pnpm run build:mcp",
-    "build:clean": "rimraf dist",
-    "build:mcp": "tsdown --config tsdown.config.ts",
+    "typescript": "tsc -p tsconfig.json",
+    "build": "code-infra build --flat --bundle cjs --buildTypes false",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
     "test": "vitest run --config vitest.config.node.mts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
+  },
+  "engines": {
+    "node": ">=20.19"
   }
 }

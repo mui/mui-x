@@ -9,7 +9,8 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "target": "ES2017",
+    "lib": ["ES2022"],
+    "target": "ES2022",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "jsx": "react"

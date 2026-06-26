@@ -1,22 +1,47 @@
 {
   "name": "@mui/x-agent-tools",
   "version": "0.2.0",
-  "private": true,
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "types": "./src/index.ts",
+  "author": "MUI Team",
+  "description": "Shared tooling behind MUI's agent integrations (MCP server, CLI, ACP).",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
   "scripts": {
-    "dev": "tsdown --watch",
-    "build": "tsdown",
+    "typescript": "tsc -p tsconfig.json",
+    "build": "code-infra build --flat",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
     "test": "vitest run --config vitest.config.node.mts"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/x-agent-tools"
+  },
   "dependencies": {
+    "@babel/runtime": "catalog:",
+    "@mui/x-internals": "workspace:^",
     "zod": "^3.25.65",
     "p-queue": "^8.1.0",
     "eventsource-parser": "^3.0.0"
   },
   "devDependencies": {
-    "tsdown": "^0.18.3",
+    "rimraf": "catalog:",
     "vitest": "catalog:"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
+  },
+  "engines": {
+    "node": ">=20.19"
   }
 }

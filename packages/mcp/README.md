@@ -14,14 +14,14 @@ Three stdio-based tools, backed by [@mui/x-agent-tools](../x-agent-tools/):
 
 ```bash
 pnpm install                    # once, from repo root
-pnpm --filter @mui/mcp build    # produces dist/stdio.cjs
+pnpm --filter @mui/mcp build    # produces build/stdio.js
 ```
 
 Smoke test:
 
 ```bash
 echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0.1"}}}' \
-  | node packages/mcp/dist/stdio.cjs
+  | node packages/mcp/build/stdio.js
 ```
 
 Expected: `serverInfo: { name: "mui-mcp", version: "0.x.0" }` and the supported `capabilities`.
@@ -43,7 +43,7 @@ claude mcp add mui-local \
   -e MUI_BACKEND_BASE_URL=http://localhost:5002 \
   -e MUI_RECIPES_BACKEND_BASE_URL=http://localhost:5003 \
   -e MUI_DOCS_BASE_URL=http://localhost:5003 \
-  -- node /absolute/path/to/mui-x/packages/mcp/dist/stdio.cjs
+  -- node /absolute/path/to/mui-x/packages/mcp/build/stdio.js
 ```
 
 Drop any `-e` line you don't need (codegen is the only tool that requires an API key). The `--` separator is required when passing env vars. Verify with `claude mcp list`; remove with `claude mcp remove mui-local`. Writes to your personal `~/.claude.json`, never to the repo's shared `.mcp.json`.
@@ -67,7 +67,7 @@ Edit the client's config file (`~/Library/Application Support/Claude/claude_desk
   "mcpServers": {
     "mui-local": {
       "command": "node",
-      "args": ["/absolute/path/to/mui-x/packages/mcp/dist/stdio.cjs"],
+      "args": ["/absolute/path/to/mui-x/packages/mcp/build/stdio.js"],
       "env": {
         "MUI_RECIPES_API_KEY": "recipes_cli_...",
         "MUI_BACKEND_BASE_URL": "http://localhost:5002",
@@ -84,7 +84,7 @@ Drop any `env` key you don't need (only codegen requires `MUI_RECIPES_API_KEY`).
 ### MCP Inspector (debug, no client setup needed)
 
 ```bash
-npx -y @modelcontextprotocol/inspector node packages/mcp/dist/stdio.cjs
+npx -y @modelcontextprotocol/inspector node packages/mcp/build/stdio.js
 ```
 
 Opens a web UI to call tools and inspect responses in isolation.
@@ -174,11 +174,12 @@ packages/mcp/
 │       ├── handler.ts      # adapts generateReactCode to an MCP handler
 │       ├── progress.ts     # forwards codegen progress as MCP notifications
 │       └── register.ts     # builds + registers generateReactCode
-├── dist/stdio.cjs          # build output, gitignored; what MCP clients spawn
-├── tsdown.config.ts
+├── build/                  # code-infra build output, gitignored; build/stdio.js is what clients spawn
 ├── package.json
 └── tsconfig.json
 ```
+
+Built with the standard `code-infra` toolchain (`pnpm --filter @mui/mcp build`). The docs/codegen logic lives in [@mui/x-agent-tools](../x-agent-tools/), a published dependency (not bundled).
 
 ## Publishing
 
