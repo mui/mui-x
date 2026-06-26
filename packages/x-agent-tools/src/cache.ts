@@ -52,16 +52,16 @@ export class LRUCache {
   }
 
   set(url: string, content: string): void {
-    // If we're at capacity, remove the first (least recently used) item
-    if (this.cache.size >= this.max_cache_size) {
-      // Get first key in the map (least recently used)
+    if (this.cache.has(url)) {
+      // Re-insert so a refresh becomes most-recently-used (Map.set alone keeps the original position).
+      this.cache.delete(url);
+    } else if (this.cache.size >= this.max_cache_size) {
       const firstKey = this.cache.keys().next().value;
       if (firstKey) {
         this.cache.delete(firstKey);
       }
     }
 
-    // Add new entry (or update existing) at the end (most recently used)
     this.cache.set(url, {
       content,
       timestamp: Date.now(),

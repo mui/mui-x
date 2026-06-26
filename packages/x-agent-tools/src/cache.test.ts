@@ -55,6 +55,28 @@ describe('LRUCache', () => {
     expect(cache.get('c')).toBe('C');
   });
 
+  it('does not evict another entry when refreshing an existing key at capacity', () => {
+    const cache = new LRUCache(HOUR_MS, 2);
+    cache.set('a', 'A');
+    cache.set('b', 'B'); // full: { a, b }
+    cache.set('b', 'B2'); // refresh existing key — must NOT drop 'a'
+
+    expect(cache.get('a')).toBe('A');
+    expect(cache.get('b')).toBe('B2');
+  });
+
+  it('treats a refresh (set of an existing key) as a use', () => {
+    const cache = new LRUCache(HOUR_MS, 2);
+    cache.set('a', 'A');
+    cache.set('b', 'B');
+    cache.set('a', 'A2'); // 'a' becomes most-recently-used
+    cache.set('c', 'C'); // 'b' is now the LRU and gets dropped
+
+    expect(cache.get('a')).toBe('A2');
+    expect(cache.get('b')).toBe(null);
+    expect(cache.get('c')).toBe('C');
+  });
+
   it('treats a read as a use, protecting that entry from eviction', () => {
     const cache = new LRUCache(HOUR_MS, 2);
     cache.set('a', 'A');
