@@ -40,6 +40,7 @@ export async function registerDocsTools(
 
     const fetchDocsTool = await deps.createFetchDocTool({
       overrides: { description: deps.fetchDocsDescription },
+      queue: { concurrency: deps.concurrency },
       cache: true,
       logger: deps.logger,
       isUrlAllowed: deps.isUrlAllowed,

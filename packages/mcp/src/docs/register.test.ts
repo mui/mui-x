@@ -60,7 +60,12 @@ describe('registerDocsTools', () => {
       }),
     );
     expect(deps.createFetchDocTool).toHaveBeenCalledWith(
-      expect.objectContaining({ cache: true, isUrlAllowed, logger: deps.logger }),
+      expect.objectContaining({
+        cache: true,
+        isUrlAllowed,
+        logger: deps.logger,
+        queue: { concurrency: 10 },
+      }),
     );
   });
 
