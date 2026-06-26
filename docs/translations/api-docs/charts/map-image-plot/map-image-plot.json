@@ -1,0 +1,5 @@
+{
+  "componentDescription": "Renders an `<image>` stretched to the bounding box of the displayed `geoData`.\nUseful to draw a base map raster (e.g. a satellite mosaic) under the series.\nPass `href` and any other SVG image attribute; computed `x`/`y`/`width`/\n`height` can be overridden through props.",
+  "propDescriptions": {},
+  "classDescriptions": {}
+}
