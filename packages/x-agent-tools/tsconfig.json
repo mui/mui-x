@@ -11,6 +11,9 @@
     "isolatedModules": true,
     "lib": ["ES2022"],
     "target": "ES2022",
+    // Node-targeted package using Node-only APIs (Timeout.unref, process.env), so it needs real
+    // Node types. @types/node is a devDependency so the isolated CI build can resolve it.
+    "types": ["node"],
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "jsx": "react"
