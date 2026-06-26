@@ -90,7 +90,7 @@ export default function MarsMap() {
       <ChartsGeoDataProviderPremium
         geoData={marsRegions}
         projection={projection}
-        rotate={projection === 'orthographic' ? [-70, -10] : [-70, 0]}
+        rotate={projection === 'orthographic' ? [160, -10] : [0, 0]}
         height={360}
         series={[
           {
