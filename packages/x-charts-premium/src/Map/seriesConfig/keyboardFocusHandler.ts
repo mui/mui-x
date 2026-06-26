@@ -50,7 +50,8 @@ const keyboardFocusHandler: KeyboardFocusHandler<'mapShape', 'mapShape'> = (even
       ? {
           type: 'mapShape' as const,
           seriesId: currentItem.seriesId,
-          dataIndex: mapSeries?.series[currentItem.seriesId]?.lookupByName.get(currentItem.name) ?? -1,
+          dataIndex:
+            mapSeries?.series[currentItem.seriesId]?.lookupByName.get(currentItem.name) ?? -1,
         }
       : null;
 
