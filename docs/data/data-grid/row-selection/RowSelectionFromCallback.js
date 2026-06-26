@@ -2,10 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
-import {
-  DataGridPro,
-  gridRowSelectionIdsSelector,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, gridRowSelectionIdsSelector } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function RowSelectionFromCallback() {
