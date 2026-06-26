@@ -117,7 +117,7 @@ describe('mapZoomUtils', () => {
     });
 
     it('widens the allowed range as the gap grows', () => {
-      // gap = 300 px (e.g. maxGap 0.5 of a 600px area) extends the bound from 100 to 400.
+      // gap = 300 px (e.g. maxEmptySpace 0.5 of a 600px area) extends the bound from 100 to 400.
       expect(clampTranslationAxis(500, 0, box[0], box[1], area[0], area[1], 300)).to.equal(400);
     });
 

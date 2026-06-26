@@ -225,7 +225,7 @@ By default, both are derived from the chosen projection so each map behaves as e
 You can also modify the zoom result with:
 
 - `minZoomLevel`/`maxZoomLevel`: Clamp the `zoomLevel` between those two values.
-- `maxGap`: The maximal gap between the map and the drawing area as a ratio of the drawing area size. For example `maxGap=0.2` means the map need to fill at list 80% of the drawing area.
+- `maxEmptySpace`: The maximal space left empty while dragging the map. It's a ratio of the drawing area size. For example `maxEmptySpace=0.2` means you can not leave more than 20% of the drawing area empty when dragging the map.
 
 {{"demo": "MapZoomOptions.js"}}
 

@@ -100,7 +100,7 @@ export default function MapZoomOptions() {
   const [translationAllowed, setTranslationAllowed] = React.useState<
     'both' | 'x' | 'y' | 'none'
   >('y');
-  const [maxGap, setMaxGap] = React.useState(0);
+  const [maxEmptySpace, setMaxEmptySpace] = React.useState(0);
 
   return (
     <Stack
@@ -113,7 +113,7 @@ export default function MapZoomOptions() {
           geoData={isConicProjection(projection) ? USAStates : countries}
           projection={projection}
           apiRef={apiRef}
-          zoom={{ rotationAllowed, translationAllowed, maxGap }}
+          zoom={{ rotationAllowed, translationAllowed, maxEmptySpace }}
           height={360}
         >
           <ChartsSurface>
@@ -199,16 +199,16 @@ export default function MapZoomOptions() {
 
         <div>
           <Typography gutterBottom variant="caption">
-            Max Gap
+            Max Empty Space
           </Typography>
           <div>
             <ToggleButtonGroup
-              value={maxGap}
+              value={maxEmptySpace}
               exclusive
               size="small"
               onChange={(_, value) => {
                 if (value !== null) {
-                  setMaxGap(value);
+                  setMaxEmptySpace(value);
                 }
               }}
             >

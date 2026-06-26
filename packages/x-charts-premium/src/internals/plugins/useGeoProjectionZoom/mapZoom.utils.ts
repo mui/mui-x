@@ -203,7 +203,7 @@ export function getTranslation(
   geoPoint: [number, number],
   to: [number, number],
   translationAllowed: MapTranslationAxis = 'both',
-  maxGap: number = 0,
+  maxEmptySpace: number = 0,
 ): [number, number] | null {
   if (!projection.invert) {
     return null;
@@ -231,7 +231,7 @@ export function getTranslation(
   let ty = initTranslation[1] + (allowY ? deltaY : 0);
 
   // Clamp translation
-  const geoData = Number.isFinite(maxGap) ? selectorChartGeoData(store.state) : null;
+  const geoData = Number.isFinite(maxEmptySpace) ? selectorChartGeoData(store.state) : null;
   if (geoData) {
     const [[bx0, by0], [bx1, by1]] = geoPath(projection).bounds(geoData);
     tx = clampTranslationAxis(
@@ -241,7 +241,7 @@ export function getTranslation(
       bx1,
       drawingArea.left,
       drawingArea.left + drawingArea.width,
-      maxGap * drawingArea.width,
+      maxEmptySpace * drawingArea.width,
     );
     ty = clampTranslationAxis(
       ty,
@@ -250,7 +250,7 @@ export function getTranslation(
       by1,
       drawingArea.top,
       drawingArea.top + drawingArea.height,
-      maxGap * drawingArea.height,
+      maxEmptySpace * drawingArea.height,
     );
   }
 

@@ -59,13 +59,13 @@ export interface MapZoomOptions {
    */
   maxZoomLevel?: number;
   /**
-   * The maximal gap around the map while panning, expressed as a ratio of the drawing area size.
+   * The maximal space left empty while panning, expressed as a ratio of the drawing area size.
    * For example:
    * - `0` keeps the map's bounding box flush with (or covering) the drawing area.
    * - `0.5` lets the user pan until at most half of the drawing area is empty on a given side.
    * @default 0
    */
-  maxGap?: number;
+  maxEmptySpace?: number;
 }
 
 export interface UseGeoProjectionZoomParameters {

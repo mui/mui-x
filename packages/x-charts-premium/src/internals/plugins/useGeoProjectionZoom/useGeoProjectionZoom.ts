@@ -33,7 +33,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   const {
     minZoomLevel = 1,
     maxZoomLevel = 8,
-    maxGap = 0,
+    maxEmptySpace = 0,
     rotationAllowed = interactionDefaults.rotationAllowed,
     translationAllowed = interactionDefaults.translationAllowed,
   } = typeof zoom === 'object' ? zoom : {};
@@ -137,7 +137,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         geoPoint.current,
         dragCurrentPoint.current,
         translationAllowed,
-        maxGap,
+        maxEmptySpace,
       );
 
       projection.rotate(rotate);
@@ -188,7 +188,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         geoPoint,
         [point.x, point.y],
         translationAllowed,
-        maxGap,
+        maxEmptySpace,
       );
       projection.rotate(rotate);
       projection.scale(scale);
@@ -236,7 +236,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         geoPoint,
         [point.x, point.y],
         translationAllowed,
-        maxGap,
+        maxEmptySpace,
       );
       projection.rotate(rotate);
       projection.scale(scale);
