@@ -28,12 +28,10 @@ export default function BasicGeoDataPlot() {
             label: 'World',
             color: 'lightgray',
             highlightScope: { highlight: 'item', fade: 'global' },
-            data: countries.features
-              .filter((feature) => feature.properties?.name)
-              .map((feature, index) => ({
-                name: feature.properties.name,
-                color: `hsl(${(index / countries.features.length) * 360}, 50%, 70%)`,
-              })),
+            data: countries.features.map((feature, index) => ({
+              name: feature.properties?.name,
+              color: `hsl(${(index / countries.features.length) * 360}, 50%, 70%)`,
+            })),
             valueFormatter: (point) =>
               point.value != null ? `${point.value} units` : 'No data',
           },
