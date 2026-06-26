@@ -8,7 +8,9 @@ import {
 
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 // Mirrors the priority used for the Ctrl+C shortcut: selected cells, then
 // selected rows, then the focused cell. It's built entirely from public APIs,
@@ -61,19 +63,34 @@ export default function ClipboardCopyButton() {
     rowLength: 10,
     maxColumns: 6,
   });
+  const [copiedText, setCopiedText] = React.useState('');
+
+  const handleCopy = () => {
+    const text = getSelectionAsText(apiRef);
+    navigator.clipboard.writeText(text);
+    setCopiedText(text);
+  };
 
   return (
     <Stack sx={{ width: '100%' }} spacing={1}>
-      <Button
-        sx={{ alignSelf: 'flex-start' }}
-        variant="outlined"
-        onClick={() => navigator.clipboard.writeText(getSelectionAsText(apiRef))}
-      >
+      <Button sx={{ alignSelf: 'flex-start' }} variant="outlined" onClick={handleCopy}>
         Copy selection
       </Button>
       <div style={{ height: 400 }}>
         <DataGridPremium apiRef={apiRef} checkboxSelection cellSelection {...data} />
       </div>
+      <Typography variant="body2" color="text.secondary">
+        Clipboard content:
+      </Typography>
+      <Paper variant="outlined" sx={{ p: 1.5, minHeight: 48 }}>
+        <Typography
+          component="pre"
+          variant="body2"
+          sx={{ m: 0, fontFamily: 'monospace', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+        >
+          {copiedText || <Typography component="span" color="text.disabled" variant="body2">Nothing copied yet</Typography>}
+        </Typography>
+      </Paper>
     </Stack>
   );
 }
