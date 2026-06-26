@@ -2,10 +2,5 @@ import { useGeoProjectionSelectors } from '@mui/x-charts/internals';
 
 export const selectorChartGeoFeatureIndexesByName =
   useGeoProjectionSelectors.selectorChartGeoFeatureIndexesByName;
-export const selectorChartGeoProjectionState =
-  useGeoProjectionSelectors.selectorChartGeoProjectionState;
 export const selectorChartGeoData = useGeoProjectionSelectors.selectorChartGeoData;
-export const selectorChartRawProjection = useGeoProjectionSelectors.selectorChartRawProjection;
-export const selectorChartRawScale = useGeoProjectionSelectors.selectorChartRawScale;
-export const selectorChartProjection = useGeoProjectionSelectors.selectorChartProjection;
 export const selectorChartGeoPath = useGeoProjectionSelectors.selectorChartGeoPath;
