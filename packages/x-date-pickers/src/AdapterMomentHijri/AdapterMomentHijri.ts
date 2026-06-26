@@ -62,7 +62,7 @@ const defaultFormats: AdapterFormats = {
   minutes: 'mm',
   seconds: 'ss',
 
-  fullDate: 'iYYYY, iMMMM Do',
+  fullDate: 'iYYYY, iMMMM iD',
   shortDate: 'iD iMMM',
   normalDate: 'dddd, iD iMMM',
   normalDateWithWeekday: 'DD iMMMM',
