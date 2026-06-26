@@ -66,7 +66,10 @@ const roROPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Selectați data, data selectată este ${formattedDate}` : 'Selectați data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Selectați ora, ora selectată este ${formattedTime}` : 'Selectați ora',
-  openRangePickerDialogue: formattedRange => formattedRange ? `Selectați intervalul, intervalul selectat este ${formattedRange}` : 'Selectați intervalul',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+      ? `Selectați intervalul, intervalul selectat este ${formattedRange}`
+      : 'Selectați intervalul',
   fieldClearLabel: 'Golire conținut',
 
   // Table labels
