@@ -20,6 +20,9 @@ import {
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
 
+// Coarse pointer = touch/pen. Resizing while the dialog is open is a touch-only affordance.
+const TOUCH_MEDIA = '@media (pointer: coarse)';
+
 const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
   slot: 'Root',
@@ -34,6 +37,17 @@ const EventDialogRoot = styled(Dialog, {
   },
   [`& .${dialogClasses.paper}`]: {
     margin: 0,
+  },
+  // Touch only: `pointer-events` inherits, so disabling it on the root lets interactions fall through
+  // to the grid behind so the armed event stays resizable while the dialog is open; the paper
+  // re-enables them for itself. The transparent backdrop then no longer catches the tap that closes
+  // the dialog, so closing on an outside tap is handled by the grid instead (`DayTimeGrid` wires up
+  // `useDisarmOnOutsidePointer`). Non-touch keeps the standard backdrop click-to-close untouched.
+  [TOUCH_MEDIA]: {
+    pointerEvents: 'none',
+    [`& .${dialogClasses.paper}`]: {
+      pointerEvents: 'auto',
+    },
   },
 });
 
@@ -130,6 +144,9 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       PaperComponent={PaperComponent}
       aria-labelledby={`${schedulerId}-event-dialog-title`}
       aria-modal="false"
+      // Non-modal: keep the grid behind usable (focus + scroll) while the dialog is open.
+      disableEnforceFocus
+      disableScrollLock
       className={classes.eventDialog}
       slotProps={{
         paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,

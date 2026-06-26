@@ -85,27 +85,49 @@ const getTouchResizeHandleStyles = (): CSSObject => ({
   },
 });
 
-const STACKED_TITLE_LINE_HEIGHT_PX = 12;
-const STACKED_EVENT_VERTICAL_PADDING_PX = 4;
-const STACKED_TITLE_MAX_LINES = 24;
+// The root is a `container-type: size` container, so the layout reacts to the actual available space via container (size) queries.
+// Size queries use the content box, so the thresholds below already exclude the root padding.
 
-// Container-query steps that grow the (stacked) title's line clamp with the available height.
-const stackedTitleLineClampSteps: CSSObject = {};
-for (let lines = 2; lines <= STACKED_TITLE_MAX_LINES; lines += 1) {
-  const minHeight = STACKED_EVENT_VERTICAL_PADDING_PX + lines * STACKED_TITLE_LINE_HEIGHT_PX;
-  stackedTitleLineClampSteps[`@container (min-height: ${minHeight}px)`] = {
-    WebkitLineClamp: lines,
-    maxHeight: `${lines * STACKED_TITLE_LINE_HEIGHT_PX}px`,
-  };
+// Fixed line box (px) for the title/time. Both the rendered `line-height` and the clamp thresholds
+const LINE_BOX_PX = 14;
+
+// Below this content width there is no room for the time, so only the title shows (wrapped).
+const NARROW_MAX_WIDTH_PX = 50;
+
+// Below this content height a single line barely fits, so the font is capped to avoid clipping.
+const SHORT_MAX_HEIGHT_PX = LINE_BOX_PX;
+
+const TITLE_MAX_LINES = 12;
+
+const titleFontSize = 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)';
+const timeFontSize = 'var(--EventCalendar-fontSize-timeText, 0.75rem)';
+
+/**
+ * Container-query steps growing the title's line clamp with the available height. `reserveTimeLine`
+ * keeps one line free for the time row (stacked); otherwise the title uses the full height (narrow
+ * or touch, where the time is hidden). `extraConditions` scopes the steps further (e.g. a max-width).
+ */
+function titleLineClampSteps(reserveTimeLine: boolean, extraConditions: string = ''): CSSObject {
+  const steps: CSSObject = {};
+  for (let lines = 2; lines <= TITLE_MAX_LINES; lines += 1) {
+    const linesNeeded = reserveTimeLine ? lines + 1 : lines;
+    steps[`@container (min-height: ${linesNeeded * LINE_BOX_PX}px)${extraConditions}`] = {
+      WebkitLineClamp: lines,
+    };
+  }
+  return steps;
 }
 
-// Applied to every title rendered above the time (tall events, and all touch events), so the title
-// wraps to multiple lines scaled to the event height.
-const stackedTitleStyles: CSSObject = {
-  lineHeight: `${STACKED_TITLE_LINE_HEIGHT_PX}px`,
-  maxHeight: `${STACKED_TITLE_LINE_HEIGHT_PX}px`,
-  ...stackedTitleLineClampSteps,
-};
+// Caps the font on very short events so a single line fits, while keeping the responsive tier via
+// `min()` (the smaller tier still wins on narrow calendars).
+function shortEventFontStyles(fontSize: string): CSSObject {
+  return {
+    [`@container (max-height: ${SHORT_MAX_HEIGHT_PX}px)`]: {
+      fontSize: `min(${fontSize}, 11px)`,
+      lineHeight: 1,
+    },
+  };
+}
 
 const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
   '--time-grid-event-column-gap': '12px',
@@ -120,16 +142,12 @@ const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
   zIndex: 2,
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(0.25),
   justifyContent: 'flex-start',
   alignContent: 'flex-start',
   minHeight: 11.5,
   containerType: 'size',
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
-  },
-  '&[data-under-hour="true"]': {
-    flexDirection: 'row',
   },
   '&:focus-visible': {
     outline: '2px solid var(--event-surface-accent)',
@@ -148,8 +166,14 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
 })<{ palette?: PaletteName }>(({ theme }) => ({
   ...getTimeGridEventRootStyles(theme),
   padding: theme.spacing(0.5, 1, 0.5, 1),
+  // Shrink the vertical padding on shorter events so the text isn't squeezed out.
+  '&[data-under-hour="true"]': {
+    paddingTop: theme.spacing(0.25),
+    paddingBottom: theme.spacing(0.25),
+  },
   '&[data-under-fifteen-minutes="true"]': {
-    padding: theme.spacing(0, 1),
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   '&[role="button"]': {
     cursor: 'pointer',
@@ -185,6 +209,10 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   // Touch devices: tighter padding, an armed selection outline, and no accent bar.
   [TOUCH_MEDIA]: {
     padding: theme.spacing(0.5, 0.7, 0.5, 0.7),
+    '&[data-under-hour="true"]': {
+      paddingTop: theme.spacing(0.25),
+      paddingBottom: theme.spacing(0.25),
+    },
     '&[data-under-fifteen-minutes="true"]': {
       padding: theme.spacing(0, 0.5),
     },
@@ -205,19 +233,32 @@ const TimeGridEventTitle = styled(Typography, {
   margin: 0,
   color: 'var(--event-on-surface-subtle-primary)',
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)',
-  lineHeight: 1.43,
-  paddingRight: theme.spacing(1.5),
-  height: 'fit-content',
+  fontSize: titleFontSize,
+  // Fixed line box so the line count (and thus the clamp thresholds) is exact at every font tier —
+  // the title wraps to fill the available height without ever clipping a glyph.
+  lineHeight: `${LINE_BOX_PX}px`,
   ...linesClampStyles(1),
-  '@container (max-height: 20px)': {
-    fontSize: '11px',
-    lineHeight: '11px',
+  ...shortEventFontStyles(titleFontSize),
+  // Single-line titles share the line with the recurring icon (bottom-right), so reserve room for
+  // it — but only while it is shown (freed when non-recurring, narrow, or touch).
+  '[data-recurrent] &:not([data-stacked])': {
+    paddingRight: theme.spacing(1.5),
+    [`@container (max-width: ${NARROW_MAX_WIDTH_PX}px)`]: { paddingRight: 0 },
+    [TOUCH_MEDIA]: { paddingRight: 0 },
   },
-  // When the title is stacked above the time (tall events), let it wrap to multiple lines.
-  '&[data-stacked]': stackedTitleStyles,
-  // On touch every event shows the title only (the time is hidden), so the title always wraps.
-  [TOUCH_MEDIA]: stackedTitleStyles,
+  // Inline (short events): wrap the title into the available height; the start time rides at the end.
+  '&:not([data-stacked])': titleLineClampSteps(false),
+  // Stacked (tall events): wrap the title, reserving one line for the time below — unless too narrow
+  // to show the time, where it drops it and uses the full height (narrow steps win, declared last).
+  '&[data-stacked]': {
+    ...titleLineClampSteps(true),
+    ...titleLineClampSteps(false, ` and (max-width: ${NARROW_MAX_WIDTH_PX}px)`),
+  },
+  // Touch shows the title only, so it always wraps into the full height (overriding the steps above).
+  [TOUCH_MEDIA]: {
+    ...titleLineClampSteps(false),
+    '&[data-stacked]': titleLineClampSteps(false),
+  },
   [HOVER_MEDIA]: {
     '[data-editing] &': {
       color: 'var(--event-on-surface-selected)',
@@ -231,22 +272,25 @@ const TimeGridEventTime = styled('time', {
 })(({ theme }) => ({
   color: 'var(--event-on-surface-subtle-secondary)',
   fontWeight: theme.typography.fontWeightRegular,
-  fontSize: 'var(--EventCalendar-fontSize-timeText, 0.75rem)',
-  lineHeight: 1.43,
-  '&[data-lines-clamp]': {
+  fontSize: timeFontSize,
+  lineHeight: `${LINE_BOX_PX}px`,
+  // Inline variant (short events) rides at the end of the title line, so it ellipsizes first as the
+  // width shrinks. Block variant (stacked events) gets its own clamped line; hidden when too narrow.
+  '&[data-variant="block"]': {
     ...linesClampStyles(1),
+    [`@container (max-width: ${NARROW_MAX_WIDTH_PX}px)`]: {
+      display: 'none',
+    },
+  },
+  // Reserve room for the recurring icon on the time line only while the icon is shown.
+  '[data-recurrent] &[data-variant="block"]': {
     paddingInlineEnd: theme.spacing(1.5),
   },
-  '@container (max-width: 50px & max-height: 50px)': {
-    display: 'none',
-  },
-  '@container (max-height: 20px)': {
-    fontSize: '11px',
-    lineHeight: '11px',
-  },
+  ...shortEventFontStyles(timeFontSize),
   // Touch shows the title only.
   [TOUCH_MEDIA]: {
-    display: 'none',
+    '&[data-variant="inline"]': { display: 'none' },
+    '&[data-variant="block"]': { display: 'none' },
   },
   [HOVER_MEDIA]: {
     '[data-editing] &': {
@@ -265,7 +309,7 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   padding: theme.spacing(0.25),
   fontSize: 'var(--EventCalendar-fontSize-recurringIcon, 1.25rem)',
   color: 'var(--event-on-surface-subtle-secondary)',
-  '@container (max-width: 50px)': {
+  [`@container (max-width: ${NARROW_MAX_WIDTH_PX}px)`]: {
     display: 'none',
   },
   '@container (max-height: 12px)': {
@@ -374,8 +418,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const placeholderHasResizeHandles =
     placeholderType === 'creation' || placeholderType === 'internal-resize';
 
-  // Events long enough to show the time on its own line stack the title above it; shorter events
-  // show the title and start time inline.
+  // Tall events stack the title over the full time range; shorter ones show the title with the start
+  // time inline. Width-driven degradation (dropping the time, wrapping the title) is handled in CSS.
   const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
 
   const content = React.useMemo(() => {
@@ -386,7 +430,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
             <TimeGridEventTitle className={classes.timeGridEventTitle} data-stacked>
               {occurrence.title}
             </TimeGridEventTitle>
-            <TimeGridEventTime className={classes.timeGridEventTime} data-lines-clamp>
+            <TimeGridEventTime className={classes.timeGridEventTime} data-variant="block">
               {formatTime(occurrence.displayTimezone.start.value)} -{' '}
               {formatTime(occurrence.displayTimezone.end.value)}
             </TimeGridEventTime>
@@ -394,7 +438,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         ) : (
           <TimeGridEventTitle className={classes.timeGridEventTitle}>
             {occurrence.title}{' '}
-            <TimeGridEventTime className={classes.timeGridEventTime}>
+            <TimeGridEventTime className={classes.timeGridEventTime} data-variant="inline">
               {formatTime(occurrence.displayTimezone.start.value)}
             </TimeGridEventTime>
           </TimeGridEventTitle>

@@ -21,6 +21,8 @@ import clsx from 'clsx';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
+import { useEventEditingContext } from '../event-editing';
+import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
@@ -338,6 +340,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
+  const { isOpen: isEditing, onClose: stopEditing } = useEventEditingContext();
 
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -345,6 +348,14 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const containerRef = React.useRef<HTMLElement | null>(null);
   const scrollRootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
+
+  // While editing, the first tap on the grid exits editing without creating or arming another event; the resize handle is ignored so finishing a resize gesture doesn't disarm.
+  useDisarmOnOutsidePointer({
+    ref: containerRef,
+    active: isEditing,
+    onDisarm: stopEditing,
+    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
+  });
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);

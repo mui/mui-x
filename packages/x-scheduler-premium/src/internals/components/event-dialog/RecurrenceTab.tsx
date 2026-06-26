@@ -56,6 +56,8 @@ const RecurrenceSelectorContainer = styled('div', {
   slot: 'RecurrenceSelectorContainer',
 })(({ theme }) => ({
   display: 'inline-flex',
+  // Wrap the day-of-week toggles instead of overflowing in a narrow surface (e.g. the mobile drawer).
+  flexWrap: 'wrap',
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   width: 'fit-content',
@@ -116,6 +118,7 @@ const InlineRow = styled('div', {
 })({
   display: 'flex',
   alignItems: 'center',
+  flexWrap: 'wrap',
   gap: 8,
 });
 

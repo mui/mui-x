@@ -1,12 +1,10 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { DayTimeGrid } from '../day-time-grid/DayTimeGrid';
 import { DayTimeGridProps } from '../day-time-grid/DayTimeGrid.types';
 import { CompactEventDrawer } from '../compact-event-drawer';
-import { CompactEventEditingProvider, useEventEditingContext } from '../event-editing';
-import { useDisarmOnOutsidePointer } from '../armed-occurrence';
+import { CompactEventEditingProvider } from '../event-editing';
 
 // Column layout so the drawer sits below the grid and the grid shrinks to make room for it
 // (rather than the drawer overlaying the grid).
@@ -36,24 +34,11 @@ const CompactDayTimeGridContainer = React.forwardRef(function CompactDayTimeGrid
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  // The in-flow drawer has no outside-click dismissal of its own, so close it (which also disarms
-  // the event, since arming follows the editing state) when a tap lands outside the open event.
-  const { isOpen, onClose } = useEventEditingContext();
-  const contentRef = React.useRef<HTMLDivElement>(null);
-
-  // While editing, the first tap on the grid exits editing (closing the drawer) without creating or
-  // arming another event; the next tap creates or arms. The resize handle is ignored so finishing a
-  // resize gesture doesn't disarm.
-  useDisarmOnOutsidePointer({
-    ref: contentRef,
-    active: isOpen,
-    onDisarm: onClose,
-    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
-  });
-
+  // Tap-to-exit-editing lives in `DayTimeGrid` (shared with the desktop dialog), so the in-flow
+  // drawer — which has no backdrop of its own — gets the same outside-tap dismissal for free.
   return (
     <CompactDayTimeGridRoot>
-      <CompactDayTimeGridContent ref={contentRef}>
+      <CompactDayTimeGridContent>
         <DayTimeGrid ref={forwardedRef} {...props} />
       </CompactDayTimeGridContent>
       <CompactEventDrawer />
