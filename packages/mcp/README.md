@@ -13,8 +13,8 @@ Three stdio-based tools, backed by [@mui/x-agent-tools](../x-agent-tools/):
 ## Quick start
 
 ```bash
-pnpm install                    # once, from repo root
-pnpm --filter @mui/mcp build    # produces build/stdio.js
+pnpm install                          # once, from repo root
+pnpm --filter @mui/mcp build:local    # builds @mui/x-agent-tools first, then @mui/mcp -> build/stdio.js
 ```
 
 Smoke test:
@@ -152,10 +152,11 @@ If you're building an integration around `generateReactCode`, design for "the ag
 
 Tool implementations live in [@mui/x-agent-tools](../x-agent-tools/). This package is a thin SDK wrapper that registers them over the MCP protocol.
 
-Dev loop: edit `src/`, rebuild, restart your MCP client (Inspector reloads automatically).
+Dev loop: edit `src/`, rebuild, restart your MCP client (Inspector reloads automatically). `build:local`
+also rebuilds `@mui/x-agent-tools` when you change it (skipped when unchanged).
 
 ```bash
-pnpm --filter @mui/mcp build
+pnpm --filter @mui/mcp build:local
 ```
 
 Source layout:
@@ -179,7 +180,7 @@ packages/mcp/
 └── tsconfig.json
 ```
 
-Built with the standard `code-infra` toolchain (`pnpm --filter @mui/mcp build`). The docs/codegen logic lives in [@mui/x-agent-tools](../x-agent-tools/), a published dependency (not bundled).
+Built with the standard `code-infra` toolchain. The docs/codegen logic lives in [@mui/x-agent-tools](../x-agent-tools/), a published dependency that pnpm links from its `build/` output, so it must be built first — the `build:local` script (`pnpm --filter @mui/mcp build:local`, which expands to `pnpm --filter "@mui/mcp..." build`) handles that.
 
 ## Publishing
 

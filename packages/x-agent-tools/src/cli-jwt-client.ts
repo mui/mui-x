@@ -63,7 +63,7 @@ export class CliJwtClient {
     if (!options.muiBackendBaseUrl) {
       throw new CliJwtClientError(
         'token_exchange_failed',
-        'CliJwtClient: muiBackendBaseUrl is required',
+        'MUI X Agent Tools: muiBackendBaseUrl is required to exchange the API key for a JWT.',
       );
     }
     this.muiBackendBaseUrl = options.muiBackendBaseUrl.replace(/\/+$/, '');
@@ -108,7 +108,7 @@ export class CliJwtClient {
     if (!key) {
       throw new CliJwtClientError(
         'missing_api_key',
-        `Missing API key. Set the ${RECIPES_API_KEY_ENV} env var (or pass apiKey to CliJwtClient). Create a key at console.mui.com/products/recipes/api-keys.`,
+        `MUI X Agent Tools: Missing API key. Set the ${RECIPES_API_KEY_ENV} env var (or pass apiKey to CliJwtClient). Create a key at console.mui.com/products/recipes/api-keys.`,
       );
     }
     return key;
@@ -127,7 +127,7 @@ export class CliJwtClient {
     } catch (cause) {
       throw new CliJwtClientError(
         'token_exchange_failed',
-        `Token exchange failed: ${cause instanceof Error ? cause.message : String(cause)}. Retry shortly.`,
+        `MUI X Agent Tools: Token exchange failed: ${cause instanceof Error ? cause.message : String(cause)}. Retry shortly.`,
         { cause },
       );
     }
@@ -136,7 +136,7 @@ export class CliJwtClient {
       this.invalidate();
       throw new CliJwtClientError(
         'api_key_invalid',
-        'API key invalid or revoked. Create a new one at console.mui.com/products/recipes/api-keys.',
+        'MUI X Agent Tools: API key invalid or revoked. Create a new one at console.mui.com/products/recipes/api-keys.',
         { status: 401 },
       );
     }
@@ -144,14 +144,14 @@ export class CliJwtClient {
       this.invalidate();
       throw new CliJwtClientError(
         'api_key_forbidden',
-        "API key is not authorized to mint a JWT (organization membership may have been lost). Verify the key's owner and try again.",
+        "MUI X Agent Tools: API key is not authorized to mint a JWT (organization membership may have been lost). Verify the key's owner and try again.",
         { status: 403 },
       );
     }
     if (!response.ok) {
       throw new CliJwtClientError(
         'token_exchange_failed',
-        `Token exchange failed with HTTP ${response.status}. Retry shortly.`,
+        `MUI X Agent Tools: Token exchange failed with HTTP ${response.status}. Retry shortly.`,
         { status: response.status },
       );
     }
@@ -160,7 +160,7 @@ export class CliJwtClient {
     if (!data?.token || !data.expiresAt) {
       throw new CliJwtClientError(
         'token_exchange_failed',
-        'Token exchange returned an unexpected response shape.',
+        'MUI X Agent Tools: Token exchange returned an unexpected response shape.',
       );
     }
 
