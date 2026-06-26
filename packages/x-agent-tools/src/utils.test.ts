@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import PQueue from 'p-queue';
 import { z } from 'zod';
 import { LRUCache } from './cache';
-import { wrapTool, urlListFetcher, createDocsUrlGuard } from './utils';
+import { wrapTool, urlListFetcher, createDocsUrlGuard, absolutizeDocLinks } from './utils';
 
 const ok = (body: string): Response => new Response(body, { status: 200 });
 
@@ -226,5 +226,24 @@ describe('createDocsUrlGuard', () => {
     const guard = createDocsUrlGuard([]);
     expect(guard('file:///etc/passwd')).toBe(false);
     expect(guard('not a url')).toBe(false);
+  });
+});
+
+describe('absolutizeDocLinks', () => {
+  it('rewrites site-absolute markdown links against the source origin', () => {
+    const md = '- [Row selection](/x/react-data-grid/row-selection.md)';
+    expect(absolutizeDocLinks(md, 'https://mui.com/x/react-data-grid/llms.txt')).toBe(
+      '- [Row selection](https://mui.com/x/react-data-grid/row-selection.md)',
+    );
+  });
+
+  it('leaves already-absolute URLs, anchors, and mailto links untouched', () => {
+    const md = '[a](https://mui.com/x/a.md) [b](#section) [c](mailto:x@mui.com)';
+    expect(absolutizeDocLinks(md, 'https://mui.com/x/llms.txt')).toBe(md);
+  });
+
+  it('returns the markdown unchanged when the base URL is invalid', () => {
+    const md = '[a](/x/a.md)';
+    expect(absolutizeDocLinks(md, 'not a url')).toBe(md);
   });
 });

@@ -30,9 +30,13 @@ export async function createUseMuiDocsTool(options: {
   // The cache lives for the lifetime of this tool; the host owns it, not a module-level singleton.
   const cache = options.cache ? new LRUCache() : undefined;
   const { logger, isUrlAllowed } = options;
-  const availablePackagesText = await options.getPackagesList().then((packages) => {
-    return packages.map((it) => `[${it.name}@${it.version}](${it.llmsUrl})`).join('\n');
-  });
+  const packages = await options.getPackagesList();
+  const availablePackagesText = packages
+    .map((it) => `[${it.name}@${it.version}](${it.llmsUrl})`)
+    .join('\n');
+  // Resolve a bare package name (e.g. `@mui/x-data-grid`) to its llms.txt URL, so the agent can
+  // pass either the URL from the list above or just the package name and still get docs back.
+  const llmsUrlByPackageName = new Map(packages.map((it) => [it.name, it.llmsUrl]));
 
   return wrapTool({
     name: 'use_mui_docs',
@@ -44,17 +48,28 @@ export async function createUseMuiDocsTool(options: {
 
       ${availablePackagesText}
 
-      1. Pick the most suitable URL from the above list, and use that as the "urlList" argument for this tool's execution, to get the docs content. If it's just one, let it be an array with one URL.
-      2. Analyze the URLs listed in the llms.txt file
+      1. Pick the most suitable entry from the above list and use it as the "urlList" argument. You can pass either the llms.txt URL or just the package name (e.g. "@mui/x-data-grid"); both resolve to the same docs. If it's just one, let it be an array with one entry.
+      2. Analyze the URLs listed in the llms.txt file. They are returned as absolute URLs, ready to pass to the next tool call.
       3. Then fetch specific documentation pages relevant to the user's question with the subsequent tool call.
     `,
     ...options.overrides,
     inputSchema: z.object({
-      urlList: z.array(z.string()).describe('The list of urls to fetch the documentation from'),
+      urlList: z
+        .array(z.string())
+        .describe(
+          'The documentation sources to fetch: each entry is either an llms.txt URL from the list above or a package name (e.g. "@mui/x-data-grid"), which resolves to that package\'s llms.txt.',
+        ),
     }),
     outputSchema: z.string().describe('A string containing the fetched documentation content'),
     execute: async (input) => {
-      return urlListFetcher(queue, fetcher, input.urlList, { cache, logger, isUrlAllowed });
+      // Accept package names as well as URLs: map any known package name to its llms.txt URL.
+      const urls = input.urlList.map((entry) => llmsUrlByPackageName.get(entry) ?? entry);
+      return urlListFetcher(queue, fetcher, urls, {
+        cache,
+        logger,
+        isUrlAllowed,
+        resolveDocLinks: true,
+      });
     },
   });
 }

@@ -65,6 +65,24 @@ export interface UrlListFetcherOptions {
   // Validates each URL before it is fetched. Returning false blocks the request (SSRF guard); the
   // result for that URL is an error string. Omit to allow any URL (the host should set this).
   isUrlAllowed?: (url: string) => boolean;
+  // When true, site-absolute markdown links in each response (e.g. `](/x/react-data-grid/foo.md)`,
+  // as listed in MUI `llms.txt` indexes) are rewritten to absolute URLs against the source URL's
+  // origin, so the agent can pass them straight to the next fetch without resolving paths itself.
+  resolveDocLinks?: boolean;
+}
+
+// Rewrite site-absolute markdown link targets (`](/path)`) to absolute URLs against `baseUrl`'s
+// origin. `llms.txt` indexes list relative paths; absolutizing them keeps the next fetch valid (a
+// bare `/path` is not a valid URL and would be rejected by the SSRF guard). Other targets
+// (already-absolute URLs, anchors, mailto, etc.) are left untouched.
+export function absolutizeDocLinks(markdown: string, baseUrl: string): string {
+  let origin: string;
+  try {
+    origin = new URL(baseUrl).origin;
+  } catch {
+    return markdown;
+  }
+  return markdown.replace(/\]\((\/[^)]*)\)/g, (_match, path) => `](${origin}${path})`);
 }
 
 export function wrapTool<SchemaInputT extends ZodObjectAny, SchemaOutputT extends ZodObjectAny>(
@@ -123,7 +141,7 @@ export function urlListFetcher(
   urlList: string[],
   options: UrlListFetcherOptions = {},
 ) {
-  const { cache, logger = noopLogger, isUrlAllowed } = options;
+  const { cache, logger = noopLogger, isUrlAllowed, resolveDocLinks } = options;
   return Promise.all(
     urlList.map((url) =>
       queue.add(async () => {
@@ -141,7 +159,8 @@ export function urlListFetcher(
             // surfaces standalone: no need for an error code.
             throw /* minify-error-disabled */ new Error(`HTTP error! status: ${response.status}`);
           }
-          const responseText = await response.text();
+          const rawText = await response.text();
+          const responseText = resolveDocLinks ? absolutizeDocLinks(rawText, url) : rawText;
 
           if (cache) {
             queueMicrotask(() => {

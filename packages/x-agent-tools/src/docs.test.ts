@@ -39,6 +39,33 @@ describe('createUseMuiDocsTool', () => {
     expect(fetcher).toHaveBeenCalledWith('https://llms.example/material');
   });
 
+  it('resolves a bare package name to its llms.txt URL', async () => {
+    const fetcher = vi.fn().mockResolvedValue(ok('the docs'));
+    const tool = await createUseMuiDocsTool({
+      getPackagesList: async () => samplePackages,
+      fetcher,
+    });
+
+    const result = await tool.execute({ urlList: ['@mui/material'] });
+
+    expect(result).toBe('the docs');
+    expect(fetcher).toHaveBeenCalledWith('https://llms.example/material');
+  });
+
+  it('rewrites site-absolute links in the response to absolute URLs', async () => {
+    const llms = '# Docs\n- [Row selection](/x/react-data-grid/row-selection.md)';
+    const fetcher = vi.fn().mockResolvedValue(ok(llms));
+    const tool = await createUseMuiDocsTool({
+      getPackagesList: async () => samplePackages,
+      fetcher,
+    });
+
+    const result = await tool.execute({ urlList: ['https://llms.example/material'] });
+
+    expect(result).toContain('](https://llms.example/x/react-data-grid/row-selection.md)');
+    expect(result).not.toContain('](/x/react-data-grid/row-selection.md)');
+  });
+
   it('applies name and description overrides', async () => {
     const tool = await createUseMuiDocsTool({
       getPackagesList: async () => samplePackages,
