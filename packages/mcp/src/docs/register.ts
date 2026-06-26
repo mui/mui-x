@@ -66,7 +66,7 @@ export async function registerDocsTools(
     return true;
   } catch (error) {
     deps.logger(
-      'MUI X MCP: Could not register the docs tools (the docs catalog was unreachable at startup). ' +
+      'MUI MCP: Could not register the docs tools (the docs catalog was unreachable at startup). ' +
         'generateReactCode is still available; restart the server once the docs backend recovers.',
       error,
     );

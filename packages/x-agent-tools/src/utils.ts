@@ -110,7 +110,9 @@ async function fetchFollowingGuardedRedirects(
     }
     target = new URL(location, target).toString();
   }
-  throw new Error(`Exceeded ${MAX_REDIRECTS} redirects`);
+  // Caught internally and folded into the "Could not fetch …" string, so it never surfaces as a
+  // standalone error: no need for an error code.
+  throw /* minify-error-disabled */ new Error(`Exceeded ${MAX_REDIRECTS} redirects`);
 }
 
 export function urlListFetcher(
@@ -133,7 +135,9 @@ export function urlListFetcher(
         try {
           const response = await fetchFollowingGuardedRedirects(fetcher, url, isUrlAllowed);
           if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            // Caught just below and folded into the "Could not fetch …" string, so it never
+            // surfaces standalone: no need for an error code.
+            throw /* minify-error-disabled */ new Error(`HTTP error! status: ${response.status}`);
           }
           const responseText = await response.text();
 

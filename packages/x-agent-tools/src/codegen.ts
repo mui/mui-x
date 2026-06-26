@@ -226,7 +226,9 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
           options.invalidateToken?.();
         }
         const body = await safeJson(generateResponse);
-        throw new Error(translateBackendError(generateResponse.status, body));
+        throw new Error(
+          `MUI X Agent Tools: ${translateBackendError(generateResponse.status, body)}`,
+        );
       }
 
       const generated = generateResponseSchema.parse(await generateResponse.json());
@@ -248,7 +250,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
           options.invalidateToken?.();
         }
         const body = await safeJson(streamResponse);
-        throw new Error(translateBackendError(streamResponse.status, body));
+        throw new Error(`MUI X Agent Tools: ${translateBackendError(streamResponse.status, body)}`);
       }
 
       const { files, explanation } = await consumeCodegenStream(
@@ -276,7 +278,7 @@ async function consumeCodegenStream(
   explanation: string;
 }> {
   if (!response.body) {
-    throw new Error('Backend returned an SSE response with no body.');
+    throw new Error('MUI X Agent Tools: Backend returned an SSE response with no body.');
   }
 
   const files = new Map<string, string>(); // last-write-wins for a given filename
@@ -335,7 +337,7 @@ async function consumeCodegenStream(
             return;
           }
           finished = true;
-          reject(new Error(outcome.message));
+          reject(new Error(`MUI X Agent Tools: ${outcome.message}`));
           return;
         }
         if (outcome.kind === 'file') {
@@ -351,11 +353,13 @@ async function consumeCodegenStream(
       }
       finished = true;
       if (err) {
-        reject(new Error(`SSE stream errored: ${err.message}`));
+        reject(new Error(`MUI X Agent Tools: SSE stream errored: ${err.message}`));
       } else {
         // Stream closed without `[DONE]`: treat as truncated so the agent retries.
         reject(
-          new Error('Generation stream ended unexpectedly before `[DONE]`. Retry the request.'),
+          new Error(
+            'MUI X Agent Tools: Generation stream ended unexpectedly before `[DONE]`. Retry the request.',
+          ),
         );
       }
     });

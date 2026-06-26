@@ -31,12 +31,12 @@ describe('fetchRemotePackages', () => {
 
   it('throws an actionable MUI X error when the response is an empty array', async () => {
     const fetcher = vi.fn().mockResolvedValue(json([]));
-    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/MUI X MCP: .*returned no packages/);
+    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/MUI MCP: .*returned no packages/);
   });
 
   it('throws an actionable MUI X error when the response is not an array', async () => {
     const fetcher = vi.fn().mockResolvedValue(json({ unexpected: 'shape' }));
-    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/MUI X MCP: .*returned no packages/);
+    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/MUI MCP: .*returned no packages/);
   });
 
   it('propagates network errors from the fetcher (host can decide to retry)', async () => {
