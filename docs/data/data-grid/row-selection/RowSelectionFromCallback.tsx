@@ -1,10 +1,12 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
 import {
   DataGridPro,
   GridCallbackDetails,
   GridFilterModel,
   GridRowSelectionModel,
-  gridFilterModelSelector,
   gridRowSelectionIdsSelector,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -16,32 +18,61 @@ export default function RowSelectionFromCallback() {
     maxColumns: 6,
   });
 
-  const logSelectionAndFilter = (details: GridCallbackDetails) => {
+  const [selectedDesks, setSelectedDesks] = React.useState<string[]>([]);
+
+  const updateSelectionAndFilter = (details: GridCallbackDetails) => {
     // `details.api` is the same object as `apiRef.current`, so it can be passed
     // to any selector by wrapping it in a ref-shaped object: `{ current: details.api }`
     const apiRef = { current: details.api };
-    console.log('selected rows:', gridRowSelectionIdsSelector(apiRef));
-    console.log('filter model:', gridFilterModelSelector(apiRef));
+    const selectedRows = gridRowSelectionIdsSelector(apiRef);
+    const desks = [...selectedRows.values()].map((row) => row?.desk).filter(Boolean);
+    setSelectedDesks(desks);
   };
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       <DataGridPro
         checkboxSelection
         onRowSelectionModelChange={(
           newRowSelectionModel: GridRowSelectionModel,
           details: GridCallbackDetails,
         ) => {
-          logSelectionAndFilter(details);
+          updateSelectionAndFilter(details);
         }}
         onFilterModelChange={(
           newFilterModel: GridFilterModel,
           details: GridCallbackDetails,
         ) => {
-          logSelectionAndFilter(details);
+          updateSelectionAndFilter(details);
         }}
         {...data}
+        sx={{ height: 400 }}
       />
-    </div>
+      <Box
+        sx={{
+          mt: 1,
+          p: 1.5,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+          minHeight: 48,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          flexWrap: 'wrap',
+        }}
+      >
+        <Typography variant="body2" color="text.secondary" sx={{ mr: 0.5 }}>
+          Selected desks:
+        </Typography>
+        {selectedDesks.length === 0 ? (
+          <Typography variant="body2" color="text.disabled">
+            None
+          </Typography>
+        ) : (
+          selectedDesks.map((desk) => <Chip key={desk} label={desk} size="small" />)
+        )}
+      </Box>
+    </Box>
   );
 }
