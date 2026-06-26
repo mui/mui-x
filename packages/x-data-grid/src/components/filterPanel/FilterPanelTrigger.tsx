@@ -63,8 +63,8 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
     const filterCount = activeFilters.length;
     const state = { open, filterCount };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
-    const { filterPanelTriggerRef } = useGridPanelContext();
-    const handleRef = useForkRef(ref, filterPanelTriggerRef);
+    const { triggers } = useGridPanelContext();
+    const handleRef = useForkRef(ref, triggers.filterPanel.setRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {
