@@ -50,6 +50,7 @@ describe('<AdapterMomentHijri />', () => {
       expectDate('keyboardDate', '١٤٤١/٠٥/٠٦');
       expectDate('fullDate', '١٤٤١، جمادى الأولى ١');
       expectDate('normalDate', 'الأربعاء، ٦ جمادى ١');
+      expectDate('normalDateWithWeekday', 'أربعاء، ٦ جمادى الأولى');
       expectDate('shortDate', '٦ جمادى ١');
       expectDate('year', '١٤٤١');
       expectDate('month', 'جمادى الأولى');
