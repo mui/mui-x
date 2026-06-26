@@ -456,7 +456,9 @@ async function pumpStream(
     }
     onDone();
   } catch (err) {
-    onDone(err instanceof Error ? err : new Error(String(err)));
+    // Fallback wrap for a non-Error rejection; the message is dynamic (not a literal), so it can't
+    // be minified into an error code.
+    onDone(err instanceof Error ? err : /* minify-error-disabled */ new Error(String(err)));
   }
 }
 
