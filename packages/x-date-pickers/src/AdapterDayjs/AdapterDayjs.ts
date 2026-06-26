@@ -1,5 +1,6 @@
 /* v8 ignore start */
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 // dayjs has no exports field defined
 // See https://github.com/iamkun/dayjs/issues/2562
 /* eslint-disable import/extensions */
@@ -11,7 +12,7 @@ import advancedFormatPlugin from 'dayjs/plugin/advancedFormat.js';
 /* v8 ignore stop */
 /* eslint-enable import/extensions */
 import { warnOnce } from '@mui/x-internals/warning';
-import {
+import type {
   FieldFormatTokenMap,
   MuiPickersAdapter,
   AdapterFormats,

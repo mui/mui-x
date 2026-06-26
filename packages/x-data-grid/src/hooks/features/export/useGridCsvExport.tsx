@@ -8,8 +8,10 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { getColumnsToExport, defaultGetRowsToExport } from './utils';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
-import { type GridExportDisplayOptions, GridCsvExportMenuItem } from '../../../components/toolbar';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
+import { GridCsvExportMenuItem } from '../../../components/toolbar';
+import type { GridExportDisplayOptions } from '../../../components/toolbar';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 /**

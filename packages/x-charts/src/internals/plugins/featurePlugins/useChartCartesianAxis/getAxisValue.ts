@@ -1,7 +1,7 @@
 import { isOrdinalScale } from '../../../scaleGuards';
 import { getAsNumber } from '../../../getAsNumber';
 import { findClosestIndex } from '../../../findClosestIndex';
-import { type ComputedAxis, type D3Scale } from '../../../../models/axis';
+import type { ComputedAxis, D3Scale } from '../../../../models/axis';
 
 /**
  * For a pointer coordinate, this function returns the dataIndex associated.

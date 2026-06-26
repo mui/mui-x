@@ -22,7 +22,7 @@ catalog:
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.1.1
   '@mui/internal-test-utils': 2.0.18-canary.25
-  '@mui/internal-core-docs': 9.1.2-canary.0
+  '@mui/internal-core-docs': 9.1.2-canary.2
   '@mui/material': 9.1.1
   '@mui/stylis-plugin-rtl': 9.1.1
   '@mui/system': 9.1.1
@@ -92,9 +92,6 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
   - '@base-ui/*'
-  # nanoid@3.3.14 fails the no-downgrade trust policy (no provenance); this forces the attested 3.3.15.
-  # Removable from 2026-06-25, once 3.3.15 ages past minimumReleaseAge.
-  - 'nanoid@3.3.15'
 trustPolicy: no-downgrade
 # Skip trust-policy checks for packages published more than 365 days ago.
 # Some widely-used legacy packages (notably semver@6.x — pulled in by @babel/core@7.x — plus

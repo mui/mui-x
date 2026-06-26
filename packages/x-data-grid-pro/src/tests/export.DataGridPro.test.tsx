@@ -1,11 +1,6 @@
-import {
-  type GridColDef,
-  useGridApiRef,
-  DataGridPro,
-  type GridApi,
-  type DataGridProProps,
-} from '@mui/x-data-grid-pro';
-import { type RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { includeRowSelection } from 'test/utils/helperFn';
 

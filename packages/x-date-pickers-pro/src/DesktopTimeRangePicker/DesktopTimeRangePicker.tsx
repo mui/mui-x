@@ -2,12 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import {
+import type {
   TimeViewWithMeridiem,
-  resolveTimeFormat,
   PickerRangeValue,
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
+} from '@mui/x-date-pickers/internals';
+import {
+  resolveTimeFormat,
   mergeSx,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '@mui/x-date-pickers/internals';
@@ -22,17 +24,17 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '@mui/x-date-pickers/timeViewRenderers';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
-import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
+import type { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
 import { SingleInputTimeRangeField } from '../SingleInputTimeRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
-import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
 const STEPS: PickerRangeStep[] = [
   { views: null, rangePosition: 'start' },

@@ -1,7 +1,7 @@
-import { type Store } from '@mui/x-internals/store';
+import type { Store } from '@mui/x-internals/store';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import type { ChartCorePluginSignatures } from '../corePlugins';
-import { type ChartState } from './chart';
+import type { ChartState } from './chart';
 
 export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> {
   /**
