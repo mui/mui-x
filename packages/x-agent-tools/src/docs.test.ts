@@ -33,7 +33,7 @@ describe('createUseMuiDocsTool', () => {
       fetcher,
     });
 
-    const result = await tool.execute({ urlList: ['https://llms.example/material'] });
+    const result = await tool.execute({ sources: ['https://llms.example/material'] });
 
     expect(result).toBe('the docs');
     expect(fetcher).toHaveBeenCalledWith('https://llms.example/material');
@@ -46,7 +46,7 @@ describe('createUseMuiDocsTool', () => {
       fetcher,
     });
 
-    const result = await tool.execute({ urlList: ['@mui/material'] });
+    const result = await tool.execute({ sources: ['@mui/material'] });
 
     expect(result).toBe('the docs');
     expect(fetcher).toHaveBeenCalledWith('https://llms.example/material');
@@ -60,7 +60,7 @@ describe('createUseMuiDocsTool', () => {
       fetcher,
     });
 
-    const result = await tool.execute({ urlList: ['https://llms.example/material'] });
+    const result = await tool.execute({ sources: ['https://llms.example/material'] });
 
     expect(result).toContain('](https://llms.example/x/react-data-grid/row-selection.md)');
     expect(result).not.toContain('](/x/react-data-grid/row-selection.md)');
@@ -84,7 +84,7 @@ describe('createUseMuiDocsTool', () => {
       isUrlAllowed: (url) => url.startsWith('https://llms.example/'),
     });
 
-    const result = await tool.execute({ urlList: ['http://169.254.169.254/latest/meta-data/'] });
+    const result = await tool.execute({ sources: ['http://169.254.169.254/latest/meta-data/'] });
 
     expect(result).toContain('blocked for security');
     expect(fetcher).not.toHaveBeenCalled();

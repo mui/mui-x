@@ -48,13 +48,13 @@ export async function createUseMuiDocsTool(options: {
 
       ${availablePackagesText}
 
-      1. Pick the most suitable entry from the above list and use it as the "urlList" argument. You can pass either the llms.txt URL or just the package name (e.g. "@mui/x-data-grid"); both resolve to the same docs. If it's just one, let it be an array with one entry.
+      1. Pick the most suitable entry from the above list and use it as the "sources" argument. You can pass either the llms.txt URL or just the package name (e.g. "@mui/x-data-grid"); both resolve to the same docs. If it's just one, let it be an array with one entry.
       2. Analyze the URLs listed in the llms.txt file. They are returned as absolute URLs, ready to pass to the next tool call.
       3. Then fetch specific documentation pages relevant to the user's question with the subsequent tool call.
     `,
     ...options.overrides,
     inputSchema: z.object({
-      urlList: z
+      sources: z
         .array(z.string())
         .describe(
           'The documentation sources to fetch: each entry is either an llms.txt URL from the list above or a package name (e.g. "@mui/x-data-grid"), which resolves to that package\'s llms.txt.',
@@ -63,7 +63,7 @@ export async function createUseMuiDocsTool(options: {
     outputSchema: z.string().describe('A string containing the fetched documentation content'),
     execute: async (input) => {
       // Accept package names as well as URLs: map any known package name to its llms.txt URL.
-      const urls = input.urlList.map((entry) => llmsUrlByPackageName.get(entry) ?? entry);
+      const urls = input.sources.map((entry) => llmsUrlByPackageName.get(entry) ?? entry);
       return urlListFetcher(queue, fetcher, urls, {
         cache,
         logger,

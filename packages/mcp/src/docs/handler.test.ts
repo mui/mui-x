@@ -7,10 +7,10 @@ describe('buildDocsHandler', () => {
     const tool = { publicName: 'useMuiDocs', execute };
     const handler = buildDocsHandler(tool, vi.fn());
 
-    const result = await handler({ urlList: ['x'] });
+    const result = await handler({ sources: ['x'] });
 
     expect(result).toEqual({ content: [{ type: 'text', text: 'the docs content' }] });
-    expect(execute).toHaveBeenCalledWith({ urlList: ['x'] });
+    expect(execute).toHaveBeenCalledWith({ sources: ['x'] });
   });
 
   it('logs success duration with the tool publicName', async () => {
