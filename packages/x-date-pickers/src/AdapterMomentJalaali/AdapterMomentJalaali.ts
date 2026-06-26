@@ -61,11 +61,11 @@ const defaultFormats: AdapterFormats = {
   minutes: 'mm',
   seconds: 'ss',
 
-  fullDate: 'jYYYY, jMMMM Do',
+  fullDate: 'jYYYY, jMMMM jD',
   keyboardDate: 'jYYYY/jMM/jDD',
   shortDate: 'jD jMMM',
   normalDate: 'dddd, jD jMMM',
-  normalDateWithWeekday: 'DD MMMM',
+  normalDateWithWeekday: 'ddd, jD jMMMM',
 
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
