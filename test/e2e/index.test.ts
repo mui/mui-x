@@ -371,7 +371,7 @@ async function initializeEnvironment(
 
           await page.keyboard.press('Enter');
 
-          await page.getByText('1/31/2025, 4:05:00 PM').waitFor();
+          await page.getByText('1/31/2025, 4:05:00 AM').waitFor();
         },
       );
 
