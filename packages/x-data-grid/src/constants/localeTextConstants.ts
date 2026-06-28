@@ -55,6 +55,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI Assistant',
 
+  // Toolbar Copilot button
+  toolbarCopilot: 'Copilot',
+
   // Columns management text
   columnsManagementSearchTitle: 'Search',
   columnsManagementNoColumns: 'No columns',
@@ -298,6 +301,28 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   aiAssistantPanelConversationHistory: 'Conversation history',
   aiAssistantPanelEmptyConversation: 'No prompt history',
   aiAssistantSuggestions: 'Suggestions',
+
+  // Copilot panel
+  copilotPanelTitle: 'Copilot',
+  copilotPanelClose: 'Close Copilot',
+  copilotPanelBeta: 'BETA',
+  copilotPanelReload: 'New conversation',
+  copilotPanelEmptyStateTitle: 'How can I help?',
+  copilotPanelEmptyStateHelper:
+    'Ask anything about your data, or pick a suggestion to get started.',
+  copilotPanelMenu: 'Open Copilot menu',
+  copilotPanelBack: 'Back to Copilot',
+  copilotPanelHistory: 'History',
+  copilotPanelMoreSuggestions: 'More suggestions',
+  copilotPanelViewAll: 'View all',
+  copilotPanelSettings: 'Settings',
+  copilotPanelSendFeedback: 'Send feedback',
+  copilotPanelReport: 'Report',
+  copilotPanelSession: 'This session',
+  copilotPanelAll: 'Earlier',
+  copilotPanelAsk: 'Ask',
+  copilotPanelToday: 'Today',
+  copilotPanelYesterday: 'Yesterday',
 
   // Prompt field
   promptFieldLabel: 'Prompt',

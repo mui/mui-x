@@ -77,6 +77,16 @@ export interface ChatLoadMoreResult<Cursor = string> {
 }
 
 export interface ChatAdapter<Cursor = string> {
+  /**
+   * Opt-in flag. When `true`, the chat runtime allows the `sendMessage`
+   * stream to land more than one assistant message per call — the chunk
+   * stream may carry multiple `start` chunks with distinct `messageId`s.
+   * Used by adapters that fan out parallel responses (e.g. the grid
+   * Copilot A/B adapter merges a primary + twin fetch into one logical
+   * stream). Leave undefined / `false` for the single-response default.
+   */
+  allowMultipleMessages?: boolean;
+
   listConversations?(
     input?: ChatListConversationsInput<Cursor>,
   ): Promise<ChatListConversationsResult<Cursor>>;

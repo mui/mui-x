@@ -1,0 +1,678 @@
+{
+  "query": "Build a single-page PDF fulfillment report. Use EXACTLY ONE queryGridData call (mode:'aggregate', sum and avg over quantity and filledQuantity), then composePdfReport with the actual computed values. Do not ask any clarifying question.",
+  "gridContext": {
+    "version": 1,
+    "capabilities": {
+      "guards": {
+        "filter": true,
+        "sort": true,
+        "grouping": true,
+        "aggregation": true,
+        "pivoting": true,
+        "rowSelection": true,
+        "chartsIntegration": true,
+        "mutations": false
+      },
+      "plan": "premium"
+    },
+    "columns": [
+      {
+        "field": "__check__",
+        "headerName": "Checkbox selection",
+        "description": null,
+        "type": "custom",
+        "allowedOperators": ["is"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "id",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "desk",
+        "headerName": "Desk",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "commodity",
+        "headerName": "Commodity",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "traderName",
+        "headerName": "Trader Name",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "traderEmail",
+        "headerName": "Trader Email",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "quantity",
+        "headerName": "Quantity",
+        "description": null,
+        "type": "number",
+        "allowedOperators": ["=", "!=", ">", ">=", "<", "<=", "isEmpty", "isNotEmpty", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "filledQuantity",
+        "headerName": "Filled Quantity",
+        "description": null,
+        "type": "number",
+        "allowedOperators": ["=", "!=", ">", ">=", "<", "<=", "isEmpty", "isNotEmpty", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "isFilled",
+        "headerName": "Is Filled",
+        "description": null,
+        "type": "boolean",
+        "allowedOperators": ["is"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "status",
+        "headerName": "Status",
+        "description": null,
+        "type": "singleSelect",
+        "allowedOperators": ["is", "not", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "unitPrice",
+        "headerName": "Unit Price",
+        "description": null,
+        "type": "number",
+        "allowedOperators": ["=", "!=", ">", ">=", "<", "<=", "isEmpty", "isNotEmpty", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "unitPriceCurrency",
+        "headerName": "Unit Price Currency",
+        "description": null,
+        "type": "singleSelect",
+        "allowedOperators": ["is", "not", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "subTotal",
+        "headerName": "Sub Total",
+        "description": null,
+        "type": "number",
+        "allowedOperators": ["=", "!=", ">", ">=", "<", "<=", "isEmpty", "isNotEmpty", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "feeRate",
+        "headerName": "Fee Rate",
+        "description": null,
+        "type": "number",
+        "allowedOperators": ["=", "!=", ">", ">=", "<", "<=", "isEmpty", "isNotEmpty", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "feeAmount",
+        "headerName": "Fee Amount",
+        "description": null,
+        "type": "number",
+        "allowedOperators": ["=", "!=", ">", ">=", "<", "<=", "isEmpty", "isNotEmpty", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "incoTerm",
+        "headerName": "Incoterm",
+        "description": null,
+        "type": "singleSelect",
+        "allowedOperators": ["is", "not", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "totalPrice",
+        "headerName": "Total in USD",
+        "description": null,
+        "type": "number",
+        "allowedOperators": ["=", "!=", ">", ">=", "<", "<=", "isEmpty", "isNotEmpty", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "pnl",
+        "headerName": "PnL",
+        "description": null,
+        "type": "number",
+        "allowedOperators": ["=", "!=", ">", ">=", "<", "<=", "isEmpty", "isNotEmpty", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "maturityDate",
+        "headerName": "Maturity Date",
+        "description": null,
+        "type": "date",
+        "allowedOperators": [
+          "is",
+          "not",
+          "after",
+          "onOrAfter",
+          "before",
+          "onOrBefore",
+          "isEmpty",
+          "isNotEmpty"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "tradeDate",
+        "headerName": "Trade Date",
+        "description": null,
+        "type": "date",
+        "allowedOperators": [
+          "is",
+          "not",
+          "after",
+          "onOrAfter",
+          "before",
+          "onOrBefore",
+          "isEmpty",
+          "isNotEmpty"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "brokerId",
+        "headerName": "Broker Id",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "brokerName",
+        "headerName": "Broker Name",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "counterPartyName",
+        "headerName": "Counterparty",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "counterPartyCountry",
+        "headerName": "Counterparty Country",
+        "description": null,
+        "type": "singleSelect",
+        "allowedOperators": ["is", "not", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "counterPartyCurrency",
+        "headerName": "Counterparty Currency",
+        "description": null,
+        "type": "singleSelect",
+        "allowedOperators": ["is", "not", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "counterPartyAddress",
+        "headerName": "Counterparty Address",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "counterPartyCity",
+        "headerName": "Counterparty City",
+        "description": null,
+        "type": "string",
+        "allowedOperators": [
+          "contains",
+          "doesNotContain",
+          "equals",
+          "doesNotEqual",
+          "startsWith",
+          "endsWith",
+          "isEmpty",
+          "isNotEmpty",
+          "isAnyOf"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "taxCode",
+        "headerName": "Tax Code",
+        "description": null,
+        "type": "singleSelect",
+        "allowedOperators": ["is", "not", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "contractType",
+        "headerName": "Contract Type",
+        "description": null,
+        "type": "singleSelect",
+        "allowedOperators": ["is", "not", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "rateType",
+        "headerName": "Rate Type",
+        "description": null,
+        "type": "singleSelect",
+        "allowedOperators": ["is", "not", "isAnyOf"],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "lastUpdated",
+        "headerName": "Updated on",
+        "description": null,
+        "type": "dateTime",
+        "allowedOperators": [
+          "is",
+          "not",
+          "after",
+          "onOrAfter",
+          "before",
+          "onOrBefore",
+          "isEmpty",
+          "isNotEmpty"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      },
+      {
+        "field": "dateCreated",
+        "headerName": "Created on",
+        "description": null,
+        "type": "date",
+        "allowedOperators": [
+          "is",
+          "not",
+          "after",
+          "onOrAfter",
+          "before",
+          "onOrBefore",
+          "isEmpty",
+          "isNotEmpty"
+        ],
+        "visible": true,
+        "pinned": null,
+        "examples": []
+      }
+    ],
+    "aggregationFunctions": ["sum", "avg", "min", "max", "size"],
+    "state": {
+      "filter": {
+        "items": [],
+        "logicOperator": "and",
+        "quickFilterValues": [],
+        "quickFilterLogicOperator": "and"
+      },
+      "sort": [],
+      "grouping": [],
+      "aggregation": {},
+      "pivot": { "active": false, "model": { "rows": [], "columns": [], "values": [] } },
+      "columns": {
+        "visibility": {},
+        "pinned": {},
+        "order": [
+          "__check__",
+          "id",
+          "desk",
+          "commodity",
+          "traderName",
+          "traderEmail",
+          "quantity",
+          "filledQuantity",
+          "isFilled",
+          "status",
+          "unitPrice",
+          "unitPriceCurrency",
+          "subTotal",
+          "feeRate",
+          "feeAmount",
+          "incoTerm",
+          "totalPrice",
+          "pnl",
+          "maturityDate",
+          "tradeDate",
+          "brokerId",
+          "brokerName",
+          "counterPartyName",
+          "counterPartyCountry",
+          "counterPartyCurrency",
+          "counterPartyAddress",
+          "counterPartyCity",
+          "taxCode",
+          "contractType",
+          "rateType",
+          "lastUpdated",
+          "dateCreated"
+        ],
+        "widths": {}
+      },
+      "charts": {},
+      "selection": { "rows": { "type": "include", "ids": [] } },
+      "view": {
+        "density": "standard",
+        "pagination": { "page": 0, "pageSize": 100 },
+        "sidebar": "copilot",
+        "chartsPanelOpen": false,
+        "preferences": null,
+        "activeChartId": "main"
+      }
+    },
+    "catalog": {
+      "version": 1,
+      "statePaths": [],
+      "commands": [
+        {
+          "type": "history.undo",
+          "namespace": "history",
+          "tier": 2,
+          "plan": "premium",
+          "guard": null,
+          "description": "Revert every action applied by the previous assistant message (one history slice) in a single step."
+        },
+        {
+          "type": "state.reset",
+          "namespace": "state",
+          "tier": 2,
+          "plan": "premium",
+          "guard": null,
+          "description": "Clear all shaping in one step: sort, filter, grouping, aggregation, pivot, charts, column visibility/pinning/order, selection."
+        },
+        {
+          "type": "state.restore",
+          "namespace": "state",
+          "tier": 2,
+          "plan": "community",
+          "guard": null,
+          "description": "Restore a previously saved grid state."
+        },
+        {
+          "type": "state.export",
+          "namespace": "state",
+          "tier": 2,
+          "plan": "community",
+          "guard": null,
+          "description": "Export the current grid state."
+        },
+        {
+          "type": "view.scroll",
+          "namespace": "view",
+          "tier": 2,
+          "plan": "community",
+          "guard": null,
+          "description": "Scroll the viewport to a rowIndex/colIndex."
+        },
+        {
+          "type": "view.focus",
+          "namespace": "view",
+          "tier": 2,
+          "plan": "community",
+          "guard": null,
+          "description": "Focus a specific cell (id, field)."
+        },
+        {
+          "type": "columns.autosize",
+          "namespace": "columns",
+          "tier": 2,
+          "plan": "community",
+          "guard": null,
+          "description": "Autosize columns to content."
+        },
+        {
+          "type": "rows.expandAll",
+          "namespace": "rows",
+          "tier": 2,
+          "plan": "pro",
+          "guard": null,
+          "description": "Expand every group row."
+        },
+        {
+          "type": "rows.collapseAll",
+          "namespace": "rows",
+          "tier": 2,
+          "plan": "pro",
+          "guard": null,
+          "description": "Collapse every group row."
+        },
+        {
+          "type": "selection.selectVisibleTop",
+          "namespace": "selection",
+          "tier": 1,
+          "plan": "community",
+          "guard": "rowSelection",
+          "description": "Select the top N visible rows."
+        }
+      ]
+    }
+  },
+  "toolResults": [
+    {
+      "toolCallId": "call_7f5e6451aad145b494c27992",
+      "toolName": "queryGridData",
+      "output": {
+        "meta": {
+          "mode": "aggregate",
+          "rowFilter": "visible",
+          "rowCount": 100,
+          "truncatedBy": 0,
+          "columns": [
+            { "field": "__check__", "headerName": "Checkbox selection" },
+            { "field": "id" },
+            { "field": "desk", "headerName": "Desk" },
+            { "field": "commodity", "headerName": "Commodity" },
+            { "field": "traderName", "headerName": "Trader Name" },
+            { "field": "traderEmail", "headerName": "Trader Email" },
+            { "field": "quantity", "headerName": "Quantity" },
+            { "field": "filledQuantity", "headerName": "Filled Quantity" },
+            { "field": "isFilled", "headerName": "Is Filled" },
+            { "field": "status", "headerName": "Status" },
+            { "field": "unitPrice", "headerName": "Unit Price" },
+            { "field": "unitPriceCurrency", "headerName": "Unit Price Currency" },
+            { "field": "subTotal", "headerName": "Sub Total" },
+            { "field": "feeRate", "headerName": "Fee Rate" },
+            { "field": "feeAmount", "headerName": "Fee Amount" },
+            { "field": "incoTerm", "headerName": "Incoterm" },
+            { "field": "totalPrice", "headerName": "Total in USD" },
+            { "field": "pnl", "headerName": "PnL" },
+            { "field": "maturityDate", "headerName": "Maturity Date" },
+            { "field": "tradeDate", "headerName": "Trade Date" },
+            { "field": "brokerId", "headerName": "Broker Id" },
+            { "field": "brokerName", "headerName": "Broker Name" },
+            { "field": "counterPartyName", "headerName": "Counterparty" },
+            { "field": "counterPartyCountry", "headerName": "Counterparty Country" },
+            { "field": "counterPartyCurrency", "headerName": "Counterparty Currency" },
+            { "field": "counterPartyAddress", "headerName": "Counterparty Address" },
+            { "field": "counterPartyCity", "headerName": "Counterparty City" },
+            { "field": "taxCode", "headerName": "Tax Code" },
+            { "field": "contractType", "headerName": "Contract Type" },
+            { "field": "rateType", "headerName": "Rate Type" },
+            { "field": "lastUpdated", "headerName": "Updated on" },
+            { "field": "dateCreated", "headerName": "Created on" }
+          ]
+        },
+        "aggregations": [
+          { "field": "quantity", "fn": "sum", "value": 4559826 },
+          { "field": "quantity", "fn": "avg", "value": 45598.26 },
+          { "field": "filledQuantity", "fn": "sum", "value": 50.698921469565356 },
+          { "field": "filledQuantity", "fn": "avg", "value": 0.5069892146956536 }
+        ]
+      }
+    }
+  ]
+}

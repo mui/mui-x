@@ -1,0 +1,273 @@
+import type {
+  AggFn,
+  TransformAggregation,
+  TransformDateWindow,
+  TransformFilter,
+  TransformSpec,
+  TransformTopN,
+} from './types';
+
+type Row = Record<string, any>;
+
+/** Coerce a cell to a finite number, or `null`. Mirrors `resolveForRenderer`. */
+const toNumber = (value: any): number | null => {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+  const num = typeof value === 'number' ? value : Number(value);
+  return Number.isNaN(num) ? null : num;
+};
+
+function passesFilter(row: Row, filter: TransformFilter): boolean {
+  const cell = row[filter.field];
+  switch (filter.op) {
+    case 'eq':
+      return cell === filter.value;
+    case 'neq':
+      return cell !== filter.value;
+    case 'gt': {
+      const a = toNumber(cell);
+      const b = toNumber(filter.value);
+      return a !== null && b !== null && a > b;
+    }
+    case 'lt': {
+      const a = toNumber(cell);
+      const b = toNumber(filter.value);
+      return a !== null && b !== null && a < b;
+    }
+    case 'in':
+      return Array.isArray(filter.value) && filter.value.includes(cell);
+    case 'between': {
+      if (!Array.isArray(filter.value) || filter.value.length !== 2) {
+        return true;
+      }
+      const a = toNumber(cell);
+      const lo = toNumber(filter.value[0]);
+      const hi = toNumber(filter.value[1]);
+      return a !== null && lo !== null && hi !== null && a >= lo && a <= hi;
+    }
+    default:
+      return true;
+  }
+}
+
+const WINDOW_RE = /^(\d+)\s*([dwmy])$/i;
+
+/** Window start time, `amount` units before `maxTime`. */
+function windowStart(maxTime: number, amount: number, unit: string): number {
+  const date = new Date(maxTime);
+  switch (unit.toUpperCase()) {
+    case 'D':
+      date.setDate(date.getDate() - amount);
+      break;
+    case 'W':
+      date.setDate(date.getDate() - amount * 7);
+      break;
+    case 'M':
+      date.setMonth(date.getMonth() - amount);
+      break;
+    case 'Y':
+      date.setFullYear(date.getFullYear() - amount);
+      break;
+    default:
+      break;
+  }
+  return date.getTime();
+}
+
+function applyDateWindow(rows: Row[], dateWindow: TransformDateWindow): Row[] {
+  const match = WINDOW_RE.exec(dateWindow.last.trim());
+  if (!match) {
+    return rows;
+  }
+  const amount = parseInt(match[1], 10);
+  const unit = match[2];
+
+  // Resolve every row's timestamp once; the window is relative to the max date
+  // in the column, so the result is independent of the wall clock.
+  const times = rows.map((row) => {
+    const time = new Date(row[dateWindow.field]).getTime();
+    return Number.isNaN(time) ? null : time;
+  });
+
+  let maxTime = -Infinity;
+  for (const time of times) {
+    if (time !== null && time > maxTime) {
+      maxTime = time;
+    }
+  }
+  if (maxTime === -Infinity) {
+    return rows;
+  }
+
+  const threshold = windowStart(maxTime, amount, unit);
+  return rows.filter((_row, index) => {
+    const time = times[index];
+    return time !== null && time >= threshold;
+  });
+}
+
+/** Reduce a group's members for one measure field. */
+function reduceMeasure(members: Row[], field: string, fn: AggFn): number | null {
+  if (fn === 'count') {
+    let count = 0;
+    for (const member of members) {
+      if (toNumber(member[field]) !== null) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  let sum = 0;
+  let count = 0;
+  let min = Infinity;
+  let max = -Infinity;
+  for (const member of members) {
+    const value = toNumber(member[field]);
+    if (value === null) {
+      continue;
+    }
+    sum += value;
+    count += 1;
+    if (value < min) {
+      min = value;
+    }
+    if (value > max) {
+      max = value;
+    }
+  }
+
+  // Guard on the count of contributing values, not the sum: an all-null group
+  // must yield null for avg/min/max (a 0 would be a fake data point).
+  if (count === 0) {
+    return fn === 'sum' ? 0 : null;
+  }
+  switch (fn) {
+    case 'sum':
+      return sum;
+    case 'avg':
+      return sum / count;
+    case 'min':
+      return min;
+    case 'max':
+      return max;
+    default:
+      return null;
+  }
+}
+
+function aggregate(rows: Row[], aggregation: TransformAggregation): Row[] {
+  const groups = new Map<string, { keyValues: Row; members: Row[] }>();
+
+  for (const row of rows) {
+    // Join on a NUL so distinct field-value combinations cannot collide into
+    // one key (e.g. ['a b','c'] vs ['a','b c']). Written as the '\u0000' escape,
+    // never a raw NUL byte: a literal NUL in source corrupts the bundled module
+    // text and breaks parsing in the browser.
+    const key = aggregation.groupBy.map((field) => String(row[field])).join('\u0000');
+    let group = groups.get(key);
+    if (!group) {
+      const keyValues: Row = {};
+      for (const field of aggregation.groupBy) {
+        keyValues[field] = row[field];
+      }
+      group = { keyValues, members: [] };
+      groups.set(key, group);
+    }
+    group.members.push(row);
+  }
+
+  const out: Row[] = [];
+  for (const group of groups.values()) {
+    const outRow: Row = { ...group.keyValues };
+    for (const [field, fn] of Object.entries(aggregation.measures)) {
+      outRow[field] = reduceMeasure(group.members, field, fn);
+    }
+    out.push(outRow);
+  }
+  return out;
+}
+
+function applyTopN(
+  rows: Row[],
+  topN: TransformTopN,
+  aggregation: TransformAggregation | undefined,
+): Row[] {
+  const { measure } = topN;
+  const sorted = rows
+    .slice()
+    .sort((a, b) => (toNumber(b[measure]) ?? -Infinity) - (toNumber(a[measure]) ?? -Infinity));
+
+  const n = Math.max(1, Math.floor(topN.n));
+  if (sorted.length <= n) {
+    return sorted;
+  }
+
+  const top = sorted.slice(0, n);
+  if (!topN.otherBucket) {
+    return top;
+  }
+
+  const rest = sorted.slice(n);
+  const otherRow: Row = {};
+  const categoryField = aggregation?.groupBy?.[0];
+  if (categoryField) {
+    otherRow[categoryField] = 'Other';
+  }
+  // Sum every measure across the bucketed remainder.
+  const measureFields = aggregation ? Object.keys(aggregation.measures) : [measure];
+  for (const field of measureFields) {
+    let sum = 0;
+    for (const row of rest) {
+      const value = toNumber(row[field]);
+      if (value !== null) {
+        sum += value;
+      }
+    }
+    otherRow[field] = sum;
+  }
+  return [...top, otherRow];
+}
+
+/**
+ * Applies a {@link TransformSpec} to the dataset rows, in a fixed order:
+ * `filter → dateWindow → aggregation → topN`. Pure and deterministic — the
+ * same rows + spec always yield the same output.
+ *
+ * `transpose` is intentionally NOT handled here: it reshapes the resolved
+ * dimensions/values (a renderer concern), not the raw rows.
+ *
+ * @param rows The bound dataset rows.
+ * @param transform The transform slice (may be undefined → rows returned as-is).
+ * @returns The transformed rows.
+ */
+export function applyTransform(
+  rows: readonly Row[],
+  transform: TransformSpec | undefined,
+): Row[] {
+  if (!transform) {
+    return rows as Row[];
+  }
+
+  let result: Row[] = rows as Row[];
+
+  if (transform.filter && transform.filter.length > 0) {
+    const filters = transform.filter;
+    result = result.filter((row) => filters.every((filter) => passesFilter(row, filter)));
+  }
+
+  if (transform.dateWindow) {
+    result = applyDateWindow(result, transform.dateWindow);
+  }
+
+  if (transform.aggregation && transform.aggregation.groupBy.length > 0) {
+    result = aggregate(result, transform.aggregation);
+  }
+
+  if (transform.topN) {
+    result = applyTopN(result, transform.topN, transform.aggregation);
+  }
+
+  return result;
+}

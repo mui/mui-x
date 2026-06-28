@@ -1,0 +1,76 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e615]:
+      - generic [ref=e616]:
+        - generic [ref=e617]:
+          - generic [ref=e618]: Dataset
+          - generic [ref=e619]:
+            - combobox "Dataset" [ref=e620] [cursor=pointer]: Products
+            - textbox: products
+            - img
+            - group:
+              - generic: Dataset
+        - group "Chart workspace view" [ref=e621]:
+          - button "Show chart" [pressed] [ref=e622] [cursor=pointer]: Chart
+          - button "Show data grid" [ref=e623] [cursor=pointer]: Data grid
+      - generic [ref=e624]:
+        - generic [ref=e626]:
+          - generic:
+            - img
+            - img
+          - img [ref=e627]:
+            - generic [ref=e629]: No data to display
+          - generic:
+            - text: MUI X Missing license key
+            - generic: Open the browser console for details on how to resolve this.
+        - generic [ref=e632]:
+          - generic [ref=e634]:
+            - generic [ref=e635]: Charts
+            - button "Sync chart" [pressed] [ref=e636] [cursor=pointer]:
+              - img [ref=e637]
+            - button "Close charts configuration" [ref=e639] [cursor=pointer]:
+              - img [ref=e640]
+          - tablist [ref=e644]:
+            - tab "Chart" [selected] [ref=e645] [cursor=pointer]
+            - tab "Fields" [ref=e646] [cursor=pointer]
+            - tab "Customize" [ref=e647] [cursor=pointer]
+          - tabpanel "Chart" [ref=e649]:
+            - generic [ref=e651]:
+              - button "Column" [ref=e652] [cursor=pointer]:
+                - img [ref=e653]
+                - text: Column
+              - button "Bar" [ref=e658] [cursor=pointer]:
+                - img [ref=e659]
+                - text: Bar
+              - button "Line" [ref=e664] [cursor=pointer]:
+                - img [ref=e665]
+                - text: Line
+              - button "Area" [ref=e667] [cursor=pointer]:
+                - img [ref=e668]
+                - text: Area
+              - button "Pie" [ref=e670] [cursor=pointer]:
+                - img [ref=e671]
+                - text: Pie
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - button "Add view" [ref=e596] [cursor=pointer]:
+          - img [ref=e597]
+        - button "All tabs" [ref=e599] [cursor=pointer]:
+          - img [ref=e600]
+        - button "Hide data sources" [ref=e602] [cursor=pointer]:
+          - img [ref=e603]
+      - generic [ref=e605]:
+        - button "Customers" [ref=e607] [cursor=pointer]:
+          - generic [ref=e608]: Customers
+        - button "Products" [ref=e610] [cursor=pointer]:
+          - generic [ref=e611]: Products
+        - button "Orders" [ref=e613] [cursor=pointer]:
+          - generic [ref=e614]: Orders
+        - generic [ref=e673]:
+          - button "Chart 1" [ref=e674] [cursor=pointer]:
+            - generic [ref=e675]: Chart 1
+          - button "View options for Chart 1" [ref=e676] [cursor=pointer]:
+            - img [ref=e677]
+  - button "Open Next.js Dev Tools" [ref=e45] [cursor=pointer]:
+    - img [ref=e46]
+  - alert [ref=e49]: Coffee Beans - Data Studio demo - MUI X

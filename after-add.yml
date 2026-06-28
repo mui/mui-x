@@ -1,0 +1,101 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e602]:
+      - generic [ref=e603]:
+        - generic [ref=e604]: Dataset
+        - generic [ref=e605]:
+          - combobox "Dataset" [ref=e606] [cursor=pointer]: Orders
+          - textbox: orders
+          - img
+          - group:
+            - generic: Dataset
+      - generic [ref=e607]:
+        - generic [ref=e608]:
+          - toolbar [ref=e609]:
+            - button "Columns" [ref=e610] [cursor=pointer]:
+              - img [ref=e611]
+            - button "Filters" [ref=e613] [cursor=pointer]:
+              - img [ref=e615]
+            - button "Pivot" [ref=e617] [cursor=pointer]:
+              - img [ref=e618]
+            - button "Charts" [expanded] [ref=e620] [cursor=pointer]:
+              - img [ref=e621]
+            - separator [ref=e625]
+            - button "Export" [ref=e626] [cursor=pointer]:
+              - img [ref=e627]
+            - separator [ref=e629]
+            - generic [ref=e630]:
+              - button "Search" [ref=e631] [cursor=pointer]:
+                - img [ref=e632]
+              - generic "Search" [ref=e634]:
+                - generic [ref=e635]:
+                  - img [ref=e637]
+                  - searchbox "Search…" [ref=e639]
+                  - group
+          - grid [ref=e640]:
+            - generic:
+              - text: MUI X Missing license key
+              - generic: Open the browser console for details on how to resolve this.
+          - generic [ref=e694]: "Total Rows: 100"
+          - generic [ref=e644]:
+            - generic [ref=e646]:
+              - generic [ref=e647]: Charts
+              - button "Sync chart" [pressed] [ref=e648] [cursor=pointer]:
+                - img [ref=e649]
+              - button "Close charts configuration" [ref=e651] [cursor=pointer]:
+                - img [ref=e652]
+            - tablist [ref=e656]:
+              - tab "Chart" [selected] [ref=e657] [cursor=pointer]
+              - tab "Fields" [ref=e658] [cursor=pointer]
+              - tab "Customize" [ref=e659] [cursor=pointer]
+            - tabpanel "Chart" [ref=e661]:
+              - generic [ref=e663]:
+                - button "Column" [ref=e664] [cursor=pointer]:
+                  - img [ref=e665]
+                  - text: Column
+                - button "Bar" [ref=e670] [cursor=pointer]:
+                  - img [ref=e671]
+                  - text: Bar
+                - button "Line" [ref=e676] [cursor=pointer]:
+                  - img [ref=e677]
+                  - text: Line
+                - button "Area" [ref=e679] [cursor=pointer]:
+                  - img [ref=e680]
+                  - text: Area
+                - button "Pie" [ref=e682] [cursor=pointer]:
+                  - img [ref=e683]
+                  - text: Pie
+        - generic:
+          - generic:
+            - generic:
+              - img
+              - img
+            - img:
+              - generic:
+                - generic: No data to display
+            - generic:
+              - text: MUI X Missing license key
+              - generic: Open the browser console for details on how to resolve this.
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - button "Add view" [ref=e583] [cursor=pointer]:
+          - img [ref=e584]
+        - button "All tabs" [ref=e586] [cursor=pointer]:
+          - img [ref=e587]
+        - button "Hide data sources" [ref=e589] [cursor=pointer]:
+          - img [ref=e590]
+      - generic [ref=e592]:
+        - button "Customers" [ref=e594] [cursor=pointer]:
+          - generic [ref=e595]: Customers
+        - button "Products" [ref=e597] [cursor=pointer]:
+          - generic [ref=e598]: Products
+        - button "Orders" [ref=e600] [cursor=pointer]:
+          - generic [ref=e601]: Orders
+        - generic [ref=e685]:
+          - button "Chart 1" [ref=e686] [cursor=pointer]:
+            - generic [ref=e687]: Chart 1
+          - button "View options for Chart 1" [ref=e688] [cursor=pointer]:
+            - img [ref=e689]
+  - button "Open Next.js Dev Tools" [ref=e45] [cursor=pointer]:
+    - img [ref=e46]
+  - alert [ref=e49]: Coffee Beans - Data Studio demo - MUI X

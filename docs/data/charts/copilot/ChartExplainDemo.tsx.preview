@@ -1,0 +1,8 @@
+<ChartCopilot
+  dataset={BEVERAGE_DATASET}
+  state={state}
+  onStateChange={setState}
+  chatAdapter={adapter}
+  suggestions={EXPLAIN_SUGGESTIONS}
+  height={320}
+/>

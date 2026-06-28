@@ -17,6 +17,13 @@ export interface ChatFinishMessageChunk {
   type: 'finish';
   messageId: string;
   finishReason?: string;
+  /**
+   * Inline message metadata, merged into the assistant message's `metadata`
+   * field. Mirrors the AI SDK UI-message-stream shorthand where `finish` can
+   * carry the final metadata frame instead of a preceding `message-metadata`
+   * chunk.
+   */
+  messageMetadata?: Partial<import('./chat-type-registry').ChatMessageMetadata>;
 }
 
 export interface ChatAbortMessageChunk {

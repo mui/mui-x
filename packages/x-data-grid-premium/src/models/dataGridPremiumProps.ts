@@ -18,6 +18,8 @@ import type {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   DataGridPremiumSharedPropsWithDefaultValue,
 } from '@mui/x-data-grid-pro/internals';
+import type { ChatSuggestion } from '@mui/x-chat-headless';
+import type { CopilotPlugin } from '../hooks/features/copilot/plugins';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import type {
   GridAggregationModel,
@@ -44,6 +46,7 @@ import type {
   PromptResponse,
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { GridCopilotAdapter } from '../hooks/features/copilot/gridCopilotInterfaces';
 import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
@@ -153,6 +156,18 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default false
    */
   aiAssistant: boolean;
+  /**
+   * If `true`, the Copilot side panel is enabled.
+   * @default false
+   */
+  copilot: boolean;
+  /**
+   * If `true`, the Copilot executor accepts mutating commands (data updates,
+   * exports, history clear, dataSource writes, etc.). Default-off because
+   * these commands have user-visible side effects beyond changing the view.
+   * @default false
+   */
+  enableMutatingActions: boolean;
   /**
    * If `true`, the charts integration feature is enabled.
    * @default false
@@ -365,6 +380,30 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
     promptContext: string,
     conversationId?: string,
   ) => Promise<PromptResponse>;
+  /**
+   * The adapter (a.k.a. "model") that powers the Copilot side panel.
+   * Extends the `@mui/x-chat-headless` `ChatAdapter` so a single object can provide
+   * conversations, messages, and (later) grid-aware behaviour.
+   * If not provided, a built-in echo adapter is used.
+   */
+  copilotAdapter?: GridCopilotAdapter;
+  /**
+   * Prompt suggestions displayed in the Copilot panel's empty state.
+   * Clicking a suggestion pre-fills the composer.
+   * If not provided, a generic default list is used.
+   */
+  copilotSuggestions?: Array<ChatSuggestion | string>;
+  /**
+   * Opt-in Copilot plugins (e.g. `pdfReportPlugin()` from `@mui/x-copilot/pdf`).
+   * Each plugin claims one or more client-side tool names. When the model
+   * emits a matching `tool-input-available` chunk, the plugin's
+   * `handleToolCall` runs locally and writes the resulting
+   * `tool-output-available` back into the chat stream — no extra round trip.
+   * The list of enabled plugin ids is also reported to the backend in
+   * `metadata.copilotPlugins` so the backend can conditionally expose
+   * matching server-side tool definitions to the model.
+   */
+  copilotPlugins?: readonly CopilotPlugin[];
   /**
    * Callback fired when the sidebar is closed.
    * @param {GridSidebarParams} params With all properties from [[GridSidebarParams]].

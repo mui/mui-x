@@ -73,6 +73,16 @@
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
     },
+    "copilot": { "description": "If <code>true</code>, the Copilot side panel is enabled." },
+    "copilotAdapter": {
+      "description": "The adapter (a.k.a. &quot;model&quot;) that powers the Copilot side panel. Extends the <code>@mui/x-chat-headless</code> <code>ChatAdapter</code> so a single object can provide conversations, messages, and (later) grid-aware behaviour. If not provided, a built-in echo adapter is used."
+    },
+    "copilotPlugins": {
+      "description": "Opt-in Copilot plugins (e.g. <code>pdfReportPlugin()</code> from <code>@mui/x-copilot/pdf</code>). Each plugin claims one or more client-side tool names. When the model emits a matching <code>tool-input-available</code> chunk, the plugin&#39;s <code>handleToolCall</code> runs locally and writes the resulting <code>tool-output-available</code> back into the chat stream — no extra round trip. The list of enabled plugin ids is also reported to the backend in <code>metadata.copilotPlugins</code> so the backend can conditionally expose matching server-side tool definitions to the model."
+    },
+    "copilotSuggestions": {
+      "description": "Prompt suggestions displayed in the Copilot panel&#39;s empty state. Clicking a suggestion pre-fills the composer. If not provided, a generic default list is used."
+    },
     "dataSource": { "description": "Data source object." },
     "dataSourceCache": { "description": "Data source cache object." },
     "dataSourceRevalidateMs": {
@@ -138,6 +148,9 @@
       "description": "If <code>true</code>, the virtualization is disabled."
     },
     "editMode": { "description": "Controls whether to use the cell or row editing." },
+    "enableMutatingActions": {
+      "description": "If <code>true</code>, the Copilot executor accepts mutating commands (data updates, exports, history clear, dataSource writes, etc.). Default-off because these commands have user-visible side effects beyond changing the view."
+    },
     "estimatedRowCount": {
       "description": "Use if the actual rowCount is not known upfront, but an estimation is available. If some rows have children (for instance in the tree data), this number represents the amount of top level rows. Applicable only with <code>paginationMode=&quot;server&quot;</code> and when <code>rowCount=&quot;-1&quot;</code>"
     },
@@ -2057,6 +2070,9 @@
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
     "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
+    "copilotIcon": "Icon used for the Copilot button.",
+    "copilotPanel": "Component rendered when the Copilot side panel is open. Only used when the <code>copilot</code> prop is passed to the grid.",
+    "copilotPanelCloseIcon": "Icon used for the Copilot panel close button.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",

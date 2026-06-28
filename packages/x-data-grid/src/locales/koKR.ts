@@ -55,6 +55,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI 어시스턴트',
 
+  // Toolbar Copilot button
+  // toolbarCopilot: 'Copilot',
+
   // Columns management text
   columnsManagementSearchTitle: '검색',
   columnsManagementNoColumns: '열이 없습니다.',
@@ -290,6 +293,14 @@ const koKRGrid: Partial<GridLocaleText> = {
   aiAssistantPanelConversationHistory: '대화 기록',
   aiAssistantPanelEmptyConversation: '프롬프트 내역이 없습니다.',
   aiAssistantSuggestions: '제안',
+
+  // Copilot panel
+  // copilotPanelTitle: 'Copilot',
+  // copilotPanelClose: 'Close Copilot',
+  // copilotPanelBeta: 'BETA',
+  // copilotPanelReload: 'New conversation',
+  // copilotPanelEmptyStateTitle: 'How can I help?',
+  // copilotPanelEmptyStateHelper: 'Ask anything about your data, or pick a suggestion to get started.',
 
   // Prompt field
   promptFieldLabel: '프롬프트 입력',

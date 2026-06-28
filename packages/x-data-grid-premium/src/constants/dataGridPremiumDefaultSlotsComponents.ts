@@ -5,12 +5,14 @@ import materialSlots from '../material';
 import { GridBottomContainer } from '../components/GridBottomContainer';
 import { GridEmptyPivotOverlay } from '../components/GridEmptyPivotOverlay';
 import { GridPremiumToolbar } from '../components/GridPremiumToolbar';
+import { GridCopilotPanel } from '../components/copilotPanel/GridCopilotPanel';
 
 export const DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS: GridPremiumSlotsComponent = {
   ...DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS,
   ...materialSlots,
   aiAssistantPanel: null,
   chartsPanel: null,
+  copilotPanel: GridCopilotPanel,
   columnMenu: GridPremiumColumnMenu,
   bottomContainer: GridBottomContainer,
   emptyPivotOverlay: GridEmptyPivotOverlay,

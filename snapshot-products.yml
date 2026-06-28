@@ -1,0 +1,493 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - img [ref=e8]
+          - generic [ref=e12]:
+            - paragraph [ref=e13]: Products (47)
+            - generic [ref=e14]:
+              - generic "Add to favorites (coming soon)" [ref=e814]:
+                - button "Favorite" [disabled]:
+                  - img
+              - generic "Move (coming soon)" [ref=e815]:
+                - button "Move" [disabled]:
+                  - img
+              - button "Saved" [ref=e816] [cursor=pointer]:
+                - img [ref=e18]
+          - generic [ref=e20]:
+            - generic "Version history (coming soon)" [ref=e817]:
+              - button "Version history" [disabled]:
+                - img
+            - generic "Open chat (coming soon)" [ref=e818]:
+              - button "Open chat" [disabled]:
+                - img
+            - generic "Start a meeting (coming soon)" [ref=e819]:
+              - button "Meeting" [disabled]:
+                - img
+            - button "Share" [disabled]:
+              - generic:
+                - img
+              - text: Share
+            - button "Upgrade" [disabled]
+            - generic "AI assistant (coming soon)" [ref=e820]:
+              - button "AI assistant" [disabled]:
+                - img
+            - generic "Account" [ref=e821]:
+              - button "Account" [disabled]:
+                - img
+        - menubar [ref=e26]:
+          - button "File" [ref=e822] [cursor=pointer]: File
+          - button "Edit" [ref=e823] [cursor=pointer]
+          - button "View" [ref=e824] [cursor=pointer]
+          - button "Insert" [ref=e825] [cursor=pointer]
+          - button "Format" [ref=e826] [cursor=pointer]
+          - button "Data" [ref=e827] [cursor=pointer]
+          - button "Tools" [ref=e828] [cursor=pointer]
+          - button "Help" [ref=e829] [cursor=pointer]
+      - toolbar "Data Studio toolbar" [ref=e830]:
+        - generic [ref=e39]:
+          - img [ref=e41]
+          - textbox "Search" [ref=e831]
+          - group
+        - separator [ref=e44]
+        - generic [ref=e45]:
+          - generic "Undo" [ref=e832]:
+            - button "Undo" [disabled]:
+              - img
+          - generic "Redo" [ref=e833]:
+            - button "Redo" [disabled]:
+              - img
+        - separator [ref=e48]
+        - generic [ref=e49]:
+          - button "Print" [ref=e834] [cursor=pointer]:
+            - img [ref=e51]
+          - generic "Paint format — not available in Data Studio" [ref=e835]:
+            - button "Paint format" [disabled]:
+              - img
+        - separator [ref=e54]
+        - button "Zoom (Compact density)" [ref=e836] [cursor=pointer]:
+          - text: 75%
+          - img [ref=e58]
+        - separator [ref=e60]
+        - generic [ref=e61]:
+          - generic "Format as currency (USD)" [ref=e837]:
+            - button "Currency" [disabled]:
+              - img
+          - generic "Format as percent" [ref=e838]:
+            - button "Percent" [disabled]:
+              - img
+          - generic "Decrease decimal places" [ref=e839]:
+            - button "Decrease decimal places" [disabled]:
+              - img:
+                - generic:
+                  - generic: ".0"
+          - generic "Increase decimal places" [ref=e840]:
+            - button "Increase decimal places" [disabled]:
+              - img:
+                - generic:
+                  - generic: ".00"
+          - generic "More formats" [ref=e841]:
+            - button "More formats" [disabled]:
+              - img:
+                - generic: "123"
+        - separator [ref=e67]
+        - generic "Font family — not available in Data Studio" [ref=e842]:
+          - button "Default" [disabled]:
+            - text: Default
+            - generic:
+              - img
+        - generic [ref=e70]:
+          - generic "Decrease font size — not available in Data Studio" [ref=e843]:
+            - button "Decrease font size" [disabled]:
+              - img
+          - generic [ref=e72]: "10"
+          - generic "Increase font size — not available in Data Studio" [ref=e844]:
+            - button "Increase font size" [disabled]:
+              - img
+        - separator [ref=e74]
+        - generic [ref=e75]:
+          - generic "Bold — not available in Data Studio" [ref=e845]:
+            - button "Bold" [disabled]:
+              - img
+          - generic "Italic — not available in Data Studio" [ref=e846]:
+            - button "Italic" [disabled]:
+              - img
+          - generic "Strikethrough — not available in Data Studio" [ref=e847]:
+            - button "Strikethrough" [disabled]:
+              - img
+          - generic "Text color — not available in Data Studio" [ref=e848]:
+            - button "Text color" [disabled]:
+              - img
+        - separator [ref=e80]
+        - generic [ref=e81]:
+          - generic "Fill color — not available in Data Studio" [ref=e849]:
+            - button "Fill color" [disabled]:
+              - img
+          - generic "Borders — not available in Data Studio" [ref=e850]:
+            - button "Borders" [disabled]:
+              - img
+          - generic "Merge cells — not available in Data Studio" [ref=e851]:
+            - button "Merge cells" [disabled]:
+              - img
+              - img
+        - separator [ref=e85]
+        - generic [ref=e86]:
+          - generic "Horizontal align — not available in Data Studio" [ref=e852]:
+            - button "Horizontal align" [disabled]:
+              - img
+              - img
+          - generic "Vertical align — not available in Data Studio" [ref=e853]:
+            - button "Vertical align" [disabled]:
+              - img
+              - img
+          - generic "Text wrapping — not available in Data Studio" [ref=e854]:
+            - button "Text wrapping" [disabled]:
+              - img
+              - img
+          - generic "Text rotation — not available in Data Studio" [ref=e855]:
+            - button "Text rotation" [disabled]:
+              - img
+              - img
+        - separator [ref=e91]
+        - generic [ref=e92]:
+          - generic "Insert link — not available in Data Studio" [ref=e856]:
+            - button "Insert link" [disabled]:
+              - img
+          - generic "Insert comment — not available in Data Studio" [ref=e857]:
+            - button "Insert comment" [disabled]:
+              - img
+          - generic "Insert chart — not available in Data Studio" [ref=e858]:
+            - button "Insert chart" [disabled]:
+              - img
+        - separator [ref=e96]
+        - generic [ref=e97]:
+          - button "Columns" [ref=e859] [cursor=pointer]:
+            - img [ref=e99]
+          - button "Filter" [ref=e860] [cursor=pointer]:
+            - generic [ref=e103]:
+              - img [ref=e104]
+              - generic: "0"
+          - generic "Filter views — not available in Data Studio" [ref=e861]:
+            - button "Filter views" [disabled]:
+              - img
+              - img
+        - separator [ref=e107]
+        - generic "Aggregate numeric columns" [ref=e862]:
+          - button "Aggregate" [disabled]:
+            - img
+        - generic [ref=e110]:
+          - button "Export" [ref=e863] [cursor=pointer]:
+            - img [ref=e112]
+          - generic "Collapse toolbar — not available in Data Studio" [ref=e864]:
+            - button "Collapse toolbar" [disabled]:
+              - img
+      - generic [ref=e1090]:
+        - toolbar [ref=e1091]:
+          - button "Add row" [ref=e1092] [cursor=pointer]:
+            - img [ref=e1094]
+            - text: Add row
+        - grid [ref=e1096]:
+          - row "Product ID Coffee Type Roast Type Size Unit Price Price per 100g Profit" [ref=e1097]:
+            - columnheader "Product ID" [ref=e1098] [cursor=pointer]:
+              - generic [ref=e1100]: Product ID
+              - generic [ref=e1101]:
+                - img
+            - columnheader "Coffee Type" [ref=e1102] [cursor=pointer]:
+              - generic [ref=e1104]: Coffee Type
+              - generic [ref=e1105]:
+                - img
+            - columnheader "Roast Type" [ref=e1106] [cursor=pointer]:
+              - generic [ref=e1108]: Roast Type
+              - generic [ref=e1109]:
+                - img
+            - columnheader "Size" [ref=e1110] [cursor=pointer]:
+              - generic [ref=e1112]: Size
+              - generic [ref=e1113]:
+                - img
+            - columnheader "Unit Price" [ref=e1114] [cursor=pointer]:
+              - generic [ref=e1116]: Unit Price
+              - generic [ref=e1117]:
+                - img
+            - columnheader "Price per 100g" [ref=e1118] [cursor=pointer]:
+              - generic [ref=e1120]: Price per 100g
+              - generic [ref=e1121]:
+                - img
+            - columnheader "Profit" [ref=e1122] [cursor=pointer]:
+              - generic [ref=e1124]: Profit
+              - generic [ref=e1125]:
+                - img
+            - columnheader [ref=e1126]:
+              - generic [ref=e1127]:
+                - img
+          - rowgroup [ref=e1128]:
+            - row "A-L-0.2 Ara L 0.2 $3.89 $1.94 $0.35" [ref=e1129]:
+              - gridcell "A-L-0.2" [ref=e1130]
+              - gridcell "Ara" [ref=e1131]
+              - gridcell "L" [ref=e1132]
+              - gridcell "0.2" [ref=e1133]
+              - gridcell "$3.89" [ref=e1134]
+              - gridcell "$1.94" [ref=e1135]
+              - gridcell "$0.35" [ref=e1136]
+              - gridcell [ref=e1137]:
+                - menu [ref=e1138]:
+                  - menuitem "Edit" [ref=e1139] [cursor=pointer]:
+                    - img [ref=e1140]
+                  - menuitem "Delete" [ref=e1142] [cursor=pointer]:
+                    - img [ref=e1143]
+            - row "A-L-0.5 Ara L 0.5 $7.77 $1.55 $0.70" [ref=e1145]:
+              - gridcell "A-L-0.5" [ref=e1146]
+              - gridcell "Ara" [ref=e1147]
+              - gridcell "L" [ref=e1148]
+              - gridcell "0.5" [ref=e1149]
+              - gridcell "$7.77" [ref=e1150]
+              - gridcell "$1.55" [ref=e1151]
+              - gridcell "$0.70" [ref=e1152]
+              - gridcell [ref=e1153]:
+                - menu [ref=e1154]:
+                  - menuitem "Edit" [ref=e1155] [cursor=pointer]:
+                    - img [ref=e1156]
+                  - menuitem "Delete" [ref=e1158] [cursor=pointer]:
+                    - img [ref=e1159]
+            - row "A-L-1 Ara L 1 $12.95 $1.30 $1.17" [ref=e1161]:
+              - gridcell "A-L-1" [ref=e1162]
+              - gridcell "Ara" [ref=e1163]
+              - gridcell "L" [ref=e1164]
+              - gridcell "1" [ref=e1165]
+              - gridcell "$12.95" [ref=e1166]
+              - gridcell "$1.30" [ref=e1167]
+              - gridcell "$1.17" [ref=e1168]
+              - gridcell [ref=e1169]:
+                - menu [ref=e1170]:
+                  - menuitem "Edit" [ref=e1171] [cursor=pointer]:
+                    - img [ref=e1172]
+                  - menuitem "Delete" [ref=e1174] [cursor=pointer]:
+                    - img [ref=e1175]
+            - row "A-L-2.5 Ara L 2.5 $29.79 $1.19 $2.68" [ref=e1177]:
+              - gridcell "A-L-2.5" [ref=e1178]
+              - gridcell "Ara" [ref=e1179]
+              - gridcell "L" [ref=e1180]
+              - gridcell "2.5" [ref=e1181]
+              - gridcell "$29.79" [ref=e1182]
+              - gridcell "$1.19" [ref=e1183]
+              - gridcell "$2.68" [ref=e1184]
+              - gridcell [ref=e1185]:
+                - menu [ref=e1186]:
+                  - menuitem "Edit" [ref=e1187] [cursor=pointer]:
+                    - img [ref=e1188]
+                  - menuitem "Delete" [ref=e1190] [cursor=pointer]:
+                    - img [ref=e1191]
+            - row "A-M-0.2 Ara M 0.2 $3.38 $1.69 $0.30" [ref=e1193]:
+              - gridcell "A-M-0.2" [ref=e1194]
+              - gridcell "Ara" [ref=e1195]
+              - gridcell "M" [ref=e1196]
+              - gridcell "0.2" [ref=e1197]
+              - gridcell "$3.38" [ref=e1198]
+              - gridcell "$1.69" [ref=e1199]
+              - gridcell "$0.30" [ref=e1200]
+              - gridcell [ref=e1201]:
+                - menu [ref=e1202]:
+                  - menuitem "Edit" [ref=e1203] [cursor=pointer]:
+                    - img [ref=e1204]
+                  - menuitem "Delete" [ref=e1206] [cursor=pointer]:
+                    - img [ref=e1207]
+            - row "A-M-0.5 Ara M 0.5 $6.75 $1.35 $0.61" [ref=e1209]:
+              - gridcell "A-M-0.5" [ref=e1210]
+              - gridcell "Ara" [ref=e1211]
+              - gridcell "M" [ref=e1212]
+              - gridcell "0.5" [ref=e1213]
+              - gridcell "$6.75" [ref=e1214]
+              - gridcell "$1.35" [ref=e1215]
+              - gridcell "$0.61" [ref=e1216]
+              - gridcell [ref=e1217]:
+                - menu [ref=e1218]:
+                  - menuitem "Edit" [ref=e1219] [cursor=pointer]:
+                    - img [ref=e1220]
+                  - menuitem "Delete" [ref=e1222] [cursor=pointer]:
+                    - img [ref=e1223]
+            - row "A-M-1 Ara M 1 $11.25 $1.13 $1.01" [ref=e1225]:
+              - gridcell "A-M-1" [ref=e1226]
+              - gridcell "Ara" [ref=e1227]
+              - gridcell "M" [ref=e1228]
+              - gridcell "1" [ref=e1229]
+              - gridcell "$11.25" [ref=e1230]
+              - gridcell "$1.13" [ref=e1231]
+              - gridcell "$1.01" [ref=e1232]
+              - gridcell [ref=e1233]:
+                - menu [ref=e1234]:
+                  - menuitem "Edit" [ref=e1235] [cursor=pointer]:
+                    - img [ref=e1236]
+                  - menuitem "Delete" [ref=e1238] [cursor=pointer]:
+                    - img [ref=e1239]
+            - row "A-M-2.5 Ara M 2.5 $25.88 $1.04 $2.33" [ref=e1241]:
+              - gridcell "A-M-2.5" [ref=e1242]
+              - gridcell "Ara" [ref=e1243]
+              - gridcell "M" [ref=e1244]
+              - gridcell "2.5" [ref=e1245]
+              - gridcell "$25.88" [ref=e1246]
+              - gridcell "$1.04" [ref=e1247]
+              - gridcell "$2.33" [ref=e1248]
+              - gridcell [ref=e1249]:
+                - menu [ref=e1250]:
+                  - menuitem "Edit" [ref=e1251] [cursor=pointer]:
+                    - img [ref=e1252]
+                  - menuitem "Delete" [ref=e1254] [cursor=pointer]:
+                    - img [ref=e1255]
+            - row "A-D-0.2 Ara D 0.2 $2.99 $1.49 $0.27" [ref=e1257]:
+              - gridcell "A-D-0.2" [ref=e1258]
+              - gridcell "Ara" [ref=e1259]
+              - gridcell "D" [ref=e1260]
+              - gridcell "0.2" [ref=e1261]
+              - gridcell "$2.99" [ref=e1262]
+              - gridcell "$1.49" [ref=e1263]
+              - gridcell "$0.27" [ref=e1264]
+              - gridcell [ref=e1265]:
+                - menu [ref=e1266]:
+                  - menuitem "Edit" [ref=e1267] [cursor=pointer]:
+                    - img [ref=e1268]
+                  - menuitem "Delete" [ref=e1270] [cursor=pointer]:
+                    - img [ref=e1271]
+            - row "A-D-0.5 Ara D 0.5 $5.97 $1.19 $0.54" [ref=e1273]:
+              - gridcell "A-D-0.5" [ref=e1274]
+              - gridcell "Ara" [ref=e1275]
+              - gridcell "D" [ref=e1276]
+              - gridcell "0.5" [ref=e1277]
+              - gridcell "$5.97" [ref=e1278]
+              - gridcell "$1.19" [ref=e1279]
+              - gridcell "$0.54" [ref=e1280]
+              - gridcell [ref=e1281]:
+                - menu [ref=e1282]:
+                  - menuitem "Edit" [ref=e1283] [cursor=pointer]:
+                    - img [ref=e1284]
+                  - menuitem "Delete" [ref=e1286] [cursor=pointer]:
+                    - img [ref=e1287]
+            - row "A-D-1 Ara D 1 $9.95 $1.00 $0.90" [ref=e1289]:
+              - gridcell "A-D-1" [ref=e1290]
+              - gridcell "Ara" [ref=e1291]
+              - gridcell "D" [ref=e1292]
+              - gridcell "1" [ref=e1293]
+              - gridcell "$9.95" [ref=e1294]
+              - gridcell "$1.00" [ref=e1295]
+              - gridcell "$0.90" [ref=e1296]
+              - gridcell [ref=e1297]:
+                - menu [ref=e1298]:
+                  - menuitem "Edit" [ref=e1299] [cursor=pointer]:
+                    - img [ref=e1300]
+                  - menuitem "Delete" [ref=e1302] [cursor=pointer]:
+                    - img [ref=e1303]
+            - row "A-D-2.5 Ara D 2.5 $22.89 $0.92 $2.06" [ref=e1305]:
+              - gridcell "A-D-2.5" [ref=e1306]
+              - gridcell "Ara" [ref=e1307]
+              - gridcell "D" [ref=e1308]
+              - gridcell "2.5" [ref=e1309]
+              - gridcell "$22.89" [ref=e1310]
+              - gridcell "$0.92" [ref=e1311]
+              - gridcell "$2.06" [ref=e1312]
+              - gridcell [ref=e1313]:
+                - menu [ref=e1314]:
+                  - menuitem "Edit" [ref=e1315] [cursor=pointer]:
+                    - img [ref=e1316]
+                  - menuitem "Delete" [ref=e1318] [cursor=pointer]:
+                    - img [ref=e1319]
+            - row "R-L-0.2 Rob L 0.2 $3.59 $1.79 $0.22" [ref=e1321]:
+              - gridcell "R-L-0.2" [ref=e1322]
+              - gridcell "Rob" [ref=e1323]
+              - gridcell "L" [ref=e1324]
+              - gridcell "0.2" [ref=e1325]
+              - gridcell "$3.59" [ref=e1326]
+              - gridcell "$1.79" [ref=e1327]
+              - gridcell "$0.22" [ref=e1328]
+              - gridcell [ref=e1329]:
+                - menu [ref=e1330]:
+                  - menuitem "Edit" [ref=e1331] [cursor=pointer]:
+                    - img [ref=e1332]
+                  - menuitem "Delete" [ref=e1334] [cursor=pointer]:
+                    - img [ref=e1335]
+            - row "R-L-0.5 Rob L 0.5 $7.17 $1.43 $0.43" [ref=e1337]:
+              - gridcell "R-L-0.5" [ref=e1338]
+              - gridcell "Rob" [ref=e1339]
+              - gridcell "L" [ref=e1340]
+              - gridcell "0.5" [ref=e1341]
+              - gridcell "$7.17" [ref=e1342]
+              - gridcell "$1.43" [ref=e1343]
+              - gridcell "$0.43" [ref=e1344]
+              - gridcell [ref=e1345]:
+                - menu [ref=e1346]:
+                  - menuitem "Edit" [ref=e1347] [cursor=pointer]:
+                    - img [ref=e1348]
+                  - menuitem "Delete" [ref=e1350] [cursor=pointer]:
+                    - img [ref=e1351]
+            - row "R-L-1 Rob L 1 $11.95 $1.20 $0.72" [ref=e1353]:
+              - gridcell "R-L-1" [ref=e1354]
+              - gridcell "Rob" [ref=e1355]
+              - gridcell "L" [ref=e1356]
+              - gridcell "1" [ref=e1357]
+              - gridcell "$11.95" [ref=e1358]
+              - gridcell "$1.20" [ref=e1359]
+              - gridcell "$0.72" [ref=e1360]
+              - gridcell [ref=e1361]:
+                - menu [ref=e1362]:
+                  - menuitem "Edit" [ref=e1363] [cursor=pointer]:
+                    - img [ref=e1364]
+                  - menuitem "Delete" [ref=e1366] [cursor=pointer]:
+                    - img [ref=e1367]
+            - row "R-L-2.5 Rob L 2.5 $27.49 $1.10 $1.65" [ref=e1369]:
+              - gridcell "R-L-2.5" [ref=e1370]
+              - gridcell "Rob" [ref=e1371]
+              - gridcell "L" [ref=e1372]
+              - gridcell "2.5" [ref=e1373]
+              - gridcell "$27.49" [ref=e1374]
+              - gridcell "$1.10" [ref=e1375]
+              - gridcell "$1.65" [ref=e1376]
+              - gridcell [ref=e1377]:
+                - menu [ref=e1378]:
+                  - menuitem "Edit" [ref=e1379] [cursor=pointer]:
+                    - img [ref=e1380]
+                  - menuitem "Delete" [ref=e1382] [cursor=pointer]:
+                    - img [ref=e1383]
+            - row "R-M-0.2 Rob M 0.2 $2.99 $1.49 $0.18" [ref=e1385]:
+              - gridcell "R-M-0.2" [ref=e1386]
+              - gridcell "Rob" [ref=e1387]
+              - gridcell "M" [ref=e1388]
+              - gridcell "0.2" [ref=e1389]
+              - gridcell "$2.99" [ref=e1390]
+              - gridcell "$1.49" [ref=e1391]
+              - gridcell "$0.18" [ref=e1392]
+              - gridcell [ref=e1393]:
+                - menu [ref=e1394]:
+                  - menuitem "Edit" [ref=e1395] [cursor=pointer]:
+                    - img [ref=e1396]
+                  - menuitem "Delete" [ref=e1398] [cursor=pointer]:
+                    - img [ref=e1399]
+          - generic:
+            - text: MUI X Missing license key
+            - generic: Open the browser console for details on how to resolve this.
+        - generic [ref=e1404]: "Total Rows: 47"
+    - generic [ref=e473]:
+      - generic [ref=e474]:
+        - button "Add view" [ref=e1075] [cursor=pointer]:
+          - img [ref=e476]
+        - button "All tabs" [ref=e1076] [cursor=pointer]:
+          - img [ref=e479]
+        - button "Hide data sources" [ref=e1077] [cursor=pointer]:
+          - img [ref=e482]
+      - generic [ref=e485]:
+        - button "Customers (998)" [ref=e1078] [cursor=pointer]:
+          - generic [ref=e488]: Customers (998)
+        - button "Products (47)" [active] [ref=e1079] [cursor=pointer]:
+          - generic [ref=e491]: Products (47)
+        - button "Orders (1000)" [ref=e1080] [cursor=pointer]:
+          - generic [ref=e494]: Orders (1000)
+  - button "Open Next.js Dev Tools" [ref=e1081] [cursor=pointer]:
+    - img [ref=e501]
+  - alert [ref=e504]
+  - dialog "Cookie preferences" [ref=e1082]:
+    - generic [ref=e506]:
+      - generic [ref=e507]:
+        - img [ref=e509]
+        - generic [ref=e514]:
+          - heading "Cookie preferences" [level=2] [ref=e1083]
+          - paragraph [ref=e516]: We use cookies to understand site usage and improve our content. This includes third-party analytics.
+      - generic [ref=e517]:
+        - button "Allow analytics" [ref=e1084] [cursor=pointer]
+        - button "Essential only" [ref=e1085] [cursor=pointer]

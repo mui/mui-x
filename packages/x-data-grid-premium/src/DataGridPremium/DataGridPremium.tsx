@@ -375,6 +375,62 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
+   * If `true`, the Copilot side panel is enabled.
+   * @default false
+   */
+  copilot: PropTypes.bool,
+  /**
+   * The adapter (a.k.a. "model") that powers the Copilot side panel.
+   * Extends the `@mui/x-chat-headless` `ChatAdapter` so a single object can provide
+   * conversations, messages, and (later) grid-aware behaviour.
+   * If not provided, a built-in echo adapter is used.
+   */
+  copilotAdapter: PropTypes.shape({
+    addToolApprovalResponse: PropTypes.func,
+    allowMultipleMessages: PropTypes.bool,
+    listConversations: PropTypes.func,
+    listMessages: PropTypes.func,
+    loadMore: PropTypes.func,
+    markRead: PropTypes.func,
+    reconnectToStream: PropTypes.func,
+    sendMessage: PropTypes.func.isRequired,
+    setTyping: PropTypes.func,
+    stop: PropTypes.func,
+    subscribe: PropTypes.func,
+  }),
+  /**
+   * Opt-in Copilot plugins (e.g. `pdfReportPlugin()` from `@mui/x-copilot/pdf`).
+   * Each plugin claims one or more client-side tool names. When the model
+   * emits a matching `tool-input-available` chunk, the plugin's
+   * `handleToolCall` runs locally and writes the resulting
+   * `tool-output-available` back into the chat stream — no extra round trip.
+   * The list of enabled plugin ids is also reported to the backend in
+   * `metadata.copilotPlugins` so the backend can conditionally expose
+   * matching server-side tool definitions to the model.
+   */
+  copilotPlugins: PropTypes.arrayOf(
+    PropTypes.shape({
+      handleToolCall: PropTypes.func.isRequired,
+      id: PropTypes.string.isRequired,
+      toolNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+      toolSlots: PropTypes.object,
+    }),
+  ),
+  /**
+   * Prompt suggestions displayed in the Copilot panel's empty state.
+   * Clicking a suggestion pre-fills the composer.
+   * If not provided, a generic default list is used.
+   */
+  copilotSuggestions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        label: PropTypes.string,
+        value: PropTypes.string.isRequired,
+      }),
+      PropTypes.string,
+    ]).isRequired,
+  ),
+  /**
    * Data source object.
    */
   dataSource: PropTypes.shape({
@@ -530,6 +586,13 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    * @default "cell"
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
+  /**
+   * If `true`, the Copilot executor accepts mutating commands (data updates,
+   * exports, history clear, dataSource writes, etc.). Default-off because
+   * these commands have user-visible side effects beyond changing the view.
+   * @default false
+   */
+  enableMutatingActions: PropTypes.bool,
   /**
    * Use if the actual rowCount is not known upfront, but an estimation is available.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.

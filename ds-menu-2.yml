@@ -1,0 +1,80 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e615]:
+      - generic [ref=e616]:
+        - generic [ref=e617]:
+          - generic [ref=e618]: Dataset
+          - generic [ref=e619]:
+            - combobox [expanded] [ref=e1020] [cursor=pointer]: Customers
+            - textbox: customers
+            - img
+            - group:
+              - generic: Dataset
+        - group [ref=e1021]:
+          - button [pressed] [ref=e1022] [cursor=pointer]: Chart
+          - button [ref=e1023] [cursor=pointer]: Data grid
+      - generic [ref=e624]:
+        - generic [ref=e626]:
+          - generic:
+            - img
+            - img
+          - img [ref=e627]:
+            - generic [ref=e629]: No data to display
+          - generic:
+            - text: MUI X Missing license key
+            - generic: Open the browser console for details on how to resolve this.
+        - generic [ref=e714]:
+          - generic [ref=e716]:
+            - generic [ref=e717]: Charts
+            - button [pressed] [ref=e1024] [cursor=pointer]:
+              - img [ref=e719]
+            - button [ref=e1025] [cursor=pointer]:
+              - img [ref=e722]
+          - tablist [ref=e726]:
+            - tab [selected] [ref=e1026] [cursor=pointer]: Chart
+            - tab [ref=e1027] [cursor=pointer]: Fields
+            - tab [ref=e1028] [cursor=pointer]: Customize
+          - tabpanel [ref=e1029]:
+            - generic [ref=e733]:
+              - button [ref=e1030] [cursor=pointer]:
+                - img [ref=e735]
+                - text: Column
+              - button [ref=e1031] [cursor=pointer]:
+                - img [ref=e741]
+                - text: Bar
+              - button [ref=e1032] [cursor=pointer]:
+                - img [ref=e747]
+                - text: Line
+              - button [ref=e1033] [cursor=pointer]:
+                - img [ref=e750]
+                - text: Area
+              - button [ref=e1034] [cursor=pointer]:
+                - img [ref=e753]
+                - text: Pie
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - button [ref=e1035] [cursor=pointer]:
+          - img [ref=e597]
+        - button [ref=e1036] [cursor=pointer]:
+          - img [ref=e600]
+        - button [ref=e1037] [cursor=pointer]:
+          - img [ref=e603]
+      - generic [ref=e605]:
+        - button [ref=e1038] [cursor=pointer]:
+          - generic [ref=e608]: Customers
+        - button [ref=e1039] [cursor=pointer]:
+          - generic [ref=e611]: Products
+        - button [ref=e1040] [cursor=pointer]:
+          - generic [ref=e614]: Orders
+        - generic [ref=e673]:
+          - button [ref=e1041] [cursor=pointer]:
+            - generic [ref=e675]: Chart 1
+          - button [ref=e1042] [cursor=pointer]:
+            - img [ref=e677]
+  - button [ref=e1043] [cursor=pointer]:
+    - img [ref=e46]
+  - alert [ref=e49]: Coffee Beans - Data Studio demo - MUI X
+  - listbox "Dataset" [ref=e1046]:
+    - option "Customers" [active] [selected] [ref=e1047] [cursor=pointer]: Customers
+    - option "Products" [ref=e1048] [cursor=pointer]
+    - option "Orders" [ref=e1049] [cursor=pointer]

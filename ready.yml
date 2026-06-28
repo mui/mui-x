@@ -1,0 +1,572 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - img [ref=e8]
+          - generic [ref=e12]:
+            - paragraph [ref=e13]: Customers
+            - generic [ref=e14]:
+              - generic "Add to favorites (coming soon)" [ref=e15]:
+                - button "Favorite" [disabled]:
+                  - img
+              - generic "Move (coming soon)" [ref=e16]:
+                - button "Move" [disabled]:
+                  - img
+              - button "Saved" [ref=e17] [cursor=pointer]:
+                - img [ref=e18]
+          - generic [ref=e20]:
+            - generic "Version history (coming soon)" [ref=e21]:
+              - button "Version history" [disabled]:
+                - img
+            - generic "Open chat (coming soon)" [ref=e22]:
+              - button "Open chat" [disabled]:
+                - img
+            - generic "Start a meeting (coming soon)" [ref=e23]:
+              - button "Meeting" [disabled]:
+                - img
+            - button "Share" [disabled]:
+              - generic:
+                - img
+              - text: Share
+            - button "Upgrade" [disabled]:
+              - generic:
+                - img
+              - text: Upgrade
+            - generic "AI assistant (coming soon)" [ref=e24]:
+              - button "AI assistant" [disabled]:
+                - img
+            - generic "Account" [ref=e25]:
+              - button "Account" [disabled]:
+                - img
+        - menubar [ref=e26]:
+          - button "File" [ref=e27] [cursor=pointer]
+          - button "Edit" [ref=e28] [cursor=pointer]
+          - button "View" [ref=e29] [cursor=pointer]
+          - button "Insert" [ref=e30] [cursor=pointer]
+          - button "Format" [ref=e31] [cursor=pointer]
+          - button "Data" [ref=e32] [cursor=pointer]
+          - button "Tools" [ref=e33] [cursor=pointer]
+          - button "Help" [ref=e34] [cursor=pointer]
+      - toolbar "Data Studio toolbar" [ref=e36]:
+        - generic [ref=e39]:
+          - img [ref=e41]
+          - textbox "Search" [ref=e43]
+          - group
+        - separator [ref=e44]
+        - button "Add row" [ref=e46] [cursor=pointer]:
+          - img [ref=e48]
+          - text: Add row
+        - separator [ref=e50]
+        - generic [ref=e51]:
+          - generic "Undo" [ref=e52]:
+            - button "Undo" [disabled]:
+              - img
+          - generic "Redo" [ref=e53]:
+            - button "Redo" [disabled]:
+              - img
+        - separator [ref=e54]
+        - 'button "Row density: Compact" [ref=e56] [cursor=pointer]':
+          - text: Compact
+          - img [ref=e58]
+        - separator [ref=e60]
+        - generic [ref=e61]:
+          - button "Refresh data" [ref=e62] [cursor=pointer]:
+            - img [ref=e63]
+          - button "Save current view" [ref=e65] [cursor=pointer]:
+            - img [ref=e66]
+          - button "Reset view" [ref=e68] [cursor=pointer]:
+            - img [ref=e69]
+        - separator [ref=e71]
+        - button "Sort" [ref=e73] [cursor=pointer]:
+          - generic [ref=e74]:
+            - img [ref=e75]
+            - generic: "0"
+        - separator [ref=e77]
+        - button "Filter" [ref=e79] [cursor=pointer]:
+          - generic [ref=e80]:
+            - img [ref=e81]
+            - generic: "0"
+        - separator [ref=e83]
+        - generic [ref=e84]:
+          - button "Columns" [ref=e85] [cursor=pointer]:
+            - img [ref=e86]
+          - button "Autosize columns" [ref=e89] [cursor=pointer]:
+            - img [ref=e90]
+          - generic "Pin column (focus a column header first)" [ref=e94]:
+            - button "Pin column" [disabled]:
+              - img
+        - separator [ref=e95]
+        - generic [ref=e96]:
+          - button "Group by" [ref=e97] [cursor=pointer]:
+            - generic [ref=e98]:
+              - img [ref=e99]
+              - generic: "0"
+          - generic "Aggregate numeric columns" [ref=e106]:
+            - button "Aggregate" [disabled]:
+              - img
+          - button "Open pivot panel" [ref=e107] [cursor=pointer]:
+            - img [ref=e108]
+        - separator [ref=e114]
+        - button "Add chart" [ref=e116] [cursor=pointer]:
+          - img [ref=e117]
+        - button "Export" [ref=e124] [cursor=pointer]:
+          - img [ref=e125]
+      - grid [ref=e129]:
+        - row "Select all rows Customer ID Customer Name Email Phone Number Address Line 1 City Country Postcode Loyalty Card" [ref=e130]:
+          - columnheader "Select all rows" [ref=e131]:
+            - generic [ref=e133] [cursor=pointer]:
+              - checkbox "Select all rows" [ref=e134]
+              - img [ref=e135]
+            - img [ref=e138]
+          - columnheader "Customer ID" [ref=e140] [cursor=pointer]:
+            - generic [ref=e142]: Customer ID
+            - generic [ref=e143]:
+              - img
+          - columnheader "Customer Name" [ref=e144] [cursor=pointer]:
+            - generic [ref=e146]: Customer Name
+            - generic [ref=e147]:
+              - img
+          - columnheader "Email" [ref=e148] [cursor=pointer]:
+            - generic [ref=e150]: Email
+            - generic [ref=e151]:
+              - img
+          - columnheader "Phone Number" [ref=e152] [cursor=pointer]:
+            - generic [ref=e154]: Phone Number
+            - generic [ref=e155]:
+              - img
+          - columnheader "Address Line 1" [ref=e156] [cursor=pointer]:
+            - generic [ref=e158]: Address Line 1
+            - generic [ref=e159]:
+              - img
+          - columnheader "City" [ref=e160] [cursor=pointer]:
+            - generic [ref=e162]: City
+            - generic [ref=e163]:
+              - img
+          - columnheader "Country" [ref=e164] [cursor=pointer]:
+            - generic [ref=e166]: Country
+            - generic [ref=e167]:
+              - img
+          - columnheader "Postcode" [ref=e168] [cursor=pointer]:
+            - generic [ref=e170]: Postcode
+            - generic [ref=e171]:
+              - img
+          - columnheader "Loyalty Card" [ref=e172] [cursor=pointer]:
+            - generic [ref=e174]: Loyalty Card
+            - generic [ref=e175]:
+              - img
+          - columnheader [ref=e176]:
+            - generic [ref=e177]:
+              - img
+        - rowgroup [ref=e178]:
+          - row "Select row 17670-51384-MA Aloisia Allner aallner0@lulu.com +1 (862) 817-0124 57999 Pepper Wood Alley Paterson United States 7505 Yes" [ref=e179]:
+            - gridcell "Select row" [ref=e180]:
+              - generic [ref=e181] [cursor=pointer]:
+                - checkbox "Select row" [ref=e182]
+                - img [ref=e183]
+            - gridcell "17670-51384-MA" [ref=e185]
+            - gridcell "Aloisia Allner" [ref=e186]
+            - gridcell "aallner0@lulu.com" [ref=e187]
+            - gridcell "+1 (862) 817-0124" [ref=e188]
+            - gridcell "57999 Pepper Wood Alley" [ref=e189]
+            - gridcell "Paterson" [ref=e190]
+            - gridcell "United States" [ref=e191]
+            - gridcell "7505" [ref=e192]
+            - gridcell "Yes" [ref=e193]
+            - gridcell [ref=e194]:
+              - menu [ref=e195]:
+                - menuitem "Edit" [ref=e196] [cursor=pointer]:
+                  - img [ref=e197]
+                - menuitem "Delete" [ref=e199] [cursor=pointer]:
+                  - img [ref=e200]
+          - row "Select row 73342-18763-UW Piotr Bote pbote1@yelp.com +353 (913) 396-4653 2112 Ridgeway Hill Crumlin Ireland D6W No" [ref=e202]:
+            - gridcell "Select row" [ref=e203]:
+              - generic [ref=e204] [cursor=pointer]:
+                - checkbox "Select row" [ref=e205]
+                - img [ref=e206]
+            - gridcell "73342-18763-UW" [ref=e208]
+            - gridcell "Piotr Bote" [ref=e209]
+            - gridcell "pbote1@yelp.com" [ref=e210]
+            - gridcell "+353 (913) 396-4653" [ref=e211]
+            - gridcell "2112 Ridgeway Hill" [ref=e212]
+            - gridcell "Crumlin" [ref=e213]
+            - gridcell "Ireland" [ref=e214]
+            - gridcell "D6W" [ref=e215]
+            - gridcell "No" [ref=e216]
+            - gridcell [ref=e217]:
+              - menu [ref=e218]:
+                - menuitem "Edit" [ref=e219] [cursor=pointer]:
+                  - img [ref=e220]
+                - menuitem "Delete" [ref=e222] [cursor=pointer]:
+                  - img [ref=e223]
+          - row "Select row 21125-22134-PX Jami Redholes jredholes2@tmall.com +1 (210) 986-6806 5214 Bartillon Park San Antonio United States 78205 Yes" [ref=e225]:
+            - gridcell "Select row" [ref=e226]:
+              - generic [ref=e227] [cursor=pointer]:
+                - checkbox "Select row" [ref=e228]
+                - img [ref=e229]
+            - gridcell "21125-22134-PX" [ref=e231]
+            - gridcell "Jami Redholes" [ref=e232]
+            - gridcell "jredholes2@tmall.com" [ref=e233]
+            - gridcell "+1 (210) 986-6806" [ref=e234]
+            - gridcell "5214 Bartillon Park" [ref=e235]
+            - gridcell "San Antonio" [ref=e236]
+            - gridcell "United States" [ref=e237]
+            - gridcell "78205" [ref=e238]
+            - gridcell "Yes" [ref=e239]
+            - gridcell [ref=e240]:
+              - menu [ref=e241]:
+                - menuitem "Edit" [ref=e242] [cursor=pointer]:
+                  - img [ref=e243]
+                - menuitem "Delete" [ref=e245] [cursor=pointer]:
+                  - img [ref=e246]
+          - row "Select row 71253-00052-RN Dene Azema dazema3@facebook.com +1 (217) 418-0714 27 Maywood Place Springfield United States 62711 Yes" [ref=e248]:
+            - gridcell "Select row" [ref=e249]:
+              - generic [ref=e250] [cursor=pointer]:
+                - checkbox "Select row" [ref=e251]
+                - img [ref=e252]
+            - gridcell "71253-00052-RN" [ref=e254]
+            - gridcell "Dene Azema" [ref=e255]
+            - gridcell "dazema3@facebook.com" [ref=e256]
+            - gridcell "+1 (217) 418-0714" [ref=e257]
+            - gridcell "27 Maywood Place" [ref=e258]
+            - gridcell "Springfield" [ref=e259]
+            - gridcell "United States" [ref=e260]
+            - gridcell "62711" [ref=e261]
+            - gridcell "Yes" [ref=e262]
+            - gridcell [ref=e263]:
+              - menu [ref=e264]:
+                - menuitem "Edit" [ref=e265] [cursor=pointer]:
+                  - img [ref=e266]
+                - menuitem "Delete" [ref=e268] [cursor=pointer]:
+                  - img [ref=e269]
+          - row "Select row 23806-46781-OU Christoffer O' Shea +353 (698) 362-9201 38980 Manitowish Junction Cill Airne Ireland N41 No" [ref=e271]:
+            - gridcell "Select row" [ref=e272]:
+              - generic [ref=e273] [cursor=pointer]:
+                - checkbox "Select row" [ref=e274]
+                - img [ref=e275]
+            - gridcell "23806-46781-OU" [ref=e277]
+            - gridcell "Christoffer O' Shea" [ref=e278]
+            - gridcell [ref=e279]
+            - gridcell "+353 (698) 362-9201" [ref=e280]
+            - gridcell "38980 Manitowish Junction" [ref=e281]
+            - gridcell "Cill Airne" [ref=e282]
+            - gridcell "Ireland" [ref=e283]
+            - gridcell "N41" [ref=e284]
+            - gridcell "No" [ref=e285]
+            - gridcell [ref=e286]:
+              - menu [ref=e287]:
+                - menuitem "Edit" [ref=e288] [cursor=pointer]:
+                  - img [ref=e289]
+                - menuitem "Delete" [ref=e291] [cursor=pointer]:
+                  - img [ref=e292]
+          - row "Select row 86561-91660-RB Beryle Cottier +1 (570) 289-7473 2651 Stoughton Place Scranton United States 18505 No" [ref=e294]:
+            - gridcell "Select row" [ref=e295]:
+              - generic [ref=e296] [cursor=pointer]:
+                - checkbox "Select row" [ref=e297]
+                - img [ref=e298]
+            - gridcell "86561-91660-RB" [ref=e300]
+            - gridcell "Beryle Cottier" [ref=e301]
+            - gridcell [ref=e302]
+            - gridcell "+1 (570) 289-7473" [ref=e303]
+            - gridcell "2651 Stoughton Place" [ref=e304]
+            - gridcell "Scranton" [ref=e305]
+            - gridcell "United States" [ref=e306]
+            - gridcell "18505" [ref=e307]
+            - gridcell "No" [ref=e308]
+            - gridcell [ref=e309]:
+              - menu [ref=e310]:
+                - menuitem "Edit" [ref=e311] [cursor=pointer]:
+                  - img [ref=e312]
+                - menuitem "Delete" [ref=e314] [cursor=pointer]:
+                  - img [ref=e315]
+          - row "Select row 65223-29612-CB Shaylynn Lobe slobe6@nifty.com +1 (937) 954-4541 7005 Mariners Cove Place Dayton United States 45440 Yes" [ref=e317]:
+            - gridcell "Select row" [ref=e318]:
+              - generic [ref=e319] [cursor=pointer]:
+                - checkbox "Select row" [ref=e320]
+                - img [ref=e321]
+            - gridcell "65223-29612-CB" [ref=e323]
+            - gridcell "Shaylynn Lobe" [ref=e324]
+            - gridcell "slobe6@nifty.com" [ref=e325]
+            - gridcell "+1 (937) 954-4541" [ref=e326]
+            - gridcell "7005 Mariners Cove Place" [ref=e327]
+            - gridcell "Dayton" [ref=e328]
+            - gridcell "United States" [ref=e329]
+            - gridcell "45440" [ref=e330]
+            - gridcell "Yes" [ref=e331]
+            - gridcell [ref=e332]:
+              - menu [ref=e333]:
+                - menuitem "Edit" [ref=e334] [cursor=pointer]:
+                  - img [ref=e335]
+                - menuitem "Delete" [ref=e337] [cursor=pointer]:
+                  - img [ref=e338]
+          - row "Select row 21134-81676-FR Melvin Wharfe +353 (507) 574-3034 7 Straubel Road Kill Ireland P24 Yes" [ref=e340]:
+            - gridcell "Select row" [ref=e341]:
+              - generic [ref=e342] [cursor=pointer]:
+                - checkbox "Select row" [ref=e343]
+                - img [ref=e344]
+            - gridcell "21134-81676-FR" [ref=e346]
+            - gridcell "Melvin Wharfe" [ref=e347]
+            - gridcell [ref=e348]
+            - gridcell "+353 (507) 574-3034" [ref=e349]
+            - gridcell "7 Straubel Road" [ref=e350]
+            - gridcell "Kill" [ref=e351]
+            - gridcell "Ireland" [ref=e352]
+            - gridcell "P24" [ref=e353]
+            - gridcell "Yes" [ref=e354]
+            - gridcell [ref=e355]:
+              - menu [ref=e356]:
+                - menuitem "Edit" [ref=e357] [cursor=pointer]:
+                  - img [ref=e358]
+                - menuitem "Delete" [ref=e360] [cursor=pointer]:
+                  - img [ref=e361]
+          - row "Select row 03396-68805-ZC Guthrey Petracci gpetracci8@livejournal.com +1 (310) 868-1842 949 Paget Parkway Los Angeles United States 90045 No" [ref=e363]:
+            - gridcell "Select row" [ref=e364]:
+              - generic [ref=e365] [cursor=pointer]:
+                - checkbox "Select row" [ref=e366]
+                - img [ref=e367]
+            - gridcell "03396-68805-ZC" [ref=e369]
+            - gridcell "Guthrey Petracci" [ref=e370]
+            - gridcell "gpetracci8@livejournal.com" [ref=e371]
+            - gridcell "+1 (310) 868-1842" [ref=e372]
+            - gridcell "949 Paget Parkway" [ref=e373]
+            - gridcell "Los Angeles" [ref=e374]
+            - gridcell "United States" [ref=e375]
+            - gridcell "90045" [ref=e376]
+            - gridcell "No" [ref=e377]
+            - gridcell [ref=e378]:
+              - menu [ref=e379]:
+                - menuitem "Edit" [ref=e380] [cursor=pointer]:
+                  - img [ref=e381]
+                - menuitem "Delete" [ref=e383] [cursor=pointer]:
+                  - img [ref=e384]
+          - row "Select row 61021-27840-ZN Rodger Raven rraven9@ed.gov +1 (213) 263-0288 1 Reinke Avenue Los Angeles United States 90065 No" [ref=e386]:
+            - gridcell "Select row" [ref=e387]:
+              - generic [ref=e388] [cursor=pointer]:
+                - checkbox "Select row" [ref=e389]
+                - img [ref=e390]
+            - gridcell "61021-27840-ZN" [ref=e392]
+            - gridcell "Rodger Raven" [ref=e393]
+            - gridcell "rraven9@ed.gov" [ref=e394]
+            - gridcell "+1 (213) 263-0288" [ref=e395]
+            - gridcell "1 Reinke Avenue" [ref=e396]
+            - gridcell "Los Angeles" [ref=e397]
+            - gridcell "United States" [ref=e398]
+            - gridcell "90065" [ref=e399]
+            - gridcell "No" [ref=e400]
+            - gridcell [ref=e401]:
+              - menu [ref=e402]:
+                - menuitem "Edit" [ref=e403] [cursor=pointer]:
+                  - img [ref=e404]
+                - menuitem "Delete" [ref=e406] [cursor=pointer]:
+                  - img [ref=e407]
+          - row "Select row 76239-90137-UQ Ferrell Ferber fferbera@businesswire.com +1 (408) 383-5302 68 High Crossing Court San Jose United States 95160 No" [ref=e409]:
+            - gridcell "Select row" [ref=e410]:
+              - generic [ref=e411] [cursor=pointer]:
+                - checkbox "Select row" [ref=e412]
+                - img [ref=e413]
+            - gridcell "76239-90137-UQ" [ref=e415]
+            - gridcell "Ferrell Ferber" [ref=e416]
+            - gridcell "fferbera@businesswire.com" [ref=e417]
+            - gridcell "+1 (408) 383-5302" [ref=e418]
+            - gridcell "68 High Crossing Court" [ref=e419]
+            - gridcell "San Jose" [ref=e420]
+            - gridcell "United States" [ref=e421]
+            - gridcell "95160" [ref=e422]
+            - gridcell "No" [ref=e423]
+            - gridcell [ref=e424]:
+              - menu [ref=e425]:
+                - menuitem "Edit" [ref=e426] [cursor=pointer]:
+                  - img [ref=e427]
+                - menuitem "Delete" [ref=e429] [cursor=pointer]:
+                  - img [ref=e430]
+          - row "Select row 49315-21985-BB Duky Phizackerly dphizackerlyb@utexas.edu +1 (408) 533-6012 28643 Bluejay Crossing San Jose United States 95194 Yes" [ref=e432]:
+            - gridcell "Select row" [ref=e433]:
+              - generic [ref=e434] [cursor=pointer]:
+                - checkbox "Select row" [ref=e435]
+                - img [ref=e436]
+            - gridcell "49315-21985-BB" [ref=e438]
+            - gridcell "Duky Phizackerly" [ref=e439]
+            - gridcell "dphizackerlyb@utexas.edu" [ref=e440]
+            - gridcell "+1 (408) 533-6012" [ref=e441]
+            - gridcell "28643 Bluejay Crossing" [ref=e442]
+            - gridcell "San Jose" [ref=e443]
+            - gridcell "United States" [ref=e444]
+            - gridcell "95194" [ref=e445]
+            - gridcell "Yes" [ref=e446]
+            - gridcell [ref=e447]:
+              - menu [ref=e448]:
+                - menuitem "Edit" [ref=e449] [cursor=pointer]:
+                  - img [ref=e450]
+                - menuitem "Delete" [ref=e452] [cursor=pointer]:
+                  - img [ref=e453]
+          - row "Select row 34136-36674-OM Rosaleen Scholar rscholarc@nyu.edu +1 (804) 420-0420 80915 Montana Park Richmond United States 23285 No" [ref=e455]:
+            - gridcell "Select row" [ref=e456]:
+              - generic [ref=e457] [cursor=pointer]:
+                - checkbox "Select row" [ref=e458]
+                - img [ref=e459]
+            - gridcell "34136-36674-OM" [ref=e461]
+            - gridcell "Rosaleen Scholar" [ref=e462]
+            - gridcell "rscholarc@nyu.edu" [ref=e463]
+            - gridcell "+1 (804) 420-0420" [ref=e464]
+            - gridcell "80915 Montana Park" [ref=e465]
+            - gridcell "Richmond" [ref=e466]
+            - gridcell "United States" [ref=e467]
+            - gridcell "23285" [ref=e468]
+            - gridcell "No" [ref=e469]
+            - gridcell [ref=e470]:
+              - menu [ref=e471]:
+                - menuitem "Edit" [ref=e472] [cursor=pointer]:
+                  - img [ref=e473]
+                - menuitem "Delete" [ref=e475] [cursor=pointer]:
+                  - img [ref=e476]
+          - row "Select row 39396-12890-PE Terence Vanyutin tvanyutind@wix.com 331 Bunting Hill Migrate United States 41905 No" [ref=e478]:
+            - gridcell "Select row" [ref=e479]:
+              - generic [ref=e480] [cursor=pointer]:
+                - checkbox "Select row" [ref=e481]
+                - img [ref=e482]
+            - gridcell "39396-12890-PE" [ref=e484]
+            - gridcell "Terence Vanyutin" [ref=e485]
+            - gridcell "tvanyutind@wix.com" [ref=e486]
+            - gridcell [ref=e487]
+            - gridcell "331 Bunting Hill" [ref=e488]
+            - gridcell "Migrate" [ref=e489]
+            - gridcell "United States" [ref=e490]
+            - gridcell "41905" [ref=e491]
+            - gridcell "No" [ref=e492]
+            - gridcell [ref=e493]:
+              - menu [ref=e494]:
+                - menuitem "Edit" [ref=e495] [cursor=pointer]:
+                  - img [ref=e496]
+                - menuitem "Delete" [ref=e498] [cursor=pointer]:
+                  - img [ref=e499]
+          - row "Select row 95875-73336-RG Patrice Trobe ptrobee@wunderground.com +1 (314) 240-7896 827 Declaration Plaza Saint Louis United States 63131 Yes" [ref=e501]:
+            - gridcell "Select row" [ref=e502]:
+              - generic [ref=e503] [cursor=pointer]:
+                - checkbox "Select row" [ref=e504]
+                - img [ref=e505]
+            - gridcell "95875-73336-RG" [ref=e507]
+            - gridcell "Patrice Trobe" [ref=e508]
+            - gridcell "ptrobee@wunderground.com" [ref=e509]
+            - gridcell "+1 (314) 240-7896" [ref=e510]
+            - gridcell "827 Declaration Plaza" [ref=e511]
+            - gridcell "Saint Louis" [ref=e512]
+            - gridcell "United States" [ref=e513]
+            - gridcell "63131" [ref=e514]
+            - gridcell "Yes" [ref=e515]
+            - gridcell [ref=e516]:
+              - menu [ref=e517]:
+                - menuitem "Edit" [ref=e518] [cursor=pointer]:
+                  - img [ref=e519]
+                - menuitem "Delete" [ref=e521] [cursor=pointer]:
+                  - img [ref=e522]
+          - row "Select row 25473-43727-BY Llywellyn Oscroft loscroftf@ebay.co.uk 022 Roth Place Philadelphia United States 19172 No" [ref=e524]:
+            - gridcell "Select row" [ref=e525]:
+              - generic [ref=e526] [cursor=pointer]:
+                - checkbox "Select row" [ref=e527]
+                - img [ref=e528]
+            - gridcell "25473-43727-BY" [ref=e530]
+            - gridcell "Llywellyn Oscroft" [ref=e531]
+            - gridcell "loscroftf@ebay.co.uk" [ref=e532]
+            - gridcell [ref=e533]
+            - gridcell "022 Roth Place" [ref=e534]
+            - gridcell "Philadelphia" [ref=e535]
+            - gridcell "United States" [ref=e536]
+            - gridcell "19172" [ref=e537]
+            - gridcell "No" [ref=e538]
+            - gridcell [ref=e539]:
+              - menu [ref=e540]:
+                - menuitem "Edit" [ref=e541] [cursor=pointer]:
+                  - img [ref=e542]
+                - menuitem "Delete" [ref=e544] [cursor=pointer]:
+                  - img [ref=e545]
+          - row "Select row 99643-51048-IQ Minni Alabaster malabasterg@hexun.com +1 (971) 483-6255 3 Charing Cross Trail Portland United States 97271 No" [ref=e547]:
+            - gridcell "Select row" [ref=e548]:
+              - generic [ref=e549] [cursor=pointer]:
+                - checkbox "Select row" [ref=e550]
+                - img [ref=e551]
+            - gridcell "99643-51048-IQ" [ref=e553]
+            - gridcell "Minni Alabaster" [ref=e554]
+            - gridcell "malabasterg@hexun.com" [ref=e555]
+            - gridcell "+1 (971) 483-6255" [ref=e556]
+            - gridcell "3 Charing Cross Trail" [ref=e557]
+            - gridcell "Portland" [ref=e558]
+            - gridcell "United States" [ref=e559]
+            - gridcell "97271" [ref=e560]
+            - gridcell "No" [ref=e561]
+            - gridcell [ref=e562]:
+              - menu [ref=e563]:
+                - menuitem "Edit" [ref=e564] [cursor=pointer]:
+                  - img [ref=e565]
+                - menuitem "Delete" [ref=e567] [cursor=pointer]:
+                  - img [ref=e568]
+          - row "Select row 62173-15287-CU Rhianon Broxup rbroxuph@jimdo.com +1 (713) 663-1338 83517 Thierer Court Houston United States 77240 No" [ref=e570]:
+            - gridcell "Select row" [ref=e571]:
+              - generic [ref=e572] [cursor=pointer]:
+                - checkbox "Select row" [ref=e573]
+                - img [ref=e574]
+            - gridcell "62173-15287-CU" [ref=e576]
+            - gridcell "Rhianon Broxup" [ref=e577]
+            - gridcell "rbroxuph@jimdo.com" [ref=e578]
+            - gridcell "+1 (713) 663-1338" [ref=e579]
+            - gridcell "83517 Thierer Court" [ref=e580]
+            - gridcell "Houston" [ref=e581]
+            - gridcell "United States" [ref=e582]
+            - gridcell "77240" [ref=e583]
+            - gridcell "No" [ref=e584]
+            - gridcell [ref=e585]:
+              - menu [ref=e586]:
+                - menuitem "Edit" [ref=e587] [cursor=pointer]:
+                  - img [ref=e588]
+                - menuitem "Delete" [ref=e590] [cursor=pointer]:
+                  - img [ref=e591]
+          - row "Select row 57611-05522-ST Pall Redford predfordi@ow.ly 7337 Hayes Junction Caherconlish Ireland F45 Yes" [ref=e593]:
+            - gridcell "Select row" [ref=e594]:
+              - generic [ref=e595] [cursor=pointer]:
+                - checkbox "Select row" [ref=e596]
+                - img [ref=e597]
+            - gridcell "57611-05522-ST" [ref=e599]
+            - gridcell "Pall Redford" [ref=e600]
+            - gridcell "predfordi@ow.ly" [ref=e601]
+            - gridcell [ref=e602]
+            - gridcell "7337 Hayes Junction" [ref=e603]
+            - gridcell "Caherconlish" [ref=e604]
+            - gridcell "Ireland" [ref=e605]
+            - gridcell "F45" [ref=e606]
+            - gridcell "Yes" [ref=e607]
+            - gridcell [ref=e608]:
+              - menu [ref=e609]:
+                - menuitem "Edit" [ref=e610] [cursor=pointer]:
+                  - img [ref=e611]
+                - menuitem "Delete" [ref=e613] [cursor=pointer]:
+                  - img [ref=e614]
+        - generic:
+          - text: MUI X Missing license key
+          - generic: Open the browser console for details on how to resolve this.
+    - generic [ref=e618]:
+      - generic [ref=e619]:
+        - button "Add view" [ref=e620] [cursor=pointer]:
+          - img [ref=e621]
+        - button "All tabs" [ref=e623] [cursor=pointer]:
+          - img [ref=e624]
+        - button "Hide data sources" [ref=e626] [cursor=pointer]:
+          - img [ref=e627]
+      - generic [ref=e629]:
+        - button "Customers" [ref=e631] [cursor=pointer]:
+          - generic [ref=e632]: Customers
+        - button "Products" [ref=e634] [cursor=pointer]:
+          - generic [ref=e635]: Products
+        - button "Orders" [ref=e637] [cursor=pointer]:
+          - generic [ref=e638]: Orders
+  - button "Open Next.js Dev Tools" [ref=e644] [cursor=pointer]:
+    - img [ref=e645]
+  - alert [ref=e648]
+  - dialog "Cookie preferences" [ref=e649]:
+    - generic [ref=e650]:
+      - generic [ref=e651]:
+        - img [ref=e653]
+        - generic [ref=e658]:
+          - heading "Cookie preferences" [level=2] [ref=e659]
+          - paragraph [ref=e660]: We use cookies to understand site usage and improve our content. This includes third-party analytics.
+      - generic [ref=e661]:
+        - button "Allow analytics" [ref=e662] [cursor=pointer]
+        - button "Essential only" [ref=e663] [cursor=pointer]

@@ -16,7 +16,10 @@
     { "path": "../x-data-grid/tsconfig.build.json" },
     { "path": "../x-data-grid-pro/tsconfig.build.json" },
     { "path": "../x-license/tsconfig.build.json" },
-    { "path": "../x-internals/tsconfig.build.json" }
+    { "path": "../x-internals/tsconfig.build.json" },
+    { "path": "../x-chat-headless/tsconfig.build.json" },
+    { "path": "../x-chat/tsconfig.build.json" },
+    { "path": "../x-copilot/tsconfig.build.json" }
   ],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]

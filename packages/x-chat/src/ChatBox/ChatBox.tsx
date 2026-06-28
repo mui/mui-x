@@ -202,6 +202,7 @@ ChatBox.propTypes /* remove-proptypes */ = {
   activeConversationId: PropTypes.string,
   adapter: PropTypes.shape({
     addToolApprovalResponse: PropTypes.func,
+    allowMultipleMessages: PropTypes.bool,
     listConversations: PropTypes.func,
     listMessages: PropTypes.func,
     loadMore: PropTypes.func,

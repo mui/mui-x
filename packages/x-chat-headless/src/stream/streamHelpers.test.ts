@@ -33,19 +33,45 @@ describe('getOrCreateMessage', () => {
     expect(message.status).toBe('streaming');
   });
 
-  it('updates an existing non-streaming message to streaming status', () => {
-    const existing: ChatMessage = {
-      id: 'a1',
-      role: 'assistant',
-      status: 'sent',
-      parts: [],
-    };
-    const store = new ChatStore({ initialMessages: [existing] });
+  it('preserves a terminal status — does not flip sent/error/cancelled/read back to streaming', () => {
+    // Trailing chunks (e.g. a `message-metadata` frame carrying follow-up
+    // suggestions emitted after `finish`) re-enter ensureAssistantMessage
+    // to write metadata. They must NOT re-open a finalized message — the
+    // UI's streaming indicator keys off message.status === 'streaming' and
+    // would otherwise stay on forever.
+    for (const status of ['sent', 'read', 'error', 'cancelled'] as const) {
+      const existing: ChatMessage = {
+        id: 'a1',
+        role: 'assistant',
+        status,
+        parts: [],
+      };
+      const store = new ChatStore({ initialMessages: [existing] });
 
-    const message = getOrCreateMessage(asUnknown(store), 'a1', 'c1');
+      const message = getOrCreateMessage(asUnknown(store), 'a1', 'c1');
 
-    expect(message.status).toBe('streaming');
-    expect(store.state.messagesById.a1.status).toBe('streaming');
+      expect(message.status).toBe(status);
+      expect(store.state.messagesById.a1.status).toBe(status);
+    }
+  });
+
+  it('updates a pending/sending message to streaming status', () => {
+    // Pre-stream statuses are intermediate states; the act of streaming
+    // chunks into the message should transition them to 'streaming'.
+    for (const status of ['pending', 'sending'] as const) {
+      const existing: ChatMessage = {
+        id: 'a1',
+        role: 'assistant',
+        status,
+        parts: [],
+      };
+      const store = new ChatStore({ initialMessages: [existing] });
+
+      const message = getOrCreateMessage(asUnknown(store), 'a1', 'c1');
+
+      expect(message.status).toBe('streaming');
+      expect(store.state.messagesById.a1.status).toBe('streaming');
+    }
   });
 
   it('creates a new assistant message when not found in store', () => {

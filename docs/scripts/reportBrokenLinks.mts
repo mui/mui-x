@@ -5,12 +5,24 @@ async function main() {
     startCommand: 'pnpm serve --no-request-logging',
     host: 'http://localhost:3010/',
     seedUrls: ['/x/introduction/'],
+    // The crawler defaults to 4 concurrent page fetches. The docs export has
+    // thousands of pages, so raise this to shorten the link-check phase and keep
+    // the overall build within Netlify's timeout. Runs after static generation,
+    // so it does not compete with the memory-bound page-generation workers.
+    concurrency: 8,
     // Target paths to ignore during link checking
     ignoredPaths: [
       // The site root has no page in the `next export` output (redirects only
       // apply in dev, not in the exported site), so the shared header's logo
       // link to `/` resolves to a 404 here even though mui.com redirects it.
       /^\/$/,
+      // Next.js build output (hashed JS/CSS chunks and their `.js.map` source
+      // maps). The crawler spawns a worker thread, fetches and HTML-validates
+      // every URL it discovers, so crawling these assets means downloading and
+      // parsing thousands of (often multi-MB) build files — which blew past
+      // Netlify's 18-minute build timeout. They are emitted by the build and not
+      // navigable pages, so there is nothing to link-check here.
+      /\/_next\//,
       // Links to other MUI products and main-site pages (blog, pricing, etc.)
       // that are not served by this `/x`-only docs export. They resolve on the
       // live mui.com site but 404 in this isolated preview build.

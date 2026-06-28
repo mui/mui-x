@@ -77,6 +77,9 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
 
+  // Toolbar Copilot button
+  // toolbarCopilot: 'Copilot',
+
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
@@ -327,6 +330,14 @@ const beBYGrid: Partial<GridLocaleText> = {
   // aiAssistantPanelConversationHistory: 'Conversation history',
   // aiAssistantPanelEmptyConversation: 'No prompt history',
   // aiAssistantSuggestions: 'Suggestions',
+
+  // Copilot panel
+  // copilotPanelTitle: 'Copilot',
+  // copilotPanelClose: 'Close Copilot',
+  // copilotPanelBeta: 'BETA',
+  // copilotPanelReload: 'New conversation',
+  // copilotPanelEmptyStateTitle: 'How can I help?',
+  // copilotPanelEmptyStateHelper: 'Ask anything about your data, or pick a suggestion to get started.',
 
   // Prompt field
   // promptFieldLabel: 'Prompt',

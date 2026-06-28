@@ -1,0 +1,105 @@
+{
+  "name": "@mui/x-data-studio",
+  "version": "0.1.0-alpha.0",
+  "author": "MUI Team",
+  "description": "A MUI X multi-dataset data exploration component.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/react-data-studio/",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "material-ui",
+    "mui",
+    "mui-x",
+    "data-studio",
+    "data-grid",
+    "spreadsheet"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "code-infra build --flat",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "test:data-sources": "DATA_STUDIO_DATABASES=1 vitest run test/data-sources/dataSources.integration.test.ts --config vitest.config.jsdom.mts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/x-data-studio"
+  },
+  "dependencies": {
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
+    "@mui/x-charts-premium": "workspace:^",
+    "@mui/x-chat": "workspace:^",
+    "@mui/x-chat-headless": "workspace:^",
+    "@mui/x-copilot": "workspace:^",
+    "@mui/x-data-grid": "workspace:^",
+    "@mui/x-data-grid-premium": "workspace:^",
+    "@mui/x-data-grid-pro": "workspace:^",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-tree-view": "workspace:^",
+    "clsx": "catalog:",
+    "knex": "^3.2.10",
+    "prop-types": "catalog:"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^7.3.0 || ^9.0.0",
+    "@mui/system": "^7.3.0 || ^9.0.0",
+    "better-sqlite3": "^12.10.0",
+    "mongodb": "^7.2.0",
+    "mysql2": "^3.22.3",
+    "pg": "^8.21.0",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    },
+    "better-sqlite3": {
+      "optional": true
+    },
+    "mongodb": {
+      "optional": true
+    },
+    "mysql2": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
+    "@types/prop-types": "catalog:",
+    "better-sqlite3": "^12.10.0",
+    "mongodb": "^7.2.0",
+    "mysql2": "^3.22.3",
+    "pg": "^8.21.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
+  }
+}

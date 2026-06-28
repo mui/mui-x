@@ -63,6 +63,8 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   },
   disablePivoting: false,
   aiAssistant: false,
+  copilot: false,
+  enableMutatingActions: false,
   chartsIntegration: false,
   historyStackSize: 30,
   historyEventHandlers: {} as Record<GridEvents, GridHistoryEventHandler<any>>,

@@ -100,6 +100,16 @@ export interface GridPremiumIconSlotsComponent {
    */
   aiAssistantPanelHistoryIcon: React.JSXElementConstructor<IconProps>;
   /**
+   * Icon used for the Copilot button.
+   * @default GridCopilotIcon
+   */
+  copilotIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the Copilot panel close button.
+   * @default GridCloseIcon
+   */
+  copilotPanelCloseIcon: React.JSXElementConstructor<IconProps>;
+  /**
    * Icon used for the prompt
    * @default GridPromptIcon
    */

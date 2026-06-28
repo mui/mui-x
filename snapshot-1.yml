@@ -1,0 +1,415 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - tree [ref=e5]:
+        - treeitem "Data Sources" [checked=mixed] [expanded] [ref=e6]:
+          - generic [ref=e7] [cursor=pointer]:
+            - img [ref=e9]
+            - generic [ref=e11]: Data Sources
+          - group [ref=e12]:
+            - generic [ref=e14]:
+              - treeitem "Customers (998)" [checked] [ref=e15]:
+                - generic [ref=e17] [cursor=pointer]: Customers (998)
+              - treeitem "Products (47)" [ref=e18]:
+                - generic [ref=e20] [cursor=pointer]: Products (47)
+              - treeitem "Orders (1000)" [ref=e21]:
+                - generic [ref=e23] [cursor=pointer]: Orders (1000)
+        - treeitem "Views" [expanded] [ref=e24]:
+          - generic [ref=e25] [cursor=pointer]:
+            - img [ref=e27]
+            - generic [ref=e29]: Views
+          - group [ref=e30]:
+            - treeitem "No views yet" [disabled] [ref=e33]:
+              - generic [ref=e35]: No views yet
+      - generic [ref=e36]:
+        - button "Add new view" [disabled]
+    - generic [ref=e37]:
+      - toolbar "Data Studio toolbar" [ref=e39]:
+        - generic [ref=e42]:
+          - img [ref=e44]
+          - textbox "Search" [disabled] [ref=e46]
+          - group
+      - generic [ref=e48]:
+        - toolbar [ref=e49]:
+          - button "Add row" [ref=e50] [cursor=pointer]:
+            - img [ref=e52]
+            - text: Add row
+        - grid [ref=e54]:
+          - row "Customer ID Customer Name Email Phone Number Address Line 1 City Country Postcode Loyalty Card" [ref=e55]:
+            - columnheader "Customer ID" [ref=e56] [cursor=pointer]:
+              - generic [ref=e58]: Customer ID
+              - generic [ref=e59]:
+                - img
+            - columnheader "Customer Name" [ref=e60] [cursor=pointer]:
+              - generic [ref=e62]: Customer Name
+              - generic [ref=e63]:
+                - img
+            - columnheader "Email" [ref=e64] [cursor=pointer]:
+              - generic [ref=e66]: Email
+              - generic [ref=e67]:
+                - img
+            - columnheader "Phone Number" [ref=e68] [cursor=pointer]:
+              - generic [ref=e70]: Phone Number
+              - generic [ref=e71]:
+                - img
+            - columnheader "Address Line 1" [ref=e72] [cursor=pointer]:
+              - generic [ref=e74]: Address Line 1
+              - generic [ref=e75]:
+                - img
+            - columnheader "City" [ref=e76] [cursor=pointer]:
+              - generic [ref=e78]: City
+              - generic [ref=e79]:
+                - img
+            - columnheader "Country" [ref=e80] [cursor=pointer]:
+              - generic [ref=e82]: Country
+              - generic [ref=e83]:
+                - img
+            - columnheader "Postcode" [ref=e84] [cursor=pointer]:
+              - generic [ref=e86]: Postcode
+              - generic [ref=e87]:
+                - img
+            - columnheader "Loyalty Card" [ref=e88] [cursor=pointer]:
+              - generic [ref=e90]: Loyalty Card
+              - generic [ref=e91]:
+                - img
+            - columnheader [ref=e92]:
+              - generic [ref=e93]:
+                - img
+          - rowgroup [ref=e94]:
+            - row "73342-18763-UW Piotr Bote pbote1@yelp.com +353 (913) 396-4653 2112 Ridgeway Hill Crumlin Ireland D6W No" [ref=e95]:
+              - gridcell "73342-18763-UW" [ref=e96]
+              - gridcell "Piotr Bote" [ref=e97]
+              - gridcell "pbote1@yelp.com" [ref=e98]
+              - gridcell "+353 (913) 396-4653" [ref=e99]
+              - gridcell "2112 Ridgeway Hill" [ref=e100]
+              - gridcell "Crumlin" [ref=e101]
+              - gridcell "Ireland" [ref=e102]
+              - gridcell "D6W" [ref=e103]
+              - gridcell "No" [ref=e104]
+              - gridcell [ref=e105]:
+                - menu [ref=e106]:
+                  - menuitem "Edit" [ref=e107] [cursor=pointer]:
+                    - img [ref=e108]
+                  - menuitem "Delete" [ref=e110] [cursor=pointer]:
+                    - img [ref=e111]
+            - row "21125-22134-PX Jami Redholes jredholes2@tmall.com +1 (210) 986-6806 5214 Bartillon Park San Antonio United States 78205 Yes" [ref=e113]:
+              - gridcell "21125-22134-PX" [ref=e114]
+              - gridcell "Jami Redholes" [ref=e115]
+              - gridcell "jredholes2@tmall.com" [ref=e116]
+              - gridcell "+1 (210) 986-6806" [ref=e117]
+              - gridcell "5214 Bartillon Park" [ref=e118]
+              - gridcell "San Antonio" [ref=e119]
+              - gridcell "United States" [ref=e120]
+              - gridcell "78205" [ref=e121]
+              - gridcell "Yes" [ref=e122]
+              - gridcell [ref=e123]:
+                - menu [ref=e124]:
+                  - menuitem "Edit" [ref=e125] [cursor=pointer]:
+                    - img [ref=e126]
+                  - menuitem "Delete" [ref=e128] [cursor=pointer]:
+                    - img [ref=e129]
+            - row "71253-00052-RN Dene Azema dazema3@facebook.com +1 (217) 418-0714 27 Maywood Place Springfield United States 62711 Yes" [ref=e131]:
+              - gridcell "71253-00052-RN" [ref=e132]
+              - gridcell "Dene Azema" [ref=e133]
+              - gridcell "dazema3@facebook.com" [ref=e134]
+              - gridcell "+1 (217) 418-0714" [ref=e135]
+              - gridcell "27 Maywood Place" [ref=e136]
+              - gridcell "Springfield" [ref=e137]
+              - gridcell "United States" [ref=e138]
+              - gridcell "62711" [ref=e139]
+              - gridcell "Yes" [ref=e140]
+              - gridcell [ref=e141]:
+                - menu [ref=e142]:
+                  - menuitem "Edit" [ref=e143] [cursor=pointer]:
+                    - img [ref=e144]
+                  - menuitem "Delete" [ref=e146] [cursor=pointer]:
+                    - img [ref=e147]
+            - row "23806-46781-OU Christoffer O' Shea +353 (698) 362-9201 38980 Manitowish Junction Cill Airne Ireland N41 No" [ref=e149]:
+              - gridcell "23806-46781-OU" [ref=e150]
+              - gridcell "Christoffer O' Shea" [ref=e151]
+              - gridcell [ref=e152]
+              - gridcell "+353 (698) 362-9201" [ref=e153]
+              - gridcell "38980 Manitowish Junction" [ref=e154]
+              - gridcell "Cill Airne" [ref=e155]
+              - gridcell "Ireland" [ref=e156]
+              - gridcell "N41" [ref=e157]
+              - gridcell "No" [ref=e158]
+              - gridcell [ref=e159]:
+                - menu [ref=e160]:
+                  - menuitem "Edit" [ref=e161] [cursor=pointer]:
+                    - img [ref=e162]
+                  - menuitem "Delete" [ref=e164] [cursor=pointer]:
+                    - img [ref=e165]
+            - row "86561-91660-RB Beryle Cottier +1 (570) 289-7473 2651 Stoughton Place Scranton United States 18505 No" [ref=e167]:
+              - gridcell "86561-91660-RB" [ref=e168]
+              - gridcell "Beryle Cottier" [ref=e169]
+              - gridcell [ref=e170]
+              - gridcell "+1 (570) 289-7473" [ref=e171]
+              - gridcell "2651 Stoughton Place" [ref=e172]
+              - gridcell "Scranton" [ref=e173]
+              - gridcell "United States" [ref=e174]
+              - gridcell "18505" [ref=e175]
+              - gridcell "No" [ref=e176]
+              - gridcell [ref=e177]:
+                - menu [ref=e178]:
+                  - menuitem "Edit" [ref=e179] [cursor=pointer]:
+                    - img [ref=e180]
+                  - menuitem "Delete" [ref=e182] [cursor=pointer]:
+                    - img [ref=e183]
+            - row "65223-29612-CB Shaylynn Lobe slobe6@nifty.com +1 (937) 954-4541 7005 Mariners Cove Place Dayton United States 45440 Yes" [ref=e185]:
+              - gridcell "65223-29612-CB" [ref=e186]
+              - gridcell "Shaylynn Lobe" [ref=e187]
+              - gridcell "slobe6@nifty.com" [ref=e188]
+              - gridcell "+1 (937) 954-4541" [ref=e189]
+              - gridcell "7005 Mariners Cove Place" [ref=e190]
+              - gridcell "Dayton" [ref=e191]
+              - gridcell "United States" [ref=e192]
+              - gridcell "45440" [ref=e193]
+              - gridcell "Yes" [ref=e194]
+              - gridcell [ref=e195]:
+                - menu [ref=e196]:
+                  - menuitem "Edit" [ref=e197] [cursor=pointer]:
+                    - img [ref=e198]
+                  - menuitem "Delete" [ref=e200] [cursor=pointer]:
+                    - img [ref=e201]
+            - row "21134-81676-FR Melvin Wharfe +353 (507) 574-3034 7 Straubel Road Kill Ireland P24 Yes" [ref=e203]:
+              - gridcell "21134-81676-FR" [ref=e204]
+              - gridcell "Melvin Wharfe" [ref=e205]
+              - gridcell [ref=e206]
+              - gridcell "+353 (507) 574-3034" [ref=e207]
+              - gridcell "7 Straubel Road" [ref=e208]
+              - gridcell "Kill" [ref=e209]
+              - gridcell "Ireland" [ref=e210]
+              - gridcell "P24" [ref=e211]
+              - gridcell "Yes" [ref=e212]
+              - gridcell [ref=e213]:
+                - menu [ref=e214]:
+                  - menuitem "Edit" [ref=e215] [cursor=pointer]:
+                    - img [ref=e216]
+                  - menuitem "Delete" [ref=e218] [cursor=pointer]:
+                    - img [ref=e219]
+            - row "03396-68805-ZC Guthrey Petracci gpetracci8@livejournal.com +1 (310) 868-1842 949 Paget Parkway Los Angeles United States 90045 No" [ref=e221]:
+              - gridcell "03396-68805-ZC" [ref=e222]
+              - gridcell "Guthrey Petracci" [ref=e223]
+              - gridcell "gpetracci8@livejournal.com" [ref=e224]
+              - gridcell "+1 (310) 868-1842" [ref=e225]
+              - gridcell "949 Paget Parkway" [ref=e226]
+              - gridcell "Los Angeles" [ref=e227]
+              - gridcell "United States" [ref=e228]
+              - gridcell "90045" [ref=e229]
+              - gridcell "No" [ref=e230]
+              - gridcell [ref=e231]:
+                - menu [ref=e232]:
+                  - menuitem "Edit" [ref=e233] [cursor=pointer]:
+                    - img [ref=e234]
+                  - menuitem "Delete" [ref=e236] [cursor=pointer]:
+                    - img [ref=e237]
+            - row "61021-27840-ZN Rodger Raven rraven9@ed.gov +1 (213) 263-0288 1 Reinke Avenue Los Angeles United States 90065 No" [ref=e239]:
+              - gridcell "61021-27840-ZN" [ref=e240]
+              - gridcell "Rodger Raven" [ref=e241]
+              - gridcell "rraven9@ed.gov" [ref=e242]
+              - gridcell "+1 (213) 263-0288" [ref=e243]
+              - gridcell "1 Reinke Avenue" [ref=e244]
+              - gridcell "Los Angeles" [ref=e245]
+              - gridcell "United States" [ref=e246]
+              - gridcell "90065" [ref=e247]
+              - gridcell "No" [ref=e248]
+              - gridcell [ref=e249]:
+                - menu [ref=e250]:
+                  - menuitem "Edit" [ref=e251] [cursor=pointer]:
+                    - img [ref=e252]
+                  - menuitem "Delete" [ref=e254] [cursor=pointer]:
+                    - img [ref=e255]
+            - row "76239-90137-UQ Ferrell Ferber fferbera@businesswire.com +1 (408) 383-5302 68 High Crossing Court San Jose United States 95160 No" [ref=e257]:
+              - gridcell "76239-90137-UQ" [ref=e258]
+              - gridcell "Ferrell Ferber" [ref=e259]
+              - gridcell "fferbera@businesswire.com" [ref=e260]
+              - gridcell "+1 (408) 383-5302" [ref=e261]
+              - gridcell "68 High Crossing Court" [ref=e262]
+              - gridcell "San Jose" [ref=e263]
+              - gridcell "United States" [ref=e264]
+              - gridcell "95160" [ref=e265]
+              - gridcell "No" [ref=e266]
+              - gridcell [ref=e267]:
+                - menu [ref=e268]:
+                  - menuitem "Edit" [ref=e269] [cursor=pointer]:
+                    - img [ref=e270]
+                  - menuitem "Delete" [ref=e272] [cursor=pointer]:
+                    - img [ref=e273]
+            - row "49315-21985-BB Duky Phizackerly dphizackerlyb@utexas.edu +1 (408) 533-6012 28643 Bluejay Crossing San Jose United States 95194 Yes" [ref=e275]:
+              - gridcell "49315-21985-BB" [ref=e276]
+              - gridcell "Duky Phizackerly" [ref=e277]
+              - gridcell "dphizackerlyb@utexas.edu" [ref=e278]
+              - gridcell "+1 (408) 533-6012" [ref=e279]
+              - gridcell "28643 Bluejay Crossing" [ref=e280]
+              - gridcell "San Jose" [ref=e281]
+              - gridcell "United States" [ref=e282]
+              - gridcell "95194" [ref=e283]
+              - gridcell "Yes" [ref=e284]
+              - gridcell [ref=e285]:
+                - menu [ref=e286]:
+                  - menuitem "Edit" [ref=e287] [cursor=pointer]:
+                    - img [ref=e288]
+                  - menuitem "Delete" [ref=e290] [cursor=pointer]:
+                    - img [ref=e291]
+            - row "34136-36674-OM Rosaleen Scholar rscholarc@nyu.edu +1 (804) 420-0420 80915 Montana Park Richmond United States 23285 No" [ref=e293]:
+              - gridcell "34136-36674-OM" [ref=e294]
+              - gridcell "Rosaleen Scholar" [ref=e295]
+              - gridcell "rscholarc@nyu.edu" [ref=e296]
+              - gridcell "+1 (804) 420-0420" [ref=e297]
+              - gridcell "80915 Montana Park" [ref=e298]
+              - gridcell "Richmond" [ref=e299]
+              - gridcell "United States" [ref=e300]
+              - gridcell "23285" [ref=e301]
+              - gridcell "No" [ref=e302]
+              - gridcell [ref=e303]:
+                - menu [ref=e304]:
+                  - menuitem "Edit" [ref=e305] [cursor=pointer]:
+                    - img [ref=e306]
+                  - menuitem "Delete" [ref=e308] [cursor=pointer]:
+                    - img [ref=e309]
+            - row "39396-12890-PE Terence Vanyutin tvanyutind@wix.com 331 Bunting Hill Migrate United States 41905 No" [ref=e311]:
+              - gridcell "39396-12890-PE" [ref=e312]
+              - gridcell "Terence Vanyutin" [ref=e313]
+              - gridcell "tvanyutind@wix.com" [ref=e314]
+              - gridcell [ref=e315]
+              - gridcell "331 Bunting Hill" [ref=e316]
+              - gridcell "Migrate" [ref=e317]
+              - gridcell "United States" [ref=e318]
+              - gridcell "41905" [ref=e319]
+              - gridcell "No" [ref=e320]
+              - gridcell [ref=e321]:
+                - menu [ref=e322]:
+                  - menuitem "Edit" [ref=e323] [cursor=pointer]:
+                    - img [ref=e324]
+                  - menuitem "Delete" [ref=e326] [cursor=pointer]:
+                    - img [ref=e327]
+            - row "95875-73336-RG Patrice Trobe ptrobee@wunderground.com +1 (314) 240-7896 827 Declaration Plaza Saint Louis United States 63131 Yes" [ref=e329]:
+              - gridcell "95875-73336-RG" [ref=e330]
+              - gridcell "Patrice Trobe" [ref=e331]
+              - gridcell "ptrobee@wunderground.com" [ref=e332]
+              - gridcell "+1 (314) 240-7896" [ref=e333]
+              - gridcell "827 Declaration Plaza" [ref=e334]
+              - gridcell "Saint Louis" [ref=e335]
+              - gridcell "United States" [ref=e336]
+              - gridcell "63131" [ref=e337]
+              - gridcell "Yes" [ref=e338]
+              - gridcell [ref=e339]:
+                - menu [ref=e340]:
+                  - menuitem "Edit" [ref=e341] [cursor=pointer]:
+                    - img [ref=e342]
+                  - menuitem "Delete" [ref=e344] [cursor=pointer]:
+                    - img [ref=e345]
+            - row "25473-43727-BY Llywellyn Oscroft loscroftf@ebay.co.uk 022 Roth Place Philadelphia United States 19172 No" [ref=e347]:
+              - gridcell "25473-43727-BY" [ref=e348]
+              - gridcell "Llywellyn Oscroft" [ref=e349]
+              - gridcell "loscroftf@ebay.co.uk" [ref=e350]
+              - gridcell [ref=e351]
+              - gridcell "022 Roth Place" [ref=e352]
+              - gridcell "Philadelphia" [ref=e353]
+              - gridcell "United States" [ref=e354]
+              - gridcell "19172" [ref=e355]
+              - gridcell "No" [ref=e356]
+              - gridcell [ref=e357]:
+                - menu [ref=e358]:
+                  - menuitem "Edit" [ref=e359] [cursor=pointer]:
+                    - img [ref=e360]
+                  - menuitem "Delete" [ref=e362] [cursor=pointer]:
+                    - img [ref=e363]
+            - row "99643-51048-IQ Minni Alabaster malabasterg@hexun.com +1 (971) 483-6255 3 Charing Cross Trail Portland United States 97271 No" [ref=e365]:
+              - gridcell "99643-51048-IQ" [ref=e366]
+              - gridcell "Minni Alabaster" [ref=e367]
+              - gridcell "malabasterg@hexun.com" [ref=e368]
+              - gridcell "+1 (971) 483-6255" [ref=e369]
+              - gridcell "3 Charing Cross Trail" [ref=e370]
+              - gridcell "Portland" [ref=e371]
+              - gridcell "United States" [ref=e372]
+              - gridcell "97271" [ref=e373]
+              - gridcell "No" [ref=e374]
+              - gridcell [ref=e375]:
+                - menu [ref=e376]:
+                  - menuitem "Edit" [ref=e377] [cursor=pointer]:
+                    - img [ref=e378]
+                  - menuitem "Delete" [ref=e380] [cursor=pointer]:
+                    - img [ref=e381]
+            - row "62173-15287-CU Rhianon Broxup rbroxuph@jimdo.com +1 (713) 663-1338 83517 Thierer Court Houston United States 77240 No" [ref=e383]:
+              - gridcell "62173-15287-CU" [ref=e384]
+              - gridcell "Rhianon Broxup" [ref=e385]
+              - gridcell "rbroxuph@jimdo.com" [ref=e386]
+              - gridcell "+1 (713) 663-1338" [ref=e387]
+              - gridcell "83517 Thierer Court" [ref=e388]
+              - gridcell "Houston" [ref=e389]
+              - gridcell "United States" [ref=e390]
+              - gridcell "77240" [ref=e391]
+              - gridcell "No" [ref=e392]
+              - gridcell [ref=e393]:
+                - menu [ref=e394]:
+                  - menuitem "Edit" [ref=e395] [cursor=pointer]:
+                    - img [ref=e396]
+                  - menuitem "Delete" [ref=e398] [cursor=pointer]:
+                    - img [ref=e399]
+            - row "57611-05522-ST Pall Redford predfordi@ow.ly 7337 Hayes Junction Caherconlish Ireland F45 Yes" [ref=e401]:
+              - gridcell "57611-05522-ST" [ref=e402]
+              - gridcell "Pall Redford" [ref=e403]
+              - gridcell "predfordi@ow.ly" [ref=e404]
+              - gridcell [ref=e405]
+              - gridcell "7337 Hayes Junction" [ref=e406]
+              - gridcell "Caherconlish" [ref=e407]
+              - gridcell "Ireland" [ref=e408]
+              - gridcell "F45" [ref=e409]
+              - gridcell "Yes" [ref=e410]
+              - gridcell [ref=e411]:
+                - menu [ref=e412]:
+                  - menuitem "Edit" [ref=e413] [cursor=pointer]:
+                    - img [ref=e414]
+                  - menuitem "Delete" [ref=e416] [cursor=pointer]:
+                    - img [ref=e417]
+            - row "76664-37050-DT Aurea Corradino acorradinoj@harvard.edu +1 (646) 202-5965 698 Canary Terrace New York City United States 10060 Yes" [ref=e419]:
+              - gridcell "76664-37050-DT" [ref=e420]
+              - gridcell "Aurea Corradino" [ref=e421]
+              - gridcell "acorradinoj@harvard.edu" [ref=e422]
+              - gridcell "+1 (646) 202-5965" [ref=e423]
+              - gridcell "698 Canary Terrace" [ref=e424]
+              - gridcell "New York City" [ref=e425]
+              - gridcell "United States" [ref=e426]
+              - gridcell "10060" [ref=e427]
+              - gridcell "Yes" [ref=e428]
+              - gridcell [ref=e429]:
+                - menu [ref=e430]:
+                  - menuitem "Edit" [ref=e431] [cursor=pointer]:
+                    - img [ref=e432]
+                  - menuitem "Delete" [ref=e434] [cursor=pointer]:
+                    - img [ref=e435]
+            - row "84565-53984-SX Kendal Scardefield +353 (733) 405-3302 3 Northridge Crossing Clondalkin Ireland D24 Yes" [ref=e437]:
+              - gridcell "84565-53984-SX" [ref=e438]
+              - gridcell "Kendal Scardefield" [ref=e439]
+              - gridcell [ref=e440]
+              - gridcell "+353 (733) 405-3302" [ref=e441]
+              - gridcell "3 Northridge Crossing" [ref=e442]
+              - gridcell "Clondalkin" [ref=e443]
+              - gridcell "Ireland" [ref=e444]
+              - gridcell "D24" [ref=e445]
+              - gridcell "Yes" [ref=e446]
+              - gridcell [ref=e447]:
+                - menu [ref=e448]:
+                  - menuitem "Edit" [ref=e449] [cursor=pointer]:
+                    - img [ref=e450]
+                  - menuitem "Delete" [ref=e452] [cursor=pointer]:
+                    - img [ref=e453]
+          - generic:
+            - text: MUI X Missing license key
+            - generic: Open the browser console for details on how to resolve this.
+        - generic [ref=e461]: "Total Rows: 100"
+  - button "Open Next.js Dev Tools" [ref=e467] [cursor=pointer]:
+    - img [ref=e468]
+  - alert [ref=e471]
+  - dialog "Cookie preferences" [ref=e472]:
+    - generic [ref=e473]:
+      - generic [ref=e474]:
+        - img [ref=e476]
+        - generic [ref=e481]:
+          - heading "Cookie preferences" [level=2] [ref=e482]
+          - paragraph [ref=e483]: We use cookies to understand site usage and improve our content. This includes third-party analytics.
+      - generic [ref=e484]:
+        - button "Allow analytics" [ref=e485] [cursor=pointer]
+        - button "Essential only" [ref=e486] [cursor=pointer]

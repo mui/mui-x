@@ -93,10 +93,10 @@ export const useGridRowGrouping = (
       const currentModel = gridRowGroupingModelSelector(apiRef);
       if (currentModel !== model) {
         apiRef.current.setState(mergeStateWithRowGroupingModel(model));
-        setStrategyAvailability(apiRef, props.disableRowGrouping);
+        setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
       }
     },
-    [apiRef, props.disableRowGrouping],
+    [apiRef, props.disableRowGrouping, props.dataSource],
   );
 
   const addRowGroupingCriteria = React.useCallback<GridRowGroupingApi['addRowGroupingCriteria']>(

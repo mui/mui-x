@@ -9,6 +9,20 @@ import type {
 } from '../types/chat-message-parts';
 
 declare module '@mui/x-chat-headless/types' {
+  // Test-only message metadata fields. `ChatMessageMetadata` ships empty so
+  // consumers can augment it; these are the fields exercised across the
+  // x-chat-headless test suite. Module augmentation merges globally within the
+  // package's TypeScript program, so declaring them once here covers every test.
+  interface ChatMessageMetadata {
+    responseId?: string;
+    abVariant?: string;
+    modelId?: string;
+    costUsd?: number;
+    suggestions?: string[];
+    traceId?: string;
+    expanded?: boolean;
+  }
+
   interface ChatToolDefinitionMap {
     search: {
       input: {
@@ -78,6 +92,227 @@ describe('processStream', () => {
       parts: [{ type: 'text', text: 'Hello world', state: 'done' }],
       createdAt: expect.any(String),
     });
+  });
+
+  it('tolerates a leading `message-metadata` chunk and buffers it onto the assistant message created by the next `start`', async () => {
+    // Mirrors the wire format the grid Copilot A/B adapter receives: the
+    // backend writes a leading `message-metadata` carrying the AB preamble
+    // (responseId / abPairId / abTwinUrl) BEFORE the AI SDK's `start`
+    // chunk. Earlier versions of processStream errored on the missing
+    // target id; now the metadata buffers until `start` and lands on the
+    // freshly-created message.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        // Note: backend uses `messageMetadata` (AI-SDK shape); processStream
+        // accepts either `messageMetadata` or `metadata`.
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { responseId: 'r-1', abPairId: 'p-1', abVariant: 'A' },
+        } as any,
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'Hello' },
+        { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+      ]),
+      { conversationId: 'c1' },
+    );
+
+    expect(store.state.error).toBeNull();
+    expect(store.state.messagesById.a1).toBeDefined();
+    expect(store.state.messagesById.a1.metadata).toMatchObject({
+      responseId: 'r-1',
+      abPairId: 'p-1',
+      abVariant: 'A',
+    });
+  });
+
+  it('lands sibling assistant messages when a second `start` with a different messageId arrives', async () => {
+    // Adapters that fan out parallel responses (the grid Copilot A/B
+    // adapter) merge two upstream streams into one logical chunk stream.
+    // processStream should treat a second `start` chunk as the boundary
+    // between siblings: finalize the previous target, then begin a new
+    // assistant message under the fresh id.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'A response' },
+        { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+        { type: 'start', messageId: 'b1' },
+        { type: 'text-delta', id: 't2', delta: 'B response' },
+        { type: 'finish', messageId: 'b1', finishReason: 'stop' },
+      ]),
+      { conversationId: 'c1', allowMultipleMessages: true },
+    );
+
+    expect(store.state.messageIds).toEqual(['a1', 'b1']);
+    expect(store.state.messagesById.a1.status).toBe('sent');
+    expect(store.state.messagesById.a1.parts).toEqual([
+      { type: 'text', text: 'A response', state: 'done' },
+    ]);
+    expect(store.state.messagesById.b1.status).toBe('sent');
+    expect(store.state.messagesById.b1.parts).toEqual([
+      { type: 'text', text: 'B response', state: 'done' },
+    ]);
+  });
+
+  it('routes a `message-metadata` chunk that lands AFTER a `finish` to the NEXT sibling, not back to the finalised message', async () => {
+    // Reproduces the grid Copilot A/B wire sequence with the SECOND
+    // message-metadata frame that the Copilot backend emits after each
+    // variant's `finish` (the `suggestions` frame). The full per-variant
+    // wire frames are:
+    //   message-metadata(A preamble)
+    //   start(A) → ... → finish(A, messageMetadata)
+    //   message-metadata(A suggestions)
+    //   message-metadata(B preamble)
+    //   start(B) → ... → finish(B, messageMetadata)
+    //   message-metadata(B suggestions)
+    //
+    // Three things must happen for the demo to work:
+    //  1. A's preamble flushes onto A's `start`.
+    //  2. A's suggestions frame applies to A even though it arrives AFTER
+    //     A's `finish` (no sibling yet).
+    //  3. B's preamble must NOT mutate the just-finalised A — it must be
+    //     buffered until B's `start` arrives.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { responseId: 'r-A', abPairId: 'p-1', abVariant: 'A' },
+        } as any,
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'A response' },
+        {
+          type: 'finish',
+          messageId: 'a1',
+          finishReason: 'stop',
+          messageMetadata: { modelId: 'model-A', costUsd: 0.001 },
+        } as any,
+        // A's trailing suggestions frame — should land on A (no sibling
+        // has started yet, so this is the only candidate).
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { suggestions: ['follow-up-A'] },
+        } as any,
+        // B's preamble — `targetMessageId` still points at A but A is
+        // finalised; this metadata must buffer for B's upcoming `start`.
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { responseId: 'r-B', abPairId: 'p-1', abVariant: 'B' },
+        } as any,
+        { type: 'start', messageId: 'b1' },
+        { type: 'text-delta', id: 't2', delta: 'B response' },
+        {
+          type: 'finish',
+          messageId: 'b1',
+          finishReason: 'stop',
+          messageMetadata: { modelId: 'model-B', costUsd: 0.002 },
+        } as any,
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { suggestions: ['follow-up-B'] },
+        } as any,
+      ]),
+      { conversationId: 'c1', allowMultipleMessages: true },
+    );
+
+    // A retains its own preamble + finish-bound metadata. The trailing
+    // suggestions frame lands here (A is the only finalised sibling at
+    // that point).
+    expect(store.state.messagesById.a1.metadata).toMatchObject({
+      responseId: 'r-A',
+      abVariant: 'A',
+      modelId: 'model-A',
+      costUsd: 0.001,
+    });
+    // B inherits its preamble + its own finish metadata + its trailing
+    // suggestions — none of A's metadata leaks through.
+    expect(store.state.messagesById.b1.metadata).toMatchObject({
+      responseId: 'r-B',
+      abVariant: 'B',
+      modelId: 'model-B',
+      costUsd: 0.002,
+      suggestions: ['follow-up-B'],
+    });
+    // And crucially: A's metadata was NOT overwritten by B's preamble.
+    expect(store.state.messagesById.a1.metadata?.responseId).toBe('r-A');
+    expect(store.state.messagesById.a1.metadata?.abVariant).toBe('A');
+    // Both sibling messages must remain in 'sent' status — trailing
+    // metadata frames must not re-open finalized messages.
+    expect(store.state.messagesById.a1.status).toBe('sent');
+    expect(store.state.messagesById.b1.status).toBe('sent');
+  });
+
+  it('keeps a finalized message in sent status when trailing metadata frames arrive', async () => {
+    // Regression: the Copilot backend emits a separate `message-metadata`
+    // frame carrying follow-up suggestions AFTER its `finish` chunk. The
+    // trailing chunk used to call ensureAssistantMessage -> getOrCreateMessage,
+    // which incorrectly flipped the message status from 'sent' back to
+    // 'streaming'. The UI's streaming indicator (which keys off
+    // message.status === 'streaming') would then stay on forever.
+    //
+    // `allowMultipleMessages: true` matches the grid Copilot runtime — its
+    // AB adapter always sets it so the read loop doesn't break on the
+    // first finish chunk, allowing trailing frames to be processed.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'Hello' },
+        {
+          type: 'finish',
+          messageId: 'a1',
+          finishReason: 'stop',
+          messageMetadata: { modelId: 'model-A', costUsd: 0.001 },
+        } as any,
+        // Trailing suggestions frame — arrives AFTER finish. It should
+        // update metadata without re-opening the message.
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { suggestions: ['follow-up-A'] },
+        } as any,
+      ]),
+      { conversationId: 'c1', allowMultipleMessages: true },
+    );
+
+    expect(store.state.messagesById.a1.status).toBe('sent');
+    expect(store.state.messagesById.a1.metadata).toMatchObject({
+      modelId: 'model-A',
+      costUsd: 0.001,
+      suggestions: ['follow-up-A'],
+    });
+  });
+
+  it('finalizes the previous sibling even when no finish chunk fires before a new start', async () => {
+    // Defensive case: if the upstream loses a `finish` chunk for the
+    // first sibling, the second `start` still terminates it cleanly so
+    // the store doesn't carry a phantom streaming message.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'A response' },
+        { type: 'start', messageId: 'b1' },
+        { type: 'text-delta', id: 't2', delta: 'B response' },
+        { type: 'finish', messageId: 'b1', finishReason: 'stop' },
+      ]),
+      { conversationId: 'c1', allowMultipleMessages: true },
+    );
+
+    expect(store.state.messageIds).toEqual(['a1', 'b1']);
+    expect(store.state.messagesById.a1.status).toBe('sent');
+    expect(store.state.messagesById.b1.status).toBe('sent');
   });
 
   it('tracks reasoning parts separately from text parts', async () => {

@@ -1,0 +1,242 @@
+data: {"type":"start"}
+
+data: {"type":"start-step"}
+
+data: {"type":"reasoning-start","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"The","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"The","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"The","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" user wants to group","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" user wants to group","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" employees by country and","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" employees by country and","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" aggregate salary. \n\n","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" aggregate salary. \n\n","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"Let me break this","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"Let me break this","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" down:\n1","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" down:\n1","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":". Group by country","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":". Group by country","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":": This means I","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":": This means I","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" need to","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" need to","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" set `/grouping","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" set `/grouping","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"` to `[\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"` to `[\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"country\"]`\n","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"country\"]`\n","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"2. Aggregate salary","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"2. Aggregate salary","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":": This means I","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":": This means I","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" need to set `/","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" need to set `/","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"aggregation` with","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"aggregation` with","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" the salary field.","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" the salary field.","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" The","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" The","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" user wants to aggregate","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" user wants to aggregate","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" salary,","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" salary,","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" but doesn't specify","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" but doesn't specify","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" which aggregation function.","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" which aggregation function.","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" The default aggregation when","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" The default aggregation when","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" grouping is typically `","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" grouping is typically `","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"sum`, but \"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"sum`, but \"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"aggregate salary\" is","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"aggregate salary\" is","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" somewhat ambiguous. Looking","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" somewhat ambiguous. Looking","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" at the available aggregation","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" at the available aggregation","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" functions: sum,","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" functions: sum,","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" avg, min,","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" avg, min,","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" max, size.","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" max, size.","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" Since","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" Since","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" the user just says","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" the user just says","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" \"aggregate salary\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" \"aggregate salary\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" without specifying which function","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" without specifying which function","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":", I should","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":", I should","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" probably use `sum","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" probably use `sum","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"` as that's","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"` as that's","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" the most common","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" the most common","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" interpretation of \"aggregate","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" interpretation of \"aggregate","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" (total). However","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" (total). However","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":", I could","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":", I could","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" also argue for `","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" also argue for `","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"avg`","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"avg`","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" (average salary across","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" (average salary across","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" countries). Looking at","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" countries). Looking at","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" the examples given","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" the examples given","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" in the system prompt","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" in the system prompt","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":":","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":":","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\n   - Example","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\n   - Example","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" 3","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" 3","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"a: \"Group","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"a: \"Group","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" orders by country and","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" orders by country and","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" sum the revenue\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" sum the revenue\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" â†’ aggregation: {\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" â†’ aggregation: {\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"revenue\":\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"revenue\":\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"sum\"}\n  ","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"sum\"}\n  ","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" - Example 3","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" - Example 3","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"b: \"Group","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"b: \"Group","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" by department then by","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" by department then by","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" location with average salary","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" location with average salary","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\" â†’ aggregation:","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\" â†’ aggregation:","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" {\"salary\":\"avg","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" {\"salary\":\"avg","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\"}\n   \n  ","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\"}\n   \n  ","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" The user says \"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" The user says \"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"aggregate salary\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"aggregate salary\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" - this is less","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" - this is less","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" specific. I'll","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" specific. I'll","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" use \"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" use \"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"sum\" as the","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"sum\" as the","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" default aggregation for salary","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" default aggregation for salary","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" as that seems like","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" as that seems like","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" the most common interpretation","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" the most common interpretation","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":".","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":".","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" But wait, on","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" But wait, on","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" second thought \"aggregate","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" second thought \"aggregate","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" often implies a total","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" often implies a total","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"/sum operation.","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"/sum operation.","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" Let me use","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" Let me use","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" sum.\n\nLet","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" sum.\n\nLet","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" me construct the patches","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" me construct the patches","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":":\n1.","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":":\n1.","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" Group","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" Group","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"ing by country:","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"ing by country:","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" `{\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" `{\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"op\":\"replace\",\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"op\":\"replace\",\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"path\":\"/grouping","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"path\":\"/grouping","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\",\"value\":[\"country","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\",\"value\":[\"country","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\"]}`\n2","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\"]}`\n2","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":". Aggregation for","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":". Aggregation for","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" salary: `{\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" salary: `{\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"op\":\"replace\",\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"op\":\"replace\",\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"path\":\"/aggregation","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"path\":\"/aggregation","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\",\"value\":{\"salary","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\",\"value\":{\"salary","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\":\"sum\"}}`","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\":\"sum\"}}`","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":"\n\nBoth are straightforward","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"\n\nBoth are straightforward","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":". Let me emit","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":". Let me emit","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","delta":" these patches.\n","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" these patches.\n","format":"unknown","index":0}]}}}
+
+data: {"type":"tool-input-start","toolCallId":"call_bef928a970184110a53c918f","toolName":"setGridState"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"{\"patches\": \"{\\\"op"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"\\\":\\\"replace\\\",\\\"path"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"\\\":\\\"/grouping\\\",\\\""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"value\\\":[\\\"country\\\"]}"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"\\n{\\\"op\\\":\\\""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"replace\\\",\\\"path\\\":\\\"/"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"aggregation\\\",\\\"value"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"\\\":{\\\"salary\\\":\\\"sum"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"\\\"}}"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"\""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_bef928a970184110a53c918f","inputTextDelta":"}"}
+
+data: {"type":"tool-input-available","toolCallId":"call_bef928a970184110a53c918f","toolName":"setGridState","input":{"patches":"{\"op\":\"replace\",\"path\":\"/grouping\",\"value\":[\"country\"]}\n{\"op\":\"replace\",\"path\":\"/aggregation\",\"value\":{\"salary\":\"sum\"}}"},"providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"The user wants to group employees by country and aggregate salary. \n\nLet me break this down:\n1. Group by country: This means I need to set `/grouping` to `[\"country\"]`\n2. Aggregate salary: This means I need to set `/aggregation` with the salary field. The user wants to aggregate salary, but doesn't specify which aggregation function. The default aggregation when grouping is typically `sum`, but \"aggregate salary\" is somewhat ambiguous. Looking at the available aggregation functions: sum, avg, min, max, size. Since the user just says \"aggregate salary\" without specifying which function, I should probably use `sum` as that's the most common interpretation of \"aggregate\" (total). However, I could also argue for `avg` (average salary across countries). Looking at the examples given in the system prompt:\n   - Example 3a: \"Group orders by country and sum the revenue\" â†’ aggregation: {\"revenue\":\"sum\"}\n   - Example 3b: \"Group by department then by location with average salary\" â†’ aggregation: {\"salary\":\"avg\"}\n   \n   The user says \"aggregate salary\" - this is less specific. I'll use \"sum\" as the default aggregation for salary as that seems like the most common interpretation. But wait, on second thought \"aggregate\" often implies a total/sum operation. Let me use sum.\n\nLet me construct the patches:\n1. Grouping by country: `{\"op\":\"replace\",\"path\":\"/grouping\",\"value\":[\"country\"]}`\n2. Aggregation for salary: `{\"op\":\"replace\",\"path\":\"/aggregation\",\"value\":{\"salary\":\"sum\"}}`\n\nBoth are straightforward. Let me emit these patches.\n","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-end","id":"gen-1779198007-MCIYA6KcqiVRU9WMX4pf","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"The user wants to group employees by country and aggregate salary. \n\nLet me break this down:\n1. Group by country: This means I need to set `/grouping` to `[\"country\"]`\n2. Aggregate salary: This means I need to set `/aggregation` with the salary field. The user wants to aggregate salary, but doesn't specify which aggregation function. The default aggregation when grouping is typically `sum`, but \"aggregate salary\" is somewhat ambiguous. Looking at the available aggregation functions: sum, avg, min, max, size. Since the user just says \"aggregate salary\" without specifying which function, I should probably use `sum` as that's the most common interpretation of \"aggregate\" (total). However, I could also argue for `avg` (average salary across countries). Looking at the examples given in the system prompt:\n   - Example 3a: \"Group orders by country and sum the revenue\" â†’ aggregation: {\"revenue\":\"sum\"}\n   - Example 3b: \"Group by department then by location with average salary\" â†’ aggregation: {\"salary\":\"avg\"}\n   \n   The user says \"aggregate salary\" - this is less specific. I'll use \"sum\" as the default aggregation for salary as that seems like the most common interpretation. But wait, on second thought \"aggregate\" often implies a total/sum operation. Let me use sum.\n\nLet me construct the patches:\n1. Grouping by country: `{\"op\":\"replace\",\"path\":\"/grouping\",\"value\":[\"country\"]}`\n2. Aggregation for salary: `{\"op\":\"replace\",\"path\":\"/aggregation\",\"value\":{\"salary\":\"sum\"}}`\n\nBoth are straightforward. Let me emit these patches.\n","format":"unknown","index":0}]}}}
+
+data: {"type":"finish-step"}
+
+data: {"type":"finish","finishReason":"tool-calls","messageMetadata":{"modelId":"qwen/qwen3.6-flash","costUsd":0.001853625,"elapsedTime":"3.9s","suggestionsCostUsd":null}}
+
+data: [DONE]
+

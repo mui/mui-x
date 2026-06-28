@@ -100,6 +100,15 @@ export default withDeploymentConfig({
   reactStrictMode: true,
   experimental: {
     esmExternals: undefined,
+    // Static-generation workers are forked Node processes that each inherit
+    // `NODE_OPTIONS` (`--max-old-space-size=6144`) and render several pages
+    // concurrently. On Netlify's memory-constrained build container, running one
+    // worker per CPU (6) pushed total RSS past the container limit while rendering
+    // the heavier chart/scheduler API pages, so the OOM killer SIGKILL'd a worker
+    // mid-generation and the build failed silently (no JS error). Cap the worker
+    // count there to keep peak memory under the container limit. Local builds keep
+    // the default (one per core) for speed.
+    ...(process.env.NETLIFY ? { cpus: 2 } : {}),
   },
   typescript: {
     tsconfigPath: './tsconfig.json',
@@ -108,6 +117,7 @@ export default withDeploymentConfig({
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
     '@mui/internal-core-docs',
   ],
+  serverExternalPackages: ['better-sqlite3', 'knex', 'mongodb', 'mysql2', 'pg'],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
@@ -162,6 +172,9 @@ export default withDeploymentConfig({
   // @ts-ignore
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
+    const externals = Array.isArray(config.externals)
+      ? config.externals.slice()
+      : [config.externals].filter(Boolean);
 
     if (process.env.DOCS_STATS_ENABLED) {
       plugins.push(
@@ -178,6 +191,9 @@ export default withDeploymentConfig({
 
     return {
       ...config,
+      externals: options.isServer
+        ? externals.concat(['better-sqlite3', 'knex', 'mongodb', 'mysql2', 'pg'])
+        : config.externals,
       plugins,
       module: {
         ...config.module,
@@ -260,7 +276,17 @@ export default withDeploymentConfig({
       }
     : {
         rewrites: async () => {
-          return [{ source: '/api/:rest*', destination: '/api-docs/:rest*' }];
+          return [
+            {
+              source: '/data-studio/coffee-beans/:dataStudioAction*',
+              destination: '/api/data-studio/coffee-beans/:dataStudioAction*',
+            },
+            {
+              source: '/data-studio/adventure-works/:dataStudioAction*',
+              destination: '/api/data-studio/adventure-works/:dataStudioAction*',
+            },
+            { source: '/api/:rest*', destination: '/api-docs/:rest*' },
+          ];
         },
         // redirects only take effect in the development, not production (because of `next export`).
         redirects: async () => [

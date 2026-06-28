@@ -1,6 +1,7 @@
 import { asCursorAgnosticChatStore, type ChatStore } from '../store/ChatStore';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
+import type { ChatMessageMetadata } from '../types/chat-type-registry';
 import type {
   ChatDataMessagePart,
   ChatDynamicToolInvocation,
@@ -50,6 +51,19 @@ export interface ProcessStreamOptions {
    * Used when reconnecting so replayed envelopes can be skipped.
    */
   seenEventIds?: Iterable<string>;
+  /**
+   * When `true`, the read loop keeps going past the first sibling's
+   * terminal chunk (`finish` / `abort`) until the upstream stream closes
+   * naturally. Lets a single `sendMessage` call land more than one
+   * assistant message in the store — used by the grid Copilot A/B adapter,
+   * which merges two parallel responses into one logical chunk stream. It
+   * also lets trailing `message-metadata` frames (e.g. the Copilot
+   * backend's post-`finish` suggestions frame) apply without re-opening the
+   * finalized message.
+   *
+   * Default `false` — the production single-response path is unchanged.
+   */
+  allowMultipleMessages?: boolean;
 }
 
 export interface ProcessStreamResult {
@@ -114,6 +128,14 @@ export async function processStream<Cursor = string>(
   const seenEventIds = new Set<string>(options.seenEventIds);
   const bufferedChunksBySequence = new Map<number, ChatMessageChunk>();
   const flushInterval = Math.max(0, options.flushInterval ?? DEFAULT_STREAM_FLUSH_INTERVAL);
+
+  // Metadata frames that arrived before a `start` chunk (e.g. the server-side
+  // A/B preamble that ships `responseId` / `abPairId` / `abTwinUrl` ahead of any
+  // model output). Buffered rather than eagerly applied so they don't
+  // materialize a phantom assistant message under the pre-bound fallback id —
+  // they are flushed onto the real message the moment its `start` lands.
+  const pendingMessageMetadataByMessageId = new Map<string, Partial<ChatMessageMetadata>>();
+  let pendingMessageMetadataForNextStart: Partial<ChatMessageMetadata> | undefined;
 
   const reader = stream.getReader();
 
@@ -293,20 +315,67 @@ export async function processStream<Cursor = string>(
     }
 
     switch (chunk.type) {
-      case 'start':
+      case 'start': {
+        // Multi-message-per-turn support: when an upstream adapter wraps
+        // multiple assistant responses into one logical stream (e.g. the grid
+        // Copilot A/B adapter, which fires a twin fetch in parallel), a second
+        // `start` chunk arrives with a different `messageId`. Finalize the
+        // previous target as `sent` before switching so each sibling lands in
+        // the store with its own status, and reset `didReceiveTerminalChunk` so
+        // the read loop doesn't exit on the previous sibling's `finish` chunk.
+        // The single-message path is unchanged (the guards collapse to no-ops;
+        // and when the only message so far is an un-materialized pre-bound
+        // fallback id, `finalizeMessage` is a no-op because no message exists).
+        if (chunk.messageId && targetMessageId && targetMessageId !== chunk.messageId) {
+          finalizeMessage('sent');
+          didReceiveTerminalChunk = false;
+          finishReason = undefined;
+        }
         // A backend-supplied id wins; otherwise keep any pre-bound target
         // (the runtime mints a unique fallback id per run, and reconnect passes
         // the resumed message's id). Clobbering with an absent id here is what
         // let two ids-less responses merge into one assistant message.
         targetMessageId = chunk.messageId ?? targetMessageId;
         startAuthor = chunk.author;
-        ensureAssistantMessage();
+        const startedMessage = ensureAssistantMessage();
+        // Flush any metadata frames that landed BEFORE this `start` — either
+        // ones explicitly addressed to this id, or the floating pre-`start` slot
+        // filled by adapters that emit a preamble ahead of the model output.
+        const pendingById = pendingMessageMetadataByMessageId.get(startedMessage.id);
+        const pendingFloating = pendingMessageMetadataForNextStart;
+        if (pendingById || pendingFloating) {
+          updateMessage(storeUnknown, startedMessage.id, (message) => ({
+            metadata: {
+              ...message.metadata,
+              ...(pendingFloating ?? {}),
+              ...(pendingById ?? {}),
+            },
+          }));
+          pendingMessageMetadataByMessageId.delete(startedMessage.id);
+          pendingMessageMetadataForNextStart = undefined;
+        }
         return;
+      }
 
-      case 'finish':
-        targetMessageId ??= chunk.messageId;
-        ensureAssistantMessage();
+      case 'finish': {
+        // Finish chunks always target the specific messageId on the chunk —
+        // never the floating `targetMessageId`, which may be pointing at a
+        // sibling sent in parallel. Without this distinction, an interleaved
+        // A/B stream would write the second message's finish metadata onto the
+        // first sibling.
+        targetMessageId = chunk.messageId ?? targetMessageId;
+        const finishedMessage = ensureAssistantMessage();
         finishReason = chunk.finishReason;
+        // The AI SDK UI Message Stream lets `finish` carry the final metadata
+        // frame inline (instead of a preceding `message-metadata` chunk).
+        if (chunk.messageMetadata) {
+          updateMessage(storeUnknown, finishedMessage.id, (message) => ({
+            metadata: {
+              ...message.metadata,
+              ...chunk.messageMetadata,
+            },
+          }));
+        }
         didReceiveTerminalChunk = true;
         finalizeMessage('sent');
         store.setStreaming(false);
@@ -315,6 +384,7 @@ export async function processStream<Cursor = string>(
           store.clearMessageError(targetMessageId);
         }
         return;
+      }
 
       case 'abort':
         targetMessageId ??= chunk.messageId;
@@ -589,14 +659,58 @@ export async function processStream<Cursor = string>(
         ensureAssistantMessage();
         return;
 
-      case 'message-metadata':
-        updateMessage(storeUnknown, ensureAssistantMessage().id, (message) => ({
+      case 'message-metadata': {
+        // The AI SDK's UI Message Stream emits `message-metadata` chunks with a
+        // `messageMetadata` field — the same shape `finish` carries. The
+        // historical chat-headless type called it `metadata`. Accept both so
+        // adapters streaming from the AI SDK directly (the grid Copilot does)
+        // keep working without a translation layer.
+        const payload =
+          (chunk as { messageMetadata?: Partial<ChatMessageMetadata> }).messageMetadata ??
+          (chunk as { metadata?: Partial<ChatMessageMetadata> }).metadata;
+        if (!payload) {
+          return;
+        }
+        // The wire format conflates two different "metadata" payloads under the
+        // same chunk type:
+        //   - Preamble of a NEW assistant turn (carries `responseId`).
+        //   - Trailing fragment of the CURRENT turn (e.g. a `suggestions` frame
+        //     the Copilot backend emits AFTER `finish`).
+        // Use the presence of a *new* `responseId` as the discriminator: it's
+        // the per-turn primary key, so a fresh value means "this metadata is for
+        // a sibling that hasn't started yet" and we buffer it for the next
+        // `start`. Buffering also avoids materializing a phantom message under
+        // the pre-bound fallback id when a preamble lands before any `start`.
+        // Trailing fragments (no responseId, or the same responseId as the
+        // current target) apply to the current target — even after its `finish`.
+        const currentMessage = targetMessageId
+          ? store.state.messagesById[targetMessageId]
+          : undefined;
+        const incomingResponseId =
+          typeof (payload as { responseId?: unknown }).responseId === 'string'
+            ? (payload as { responseId?: string }).responseId
+            : undefined;
+        const currentResponseId =
+          typeof (currentMessage?.metadata as { responseId?: unknown })?.responseId === 'string'
+            ? (currentMessage!.metadata as { responseId?: string }).responseId
+            : undefined;
+        const declaresNewTurn =
+          incomingResponseId !== undefined && incomingResponseId !== currentResponseId;
+        if (!currentMessage || declaresNewTurn) {
+          pendingMessageMetadataForNextStart = {
+            ...(pendingMessageMetadataForNextStart ?? {}),
+            ...payload,
+          };
+          return;
+        }
+        updateMessage(storeUnknown, currentMessage.id, (message) => ({
           metadata: {
             ...message.metadata,
-            ...chunk.metadata,
+            ...payload,
           },
         }));
         return;
+      }
 
       default:
         if (isDataChunk(chunk)) {
@@ -691,7 +805,13 @@ export async function processStream<Cursor = string>(
       // eslint-disable-next-line no-await-in-loop
       await processIncoming(value);
 
-      if (didReceiveTerminalChunk) {
+      // In multi-message mode (the grid Copilot A/B adapter merges two parallel
+      // responses into one logical stream) we DON'T break on the first
+      // sibling's `finish` chunk — the upstream closes the reader naturally once
+      // every sibling is done. The next `start` resets `didReceiveTerminalChunk`
+      // and finalizes the previous sibling; trailing metadata frames after the
+      // final `finish` still get processed instead of being cut off.
+      if (didReceiveTerminalChunk && !options.allowMultipleMessages) {
         break;
       }
     }

@@ -55,6 +55,9 @@ const thTHGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'ผู้ช่วย AI',
 
+  // Toolbar Copilot button
+  // toolbarCopilot: 'Copilot',
+
   // Columns management text
   columnsManagementSearchTitle: 'ค้นหา',
   columnsManagementNoColumns: 'ไม่มีคอลัมน์',
@@ -292,6 +295,14 @@ const thTHGrid: Partial<GridLocaleText> = {
   aiAssistantPanelConversationHistory: 'ประวัติบทสนทนา',
   aiAssistantPanelEmptyConversation: 'ไม่มีประวัติคำสั่ง',
   aiAssistantSuggestions: 'คำแนะนำ',
+
+  // Copilot panel
+  // copilotPanelTitle: 'Copilot',
+  // copilotPanelClose: 'Close Copilot',
+  // copilotPanelBeta: 'BETA',
+  // copilotPanelReload: 'New conversation',
+  // copilotPanelEmptyStateTitle: 'How can I help?',
+  // copilotPanelEmptyStateHelper: 'Ask anything about your data, or pick a suggestion to get started.',
 
   // Prompt field
   promptFieldLabel: 'คำสั่ง',

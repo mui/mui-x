@@ -56,6 +56,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'Assistant IA',
 
+  // Toolbar Copilot button
+  // toolbarCopilot: 'Copilot',
+
   // Columns management text
   columnsManagementSearchTitle: 'Rechercher',
   columnsManagementNoColumns: 'Pas de colonnes',
@@ -299,6 +302,14 @@ const frFRGrid: Partial<GridLocaleText> = {
   // aiAssistantPanelConversationHistory: 'Conversation history',
   // aiAssistantPanelEmptyConversation: 'No prompt history',
   // aiAssistantSuggestions: 'Suggestions',
+
+  // Copilot panel
+  // copilotPanelTitle: 'Copilot',
+  // copilotPanelClose: 'Close Copilot',
+  // copilotPanelBeta: 'BETA',
+  // copilotPanelReload: 'New conversation',
+  // copilotPanelEmptyStateTitle: 'How can I help?',
+  // copilotPanelEmptyStateHelper: 'Ask anything about your data, or pick a suggestion to get started.',
 
   // Prompt field
   // promptFieldLabel: 'Prompt',

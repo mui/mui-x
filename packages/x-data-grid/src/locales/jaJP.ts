@@ -55,6 +55,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
 
+  // Toolbar Copilot button
+  // toolbarCopilot: 'Copilot',
+
   // Columns management text
   columnsManagementSearchTitle: '検索',
   columnsManagementNoColumns: 'カラムなし',
@@ -290,6 +293,14 @@ const jaJPGrid: Partial<GridLocaleText> = {
   aiAssistantPanelConversationHistory: '会話の履歴',
   // aiAssistantPanelEmptyConversation: 'No prompt history',
   aiAssistantSuggestions: '提案',
+
+  // Copilot panel
+  // copilotPanelTitle: 'Copilot',
+  // copilotPanelClose: 'Close Copilot',
+  // copilotPanelBeta: 'BETA',
+  // copilotPanelReload: 'New conversation',
+  // copilotPanelEmptyStateTitle: 'How can I help?',
+  // copilotPanelEmptyStateHelper: 'Ask anything about your data, or pick a suggestion to get started.',
 
   // Prompt field
   promptFieldLabel: 'プロンプト',

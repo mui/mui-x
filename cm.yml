@@ -1,0 +1,99 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - menubar [ref=e647]:
+        - button "File" [disabled]
+        - button "Edit" [disabled]
+        - button "View" [disabled]
+        - button "Insert" [disabled]
+        - button "Format" [disabled]
+        - button "Data" [disabled]
+        - button "Tools" [disabled]
+        - button "Help" [disabled]
+      - toolbar "Data Studio toolbar" [ref=e648]:
+        - generic [ref=e651]:
+          - img [ref=e653]
+          - textbox "Search" [disabled] [ref=e655]
+          - group
+      - generic [ref=e656]:
+        - generic [ref=e657]:
+          - generic [ref=e658]:
+            - generic [ref=e659]: Dataset
+            - generic [ref=e660]:
+              - combobox "Dataset" [ref=e661] [cursor=pointer]: Customer
+              - textbox: customer
+              - img
+              - group:
+                - generic: Dataset
+          - group "Chart workspace view" [ref=e662]:
+            - button "Show chart" [pressed] [ref=e663] [cursor=pointer]: Chart
+            - button "Show data grid" [ref=e664] [cursor=pointer]: Data grid
+        - generic [ref=e665]:
+          - generic [ref=e667]:
+            - generic:
+              - img
+              - img
+            - img [ref=e668]:
+              - generic [ref=e670]: No data to display
+            - generic:
+              - text: MUI X Missing license key
+              - generic: Open the browser console for details on how to resolve this.
+          - generic [ref=e673]:
+            - generic [ref=e675]:
+              - generic [ref=e676]: Charts
+              - button "Sync chart" [pressed] [ref=e677] [cursor=pointer]:
+                - img [ref=e678]
+              - button "Close charts configuration" [ref=e680] [cursor=pointer]:
+                - img [ref=e681]
+            - tablist [ref=e685]:
+              - tab "Chart" [selected] [ref=e686] [cursor=pointer]
+              - tab "Fields" [ref=e687] [cursor=pointer]
+              - tab "Customize" [ref=e688] [cursor=pointer]
+            - tabpanel "Chart" [ref=e690]:
+              - generic [ref=e692]:
+                - button "Column" [ref=e693] [cursor=pointer]:
+                  - img [ref=e694]
+                  - text: Column
+                - button "Bar" [ref=e699] [cursor=pointer]:
+                  - img [ref=e700]
+                  - text: Bar
+                - button "Line" [ref=e705] [cursor=pointer]:
+                  - img [ref=e706]
+                  - text: Line
+                - button "Area" [ref=e708] [cursor=pointer]:
+                  - img [ref=e709]
+                  - text: Area
+                - button "Pie" [ref=e711] [cursor=pointer]:
+                  - img [ref=e712]
+                  - text: Pie
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - button "Add view" [ref=e615] [cursor=pointer]:
+          - img [ref=e616]
+        - button "All tabs" [ref=e618] [cursor=pointer]:
+          - img [ref=e619]
+        - button "Hide data sources" [ref=e621] [cursor=pointer]:
+          - img [ref=e622]
+      - generic [ref=e624]:
+        - button "Customer" [ref=e626] [cursor=pointer]:
+          - generic [ref=e627]: Customer
+        - button "Date" [ref=e629] [cursor=pointer]:
+          - generic [ref=e630]: Date
+        - button "Product" [ref=e632] [cursor=pointer]:
+          - generic [ref=e633]: Product
+        - button "Reseller" [ref=e635] [cursor=pointer]:
+          - generic [ref=e636]: Reseller
+        - button "Sales" [ref=e638] [cursor=pointer]:
+          - generic [ref=e639]: Sales
+        - button "Sales Order" [ref=e641] [cursor=pointer]:
+          - generic [ref=e642]: Sales Order
+        - button "Sales Territory" [ref=e644] [cursor=pointer]:
+          - generic [ref=e645]: Sales Territory
+        - generic [ref=e714]:
+          - button "Chart 1" [ref=e715] [cursor=pointer]:
+            - generic [ref=e716]: Chart 1
+          - button "View options for Chart 1" [ref=e717] [cursor=pointer]:
+            - img [ref=e718]
+  - button "Open Next.js Dev Tools" [ref=e25] [cursor=pointer]:
+    - img [ref=e26]
+  - alert [ref=e29]: Adventure Works - Data Studio demo - MUI X

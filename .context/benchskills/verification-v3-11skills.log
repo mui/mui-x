@@ -1,0 +1,1215 @@
+Extended Copilot quality benchmark — A/B variants × research arms
+  1 variants × 6 arms × 50 prompts × 1 tool-schemes = 300 calls
+  schemes:  verbose
+  concurrency: 20 prompts in parallel per (variant, scheme, arm)
+  variants: v5
+  sources:  managed, research
+  datasets: orders, hr, finance, logistics
+  catalog:  44 state paths, 17 commands
+
+
+
+@@@@@@@@@@@@@@@@@@@@ SCHEME: verbose — descriptive multi-word names @@@@@@@@@@@@@@@@@@@@
+
+
+######## VARIANT V5 (scheme=verbose) ########
+
+=== v5/verbose / arm: haiku-4-5 (anthropic/claude-haiku-4-5, managed) ===
+  skill-chart-1                        ✓ (3500ms) $0.040120
+  skill-chart-5                        ✓ (4747ms) $0.002761
+  skill-outlier-5                      ✓ (4800ms) $0.040447
+  skill-whatif-3                       ✓ (5298ms) $0.040347
+  skill-pivot-5                        ✓ (6124ms) $0.002676
+  skill-chart-2                        ✓ (6645ms) $0.002657
+  skill-outlier-4                      ✓ (6648ms) $0.040656
+  skill-chart-3                        ✓ (6744ms) $0.039821
+  skill-outlier-2                      ✓ (7055ms) $0.040353
+  skill-whatif-1                       ✓ (7495ms) $0.005048
+  skill-pin-1                          ✓ (5892ms) $0.002872
+  skill-pivot-1                        ✓ (9514ms) $0.002675
+  skill-pin-2                          ✓ (6226ms) $0.003115
+  skill-story-3                        ✓ (4710ms) $0.002967
+  skill-pivot-2                        ✓ (12032ms) $0.040075
+  skill-pin-4                          ✓ (7106ms) $0.003098
+  skill-whatif-4                       ✓ (12813ms) $0.003192
+  skill-story-2                        ✓ (6292ms) $0.002881
+  skill-pivot-6                        ✓ (13264ms) $0.002671
+  skill-pivot-3                        ✓ (13283ms) $0.002664
+  skill-outlier-3                      ✓ (13282ms) $0.003266
+  skill-pivot-4                        ✓ (13464ms) $0.039952
+  reg-pdf-1                            ✗ (4480ms) $0.003293 — missing-required-tool
+  reg-formula-1                        ✓ (2138ms) $0.002548
+  reg-pdf-2                            ✗ (5555ms) $0.003363 — missing-required-tool
+  reg-pdf-3                            ✗ (4068ms) $0.003162 — missing-required-tool
+  reg-filter-2                         ✓ (1843ms) $0.002485
+  reg-formula-2                        ✓ (3670ms) $0.002545
+  skill-outlier-1                      ✓ (16367ms) $0.003129
+  skill-pin-3                          ✓ (11801ms) $0.002865
+  reg-group-2                          ✓ (1949ms) $0.002522
+  reg-chart-1                          ✓ (1881ms) $0.002602
+  reg-sort-2                           ✓ (3261ms) $0.002470
+  reg-group-3                          ✓ (2468ms) $0.002511
+  reg-sort-1                           ✓ (4195ms) $0.002456
+  reg-formula-4                        ✓ (5070ms) $0.002575
+  reg-pdf-4                            ✗ (6644ms) $0.003170 — missing-required-tool
+  skill-chart-4                        ✓ (18447ms) $0.002595
+  reg-chart-2                          ✓ (2624ms) $0.002655
+  reg-filter-1                         ✓ (6047ms) $0.002530
+  reg-filter-3                         ✓ (6252ms) $0.002604
+  reg-formula-3                        ✓ (7148ms) $0.002543
+  skill-story-1                        ✓ (14155ms) $0.002891
+  skill-whatif-2                       ✓ (22098ms) $0.003216
+  skill-surprise-1                     ✓ (15485ms) $0.003839
+  reg-group-1                          ✓ (10045ms) $0.002523
+  skill-surprise-3                     ✓ (17627ms) $0.003449
+  reg-pivot-1                          ✓ (10505ms) $0.002649
+  skill-surprise-2                     ✓ (20012ms) $0.003616
+  reg-pivot-2                          ✓ (10575ms) $0.002668
+
+=== v5/verbose / arm: qwen3.5-flash-02-23 (qwen/qwen3.5-flash-02-23, managed) ===
+  skill-chart-3                        ✓ (5179ms) $0.001075
+  skill-outlier-2                      ✓ (5491ms) $0.001106
+  skill-outlier-1                      ✓ (5507ms) $0.001095
+  skill-outlier-5                      ✓ (5522ms) $0.001146
+  skill-pivot-5                        ✓ (5687ms) $0.001089
+  skill-outlier-3                      ✓ (5920ms) $0.001116
+  skill-pivot-6                        ✓ (6176ms) $0.001130
+  skill-whatif-3                       ✓ (6295ms) $0.001147
+  skill-outlier-4                      ✓ (6379ms) $0.001115
+  skill-pivot-3                        ✓ (6403ms) $0.001129
+  skill-chart-2                        ✓ (6841ms) $0.001151
+  skill-chart-1                        ✓ (6986ms) $0.001137
+  skill-pivot-2                        ✓ (7185ms) $0.001165
+  skill-whatif-4                       ✓ (7457ms) $0.001330
+  skill-chart-4                        ✓ (7750ms) $0.001261
+  skill-chart-5                        ✓ (7973ms) $0.001151
+  skill-whatif-2                       ✓ (8368ms) $0.001240
+  skill-whatif-1                       ✓ (8467ms) $0.001349
+  skill-pin-3                          ✓ (3622ms) $0.001108
+  skill-pivot-1                        ✓ (9439ms) $0.001155
+  skill-pivot-4                        ✓ (9617ms) $0.001325
+[02:05:10.037] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-formula-3                        ✓ (2038ms) $0.001060
+  reg-formula-1                        ✓ (3011ms) $0.001054
+  skill-pin-1                          ✗ (5907ms) $0.001146 — missing-required-tool
+  skill-story-2                        ✓ (5437ms) $0.001198
+  skill-pin-4                          ✗ (5992ms) $0.001246 — missing-required-tool
+  skill-story-3                        ✓ (5573ms) $0.001229
+  skill-pin-2                          ✗ (6306ms) $0.001172 — missing-required-tool
+  skill-surprise-3                     ✓ (5655ms) $0.001185
+  skill-story-1                        ✓ (6410ms) $0.001199
+  reg-formula-2                        ✓ (4129ms) $0.001062
+  skill-surprise-1                     ✓ (5927ms) $0.001242
+  reg-filter-1                         ✓ (3246ms) $0.001080
+  reg-filter-3                         ✓ (2871ms) $0.001109
+  skill-surprise-2                     ✓ (6127ms) $0.001226
+  reg-pdf-1                            ✗ (5705ms) $0.001179 — missing-required-tool
+  reg-filter-2                         ✓ (3216ms) $0.001125
+  reg-sort-2                           ✓ (2007ms) $0.001070
+  reg-formula-4                        ✓ (4303ms) $0.001138
+  reg-pdf-3                            ✓ (5789ms) $0.001271
+[02:05:12.959] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[02:05:13.134] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[02:05:13.452] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[02:05:13.876] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-sort-1                           ✓ (2594ms) $0.001059
+  reg-pdf-2                            ✗ (6991ms) $0.001260 — missing-required-tool
+[02:05:14.882] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-group-1                          ✓ (3243ms) $0.001113
+  reg-group-3                          ✓ (3131ms) $0.001132
+  reg-pivot-2                          ✓ (2915ms) $0.001115
+  reg-group-2                          ✓ (3793ms) $0.001139
+  reg-pivot-1                          ✓ (3345ms) $0.001160
+  reg-chart-2                          ✓ (4241ms) $0.001221
+  reg-chart-1                          ✓ (4546ms) $0.001162
+  reg-pdf-4                            ✓ (9722ms) $0.001386
+
+=== v5/verbose / arm: glm-5.1 (z-ai/glm-5.1, managed) ===
+[02:05:18.091] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-pivot-2                        ✓ (4048ms) $0.006560
+  skill-pivot-5                        ✓ (4221ms) $0.015229
+  skill-outlier-5                      ✓ (4699ms) $0.006767
+  skill-whatif-3                       ✓ (4747ms) $0.003653
+  skill-outlier-1                      ✓ (4949ms) $0.015557
+  skill-outlier-2                      ✓ (5177ms) $0.015554
+  skill-pivot-1                        ✓ (5310ms) $0.003494
+  skill-outlier-4                      ✓ (5644ms) $0.003445
+  skill-pivot-4                        ✓ (5662ms) $0.007281
+  skill-chart-1                        ✓ (5950ms) $0.006978
+  skill-chart-5                        ✓ (6033ms) $0.003658
+  skill-outlier-3                      ✓ (6074ms) $0.015635
+  skill-pivot-3                        ✓ (6632ms) $0.015730
+  skill-pivot-6                        ✓ (6837ms) $0.003340
+  skill-chart-3                        ✓ (7070ms) $0.007634
+  skill-whatif-2                       ✓ (8988ms) $0.016434
+  skill-pin-3                          ✓ (4889ms) $0.004114
+  skill-pin-2                          ✓ (5708ms) $0.004126
+  skill-whatif-4                       ✓ (10516ms) $0.006532
+  reg-formula-1                        ✓ (3666ms) $0.003879
+  skill-story-2                        ✓ (5808ms) $0.004298
+  reg-formula-2                        ✓ (2186ms) $0.003043
+  reg-formula-3                        ✓ (2625ms) $0.003266
+  reg-formula-4                        ✓ (2527ms) $0.003135
+  skill-surprise-1                     ✓ (6998ms) $0.004566
+  reg-filter-2                         ✓ (2056ms) $0.003296
+  skill-story-3                        ✓ (7785ms) $0.004490
+  reg-filter-3                         ✓ (2427ms) $0.003153
+  reg-sort-1                           ✓ (2532ms) $0.002990
+  reg-filter-1                         ✓ (3352ms) $0.003206
+  skill-surprise-2                     ✓ (8475ms) $0.004703
+  skill-story-1                        ✓ (9491ms) $0.005332
+  skill-whatif-1                       ✓ (15175ms) $0.007934
+  reg-sort-2                           ✓ (2979ms) $0.003034
+  reg-pdf-4                            ✗ (9721ms) $0.005455 — missing-required-tool
+  reg-pivot-1                          ✓ (3443ms) $0.003938
+  reg-pivot-2                          ✓ (3979ms) $0.003815
+  skill-pin-1                          ✗ (14586ms) $0.006783 — missing-required-tool
+  reg-pdf-2                            ✗ (13548ms) $0.006667 — missing-required-tool
+  reg-group-1                          ✓ (9200ms) $0.006120
+  reg-pdf-1                            ✓ (15831ms) $0.007272
+[02:05:39.961] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-chart-2                        ✓ (23337ms) $0.016740
+  reg-group-2                          ✓ (10722ms) $0.008053
+  reg-group-3                          ✓ (11712ms) $0.007520
+  skill-surprise-3                     ✗ (20901ms) $0.011738 — wrong-tool-call-count
+  reg-chart-1                          ✓ (31362ms) $0.012750
+  reg-chart-2                          ✓ (37504ms) $0.025364
+  skill-chart-4                        ✗ (51547ms) $0.041952 — refused-wrongly
+[02:06:09.643] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-pin-4                          ✗ (47783ms) $0.029824 — missing-required-tool
+[02:06:10.632] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-3                            ✗ (46382ms) $0.029943 — missing-required-tool,missing-required-tool
+
+=== v5/verbose / arm: gemini-3.1-flash-lite (google/gemini-3.1-flash-lite-preview, managed) ===
+[02:06:11.107] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-pivot-5                        ✓ (1745ms) $0.003914
+  skill-outlier-5                      ✓ (1990ms) $0.004330
+  skill-outlier-1                      ✓ (2152ms) $0.004724
+  skill-pivot-3                        ✓ (2315ms) $0.001140
+  skill-whatif-3                       ✓ (2597ms) $0.001625
+  skill-pivot-1                        ✓ (2643ms) $0.004135
+  skill-pivot-2                        ✓ (2653ms) $0.004598
+  skill-chart-3                        ✗ (2758ms) $0.004626 — invalid-patch-line
+  skill-outlier-2                      ✓ (2837ms) $0.004312
+  skill-whatif-2                       ✓ (2861ms) $0.001565
+  skill-pivot-6                        ✓ (2954ms) $0.004751
+  skill-chart-1                        ✓ (2972ms) $0.002836
+  skill-outlier-4                      ✓ (3065ms) $0.002845
+  skill-chart-5                        ✓ (3076ms) $0.002550
+  skill-outlier-3                      ✓ (3373ms) $0.002416
+  skill-pivot-4                        ✓ (3403ms) $0.003935
+  skill-chart-4                        ✓ (3605ms) $0.005100
+  skill-whatif-4                       ✓ (3717ms) $0.005144
+  skill-whatif-1                       ✓ (3758ms) $0.002322
+  skill-chart-2                        ✓ (3972ms) $0.003785
+  skill-story-1                        ✓ (1747ms) $0.001550
+[02:06:15.467] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-story-3                        ✓ (2110ms) $0.001589
+  reg-formula-2                        ✓ (1506ms) $0.002027
+  skill-surprise-3                     ✓ (2057ms) $0.001753
+  skill-surprise-1                     ✓ (2206ms) $0.002155
+  skill-pin-2                          ✓ (2981ms) $0.003513
+  skill-story-2                        ✓ (2349ms) $0.002784
+[02:06:16.041] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[02:06:16.080] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[02:06:16.099] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-formula-3                        ✓ (1591ms) $0.002308
+  reg-formula-4                        ✓ (1502ms) $0.001116
+  reg-formula-1                        ✓ (2134ms) $0.001700
+  skill-pin-4                          ✓ (3628ms) $0.003922
+  reg-sort-1                           ✓ (1313ms) $0.001116
+  reg-filter-1                         ✓ (2423ms) $0.001743
+  reg-pdf-2                            ✓ (3530ms) $0.002595
+  reg-filter-3                         ✓ (2180ms) $0.001660
+  skill-pin-3                          ✓ (4469ms) $0.004156
+  skill-surprise-2                     ✓ (3806ms) $0.002705
+  skill-pin-1                          ✓ (4986ms) $0.003998
+  reg-pivot-2                          ✓ (1417ms) $0.001135
+  reg-group-3                          ✓ (1991ms) $0.001556
+  reg-pdf-4                            ✓ (3941ms) $0.005895
+  reg-sort-2                           ✓ (2134ms) $0.002226
+  reg-filter-2                         ✓ (3197ms) $0.001773
+  reg-pdf-3                            ✓ (4127ms) $0.003467
+[02:06:17.617] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[02:06:17.762] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[02:06:18.135] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-group-2                          ✓ (2289ms) $0.001499
+  reg-group-1                          ✓ (2797ms) $0.001811
+  reg-chart-1                          ✓ (2768ms) $0.003049
+  reg-pivot-1                          ✓ (2584ms) $0.002030
+  reg-chart-2                          ✓ (3303ms) $0.002936
+  reg-pdf-1                            ✓ (5805ms) $0.002889
+
+=== v5/verbose / arm: qwen3.6-flash (qwen/qwen3.6-flash, managed) ===
+[02:06:19.873] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-outlier-2                      ✓ (4164ms) $0.003351
+  skill-pivot-2                        ✓ (4449ms) $0.003486
+  skill-pivot-1                        ✓ (5034ms) $0.003374
+  skill-pivot-6                        ✓ (5061ms) $0.003619
+  skill-outlier-5                      ✓ (5120ms) $0.003272
+  skill-pivot-5                        ✓ (5146ms) $0.003398
+  skill-whatif-3                       ✓ (5571ms) $0.003488
+  skill-pivot-3                        ✓ (5791ms) $0.003747
+  skill-chart-5                        ✓ (5845ms) $0.003636
+  skill-pivot-4                        ✗ (6050ms) $0.003823 — text-instead-of-tools
+  skill-chart-1                        ✓ (6201ms) $0.004068
+  skill-chart-3                        ✓ (6333ms) $0.003979
+  skill-whatif-2                       ✓ (6611ms) $0.003526
+  skill-chart-2                        ✓ (7230ms) $0.004426
+  skill-outlier-4                      ✓ (7308ms) $0.003542
+  skill-outlier-3                      ✓ (7600ms) $0.003315
+  skill-whatif-4                       ✓ (7675ms) $0.004573
+  skill-outlier-1                      ✓ (8198ms) $0.003360
+  reg-formula-3                        ✓ (1759ms) $0.003120
+  reg-formula-2                        ✓ (3048ms) $0.003238
+  skill-pin-3                          ✗ (6290ms) $0.004294 — missing-required-tool
+  skill-pin-2                          ✗ (6985ms) $0.004301 — missing-required-tool
+  reg-formula-1                        ✓ (4210ms) $0.003561
+  reg-formula-4                        ✓ (3423ms) $0.003324
+  skill-story-2                        ✓ (7084ms) $0.004258
+  skill-surprise-2                     ✓ (6601ms) $0.004204
+  skill-pin-4                          ✗ (7823ms) $0.004306 — missing-required-tool
+  reg-pdf-4                            ✗ (5768ms) $0.004153 — missing-required-tool
+  reg-filter-2                         ✓ (3020ms) $0.003486
+  skill-chart-4                        ✗ (13830ms) $0.006437 — text-instead-of-tools
+  skill-story-1                        ✓ (9367ms) $0.005996
+  skill-pin-1                          ✗ (10754ms) $0.005430 — missing-required-tool
+RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Provider returned error
+    at _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:111:13)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+    at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+    at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+    at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+  cause: [90mundefined[39m,
+  reason: [32m'maxRetriesExceeded'[39m,
+  errors: [
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    },
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    },
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Provider returned error
+      at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+  [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+      at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+      at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+      at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+      at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+      at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+      at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+    cause: [90mundefined[39m,
+    url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+    requestBodyValues: {
+      model: [32m'qwen/qwen3.6-flash'[39m,
+      models: [90mundefined[39m,
+      logit_bias: [90mundefined[39m,
+      logprobs: [90mundefined[39m,
+      top_logprobs: [90mundefined[39m,
+      user: [90mundefined[39m,
+      parallel_tool_calls: [90mundefined[39m,
+      max_tokens: [33m4096[39m,
+      temperature: [90mundefined[39m,
+      top_p: [90mundefined[39m,
+      frequency_penalty: [90mundefined[39m,
+      presence_penalty: [90mundefined[39m,
+      seed: [90mundefined[39m,
+      stop: [90mundefined[39m,
+      response_format: [90mundefined[39m,
+      top_k: [90mundefined[39m,
+      messages: [36m[Array][39m,
+      include_reasoning: [90mundefined[39m,
+      reasoning: [36m[Object][39m,
+      usage: [90mundefined[39m,
+      plugins: [90mundefined[39m,
+      web_search_options: [90mundefined[39m,
+      provider: [36m[Object][39m,
+      debug: [90mundefined[39m,
+      tools: [36m[Array][39m,
+      tool_choice: [32m'auto'[39m,
+      stream: [33mtrue[39m,
+      stream_options: [90mundefined[39m
+    },
+    statusCode: [33m429[39m,
+    responseHeaders: {
+      [32m'access-control-allow-origin'[39m: [32m'*'[39m,
+      [32m'access-control-expose-headers'[39m: [32m'X-Generation-Id,cf-ray'[39m,
+      [32m'cf-ray'[39m: [32m'a0080e2319326926-LIS'[39m,
+      connection: [32m'keep-alive'[39m,
+      [32m'content-type'[39m: [32m'application/json'[39m,
+      date: [32m'Sun, 24 May 2026 00:06:36 GMT'[39m,
+      [32m'permissions-policy'[39m: [32m'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")'[39m,
+      [32m'referrer-policy'[39m: [32m'no-referrer, strict-origin-when-cross-origin'[39m,
+      server: [32m'cloudflare'[39m,
+      [32m'transfer-encoding'[39m: [32m'chunked'[39m,
+      [32m'x-content-type-options'[39m: [32m'nosniff'[39m
+    },
+    responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+    isRetryable: [33mtrue[39m,
+    data: { error: [36m[Object][39m, user_id: [32m'org_340qHtGURWHLMfsoGMsEFSIdF1y'[39m },
+    [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+    [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+  },
+  [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+  [32mSymbol(vercel.ai.error.AI_RetryError)[39m: [33mtrue[39m
+}
+  skill-surprise-3                     ✗ (10973ms) — wrong-tool-call-count
+RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Provider returned error
+    at _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:111:13)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+    at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+    at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+    at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+  cause: [90mundefined[39m,
+  reason: [32m'maxRetriesExceeded'[39m,
+  errors: [
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    },
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    },
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Provider returned error
+      at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+  [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+      at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+      at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+      at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+      at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+      at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+      at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+    cause: [90mundefined[39m,
+    url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+    requestBodyValues: {
+      model: [32m'qwen/qwen3.6-flash'[39m,
+      models: [90mundefined[39m,
+      logit_bias: [90mundefined[39m,
+      logprobs: [90mundefined[39m,
+      top_logprobs: [90mundefined[39m,
+      user: [90mundefined[39m,
+      parallel_tool_calls: [90mundefined[39m,
+      max_tokens: [33m4096[39m,
+      temperature: [90mundefined[39m,
+      top_p: [90mundefined[39m,
+      frequency_penalty: [90mundefined[39m,
+      presence_penalty: [90mundefined[39m,
+      seed: [90mundefined[39m,
+      stop: [90mundefined[39m,
+      response_format: [90mundefined[39m,
+      top_k: [90mundefined[39m,
+      messages: [36m[Array][39m,
+      include_reasoning: [90mundefined[39m,
+      reasoning: [36m[Object][39m,
+      usage: [90mundefined[39m,
+      plugins: [90mundefined[39m,
+      web_search_options: [90mundefined[39m,
+      provider: [36m[Object][39m,
+      debug: [90mundefined[39m,
+      tools: [36m[Array][39m,
+      tool_choice: [32m'auto'[39m,
+      stream: [33mtrue[39m,
+      stream_options: [90mundefined[39m
+    },
+    statusCode: [33m429[39m,
+    responseHeaders: {
+      [32m'access-control-allow-origin'[39m: [32m'*'[39m,
+      [32m'access-control-expose-headers'[39m: [32m'X-Generation-Id,cf-ray'[39m,
+      [32m'cf-ray'[39m: [32m'a0080e255eeae3c0-LIS'[39m,
+      connection: [32m'keep-alive'[39m,
+      [32m'content-type'[39m: [32m'application/json'[39m,
+      date: [32m'Sun, 24 May 2026 00:06:37 GMT'[39m,
+      [32m'permissions-policy'[39m: [32m'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")'[39m,
+      [32m'referrer-policy'[39m: [32m'no-referrer, strict-origin-when-cross-origin'[39m,
+      server: [32m'cloudflare'[39m,
+      [32m'transfer-encoding'[39m: [32m'chunked'[39m,
+      [32m'x-content-type-options'[39m: [32m'nosniff'[39m
+    },
+    responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+    isRetryable: [33mtrue[39m,
+    data: { error: [36m[Object][39m, user_id: [32m'org_340qHtGURWHLMfsoGMsEFSIdF1y'[39m },
+    [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+    [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+  },
+  [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+  [32mSymbol(vercel.ai.error.AI_RetryError)[39m: [33mtrue[39m
+}
+  reg-pdf-3                            ✗ (10633ms) — missing-required-tool,missing-required-tool
+  reg-pdf-2                            ✓ (10998ms) $0.004806
+RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Provider returned error
+    at _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:111:13)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+    at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+    at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+    at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+  cause: [90mundefined[39m,
+  reason: [32m'maxRetriesExceeded'[39m,
+  errors: [
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    },
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    },
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Provider returned error
+      at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+  [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+      at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+      at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+      at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+      at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+      at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+      at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+    cause: [90mundefined[39m,
+    url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+    requestBodyValues: {
+      model: [32m'qwen/qwen3.6-flash'[39m,
+      models: [90mundefined[39m,
+      logit_bias: [90mundefined[39m,
+      logprobs: [90mundefined[39m,
+      top_logprobs: [90mundefined[39m,
+      user: [90mundefined[39m,
+      parallel_tool_calls: [90mundefined[39m,
+      max_tokens: [33m4096[39m,
+      temperature: [90mundefined[39m,
+      top_p: [90mundefined[39m,
+      frequency_penalty: [90mundefined[39m,
+      presence_penalty: [90mundefined[39m,
+      seed: [90mundefined[39m,
+      stop: [90mundefined[39m,
+      response_format: [90mundefined[39m,
+      top_k: [90mundefined[39m,
+      messages: [36m[Array][39m,
+      include_reasoning: [90mundefined[39m,
+      reasoning: [36m[Object][39m,
+      usage: [90mundefined[39m,
+      plugins: [90mundefined[39m,
+      web_search_options: [90mundefined[39m,
+      provider: [36m[Object][39m,
+      debug: [90mundefined[39m,
+      tools: [36m[Array][39m,
+      tool_choice: [32m'auto'[39m,
+      stream: [33mtrue[39m,
+      stream_options: [90mundefined[39m
+    },
+    statusCode: [33m429[39m,
+    responseHeaders: {
+      [32m'access-control-allow-origin'[39m: [32m'*'[39m,
+      [32m'access-control-expose-headers'[39m: [32m'X-Generation-Id,cf-ray'[39m,
+      [32m'cf-ray'[39m: [32m'a0080e25fc8a16a5-LIS'[39m,
+      connection: [32m'keep-alive'[39m,
+      [32m'content-type'[39m: [32m'application/json'[39m,
+      date: [32m'Sun, 24 May 2026 00:06:37 GMT'[39m,
+      [32m'permissions-policy'[39m: [32m'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")'[39m,
+      [32m'referrer-policy'[39m: [32m'no-referrer, strict-origin-when-cross-origin'[39m,
+      server: [32m'cloudflare'[39m,
+      [32m'transfer-encoding'[39m: [32m'chunked'[39m,
+      [32m'x-content-type-options'[39m: [32m'nosniff'[39m
+    },
+    responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+    isRetryable: [33mtrue[39m,
+    data: { error: [36m[Object][39m, user_id: [32m'org_340qHtGURWHLMfsoGMsEFSIdF1y'[39m },
+    [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+    [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+  },
+  [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+  [32mSymbol(vercel.ai.error.AI_RetryError)[39m: [33mtrue[39m
+}
+  reg-pdf-1                            ✗ (11187ms) — missing-required-tool,missing-required-tool
+RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Provider returned error
+    at _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:111:13)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+    at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+    at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+    at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+  cause: [90mundefined[39m,
+  reason: [32m'maxRetriesExceeded'[39m,
+  errors: [
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    },
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    },
+    APICallError [AI_APICallError]: Provider returned error
+        at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+    [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+        at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+        at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+        at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+        at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+      cause: [90mundefined[39m,
+      url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+      requestBodyValues: [36m[Object][39m,
+      statusCode: [33m429[39m,
+      responseHeaders: [36m[Object][39m,
+      responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+      isRetryable: [33mtrue[39m,
+      data: [36m[Object][39m,
+      [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+      [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Provider returned error
+      at <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/response-handler.ts:57:16)
+  [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+      at async postToApi (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/node_modules/[4m.pnpm[24m/@ai-sdk+provider-utils@4.0.1_zod@4.3.5/node_modules/[4m@ai-sdk/provider-utils[24m/src/post-to-api.ts:118:28)
+      at async OpenRouterChatLanguageModel.doStream (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/@openrouter+ai-sdk-provider@2.2.3_ai@6.0.86_zod@4.3.6__zod@4.3.6/node_modules/[4m@openrouter/ai-sdk-provider[24m/src/chat/index.ts:516:50)
+      at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1446:27)
+      at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1398:17)
+      at async fn (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/generate-text/stream-text.ts:1899:9)
+      at async <anonymous> (/Users/hasdfa/conductor/workspaces/mui-private/brussels/node_modules/[4m.pnpm[24m/ai@6.0.86_zod@4.3.6/node_modules/[4mai[24m/src/telemetry/record-span.ts:32:24) {
+    cause: [90mundefined[39m,
+    url: [32m'https://openrouter.ai/api/v1/chat/completions'[39m,
+    requestBodyValues: {
+      model: [32m'qwen/qwen3.6-flash'[39m,
+      models: [90mundefined[39m,
+      logit_bias: [90mundefined[39m,
+      logprobs: [90mundefined[39m,
+      top_logprobs: [90mundefined[39m,
+      user: [90mundefined[39m,
+      parallel_tool_calls: [90mundefined[39m,
+      max_tokens: [33m4096[39m,
+      temperature: [90mundefined[39m,
+      top_p: [90mundefined[39m,
+      frequency_penalty: [90mundefined[39m,
+      presence_penalty: [90mundefined[39m,
+      seed: [90mundefined[39m,
+      stop: [90mundefined[39m,
+      response_format: [90mundefined[39m,
+      top_k: [90mundefined[39m,
+      messages: [36m[Array][39m,
+      include_reasoning: [90mundefined[39m,
+      reasoning: [36m[Object][39m,
+      usage: [90mundefined[39m,
+      plugins: [90mundefined[39m,
+      web_search_options: [90mundefined[39m,
+      provider: [36m[Object][39m,
+      debug: [90mundefined[39m,
+      tools: [36m[Array][39m,
+      tool_choice: [32m'auto'[39m,
+      stream: [33mtrue[39m,
+      stream_options: [90mundefined[39m
+    },
+    statusCode: [33m429[39m,
+    responseHeaders: {
+      [32m'access-control-allow-origin'[39m: [32m'*'[39m,
+      [32m'access-control-expose-headers'[39m: [32m'X-Generation-Id,cf-ray'[39m,
+      [32m'cf-ray'[39m: [32m'a0080e3698faab0d-LIS'[39m,
+      connection: [32m'keep-alive'[39m,
+      [32m'content-type'[39m: [32m'application/json'[39m,
+      date: [32m'Sun, 24 May 2026 00:06:38 GMT'[39m,
+      [32m'permissions-policy'[39m: [32m'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")'[39m,
+      [32m'referrer-policy'[39m: [32m'no-referrer, strict-origin-when-cross-origin'[39m,
+      server: [32m'cloudflare'[39m,
+      [32m'transfer-encoding'[39m: [32m'chunked'[39m,
+      [32m'x-content-type-options'[39m: [32m'nosniff'[39m
+    },
+    responseBody: [32m'{"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"qwen/qwen3.6-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Alibaba","is_byok":false}},"user_id":"org_340qHtGURWHLMfsoGMsEFSIdF1y"}'[39m,
+    isRetryable: [33mtrue[39m,
+    data: { error: [36m[Object][39m, user_id: [32m'org_340qHtGURWHLMfsoGMsEFSIdF1y'[39m },
+    [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+    [32mSymbol(vercel.ai.error.AI_APICallError)[39m: [33mtrue[39m
+  },
+  [32mSymbol(vercel.ai.error)[39m: [33mtrue[39m,
+  [32mSymbol(vercel.ai.error.AI_RetryError)[39m: [33mtrue[39m
+}
+  reg-filter-1                         ✗ (9348ms) — refused-wrongly
+  skill-whatif-1                       ✓ (19348ms) $0.008923
+  reg-group-2                          ✓ (7453ms) $0.003565
+  skill-surprise-1                     ✗ (15424ms) $0.004186 — wrong-tool-call-count
+  reg-sort-2                           ✓ (13280ms) $0.003309
+  reg-sort-1                           ✓ (13546ms) $0.003647
+  reg-pivot-1                          ✓ (11395ms) $0.003387
+  reg-group-3                          ✓ (12927ms) $0.003467
+  reg-filter-3                         ✓ (14477ms) $0.003859
+  reg-pivot-2                          ✓ (13977ms) $0.003504
+  reg-chart-1                          ✓ (17856ms) $0.004716
+  reg-group-1                          ✓ (20473ms) $0.005889
+  skill-story-3                        ✓ (27005ms) $0.012402
+  reg-chart-2                          ✗ (26235ms) $0.007750 — text-instead-of-tools
+
+=== v5/verbose / arm: kimi-latest [high] (~moonshotai/kimi-latest, research) ===
+  skill-outlier-2                      ✓ (10615ms) $0.011837
+  skill-pivot-3                        ✓ (11825ms) $0.012212
+  skill-outlier-5                      ✓ (12713ms) $0.012461
+  skill-pivot-4                        ✓ (12776ms) $0.012570
+  skill-outlier-3                      ✓ (14139ms) $0.012963
+  skill-pivot-6                        ✓ (14839ms) $0.013138
+  skill-whatif-4                       ✓ (17642ms) $0.014047
+  skill-pivot-1                        ✓ (18810ms) $0.011926
+  skill-pivot-5                        ✓ (19413ms) $0.014852
+  skill-outlier-4                      ✓ (20720ms) $0.012584
+  skill-outlier-1                      ✗ (23929ms) $0.013605 — invalid-command-line,missing-required-commands
+  skill-pivot-2                        ✓ (24469ms) $0.013631
+  skill-chart-1                        ✓ (37751ms) $0.017984
+  skill-whatif-2                       ✓ (50610ms) $0.023137
+  skill-whatif-3                       ✓ (58839ms) $0.025621
+  reg-formula-1                        ✓ (5325ms) $0.011374
+  skill-whatif-1                       ✓ (65146ms) $0.024471
+  reg-formula-2                        ✓ (5525ms) $0.011797
+  skill-chart-2                        ✓ (70730ms) $0.029962
+  reg-formula-3                        ✓ (5932ms) $0.011943
+  reg-formula-4                        ✓ (8371ms) $0.011459
+  reg-filter-1                         ✓ (7632ms) $0.012415
+  reg-filter-2                         ✓ (8206ms) $0.011781
+  skill-pin-1                          ✗ (68705ms) $0.031944 — missing-required-tool
+  skill-chart-5                        ✓ (80370ms) $0.027880
+  reg-sort-1                           ✓ (3553ms) $0.010988
+  reg-sort-2                           ✓ (5770ms) $0.011177
+  reg-group-1                          ✓ (8704ms) $0.012156
+  reg-filter-3                         ✓ (10724ms) $0.014041
+  reg-group-2                          ✓ (20440ms) $0.014637
+  skill-chart-3                        ✓ (101494ms) $0.039679
+  skill-pin-3                          ✗ (89152ms) $0.036986 — missing-required-tool
+  reg-pivot-1                          ✓ (18277ms) $0.013541
+  skill-story-3                        ✗ (97353ms) $0.041419 — missing-required-tool
+  skill-surprise-2                     ✗ (96060ms) $0.042014 — wrong-tool-call-count
+[02:08:54.118] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[02:08:54.586] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pivot-2                          ✓ (15775ms) $0.012771
+  reg-pdf-2                            ✗ (92223ms) $0.037653 — missing-required-tool
+  skill-chart-4                        ✗ (120412ms) $0.041050 — refused-wrongly
+[02:08:59.528] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-pin-2                          ✗ (110128ms) $0.041627 — missing-required-tool
+[02:09:01.064] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-group-3                          ✓ (42139ms) $0.023319
+  skill-pin-4                          ✗ (111698ms) $0.041335 — missing-required-tool
+  skill-story-1                        ✗ (110455ms) $0.041606 — missing-required-tool
+[02:09:03.586] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[02:09:03.712] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-story-2                        ✗ (109920ms) $0.041310 — missing-required-tool
+[02:09:03.873] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-3                            ✗ (87926ms) $0.041119 — missing-required-tool,missing-required-tool
+[02:09:04.792] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-surprise-1                     ✗ (113627ms) $0.040844 — wrong-tool-call-count
+[02:09:11.547] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-surprise-3                     ✗ (112869ms) $0.040156 — wrong-tool-call-count
+[02:09:12.708] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-1                            ✗ (112463ms) $0.038872 — missing-required-tool,missing-required-tool
+[02:09:15.508] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-4                            ✗ (109937ms) $0.039263 — missing-required-tool,missing-required-tool
+[02:09:39.669] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-chart-1                          ✗ (112123ms) $0.041394 — refused-wrongly
+[02:10:16.296] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-chart-2                          ✗ (113889ms) $0.040235 — refused-wrongly
+
+
+========== AGGREGATES ==========
+
+## §1. Pass rate by variant × arm
+  arm                    v5             
+  haiku-4-5              46/50 (92%)    
+  qwen3.5-flash-02-23    45/50 (90%)    
+  glm-5.1                43/50 (86%)    
+  gemini-3.1-flash-lite  49/50 (98%)    
+  qwen3.6-flash          37/50 (74%)    
+  kimi-latest            32/50 (64%)    
+  ALL                    252/300 (84.0%)
+
+## §2. Avg latency by variant × arm
+  arm                    v5     
+  haiku-4-5              8267ms 
+  qwen3.5-flash-02-23    5529ms 
+  glm-5.1                10856ms
+  gemini-3.1-flash-lite  2826ms 
+  qwen3.6-flash          9318ms 
+  kimi-latest            52043ms
+
+## §3. Cost by variant × arm (total $ for all 31 prompts)
+  arm                    v5       
+  haiku-4-5              $0.443791
+  qwen3.5-flash-02-23    $0.058261
+  glm-5.1                $0.445979
+  gemini-3.1-flash-lite  $0.143305
+  qwen3.6-flash          $0.199501
+  kimi-latest            $1.206787
+
+## §3b. Avg $ per call (variant × arm)
+  arm                    v5       
+  haiku-4-5              $0.008876
+  qwen3.5-flash-02-23    $0.001165
+  glm-5.1                $0.008920
+  gemini-3.1-flash-lite  $0.002866
+  qwen3.6-flash          $0.003990
+  kimi-latest            $0.024136
+
+## §4. Pass rate by variant × category (across all arms)
+  category                  v5          
+  filter (n=90)             17/18 (94%) 
+  sort (n=48)               12/12 (100%)
+  group-agg (n=66)          18/18 (100%)
+  pivot (n=42)              12/12 (100%)
+  chart (n=60)              9/12 (75%)  
+  columns (n=48)            0/0 (0%)    
+  view (n=36)               0/0 (0%)    
+  topn (n=30)               0/0 (0%)    
+  command (n=60)            0/0 (0%)    
+  composite (n=42)          0/0 (0%)    
+  refusal (n=48)            0/0 (0%)    
+  date (n=30)               0/0 (0%)    
+  multilingual (n=30)       0/0 (0%)    
+  edge (n=30)               0/0 (0%)    
+  pivot-builder (n=36)      35/36 (97%) 
+  chart-suggest (n=30)      26/30 (87%) 
+  outlier-hunt (n=30)       29/30 (97%) 
+  what-if-ghost (n=24)      24/24 (100%)
+  investigation-log (n=24)  11/24 (46%) 
+  data-story (n=18)         15/18 (83%) 
+  surprise-me (n=18)        12/18 (67%) 
+  pdf-report (n=24)         8/24 (33%)  
+  formula (n=24)            24/24 (100%)
+
+## §5. Failure-mode histogram by variant (across all arms)
+  failure mode               v5
+  refused-wrongly            5 
+  missing-required-paths     · 
+  missing-required-commands  1 
+  should-refuse-but-emitted  · 
+  text-instead-of-tools      3 
+  invalid-patch-line         1 
+  invalid-command-line       1 
+  hallucinated-column        · 
+  parse-error                · 
+  timeout                    · 
+  errored                    · 
+
+## §6. Best variant per (arm × category)
+  arm                    filter  sort    group-agg  pivot   chart   columns  view    topn    command  composite  refusal  date    multilingual  edge    pivot-builder  chart-suggest  outlier-hunt  what-if-ghost  investigation-log  data-story  surprise-me  pdf-report  formula
+  haiku-4-5              v5 3/3  v5 2/2  v5 3/3     v5 2/2  v5 2/2  v5 0/0   v5 0/0  v5 0/0  v5 0/0   v5 0/0     v5 0/0   v5 0/0  v5 0/0        v5 0/0  v5 6/6         v5 5/5         v5 5/5        v5 4/4         v5 4/4             v5 3/3      v5 3/3       v5 0/4      v5 4/4 
+  qwen3.5-flash-02-23    v5 3/3  v5 2/2  v5 3/3     v5 2/2  v5 2/2  v5 0/0   v5 0/0  v5 0/0  v5 0/0   v5 0/0     v5 0/0   v5 0/0  v5 0/0        v5 0/0  v5 6/6         v5 5/5         v5 5/5        v5 4/4         v5 1/4             v5 3/3      v5 3/3       v5 2/4      v5 4/4 
+  glm-5.1                v5 3/3  v5 2/2  v5 3/3     v5 2/2  v5 2/2  v5 0/0   v5 0/0  v5 0/0  v5 0/0   v5 0/0     v5 0/0   v5 0/0  v5 0/0        v5 0/0  v5 6/6         v5 4/5         v5 5/5        v5 4/4         v5 2/4             v5 3/3      v5 2/3       v5 1/4      v5 4/4 
+  gemini-3.1-flash-lite  v5 3/3  v5 2/2  v5 3/3     v5 2/2  v5 2/2  v5 0/0   v5 0/0  v5 0/0  v5 0/0   v5 0/0     v5 0/0   v5 0/0  v5 0/0        v5 0/0  v5 6/6         v5 4/5         v5 5/5        v5 4/4         v5 4/4             v5 3/3      v5 3/3       v5 4/4      v5 4/4 
+  qwen3.6-flash          v5 2/3  v5 2/2  v5 3/3     v5 2/2  v5 1/2  v5 0/0   v5 0/0  v5 0/0  v5 0/0   v5 0/0     v5 0/0   v5 0/0  v5 0/0        v5 0/0  v5 5/6         v5 4/5         v5 5/5        v5 4/4         v5 0/4             v5 3/3      v5 1/3       v5 1/4      v5 4/4 
+  kimi-latest            v5 3/3  v5 2/2  v5 3/3     v5 2/2  v5 0/2  v5 0/0   v5 0/0  v5 0/0  v5 0/0   v5 0/0     v5 0/0   v5 0/0  v5 0/0        v5 0/0  v5 6/6         v5 4/5         v5 4/5        v5 4/4         v5 0/4             v5 0/3      v5 0/3       v5 0/4      v5 4/4 
+
+## Failure detail (per variant × arm)
+
+### v5
+  - haiku-4-5 — 4 failure(s):
+     [reg-pdf-1] missing-required-tool(composePdfReport)
+        text: "I'll prepare a PDF summary of the visible orders. Let me first gather the data shape from your grid."
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: "I'll create a printable HR report with key salary statistics. Let me first gather the salary data and then generate the report."
+     [reg-pdf-3] missing-required-tool(composePdfReport)
+        text: "I'll build a PDF report showing total amounts per category. Let me first gather the data shape, then generate the report."
+     [reg-pdf-4] missing-required-tool(composePdfReport)
+        text: "I'll create a shipment summary report as a PDF. Let me first gather the data about your shipments."
+  - qwen3.5-flash-02-23 — 5 failure(s):
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-1] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+  - glm-5.1 — 7 failure(s):
+     [reg-pdf-4] missing-required-tool(composePdfReport)
+        text: "I'll create a shipment summary PDF report for you. Let me first request the data shape and then composethe report."
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: "I'll set up the grouped view and compute per-department averages to spot anything unusual."
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: "I'll create a PDF report with overall salary statistics and a department-level breakdown. Let me gather the data shape first and build the report specin parallel."
+     [skill-surprise-3] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: "I'll probe several dimensions of the shipment data to surface unexpected patterns. Let me run a few aggregate queries in parallel."
+     [skill-chart-4] refused-wrongly(expected patch on '/charts/')
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+  - gemini-3.1-flash-lite — 1 failure(s):
+     [skill-chart-3] invalid-patch-line(invalid-value: {"op":"replace","path":"/grouping","value":{")
+  - qwen3.6-flash — 13 failure(s):
+     [skill-pivot-4] text-instead-of-tools(expected patch on '/pivot' — model emitted JSONL as plain te)
+     [skill-pin-3] missing-required-tool(queryGridData)
+        text: "I'll group the transactions by type and aggregate the amounts to see the distribution patterns."
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-4] missing-required-tool(composePdfReport)
+        text: "I'll gather the shipment data for your summary report. Let me pull aggregate stats and the full row data so we can build the PDF."
+     [skill-chart-4] text-instead-of-tools(expected patch on '/charts/' — model emitted JSONL as plain )
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-3] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-1] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-filter-1] refused-wrongly(expected patch on '/filter')
+     [skill-surprise-1] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: "I'll run several exploratory queries in parallel to find interesting patterns. Let me scope out the data distribution across transaction types, categories, currencies, and date ranges. Could I run the…"
+     [reg-chart-2] text-instead-of-tools(expected patch on '/charts/' — model emitted JSONL as plain )
+  - kimi-latest — 18 failure(s):
+     [skill-outlier-1] invalid-command-line({"type":"selection.selectVisibleTop","count":5}); missing-required-commands(selection.selectVisibleTop)
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: ""
+     [skill-pin-3] missing-required-tool(queryGridData)
+        text: ""
+     [skill-story-3] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-2] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: ""
+     [skill-chart-4] refused-wrongly(expected patch on '/charts/')
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-1] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-1] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-3] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-1] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-4] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-chart-1] refused-wrongly(expected patch on '/charts/')
+     [reg-chart-2] refused-wrongly(expected patch on '/charts/')
+
+
+Final: 252/300 (84.0%) calls passed across all variants and arms.
+[02:10:21.032] [33mWARN[39m (848):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"

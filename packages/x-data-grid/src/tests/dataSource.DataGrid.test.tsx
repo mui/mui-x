@@ -610,3 +610,37 @@ describe('<DataGrid /> - Data source', () => {
     });
   });
 });
+
+describe('getKeyDefault', () => {
+  const baseParams = {
+    start: 0,
+    end: 24,
+    filterModel: { items: [] },
+    sortModel: [],
+  } as unknown as GridGetRowsParams;
+
+  it('includes `groupKeys` so the root grouped page and an expanded group differ', () => {
+    // Without this, a group-children fetch (same filter/sort/start/end) collides
+    // with the root grouped page in the cache and the children never load.
+    const root = getKeyDefault({ ...baseParams, groupKeys: [] } as GridGetRowsParams);
+    const child = getKeyDefault({ ...baseParams, groupKeys: ['10'] } as GridGetRowsParams);
+    expect(root).not.to.equal(child);
+    expect(getKeyDefault({ ...baseParams, groupKeys: ['11'] } as GridGetRowsParams)).not.to.equal(
+      child,
+    );
+  });
+
+  it('includes `groupFields` so different grouping columns differ', () => {
+    const byA = getKeyDefault({
+      ...baseParams,
+      groupKeys: ['10'],
+      groupFields: ['a'],
+    } as unknown as GridGetRowsParams);
+    const byB = getKeyDefault({
+      ...baseParams,
+      groupKeys: ['10'],
+      groupFields: ['b'],
+    } as unknown as GridGetRowsParams);
+    expect(byA).not.to.equal(byB);
+  });
+});

@@ -33,6 +33,7 @@ export type XProjectNames =
   | 'x-data-grid-pro'
   | 'x-data-grid-premium'
   | 'x-data-grid-generator'
+  | 'x-data-studio'
   | 'x-date-pickers'
   | 'x-date-pickers-pro'
   | 'x-charts'
@@ -277,6 +278,22 @@ export const createXTypeScriptProjects = () => {
       rootPath: path.join(workspaceRoot, 'packages/x-data-grid-generator'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
+    }),
+  );
+
+  projects.set(
+    'x-data-studio',
+    createXTypeScriptProject({
+      name: 'x-data-studio',
+      rootPath: path.join(workspaceRoot, 'packages/x-data-studio'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'data-studio',
+      getComponentsWithPropTypes: getComponentPaths({
+        files: ['src/DataStudio/DataStudio.tsx'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        files: ['src/DataStudio/DataStudio.tsx'],
+      }),
     }),
   );
 

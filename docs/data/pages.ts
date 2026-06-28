@@ -329,6 +329,12 @@ const pages: MuiPage[] = [
             newFeature: true,
             title: 'AI Assistant',
           },
+          {
+            pathname: '/x/react-data-grid/copilot',
+            plan: 'premium',
+            newFeature: true,
+            title: 'Copilot',
+          },
         ],
       },
       {
@@ -476,6 +482,17 @@ const pages: MuiPage[] = [
           },
         ],
       },
+    ],
+  },
+  {
+    pathname: '/x/react-data-studio-group',
+    title: 'Data Studio',
+    unstable: true,
+    children: [
+      { pathname: '/x/react-data-studio', title: 'Demos' },
+      { pathname: '/x/react-data-studio/coffee-beans', title: 'Coffee Beans' },
+      { pathname: '/x/react-data-studio/adventure-works', title: 'Adventure Works' },
+      { pathname: '/x/react-data-studio/copilot', title: 'Copilot' },
     ],
   },
   {
@@ -640,6 +657,12 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-charts', title: 'Overview' },
       { pathname: '/x/react-charts/quickstart', title: 'Quickstart' },
       { pathname: '/x/react-charts/examples', title: 'Examples' },
+      {
+        pathname: '/x/react-charts/copilot',
+        title: 'Copilot',
+        plan: 'premium',
+        unstable: true,
+      },
       {
         pathname: '/x/react-chart-components',
         subheader: 'Components',

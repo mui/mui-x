@@ -163,7 +163,6 @@ export const useGridChartsIntegration = (
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
-  const aggregationModel = gridAggregationModelSelector(apiRef);
   const pivotActive = gridPivotActiveSelector(apiRef);
   const pivotModel = gridPivotModelSelector(apiRef);
 
@@ -248,21 +247,33 @@ export const useGridChartsIntegration = (
   // sometimes, updates made to the chart dimensions and values require updating other models
   // for example, if we are adding more than one dimension, we need to set the new grouping model
   // if we are adding new value dataset to the grouped data, we need to set the aggregation model, otherwise the values will be undefined
+  //
+  // All selector reads here are LIVE (not render-time closures), because this
+  // callback is invoked from a `debounce(_, 0)` macrotask scheduled by
+  // `updateChartValuesData` and may run interleaved with synchronous model
+  // setters made by the same upstream caller (e.g. the Copilot reconciler
+  // applying `/aggregation`, `/charts/<id>`, `/grouping`, `/pivot/active` in
+  // one envelope). A stale React closure would overwrite freshly-applied
+  // models with defaults — see the regression tests in `copilot.DataGridPremium.test.tsx`.
   const updateOtherModels = React.useCallback(() => {
+    const liveActiveChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
+    const livePivotActive = gridPivotActiveSelector(apiRef);
     const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
     if (
-      visibleDimensions.current[activeChartId]?.length > 0 &&
+      visibleDimensions.current[liveActiveChartId]?.length > 0 &&
       // if there was row grouping or if we are adding more than one dimension, set the new grouping model
-      (rowGroupingModel.length > 0 || visibleDimensions.current[activeChartId].length > 1) &&
+      (rowGroupingModel.length > 0 || visibleDimensions.current[liveActiveChartId].length > 1) &&
       // if row grouping model starts with dimensions in the same order, we don't have to do anything
-      visibleDimensions.current[activeChartId].some(
+      visibleDimensions.current[liveActiveChartId].some(
         (item, index) => item.field !== rowGroupingModel[index],
       )
     ) {
       // if pivoting is enabled, then the row grouping model is driven by the pivoting rows
-      const newGroupingModel = visibleDimensions.current[activeChartId].map((item) => item.field);
-      if (pivotActive) {
+      const newGroupingModel = visibleDimensions.current[liveActiveChartId].map(
+        (item) => item.field,
+      );
+      if (livePivotActive) {
         apiRef.current.setPivotModel((prev) => ({
           ...prev,
           rows: newGroupingModel.map((item) => ({ field: item, hidden: false })),
@@ -277,12 +288,12 @@ export const useGridChartsIntegration = (
       }
     }
 
-    if (!pivotActive && visibleValues.current[activeChartId] && rowGroupingModel.length > 0) {
-      // with row grouping add the aggregation model to the newly added value dataset
-      const aggregatedFields = Object.keys(aggregationModel);
+    if (!livePivotActive && visibleValues.current[liveActiveChartId] && rowGroupingModel.length > 0) {
+      const liveAggregationModel = gridAggregationModelSelector(apiRef);
+      const aggregatedFields = Object.keys(liveAggregationModel);
       const aggregationsToAdd: GridAggregationModel = {};
 
-      visibleValues.current[activeChartId].forEach((item) => {
+      visibleValues.current[liveActiveChartId].forEach((item) => {
         const hasAggregation = aggregatedFields.includes(item.field);
         if (!hasAggregation) {
           // use the first available aggregation function
@@ -296,19 +307,12 @@ export const useGridChartsIntegration = (
 
       if (Object.keys(aggregationsToAdd).length > 0) {
         apiRef.current.setAggregationModel({
-          ...aggregationModel,
+          ...liveAggregationModel,
           ...aggregationsToAdd,
         });
       }
     }
-  }, [
-    apiRef,
-    props.aggregationFunctions,
-    props.dataSource,
-    activeChartId,
-    pivotActive,
-    aggregationModel,
-  ]);
+  }, [apiRef, props.aggregationFunctions, props.dataSource]);
 
   const handleRowDataUpdate = React.useCallback(
     (chartIds: string[]) => {
@@ -781,12 +785,14 @@ export const useGridChartsIntegration = (
             ? currentItems.filter((item) => item.field !== field)
             : [...currentItems];
 
-        // with row grouping add the aggregation model to the newly added values dataset
+        // With row grouping, add a default aggregation for the newly added value.
+        // Read live from the selector — see `updateOtherModels` for the rationale.
         if (rowGroupingModel.length > 0 && targetSection === 'values') {
-          const hasAggregation = Object.keys(aggregationModel).includes(field);
+          const liveAggregationModel = gridAggregationModelSelector(apiRef);
+          const hasAggregation = Object.keys(liveAggregationModel).includes(field);
           if (!hasAggregation) {
             apiRef.current.setAggregationModel({
-              ...aggregationModel,
+              ...liveAggregationModel,
               [field]: getAvailableAggregationFunctions({
                 aggregationFunctions: props.aggregationFunctions,
                 colDef: columns[field],
@@ -815,7 +821,6 @@ export const useGridChartsIntegration = (
       chartStateLookup,
       updateChartDimensionsData,
       updateChartValuesData,
-      aggregationModel,
       pivotActive,
       pivotModel,
     ],

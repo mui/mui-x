@@ -55,6 +55,9 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'Asystent AI',
 
+  // Toolbar Copilot button
+  // toolbarCopilot: 'Copilot',
+
   // Columns management text
   columnsManagementSearchTitle: 'Szukaj',
   columnsManagementNoColumns: 'Brak kolumn',
@@ -292,6 +295,14 @@ const plPLGrid: Partial<GridLocaleText> = {
   aiAssistantPanelConversationHistory: 'Historia konwersacji',
   aiAssistantPanelEmptyConversation: 'Brak historii poleceń',
   aiAssistantSuggestions: 'Sugestie',
+
+  // Copilot panel
+  // copilotPanelTitle: 'Copilot',
+  // copilotPanelClose: 'Close Copilot',
+  // copilotPanelBeta: 'BETA',
+  // copilotPanelReload: 'New conversation',
+  // copilotPanelEmptyStateTitle: 'How can I help?',
+  // copilotPanelEmptyStateHelper: 'Ask anything about your data, or pick a suggestion to get started.',
 
   // Prompt field
   promptFieldLabel: 'Wprowadź polecenie',

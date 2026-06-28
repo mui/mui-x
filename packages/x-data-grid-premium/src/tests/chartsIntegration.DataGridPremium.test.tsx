@@ -633,6 +633,32 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
         expect(apiRef!.current?.state.aggregation.model.category2).to.equal('size');
       });
+
+      // Regression: when `setAggregationModel` and `updateChartValuesData` are
+      // called for the same field in the same tick (e.g. from the Copilot
+      // reconciler applying both an `/aggregation` and a `/charts/<id>` patch),
+      // the default-aggregation pass inside chartsIntegration must not
+      // overwrite the explicitly-set function with the first available one.
+      it('should preserve explicit aggregation set in the same tick as a chart value update', async () => {
+        const initialState = {
+          ...baseInitialState,
+          rowGrouping: {
+            model: ['category1'],
+          },
+        };
+        render(<Test initialState={initialState} />);
+
+        act(() => {
+          apiRef!.current?.setAggregationModel({ amount: 'avg' });
+          apiRef!.current?.updateChartValuesData('test', [{ field: 'amount' }]);
+        });
+
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.values[0].id).to.equal('amount');
+        });
+
+        expect(apiRef!.current?.state.aggregation.model.amount).to.equal('avg');
+      });
     });
   });
 
