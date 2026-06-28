@@ -4,8 +4,8 @@ import { usePolarGeometry } from './usePolarGeometry';
 import { useDrawingArea } from './useDrawingArea';
 import { useRotationAxis, useRadiusAxis } from './useAxis';
 import { RadarChart } from '../RadarChart';
-import { type RadarSeriesType } from '../models';
 import type { D3OrdinalScale } from '../models/axis';
+import type { RadarSeriesType } from '../models';
 
 const mockSeries: RadarSeriesType[] = [
   {
