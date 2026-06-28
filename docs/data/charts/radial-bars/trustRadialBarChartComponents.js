@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ChartsTooltipContainer, useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
 import { usePolarGeometry } from '@mui/x-charts/hooks';
+
 import {
   euAverageTrust2025,
   europeanYouthTrust,
@@ -84,7 +85,9 @@ export function PreviousTrustData({ currentColor, previousColor }) {
     return null;
   }
 
-  const { cx, cy, angleScale, bandwidth, radiusScale, point } = geometry;
+  const { cx, cy, bandwidth, point } = geometry;
+  const angleScale = geometry.angleScale;
+  const radiusScale = geometry.radiusScale;
 
   return (
     <g transform={`translate(${cx} ${cy})`}>
@@ -233,7 +236,8 @@ export function EuAverageRing() {
     return null;
   }
 
-  const { cx, cy, radiusScale } = geometry;
+  const { cx, cy } = geometry;
+  const radiusScale = geometry.radiusScale;
   const radius = radiusScale(euAverageTrust2025);
 
   return (

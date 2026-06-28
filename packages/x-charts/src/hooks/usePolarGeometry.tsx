@@ -34,6 +34,7 @@ export function usePolarGeometry(): PolarGeometry | null {
     cx: left + width / 2,
     cy: top + height / 2,
     angleScale,
+    bandwidth: 'bandwidth' in angleScale ? angleScale.bandwidth() : 0,
     radiusScale,
     point: (radius, angle) => [radius * Math.sin(angle), -radius * Math.cos(angle)],
     pointInverse: (x, y) => [Math.sqrt(x * x + y * y), Math.atan2(x, -y)],
@@ -56,6 +57,11 @@ export interface PolarGeometry<
    * The scale that maps rotation axis values to angles in radians.
    */
   angleScale: TAngleScale;
+  /**
+   * The angular width of each band on the rotation axis.
+   * Zero when the rotation axis uses a point scale instead of a band scale.
+   */
+  bandwidth: number;
   /**
    * The scale that maps data values to radii (distance from the chart center).
    */

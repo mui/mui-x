@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ChartsTooltipContainer, useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
 import { usePolarGeometry } from '@mui/x-charts/hooks';
+import type { D3OrdinalScale, D3ContinuousScale } from '@mui/x-charts/models';
 import {
   euAverageTrust2025,
   europeanYouthTrust,
@@ -92,7 +93,9 @@ export function PreviousTrustData({
     return null;
   }
 
-  const { cx, cy, angleScale, bandwidth, radiusScale, point } = geometry;
+  const { cx, cy, bandwidth, point } = geometry;
+  const angleScale = geometry.angleScale as D3OrdinalScale;
+  const radiusScale = geometry.radiusScale as D3ContinuousScale;
 
   return (
     <g transform={`translate(${cx} ${cy})`}>
@@ -243,7 +246,8 @@ export function EuAverageRing() {
     return null;
   }
 
-  const { cx, cy, radiusScale } = geometry;
+  const { cx, cy } = geometry;
+  const radiusScale = geometry.radiusScale as D3ContinuousScale;
   const radius = radiusScale(euAverageTrust2025);
 
   return (
@@ -268,14 +272,4 @@ export function EuAverageRing() {
       </text>
     </g>
   );
-}
-
-export interface PolarGeometry {
-  cx: number;
-  cy: number;
-  angleScale: (value: string) => number | undefined;
-  bandwidth: number;
-  radiusScale: (value: number) => number;
-  // Polar (0 = up, clockwise) to local cartesian, relative to the center.
-  point: (radius: number, angle: number) => readonly [number, number];
 }

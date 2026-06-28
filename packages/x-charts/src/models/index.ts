@@ -16,6 +16,9 @@ export type {
   RotationAxis,
   AxisItemIdentifier,
   AxisValueFormatterContext,
+  D3Scale,
+  D3OrdinalScale,
+  D3ContinuousScale,
 } from './axis';
 export type { NumberValue } from '@mui/x-charts-vendor/d3-scale';
 

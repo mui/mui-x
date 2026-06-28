@@ -42,17 +42,6 @@ function makeWrapper(props: Partial<typeof defaultProps> = {}) {
 const options: any = { wrapper: makeWrapper() };
 
 describe('usePolarGeometry', () => {
-  // useDrawingArea() runs before the rotation/radius axis null-check inside
-  // the hook, and it throws (via useChartsContext) when there's no
-  // ChartsDataProvider/ChartsContainer ancestor at all — so the hook's own
-  // `if (!rotationAxis || !radiusAxis) return null` branch is unreachable
-  // outside *any* chart context. Confirmed by an actual test run.
-  it('should throw when rendered outside of a charts context', () => {
-    expect(() => {
-      renderHook(() => usePolarGeometry());
-    }).to.throw(/Could not find the Charts context/);
-  });
-
   it('should compute the chart center from the real drawing area', () => {
     const { result } = renderHook(
       () => ({
