@@ -7,7 +7,7 @@ productId: x-charts
 
 <p class="description">Access the geometry of a polar chart to position custom SVG elements and transformations.</p>
 
-The `usePolarGeometry()` returns the geometry of a polar chart, providing access to the chart's center coordinates, angle and radius scales, and a helper function to convert polar coordinates to Cartesian coordinates.
+The `usePolarGeometry()` returns the geometry of a polar chart, providing access to the chart's center coordinates, scales, and coordinate converters.
 
 ## Usage
 
