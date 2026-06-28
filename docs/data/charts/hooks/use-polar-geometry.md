@@ -35,17 +35,22 @@ function PolarGeometryOverlay() {
 ## Return value
 
 ```ts
-interface PolarGeometry {
-  cx: number; // Chart center X coordinate
-  cy: number; // Chart center Y coordinate
-  angleScale: (rotationAxis: string) => number | undefined; // Maps rotation axis values to angles
-  bandwidth: number; // Angular bandwidth of bands on rotation axis
-  radiusScale: (value: number) => number; // Maps data values to radii
-  point: (radius: number, angle: number) => [number, number]; // Converts polar to Cartesian coordinates
+// D3Scale is the union of all supported D3 scale types:
+// ScaleBand | ScalePoint | ScaleLinear | ScaleLogarithmic | ScaleSymLog | ScalePower | ScaleTime
+interface PolarGeometry<
+  TAngleScale extends D3Scale = D3Scale,
+  TRadiusScale extends D3Scale = D3Scale,
+> {
+  cx: number; // X coordinate of the chart center within the SVG
+  cy: number; // Y coordinate of the chart center within the SVG
+  angleScale: TAngleScale; // Maps rotation axis values to angles in radians
+  radiusScale: TRadiusScale; // Maps data values to radii (distance from center)
+  point: (radius: number, angle: number) => [number, number]; // Polar → Cartesian offset from [cx, cy]
+  pointInverse: (x: number, y: number) => [number, number]; // Cartesian offset → [radius, angle in (-π, π)]
 }
 ```
 
-Returns `null` if the chart scales are not ready or the axes don't meet the requirements (rotation axis must be band/point scale, radius axis must be continuous).
+Returns `null` if the chart scales are not ready.
 
 ## Caveats
 

@@ -117,15 +117,6 @@ describe('usePolarGeometry', () => {
     }
   });
 
-  // The rotation axis places metrics as points around the circle (vertices),
-  // not as bands with width, so its scale is a point scale where
-  // bandwidth() is 0 by definition — confirmed by an actual test run.
-  it('should report a bandwidth of 0, since metrics sit on a point scale', () => {
-    const { result } = renderHook(() => usePolarGeometry(), options);
-
-    expect(result.current?.bandwidth).to.equal(0);
-  });
-
   it('should produce a smaller angular step as the number of metrics grows', () => {
     const fewOptions: any = { wrapper: makeWrapper({ radar: { metrics: ['A', 'B', 'C'] } }) };
     const manyOptions: any = {
@@ -157,7 +148,6 @@ describe('usePolarGeometry', () => {
     const { result } = renderHook(() => usePolarGeometry(), singleMetricOptions);
 
     expect(result.current).to.not.equal(null);
-    expect(result.current?.bandwidth).to.equal(0);
   });
 
   // point() is a pure trig function defined directly in the hook, so these

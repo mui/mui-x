@@ -5,7 +5,7 @@ import type { D3Scale } from '../models/axis';
 /**
  * Provides access to the geometry of a polar chart.
  *
- * It can be used to position custom elements, and serves as helper to convert polar coordinates to xartesian coordinates
+ * It can be used to position custom elements and convert between polar and Cartesian coordinates.
  *
  * @example
  * ```tsx
@@ -34,13 +34,16 @@ export function usePolarGeometry(): PolarGeometry | null {
     cx: left + width / 2,
     cy: top + height / 2,
     angleScale,
-    bandwidth: 'bandwidth' in angleScale ? angleScale.bandwidth() : 0,
     radiusScale,
     point: (radius, angle) => [radius * Math.sin(angle), -radius * Math.cos(angle)],
+    pointInverse: (x, y) => [Math.sqrt(x * x + y * y), Math.atan2(x, -y)],
   };
 }
 
-export interface PolarGeometry {
+export interface PolarGeometry<
+  TAngleScale extends D3Scale = D3Scale,
+  TRadiusScale extends D3Scale = D3Scale,
+> {
   /**
    * The X coordinate of the chart center within the SVG.
    */
@@ -50,18 +53,13 @@ export interface PolarGeometry {
    */
   cy: number;
   /**
-   * The scale that maps rotation axis values (e.g., category names) to angles in radians.
+   * The scale that maps rotation axis values to angles in radians.
    */
-  angleScale: D3Scale;
-  /**
-   * The angular width of each band on the rotation axis.
-   * Zero when the rotation axis uses a point scale instead of a band scale.
-   */
-  bandwidth: number;
+  angleScale: TAngleScale;
   /**
    * The scale that maps data values to radii (distance from the chart center).
    */
-  radiusScale: D3Scale;
+  radiusScale: TRadiusScale;
   /**
    * Converts polar coordinates to Cartesian offsets relative to the chart center.
    * @param {number} radius - Distance from the center.
@@ -69,4 +67,12 @@ export interface PolarGeometry {
    * @returns {[number, number]} `[x, y]` offset from `[cx, cy]`.
    */
   point: (radius: number, angle: number) => [number, number];
+  /**
+   * Converts Cartesian offsets (relative to the chart center) back to polar coordinates.
+   * The inverse of `point`.
+   * @param {number} x - Horizontal offset from `cx`.
+   * @param {number} y - Vertical offset from `cy`.
+   * @returns {[number, number]} `[radius, angle]` where angle is in radians within `[-π, π]`.
+   */
+  pointInverse: (x: number, y: number) => [number, number];
 }
