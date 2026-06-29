@@ -112,6 +112,71 @@ describe('createGenerateReactCodeTool', () => {
     });
   });
 
+  it('forwards the abort signal to both the POST and SSE fetches', async () => {
+    const controller = new AbortController();
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(makeJsonResponse(202, { threadId: 'chat-1', runId: 'msg-1' }))
+      .mockResolvedValueOnce(makeSseResponse([sseFrame('[DONE]')]));
+
+    const tool = createGenerateReactCodeTool({
+      recipesBackendBaseUrl: baseUrl,
+      getToken,
+      fetcher,
+      signal: controller.signal,
+    });
+    await tool.execute({ prompt: 'Build a card' });
+
+    expect(fetcher).toHaveBeenNthCalledWith(
+      1,
+      expect.any(String),
+      expect.objectContaining({ signal: controller.signal }),
+    );
+    expect(fetcher).toHaveBeenNthCalledWith(
+      2,
+      expect.any(String),
+      expect.objectContaining({ signal: controller.signal }),
+    );
+  });
+
+  it('throws when the SSE response has no body', async () => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(makeJsonResponse(202, { threadId: 'chat-1', runId: 'msg-1' }))
+      .mockResolvedValueOnce(
+        new Response(null, { status: 200, headers: { 'content-type': 'text/event-stream' } }),
+      );
+
+    const tool = createGenerateReactCodeTool({ recipesBackendBaseUrl: baseUrl, getToken, fetcher });
+
+    await expect(tool.execute({ prompt: 'Build a card' })).rejects.toThrow(
+      /MUI X Agent Tools: Backend returned an SSE response with no body/,
+    );
+  });
+
+  it('rejects when the SSE stream errors mid-read', async () => {
+    const erroringStream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.error(new Error('boom'));
+      },
+    });
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(makeJsonResponse(202, { threadId: 'chat-1', runId: 'msg-1' }))
+      .mockResolvedValueOnce(
+        new Response(erroringStream, {
+          status: 200,
+          headers: { 'content-type': 'text/event-stream' },
+        }),
+      );
+
+    const tool = createGenerateReactCodeTool({ recipesBackendBaseUrl: baseUrl, getToken, fetcher });
+
+    await expect(tool.execute({ prompt: 'Build a card' })).rejects.toThrow(
+      /MUI X Agent Tools: SSE stream errored: boom/,
+    );
+  });
+
   it('plumbs the backend-resolved muiPairing from the 202 response into the tool result', async () => {
     const fetcher = vi
       .fn()

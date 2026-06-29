@@ -76,6 +76,16 @@ describe('buildCodegenHandler', () => {
     expect(opts.onProgress).toBeUndefined();
   });
 
+  it('forwards the request abort signal to the per-call tool', async () => {
+    const { deps, createPerCallTool } = buildDeps();
+    const handler = buildCodegenHandler(deps);
+    const { signal } = new AbortController();
+    await handler({ prompt: 'hi' }, { signal });
+
+    const [opts] = createPerCallTool.mock.calls[0];
+    expect(opts.signal).toBe(signal);
+  });
+
   it('logs success duration', async () => {
     const { deps, log } = buildDeps();
     const handler = buildCodegenHandler(deps);

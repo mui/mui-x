@@ -163,6 +163,9 @@ export type CreateGenerateReactCodeToolOptions = {
   logger?: (message: string, error?: unknown) => void;
   /** Override `globalThis.fetch`. Useful for tests. */
   fetcher?: typeof fetch;
+  // Abort signal from the host (e.g. the MCP request). When it fires, the in-flight POST and SSE
+  // fetches are cancelled so the server stops streaming and the backend can stop the run.
+  signal?: AbortSignal;
   /** Override the tool's name / description (e.g. when restraining the agent's tool selection). */
   overrides?: ToolOverrides;
 };
@@ -226,6 +229,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
           accept: 'application/json',
         },
         body: JSON.stringify(input),
+        signal: options.signal,
       });
 
       if (!generateResponse.ok) {
@@ -249,6 +253,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
             authorization: `Bearer ${token}`,
             accept: 'text/event-stream',
           },
+          signal: options.signal,
         },
       );
 

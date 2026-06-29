@@ -59,8 +59,8 @@ const main = async () => {
   // Codegen needs no network at startup, so register it first and connect right away.
   registerCodegenTool(server, {
     codegenStatic,
-    createPerCallTool: ({ onProgress }) =>
-      createGenerateReactCodeTool({ ...baseCodegenOpts, onProgress }),
+    createPerCallTool: ({ onProgress, signal }) =>
+      createGenerateReactCodeTool({ ...baseCodegenOpts, onProgress, signal }),
     formatText: formatCodegenText,
     logger,
   });

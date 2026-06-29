@@ -13,6 +13,7 @@ type CodegenTool = {
 
 type CodegenToolFactory = (opts: {
   onProgress?: ReturnType<typeof buildCodegenProgressForwarder>;
+  signal?: AbortSignal;
 }) => CodegenTool;
 
 type FormatCodegenText = (result: CodegenResult) => string;
@@ -28,7 +29,9 @@ export const buildCodegenHandler = (deps: {
   return async (input: any, extra: any) => {
     const startTime = Date.now();
     const onProgress = buildCodegenProgressForwarder(extra, log);
-    const perCallTool = createPerCallTool({ onProgress });
+    // `extra.signal` aborts when the MCP client cancels or times out the request; forward it so the
+    // codegen fetches stop instead of running on (and burning backend credits) after cancellation.
+    const perCallTool = createPerCallTool({ onProgress, signal: extra?.signal });
 
     try {
       const result = await perCallTool.execute(input);

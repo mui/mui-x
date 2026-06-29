@@ -156,7 +156,16 @@ export class CliJwtClient {
       );
     }
 
-    const data = (await response.json()) as Partial<TokenExchangeResponse>;
+    let data: Partial<TokenExchangeResponse>;
+    try {
+      data = (await response.json()) as Partial<TokenExchangeResponse>;
+    } catch (cause) {
+      throw new CliJwtClientError(
+        'token_exchange_failed',
+        'MUI X Agent Tools: Token exchange returned a non-JSON response. Check that MUI_BACKEND_BASE_URL points at the API backend (not a proxy or error page), then retry.',
+        { cause },
+      );
+    }
     if (!data?.token || !data.expiresAt) {
       throw new CliJwtClientError(
         'token_exchange_failed',

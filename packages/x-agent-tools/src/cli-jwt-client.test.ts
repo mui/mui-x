@@ -45,6 +45,29 @@ describe('CliJwtClient', () => {
     );
   });
 
+  it('wraps a non-JSON token response (e.g. an HTML error page) as a CliJwtClientError', async () => {
+    const fetcher = vi.fn().mockResolvedValue(
+      new Response('<html>Bad Gateway</html>', {
+        status: 200,
+        headers: { 'content-type': 'text/html' },
+      }),
+    );
+    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+
+    await expect(client.getToken()).rejects.toThrow(
+      /MUI X Agent Tools: Token exchange returned a non-JSON response/,
+    );
+  });
+
+  it('throws on a non-ok token exchange status (e.g. HTTP 500)', async () => {
+    const fetcher = vi.fn().mockResolvedValue(makeErrorResponse(500));
+    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+
+    await expect(client.getToken()).rejects.toThrow(
+      /MUI X Agent Tools: Token exchange failed with HTTP 500/,
+    );
+  });
+
   it('returns the cached token without a second network call', async () => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
