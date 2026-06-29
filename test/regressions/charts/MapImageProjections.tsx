@@ -57,7 +57,8 @@ export default function MapImageProjections() {
         </div>
       ))}
       {loaded >= PROJECTIONS.length && (
-        <div data-testid="map-images-ready" style={{ display: 'none' }} />
+        // Visible (1×1) so Playwright's `waitForSelector` (state: 'visible') resolves.
+        <div data-testid="map-images-ready" style={{ width: 1, height: 1 }} />
       )}
     </div>
   );
