@@ -29,11 +29,14 @@ const CELL_WIDTH = 200;
 const CELL_HEIGHT = 130;
 
 export default function MapImageProjections() {
-  // `MapImagePlot` reprojects on a canvas asynchronously. Count only the cells
-  // that produced a raster (`onReady` also fires with `null` before the image
-  // loads) and reveal a sentinel once every cell is ready, so the screenshot
-  // waits for the reprojection instead of racing it.
-  const [loaded, setLoaded] = React.useState(0);
+  // `MapImagePlot` reprojects on a canvas asynchronously. Track which cells have
+  // produced a raster by projection name (a Set, not a counter: `onReady` can fire
+  // truthy more than once per cell as the fit settles, which would otherwise reveal
+  // the sentinel before every cell is ready). `onReady` also fires with `null`
+  // before the image loads, so those are ignored.
+  const [ready, setReady] = React.useState<ReadonlySet<string>>(() => new Set());
+  const markReady = (projection: string) =>
+    setReady((prev) => (prev.has(projection) ? prev : new Set(prev).add(projection)));
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: `repeat(4, ${CELL_WIDTH}px)`, gap: 4 }}>
@@ -49,14 +52,14 @@ export default function MapImageProjections() {
             <ChartsSurface>
               <MapImagePlot
                 href={MARS_IMAGE}
-                onReady={(dataUrl) => dataUrl && setLoaded((count) => count + 1)}
+                onReady={(dataUrl) => dataUrl && markReady(projection)}
               />
               <GeoDataPlot fill="none" stroke="#1976d2" strokeWidth={0.4} />
             </ChartsSurface>
           </ChartsGeoDataProviderPremium>
         </div>
       ))}
-      {loaded >= PROJECTIONS.length && (
+      {ready.size === PROJECTIONS.length && (
         // Visible (1×1) so Playwright's `waitForSelector` (state: 'visible') resolves.
         <div data-testid="map-images-ready" style={{ width: 1, height: 1 }} />
       )}
