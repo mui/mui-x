@@ -10,6 +10,7 @@ import {
   selectorChartSamplingPyramids,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
 import type { SampledBucket } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
+import type { ZoomMap } from '../internals/plugins/featurePlugins/useChartCartesianAxis/zoom.types';
 import {
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
@@ -41,6 +42,12 @@ interface LinePlotDataPoint {
 export function useLinePlotData(
   xAxes: ComputedAxisConfig<ChartsXAxisProps>,
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
+  /**
+   * Overrides the zoom span and pixel size used for sampling. The zoom-slider preview passes its
+   * full-range zoom and own width so its density stays stable while the main chart zooms, instead
+   * of reading the active zoom from the store.
+   */
+  samplingOverride?: { zoomMap: ZoomMap; availableSize: number },
 ) {
   const seriesData = useLineSeriesContext();
   const defaultXAxisId = useXAxes().xAxisIds[0];
@@ -51,9 +58,12 @@ export function useLinePlotData(
   const store = useStore();
   const samplingState = store.use(selectorChartSamplingState);
   const sampledSeries = store.use(selectorChartSamplingPyramids);
-  const zoomMap = store.use(selectorChartZoomMap);
+  const activeZoomMap = store.use(selectorChartZoomMap);
   const zoomOptions = store.use(selectorChartZoomOptionsLookup);
   const sampler = store.use(selectorChartSeriesConfig).line?.sampler;
+
+  const zoomMap = samplingOverride?.zoomMap ?? activeZoomMap;
+  const samplingSize = samplingOverride?.availableSize ?? drawingArea.width;
 
   // Skip the line animation while sampling is on, plus the first render after it turns off: the
   // point count changes, so the path would morph.
@@ -138,7 +148,7 @@ export function useLinePlotData(
             sampler?.sample?.({
               built,
               zoom,
-              availableSize: drawingArea.width,
+              availableSize: samplingSize,
               minSpan: zoomOptions[xAxisId]?.minSpan ?? 0,
               algorithm: lineMethod,
               getValues: () => Float64Array.from(visibleStackedData, (point) => point[1]),
@@ -224,11 +234,11 @@ export function useLinePlotData(
     xAxes,
     yAxes,
     getGradientId,
-    drawingArea,
     samplingEnabled,
     lineMethod,
     sampledSeries,
     zoomMap,
+    samplingSize,
     zoomOptions,
     sampler,
     skipSamplingAnimation,
