@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-agent-tools",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "author": "MUI Team",
   "description": "Shared tooling behind MUI's agent integrations (MCP server, CLI, ACP).",
   "license": "MIT",
