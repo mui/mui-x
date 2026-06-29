@@ -25,21 +25,6 @@ const schedulerApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
-    pathname: '/x/api/scheduler/standalone-compact-day-view-premium',
-    title: 'StandaloneCompactDayViewPremium',
-    plan: 'premium',
-  },
-  {
-    pathname: '/x/api/scheduler/standalone-compact-three-day-view-premium',
-    title: 'StandaloneCompactThreeDayViewPremium',
-    plan: 'premium',
-  },
-  {
-    pathname: '/x/api/scheduler/standalone-compact-week-view-premium',
-    title: 'StandaloneCompactWeekViewPremium',
-    plan: 'premium',
-  },
-  {
     pathname: '/x/api/scheduler/standalone-day-view',
     title: 'StandaloneDayView',
   },
