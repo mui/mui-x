@@ -17,7 +17,7 @@ The priority of the data copied to the clipboard is the following, from highest 
 
 ### Triggering a copy without the keyboard shortcut
 
-To let users copy the current selection from a button (or any other UI, such as a context menu), reproduce the same priority logic from public APIs: `apiRef.current.getSelectedCellsAsArray()` and `getCellSelectionModel()` for cell selection, `apiRef.current.getDataAsCsv()` for row selection, and `gridFocusCellSelector` as a fallback for a single focused cell.
+To let users copy the current selection from a button (or any other UI, such as a context menu), combine public APIs: `apiRef.current.getSelectedCellsAsArray()` and `getCellSelectionModel()` for cell selection, `apiRef.current.getDataAsCsv()` for row selection, and `gridFocusCellSelector` as a fallback for a single focused cell.
 
 {{"demo": "ClipboardCopyButton.js", "bg": "inline"}}
 
