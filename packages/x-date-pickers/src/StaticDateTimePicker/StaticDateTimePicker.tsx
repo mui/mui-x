@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
+import type { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import {
   renderDigitalClockTimeView,
@@ -11,8 +11,8 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateDateTime } from '../validation';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import type { PickerViewRendererLookup } from '../internals/hooks/usePicker';
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { mergeSx } from '../internals/utils/utils';
 import {
   multiSectionDigitalClockClasses,
@@ -20,7 +20,7 @@ import {
 } from '../MultiSectionDigitalClock';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { digitalClockClasses } from '../DigitalClock';
-import { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
+import type { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
 import { DATE_VIEWS } from '../internals/utils/date-utils';
 import { EXPORTED_TIME_VIEWS } from '../internals/utils/time-utils';
 
@@ -134,7 +134,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   return renderPicker();
 }) as StaticDateTimePickerComponent;
 
-StaticDateTimePicker.propTypes = {
+StaticDateTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

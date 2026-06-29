@@ -41,8 +41,8 @@ import { startOfWeek } from 'date-fns/startOfWeek';
 import { startOfYear } from 'date-fns/startOfYear';
 import { isWithinInterval } from 'date-fns/isWithinInterval';
 import { enUS } from 'date-fns/locale/en-US';
-import { Locale as DateFnsLocale } from 'date-fns/locale';
-import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
+import type { Locale as DateFnsLocale } from 'date-fns/locale';
+import type { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 declare module '@mui/x-date-pickers/models' {

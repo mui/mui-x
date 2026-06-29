@@ -1,4 +1,4 @@
-import { PickersLocaleText } from './pickersLocaleTextApi';
+import type { PickersLocaleText } from './pickersLocaleTextApi';
 
 export const getPickersLocalization = (pickersTranslations: Partial<PickersLocaleText>) => {
   return {

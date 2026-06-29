@@ -1,22 +1,17 @@
-import {
-  type AxisId,
-  type ChartsXAxisProps,
-  type ChartsYAxisProps,
-  type ComputedAxis,
-} from '../models/axis';
+import type { AxisId, ChartsXAxisProps, ChartsYAxisProps, ComputedAxis } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
-import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
+import type { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import type { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { createGetBarDimensions } from '../internals/createGetBarDimensions';
-import { type ChartDrawingArea } from '../hooks/useDrawingArea';
+import type { ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
-import { type SeriesId } from '../models/seriesType';
+import type { SeriesId } from '../models/seriesType';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,

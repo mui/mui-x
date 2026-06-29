@@ -194,7 +194,11 @@ describe('createAiSdkAdapter — { stream } branch', () => {
     expect(finish.messageId).toBe(start.messageId);
   });
 
-  it('resets synthetic messageId generation for each stream', async () => {
+  it('assigns a unique synthetic messageId to each stream', async () => {
+    // Each send must get a *distinct* synthetic id. If the adapter reused the
+    // same id across sends, processStream would key every reply to the same
+    // assistant message and append sequential replies into a single bubble
+    // (the "user sends 1, then 2, and reply 2 merges into reply 1" bug).
     const adapter = createAiSdkAdapter({
       stream: () =>
         makeReadableStream<AiSdkUIMessageChunk>([{ type: 'start' }, { type: 'finish' }]),
@@ -224,7 +228,7 @@ describe('createAiSdkAdapter — { stream } branch', () => {
 
     expect(firstFinish.messageId).toBe(firstStart.messageId);
     expect(secondFinish.messageId).toBe(secondStart.messageId);
-    expect(secondStart.messageId).toBe(firstStart.messageId);
+    expect(secondStart.messageId).not.toBe(firstStart.messageId);
   });
 
   it('preserves a messageId when the AI SDK does provide one', async () => {
@@ -333,6 +337,47 @@ describe('createAiSdkAdapter — { stream } branch', () => {
       messages: [],
       attachments: [{ localId: 'a1', file, status: 'queued' }],
       metadata: { model: 'fast' },
+      trigger: 'submit-message',
+      signal: expect.any(AbortSignal),
+    });
+  });
+
+  it('always defines regenerate, calling streamFn with the regenerate trigger and anchor message', async () => {
+    const stream = vi.fn(() =>
+      makeReadableStream<AiSdkUIMessageChunk>([
+        { type: 'start', messageId: 'm2' },
+        { type: 'text-start', id: 't' },
+        { type: 'text-delta', id: 't', delta: 'regen' },
+        { type: 'text-end', id: 't' },
+        { type: 'finish', messageId: 'm2', finishReason: 'stop' },
+      ]),
+    );
+    const adapter = createAiSdkAdapter({ stream });
+
+    expect(typeof adapter.regenerate).toBe('function');
+
+    const anchor = makeUserMessage('hi');
+    const result = await adapter.regenerate!({
+      messageId: 'assistant-1',
+      message: anchor,
+      messages: [anchor],
+      signal: new AbortController().signal,
+    });
+
+    // Goes through convertToChatStream like sends.
+    const chunks = await readAll(result);
+    expect(chunks.map((c) => (c as ChatMessageChunk).type)).toEqual([
+      'start',
+      'text-start',
+      'text-delta',
+      'text-end',
+      'finish',
+    ]);
+    expect(stream).toHaveBeenCalledWith({
+      message: anchor,
+      messages: [anchor],
+      trigger: 'regenerate-message',
+      regenerateMessageId: 'assistant-1',
       signal: expect.any(AbortSignal),
     });
   });
@@ -437,6 +482,77 @@ describe('createAiSdkAdapter — { chat } branch', () => {
 
     const chunks = await readAll(result);
     expect((chunks[2] as { delta: string }).delta).toBe('');
+  });
+
+  it('defines regenerate when chat.regenerate exists and streams the trailing assistant message', async () => {
+    const messages: Array<{
+      id: string;
+      role: string;
+      parts: Array<{ type: string; text?: string }>;
+    }> = [
+      { id: 'user-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] },
+      { id: 'assistant-1', role: 'assistant', parts: [{ type: 'text', text: 'old reply' }] },
+    ];
+    const chat = {
+      messages,
+      stop: vi.fn(),
+      sendMessage: vi.fn(async () => undefined),
+      regenerate: vi.fn(async () => {
+        // Replace the trailing assistant message in place.
+        messages[messages.length - 1] = {
+          id: 'assistant-1',
+          role: 'assistant',
+          parts: [{ type: 'text', text: 'fresh reply' }],
+        };
+      }),
+    };
+    const adapter = createAiSdkAdapter({ chat });
+
+    expect(typeof adapter.regenerate).toBe('function');
+
+    const controller = new AbortController();
+    const result = await adapter.regenerate!({
+      messageId: 'assistant-1',
+      message: makeUserMessage('hi'),
+      messages: [],
+      signal: controller.signal,
+    });
+
+    const chunks = await readAll(result);
+    expect(chat.regenerate).toHaveBeenCalledWith({ messageId: 'assistant-1' });
+    expect((chunks[2] as { delta: string }).delta).toBe('fresh reply');
+
+    // Aborting after the stream is built still wires through to chat.stop —
+    // verify the listener pattern via a fresh regenerate that we abort.
+    const abortChat = {
+      messages: [{ id: 'a', role: 'assistant', parts: [{ type: 'text', text: 'x' }] }],
+      stop: vi.fn(),
+      sendMessage: vi.fn(async () => undefined),
+      regenerate: vi.fn(
+        () =>
+          new Promise<void>((resolve) => {
+            setTimeout(resolve, 0);
+          }),
+      ),
+    };
+    const abortAdapter = createAiSdkAdapter({ chat: abortChat });
+    const abortController = new AbortController();
+    const regenPromise = abortAdapter.regenerate!({
+      messageId: 'a',
+      message: makeUserMessage('hi'),
+      messages: [],
+      signal: abortController.signal,
+    });
+    abortController.abort();
+    await regenPromise;
+    expect(abortChat.stop).toHaveBeenCalledTimes(1);
+  });
+
+  it('omits regenerate when chat.regenerate is not implemented (runtime fallback engages)', async () => {
+    const chat = makeChat('hi');
+    const adapter = createAiSdkAdapter({ chat });
+
+    expect(adapter.regenerate).toBeUndefined();
   });
 });
 

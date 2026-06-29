@@ -23,6 +23,7 @@ async function findComponents(packageFolder, packageName) {
 
 // Sub-path exports that aren't renderable components and therefore shouldn't be
 // tracked individually for bundle size (types, locales, augmentations, internals).
+// Add to this denylist when introducing non-component sub-path exports (e.g. `utils`, `colors`).
 const NON_COMPONENT_EXPORTS = new Set(['models', 'locales', 'theme-augmentation', 'internals']);
 
 /**

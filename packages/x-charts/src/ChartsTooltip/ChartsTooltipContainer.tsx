@@ -4,13 +4,17 @@ import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled, useThemeProps } from '@mui/material/styles';
-import Popper, { type PopperProps } from '@mui/material/Popper';
+import Popper from '@mui/material/Popper';
+import type { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { warnOnce } from '@mui/x-internals/warning';
-import { type TriggerOptions, useIsFineMainPointer } from './utils';
-import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { useIsFineMainPointer } from './utils';
+import type { TriggerOptions } from './utils';
+import { useUtilityClasses } from './chartsTooltipClasses';
+import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsLastInteraction,
@@ -19,9 +23,9 @@ import {
 import {
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
-  type UseChartTooltipSignature,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
-import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartsInteractionAxisTooltip,
   selectorChartsTooltipAxisPosition,
@@ -184,7 +188,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   }
 
   const chartsLayerContainerRef = useChartsLayerContainerRef();
-  const anchorRef = React.useRef<HTMLDivElement | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
 
   const classes = useUtilityClasses(propClasses);
 
@@ -238,6 +242,13 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       pointerUpdate.clear();
     };
   }, [chartsLayerContainerRef, positionRef, isTooltipNodeAnchored]);
+
+  useEnhancedEffect(() => {
+    if (!isTooltipNodeAnchored) {
+      return;
+    }
+    popperRef.current?.update();
+  }, [isTooltipNodeAnchored, itemPosition?.x, itemPosition?.y]);
 
   const pointerAnchorEl = React.useMemo(
     () => ({
@@ -297,7 +308,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       {chartsLayerContainerRef.current &&
         ReactDOM.createPortal(
           <div
-            ref={anchorRef}
+            ref={setAnchorEl}
             style={{
               position: 'absolute',
               display: 'hidden',
@@ -327,9 +338,9 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
               (!isTooltipNodeAnchored && isMouse ? 'right-start' : 'top')
             }
             popperRef={popperRef}
-            anchorEl={itemPosition ? anchorRef.current : pointerAnchorEl}
+            anchorEl={itemPosition ? anchorEl : pointerAnchorEl}
             modifiers={modifiers}
-            container={chartsLayerContainerRef.current}
+            container={other.container ?? chartsLayerContainerRef.current}
             popperOptions={{ ...other.popperOptions, strategy: 'fixed' }}
           >
             {children}
@@ -340,7 +351,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   );
 }
 
-ChartsTooltipContainer.propTypes = {
+ChartsTooltipContainer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -349,7 +360,7 @@ ChartsTooltipContainer.propTypes = {
    * Determine if the tooltip should be placed on the pointer location or on the node.
    * @default 'pointer'
    */
-  anchor: PropTypes.oneOf(['node', 'pointer']),
+  anchor: PropTypes.oneOf(['chart', 'node', 'pointer']),
   /**
    * An HTML element, [virtualElement](https://popper.js.org/docs/v2/virtual-elements/),
    * or a function that returns either.
@@ -375,25 +386,6 @@ ChartsTooltipContainer.propTypes = {
    */
   component: PropTypes.elementType,
   /**
-   * The components used for each slot inside the Popper.
-   * Either a string to use a HTML element or a component.
-   *
-   * @deprecated use the `slots` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
-   * @default {}
-   */
-  components: PropTypes.shape({
-    Root: PropTypes.elementType,
-  }),
-  /**
-   * The props used for each slot inside the Popper.
-   *
-   * @deprecated use the `slotProps` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
-   * @default {}
-   */
-  componentsProps: PropTypes.shape({
-    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  }),
-  /**
    * An HTML element or function that returns one.
    * The `container` will have the portal children appended to it.
    *
@@ -406,10 +398,10 @@ ChartsTooltipContainer.propTypes = {
   container: PropTypes.oneOfType([
     (props, propName) => {
       if (props[propName] == null) {
-        return new Error(`MUI X: Prop '${propName}' is required but wasn't specified`);
+        return new Error(`Prop '${propName}' is required but wasn't specified`);
       }
       if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-        return new Error(`MUI X: Expected prop '${propName}' to be of type Element`);
+        return new Error(`Expected prop '${propName}' to be of type Element`);
       }
       return null;
     },
@@ -558,13 +550,12 @@ ChartsTooltipContainer.propTypes = {
    */
   position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
   /**
-   * The props used for each slot inside the Popper.
+   * The props used for each component slot.
    * @default {}
    */
   slotProps: PropTypes.object,
   /**
-   * The components used for each slot inside the Popper.
-   * Either a string to use a HTML element or a component.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

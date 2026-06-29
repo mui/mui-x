@@ -5,18 +5,19 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   useGridEvent as addEventHandler,
   useGridApiMethod,
-  type GridEventLookup,
   GRID_ROOT_GROUP_ID,
-  type GridValidRowModel,
   useGridEvent,
-  type GridUpdateRowParams,
-  type GridRowModel,
   gridRowTreeSelector,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridEventLookup,
+  GridValidRowModel,
+  GridUpdateRowParams,
+  GridRowModel,
 } from '@mui/x-data-grid-pro';
 import {
   useGridDataSourceBasePro,
   useGridRegisterStrategyProcessor,
-  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   gridPivotInitialColumnsSelector,
   runIf,
@@ -25,6 +26,7 @@ import {
   DataSourceRowsUpdateStrategy,
   getGroupKeys,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';

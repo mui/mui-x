@@ -1,0 +1,12 @@
+<ChatBox
+  adapter={adapter}
+  partRenderers={partRenderers}
+  initialMessages={seededMessages}
+  localeText={{ composerInputPlaceholder: 'Send a message to stream the steps' }}
+  sx={{
+    height: 420,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

@@ -3,7 +3,8 @@ import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { DateTimePickerTabs, DateTimePickerTabsProps } from '../../DateTimePicker';
+import type { DateTimePickerTabsProps } from '../../DateTimePicker';
+import { DateTimePickerTabs } from '../../DateTimePicker';
 
 describe('<StaticDateTimePicker />', () => {
   const { render } = createPickerRenderer();

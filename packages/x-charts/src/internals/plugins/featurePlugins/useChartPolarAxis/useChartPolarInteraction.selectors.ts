@@ -10,7 +10,7 @@ import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
 } from '../useChartInteraction/useChartInteraction.selectors';
-import { type ComputeResult } from './computeAxisValue';
+import type { ComputeResult } from './computeAxisValue';
 import { generateSvg2rotation } from './coordinateTransformation';
 import { getRotationAxisIndex, getRadiusAxisIndex } from './getAxisIndex';
 import {

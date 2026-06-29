@@ -1,13 +1,11 @@
-import {
-  GRID_ROOT_GROUP_ID,
-  gridRowsLookupSelector,
-  gridRowTreeSelector,
-  type GridRowId,
-  type GridTreeNode,
-  type GridGroupNode,
-  type GridValidRowModel,
-  type GridLeafNode,
-  type GridRowTreeConfig,
+import { GRID_ROOT_GROUP_ID, gridRowsLookupSelector, gridRowTreeSelector } from '@mui/x-data-grid';
+import type {
+  GridRowId,
+  GridTreeNode,
+  GridGroupNode,
+  GridValidRowModel,
+  GridLeafNode,
+  GridRowTreeConfig,
 } from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { ReorderExecutionContext } from '../rowReorder/types';
@@ -32,11 +30,13 @@ export const buildTreeDataPath = (node: GridTreeNode, tree: GridRowTreeConfig): 
 };
 
 export function displaySetTreeDataPathWarning(operationName: string): void {
-  warnOnce(
-    `MUI X: ${operationName} requires \`setTreeDataPath()\` prop to update row data paths. ` +
-      'Please provide a `setTreeDataPath()` function to enable this feature.',
-    'warning',
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    warnOnce(
+      `MUI X: ${operationName} requires \`setTreeDataPath()\` prop to update row data paths. ` +
+        'Please provide a `setTreeDataPath()` function to enable this feature.',
+      'warning',
+    );
+  }
 }
 
 export function removeNodeFromSourceParent(
