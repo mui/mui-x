@@ -46,6 +46,9 @@ function MapImagePlot(props: MapImagePlotProps) {
   const [[west, south], [east, north]] = imageBounds ?? FULL_GLOBE;
 
   React.useEffect(() => {
+    // Hide the previous (now stale) raster until the new projection is ready.
+    setDataUrl(null);
+
     if (
       !href ||
       !projection ||
@@ -53,7 +56,6 @@ function MapImagePlot(props: MapImagePlotProps) {
       width <= 0 ||
       height <= 0
     ) {
-      setDataUrl(null);
       return undefined;
     }
 
