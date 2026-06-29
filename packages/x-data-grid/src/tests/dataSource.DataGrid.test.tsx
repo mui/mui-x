@@ -549,6 +549,67 @@ describe('<DataGrid /> - Data source', () => {
       });
     });
 
+    it('should keep the previous rows visible when the `dataSource` reference changes', async () => {
+      // The `dataSource`-identity effect refetches from scratch whenever the `dataSource`
+      // reference changes (e.g. a non-memoized inline object). With `keepPreviousData` the
+      // previous rows must stay visible during that refetch instead of being cleared.
+      const { promise, resolve } = Promise.withResolvers<GridGetRowsResponse>();
+      const firstDataSource: GridDataSource = {
+        getRows: () => Promise.resolve({ rows: [{ id: 1, value: 'first' }], rowCount: 2 }),
+      };
+      const secondDataSource: GridDataSource = {
+        getRows: spy(() => promise),
+      };
+      let localApiRef: RefObject<GridApi | null> = { current: null };
+      function Test(props: Partial<DataGridProps>) {
+        localApiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              apiRef={localApiRef}
+              columns={[{ field: 'value' }]}
+              dataSource={firstDataSource}
+              dataSourceCache={null}
+              dataSourceKeepPreviousData
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 1 }, rowCount: 0 },
+              }}
+              pagination
+              pageSizeOptions={[1]}
+              disableVirtualization
+              {...props}
+            />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Test />);
+
+      await waitFor(() => {
+        expect(localApiRef.current?.getRowsCount()).to.equal(1);
+      });
+
+      // Swap to a different `dataSource` reference whose response is deferred.
+      act(() => {
+        setProps({ dataSource: secondDataSource });
+      });
+
+      await waitFor(() => {
+        expect((secondDataSource.getRows as ReturnType<typeof spy>).callCount).to.equal(1);
+      });
+      // Previous row remains visible while the new dataSource is fetched.
+      expect(localApiRef.current?.getRowsCount()).to.equal(1);
+      expect(localApiRef.current?.getRow(1)).to.deep.equal({ id: 1, value: 'first' });
+
+      await act(async () => {
+        resolve({ rows: [{ id: 2, value: 'second' }], rowCount: 2 });
+      });
+
+      await waitFor(() => {
+        expect(localApiRef.current?.getRow(2)).not.to.equal(null);
+      });
+    });
+
     it('should clear the rows during the fetch when disabled (default)', async () => {
       const { promise, resolve } = Promise.withResolvers<GridGetRowsResponse>();
       const initialResponse: GridGetRowsResponse = {

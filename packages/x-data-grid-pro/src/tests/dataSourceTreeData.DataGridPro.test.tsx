@@ -632,13 +632,24 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       );
     }
 
-    const { user, setProps } = render(<TestComponent />);
+    // `dataSourceKeepPreviousData` is a no-op for tree data, so it also emits a dev warning.
+    let renderResult!: ReturnType<typeof render>;
+    await expect(async () => {
+      renderResult = render(<TestComponent />);
+      await waitFor(() => {
+        const rootChildren = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+          .children;
+        expect(rootChildren).to.deep.equal(['A', 'B']);
+      });
+    }).toWarnDev(
+      [
+        'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
+        'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
+        'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
+      ].join('\n'),
+    );
 
-    await waitFor(() => {
-      const rootChildren = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-        .children;
-      expect(rootChildren).to.deep.equal(['A', 'B']);
-    });
+    const { user, setProps } = renderResult;
 
     await user.click(within(getCell(0, 0)).getByRole('button'));
 

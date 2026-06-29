@@ -445,7 +445,17 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     }
     if (props.dataSource) {
       stopPolling();
-      apiRef.current.setRows([]);
+      // `dataSourceKeepPreviousData` only applies to the flat `Default` strategy (mirroring
+      // `handleFetchRowsOnParamsChange`). Keep the previous rows visible when the `dataSource`
+      // reference changes so the feature isn't silently defeated for a non-memoized
+      // `dataSource`. Other strategies must still reset the rows to keep their order consistent
+      // with the new response (https://github.com/mui/mui-x/pull/21619).
+      if (
+        !props.dataSourceKeepPreviousData ||
+        currentStrategy !== DataSourceRowsUpdateStrategy.Default
+      ) {
+        apiRef.current.setRows([]);
+      }
       apiRef.current.dataSource.cache.clear();
       apiRef.current.dataSource.fetchRows();
     }
@@ -454,7 +464,25 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       // ignore the current request on unmount
       lastRequestId.current += 1;
     };
-  }, [apiRef, props.dataSource, currentStrategy, stopPolling]);
+  }, [apiRef, props.dataSource, props.dataSourceKeepPreviousData, currentStrategy, stopPolling]);
+
+  React.useEffect(() => {
+    // `dataSourceKeepPreviousData` is a no-op for tree data and row grouping: those
+    // strategies always reset the rows on refetch to keep their order consistent with the
+    // response. Warn so the limitation is discoverable at runtime, not only in the docs.
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      props.dataSourceKeepPreviousData &&
+      (currentStrategy === DataSourceRowsUpdateStrategy.GroupedData ||
+        currentStrategy === DataSourceRowsUpdateStrategy.LazyLoadedGroupedData)
+    ) {
+      warnOnce([
+        'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
+        'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
+        'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
+      ]);
+    }
+  }, [props.dataSourceKeepPreviousData, currentStrategy]);
 
   return {
     api: { public: dataSourceApi },
