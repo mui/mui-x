@@ -20,12 +20,13 @@ export const useChartProSampling: ChartPlugin<UseChartProSamplingSignature> = ({
 /** Maps the per-series-type `sampling` config to the internal state (enabled methods per type). */
 function toSamplingState(sampling: SamplingConfig = {}): SamplingState {
   const methods: SamplingState['methods'] = {};
-  if (sampling.bar && sampling.bar !== 'none') {
-    methods.bar = sampling.bar;
-  }
-  if (sampling.line && sampling.line !== 'none') {
-    methods.line = sampling.line;
-  }
+  // Iterate generically so a new series type only needs its `sampling` config entry, no edit here.
+  (Object.keys(sampling) as (keyof SamplingConfig)[]).forEach((seriesType) => {
+    const method = sampling[seriesType];
+    if (method && method !== 'none') {
+      methods[seriesType] = method;
+    }
+  });
   return {
     enabled: Object.keys(methods).length > 0,
     methods,
