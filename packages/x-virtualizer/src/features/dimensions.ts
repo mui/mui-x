@@ -717,9 +717,17 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
   const canScrollX = computed?.overflowX === 'auto' || computed?.overflowX === 'scroll';
   const hasScrollY = canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight;
   const hasScrollX = canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth;
+
+  // `offsetWidth` / `offsetHeight` include borders, while `clientWidth` /
+  // `clientHeight` do not. Subtract borders so direct measurement only returns
+  // the scrollbar size.
+  const borderWidth =
+    parseCSSPixelValue(computed?.borderLeftWidth) + parseCSSPixelValue(computed?.borderRightWidth);
+  const borderHeight =
+    parseCSSPixelValue(computed?.borderTopWidth) + parseCSSPixelValue(computed?.borderBottomWidth);
   const directSize = Math.max(
-    hasScrollY ? htmlElement.offsetWidth - htmlElement.clientWidth : 0,
-    hasScrollX ? htmlElement.offsetHeight - htmlElement.clientHeight : 0,
+    hasScrollY ? htmlElement.offsetWidth - htmlElement.clientWidth - borderWidth : 0,
+    hasScrollX ? htmlElement.offsetHeight - htmlElement.clientHeight - borderHeight : 0,
   );
 
   if (hasScrollY || hasScrollX) {
@@ -751,6 +759,11 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
   scrollbarSizeCache.set(element, size);
 
   return size;
+}
+
+function parseCSSPixelValue(value: string | undefined) {
+  const parsedValue = Number.parseFloat(value ?? '0');
+  return Number.isNaN(parsedValue) ? 0 : parsedValue;
 }
 
 function eslintUseValue(_: any) {}
