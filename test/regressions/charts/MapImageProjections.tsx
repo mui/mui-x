@@ -29,8 +29,9 @@ const CELL_WIDTH = 200;
 const CELL_HEIGHT = 130;
 
 export default function MapImageProjections() {
-  // `MapImagePlot` reprojects on a canvas asynchronously. Count the `onReady`
-  // callbacks and reveal a sentinel once every cell is ready, so the screenshot
+  // `MapImagePlot` reprojects on a canvas asynchronously. Count only the cells
+  // that produced a raster (`onReady` also fires with `null` before the image
+  // loads) and reveal a sentinel once every cell is ready, so the screenshot
   // waits for the reprojection instead of racing it.
   const [loaded, setLoaded] = React.useState(0);
 
@@ -46,7 +47,10 @@ export default function MapImageProjections() {
             height={CELL_HEIGHT}
           >
             <ChartsSurface>
-              <MapImagePlot href={MARS_IMAGE} onReady={() => setLoaded((count) => count + 1)} />
+              <MapImagePlot
+                href={MARS_IMAGE}
+                onReady={(dataUrl) => dataUrl && setLoaded((count) => count + 1)}
+              />
               <GeoDataPlot fill="none" stroke="#1976d2" strokeWidth={0.4} />
             </ChartsSurface>
           </ChartsGeoDataProviderPremium>
