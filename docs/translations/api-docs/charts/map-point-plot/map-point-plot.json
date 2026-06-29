@@ -1,0 +1,16 @@
+{
+  "componentDescription": "Renders series mapPoint items at their projected coordinates.",
+  "propDescriptions": {
+    "fill": {
+      "description": "Fill color applied to every marker. Overrides item and series colors."
+    },
+    "shape": { "description": "The shape of the markers." },
+    "showLabels": {
+      "description": "If <code>true</code>, renders the label of each point next to its marker."
+    },
+    "size": { "description": "The size of the markers, as the symbol area in square pixels." },
+    "stroke": { "description": "Stroke color applied to every marker." },
+    "strokeWidth": { "description": "Stroke width applied to every marker." }
+  },
+  "classDescriptions": {}
+}
