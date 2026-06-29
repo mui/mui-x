@@ -1,5 +1,7 @@
 /// <reference path="./core-js-pure.d.ts" />
+// eslint-disable-next-line import/extensions
 import CoreJsDisposableStack from 'core-js-pure/actual/disposable-stack/index.js';
+// eslint-disable-next-line import/extensions
 import CoreJsAsyncDisposableStack from 'core-js-pure/actual/async-disposable-stack/index.js';
 
 /**
