@@ -1,10 +1,10 @@
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/internals';
-import {
+import type { BaseSingleInputFieldProps } from '@mui/x-date-pickers/internals';
+import type {
   DesktopDateTimeRangePickerProps,
   DesktopDateTimeRangePickerSlots,
   DesktopDateTimeRangePickerSlotProps,
 } from '../DesktopDateTimeRangePicker';
-import {
+import type {
   MobileDateTimeRangePickerProps,
   MobileDateTimeRangePickerSlots,
   MobileDateTimeRangePickerSlotProps,

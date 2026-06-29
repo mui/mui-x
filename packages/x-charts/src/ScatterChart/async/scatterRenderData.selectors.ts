@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type SeriesId } from '../../models/seriesType/common';
+import type { SeriesId } from '../../models/seriesType/common';
 import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
 import { selectorChartSeriesProcessed } from '../../internals/plugins/corePlugins/useChartSeries';
 import { selectorChartDrawingArea } from '../../internals/plugins/corePlugins/useChartDimensions';
@@ -9,30 +9,20 @@ import {
 } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 /**
- * Pre-computed render data for a single scatter series.
- *
- * Coordinates are stored in a packed `Float64Array` (stride 3: `[x0, y0, i0,
- * x1, y1, i1, ...]`, where `iN` is the original `dataIndex`). Only points that
- * project inside the drawing area are kept, so the progressive renderer can
- * size its batches by the number of *visible* points — when zoomed in tightly
- * the wave finishes in a single tick. Batches are contiguous slices of this
- * array, so a batch's data is obtained with a zero-copy `subarray` view (see
- * {@link getScatterBatchView}).
+ * Render data for one scatter series. Packed `Float64Array` indexed by
+ * `dataIndex` (stride 3: `[x, y, visible]`). Off-screen points keep their slot
+ * so a point's batch stays fixed across zoom/pan (no popping).
  */
 export interface ScatterSeriesRenderData {
-  /** Packed projected pixel coordinates + dataIndex, stride 3. */
+  /** Packed projected coordinates + visibility flag, stride 3. */
   coords: Float64Array;
-  /** Number of visible points (i.e. `coords.length / 3`). */
+  /** Total number of points (`coords.length / 3`). */
   count: number;
 }
 
 const EMPTY_RENDER_DATA = new Map<SeriesId, ScatterSeriesRenderData>();
 
-/**
- * Packed projected coordinates for every scatter series, filtered to the
- * drawing area. Recomputes when the processed series, axis scales, or drawing
- * area change.
- */
+/** Packed projected coordinates for every scatter series, indexed by `dataIndex`. */
 export const selectorScatterRenderData = createSelectorMemoized(
   selectorChartSeriesProcessed,
   selectorChartXAxis,
@@ -66,52 +56,57 @@ export const selectorScatterRenderData = createSelectorMemoized(
       const getXPosition = getValueToPositionMapper(xAxis.scale);
       const getYPosition = getValueToPositionMapper(yAxis.scale);
 
-      const data = series.data;
-      const n = data.length;
-      const packed = new Float64Array(n * 3);
-
-      let j = 0;
-      for (let i = 0; i < n; i += 1) {
-        const x = getXPosition(data[i].x);
-        if (!(x >= xMin && x <= xMax)) {
-          continue;
-        }
-        const y = getYPosition(data[i].y);
-        if (!(y >= yMin && y <= yMax)) {
-          continue;
-        }
-        packed[j] = x;
-        packed[j + 1] = y;
-        packed[j + 2] = i;
-        j += 3;
-      }
-      const coords = packed.slice(0, j);
-
-      result.set(seriesId, { coords, count: j / 3 });
+      result.set(
+        seriesId,
+        packScatterSeriesCoords(series.data, getXPosition, getYPosition, {
+          xMin,
+          xMax,
+          yMin,
+          yMax,
+        }),
+      );
     }
 
     return result;
   },
 );
 
+/** Pixel bounds (inclusive) a point must fall within to be flagged visible. */
+export interface ScatterVisibilityBounds {
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+}
+
 /**
- * Render data for a single scatter series, or `undefined` while it is not
- * available yet (processors/axes still pending).
+ * Projects `data` into a `dataIndex`-indexed packed array (stride 3:
+ * `[x, y, visible]`). Every point keeps its slot; `visible` is `1` inside
+ * `bounds`, `0` otherwise.
  */
+export function packScatterSeriesCoords(
+  data: readonly { x: number | Date; y: number | Date }[],
+  getXPosition: (value: number | Date) => number,
+  getYPosition: (value: number | Date) => number,
+  bounds: ScatterVisibilityBounds,
+): ScatterSeriesRenderData {
+  const n = data.length;
+  const packed = new Float64Array(n * 3);
+
+  for (let i = 0; i < n; i += 1) {
+    const x = getXPosition(data[i].x);
+    const y = getYPosition(data[i].y);
+    const visible = x >= bounds.xMin && x <= bounds.xMax && y >= bounds.yMin && y <= bounds.yMax;
+    packed[i * 3] = x;
+    packed[i * 3 + 1] = y;
+    packed[i * 3 + 2] = visible ? 1 : 0;
+  }
+
+  return { coords: packed, count: n };
+}
+
+/** Render data for one series, or `undefined` while processors/axes are pending. */
 export const selectorScatterSeriesRenderData = createSelector(
   selectorScatterRenderData,
   (renderData, seriesId: SeriesId) => renderData.get(seriesId),
 );
-
-/**
- * Zero-copy view of one batch's coordinates. `start`/`end` are visible-point
- * indices (not original `dataIndex` values). The returned `Float64Array` shares
- * the buffer with `renderData.coords`.
- */
-export function getScatterBatchView(
-  renderData: ScatterSeriesRenderData,
-  start: number,
-  end: number,
-): Float64Array {
-  return renderData.coords.subarray(start * 3, end * 3);
-}

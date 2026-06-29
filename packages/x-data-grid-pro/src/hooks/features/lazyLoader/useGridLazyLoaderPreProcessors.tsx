@@ -1,7 +1,9 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
-import { GRID_ROOT_GROUP_ID, type GridGroupNode, type GridSkeletonRowNode } from '@mui/x-data-grid';
+import { useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
+import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type { GridGroupNode, GridSkeletonRowNode } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 

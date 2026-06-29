@@ -7,15 +7,15 @@ import {
   selectorChartsInteractionYAxisIndex,
   selectorChartsInteractionYAxisValue,
 } from './useChartCartesianInteraction.selectors';
-import { type ChartState } from '../../models/chart';
-import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
-import { type ComputeResult } from './computeAxisValue';
+import type { ChartState } from '../../models/chart';
+import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import type { ComputeResult } from './computeAxisValue';
 import {
   selectorChartsKeyboardXAxisIndex,
   selectorChartsKeyboardYAxisIndex,
 } from '../useChartKeyboardNavigation/useChartKeyboardNavigation.selectors';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
-import { type InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
+import type { InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
 import { selectorBrushShouldPreventAxisHighlight } from '../useChartBrush';
 
 /**

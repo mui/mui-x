@@ -3,7 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import type { SankeySeriesType } from './sankey.types';
-import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
+import { SANKEY_CHART_PLUGINS } from './SankeyChart.plugins';
+import type { SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { sankeySeriesConfig } from './seriesConfig';
 

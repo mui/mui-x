@@ -1,21 +1,23 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridDataSource,
-  type GridGetRowsResponse,
   useGridApiRef,
-  type GridPivotModel,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridDataSource,
+  GridGetRowsResponse,
+  GridPivotModel,
+} from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getColumnHeadersTextContent, getRowValues } from 'test/utils/helperFn';
-import { type PivotingColDefCallback } from '../hooks/features/pivoting/gridPivotingInterfaces';
+import type { PivotingColDefCallback } from '../hooks/features/pivoting/gridPivotingInterfaces';
 
 describe('<DataGridPremium /> - Data source pivoting', () => {
   const { render } = createRenderer();

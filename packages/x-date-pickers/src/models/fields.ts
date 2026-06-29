@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { FormControlOwnProps } from '@mui/material/FormControl';
+import type * as React from 'react';
+import type { FormControlOwnProps } from '@mui/material/FormControl';
 import type { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldReturnValue } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
-import {
+import type {
   BaseSingleInputFieldProps,
   FieldRangeSection,
   PickerRangeValue,
   PickerValidValue,
 } from '../internals/models';
-import { PickerOwnerState } from './pickers';
+import type { PickerOwnerState } from './pickers';
 import type { ExportedPickerFieldUIProps } from '../internals/components/PickerFieldUI';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
