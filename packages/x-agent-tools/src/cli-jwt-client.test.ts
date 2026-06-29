@@ -68,6 +68,20 @@ describe('CliJwtClient', () => {
     );
   });
 
+  it('wraps a token response missing token/expiresAt with recovery guidance', async () => {
+    const fetcher = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ somethingElse: true }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      }),
+    );
+    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+
+    await expect(client.getToken()).rejects.toThrow(
+      /Token exchange succeeded but the response was missing token\/expiresAt/,
+    );
+  });
+
   it('returns the cached token without a second network call', async () => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));

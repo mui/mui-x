@@ -169,7 +169,7 @@ export class CliJwtClient {
     if (!data?.token || !data.expiresAt) {
       throw new CliJwtClientError(
         'token_exchange_failed',
-        'MUI X Agent Tools: Token exchange returned an unexpected response shape.',
+        'MUI X Agent Tools: Token exchange succeeded but the response was missing token/expiresAt. Check that MUI_BACKEND_BASE_URL points at the API backend (not the wrong route or a proxy), then retry.',
       );
     }
 
