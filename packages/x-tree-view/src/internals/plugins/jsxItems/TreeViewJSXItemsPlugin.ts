@@ -129,8 +129,10 @@ Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
 
     // If a parent was selected while its children were unmounted (collapsed with unmountOnExit),
     // re-run selection propagation now that the children are registered.
+    // The multiSelect guard matches the documented contract: selectionPropagation only works with multiSelect.
     if (
       parentId !== null &&
+      selectionSelectors.isMultiSelectEnabled(this.store.state) &&
       selectionSelectors.propagationRules(this.store.state).descendants &&
       selectionSelectors.isItemSelected(this.store.state, parentId)
     ) {

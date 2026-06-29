@@ -124,6 +124,37 @@ describeTreeView<TreeViewAnyStore>(
         expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
       });
 
+      it('should propagate selection to descendants when they mount after parent is selected (descendants propagation enabled)', () => {
+        const onSelectedItemsChange = spy();
+
+        const view = render({
+          multiSelect: true,
+          selectionPropagation: { descendants: true },
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultSelectedItems: ['1'],
+          onSelectedItemsChange,
+        });
+
+        fireEvent.click(view.getItemIconContainer('1'));
+
+        expect(view.isItemSelected('1.1')).to.equal(true);
+      });
+
+      it('should call the onSelectedItemsChange callback only once when selecting a collapsed parent item in single-select mode with selectionPropagation.descendants', () => {
+        const onSelectedItemsChange = spy();
+
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          selectionPropagation: { descendants: true },
+          onSelectedItemsChange,
+        });
+
+        fireEvent.click(view.getItemContent('1'));
+
+        expect(onSelectedItemsChange.callCount).to.equal(1);
+        expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
+      });
+
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to non-empty list)', () => {
         const onSelectedItemsChange = spy();
 
