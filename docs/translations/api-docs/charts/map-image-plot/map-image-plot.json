@@ -5,7 +5,7 @@
       "description": "URL of the image to render as the base map. Must be same-origin (or CORS-enabled) so it can be reprojected on a canvas."
     },
     "imageBounds": {
-      "description": "Geographic extent the source image covers, as <code>[[west, south], [east, north]]</code>. The image is assumed to be in the equirectangular (plate carrée) projection."
+      "description": "Geographic extent the source image covers, as <code>[[west, south], [east, north]]</code>. The image is assumed to be in the equirectangular (plate carrée) projection. If <code>west</code> is greater than <code>east</code>, the range wraps across the antimeridian."
     },
     "onReady": {
       "description": "Called after each reprojection.",

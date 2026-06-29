@@ -17,7 +17,7 @@ export interface ReprojectEquirectangularImageParams {
   area: { left: number; top: number; width: number; height: number };
   /**
    * Geographic extent the source image covers, as `[[west, south], [east, north]]`
-   * in degrees.
+   * in degrees. `west > east` is allowed and means the range wraps across the antimeridian.
    */
   imageBounds: [[number, number], [number, number]];
 }
@@ -99,6 +99,10 @@ export function reprojectEquirectangularImage(
   const sourceHeight = source.height;
   const target = outputCtx.createImageData(outWidth, outHeight);
 
+  // `west > east` means the source wraps across the antimeridian (e.g. 170°E..-170°E).
+  const lonWraps = east < west;
+  const lonSpan = lonWraps ? east - west + 360 : east - west;
+
   for (let py = 0; py < outHeight; py += 1) {
     for (let px = 0; px < outWidth; px += 1) {
       const deviceX = left + px;
@@ -112,7 +116,8 @@ export function reprojectEquirectangularImage(
       const [lon, lat] = coordinates;
 
       // 2. Outside the source image extent: nothing to sample.
-      if (lon < west || lon > east || lat < south || lat > north) {
+      const insideLon = lonWraps ? lon >= west || lon <= east : lon >= west && lon <= east;
+      if (!insideLon || lat < south || lat > north) {
         continue;
       }
 
@@ -129,8 +134,10 @@ export function reprojectEquirectangularImage(
         continue;
       }
 
-      // 4. Geographic coordinate -> source pixel (nearest neighbor).
-      let sx = Math.floor(((lon - west) / (east - west)) * sourceWidth);
+      // 4. Geographic coordinate -> source pixel (nearest neighbor). When the
+      // bounds wrap, longitudes past the antimeridian are offset by a full turn.
+      const lonOffset = lonWraps && lon <= east ? lon - west + 360 : lon - west;
+      let sx = Math.floor((lonOffset / lonSpan) * sourceWidth);
       let sy = Math.floor(((north - lat) / (north - south)) * sourceHeight);
       sx = Math.min(Math.max(sx, 0), sourceWidth - 1);
       sy = Math.min(Math.max(sy, 0), sourceHeight - 1);

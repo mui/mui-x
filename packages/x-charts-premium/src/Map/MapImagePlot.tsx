@@ -20,6 +20,7 @@ export interface MapImagePlotProps extends React.SVGProps<SVGImageElement> {
   /**
    * Geographic extent the source image covers, as `[[west, south], [east, north]]`.
    * The image is assumed to be in the equirectangular (plate carrée) projection.
+   * If `west` is greater than `east`, the range wraps across the antimeridian.
    * @default [[-180, -90], [180, 90]]
    */
   imageBounds?: [[number, number], [number, number]];
@@ -129,6 +130,7 @@ MapImagePlot.propTypes /* remove-proptypes */ = {
   /**
    * Geographic extent the source image covers, as `[[west, south], [east, north]]`.
    * The image is assumed to be in the equirectangular (plate carrée) projection.
+   * If `west` is greater than `east`, the range wraps across the antimeridian.
    * @default [[-180, -90], [180, 90]]
    */
   imageBounds: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired).isRequired),
