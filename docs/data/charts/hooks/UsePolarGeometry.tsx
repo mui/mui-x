@@ -24,7 +24,7 @@ function PolarGeometryOverlay() {
 
   // Draw a reference ring at value 50
   const radius = geometry.radiusScale(50);
-  const [x, y] = geometry.point(50, Math.PI / 4);
+  const [x, y] = geometry.point(radius, Math.PI / 4);
 
   return (
     <React.Fragment>

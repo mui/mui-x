@@ -30,7 +30,8 @@ function PolarGeometryOverlay() {
   // Example: Position a custom marker at a specific radius and angle
   const [x, y] = point(100, Math.PI / 4); // radius: 100px, angle: 45 degrees
 
-  return <circle cx={x} cy={y} r={5} fill="red" />;
+  // point() returns an offset from the center, so add cx/cy
+  return <circle cx={cx + x} cy={cy + y} r={5} fill="red" />;
 }
 ```
 
