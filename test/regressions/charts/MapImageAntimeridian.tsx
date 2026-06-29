@@ -4,6 +4,15 @@ import { GeoDataPlot, MapImagePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { marsRegions } from 'docs/data/charts/map/marsRegions';
 
+// Expected longitude-band mapping for the wrapping case (left -> right across the map).
+const COLOR_HEX = {
+  red: '#e53935',
+  green: '#43a047',
+  blue: '#1e88e5',
+  yellow: '#fdd835',
+  white: '#ffffff',
+} as const;
+
 // A synthetic equirectangular image: four colored longitude bands, so the
 // reprojected position of each band is obvious and the antimeridian wrap is
 // visible (a `data:` URL, so it loads without hitting the image network block).
@@ -18,7 +27,7 @@ function makeBandImage() {
   if (!ctx) {
     return '';
   }
-  ['#e53935', '#43a047', '#1e88e5', '#fdd835'].forEach((color, index) => {
+  [COLOR_HEX.red, COLOR_HEX.green, COLOR_HEX.blue, COLOR_HEX.yellow].forEach((color, index) => {
     ctx.fillStyle = color;
     ctx.fillRect(index * 90, 0, 90, 180);
   });
@@ -77,10 +86,43 @@ export default function MapImageAntimeridian() {
           </ChartsGeoDataProviderPremium>
         </div>
       ))}
+      <WrapMappingTable />
       {ready.size === CASES.length && (
         // Visible (1×1) so Playwright's `waitForSelector` (state: 'visible') resolves.
         <div data-testid="map-images-ready" style={{ width: 1, height: 1 }} />
       )}
     </div>
+  );
+}
+
+const MAPPING: { label: string; bands: (keyof typeof COLOR_HEX)[] }[] = [
+  { label: 'from', bands: ['red', 'red', 'green', 'green', 'blue', 'blue', 'yellow', 'yellow'] },
+  { label: 'to', bands: ['blue', 'yellow', 'white', 'white', 'white', 'white', 'red', 'green'] },
+];
+
+function WrapMappingTable() {
+  return (
+    <table style={{ borderCollapse: 'collapse', fontSize: 11, fontFamily: 'monospace' }}>
+      <caption style={{ textAlign: 'left' }}>Wrapped band mapping</caption>
+      <tbody>
+        {MAPPING.map(({ label, bands }) => (
+          <tr key={label}>
+            <th style={{ textAlign: 'right', paddingRight: 4 }}>{label}</th>
+            {bands.map((band, index) => (
+              <td
+                key={index}
+                aria-label={band}
+                style={{
+                  width: 22,
+                  height: 16,
+                  border: '1px solid #999',
+                  background: COLOR_HEX[band],
+                }}
+              />
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
