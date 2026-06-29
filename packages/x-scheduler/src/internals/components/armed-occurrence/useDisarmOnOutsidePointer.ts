@@ -3,15 +3,14 @@ import * as React from 'react';
 
 /**
  * While `active`, swallows the next click inside `ref` (unless it matches `ignoreSelector`) and
- * calls `onDisarm`, so a tap that would otherwise create or arm an event just exits editing instead.
+ * calls `onDisarm`, so a tap that would create or arm an event just exits editing instead.
  */
 export function useDisarmOnOutsidePointer(parameters: {
   ref: React.RefObject<HTMLElement | null>;
   active: boolean;
   onDisarm: () => void;
   /**
-   * Clicks landing on an element matching this selector are ignored (not treated as "outside").
-   * Used so finishing a resize gesture on its handle doesn't disarm the event.
+   * Clicks matching this selector are ignored, so finishing a resize gesture on its handle doesn't disarm.
    */
   ignoreSelector?: string;
 }) {
@@ -23,8 +22,7 @@ export function useDisarmOnOutsidePointer(parameters: {
       return undefined;
     }
     const onClickCapture = (event: MouseEvent) => {
-      // Read the real target from the composed path so detection still works when the click
-      // originates inside a shadow root (where `event.target` resolves to the host element).
+      // Real target from the composed path, so detection works inside a shadow root too.
       const target = event.composedPath()[0];
       if (ignoreSelector && target instanceof Element && target.closest(ignoreSelector)) {
         return;

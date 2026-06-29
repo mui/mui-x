@@ -94,10 +94,15 @@ interface FormContentProps {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
   dragHandlerRef: React.RefObject<HTMLElement | null>;
+  /**
+   * Whether the header acts as a drag handle. `false` for the non-draggable mobile drawer.
+   * @default true
+   */
+  isDraggable?: boolean;
 }
 
 export function FormContent(props: FormContentProps) {
-  const { occurrence, onClose, dragHandlerRef } = props;
+  const { occurrence, onClose, dragHandlerRef, isDraggable } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -262,7 +267,11 @@ export function FormContent(props: FormContentProps) {
   return (
     <DialogContent className={classes.eventDialogContent}>
       <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
-        <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+        <EventDialogHeader
+          onClose={onClose}
+          dragHandlerRef={dragHandlerRef}
+          isDraggable={isDraggable}
+        >
           <span
             id={`${schedulerId}-event-dialog-title`}
             style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}

@@ -94,9 +94,8 @@ interface ReadonlyEventDetailsProps {
 }
 
 /**
- * Read-only details of an event occurrence (resource, date/time, recurrence and description).
- * Surface-agnostic and shared by both editing surfaces, each of which wraps these details with its
- * own chrome (heading, close affordances).
+ * Read-only details of an occurrence (resource, date/time, recurrence, description). Shared by both
+ * editing surfaces, each wrapping them with its own chrome.
  */
 export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const { occurrence } = props;

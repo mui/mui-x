@@ -40,8 +40,7 @@ export namespace CalendarGridTimeScrollableContent {
 
   export interface Props extends BaseUIComponentProps<'div', State> {
     /**
-     * Ref to the element that actually scrolls — used to register the drag-and-drop auto-scroll
-     * behavior on the correct container. Defaults to the rendered element of this component.
+     * Ref to the element that actually scrolls, where the drag-and-drop auto-scroll is registered. Defaults to this component's rendered element.
      */
     scrollableRef?: React.RefObject<HTMLElement | null>;
   }

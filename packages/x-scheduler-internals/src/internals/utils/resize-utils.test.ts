@@ -22,7 +22,7 @@ describe('clampResizedEventEdge', () => {
     });
 
     it('clamps the start so the event keeps at least one precision step', () => {
-      // Cursor past the end would invert the event; it must stop one precision step before `end`.
+      // Stop one precision step before `end` so the event can't invert.
       const cursorDate = adapter.date('2024-01-15T11:30:00', 'default');
       const result = clampResizedEventEdge({
         adapter,
@@ -53,7 +53,7 @@ describe('clampResizedEventEdge', () => {
     });
 
     it('clamps the end so the event keeps at least one precision step', () => {
-      // Cursor before the start would invert the event; it must stop one precision step after `start`.
+      // Stop one precision step after `start` so the event can't invert.
       const cursorDate = adapter.date('2024-01-15T09:30:00', 'default');
       const result = clampResizedEventEdge({
         adapter,

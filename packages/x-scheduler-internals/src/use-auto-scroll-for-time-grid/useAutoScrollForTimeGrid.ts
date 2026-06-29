@@ -6,9 +6,7 @@ import { buildIsValidDropTarget } from '../build-is-valid-drop-target/buildIsVal
 
 const OVERFLOW_PX = 160;
 
-// Only event drags should drive the time-grid autoscroll. The autoscroll subscribes to the
-// global element-adapter drag monitor, so without this filter any other element drag (e.g. the
-// draggable event dialog, which carries no `source`) would scroll the grid near its edges.
+// Only event drags should autoscroll the grid; other element drags (e.g. the dialog) carry no `source`.
 const canAutoScrollForDrag = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
   'CalendarGridTimeEventResizeHandler',

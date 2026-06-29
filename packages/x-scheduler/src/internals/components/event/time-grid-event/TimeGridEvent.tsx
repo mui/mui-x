@@ -22,8 +22,7 @@ import {
   RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
 } from '../../../constants';
 
-// The single event component follows the real device: visuals split via these media queries, while
-// the resize behavior follows the actual pointer (handled inside the resize primitive).
+// Visuals split via these media queries; resize follows the actual pointer (in the resize primitive).
 const HOVER_MEDIA = '@media (hover: hover)';
 const TOUCH_MEDIA = '@media (pointer: coarse)';
 
@@ -37,23 +36,19 @@ const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   overflowWrap: 'break-word',
 });
 
-// Visible diameter of the circular touch resize handle.
+// Visible dot diameter of the touch resize handle.
 const TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX = 14;
-// Target hit-area size, following WCAG 2.5.8 (24px min) and Apple HIG (44px) touch guidance.
+// Hit-area size per WCAG 2.5.8 (24px min) and Apple HIG (44px).
 const TOUCH_RESIZE_HANDLE_HIT_SIZE_PX = 44;
-// How far the (transparent) hit area extends past the visible dot on each expanded side.
+// How far the transparent hit area extends past the dot on each expanded side.
 const TOUCH_RESIZE_HANDLE_HIT_INSET_PX = -(
   (TOUCH_RESIZE_HANDLE_HIT_SIZE_PX - TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX) /
   2
 );
 
 /**
- * Styles for a circular touch resize handle.
- *
- * The visible dot stays {@link TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX}px, while a transparent `::before`
- * expands the hit area to {@link TOUCH_RESIZE_HANDLE_HIT_SIZE_PX}px. The hit area is biased outward
- * (start grows up, end grows down) so the two handles never overlap until the event is shorter than
- * the dot, keeping the wrong edge from grabbing on short events.
+ * Circular touch resize handle. A transparent `::before` expands the dot's hit area, biased outward
+ * (start up, end down) so the two handles don't overlap until the event is shorter than the dot.
  */
 const getTouchResizeHandleStyles = (): CSSObject => ({
   position: 'absolute',
@@ -64,7 +59,7 @@ const getTouchResizeHandleStyles = (): CSSObject => ({
   border: '2px solid var(--event-on-surface-subtle-primary)',
   zIndex: 3,
   cursor: 'ns-resize',
-  // Prevent the browser from scrolling/zooming while the resize gesture is in progress.
+  // Block scroll/zoom during the resize gesture.
   touchAction: 'none',
   '&::before': {
     content: '""',
@@ -74,24 +69,24 @@ const getTouchResizeHandleStyles = (): CSSObject => ({
   '&[data-start]': {
     top: -TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX / 2,
     left: 6,
-    // Grow the hit area upward (away from the event), not down toward the end handle.
+    // Grow the hit area up, away from the end handle.
     '&::before': { top: TOUCH_RESIZE_HANDLE_HIT_INSET_PX, bottom: 0 },
   },
   '&[data-end]': {
     bottom: -TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX / 2,
     right: 6,
-    // Grow the hit area downward (away from the event), not up toward the start handle.
+    // Grow the hit area down, away from the start handle.
     '&::before': { bottom: TOUCH_RESIZE_HANDLE_HIT_INSET_PX, top: 0 },
   },
 });
 
-// The root is a `container-type: size` container, so the layout reacts to the actual available space via container (size) queries.
-// Size queries use the content box, so the thresholds below already exclude the root padding.
+// The root is a `container-type: size` container; size queries use the content box, so the
+// thresholds below already exclude the root padding.
 
-// Fixed line box (px) for the title/time. Both the rendered `line-height` and the clamp thresholds
+// Fixed line box (px), driving both `line-height` and the clamp thresholds.
 const LINE_BOX_PX = 14;
 
-// Below this content width there is no room for the time, so only the title shows (wrapped).
+// Below this content width there's no room for the time, so only the title shows (wrapped).
 const NARROW_MAX_WIDTH_PX = 50;
 
 // Below this content height a single line barely fits, so the font is capped to avoid clipping.
@@ -104,8 +99,8 @@ const timeFontSize = 'var(--EventCalendar-fontSize-timeText, 0.75rem)';
 
 /**
  * Container-query steps growing the title's line clamp with the available height. `reserveTimeLine`
- * keeps one line free for the time row (stacked); otherwise the title uses the full height (narrow
- * or touch, where the time is hidden). `extraConditions` scopes the steps further (e.g. a max-width).
+ * keeps one line free for the time row; otherwise the title uses the full height. `extraConditions`
+ * scopes the steps further (e.g. a max-width).
  */
 function titleLineClampSteps(reserveTimeLine: boolean, extraConditions: string = ''): CSSObject {
   const steps: CSSObject = {};
@@ -118,8 +113,7 @@ function titleLineClampSteps(reserveTimeLine: boolean, extraConditions: string =
   return steps;
 }
 
-// Caps the font on very short events so a single line fits, while keeping the responsive tier via
-// `min()` (the smaller tier still wins on narrow calendars).
+// Caps the font on very short events so a single line fits; `min()` keeps the smaller responsive tier.
 function shortEventFontStyles(fontSize: string): CSSObject {
   return {
     [`@container (max-height: ${SHORT_MAX_HEIGHT_PX}px)`]: {
@@ -166,7 +160,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
 })<{ palette?: PaletteName }>(({ theme }) => ({
   ...getTimeGridEventRootStyles(theme),
   padding: theme.spacing(0.5, 1, 0.5, 1),
-  // Shrink the vertical padding on shorter events so the text isn't squeezed out.
+  // Shrink vertical padding on shorter events so the text isn't squeezed out.
   '&[data-under-hour="true"]': {
     paddingTop: theme.spacing(0.25),
     paddingBottom: theme.spacing(0.25),
@@ -190,7 +184,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
-  // Mouse / hover-capable devices: hover affordance and the filled "selected" look while editing.
+  // Hover-capable devices: hover affordance and the filled "selected" look while editing.
   [HOVER_MEDIA]: {
     '&:hover': {
       backgroundColor: 'var(--event-surface-subtle-hover)',
@@ -234,13 +228,11 @@ const TimeGridEventTitle = styled(Typography, {
   color: 'var(--event-on-surface-subtle-primary)',
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: titleFontSize,
-  // Fixed line box so the line count (and thus the clamp thresholds) is exact at every font tier —
-  // the title wraps to fill the available height without ever clipping a glyph.
+  // Fixed line box keeps the line count (and clamp thresholds) exact at every font tier.
   lineHeight: `${LINE_BOX_PX}px`,
   ...linesClampStyles(1),
   ...shortEventFontStyles(titleFontSize),
-  // Single-line titles share the line with the recurring icon (bottom-right), so reserve room for
-  // it — but only while it is shown (freed when non-recurring, narrow, or touch).
+  // Single-line titles share the line with the recurring icon, so reserve room while it's shown.
   '[data-recurrent] &:not([data-stacked])': {
     paddingRight: theme.spacing(1.5),
     [`@container (max-width: ${NARROW_MAX_WIDTH_PX}px)`]: { paddingRight: 0 },
@@ -248,8 +240,8 @@ const TimeGridEventTitle = styled(Typography, {
   },
   // Inline (short events): wrap the title into the available height; the start time rides at the end.
   '&:not([data-stacked])': titleLineClampSteps(false),
-  // Stacked (tall events): wrap the title, reserving one line for the time below — unless too narrow
-  // to show the time, where it drops it and uses the full height (narrow steps win, declared last).
+  // Stacked (tall events): wrap the title, reserving one line for the time — unless too narrow to
+  // show it, where the title uses the full height (narrow steps win, declared last).
   '&[data-stacked]': {
     ...titleLineClampSteps(true),
     ...titleLineClampSteps(false, ` and (max-width: ${NARROW_MAX_WIDTH_PX}px)`),
@@ -274,8 +266,8 @@ const TimeGridEventTime = styled('time', {
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: timeFontSize,
   lineHeight: `${LINE_BOX_PX}px`,
-  // Inline variant (short events) rides at the end of the title line, so it ellipsizes first as the
-  // width shrinks. Block variant (stacked events) gets its own clamped line; hidden when too narrow.
+  // Inline variant rides at the end of the title line; block variant gets its own clamped line,
+  // hidden when too narrow.
   '&[data-variant="block"]': {
     ...linesClampStyles(1),
     [`@container (max-width: ${NARROW_MAX_WIDTH_PX}px)`]: {
@@ -362,9 +354,8 @@ const TimeGridEventResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   },
 });
 
-// The placeholder is a real `CalendarGrid.TimeEvent` (not the inert `TimeEventPlaceholder`) so it
-// can host pointer resize handles for sizing on touch. There is no JS device flag, so the
-// desktop-vs-touch look is split with CSS.
+// A real `CalendarGrid.TimeEvent` (not the inert `TimeEventPlaceholder`) so it can host pointer
+// resize handles for sizing on touch. No JS device flag, so the desktop-vs-touch look is split in CSS.
 const TimeGridEventPlaceholderRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventPlaceholder',
@@ -409,21 +400,19 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const formatTime = useFormatTime();
 
-  // Armed = this occurrence is the one being edited. The touch-only resize dots + selection outline
-  // are revealed by the coarse-pointer styles, so `data-armed` is inert on a mouse.
+  // Armed = this occurrence is being edited. Touch styles reveal the resize dots + outline; inert on a mouse.
   const isArmed = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
 
-  // Creation / internal-resize placeholders host sizing handles; move placeholders don't. While the
-  // form is open (`edit` mode, e.g. the creation dialog) the form is the single way to change the
-  // times, so the handles are suppressed — matching the regular event (see `useTimeGridEvent`).
+  // Creation / internal-resize placeholders host sizing handles; move placeholders don't. Suppressed
+  // in `edit` mode where the form owns the times — matching the regular event (see `useTimeGridEvent`).
   const placeholderType = useStore(store, schedulerOccurrencePlaceholderSelectors.type);
   const placeholderHasResizeHandles =
     (placeholderType === 'creation' || placeholderType === 'internal-resize') &&
     editingMode !== 'edit';
 
-  // Tall events stack the title over the full time range; shorter ones show the title with the start
-  // time inline. Width-driven degradation (dropping the time, wrapping the title) is handled in CSS.
+  // Tall events stack the title over the full time range; shorter ones show the start time inline.
+  // Width-driven degradation (dropping the time, wrapping the title) is handled in CSS.
   const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
 
   const content = React.useMemo(() => {
@@ -503,6 +492,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={isArmed || undefined}
+      data-editing={isArmed || undefined}
       {...rootDataAttributes}
       {...sharedProps}
       className={clsx(classes.timeGridEvent, sharedProps.className)}

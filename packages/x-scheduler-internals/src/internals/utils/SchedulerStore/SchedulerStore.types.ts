@@ -34,20 +34,17 @@ export interface StoredError {
 
 /**
  * Which face of the editing surface (dialog or drawer) is shown:
- * - `'readonly'`: the read-only summary. The event stays resizable and a resize commits immediately.
- * - `'edit'`: the editing form. The event is not resizable while the form is open.
+ * - `'readonly'`: summary; event stays resizable and a resize commits immediately.
+ * - `'edit'`: form; event is not resizable while open.
  */
 export type SchedulerEditingMode = 'readonly' | 'edit';
 
 export interface SchedulerEditingState {
-  /**
-   * The occurrence being edited — an existing occurrence or a creation draft.
-   */
+  /** The occurrence being edited — existing or a creation draft. */
   occurrence: SchedulerRenderableEventOccurrence;
   /**
-   * Whether the editing surface shows the read-only summary or the editing form.
-   * On touch, arming an event opens in `'readonly'`; the edit affordance switches it to `'edit'`.
-   * On non-touch the surface opens directly in `'edit'`.
+   * Whether the surface shows the read-only summary or the form.
+   * Touch arms in `'readonly'` (edit affordance switches to `'edit'`); non-touch opens in `'edit'`.
    */
   mode: SchedulerEditingMode;
 }
@@ -183,9 +180,9 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The occurrence currently being edited (an existing occurrence or a creation draft), or `null`.
-   * Single source of truth for *what* is being edited, decoupled from *which* surface (dialog or
-   * drawer) is open. The editing surfaces and the highlight read from here.
+   * The occurrence currently being edited (existing or a creation draft), or `null`.
+   * Single source of truth for *what* is edited, decoupled from *which* surface is open; surfaces
+   * and the highlight read from here.
    */
   editingOccurrence: SchedulerEditingState | null;
   /**

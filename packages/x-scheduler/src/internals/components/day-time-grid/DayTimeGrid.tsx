@@ -349,7 +349,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const scrollRootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-  // While editing, the first tap on the grid exits editing without creating or arming another event; the resize handle is ignored so finishing a resize gesture doesn't disarm.
+  // While editing, the first grid tap exits editing instead of creating/arming; resize handle is ignored so finishing a resize doesn't disarm.
   useDisarmOnOutsidePointer({
     ref: containerRef,
     active: isEditing,

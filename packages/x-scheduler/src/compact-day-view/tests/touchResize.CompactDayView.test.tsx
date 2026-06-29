@@ -12,8 +12,8 @@ import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 
 /**
- * Touch resize uses pointer events rather than native drag-and-drop, so it is exercised here
- * through {@link simulatePointerResize} on the compact (touch) view.
+ * Touch resize uses pointer events, not native drag-and-drop, so it is driven here via
+ * {@link simulatePointerResize} on the compact (touch) view.
  */
 describe('CompactDayView - touch resize', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
@@ -36,7 +36,7 @@ describe('CompactDayView - touch resize', () => {
       <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
     );
 
-    // The geometry resolver maps the pointer Y to a time using the column's own bounds.
+    // Geometry resolver maps pointer Y to a time via the column's bounds.
     mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
 
     return { onEventsChange };
@@ -52,8 +52,7 @@ describe('CompactDayView - touch resize', () => {
   it('arms the event only once it is tapped', () => {
     renderResizableEvent();
     const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
-    // Resize handles are always in the DOM; the coarse-pointer styles reveal them only while the
-    // event is armed. In JSDOM (no CSS) the armed state is observable through `data-armed`.
+    // Handles are always in the DOM; coarse-pointer CSS reveals them when armed. In JSDOM, assert via `data-armed`.
     expect(eventElement).not.to.have.attribute('data-armed');
     fireEvent.click(eventElement);
     expect(eventElement).to.have.attribute('data-armed');
@@ -71,7 +70,7 @@ describe('CompactDayView - touch resize', () => {
 
     expect(onEventsChange.callCount).to.equal(1);
     const updatedEvents = onEventsChange.firstCall.args[0];
-    // Start stays at 10:00, end moves later than the original 11:00.
+    // Start stays at 10:00, end moves later than 11:00.
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
@@ -88,7 +87,7 @@ describe('CompactDayView - touch resize', () => {
 
     expect(onEventsChange.callCount).to.equal(1);
     const updatedEvents = onEventsChange.firstCall.args[0];
-    // End stays at 11:00, start moves earlier than the original 10:00.
+    // End stays at 11:00, start moves earlier than 10:00.
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(8);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
   });
@@ -117,8 +116,7 @@ describe('CompactDayView - touch resize', () => {
     const column = getTimeGridColumn();
     mockElementBounds(column, { top: 0, height: 1440, width: 200 });
 
-    // Tap an empty slot (~9:00) to start creating an event. This sets a `creation` placeholder,
-    // which renders as a real event with pointer resize handles.
+    // Tap an empty slot (~9:00) to start creating: sets a `creation` placeholder with resize handles.
     fireEvent.click(column, { clientY: clientYForTime(0, 24, 9) });
 
     const placeholder = document.querySelector<HTMLElement>(
@@ -132,10 +130,10 @@ describe('CompactDayView - touch resize', () => {
       simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 18) } });
     });
 
-    // The draft has no underlying event, so pointer-up commits nothing.
+    // Draft has no underlying event, so pointer-up commits nothing.
     expect(onEventsChange.callCount).to.equal(0);
 
-    // The creation placeholder is updated in place (still present, now taller) rather than dropped.
+    // Placeholder is updated in place (still present, now taller) rather than dropped.
     const placeholderAfter = document.querySelector<HTMLElement>(
       `.${eventCalendarClasses.timeGridEventPlaceholder}`,
     );

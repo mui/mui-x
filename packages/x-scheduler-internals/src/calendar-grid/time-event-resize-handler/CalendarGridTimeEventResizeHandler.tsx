@@ -13,7 +13,7 @@ import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeE
 import type { CalendarGridTimeEvent } from '../time-event/CalendarGridTimeEvent';
 import { SchedulerEventSide } from '../../models';
 
-// Time grid events are never all-day, so a resize must keep them that way.
+// Time grid events are never all-day; keep them that way on resize.
 function addPropertiesToResizedEvent() {
   return { allDay: false as const };
 }
@@ -49,8 +49,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       side,
     }));
 
-    // Pointer-resize session: from the placeholder when sizing a new event, otherwise from the
-    // event's shared drag data.
+    // Pointer-resize session: from the placeholder when sizing a new event, else the event's drag data.
     const getResizeSession = useStableCallback((): useEventPointerResizeHandler.ResizeSession => {
       const placeholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
       if (placeholder?.type === 'creation') {
@@ -62,7 +61,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
         };
       }
 
-      // The pointer maps directly to a date, so the grab offset isn't needed: call without an input.
+      // Pointer maps directly to a date — no grab offset needed.
       const data = contextValue.getSharedDragData();
       return {
         kind: 'event',
@@ -75,9 +74,8 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       };
     });
 
-    // Computed once and shared by both resize handlers. They run together: the native
-    // drag-and-drop handler serves the mouse, and the pointer handler serves touch/pen (it
-    // ignores mouse presses), so a single handle resizes from whatever pointer the user has.
+    // Shared by both resize handlers running together: native drag-and-drop serves the mouse, the
+    // pointer handler serves touch/pen, so one handle resizes from whatever pointer the user has.
     const enabled = isResizeHandlerEnabled({
       side,
       doesEventStartBeforeCollectionStart: contextValue.doesEventStartBeforeCollectionStart,

@@ -118,8 +118,7 @@ export namespace useDraggableEvent {
      */
     isDraggable?: boolean;
     /**
-     * Called when a drag is about to start. Returning `false` aborts it and lets pointer events
-     * bubble normally. Defaults to always allowing the drag.
+     * Called before a drag starts; return `false` to abort and let pointer events bubble. Defaults to allowing the drag.
      */
     canDrag?: () => boolean;
     /**

@@ -237,13 +237,9 @@ export function getResizeHandle(eventElement: HTMLElement, side: 'start' | 'end'
 }
 
 /**
- * Stubs the pointer-capture methods the resize handler relies on, since JSDOM doesn't implement
- * `setPointerCapture` / `hasPointerCapture` / `releasePointerCapture`.
- *
- * The stubs track captured pointer ids so `hasPointerCapture` reflects prior `setPointerCapture` /
- * `releasePointerCapture` calls. A constant `false` would short-circuit the handler's capture-release
- * and unmount-mid-gesture teardown branches (both guarded behind `hasPointerCapture`), leaving them
- * untested.
+ * Stubs the pointer-capture methods JSDOM lacks. Tracks captured ids so `hasPointerCapture` reflects
+ * prior set/release calls; a constant `false` would skip the handler's capture-release and
+ * unmount-mid-gesture teardown branches.
  */
 function ensurePointerCaptureMethods(element: HTMLElement): void {
   const target = element as any;
@@ -275,8 +271,7 @@ function createPointerEvent(
     clientY: options.clientY ?? 0,
     button: options.button ?? 0,
   };
-  // `PointerEvent` is not always available in JSDOM; fall back to a `MouseEvent` carrying a
-  // `pointerId`, which is all the resize handler reads.
+  // `PointerEvent` may be missing in JSDOM; fall back to a `MouseEvent` with a `pointerId`.
   if (typeof PointerEvent === 'function') {
     return new PointerEvent(type, { ...init, pointerId: options.pointerId ?? 1 });
   }
@@ -286,36 +281,31 @@ function createPointerEvent(
 }
 
 interface SimulatePointerResizeParameters {
-  /**
-   * The resize handle element (the one carrying `data-start` / `data-end`).
-   */
+  /** The resize handle element (carries `data-start` / `data-end`). */
   handle: HTMLElement;
-  /**
-   * The final pointer position (where the gesture ends).
-   */
+  /** Final pointer position (gesture end). */
   to: { clientX?: number; clientY?: number };
   /**
-   * The initial pointer position (where the gesture starts).
+   * Initial pointer position (gesture start).
    * @default { clientX: 0, clientY: 0 }
    */
   from?: { clientX?: number; clientY?: number };
   /**
-   * The pointer id to use for the gesture.
+   * Pointer id for the gesture.
    * @default 1
    */
   pointerId?: number;
   /**
-   * Whether to end the gesture with `pointercancel` instead of `pointerup`.
+   * End with `pointercancel` instead of `pointerup`.
    * @default false
    */
   cancel?: boolean;
 }
 
 /**
- * Simulates a pointer-driven resize gesture (pointerdown → pointermove → pointerup/cancel) on a
- * resize handle, for the touch resize path (`useEventPointerResizeHandler`).
- *
- * Pair with {@link mockElementBounds} on the column so the gesture maps to a known time.
+ * Simulates a pointer resize gesture (pointerdown → pointermove → pointerup/cancel) for the touch
+ * resize path (`useEventPointerResizeHandler`). Pair with {@link mockElementBounds} on the column so
+ * the gesture maps to a known time.
  *
  * @example
  * ```tsx

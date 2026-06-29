@@ -33,8 +33,7 @@ describe('<DayView />', () => {
     return document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridContainer}`)!;
   }
 
-  // The single event component renders the time element for every device (it is only hidden by CSS
-  // on touch screens), so a normal DayView always exposes it in the DOM.
+  // The event component always renders the time element (only hidden by CSS on touch), so it is in the DOM.
   it('renders the event with a time element', () => {
     const event = EventBuilder.new()
       .title('Desktop Event')

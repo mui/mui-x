@@ -6,8 +6,7 @@ import { DayTimeGridProps } from '../day-time-grid/DayTimeGrid.types';
 import { CompactEventDrawer } from '../compact-event-drawer';
 import { CompactEventEditingProvider } from '../event-editing';
 
-// Column layout so the drawer sits below the grid and the grid shrinks to make room for it
-// (rather than the drawer overlaying the grid).
+// Column layout: drawer sits below the grid, which shrinks to make room rather than being overlaid.
 const CompactDayTimeGridRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'CompactDayTimeGridRoot',
@@ -34,8 +33,7 @@ const CompactDayTimeGridContainer = React.forwardRef(function CompactDayTimeGrid
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  // Tap-to-exit-editing lives in `DayTimeGrid` (shared with the desktop dialog), so the in-flow
-  // drawer — which has no backdrop of its own — gets the same outside-tap dismissal for free.
+  // Outside-tap dismissal comes from `DayTimeGrid` (shared with the desktop dialog), so the backdrop-less drawer gets it for free.
   return (
     <CompactDayTimeGridRoot>
       <CompactDayTimeGridContent>
@@ -50,9 +48,8 @@ const CompactDayTimeGridContainer = React.forwardRef(function CompactDayTimeGrid
  * Shared layout for the compact (touch) views (`CompactDayView`, `CompactThreeDayView`,
  * `CompactWeekView`).
  *
- * It reuses `DayTimeGrid` (whose events adapt to touch on their own), stacks the editing drawer
- * below the grid, and drives the tap-to-exit interaction through the shared editing surface. Each
- * view only provides its own `days` (a 1-, 3- or 7-day range).
+ * Reuses `DayTimeGrid` (its events adapt to touch on their own), stacks the editing drawer below,
+ * and drives tap-to-exit through the shared editing surface. Each view only provides its own `days`.
  */
 export const CompactDayTimeGrid = React.forwardRef(function CompactDayTimeGrid(
   props: DayTimeGridProps,

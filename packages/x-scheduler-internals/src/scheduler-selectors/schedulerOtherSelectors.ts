@@ -1,22 +1,12 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { SchedulerEventId } from '../models';
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { processDate } from '../process-date';
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
   /**
-   * Returns `true` if the event with the given ID is the one currently being edited.
-   */
-  isEditedEvent: createSelector(
-    (state: State) => state.editingOccurrence?.occurrence.id ?? null,
-    (editedEventId, eventId: SchedulerEventId | undefined) =>
-      editedEventId != null && editedEventId === eventId,
-  ),
-  /**
-   * Returns `true` if the occurrence with the given key is the one currently being edited.
-   * Unlike {@link isEditedEvent}, this is occurrence-precise, so editing one occurrence of a
-   * recurring series does not match its other occurrences.
+   * Returns `true` if the occurrence with the given key is the one being edited.
+   * Occurrence-precise: editing one occurrence of a recurring series doesn't match its siblings.
    */
   isEditedOccurrence: createSelector(
     (state: State) => state.editingOccurrence?.occurrence.key ?? null,
@@ -24,10 +14,9 @@ export const schedulerOtherSelectors = {
       editedOccurrenceKey != null && editedOccurrenceKey === occurrenceKey,
   ),
   /**
-   * The occurrence currently being edited, with the live resize preview applied, or `null`.
-   * During a resize the new start/end live on the `internal-resize` placeholder (the occurrence
-   * only updates on pointer-up), so surfaces bound to the editing occurrence read this to preview
-   * the in-progress times.
+   * The edited occurrence with the live resize preview applied, or `null`.
+   * During a resize new times live on the `internal-resize` placeholder (occurrence updates only on
+   * pointer-up); surfaces read this to preview the in-progress times.
    */
   editingOccurrenceWithResizePreview: createSelectorMemoized(
     (state: State) => state.adapter,
@@ -59,14 +48,13 @@ export const schedulerOtherSelectors = {
     (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
   ),
   /**
-   * Which face the editing surface shows (`'readonly'` summary or `'edit'` form), or `null` when
-   * nothing is being edited. Drives the read-only-vs-form swap and whether the edited event stays
-   * resizable.
+   * Which face the surface shows (`'readonly'` summary or `'edit'` form), or `null` when idle.
+   * Drives the read-only-vs-form swap and whether the edited event stays resizable.
    */
   editingMode: createSelector((state: State) => state.editingOccurrence?.mode ?? null),
   /**
-   * Returns `true` when the occurrence with the given key is being edited through the form
-   * (`'edit'` mode). Resizing is disabled in that state — the form is the single way to change times.
+   * Returns `true` when the occurrence with the given key is being edited in the form (`'edit'`).
+   * Resizing is disabled then — the form is the only way to change times.
    */
   isEditedOccurrenceInEditMode: createSelector(
     (state: State) => state.editingOccurrence?.occurrence.key ?? null,

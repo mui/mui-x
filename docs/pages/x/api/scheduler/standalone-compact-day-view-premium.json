@@ -6,7 +6,10 @@
     "import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": false,
   "muiName": "MuiStandaloneCompactDayViewPremium",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/compact-day-view-premium/StandaloneCompactDayViewPremium.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-scheduler/experiments/\">Experiments</a></li></ul>"

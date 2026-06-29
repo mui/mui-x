@@ -40,9 +40,8 @@ interface CompactReadonlyContentProps {
 /**
  * The read-only summary shown inside the compact editing drawer.
  *
- * It mirrors the desktop dialog's read-only view (shared `ReadonlyEventDetails`) with lighter chrome
- * for the drawer: a smaller heading with a close button and no footer. While creating an event the
- * title is empty, so a placeholder stands in until the user opens the form.
+ * Renders the shared `ReadonlyEventDetails` (same as the desktop dialog) with lighter chrome:
+ * a small heading + close button, no footer. While creating, the empty title shows a placeholder.
  */
 export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
   const { occurrence, onClose } = props;
@@ -56,7 +55,7 @@ export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
 
   const showPlaceholder = isCreating && !occurrence.title;
 
-  // Stop the tap from also reaching the drawer root, which would expand the drawer instead of closing it.
+  // Stop the tap reaching the drawer root, which would expand instead of close.
   const handleClose = (event: React.MouseEvent) => {
     event.stopPropagation();
     onClose();
@@ -65,11 +64,7 @@ export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
   return (
     <React.Fragment>
       <CompactReadonlyContentHeader>
-        <CompactReadonlyContentTitle
-          variant="body1"
-          noWrap
-          data-placeholder={showPlaceholder || undefined}
-        >
+        <CompactReadonlyContentTitle variant="body1" noWrap>
           {showPlaceholder
             ? localeText.eventTitlePlaceholder
             : `${occurrence?.title} (${localeText.tapToEditEvent})`}

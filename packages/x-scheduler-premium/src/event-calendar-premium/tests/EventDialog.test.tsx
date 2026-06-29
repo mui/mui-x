@@ -2102,8 +2102,7 @@ describe('<EventDialogContent open />', () => {
         </EventCalendarProvider>,
       );
 
-      // EventDialogProvider's onOpen sets editingOccurrence; rendering the content directly
-      // (without the trigger flow) leaves it null.
+      // `onOpen` sets editingOccurrence; rendering content directly (no trigger flow) leaves it null.
       expect(handleEditingChange.lastCall?.firstArg).to.equal(null);
     });
 
@@ -2125,7 +2124,7 @@ describe('<EventDialogContent open />', () => {
         </EventCalendarProvider>,
       );
 
-      // After SchedulerStoreRunner calls startEditing, it should be the event ID
+      // After `startEditing`, it should be the event ID.
       expect(handleEditingChange.lastCall?.firstArg).to.equal(DEFAULT_EVENT.id);
     });
 

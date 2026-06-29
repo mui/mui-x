@@ -16,9 +16,7 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-schedul
 import { useEventEditingStyledContext } from '@mui/x-scheduler/internals';
 import { RecurringScopeDialogProps } from './RecurringScopeDialog.types';
 
-/**
- * Dialog that asks which occurrences a change to a recurring event should apply to.
- */
+/** Asks which occurrences a change to a recurring event should apply to. */
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringScopeDialogProps>(
   function RecurringScopeDialog(props, ref) {
     // Context hooks

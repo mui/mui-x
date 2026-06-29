@@ -43,11 +43,9 @@ const EventDialogRoot = styled(Dialog, {
   [`& .${dialogClasses.paper}`]: {
     margin: 0,
   },
-  // Touch only: `pointer-events` inherits, so disabling it on the root lets interactions fall through
-  // to the grid behind so the armed event stays resizable while the dialog is open; the paper
-  // re-enables them for itself. The transparent backdrop then no longer catches the tap that closes
-  // the dialog, so closing on an outside tap is handled by the grid instead (`DayTimeGrid` wires up
-  // `useDisarmOnOutsidePointer`). Non-touch keeps the standard backdrop click-to-close untouched.
+  // Touch only: disabling `pointer-events` on the root lets taps fall through to the grid so the
+  // armed event stays resizable; the paper re-enables them for itself. Outside-tap close is then
+  // handled by the grid (`DayTimeGrid`'s `useDisarmOnOutsidePointer`), not the transparent backdrop.
   [TOUCH_MEDIA]: {
     pointerEvents: 'none',
     [`& .${dialogClasses.paper}`]: {
@@ -92,8 +90,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
 
   const updatePosition = React.useCallback(
     (shouldResetDrag = false) => {
-      // The anchored event may have been detached (e.g. a recurring occurrence replaced by an
-      // exception after an edit); don't reposition against a stale node.
+      // Anchor may have been detached (e.g. occurrence replaced by an exception); skip stale nodes.
       if (anchorRef.current != null && !anchorRef.current.isConnected) {
         return;
       }
@@ -116,11 +113,9 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     updatePosition(true);
   }, [updatePosition]);
 
-  // Keep the dialog anchored as things change after it opens, without coupling to the editing store:
-  // - the paper's own height changes when its content swaps (read-only summary ↔ taller form) or a
-  //   field grows — a `ResizeObserver` on the paper catches it;
-  // - the anchored event is positioned through inline CSS custom properties, so it being resized or
-  //   moved mutates its `style` — a `MutationObserver` on the anchor catches it.
+  // Keep the dialog anchored as things change, without coupling to the store: a `ResizeObserver`
+  // on the paper catches content/height swaps; a `MutationObserver` on the anchor catches its
+  // inline-style changes (the event is positioned via CSS custom properties).
   React.useEffect(() => {
     const reposition = () => updatePosition(true);
 
@@ -170,8 +165,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const { schedulerId, classes } = useEventEditingStyledContext();
 
   // Selector hooks
-  // Render from the live editing occurrence so a resize committed behind the dialog (and the
-  // recurring-scope confirmation) is reflected; fall back to the prop during the close animation.
+  // Render from the live editing occurrence (reflects resizes behind the dialog); fall back to the prop while closing.
   const editingOccurrence = useStore(
     store,
     schedulerOtherSelectors.editingOccurrenceWithResizePreview,
@@ -238,8 +232,8 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 });
 
 /**
- * Desktop editing surface: renders the anchored, draggable event dialog through the shared
- * `EventEditingProvider` and stacks the recurring scope confirmation on top when needed.
+ * Desktop editing surface: anchored, draggable dialog via `EventEditingProvider`, with the
+ * recurring scope confirmation stacked on top when needed.
  */
 export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, optionalRenderers, ...other } = props;

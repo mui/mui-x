@@ -610,8 +610,7 @@ export class SchedulerStore<
     }
     this.updateEvents(updatedEvents);
 
-    // Keep the read-only editing surface (if still open) in sync with the times just committed,
-    // so a resize confirmed through the scope dialog is reflected instead of the pre-resize value.
+    // Keep the open read-only surface in sync with the committed times after a scope-dialog resize.
     if (pendingRecurringEventOperation.kind === 'update') {
       const { start, end } = pendingRecurringEventOperation.changes;
       if (start != null && end != null) {
@@ -754,9 +753,8 @@ export class SchedulerStore<
   };
 
   /**
-   * Marks an occurrence (an existing occurrence or a creation draft) as the one being edited.
-   * This only records *what* is being edited; opening the editing surface (dialog or drawer) is
-   * handled separately.
+   * Marks an occurrence (existing or creation draft) as the one being edited. Only records *what*
+   * is edited; opening the surface (dialog or drawer) is handled separately.
    */
   public startEditing = (
     occurrence: SchedulerRenderableEventOccurrence,
@@ -766,8 +764,8 @@ export class SchedulerStore<
   };
 
   /**
-   * Switches the editing surface between its read-only summary and its editing form without
-   * changing which occurrence is being edited. No-op when nothing is being edited.
+   * Switches the editing surface between read-only summary and form, keeping the same occurrence.
+   * No-op when nothing is being edited.
    */
   public setEditingMode = (mode: SchedulerEditingMode) => {
     const { editingOccurrence } = this.state;
@@ -778,8 +776,8 @@ export class SchedulerStore<
   };
 
   /**
-   * Refreshes the times of the occurrence being edited so the read-only surface reflects a change
-   * (e.g. a resize) that was just committed to the event. No-op when nothing is being edited.
+   * Refreshes the edited occurrence's times so the read-only surface reflects a just-committed
+   * change (e.g. a resize). No-op when nothing is being edited.
    */
   public setEditingOccurrenceTimes = (
     start: TemporalSupportedObject,
@@ -803,9 +801,7 @@ export class SchedulerStore<
     });
   };
 
-  /**
-   * Clears the editing state and dismisses any in-progress event creation / live preview.
-   */
+  /** Clears editing state and dismisses any in-progress event creation / live preview. */
   public stopEditing = () => {
     this.set('editingOccurrence', null);
     this.setOccurrencePlaceholder(null);

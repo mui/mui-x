@@ -247,15 +247,13 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
       occurrenceStart: originalOccurrence.displayTimezone.start.value,
       changes,
     });
-    // The read-only editing surface is refreshed in `selectRecurringEventScope`, once the user
-    // confirms a scope (the change isn't applied before that).
+    // Editing surface is refreshed in `selectRecurringEventScope` once the user confirms a scope.
     return;
   }
 
   store.updateEvent(changes);
 
-  // Keep the read-only editing surface (if this occurrence is the one being edited) in sync with
-  // the times just committed, so a resize behind the surface is reflected immediately.
+  // Sync the editing surface (if this occurrence is being edited) with the committed times.
   if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
     store.setEditingOccurrenceTimes(start, end);
   }

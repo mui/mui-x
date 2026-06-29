@@ -42,7 +42,7 @@ describe('useDisarmOnOutsidePointer', () => {
     inside.dispatchEvent(event);
 
     expect(onDisarm.callCount).to.equal(1);
-    // The click is swallowed so it reaches neither a create handler nor an event's open trigger.
+    // Swallowed: reaches neither a create handler nor an event's open trigger.
     expect(event.defaultPrevented).to.equal(true);
   });
 

@@ -50,7 +50,6 @@ describe('<CompactDayView />', () => {
     renderWithProviders(<CompactDayView />, [event]);
 
     expect(screen.getAllByText('Compact Event').length).to.be.greaterThan(0);
-    // On touch the time is hidden by CSS (`@media (pointer: coarse)`) rather than removed from the
-    // DOM, so there is nothing device-specific left to assert in JSDOM.
+    // On touch the time is hidden by CSS (`@media (pointer: coarse)`), not removed, so nothing device-specific to assert in JSDOM.
   });
 });

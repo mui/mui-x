@@ -45,8 +45,7 @@ export function useTimeGridEvent(
 
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
-  // While the form is open for this occurrence, resizing is disabled — the form is the single way to
-  // change its times. It stays resizable in the read-only/armed state and when it is not being edited.
+  // While the form is open, the form owns the times, so resizing is disabled (still resizable when armed/read-only).
   const isEditedInForm = useStore(
     store,
     schedulerOtherSelectors.isEditedOccurrenceInEditMode,

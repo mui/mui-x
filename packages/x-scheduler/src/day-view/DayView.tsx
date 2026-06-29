@@ -10,8 +10,7 @@ const DAY_VIEW_CONFIG = createDayTimeGridViewConfig(1);
 /**
  * A Day View to use inside the Event Calendar.
  *
- * Events adapt to the device on their own (click on a mouse, touch on a touch screen), so no
- * view-level configuration is needed here.
+ * Events adapt to the device on their own (mouse vs. touch), so no view-level config is needed.
  */
 export const DayView = React.memo(
   React.forwardRef(function DayView(

@@ -6,7 +6,10 @@
     "import { StandaloneCompactWeekViewPremium } from '@mui/x-scheduler-premium';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": false,
   "muiName": "MuiStandaloneCompactWeekViewPremium",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/compact-week-view-premium/StandaloneCompactWeekViewPremium.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-scheduler/experiments/\">Experiments</a></li></ul>"

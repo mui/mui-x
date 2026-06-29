@@ -11,10 +11,9 @@ import {
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 
 /**
- * Touch behavior is device-adaptive and not bound to the compact views: arming (driven by the
- * editing state) and pointer resize work in the normal Day View too. Pointer resize is exercised
- * here through {@link simulatePointerResize}, whose pointer events are not `mouse`, so they take the
- * pointer-resize path.
+ * Touch behavior is device-adaptive, not bound to the compact views: arming and pointer resize work
+ * in the normal Day View too. Driven via {@link simulatePointerResize}, whose non-`mouse` pointer
+ * events take the pointer-resize path.
  */
 const createMatchMedia = (matches: boolean) => () =>
   ({
@@ -26,8 +25,7 @@ const createMatchMedia = (matches: boolean) => () =>
 describe('DayView - touch resize', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
 
-  // These tests exercise the touch flow: the dialog opens on its read-only summary and the armed
-  // event stays resizable. Report a coarse pointer so the open mode resolves to read-only.
+  // Touch flow: dialog opens read-only and the armed event stays resizable. Report a coarse pointer so the open mode resolves to read-only.
   const originalMatchMedia = window.matchMedia;
   beforeEach(() => {
     window.matchMedia = createMatchMedia(true);
@@ -52,7 +50,7 @@ describe('DayView - touch resize', () => {
 
     render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
 
-    // The geometry resolver maps the pointer Y to a time using the column's own bounds.
+    // Geometry resolver maps pointer Y to a time via the column's bounds.
     mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
 
     return { onEventsChange };
@@ -83,7 +81,7 @@ describe('DayView - touch resize', () => {
 
     expect(onEventsChange.callCount).to.equal(1);
     const updatedEvents = onEventsChange.firstCall.args[0];
-    // Start stays at 10:00, end moves later than the original 11:00.
+    // Start stays at 10:00, end moves later than 11:00.
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });

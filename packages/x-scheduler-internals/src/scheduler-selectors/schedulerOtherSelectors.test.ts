@@ -3,7 +3,7 @@ import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const BASE_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 
-// The selector only reads `occurrence.id` / `occurrence.key`, so a minimal occurrence is enough.
+// Selector only reads `occurrence.id` / `occurrence.key`, so a minimal occurrence suffices.
 const occurrence = (id: string) => ({ id, key: id }) as any;
 
 storeClasses.forEach((storeClass) => {
@@ -17,22 +17,22 @@ storeClasses.forEach((storeClass) => {
       it('should return true when the given occurrence key matches the active occurrence', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.startEditing(occurrence('event-1'));
-        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);
+        expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(true);
       });
 
       it('should return false when a different occurrence is active', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.startEditing(occurrence('event-2'));
-        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
+        expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(false);
       });
 
       it('should distinguish occurrences of the same recurring event', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.startEditing(occurrence('event-1'));
-        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);
+        expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(true);
 
         store.stopEditing();
-        expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
+        expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(false);
       });
     });
 
@@ -40,8 +40,7 @@ storeClasses.forEach((storeClass) => {
       const start = adapter.date('2025-07-03T09:00:00Z', 'default');
       const end = adapter.date('2025-07-03T10:00:00Z', 'default');
 
-      // The selector reads `occurrence.key` and spreads `occurrence.displayTimezone`, so a minimal
-      // occurrence carrying those is enough.
+      // Selector reads `occurrence.key` and spreads `occurrence.displayTimezone`; a minimal one suffices.
       const editedOccurrence = {
         id: 'event-1',
         key: 'event-1',

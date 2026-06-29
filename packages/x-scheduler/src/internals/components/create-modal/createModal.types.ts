@@ -36,9 +36,7 @@ export interface ProviderProps<TData> {
     onClose: () => void;
   }) => React.ReactNode;
   /**
-   * Whether the modal is positioned relative to an anchor element. When `true`, the modal only
-   * renders once an anchor is available. Set to `false` for surfaces that don't need an anchor
-   * (e.g. an in-flow drawer or a centered bottom-sheet).
+   * Whether the modal is anchored; when `true`, it renders only once an anchor is available.
    * @default true
    */
   anchored?: boolean;

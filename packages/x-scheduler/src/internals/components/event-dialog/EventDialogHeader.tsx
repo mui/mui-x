@@ -14,26 +14,37 @@ const EventDialogHeaderRoot = styled('header', {
   justifyContent: 'space-between',
   gap: theme.spacing(1.5),
   padding: theme.spacing(3),
-  cursor: 'move',
+  // Only the draggable desktop dialog shows the move affordance; the drawer reuses this header.
+  '&[data-draggable]': {
+    cursor: 'move',
+  },
 }));
 
 interface EventDialogHeaderProps {
   onClose: () => void;
   /**
-   * When provided, renders an edit affordance that switches the read-only summary to the form.
-   * Omitted for read-only events, which have no form.
+   * Renders an edit affordance that switches the summary to the form. Omitted for read-only events.
    */
   onEdit?: () => void;
   dragHandlerRef?: React.RefObject<HTMLElement | null>;
+  /**
+   * Whether the header acts as a drag handle; when `false` the move cursor is suppressed.
+   * @default true
+   */
+  isDraggable?: boolean;
   children?: React.ReactNode;
 }
 
 export default function EventDialogHeader(props: EventDialogHeaderProps) {
-  const { children, onClose, onEdit, dragHandlerRef } = props;
+  const { children, onClose, onEdit, dragHandlerRef, isDraggable = true } = props;
   const { classes, localeText } = useEventEditingStyledContext();
 
   return (
-    <EventDialogHeaderRoot ref={dragHandlerRef} className={classes.eventDialogHeader}>
+    <EventDialogHeaderRoot
+      ref={dragHandlerRef}
+      className={classes.eventDialogHeader}
+      data-draggable={isDraggable || undefined}
+    >
       {children}
       <div className={classes.eventDialogHeaderActions}>
         {onEdit && (

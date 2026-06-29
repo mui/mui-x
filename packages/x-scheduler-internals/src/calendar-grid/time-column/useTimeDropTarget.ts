@@ -48,8 +48,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
   const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(
     (input) => {
-      // Bail when the column isn't measurable yet (no element, or zero height): a zero height
-      // would make `getCursorPositionInElementMs` return NaN and produce an invalid date.
+      // Bail when the column isn't measurable yet — zero height makes `getCursorPositionInElementMs` return NaN.
       if (!ref.current || ref.current.offsetHeight === 0) {
         return null;
       }
