@@ -122,7 +122,7 @@ export default function MarsMap() {
         <ChartsTooltip trigger="item" />
         <ContinuousColorLegend
           axisDirection="z"
-          sx={{ maxWidth: 150, mx: 'auto' }}
+          sx={{ width: 150, mx: 'auto', alignSelf: 'center' }}
         />
       </ChartsGeoDataProviderPremium>
     </Stack>
