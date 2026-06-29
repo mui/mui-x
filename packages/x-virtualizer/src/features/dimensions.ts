@@ -691,7 +691,10 @@ export function observeRootNode(
   };
 }
 
-const scrollbarSizeCache = new WeakMap<Element, number>();
+const scrollbarSizeCache = new WeakMap<
+  Element,
+  { size: number; devicePixelRatio: number; measuredDirectly: boolean }
+>();
 function measureScrollbarSize(element: Element | null, scrollbarSize: number | undefined) {
   if (scrollbarSize !== undefined) {
     return scrollbarSize;
@@ -704,6 +707,25 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
   const htmlElement = element as HTMLElement;
   const doc = ownerDocument(element);
   const view = doc.defaultView;
+
+  // We don't expect the scrollbar size styles to change, so we can cache the size and reuse it on every dimensions update.
+  // The scrollbar size is expected to change when the browser zoom or display scale changes while the element stays mounted, which `devicePixelRatio` reflects.
+  // Other layout changes (container resize, row/column updates) keep the same `devicePixelRatio`,
+  // so we can reuse the cached size and skip re-measuring the DOM (`getComputedStyle` + forced reflow) on every dimensions update.
+  //
+  // Only a value measured directly from the element is authoritative: it reflects the real scrollbar, including
+  // `::-webkit-scrollbar` pseudo styling that the probe-div fallback can't replicate. A cached probe estimate must
+  // not short-circuit here, otherwise it would mask the real size once the element becomes scrollable.
+  const devicePixelRatio = view?.devicePixelRatio ?? 1;
+  const cached = scrollbarSizeCache.get(element);
+  if (
+    cached !== undefined &&
+    cached.devicePixelRatio === devicePixelRatio &&
+    cached.measuredDirectly
+  ) {
+    return cached.size;
+  }
+
   const computed = view?.getComputedStyle(htmlElement);
 
   // First, try measuring `element` directly. When `element` is a scroll widget
@@ -711,8 +733,6 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
   // virtual scrollbars), its rendered scrollbar reflects whatever
   // `scrollbar-width` / `::-webkit-scrollbar` styling is applied to *this*
   // element, which is exactly what we need.
-  //
-  // The scrollbar size can change when the browser zoom or display scale changes while the element stays mounted.
   const canScrollY = computed?.overflowY === 'auto' || computed?.overflowY === 'scroll';
   const canScrollX = computed?.overflowX === 'auto' || computed?.overflowX === 'scroll';
   const hasScrollY = canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight;
@@ -731,12 +751,18 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
   );
 
   if (hasScrollY || hasScrollX) {
-    return Math.max(0, directSize);
+    const size = Math.max(0, directSize);
+    scrollbarSizeCache.set(element, { size, devicePixelRatio, measuredDirectly: true });
+    return size;
   }
 
-  const cachedSize = scrollbarSizeCache.get(element);
-  if (cachedSize !== undefined) {
-    return cachedSize;
+  // The element isn't scrollable yet, so it can't be measured directly. Reuse a
+  // probe estimate cached at the same `devicePixelRatio` to avoid re-running the
+  // (expensive) probe on every dimensions update while the element stays
+  // non-scrollable. Once it becomes scrollable, the direct measurement above
+  // takes over and replaces this estimate.
+  if (cached !== undefined && cached.devicePixelRatio === devicePixelRatio) {
+    return cached.size;
   }
 
   // Fall back to a probe div appended to `element`. `scrollbar-width` is not
@@ -756,7 +782,7 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
   element.removeChild(scrollDiv);
 
-  scrollbarSizeCache.set(element, size);
+  scrollbarSizeCache.set(element, { size, devicePixelRatio, measuredDirectly: false });
 
   return size;
 }
