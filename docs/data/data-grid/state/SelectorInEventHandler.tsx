@@ -21,10 +21,7 @@ export default function SelectorInEventHandler() {
   const [selectedDesks, setSelectedDesks] = React.useState<string[]>([]);
 
   const updateSelectedDesks = (details: GridCallbackDetails) => {
-    // `details.api` is the same object as `apiRef.current`, so it can be passed
-    // to any selector by wrapping it in a ref-shaped object: `{ current: details.api }`
-    const apiRef = { current: details.api };
-    const selectedRows = gridRowSelectionIdsSelector(apiRef);
+    const selectedRows = gridRowSelectionIdsSelector(details.apiRef);
     const desks = [...selectedRows.values()].map((row) => row?.desk).filter(Boolean);
     setSelectedDesks(desks);
   };
