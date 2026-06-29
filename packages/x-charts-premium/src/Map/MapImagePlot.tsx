@@ -114,7 +114,9 @@ function MapImagePlot(props: MapImagePlotProps) {
     return null;
   }
 
-  return <image href={dataUrl} x={left} y={top} width={width} height={height} {...other} />;
+  // Spread first so forwarded attributes can't override the computed geometry/href
+  // and break the alignment with the projection.
+  return <image {...other} href={dataUrl} x={left} y={top} width={width} height={height} />;
 }
 
 MapImagePlot.propTypes /* remove-proptypes */ = {
