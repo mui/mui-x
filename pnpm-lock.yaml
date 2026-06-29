@@ -3248,7 +3248,7 @@ packages:
         optional: true
 
   '@base-ui/react@https://pkg.pr.new/mui/base-ui/@base-ui/react@5138':
-    resolution: {tarball: https://pkg.pr.new/mui/base-ui/@base-ui/react@5138}
+    resolution: {integrity: sha512-s8WKLUimdHkk7NBpA61F3SPWXHZQkqq9CG5QCXd/nwtRye87tTzJ6v25LxBHFo7amshcn+ZcBiZzcdku3Y0UkQ==, tarball: https://pkg.pr.new/mui/base-ui/@base-ui/react@5138}
     version: 1.6.0
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3276,7 +3276,7 @@ packages:
         optional: true
 
   '@base-ui/utils@https://pkg.pr.new/mui/base-ui/@base-ui/utils@5138':
-    resolution: {tarball: https://pkg.pr.new/mui/base-ui/@base-ui/utils@5138}
+    resolution: {integrity: sha512-/va8MD0RHAA672VsXpUr6oujJOTvw6XJQIJbUcaSUUC7xaKrPQf5tuiKqeqr3TynkZGOjVU36MbK5gUPmOxBVQ==, tarball: https://pkg.pr.new/mui/base-ui/@base-ui/utils@5138}
     version: 0.3.1
     peerDependencies:
       '@types/react': ^17 || ^18 || ^19
