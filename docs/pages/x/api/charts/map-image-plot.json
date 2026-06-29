@@ -4,6 +4,13 @@
     "imageBounds": {
       "type": { "name": "arrayOf", "description": "Array&lt;Array&lt;number&gt;&gt;" },
       "default": "[[-180, -90], [180, 90]]"
+    },
+    "onReady": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(dataUrl: string | null) => void",
+        "describedArgs": ["dataUrl"]
+      }
     }
   },
   "name": "MapImagePlot",

@@ -1,11 +1,20 @@
 {
-  "componentDescription": "Renders a raster base map (for example a satellite mosaic) under the series,\nreprojected to match the chart's `projection` so it follows the geography\ninstead of being a flat rectangle. Pixels outside the projection's visible\nfootprint are left transparent.\n\nThe source image is assumed to be equirectangular; use `imageBounds` when it\ndoes not cover the whole globe. Any other SVG image attribute is forwarded to\nthe underlying element.",
+  "componentDescription": "Renders a raster base map (for example a satellite mosaic) under the series,\nreprojected to match the chart's `projection` so it follows the geography\ninstead of being a flat rectangle. Pixels outside the projection's visible\nfootprint are left transparent.\n\nThe source image is loaded only when `href` changes; changing the projection or\nresizing reuses the decoded image and only re-runs the (synchronous) canvas\nreprojection.\n\nThe source image is assumed to be equirectangular; use `imageBounds` when it\ndoes not cover the whole globe. Any other SVG image attribute is forwarded to\nthe underlying element.",
   "propDescriptions": {
     "href": {
       "description": "URL of the image to render as the base map. Must be same-origin (or CORS-enabled) so it can be reprojected on a canvas."
     },
     "imageBounds": {
       "description": "Geographic extent the source image covers, as <code>[[west, south], [east, north]]</code>. The image is assumed to be in the equirectangular (plate carrée) projection."
+    },
+    "onReady": {
+      "description": "Called after each reprojection.",
+      "typeDescriptions": {
+        "dataUrl": {
+          "name": "dataUrl",
+          "description": "The reprojected raster as a data URL, or <code>null</code> when it could not be produced."
+        }
+      }
     }
   },
   "classDescriptions": {}

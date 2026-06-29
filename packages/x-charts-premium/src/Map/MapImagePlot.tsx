@@ -23,6 +23,11 @@ export interface MapImagePlotProps extends React.SVGProps<SVGImageElement> {
    * @default [[-180, -90], [180, 90]]
    */
   imageBounds?: [[number, number], [number, number]];
+  /**
+   * Called after each reprojection.
+   * @param {string | null} dataUrl The reprojected raster as a data URL, or `null` when it could not be produced.
+   */
+  onReady?: (dataUrl: string | null) => void;
 }
 
 /**
@@ -31,59 +36,78 @@ export interface MapImagePlotProps extends React.SVGProps<SVGImageElement> {
  * instead of being a flat rectangle. Pixels outside the projection's visible
  * footprint are left transparent.
  *
+ * The source image is loaded only when `href` changes; changing the projection or
+ * resizing reuses the decoded image and only re-runs the (synchronous) canvas
+ * reprojection.
+ *
  * The source image is assumed to be equirectangular; use `imageBounds` when it
  * does not cover the whole globe. Any other SVG image attribute is forwarded to
  * the underlying element.
  */
 function MapImagePlot(props: MapImagePlotProps) {
-  const { href, imageBounds, ...other } = props;
+  const { href, imageBounds, onReady, ...other } = props;
   const path = useGeoPath();
   const { left, top, width, height } = useDrawingArea();
+  const [image, setImage] = React.useState<HTMLImageElement | null>(null);
   const [dataUrl, setDataUrl] = React.useState<string | null>(null);
 
   const projection = path?.projection?.() as GeoProjection | null | undefined;
 
   const [[west, south], [east, north]] = imageBounds ?? FULL_GLOBE;
 
+  // Keep the latest `onReady` without making it a reprojection dependency.
+  const onReadyRef = React.useRef(onReady);
   React.useEffect(() => {
-    // Hide the previous (now stale) raster until the new projection is ready.
-    setDataUrl(null);
+    onReadyRef.current = onReady;
+  });
 
+  // Load (decode) the source image only when `href` changes. Clearing the image
+  // first hides the now-stale raster until the new one is ready.
+  React.useEffect(() => {
+    setImage(null);
+    if (!href) {
+      return undefined;
+    }
+    let cancelled = false;
+    const nextImage = new Image();
+    nextImage.crossOrigin = 'anonymous';
+    nextImage.onload = () => {
+      if (!cancelled) {
+        setImage(nextImage);
+      }
+    };
+    nextImage.src = href;
+    return () => {
+      cancelled = true;
+    };
+  }, [href]);
+
+  // Reproject whenever the decoded image, projection, drawing area, or bounds
+  // change. This is synchronous, so switching projection does not reload `href`.
+  React.useEffect(() => {
     if (
-      !href ||
+      !image ||
       !projection ||
       typeof projection.invert !== 'function' ||
       width <= 0 ||
       height <= 0
     ) {
-      return undefined;
+      setDataUrl(null);
+      onReadyRef.current?.(null);
+      return;
     }
-
-    let cancelled = false;
-    const image = new Image();
-    image.crossOrigin = 'anonymous';
-    image.onload = () => {
-      if (cancelled) {
-        return;
-      }
-      setDataUrl(
-        reprojectEquirectangularImage({
-          image,
-          projection,
-          area: { left, top, width, height },
-          imageBounds: [
-            [west, south],
-            [east, north],
-          ],
-        }),
-      );
-    };
-    image.src = href;
-
-    return () => {
-      cancelled = true;
-    };
-  }, [href, projection, left, top, width, height, west, south, east, north]);
+    const url = reprojectEquirectangularImage({
+      image,
+      projection,
+      area: { left, top, width, height },
+      imageBounds: [
+        [west, south],
+        [east, north],
+      ],
+    });
+    setDataUrl(url);
+    onReadyRef.current?.(url);
+  }, [image, projection, left, top, width, height, west, south, east, north]);
 
   if (!dataUrl) {
     return null;
@@ -108,6 +132,11 @@ MapImagePlot.propTypes /* remove-proptypes */ = {
    * @default [[-180, -90], [180, 90]]
    */
   imageBounds: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired).isRequired),
+  /**
+   * Called after each reprojection.
+   * @param {string | null} dataUrl The reprojected raster as a data URL, or `null` when it could not be produced.
+   */
+  onReady: PropTypes.func,
 } as any;
 
 export { MapImagePlot };
