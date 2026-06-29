@@ -16,6 +16,7 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   allDayLabel: 'Toute la journée',
   closeButtonAriaLabel: 'Fermer',
   closeButtonLabel: 'Fermer',
+  // editEventButtonAriaLabel: 'Edit event',
   deleteEvent: "Supprimer l'événement",
   descriptionLabel: 'Description',
   endDateLabel: 'Date de fin',

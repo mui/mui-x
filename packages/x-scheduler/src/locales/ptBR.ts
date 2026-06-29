@@ -16,6 +16,7 @@ const ptBRDialog: Partial<EventDialogLocaleText> = {
   allDayLabel: 'O dia todo',
   closeButtonAriaLabel: 'Fechar',
   closeButtonLabel: 'Fechar',
+  // editEventButtonAriaLabel: 'Edit event',
   deleteEvent: 'Excluir evento',
   descriptionLabel: 'Descrição',
   endDateLabel: 'Data de término',

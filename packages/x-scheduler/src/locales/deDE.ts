@@ -16,6 +16,7 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   allDayLabel: 'Ganztägig',
   closeButtonAriaLabel: 'Schließen',
   closeButtonLabel: 'Schließen',
+  // editEventButtonAriaLabel: 'Edit event',
   deleteEvent: 'Ereignis löschen',
   descriptionLabel: 'Beschreibung',
   endDateLabel: 'Enddatum',

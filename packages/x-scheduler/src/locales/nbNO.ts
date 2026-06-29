@@ -16,6 +16,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   allDayLabel: 'Hele dagen',
   closeButtonAriaLabel: 'Lukk',
   closeButtonLabel: 'Lukk',
+  // editEventButtonAriaLabel: 'Edit event',
   deleteEvent: 'Slett hendelse',
   descriptionLabel: 'Beskrivelse',
   endDateLabel: 'Sluttdato',
