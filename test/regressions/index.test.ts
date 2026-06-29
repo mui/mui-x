@@ -76,6 +76,11 @@ const TEST_RULES: RouteRule[] = [
     // reveals this sentinel once every projection has finished rendering.
     waitForSelector: '[data-testid="map-images-ready"]',
   },
+  {
+    test: '/test-regressions-charts/MapImageAntimeridian',
+    // Same async reprojection sentinel as MapImageProjections.
+    waitForSelector: '[data-testid="map-images-ready"]',
+  },
 
   // Overview composites embed desktop-breakpoint media queries that don't
   // match at the default 1000x700 viewport, leaving panes hidden in
