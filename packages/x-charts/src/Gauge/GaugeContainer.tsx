@@ -2,11 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
-import { GaugeProvider, type GaugeProviderProps } from './GaugeProvider';
+import { ChartsSurface } from '../ChartsSurface';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import { GaugeProvider } from './GaugeProvider';
+import type { GaugeProviderProps } from './GaugeProvider';
 import { ChartsProvider } from '../context/ChartsProvider';
-import { type MergeSignaturesProperty } from '../internals/plugins/models';
-import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import type { MergeSignaturesProperty } from '../internals/plugins/models';
+import type { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps

@@ -5,10 +5,10 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled, useThemeProps } from '@mui/material/styles';
+import type { PickersSectionListClasses } from './pickersSectionListClasses';
 import {
   getPickersSectionListUtilityClass,
   pickersSectionListClasses,
-  PickersSectionListClasses,
 } from './pickersSectionListClasses';
 import type { PickersSectionListProps, PickersSectionElement } from './PickersSectionList.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';

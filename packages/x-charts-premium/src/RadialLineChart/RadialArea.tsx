@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { areaRadial as d3AreaRadial } from '@mui/x-charts-vendor/d3-shape';
 import { getCurveFactory } from '@mui/x-charts/internals';
-import { type RadialLinePoint } from './useRadialLinePlotData';
+import type { RadialLinePoint } from './useRadialLinePlotData';
 import { useItemHighlightState } from '../hooks';
-import { type RadialLineOrAreaProps } from './RadialLine';
+import type { RadialLineOrAreaProps } from './RadialLine';
 
 function RadialArea(props: RadialLineOrAreaProps) {
   const { seriesId, color, hidden, curve, points, closePath, ...other } = props;

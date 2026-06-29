@@ -1,10 +1,8 @@
 'use client';
-import { type GeoPath } from '@mui/x-charts-vendor/d3-geo';
+import type { GeoPath } from '@mui/x-charts-vendor/d3-geo';
 import { useStore } from '@mui/x-charts/internals';
-import {
-  selectorChartGeoPath,
-  type UseGeoProjectionSignature,
-} from '../internals/plugins/useGeoProjection';
+import { selectorChartGeoPath } from '../internals/plugins/useGeoProjection';
+import type { UseGeoProjectionSignature } from '../internals/plugins/useGeoProjection';
 
 /**
  * Get the geo path registered with the geo chart, resolved against d3-geo and

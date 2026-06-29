@@ -1,19 +1,21 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, createEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   DataGridPro,
-  type DataGridProProps,
-  type GridRowModel,
   gridRowTreeSelector,
-  type GridApi,
   useGridApiRef,
   GRID_ROOT_GROUP_ID,
-  type ReorderValidationContext,
-  type GridGroupNode,
-  type IsRowReorderableParams,
+} from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridRowModel,
+  GridApi,
+  ReorderValidationContext,
+  GridGroupNode,
+  IsRowReorderableParams,
 } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { RowReorderDropPosition } from '@mui/x-data-grid/internals';

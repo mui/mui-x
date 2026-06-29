@@ -1,4 +1,4 @@
-import { type ColorProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ColorProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { resolveColorProcessor } from '../../internals/resolveColorProcessor';
 
 const getColor: ColorProcessor<'line'> = (series, xAxis, yAxis) =>

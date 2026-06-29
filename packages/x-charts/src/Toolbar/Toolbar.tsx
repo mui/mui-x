@@ -2,7 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { ToolbarContextProvider } from '@mui/x-internals/ToolbarContext';
 import { chartsToolbarClasses } from './chartToolbarClasses';
 

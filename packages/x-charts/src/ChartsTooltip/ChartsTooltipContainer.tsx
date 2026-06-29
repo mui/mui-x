@@ -6,12 +6,15 @@ import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled, useThemeProps } from '@mui/material/styles';
-import Popper, { type PopperProps } from '@mui/material/Popper';
+import Popper from '@mui/material/Popper';
+import type { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { warnOnce } from '@mui/x-internals/warning';
-import { type TriggerOptions, useIsFineMainPointer } from './utils';
-import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { useIsFineMainPointer } from './utils';
+import type { TriggerOptions } from './utils';
+import { useUtilityClasses } from './chartsTooltipClasses';
+import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsLastInteraction,
@@ -20,9 +23,9 @@ import {
 import {
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
-  type UseChartTooltipSignature,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
-import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartsInteractionAxisTooltip,
   selectorChartsTooltipAxisPosition,

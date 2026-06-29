@@ -228,7 +228,7 @@ export const getTreeNodeDescendants = (
   directChildrenOnly?: boolean,
 ) => {
   const node = tree[parentId];
-  if (node.type !== 'group') {
+  if (node?.type !== 'group') {
     return [];
   }
 
