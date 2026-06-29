@@ -14,6 +14,25 @@ import { marsTexture } from './marsTexture';
 
 const FEATURE_COLORS = { landmark: '#ff7777', mission: '#4fc3f7' } as const;
 
+// Returns a predicate telling whether a coordinate is hidden by the projection,
+// by checking it survives the round-trip `coord === invert(project(coord))`.
+// On a globe (e.g. orthographic) back-of-sphere coordinates project onto the disk
+// but invert to a different, front-facing coordinate.
+function createIsHidden(projection: GeoProjection) {
+  return (coordinate: [number, number]) => {
+    const point = projection(coordinate);
+    if (!point) {
+      return true;
+    }
+    const inverted = projection.invert?.(point);
+    return (
+      !inverted ||
+      Math.abs(inverted[0] - coordinate[0]) > 1 ||
+      Math.abs(inverted[1] - coordinate[1]) > 1
+    );
+  };
+}
+
 // Notable features projected as labeled markers.
 function MarsFeatureMarkers() {
   const path = useGeoPath();
@@ -21,21 +40,13 @@ function MarsFeatureMarkers() {
   if (!projection) {
     return null;
   }
+  const isHidden = createIsHidden(projection);
   return (
     <g>
       {marsFeatures.map((feature) => {
-        const point = projection([feature.lon, feature.lat]);
-        if (!point) {
-          return null;
-        }
-        // Hide features on the hidden hemisphere: their coordinate does not
-        // round-trip back to itself through the projection.
-        const back = projection.invert?.(point);
-        if (
-          back &&
-          (Math.abs(back[0] - feature.lon) > 1 ||
-            Math.abs(back[1] - feature.lat) > 1)
-        ) {
+        const coordinate: [number, number] = [feature.lon, feature.lat];
+        const point = projection(coordinate);
+        if (!point || isHidden(coordinate)) {
           return null;
         }
         const [x, y] = point;
