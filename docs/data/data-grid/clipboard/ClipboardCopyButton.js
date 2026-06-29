@@ -30,8 +30,11 @@ function getSelectionAsText(apiRef) {
     return sortedRowIds
       .map((rowId) =>
         Object.keys(cellSelectionModel[rowId])
-          .filter((field) => cellSelectionModel[rowId][field])
-          .map((field) => String(api.getCellParams(rowId, field).formattedValue))
+          .map((field) =>
+            cellSelectionModel[rowId][field]
+              ? String(api.getCellParams(rowId, field).formattedValue)
+              : '',
+          )
           .join('\t'),
       )
       .join('\n');
