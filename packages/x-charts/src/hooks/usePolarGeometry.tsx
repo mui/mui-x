@@ -1,6 +1,6 @@
 import { useDrawingArea } from './useDrawingArea';
 import { useRotationAxis, useRadiusAxis } from './useAxis';
-import type { D3Scale } from '../models/axis';
+import type { AxisScaleConfig, ScaleName } from '../models/axis';
 
 /**
  * Provides access to the geometry of a polar chart.
@@ -18,7 +18,10 @@ import type { D3Scale } from '../models/axis';
  *
  * @returns The polar geometry helpers, or `null` if the chart scales are not ready.
  */
-export function usePolarGeometry(): PolarGeometry | null {
+export function usePolarGeometry<
+  AngleScale extends ScaleName = ScaleName,
+  RadiusScale extends ScaleName = ScaleName,
+>(): PolarGeometry<AngleScale, RadiusScale> | null {
   const { left, top, width, height } = useDrawingArea();
   const rotationAxis = useRotationAxis();
   const radiusAxis = useRadiusAxis();
@@ -27,14 +30,13 @@ export function usePolarGeometry(): PolarGeometry | null {
     return null;
   }
 
-  const angleScale = rotationAxis.scale;
-  const radiusScale = radiusAxis.scale;
+  const angleScale = rotationAxis.scale as AxisScaleConfig[AngleScale]['scale'];
+  const radiusScale = radiusAxis.scale as AxisScaleConfig[RadiusScale]['scale'];
 
   return {
     cx: left + width / 2,
     cy: top + height / 2,
     angleScale,
-    bandwidth: 'bandwidth' in angleScale ? angleScale.bandwidth() : 0,
     radiusScale,
     point: (radius, angle) => [radius * Math.sin(angle), -radius * Math.cos(angle)],
     pointInverse: (x, y) => [Math.sqrt(x * x + y * y), Math.atan2(x, -y)],
@@ -42,8 +44,8 @@ export function usePolarGeometry(): PolarGeometry | null {
 }
 
 export interface PolarGeometry<
-  TAngleScale extends D3Scale = D3Scale,
-  TRadiusScale extends D3Scale = D3Scale,
+  AngleScale extends ScaleName = ScaleName,
+  RadiusScale extends ScaleName = ScaleName,
 > {
   /**
    * The X coordinate of the chart center within the SVG.
@@ -56,16 +58,11 @@ export interface PolarGeometry<
   /**
    * The scale that maps rotation axis values to angles in radians.
    */
-  angleScale: TAngleScale;
-  /**
-   * The angular width of each band on the rotation axis.
-   * Zero when the rotation axis uses a point scale instead of a band scale.
-   */
-  bandwidth: number;
+  angleScale: AxisScaleConfig[AngleScale]['scale'];
   /**
    * The scale that maps data values to radii (distance from the chart center).
    */
-  radiusScale: TRadiusScale;
+  radiusScale: AxisScaleConfig[RadiusScale]['scale'];
   /**
    * Converts polar coordinates to Cartesian offsets relative to the chart center.
    * @param {number} radius - Distance from the center.

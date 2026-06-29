@@ -16,7 +16,7 @@ const trustData = [
  * Custom overlay using usePolarGeometry hook
  */
 function PolarGeometryOverlay() {
-  const geometry = usePolarGeometry();
+  const geometry = usePolarGeometry<'band', 'linear'>();
 
   if (!geometry) {
     return null;

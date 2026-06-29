@@ -11,6 +11,9 @@ The `usePolarGeometry()` returns the geometry of a polar chart, providing access
 
 ## Usage
 
+The hook returns the chart's center coordinates (`cx`, `cy`), the `angleScale` and `radiusScale`, and the `point`/`pointInverse` converters between polar and Cartesian coordinates.
+It returns `null` while the chart scales are not ready.
+
 ```js
 import { usePolarGeometry } from '@mui/x-charts/hooks';
 
@@ -30,27 +33,20 @@ function PolarGeometryOverlay() {
 }
 ```
 
-{{"demo": "UsePolarGeometry.js"}}
-
-## Return value
+By default `angleScale` and `radiusScale` are typed as the union of all supported scale types.
+Pass the rotation and radius scale names as generic arguments to get precisely typed scales—for example, to call `bandwidth()` on a band rotation axis:
 
 ```ts
-// D3Scale is the union of all supported D3 scale types:
-// ScaleBand | ScalePoint | ScaleLinear | ScaleLogarithmic | ScaleSymLog | ScalePower | ScaleTime
-interface PolarGeometry<
-  TAngleScale extends D3Scale = D3Scale,
-  TRadiusScale extends D3Scale = D3Scale,
-> {
-  cx: number; // X coordinate of the chart center within the SVG
-  cy: number; // Y coordinate of the chart center within the SVG
-  angleScale: TAngleScale; // Maps rotation axis values to angles in radians
-  radiusScale: TRadiusScale; // Maps data values to radii (distance from center)
-  point: (radius: number, angle: number) => [number, number]; // Polar → Cartesian offset from [cx, cy]
-  pointInverse: (x: number, y: number) => [number, number]; // Cartesian offset → [radius, angle in (-π, π)]
+const geometry = usePolarGeometry<'band', 'linear'>();
+
+if (geometry) {
+  // angleScale is ScaleBand, radiusScale is ScaleLinear
+  const band = geometry.angleScale.bandwidth();
+  const radius = geometry.radiusScale(100);
 }
 ```
 
-Returns `null` if the chart scales are not ready.
+{{"demo": "UsePolarGeometry.js"}}
 
 ## Caveats
 

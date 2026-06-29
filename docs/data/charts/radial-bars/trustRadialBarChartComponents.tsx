@@ -5,7 +5,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ChartsTooltipContainer, useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
 import { usePolarGeometry } from '@mui/x-charts/hooks';
-import type { D3OrdinalScale, D3ContinuousScale } from '@mui/x-charts/models';
 import {
   euAverageTrust2025,
   europeanYouthTrust,
@@ -88,14 +87,13 @@ export function PreviousTrustData({
   currentColor,
   previousColor,
 }: PreviousTrustDataProps) {
-  const geometry = usePolarGeometry();
+  const geometry = usePolarGeometry<'band', 'linear'>();
   if (!geometry) {
     return null;
   }
 
-  const { cx, cy, bandwidth, point } = geometry;
-  const angleScale = geometry.angleScale as D3OrdinalScale;
-  const radiusScale = geometry.radiusScale as D3ContinuousScale;
+  const { cx, cy, angleScale, radiusScale, point } = geometry;
+  const bandwidth = angleScale.bandwidth();
 
   return (
     <g transform={`translate(${cx} ${cy})`}>
@@ -241,13 +239,12 @@ export function TrustLegend({ currentColor, previousColor }: TrustLegendProps) {
 
 /** Dashed ring at the EU average of the 2025 values. */
 export function EuAverageRing() {
-  const geometry = usePolarGeometry();
+  const geometry = usePolarGeometry<'band', 'linear'>();
   if (!geometry) {
     return null;
   }
 
-  const { cx, cy } = geometry;
-  const radiusScale = geometry.radiusScale as D3ContinuousScale;
+  const { cx, cy, radiusScale } = geometry;
   const radius = radiusScale(euAverageTrust2025);
 
   return (
