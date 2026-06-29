@@ -12,6 +12,7 @@ The `usePolarGeometry()` returns the geometry of a polar chart, providing access
 ## Usage
 
 The hook returns the chart's center coordinates (`cx`, `cy`), the `angleScale` and `radiusScale`, and the `point`/`pointInverse` converters between polar and Cartesian coordinates.
+`angleScale` is the scale of the rotation axis (the angular axis going around the center), and `radiusScale` is the scale of the radius axis (the radial distance from the center).
 It returns `null` while the chart scales are not ready.
 
 ```js
