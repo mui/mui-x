@@ -1,6 +1,6 @@
 ---
 productId: x-scheduler
-title: React Scheduler component - Event Timeline vs Gantt chart
+title: React Scheduler component - Event Timeline vs Gantt Chart
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
 components: EventTimelinePremium

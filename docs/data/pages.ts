@@ -17,7 +17,7 @@ const schedulerPages: MuiPage[] = [
       { pathname: '/x/react-scheduler/quickstart' },
       {
         pathname: '/x/react-scheduler/event-timeline-vs-gantt',
-        title: 'Event Timeline vs Gantt chart',
+        title: 'Event Timeline vs Gantt Chart',
       },
       {
         pathname: 'https://forms.gle/Ksbc91D3PcMiiK5x9',
