@@ -39,16 +39,10 @@ export interface ReprojectEquirectangularImageParams {
  *
  * 1. Convert it to SVG coordinates `(left + px, top + py)` — the space the
  *    projection works in — and `projection.invert` it to a `[lon, lat]` coordinate.
- *    `invert` returns `null` outside the projection's domain, leaving the pixel
- *    transparent.
+ *    `invert` returns `null` for pixels outside the projection's visible footprint
+ *    (for example the area around an `orthographic` globe), leaving them transparent.
  * 2. Discard coordinates outside `imageBounds` (no source data there).
- * 3. Round-trip test: forward-project `[lon, lat]` again. Projections such as
- *    `orthographic` are many-to-one — back-of-globe coordinates `invert` to a
- *    point that does *not* project back to the original pixel. If the round trip
- *    lands more than half a pixel away, the pixel is on the hidden side of the
- *    projection and is left transparent. This is what clips the raster to the
- *    visible footprint.
- * 4. Map `[lon, lat]` to a source pixel with nearest-neighbor sampling (the image
+ * 3. Map `[lon, lat]` to a source pixel with nearest-neighbor sampling (the image
  *    being equirectangular, both axes are linear) and copy its RGBA.
  *
  * ### Failure modes
@@ -57,7 +51,7 @@ export interface ReprojectEquirectangularImageParams {
  * source pixels throws because a cross-origin image without CORS headers has
  * tainted the canvas.
  *
- * Complexity is `O(width × height)` with two projection evaluations per pixel, so
+ * Complexity is `O(width × height)` with one inverse projection per pixel, so
  * callers should treat it as a per-resize computation rather than a per-frame one.
  */
 export function reprojectEquirectangularImage(
@@ -116,17 +110,7 @@ export function reprojectEquirectangularImage(
         continue;
       }
 
-      // 3. Round-trip test: drop coordinates hidden by the projection.
-      const reprojected = projection([lon, lat]);
-      if (
-        !reprojected ||
-        Math.abs(reprojected[0] - deviceX) > 0.5 ||
-        Math.abs(reprojected[1] - deviceY) > 0.5
-      ) {
-        continue;
-      }
-
-      // 4. Geographic coordinate -> source pixel (nearest neighbor).
+      // 3. Geographic coordinate -> source pixel (nearest neighbor).
       let sx = Math.floor(((lon - west) / (east - west)) * sourceWidth);
       let sy = Math.floor(((north - lat) / (north - south)) * sourceHeight);
       sx = Math.min(Math.max(sx, 0), sourceWidth - 1);
