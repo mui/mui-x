@@ -158,7 +158,7 @@ function useClickAwayListener(
     }
 
     // Ensure that this hook is not "activated" synchronously.
-    // https://github.com/facebook/react/issues/20074
+    // https://github.com/react/react/issues/20074
     function armClickAwayListener() {
       activatedRef.current = true;
     }

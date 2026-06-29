@@ -186,6 +186,78 @@ const cleanText = (string) =>
 expect(cleanText(input.value)).to.equal('04-17-2022');
 ```
 
+### End-to-end testing with Playwright
+
+The field's accessible DOM structure renders a visually-hidden, form-submittable `<input>` alongside the `role="group"` container that holds the editable sections.
+This hidden input is a stable target for filling a value and asserting it: unlike the visible section spans, its value doesn't contain the invisible Unicode characters mentioned above, so assertions don't need any cleanup.
+When the picker has a `label`, that label becomes the accessible name of both the group and the hidden input (the field wires `<label htmlFor={id}>` automatically), which lets you scope the locators on pages that render more than one picker.
+
+Given a labeled picker:
+
+```tsx
+<DatePicker label="Departure" />
+```
+
+**Recommended: click the field, then fill the hidden input.**
+Clicking the visible field focuses it deterministically before the fill resolves:
+
+```ts
+const field = page.getByRole('group', { name: 'Departure' });
+const input = field.getByRole('textbox', { includeHidden: true });
+
+await field.click();
+await input.fill('02/12/2020');
+await expect(input).toHaveValue('02/12/2020');
+```
+
+`includeHidden: true` is only required to _locate_ the input, since it carries `aria-hidden="true"`.
+The `.fill()` itself works because the visually-hidden input is a 1px clipped element (not `display: none`), so it passes Playwright's editability checks.
+
+**Single-locator alternative.**
+You can keep everything on the hidden input, focusing it before the fill:
+
+```ts
+const input = page.getByRole('textbox', { includeHidden: true, name: 'Departure' });
+
+await input.focus();
+await input.fill('02/12/2020');
+await expect(input).toHaveValue('02/12/2020');
+```
+
+:::warning
+Focusing the hidden input redirects focus to the editable sections.
+A bare `input.fill()` _without_ the preceding `.focus()` is silently dropped because focus moves away mid-fill - this is especially visible on a pre-filled field, where the value reverts to its previous content.
+The explicit `.focus()` works around it, but it relies on the focus settling before the fill resolves, so it can still be flaky under load.
+Prefer clicking the field first when you can.
+:::
+
+To drive individual sections (for example, keyboard-flow tests), click the field first, then fill each `spinbutton`:
+
+```ts
+const field = page.getByRole('group', { name: 'Departure' });
+
+await field.click();
+await field.getByRole('spinbutton', { name: 'Month' }).fill('04');
+await field.getByRole('spinbutton', { name: 'Day' }).fill('11');
+await field.getByRole('spinbutton', { name: 'Year' }).fill('2022');
+```
+
+:::warning
+The `spinbutton` accessible names are locale-dependent.
+Use the localized labels if your tests run against a non-English locale.
+:::
+
+:::info
+The hidden input's value substitutes placeholders for empty sections (for example, `04/DD/YYYY` if only the month is filled).
+For partial-fill assertions, prefer reading section content via `getByRole('spinbutton', { name: ... })`.
+:::
+
+A few additional gotchas:
+
+- **Date format and locale**. The hidden input's value uses the picker's configured format. `04/11/2022` parses as April 11 in `en-US` but November 4 in `en-GB`. Pin your tests to a fixed locale, or generate the expected string from the same adapter you configured the picker with.
+- **Range pickers expose two sets of sections**. With a single-input range picker each `spinbutton` role appears twice; scope using `.first()` / `.last()` (or `.nth(i)`) to target the start or end side. With a multi-input range picker the two fields are separate `role="group"` containers; target each input via a parent locator.
+- **Wait for the picker dialog to detach**. After selecting a date in a picker, the dialog closes asynchronously. If you are asserting selection and experiencing flaky failures, be sure to add `await page.waitForSelector('[role="dialog"]', { state: 'detached' })` (or `[role="tooltip"]` in case of a range picker with multiple input fields) before the next assertion.
+
 ## Overriding slots and slot props
 
 Date and Time Pickers are complex components built using many subcomponents known as **slots**.
