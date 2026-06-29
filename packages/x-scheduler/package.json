@@ -13,6 +13,7 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
+    ".": "./src/index.ts",
     "./agenda-view": "./src/agenda-view/index.ts",
     "./compact-day-view": "./src/compact-day-view/index.ts",
     "./compact-three-day-view": "./src/compact-three-day-view/index.ts",
