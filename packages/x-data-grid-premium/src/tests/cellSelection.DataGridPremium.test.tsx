@@ -1,17 +1,12 @@
 import * as React from 'react';
-import { stub, type SinonStub, spy } from 'sinon';
+import { stub, spy } from 'sinon';
+import type { SinonStub } from 'sinon';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridColDef,
-  useGridApiRef,
-  gridClasses,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef, gridClasses } from '@mui/x-data-grid-premium';
+import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
 

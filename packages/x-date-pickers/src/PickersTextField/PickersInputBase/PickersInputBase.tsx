@@ -11,25 +11,24 @@ import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
+import type { PickersInputBaseClasses } from './pickersInputBaseClasses';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
-  PickersInputBaseClasses,
 } from './pickersInputBaseClasses';
-import { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersSectionElement, PickersSectionListSlotProps } from '../../PickersSectionList';
 import {
   Unstable_PickersSectionList as PickersSectionList,
   Unstable_PickersSectionListRoot as PickersSectionListRoot,
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
-  PickersSectionElement,
-  PickersSectionListSlotProps,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../../models/fields';
-import { PickerOwnerState } from '../../models/pickers';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerOwnerState } from '../../models/pickers';
 
 function mergePickersInputBaseSectionContentSlotProps(
   consumerSlotProps: PickersSectionListSlotProps['sectionContent'],

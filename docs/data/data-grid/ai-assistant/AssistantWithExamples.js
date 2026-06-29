@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   DataGridPremium,
   GridAiAssistantPanel,
+  GridPreferencePanelsValue,
   unstable_gridDefaultPromptResolver as promptResolver,
 } from '@mui/x-data-grid-premium';
 import {
@@ -91,6 +92,12 @@ export default function AssistantWithExamples() {
       <DataGridPremium
         {...data}
         columns={columns}
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.aiAssistant,
+          },
+        }}
         aiAssistantSuggestions={[
           { value: 'Sort by name' },
           { value: 'Show people from the EU' },

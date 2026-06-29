@@ -6,21 +6,18 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TimeIcon, DateRangeIcon, ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers/icons';
-import {
+import type {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
-  isDatePickerView,
-  usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import { isDatePickerView, usePickerPrivateContext } from '@mui/x-date-pickers/internals';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import {
-  DateTimeRangePickerTabsClasses,
-  getDateTimeRangePickerTabsUtilityClass,
-} from './dateTimeRangePickerTabsClasses';
-import { RangePosition } from '../models';
+import type { DateTimeRangePickerTabsClasses } from './dateTimeRangePickerTabsClasses';
+import { getDateTimeRangePickerTabsUtilityClass } from './dateTimeRangePickerTabsClasses';
+import type { RangePosition } from '../models';
 import { usePickerRangePositionContext } from '../hooks';
 
 type TabValue = 'start-date' | 'start-time' | 'end-date' | 'end-time';

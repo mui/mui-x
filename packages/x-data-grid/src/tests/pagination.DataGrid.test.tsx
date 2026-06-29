@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
-import { spy, type SinonSpy } from 'sinon';
+import type { RefObject } from '@mui/x-internals/types';
+import { spy } from 'sinon';
+import type { SinonSpy } from 'sinon';
 import {
   createRenderer,
   fireEvent,
@@ -9,15 +10,8 @@ import {
   waitFor,
   act,
 } from '@mui/internal-test-utils';
-import {
-  DataGrid,
-  type DataGridProps,
-  gridClasses,
-  GridLogicOperator,
-  type GridRowsProp,
-  type GridApi,
-  useGridApiRef,
-} from '@mui/x-data-grid';
+import { DataGrid, gridClasses, GridLogicOperator, useGridApiRef } from '@mui/x-data-grid';
+import type { DataGridProps, GridRowsProp, GridApi } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';

@@ -1,11 +1,7 @@
 'use client';
-import {
-  type ChartPlugin,
-  selectorChartDrawingArea,
-  type ZoomData,
-  selectorChartZoomOptionsLookup,
-} from '@mui/x-charts/internals';
-import { type UseChartProZoomSignature } from '../useChartProZoom.types';
+import { selectorChartDrawingArea, selectorChartZoomOptionsLookup } from '@mui/x-charts/internals';
+import type { ChartPlugin, ZoomData } from '@mui/x-charts/internals';
+import type { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { selectorPanInteractionConfig } from '../ZoomInteractionConfig.selectors';
 import { useDragOnPressGesture } from '../../zoomGestures/useDragOnPressGesture';

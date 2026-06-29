@@ -1,9 +1,9 @@
 import type * as React from 'react';
-import {
-  type ChartBaseButtonProps,
-  type ChartBaseIconButtonProps,
-  type ChartBaseToggleButtonProps,
-  type ChartBaseToggleButtonGroupProps,
+import type {
+  ChartBaseButtonProps,
+  ChartBaseIconButtonProps,
+  ChartBaseToggleButtonProps,
+  ChartBaseToggleButtonGroupProps,
 } from './chartsBaseSlotProps';
 import type {
   BaseButtonPropsOverrides,
