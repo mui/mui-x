@@ -18,6 +18,13 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 
 const countries = topojsonFeature(countriesTopology, 'countries');
 
+const countriesWithoutAntarctica = {
+  ...countries,
+  features: countries.features.filter(
+    (feature) => feature.properties?.name !== 'Antarctica',
+  ),
+};
+
 const USAStates = topojsonFeature(USATopology, 'states');
 
 const projectionGroups = [
@@ -37,10 +44,10 @@ const projectionGroups = [
     label: 'Conic',
     projections: [
       //  For now commented because those are more difficult to handle
-      // 'conicConformal',
-      // 'conicEqualArea',
-      // 'conicEquidistant',
-      // 'albers',
+      'conicConformal',
+      'conicEqualArea',
+      'conicEquidistant',
+      'albers',
       'albersUsa', // Special composition for the USA with an edge case for Alaska and Hawaii.
     ],
   },
@@ -93,7 +100,9 @@ export default function MapZoomOptions() {
     >
       <Box sx={{ flexGrow: 1, maxWidth: 800 }}>
         <ChartsGeoDataProviderPremium
-          geoData={isConicProjection(projection) ? USAStates : countries}
+          geoData={
+            projection === 'albersUsa' ? USAStates : countriesWithoutAntarctica
+          }
           projection={projection}
           apiRef={apiRef}
           zoom={{ rotationAllowed, translationAllowed, maxEmptySpace }}
@@ -111,12 +120,13 @@ export default function MapZoomOptions() {
           label="projection"
           value={projection}
           onChange={(event) => {
-            setProjection(event.target.value);
+            const value = event.target.value;
+            setProjection(value);
             apiRef.current?.resetZoom();
-            if (
-              isConicProjection(event.target.value) ||
-              isCylindricalProjection(event.target.value)
-            ) {
+            if (value === 'albersUsa') {
+              setRotationAllowed('none');
+              setTranslationAllowed('both');
+            } else if (isConicProjection(value) || isCylindricalProjection(value)) {
               setRotationAllowed('long');
               setTranslationAllowed('y');
             } else {

@@ -8,7 +8,7 @@ import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom
 const DEG = Math.PI / 180;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
-type ProjectionFamily = 'azimuthal' | 'conic' | 'cylindrical';
+type ProjectionFamily = 'azimuthal' | 'conic' | 'cylindrical' | 'albersUsa';
 
 const PROJECTION_FAMILY: Record<useGeoProjectionTypes.D3NamedProjection, ProjectionFamily> = {
   azimuthalEqualArea: 'azimuthal',
@@ -20,7 +20,7 @@ const PROJECTION_FAMILY: Record<useGeoProjectionTypes.D3NamedProjection, Project
   conicEqualArea: 'conic',
   conicEquidistant: 'conic',
   albers: 'conic',
-  albersUsa: 'conic',
+  albersUsa: 'albersUsa',
   equirectangular: 'cylindrical',
   mercator: 'cylindrical',
   transverseMercator: 'cylindrical',
@@ -37,8 +37,9 @@ const FAMILY_INTERACTION: Record<
   { rotationAllowed: MapRotationAxis; translationAllowed: MapTranslationAxis }
 > = {
   azimuthal: { rotationAllowed: 'both', translationAllowed: 'none' },
-  conic: { rotationAllowed: 'both', translationAllowed: 'none' },
-  cylindrical: { rotationAllowed: 'long', translationAllowed: 'both' },
+  conic: { rotationAllowed: 'long', translationAllowed: 'y' },
+  cylindrical: { rotationAllowed: 'long', translationAllowed: 'y' },
+  albersUsa: { rotationAllowed: 'none', translationAllowed: 'both' },
 };
 
 export function getProjectionFamily(
@@ -104,19 +105,19 @@ export function getRotation(
   zoomFactor: number = 1,
   rotationAllowed: MapRotationAxis = 'both',
 ): [number, number] | null {
-  if (!projection.invert) {
+  if (!projection.invert || !projection.rotate) {
     return null;
   }
 
-  const rotate = projection.rotate();
+  const rotate = projection.rotate?.();
   const scale = projection.scale();
   projection.scale(scale * zoomFactor);
-  projection.rotate([0, 0]);
+  projection.rotate?.([0, 0]);
 
   const q = projection.invert(to);
 
   // Reset projection modifications to avoid side effects.
-  projection.rotate(rotate);
+  projection.rotate?.(rotate);
   projection.scale(scale);
 
   if (!geoPoint || !q) {

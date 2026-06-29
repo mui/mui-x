@@ -18,6 +18,13 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 
 const countries = topojsonFeature(countriesTopology, 'countries');
 
+const countriesWithoutAntarctica = {
+  ...countries,
+  features: countries.features.filter(
+    (feature) => feature.properties?.name !== 'Antarctica',
+  ),
+};
+
 const USAStates = topojsonFeature(USATopology, 'states');
 
 const projectionGroups = [
@@ -37,10 +44,10 @@ const projectionGroups = [
     label: 'Conic',
     projections: [
       //  For now commented because those are more difficult to handle
-      // 'conicConformal',
-      // 'conicEqualArea',
-      // 'conicEquidistant',
-      // 'albers',
+      'conicConformal',
+      'conicEqualArea',
+      'conicEquidistant',
+      'albers',
       'albersUsa', // Special composition for the USA with an edge case for Alaska and Hawaii.
     ],
   },
@@ -64,16 +71,6 @@ const cities = [
   { name: 'Rio', coordinates: [-43.1729, -22.9068] },
 ];
 
-function isConicProjection(projection) {
-  return (
-    projection === 'conicConformal' ||
-    projection === 'conicEqualArea' ||
-    projection === 'conicEquidistant' ||
-    projection === 'albers' ||
-    projection === 'albersUsa'
-  );
-}
-
 export default function MapZoomControl() {
   const [projection, setProjection] = React.useState('naturalEarth1');
   const apiRef = useChartPremiumApiRef();
@@ -92,7 +89,9 @@ export default function MapZoomControl() {
     >
       <Box sx={{ flexGrow: 1, maxWidth: 800 }}>
         <ChartsGeoDataProviderPremium
-          geoData={isConicProjection(projection) ? USAStates : countries}
+          geoData={
+            projection === 'albersUsa' ? USAStates : countriesWithoutAntarctica
+          }
           projection={projection}
           apiRef={apiRef}
           zoom

@@ -15,7 +15,7 @@ import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/u
 import type { UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
 import type { GeoTooltipPosition } from '../../corePlugins/useChartSeriesConfig';
 import type { ChartState } from '../../models/chart';
-import { getParallels, isConicProjection, resolveProjectionInstance } from './projection.utils';
+import { getParallels, resolveProjectionInstance } from './projection.utils';
 
 const ZERO_COORDINATES: [number, number] = [0, 0];
 
@@ -205,12 +205,6 @@ export const selectorChartProjection = createSelectorMemoized(
     // `fitScale` is the `zoomLevel === 1` reference scale, computed independently in
     // `selectorFitScale` so it stays stable across pan/zoom transforms.
     projection.scale(zoomLevel != null && zoomLevel !== 1 ? fitScale * zoomLevel : fitScale);
-
-    // Conic projections are positioned via `rotate`; `center` panning is not applied.
-    if (isConicProjection(projection)) {
-      return projection;
-    }
-
     projection.translate([
       drawingArea.left + drawingArea.width / 2 + (translation?.[0] ?? 0) * drawingArea.width,
       drawingArea.top + drawingArea.height / 2 + (translation?.[1] ?? 0) * drawingArea.height,
