@@ -43,7 +43,7 @@ const roROPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Selectați data și ora',
   timePickerToolbarTitle: 'Selectați ora',
   dateRangePickerToolbarTitle: 'Selectați intervalul de date',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Selectați intervalul de timp',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -66,7 +66,10 @@ const roROPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Selectați data, data selectată este ${formattedDate}` : 'Selectați data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Selectați ora, ora selectată este ${formattedTime}` : 'Selectați ora',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+      ? `Selectați intervalul, intervalul selectat este ${formattedRange}`
+      : 'Selectați intervalul',
   fieldClearLabel: 'Golire conținut',
 
   // Table labels
