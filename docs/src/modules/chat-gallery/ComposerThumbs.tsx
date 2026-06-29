@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BigDisc, Card, ThumbCanvas, useTokens } from './primitives';
+import { Card, ThumbCanvas, useTokens } from './primitives';
 
 /**
  * Composer family — every thumb shows ONLY its slot, on a single surface.
@@ -101,52 +101,6 @@ function ComposerSurface() {
   );
 }
 
-// === ChatComposerTextArea — standalone textarea ==============================
-
-export function ChatComposerTextAreaThumb() {
-  return (
-    <ThumbCanvas>
-      <Card>
-        <StandaloneTextArea />
-      </Card>
-    </ThumbCanvas>
-  );
-}
-
-function StandaloneTextArea() {
-  const t = useTokens();
-  const w = W - 96;
-  const h = 240;
-  const x = (W - w) / 2;
-  const y = (H - h) / 2;
-  const lines = [w - 48, w - 80, w - 200, w - 360];
-  return (
-    <g>
-      <rect
-        x={x}
-        y={y}
-        width={w}
-        height={h}
-        rx={16}
-        fill={t.surface}
-        stroke={t.accent}
-        strokeWidth={1.5}
-      />
-      {lines.map((lw, i) => (
-        <rect key={i} x={x + 24} y={y + 32 + i * 24} width={lw} height={10} rx={5} fill={t.text} />
-      ))}
-      {/* Cursor at end of last line */}
-      <rect
-        x={x + 24 + lines[lines.length - 1] + 8}
-        y={y + 32 + (lines.length - 1) * 24 - 3}
-        width={2}
-        height={18}
-        fill={t.accent}
-      />
-    </g>
-  );
-}
-
 // === ChatComposerToolbar — standalone toolbar pill ===========================
 
 export function ChatComposerToolbarThumb() {
@@ -205,30 +159,6 @@ function StandaloneToolbar() {
   );
 }
 
-// === ChatComposerSendButton — big paper-plane disc ===========================
-
-export function ChatComposerSendButtonThumb() {
-  return (
-    <ThumbCanvas>
-      <Card>
-        <BigDisc icon="send" variant="accent" size={140} />
-      </Card>
-    </ThumbCanvas>
-  );
-}
-
-// === ChatComposerAttachButton — big paperclip disc ==========================
-
-export function ChatComposerAttachButtonThumb() {
-  return (
-    <ThumbCanvas>
-      <Card>
-        <BigDisc icon="paperclip" variant="soft" size={140} />
-      </Card>
-    </ThumbCanvas>
-  );
-}
-
 // === ChatComposerAttachmentList — file chips ===============================
 
 export function ChatComposerAttachmentListThumb() {
@@ -281,96 +211,6 @@ function AttachmentChips() {
           </g>
         );
       })}
-    </g>
-  );
-}
-
-// === ChatComposerHelperText — caption under composer ========================
-
-export function ChatComposerHelperTextThumb() {
-  return (
-    <ThumbCanvas>
-      <Card>
-        <HelperShowcase />
-      </Card>
-    </ThumbCanvas>
-  );
-}
-
-function HelperShowcase() {
-  const t = useTokens();
-  const inputW = W - 96;
-  const inputH = 56;
-  const helperH = 12;
-  const totalH = inputH + 16 + helperH;
-  const x = (W - inputW) / 2;
-  const inputY = (H - totalH) / 2;
-  const helperY = inputY + inputH + 16;
-  return (
-    <g>
-      {/* Implied input above (muted) */}
-      <rect
-        x={x}
-        y={inputY}
-        width={inputW}
-        height={inputH}
-        rx={inputH / 2}
-        fill={t.surface}
-        stroke={t.divider}
-        strokeWidth={1}
-      />
-      {/* Helper text — accent line + small info dot */}
-      <circle cx={x + 8} cy={helperY + helperH / 2} r={5} fill={t.accent} />
-      <rect
-        x={x + 22}
-        y={helperY}
-        width={inputW - 60}
-        height={helperH}
-        rx={helperH / 2}
-        fill={t.accent}
-        opacity={0.85}
-      />
-    </g>
-  );
-}
-
-// === ChatComposerLabel — accessible label above input ======================
-
-export function ChatComposerLabelThumb() {
-  return (
-    <ThumbCanvas>
-      <Card>
-        <LabelShowcase />
-      </Card>
-    </ThumbCanvas>
-  );
-}
-
-function LabelShowcase() {
-  const t = useTokens();
-  const inputW = W - 96;
-  const inputH = 56;
-  const labelW = 160;
-  const labelH = 14;
-  const totalH = labelH + 16 + inputH;
-  const x = (W - inputW) / 2;
-  const labelY = (H - totalH) / 2;
-  const inputY = labelY + labelH + 16;
-  return (
-    <g>
-      {/* Label — accent bar */}
-      <rect x={x} y={labelY} width={labelW} height={labelH} rx={labelH / 2} fill={t.accent} />
-      {/* Input below (muted) */}
-      <rect
-        x={x}
-        y={inputY}
-        width={inputW}
-        height={inputH}
-        rx={inputH / 2}
-        fill={t.surface}
-        stroke={t.divider}
-        strokeWidth={1}
-      />
     </g>
   );
 }

@@ -2,31 +2,16 @@ import * as React from 'react';
 import { ChatBoxThumb } from './ChatBoxThumb';
 import { ChatConversationThumb } from './ChatConversationThumb';
 import { ChatConversationListThumb, ChatMessageListThumb } from './LayoutThumbs';
-import {
-  ChatConversationHeaderActionsThumb,
-  ChatConversationHeaderInfoThumb,
-  ChatConversationHeaderThumb,
-  ChatConversationSubtitleThumb,
-  ChatConversationTitleThumb,
-} from './HeaderThumbs';
+import { ChatConversationHeaderThumb } from './HeaderThumbs';
 import {
   ChatMessageActionsThumb,
-  ChatMessageAuthorLabelThumb,
-  ChatMessageAvatarThumb,
   ChatMessageContentThumb,
-  ChatMessageErrorThumb,
   ChatMessageGroupThumb,
-  ChatMessageInlineMetaThumb,
   ChatMessageMetaThumb,
   ChatMessageThumb,
 } from './MessageThumbs';
 import {
-  ChatComposerAttachButtonThumb,
   ChatComposerAttachmentListThumb,
-  ChatComposerHelperTextThumb,
-  ChatComposerLabelThumb,
-  ChatComposerSendButtonThumb,
-  ChatComposerTextAreaThumb,
   ChatComposerThumb,
   ChatComposerToolbarThumb,
 } from './ComposerThumbs';
@@ -47,7 +32,6 @@ import {
 
 export type ChatGallerySectionId =
   | 'full-surfaces'
-  | 'layout-and-navigation'
   | 'messages'
   | 'composer'
   | 'states'
@@ -71,7 +55,7 @@ export interface ChatGalleryEntry {
 }
 
 export const CHAT_GALLERY: ChatGalleryEntry[] = [
-  // === Full surfaces ===
+  // === Chat surfaces ===
   {
     id: 'chat-box',
     name: 'ChatBox',
@@ -88,13 +72,11 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     href: '/x/react-chat/basics/conversation/',
     Thumbnail: ChatConversationThumb,
   },
-
-  // === Layout and navigation ===
   {
     id: 'chat-conversation-list',
     name: 'ChatConversationList',
     status: 'compound',
-    sectionId: 'layout-and-navigation',
+    sectionId: 'full-surfaces',
     href: '/x/react-chat/multi-conversation/conversation-list/',
     Thumbnail: ChatConversationListThumb,
   },
@@ -102,41 +84,9 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     id: 'chat-conversation-header',
     name: 'ChatConversationHeader',
     status: 'compound',
-    sectionId: 'layout-and-navigation',
+    sectionId: 'full-surfaces',
     href: '/x/react-chat/multi-conversation/conversation-header/',
     Thumbnail: ChatConversationHeaderThumb,
-  },
-  {
-    id: 'chat-conversation-header-info',
-    name: 'ChatConversationHeaderInfo',
-    status: 'slot',
-    sectionId: 'layout-and-navigation',
-    href: '/x/react-chat/multi-conversation/conversation-header/',
-    Thumbnail: ChatConversationHeaderInfoThumb,
-  },
-  {
-    id: 'chat-conversation-title',
-    name: 'ChatConversationTitle',
-    status: 'slot',
-    sectionId: 'layout-and-navigation',
-    href: '/x/react-chat/multi-conversation/conversation-header/',
-    Thumbnail: ChatConversationTitleThumb,
-  },
-  {
-    id: 'chat-conversation-subtitle',
-    name: 'ChatConversationSubtitle',
-    status: 'slot',
-    sectionId: 'layout-and-navigation',
-    href: '/x/react-chat/multi-conversation/conversation-header/',
-    Thumbnail: ChatConversationSubtitleThumb,
-  },
-  {
-    id: 'chat-conversation-header-actions',
-    name: 'ChatConversationHeaderActions',
-    status: 'slot',
-    sectionId: 'layout-and-navigation',
-    href: '/x/react-chat/multi-conversation/conversation-header/',
-    Thumbnail: ChatConversationHeaderActionsThumb,
   },
 
   // === Messages ===
@@ -165,22 +115,6 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     Thumbnail: ChatMessageThumb,
   },
   {
-    id: 'chat-message-avatar',
-    name: 'ChatMessageAvatar',
-    status: 'slot',
-    sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#message-slots',
-    Thumbnail: ChatMessageAvatarThumb,
-  },
-  {
-    id: 'chat-message-author-label',
-    name: 'ChatMessageAuthorLabel',
-    status: 'slot',
-    sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#message-slots',
-    Thumbnail: ChatMessageAuthorLabelThumb,
-  },
-  {
     id: 'chat-message-content',
     name: 'ChatMessageContent',
     status: 'slot',
@@ -197,28 +131,12 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     Thumbnail: ChatMessageMetaThumb,
   },
   {
-    id: 'chat-message-inline-meta',
-    name: 'ChatMessageInlineMeta',
-    status: 'slot',
-    sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#message-slots',
-    Thumbnail: ChatMessageInlineMetaThumb,
-  },
-  {
     id: 'chat-message-actions',
     name: 'ChatMessageActions',
     status: 'slot',
     sectionId: 'messages',
     href: '/x/react-chat/display/message-actions/',
     Thumbnail: ChatMessageActionsThumb,
-  },
-  {
-    id: 'chat-message-error',
-    name: 'ChatMessageError',
-    status: 'state',
-    sectionId: 'messages',
-    href: '/x/react-chat/behavior/error-handling/',
-    Thumbnail: ChatMessageErrorThumb,
   },
 
   // === Composer ===
@@ -231,22 +149,6 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     Thumbnail: ChatComposerThumb,
   },
   {
-    id: 'chat-composer-label',
-    name: 'ChatComposerLabel',
-    status: 'slot',
-    sectionId: 'composer',
-    href: '/x/react-chat/basics/composer/',
-    Thumbnail: ChatComposerLabelThumb,
-  },
-  {
-    id: 'chat-composer-text-area',
-    name: 'ChatComposerTextArea',
-    status: 'slot',
-    sectionId: 'composer',
-    href: '/x/react-chat/basics/composer/',
-    Thumbnail: ChatComposerTextAreaThumb,
-  },
-  {
     id: 'chat-composer-toolbar',
     name: 'ChatComposerToolbar',
     status: 'slot',
@@ -255,36 +157,12 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     Thumbnail: ChatComposerToolbarThumb,
   },
   {
-    id: 'chat-composer-attach-button',
-    name: 'ChatComposerAttachButton',
-    status: 'slot',
-    sectionId: 'composer',
-    href: '/x/react-chat/behavior/attachments/',
-    Thumbnail: ChatComposerAttachButtonThumb,
-  },
-  {
     id: 'chat-composer-attachment-list',
     name: 'ChatComposerAttachmentList',
     status: 'slot',
     sectionId: 'composer',
     href: '/x/react-chat/behavior/attachments/',
     Thumbnail: ChatComposerAttachmentListThumb,
-  },
-  {
-    id: 'chat-composer-send-button',
-    name: 'ChatComposerSendButton',
-    status: 'slot',
-    sectionId: 'composer',
-    href: '/x/react-chat/basics/composer/',
-    Thumbnail: ChatComposerSendButtonThumb,
-  },
-  {
-    id: 'chat-composer-helper-text',
-    name: 'ChatComposerHelperText',
-    status: 'slot',
-    sectionId: 'composer',
-    href: '/x/react-chat/basics/composer/',
-    Thumbnail: ChatComposerHelperTextThumb,
   },
 
   // === States ===
@@ -389,27 +267,21 @@ export interface ChatGallerySection {
 export const CHAT_GALLERY_SECTIONS: ChatGallerySection[] = [
   {
     id: 'full-surfaces',
-    title: 'Full surfaces',
+    title: 'Chat surfaces',
     description:
-      'Reach for these when you want a working chat with minimal wiring—`ChatBox` is the batteries-included entry point, while `ChatConversation` is for when you bring your own shell:',
-  },
-  {
-    id: 'layout-and-navigation',
-    title: 'Layout and navigation',
-    description:
-      'The shell around messages: conversation chrome, header slots (info, title, subtitle, actions), and the inbox-style conversation list for multi-conversation apps:',
+      'The top-level building blocks you assemble a chat from: `ChatBox` for a batteries-included drop-in, `ChatConversation` to pair a message list with a composer, `ChatConversationList` for the inbox sidebar, and `ChatConversationHeader` for the conversation title bar:',
   },
   {
     id: 'messages',
     title: 'Messages',
     description:
-      'The message stack from list to group to message, plus the slots inside each bubble; reach for a slot when restyling a single part instead of replacing the whole message:',
+      'The message stack from list to group to message, plus the content, meta, and actions slots inside each bubble; reach for a slot when restyling a single part instead of replacing the whole message:',
   },
   {
     id: 'composer',
     title: 'Composer',
     description:
-      'Build the prompt form from a label, text area, attachment controls, toolbar, send button, and helper text—swap any slot to restyle one part without rebuilding the form:',
+      'The prompt form—`ChatComposer` is the shell, with a toolbar and attachment list you can swap to restyle a single part without rebuilding the form:',
   },
   {
     id: 'states',
