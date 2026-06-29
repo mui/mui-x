@@ -215,7 +215,6 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       aria-modal="false"
       // Non-modal: keep the grid behind usable (focus + scroll) while the dialog is open.
       disableEnforceFocus
-      disableScrollLock
       className={classes.eventDialog}
       slotProps={{
         paper: {
