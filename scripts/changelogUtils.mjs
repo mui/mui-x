@@ -147,7 +147,7 @@ function getContributors(commits = []) {
   const warnUsers = new Map();
   for (const commitItem of commits) {
     const { author, commit } = commitItem;
-    if (!author || author.login === 'renovate[bot]') {
+    if (!author || ['renovate[bot]', 'code-infra-renovate[bot]'].includes(author.login)) {
       continue;
     }
     if (author.login === 'github-actions[bot]') {

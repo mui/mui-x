@@ -5,13 +5,15 @@ import composeClasses from '@mui/utils/composeClasses';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
-  type CursorCoordinates,
   useGridEvent,
   getDataGridUtilityClass,
-  type GridEventListener,
   useGridLogger,
   useGridEventPriority,
-  type GridColumnOrderChangeParams,
+} from '@mui/x-data-grid';
+import type {
+  CursorCoordinates,
+  GridEventListener,
+  GridColumnOrderChangeParams,
 } from '@mui/x-data-grid';
 import type { GridStateInitializer } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';

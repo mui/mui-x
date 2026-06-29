@@ -3,9 +3,9 @@ import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommuni
 import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models';
 import {
   GRID_DEFAULT_STRATEGY,
-  type GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '../../core/strategyProcessing';
+import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import { buildRootGroup, GRID_ROOT_GROUP_ID } from './gridRowsUtils';
 import type { GridRowsPartialUpdateAction, GridRowTreeCreationValue } from './gridRowsInterfaces';
 

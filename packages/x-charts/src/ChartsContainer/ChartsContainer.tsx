@@ -1,17 +1,18 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type ChartSeriesType } from '../models/seriesType/config';
-import {
-  ChartsDataProvider,
-  type ChartsDataProviderProps,
-  type ChartsDataProviderSlotProps,
-  type ChartsDataProviderSlots,
+import type { ChartSeriesType } from '../models/seriesType/config';
+import { ChartsDataProvider } from '../ChartsDataProvider';
+import type {
+  ChartsDataProviderProps,
+  ChartsDataProviderSlotProps,
+  ChartsDataProviderSlots,
 } from '../ChartsDataProvider';
 import { useChartsContainerProps } from './useChartsContainerProps';
-import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
-import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { ChartsSurface } from '../ChartsSurface';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export interface ChartsContainerSlots extends ChartsDataProviderSlots {}
 

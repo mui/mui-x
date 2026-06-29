@@ -2,10 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  type BarChartProProps,
-  type BarChartProSlotProps,
-  type BarChartProSlots,
+import type {
+  BarChartProProps,
+  BarChartProSlotProps,
+  BarChartProSlots,
 } from '@mui/x-charts-pro/BarChartPro';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
@@ -14,7 +14,8 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
+import { FocusedBar } from '@mui/x-charts/BarChart';
+import type { BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -25,14 +26,11 @@ import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
-import { BarPlotPremium, type BarPlotPremiumProps } from './BarPlotPremium';
+import { BarPlotPremium } from './BarPlotPremium';
+import type { BarPlotPremiumProps } from './BarPlotPremium';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
-import {
-  type BarItemIdentifier,
-  type RangeBarItemIdentifier,
-  type RangeBarSeriesType,
-} from '../models';
+import type { BarItemIdentifier, RangeBarItemIdentifier, RangeBarSeriesType } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
 

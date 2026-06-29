@@ -9,9 +9,9 @@ import {
   PickerFieldUIContextProvider,
   useFieldTextFieldProps,
 } from '@mui/x-date-pickers/internals';
-import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
+import type { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
-import { FieldType } from '../models';
+import type { FieldType } from '../models';
 
 type DateRangeFieldComponent = ((
   props: SingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -217,6 +217,7 @@ SingleInputDateRangeField.propTypes /* remove-proptypes */ = {
   onFocus: PropTypes.func,
   onInput: PropTypes.func,
   onKeyDown: PropTypes.func,
+  onMouseDown: PropTypes.func,
   onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.

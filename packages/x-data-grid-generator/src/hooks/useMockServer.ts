@@ -1,24 +1,23 @@
 'use client';
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
-import {
-  getGridDefaultColumnTypes,
-  type GridGetRowsResponse,
-  type GridRowId,
-  type GridRowModel,
-  type GridColDef,
-  type GridInitialState,
-  type GridColumnVisibilityModel,
+import { getGridDefaultColumnTypes } from '@mui/x-data-grid-premium';
+import type {
+  GridGetRowsResponse,
+  GridRowId,
+  GridRowModel,
+  GridColDef,
+  GridInitialState,
+  GridColumnVisibilityModel,
 } from '@mui/x-data-grid-premium';
 import { extrapolateSeed, deepFreeze } from './useDemoData';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
 import type { GridColDefGenerator } from '../services/gridColDefGenerator';
-import { getRealGridData, type GridDemoData } from '../services/real-data-service';
-import {
-  addTreeDataOptionsToDemoData,
-  type AddPathToDemoDataOptions,
-} from '../services/tree-data-generator';
+import { getRealGridData } from '../services/real-data-service';
+import type { GridDemoData } from '../services/real-data-service';
+import { addTreeDataOptionsToDemoData } from '../services/tree-data-generator';
+import type { AddPathToDemoDataOptions } from '../services/tree-data-generator';
 import {
   loadServerRows,
   processTreeDataRows,

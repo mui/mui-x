@@ -1,19 +1,17 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { type ChartsClipPathProps } from '../ChartsClipPath';
-import { type ChartsRadialGridProps } from '../ChartsRadialGrid';
-import { type ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
-import { type ChartsLegendSlotExtension } from '../ChartsLegend';
-import { type ChartsOverlayProps } from '../ChartsOverlay';
+import type { ChartsClipPathProps } from '../ChartsClipPath';
+import type { ChartsRadialGridProps } from '../ChartsRadialGrid';
+import type { ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
+import type { ChartsLegendSlotExtension } from '../ChartsLegend';
+import type { ChartsOverlayProps } from '../ChartsOverlay';
 
-import { type ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
+import type { ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
 import type { RadialLineChartProps } from './RadialLineChart';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import {
-  RADIAL_LINE_CHART_PLUGINS,
-  type RadialLineChartPluginSignatures,
-} from './RadialLineChart.plugins';
+import { RADIAL_LINE_CHART_PLUGINS } from './RadialLineChart.plugins';
+import type { RadialLineChartPluginSignatures } from './RadialLineChart.plugins';
 import { DEFAULT_ROTATION_AXIS_KEY } from '../constants';
 
 /**
