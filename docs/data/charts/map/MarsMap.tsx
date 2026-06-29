@@ -12,7 +12,7 @@ import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { marsRegions, marsData, marsFeatures } from './marsRegions';
 import { marsTexture } from './marsTexture';
 
-const FEATURE_COLORS = { landmark: '#ffcc66', mission: '#4fc3f7' } as const;
+const FEATURE_COLORS = { landmark: '#ff7777', mission: '#4fc3f7' } as const;
 
 // Notable features projected as labeled markers.
 function MarsFeatureMarkers() {

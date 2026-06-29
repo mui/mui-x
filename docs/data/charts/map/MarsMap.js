@@ -12,7 +12,7 @@ import { ContinuousColorLegend } from '@mui/x-charts-premium/ChartsLegend';
 import { marsRegions, marsData, marsFeatures } from './marsRegions';
 import { marsTexture } from './marsTexture';
 
-const FEATURE_COLORS = { landmark: '#ffcc66', mission: '#4fc3f7' };
+const FEATURE_COLORS = { landmark: '#ff7777', mission: '#4fc3f7' };
 
 // Notable features projected as labeled markers.
 function MarsFeatureMarkers() {
