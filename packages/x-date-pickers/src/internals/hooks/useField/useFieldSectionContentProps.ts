@@ -5,7 +5,7 @@ import type { FieldSection, MuiPickersAdapter } from '../../../models';
 import type { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
 import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
-import { getLocalizedDigits, removeLocalizedDigits } from './useField.utils';
+import { removeLocalizedDigits } from './useField.utils';
 import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import type { FieldRangeSection, PickerAnyManager } from '../../models';
 import type { PickersSectionElement } from '../../../PickersSectionList';
@@ -20,7 +20,6 @@ export function useFieldSectionContentProps(
 ): UseFieldSectionContentPropsReturnValue {
   const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
-  const localizedDigits = React.useMemo(() => getLocalizedDigits(adapter), [adapter]);
 
   const {
     focused,
@@ -34,6 +33,7 @@ export function useFieldSectionContentProps(
       sectionsValueBoundaries,
       state,
       value,
+      localizedDigits,
 
       // Methods to update the states
       clearActiveSection,
