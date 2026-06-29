@@ -48,6 +48,7 @@ export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/featurePlugins/useChartBrush';
 export * as useGeoProjectionSelectors from './plugins/featurePlugins/useGeoProjection/useGeoProjection.selectors';
+export { getDefaultTranslation } from './plugins/featurePlugins/useGeoProjection/projection.utils';
 export * as useGeoProjectionTypes from './plugins/featurePlugins/useGeoProjection/useGeoProjection.types';
 export * as useGeoProjectionZoomTypes from './plugins/featurePlugins/useGeoProjectionZoom/useGeoProjectionZoom.types';
 export * from './plugins/featurePlugins/useChartItemClick';

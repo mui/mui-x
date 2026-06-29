@@ -21,7 +21,7 @@ import {
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import type { UseGeoProjectionSignature } from './useGeoProjection.types';
 
-const PROJECTION_FACTORIES: Record<
+export const PROJECTION_FACTORIES: Record<
   useGeoProjectionTypes.D3NamedProjection,
   (() => GeoProjection) | undefined
 > = {
@@ -48,7 +48,7 @@ const PROJECTION_FACTORIES: Record<
 };
 
 export const useGeoProjection: ChartPlugin<UseGeoProjectionSignature> = ({ params, store }) => {
-  const { geoData, geoFeatureKey, projection } = params;
+  const { geoData, geoFeatureKey, projection, parallels } = params;
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -62,8 +62,9 @@ export const useGeoProjection: ChartPlugin<UseGeoProjectionSignature> = ({ param
       geoData: geoData ?? null,
       geoFeatureKey: geoFeatureKey ?? 'name',
       projection: projection ?? null,
+      parallels: parallels ?? null,
     });
-  }, [geoData, geoFeatureKey, projection, store]);
+  }, [geoData, geoFeatureKey, projection, parallels, store]);
 
   return {};
 };
@@ -72,6 +73,7 @@ useGeoProjection.params = {
   geoData: true,
   geoFeatureKey: true,
   projection: true,
+  parallels: true,
 };
 
 useGeoProjection.getDefaultizedParams = ({ params }) => ({ ...params });
@@ -81,6 +83,7 @@ useGeoProjection.getInitialState = (params) => ({
     geoData: params.geoData ?? null,
     geoFeatureKey: params.geoFeatureKey ?? 'name',
     projection: params.projection ?? null,
+    parallels: params.parallels ?? null,
     factories: PROJECTION_FACTORIES,
   },
 });

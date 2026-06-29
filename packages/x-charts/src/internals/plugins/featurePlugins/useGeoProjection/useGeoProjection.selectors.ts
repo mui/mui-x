@@ -4,7 +4,6 @@ import type {
   ExtendedFeatureCollection,
   GeoProjection,
   GeoPath,
-  GeoConicProjection,
 } from '@mui/x-charts-vendor/d3-geo';
 import type {
   D3NamedProjection,
@@ -16,11 +15,9 @@ import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/u
 import type { UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
 import type { GeoTooltipPosition } from '../../corePlugins/useChartSeriesConfig';
 import type { ChartState } from '../../models/chart';
+import { getParallels, isConicProjection, resolveProjectionInstance } from './projection.utils';
 
 const ZERO_COORDINATES: [number, number] = [0, 0];
-const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
-  return 'parallels' in projection && typeof projection.parallels === 'function';
-};
 
 export const selectorChartGeoProjectionState = (
   state: ChartState<[], [UseGeoProjectionSignature]>,
@@ -75,18 +72,15 @@ const selectorChartCenter = createSelectorMemoized(
 const selectorChartTranslation = createSelectorMemoized(
   selectorChartGeoProjectionZoomState,
   function selectorChartTranslation(geoProjectionZoom): [number, number] | null {
-    return geoProjectionZoom?.translation ?? ZERO_COORDINATES;
+    return geoProjectionZoom?.translation ?? null;
   },
 );
 
-const DEFAULT_PARALLELS: [number, number] = [30, 30];
 const selectorChartParallels = createSelectorMemoized(
   selectorChartGeoProjectionState,
   selectorChartCenter,
   function selectorChartParallels(geoProjection, center): [number, number] {
-    return (
-      geoProjection?.parallels ?? (center ? [-center[1] - 15, -center[1] + 15] : DEFAULT_PARALLELS)
-    );
+    return getParallels(geoProjection?.parallels, center);
   },
 );
 /**
@@ -126,43 +120,6 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
     return map;
   },
 );
-
-/**
- * Builds a *fresh* `GeoProjection` instance from the raw projection input.
- *
- * This is intentionally not a memoized selector: callers mutate the returned projection (to fit,
- * scale, translate, rotate it). Returning a shared instance would mean mutations leak between
- * consumers and, worse, that a recomputed view keeps the same object reference — so store
- * subscribers comparing with `Object.is` would not detect the change and the map would render one
- * update behind.
- */
-function resolveProjectionInstance(
-  projectionInput: GeoProjectionInput | null,
-  projectionFactory: Record<D3NamedProjection, (() => GeoProjection) | undefined> | null,
-  parallels: [number, number],
-): GeoProjection | null {
-  if (projectionInput === null) {
-    return null;
-  }
-  if (typeof projectionInput !== 'string') {
-    return projectionInput;
-  }
-  const factory = projectionFactory?.[projectionInput];
-  if (!factory) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error(
-        `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-          `Expected one of: ${Object.keys(projectionFactory ?? {}).join(', ')}.`,
-      );
-    }
-    return null;
-  }
-  const projection = factory();
-  if (isConicProjection(projection)) {
-    projection.parallels(parallels);
-  }
-  return projection;
-}
 
 export const selectorFitScale = createSelector(
   selectorChartRawProjection,

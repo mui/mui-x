@@ -1,8 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { selectorChartDrawingArea } from '@mui/x-charts/internals';
+import { getDefaultTranslation } from '@mui/x-charts/internals';
 import type { ChartPlugin } from '@mui/x-charts/internals';
 import {
   useDragGesture,
@@ -14,10 +13,10 @@ import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import {
   selectorChartProjection,
   selectorChartRawProjection,
-  selectorFitScale,
 } from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapZoomView, UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
 import { getDefaultMapInteraction, getRotation, getTranslation } from './mapZoom.utils';
+import { PROJECTION_FACTORIES } from '../useGeoProjection';
 
 /** Multiplicative zoom step applied per wheel tick. */
 const WHEEL_ZOOM_STEP = 1.1;
@@ -31,6 +30,11 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 }) => {
   const { zoom, onViewChange, view } = params;
 
+  const initialViewRef = React.useRef<MapZoomView>({
+    zoomLevel: store.state.geoProjectionZoom.zoomLevel ?? 1,
+    center: store.state.geoProjectionZoom.center ?? [0, 0],
+    translation: store.state.geoProjectionZoom.translation ?? [0, 0],
+  });
   const interactionDefaults = getDefaultMapInteraction(selectorChartRawProjection(store.state));
 
   const {
@@ -44,41 +48,6 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   // `zoom` is either a boolean or a config object; an object always enables the interaction.
   const enabled = zoom !== false;
   const isControlled = view !== undefined;
-
-  useEnhancedEffect(() => {
-    // Set the default translation such that the entire map is visible.
-    if (store.state.geoProjectionZoom.translation !== null) {
-      return;
-    }
-
-    const fitScale = selectorFitScale(store.state);
-    const projection = selectorChartProjection(store.state);
-    const drawingArea = selectorChartDrawingArea(store.state);
-
-    if (!projection || !fitScale) {
-      return;
-    }
-
-    const scale = projection?.scale();
-    const center = projection?.center();
-    projection?.scale(fitScale);
-
-    const defaultTranslation = getTranslation(
-      store,
-      projection,
-      center,
-      [drawingArea.width / 2, drawingArea.height / 2],
-      'both',
-      0,
-    );
-    if (defaultTranslation) {
-      store.set('geoProjectionZoom', {
-        ...store.state.geoProjectionZoom,
-        translation: defaultTranslation,
-      });
-    }
-    projection?.scale(scale);
-  }, [store]);
 
   const getProjection = React.useCallback(
     (): GeoProjection | null => selectorChartProjection(store.state),
@@ -314,7 +283,11 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   const zoomOut = React.useCallback(() => zoomBy(1 / BUTTON_ZOOM_STEP), [zoomBy]);
 
   const resetZoom = React.useCallback(() => {
-    applyView({ zoomLevel: 1, center: [0, 0], translation: [0, 0] });
+    const view = initialViewRef.current;
+    if (!view) {
+      return;
+    }
+    applyView(view);
   }, [applyView]);
 
   const publicAPI = { zoomIn, zoomOut, resetZoom };
@@ -337,10 +310,22 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
   zoom: params.zoom ?? false,
 });
 
-useGeoProjectionZoom.getInitialState = (params) => ({
-  geoProjectionZoom: {
-    zoomLevel: params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1,
-    center: params.view?.center ?? params.initialView?.center ?? [0, 0],
-    translation: params.view?.translation ?? params.initialView?.translation ?? null,
-  },
-});
+useGeoProjectionZoom.getInitialState = (params) => {
+  const center = params.view?.center ?? params.initialView?.center ?? [0, 0];
+  return {
+    geoProjectionZoom: {
+      zoomLevel: params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1,
+      center,
+      translation:
+        params.view?.translation ??
+        params.initialView?.translation ??
+        getDefaultTranslation(
+          params.projection,
+          PROJECTION_FACTORIES,
+          params.geoData,
+          params.parallels,
+          center,
+        ),
+    },
+  };
+};

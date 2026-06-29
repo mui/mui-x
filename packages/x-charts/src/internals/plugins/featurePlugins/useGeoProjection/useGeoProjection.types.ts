@@ -47,6 +47,11 @@ export interface UseGeoProjectionParameters {
    * or a custom `GeoProjection` instance.
    */
   projection?: GeoProjectionInput;
+  /**
+   * The two standard parallels used by conic projections, if applicable.
+   * Used for projection 'conicConformal', 'conicEqualArea', 'conicEquidistant'.
+   */
+  parallels?: [number, number] | null;
 }
 
 export type UseGeoProjectionDefaultizedParameters = UseGeoProjectionParameters;
