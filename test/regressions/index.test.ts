@@ -744,10 +744,14 @@ async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
+  const allowedImages = [
+    'https://flagcdn.com',
+    // Map raster base maps are reprojected on a canvas, so they must actually load.
+    '/static/x/charts/mars-viking-mdim21.jpg',
+  ];
   await page.route(/./, async (route, request) => {
     const type = request.resourceType();
-    // Block all images except the flags
-    if (type === 'image' && !request.url().startsWith('https://flagcdn.com')) {
+    if (type === 'image' && !allowedImages.some((allowed) => request.url().includes(allowed))) {
       route.abort();
     } else {
       route.continue();

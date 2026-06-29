@@ -3,7 +3,8 @@ import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium }
 import { GeoDataPlot, MapImagePlot, D3NamedProjection } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { marsRegions } from 'docs/data/charts/map/marsRegions';
-import { marsTexture } from 'docs/data/charts/map/marsTexture';
+
+const MARS_IMAGE = '/static/x/charts/mars-viking-mdim21.jpg';
 
 // Every named d3-geo projection the provider supports.
 const PROJECTIONS: D3NamedProjection[] = [
@@ -45,7 +46,7 @@ export default function MapImageProjections() {
             height={CELL_HEIGHT}
           >
             <ChartsSurface>
-              <MapImagePlot href={marsTexture} onReady={() => setLoaded((count) => count + 1)} />
+              <MapImagePlot href={MARS_IMAGE} onReady={() => setLoaded((count) => count + 1)} />
               <GeoDataPlot fill="none" stroke="#1976d2" strokeWidth={0.4} />
             </ChartsSurface>
           </ChartsGeoDataProviderPremium>

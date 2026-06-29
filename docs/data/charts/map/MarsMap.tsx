@@ -10,7 +10,8 @@ import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { ContinuousColorLegend } from '@mui/x-charts-premium/ChartsLegend';
 import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { marsRegions, marsData, marsFeatures } from './marsRegions';
-import { marsTexture } from './marsTexture';
+
+const MARS_IMAGE = '/static/x/charts/mars-viking-mdim21.jpg';
 
 const FEATURE_COLORS = { landmark: '#ff7777', mission: '#4fc3f7' } as const;
 
@@ -126,7 +127,7 @@ export default function MarsMap() {
         ]}
       >
         <ChartsSurface>
-          <MapImagePlot href={marsTexture} />
+          <MapImagePlot href={MARS_IMAGE} />
           <g opacity={0.5}>
             <MapShapePlot stroke="#fff" strokeWidth={0.4} />
           </g>
