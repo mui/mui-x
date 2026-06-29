@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -6,6 +7,7 @@ import { Store, createSelectorMemoized } from '@mui/x-internals/store';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
+import useRefCallback from '../../utils/useRefCallback';
 
 /* eslint-disable react-hooks/rules-of-hooks */
 
@@ -98,8 +100,10 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       (context, autoHeight, needsHorizontalScrollbar) => ({
         ref: context.scrollerRef,
         style: {
+          // TODO: fall back to overflow: 'auto' if no overflowX or overflowY is set?
           overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
           overflowY: autoHeight ? 'hidden' : undefined,
+          // TODO: should include display: 'flex', flexDirection: 'column' since the Content has flexBasis and flexShrink?
         },
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
@@ -323,28 +327,4 @@ function useScrollbarRefCallback(
       refSetter(null);
     };
   });
-}
-
-function cssAdd(a: string | number | undefined, b: string | number | undefined) {
-  if (typeof a === 'number' && typeof b === 'number') {
-    return a + b;
-  }
-  return `calc(${valueToCSSString(a)} + ${valueToCSSString(b)})`;
-}
-
-function cssMax(a: string | number | undefined, b: string | number | undefined) {
-  if (typeof a === 'number' && typeof b === 'number') {
-    return Math.max(a, b);
-  }
-  return `max(${valueToCSSString(a)}, ${valueToCSSString(b)})`;
-}
-
-function valueToCSSString(value: string | number | undefined) {
-  if (typeof value === 'string') {
-    return value;
-  }
-  if (typeof value === 'undefined') {
-    return '0';
-  }
-  return `${value}px`;
 }
