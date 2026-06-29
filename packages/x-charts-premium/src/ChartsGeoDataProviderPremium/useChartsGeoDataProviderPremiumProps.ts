@@ -11,9 +11,11 @@ import type { ChartsGeoDataProviderPremiumProps } from './ChartsGeoDataProviderP
 import { GEO_PREMIUM_PLUGINS } from './ChartsGeoDataProviderPremium.plugins';
 import type { GeoPremiumPluginSignatures } from './ChartsGeoDataProviderPremium.plugins';
 import { mapShapeSeriesConfig } from '../Map/seriesConfig';
+import { mapPointSeriesConfig } from '../Map/pointSeriesConfig';
 
-const GEO_PREMIUM_SERIES_CONFIG: ChartSeriesConfig<'mapShape'> = {
+const GEO_PREMIUM_SERIES_CONFIG: ChartSeriesConfig<'mapShape' | 'mapPoint'> = {
   mapShape: mapShapeSeriesConfig,
+  mapPoint: mapPointSeriesConfig,
 };
 
 export const useChartsGeoDataProviderPremiumProps = <
