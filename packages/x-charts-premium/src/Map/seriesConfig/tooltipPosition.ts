@@ -4,7 +4,7 @@ import type { TooltipItemPositionGetter } from '@mui/x-charts/internals';
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'mapShape'> = (params) => {
   const { series, identifier, axesConfig, placement } = params;
 
-  if (!identifier || identifier.dataIndex === undefined) {
+  if (!identifier || identifier.name === undefined) {
     return null;
   }
   const itemSeries = series.mapShape?.series[identifier.seriesId];
@@ -23,7 +23,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'mapShape'> = (params
     return null;
   }
 
-  const featureIndex = featureIndexesByName.get(itemSeries.data[identifier.dataIndex].name)?.[0];
+  const featureIndex = featureIndexesByName.get(identifier.name)?.[0];
 
   if (featureIndex === undefined) {
     return null;
