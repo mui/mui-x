@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { AxisId, ChartsXAxisProps, ChartsYAxisProps, ComputedAxis } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
@@ -50,19 +51,36 @@ export function useBarPlotData(
   const zoomOptions = store.use(selectorChartZoomOptionsLookup);
   const sampler = store.use(selectorChartSeriesConfig).bar?.sampler;
 
-  return processBarDataForPlot(
-    drawingArea,
-    chartId,
-    seriesData.stackingGroups,
-    seriesData.series,
-    xAxes,
-    yAxes,
-    defaultXAxisId,
-    defaultYAxisId,
-    samplingPyramids,
-    zoomMap,
-    sampler,
-    zoomOptions,
+  return React.useMemo(
+    () =>
+      processBarDataForPlot(
+        drawingArea,
+        chartId,
+        seriesData.stackingGroups,
+        seriesData.series,
+        xAxes,
+        yAxes,
+        defaultXAxisId,
+        defaultYAxisId,
+        samplingPyramids,
+        zoomMap,
+        sampler,
+        zoomOptions,
+      ),
+    [
+      drawingArea,
+      chartId,
+      seriesData.stackingGroups,
+      seriesData.series,
+      xAxes,
+      yAxes,
+      defaultXAxisId,
+      defaultYAxisId,
+      samplingPyramids,
+      zoomMap,
+      sampler,
+      zoomOptions,
+    ],
   );
 }
 
@@ -222,8 +240,9 @@ export function processBarDataForPlot(
           let high = -Infinity;
           for (let k = 0; k < indices.length; k += 1) {
             const point = stacked[indices[k]];
-            low = Math.min(low, point[0]);
-            high = Math.max(high, point[1]);
+            // Both coords, so diverging/negative bars (`[0, -5]`, base > top) keep their full extent.
+            low = Math.min(low, point[0], point[1]);
+            high = Math.max(high, point[0], point[1]);
           }
           const dimensions = getBucketBarDimensions(startIndex, endIndex, low, high, groupIndex);
           registerResult(makeResult(startIndex, dimensions), startIndex);

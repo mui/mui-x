@@ -103,6 +103,10 @@ describe('largestTriangleThreeBuckets', () => {
     expect(Array.from(largestTriangleThreeBuckets(f64([1, 2, 3]), 5))).to.deep.equal([0, 1, 2]);
   });
 
+  it('returns only the endpoints when threshold <= 2 (does not bypass the cap)', () => {
+    expect(Array.from(largestTriangleThreeBuckets(f64([1, 2, 3, 4, 5]), 2))).to.deep.equal([0, 4]);
+  });
+
   it('keeps first and last and hits the threshold count', () => {
     const values = f64(Array.from({ length: 100 }, (_, i) => Math.sin(i / 5)));
     const out = largestTriangleThreeBuckets(values, 10);

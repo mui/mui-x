@@ -120,8 +120,12 @@ export function largestTriangleThreeBuckets(
   threshold: number,
 ): Int32Array {
   const dataLength = values.length;
-  if (threshold >= dataLength || threshold <= 2) {
+  if (threshold >= dataLength) {
     return Int32Array.from({ length: dataLength }, (_, i) => i);
+  }
+  if (threshold <= 2) {
+    // Keep just the endpoints; returning every index here would bypass the rendered-point cap.
+    return Int32Array.from([0, dataLength - 1]);
   }
 
   const sampled = new Int32Array(threshold);
