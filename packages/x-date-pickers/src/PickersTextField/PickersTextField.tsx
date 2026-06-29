@@ -1,26 +1,25 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import { warnOnce } from '@mui/x-internals/warning';
 import { styled, useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import useForkRef from '@mui/utils/useForkRef';
+import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
-import {
-  getPickersTextFieldUtilityClass,
-  PickersTextFieldClasses,
-} from './pickersTextFieldClasses';
-import { PickersTextFieldProps } from './PickersTextField.types';
+import type { PickersTextFieldClasses } from './pickersTextFieldClasses';
+import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
+import type { PickersTextFieldProps } from './PickersTextField.types';
 import { PickersOutlinedInput } from './PickersOutlinedInput';
 import { PickersFilledInput } from './PickersFilledInput';
 import { PickersInput } from './PickersInput';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
 import { PickerTextFieldOwnerStateContext } from './usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../models/fields';
+import type { PickerTextFieldOwnerState } from '../models/fields';
 
 const VARIANT_COMPONENT = {
   standard: PickersInput,
@@ -62,6 +61,29 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     name: 'MuiPickersTextField',
   });
 
+  // TODO v10: remove
+  if (process.env.NODE_ENV !== 'production') {
+    const legacyProps = inProps as {
+      InputProps?: unknown;
+      inputProps?: unknown;
+      InputLabelProps?: unknown;
+      FormHelperTextProps?: unknown;
+    };
+    if (
+      legacyProps.InputProps ||
+      legacyProps.inputProps ||
+      legacyProps.InputLabelProps ||
+      legacyProps.FormHelperTextProps
+    ) {
+      warnOnce([
+        'MUI X: `PickersTextField` no longer supports the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
+        'They are silently dropped, which can hide configuration bugs in JavaScript codebases that do not benefit from TypeScript checks.',
+        'Use `slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel` and `slotProps.formHelperText` instead.',
+        'You can run the `migrate-text-field-props` codemod to migrate automatically.',
+      ]);
+    }
+  }
+
   const {
     // Props used by FormControl
     onFocus,
@@ -75,13 +97,12 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     required = false,
     hiddenLabel = false,
     // Props used by PickersInput
-    InputProps,
-    inputProps,
     inputRef,
     sectionListRef,
     elements,
     areAllSectionsEmpty,
     onClick,
+    onMouseDown,
     onKeyDown,
     onKeyUp,
     onPaste,
@@ -98,10 +119,11 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     name,
     // Props used by FormHelperText
     helperText,
-    FormHelperTextProps,
     // Props used by InputLabel
     label,
-    InputLabelProps,
+    // Slot system
+    slots,
+    slotProps,
     // @ts-ignore
     'data-active-range-position': dataActiveRangePosition,
     ...other
@@ -114,10 +136,13 @@ const PickersTextField = React.forwardRef(function PickersTextField(
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
   const inputLabelId = label && id ? `${id}-label` : undefined;
 
+  const inputSlotProps = slotProps?.input;
+  const inputLabelSlotProps = slotProps?.inputLabel;
+
   const fieldOwnerState = useFieldOwnerState({
     disabled: props.disabled,
     required: props.required,
-    readOnly: InputProps?.readOnly,
+    readOnly: inputSlotProps?.readOnly,
   });
   const ownerState = React.useMemo<PickerTextFieldOwnerState>(
     () => ({
@@ -128,10 +153,10 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       inputSize: props.size ?? 'medium',
       inputColor: color ?? 'primary',
       isInputInFullWidth: fullWidth ?? false,
-      hasStartAdornment: Boolean(startAdornment ?? InputProps?.startAdornment),
-      hasEndAdornment: Boolean(endAdornment ?? InputProps?.endAdornment),
+      hasStartAdornment: Boolean(startAdornment ?? inputSlotProps?.startAdornment),
+      hasEndAdornment: Boolean(endAdornment ?? inputSlotProps?.endAdornment),
       inputHasLabel: !!label,
-      isLabelShrunk: Boolean(InputLabelProps?.shrink),
+      isLabelShrunk: Boolean(inputLabelSlotProps?.shrink),
     }),
     [
       fieldOwnerState,
@@ -143,50 +168,60 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       fullWidth,
       startAdornment,
       endAdornment,
-      InputProps?.startAdornment,
-      InputProps?.endAdornment,
+      inputSlotProps?.startAdornment,
+      inputSlotProps?.endAdornment,
       label,
-      InputLabelProps?.shrink,
+      inputLabelSlotProps?.shrink,
     ],
   );
   const classes = useUtilityClasses(classesProp, ownerState);
 
-  const PickersInputComponent = VARIANT_COMPONENT[variant];
+  const PickersInputComponent = slots?.input ?? VARIANT_COMPONENT[variant];
+  const RootComponent = slots?.root ?? PickersTextFieldRoot;
+  const InputLabelComponent = slots?.inputLabel ?? InputLabel;
+  const FormHelperTextComponent = slots?.formHelperText ?? FormHelperText;
 
   const inputAdditionalProps: Record<string, any> = {};
   if (variant === 'outlined') {
-    if (InputLabelProps && typeof InputLabelProps.shrink !== 'undefined') {
-      inputAdditionalProps.notched = InputLabelProps.shrink;
+    if (inputLabelSlotProps && typeof inputLabelSlotProps.shrink !== 'undefined') {
+      inputAdditionalProps.notched = inputLabelSlotProps.shrink;
     }
     inputAdditionalProps.label = label;
   } else if (variant === 'filled') {
     inputAdditionalProps.hiddenLabel = hiddenLabel;
   }
 
+  const rootSlotProps = useSlotProps({
+    elementType: RootComponent,
+    externalSlotProps: slotProps?.root,
+    externalForwardedProps: { ...other, className },
+    additionalProps: {
+      ref: handleRootRef,
+      focused,
+      disabled,
+      variant,
+      error,
+      color,
+      fullWidth,
+      required,
+    },
+    className: classes.root,
+    ownerState,
+  });
+
   return (
     <PickerTextFieldOwnerStateContext.Provider value={ownerState}>
-      <PickersTextFieldRoot
-        className={clsx(classes.root, className)}
-        ref={handleRootRef}
-        focused={focused}
-        disabled={disabled}
-        variant={variant}
-        error={error}
-        color={color}
-        fullWidth={fullWidth}
-        required={required}
-        ownerState={ownerState}
-        {...other}
-      >
+      <RootComponent {...rootSlotProps}>
         {label != null && label !== '' && (
-          <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
+          <InputLabelComponent htmlFor={id} id={inputLabelId} {...inputLabelSlotProps}>
             {label}
-          </InputLabel>
+          </InputLabelComponent>
         )}
         <PickersInputComponent
           elements={elements}
           areAllSectionsEmpty={areAllSectionsEmpty}
           onClick={onClick}
+          onMouseDown={onMouseDown}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
           onInput={onInput}
@@ -201,7 +236,6 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           onChange={onChange}
           id={id}
           fullWidth={fullWidth}
-          inputProps={inputProps}
           inputRef={inputRef}
           sectionListRef={sectionListRef}
           label={label}
@@ -212,19 +246,27 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           aria-live={helperTextId ? 'polite' : undefined}
           data-active-range-position={dataActiveRangePosition}
           {...inputAdditionalProps}
-          {...InputProps}
+          {...inputSlotProps}
+          slots={{
+            ...inputSlotProps?.slots,
+            ...(slots?.htmlInput !== undefined && { htmlInput: slots.htmlInput }),
+          }}
+          slotProps={{
+            ...inputSlotProps?.slotProps,
+            ...(slotProps?.htmlInput !== undefined && { htmlInput: slotProps.htmlInput }),
+          }}
         />
         {helperText && (
-          <FormHelperText id={helperTextId} {...FormHelperTextProps}>
+          <FormHelperTextComponent id={helperTextId} {...slotProps?.formHelperText}>
             {helperText}
-          </FormHelperText>
+          </FormHelperTextComponent>
         )}
-      </PickersTextFieldRoot>
+      </RootComponent>
     </PickerTextFieldOwnerStateContext.Provider>
   );
 });
 
-PickersTextField.propTypes = {
+PickersTextField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -276,11 +318,6 @@ PickersTextField.propTypes = {
    */
   focused: PropTypes.bool,
   /**
-   * Props applied to the [`FormHelperText`](https://mui.com/material-ui/api/form-helper-text/) element.
-   * @deprecated Use `slotProps.formHelperText` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  FormHelperTextProps: PropTypes.object,
-  /**
    * If `true`, the input will take up the full width of its container.
    * @default false
    */
@@ -300,25 +337,6 @@ PickersTextField.propTypes = {
    * The id of the `input` element.
    */
   id: PropTypes.string,
-  /**
-   * Props applied to the [`InputLabel`](https://mui.com/material-ui/api/input-label/) element.
-   * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
-   * @deprecated Use `slotProps.inputLabel` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputLabelProps: PropTypes.object,
-  /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
-  /**
-   * Props applied to the Input element.
-   * It will be a [`FilledInput`](https://mui.com/material-ui/api/filled-input/),
-   * [`OutlinedInput`](https://mui.com/material-ui/api/outlined-input/) or [`Input`](https://mui.com/material-ui/api/input/)
-   * component depending on the `variant` prop value.
-   * @deprecated Use `slotProps.input` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */
@@ -342,6 +360,7 @@ PickersTextField.propTypes = {
   onFocus: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
   /**
@@ -365,6 +384,16 @@ PickersTextField.propTypes = {
    * @default 'medium'
    */
   size: PropTypes.oneOf(['medium', 'small']),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * The components used for each slot inside.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * Start `InputAdornment` for this component.
    */

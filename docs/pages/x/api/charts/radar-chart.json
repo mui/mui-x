@@ -3,7 +3,7 @@
     "radar": {
       "type": {
         "name": "shape",
-        "description": "{ labelFormatter?: func, labelGap?: number, max?: number, metrics: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;{ max?: number, min?: number, name: string }&gt;, startAngle?: number }"
+        "description": "{ labelFormatter?: func, labelGap?: number, max?: number, metrics: Array&lt;{ max?: number, min?: number, name: string }&gt;<br>&#124;&nbsp;Array&lt;string&gt;, startAngle?: number }"
       },
       "required": true
     },
@@ -39,7 +39,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -124,7 +124,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radar' }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -139,6 +139,12 @@
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null },
+    {
+      "name": "baseToggleButton",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "class": null
+    },
+    { "name": "baseToggleButtonGroup", "description": "", "class": null },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
@@ -177,6 +183,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/RadarChart/RadarChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>"
 }

@@ -1,5 +1,5 @@
-import ApiDocs from 'docsx/src/modules/components/ApiDocs';
-import api from 'docsx/pages/x/api/data-grid/grid-row-grouping-api.json';
+import ApiDocs from 'docs/src/modules/components/ApiDocs';
+import api from 'docs/pages/x/api/data-grid/grid-row-grouping-api.json';
 
 export default function RowGroupingApiNoSnap() {
   return <ApiDocs premiumApi={api} />;

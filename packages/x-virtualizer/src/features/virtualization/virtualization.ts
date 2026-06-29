@@ -6,7 +6,7 @@ import useTimeout from '@mui/utils/useTimeout';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { integer } from '@mui/x-internals/types';
-import * as platform from '@mui/x-internals/platform';
+import { platform } from '@base-ui/utils/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
 import useRefCallback from '../../utils/useRefCallback';
@@ -41,6 +41,13 @@ export type VirtualizationParams = {
   /** The column buffer in pixels to render before and after the viewport.
    * @default 150 */
   columnBufferPx?: number;
+  /**
+   * Controls how the container and render zones are positioned:
+   * - 'uncontrolled': uses CSS sticky positioning (default)
+   * - 'controlled': uses CSS absolute positioning with JS-computed offsets
+   * @default 'uncontrolled'
+   */
+  layoutMode?: 'controlled' | 'uncontrolled';
 };
 
 export type VirtualizationState<K extends string = string> = {
@@ -51,6 +58,7 @@ export type VirtualizationState<K extends string = string> = {
   props: Record<K, Record<string, any>>;
   context: Record<string, any>;
   scrollPosition: { current: ScrollPosition };
+  layoutMode: 'controlled' | 'uncontrolled';
 };
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
@@ -68,18 +76,49 @@ const selectors = (() => {
   const firstRowIndexSelector = createSelector(
     (state: BaseState) => state.virtualization.renderContext.firstRowIndex,
   );
+  const scrollPositionSelector = createSelector(
+    (state: BaseState) => state.virtualization.scrollPosition,
+  );
+  const layoutModeSelector = createSelector((state: BaseState) => state.virtualization.layoutMode);
+
   return {
     store: createSelector((state: BaseState) => state.virtualization),
     renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
     enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
     enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
     offsetTop: createSelector(
+      layoutModeSelector,
+      Dimensions.selectors.dimensions,
       Dimensions.selectors.rowPositions,
       firstRowIndexSelector,
-      (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
+      (layoutMode, dimensions, rowPositions, firstRowIndex) => {
+        return (
+          (layoutMode === 'uncontrolled' ? dimensions.topContainerHeight : 0) +
+          (rowPositions[firstRowIndex] ?? 0)
+        );
+      },
     ),
     context: createSelector((state: BaseState) => state.virtualization.context),
-    scrollPosition: createSelector((state: BaseState) => state.virtualization.scrollPosition),
+    layoutMode: layoutModeSelector,
+    scrollPosition: scrollPositionSelector,
+    pinnedLeftOffsetSelector: createSelector(
+      scrollPositionSelector,
+      (scrollPosition) => scrollPosition.current.left,
+    ),
+    pinnedRightOffsetSelector: createSelector(
+      scrollPositionSelector,
+      Dimensions.selectors.dimensions,
+      Dimensions.selectors.columnsTotalWidth,
+      Dimensions.selectors.needsVerticalScrollbar,
+      (scrollPosition, dimensions, columnsTotalWidth, needsVerticalScrollbar) => {
+        return (
+          Math.max(columnsTotalWidth, dimensions.viewportOuterSize.width) -
+          dimensions.viewportOuterSize.width -
+          scrollPosition.current.left +
+          (needsVerticalScrollbar ? dimensions.scrollbarSize : 0)
+        );
+      },
+    ),
   };
 })();
 
@@ -97,18 +136,36 @@ export namespace Virtualization {
 }
 
 function initializeState(params: ParamsWithDefaults) {
+  const { enabled, enabledForRows, enabledForColumns } = params.initialState?.virtualization ?? {};
+
+  // When virtualization is fully disabled, pre-compute the render context to
+  // cover all rows/columns. This matches what `computeRenderContext` returns
+  // for the disabled case, so the first `forceUpdateRenderContext` after mount
+  // detects no change and skips the store notification, which avoids a nested
+  // re-render.
+  const renderContext =
+    enabled === false && enabledForRows === false && enabledForColumns === false
+      ? {
+          firstRowIndex: 0,
+          lastRowIndex: params.rows.length,
+          firstColumnIndex: 0,
+          lastColumnIndex: params.columns?.length ?? 0,
+        }
+      : EMPTY_RENDER_CONTEXT;
+
   const state: Virtualization.State<typeof params.layout> = {
     virtualization: {
-      enabled: !platform.isJSDOM,
-      enabledForRows: !platform.isJSDOM,
-      enabledForColumns: !platform.isJSDOM,
-      renderContext: EMPTY_RENDER_CONTEXT,
+      enabled: !platform.env.jsdom,
+      enabledForRows: !platform.env.jsdom,
+      enabledForColumns: !platform.env.jsdom,
+      renderContext,
       props: (params.layout.constructor as typeof Layout).elements.reduce(
         (acc, key) => (acc[key as string], acc),
         {} as Record<string, Record<string, any>>,
       ),
       context: {},
       scrollPosition: { current: ScrollPosition.EMPTY },
+      layoutMode: params.virtualization.layoutMode ?? 'uncontrolled',
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
@@ -169,6 +226,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
+  const layoutMode = useStore(store, selectors.layoutMode);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
@@ -195,7 +253,14 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const scrollTimeout = useTimeout();
   const frozenContext = React.useRef<RenderContext | undefined>(undefined);
   const scrollCache = useLazyRef(() =>
-    createScrollCache(isRtl, rowBufferPx, columnBufferPx, rowHeight * 15, MINIMUM_COLUMN_WIDTH * 6),
+    createScrollCache(
+      isRtl,
+      rowBufferPx,
+      columnBufferPx,
+      rowHeight * 15,
+      MINIMUM_COLUMN_WIDTH * 6,
+      layoutMode,
+    ),
   ).current;
 
   const updateRenderContext = React.useCallback(
@@ -301,9 +366,17 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       columnBufferPx,
       rowHeight * 15,
       MINIMUM_COLUMN_WIDTH * 6,
+      layoutMode,
     );
 
-    const inputs = inputsSelector(store, params, api, enabledForRows, enabledForColumns);
+    const inputs = inputsSelector(
+      store,
+      params,
+      api,
+      enabledForRows,
+      enabledForColumns,
+      layoutMode,
+    );
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
     if (!areRenderContextsEqual(nextRenderContext, renderContext)) {
@@ -312,7 +385,9 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         updateRenderContext(nextRenderContext);
       });
 
-      scrollTimeout.start(1000, triggerUpdateRenderContext);
+      if (layoutMode === 'uncontrolled') {
+        scrollTimeout.start(1000, triggerUpdateRenderContext);
+      }
     } else {
       store.set('virtualization', {
         ...store.state.virtualization,
@@ -331,7 +406,14 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     ) {
       return;
     }
-    const inputs = inputsSelector(store, params, api, enabledForRows, enabledForColumns);
+    const inputs = inputsSelector(
+      store,
+      params,
+      api,
+      enabledForRows,
+      enabledForColumns,
+      layoutMode,
+    );
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
     frozenContext.current = undefined;
@@ -520,6 +602,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         columnPositions,
         currentRenderContext,
         pinnedColumns.left.length,
+        layoutMode,
       );
       const showBottomBorder = isLastVisibleInSection && rowParams.position === 'top';
 
@@ -711,6 +794,7 @@ function inputsSelector(
   api: RequiredAPI,
   enabledForRows: boolean,
   enabledForColumns: boolean,
+  layoutMode: VirtualizationState['layoutMode'],
 ) {
   const dimensions = Dimensions.selectors.dimensions(store.state);
   const rows = params.rows;
@@ -729,6 +813,7 @@ function inputsSelector(
     rowBufferPx: params.virtualization.rowBufferPx,
     columnBufferPx: params.virtualization.columnBufferPx,
     leftPinnedWidth: dimensions.leftPinnedWidth,
+    rightPinnedWidth: dimensions.rightPinnedWidth,
     columnsTotalWidth: dimensions.columnsTotalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
     viewportInnerHeight: dimensions.viewportInnerSize.height,
@@ -742,6 +827,7 @@ function inputsSelector(
     columns,
     hiddenCellsOriginMap,
     virtualizeColumnsWithAutoRowHeight: params.virtualizeColumnsWithAutoRowHeight,
+    layoutMode,
   };
 }
 
@@ -824,7 +910,11 @@ function computeRenderContext(
         atStart: true,
         lastPosition: inputs.columnsTotalWidth,
       });
-      lastColumnIndex = binarySearch(realLeft + inputs.viewportInnerWidth, inputs.columnPositions);
+      const rightBound =
+        inputs.layoutMode === 'controlled'
+          ? realLeft + inputs.viewportInnerWidth - inputs.rightPinnedWidth
+          : realLeft + inputs.viewportInnerWidth;
+      lastColumnIndex = binarySearch(rightBound, inputs.columnPositions);
     }
 
     renderContext.firstColumnIndex = firstColumnIndex;
@@ -1015,7 +1105,7 @@ function getIndexesToRender({
     lastPosition: positions[positions.length - 1] + lastSize,
   });
 
-  const lastIndexPadded = binarySearch(lastPosition, positions);
+  const lastIndexPadded = binarySearch(lastPosition, positions) + 1;
 
   return [
     clamp(firstIndexPadded, minFirstIndex, maxLastIndex),
@@ -1039,12 +1129,23 @@ export function computeOffsetLeft(
   columnPositions: number[],
   renderContext: ColumnsRenderContext,
   pinnedLeftLength: number,
+  layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
-  const left =
-    (columnPositions[renderContext.firstColumnIndex] ?? 0) -
-    (columnPositions[pinnedLeftLength] ?? 0);
-  return Math.abs(left);
+  let offset = columnPositions[renderContext.firstColumnIndex] ?? 0;
+  /* CSS sticky leaves elements in the normal flow of the DOM, so we
+   * don't need to add the offset of the pinned columns. */
+  if (layoutMode === 'uncontrolled') {
+    offset -= columnPositions[pinnedLeftLength] ?? 0;
+  }
+  return Math.abs(offset);
 }
+
+const EMPTY_BUFFER = {
+  rowAfter: 0,
+  rowBefore: 0,
+  columnAfter: 0,
+  columnBefore: 0,
+};
 
 function bufferForDirection(
   isRtl: boolean,
@@ -1053,7 +1154,12 @@ function bufferForDirection(
   columnBufferPx: number,
   verticalBuffer: number,
   horizontalBuffer: number,
+  layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
+  if (layoutMode === 'controlled') {
+    return EMPTY_BUFFER;
+  }
+
   if (isRtl) {
     switch (direction) {
       case ScrollDirection.LEFT:
@@ -1114,6 +1220,7 @@ function createScrollCache(
   columnBufferPx: number,
   verticalBuffer: number,
   horizontalBuffer: number,
+  layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
   return {
     direction: ScrollDirection.NONE,
@@ -1124,6 +1231,7 @@ function createScrollCache(
       columnBufferPx,
       verticalBuffer,
       horizontalBuffer,
+      layoutMode,
     ),
   };
 }

@@ -1,16 +1,13 @@
-import {
+import type {
   ExportedPickerFieldUIProps,
   PickerFieldUISlots,
   PickerFieldUISlotProps,
 } from '@mui/x-date-pickers/internals';
-import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
-import { TimeRangeManagerFieldInternalProps } from '../managers/useTimeRangeManager';
+import type { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
+import type { TimeRangeManagerFieldInternalProps } from '../managers/useTimeRangeManager';
 
 export interface UseSingleInputTimeRangeFieldProps
-  extends
-    TimeRangeManagerFieldInternalProps,
-    // TODO v8: Remove once the range fields open with a button.
-    Omit<ExportedPickerFieldUIProps, 'openPickerButtonPosition'> {}
+  extends TimeRangeManagerFieldInternalProps, ExportedPickerFieldUIProps {}
 
 export type SingleInputTimeRangeFieldProps = Omit<
   BuiltInFieldTextFieldProps,

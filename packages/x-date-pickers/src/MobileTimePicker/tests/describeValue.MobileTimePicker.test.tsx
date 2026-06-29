@@ -1,16 +1,18 @@
-import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
   expectFieldValue,
   openPicker,
+  fireClockPointerEvent,
   getClockTouchEvent,
   describeValue,
   formatFullTimeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<MobileTimePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();
@@ -35,9 +37,9 @@ describe('<MobileTimePicker /> - Describe Value', () => {
 
       expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue, user }) => {
       if (!isOpened) {
-        openPicker({ type: 'time' });
+        await openPicker(user, { type: 'time' });
       }
 
       const newValue = applySameValue
@@ -49,26 +51,41 @@ describe('<MobileTimePicker /> - Describe Value', () => {
         adapterToUse.getHours(newValue),
         hasMeridiem ? '12hours' : '24hours',
       );
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', hourClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', hourClockEvent);
       // change minutes
       const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', minutesClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', minutesClockEvent);
 
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        fireEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+        await user.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('{Escape}');
       } else {
-        // return to the hours view in case we'd like to repeat the selection process
-        fireEvent.click(screen.getByRole('button', { name: 'Open previous view' }));
+        // Return to the hours view in case we'd like to repeat the selection process.
+        const openPreviousViewButton = screen.getByRole('button', { name: 'Open previous view' });
+        await user.click(openPreviousViewButton);
+        await waitFor(() => {
+          expect(openPreviousViewButton).to.have.attribute('disabled');
+        });
+        // The "Open previous view" button becomes disabled after we
+        // land back on the first view, which traps focus on a disabled
+        // element in jsdom and swallows follow-up keyboard events.
+        // Click the dialog body to move focus to a live element
+        // so callers can press Escape to dismiss the picker.
+        if (isJSDOM) {
+          await user.click(screen.getByRole('dialog'));
+        } else {
+          await waitFor(() => {
+            expect(document.activeElement).toBe(screen.getByRole('dialog').parentElement);
+          });
+        }
       }
 
       return newValue;

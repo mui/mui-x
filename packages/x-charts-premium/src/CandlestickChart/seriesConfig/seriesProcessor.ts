@@ -1,7 +1,8 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import { type SeriesId } from '@mui/x-charts/models';
-import { type SeriesProcessor } from '@mui/x-charts/internals';
-import { type DefaultizedOHLCSeriesType } from '../../models';
+import type { SeriesId } from '@mui/x-charts/models';
+import { incompleteDatasetKeysError } from '@mui/x-charts/internals';
+import type { SeriesProcessor } from '@mui/x-charts/internals';
+import type { DefaultizedOHLCSeriesType } from '../../models';
 
 const candlestickValueFormatter: DefaultizedOHLCSeriesType['valueFormatter'] = (v) =>
   v == null ? '' : v.toLocaleString();
@@ -27,48 +28,49 @@ Either provide a data property to the series or use the dataset prop.`,
     );
 
     if (datasetKeys && missingKeys.length > 0) {
-      throw new Error(
-        `MUI X Charts: OHLC series with id='${id}' has incomplete datasetKeys.
-Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
-      );
+      incompleteDatasetKeysError('OHLC', id, missingKeys);
+    }
+
+    let data: DefaultizedOHLCSeriesType['data'];
+    if (seriesData.valueGetter) {
+      data = dataset!.map((d) => seriesData.valueGetter!(d));
+    } else if (datasetKeys) {
+      data = dataset!.map((d) => {
+        const open = d[datasetKeys.open];
+        const high = d[datasetKeys.high];
+        const low = d[datasetKeys.low];
+        const close = d[datasetKeys.close];
+
+        if (
+          typeof open !== 'number' ||
+          typeof high !== 'number' ||
+          typeof low !== 'number' ||
+          typeof close !== 'number'
+        ) {
+          if (process.env.NODE_ENV !== 'production') {
+            for (const key of ['open', 'high', 'low', 'close'] as const) {
+              if (d[datasetKeys[key]] !== null && typeof d[datasetKeys[key]] !== 'number') {
+                warnOnce([
+                  `MUI X Charts: Your dataset key "${key}" is used for plotting a candlestick, but contains non-numerical elements.`,
+                  'Candlestick charts only support numbers.',
+                ]);
+              }
+            }
+          }
+          return null;
+        }
+
+        return [open, high, low, close];
+      });
+    } else {
+      data = series[id].data!;
     }
 
     completedSeries[id] = {
       ...series[id],
       valueFormatter: series[id].valueFormatter ?? candlestickValueFormatter,
       hidden: !isItemVisible?.({ type: 'ohlc', seriesId: id }),
-      data: datasetKeys
-        ? dataset!.map((data) => {
-            const open = data[datasetKeys.open];
-            const high = data[datasetKeys.high];
-            const low = data[datasetKeys.low];
-            const close = data[datasetKeys.close];
-
-            if (
-              typeof open !== 'number' ||
-              typeof high !== 'number' ||
-              typeof low !== 'number' ||
-              typeof close !== 'number'
-            ) {
-              if (process.env.NODE_ENV !== 'production') {
-                for (const key of ['open', 'high', 'low', 'close'] as const) {
-                  if (
-                    data[datasetKeys[key]] !== null &&
-                    typeof data[datasetKeys[key]] !== 'number'
-                  ) {
-                    warnOnce([
-                      `MUI X Charts: Your dataset key "${key}" is used for plotting a candlestick, but contains nonnumerical elements.`,
-                      'Candlestick charts only support numbers.',
-                    ]);
-                  }
-                }
-              }
-              return null;
-            }
-
-            return [open, high, low, close];
-          })
-        : series[id].data!,
+      data,
     } satisfies DefaultizedOHLCSeriesType;
   }
 

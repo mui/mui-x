@@ -1,15 +1,24 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { EventCalendarProvider as HeadlessEventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { useId } from '@base-ui/utils/useId';
+import { EventCalendarProvider as UnstyledEventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { EventDialogStyledContext } from './event-dialog/EventDialogStyledContext';
+import { SharedComponentsStyledContext } from './SharedComponentsStyledContext';
 import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../constants/defaultLocaleText';
+import { responsiveTypographyContainerQueries } from '../constants/responsiveTypography';
 
 /**
  * Root wrapper for standalone views that provides CSS variable tokens.
  * This ensures event colors work correctly outside of EventCalendar.
+ *
+ * The @container queries spread below redefine the effective typography
+ * vars on this slot when the surrounding ResponsiveTypographyContainer
+ * (which Standalone*View components wrap their tree in) crosses a tier
+ * threshold. display:contents doesn't block custom-property inheritance,
+ * so descendants pick up the retargeted values.
  */
 const StandaloneViewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -21,29 +30,42 @@ const StandaloneViewRoot = styled('div', {
   '*, *::before, *::after': {
     boxSizing: 'inherit',
   },
+  ...responsiveTypographyContainerQueries,
 }));
 
-const calendarStyledValue = {
-  classes: eventCalendarClasses,
-  localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
-};
-const dialogStyledValue = {
-  classes: eventCalendarClasses,
-  localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
-};
-
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(
-  props: HeadlessEventCalendarProvider.Props<TEvent, TResource>,
+  props: UnstyledEventCalendarProvider.Props<TEvent, TResource>,
 ) {
   const { children, ...other } = props;
+  const schedulerId = useId();
+
+  const calendarStyledValue = React.useMemo(
+    () => ({
+      schedulerId,
+      classes: eventCalendarClasses,
+      localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+    }),
+    [schedulerId],
+  );
+  const dialogStyledValue = React.useMemo(
+    () => ({
+      schedulerId,
+      classes: eventCalendarClasses,
+      localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+    }),
+    [schedulerId],
+  );
+  const sharedComponentsStyledValue = React.useMemo(() => ({ classes: eventCalendarClasses }), []);
 
   return (
-    <HeadlessEventCalendarProvider {...other}>
+    <UnstyledEventCalendarProvider {...other}>
       <EventCalendarStyledContext.Provider value={calendarStyledValue}>
         <EventDialogStyledContext.Provider value={dialogStyledValue}>
-          <StandaloneViewRoot>{children}</StandaloneViewRoot>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledValue}>
+            <StandaloneViewRoot>{children}</StandaloneViewRoot>
+          </SharedComponentsStyledContext.Provider>
         </EventDialogStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
-    </HeadlessEventCalendarProvider>
+    </UnstyledEventCalendarProvider>
   );
 }

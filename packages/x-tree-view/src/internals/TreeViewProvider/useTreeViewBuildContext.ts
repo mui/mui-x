@@ -127,7 +127,7 @@ function initializeInputApiRef<TStore extends TreeViewAnyStore>(
   publicAPI: TreeViewPublicAPI<TStore>,
   apiRef: React.RefObject<Partial<TreeViewPublicAPI<TStore>> | undefined> | undefined,
 ) {
-  if (apiRef != null && apiRef.current == null) {
+  if (apiRef != null && apiRef.current !== publicAPI) {
     apiRef.current = publicAPI;
   }
 }

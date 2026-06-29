@@ -2,21 +2,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import {
-  GridRoot,
-  GridContextProvider,
-  type GridValidRowModel,
-  useGridSelector,
-} from '@mui/x-data-grid-pro';
+import { GridRoot, GridContextProvider, useGridSelector } from '@mui/x-data-grid-pro';
+import type { GridValidRowModel } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
-  type PropValidator,
   validateProps,
-  type GridConfiguration,
   useGridApiInitialization,
   getRowValue,
+  GridMultiSelectMeasurer,
 } from '@mui/x-data-grid-pro/internals';
+import type { PropValidator, GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
@@ -111,12 +107,13 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
         sidePanel={sidePanel}
       >
         {watermark}
+        <GridMultiSelectMeasurer />
       </GridRoot>
     </GridContextProvider>
   );
 });
 
-DataGridPremiumRaw.propTypes = {
+DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -243,6 +240,13 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   cellSelection: PropTypes.bool,
+  /**
+   * If `true`, a fill handle is shown at the bottom-right corner of the cell selection.
+   * Dragging the fill handle fills target cells with the values from selected cells.
+   * Requires `cellSelection` to be enabled.
+   * @default false
+   */
+  cellSelectionFillHandle: PropTypes.bool,
   /**
    * Set the cell selection model of the grid.
    */
@@ -537,6 +541,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**

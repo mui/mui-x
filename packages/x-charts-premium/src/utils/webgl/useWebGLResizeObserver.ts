@@ -1,6 +1,5 @@
 'use client';
-import * as React from 'react';
-import { useWebGLContext } from '../../ChartsWebGLLayer/ChartsWebGLLayer';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 function getDevicePixelContentBoxSize(entry: ResizeObserverEntry) {
   // Safari does not support devicePixelContentBoxSize
@@ -21,12 +20,11 @@ function getDevicePixelContentBoxSize(entry: ResizeObserverEntry) {
  * This hook calls the provided `onResize` callback whenever the WebGL canvas is resized.
  * It detects size changes when the element is resized, the browser zoom updates or the device pixel ratio changes.
  * These last two conditions aren't supported by Safari, so `onResize` won't be called in these cases on Safari.
- * @param onResize
+ * @param gl The WebGL2 rendering context whose canvas to observe.
+ * @param onResize Callback invoked after the canvas and viewport are updated.
  */
-export function useWebGLResizeObserver(onResize: () => void) {
-  const gl = useWebGLContext();
-
-  React.useEffect(() => {
+export function useWebGLResizeObserver(gl: WebGL2RenderingContext | null, onResize: () => void) {
+  useEnhancedEffect(() => {
     const canvas = gl?.canvas;
 
     if (!(canvas instanceof HTMLCanvasElement)) {

@@ -9,9 +9,9 @@ import {
   PickerFieldUIContextProvider,
   useFieldTextFieldProps,
 } from '@mui/x-date-pickers/internals';
-import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
+import type { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
-import { FieldType } from '../models';
+import type { FieldType } from '../models';
 
 type DateRangeFieldComponent = ((
   props: SingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -55,7 +55,7 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
 
 SingleInputDateRangeField.fieldType = 'single-input';
 
-SingleInputDateRangeField.propTypes = {
+SingleInputDateRangeField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -144,11 +144,6 @@ SingleInputDateRangeField.propTypes = {
    */
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
-   * Props applied to the [`FormHelperText`](https://mui.com/material-ui/api/form-helper-text/) element.
-   * @deprecated Use `slotProps.formHelperText` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  FormHelperTextProps: PropTypes.object,
-  /**
    * If `true`, the input will take up the full width of its container.
    * @default false
    */
@@ -168,25 +163,6 @@ SingleInputDateRangeField.propTypes = {
    * The id of the `input` element.
    */
   id: PropTypes.string,
-  /**
-   * Props applied to the [`InputLabel`](https://mui.com/material-ui/api/input-label/) element.
-   * Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
-   * @deprecated Use `slotProps.inputLabel` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputLabelProps: PropTypes.object,
-  /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
-  /**
-   * Props applied to the Input element.
-   * It will be a [`FilledInput`](https://mui.com/material-ui/api/filled-input/),
-   * [`OutlinedInput`](https://mui.com/material-ui/api/outlined-input/) or [`Input`](https://mui.com/material-ui/api/input/)
-   * component depending on the `variant` prop value.
-   * @deprecated Use `slotProps.input` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  InputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
    */
@@ -241,12 +217,19 @@ SingleInputDateRangeField.propTypes = {
   onFocus: PropTypes.func,
   onInput: PropTypes.func,
   onKeyDown: PropTypes.func,
+  onMouseDown: PropTypes.func,
   onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange: PropTypes.func,
+  /**
+   * The position at which the opening button is placed.
+   * If there is no Picker to open, the button is not rendered
+   * @default 'end'
+   */
+  openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * If `true`, the component is read-only.
    * When read-only, the value cannot be changed but the user can interact with the interface.

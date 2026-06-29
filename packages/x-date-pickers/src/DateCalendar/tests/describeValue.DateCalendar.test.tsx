@@ -1,7 +1,7 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { pickerDayClasses } from '@mui/x-date-pickers/PickerDay';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { adapterToUse, createPickerRenderer, describeValue } from 'test/utils/pickers';
 
 describe('<DateCalendar /> - Describe Value', () => {
@@ -21,9 +21,9 @@ describe('<DateCalendar /> - Describe Value', () => {
         expect(selectedCells[0]).to.have.text(adapterToUse.getDate(expectedValue).toString());
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value, { user }) => {
       const newValue = adapterToUse.addDays(value!, 1);
-      fireEvent.click(
+      await user.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 

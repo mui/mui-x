@@ -3,9 +3,10 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
-import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
-import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
+import RepeatRounded from '@mui/icons-material/RepeatRounded';
+import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
@@ -26,9 +27,13 @@ const EventTimelinePremiumEventRoot = styled('div', {
   padding: theme.spacing(0.5, 1),
   position: 'relative',
   width: 'var(--width)',
+  height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)})`,
   marginLeft: 'var(--x-position)',
   gridRow: 'var(--row-index, 1)',
   gridColumn: 1,
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(0.5),
   cursor: 'pointer',
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
@@ -94,6 +99,14 @@ const EventTimelinePremiumEventLinesClamp = styled('span', {
   overflowWrap: 'break-word',
 });
 
+const EventTimelinePremiumEventRecurringIcon = styled(RepeatRounded, {
+  name: 'MuiEventTimeline',
+  slot: 'EventRecurringIcon',
+})({
+  flexShrink: 0,
+  fontSize: '1rem',
+});
+
 const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHandler, {
   name: 'MuiEventTimeline',
   slot: 'EventResizeHandler',
@@ -132,6 +145,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   );
   const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   // Feature hooks
   const id = useId(idProp);
@@ -162,6 +176,12 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
           {occurrence.title}
         </EventTimelinePremiumEventLinesClamp>
+        {isRecurring && (
+          <EventTimelinePremiumEventRecurringIcon
+            className={classes.eventRecurringIcon}
+            aria-hidden="true"
+          />
+        )}
       </TimelineGrid.EventPlaceholder>
     );
   }
@@ -185,6 +205,12 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
         {occurrence.title}
       </EventTimelinePremiumEventLinesClamp>
+      {isRecurring && (
+        <EventTimelinePremiumEventRecurringIcon
+          className={classes.eventRecurringIcon}
+          aria-hidden="true"
+        />
+      )}
       {isEndResizable && (
         <EventTimelinePremiumEventResizeHandler side="end" className={classes.eventResizeHandler} />
       )}

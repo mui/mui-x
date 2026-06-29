@@ -5,14 +5,12 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
-import {
-  pickersInputClasses,
-  getPickersInputUtilityClass,
-  PickersInputClasses,
-} from './pickersInputClasses';
-import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
+import type { PickersInputClasses } from './pickersInputClasses';
+import { pickersInputClasses, getPickersInputUtilityClass } from './pickersInputClasses';
+import type { PickersInputBaseProps } from '../PickersInputBase';
+import { PickersInputBase } from '../PickersInputBase';
 import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersInputProps extends PickersInputBaseProps {
@@ -66,7 +64,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
             background: 'red',
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '""',
             position: 'absolute',
             right: 0,
@@ -91,7 +89,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
             borderBottom: `1px solid ${bottomLineColor}`,
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '"\\00a0"',
             position: 'absolute',
             right: 0,
@@ -153,6 +151,8 @@ const PickersInput = React.forwardRef(function PickersInput(
     disableUnderline = false,
     ownerState: ownerStateProp,
     classes: classesProp,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...other
   } = props;
 
@@ -165,9 +165,12 @@ const PickersInput = React.forwardRef(function PickersInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersInputRoot }}
-      slotProps={{ root: { disableUnderline } }}
       {...other}
+      slots={{ root: PickersInputRoot, ...inSlots }}
+      slotProps={{
+        ...inSlotProps,
+        root: { disableUnderline, ...inSlotProps?.root },
+      }}
       ownerState={ownerState}
       label={label}
       classes={classes}
@@ -176,7 +179,7 @@ const PickersInput = React.forwardRef(function PickersInput(
   );
 });
 
-PickersInput.propTypes = {
+PickersInput.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -187,8 +190,8 @@ PickersInput.propTypes = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
   className: PropTypes.string,
-  component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
@@ -222,11 +225,6 @@ PickersInput.propTypes = {
    */
   id: PropTypes.string,
   /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
-  /**
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
@@ -243,6 +241,7 @@ PickersInput.propTypes = {
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
@@ -273,7 +272,6 @@ PickersInput.propTypes = {
    * Start `InputAdornment` for this component.
    */
   startAdornment: PropTypes.node,
-  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

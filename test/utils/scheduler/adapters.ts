@@ -1,7 +1,8 @@
 import { fr } from 'date-fns/locale/fr';
 import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
-import type { DateLocale } from '@mui/x-scheduler-headless/use-adapter';
+import type { DateLocale } from '@mui/x-scheduler-internals/use-adapter';
 
+// TODO: Replace with Base UI adapter when available.
 export const adapter = new TemporalAdapterDateFns();
 
 export const adapterFr = new TemporalAdapterDateFns({ locale: fr });

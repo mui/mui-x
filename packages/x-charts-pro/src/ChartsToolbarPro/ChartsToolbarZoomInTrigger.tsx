@@ -2,17 +2,12 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  useChartsContext,
-  type ChartsSlotProps,
-  useChartsSlots,
-  type UseChartCartesianAxisSignature,
-} from '@mui/x-charts/internals';
-import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
-import {
-  selectorChartCanZoomIn,
-  type UseChartProZoomSignature,
-} from '../internals/plugins/useChartProZoom';
+import { useChartsContext, useChartsSlots } from '@mui/x-charts/internals';
+import type { ChartsSlotProps, UseChartCartesianAxisSignature } from '@mui/x-charts/internals';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { selectorChartCanZoomIn } from '../internals/plugins/useChartProZoom';
+import type { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
 interface ChartsToolbarZoomInTriggerProps {
   /**
@@ -32,7 +27,7 @@ const ChartsToolbarZoomInTrigger = React.forwardRef<
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const disabled = store.use(selectorChartCanZoomIn);
+  const disabled = !store.use(selectorChartCanZoomIn);
 
   const element = useComponentRenderer(slots.baseButton, render, {
     ...slotProps.baseButton,
@@ -45,7 +40,7 @@ const ChartsToolbarZoomInTrigger = React.forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarZoomInTrigger.propTypes = {
+ChartsToolbarZoomInTrigger.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

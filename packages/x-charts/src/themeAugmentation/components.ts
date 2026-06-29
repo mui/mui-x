@@ -1,4 +1,4 @@
-import { type ComponentsProps, type ComponentsOverrides } from '@mui/material/styles';
+import type { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
 
 export interface ChartsComponents<Theme = unknown> {
   MuiChartsAxis?: {
@@ -18,6 +18,10 @@ export interface ChartsComponents<Theme = unknown> {
   MuiChartsGrid?: {
     defaultProps?: ComponentsProps['MuiChartsGrid'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsGrid'];
+  };
+  MuiRadialChartsGrid?: {
+    defaultProps?: ComponentsProps['MuiRadialChartsGrid'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiRadialChartsGrid'];
   };
   MuiChartsLegend?: {
     defaultProps?: ComponentsProps['MuiChartsLegend'];

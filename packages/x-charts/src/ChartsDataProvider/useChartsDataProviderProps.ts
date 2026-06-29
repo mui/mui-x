@@ -1,16 +1,14 @@
 'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartsDataProviderProps } from './ChartsDataProvider';
-import { type ChartsProviderProps } from '../context/ChartsProvider';
+import type { ChartsProviderProps } from '../context/ChartsProvider';
 import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
-import {
-  type ChartAnyPluginSignature,
-  type MergeSignaturesProperty,
-} from '../internals/plugins/models';
-import { type ChartSeriesType } from '../models/seriesType/config';
-import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
-import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
-import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
+import type { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/plugins/models';
+import type { ChartSeriesType } from '../models/seriesType/config';
+import type { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 
 export const useChartsDataProviderProps = <
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -19,9 +17,7 @@ export const useChartsDataProviderProps = <
   inProps: ChartsDataProviderProps<SeriesType, TSignatures> & ChartsLocalizationProviderProps,
 ) => {
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
-  const themedProps = useThemeProps({ props: inProps, name: 'MuiChartsDataProvider' });
-  // eslint-disable-next-line mui/material-ui-name-matches-component-name
-  const props = useThemeProps({ props: themedProps, name: 'MuiChartsDataProvider' });
+  const props = useThemeProps({ props: inProps, name: 'MuiChartsDataProvider' });
 
   const {
     children,

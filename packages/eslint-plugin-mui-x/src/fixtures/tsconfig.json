@@ -5,8 +5,8 @@
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
-    "lib": ["es2015", "es2017", "esnext"],
-    "experimentalDecorators": true
+    "lib": ["es2015", "es2017", "esnext", "dom"],
+    "types": ["react"]
   },
   "include": ["file.ts"]
 }

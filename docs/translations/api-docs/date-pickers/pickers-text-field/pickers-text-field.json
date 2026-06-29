@@ -20,9 +20,6 @@
     "focused": {
       "description": "If <code>true</code>, the component is displayed in focused state."
     },
-    "FormHelperTextProps": {
-      "description": "Props applied to the <a href=\"https://mui.com/material-ui/api/form-helper-text/\"><code>FormHelperText</code></a> element."
-    },
     "fullWidth": {
       "description": "If <code>true</code>, the input will take up the full width of its container."
     },
@@ -31,15 +28,6 @@
       "description": "If <code>true</code>, the label is hidden. This is used to increase density for a <code>FilledInput</code>. Be sure to add <code>aria-label</code> to the <code>input</code> element."
     },
     "id": { "description": "The id of the <code>input</code> element." },
-    "InputLabelProps": {
-      "description": "Props applied to the <a href=\"https://mui.com/material-ui/api/input-label/\"><code>InputLabel</code></a> element. Pointer events like <code>onClick</code> are enabled if and only if <code>shrink</code> is <code>true</code>."
-    },
-    "inputProps": {
-      "description": "<a href=\"https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes\">Attributes</a> applied to the <code>input</code> element."
-    },
-    "InputProps": {
-      "description": "Props applied to the Input element. It will be a <a href=\"https://mui.com/material-ui/api/filled-input/\"><code>FilledInput</code></a>, <a href=\"https://mui.com/material-ui/api/outlined-input/\"><code>OutlinedInput</code></a> or <a href=\"https://mui.com/material-ui/api/input/\"><code>Input</code></a> component depending on the <code>variant</code> prop value."
-    },
     "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
     "label": { "description": "The label content." },
     "margin": {
@@ -50,6 +38,8 @@
       "description": "If <code>true</code>, the label will indicate that the <code>input</code> is required."
     },
     "size": { "description": "The size of the component." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "The components used for each slot inside." },
     "startAdornment": { "description": "Start <code>InputAdornment</code> for this component." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
@@ -71,7 +61,13 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "<code>margin=\"normal\"</code>"
-    },
-    "root": { "description": "Styles applied to the root element." }
+    }
+  },
+  "slotDescriptions": {
+    "formHelperText": "The component used for the form helper text slot.",
+    "htmlInput": "The component rendered as the underlying hidden <code>&lt;input&gt;</code> element.",
+    "input": "The component used for the input slot. Defaults to one of <code>PickersInput</code>, <code>PickersFilledInput</code>, <code>PickersOutlinedInput</code> based on <code>variant</code>.",
+    "inputLabel": "The component used for the input label slot.",
+    "root": "The component used for the root slot."
   }
 }

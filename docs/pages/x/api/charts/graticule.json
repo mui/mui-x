@@ -1,0 +1,13 @@
+{
+  "props": {},
+  "name": "Graticule",
+  "imports": [
+    "import { Graticule } from '@mui/x-charts-premium/Map';",
+    "import { Graticule } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiGraticule",
+  "filename": "/packages/x-charts-premium/src/Map/Graticule.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/map/\">Charts - Map <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>"
+}

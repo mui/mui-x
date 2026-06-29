@@ -1,4 +1,4 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   getCell,
@@ -12,15 +12,17 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   DataGridPro,
-  type DataGridProProps,
   GRID_TREE_DATA_GROUPING_FIELD,
-  type GridApi,
-  type GridGroupNode,
   GridLogicOperator,
-  type GridRowsProp,
   useGridApiRef,
-  type GridPaginationModel,
-  type GridColDef,
+} from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridApi,
+  GridGroupNode,
+  GridRowsProp,
+  GridPaginationModel,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -230,6 +232,21 @@ describe('<DataGridPro /> - Tree data', () => {
         'B.B',
         'C',
       ]);
+    });
+
+    // Regression test for https://github.com/mui/mui-x/issues/22310
+    it('should not crash when path segments match Object.prototype property names', () => {
+      render(
+        <Test
+          rows={[
+            { id: 0, name: 'constructor.leaf1' },
+            { id: 1, name: 'constructor.leaf2' },
+          ]}
+          getRowId={(row) => row.id}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['', 'constructor.leaf1', 'constructor.leaf2']);
     });
   });
 

@@ -100,3 +100,29 @@ function App() {
     </div>
   );
 }
+
+// migrate-text-field-props
+function LegacyTextFieldProps() {
+  return (
+    <div>
+      <DateField
+        slotProps={{
+          textField: {
+            slotProps: {
+              input: { name: 'birthday' },
+              htmlInput: { 'data-testid': 'html-input' },
+            },
+          },
+        }} />
+      <DatePicker
+        slotProps={{
+          textField: {
+            slotProps: {
+              input: { name: 'date' },
+            },
+          },
+        }}
+      />
+    </div>
+  );
+}

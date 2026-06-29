@@ -3,11 +3,16 @@
 # Avoid conflicts with the other Next.js apps hosted under https://mui.com/
 /x/_next/* /_next/:splat 200
 
+# Shortlink to Netlify deploy previews
+/x/pr/:number https://deploy-preview-:number--material-ui-x.netlify.app/ 302
+
 # For links that we can't edit later on, for example hosted in the code published on npm or sent by email
 
 # should all be prefixed with x-
 
 /r/x-get-license https://mui.com/pricing/ 302
+/r/x-license-account https://mui.com/store/account/licenses/ 302
+/r/x-license-key-v9-upgrade https://support.mui.com/hc/en-us/articles/26762005295516-How-can-I-generate-a-v9-license-key/ 302
 /r/x-license-eula https://mui.com/legal/mui-x-eula/ 302
 /r/x-license-annual https://mui.com/legal/mui-x-eula/#annual-license 302
 /r/x-license-trial https://mui.com/x/introduction/licensing/#evaluation-trial-licenses 302
@@ -73,6 +78,7 @@
 /x/api/charts/pie-series-type/ /x/api/charts/pie-series/ 301
 /x/api/charts/scatter-series-type/ /x/api/charts/scatter-series/ 301
 # 2026
+/x/react-chat/customization/ /x/react-chat/customization/overview/ 301
 /x/api/charts/chart-container/ /x/api/charts/charts-container/ 301
 /x/api/charts/chart-container-pro/ /x/api/charts/charts-container-pro/ 301
 /x/api/charts/chart-container-premium/ /x/api/charts/charts-container-premium/ 301

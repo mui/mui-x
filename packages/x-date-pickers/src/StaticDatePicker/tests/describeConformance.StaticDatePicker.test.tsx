@@ -18,7 +18,6 @@ describe('<StaticDatePicker /> - Describe Conformance', () => {
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      'propsSpread',
     ],
   }));
 });

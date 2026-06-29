@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -8,7 +8,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<DesktopTimePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();
@@ -33,7 +33,7 @@ describe('<DesktopTimePicker /> - Describe Value', () => {
 
       expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey, user }) => {
       const newValue = applySameValue
         ? value!
         : adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
@@ -42,28 +42,28 @@ describe('<DesktopTimePicker /> - Describe Value', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
         const hoursNumber = adapterToUse.getHours(newValue);
-        fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-        fireEvent.click(
+        await user.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+        await user.click(
           screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
         );
         if (hasMeridiem) {
-          fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+          await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
         }
       } else {
-        selectSection('hours');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('hours');
+        await pressKey('ArrowUp');
 
-        selectSection('minutes');
-        pressKey(undefined, 'PageUp'); // increment by 5 minutes
+        await selectSection('minutes');
+        await pressKey('PageUp'); // increment by 5 minutes
 
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
-          selectSection('meridiem');
+          await selectSection('meridiem');
           const previousHours = adapterToUse.getHours(value!);
           const newHours = adapterToUse.getHours(newValue);
           // update meridiem section if it changed
           if ((previousHours < 12 && newHours >= 12) || (previousHours >= 12 && newHours < 12)) {
-            pressKey(undefined, 'ArrowUp');
+            await pressKey('ArrowUp');
           }
         }
       }

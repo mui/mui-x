@@ -5,18 +5,19 @@ import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
+import type { PickersOutlinedInputClasses } from './pickersOutlinedInputClasses';
 import {
   pickersOutlinedInputClasses,
   getPickersOutlinedInputUtilityClass,
-  PickersOutlinedInputClasses,
 } from './pickersOutlinedInputClasses';
 import Outline from './Outline';
-import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
+import type { PickersInputBaseProps } from '../PickersInputBase';
+import { PickersInputBase } from '../PickersInputBase';
 import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersOutlinedInputProps extends PickersInputBaseProps {
   notched?: boolean;
@@ -46,16 +47,13 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
       borderStyle: 'solid',
       borderWidth: 2,
     },
+    [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
+      borderColor: (theme.vars || theme).palette.error.main,
+    },
     [`&.${pickersOutlinedInputClasses.disabled}`]: {
       [`& .${pickersOutlinedInputClasses.notchedOutline}`]: {
         borderColor: (theme.vars || theme).palette.action.disabled,
       },
-      '*': {
-        color: (theme.vars || theme).palette.action.disabled,
-      },
-    },
-    [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
-      borderColor: (theme.vars || theme).palette.error.main,
     },
     variants: Object.keys((theme.vars ?? theme).palette)
       // @ts-ignore
@@ -121,6 +119,8 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
     ownerState: ownerStateProp,
     classes: classesProp,
     notched,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...other
   } = props;
 
@@ -129,25 +129,36 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersOutlinedInputRoot, input: PickersOutlinedInputSectionsContainer }}
-      renderSuffix={(state) => (
-        <Outline
-          shrink={Boolean(notched || state.adornedStart || state.focused || state.filled)}
-          notched={Boolean(notched || state.adornedStart || state.focused || state.filled)}
-          className={classes.notchedOutline}
-          label={
-            label != null && label !== '' && muiFormControl?.required ? (
-              <React.Fragment>
-                {label}
-                &thinsp;{'*'}
-              </React.Fragment>
-            ) : (
-              label
-            )
-          }
-        />
-      )}
       {...other}
+      slots={{
+        root: PickersOutlinedInputRoot,
+        input: PickersOutlinedInputSectionsContainer,
+        ...inSlots,
+      }}
+      slotProps={inSlotProps}
+      renderSuffix={(state) => {
+        const isNotched =
+          typeof notched !== 'undefined'
+            ? notched
+            : Boolean(state.adornedStart || state.focused || state.filled);
+        return (
+          <Outline
+            shrink={isNotched}
+            notched={isNotched}
+            className={classes.notchedOutline}
+            label={
+              label != null && label !== '' && muiFormControl?.required ? (
+                <React.Fragment>
+                  {label}
+                  &thinsp;{'*'}
+                </React.Fragment>
+              ) : (
+                label
+              )
+            }
+          />
+        );
+      }}
       label={label}
       classes={classes}
       ref={ref as any}
@@ -155,7 +166,7 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
   );
 });
 
-PickersOutlinedInput.propTypes = {
+PickersOutlinedInput.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -166,8 +177,8 @@ PickersOutlinedInput.propTypes = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
   className: PropTypes.string,
-  component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
@@ -200,11 +211,6 @@ PickersOutlinedInput.propTypes = {
    */
   id: PropTypes.string,
   /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
-   * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
-   */
-  inputProps: PropTypes.object,
-  /**
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
@@ -222,6 +228,7 @@ PickersOutlinedInput.propTypes = {
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
@@ -252,7 +259,6 @@ PickersOutlinedInput.propTypes = {
    * Start `InputAdornment` for this component.
    */
   startAdornment: PropTypes.node,
-  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

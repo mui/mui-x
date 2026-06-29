@@ -50,3 +50,14 @@ The `useGridSelector()` is based on a React Context, so the component must be a 
 
 You could use a [React portal](https://react.dev/reference/react-dom/createPortal) to achieve the same while rendering the component outside the Data Grid DOM tree.
 :::
+
+## Drag rows between pages while reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+By default, [row reordering](/x/react-data-grid/row-ordering/) requires both the dragged row and the drop target to be rendered on the same page.
+You can use a custom [pagination](/x/react-data-grid/components/#pagination) component to switch pages while a row is being dragged.
+
+The following demo listens to the `rowDragStart` and `rowDragEnd` events in a custom pagination component.
+When a row is being dragged over the previous or next page button, the component changes the page during the `dragOver` phase.
+After the page changes, drop it in the desired position in the new page.
+
+{{"demo": "RowReorderingWithPagination.js", "bg": "inline", "defaultCodeOpen": false}}

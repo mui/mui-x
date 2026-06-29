@@ -95,7 +95,7 @@ For more details on how to install each package, visit the [package installation
 
 ## Evaluation (trial) licenses
 
-Per the [End User License Agreement](https://mui.com/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days for non-production environments.
+Per the [MUI X End User License Agreement (commercial plans)](https://mui.com/legal/mui-x-eula/#article-evaluation-license), you can use the Pro and Premium components without a commercial license for 30 days for non-production environments.
 You can also use it for the development of code not intended for production (for example the reproduction of an issue, doing a benchmark).
 
 You don't need to contact us to use these components for the above cases.
@@ -117,12 +117,14 @@ The number of licenses purchased must correspond to the number of concurrent dev
   'AppY' has five front-end developers, and 'AppZ' has three; additionally, there are two front-end developers on the company's UI development team.
   Company 'B' must purchase ten licenses.
 
-This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#required-quantity-of-licenses)
+This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#authorized-developer-count-rule)
 
 ## License key
 
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
+
+{{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
 
 :::warning
 Orders placed after **May 13, 2022** come with a license key by default that is only compatible with MUI X from `v5.11.0` and upwards.
@@ -245,7 +247,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_X_LICENSE_KEY);
 
 ## What is the key for?
 
-The license key is meant to help you [stay compliant](https://mui.com/legal/mui-x-eula/#license-key) with the EULA of the commercial licenses.
+The license key is meant to help you [stay compliant](https://mui.com/legal/mui-x-eula/#article-license-key-and-compliance-verification) with the EULA of the commercial licenses.
 While each developer needs to be licensed, the license key is set once per project, where the components are used.
 
 ## License key security

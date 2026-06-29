@@ -20,35 +20,37 @@ export class TreeViewFocusPlugin {
     // Whenever the items change, we need to ensure the focused item is still present.
     // If the focused item was removed, focus the closest neighbor instead of the first item.
     let previousState = store.state;
-    this.store.subscribe((newState) => {
-      // Only run when items actually changed.
-      if (newState.itemMetaLookup === previousState.itemMetaLookup) {
+    this.store.disposables.defer(
+      this.store.subscribe((newState) => {
+        // Only run when items actually changed.
+        if (newState.itemMetaLookup === previousState.itemMetaLookup) {
+          previousState = newState;
+          return;
+        }
+
+        const focusedItemId = focusSelectors.focusedItemId(newState);
+        if (focusedItemId == null || itemsSelectors.itemMeta(newState, focusedItemId)) {
+          previousState = newState;
+          return;
+        }
+
+        const checkItemInNewTree = (itemId: TreeViewItemId | null) =>
+          itemId == null || !itemsSelectors.itemMeta(newState, itemId) ? null : itemId;
+
+        const itemToFocusId =
+          checkItemInNewTree(getNextNavigableItem(previousState, focusedItemId)) ??
+          checkItemInNewTree(getPreviousNavigableItem(previousState, focusedItemId)) ??
+          getFirstNavigableItem(newState);
+
+        if (itemToFocusId == null) {
+          this.setFocusedItemId(null);
+        } else {
+          this.applyItemFocus(null, itemToFocusId);
+        }
+
         previousState = newState;
-        return;
-      }
-
-      const focusedItemId = focusSelectors.focusedItemId(newState);
-      if (focusedItemId == null || itemsSelectors.itemMeta(newState, focusedItemId)) {
-        previousState = newState;
-        return;
-      }
-
-      const checkItemInNewTree = (itemId: TreeViewItemId | null) =>
-        itemId == null || !itemsSelectors.itemMeta(newState, itemId) ? null : itemId;
-
-      const itemToFocusId =
-        checkItemInNewTree(getNextNavigableItem(previousState, focusedItemId)) ??
-        checkItemInNewTree(getPreviousNavigableItem(previousState, focusedItemId)) ??
-        getFirstNavigableItem(newState);
-
-      if (itemToFocusId == null) {
-        this.setFocusedItemId(null);
-      } else {
-        this.applyItemFocus(null, itemToFocusId);
-      }
-
-      previousState = newState;
-    });
+      }),
+    );
   }
 
   private setFocusedItemId = (itemId: TreeViewItemId | null) => {

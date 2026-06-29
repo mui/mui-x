@@ -1,7 +1,7 @@
-import { Theme } from '@mui/material/styles';
-import { SxProps, SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+import type { SxProps, SystemStyleObject } from '@mui/system';
 import ownerDocument from '@mui/utils/ownerDocument';
-import * as React from 'react';
+import type * as React from 'react';
 
 /* Use it instead of .includes method for IE support */
 export function arrayIncludes<T>(array: T[] | readonly T[], itemOrItems: T | T[]) {
@@ -72,6 +72,21 @@ export const getFocusedListItemIndex = (listElement: HTMLUListElement): number =
 };
 
 export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (pointer: fine)';
+
+/**
+ * Picks any `data-*` and `aria-*` properties from `props` so they can be
+ * forwarded to the root DOM element rendered by the Picker. Other props stay
+ * owned by the Picker and are handled explicitly elsewhere.
+ */
+export function extractRootForwardedProps<T extends object>(props: T): Record<string, unknown> {
+  const forwardedProps: Record<string, unknown> = {};
+  for (const key of Object.keys(props)) {
+    if (key.startsWith('data-') || key.startsWith('aria-')) {
+      forwardedProps[key] = props[key as keyof T];
+    }
+  }
+  return forwardedProps;
+}
 
 export function mergeSx(
   ...sxProps: (SxProps<Theme> | undefined)[]

@@ -35,7 +35,7 @@ export default function SankeyNodeSorting() {
       spacing={3}
       sx={{ width: '100%', '&>div': { flex: '1 0 0' } }}
     >
-      <div>
+      <div style={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom>
           auto (default)
         </Typography>
@@ -50,7 +50,7 @@ export default function SankeyNodeSorting() {
         />
       </div>
 
-      <div>
+      <div style={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom>
           fixed
         </Typography>
@@ -65,7 +65,7 @@ export default function SankeyNodeSorting() {
         />
       </div>
 
-      <div>
+      <div style={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom>
           Custom Function
         </Typography>

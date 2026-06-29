@@ -1,20 +1,8 @@
 import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+import { ApiPage } from '@mui/internal-core-docs/ApiPage';
+import descriptions from 'docs/translations/api-docs/date-pickers/static-time-picker/static-time-picker.json';
 import jsonPageContent from './static-time-picker.json';
 
-export default function Page(props) {
-  const { descriptions } = props;
+export default function Page() {
   return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
-
-export async function getStaticProps() {
-  const req = require.context(
-    'docsx/translations/api-docs/date-pickers/static-time-picker',
-    false,
-    /\.\/static-time-picker.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

@@ -17,7 +17,7 @@ export default function EventCreationDuration() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="months"
+        defaultPreset="monthAndYear"
         eventCreation={{ duration: 60 * 24 * 7 }} // 1 week in minutes
       />
     </div>

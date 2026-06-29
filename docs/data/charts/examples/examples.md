@@ -39,19 +39,12 @@ Circular slices showing proportional data.
 
 {{"component": "modules/examples/charts/PieChartsGrid.js"}}
 
-## Other Charts
+## Other charts
 
 Gauge, sparkline, and specialized chart types.
 
 {{"component": "modules/examples/charts/OtherChartsGrid.js"}}
 
-## More demos
+## Docs demos
 
-Browse individual chart categories for more detailed examples:
-
-- **[Bar Charts](/x/react-charts/bar-demo/)**
-- **[Line Charts](/x/react-charts/line-demo/)**
-- **[Area Charts](/x/react-charts/areas-demo/)**
-- **[Scatter Charts](/x/react-charts/scatter-demo/)**
-- **[Pie Charts](/x/react-charts/pie-demo/)**
-- **[Other Charts](/x/react-charts/gauge/)**
+Browse individual chart categories docs demos for detailed examples, for example, the **[Bar Charts](/x/react-charts/bar-demo/)**.

@@ -2,15 +2,13 @@ import { kebabCase } from 'es-toolkit/string';
 import * as prettier from 'prettier';
 import { Symbol } from 'typescript';
 import fs from 'node:fs/promises';
-// eslint-disable-next-line no-restricted-imports
 import {
+  resolveExportSpecifier as resolveExportSpecifierBase,
   getSymbolDescription as getSymbolDescriptionBase,
   getSymbolJSDocTags as getSymbolJSDocTagsBase,
   formatType,
   stringifySymbol as stringifySymbolBase,
-} from '@mui/monorepo/packages-internal/api-docs-builder/buildApiUtils';
-// eslint-disable-next-line no-restricted-imports
-import resolveExportSpecifierBase from '@mui/monorepo/packages-internal/api-docs-builder/utils/resolveExportSpecifier';
+} from '@mui/internal-api-docs-builder';
 import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
 import { resolvePrettierConfigPath } from '../utils';
 

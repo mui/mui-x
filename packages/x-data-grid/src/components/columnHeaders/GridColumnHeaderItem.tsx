@@ -7,7 +7,7 @@ import capitalize from '@mui/utils/capitalize';
 import useId from '@mui/utils/useId';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
-import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
+import { focusElement } from '../../utils/focusElement';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -24,6 +24,7 @@ import type { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
 import { PinnedColumnPosition } from '../../internals/constants';
 import { attachPinnedStyle } from '../../internals/utils';
+import { usePinnedScrollOffset } from '../../hooks/utils/usePinnedScrollOffset';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -310,13 +311,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       if (!elementToFocus) {
         return;
       }
-      if (doesSupportPreventScroll()) {
-        elementToFocus.focus({ preventScroll: true });
-      } else {
-        const scrollPosition = apiRef.current.getScrollPosition();
-        elementToFocus.focus();
-        apiRef.current.scroll(scrollPosition);
-      }
+      focusElement(elementToFocus, apiRef);
     }
   }, [apiRef, hasFocus]);
 
@@ -327,9 +322,16 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const label = colDef.headerName ?? colDef.field;
 
+  const pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition);
   const style = React.useMemo(
-    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
-    [pinnedPosition, pinnedOffset, props.style, isRtl],
+    () =>
+      attachPinnedStyle(
+        { ...props.style },
+        isRtl,
+        pinnedPosition,
+        pinnedOffset !== undefined ? pinnedOffset + pinnedScrollOffset : undefined,
+      ),
+    [pinnedPosition, pinnedOffset, pinnedScrollOffset, props.style, isRtl],
   );
 
   return (
@@ -364,7 +366,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 }
 
-GridColumnHeaderItem.propTypes = {
+GridColumnHeaderItem.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

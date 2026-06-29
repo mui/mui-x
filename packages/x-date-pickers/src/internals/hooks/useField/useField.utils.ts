@@ -1,11 +1,11 @@
-import {
+import type {
   FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
   FieldSectionValueBoundaries,
   FieldParsedSelectedSections,
 } from './useField.types';
-import {
+import type {
   FieldSectionType,
   FieldSection,
   MuiPickersAdapter,
@@ -17,7 +17,8 @@ import {
   InferFieldSection,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
-import { PickerValidValue } from '../../models';
+import { convertToMeridiem } from '../../utils/time-utils';
+import type { PickerValidValue } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = (
   adapter: MuiPickersAdapter,
@@ -178,6 +179,8 @@ export const cleanDigitSectionValue = (
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         [
           `MUI X: The token "${section.format}" is a digit format with letter in it.'
@@ -253,6 +256,8 @@ export const changeSectionValueFormat = (
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (getDateSectionConfigFromFormatToken(adapter, currentFormat).type === 'weekDay') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error("changeSectionValueFormat doesn't support week day formats");
     }
   }
@@ -409,28 +414,39 @@ export const getSectionsBoundaries = (
     },
     hours: ({ format }) => {
       const lastHourInDay = adapter.getHours(endOfDay);
-      const hasMeridiem =
+
+      const formattedMidnight = Number(
+        removeLocalizedDigits(
+          adapter.formatByString(adapter.startOfDay(today), format),
+          localizedDigits,
+        ),
+      );
+
+      const formattedEndOfDay = Number(
         removeLocalizedDigits(
           adapter.formatByString(adapter.endOfDay(today), format),
           localizedDigits,
-        ) !== lastHourInDay.toString();
+        ),
+      );
+
+      const hasMeridiem = formattedEndOfDay !== lastHourInDay;
 
       if (hasMeridiem) {
-        return {
-          minimum: 1,
-          maximum: Number(
-            removeLocalizedDigits(
-              adapter.formatByString(adapter.startOfDay(today), format),
-              localizedDigits,
-            ),
-          ),
-        };
+        // K/KK format (hour 0-11): midnight formats as 0
+        if (formattedMidnight === 0) {
+          return { minimum: 0, maximum: formattedEndOfDay };
+        }
+        // h/hh format (hour 1-12): midnight formats as 12
+        return { minimum: 1, maximum: formattedMidnight };
       }
 
-      return {
-        minimum: 0,
-        maximum: lastHourInDay,
-      };
+      // k/kk format (hour 1-24): midnight formats as 24 (> lastHourInDay)
+      if (formattedMidnight > lastHourInDay) {
+        return { minimum: 1, maximum: formattedMidnight };
+      }
+
+      // H/HH format (hour 0-23)
+      return { minimum: 0, maximum: lastHourInDay };
     },
     minutes: () => ({
       minimum: 0,
@@ -515,18 +531,8 @@ const transferDateSectionValue = (
     }
 
     case 'meridiem': {
-      const isAM = adapter.getHours(dateToTransferFrom) < 12;
-      const mergedDateHours = adapter.getHours(dateToTransferTo);
-
-      if (isAM && mergedDateHours >= 12) {
-        return adapter.addHours(dateToTransferTo, -12);
-      }
-
-      if (!isAM && mergedDateHours < 12) {
-        return adapter.addHours(dateToTransferTo, 12);
-      }
-
-      return dateToTransferTo;
+      const meridiem = adapter.getHours(dateToTransferFrom) < 12 ? 'am' : 'pm';
+      return convertToMeridiem(dateToTransferTo, meridiem, true, adapter);
     }
 
     case 'hours': {
@@ -578,8 +584,6 @@ export const mergeDateIntoReferenceDate = (
 
       return mergedDate;
     }, referenceDate);
-
-export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
   const neighbors: SectionNeighbors = {};

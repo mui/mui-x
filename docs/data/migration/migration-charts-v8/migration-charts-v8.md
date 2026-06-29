@@ -80,7 +80,7 @@ Here is the table of the classes renamed.
 Run the following command to do the renaming.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/charts/rename-classes <path|folder>
+npx @mui/x-codemod@latest v9.0.0/charts/rename-classes <path|folder>
 ```
 
 After running the codemod, make sure the type check are passing.
@@ -152,22 +152,43 @@ This codemod does not handle:
 
 ## Start using the new release
 
-In `package.json`, change the version of the charts package to `next`.
+In `package.json`, change the version of the charts package to `^9.0.0`.
 
 ```diff
 -"@mui/x-charts": "^8.x.x",
-+"@mui/x-charts": "next",
++"@mui/x-charts": "^9.0.0",
 
 -"@mui/x-charts-pro": "^8.x.x",
-+"@mui/x-charts-pro": "next",
++"@mui/x-charts-pro": "^9.0.0",
 
 -"@mui/x-charts-premium": "^8.x.x",
-+"@mui/x-charts-premium": "next",
++"@mui/x-charts-premium": "^9.0.0",
 ```
 
 Since `v9` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v8` to `v9`.
+
+## Update `@mui/material` and `@mui/system` packages
+
+The minimum supported version of `@mui/material` and `@mui/system` has been updated to `^7.3.0` or `^9.0.0`.
+This change enables the opt-in [Native Color](/material-ui/customization/css-theme-variables/native-color/) feature, which replaces JavaScript color manipulation with native CSS.
+The v5 and v6 versions are no longer supported.
+
+If you are using `@mui/material` v5 or v6, you need to upgrade to at least v7.3.0.
+Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/) to upgrade your implementation.
+
+```diff
+-"@mui/material": "^5.x.x",
++"@mui/material": "^7.3.0",
+
+-"@mui/system": "^5.x.x",
++"@mui/system": "^7.3.0",
+```
+
+## Update your license key (Pro and Premium)
+
+{{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
 
 ## Run codemods
 
@@ -179,10 +200,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 
 ```bash
 # Charts-specific
-npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/charts/preset-safe <path>
 
 # Target the other packages as well
-npx @mui/x-codemod@next v9.0.0/preset-safe <path>
+npx @mui/x-codemod@latest v9.0.0/preset-safe <path>
 ```
 
 :::info
@@ -354,7 +375,7 @@ The hook now always returns an array of tooltip data (one entry per active axis)
 Run the following command to do the renaming.
 
 ```bash
-npx @mui/x-codemod@next v9.0.0/charts/rename-axis-tooltip-hook <path|folder>
+npx @mui/x-codemod@latest v9.0.0/charts/rename-axis-tooltip-hook <path|folder>
 ```
 
 After running the codemod make sure to adapt the hook returned value to your needs.

@@ -19,6 +19,10 @@ export function FocusedBar(props: React.SVGAttributes<SVGRectElement>) {
 
   const series = barSeries.series[focusedItem.seriesId];
 
+  if (!series || series.hidden) {
+    return null;
+  }
+
   if (series.data[focusedItem.dataIndex] == null) {
     // Handle missing data
     return null;

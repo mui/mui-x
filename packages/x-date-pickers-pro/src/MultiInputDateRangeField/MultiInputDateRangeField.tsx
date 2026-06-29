@@ -1,16 +1,15 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import PropTypes from 'prop-types';
-import { useDateRangeManager, UseDateRangeManagerReturnValue } from '../managers';
+import type { UseDateRangeManagerReturnValue } from '../managers';
+import { useDateRangeManager } from '../managers';
+import type { MultiInputRangeFieldProps } from '../internals/utils/createMultiInputRangeField';
 import {
   // The alias is needed to have the doc gen working.
   createMultiInputRangeField as createMultiInputDateRangeField,
-  MultiInputRangeFieldProps,
 } from '../internals/utils/createMultiInputRangeField';
-import {
-  getMultiInputDateRangeFieldUtilityClass,
-  MultiInputDateRangeFieldClasses,
-} from './multiInputDateRangeFieldClasses';
+import type { MultiInputDateRangeFieldClasses } from './multiInputDateRangeFieldClasses';
+import { getMultiInputDateRangeFieldUtilityClass } from './multiInputDateRangeFieldClasses';
 
 export interface MultiInputDateRangeFieldProps extends MultiInputRangeFieldProps<UseDateRangeManagerReturnValue> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
@@ -40,13 +39,13 @@ const MultiInputDateRangeField = createMultiInputDateRangeField({
   useManager: useDateRangeManager,
 }) as MultiInputDateRangeFieldComponent;
 
-MultiInputDateRangeField.propTypes = {
+MultiInputDateRangeField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If `true`, the `input` element is focused during the first mount.
+   * If `true`, the field is focused during the first mount.
    * @default false
    */
   autoFocus: PropTypes.bool,

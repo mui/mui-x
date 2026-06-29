@@ -7,19 +7,65 @@ import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
+    title: 'MUI X v9',
+    description:
+      'A new major with accessibility-first charts, Data Grid AI assistant, candlestick and range bar charts, and new Scheduler and Chat packages.',
+    date: new Date(Date.UTC(2026, 3, 8)),
+    url: 'https://mui.com/blog/introducing-mui-v9/',
+    highlightList: [
+      {
+        title: 'Data Grid – Charts integration [Premium]',
+        url: '/x/react-data-grid/charts-integration/',
+      },
+      {
+        title: 'Data Grid – AI Assistant [Premium]',
+        url: '/x/react-data-grid/ai-assistant/',
+      },
+      {
+        title: 'Data Grid – Undo and redo [Premium]',
+        url: '/x/react-data-grid/undo-redo/',
+      },
+      {
+        title: 'Data Grid – Drag fill [Premium]',
+        url: '/x/react-data-grid/clipboard/#drag-to-fill',
+      },
+      {
+        title: 'Data Grid – longText column type',
+        url: '/x/react-data-grid/column-definition/#column-types',
+      },
+      {
+        title: 'Charts – Interaction and accessibility',
+        url: '/x/react-charts/accessibility/',
+      },
+      {
+        title: 'Charts – Candlestick [Premium]',
+        url: '/x/react-charts/candlestick/',
+      },
+      {
+        title: 'Charts – Range bar charts [Premium]',
+        url: '/x/react-charts/range-bar/',
+      },
+      {
+        title: 'Charts – WebGL Heatmap renderer [Premium]',
+        url: '/x/react-charts/heatmap/#webgl-renderer',
+      },
+      {
+        title: 'Tree View – Virtualization [Pro]',
+        url: '/x/react-tree-view/rich-tree-view/virtualization/',
+      },
+      {
+        title: 'Scheduler [Alpha]',
+        url: '/x/react-scheduler/',
+      },
+    ],
+  },
+  {
     title: 'MUI X v8.2',
     description: 'A roundup of all new features beyond v8.0.0.',
-    date: new Date(2025, 12, 1),
+    date: new Date(Date.UTC(2025, 12, 1)),
     url: 'https://github.com/mui/mui-x/releases/tag/v8.23.0',
     highlightList: [
       {
@@ -87,7 +133,7 @@ const entries = [
   {
     title: 'MUI X v8',
     description: 'Cutting-edge features, enhanced customization, and full support for native ESM.',
-    date: new Date(2025, 3, 17),
+    date: new Date(Date.UTC(2025, 3, 17)),
     url: 'https://mui.com/blog/mui-x-v8/',
     highlightList: [
       {
@@ -183,7 +229,7 @@ const entries = [
   {
     title: 'MUI X v7.19',
     description: 'A roundup of all new features since v7.15.0.',
-    date: new Date(2024, 9, 4),
+    date: new Date(Date.UTC(2024, 9, 4)),
     url: 'https://github.com/mui/mui-x/releases/tag/v7.19.0',
     highlightList: [
       {
@@ -202,7 +248,7 @@ const entries = [
   },
   {
     title: 'MUI X v7.15',
-    date: new Date(2024, 7, 29),
+    date: new Date(Date.UTC(2024, 7, 29)),
     description: 'A roundup of all new features since v7.13.0.',
     url: 'https://github.com/mui/mui-x/releases/tag/v7.15.0',
     highlightList: [
@@ -218,7 +264,7 @@ const entries = [
   },
   {
     title: 'MUI X v7.13',
-    date: new Date(2024, 7, 16),
+    date: new Date(Date.UTC(2024, 7, 16)),
     description: 'A roundup of all new features since v7.8.0.',
     url: 'https://github.com/mui/mui-x/releases/tag/v7.13.0',
     highlightList: [
@@ -250,7 +296,7 @@ const entries = [
   },
   {
     title: 'MUI X v7.8',
-    date: new Date(2024, 5, 28),
+    date: new Date(Date.UTC(2024, 5, 28)),
     description: 'A roundup of all new features since v7.0.0.',
     url: 'https://github.com/mui/mui-x/releases/tag/v7.8.0',
     highlightList: [
@@ -272,7 +318,7 @@ const entries = [
     title: 'MUI X v7',
     description:
       'Featuring new components and multiple enhancements for both developers and end-users.',
-    date: new Date(2024, 2, 21),
+    date: new Date(Date.UTC(2024, 2, 21)),
     url: 'https://mui.com/blog/mui-x-v7/',
     highlightList: [
       {
@@ -316,7 +362,7 @@ const entries = [
   {
     title: 'MUI X v6.18',
     description: 'New stable components, polished features, better performance, and more.',
-    date: new Date(2023, 10, 13),
+    date: new Date(Date.UTC(2023, 10, 13)),
     url: 'https://mui.com/blog/mui-x-end-v6-features/',
     highlightList: [
       {
@@ -348,7 +394,7 @@ const entries = [
   {
     title: 'MUI X v6.11',
     description: 'A roundup of all new features since v6.0.0.',
-    date: new Date(2023, 7, 14),
+    date: new Date(Date.UTC(2023, 7, 14)),
     url: 'https://mui.com/blog/mui-x-mid-v6-features/',
     highlightList: [
       {
@@ -380,7 +426,7 @@ const entries = [
   {
     title: 'MUI X v6',
     description: 'A new major is available, with many new features and improvements.',
-    date: new Date(2023, 2, 6),
+    date: new Date(Date.UTC(2023, 2, 6)),
     url: 'https://mui.com/blog/mui-x-v6/',
     highlightList: [
       {
@@ -417,7 +463,7 @@ const entries = [
     title: 'MUI X Date Pickers v5',
     description:
       'After some months of polishing in pre-releases, the Date Pickers finally get a stable.',
-    date: new Date(2022, 8, 22),
+    date: new Date(Date.UTC(2022, 8, 22)),
     url: 'https://mui.com/blog/date-pickers-stable-v5/',
     highlightList: [
       {
@@ -438,7 +484,7 @@ const entries = [
     title: 'MUI X Data Grid v5.15',
     description:
       'This version brings an amazing set of new supported use cases with the Data Grid Premium.',
-    date: new Date(2022, 7, 12),
+    date: new Date(Date.UTC(2022, 7, 12)),
     url: 'https://mui.com/blog/aggregation-functions/',
     highlightList: [
       {
@@ -455,7 +501,7 @@ const entries = [
     title: 'New Premium plan',
     description:
       'Premium plan announcement, including the most advanced features for data analysis and management.',
-    date: new Date(2022, 4, 12),
+    date: new Date(Date.UTC(2022, 4, 12)),
     url: 'https://mui.com/blog/premium-plan-release/',
     highlightList: [
       { title: 'Row Grouping', url: '/x/react-data-grid/row-grouping/' },
@@ -465,7 +511,7 @@ const entries = [
   {
     title: 'MUI X v5',
     description: 'A new Data Grid virtualization engine, and improvements in several APIs.',
-    date: new Date(2021, 10, 22),
+    date: new Date(Date.UTC(2021, 10, 22)),
     url: 'https://mui.com/blog/mui-x-v5/',
     highlightList: [
       {
@@ -483,6 +529,13 @@ const entries = [
     ],
   },
 ];
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 
 function BlogCard({ entry }) {
   return (
@@ -524,11 +577,7 @@ function BlogCard({ entry }) {
               display: { xs: 'auto', sm: 'none' },
             }}
           >
-            {entry.date.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            })}
+            {dateFormatter.format(entry.date)}
           </Typography>
           <Typography
             component="div"
@@ -609,17 +658,23 @@ BlogCard.propTypes = {
 export default function WhatsNewLayout() {
   return (
     <div>
-      <Timeline
+      <Box
+        component="ul"
+        className="MuiTimeline-root MuiTimeline-positionRight"
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          flexGrow: 1,
           p: 0,
           px: { xs: 2, sm: 0 },
-          'li:first-child': {
+          listStyle: 'none',
+          '& > li:first-of-type': {
             '& .top-connector': {
               visibility: 'hidden',
             },
           },
-          'li:last-child': {
-            '& .MuiTimelineContent-root': {
+          '& > li:last-child': {
+            '& .timeline-content': {
               pb: 0,
             },
             '& .bottom-connector': {
@@ -629,8 +684,18 @@ export default function WhatsNewLayout() {
         }}
       >
         {entries.map((entry) => (
-          <TimelineItem key={entry.date.toISOString()}>
-            <TimelineOppositeContent
+          <Box
+            component="li"
+            key={entry.date.toISOString()}
+            sx={{
+              listStyle: 'none',
+              display: 'flex',
+              position: 'relative',
+              minHeight: 70,
+            }}
+          >
+            <Typography
+              component="div"
               variant="body2"
               sx={{
                 color: 'text.tertiary',
@@ -639,19 +704,24 @@ export default function WhatsNewLayout() {
                 px: 0,
                 pt: 3.5,
                 pr: 3,
+                pb: 0.75,
                 width: 120,
                 textAlign: 'left',
                 fontWeight: 'medium',
               }}
             >
-              {entry.date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-              <TimelineConnector
+              {dateFormatter.format(entry.date)}
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 0,
+                alignItems: 'center',
+              }}
+            >
+              <Box
+                component="span"
                 className="top-connector"
                 sx={{
                   height: 32,
@@ -662,32 +732,46 @@ export default function WhatsNewLayout() {
                   '.mode-dark &': { backgroundColor: 'primaryDark.700' },
                 }}
               />
-              <TimelineDot
+              <Box
+                component="span"
                 sx={{
+                  boxSizing: 'border-box',
+                  width: 10,
+                  height: 10,
+                  display: 'flex',
+                  alignSelf: 'baseline',
                   m: 0,
+                  p: 0.5,
                   backgroundColor: 'transparent',
                   boxShadow: 'none',
+                  borderStyle: 'solid',
                   borderColor: 'grey.500',
                   opacity: '60%',
                   borderWidth: '1px',
+                  borderRadius: '50%',
                 }}
               />
-              <TimelineConnector
+              <Box
+                component="span"
                 className="bottom-connector"
                 sx={{
+                  flexGrow: 1,
                   width: '1px',
                   backgroundColor: 'grey.100',
                   // TODO: Allow to use theme.applyDarkStyles
                   '.mode-dark &': { backgroundColor: 'primaryDark.700' },
                 }}
               />
-            </TimelineSeparator>
-            <TimelineContent sx={{ pl: { xs: 2, sm: 4 }, pr: 0, pt: 0, pb: 3 }}>
+            </Box>
+            <Box
+              className="timeline-content"
+              sx={{ flex: 1, pl: { xs: 2, sm: 4 }, pr: 0, pt: 0, pb: 3, textAlign: 'left' }}
+            >
               <BlogCard entry={entry} />
-            </TimelineContent>
-          </TimelineItem>
+            </Box>
+          </Box>
         ))}
-      </Timeline>
+      </Box>
     </div>
   );
 }

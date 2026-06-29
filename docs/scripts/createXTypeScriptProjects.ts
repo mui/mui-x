@@ -41,7 +41,8 @@ export type XProjectNames =
   | 'x-scheduler'
   | 'x-scheduler-premium'
   | 'x-tree-view'
-  | 'x-tree-view-pro';
+  | 'x-tree-view-pro'
+  | 'x-chat';
 
 export type XTypeScriptProjects = Map<XProjectNames, XTypeScriptProject>;
 
@@ -433,6 +434,22 @@ export const createXTypeScriptProjects = () => {
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
         includeUnstableComponents: true,
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-chat',
+    createXTypeScriptProject({
+      name: 'x-chat',
+      rootPath: path.join(workspaceRoot, 'packages/x-chat'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'chat',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
       }),
     }),
   );

@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -8,7 +8,7 @@ import {
 } from 'test/utils/pickers';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 
 describe('<DesktopDateRangePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();
@@ -43,9 +43,9 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
         : 'MM/DD/YYYY';
       expectFieldValue(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
-      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
+      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey, user },
     ) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
@@ -57,14 +57,14 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
       }
 
       if (isOpened) {
-        fireEvent.click(
+        await user.click(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
         );
       } else {
-        selectSection('day');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('day');
+        await pressKey('ArrowUp');
       }
 
       return newValue;

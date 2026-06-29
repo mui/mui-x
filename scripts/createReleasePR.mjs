@@ -217,8 +217,6 @@ async function findForkRemote() {
       console.log('No specific fork remote found, defaulting to "origin"');
       return 'origin';
     }
-
-    console.log(`Found fork remote: ${forkRemote}`);
     return forkRemote;
   } catch (error) {
     console.error('Error finding fork remote:', error);
@@ -806,7 +804,7 @@ async function main() {
 
     // Find the fork remote
     const forkRemote = await findForkRemote();
-    console.log(`Found fork remote: ${upstreamRemote}`);
+    console.log(`Found fork remote: ${forkRemote}`);
 
     const latestMajorVersion = await findLatestMajorVersion();
     console.log(`Found latest major version: ${latestMajorVersion}`);
@@ -830,7 +828,7 @@ async function main() {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(latestMajorVersion);
 
-    const latestTag = await findLatestTaggedVersionForMajor(majorVersion);
+    const latestTag = await findLatestTaggedVersionForMajor(majorVersion, upstreamRemote);
     const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
@@ -904,7 +902,15 @@ async function main() {
       console.log(`Creating branch from master for current major version: ${branchSource}`);
     }
 
-    await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
+    // Note: intentionally not tracking `branchSource` here. Tracking it directly
+    // would point this branch's upstream at the `upstream` remote, so a later plain
+    // `git push` (e.g. during manual fixups) would push straight to `upstream/master`
+    // instead of the fork. The branch doesn't exist on the fork yet, so we can't point
+    // `--track` at it either; instead we configure the tracking refs by hand so the
+    // branch is never left orphaned even if the push below is skipped or fails.
+    await execa('git', ['checkout', '-b', branchName, branchSource]);
+    await execa('git', ['config', `branch.${branchName}.remote`, forkRemote]);
+    await execa('git', ['config', `branch.${branchName}.merge`, `refs/heads/${branchName}`]);
 
     // Update package.json
     await updatePackageJson(newVersion);
@@ -952,17 +958,10 @@ async function main() {
 
     console.log(`Changes committed to branch ${branchName}`);
 
-    // Push the committed changes to fork remote
+    // Push the committed changes to fork remote (already tracked above).
     console.log('Pushing committed changes to fork remote...');
-    try {
-      await execa('git', ['push', forkRemote, branchName]);
-      console.log(`Changes pushed to ${forkRemote}/${branchName}`);
-    } catch (error) {
-      console.error('Error pushing to fork remote:', error);
-      console.error('Falling back to pushing to origin...');
-      await execa('git', ['push', 'origin', branchName]);
-      console.log(`Changes pushed to origin/${branchName}`);
-    }
+    await execa('git', ['push', forkRemote, branchName]);
+    console.log(`Changes pushed to ${forkRemote}/${branchName}`);
 
     // Create PR body with checklist
     const prBody = createPrBody(newVersion);

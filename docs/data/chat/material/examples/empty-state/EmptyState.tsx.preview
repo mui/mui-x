@@ -1,0 +1,13 @@
+<ChatBox
+  adapter={adapter}
+  members={demoMembers}
+  initialActiveConversationId={emptyConversation.id}
+  initialConversations={[emptyConversation]}
+  initialMessages={[]}
+  sx={{
+    height: 500,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

@@ -3,29 +3,31 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { type ScatterMarkerSlotProps, type ScatterMarkerSlots } from './ScatterMarker.types';
-import {
-  type DefaultizedScatterSeriesType,
-  type ScatterItemIdentifier,
+import type { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
+import type {
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
 } from '../models/seriesType/scatter';
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
-import { type D3Scale } from '../models/axis';
+import type { D3Scale } from '../models/axis';
 import { useItemHighlightStateGetter } from '../hooks/useItemHighlightStateGetter';
-import {
-  selectorChartsIsVoronoiEnabled,
-  type UseChartClosestPointSignature,
-} from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import { selectorChartsIsVoronoiEnabled } from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
-import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ScatterSizeGetter } from './seriesConfig/getMarkerSize';
 import { useUtilityClasses } from './scatterClasses';
 import type { ScatterClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartsContext } from '../context/ChartsProvider';
-import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
-import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 
+/**
+ * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
+ */
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
@@ -37,6 +39,10 @@ export interface ScatterProps {
    * If provided, the color for the specific scatter item is returned.
    */
   colorGetter: ColorGetter<'scatter'>;
+  /**
+   * Function to get the marker size of a scatter item given its data index.
+   */
+  sizeGetter: ScatterSizeGetter;
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
@@ -51,11 +57,19 @@ export interface ScatterProps {
   slotProps?: ScatterSlotProps;
 }
 
+/**
+ * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
+ */
 export interface ScatterSlots extends ScatterMarkerSlots {}
 
+/**
+ * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
+ */
 export interface ScatterSlotProps extends ScatterMarkerSlotProps {}
 
 /**
+ * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
+ *
  * Demos:
  *
  * - [Scatter](https://mui.com/x/react-charts/scatter/)
@@ -71,6 +85,7 @@ function Scatter(props: ScatterProps) {
     xScale,
     yScale,
     colorGetter,
+    sizeGetter,
     onItemClick,
     classes: inClasses,
     slots,
@@ -99,7 +114,6 @@ function Scatter(props: ScatterProps) {
     externalSlotProps: slotProps?.marker,
     additionalProps: {
       seriesId: series.id,
-      size: series.markerSize,
     },
     ownerState: {},
   });
@@ -119,6 +133,7 @@ function Scatter(props: ScatterProps) {
             className={clsx(classes.marker, markerProps.className)}
             dataIndex={dataPoint.dataIndex}
             color={colorGetter(dataPoint.dataIndex)}
+            size={sizeGetter(dataPoint.dataIndex)}
             isHighlighted={isItemHighlighted}
             isFaded={isItemFaded}
             x={dataPoint.x}
@@ -145,7 +160,7 @@ function Scatter(props: ScatterProps) {
   );
 }
 
-Scatter.propTypes = {
+Scatter.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -165,6 +180,10 @@ Scatter.propTypes = {
    */
   onItemClick: PropTypes.func,
   series: PropTypes.object.isRequired,
+  /**
+   * Function to get the marker size of a scatter item given its data index.
+   */
+  sizeGetter: PropTypes.func.isRequired,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
   xScale: PropTypes.func.isRequired,

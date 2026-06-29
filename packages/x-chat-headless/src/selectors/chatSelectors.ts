@@ -1,0 +1,160 @@
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { resolveMessageAuthor } from '../internals/messageAuthor';
+import type { ChatConversation, ChatMessage } from '../types/chat-entities';
+import type { ChatError } from '../types/chat-error';
+import type { ChatInternalState } from '../types/chat-state';
+import type { ChatStoreParameters } from '../store';
+
+type State<Cursor = string> = ChatInternalState<Cursor>;
+
+export const chatSelectors = {
+  messageIds: createSelector((state: State) => state.messageIds),
+  messagesById: createSelector((state: State) => state.messagesById),
+  conversationIds: createSelector((state: State) => state.conversationIds),
+  conversationsById: createSelector((state: State) => state.conversationsById),
+  activeConversationId: createSelector((state: State) => state.activeConversationId),
+  isStreaming: createSelector((state: State) => state.isStreaming),
+  streamingConversationId: createSelector((state: State) => state.streamingConversationId),
+  hasMoreHistory: createSelector((state: State) => state.hasMoreHistory),
+  isLoadingHistory: createSelector((state: State) => state.isLoadingHistory),
+  error: createSelector((state: State) => state.error),
+  messages: createSelectorMemoized(
+    (state: State) => state.messageIds,
+    (state: State) => state.messagesById,
+    (messageIds, messagesById): ChatMessage[] => messageIds.map((id) => messagesById[id]!),
+  ),
+  message: createSelector(
+    (state: State) => state.messagesById,
+    (messagesById, id: string): ChatMessage | undefined => messagesById[id],
+  ),
+  messageAuthor: createSelectorMemoized(
+    (state: State) => state.messagesById,
+    (state: State) => state.conversationsById,
+    (state: State) => state.activeConversationId,
+    (
+      messagesById,
+      conversationsById,
+      activeConversationId,
+      id: string,
+      parameters: ChatStoreParameters<any>,
+    ) => {
+      const activeConversation =
+        activeConversationId == null ? undefined : conversationsById[activeConversationId];
+
+      return resolveMessageAuthor(messagesById[id] ?? null, {
+        currentUser: parameters.currentUser,
+        members: parameters.members,
+        activeConversation,
+        getMessageAuthorId: parameters.getMessageAuthorId,
+        getMessageAuthorDisplayName: parameters.getMessageAuthorDisplayName,
+        getMessageAuthorAvatarUrl: parameters.getMessageAuthorAvatarUrl,
+        roleDisplayNames: parameters.roleDisplayNames,
+      });
+    },
+  ),
+  messageError: createSelector(
+    (state: State) => state.messageErrorsById,
+    (state: State) => state.messagesById,
+    (messageErrorsById, messagesById, id: string): ChatError | null => {
+      const message = messagesById[id];
+      const error = messageErrorsById[id];
+
+      if (!error || message?.status !== 'error') {
+        return null;
+      }
+
+      return error;
+    },
+  ),
+  conversations: createSelectorMemoized(
+    (state: State) => state.conversationIds,
+    (state: State) => state.conversationsById,
+    (conversationIds, conversationsById): ChatConversation[] =>
+      conversationIds.map((id) => conversationsById[id]!),
+  ),
+  conversation: createSelector(
+    (state: State) => state.conversationsById,
+    (conversationsById, id: string): ChatConversation | undefined => conversationsById[id],
+  ),
+  activeConversation: createSelector(
+    (state: State) => state.activeConversationId,
+    (state: State) => state.conversationsById,
+    (activeConversationId, conversationsById): ChatConversation | undefined =>
+      activeConversationId == null ? undefined : conversationsById[activeConversationId],
+  ),
+  messageCount: createSelector(
+    (state: State) => state.messageIds,
+    (messageIds): number => messageIds.length,
+  ),
+  conversationCount: createSelector(
+    (state: State) => state.conversationIds,
+    (conversationIds): number => conversationIds.length,
+  ),
+  composerValue: createSelector((state: State) => state.composerValue),
+  composerAttachments: createSelector((state: State) => state.composerAttachments),
+  /**
+   * Returns the IDs of users currently typing in the given conversation.
+   * If no conversationId argument is provided, falls back to the active conversation.
+   */
+  typingUserIds: createSelectorMemoized(
+    (state: State) => state.typingByConversation,
+    (state: State) => state.activeConversationId,
+    (typingByConversation, activeConversationId, conversationId: string | undefined): string[] => {
+      const id = conversationId ?? activeConversationId;
+      if (!id) {
+        return [];
+      }
+      const byUser = typingByConversation[id];
+      if (!byUser) {
+        return [];
+      }
+      return Object.keys(byUser).filter((userId) => byUser[userId]);
+    },
+  ),
+  /**
+   * Returns the IDs of users currently typing in the active conversation.
+   * Use this instead of `typingUserIds(state, undefined)` to avoid creating an inline wrapper
+   * function that would defeat memoization.
+   */
+  typingUserIdsForActiveConversation: createSelectorMemoized(
+    (state: State) => state.typingByConversation,
+    (state: State) => state.activeConversationId,
+    (typingByConversation, activeConversationId): string[] => {
+      if (!activeConversationId) {
+        return [];
+      }
+      const byUser = typingByConversation[activeConversationId];
+      if (!byUser) {
+        return [];
+      }
+      return Object.keys(byUser).filter((userId) => byUser[userId]);
+    },
+  ),
+} as const;
+
+// `messageAuthor` intentionally has no standalone `select*` alias: it requires
+// trailing `(id, parameters: ChatStoreParameters)` args and is consumed via the
+// internal useMessageAuthor plumbing rather than ad-hoc useStore calls.
+export const selectMessageIds = chatSelectors.messageIds;
+export const selectMessagesById = chatSelectors.messagesById;
+export const selectConversationIds = chatSelectors.conversationIds;
+export const selectConversationsById = chatSelectors.conversationsById;
+export const selectActiveConversationId = chatSelectors.activeConversationId;
+export const selectIsStreaming = chatSelectors.isStreaming;
+export const selectStreamingConversationId = chatSelectors.streamingConversationId;
+export const selectHasMoreHistory = chatSelectors.hasMoreHistory;
+export const selectIsLoadingHistory = chatSelectors.isLoadingHistory;
+export const selectError = chatSelectors.error;
+export const selectMessages = chatSelectors.messages;
+export const selectMessage = chatSelectors.message;
+export const selectMessageError = chatSelectors.messageError;
+export const selectConversations = chatSelectors.conversations;
+export const selectConversation = chatSelectors.conversation;
+export const selectActiveConversation = chatSelectors.activeConversation;
+export const selectMessageCount = chatSelectors.messageCount;
+export const selectConversationCount = chatSelectors.conversationCount;
+export const selectComposerValue = chatSelectors.composerValue;
+export const selectComposerAttachments = chatSelectors.composerAttachments;
+export const selectTypingUserIds = chatSelectors.typingUserIds;
+export const selectTypingUserIdsForActiveConversation =
+  chatSelectors.typingUserIdsForActiveConversation;

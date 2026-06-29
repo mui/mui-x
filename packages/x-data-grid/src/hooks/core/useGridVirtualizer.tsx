@@ -8,11 +8,11 @@ import { useStoreEffect } from '@mui/x-internals/store';
 import {
   useVirtualizer,
   Dimensions,
-  LayoutDataGridLegacy,
-  type VirtualizerParams,
+  LayoutDataGrid,
   Virtualization,
   EMPTY_RENDER_CONTEXT,
 } from '@mui/x-virtualizer';
+import type { VirtualizerParams } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
@@ -171,7 +171,7 @@ export function useGridVirtualizer() {
 
   const layout = useLazyRef(
     () =>
-      new LayoutDataGridLegacy({
+      new LayoutDataGrid({
         container: apiRef.current.mainElementRef,
         scroller: apiRef.current.virtualScrollerRef,
         scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
@@ -184,6 +184,7 @@ export function useGridVirtualizer() {
 
     dimensions: dimensionsParams,
     virtualization: {
+      layoutMode: rootProps.experimentalFeatures?.virtualizerLayoutMode ?? 'uncontrolled',
       isRtl,
       rowBufferPx: rootProps.rowBufferPx,
       columnBufferPx: rootProps.columnBufferPx,

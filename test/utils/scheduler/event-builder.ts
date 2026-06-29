@@ -1,8 +1,7 @@
 import {
   RecurringEventPresetKey,
   SchedulerEventRecurrenceRule,
-  TemporalTimezone,
-} from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/models';
 import {
   SchedulerEvent,
   SchedulerEventColor,
@@ -10,11 +9,15 @@ import {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerEventSide,
-} from '@mui/x-scheduler-headless/models/event';
-import { processEvent, resolveEventDate } from '@mui/x-scheduler-headless/process-event';
-import { getWeekDayCode } from '@mui/x-scheduler-headless/internals/utils/recurring-events';
-import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import type { SchedulerResource } from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/models/event';
+import { processEvent, resolveEventDate } from '@mui/x-scheduler-internals/process-event';
+import {
+  schedulerRecurringEventsPlugin,
+  getWeekDayCode,
+} from '@mui/x-scheduler-internals-premium/internals';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { adapter as defaultAdapter } from './adapters';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
@@ -253,7 +256,12 @@ export class EventBuilder {
       ? this.adapter.date(occurrenceStartDate, 'default')
       : resolveEventDate(this.event.start, dataTimezone, this.adapter);
 
-    const baseProcessed = processEvent(this.event, this.displayTimezone, this.adapter);
+    const baseProcessed = processEvent(
+      this.event,
+      this.displayTimezone,
+      this.adapter,
+      schedulerRecurringEventsPlugin,
+    );
     const originalDurationMs =
       baseProcessed.dataTimezone.end.timestamp - baseProcessed.dataTimezone.start.timestamp;
     const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
@@ -264,7 +272,12 @@ export class EventBuilder {
       end: rawEnd.toISOString(),
     };
 
-    const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter);
+    const processed = processEvent(
+      occurrenceModel,
+      this.displayTimezone,
+      this.adapter,
+      schedulerRecurringEventsPlugin,
+    );
 
     return {
       ...processed,
@@ -276,7 +289,12 @@ export class EventBuilder {
    * Derives a processed event from the built event.
    */
   toProcessed() {
-    return processEvent(this.event, this.displayTimezone, this.adapter);
+    return processEvent(
+      this.event,
+      this.displayTimezone,
+      this.adapter,
+      schedulerRecurringEventsPlugin,
+    );
   }
 
   /**

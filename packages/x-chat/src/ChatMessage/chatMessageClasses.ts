@@ -1,0 +1,102 @@
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import composeClasses from '@mui/utils/composeClasses';
+
+export interface ChatMessageClasses {
+  /** Styles applied to the message root element. */
+  root: string;
+  /** Styles applied to the message avatar element. */
+  avatar: string;
+  /** Styles applied to the message author label element. */
+  authorLabel: string;
+  /** Styles applied to the message content element. */
+  content: string;
+  /** Styles applied to the message bubble element inside content. */
+  bubble: string;
+  /** Styles applied to the message meta element. */
+  meta: string;
+  /** Styles applied to the message actions element. */
+  actions: string;
+  /** Styles applied to the message group element. */
+  group: string;
+  /** Class applied to the group author name element. */
+  groupAuthorName: string;
+  /** Class applied to the group timestamp element (compact variant only). */
+  groupTimestamp: string;
+  /** Styles applied to the inline meta spacer element (default variant). */
+  inlineMetaSpacer: string;
+  /** Styles applied to the inline meta container element (default variant). */
+  inlineMeta: string;
+  /** Styles applied to the date divider element. */
+  dateDivider: string;
+  /** Styles applied to the horizontal rule on each side of the date divider label. */
+  dateDividerLine: string;
+  /** Styles applied to the formatted day label inside the date divider. */
+  dateDividerLabel: string;
+  /** Applied when the message role is 'user' */
+  roleUser: string;
+  /** Applied when the message role is 'assistant' */
+  roleAssistant: string;
+  /** Applied while the message is streaming */
+  streaming: string;
+  /** Applied when the message has an error status */
+  error: string;
+  /** Applied when the avatar slot is hidden (`slots.avatar: null`) so the grid drops the avatar track. */
+  noAvatar: string;
+}
+
+export type ChatMessageClassKey = keyof ChatMessageClasses;
+
+export function getChatMessageUtilityClass(slot: string): string {
+  return generateUtilityClass('MuiChatMessage', slot);
+}
+
+export const chatMessageClasses: ChatMessageClasses = generateUtilityClasses('MuiChatMessage', [
+  'root',
+  'avatar',
+  'authorLabel',
+  'content',
+  'bubble',
+  'meta',
+  'actions',
+  'group',
+  'groupAuthorName',
+  'groupTimestamp',
+  'inlineMetaSpacer',
+  'inlineMeta',
+  'dateDivider',
+  'dateDividerLine',
+  'dateDividerLabel',
+  'roleUser',
+  'roleAssistant',
+  'streaming',
+  'error',
+  'noAvatar',
+]);
+
+const slots: Record<ChatMessageClassKey, string[]> = {
+  root: ['root'],
+  avatar: ['avatar'],
+  authorLabel: ['authorLabel'],
+  content: ['content'],
+  bubble: ['bubble'],
+  meta: ['meta'],
+  actions: ['actions'],
+  group: ['group'],
+  groupAuthorName: ['groupAuthorName'],
+  groupTimestamp: ['groupTimestamp'],
+  inlineMetaSpacer: ['inlineMetaSpacer'],
+  inlineMeta: ['inlineMeta'],
+  dateDivider: ['dateDivider'],
+  dateDividerLine: ['dateDividerLine'],
+  dateDividerLabel: ['dateDividerLabel'],
+  roleUser: ['roleUser'],
+  roleAssistant: ['roleAssistant'],
+  streaming: ['streaming'],
+  error: ['error'],
+  noAvatar: ['noAvatar'],
+};
+
+export const useChatMessageUtilityClasses = (
+  classes: Partial<ChatMessageClasses> | undefined,
+): ChatMessageClasses => composeClasses(slots, getChatMessageUtilityClass, classes);

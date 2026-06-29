@@ -6,7 +6,7 @@ import {
   timeClockHandler,
   describeValue,
 } from 'test/utils/pickers';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeClock /> - Describe Value', () => {
   const { render } = createPickerRenderer();
@@ -34,11 +34,11 @@ describe('<TimeClock /> - Describe Value', () => {
         }
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value, { user }) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
 
-      timeClockHandler.setViewValue(adapterToUse, newValue, 'hours');
-      timeClockHandler.setViewValue(adapterToUse, newValue, 'minutes');
+      await timeClockHandler.setViewValue(user, adapterToUse, newValue, 'hours');
+      await timeClockHandler.setViewValue(user, adapterToUse, newValue, 'minutes');
 
       return newValue;
     },

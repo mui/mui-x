@@ -1,0 +1,10 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "shouldShowDivider": {
+      "description": "Decides whether the divider renders above the message, replacing the built-in rule when provided. <code>date</code>/<code>previousDate</code> are the parsed <code>createdAt</code> values (<code>null</code> when missing or invalid); <code>previousMessage</code> is <code>null</code> for the first message in the list."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "divider": "", "label": "", "line": "" }
+}

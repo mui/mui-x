@@ -1,5 +1,5 @@
-import { defaultizeZoom } from './defaultizeZoom';
-import { type ZoomOptions } from './zoom.types';
+import { defaultizeZoom, getEffectiveZoomReverse } from './defaultizeZoom';
+import type { ZoomOptions } from './zoom.types';
 import {
   DEFAULT_X_AXIS_KEY,
   DEFAULT_Y_AXIS_KEY,
@@ -7,9 +7,9 @@ import {
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
-import { type XAxis, type YAxis } from '../../../../models';
-import { type DefaultedXAxis, type DefaultedYAxis } from '../../../../models/axis';
-import { type DatasetType } from '../../../../models/seriesType/config';
+import type { XAxis, YAxis } from '../../../../models';
+import type { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
+import type { DatasetType } from '../../../../models/seriesType/config';
 
 type InXAxis = XAxis & { zoom?: boolean | ZoomOptions };
 
@@ -46,7 +46,12 @@ export function defaultizeXAxis(
       id,
       position,
       height,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'x', axisConfig.reverse),
+      zoom: defaultizeZoom(
+        axisConfig.zoom,
+        id,
+        'x',
+        getEffectiveZoomReverse('x', axisConfig.scaleType, axisConfig.reverse),
+      ),
     };
 
     // Increment the offset for the next axis
@@ -61,23 +66,24 @@ export function defaultizeXAxis(
       }
     }
 
-    // If `dataKey` is NOT provided
-    if (dataKey === undefined || axisConfig.data !== undefined) {
+    // If data is already provided or no dataset extraction is needed
+    if (axisConfig.data !== undefined || (dataKey === undefined && !axisConfig.valueGetter)) {
       return sharedConfig;
     }
 
     if (dataset === undefined) {
       throw new Error(
-        'MUI X Charts: The x-axis uses `dataKey` but no `dataset` is provided. ' +
-          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
+        'MUI X Charts: The x-axis uses `dataKey` or `valueGetter` but no `dataset` is provided. ' +
+          'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
           'Either provide a dataset prop or use the data property directly on the x-axis.',
       );
     }
 
-    // If `dataKey` is provided
     return {
       ...sharedConfig,
-      data: dataset.map((d) => d[dataKey]),
+      data: axisConfig.valueGetter
+        ? dataset.map((d) => axisConfig.valueGetter!(d))
+        : dataset.map((d) => d[dataKey!]),
     };
   });
 
@@ -115,7 +121,12 @@ export function defaultizeYAxis(
       id,
       position,
       width,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'y', axisConfig.reverse),
+      zoom: defaultizeZoom(
+        axisConfig.zoom,
+        id,
+        'y',
+        getEffectiveZoomReverse('y', axisConfig.scaleType, axisConfig.reverse),
+      ),
     };
 
     // Increment the offset for the next axis
@@ -130,23 +141,24 @@ export function defaultizeYAxis(
       }
     }
 
-    // If `dataKey` is NOT provided
-    if (dataKey === undefined || axisConfig.data !== undefined) {
+    // If data is already provided or no dataset extraction is needed
+    if (axisConfig.data !== undefined || (dataKey === undefined && !axisConfig.valueGetter)) {
       return sharedConfig;
     }
 
     if (dataset === undefined) {
       throw new Error(
-        'MUI X Charts: The y-axis uses `dataKey` but no `dataset` is provided. ' +
-          'When using dataKey, a dataset must be provided to retrieve the axis data. ' +
+        'MUI X Charts: The y-axis uses `dataKey` or `valueGetter` but no `dataset` is provided. ' +
+          'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
           'Either provide a dataset prop or use the data property directly on the y-axis.',
       );
     }
 
-    // If `dataKey` is provided
     return {
       ...sharedConfig,
-      data: dataset.map((d) => d[dataKey]),
+      data: axisConfig.valueGetter
+        ? dataset.map((d) => axisConfig.valueGetter!(d))
+        : dataset.map((d) => d[dataKey!]),
     };
   });
 

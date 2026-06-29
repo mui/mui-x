@@ -16,12 +16,18 @@ export default function Birthday() {
           fullWidth
           value={dayjs('2019-07-11T15:30')}
           variant="filled"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <CakeIcon fontSize="small" />
-              </InputAdornment>
-            ),
+          slotProps={{
+            textField: {
+              slotProps: {
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <CakeIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                },
+              },
+            },
           }}
         />
         <Button variant="contained" fullWidth size="small">

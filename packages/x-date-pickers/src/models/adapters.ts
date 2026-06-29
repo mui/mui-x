@@ -1,6 +1,6 @@
-import { FieldSectionContentType, FieldSectionType } from './fields';
-import { PickersTimezone } from './timezone';
-import { PickerValidDate } from './pickers';
+import type { FieldSectionContentType, FieldSectionType } from './fields';
+import type { PickersTimezone } from './timezone';
+import type { PickerValidDate } from './pickers';
 
 export interface AdapterFormats {
   // Token formats
@@ -28,6 +28,8 @@ export interface AdapterFormats {
    * The day of the month with letters.
    * @example "2nd"
    */
+  // TODO v10: Remove. No longer read since the day field `aria-valuetext` uses `dayOfMonth` (cardinal).
+  // See https://github.com/mui/mui-x/issues/22915.
   dayOfMonthFull: string;
   /**
    * The name of the day of the week.
@@ -296,7 +298,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    * @returns {boolean} `true` if the reference date is after the second date.
    */
   isAfter(value: PickerValidDate, comparing: PickerValidDate): boolean;
-  // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
+  // TODO v10: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
    * Check if the year of the reference date is after the year of the second date (using the timezone of the reference date).
    * @param {PickerValidDate} value The reference date.
@@ -304,7 +306,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    * @returns {boolean} `true` if the year of the reference date is after the year of the second date.
    */
   isAfterYear(value: PickerValidDate, comparing: PickerValidDate): boolean;
-  // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
+  // TODO v10: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
    * Check if the day of the reference date is after the day of the second date (using the timezone of the reference date).
    * @param {PickerValidDate} value The reference date.
@@ -319,7 +321,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    * @returns {boolean} `true` if the reference date is before the second date.
    */
   isBefore(value: PickerValidDate, comparing: PickerValidDate): boolean;
-  // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
+  // TODO v10: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
    * Check if the year of the reference date is before the year of the second date (using the timezone of the reference date).
    * @param {PickerValidDate} value The reference date.
@@ -327,7 +329,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    * @returns {boolean} `true` if the year of the reference date is before the year of the second date.
    */
   isBeforeYear(value: PickerValidDate, comparing: PickerValidDate): boolean;
-  // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
+  // TODO v10: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
    * Check if the day of the reference date is before the day of the second date (using the timezone of the reference date).
    * @param {PickerValidDate} value The reference date.

@@ -98,7 +98,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span>...</span>",
+      "default": "() => <span>…</span>",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
@@ -306,12 +306,11 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiStaticDateTimePicker",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/StaticDateTimePicker/StaticDateTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>"
 }

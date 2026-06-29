@@ -1,5 +1,5 @@
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   expectFieldValue,
@@ -25,10 +25,10 @@ describe('<DateField /> - Describe Value', () => {
 
       expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection, pressKey }) => {
+    setNewValue: async (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addDays(value!, 1);
-      selectSection('day');
-      pressKey(undefined, 'ArrowUp');
+      await selectSection('day');
+      await pressKey('ArrowUp');
 
       return newValue;
     },
