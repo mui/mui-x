@@ -1,5 +1,5 @@
-import { MuiPickersAdapter, PickerValidDate } from '../models';
-import { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
+import type { MuiPickersAdapter, PickerValidDate } from '../models';
+import type { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
 
 interface GetHoursSectionOptionsParameters {
   now: PickerValidDate;

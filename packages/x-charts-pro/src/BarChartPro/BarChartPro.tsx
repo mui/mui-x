@@ -2,13 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  type BarChartProps,
-  type BarChartSlotProps,
-  type BarChartSlots,
-  BarPlot,
-  FocusedBar,
-} from '@mui/x-charts/BarChart';
+import { BarPlot, FocusedBar } from '@mui/x-charts/BarChart';
+import type { BarChartProps, BarChartSlotProps, BarChartSlots } from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -20,17 +15,18 @@ import { useBarChartProps } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
-import { BAR_CHART_PRO_PLUGINS, type BarChartProPluginSignatures } from './BarChartPro.plugins';
+import { BAR_CHART_PRO_PLUGINS } from './BarChartPro.plugins';
+import type { BarChartProPluginSignatures } from './BarChartPro.plugins';
 
 export interface BarChartProSlots
   extends Omit<BarChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
@@ -533,6 +529,7 @@ BarChartPro.propTypes /* remove-proptypes */ = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -540,6 +537,7 @@ BarChartPro.propTypes /* remove-proptypes */ = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

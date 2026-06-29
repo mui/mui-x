@@ -1,16 +1,17 @@
-import { screen, fireTouchChangedEvent, waitFor } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
   expectFieldValue,
   openPicker,
+  fireClockPointerEvent,
   getClockTouchEvent,
   describeValue,
   formatFullTimeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<MobileTimePicker /> - Describe Value', () => {
@@ -50,12 +51,12 @@ describe('<MobileTimePicker /> - Describe Value', () => {
         adapterToUse.getHours(newValue),
         hasMeridiem ? '12hours' : '24hours',
       );
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', hourClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', hourClockEvent);
       // change minutes
       const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerDown', minutesClockEvent);
+      fireClockPointerEvent(screen.getByTestId('clock'), 'pointerUp', minutesClockEvent);
 
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);

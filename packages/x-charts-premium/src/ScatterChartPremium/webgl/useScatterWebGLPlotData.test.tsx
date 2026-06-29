@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { renderHook } from '@mui/internal-test-utils';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { type ScatterSeriesType } from '@mui/x-charts/models';
+import type { ScatterSeriesType } from '@mui/x-charts/models';
 import { useScatterWebGLPlotData } from './useScatterWebGLPlotData';
 
 const baseSeries: ScatterSeriesType[] = [

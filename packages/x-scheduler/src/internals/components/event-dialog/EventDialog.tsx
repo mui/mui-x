@@ -190,10 +190,10 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
           />
         )}
         onOpen={(occurrence) => {
-          store.setEditedEventId(occurrence.id);
+          store.setEditedOccurrenceKey(occurrence.key);
         }}
         onClose={() => {
-          store.setEditedEventId(null);
+          store.setEditedOccurrenceKey(null);
           store.setOccurrencePlaceholder(null);
         }}
       >

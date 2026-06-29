@@ -1,11 +1,11 @@
-import { type ChartPluginSignature } from '../../models';
-import { type ChartSeriesConfig } from './types/seriesConfig.types';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import {
-  type HighlightItemIdentifierWithType,
-  type SeriesItemIdentifierWithType,
+import type { ChartPluginSignature } from '../../models';
+import type { ChartSeriesConfig } from './types/seriesConfig.types';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import type {
+  HighlightItemIdentifierWithType,
+  SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
-import { type VisibilityIdentifierWithType } from '../../featurePlugins/useChartVisibilityManager';
+import type { VisibilityIdentifierWithType } from '../../featurePlugins/useChartVisibilityManager';
 
 export interface UseChartSeriesConfigParameters<
   SeriesType extends ChartSeriesType = ChartSeriesType,

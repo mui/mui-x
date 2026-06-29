@@ -21,16 +21,16 @@ import { GridSignature } from '../../../constants/signature';
 import { useGridEvent } from '../../utils/useGridEvent';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
-  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterPipeApplier,
 } from '../../core/pipeProcessing';
-import {
-  type GridColumnDimensions,
-  type GridColumnsInitialState,
-  type GridColumnsState,
-  type GridColumnVisibilityModel,
-  EMPTY_PINNED_COLUMN_FIELDS,
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
+import { EMPTY_PINNED_COLUMN_FIELDS } from './gridColumnsInterfaces';
+import type {
+  GridColumnDimensions,
+  GridColumnsInitialState,
+  GridColumnsState,
+  GridColumnVisibilityModel,
 } from './gridColumnsInterfaces';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {

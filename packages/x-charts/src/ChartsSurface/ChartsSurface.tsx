@@ -1,12 +1,14 @@
 'use client';
 import clsx from 'clsx';
-import { type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
+import { useThemeProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import { ChartsSvgLayer } from '../ChartsSvgLayer';
 // eslint-disable-next-line import/no-cycle
-import { ChartsLayerContainer, type ChartsLayerContainerProps } from '../ChartsLayerContainer';
+import { ChartsLayerContainer } from '../ChartsLayerContainer';
+import type { ChartsLayerContainerProps } from '../ChartsLayerContainer';
 
 export interface ChartsSurfaceProps
   extends

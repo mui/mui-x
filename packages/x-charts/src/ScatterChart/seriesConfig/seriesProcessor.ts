@@ -1,5 +1,5 @@
-import { type ScatterValueType } from '../../models';
-import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ScatterValueType } from '../../models';
+import type { SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { incompleteDatasetKeysError } from '../../internals/incompleteDatasetKeysError';
 
 const seriesProcessor: SeriesProcessor<'scatter'> = (

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { platform } from '@base-ui/utils/platform';
 import { useStore } from '@mui/x-internals/store';
 import { TreeViewCancellableEvent, TreeViewCancellableEventHandler } from '@mui/x-tree-view/models';
 import {
@@ -11,8 +12,6 @@ import { TreeItemDragAndDropOverlayProps } from '@mui/x-tree-view/TreeItemDragAn
 import { TreeViewItemItemReorderingValidActions } from './types';
 import { itemsReorderingSelectors } from './selectors';
 import { RichTreeViewProStore } from '../../RichTreeViewProStore';
-
-export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { store } = useTreeViewContext<RichTreeViewProStore<any, any>>();
@@ -53,7 +52,11 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
           event.dataTransfer.setDragImage(contentRefObject.current!, 0, 0);
 
           const { types } = event.dataTransfer;
-          if (isAndroid() && !types.includes('text/plain') && !types.includes('text/uri-list')) {
+          if (
+            platform.os.android &&
+            !types.includes('text/plain') &&
+            !types.includes('text/uri-list')
+          ) {
             event.dataTransfer.setData('text/plain', 'android-fallback');
           }
 
