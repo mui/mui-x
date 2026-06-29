@@ -645,6 +645,31 @@ describe('<DateRangeCalendar />', () => {
       });
     });
 
+    it('should not switch the visible months when the requested month is already visible across a year boundary', async () => {
+      const { setProps } = render(
+        <DateRangeCalendar
+          value={[adapterToUse.date('2023-12-01'), adapterToUse.date('2023-12-01')]}
+        />,
+      );
+
+      // The two calendars initially show December 2023 and January 2024.
+      expect(screen.getByRole('grid', { name: 'December 2023' })).not.to.equal(null);
+      expect(screen.getByRole('grid', { name: 'January 2024' })).not.to.equal(null);
+
+      // Move the start to a day already visible in the second calendar (January 2024).
+      setProps({
+        value: [adapterToUse.date('2024-01-15'), adapterToUse.date('2024-01-15')],
+      });
+
+      // The new start is now selected, confirming the auto month-switch effect ran.
+      await screen.findByRole('gridcell', { name: '15', selected: true });
+
+      // The visible months must not jump: December 2023 and January 2024 stay, February 2024 does not appear.
+      expect(screen.getByRole('grid', { name: 'December 2023' })).not.to.equal(null);
+      expect(screen.getByRole('grid', { name: 'January 2024' })).not.to.equal(null);
+      expect(screen.queryByRole('grid', { name: 'February 2024' })).to.equal(null);
+    });
+
     describe('prop: currentMonthCalendarPosition', () => {
       it('should switch to the selected month when changing value from the outside', async () => {
         const { setProps } = render(

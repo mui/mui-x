@@ -417,11 +417,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     }
 
     const displayingMonthRange = calendars - currentMonthCalendarPosition;
-    const currentMonthNumber = adapter.getMonth(calendarState.currentMonth);
-    const requestedMonthNumber = adapter.getMonth(date);
+    // Use absolute months (year * 12 + month) so the comparison stays correct across year boundaries.
+    const currentMonthNumber =
+      adapter.getYear(calendarState.currentMonth) * 12 +
+      adapter.getMonth(calendarState.currentMonth);
+    const requestedMonthNumber = adapter.getYear(date) * 12 + adapter.getMonth(date);
 
     if (
-      !adapter.isSameYear(calendarState.currentMonth, date) ||
       requestedMonthNumber < currentMonthNumber ||
       requestedMonthNumber > currentMonthNumber + displayingMonthRange
     ) {
