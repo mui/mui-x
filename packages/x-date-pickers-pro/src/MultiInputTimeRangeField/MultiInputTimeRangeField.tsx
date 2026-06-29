@@ -1,16 +1,15 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTimeRangeManager, UseTimeRangeManagerReturnValue } from '../managers';
+import type { UseTimeRangeManagerReturnValue } from '../managers';
+import { useTimeRangeManager } from '../managers';
+import type { MultiInputRangeFieldProps } from '../internals/utils/createMultiInputRangeField';
 import {
   // The alias is needed to have the doc gen working.
   createMultiInputRangeField as createMultiInputTimeRangeField,
-  MultiInputRangeFieldProps,
 } from '../internals/utils/createMultiInputRangeField';
-import {
-  getMultiInputTimeRangeFieldUtilityClass,
-  MultiInputTimeRangeFieldClasses,
-} from './multiInputTimeRangeFieldClasses';
+import type { MultiInputTimeRangeFieldClasses } from './multiInputTimeRangeFieldClasses';
+import { getMultiInputTimeRangeFieldUtilityClass } from './multiInputTimeRangeFieldClasses';
 
 export interface MultiInputTimeRangeFieldProps extends MultiInputRangeFieldProps<UseTimeRangeManagerReturnValue> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.

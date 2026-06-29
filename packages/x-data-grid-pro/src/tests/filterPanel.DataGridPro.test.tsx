@@ -1,12 +1,11 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  type DataGridProProps,
   gridFilterModelSelector,
-  type GridApi,
   useGridApiRef,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid-pro';
+import type { DataGridProProps, GridApi } from '@mui/x-data-grid-pro';
 import { createRenderer, act, screen, within } from '@mui/internal-test-utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

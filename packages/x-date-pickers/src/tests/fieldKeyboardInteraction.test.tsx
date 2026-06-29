@@ -1,16 +1,20 @@
 import moment from 'moment';
 import jMoment from 'moment-jalaali';
+import type { AdapterName } from 'test/utils/pickers';
 import {
   buildFieldInteractions,
   getCleanedSelectedContent,
   createPickerRenderer,
   expectFieldValue,
-  AdapterName,
 } from 'test/utils/pickers';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
-import { FieldSectionType, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import type {
+  FieldSectionType,
+  MuiPickersAdapter,
+  PickerValidDate,
+} from '@mui/x-date-pickers/models';
 import {
   getDateSectionConfigFromFormatToken,
   cleanLeadingZeros,

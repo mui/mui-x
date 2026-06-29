@@ -2,10 +2,10 @@ import {
   cartesianSeriesTypes,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
-  type ChartSeriesTypeConfig,
   createIsHighlighted,
   createIsFaded,
 } from '@mui/x-charts/internals';
+import type { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import { seriesPreviewPlotMap } from '@mui/x-charts-pro/internals';
 import { getExtremumX, getExtremumY } from './extrema';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';

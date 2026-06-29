@@ -28,11 +28,11 @@ import type { GridFilterActiveItemsLookup } from '../filter';
 import type { GridColumnGroupIdentifier, GridColumnIdentifier } from '../focus';
 import type { GridColumnMenuState } from '../columnMenu';
 import {
-  type GridColumnVisibilityModel,
   gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
   gridColumnLookupSelector,
 } from '../columns';
+import type { GridColumnVisibilityModel } from '../columns';
 import type { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
