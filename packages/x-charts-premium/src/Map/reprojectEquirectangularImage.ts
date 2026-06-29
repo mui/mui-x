@@ -39,10 +39,14 @@ export interface ReprojectEquirectangularImageParams {
  *
  * 1. Convert it to SVG coordinates `(left + px, top + py)` — the space the
  *    projection works in — and `projection.invert` it to a `[lon, lat]` coordinate.
- *    `invert` returns `null` for pixels outside the projection's visible footprint
- *    (for example the area around an `orthographic` globe), leaving them transparent.
+ *    `invert` returns `null` for some pixels outside the domain, leaving them transparent.
  * 2. Discard coordinates outside `imageBounds` (no source data there).
- * 3. Map `[lon, lat]` to a source pixel with nearest-neighbor sampling (the image
+ * 3. Round-trip test: forward-project `[lon, lat]` again. Projections such as
+ *    `orthographic` clamp `invert` for points outside the visible disk to the limb
+ *    rather than returning `null`, so those coordinates survive steps 1–2 and would
+ *    smear edge colors across the background. If the round trip lands more than half
+ *    a pixel away, the pixel is outside the visible footprint and is left transparent.
+ * 4. Map `[lon, lat]` to a source pixel with nearest-neighbor sampling (the image
  *    being equirectangular, both axes are linear) and copy its RGBA.
  *
  * ### Failure modes
@@ -51,7 +55,7 @@ export interface ReprojectEquirectangularImageParams {
  * source pixels throws because a cross-origin image without CORS headers has
  * tainted the canvas.
  *
- * Complexity is `O(width × height)` with one inverse projection per pixel, so
+ * Complexity is `O(width × height)` with two projection evaluations per pixel, so
  * callers should treat it as a per-resize computation rather than a per-frame one.
  */
 export function reprojectEquirectangularImage(
@@ -110,7 +114,21 @@ export function reprojectEquirectangularImage(
         continue;
       }
 
-      // 3. Geographic coordinate -> source pixel (nearest neighbor).
+      // 3. Round-trip test: drop pixels hidden by the projection. Projections
+      // such as `orthographic` clamp `invert` for points outside the visible
+      // disk to the limb instead of returning `null`, so those coordinates pass
+      // the bounds check and would smear edge colors. They are discarded here
+      // because they do not project back to the pixel they came from.
+      const reprojected = projection([lon, lat]);
+      if (
+        !reprojected ||
+        Math.abs(reprojected[0] - deviceX) > 0.5 ||
+        Math.abs(reprojected[1] - deviceY) > 0.5
+      ) {
+        continue;
+      }
+
+      // 4. Geographic coordinate -> source pixel (nearest neighbor).
       let sx = Math.floor(((lon - west) / (east - west)) * sourceWidth);
       let sy = Math.floor(((north - lat) / (north - south)) * sourceHeight);
       sx = Math.min(Math.max(sx, 0), sourceWidth - 1);
