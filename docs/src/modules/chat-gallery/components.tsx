@@ -153,7 +153,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageGroup',
     status: 'compound',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/',
+    href: '/x/react-chat/basics/messages/#message-groups',
     Thumbnail: ChatMessageGroupThumb,
   },
   {
@@ -169,7 +169,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageAvatar',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/',
+    href: '/x/react-chat/basics/messages/#message-slots',
     Thumbnail: ChatMessageAvatarThumb,
   },
   {
@@ -177,7 +177,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageAuthorLabel',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/',
+    href: '/x/react-chat/basics/messages/#message-slots',
     Thumbnail: ChatMessageAuthorLabelThumb,
   },
   {
@@ -185,7 +185,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageContent',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/',
+    href: '/x/react-chat/basics/messages/#message-slots',
     Thumbnail: ChatMessageContentThumb,
   },
   {
@@ -193,7 +193,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageMeta',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/',
+    href: '/x/react-chat/basics/messages/#message-slots',
     Thumbnail: ChatMessageMetaThumb,
   },
   {
@@ -201,7 +201,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageInlineMeta',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/',
+    href: '/x/react-chat/basics/messages/#message-slots',
     Thumbnail: ChatMessageInlineMetaThumb,
   },
   {
@@ -415,7 +415,7 @@ export const CHAT_GALLERY_SECTIONS: ChatGallerySection[] = [
     id: 'states',
     title: 'States',
     description:
-      'Transient runtime affordances—use these when the conversation is loading, someone is typing, or the user has scrolled away: suggestions, typing indicators, unread markers, loading skeletons, date dividers, and scroll affordances:',
+      'Transient runtime affordances for when the conversation is loading, someone is typing, or the user has scrolled away from the latest message:',
   },
   {
     id: 'ai-and-rich-content',
