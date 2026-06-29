@@ -6,7 +6,7 @@ import { findVisibleDataIndex } from './plugins/featurePlugins/useChartKeyboardN
 import type { ChartState } from './plugins/models/chart';
 import { seriesHasData } from './seriesHasData';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { SeriesId, FocusedItemIdentifier } from '../models/seriesType';
+import type { SeriesId } from '../models/seriesType';
 import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 
@@ -15,6 +15,17 @@ type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
   seriesId: SeriesId;
   dataIndex: number;
 } | null;
+
+/**
+ * The item the navigators work on. Decoupled from the public `FocusedItemIdentifier` because
+ * navigation is position-based: series keyed differently (e.g. `mapShape`, keyed by `name`)
+ * reuse these helpers by translating to a `dataIndex` at their boundary.
+ */
+type WorkingItem = {
+  type: Exclude<ChartSeriesType, 'sankey' | 'heatmap'>;
+  seriesId: SeriesId;
+  dataIndex?: number;
+};
 
 type StateParameters<SeriesType extends ChartSeriesType> = Pick<
   ChartState<[UseChartKeyboardNavigationSignature], [], SeriesType>,
@@ -48,7 +59,7 @@ export function createGetNextIndexFocusedItem<
   useCurrentSeriesMaxLength: boolean = false,
 ) {
   return function getNextIndexFocusedItem(
-    currentItem: FocusedItemIdentifier<InSeriesType> | null,
+    currentItem: WorkingItem | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
@@ -126,7 +137,7 @@ export function createGetPreviousIndexFocusedItem<
   useCurrentSeriesMaxLength: boolean = false,
 ) {
   return function getPreviousIndexFocusedItem(
-    currentItem: FocusedItemIdentifier<InSeriesType> | null,
+    currentItem: WorkingItem | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
@@ -196,7 +207,7 @@ export function createGetNextSeriesFocusedItem<
   compatibleSeriesTypes: Set<OutSeriesType>,
 ) {
   return function getNextSeriesFocusedItem(
-    currentItem: FocusedItemIdentifier<InSeriesType> | null,
+    currentItem: WorkingItem | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
@@ -253,7 +264,7 @@ export function createGetPreviousSeriesFocusedItem<
   compatibleSeriesTypes: Set<OutSeriesType>,
 ) {
   return function getPreviousSeriesFocusedItem(
-    currentItem: FocusedItemIdentifier<InSeriesType> | null,
+    currentItem: WorkingItem | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
