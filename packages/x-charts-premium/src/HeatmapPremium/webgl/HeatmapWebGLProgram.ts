@@ -1,13 +1,14 @@
 import {
-  type GrowableBuffer,
-  bindAttribute,
+  bindQuadBuffer,
   createGrowableBuffer,
-  createLinkedProgram,
-  enableAlphaBlending,
+  linkProgram,
   logWebGLErrors,
+  setupStandardBlending,
   uploadGrowableBuffer,
   uploadQuadBuffer,
 } from '../../utils/webgl/utils';
+import { bindInstancedAttribute } from '../../utils/webgl/instancedAttribute';
+import type { GrowableBuffer } from '../../utils/webgl/utils';
 import {
   heatmapFragmentShaderSourceNoBorderRadius,
   heatmapFragmentShaderSourceWithBorderRadius,
@@ -47,7 +48,8 @@ export class HeatmapWebGLProgram {
   private active: ProgramVariant;
 
   constructor(private gl: WebGL2RenderingContext) {
-    enableAlphaBlending(gl);
+    /* These are global to the WebGL context and need to be set only once. */
+    setupStandardBlending(gl);
 
     this.quadBuffer = uploadQuadBuffer(gl);
 
@@ -63,23 +65,17 @@ export class HeatmapWebGLProgram {
 
   private buildVariant(fragmentShaderSource: string): ProgramVariant {
     const gl = this.gl;
-    const { program, vertexShader, fragmentShader } = createLinkedProgram(
-      gl,
-      heatmapVertexShaderSource,
-      fragmentShaderSource,
-    );
-
-    this.shaders.push(vertexShader, fragmentShader);
+    const linked = linkProgram(gl, heatmapVertexShaderSource, fragmentShaderSource);
+    this.shaders.push(...linked.shaders);
+    const program = linked.program;
 
     const vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
-
-    bindAttribute(gl, program, 'a_position', this.quadBuffer, 2, 0);
-    bindAttribute(gl, program, 'a_center', this.centers.buffer, 2, 1);
+    bindQuadBuffer(gl, program, this.quadBuffer);
+    bindInstancedAttribute(gl, program, 'a_center', this.centers, 2);
     /* Colors are uploaded as Uint8(Clamped)Array; shader sees normalized [0, 1] floats. */
-    bindAttribute(gl, program, 'a_color', this.colors.buffer, 4, 1, gl.UNSIGNED_BYTE, true);
-    bindAttribute(gl, program, 'a_saturation', this.saturations.buffer, 1, 1);
-
+    bindInstancedAttribute(gl, program, 'a_color', this.colors, 4, gl.UNSIGNED_BYTE, true);
+    bindInstancedAttribute(gl, program, 'a_saturation', this.saturations, 1);
     gl.bindVertexArray(null);
 
     return {

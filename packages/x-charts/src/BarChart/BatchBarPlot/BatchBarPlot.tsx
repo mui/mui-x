@@ -1,17 +1,17 @@
 'use client';
 import * as React from 'react';
 import type { BarItemIdentifier } from '../../models';
-import { type ProcessedBarSeriesData } from '../types';
+import type { ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
-import { type IndividualBarPlotProps } from '../IndividualBarPlot';
+import type { IndividualBarPlotProps } from '../IndividualBarPlot';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
   selectorChartSeriesHighlightedItem,
   selectorChartSeriesUnfadedItem,
-  type UseChartHighlightSignature,
 } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import { useRegisterItemClickHandlers } from '../useRegisterItemClickHandlers';
 import { createPath, useCreateBarPaths } from './useCreateBarPaths';
 import { BarGroup } from './BarGroup';

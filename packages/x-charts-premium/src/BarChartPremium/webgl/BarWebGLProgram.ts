@@ -1,15 +1,15 @@
 import {
-  type GrowableBuffer,
-  bindAttribute,
-  createGrowableBuffer,
-  createLinkedProgram,
-  enableAlphaBlending,
+  bindQuadBuffer,
+  linkProgram,
   logWebGLErrors,
+  setupStandardBlending,
   uploadGrowableBuffer,
   uploadQuadBuffer,
 } from '../../utils/webgl/utils';
+import type { InstancedAttribute } from '../../utils/webgl/instancedAttribute';
+import { createInstancedAttribute } from '../../utils/webgl/instancedAttribute';
 import { barFragmentShaderSource, barVertexShaderSource } from './shaders';
-import { type BarWebGLPlotData } from './useBarWebGLPlotData';
+import type { BarWebGLPlotData } from './useBarWebGLPlotData';
 
 export class BarWebGLProgram {
   private readonly shaders: WebGLShader[] = [];
@@ -18,23 +18,20 @@ export class BarWebGLProgram {
   private readonly vao: WebGLVertexArrayObject;
   private readonly quadBuffer: WebGLBuffer;
 
-  private readonly centersBuffer: GrowableBuffer;
-  private readonly halfSizesBuffer: GrowableBuffer;
-  private readonly colorsBuffer: GrowableBuffer;
-  private readonly cornerRadiiBuffer: GrowableBuffer;
+  private readonly centers: InstancedAttribute;
+  private readonly halfSizes: InstancedAttribute;
+  /* Colors come in as Uint8 [0, 255]; normalized=true makes the GPU read them back as vec4 in [0, 1]. */
+  private readonly colors: InstancedAttribute;
+  private readonly cornerRadii: InstancedAttribute;
 
   private readonly uResolution: WebGLUniformLocation | null;
 
   constructor(private gl: WebGL2RenderingContext) {
-    enableAlphaBlending(gl);
+    setupStandardBlending(gl);
 
-    const { program, vertexShader, fragmentShader } = createLinkedProgram(
-      gl,
-      barVertexShaderSource,
-      barFragmentShaderSource,
-    );
-    this.program = program;
-    this.shaders.push(vertexShader, fragmentShader);
+    const linked = linkProgram(gl, barVertexShaderSource, barFragmentShaderSource);
+    this.program = linked.program;
+    this.shaders.push(...linked.shaders);
 
     this.uResolution = gl.getUniformLocation(this.program, 'u_resolution');
 
@@ -42,14 +39,11 @@ export class BarWebGLProgram {
     this.vao = gl.createVertexArray();
     gl.bindVertexArray(this.vao);
 
-    // a_position references the shared quad (per-vertex); bind it into the VAO once.
-    bindAttribute(gl, this.program, 'a_position', this.quadBuffer, 2, 0);
-
-    this.centersBuffer = this.setupInstancedAttribute('a_center', 2, gl.FLOAT, false);
-    this.halfSizesBuffer = this.setupInstancedAttribute('a_halfSize', 2, gl.FLOAT, false);
-    // Colors come in as Uint8 [0, 255]; normalized=true makes the GPU read them back as vec4 in [0, 1].
-    this.colorsBuffer = this.setupInstancedAttribute('a_color', 4, gl.UNSIGNED_BYTE, true);
-    this.cornerRadiiBuffer = this.setupInstancedAttribute('a_cornerRadii', 4, gl.FLOAT, false);
+    bindQuadBuffer(gl, this.program, this.quadBuffer);
+    this.centers = createInstancedAttribute(gl, this.program, 'a_center', 2);
+    this.halfSizes = createInstancedAttribute(gl, this.program, 'a_halfSize', 2);
+    this.colors = createInstancedAttribute(gl, this.program, 'a_color', 4, gl.UNSIGNED_BYTE, true);
+    this.cornerRadii = createInstancedAttribute(gl, this.program, 'a_cornerRadii', 4);
 
     gl.bindVertexArray(null);
   }
@@ -61,10 +55,10 @@ export class BarWebGLProgram {
 
   plot(plotData: BarWebGLPlotData) {
     const gl = this.gl;
-    uploadGrowableBuffer(gl, this.centersBuffer, plotData.centers);
-    uploadGrowableBuffer(gl, this.halfSizesBuffer, plotData.halfSizes);
-    uploadGrowableBuffer(gl, this.colorsBuffer, plotData.colors);
-    uploadGrowableBuffer(gl, this.cornerRadiiBuffer, plotData.cornerRadii);
+    uploadGrowableBuffer(gl, this.centers.buffer, plotData.centers);
+    uploadGrowableBuffer(gl, this.halfSizes.buffer, plotData.halfSizes);
+    uploadGrowableBuffer(gl, this.colors.buffer, plotData.colors);
+    uploadGrowableBuffer(gl, this.cornerRadii.buffer, plotData.cornerRadii);
     logWebGLErrors(gl);
   }
 
@@ -84,23 +78,10 @@ export class BarWebGLProgram {
     gl.deleteProgram(this.program);
     gl.deleteVertexArray(this.vao);
     gl.deleteBuffer(this.quadBuffer);
-    gl.deleteBuffer(this.centersBuffer.buffer);
-    gl.deleteBuffer(this.halfSizesBuffer.buffer);
-    gl.deleteBuffer(this.colorsBuffer.buffer);
-    gl.deleteBuffer(this.cornerRadiiBuffer.buffer);
+    gl.deleteBuffer(this.centers.buffer.buffer);
+    gl.deleteBuffer(this.halfSizes.buffer.buffer);
+    gl.deleteBuffer(this.colors.buffer.buffer);
+    gl.deleteBuffer(this.cornerRadii.buffer.buffer);
     this.shaders.forEach((shader) => gl.deleteShader(shader));
-  }
-
-  // Assumes the owning VAO (Vertex Array Object) is already bound.
-  private setupInstancedAttribute(
-    name: string,
-    size: number,
-    glType: GLenum,
-    normalized: boolean,
-  ): GrowableBuffer {
-    const { gl, program } = this;
-    const target = createGrowableBuffer(gl);
-    bindAttribute(gl, program, name, target.buffer, size, 1, glType, normalized);
-    return target;
   }
 }

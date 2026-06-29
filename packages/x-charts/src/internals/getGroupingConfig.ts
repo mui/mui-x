@@ -1,4 +1,4 @@
-import { type AxisGroup } from '../models/axis';
+import type { AxisGroup } from '../models/axis';
 
 const DEFAULT_GROUPING_CONFIG = {
   tickSize: 6,

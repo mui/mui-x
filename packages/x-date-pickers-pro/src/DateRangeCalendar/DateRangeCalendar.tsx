@@ -10,31 +10,33 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license/internals';
-import {
+import type {
   BaseDateValidationProps,
-  DayCalendar,
   DayCalendarSlots,
   DayCalendarSlotProps,
+  PickerSelectionState,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
+import {
+  DayCalendar,
   useReduceAnimations,
   useCalendarState,
-  PickerSelectionState,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   useControlledValue,
   useViews,
-  PickerRangeValue,
   usePickerPrivateContext,
   areDatesEqual,
   useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
+import type { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import {
-  DateRangeCalendarClasses,
   dateRangeCalendarClasses,
   getDateRangeCalendarUtilityClass,
 } from './dateRangeCalendarClasses';
-import {
+import type {
   DateRangeCalendarProps,
   DateRangeCalendarDefaultizedProps,
   DateRangeCalendarOwnerState,
@@ -50,16 +52,14 @@ import {
   calculateRangePreview,
   resolveReferenceDate,
 } from '../internals/utils/date-range-manager';
-import { RangePosition } from '../models';
+import type { RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
 import { useRangePosition } from '../internals/hooks/useRangePosition';
 import { DAY_RANGE_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import {
-  PickersRangeCalendarHeader,
-  PickersRangeCalendarHeaderProps,
-} from '../PickersRangeCalendarHeader';
+import type { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
+import { PickersRangeCalendarHeader } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 
 const packageInfo = {

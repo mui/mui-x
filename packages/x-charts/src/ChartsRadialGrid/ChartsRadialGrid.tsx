@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  type ChartsRadialGridClasses,
-  getChartsRadialGridUtilityClass,
-} from './chartsRadialGridClasses';
+import { getChartsRadialGridUtilityClass } from './chartsRadialGridClasses';
+import type { ChartsRadialGridClasses } from './chartsRadialGridClasses';
 import { GridRoot } from './styledComponents';
 import { ChartsRotationGrid } from './ChartsRotationGrid';
 import { ChartsRadiusGrid } from './ChartsRadiusGrid';

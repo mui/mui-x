@@ -1,13 +1,6 @@
-import {
-  GRID_STRING_COL_DEF,
-  type GridColDef,
-  gridRowIdSelector,
-  gridRowNodeSelector,
-} from '@mui/x-data-grid';
-import {
-  GRID_TREE_DATA_GROUPING_FIELD,
-  type GridHydrateColumnsValue,
-} from '@mui/x-data-grid/internals';
+import { GRID_STRING_COL_DEF, gridRowIdSelector, gridRowNodeSelector } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
+import { GRID_TREE_DATA_GROUPING_FIELD } from '@mui/x-data-grid/internals';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount
@@ -38,36 +31,3 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
   editable: false,
   groupable: false,
 };
-
-/**
- * Adds, updates or removes the tree data grouping column in the `hydrateColumns` columns state.
- * Shared between the client-side and server-side (data source) tree data pre-processors.
- */
-export function updateTreeDataGroupingColumn(
-  columnsState: GridHydrateColumnsValue,
-  getGroupingColDef: () => GridColDef,
-  shouldHaveGroupingColumn: boolean,
-): GridHydrateColumnsValue {
-  const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field as string;
-
-  const prevGroupingColumn = columnsState.lookup[groupingColDefField];
-
-  if (shouldHaveGroupingColumn) {
-    const newGroupingColumn = getGroupingColDef();
-    if (prevGroupingColumn) {
-      newGroupingColumn.width = prevGroupingColumn.width;
-      newGroupingColumn.flex = prevGroupingColumn.flex;
-    }
-    columnsState.lookup[groupingColDefField] = newGroupingColumn;
-    if (prevGroupingColumn == null) {
-      columnsState.orderedFields = [groupingColDefField, ...columnsState.orderedFields];
-    }
-  } else if (!shouldHaveGroupingColumn && prevGroupingColumn) {
-    delete columnsState.lookup[groupingColDefField];
-    columnsState.orderedFields = columnsState.orderedFields.filter(
-      (field) => field !== groupingColDefField,
-    );
-  }
-
-  return columnsState;
-}

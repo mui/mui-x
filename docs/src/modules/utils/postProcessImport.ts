@@ -17,7 +17,7 @@ export const ADAPTER_TO_LIBRARY: Record<string, AdapterLibrary> = {
   AdapterMomentJalaali: 'moment-jalaali',
 };
 
-const PICKERS_ADAPTER_REGEX = /^@mui\/(lab|x-date-pickers(?:-pro)?)\/(?<adapterName>Adapter.*)/;
+const PICKERS_ADAPTER_REGEX = /^@mui\/(x-date-pickers(?:-pro)?)\/(?<adapterName>Adapter.*)/;
 
 export const postProcessImport = (importName: string): Record<string, string> | null => {
   // Direct date-fns imports (e.g. `import { getHours } from 'date-fns/getHours'`)

@@ -1,5 +1,5 @@
-import type * as React from 'react';
-import type { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridScrollApi } from '../models/api/gridScrollApi';
 import { doesSupportPreventScroll } from './doesSupportPreventScroll';
 
 /**
@@ -8,9 +8,9 @@ import { doesSupportPreventScroll } from './doesSupportPreventScroll';
  * Uses the native `preventScroll` focus option when supported, and otherwise
  * restores the scroll position manually after focusing.
  */
-export function focusElement(
+export function focusElement<Api extends GridScrollApi>(
   element: HTMLElement,
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<Api>,
 ): void {
   if (doesSupportPreventScroll()) {
     element.focus({ preventScroll: true });

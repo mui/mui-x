@@ -10,15 +10,6 @@ export function compileShader(
   return shader;
 }
 
-/**
- * Enables alpha blending for transparency. These flags are global to the WebGL
- * context, so each program only needs to set them once at construction.
- */
-export function enableAlphaBlending(gl: WebGL2RenderingContext) {
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-}
-
 export function uploadQuadBuffer(gl: WebGL2RenderingContext) {
   const quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
@@ -39,72 +30,6 @@ export function bindQuadBuffer(
   const aPosition = gl.getAttribLocation(program, 'a_position');
   gl.enableVertexAttribArray(aPosition);
   gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-}
-
-export function attachShader(
-  gl: WebGL2RenderingContext,
-  program: WebGLProgram,
-  shaderSource: string,
-  shaderType: WebGL2RenderingContext['FRAGMENT_SHADER'] | WebGL2RenderingContext['VERTEX_SHADER'],
-) {
-  const shader = gl.createShader(shaderType)!;
-  gl.shaderSource(shader, shaderSource);
-  gl.compileShader(shader);
-
-  gl.attachShader(program, shader);
-
-  return shader;
-}
-
-/**
- * Compiles the vertex + fragment shaders, attaches them to a fresh program and
- * links it. In development, logs the program/shader info-logs when linking
- * fails (the link-status query stalls the pipeline, so it is dev-only).
- */
-export function createLinkedProgram(
-  gl: WebGL2RenderingContext,
-  vertexShaderSource: string,
-  fragmentShaderSource: string,
-) {
-  const program = gl.createProgram();
-  const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
-  const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-
-  /* https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#dont_check_shader_compile_status_unless_linking_fails */
-  if (process.env.NODE_ENV !== 'production' && !gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error(`Program linking failed: ${gl.getProgramInfoLog(program)}`);
-    console.error(`Vertex shader info-log: ${gl.getShaderInfoLog(vertexShader)}`);
-    console.error(`Fragment shader info-log: ${gl.getShaderInfoLog(fragmentShader)}`);
-  }
-
-  return { program, vertexShader, fragmentShader };
-}
-
-/**
- * Binds `buffer` to `name`'s attribute location and configures the vertex
- * attribute pointer. A non-zero `divisor` makes the attribute instanced.
- * Assumes the owning VAO is already bound.
- */
-export function bindAttribute(
-  gl: WebGL2RenderingContext,
-  program: WebGLProgram,
-  name: string,
-  buffer: WebGLBuffer,
-  size: number,
-  divisor: number,
-  type: GLenum = gl.FLOAT,
-  normalized: boolean = false,
-) {
-  const location = gl.getAttribLocation(program, name);
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.enableVertexAttribArray(location);
-  gl.vertexAttribPointer(location, size, type, normalized, 0, 0);
-  if (divisor !== 0) {
-    gl.vertexAttribDivisor(location, divisor);
-  }
 }
 
 export type GrowableBuffer = {
@@ -157,4 +82,59 @@ export function logWebGLErrors(gl: WebGL2RenderingContext) {
       error = gl.getError();
     }
   }
+}
+
+/** Enables the standard non-premultiplied src-alpha blending used by all premium WebGL renderers. */
+export function setupStandardBlending(gl: WebGL2RenderingContext) {
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+}
+
+/**
+ * Returns `existing` when it's large enough to hold `length` elements, otherwise
+ * allocates a fresh typed array via `Ctor`. Lets consumers keep one ref per
+ * pool and short-circuit growth checks inline.
+ */
+export function ensurePool<T extends { length: number }>(
+  existing: T | null | undefined,
+  length: number,
+  Ctor: new (length: number) => T,
+): T {
+  if (existing != null && existing.length >= length) {
+    return existing;
+  }
+  return new Ctor(length);
+}
+
+export interface LinkedProgram {
+  program: WebGLProgram;
+  /** The vertex + fragment shaders that were attached. Hold them so dispose() can delete them. */
+  shaders: WebGLShader[];
+}
+
+/**
+ * Compiles vertex + fragment shaders, attaches them, links the program, and returns
+ * both the program and its shaders. Logs link/compile diagnostics in dev when linking fails.
+ */
+export function linkProgram(
+  gl: WebGL2RenderingContext,
+  vertexShaderSource: string,
+  fragmentShaderSource: string,
+): LinkedProgram {
+  const program = gl.createProgram();
+  const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
+  const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+
+  if (process.env.NODE_ENV !== 'production' && !gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    // WebGL best-practices: consult compile/link status only in dev mode
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#dont_check_shader_compile_status_unless_linking_fails
+    console.error(`Program linking failed: ${gl.getProgramInfoLog(program)}`);
+    console.error(`Vertex shader info-log: ${gl.getShaderInfoLog(vertexShader)}`);
+    console.error(`Fragment shader info-log: ${gl.getShaderInfoLog(fragmentShader)}`);
+  }
+
+  return { program, shaders: [vertexShader, fragmentShader] };
 }

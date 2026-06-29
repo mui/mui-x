@@ -1,32 +1,33 @@
 // This file should be removed after creating all plugins in favor of a file per chart type.
 
 import {
-  type ChartSeriesType,
-  type ConvertSignaturesIntoPlugins,
   useChartCartesianAxis,
-  type UseChartCartesianAxisSignature,
   useChartTooltip,
-  type UseChartTooltipSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
   useChartZAxis,
-  type UseChartZAxisSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
   useChartPolarAxis,
-  type UseChartPolarAxisSignature,
   useChartBrush,
-  type UseChartBrushSignature,
-  type UseChartVisibilityManagerSignature,
   useChartVisibilityManager,
   useProgressiveRendering,
-  type UseProgressiveRenderingSignature,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  type UseChartProExportSignature,
-  useChartProZoom,
-  type UseChartProZoomSignature,
+import type {
+  ChartSeriesType,
+  ConvertSignaturesIntoPlugins,
+  UseChartCartesianAxisSignature,
+  UseChartTooltipSignature,
+  UseChartInteractionSignature,
+  UseChartZAxisSignature,
+  UseChartHighlightSignature,
+  UseChartPolarAxisSignature,
+  UseChartBrushSignature,
+  UseChartVisibilityManagerSignature,
+  UseProgressiveRenderingSignature,
+} from '@mui/x-charts/internals';
+import { useChartProExport, useChartProZoom } from '@mui/x-charts-pro/plugins';
+import type {
+  UseChartProExportSignature,
+  UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
 
 export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [

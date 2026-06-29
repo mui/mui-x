@@ -8,10 +8,8 @@ import type {
   UseChartKeyboardNavigationSignature,
 } from '@mui/x-charts/internals';
 import { RADAR_PLUGINS } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  type UseChartProExportSignature,
-} from '../internals/plugins/useChartProExport';
+import { useChartProExport } from '../internals/plugins/useChartProExport';
+import type { UseChartProExportSignature } from '../internals/plugins/useChartProExport';
 
 export type RadarChartProPluginSignatures = [
   UseChartTooltipSignature<'radar'>,

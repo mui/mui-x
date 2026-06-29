@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx, { type ClassValue } from 'clsx';
+import clsx from 'clsx';
+import type { ClassValue } from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -14,13 +15,8 @@ import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { focusElement } from '../../utils/focusElement';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
-import {
-  type GridCellEventLookup,
-  type GridEvents,
-  GridCellModes,
-  type GridRowId,
-  type GridEditCellProps,
-} from '../../models';
+import { GridCellModes } from '../../models';
+import type { GridCellEventLookup, GridEvents, GridRowId, GridEditCellProps } from '../../models';
 import type { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
 import type { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';

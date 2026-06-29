@@ -1,15 +1,15 @@
 import {
-  type GrowableBuffer,
-  bindAttribute,
-  createGrowableBuffer,
-  createLinkedProgram,
-  enableAlphaBlending,
+  bindQuadBuffer,
+  linkProgram,
   logWebGLErrors,
+  setupStandardBlending,
   uploadGrowableBuffer,
   uploadQuadBuffer,
 } from '../../utils/webgl/utils';
+import type { InstancedAttribute } from '../../utils/webgl/instancedAttribute';
+import { createInstancedAttribute } from '../../utils/webgl/instancedAttribute';
 import { scatterVertexShader, scatterFragmentShader } from './shaders';
-import { type ScatterWebGLPlotData } from './useScatterWebGLPlotData';
+import type { ScatterWebGLPlotData } from './useScatterWebGLPlotData';
 
 export class ScatterWebGLProgram {
   private readonly shaders: WebGLShader[] = [];
@@ -17,29 +17,26 @@ export class ScatterWebGLProgram {
 
   private readonly program: WebGLProgram;
   private readonly vao: WebGLVertexArrayObject;
-  private readonly centers: GrowableBuffer;
-  private readonly sizes: GrowableBuffer;
-  private readonly colors: GrowableBuffer;
+  private readonly centers: InstancedAttribute;
+  private readonly sizes: InstancedAttribute;
+  /* Colors come in as Uint8 [0, 255]; normalized=true makes the GPU read them back as vec4 in [0, 1]. */
+  private readonly colors: InstancedAttribute;
 
   constructor(private gl: WebGL2RenderingContext) {
-    enableAlphaBlending(gl);
+    setupStandardBlending(gl);
+
+    const linked = linkProgram(gl, scatterVertexShader, scatterFragmentShader);
+    this.program = linked.program;
+    this.shaders.push(...linked.shaders);
 
     this.quadBuffer = uploadQuadBuffer(gl);
-
-    const prog = createLinkedProgram(gl, scatterVertexShader, scatterFragmentShader);
-    this.program = prog.program;
-    this.shaders.push(prog.vertexShader, prog.fragmentShader);
-
     this.vao = gl.createVertexArray();
     gl.bindVertexArray(this.vao);
 
-    // a_position references the shared quad; bind it once while the VAO is active.
-    bindAttribute(gl, this.program, 'a_position', this.quadBuffer, 2, 0);
-
-    this.centers = this.setupInstancedAttribute('a_center', 2, gl.FLOAT, false);
-    this.sizes = this.setupInstancedAttribute('a_size', 1, gl.FLOAT, false);
-    // Colors come in as Uint8 [0, 255]; normalized=true makes the GPU read them back as vec4 in [0, 1].
-    this.colors = this.setupInstancedAttribute('a_color', 4, gl.UNSIGNED_BYTE, true);
+    bindQuadBuffer(gl, this.program, this.quadBuffer);
+    this.centers = createInstancedAttribute(gl, this.program, 'a_center', 2);
+    this.sizes = createInstancedAttribute(gl, this.program, 'a_size', 1);
+    this.colors = createInstancedAttribute(gl, this.program, 'a_color', 4, gl.UNSIGNED_BYTE, true);
 
     gl.bindVertexArray(null);
   }
@@ -52,16 +49,15 @@ export class ScatterWebGLProgram {
 
   plot(plotData: ScatterWebGLPlotData) {
     const { gl } = this;
-    uploadGrowableBuffer(gl, this.centers, plotData.centers);
-    uploadGrowableBuffer(gl, this.sizes, plotData.sizes);
-    uploadGrowableBuffer(gl, this.colors, plotData.colors);
+    uploadGrowableBuffer(gl, this.centers.buffer, plotData.centers);
+    uploadGrowableBuffer(gl, this.sizes.buffer, plotData.sizes);
+    uploadGrowableBuffer(gl, this.colors.buffer, plotData.colors);
   }
 
   render(plotData: ScatterWebGLPlotData) {
     if (plotData.pointCount === 0) {
       return;
     }
-
     const { gl } = this;
     gl.useProgram(this.program);
     logWebGLErrors(gl);
@@ -74,23 +70,10 @@ export class ScatterWebGLProgram {
     const { gl } = this;
     gl.deleteProgram(this.program);
     gl.deleteVertexArray(this.vao);
-    gl.deleteBuffer(this.centers.buffer);
-    gl.deleteBuffer(this.sizes.buffer);
-    gl.deleteBuffer(this.colors.buffer);
+    gl.deleteBuffer(this.centers.buffer.buffer);
+    gl.deleteBuffer(this.sizes.buffer.buffer);
+    gl.deleteBuffer(this.colors.buffer.buffer);
     gl.deleteBuffer(this.quadBuffer);
     this.shaders.forEach((shader) => gl.deleteShader(shader));
-  }
-
-  // Assumes the owning VAO (Vertex Array Object) is already bound.
-  private setupInstancedAttribute(
-    name: string,
-    size: 1 | 2 | 4,
-    glType: GLenum,
-    normalized: boolean,
-  ): GrowableBuffer {
-    const { gl, program } = this;
-    const target = createGrowableBuffer(gl);
-    bindAttribute(gl, program, name, target.buffer, size, 1, glType, normalized);
-    return target;
   }
 }
