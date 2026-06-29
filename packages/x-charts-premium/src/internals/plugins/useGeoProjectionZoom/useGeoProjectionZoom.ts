@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { selectorChartDrawingArea } from '@mui/x-charts/internals';
 import type { ChartPlugin } from '@mui/x-charts/internals';
 import {
   useDragGesture,
@@ -12,6 +14,7 @@ import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import {
   selectorChartProjection,
   selectorChartRawProjection,
+  selectorFitScale,
 } from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapZoomView, UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
 import { getDefaultMapInteraction, getRotation, getTranslation } from './mapZoom.utils';
@@ -41,6 +44,41 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   // `zoom` is either a boolean or a config object; an object always enables the interaction.
   const enabled = zoom !== false;
   const isControlled = view !== undefined;
+
+  useEnhancedEffect(() => {
+    // Set the default translation such that the entire map is visible.
+    if (store.state.geoProjectionZoom.translation !== null) {
+      return;
+    }
+
+    const fitScale = selectorFitScale(store.state);
+    const projection = selectorChartProjection(store.state);
+    const drawingArea = selectorChartDrawingArea(store.state);
+
+    if (!projection || !fitScale) {
+      return;
+    }
+
+    const scale = projection?.scale();
+    const center = projection?.center();
+    projection?.scale(fitScale);
+
+    const defaultTranslation = getTranslation(
+      store,
+      projection,
+      center,
+      [drawingArea.width / 2, drawingArea.height / 2],
+      'both',
+      0,
+    );
+    if (defaultTranslation) {
+      store.set('geoProjectionZoom', {
+        ...store.state.geoProjectionZoom,
+        translation: defaultTranslation,
+      });
+    }
+    projection?.scale(scale);
+  }, [store]);
 
   const getProjection = React.useCallback(
     (): GeoProjection | null => selectorChartProjection(store.state),
@@ -303,6 +341,6 @@ useGeoProjectionZoom.getInitialState = (params) => ({
   geoProjectionZoom: {
     zoomLevel: params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1,
     center: params.view?.center ?? params.initialView?.center ?? [0, 0],
-    translation: params.view?.translation ?? params.initialView?.translation ?? [0, 0],
+    translation: params.view?.translation ?? params.initialView?.translation ?? null,
   },
 });

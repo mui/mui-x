@@ -164,7 +164,7 @@ function resolveProjectionInstance(
   return projection;
 }
 
-const selectorFitScale = createSelector(
+export const selectorFitScale = createSelector(
   selectorChartRawProjection,
   selectorChartProjectionFactory,
   selectorChartParallels,
