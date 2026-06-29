@@ -1,19 +1,21 @@
 import {
-  type GridRowModel,
-  type GridFilterModel,
-  type GridSortModel,
   GridLogicOperator,
-  type GridFilterOperator,
-  type GridColDef,
-  type GridRowId,
-  type GridPaginationModel,
-  type GridValidRowModel,
   GRID_AGGREGATION_FUNCTIONS,
-  type GridAggregationModel,
-  type GridAggregationFunction,
-  type GridPivotModel,
   gridStringOrNumberComparator,
-  type GridGetRowsResponse,
+} from '@mui/x-data-grid-premium';
+import type {
+  GridRowModel,
+  GridFilterModel,
+  GridSortModel,
+  GridFilterOperator,
+  GridColDef,
+  GridRowId,
+  GridPaginationModel,
+  GridValidRowModel,
+  GridAggregationModel,
+  GridAggregationFunction,
+  GridPivotModel,
+  GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
 import type { GridStateColDef } from '@mui/x-data-grid-pro/internals';
 import { randomInt } from '../services/random-generator';

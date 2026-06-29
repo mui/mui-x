@@ -1,12 +1,11 @@
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridColDef,
-  type GridInitialState,
-  type GridRowsProp,
-  useGridApiRef,
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridColDef,
+  GridInitialState,
+  GridRowsProp,
 } from '@mui/x-data-grid-premium';
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { getColumnValues, microtasks } from 'test/utils/helperFn';

@@ -15,17 +15,17 @@ catalog:
   '@babel/runtime': ^7.29.7
   '@babel/traverse': ^7.29.7
   '@base-ui/react': ^1.5.0
-  '@base-ui/utils': ^0.2.9
+  '@base-ui/utils': ^0.3.0
   '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.1.1
   '@mui/internal-test-utils': 2.0.18-canary.25
-  '@mui/internal-core-docs': 9.1.2-canary.0
-  '@mui/material': 9.1.1
+  '@mui/internal-core-docs': 9.1.2-canary.2
+  '@mui/material': 9.1.2
   '@mui/stylis-plugin-rtl': 9.1.1
-  '@mui/system': 9.1.1
+  '@mui/system': 9.1.2
   '@mui/types': 9.1.1
   '@mui/utils': ^9.1.1
   '@mui/x-internal-exceljs-fork': 5.0.0

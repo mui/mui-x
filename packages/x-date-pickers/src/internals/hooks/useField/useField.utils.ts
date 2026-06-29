@@ -1,11 +1,11 @@
-import {
+import type {
   FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
   FieldSectionValueBoundaries,
   FieldParsedSelectedSections,
 } from './useField.types';
-import {
+import type {
   FieldSectionType,
   FieldSection,
   MuiPickersAdapter,
@@ -18,7 +18,7 @@ import {
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
 import { convertToMeridiem } from '../../utils/time-utils';
-import { PickerValidValue } from '../../models';
+import type { PickerValidValue } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = (
   adapter: MuiPickersAdapter,
@@ -584,8 +584,6 @@ export const mergeDateIntoReferenceDate = (
 
       return mergedDate;
     }, referenceDate);
-
-export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
   const neighbors: SectionNeighbors = {};

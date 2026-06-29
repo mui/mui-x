@@ -5,17 +5,18 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
 import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
+import type { PickersFilledInputClasses } from './pickersFilledInputClasses';
 import {
   pickersFilledInputClasses,
   getPickersFilledInputUtilityClass,
-  PickersFilledInputClasses,
 } from './pickersFilledInputClasses';
-import { PickersInputBaseProps, PickersInputBase } from '../PickersInputBase';
+import type { PickersInputBaseProps } from '../PickersInputBase';
+import { PickersInputBase } from '../PickersInputBase';
 import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersFilledInputProps extends PickersInputBaseProps {
@@ -327,6 +328,7 @@ PickersFilledInput.propTypes /* remove-proptypes */ = {
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,

@@ -1,27 +1,28 @@
 import {
   useChartZAxis,
-  type UseChartZAxisSignature,
   useChartCartesianAxis,
-  type UseChartCartesianAxisSignature,
   useChartTooltip,
-  type UseChartTooltipSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
-  type ConvertSignaturesIntoPlugins,
   useChartBrush,
-  type UseChartBrushSignature,
   useChartKeyboardNavigation,
-  type UseChartKeyboardNavigationSignature,
   useChartItemClick,
-  type UseChartItemClickSignature,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  type UseChartProExportSignature,
-  useChartProZoom,
-  type UseChartProZoomSignature,
+import type {
+  UseChartZAxisSignature,
+  UseChartCartesianAxisSignature,
+  UseChartTooltipSignature,
+  UseChartInteractionSignature,
+  UseChartHighlightSignature,
+  ConvertSignaturesIntoPlugins,
+  UseChartBrushSignature,
+  UseChartKeyboardNavigationSignature,
+  UseChartItemClickSignature,
+} from '@mui/x-charts/internals';
+import { useChartProExport, useChartProZoom } from '@mui/x-charts-pro/plugins';
+import type {
+  UseChartProExportSignature,
+  UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
 
 export type HeatmapPremiumPluginSignatures = [

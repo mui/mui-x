@@ -1,5 +1,5 @@
-import { type ColorCallbackValue, type SeriesColor } from '../models/seriesType/common';
-import { type ChartSeriesType, type ChartsSeriesConfig } from '../models/seriesType/config';
+import type { ColorCallbackValue, SeriesColor } from '../models/seriesType/common';
+import type { ChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
 
 export function getSeriesColorFn<
   TValue extends ChartsSeriesConfig[ChartSeriesType]['valueType'],

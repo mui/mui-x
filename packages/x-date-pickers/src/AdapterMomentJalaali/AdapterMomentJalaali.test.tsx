@@ -1,5 +1,6 @@
 import moment from 'moment';
-import jMoment, { Moment } from 'moment-jalaali';
+import type { Moment } from 'moment-jalaali';
+import jMoment from 'moment-jalaali';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import {
@@ -8,7 +9,7 @@ import {
   describeJalaliAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import type { AdapterFormats } from '@mui/x-date-pickers/models';
 import 'moment/locale/fa';
 
 describe('<AdapterMomentJalaali />', () => {
@@ -39,7 +40,8 @@ describe('<AdapterMomentJalaali />', () => {
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
 
-      expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
+      expectDate('fullDate', '۱۳۹۸، بهمن ۱۲');
+      expectDate('normalDateWithWeekday', 'شنبه، ۱۲ بهمن');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ ب.ظ');
       expectDate('keyboardDateTime24h', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
