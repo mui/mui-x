@@ -2,8 +2,18 @@
 import * as React from 'react';
 import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import { unsafeOverflowAutoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/unsafe-overflow/element';
+import { buildIsValidDropTarget } from '../build-is-valid-drop-target/buildIsValidDropTarget';
 
 const OVERFLOW_PX = 160;
+
+// Only event drags should drive the time-grid autoscroll. The autoscroll subscribes to the
+// global element-adapter drag monitor, so without this filter any other element drag (e.g. the
+// draggable event dialog, which carries no `source`) would scroll the grid near its edges.
+const canAutoScrollForDrag = buildIsValidDropTarget([
+  'CalendarGridTimeEvent',
+  'CalendarGridTimeEventResizeHandler',
+  'StandaloneEvent',
+]);
 
 export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null>): void {
   React.useEffect(() => {
@@ -14,12 +24,14 @@ export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null
 
     const cleanupMain = autoScrollForElements({
       element,
+      canScroll: ({ source }) => canAutoScrollForDrag(source.data),
       getAllowedAxis: () => 'vertical',
       getConfiguration: () => ({ maxScrollSpeed: 'standard' }),
     });
 
     const cleanupOverflow = unsafeOverflowAutoScrollForElements({
       element,
+      canScroll: ({ source }) => canAutoScrollForDrag(source.data),
       getOverflow: () => ({
         forTopEdge: { top: OVERFLOW_PX },
         forBottomEdge: { bottom: OVERFLOW_PX },
