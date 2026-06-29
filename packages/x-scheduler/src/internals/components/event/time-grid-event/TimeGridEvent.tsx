@@ -412,11 +412,15 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // Armed = this occurrence is the one being edited. The touch-only resize dots + selection outline
   // are revealed by the coarse-pointer styles, so `data-armed` is inert on a mouse.
   const isArmed = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
 
-  // Creation / internal-resize placeholders host sizing handles; move placeholders don't.
+  // Creation / internal-resize placeholders host sizing handles; move placeholders don't. While the
+  // form is open (`edit` mode, e.g. the creation dialog) the form is the single way to change the
+  // times, so the handles are suppressed — matching the regular event (see `useTimeGridEvent`).
   const placeholderType = useStore(store, schedulerOccurrencePlaceholderSelectors.type);
   const placeholderHasResizeHandles =
-    placeholderType === 'creation' || placeholderType === 'internal-resize';
+    (placeholderType === 'creation' || placeholderType === 'internal-resize') &&
+    editingMode !== 'edit';
 
   // Tall events stack the title over the full time range; shorter ones show the title with the start
   // time inline. Width-driven degradation (dropping the time, wrapping the title) is handled in CSS.

@@ -160,6 +160,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog description label element"
     },
+    "eventDialogEditButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog edit button element"
+    },
     "eventDialogEndsRadioGroup": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog ends radio group element"
@@ -183,6 +187,10 @@
     "eventDialogHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog header element"
+    },
+    "eventDialogHeaderActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog header actions container element"
     },
     "eventDialogInlineRow": {
       "description": "Styles applied to {{nodeName}}.",

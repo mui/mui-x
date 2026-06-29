@@ -32,11 +32,24 @@ export interface StoredError {
   key: string;
 }
 
+/**
+ * Which face of the editing surface (dialog or drawer) is shown:
+ * - `'readonly'`: the read-only summary. The event stays resizable and a resize commits immediately.
+ * - `'edit'`: the editing form. The event is not resizable while the form is open.
+ */
+export type SchedulerEditingMode = 'readonly' | 'edit';
+
 export interface SchedulerEditingState {
   /**
    * The occurrence being edited — an existing occurrence or a creation draft.
    */
   occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * Whether the editing surface shows the read-only summary or the editing form.
+   * On touch, arming an event opens in `'readonly'`; the edit affordance switches it to `'edit'`.
+   * On non-touch the surface opens directly in `'edit'`.
+   */
+  mode: SchedulerEditingMode;
 }
 
 export interface SchedulerState<TEvent extends object = any> {

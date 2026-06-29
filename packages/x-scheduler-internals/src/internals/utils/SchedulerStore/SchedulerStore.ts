@@ -29,7 +29,9 @@ import {
   SchedulerModelUpdater,
   UpdateEventsParameters,
   SchedulerInstanceName,
+  SchedulerEditingMode,
 } from './SchedulerStore.types';
+import { processDate } from '../../../process-date';
 import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import {
   SchedulerEvents,
@@ -608,6 +610,15 @@ export class SchedulerStore<
     }
     this.updateEvents(updatedEvents);
 
+    // Keep the read-only editing surface (if still open) in sync with the times just committed,
+    // so a resize confirmed through the scope dialog is reflected instead of the pre-resize value.
+    if (pendingRecurringEventOperation.kind === 'update') {
+      const { start, end } = pendingRecurringEventOperation.changes;
+      if (start != null && end != null) {
+        this.setEditingOccurrenceTimes(start, end);
+      }
+    }
+
     if (onSubmit) {
       queueMicrotask(() => onSubmit());
     }
@@ -747,8 +758,49 @@ export class SchedulerStore<
    * This only records *what* is being edited; opening the editing surface (dialog or drawer) is
    * handled separately.
    */
-  public startEditing = (occurrence: SchedulerRenderableEventOccurrence) => {
-    this.set('editingOccurrence', { occurrence });
+  public startEditing = (
+    occurrence: SchedulerRenderableEventOccurrence,
+    mode: SchedulerEditingMode = 'edit',
+  ) => {
+    this.set('editingOccurrence', { occurrence, mode });
+  };
+
+  /**
+   * Switches the editing surface between its read-only summary and its editing form without
+   * changing which occurrence is being edited. No-op when nothing is being edited.
+   */
+  public setEditingMode = (mode: SchedulerEditingMode) => {
+    const { editingOccurrence } = this.state;
+    if (editingOccurrence == null || editingOccurrence.mode === mode) {
+      return;
+    }
+    this.set('editingOccurrence', { ...editingOccurrence, mode });
+  };
+
+  /**
+   * Refreshes the times of the occurrence being edited so the read-only surface reflects a change
+   * (e.g. a resize) that was just committed to the event. No-op when nothing is being edited.
+   */
+  public setEditingOccurrenceTimes = (
+    start: TemporalSupportedObject,
+    end: TemporalSupportedObject,
+  ) => {
+    const { editingOccurrence, adapter } = this.state;
+    if (editingOccurrence == null) {
+      return;
+    }
+    const { occurrence } = editingOccurrence;
+    this.set('editingOccurrence', {
+      ...editingOccurrence,
+      occurrence: {
+        ...occurrence,
+        displayTimezone: {
+          ...occurrence.displayTimezone,
+          start: processDate(start, adapter),
+          end: processDate(end, adapter),
+        },
+      },
+    });
   };
 
   /**

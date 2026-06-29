@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { PaletteName } from '../../../utils/tokens';
 import { TimeGridEventProps } from './TimeGridEvent.types';
@@ -42,13 +45,17 @@ export function useTimeGridEvent(
 
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
-  const isStartResizable = useStore(
+  // While the form is open for this occurrence, resizing is disabled — the form is the single way to
+  // change its times. It stays resizable in the read-only/armed state and when it is not being edited.
+  const isEditedInForm = useStore(
     store,
-    schedulerEventSelectors.isResizable,
-    occurrence.id,
-    'start',
+    schedulerOtherSelectors.isEditedOccurrenceInEditMode,
+    occurrence.key,
   );
-  const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
+  const isStartResizable =
+    useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'start') && !isEditedInForm;
+  const isEndResizable =
+    useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end') && !isEditedInForm;
   const palette = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   const durationMs =

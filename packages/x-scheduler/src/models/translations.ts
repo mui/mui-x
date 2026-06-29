@@ -17,6 +17,7 @@ export interface EventDialogLocaleText {
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;
+  editEventButtonAriaLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
   endDateLabel: string;

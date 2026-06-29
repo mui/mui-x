@@ -6,7 +6,11 @@ import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
 import { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
@@ -16,6 +20,7 @@ import {
   EventEditingOptionalRenderersContext,
   useEventEditingStyledContext,
   FormContent,
+  getInitialEditingMode,
 } from '../event-editing';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
@@ -87,6 +92,11 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
 
   const updatePosition = React.useCallback(
     (shouldResetDrag = false) => {
+      // The anchored event may have been detached (e.g. a recurring occurrence replaced by an
+      // exception after an edit); don't reposition against a stale node.
+      if (anchorRef.current != null && !anchorRef.current.isConnected) {
+        return;
+      }
       const position = calculatePosition(anchorRef.current, nodeRef.current, 'left');
       if (position && nodeRef.current) {
         nodeRef.current.style.top = `${position.top}px`;
@@ -101,9 +111,38 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     [anchorRef, resetDrag, nodeRef],
   );
 
+  // Position synchronously on mount, before paint, to avoid a flash at the wrong spot.
   React.useLayoutEffect(() => {
     updatePosition(true);
   }, [updatePosition]);
+
+  // Keep the dialog anchored as things change after it opens, without coupling to the editing store:
+  // - the paper's own height changes when its content swaps (read-only summary ↔ taller form) or a
+  //   field grows — a `ResizeObserver` on the paper catches it;
+  // - the anchored event is positioned through inline CSS custom properties, so it being resized or
+  //   moved mutates its `style` — a `MutationObserver` on the anchor catches it.
+  React.useEffect(() => {
+    const reposition = () => updatePosition(true);
+
+    const paper = nodeRef.current;
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined' && paper ? new ResizeObserver(reposition) : null;
+    if (paper) {
+      resizeObserver?.observe(paper);
+    }
+
+    const anchor = anchorRef.current;
+    const mutationObserver =
+      typeof MutationObserver !== 'undefined' && anchor ? new MutationObserver(reposition) : null;
+    if (anchor) {
+      mutationObserver?.observe(anchor, { attributes: true, attributeFilter: ['style'] });
+    }
+
+    return () => {
+      resizeObserver?.disconnect();
+      mutationObserver?.disconnect();
+    };
+  }, [anchorRef, updatePosition]);
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -125,16 +164,52 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 ) {
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventDialog' });
-  const { style, anchorRef, occurrence, onClose, open, ...other } = props;
+  const { style, anchorRef, occurrence: occurrenceProp, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
   const { schedulerId, classes } = useEventEditingStyledContext();
 
   // Selector hooks
+  // Render from the live editing occurrence so a resize committed behind the dialog (and the
+  // recurring-scope confirmation) is reflected; fall back to the prop during the close animation.
+  const editingOccurrence = useStore(
+    store,
+    schedulerOtherSelectors.editingOccurrenceWithResizePreview,
+  );
+  const occurrence = editingOccurrence ?? occurrenceProp;
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   // Ref hooks
   const dragHandlerRef = React.useRef<HTMLElement>(null);
+
+  let content: React.ReactNode;
+  if (isEventReadOnly) {
+    // Read-only events have no editing form, hence no edit affordance.
+    content = (
+      <ReadonlyContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
+    );
+  } else if (editingMode === 'readonly') {
+    // Editable event opened on its summary (touch): show the summary with an edit affordance.
+    content = (
+      <ReadonlyContent
+        occurrence={occurrence}
+        onClose={onClose}
+        onEdit={() => store.setEditingMode('edit')}
+        dragHandlerRef={dragHandlerRef}
+      />
+    );
+  } else {
+    // Mounting fresh on each occurrence keeps the form initialized from the current times.
+    content = (
+      <FormContent
+        key={occurrence.key}
+        occurrence={occurrence}
+        onClose={onClose}
+        dragHandlerRef={dragHandlerRef}
+      />
+    );
+  }
 
   return (
     <EventDialogRoot
@@ -149,19 +224,15 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       disableScrollLock
       className={classes.eventDialog}
       slotProps={{
-        paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,
+        paper: {
+          className: classes.eventDialogPaper,
+          anchorRef,
+          dragHandlerRef,
+        } as PaperProps,
       }}
       {...other}
     >
-      {isEventReadOnly ? (
-        <ReadonlyContent
-          occurrence={occurrence}
-          onClose={onClose}
-          dragHandlerRef={dragHandlerRef}
-        />
-      ) : (
-        <FormContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
-      )}
+      {content}
     </EventDialogRoot>
   );
 });
@@ -192,7 +263,8 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
           />
         )}
         onOpen={(occurrence) => {
-          store.startEditing(occurrence);
+          const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
+          store.startEditing(occurrence, getInitialEditingMode('dialog', { isCreating }));
         }}
         onClose={() => {
           store.stopEditing();

@@ -16,8 +16,25 @@ import { StandaloneDayView } from '@mui/x-scheduler/day-view';
  * here through {@link simulatePointerResize}, whose pointer events are not `mouse`, so they take the
  * pointer-resize path.
  */
+const createMatchMedia = (matches: boolean) => () =>
+  ({
+    matches,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  }) as any;
+
 describe('DayView - touch resize', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
+
+  // These tests exercise the touch flow: the dialog opens on its read-only summary and the armed
+  // event stays resizable. Report a coarse pointer so the open mode resolves to read-only.
+  const originalMatchMedia = window.matchMedia;
+  beforeEach(() => {
+    window.matchMedia = createMatchMedia(true);
+  });
+  afterEach(() => {
+    window.matchMedia = originalMatchMedia;
+  });
 
   function getTimeGridColumn(): HTMLElement {
     return document.querySelector<HTMLElement>(

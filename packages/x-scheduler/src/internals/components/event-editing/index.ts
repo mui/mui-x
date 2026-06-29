@@ -20,3 +20,5 @@ export type {
 } from './EventEditingOptionalRenderersContext';
 export { FormContent } from './FormContent';
 export { ReadonlyEventDetails } from './ReadonlyEventDetails';
+export { getInitialEditingMode, prefersReadonlyEditingSurface } from './editingModePolicy';
+export type { EditingSurface } from './editingModePolicy';

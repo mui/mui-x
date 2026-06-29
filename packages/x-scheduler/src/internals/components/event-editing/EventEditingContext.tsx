@@ -4,6 +4,7 @@ import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/m
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { createModal } from '../create-modal';
 import { CompactEventEditingProviderProps, EventEditingTriggerProps } from './EventEditing.types';
+import { getInitialEditingMode } from './editingModePolicy';
 
 /**
  * The shared, surface-agnostic editing backbone.
@@ -54,7 +55,7 @@ export function CompactEventEditingProvider(props: CompactEventEditingProviderPr
       render={() => null}
       anchored={false}
       onOpen={(occurrence) => {
-        store.startEditing(occurrence);
+        store.startEditing(occurrence, getInitialEditingMode('drawer'));
       }}
       onClose={() => {
         store.stopEditing();

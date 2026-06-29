@@ -58,6 +58,22 @@ export const schedulerOtherSelectors = {
     (state: State) => state.displayTimezone,
     (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
   ),
+  /**
+   * Which face the editing surface shows (`'readonly'` summary or `'edit'` form), or `null` when
+   * nothing is being edited. Drives the read-only-vs-form swap and whether the edited event stays
+   * resizable.
+   */
+  editingMode: createSelector((state: State) => state.editingOccurrence?.mode ?? null),
+  /**
+   * Returns `true` when the occurrence with the given key is being edited through the form
+   * (`'edit'` mode). Resizing is disabled in that state — the form is the single way to change times.
+   */
+  isEditedOccurrenceInEditMode: createSelector(
+    (state: State) => state.editingOccurrence?.occurrence.key ?? null,
+    (state: State) => state.editingOccurrence?.mode ?? null,
+    (editedOccurrenceKey, mode, occurrenceKey: string | undefined) =>
+      mode === 'edit' && editedOccurrenceKey != null && editedOccurrenceKey === occurrenceKey,
+  ),
   isRecurringScopeDialogOpen: createSelector(
     (state: State) => state.pendingRecurringEventOperation != null,
   ),

@@ -86,16 +86,15 @@ export function CompactEventDrawer() {
   // shell (a centered dialog).
   const { recurringScopeDialog: RecurringScopeDialogRenderer } = useEventEditingOptionalRenderers();
 
-  const [expanded, setExpanded] = React.useState(false);
+  // Peek (read-only summary) vs expanded (form) is driven by the shared editing mode, so it resets
+  // to the summary whenever a new occurrence is armed (`startEditing(..., 'readonly')`) and the
+  // edited grid event knows not to stay resizable once the form is open.
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
+  const expanded = editingMode === 'edit';
 
   // The reused dialog content expects a drag handle ref (for dragging the desktop dialog). The
   // drawer does not drag, so we pass a throwaway ref.
   const dragHandlerRef = React.useRef<HTMLElement | null>(null);
-
-  // Start collapsed each time the drawer opens or switches to a different occurrence.
-  React.useEffect(() => {
-    setExpanded(false);
-  }, [occurrence?.key]);
 
   // Peek shows the read-only summary; expanding swaps in the form, unless the event (or the whole
   // calendar) is read-only, in which case the summary stays.
@@ -107,8 +106,8 @@ export function CompactEventDrawer() {
       data-expanded={(isOpen && expanded) || undefined}
       aria-hidden={!isOpen}
       onClick={() => {
-        if (isOpen && !expanded) {
-          setExpanded(true);
+        if (isOpen && !expanded && !isReadOnly) {
+          store.setEditingMode('edit');
         }
       }}
     >
@@ -116,6 +115,7 @@ export function CompactEventDrawer() {
         <CompactEventDrawerContent>
           {showForm ? (
             <FormContent
+              key={occurrence.key}
               occurrence={occurrence}
               onClose={onClose}
               dragHandlerRef={dragHandlerRef}

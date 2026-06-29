@@ -2114,9 +2114,7 @@ describe('<EventDialogContent open />', () => {
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
-            onMount={(store) =>
-              store.startEditing({ id: DEFAULT_EVENT.id, key: DEFAULT_EVENT.id } as any)
-            }
+            onMount={(store) => store.startEditing(defaultProps.occurrence)}
           />
           <StateWatcher
             Context={SchedulerStoreContext}
