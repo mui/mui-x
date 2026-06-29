@@ -25,11 +25,13 @@ const mergeSomaliland = (feature: ExtendedFeature) =>
     ? 'Somalia'
     : (feature.properties?.name ?? null);
 
-const data = Object.entries(countryData).map(([code, country]) => ({
-  name: country.worldAtlasName,
-  label: country.country,
-  colorValue: internetUsageByCountry[code],
-}));
+const data = Object.entries(countryData)
+  .filter(([, country]) => country.worldAtlasName)
+  .map(([code, country]) => ({
+    name: country.worldAtlasName,
+    label: country.country,
+    colorValue: internetUsageByCountry[code],
+  }));
 
 export default function GeoFeatureKeyMapShape() {
   return (

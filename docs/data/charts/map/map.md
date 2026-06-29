@@ -41,6 +41,21 @@ and renders one `<path>` per feature.
 </Unstable_ChartsGeoDataProviderPremium>
 ```
 
+### Rendering any GeoJSON shapes
+
+`geoData` accepts any GeoJSON `FeatureCollection`; the features don't have to be
+country borders. Administrative regions, sales territories, watersheds, or the
+tectonic plates used below render the same way.
+
+This example loads the [PB2002](https://github.com/fraxen/tectonicplates) plate
+model together with country borders into a single `geoData`, as two `mapShape` series.
+`MapShapePlot` wraps each series in a group carrying a `data-series` attribute,
+so one plot renders both layers and CSS styles them independently: colored plates
+below, country outlines on top for orientation.
+Toggle between a flat `naturalEarth1` map and an `orthographic` globe.
+
+{{"demo": "TectonicPlates.js"}}
+
 ## Rendering the base map with `GeoDataPlot`
 
 `GeoDataPlot` draws every feature registered on the provider as an SVG path.
