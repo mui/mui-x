@@ -177,6 +177,31 @@ describe('createGenerateReactCodeTool', () => {
     );
   });
 
+  it('wraps a non-JSON generate response (e.g. a 2xx HTML proxy page) in a prefixed error', async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(
+      new Response('<html>not json</html>', {
+        status: 202,
+        headers: { 'content-type': 'text/html' },
+      }),
+    );
+
+    const tool = createGenerateReactCodeTool({ recipesBackendBaseUrl: baseUrl, getToken, fetcher });
+
+    await expect(tool.execute({ prompt: 'Build a card' })).rejects.toThrow(
+      /MUI X Agent Tools: The codegen backend returned an unexpected response/,
+    );
+  });
+
+  it('wraps a 202 generate response missing runId in a prefixed error', async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(makeJsonResponse(202, { threadId: 'chat-1' }));
+
+    const tool = createGenerateReactCodeTool({ recipesBackendBaseUrl: baseUrl, getToken, fetcher });
+
+    await expect(tool.execute({ prompt: 'Build a card' })).rejects.toThrow(
+      /MUI X Agent Tools: The codegen backend returned an unexpected response/,
+    );
+  });
+
   it('plumbs the backend-resolved muiPairing from the 202 response into the tool result', async () => {
     const fetcher = vi
       .fn()

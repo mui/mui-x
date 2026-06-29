@@ -242,7 +242,15 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
         );
       }
 
-      const generated = generateResponseSchema.parse(await generateResponse.json());
+      // Wrap raw JSON/schema parse errors (e.g. a 2xx HTML proxy page) in the prefixed message below.
+      let generated: z.infer<typeof generateResponseSchema>;
+      try {
+        generated = generateResponseSchema.parse(await generateResponse.json());
+      } catch {
+        throw new Error(
+          'MUI X Agent Tools: The codegen backend returned an unexpected response (not valid JSON, or missing runId). Check that MUI_RECIPES_BACKEND_BASE_URL points at recipes-backend (not a proxy or error page), then retry.',
+        );
+      }
 
       // 2. Open the SSE stream + buffer chunks until `[DONE]`.
       const streamResponse = await fetcher(
