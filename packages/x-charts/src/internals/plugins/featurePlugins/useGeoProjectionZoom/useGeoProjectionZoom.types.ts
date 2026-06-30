@@ -114,7 +114,7 @@ export interface UseGeoProjectionZoomPublicApi {
   resetZoom: () => void;
 }
 
-export interface UseGeoProjectionZoomInstance extends UseGeoProjectionZoomPublicApi {}
+export interface UseGeoProjectionZoomInstance extends UseGeoProjectionZoomPublicApi { }
 
 export interface UseGeoProjectionZoomState {
   geoProjectionZoom: {
@@ -133,8 +133,9 @@ export interface UseGeoProjectionZoomState {
      * The map translation in percentage of the drawing area.
      */
     translation: [number, number] | null;
-    initialTranslation: [number, number] | null;
-    initialCenter: [number, number] | null;
+    initialTranslation: [number, number];
+    initialCenter: [number, number];
+    initialZoomLevel: number;
   };
 }
 export type UseGeoProjectionZoomSignature = ChartPluginSignature<{

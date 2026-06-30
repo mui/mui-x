@@ -30,11 +30,6 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 }) => {
   const { zoom, onViewChange, view } = params;
 
-  const initialViewRef = React.useRef<MapZoomView>({
-    zoomLevel: store.state.geoProjectionZoom.zoomLevel ?? 1,
-    center: store.state.geoProjectionZoom.center ?? [0, 0],
-    translation: store.state.geoProjectionZoom.translation ?? [0, 0],
-  });
   const interactionDefaults = getDefaultMapInteraction(selectorChartRawProjection(store.state));
 
   const {
@@ -284,12 +279,12 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   const zoomOut = React.useCallback(() => zoomBy(1 / BUTTON_ZOOM_STEP), [zoomBy]);
 
   const resetZoom = React.useCallback(() => {
-    const view = initialViewRef.current;
-    if (!view) {
-      return;
-    }
-    applyView(view);
-  }, [applyView]);
+    applyView({
+      zoomLevel: store.state.geoProjectionZoom.initialZoomLevel,
+      center: store.state.geoProjectionZoom.initialCenter,
+      translation: store.state.geoProjectionZoom.initialTranslation,
+    });
+  }, [applyView, store]);
 
   const publicAPI = { zoomIn, zoomOut, resetZoom };
 
@@ -312,6 +307,7 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
 });
 
 useGeoProjectionZoom.getInitialState = (params) => {
+  const zoomLevel = params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1;
   const center = params.view?.center ?? params.initialView?.center ?? [0, 0];
   const translation =
     params.view?.translation ??
@@ -322,14 +318,14 @@ useGeoProjectionZoom.getInitialState = (params) => {
       params.geoData,
       params.parallels,
       center,
-    );
-
+    ) ?? [0, 0];
   return {
     geoProjectionZoom: {
-      zoomLevel: params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1,
+      zoomLevel,
       center,
       translation,
 
+      initialZoomLevel: zoomLevel,
       initialCenter: center,
       initialTranslation: translation,
     },
