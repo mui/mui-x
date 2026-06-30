@@ -361,7 +361,6 @@ export type UpdateRecurringEventParameters = {
   occurrenceStart: TemporalSupportedObject;
   /**
    * The changes to apply.
-   * `start` and `end` are optional; when omitted, the edited occurrence's date and time are kept.
    */
   changes: SchedulerEventUpdatedProperties;
   /**

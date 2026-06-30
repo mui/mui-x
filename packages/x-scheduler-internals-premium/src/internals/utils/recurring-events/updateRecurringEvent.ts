@@ -256,7 +256,12 @@ export function applyRecurringUpdateOnlyThis(
   const stringifiedChanges: Partial<SchedulerEventCreationProperties> = { ...changes };
   // default start/end to the edited occurrence so the detached event keeps its own day, not DTSTART
   const newStart = changes.start ?? occurrenceStart;
-  stringifiedChanges.start = dateToEventString(adapter, newStart, originalModel.start, dataTimezone);
+  stringifiedChanges.start = dateToEventString(
+    adapter,
+    newStart,
+    originalModel.start,
+    dataTimezone,
+  );
   const occurrenceEnd = getOccurrenceEnd({ adapter, event: originalEvent, occurrenceStart });
   const newEnd = changes.end ?? occurrenceEnd;
   stringifiedChanges.end = dateToEventString(adapter, newEnd, originalModel.end, dataTimezone);
