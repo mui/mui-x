@@ -14,8 +14,8 @@ catalog:
   '@babel/preset-typescript': ^7.29.7
   '@babel/runtime': ^7.29.7
   '@babel/traverse': ^7.29.7
-  '@base-ui/react': ^1.5.0
-  '@base-ui/utils': ^0.3.0
+  '@base-ui/react': https://pkg.pr.new/mui/base-ui/@base-ui/react@5138
+  '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@5138
   '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0

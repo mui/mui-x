@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
+import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
@@ -6,7 +6,7 @@ import {
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
 
-export type { TemporalTimezone } from '../base-ui-copy/types';
+export type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 
 /**
  * Base shape for processed scheduler events.

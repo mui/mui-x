@@ -1,10 +1,10 @@
 import { warnOnce } from '@mui/x-internals/warning';
+import { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { normalizeAllDayBounds } from '../internals/utils/date-utils';
 import { Adapter } from '../use-adapter';
 import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
-import { TemporalTimezone } from '../base-ui-copy/types';
 import { resolveEventDate } from './resolveEventDate';
 
 export function processEvent(

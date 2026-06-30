@@ -8,7 +8,7 @@ import {
   SchedulerParametersToStateMapper,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
-import { createChangeEventDetails } from '@mui/x-scheduler-internals/base-ui-copy';
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import { EventTimelinePremiumPreferences, EventTimelinePremiumPreset } from '../models';
 import {
   EventTimelinePremiumState,

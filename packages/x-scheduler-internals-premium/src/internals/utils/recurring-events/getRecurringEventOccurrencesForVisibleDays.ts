@@ -1,4 +1,4 @@
-import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import {
   SchedulerProcessedEventRecurrenceRule,

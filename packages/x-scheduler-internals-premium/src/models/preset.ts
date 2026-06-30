@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-internals/base-ui-copy';
+import { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 
 export type EventTimelinePremiumPreset =

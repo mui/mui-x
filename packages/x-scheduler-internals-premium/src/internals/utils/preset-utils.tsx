@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TemporalAdapter } from '@mui/x-scheduler-internals/base-ui-copy';
+import { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import { getEndOfWeek, getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import {
   TemporalSupportedObject,

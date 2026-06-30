@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useId } from '@base-ui/utils/useId';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { DEFAULT_ROW_TYPES } from '../../internals/utils/getNavigationTarget';
 import type { GridCellCoordinates, GridRowType } from '../../models/calendarGrid';
 import { CalendarGridRootContext } from './CalendarGridRootContext';

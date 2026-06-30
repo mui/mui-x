@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import { UnstableTemporalAdapterDateFns } from '../base-ui-copy/temporal-adapter-date-fns';
+import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
 import {
   SchedulerStoreContext,
   SchedulerStoreInContext,
 } from '../use-scheduler-store-context/useSchedulerStoreContext';
 import type { Adapter } from '../use-adapter/useAdapter.types';
 
-const DEFAULT_ADAPTER = new UnstableTemporalAdapterDateFns();
+const DEFAULT_ADAPTER = new TemporalAdapterDateFns();
 
 const getAdapter = (state: { adapter: Adapter }) => state.adapter;
 

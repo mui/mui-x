@@ -1,7 +1,7 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { generateId } from '@base-ui/utils/generateId';
 import { warnOnce } from '@mui/x-internals/warning';
-import { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
+import { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import {
   SchedulerProcessedEvent,
   SchedulerEventId,

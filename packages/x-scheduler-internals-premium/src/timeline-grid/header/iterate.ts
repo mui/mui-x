@@ -1,4 +1,4 @@
-import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-internals/base-ui-copy';
+import { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import { IteratedCell, PresetHeaderUnit } from '../../models';

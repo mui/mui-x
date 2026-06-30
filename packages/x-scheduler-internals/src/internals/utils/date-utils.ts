@@ -1,4 +1,4 @@
-import { TemporalTimezone, TemporalSupportedObject } from '../../base-ui-copy/types';
+import { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 

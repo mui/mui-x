@@ -1,4 +1,4 @@
-import { TemporalSupportedObject, TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   RecurringEventByDayValue,
