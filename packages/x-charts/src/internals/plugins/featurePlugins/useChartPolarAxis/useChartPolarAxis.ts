@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
-import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { type ChartPlugin } from '../../models';
-import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
+import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import type { ChartPlugin } from '../../models';
+import type { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';

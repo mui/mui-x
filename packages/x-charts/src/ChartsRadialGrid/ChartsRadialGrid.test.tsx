@@ -2,8 +2,8 @@ import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import {
   chartsRadialGridClasses,
   Unstable_ChartsRadialGrid as ChartsRadialGrid,
-  type ChartsRadialGridProps,
 } from '@mui/x-charts/ChartsRadialGrid';
+import type { ChartsRadialGridProps } from '@mui/x-charts/ChartsRadialGrid';
 import { Unstable_ChartsRadialDataProvider } from '../ChartsRadialDataProvider';
 import type { RadiusAxis, RotationAxis } from '../models';
 

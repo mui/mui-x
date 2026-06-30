@@ -1,6 +1,6 @@
-import { type ScatterValueType } from '../../../../models/seriesType/scatter';
-import { type Flatbush } from '../../../Flatbush';
-import { type D3Scale } from '../../../../models/axis';
+import type { ScatterValueType } from '../../../../models/seriesType/scatter';
+import type { Flatbush } from '../../../Flatbush';
+import type { D3Scale } from '../../../../models/axis';
 import { isOrdinalScale } from '../../../scaleGuards';
 
 // Arbitrary large number to be sure we don't pull the entire dataset from flatbush when radius is not fixed.

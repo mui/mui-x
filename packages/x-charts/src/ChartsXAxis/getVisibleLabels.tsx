@@ -1,8 +1,8 @@
 'use client';
-import { type TickItem } from '../hooks/useTicks';
-import { type ChartsXAxisProps, type ComputedXAxis } from '../models/axis';
+import type { TickItem } from '../hooks/useTicks';
+import type { ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
-import { type ChartsTextStyle } from '../internals/getWordsByLines';
+import type { ChartsTextStyle } from '../internals/getWordsByLines';
 import { batchMeasureStrings } from '../internals/domUtils';
 
 /* Returns a set of indices of the tick labels that should be visible.  */

@@ -1,6 +1,8 @@
 /// <reference path="./core-js-pure.d.ts" />
-import CoreJsDisposableStack from 'core-js-pure/actual/disposable-stack';
-import CoreJsAsyncDisposableStack from 'core-js-pure/actual/async-disposable-stack';
+// eslint-disable-next-line import/extensions
+import CoreJsDisposableStack from 'core-js-pure/actual/disposable-stack/index.js';
+// eslint-disable-next-line import/extensions
+import CoreJsAsyncDisposableStack from 'core-js-pure/actual/async-disposable-stack/index.js';
 
 /**
  * Well-known `Symbol.dispose`. Resolves to the native well-known symbol when

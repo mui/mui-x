@@ -71,7 +71,7 @@ function MapShapePlot(props: MapShapePlotProps) {
         );
         return (
           <g key={id} data-series={id}>
-            {data.map((item, dataIndex) => {
+            {data.map((item) => {
               if (item.hidden) {
                 return null;
               }
@@ -84,7 +84,7 @@ function MapShapePlot(props: MapShapePlotProps) {
                   {featureIndexes.map((featureIndex) => {
                     const feature = geoData.features[featureIndex];
                     const d = path(feature);
-                    const color = fill ?? colorGetter(dataIndex);
+                    const color = fill ?? colorGetter(item.name);
                     if (!d || color === null) {
                       return null;
                     }
@@ -92,7 +92,7 @@ function MapShapePlot(props: MapShapePlotProps) {
                       <MapShape
                         key={featureIndex}
                         seriesId={id}
-                        dataIndex={dataIndex}
+                        featureName={item.name}
                         d={d}
                         color={color}
                         stroke={stroke}

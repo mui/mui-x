@@ -4,33 +4,33 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import {
-  PickersToolbar,
-  PickersToolbarButton,
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import type {
   BaseToolbarProps,
   ExportedBaseToolbarProps,
   PickerVariant,
   TimeViewWithMeridiem,
+  PickerRangeValue,
+  PickerToolbarOwnerState,
+} from '@mui/x-date-pickers/internals';
+import {
+  PickersToolbar,
+  PickersToolbarButton,
   PickersToolbarText,
   getMeridiem,
   formatMeridiem,
   pickersToolbarClasses,
   pickersToolbarTextClasses,
-  PickerRangeValue,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
   useToolbarOwnerState,
-  PickerToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
 import {
   usePickerAdapter,
   usePickerContext,
   usePickerTranslations,
 } from '@mui/x-date-pickers/hooks';
-import {
-  TimeRangePickerToolbarClasses,
-  getTimeRangePickerToolbarUtilityClass,
-} from './timeRangePickerToolbarClasses';
+import type { TimeRangePickerToolbarClasses } from './timeRangePickerToolbarClasses';
+import { getTimeRangePickerToolbarUtilityClass } from './timeRangePickerToolbarClasses';
 import { usePickerRangePositionContext } from '../hooks';
 
 const useUtilityClasses = (

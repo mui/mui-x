@@ -4,14 +4,12 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import {
   AreaPlot,
-  type LineChartProps,
-  type LineChartSlots,
-  type LineChartSlotProps,
   LineHighlightPlot,
   LinePlot,
   MarkPlot,
   FocusedLineMark,
 } from '@mui/x-charts/LineChart';
+import type { LineChartProps, LineChartSlots, LineChartSlotProps } from '@mui/x-charts/LineChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -23,17 +21,18 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
-import { LINE_CHART_PRO_PLUGINS, type LineChartProPluginSignatures } from './LineChartPro.plugins';
+import { LINE_CHART_PRO_PLUGINS } from './LineChartPro.plugins';
+import type { LineChartProPluginSignatures } from './LineChartPro.plugins';
 
 export interface LineChartProSlots
   extends Omit<LineChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}

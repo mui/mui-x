@@ -36,6 +36,15 @@ The demo below demonstrates those options.
 
 {{"demo": "RadialBarConfig.js", "hideToolbar": true, "bg": "playground"}}
 
+## Coloring each bar
+
+Radial bars support the same [color scale](/x/react-charts/bars/#color-scale) as the bar chart.
+The only difference is that the cartesian `x` and `y` axes are replaced by the `rotationAxis` and `radiusAxis`, so you can set a `colorMap` on either of them.
+
+The demo below sets an `'ordinal'` color map on the `radiusAxis` to build a health dashboard where every metric ring tracks progress toward its goal.
+
+{{"demo": "HealthRadialBarChart.js", "bg": "outline"}}
+
 ## Click events
 
 The `RadialBarChart` provides an `onAxisClick` handler that fires when the user clicks anywhere in the chart area.

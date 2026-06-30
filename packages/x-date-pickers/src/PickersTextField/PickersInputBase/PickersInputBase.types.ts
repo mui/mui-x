@@ -1,8 +1,11 @@
-import * as React from 'react';
-import { SxProps, Theme } from '@mui/material/styles';
-import { MuiEvent } from '@mui/x-internals/types';
-import { PickersSectionListProps, PickersSectionListSlotProps } from '../../PickersSectionList';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import type * as React from 'react';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { MuiEvent } from '@mui/x-internals/types';
+import type {
+  PickersSectionListProps,
+  PickersSectionListSlotProps,
+} from '../../PickersSectionList';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersInputPropsUsedByField extends Pick<
   PickersSectionListProps,
@@ -16,6 +19,7 @@ export interface PickersInputPropsUsedByField extends Pick<
   areAllSectionsEmpty: boolean;
 
   onClick: React.MouseEventHandler<HTMLDivElement>;
+  onMouseDown: React.MouseEventHandler<HTMLDivElement>;
   onKeyDown: React.EventHandler<MuiEvent<React.KeyboardEvent<HTMLDivElement>>>;
   onInput: React.FormEventHandler<HTMLDivElement>;
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;

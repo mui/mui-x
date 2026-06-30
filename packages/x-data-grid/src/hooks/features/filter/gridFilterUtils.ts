@@ -1,20 +1,20 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
-import {
-  type GridColDef,
-  type GridFilterItem,
-  type GridFilterModel,
-  GridLogicOperator,
-  type GridRowModel,
-  type GridValidRowModel,
+import { GridLogicOperator } from '../../../models';
+import type {
+  GridColDef,
+  GridFilterItem,
+  GridFilterModel,
+  GridRowModel,
+  GridValidRowModel,
 } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateCommunity } from '../../../models/gridStateCommunity';
-import {
-  getDefaultGridFilterModel,
-  type GridAggregatedFilterItemApplier,
-  type GridFilterItemResult,
-  type GridQuickFilterValueResult,
+import { getDefaultGridFilterModel } from './gridFilterState';
+import type {
+  GridAggregatedFilterItemApplier,
+  GridFilterItemResult,
+  GridQuickFilterValueResult,
 } from './gridFilterState';
 import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {

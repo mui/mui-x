@@ -17,9 +17,9 @@ import {
   geoOrthographic,
   geoStereographic,
   geoTransverseMercator,
-  type GeoProjection,
 } from '@mui/x-charts-vendor/d3-geo';
-import { type UseGeoProjectionSignature } from './useGeoProjection.types';
+import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
+import type { UseGeoProjectionSignature } from './useGeoProjection.types';
 
 const PROJECTION_FACTORIES: Record<
   useGeoProjectionTypes.D3NamedProjection,

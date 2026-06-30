@@ -12,8 +12,8 @@ import {
   yellowPalette,
   cyanPalette,
   pinkPalette,
-  type ChartsColorPaletteCallback,
 } from '@mui/x-charts/colorPalettes';
+import type { ChartsColorPaletteCallback } from '@mui/x-charts/colorPalettes';
 
 export const colorPaletteLookup: Map<string, ChartsColorPaletteCallback> = new Map([
   ['blueberryTwilightPalette', blueberryTwilightPalette],

@@ -5,8 +5,9 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
-import { DesktopTimePickerProps } from './DesktopTimePicker.types';
-import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import type { DesktopTimePickerProps } from './DesktopTimePicker.types';
+import type { TimePickerViewRenderers } from '../TimePicker/shared';
+import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateTime } from '../validation';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
@@ -14,10 +15,10 @@ import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
-import { TimeView, PickerOwnerState } from '../models';
+import type { TimeView, PickerOwnerState } from '../models';
 
 type DesktopTimePickerComponent = ((
   props: DesktopTimePickerProps & React.RefAttributes<HTMLDivElement>,
