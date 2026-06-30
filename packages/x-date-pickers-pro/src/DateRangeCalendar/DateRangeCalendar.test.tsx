@@ -15,7 +15,7 @@ import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import type { DAY_SIZE, DAY_SIZE_COMPACT } from '@mui/x-date-pickers/internals';
-import { RangePosition } from '../models';
+import type { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
