@@ -46,7 +46,9 @@ function createSuppressedError(error: unknown, suppressed: unknown): unknown {
 
 function assertNotDisposed(disposed: boolean): void {
   if (disposed) {
-    throw /* minify-error-disabled */ new ReferenceError('MUI X: The disposable stack is disposed.');
+    throw /* minify-error-disabled */ new ReferenceError(
+      'MUI X: The disposable stack is disposed.',
+    );
   }
 }
 
@@ -143,7 +145,9 @@ class FallbackAsyncDisposableStack {
       const record = value as Record<symbol, unknown>;
       const method = record[asyncDisposeSymbol] ?? record[disposeSymbol];
       if (typeof method !== 'function') {
-        throw /* minify-error-disabled */ new TypeError('MUI X: The value is not async disposable.');
+        throw /* minify-error-disabled */ new TypeError(
+          'MUI X: The value is not async disposable.',
+        );
       }
       this.stack.push(() => (method as () => unknown).call(value));
     }

@@ -157,9 +157,11 @@ describe('disposable — built-in fallback', () => {
       const mod = await loadFallback();
       let received: unknown;
       const stack = new mod.DisposableStack();
-      expect(stack.adopt(42, (value) => {
-        received = value;
-      })).to.equal(42);
+      expect(
+        stack.adopt(42, (value) => {
+          received = value;
+        }),
+      ).to.equal(42);
       stack.dispose();
       expect(received).to.equal(42);
     });
