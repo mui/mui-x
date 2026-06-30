@@ -79,24 +79,9 @@ export function getDefaultMapInteraction(
 }
 
 /**
- * The geographic `center` (`[longitude, latitude]`) such that, after scaling the projection by
- * `zoomFactor` and applying `rotate([-center[0], -center[1]])`, the geographic coordinate
- * `geoPoint` is displayed exactly under the pixel `to`.
- *
- * `rotate([-c0, -c1])` is a yaw (longitude) followed by a pitch (latitude) rotation of the sphere,
- * so the relation between `geoPoint`, `to` and `center` is non-linear — a naive additive offset
- * only holds along the central meridian. We solve it exactly: `q` is the geographic point the
- * unrotated (but zoomed) projection shows under `to` (independent of the current rotation, hence
- * computed with `rotate([0, 0])`), then we find the yaw/pitch that maps `geoPoint` onto `q`.
- *
- * The projection is mutated to measure `q` and restored before returning, so this reads as a pure
- * function. Returns `null` when the projection is not invertible or the target latitude is
- * unreachable by a pitch-only rotation of `geoPoint`.
- *
- * `rotationAllowed` locks the longitude and/or latitude axis: a locked axis keeps the projection's
- * current rotation while the free axis is solved against that locked value. With `'both'` free,
- * `geoPoint` lands exactly on `to`; with one axis locked, the free axis still follows `to` along its
- * direction (the pitch couples the two, so tracking is no longer pixel-exact).
+ * For a given projection,
+ * apply a zoom factor to the scale and return
+ * the rotation that will allow the `geoPoint` to be rendered at the `to` pixel coordinates.
  */
 export function getRotation(
   projection: GeoProjection,
@@ -150,12 +135,13 @@ export function getRotation(
       // Target latitude is out of reach for a pitch-only rotation of `geoPoint`.
       return null;
     }
-    // Two branches solve the equation; pick the one closest to no pitch for drag continuity.
+    // Two branches solve the equation; pick the one closest to the previous one for drag continuity.
     const base = Math.atan2(x, z);
     const offset = Math.acos(clamp(Math.sin(latG) / hyp, -1, 1));
     const c1a = base - offset;
     const c1b = base + offset;
-    c1 = Math.abs(c1a) <= Math.abs(c1b) ? c1a : c1b;
+    const ref = currentLat * DEG;
+    c1 = Math.abs(c1a - ref) <= Math.abs(c1b - ref) ? c1a : c1b;
   } else {
     c1 = currentLat * DEG;
   }
