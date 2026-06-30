@@ -79,11 +79,9 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 
   const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
+  // `setHours(startOfDay, 0)` is equivalent to `startOfDay`, so no special-casing is needed here.
   const start = React.useMemo(
-    () =>
-      startTime === 0
-        ? adapter.startOfDay(day.value)
-        : adapter.setHours(adapter.startOfDay(day.value), startTime),
+    () => adapter.setHours(adapter.startOfDay(day.value), startTime),
     [adapter, day, startTime],
   );
   const end = React.useMemo(
@@ -93,8 +91,22 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
         : adapter.setHours(adapter.startOfDay(day.value), endTime),
     [adapter, day, endTime],
   );
+
+  // Only place occurrences that overlap the visible `[start, end)` window. Occurrences entirely
+  // before `startTime` or after `endTime` would otherwise be clamped to a zero-height sliver pinned
+  // to an edge (showing a misleading time) and still count toward the column's lane count.
+  const visibleOccurrences = React.useMemo(() => {
+    const startTimestamp = adapter.getTime(start);
+    const endTimestamp = adapter.getTime(end);
+    return day.withoutPosition.filter(
+      (occurrence) =>
+        occurrence.displayTimezone.end.timestamp > startTimestamp &&
+        occurrence.displayTimezone.start.timestamp < endTimestamp,
+    );
+  }, [adapter, day.withoutPosition, start, end]);
+
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
-    occurrences: day.withoutPosition,
+    occurrences: visibleOccurrences,
     maxSpan: Infinity,
   });
 
@@ -103,6 +115,8 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       className={classes.dayTimeGridColumn}
       start={start}
       end={end}
+      dayStartMinute={startTime * 60}
+      dayEndMinute={endTime * 60}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
       data-weekend={isWeekend(adapter, day.value) || undefined}

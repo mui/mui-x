@@ -199,7 +199,7 @@ export class ExtendableEventCalendarStore<
     const siblingVisibleDateGetter = this.state.viewDefinition?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
-        'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+        'MUI X Scheduler: No definition found for the current view. Please use useEventCalendarView in your custom view.',
       );
       return;
     }

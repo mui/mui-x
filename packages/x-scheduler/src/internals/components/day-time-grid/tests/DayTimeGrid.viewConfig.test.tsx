@@ -19,12 +19,12 @@ describe('<DayTimeGrid /> - viewConfig (startTime / endTime)', () => {
     .build();
 
   describe('week view', () => {
-    it('renders the 24 hour rows by default', () => {
+    it('should render the 24 hour rows by default', () => {
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
       expect(getTimeAxisCells()).to.have.length(24);
     });
 
-    it('renders only the configured hour rows', () => {
+    it('should render only the configured hour rows', () => {
       render(
         <EventCalendar
           events={[]}
@@ -36,7 +36,7 @@ describe('<DayTimeGrid /> - viewConfig (startTime / endTime)', () => {
       expect(getTimeAxisCells()).to.have.length(12);
     });
 
-    it('positions events relative to the configured window', () => {
+    it('should position events relative to the configured window', () => {
       render(
         <EventCalendar
           events={[meeting]}
@@ -51,7 +51,7 @@ describe('<DayTimeGrid /> - viewConfig (startTime / endTime)', () => {
       expect(event.style.getPropertyValue('--height')).to.equal('50%');
     });
 
-    it('clamps events starting before the window to the top edge', () => {
+    it('should clamp events starting before the window to the top edge', () => {
       const earlyEvent = EventBuilder.new()
         .title('Early')
         .span('2025-07-03T06:00:00Z', '2025-07-03T09:00:00Z')
@@ -64,13 +64,39 @@ describe('<DayTimeGrid /> - viewConfig (startTime / endTime)', () => {
           viewConfig={{ week: { startTime: 8, endTime: 20 } }}
         />,
       );
+      // 06:00 → 09:00 partially overlaps the 08:00 → 20:00 window: clamped to the top edge and
+      // only the visible 08:00 → 09:00 portion (1h out of the 12h window) keeps a height.
       const event = screen.getByRole('button', { name: /Early/ });
       expect(event.style.getPropertyValue('--y-position')).to.equal('0%');
+      expect(event.style.getPropertyValue('--height')).to.equal(`${(1 / 12) * 100}%`);
+    });
+
+    it('should not render occurrences that fall entirely outside the window', () => {
+      const beforeWindow = EventBuilder.new()
+        .title('Before')
+        .span('2025-07-03T07:00:00Z', '2025-07-03T07:45:00Z')
+        .build();
+      const afterWindow = EventBuilder.new()
+        .title('After')
+        .span('2025-07-03T21:00:00Z', '2025-07-03T21:45:00Z')
+        .build();
+      render(
+        <EventCalendar
+          events={[beforeWindow, afterWindow, meeting]}
+          visibleDate={visibleDate}
+          view="week"
+          viewConfig={{ week: { startTime: 8, endTime: 20 } }}
+        />,
+      );
+      expect(screen.queryByRole('button', { name: /Before/ })).to.equal(null);
+      expect(screen.queryByRole('button', { name: /After/ })).to.equal(null);
+      // The in-window event is still rendered.
+      expect(screen.getByRole('button', { name: /Meeting/ })).not.to.equal(null);
     });
   });
 
   describe('day view', () => {
-    it('applies the `day` key independently from the `week` key', () => {
+    it('should apply the `day` key independently from the `week` key', () => {
       const view = render(
         <EventCalendar
           events={[]}
