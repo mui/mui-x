@@ -34,14 +34,8 @@ function createSuppressedError(error: unknown, suppressed: unknown): unknown {
   if (NativeSuppressedError) {
     return new NativeSuppressedError(error, suppressed);
   }
-  const wrapper = new Error('An error was suppressed during disposal.') as Error & {
-    error: unknown;
-    suppressed: unknown;
-  };
-  wrapper.name = 'SuppressedError';
-  wrapper.error = error;
-  wrapper.suppressed = suppressed;
-  return wrapper;
+  const wrapper = /* minify-error-disabled */ new Error('An error was suppressed during disposal.');
+  return Object.assign(wrapper, { name: 'SuppressedError', error, suppressed });
 }
 
 function assertNotDisposed(disposed: boolean): void {

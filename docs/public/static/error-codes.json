@@ -291,6 +291,5 @@
   "291": "MUI X Scheduler: All events must have a unique `id`.\nWithout an `id`, an event cannot be tracked and silently overwrites another event in the calendar state.\nAdd an `id` to every event, or set `eventModelStructure.id.getter` to derive one from your event model.\nAn event was provided without an `id`:\n%s",
   "292": "MUI X Scheduler: Invalid FREQ value \"%s\". The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. Provide a supported frequency value.",
   "293": "MUI X Scheduler: The recurrence rule must include a FREQ value. The frequency (DAILY, WEEKLY, MONTHLY, or YEARLY) is required for recurrence rules. Provide a freq value.",
-  "294": "MUI X Charts: Series \"%s\" has a duplicated name \"%s\".\nMap shapes are identified by their name, so duplicates cannot be told apart for coloring, tooltips, and highlighting.\nEnsure each data entry has a unique name.",
-  "295": "An error was suppressed during disposal."
+  "294": "MUI X Charts: Series \"%s\" has a duplicated name \"%s\".\nMap shapes are identified by their name, so duplicates cannot be told apart for coloring, tooltips, and highlighting.\nEnsure each data entry has a unique name."
 }
