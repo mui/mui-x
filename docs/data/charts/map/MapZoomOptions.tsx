@@ -39,6 +39,15 @@ const USAStates = topojsonFeature(
   'states',
 ) as unknown as ExtendedFeatureCollection;
 
+function getGeoDataForProjection(projection: D3NamedProjection) {
+  if (projection === 'albersUsa') {
+    return USAStates;
+  }
+  if (projection === 'conicConformal') {
+    return countriesWithoutAntarctica;
+  }
+  return countries;
+}
 const projectionGroups: { label: string; projections: D3NamedProjection[] }[] = [
   {
     // https://d3js.org/d3-geo/azimuthal
@@ -117,9 +126,7 @@ export default function MapZoomOptions() {
     >
       <Box sx={{ flexGrow: 1, maxWidth: 800 }}>
         <ChartsGeoDataProviderPremium
-          geoData={
-            projection === 'albersUsa' ? USAStates : countriesWithoutAntarctica
-          }
+          geoData={getGeoDataForProjection(projection)}
           projection={projection}
           apiRef={apiRef}
           zoom={{ rotationAllowed, translationAllowed, maxEmptySpace }}

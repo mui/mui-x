@@ -85,6 +85,16 @@ const cities = [
   { name: 'Rio', coordinates: [-43.1729, -22.9068] },
 ];
 
+function getGeoDataForProjection(projection: D3NamedProjection) {
+  if (projection === 'albersUsa') {
+    return USAStates;
+  }
+  if (projection === 'conicConformal') {
+    return countriesWithoutAntarctica;
+  }
+  return countries;
+}
+
 export default function MapZoomControl() {
   const [projection, setProjection] =
     React.useState<D3NamedProjection>('naturalEarth1');
@@ -104,9 +114,7 @@ export default function MapZoomControl() {
     >
       <Box sx={{ flexGrow: 1, maxWidth: 800 }}>
         <ChartsGeoDataProviderPremium
-          geoData={
-            projection === 'albersUsa' ? USAStates : countriesWithoutAntarctica
-          }
+          geoData={getGeoDataForProjection(projection)}
           projection={projection}
           apiRef={apiRef}
           zoom

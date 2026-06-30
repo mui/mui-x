@@ -27,6 +27,15 @@ const countriesWithoutAntarctica = {
 
 const USAStates = topojsonFeature(USATopology, 'states');
 
+function getGeoDataForProjection(projection) {
+  if (projection === 'albersUsa') {
+    return USAStates;
+  }
+  if (projection === 'conicConformal') {
+    return countriesWithoutAntarctica;
+  }
+  return countries;
+}
 const projectionGroups = [
   {
     // https://d3js.org/d3-geo/azimuthal
@@ -100,9 +109,7 @@ export default function MapZoomOptions() {
     >
       <Box sx={{ flexGrow: 1, maxWidth: 800 }}>
         <ChartsGeoDataProviderPremium
-          geoData={
-            projection === 'albersUsa' ? USAStates : countriesWithoutAntarctica
-          }
+          geoData={getGeoDataForProjection(projection)}
           projection={projection}
           apiRef={apiRef}
           zoom={{ rotationAllowed, translationAllowed, maxEmptySpace }}
