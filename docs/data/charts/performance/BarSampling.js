@@ -10,6 +10,8 @@ import tripCounts from '../dataset/nyc-yellow-taxi-2024-trip-count.json';
 const data = tripCounts.map((entry) => entry[2]);
 const categories = data.map((_, index) => String(index));
 
+const compactFormatter = new Intl.NumberFormat('en-US', { notation: 'compact' });
+
 export default function BarSampling() {
   const [enabled, setEnabled] = React.useState(true);
 
@@ -26,6 +28,12 @@ export default function BarSampling() {
       />
       <BarChartPro
         xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}
+        yAxis={[
+          {
+            label: 'Trips',
+            valueFormatter: (value) => compactFormatter.format(value),
+          },
+        ]}
         series={[{ data, label: 'Trips' }]}
         height={300}
         sampling={enabled ? 'minmax' : 'none'}

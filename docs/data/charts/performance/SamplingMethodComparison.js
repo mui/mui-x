@@ -9,6 +9,8 @@ import { electricityGeneration2024Hourly } from '../dataset/electricityGeneratio
 const data = electricityGeneration2024Hourly.DEU;
 const xData = data.map((_, index) => index);
 
+const compactFormatter = new Intl.NumberFormat('en-US', { notation: 'compact' });
+
 const METHODS = [
   { value: 'none', label: 'None — every point' },
   { value: 'minmax', label: 'Min/max' },
@@ -40,7 +42,13 @@ export default function SamplingMethodComparison() {
           <LineChartPro
             series={[{ data, showMark: false }]}
             xAxis={[{ data: xData, id: 'x', zoom: true }]}
-            yAxis={[{ width: 40 }]}
+            yAxis={[
+              {
+                label: 'MW',
+                width: 40,
+                valueFormatter: (value) => compactFormatter.format(value),
+              },
+            ]}
             height={160}
             sampling={method.value}
             zoomData={zoomData}

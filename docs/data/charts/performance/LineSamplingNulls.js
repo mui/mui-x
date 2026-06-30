@@ -10,6 +10,8 @@ import { electricityGeneration2024Hourly } from '../dataset/electricityGeneratio
 const base = electricityGeneration2024Hourly.DEU;
 const xData = base.map((_, index) => index);
 
+const compactFormatter = new Intl.NumberFormat('en-US', { notation: 'compact' });
+
 // Same series with a few hour-long gaps (null) punched in.
 const withGaps = base.map((value, index) =>
   index % 1500 >= 700 && index % 1500 < 760 ? null : value,
@@ -37,6 +39,12 @@ export default function LineSamplingNulls() {
       </Typography>
       <LineChartPro
         xAxis={[{ data: xData, zoom: true }]}
+        yAxis={[
+          {
+            label: 'Generation (MW)',
+            valueFormatter: (value) => compactFormatter.format(value),
+          },
+        ]}
         series={[{ data, label: 'Generation (MW)', showMark: false }]}
         height={300}
         sampling="m4"

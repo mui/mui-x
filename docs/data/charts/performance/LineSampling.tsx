@@ -10,6 +10,8 @@ import { electricityGeneration2024Hourly } from '../dataset/electricityGeneratio
 const data = electricityGeneration2024Hourly.DEU;
 const xData = data.map((_, index) => index);
 
+const compactFormatter = new Intl.NumberFormat('en-US', { notation: 'compact' });
+
 const METHODS = [
   { value: 'none', label: 'None' },
   { value: 'm4', label: 'M4' },
@@ -42,6 +44,12 @@ export default function LineSampling() {
       </Typography>
       <LineChartPro
         xAxis={[{ data: xData, zoom: true }]}
+        yAxis={[
+          {
+            label: 'Generation (MW)',
+            valueFormatter: (value: number) => compactFormatter.format(value),
+          },
+        ]}
         series={[{ data, label: 'Generation (MW)', showMark: false }]}
         height={300}
         sampling={sampling}
