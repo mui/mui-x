@@ -6,7 +6,7 @@ import type {
 } from '@mui/x-charts-vendor/d3-geo';
 import type { D3NamedProjection, GeoProjectionInput } from './useGeoProjection.types';
 
-export const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
+const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
   return 'parallels' in projection && typeof projection.parallels === 'function';
 };
 
@@ -87,7 +87,6 @@ export function getDefaultTranslation(
   projection.rotate([-center[0], -center[1]]);
 
   const [[ux0, uy0], [ux1, uy1]] = geoPath(projection).bounds(geoData);
-
   const centerPoint = projection(center);
 
   if (!centerPoint) {

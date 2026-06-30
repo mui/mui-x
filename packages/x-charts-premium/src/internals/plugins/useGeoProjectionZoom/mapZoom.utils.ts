@@ -174,11 +174,22 @@ export function clampTranslationAxis(
   areaEnd: number,
   gap: number,
 ): number {
-  // Largest `value` keeping the leading-edge gap (`boundingBox0` shifted vs `areaStart`) within `gap`.
+  // Get min/mas translation allowed
   const max = areaStart - boundingBox0 + init + gap;
-  // Smallest `value` keeping the trailing-edge gap (`areaEnd` vs `boundingBox1` shifted) within `gap`.
   const min = areaEnd - boundingBox1 + init - gap;
   if (min > max) {
+    // If not translation accept the movement only if it reduces the gap
+    const prevGap0 = boundingBox0 - areaStart;
+    const prevGap1 = areaEnd - boundingBox1;
+
+    const gap = value - init;
+
+    const nextGap0 = boundingBox0 + gap - areaStart;
+    const nextGap1 = areaEnd - (boundingBox1 + gap);
+
+    if (Math.max(prevGap0, prevGap1) > Math.max(nextGap0, nextGap1)) {
+      return value;
+    }
     return init;
   }
   return Math.min(max, Math.max(min, value));

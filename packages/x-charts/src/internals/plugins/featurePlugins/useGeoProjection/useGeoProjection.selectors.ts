@@ -76,6 +76,13 @@ const selectorChartTranslation = createSelectorMemoized(
   },
 );
 
+const selectorChartInitialCenter = createSelectorMemoized(
+  selectorChartGeoProjectionZoomState,
+  function selectorChartInitialCenter(geoProjectionZoom): [number, number] | null {
+    return geoProjectionZoom?.initialCenter ?? ZERO_COORDINATES;
+  },
+);
+
 const selectorChartParallels = createSelectorMemoized(
   selectorChartGeoProjectionState,
   selectorChartCenter,
@@ -125,6 +132,7 @@ export const selectorFitScale = createSelector(
   selectorChartRawProjection,
   selectorChartProjectionFactory,
   selectorChartParallels,
+  selectorChartInitialCenter,
   selectorChartGeoData,
   selectorChartDrawingArea,
 
@@ -132,10 +140,11 @@ export const selectorFitScale = createSelector(
     projectionInput,
     projectionFactory,
     parallels,
+    initialCenter,
     geoData,
     drawingArea,
   ): number | null {
-    if (!geoData || projectionInput === null) {
+    if (!geoData || projectionInput === null || initialCenter === null) {
       return null;
     }
 
@@ -143,9 +152,18 @@ export const selectorFitScale = createSelector(
     if (projection === null) {
       return null;
     }
+    projection.rotate?.([-initialCenter[0], -initialCenter[1]]);
 
     const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
     const currentScale = projection.scale();
+
+    const scales = [
+      currentScale * (drawingArea.width / (x1 - x0)),
+      currentScale * (drawingArea.height / (y1 - y0)),
+    ];
+
+    projection.scale(Math.min(...scales));
+
     return Math.min(
       currentScale * (drawingArea.width / (x1 - x0)),
       currentScale * (drawingArea.height / (y1 - y0)),
@@ -200,6 +218,9 @@ export const selectorChartProjection = createSelectorMemoized(
 
     if (center) {
       projection.rotate?.([-center[0], -center[1]]);
+      // Edge case with conic conformal and albers:
+      // rotate impacts the center of the projection, so we need to reset it.
+      projection.center([0, 0]);
     }
 
     // `fitScale` is the `zoomLevel === 1` reference scale, computed independently in

@@ -79,7 +79,7 @@ export interface UseGeoProjectionZoomParameters {
    * The view to apply on mount, when the zoom is not controlled.
    * Use this to seed the map at a specific zoom level and center without controlling it.
    */
-  initialView?: MapZoomView;
+  initialView?: Omit<MapZoomView, 'translation'> & Partial<Pick<MapZoomView, 'translation'>>;
   /**
    * The view to display, in controlled mode.
    * When set, the component does not update the view on its own — drive it from `onViewChange`.
@@ -133,6 +133,8 @@ export interface UseGeoProjectionZoomState {
      * The map translation in percentage of the drawing area.
      */
     translation: [number, number] | null;
+    initialTranslation: [number, number] | null;
+    initialCenter: [number, number] | null;
   };
 }
 export type UseGeoProjectionZoomSignature = ChartPluginSignature<{

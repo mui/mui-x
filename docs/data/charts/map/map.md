@@ -71,6 +71,16 @@ The `projection` prop accepts either a d3-geo projection name or a `GeoProjectio
 
 {{"demo": "ProjectionMapShape.js"}}
 
+### Conic projections
+
+Conic projections take two standard `parallels` as part of their definition.
+The map distortion is minimal along those parallels.
+So it's recommended to keep those parallels close to the area you want to display.
+
+Here you can try different countries and play with projection and parallels to see its impact.
+
+{{"demo": "CountryProjectionShape.js"}}
+
 ## Plotting series with `MapShapePlot`
 
 `MapShapePlot` renders one path per item of every series with type `'mapShape'`.

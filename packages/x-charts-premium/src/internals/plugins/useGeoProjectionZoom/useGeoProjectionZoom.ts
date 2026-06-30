@@ -38,7 +38,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   const interactionDefaults = getDefaultMapInteraction(selectorChartRawProjection(store.state));
 
   const {
-    minZoomLevel = 1,
+    minZoomLevel = 0.5,
     maxZoomLevel = 8,
     maxEmptySpace = 0,
     rotationAllowed = interactionDefaults.rotationAllowed,
@@ -313,20 +313,25 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
 
 useGeoProjectionZoom.getInitialState = (params) => {
   const center = params.view?.center ?? params.initialView?.center ?? [0, 0];
+  const translation =
+    params.view?.translation ??
+    params.initialView?.translation ??
+    getDefaultTranslation(
+      params.projection,
+      PROJECTION_FACTORIES,
+      params.geoData,
+      params.parallels,
+      center,
+    );
+
   return {
     geoProjectionZoom: {
       zoomLevel: params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1,
       center,
-      translation:
-        params.view?.translation ??
-        params.initialView?.translation ??
-        getDefaultTranslation(
-          params.projection,
-          PROJECTION_FACTORIES,
-          params.geoData,
-          params.parallels,
-          center,
-        ),
+      translation,
+
+      initialCenter: center,
+      initialTranslation: translation,
     },
   };
 };
