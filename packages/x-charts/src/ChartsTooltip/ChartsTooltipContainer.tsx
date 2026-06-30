@@ -67,10 +67,8 @@ const defaultAnchorByTrigger = {
 } as const;
 
 /**
- * Common shape of the tooltip position selectors. The item selector reads the
- * extra `store` argument (to let a series type source its own state); the axis
- * and null selectors simply take fewer parameters, so they remain assignable to
- * this type without a cast.
+ * Shared shape of the tooltip position selectors. The axis and null selectors
+ * take fewer parameters than the item selector, so they stay assignable to it.
  */
 type TooltipPositionSelector = (
   state: ChartState<

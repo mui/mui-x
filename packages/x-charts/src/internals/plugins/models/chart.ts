@@ -19,11 +19,9 @@ export type ChartPublicAPI<
 export type ChartStateCacheKey = { id: number };
 
 /**
- * A loosely-typed, read-only view of a chart store, accepting any plugin
- * signatures. Useful where a helper only needs to read state (e.g. a series
- * type sourcing extra state for its tooltip) and should not be coupled to a
- * specific plugin set. Being read-only, a concretely-typed store is assignable
- * to it without a cast.
+ * A loosely-typed, read-only view of a chart store, for helpers that read state
+ * without coupling to a specific plugin set. Being read-only, a concretely-typed
+ * store is assignable to it without a cast.
  */
 export type ChartStore = ReadonlyStore<ChartState<ChartAnyPluginSignature[]>>;
 

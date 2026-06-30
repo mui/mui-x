@@ -25,9 +25,8 @@ export type TooltipItemPositionGetter<SeriesType extends ChartSeriesType> = (par
   identifier: SeriesItemIdentifierWithType<SeriesType> | null;
   seriesLayout: SeriesLayout<SeriesType>;
   /**
-   * The chart store. Lets a series type read additional state it needs to
-   * position its tooltip (e.g. the geo projection for map series) without the
-   * core tooltip plugin having to depend on feature-specific code.
+   * The chart store, letting a series type read extra state to position its
+   * tooltip (e.g. the geo projection for map series).
    */
   store: ChartStore;
   /**

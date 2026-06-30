@@ -2,8 +2,8 @@ import type { GeoProjection, ExtendedFeatureCollection } from '@mui/x-charts-ven
 import type { ChartPluginSignature } from '../../models/plugin';
 
 /**
- * The geo data a map series needs to position its tooltip: the resolved
- * projection, the feature collection, and a lookup from feature name to index.
+ * Geo data used to position a map series tooltip: the resolved projection, the
+ * feature collection, and a feature-name-to-index lookup.
  */
 export type GeoTooltipPosition = {
   geoData: ExtendedFeatureCollection | null;
