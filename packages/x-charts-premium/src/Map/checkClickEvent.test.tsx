@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '../ChartsGeoDataProviderPremium';
 import { MapShapePlot } from './MapShapePlot';
 
