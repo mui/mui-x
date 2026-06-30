@@ -92,14 +92,14 @@ describe('MapShapePlot - click event', () => {
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'mapShape',
         seriesId: 's1',
-        dataIndex: 0,
+        name: 'A',
       });
 
       await user.click(shapes[1]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'mapShape',
         seriesId: 's1',
-        dataIndex: 1,
+        name: 'B',
       });
     });
   });
