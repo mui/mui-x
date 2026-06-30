@@ -31,7 +31,7 @@ describe('<RichTreeView />', () => {
     it('should not render tree items when loading', () => {
       render(<RichTreeView items={ITEMS} loading />);
 
-      expect(screen.queryByRole('tree')).to.equal(null);
+      expect(screen.getByRole('tree')).to.have.attribute('aria-busy', 'true');
       expect(screen.queryByRole('treeitem', { name: 'Item 1' })).to.equal(null);
     });
 
@@ -52,13 +52,13 @@ describe('<RichTreeView />', () => {
     it('should render tree items when loading changes to false', () => {
       const { setProps } = render(<RichTreeView items={ITEMS} loading />);
 
-      expect(screen.queryByRole('tree')).to.equal(null);
+      expect(screen.getByRole('tree')).to.have.attribute('aria-busy', 'true');
 
       act(() => {
         setProps({ loading: false });
       });
 
-      expect(screen.getByRole('tree')).to.not.equal(null);
+      expect(screen.getByRole('tree')).not.to.have.attribute('aria-busy');
       expect(screen.getAllByRole('treeitem')).to.have.length(ITEMS.length);
     });
 
@@ -67,8 +67,14 @@ describe('<RichTreeView />', () => {
 
       const skeletonItems = screen.getAllByRole('treeitem');
       skeletonItems.forEach((item) => {
-        expect(item).to.have.attribute('aria-disabled');
+        expect(item).to.have.attribute('aria-disabled', 'true');
       });
+    });
+
+    it('should preserve the id prop on the skeleton root', () => {
+      render(<RichTreeView items={[]} loading id="my-tree" />);
+
+      expect(screen.getByRole('tree')).to.have.attribute('id', 'my-tree');
     });
   });
 });

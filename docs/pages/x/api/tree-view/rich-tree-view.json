@@ -218,6 +218,18 @@
       "className": "MuiRichTreeView-itemLabelInput",
       "description": "Styles applied to the item's label input element (visible only when editing is enabled).",
       "isGlobal": false
+    },
+    {
+      "key": "skeletonContent",
+      "className": "MuiRichTreeView-skeletonContent",
+      "description": "Styles applied to the skeleton item's content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "skeletonItem",
+      "className": "MuiRichTreeView-skeletonItem",
+      "description": "Styles applied to each skeleton item element.",
+      "isGlobal": false
     }
   ],
   "spread": true,

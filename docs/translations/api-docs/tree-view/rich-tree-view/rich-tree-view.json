@@ -197,6 +197,14 @@
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the item&#39;s label input element (visible only",
       "conditions": "editing is enabled)"
+    },
+    "skeletonContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton item&#39;s content element"
+    },
+    "skeletonItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each skeleton item element"
     }
   },
   "slotDescriptions": {

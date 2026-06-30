@@ -290,6 +290,18 @@
       "className": "MuiRichTreeViewPro-itemLoadingIcon",
       "description": "Styles applied to the item's loading icon element",
       "isGlobal": false
+    },
+    {
+      "key": "skeletonContent",
+      "className": "MuiRichTreeViewPro-skeletonContent",
+      "description": "Styles applied to the skeleton item's content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "skeletonItem",
+      "className": "MuiRichTreeViewPro-skeletonItem",
+      "description": "Styles applied to each skeleton item element.",
+      "isGlobal": false
     }
   ],
   "spread": true,

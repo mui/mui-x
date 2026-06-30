@@ -52,7 +52,7 @@ describe('<RichTreeViewPro />', () => {
       );
 
       // Root fetch is in-flight — expect skeleton, not a real tree
-      expect(screen.queryByRole('tree')).to.equal(null);
+      expect(screen.getByRole('tree')).to.have.attribute('aria-busy', 'true');
       expect(screen.getAllByRole('treeitem').length).to.be.greaterThan(0);
 
       // Resolve the fetch and wait for the state update
@@ -88,7 +88,7 @@ describe('<RichTreeViewPro />', () => {
       );
 
       // Both `loading` and the in-flight fetch indicate loading — skeleton shown
-      expect(screen.queryByRole('tree')).to.equal(null);
+      expect(screen.getByRole('tree')).to.have.attribute('aria-busy', 'true');
 
       // Resolve the fetch — but `loading` prop is still true
       await act(async () => {
@@ -98,7 +98,7 @@ describe('<RichTreeViewPro />', () => {
         });
       });
 
-      expect(screen.queryByRole('tree')).to.equal(null);
+      expect(screen.getByRole('tree')).to.have.attribute('aria-busy', 'true');
 
       // Clear the loading prop — tree should finally appear
       act(() => {
