@@ -1,29 +1,25 @@
-import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import type { NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
-import {
-  type ExtremumFilter,
-  type UseChartCartesianAxisSignature,
-} from './useChartCartesianAxis.types';
-import { type ChartState } from '../../models/chart';
+import type { ExtremumFilter, UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import type { ChartState } from '../../models/chart';
 import {
   createContinuousScaleGetAxisFilter,
   createDiscreteScaleGetAxisFilter,
   createGetAxisFilters,
 } from './createAxisFilterMapper';
-import { type ZoomData } from './zoom.types';
+import type { ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
-import {
-  type AxisId,
-  type ChartsAxisProps,
-  type ContinuousScaleName,
-  type D3Scale,
-  type DefaultedAxis,
-  isBandScaleConfig,
-  isPointScaleConfig,
-  type ScaleName,
+import { isBandScaleConfig, isPointScaleConfig } from '../../../../models/axis';
+import type {
+  AxisId,
+  ChartsAxisProps,
+  ContinuousScaleName,
+  D3Scale,
+  DefaultedAxis,
+  ScaleName,
 } from '../../../../models/axis';
 import {
   selectorChartRawXAxis,
@@ -39,22 +35,19 @@ import { getNormalizedAxisScale, getRange } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtrema } from './getAxisExtrema';
-import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
+import type { CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import { calculateFinalDomain, computeAxisDomainsMap } from './domain';
-import { type SeriesId } from '../../../../models/seriesType/common';
+import type { SeriesId } from '../../../../models/seriesType/common';
 import { Flatbush } from '../../../Flatbush';
-import {
-  selectorChartSeriesConfig,
-  type ChartSeriesConfig,
-} from '../../corePlugins/useChartSeriesConfig';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import {
   selectorChartXAxisExtrema,
   selectorChartYAxisExtrema,
 } from './useChartAxisExtrema.selectors';
 import { selectorChartZAxis } from '../useChartZAxis';
-import getMarkerSize, {
-  type ScatterSizeGetter,
-} from '../../../../ScatterChart/seriesConfig/getMarkerSize';
+import getMarkerSize from '../../../../ScatterChart/seriesConfig/getMarkerSize';
+import type { ScatterSizeGetter } from '../../../../ScatterChart/seriesConfig/getMarkerSize';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();

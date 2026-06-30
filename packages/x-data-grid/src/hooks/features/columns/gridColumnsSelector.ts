@@ -4,11 +4,8 @@ import {
   createRootSelector,
 } from '../../../utils/createSelector';
 import type { GridStateCommunity } from '../../../models/gridStateCommunity';
-import {
-  type GridColumnLookup,
-  type GridPinnedColumnFields,
-  EMPTY_PINNED_COLUMN_FIELDS,
-} from './gridColumnsInterfaces';
+import { EMPTY_PINNED_COLUMN_FIELDS } from './gridColumnsInterfaces';
+import type { GridColumnLookup, GridPinnedColumnFields } from './gridColumnsInterfaces';
 import { gridListColumnSelector, gridListViewSelector } from '../listView';
 
 /**

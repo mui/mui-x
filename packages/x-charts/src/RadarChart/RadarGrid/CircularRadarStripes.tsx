@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { getRingPath } from '../../internals/getRingPath';
-import { type RadarGridStripeRenderProps } from './RadarGrid.types';
+import type { RadarGridStripeRenderProps } from './RadarGrid.types';
 
 /**
  * @ignore - internal component.

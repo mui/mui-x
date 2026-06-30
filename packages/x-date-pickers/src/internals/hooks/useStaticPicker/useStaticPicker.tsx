@@ -1,12 +1,12 @@
 'use client';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
+import type { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
 import { PickerProvider } from '../../components/PickerProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH, DIALOG_WIDTH_COMPACT } from '../../constants/dimensions';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { extractRootForwardedProps, mergeSx } from '../../utils/utils';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 

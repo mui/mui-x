@@ -5,12 +5,12 @@ import {
   selectorChartPolarCenter,
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
-  type UseChartPolarAxisSignature,
   selectorChartsInteractionRadius,
   selectorChartsInteractionRadiusAxisValue,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import { type ChartsRadialAxisHighlightRadiusType } from './ChartsRadialAxisHighlight.types';
-import { type ChartsRadialAxisHighlightClasses } from './chartsRadialAxisHighlightClasses';
+import type { UseChartPolarAxisSignature } from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { ChartsRadialAxisHighlightRadiusType } from './ChartsRadialAxisHighlight.types';
+import type { ChartsRadialAxisHighlightClasses } from './chartsRadialAxisHighlightClasses';
 import {
   ChartsRadialAxisHighlightCircle,
   ChartsRadialAxisHighlightPath,

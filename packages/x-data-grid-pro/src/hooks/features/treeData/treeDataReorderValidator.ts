@@ -1,5 +1,6 @@
 import { gridRowTreeSelector } from '@mui/x-data-grid';
-import { RowReorderValidator, type ValidationRule } from '../rowReorder/reorderValidator';
+import { RowReorderValidator } from '../rowReorder/reorderValidator';
+import type { ValidationRule } from '../rowReorder/reorderValidator';
 import { commonReorderConditions as conditions } from '../rowReorder/commonReorderConditions';
 
 const validationRules: ValidationRule[] = [

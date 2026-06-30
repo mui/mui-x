@@ -1,11 +1,8 @@
-import { type PolarChartSeriesType } from '../../../../models/seriesType/config';
-import {
-  type ChartSeriesConfig,
-  type AxisTooltipGetter,
-} from '../../corePlugins/useChartSeriesConfig';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import type { PolarChartSeriesType } from '../../../../models/seriesType/config';
+import type { ChartSeriesConfig, AxisTooltipGetter } from '../../corePlugins/useChartSeriesConfig';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { isPolarSeriesType } from '../../../isPolar';
-import { type AxisId } from '../../../../models/axis';
+import type { AxisId } from '../../../../models/axis';
 
 export const getAxisTriggerTooltip = <SeriesType extends PolarChartSeriesType>(
   axisDirection: 'radius' | 'rotation',

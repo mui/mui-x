@@ -1,8 +1,10 @@
 import {
   createCommonKeyboardFocusHandler,
-  type KeyboardFocusHandler,
-  type ComposableRadialChartSeriesType,
   composableRadialSeriesTypes,
+} from '@mui/x-charts/internals';
+import type {
+  KeyboardFocusHandler,
+  ComposableRadialChartSeriesType,
 } from '@mui/x-charts/internals';
 
 const keyboardFocusHandler: KeyboardFocusHandler<'radialBar', ComposableRadialChartSeriesType> =

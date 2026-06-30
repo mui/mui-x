@@ -8,24 +8,22 @@ import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
-import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickerDay, PickerDayOwnerStateBase, PickerDayProps } from '../PickerDay';
-import { ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
+import type { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { PickerDayOwnerStateBase, PickerDayProps } from '../PickerDay';
+import { PickerDay } from '../PickerDay';
+import type { ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
-import { PickerOnChangeFn } from '../internals/hooks/useViews';
+import type { PickerOnChangeFn } from '../internals/hooks/useViews';
 import {
   DAY_SIZE,
   DAY_MARGIN,
   DAY_SIZE_COMPACT,
   DAY_MARGIN_COMPACT,
 } from '../internals/constants/dimensions';
-import {
-  PickersSlideTransition,
-  SlideDirection,
-  SlideTransitionProps,
-} from './PickersSlideTransition';
-import {
+import type { SlideDirection, SlideTransitionProps } from './PickersSlideTransition';
+import { PickersSlideTransition } from './PickersSlideTransition';
+import type {
   BaseDateValidationProps,
   DayValidationProps,
   MonthValidationProps,
@@ -33,10 +31,11 @@ import {
 } from '../internals/models/validation';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
-import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { PickerValidDate, TimezoneProps } from '../models';
-import { DateCalendarClasses } from './dateCalendarClasses';
-import { FormProps } from '../internals/models/formProps';
+import type { DayCalendarClasses } from './dayCalendarClasses';
+import { getDayCalendarUtilityClass } from './dayCalendarClasses';
+import type { PickerValidDate, TimezoneProps } from '../models';
+import type { DateCalendarClasses } from './dateCalendarClasses';
+import type { FormProps } from '../internals/models/formProps';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
 
 export interface DayCalendarSlots {
@@ -314,6 +313,7 @@ function WrappedDay({
   currentMonthNumber: number;
 }) {
   const {
+    currentMonth,
     compact,
     disabled,
     disableHighlightToday,
@@ -370,20 +370,20 @@ function WrappedDay({
   });
 
   const isFirstVisibleCell = React.useMemo(() => {
-    const startOfMonth = adapter.startOfMonth(adapter.setMonth(day, currentMonthNumber));
+    const startOfMonth = adapter.startOfMonth(currentMonth);
     if (!showDaysOutsideCurrentMonth) {
       return adapter.isSameDay(day, startOfMonth);
     }
     return adapter.isSameDay(day, adapter.startOfWeek(startOfMonth));
-  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, adapter]);
+  }, [currentMonth, day, showDaysOutsideCurrentMonth, adapter]);
 
   const isLastVisibleCell = React.useMemo(() => {
-    const endOfMonth = adapter.endOfMonth(adapter.setMonth(day, currentMonthNumber));
+    const endOfMonth = adapter.endOfMonth(currentMonth);
     if (!showDaysOutsideCurrentMonth) {
       return adapter.isSameDay(day, endOfMonth);
     }
     return adapter.isSameDay(day, adapter.endOfWeek(endOfMonth));
-  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, adapter]);
+  }, [currentMonth, day, showDaysOutsideCurrentMonth, adapter]);
 
   return (
     <Day

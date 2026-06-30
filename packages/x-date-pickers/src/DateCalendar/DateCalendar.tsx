@@ -8,19 +8,21 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
+import type { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DayCalendar } from './DayCalendar';
 import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
 import { useViews } from '../internals/hooks/useViews';
-import { PickersCalendarHeader, PickersCalendarHeaderProps } from '../PickersCalendarHeader';
+import type { PickersCalendarHeaderProps } from '../PickersCalendarHeader';
+import { PickersCalendarHeader } from '../PickersCalendarHeader';
 import { findClosestEnabledDate, mergeDateAndTime } from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
-import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
-import { BaseDateValidationProps } from '../internals/models/validation';
+import type { DateCalendarClasses } from './dateCalendarClasses';
+import { getDateCalendarUtilityClass } from './dateCalendarClasses';
+import type { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import {
@@ -28,7 +30,7 @@ import {
   DIALOG_WIDTH_COMPACT,
   VIEW_HEIGHT_COMPACT,
 } from '../internals/constants/dimensions';
-import { PickerOwnerState, PickerValidDate } from '../models';
+import type { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';

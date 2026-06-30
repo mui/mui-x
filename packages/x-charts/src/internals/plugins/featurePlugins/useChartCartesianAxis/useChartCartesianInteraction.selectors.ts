@@ -6,7 +6,7 @@ import {
 } from '../useChartInteraction/useChartInteraction.selectors';
 import { getAxisIndex, getAxisValue } from './getAxisValue';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
-import { type ComputeResult } from './computeAxisValue';
+import type { ComputeResult } from './computeAxisValue';
 
 /**
  * Get interaction indexes

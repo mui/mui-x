@@ -2,12 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
+import type { CSSInterpolation } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import {
   DAY_MARGIN,
@@ -15,14 +16,10 @@ import {
   DAY_MARGIN_COMPACT,
   DAY_SIZE_COMPACT,
 } from '../internals/constants/dimensions';
-import {
-  pickerDayClasses,
-  PickerDayClassKey,
-  getPickerDayUtilityClass,
-  PickerDayClasses,
-} from './pickerDayClasses';
+import type { PickerDayClassKey, PickerDayClasses } from './pickerDayClasses';
+import { pickerDayClasses, getPickerDayUtilityClass } from './pickerDayClasses';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { PickerDayOwnerState, PickerDayProps } from './PickerDay.types';
+import type { PickerDayOwnerState, PickerDayProps } from './PickerDay.types';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
 
 const useUtilityClasses = (
