@@ -2,12 +2,14 @@
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
+import { useDrawingArea } from '@mui/x-charts/hooks';
 import { getSymbol } from '@mui/x-charts/internals';
 import type { SymbolsTypes } from '@mui/x-charts/internals';
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { useFocusedItem } from '../hooks';
 import { useGeoPath } from '../hooks/useGeoPath';
 import { useMapPointSeries } from '../hooks/useMapPointSeries';
+import { projectVisiblePoint } from './isHidden';
 
 export interface FocusedMapPointProps {
   shape: SymbolsTypes;
@@ -31,6 +33,7 @@ function FocusedMapPoint({ shape, size }: FocusedMapPointProps) {
   const focusedItem = useFocusedItem();
   const path = useGeoPath();
   const series = useMapPointSeries();
+  const drawingArea = useDrawingArea();
 
   if (focusedItem?.type !== 'mapPoint' || !path) {
     return null;
@@ -47,7 +50,11 @@ function FocusedMapPoint({ shape, size }: FocusedMapPointProps) {
   }
 
   const projection = path.projection() as GeoProjection | null;
-  const point = projection?.(dataItem.coordinates);
+  if (!projection) {
+    return null;
+  }
+
+  const point = projectVisiblePoint(projection, dataItem.coordinates, drawingArea);
   if (!point) {
     return null;
   }

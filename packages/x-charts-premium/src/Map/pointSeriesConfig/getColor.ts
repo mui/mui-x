@@ -1,7 +1,9 @@
+import { getSeriesColorFn } from '@mui/x-charts/internals';
 import type { ColorProcessor } from '@mui/x-charts/internals';
 
 const getColor: ColorProcessor<'mapPoint'> = (series, _mainAxis, _secondaryAxis, zAxis) => {
   const colorScale = zAxis?.colorScale;
+  const getSeriesColor = getSeriesColorFn(series);
 
   return (dataIndex?: number) => {
     if (dataIndex === undefined) {
@@ -20,7 +22,7 @@ const getColor: ColorProcessor<'mapPoint'> = (series, _mainAxis, _secondaryAxis,
         return color;
       }
     }
-    return series.color;
+    return getSeriesColor({ value: item, dataIndex });
   };
 };
 
