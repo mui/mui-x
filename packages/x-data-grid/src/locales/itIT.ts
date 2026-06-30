@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('it-IT');
 
@@ -64,7 +61,7 @@ const itITGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Nessuna colonna',
   columnsManagementShowHideAllText: 'Mostra/Nascondi Tutto',
   columnsManagementReset: 'Resetta',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Cancella',
 
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
@@ -244,9 +241,9 @@ const itITGrid: Partial<GridLocaleText> = {
   pivotColumns: 'Colonne',
   pivotValues: 'Valori',
   pivotCloseButton: 'Chiudi impostazioni di trasposizione',
-  pivotSearchButton: 'Cerca attrubuti',
-  pivotSearchControlPlaceholder: 'Cerca attrubuti',
-  pivotSearchControlLabel: 'Cerca attrubuti',
+  pivotSearchButton: 'Cerca attributi',
+  pivotSearchControlPlaceholder: 'Cerca attributi',
+  pivotSearchControlLabel: 'Cerca attributi',
   pivotSearchControlClear: 'Annulla ricerca',
   pivotNoFields: 'Nessun attributo',
   pivotMenuMoveUp: 'Sposta in alto',
@@ -325,18 +322,18 @@ const itITGrid: Partial<GridLocaleText> = {
     `${column} (${aggregation})`,
   promptChangeAggregationDescription: (column: string, aggregation: string) =>
     `Aggrega ${column} (${aggregation})`,
-  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `${column} is any of: ${value}`;
-  //   }
-  //   return `${column} ${operator} ${value}`;
-  // },
-  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `Filter where ${column} is any of: ${value}`;
-  //   }
-  //   return `Filter where ${column} ${operator} ${value}`;
-  // },
+  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+    if (operator === 'is any of') {
+      return `${column} è uno tra: ${value}`;
+    }
+    return `${column} ${operator} ${value}`;
+  },
+  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+    if (operator === 'is any of') {
+      return `Filtra dove ${column} è uno tra: ${value}`;
+    }
+    return `Filtra dove ${column} ${operator} ${value}`;
+  },
   promptChangeSortDescription: (column: string, direction: string) =>
     `Ordina per ${column} (${direction})`,
   promptChangePivotEnableLabel: 'Pivota',
@@ -348,7 +345,8 @@ const itITGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Valori (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
-  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `Dimensioni (${dimensionsCount}), Valori (${valuesCount})`,
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid);

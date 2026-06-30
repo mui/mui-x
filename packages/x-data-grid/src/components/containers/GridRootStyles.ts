@@ -188,8 +188,11 @@ export const GridRootStyles = styled('div', {
     minHeight: 0,
     flexDirection: 'column',
     overflow: 'hidden',
-    overflowAnchor: 'none', // Keep the same scrolling position
     transform: 'translate(0, 0)', // Create a stacking context to keep scrollbars from showing on top
+
+    [`& .${c.virtualScroller}`]: {
+      overflowAnchor: 'none', // Keep the same scrolling position
+    },
 
     // Use `css` tagged template so the ignore-comment remains a sibling of the
     // `:first-child` rule in the stylis AST. Previously, the comment was embedded
@@ -230,6 +233,16 @@ export const GridRootStyles = styled('div', {
       [`& .${c['columnHeader--filter']}`]: {
         flex: 'none !important',
         width: 'unset !important',
+      },
+      [`& .${c.multiSelectCell}`]: {
+        width: 'max-content',
+        overflow: 'visible',
+      },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
       },
     },
     [`&.${c.withSidePanel}`]: {
@@ -587,6 +600,25 @@ export const GridRootStyles = styled('div', {
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
       whiteSpace: 'initial',
       lineHeight: 'inherit',
+    },
+    [`& .${c['row--dynamicHeight']}`]: {
+      [`& .${c.multiSelectCell}, .${c.editMultiSelectCell}`]: {
+        flexWrap: 'wrap',
+      },
+    },
+    [`& .${c.cell}[aria-rowspan]:not([aria-rowspan="1"])`]: {
+      [`& .${c.multiSelectCell}`]: {
+        alignItems: 'flex-start',
+        alignContent: 'flex-start',
+        flexWrap: 'wrap',
+        paddingTop: 8,
+      },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
+      },
     },
     [`& .${c.cellEmpty}`]: {
       flex: 1,

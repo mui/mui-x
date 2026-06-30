@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { MobileDatePickerProps } from './MobileDatePicker.types';
-import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import type { MobileDatePickerProps } from './MobileDatePicker.types';
+import type { DatePickerViewRenderers } from '../DatePicker/shared';
+import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateDate } from '../validation';
-import { DateView, PickerOwnerState } from '../models';
+import type { DateView, PickerOwnerState } from '../models';
 import { DateField } from '../DateField';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -81,7 +82,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker(
   return renderPicker();
 }) as MobileDatePickerComponent;
 
-MobileDatePicker.propTypes = {
+MobileDatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -300,7 +301,7 @@ MobileDatePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

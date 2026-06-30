@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { vi } from 'vitest';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   $,
   $$,
@@ -15,14 +15,16 @@ import {
   getColumnHeaderCell,
 } from 'test/utils/helperFn';
 import {
-  type GridRowModel,
   useGridApiRef,
   DataGridPro,
-  type DataGridProProps,
-  type GridApi,
   gridFocusCellSelector,
   gridClasses,
-  type GridValidRowModel,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridRowModel,
+  DataGridProProps,
+  GridApi,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -453,12 +455,14 @@ describe('<DataGridPro /> - Rows', () => {
       const { setProps } = render(
         <TestCaseVirtualization nbRows={5} nbCols={2} height={160} rowBufferPx={0} />,
       );
-      expect(getRows()).to.have.length(1);
+      // `getIndexesToRender` renders one extra row past the visible viewport so
+      // there is no empty space if the user starts scrolling, hence the +1.
+      expect(getRows()).to.have.length(2);
       setProps({
         height: 220,
       });
       await waitFor(() => {
-        expect(getRows()).to.have.length(3);
+        expect(getRows()).to.have.length(4);
       });
     });
 
@@ -529,6 +533,9 @@ describe('<DataGridPro /> - Rows', () => {
       const n = 2;
       const columnWidth = 100;
       const columnBufferPx = n * columnWidth;
+      // `getIndexesToRender` renders one extra column past the visible viewport
+      // (or past the buffer) so a horizontal scroll does not leave empty space.
+      const extra = 1;
       render(
         <TestCaseVirtualization
           width={width + border * 2}
@@ -537,12 +544,14 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
       const firstRow = getRow(0);
-      expect($$(firstRow, '[role="gridcell"]')).to.have.length(Math.floor(width / columnWidth) + n);
+      expect($$(firstRow, '[role="gridcell"]')).to.have.length(
+        Math.floor(width / columnWidth) + n + extra,
+      );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       await act(async () => virtualScroller.scrollTo({ left: 301 }));
       await waitFor(() => {
         expect($$(firstRow, '[role="gridcell"]')).to.have.length(
-          n + 1 + Math.floor(width / columnWidth) + n,
+          n + 1 + Math.floor(width / columnWidth) + n + extra,
         );
       });
     });
@@ -968,5 +977,25 @@ describe('<DataGridPro /> - Rows', () => {
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', () => {
+    const apiRef = React.createRef<GridApi>();
+    render(
+      <div style={{ width: 400, height: 300 }}>
+        <DataGridPro
+          apiRef={apiRef}
+          rows={[
+            { id: 1, name: 'a' },
+            { id: 2, name: 'b' },
+          ]}
+          columns={[{ field: 'name' }]}
+        />
+      </div>,
+    );
+
+    expect(() => apiRef.current!.getCellParams(1, 'does-not-exist')).not.to.throw();
+    expect(apiRef.current!.getCellParams(1, 'does-not-exist').value).to.equal(undefined);
   });
 });

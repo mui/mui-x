@@ -1,4 +1,4 @@
-import type { DateLocale } from '@mui/x-scheduler-headless/use-adapter';
+import type { DateLocale } from '@mui/x-scheduler-internals/use-adapter';
 
 export interface DateLocaleTheme {
   components: {

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
+import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatMessageSourceUtilityClasses,
@@ -108,6 +109,10 @@ const ChatMessageSource = React.forwardRef(function ChatMessageSource(
   const Index = slots?.index ?? ChatMessageSourceIndexStyled;
   const LinkSlot = slots?.link ?? ChatMessageSourceLinkStyled;
 
+  // Inside a roving message list the source link leaves the tab order until
+  // the user drills into the message (Enter); it stays mouse-clickable.
+  const contentTabIndex = useMessageContentTabIndex();
+
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
@@ -137,6 +142,7 @@ const ChatMessageSource = React.forwardRef(function ChatMessageSource(
       target: '_blank',
       rel: 'noreferrer noopener',
       className: classes.link,
+      tabIndex: contentTabIndex,
     },
   });
 
@@ -148,7 +154,7 @@ const ChatMessageSource = React.forwardRef(function ChatMessageSource(
   );
 }) as ChatMessageSourceComponent;
 
-ChatMessageSource.propTypes = {
+ChatMessageSource.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

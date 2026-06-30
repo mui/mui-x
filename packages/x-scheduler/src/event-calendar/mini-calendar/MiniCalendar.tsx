@@ -6,15 +6,17 @@ import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
+import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { MiniCalendarProps } from './MiniCalendar.types';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 import { formatMonthFullLetterAndYear } from '../../internals/utils/date-utils';
@@ -159,6 +161,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
 
     const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
     const [displayedMonth, setDisplayedMonth] = React.useState<TemporalSupportedObject>(() =>
       adapter.startOfMonth(visibleDate),
@@ -173,7 +176,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     // Always show 6 weeks (42 days) for consistent height
     const days = React.useMemo(() => {
       const monthStart = adapter.startOfMonth(displayedMonth);
-      const gridStart = adapter.startOfWeek(monthStart);
+      const gridStart = getStartOfWeek(adapter, monthStart, weekStartsOn);
       // 6 weeks = 42 days, so end is 41 days after start
       const gridEnd = adapter.addDays(gridStart, 41);
       return getDayList({
@@ -181,7 +184,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
         start: gridStart,
         end: gridEnd,
       });
-    }, [adapter, displayedMonth]);
+    }, [adapter, displayedMonth, weekStartsOn]);
 
     // Group days into weeks
     const weeks = React.useMemo(() => {
@@ -205,6 +208,8 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
         ref={forwardedRef}
         role="grid"
         aria-label={localeText.miniCalendarLabel}
+        aria-rowcount={1 + weeks.length}
+        aria-colcount={7}
         className={clsx(classes.miniCalendar, className)}
         {...other}
       >
@@ -232,12 +237,17 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
           </MiniCalendarNavigation>
         </MiniCalendarHeader>
 
-        <MiniCalendarWeekdayHeader role="row" className={classes.miniCalendarWeekdayHeader}>
-          {weekdays.map((day) => (
+        <MiniCalendarWeekdayHeader
+          role="row"
+          aria-rowindex={1}
+          className={classes.miniCalendarWeekdayHeader}
+        >
+          {weekdays.map((day, dayIndex) => (
             <MiniCalendarWeekdayCell
               key={day.key}
               role="columnheader"
               aria-label={adapter.formatByString(day.value, adapter.formats.weekday)}
+              aria-colindex={dayIndex + 1}
               className={classes.miniCalendarWeekdayCell}
               data-weekend={isWeekend(adapter, day.value) || undefined}
             >
@@ -248,8 +258,13 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
 
         <MiniCalendarGrid role="rowgroup" className={classes.miniCalendarGrid}>
           {weeks.map((week, weekIndex) => (
-            <MiniCalendarWeekRow key={weekIndex} role="row" className={classes.miniCalendarWeekRow}>
-              {week.map((day) => {
+            <MiniCalendarWeekRow
+              key={weekIndex}
+              role="row"
+              aria-rowindex={weekIndex + 2}
+              className={classes.miniCalendarWeekRow}
+            >
+              {week.map((day, dayIndex) => {
                 const isToday = adapter.isSameDay(day.value, now);
                 const isActive = adapter.isSameDay(day.value, visibleDate);
                 const isOtherMonth = !adapter.isSameMonth(day.value, displayedMonth);
@@ -264,6 +279,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
                   <MiniCalendarDayCell
                     key={day.key}
                     role="gridcell"
+                    aria-colindex={dayIndex + 1}
                     className={classes.miniCalendarDayCell}
                   >
                     <MiniCalendarDayButton

@@ -2,20 +2,28 @@
 import * as React from 'react';
 import { useStoreEffect } from '@mui/x-internals/store';
 import type { ChatAdapter } from '../../adapters';
-import type { ChatStore } from '../../store';
+import { asCursorAgnosticChatStore, type ChatStore } from '../../store';
 import type {
   ChatAddToolApproveResponseInput,
   ChatMessage,
   ChatOnData,
+  ChatOnError,
   ChatOnFinish,
   ChatOnToolCall,
 } from '../../types';
 import type { ChatError } from '../../types/chat-error';
 import type { UseChatSendMessageInput } from '../../types/chat-callbacks';
-import { getMessages, createRuntimeError, getErrorMessage } from './useChatControllerHelpers';
+import {
+  getMessages,
+  createRuntimeError,
+  getErrorMessage,
+  getMessageIdFromError,
+} from './useChatControllerHelpers';
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
 import { createSendMessageActions } from './sendMessageActions';
+import { createTypingActions } from './typingActions';
+import type { ChatFeatures } from '../../ChatProvider';
 
 export type { UseChatSendMessageInput };
 
@@ -26,6 +34,7 @@ export interface ChatRuntimeActions<Cursor = string> {
   loadMoreHistory(): Promise<void>;
   setActiveConversation(id: string | undefined): Promise<void>;
   retry(messageId: string): Promise<void>;
+  regenerate(messageId: string): Promise<void>;
   setError(error: ChatError | null): void;
   addToolApprovalResponse(input: ChatAddToolApproveResponseInput): Promise<void>;
 }
@@ -36,8 +45,9 @@ interface UseChatControllerParameters<Cursor = string> {
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
   onData?: ChatOnData;
-  onError?: (error: ChatError) => void;
+  onError?: ChatOnError;
   streamFlushInterval?: number;
+  features?: ChatFeatures;
 }
 
 export function useChatController<Cursor = string>({
@@ -48,6 +58,7 @@ export function useChatController<Cursor = string>({
   onData,
   onError,
   streamFlushInterval,
+  features,
 }: UseChatControllerParameters<Cursor>): ChatRuntimeActions<Cursor> {
   const runtimeRef = React.useRef({
     adapter,
@@ -56,12 +67,13 @@ export function useChatController<Cursor = string>({
     onData,
     onError,
     streamFlushInterval,
+    features,
   });
   const assistantMessageIdByUserMessageIdRef = React.useRef(new Map<string, string>());
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
-  // Cursor type is irrelevant for the cursor-agnostic helper functions below.
-  const storeUnknown = store as unknown as ChatStore<unknown>;
+  const historyLoadRequestIdRef = React.useRef(0);
+  const storeUnknown = asCursorAgnosticChatStore(store);
 
   runtimeRef.current = {
     adapter,
@@ -70,11 +82,17 @@ export function useChatController<Cursor = string>({
     onData,
     onError,
     streamFlushInterval,
+    features,
   };
 
   const setRuntimeError = React.useCallback(
     (error: ChatError | null) => {
       store.setError(error);
+
+      const messageId = getMessageIdFromError(error);
+      if (messageId) {
+        store.setMessageError(messageId, error);
+      }
 
       if (error) {
         runtimeRef.current.onError?.(error);
@@ -98,12 +116,13 @@ export function useChatController<Cursor = string>({
         stopStreaming,
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
+        historyLoadRequestIdRef,
       }),
 
     [setRuntimeError, stopStreaming, store],
   );
 
-  const { sendMessage, retry } = React.useMemo(
+  const { sendMessage, retry, regenerate, pruneAttachmentsByMessageIds } = React.useMemo(
     () =>
       createSendMessageActions({
         store,
@@ -138,16 +157,23 @@ export function useChatController<Cursor = string>({
           message.parts.some(
             (part) =>
               (part.type === 'tool' || part.type === 'dynamic-tool') &&
-              part.toolInvocation.toolCallId === id,
+              (part.toolInvocation.toolCallId === id || part.toolInvocation.approvalId === id),
           ),
       );
+
+      // Snapshot the previous parts so we can roll back if the adapter call
+      // rejects (#6). Without this, the optimistic mutation that flipped the
+      // tool invocation to `approval-responded` would persist even though the
+      // adapter never confirmed the response, leaving the UI permanently out
+      // of sync with the server.
+      const previousParts = assistantMessage?.parts;
 
       if (assistantMessage) {
         store.updateMessage(assistantMessage.id, {
           parts: assistantMessage.parts.map((part) => {
             if (
               (part.type !== 'tool' && part.type !== 'dynamic-tool') ||
-              part.toolInvocation.toolCallId !== id
+              (part.toolInvocation.toolCallId !== id && part.toolInvocation.approvalId !== id)
             ) {
               return part;
             }
@@ -174,6 +200,10 @@ export function useChatController<Cursor = string>({
           reason,
         });
       } catch (error) {
+        if (assistantMessage && previousParts) {
+          store.updateMessage(assistantMessage.id, { parts: previousParts });
+        }
+
         setRuntimeError(
           createRuntimeError(
             'SEND_ERROR',
@@ -197,6 +227,13 @@ export function useChatController<Cursor = string>({
       }),
     [storeUnknown, conversationNavigationRequestIdRef],
   );
+
+  const {
+    handleComposerValueChange,
+    handleActiveConversationChange,
+    syncTypingSignal,
+    disposeTyping,
+  } = React.useMemo(() => createTypingActions({ store: storeUnknown, runtimeRef }), [storeUnknown]);
 
   React.useEffect(() => {
     let isDisposed = false;
@@ -276,6 +313,14 @@ export function useChatController<Cursor = string>({
 
   useStoreEffect(
     store,
+    (state) => state.messageIds,
+    (_, nextMessageIds) => {
+      pruneAttachmentsByMessageIds(nextMessageIds);
+    },
+  );
+
+  useStoreEffect(
+    store,
     (state) => state.activeConversationId,
     (_, nextActiveConversationId) => {
       const navId = conversationNavigationRequestIdRef.current;
@@ -288,6 +333,21 @@ export function useChatController<Cursor = string>({
       void loadConversationMessages(nextActiveConversationId);
     },
   );
+
+  // Outbound typing signals (feature-gated via `features.typingSignal`). The
+  // conversation subscription is registered before the composer one so that,
+  // when a single controlled `setState` changes both keys, the old
+  // conversation's `false` is flushed before the composer transition runs.
+  useStoreEffect(store, (state) => state.activeConversationId, handleActiveConversationChange);
+  useStoreEffect(store, (state) => state.composerValue, handleComposerValueChange);
+
+  const typingSignalEnabled = features?.typingSignal === true;
+  React.useEffect(() => {
+    // Runs at mount (seeds a non-empty `initialComposerValue` draft) and on flag flips.
+    syncTypingSignal(typingSignalEnabled);
+  }, [typingSignalEnabled, syncTypingSignal]);
+
+  React.useEffect(() => () => disposeTyping(), [disposeTyping]);
 
   React.useEffect(() => {
     if (store.state.activeConversationId != null) {
@@ -313,12 +373,14 @@ export function useChatController<Cursor = string>({
       loadMoreHistory,
       setActiveConversation,
       retry,
+      regenerate,
       setError,
       addToolApprovalResponse,
     }),
     [
       addToolApprovalResponse,
       loadMoreHistory,
+      regenerate,
       retry,
       sendMessage,
       setActiveConversation,

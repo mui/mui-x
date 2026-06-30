@@ -17,12 +17,19 @@
           "description": "The scatter item identifier."
         }
       }
+    },
+    "sizeGetter": {
+      "description": "Function to get the marker size of a scatter item given its data index."
     }
   },
   "classDescriptions": {
     "focusedMark": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the focused scatter mark element"
+    },
+    "highlightedMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the highlighted scatter mark element"
     },
     "root": {
       "description": "Styles applied to {{nodeName}}.",

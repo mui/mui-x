@@ -10,17 +10,27 @@ import type {
 let counter = 0;
 
 /**
- * Generate a random identifier suitable for demo data (messages, conversations, etc.).
- * Uses `crypto.randomUUID` when available; falls back to a timestamp + counter combo.
+ * Generate an identifier suitable for demo data (messages, conversations, etc.).
+ *
+ * IMPORTANT: this generator is intentionally **deterministic** so identifiers
+ * produced at module load time match between the SSR pass and the client
+ * hydration pass — `crypto.randomUUID()` and `Date.now()` would both produce
+ * different values on server and client, breaking React hydration whenever a
+ * demo seeds its store at the module top level (Playwright Bug A).
+ *
+ * Demos are not real apps; the absence of true randomness has no security
+ * implications and makes the docs preview reproducible.
  */
 export function randomId(): string {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
-  }
-
   counter += 1;
-  return `${Date.now().toString(36)}-${counter.toString(36)}`;
+  return `demo-id-${counter.toString(36)}`;
 }
+
+/**
+ * Explicit alias for callers that want to make the deterministic intent
+ * obvious at the call site (e.g. when generating seed IDs at module load).
+ */
+export const deterministicId = randomId;
 
 export function splitText(text: string, size = 18) {
   const chunks: string[] = [];
@@ -61,28 +71,45 @@ export function createChunkStream(
   options: { delayMs?: number } = {},
 ) {
   const { delayMs = 170 } = options;
+  let cancelled = false;
+  const timers: ReturnType<typeof setTimeout>[] = [];
 
   return new ReadableStream<ChatMessageChunk | ChatStreamEnvelope>({
     start(controller) {
       let didFinish = false;
 
       chunks.forEach((chunk, index) => {
-        setTimeout(
+        const timerId = setTimeout(
           () => {
-            if (didFinish) {
+            if (didFinish || cancelled) {
               return;
             }
 
-            controller.enqueue(chunk);
+            try {
+              controller.enqueue(chunk);
+            } catch {
+              // Stream was closed/cancelled between scheduling and firing — bail out.
+              cancelled = true;
+              return;
+            }
 
             if (index === chunks.length - 1) {
               didFinish = true;
-              controller.close();
+              try {
+                controller.close();
+              } catch {
+                // Already closed by the consumer; ignore.
+              }
             }
           },
           delayMs * (index + 1),
         );
+        timers.push(timerId);
       });
+    },
+    cancel() {
+      cancelled = true;
+      timers.forEach(clearTimeout);
     },
   });
 }
@@ -113,10 +140,7 @@ export function createEchoAdapter(
   const { agent } = options;
   const agentName = agent?.displayName ?? 'Assistant';
   const delayMs = options.delayMs ?? 170;
-  const respond =
-    options.respond ??
-    ((text: string) =>
-      `${agentName} received "${text}". Material UI styles applied automatically from the active theme.`);
+  const respond = options.respond ?? ((text: string) => `${agentName} received "${text}".`);
 
   return {
     async sendMessage({ message }) {

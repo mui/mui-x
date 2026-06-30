@@ -1,22 +1,20 @@
-import { type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
+import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import useId from '@mui/utils/useId';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
-import {
-  type ChartsLegendProps,
-  type ChartsLegendSlotExtension,
-  ContinuousColorLegend,
-} from '@mui/x-charts/ChartsLegend';
+import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';
+import type { ChartsLegendProps, ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
-import { type ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
+import type { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
 import type { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { HEATMAP_PLUGINS, type HeatmapPluginSignatures } from './Heatmap.plugins';
-import { type HeatmapProps } from './Heatmap';
+import { HEATMAP_PLUGINS } from './Heatmap.plugins';
+import type { HeatmapPluginSignatures } from './Heatmap.plugins';
+import type { HeatmapProps } from './Heatmap';
 import { heatmapSeriesConfig } from './seriesConfig';
-import { type ChartsDataProviderProProps } from '../ChartsDataProviderPro';
-import { type HeatmapSeriesType } from '../models/seriesType';
-import { type HeatmapPlotProps } from './HeatmapPlot';
+import type { ChartsDataProviderProProps } from '../ChartsDataProviderPro';
+import type { HeatmapSeriesType } from '../models/seriesType';
+import type { HeatmapPlotProps } from './HeatmapPlot';
 
 export type UseHeatmapProps = HeatmapProps;
 

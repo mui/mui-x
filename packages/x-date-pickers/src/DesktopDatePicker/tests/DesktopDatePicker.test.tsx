@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { TransitionProps } from '@mui/material/transitions';
+import type { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
-import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import type { DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
-import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import InputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
+import type { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
+import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import type { InputAdornmentProps } from '@mui/material/InputAdornment';
+import InputAdornment from '@mui/material/InputAdornment';
+import { vi } from 'vitest';
 
 describe('<DesktopDatePicker />', () => {
   const { render } = createPickerRenderer();
@@ -329,6 +333,36 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
     });
 
+    it('should not allow to navigate to previous month on first open if props.minDate is in the current month and the value has time', async () => {
+      const { user } = render(
+        <DesktopDatePicker
+          defaultValue={adapterToUse.date('2018-02-10T15:35:00')}
+          minDate={adapterToUse.date('2018-02-05T15:35:00')}
+        />,
+      );
+
+      await openPicker(user, { type: 'date' });
+
+      expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
+    });
+
+    describe('with Luxon adapter', () => {
+      const { render: renderWithLuxon, adapter } = createPickerRenderer({ adapterName: 'luxon' });
+
+      it('should not allow to navigate to previous month on first open if props.minDate is in the current month and the value has time', async () => {
+        const { user } = renderWithLuxon(
+          <DesktopDatePicker
+            defaultValue={adapter.date('2018-02-10T15:35:00+01:00')}
+            minDate={adapter.date('2018-02-05T15:35:00+01:00')}
+          />,
+        );
+
+        await openPicker(user, { type: 'date' });
+
+        expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
+      });
+    });
+
     it('should allow to navigate to previous month if props.minDate is the last day of the previous month', async () => {
       const { user } = render(
         <DesktopDatePicker
@@ -340,6 +374,39 @@ describe('<DesktopDatePicker />', () => {
       await openPicker(user, { type: 'date' });
 
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
+    });
+
+    it('should allow to navigate to previous month if props.minDate is in the previous month and the value has time', async () => {
+      const { user } = render(
+        <DesktopDatePicker
+          defaultValue={adapterToUse.date('2018-02-10T15:35:00')}
+          minDate={adapterToUse.date('2018-01-31T15:35:00')}
+        />,
+      );
+
+      await openPicker(user, { type: 'date' });
+
+      expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
+    });
+
+    describe('with fake timers', () => {
+      beforeEach(() => {
+        vi.setSystemTime(new Date(2018, 1, 10));
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
+      it('should not allow to navigate to previous month on first open if disablePast is true and the value has time', async () => {
+        const { user } = render(
+          <DesktopDatePicker defaultValue={adapterToUse.date('2018-02-10T15:35:00')} disablePast />,
+        );
+
+        await openPicker(user, { type: 'date' });
+
+        expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
+      });
     });
 
     it('should not allow to navigate to next month if props.maxDate is before the first day of the next month', async () => {

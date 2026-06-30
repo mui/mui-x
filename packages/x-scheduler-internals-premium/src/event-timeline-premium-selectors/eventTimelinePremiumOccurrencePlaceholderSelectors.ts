@@ -1,0 +1,39 @@
+import { createSelector } from '@base-ui/utils/store';
+import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
+import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
+
+export const timelineOccurrencePlaceholderSelectors = {
+  placeholderInResource: createSelector((state: State, resourceId: SchedulerResourceId | null) => {
+    if (
+      state.occurrencePlaceholder === null ||
+      state.occurrencePlaceholder.surfaceType !== 'timeline' ||
+      state.occurrencePlaceholder.isHidden ||
+      state.occurrencePlaceholder.resourceId !== resourceId
+    ) {
+      return null;
+    }
+
+    const presetConfig = eventTimelinePremiumPresetSelectors.config(state);
+    if (
+      state.adapter.isBefore(state.occurrencePlaceholder.end, presetConfig.start) ||
+      state.adapter.isAfter(state.occurrencePlaceholder.start, presetConfig.end)
+    ) {
+      return null;
+    }
+
+    return state.occurrencePlaceholder;
+  }),
+  isCreatingInResource: createSelector((state: State, resourceId: SchedulerResourceId | null) => {
+    const placeholder = state.occurrencePlaceholder;
+    if (
+      placeholder === null ||
+      placeholder.surfaceType !== 'timeline' ||
+      placeholder.type !== 'creation' ||
+      placeholder.resourceId !== resourceId
+    ) {
+      return false;
+    }
+    return true;
+  }),
+};

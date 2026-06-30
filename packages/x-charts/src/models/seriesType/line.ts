@@ -1,4 +1,4 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import type {
   CartesianSeriesType,
@@ -7,8 +7,8 @@ import type {
   SeriesId,
   StackableSeriesType,
 } from './common';
-import { type DatasetElementType } from './config';
-import { type CurveType } from '../curve';
+import type { DatasetElementType } from './config';
+import type { CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
@@ -64,22 +64,19 @@ export interface CommonLineSeriesType {
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
-   * The type of curve to use for the line.
-   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
-   * @default 'monotoneX'
-   */
-  curve?: CurveType;
-  /**
    * If `true`, step curve starts and end at the first and last point.
    * By default the line is extended to fill the space before and after.
    */
   strictStepCurve?: boolean;
   /**
    * Define which items of the series should display a mark.
-   * If can be a boolean that applies to all items.
+   * It can be a boolean that applies to all items.
+   * It can be `'start'` or `'end'` to only display a mark on the first or last item. Such marks reuse
+   * the line highlight element, so they are replaced by the highlighted item when the pointer
+   * highlights a value.
    * Or a callback that gets some item properties and returns true if the item should be displayed.
    */
-  showMark?: boolean | ((params: ShowMarkParams) => boolean);
+  showMark?: boolean | 'start' | 'end' | ((params: ShowMarkParams) => boolean);
   /**
    * The shape of the mark elements.
    * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
@@ -110,17 +107,19 @@ export interface CommonLineSeriesType {
 }
 
 export interface LineSeriesType
-  extends
-    CommonSeriesType<number | null, 'line'>,
-    CartesianSeriesType,
-    StackableSeriesType,
-    CommonLineSeriesType {
+  extends CommonSeriesType<'line'>, CartesianSeriesType, StackableSeriesType, CommonLineSeriesType {
   type: 'line';
   /**
    * Defines how stacked series handle negative values.
    * @default 'none'
    */
   stackOffset?: StackOffsetType;
+  /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   * @default 'monotoneX'
+   */
+  curve?: CurveType;
 }
 
 /**

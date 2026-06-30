@@ -5,12 +5,6 @@ import * as semver from 'semver';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
-import {
-  LANGUAGES,
-  LANGUAGES_SSR,
-  LANGUAGES_IGNORE_PAGES,
-  LANGUAGES_IN_PROGRESS,
-} from '@mui/internal-core-docs/constants';
 import { findPages } from './src/modules/utils/find';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
@@ -58,6 +52,42 @@ const chatPkg = loadPkg('./packages/x-chat');
 
 const pickersAdaptersDeps = getPickerAdapterDeps();
 
+// Generated once and shared by both the webpack and turbopack pipelines.
+const releaseInfo = generateReleaseInfo();
+
+// Serializable markdown-loader options, shared by webpack and turbopack.
+// `ignoreLanguagePages` (a function) is added only on the webpack side since
+// turbopack requires loader options to be serializable.
+const markdownLoaderOptions = {
+  workspaceRoot: WORKSPACE_ROOT,
+  languagesInProgress: [],
+  env: {
+    SOURCE_CODE_REPO,
+    LIB_VERSION: pkg.version,
+  },
+};
+
+// `string-replace-loader` rules applied to all first-party `.ts`/`.tsx` files.
+// All `search` values are strings (not RegExp), keeping the options serializable
+// for turbopack.
+const stringReplaceRules = [
+  {
+    search: '__RELEASE_INFO__',
+    replace: releaseInfo,
+    flags: 'g',
+  },
+  {
+    search: '__ALLOW_TEST_LICENSES__',
+    replace: 'false',
+    flags: 'g',
+  },
+  {
+    search: String.raw`\(process\.env\s*(as any\s*)?\)\.MUI_VERSION`,
+    replace: JSON.stringify(pkg.version),
+    flags: 'g',
+  },
+];
+
 let localSettings = {};
 try {
   // eslint-disable-next-line import/extensions
@@ -68,12 +98,11 @@ try {
 
 export default withDeploymentConfig({
   reactStrictMode: true,
-  typescript: {
-    // The tsconfig also contains path aliases that are used by next.js.
-    tsconfigPath: IS_PRODUCTION ? '../tsconfig.prod.json' : '../tsconfig.dev.json',
-  },
   experimental: {
     esmExternals: undefined,
+  },
+  typescript: {
+    tsconfigPath: './tsconfig.json',
   },
   transpilePackages: [
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
@@ -98,6 +127,37 @@ export default withDeploymentConfig({
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
     MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
+  },
+  turbopack: {
+    resolveExtensions: ['.mjs', '.tsx', '.ts', '.jsx', '.js', '.json'],
+    rules: {
+      // `.md?muiMarkdown` → markdown loader (mirrors the webpack `oneOf` branch).
+      // `as: '*.js'` hands the emitted JS back to turbopack's own pipeline.
+      '*.md': [
+        {
+          condition: { query: /[?&]muiMarkdown(?=&|$)/ },
+          loaders: [{ loader: '@mui/internal-markdown/loader', options: markdownLoaderOptions }],
+          as: '*.js',
+        },
+      ],
+      // Token replacement that webpack does via `string-replace-loader`.
+      // `{ not: 'foreign' }` keeps it off node_modules; the tokens only live in
+      // first-party source (`docs/` and `packages/*/src`).
+      '*.{ts,tsx}': [
+        {
+          condition: { not: 'foreign' },
+          loaders: [{ loader: 'string-replace-loader', options: { multiple: stringReplaceRules } }],
+        },
+      ],
+      // API page description JSON (imported only by generated API pages) → render
+      // the markdown to HTML at build time.
+      '**/translations/api-docs/**/*.json': [
+        {
+          loaders: [{ loader: '@mui/internal-markdown/apiPageTranslationLoader' }],
+          as: '*.js',
+        },
+      ],
+    },
   },
   // @ts-ignore
   webpack: (config, options) => {
@@ -133,13 +193,10 @@ export default withDeploymentConfig({
                   {
                     loader: '@mui/internal-markdown/loader',
                     options: {
-                      workspaceRoot: WORKSPACE_ROOT,
-                      ignoreLanguagePages: LANGUAGES_IGNORE_PAGES,
-                      languagesInProgress: LANGUAGES_IN_PROGRESS,
-                      env: {
-                        SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
-                        LIB_VERSION: options.config.env.LIB_VERSION,
-                      },
+                      ...markdownLoaderOptions,
+                      // Function form is allowed under webpack; turbopack requires
+                      // serializable options so it's omitted there.
+                      ignoreLanguagePages: () => false,
                     },
                   },
                 ],
@@ -150,22 +207,15 @@ export default withDeploymentConfig({
             test: /\.(ts|tsx)$/,
             loader: 'string-replace-loader',
             options: {
-              multiple: [
-                {
-                  search: '__RELEASE_INFO__',
-                  replace: generateReleaseInfo(),
-                },
-                {
-                  search: '__ALLOW_TEST_LICENSES__',
-                  replace: 'false',
-                },
-                {
-                  search: String.raw`\(process\.env\s*(as any\s*)?\)\.MUI_VERSION`,
-                  replace: JSON.stringify(pkg.version),
-                  flags: 'g',
-                },
-              ],
+              multiple: stringReplaceRules,
             },
+          },
+          {
+            // API page description JSON (`translations/api-docs/**`, imported only by
+            // generated API pages) → render the markdown to HTML at build time.
+            test: /translations[\\/]api-docs[\\/].*\.json$/,
+            type: 'javascript/auto',
+            use: [{ loader: '@mui/internal-markdown/apiPageTranslationLoader' }],
           },
         ]),
       },
@@ -179,9 +229,7 @@ export default withDeploymentConfig({
     const map = {};
 
     // @ts-ignore
-    function traverse(pages2, userLanguage) {
-      const prefix = userLanguage === 'en' ? '' : `/${userLanguage}`;
-
+    function traverse(pages2) {
       // @ts-ignore
       pages2.forEach((page) => {
         // The experiments pages are only meant for experiments, they shouldn't leak to production.
@@ -191,29 +239,17 @@ export default withDeploymentConfig({
 
         if (!page.children) {
           // @ts-ignore
-          map[`${prefix}${page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')}`] = {
+          map[page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')] = {
             page: page.pathname,
-            query: {
-              userLanguage,
-            },
           };
           return;
         }
 
-        traverse(page.children, userLanguage);
+        traverse(page.children);
       });
     }
 
-    // We want to speed-up the build of pull requests.
-    if (process.env.PULL_REQUEST === 'true') {
-      // eslint-disable-next-line no-console
-      console.log('Considering only English for SSR');
-      traverse(pages, 'en');
-    } else {
-      LANGUAGES_SSR.forEach((userLanguage) => {
-        traverse(pages, userLanguage);
-      });
-    }
+    traverse(pages);
 
     return map;
   },
@@ -224,10 +260,7 @@ export default withDeploymentConfig({
       }
     : {
         rewrites: async () => {
-          return [
-            { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
-            { source: '/api/:rest*', destination: '/api-docs/:rest*' },
-          ];
+          return [{ source: '/api/:rest*', destination: '/api-docs/:rest*' }];
         },
         // redirects only take effect in the development, not production (because of `next export`).
         redirects: async () => [

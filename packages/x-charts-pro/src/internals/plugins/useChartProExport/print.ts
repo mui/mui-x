@@ -1,7 +1,7 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { copyCanvasesContent, createExportIframe } from './common';
-import { type ChartPrintExportOptions } from './useChartProExport.types';
+import type { ChartPrintExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
 export function printChart(
@@ -19,6 +19,7 @@ export function printChart(
   printWindow.onload = async () => {
     const printDoc = printWindow.contentDocument!;
     const elementClone = element!.cloneNode(true) as Element;
+    elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
     printDoc.body.replaceChildren(elementClone);
     printDoc.body.style.margin = '0px';
 

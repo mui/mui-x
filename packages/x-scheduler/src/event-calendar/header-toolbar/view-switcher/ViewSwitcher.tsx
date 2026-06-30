@@ -7,7 +7,7 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { CalendarView } from '@mui/x-scheduler-headless/models';
+import { CalendarView } from '@mui/x-scheduler-internals/models';
 import { useEventCalendarStyledContext } from '../../EventCalendarStyledContext';
 
 const ViewSwitcherRoot = styled('div', {
@@ -64,7 +64,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         aria-controls={open ? `${schedulerId}-view-switcher-menu` : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        aria-label="Switch View"
         onClick={handleMenuOpen}
         endIcon={<ExpandMoreOutlined />}
       >

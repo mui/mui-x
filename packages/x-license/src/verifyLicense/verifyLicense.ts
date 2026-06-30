@@ -243,6 +243,8 @@ export function verifyLicense({
   if (license.licenseModel === 'perpetual' || process.env.NODE_ENV === 'production') {
     const pkgTimestamp = parseInt(base64Decode(releaseDate), 10);
     if (Number.isNaN(pkgTimestamp)) {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         'MUI X: The release information is invalid and license validation cannot proceed. ' +
           'The package release timestamp could not be parsed. ' +

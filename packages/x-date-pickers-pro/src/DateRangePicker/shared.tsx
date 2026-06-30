@@ -1,26 +1,26 @@
 import * as React from 'react';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
-import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
-import {
+import type { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
+import type {
   BasePickerInputProps,
   PickerViewRendererLookup,
   PickerRangeValue,
-  useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRangeValidationError } from '../models';
-import {
+import { useApplyDefaultValuesToDateValidationProps } from '@mui/x-date-pickers/internals';
+import type { DateRangeValidationError } from '../models';
+import type {
   DateRangeCalendarSlots,
   DateRangeCalendarSlotProps,
   ExportedDateRangeCalendarProps,
 } from '../DateRangeCalendar';
-import {
-  DateRangePickerToolbar,
+import type {
   DateRangePickerToolbarProps,
   ExportedDateRangePickerToolbarProps,
 } from './DateRangePickerToolbar';
-import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
-import { ValidateDateRangePropsToDefault } from '../validation/validateDateRange';
+import { DateRangePickerToolbar } from './DateRangePickerToolbar';
+import type { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
+import type { ValidateDateRangePropsToDefault } from '../validation/validateDateRange';
 
 export interface BaseDateRangePickerSlots extends DateRangeCalendarSlots {
   /**
