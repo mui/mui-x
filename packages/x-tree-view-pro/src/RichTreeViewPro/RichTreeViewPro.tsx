@@ -324,11 +324,15 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
    */
   getItemId: PropTypes.func,
   /**
-   * Used to determine the string label for a given item.
+   * Used to determine the label for a given item.
+   *
+   * Return a string for items that participate in keyboard type-ahead navigation.
+   * Return a `React.ReactNode` (e.g. `<Skeleton />`) for decorative or loading labels —
+   * these are rendered as-is but are excluded from type-ahead search.
    *
    * @template R
    * @param {R} item The item to check.
-   * @returns {string} The label of the item.
+   * @returns {string | React.ReactNode} The label of the item.
    * @default (item) => item.label
    */
   getItemLabel: PropTypes.func,
@@ -380,6 +384,11 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
+   * If `true`, the reordering of items is enabled.
+   * @default false
+   */
+  itemsReordering: PropTypes.bool,
+  /**
    * If `true`, a skeleton loading UI is displayed instead of the tree items.
    * @default false
    */
@@ -389,11 +398,6 @@ RichTreeViewPro.propTypes /* remove-proptypes */ = {
    * @default 5
    */
   loadingItemsCount: PropTypes.number,
-  /**
-   * If `true`, the reordering of items is enabled.
-   * @default false
-   */
-  itemsReordering: PropTypes.bool,
   /**
    * Whether multiple items can be selected.
    * @default false
