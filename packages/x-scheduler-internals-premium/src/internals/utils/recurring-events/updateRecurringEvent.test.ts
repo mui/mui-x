@@ -796,6 +796,22 @@ describe('recurring-events/updateRecurringEvent', () => {
       ]);
     });
 
+    it('should keep the occurrence date when changes omit start/end instead of using DTSTART', () => {
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
+
+      const updatedEvents = applyRecurringUpdateOnlyThis(adapter, defaultEvent, occurrenceStart, {
+        id: defaultEvent.id,
+        title: 'Edit only this',
+      });
+
+      const createdEvent = updatedEvents.created![0];
+      expect(createdEvent.start).to.equal(occurrenceStart.toISOString());
+      expect(createdEvent.end).to.equal(adapter.addMinutes(occurrenceStart, 60).toISOString());
+      expect(updatedEvents.updated).to.deep.equal([
+        { id: defaultEvent.id, exDates: [adapter.startOfDay(occurrenceStart)] },
+      ]);
+    });
+
     it('should accumulate previous exDates', () => {
       const original = EventBuilder.new()
         .singleDay('2025-01-01T09:00:00Z')
