@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import type { ZoomData } from '@mui/x-charts-pro/models';
 import { electricityGeneration2024Hourly } from '../dataset/electricityGeneration2024Hourly';
 
 // Real dataset: average electricity generation (MW) for every hour of 2024 (8,784 points).
@@ -16,6 +17,10 @@ const METHODS = [
 ] as const;
 
 export default function SamplingMethodComparison() {
+  // Shared controlled zoom so the charts stay aligned: zooming one zooms all, comparing the methods
+  // over the same range.
+  const [zoomData, setZoomData] = React.useState<ZoomData[]>([{ axisId: 'x', start: 0, end: 100 }]);
+
   return (
     <Box
       sx={{
@@ -32,10 +37,12 @@ export default function SamplingMethodComparison() {
           </Typography>
           <LineChartPro
             series={[{ data, showMark: false }]}
-            xAxis={[{ data: xData, zoom: true }]}
+            xAxis={[{ data: xData, id: 'x', zoom: true }]}
             yAxis={[{ width: 40 }]}
             height={160}
             sampling={method.value}
+            zoomData={zoomData}
+            onZoomChange={setZoomData}
             hideLegend
           />
         </Box>
