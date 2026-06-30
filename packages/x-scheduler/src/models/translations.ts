@@ -18,13 +18,13 @@ export interface EventDialogLocaleText {
   closeButtonAriaLabel: string;
   closeButtonLabel: string;
   editEventButtonAriaLabel: string;
+  deleteEventButtonAriaLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
   eventTitlePlaceholder: string;
-  tapToEditEvent: string;
   generalTabLabel: string;
   labelNoResource: string;
   labelInvalidResource: string;

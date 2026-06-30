@@ -2,7 +2,6 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
-import EditRounded from '@mui/icons-material/EditRounded';
 import { useEventEditingStyledContext } from '../event-editing';
 
 const EventDialogHeaderRoot = styled('header', {
@@ -22,10 +21,6 @@ const EventDialogHeaderRoot = styled('header', {
 
 interface EventDialogHeaderProps {
   onClose: () => void;
-  /**
-   * Renders an edit affordance that switches the summary to the form. Omitted for read-only events.
-   */
-  onEdit?: () => void;
   dragHandlerRef?: React.RefObject<HTMLElement | null>;
   /**
    * Whether the header acts as a drag handle; when `false` the move cursor is suppressed.
@@ -36,7 +31,7 @@ interface EventDialogHeaderProps {
 }
 
 export default function EventDialogHeader(props: EventDialogHeaderProps) {
-  const { children, onClose, onEdit, dragHandlerRef, isDraggable = true } = props;
+  const { children, onClose, dragHandlerRef, isDraggable = true } = props;
   const { classes, localeText } = useEventEditingStyledContext();
 
   return (
@@ -47,15 +42,6 @@ export default function EventDialogHeader(props: EventDialogHeaderProps) {
     >
       {children}
       <div className={classes.eventDialogHeaderActions}>
-        {onEdit && (
-          <IconButton
-            className={classes.eventDialogEditButton}
-            aria-label={localeText.editEventButtonAriaLabel}
-            onClick={onEdit}
-          >
-            <EditRounded />
-          </IconButton>
-        )}
         <IconButton
           className={classes.eventDialogCloseButton}
           aria-label={localeText.closeButtonAriaLabel}

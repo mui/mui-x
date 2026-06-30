@@ -23,10 +23,8 @@ import {
   getInitialEditingMode,
 } from '../event-editing';
 import { calculatePosition } from '../../utils/dialog-utils';
+import { AnchoredEventToolbar } from '../event-toolbar';
 import ReadonlyContent from './ReadonlyContent';
-
-// Coarse pointer = touch/pen. Resizing while the dialog is open is a touch-only affordance.
-const TOUCH_MEDIA = '@media (pointer: coarse)';
 
 const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
@@ -42,15 +40,6 @@ const EventDialogRoot = styled(Dialog, {
   },
   [`& .${dialogClasses.paper}`]: {
     margin: 0,
-  },
-  // Touch only: disabling `pointer-events` on the root lets taps fall through to the grid so the
-  // armed event stays resizable; the paper re-enables them for itself. Outside-tap close is then
-  // handled by the grid (`DayTimeGrid`'s `useDisarmOnOutsidePointer`), not the transparent backdrop.
-  [TOUCH_MEDIA]: {
-    pointerEvents: 'none',
-    [`& .${dialogClasses.paper}`]: {
-      pointerEvents: 'auto',
-    },
   },
 });
 
@@ -165,11 +154,8 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const { schedulerId, classes } = useEventEditingStyledContext();
 
   // Selector hooks
-  // Render from the live editing occurrence (reflects resizes behind the dialog); fall back to the prop while closing.
-  const editingOccurrence = useStore(
-    store,
-    schedulerOtherSelectors.editingOccurrenceWithResizePreview,
-  );
+  // Fall back to the prop while closing, when the editing occurrence has already been cleared.
+  const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
   const occurrence = editingOccurrence ?? occurrenceProp;
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
@@ -177,33 +163,24 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   // Ref hooks
   const dragHandlerRef = React.useRef<HTMLElement>(null);
 
-  let content: React.ReactNode;
-  if (isEventReadOnly) {
-    // Read-only events have no editing form, hence no edit affordance.
-    content = (
-      <ReadonlyContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
-    );
-  } else if (editingMode === 'readonly') {
-    // Editable event opened on its summary (touch): show the summary with an edit affordance.
-    content = (
-      <ReadonlyContent
-        occurrence={occurrence}
-        onClose={onClose}
-        onEdit={() => store.setEditingMode('edit')}
-        dragHandlerRef={dragHandlerRef}
-      />
-    );
-  } else {
-    // Mounting fresh on each occurrence keeps the form initialized from the current times.
-    content = (
-      <FormContent
-        key={occurrence.key}
-        occurrence={occurrence}
-        onClose={onClose}
-        dragHandlerRef={dragHandlerRef}
-      />
-    );
+  // Armed (touch): show the action toolbar next to the event rather than the editing surface. The
+  // toolbar's Edit switches to `'edit'`, which swaps in the dialog below anchored to the same event.
+  if (editingMode === 'armed') {
+    return <AnchoredEventToolbar anchorRef={anchorRef} occurrence={occurrence} />;
   }
+
+  // Read-only events have no editing form; editable events open the form fresh on each occurrence
+  // (keyed) so it initializes from the current times.
+  const content = isEventReadOnly ? (
+    <ReadonlyContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
+  ) : (
+    <FormContent
+      key={occurrence.key}
+      occurrence={occurrence}
+      onClose={onClose}
+      dragHandlerRef={dragHandlerRef}
+    />
+  );
 
   return (
     <EventDialogRoot
@@ -257,7 +234,11 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
         )}
         onOpen={(occurrence) => {
           const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
-          store.startEditing(occurrence, getInitialEditingMode('dialog', { isCreating }));
+          const isReadOnly = schedulerEventSelectors.isReadOnly(store.state, occurrence.id);
+          store.startEditing(
+            occurrence,
+            getInitialEditingMode('dialog', { isCreating, isReadOnly }),
+          );
         }}
         onClose={() => {
           store.stopEditing();

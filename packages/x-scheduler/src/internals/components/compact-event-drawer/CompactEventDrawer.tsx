@@ -1,6 +1,9 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import { drawerClasses } from '@mui/material/Drawer';
+import { backdropClasses } from '@mui/material/Backdrop';
 import { useStore } from '@base-ui/utils/store';
 import {
   schedulerEventSelectors,
@@ -15,33 +18,23 @@ import {
 } from '../event-editing';
 import { CompactReadonlyContent } from './CompactReadonlyContent';
 
-// Collapsed ("peek") drawer height as a fraction of the view; tapping expands it to full height.
-const PEEK_HEIGHT = '35%';
-
-const CompactEventDrawerRoot = styled('div', {
+const CompactEventDrawerRoot = styled(SwipeableDrawer, {
   name: 'MuiEventCalendar',
   slot: 'CompactEventDrawer',
 })(({ theme }) => ({
-  flexShrink: 0,
-  boxSizing: 'border-box',
-  overflow: 'hidden',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(1),
-  backgroundColor: (theme.vars || theme).palette.grey[50],
-  ...theme.applyStyles('dark', {
-    backgroundColor: (theme.vars || theme).palette.grey[900],
-  }),
-  height: 0,
-  transition: theme.transitions.create('height', {
-    duration: theme.transitions.duration.shorter,
-  }),
-  '&[data-open]': {
-    height: PEEK_HEIGHT,
-    paddingTop: theme.spacing(1),
+  position: 'absolute',
+  [`& .${backdropClasses.root}`]: {
+    position: 'absolute',
   },
-  '&[data-expanded]': {
-    height: '100%',
+  [`& .${drawerClasses.paper}`]: {
+    position: 'absolute',
+    height: '95%',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    borderTopLeftRadius: (theme.vars || theme).shape.borderRadius,
+    borderTopRightRadius: (theme.vars || theme).shape.borderRadius,
   },
 }));
 
@@ -59,65 +52,66 @@ const CompactEventDrawerContent = styled('div', {
   },
 });
 
+interface CompactEventDrawerProps {
+  /** The compact view root; the drawer is constrained to it so it stays inside the view, not the viewport. */
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}
+
 /**
  * The editing drawer for the compact (mobile) day/time grid.
- *
- * Rendered below the grid and driven by the shared editing surface: arming an event (single tap)
- * peeks the read-only summary; tapping the drawer expands to full height and swaps in the form
- * (read-only events keep the summary).
- *
- * Reuses the shared `FormContent`, `CompactReadonlyContent` summary, and `recurringScopeDialog`
- * renderer so the editing experience matches across platforms.
- */
-export function CompactEventDrawer() {
+ **/
+export function CompactEventDrawer(props: CompactEventDrawerProps) {
+  const { containerRef } = props;
+
   const store = useEventCalendarStoreContext();
   // Open/close state comes from the shared editing surface.
-  const { isOpen, onClose } = useEventEditingContext();
-  // During a touch resize this reflects the live placeholder times, previewing the new start/end before commit.
-  const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrenceWithResizePreview);
+  const { onClose } = useEventEditingContext();
+
+  const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
   // When closed there's no occurrence; the empty id resolves to `false`.
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence?.id ?? '');
 
   // The scope confirmation reads its own open state and renders its own centered-dialog shell.
   const { recurringScopeDialog: RecurringScopeDialogRenderer } = useEventEditingOptionalRenderers();
 
-  // Driven by the shared editing mode, so peek resets on each newly armed occurrence (`startEditing(..., 'readonly')`).
-  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
-  const expanded = editingMode === 'edit';
+  // The drawer is only shown while editing; arming shows the bottom toolbar instead (see CompactDayTimeGrid).
+  const open = editingMode === 'edit';
 
-  // The reused dialog content needs a drag handle ref; the drawer doesn't drag, so pass a throwaway ref + `isDraggable={false}`.
   const dragHandlerRef = React.useRef<HTMLElement | null>(null);
 
-  // Expanding swaps in the form unless read-only, where the summary stays.
-  const showForm = expanded && !isReadOnly;
-
   return (
-    <CompactEventDrawerRoot
-      data-open={isOpen || undefined}
-      data-expanded={(isOpen && expanded) || undefined}
-      aria-hidden={!isOpen}
-      onClick={() => {
-        if (isOpen && !expanded && !isReadOnly) {
-          store.setEditingMode('edit');
-        }
-      }}
-    >
-      {isOpen && occurrence && (
-        <CompactEventDrawerContent>
-          {showForm ? (
-            <FormContent
-              key={occurrence.key}
-              occurrence={occurrence}
-              onClose={onClose}
-              dragHandlerRef={dragHandlerRef}
-              isDraggable={false}
-            />
-          ) : (
-            <CompactReadonlyContent occurrence={occurrence} onClose={onClose} />
-          )}
-        </CompactEventDrawerContent>
-      )}
+    <React.Fragment>
+      <CompactEventDrawerRoot
+        anchor="bottom"
+        open={open}
+        // Swipe-down, backdrop press, and escape all close the drawer; mirror that on the store.
+        onClose={() => onClose()}
+        // The drawer is opened programmatically (from the toolbar), never by an edge swipe.
+        onOpen={() => {}}
+        disableSwipeToOpen
+        ModalProps={{
+          container: () => containerRef.current,
+          disableScrollLock: true,
+        }}
+      >
+        {occurrence && (
+          <CompactEventDrawerContent>
+            {isReadOnly ? (
+              <CompactReadonlyContent occurrence={occurrence} onClose={onClose} />
+            ) : (
+              <FormContent
+                key={occurrence.key}
+                occurrence={occurrence}
+                onClose={onClose}
+                dragHandlerRef={dragHandlerRef}
+                isDraggable={false}
+              />
+            )}
+          </CompactEventDrawerContent>
+        )}
+      </CompactEventDrawerRoot>
       {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}
-    </CompactEventDrawerRoot>
+    </React.Fragment>
   );
 }

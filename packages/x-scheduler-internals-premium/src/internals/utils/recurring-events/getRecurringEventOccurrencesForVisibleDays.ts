@@ -11,6 +11,7 @@ import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   getDateKey,
   getOccurrenceEnd,
+  getRecurringOccurrenceKey,
   mergeDateAndTime,
   normalizeAllDayBounds,
 } from '@mui/x-scheduler-internals/internals';
@@ -218,7 +219,7 @@ class RecurringEventExpander {
       );
     occurrences.push({
       ...this.event,
-      key: `${this.event.id}::${dateKey}`,
+      key: getRecurringOccurrenceKey(this.event.id, day, this.adapter),
       dataTimezone: {
         ...this.event.dataTimezone,
         start: processDate(occurrenceStartOriginal, this.adapter),

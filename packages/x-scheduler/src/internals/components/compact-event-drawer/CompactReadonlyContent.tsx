@@ -65,9 +65,7 @@ export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
     <React.Fragment>
       <CompactReadonlyContentHeader>
         <CompactReadonlyContentTitle variant="body1" noWrap>
-          {showPlaceholder
-            ? localeText.eventTitlePlaceholder
-            : `${occurrence?.title} (${localeText.tapToEditEvent})`}
+          {showPlaceholder ? localeText.eventTitlePlaceholder : occurrence?.title}
         </CompactReadonlyContentTitle>
         <IconButton
           size="small"

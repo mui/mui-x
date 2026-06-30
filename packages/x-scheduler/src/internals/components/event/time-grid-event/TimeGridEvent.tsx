@@ -200,7 +200,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
       background: 'var(--event-surface-selected)',
     },
   },
-  // Touch devices: tighter padding, an armed selection outline, and no accent bar.
+  // Touch devices: tighter padding, a selection outline, and no accent bar.
   [TOUCH_MEDIA]: {
     padding: theme.spacing(0.5, 0.7, 0.5, 0.7),
     '&[data-under-hour="true"]': {
@@ -210,7 +210,9 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     '&[data-under-fifteen-minutes="true"]': {
       padding: theme.spacing(0, 0.5),
     },
-    '&[data-armed]': {
+    // Touch has no hover "selected" fill, so the outline is the only editing affordance: keep it for
+    // both the armed state (toolbar) and while the editing surface is open (`data-editing`).
+    '&[data-armed], &[data-editing]': {
       outline: '2px solid var(--event-main)',
       outlineOffset: '-2px',
     },
@@ -400,8 +402,10 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const formatTime = useFormatTime();
 
-  // Armed = this occurrence is being edited. Touch styles reveal the resize dots + outline; inert on a mouse.
-  const isArmed = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
+  // Armed = this occurrence shows its action toolbar (touch). Touch styles reveal the resize dots +
+  // outline; inert on a mouse. Editing = the surface is open for it (either mode), for the selected look.
+  const isArmed = useStore(store, schedulerOtherSelectors.isEditedOccurrenceArmed, occurrence.key);
+  const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
 
   // Creation / internal-resize placeholders host sizing handles; move placeholders don't. Suppressed
@@ -492,7 +496,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={isArmed || undefined}
-      data-editing={isArmed || undefined}
+      data-editing={isEditing || undefined}
       {...rootDataAttributes}
       {...sharedProps}
       className={clsx(classes.timeGridEvent, sharedProps.className)}

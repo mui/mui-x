@@ -223,12 +223,6 @@
       "isGlobal": false
     },
     {
-      "key": "eventDialogEditButton",
-      "className": "MuiEventTimelinePremium-eventDialogEditButton",
-      "description": "Styles applied to the event dialog edit button element.",
-      "isGlobal": false
-    },
-    {
       "key": "eventDialogEndsRadioGroup",
       "className": "MuiEventTimelinePremium-eventDialogEndsRadioGroup",
       "description": "Styles applied to the event dialog ends radio group element.",
@@ -502,6 +496,24 @@
       "key": "eventSkeleton",
       "className": "MuiEventTimelinePremium-eventSkeleton",
       "description": "Styles applied to the event skeleton element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbar",
+      "className": "MuiEventTimelinePremium-eventToolbar",
+      "description": "Styles applied to the armed-event toolbar root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbarDeleteButton",
+      "className": "MuiEventTimelinePremium-eventToolbarDeleteButton",
+      "description": "Styles applied to the armed-event toolbar delete button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventToolbarEditButton",
+      "className": "MuiEventTimelinePremium-eventToolbarEditButton",
+      "description": "Styles applied to the armed-event toolbar edit button element.",
       "isGlobal": false
     },
     {

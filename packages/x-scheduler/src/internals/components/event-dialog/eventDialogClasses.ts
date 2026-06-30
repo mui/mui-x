@@ -1,10 +1,14 @@
 export interface EventDialogClasses {
   /** Styles applied to the event dialog root element. */
   eventDialog: string;
+  /** Styles applied to the armed-event toolbar root element. */
+  eventToolbar: string;
+  /** Styles applied to the armed-event toolbar edit button element. */
+  eventToolbarEditButton: string;
+  /** Styles applied to the armed-event toolbar delete button element. */
+  eventToolbarDeleteButton: string;
   /** Styles applied to the event dialog close button element. */
   eventDialogCloseButton: string;
-  /** Styles applied to the event dialog edit button element. */
-  eventDialogEditButton: string;
   /** Styles applied to the event dialog header element. */
   eventDialogHeader: string;
   /** Styles applied to the event dialog header actions container element. */
@@ -107,8 +111,10 @@ export type EventDialogClassKey = keyof EventDialogClasses;
 
 export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialog',
+  'eventToolbar',
+  'eventToolbarEditButton',
+  'eventToolbarDeleteButton',
   'eventDialogCloseButton',
-  'eventDialogEditButton',
   'eventDialogHeader',
   'eventDialogHeaderActions',
   'eventDialogReadonlyContent',
@@ -162,8 +168,10 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
 // Create a slots object for reuse in useUtilityClasses (avoids duplication in EventCalendar.tsx and EventTimelinePremium.tsx)
 export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]> = {
   eventDialog: ['eventDialog'],
+  eventToolbar: ['eventToolbar'],
+  eventToolbarEditButton: ['eventToolbarEditButton'],
+  eventToolbarDeleteButton: ['eventToolbarDeleteButton'],
   eventDialogCloseButton: ['eventDialogCloseButton'],
-  eventDialogEditButton: ['eventDialogEditButton'],
   eventDialogHeader: ['eventDialogHeader'],
   eventDialogHeaderActions: ['eventDialogHeaderActions'],
   eventDialogReadonlyContent: ['eventDialogReadonlyContent'],

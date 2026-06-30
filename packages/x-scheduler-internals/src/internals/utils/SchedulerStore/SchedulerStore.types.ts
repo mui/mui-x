@@ -33,18 +33,19 @@ export interface StoredError {
 }
 
 /**
- * Which face of the editing surface (dialog or drawer) is shown:
- * - `'readonly'`: summary; event stays resizable and a resize commits immediately.
- * - `'edit'`: form; event is not resizable while open.
+ * Which face the edited occurrence is in:
+ * - `'armed'`: no surface is shown; the event displays its resize handles and an action toolbar
+ *   (Edit / Delete). A resize commits immediately. Touch-only.
+ * - `'edit'`: the editing surface (dialog or drawer) is shown; the event is not resizable while open.
  */
-export type SchedulerEditingMode = 'readonly' | 'edit';
+export type SchedulerEditingMode = 'armed' | 'edit';
 
 export interface SchedulerEditingState {
   /** The occurrence being edited — existing or a creation draft. */
   occurrence: SchedulerRenderableEventOccurrence;
   /**
-   * Whether the surface shows the read-only summary or the form.
-   * Touch arms in `'readonly'` (edit affordance switches to `'edit'`); non-touch opens in `'edit'`.
+   * Whether the occurrence is armed (toolbar + resize handles, no surface) or being edited (surface open).
+   * Touch arms in `'armed'` (the toolbar's Edit switches to `'edit'`); non-touch opens directly in `'edit'`.
    */
   mode: SchedulerEditingMode;
 }

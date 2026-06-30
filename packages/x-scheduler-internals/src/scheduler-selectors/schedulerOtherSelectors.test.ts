@@ -36,91 +36,49 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
-    describe('editingOccurrenceWithResizePreview', () => {
-      const start = adapter.date('2025-07-03T09:00:00Z', 'default');
-      const end = adapter.date('2025-07-03T10:00:00Z', 'default');
-
-      // Selector reads `occurrence.key` and spreads `occurrence.displayTimezone`; a minimal one suffices.
-      const editedOccurrence = {
-        id: 'event-1',
-        key: 'event-1',
-        displayTimezone: { start, end, timezone: 'default' },
-      } as any;
-
+    describe('editingOccurrence', () => {
       it('should return null when nothing is being edited', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        expect(schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state)).to.equal(
-          null,
+        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+      });
+
+      it('should return the edited occurrence', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        const edited = occurrence('event-1');
+        store.startEditing(edited);
+        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(edited);
+      });
+    });
+
+    describe('isEditedOccurrenceArmed', () => {
+      it('should return false when nothing is being edited', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        expect(schedulerOtherSelectors.isEditedOccurrenceArmed(store.state, 'event-1')).to.equal(
+          false,
         );
       });
 
-      it('should return the edited occurrence unchanged when no resize is in progress', () => {
+      it('should return true when the matching occurrence is armed', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        store.startEditing(editedOccurrence);
-        expect(schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state)).to.equal(
-          editedOccurrence,
+        store.startEditing(occurrence('event-1'), 'armed');
+        expect(schedulerOtherSelectors.isEditedOccurrenceArmed(store.state, 'event-1')).to.equal(
+          true,
         );
       });
 
-      it('should apply the resize placeholder times when resizing the edited occurrence', () => {
+      it('should return false when the matching occurrence is being edited in the form', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        store.startEditing(editedOccurrence);
-
-        const newEnd = adapter.date('2025-07-03T11:30:00Z', 'default');
-        store.setOccurrencePlaceholder({
-          type: 'internal-resize',
-          surfaceType: 'time-grid',
-          start,
-          end: newEnd,
-          eventId: 'event-1',
-          occurrenceKey: 'event-1',
-          originalOccurrence: editedOccurrence,
-          resourceId: null,
-        });
-
-        const result = schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state);
-        expect(result).to.not.equal(editedOccurrence);
-        expect(result!.displayTimezone.start.value).toEqualDateTime(start);
-        expect(result!.displayTimezone.end.value).toEqualDateTime(newEnd);
-      });
-
-      it('should ignore a resize placeholder targeting a different occurrence', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        store.startEditing(editedOccurrence);
-
-        store.setOccurrencePlaceholder({
-          type: 'internal-resize',
-          surfaceType: 'time-grid',
-          start,
-          end: adapter.date('2025-07-03T11:30:00Z', 'default'),
-          eventId: 'event-2',
-          occurrenceKey: 'event-2',
-          originalOccurrence: editedOccurrence,
-          resourceId: null,
-        });
-
-        expect(schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state)).to.equal(
-          editedOccurrence,
+        store.startEditing(occurrence('event-1'), 'edit');
+        expect(schedulerOtherSelectors.isEditedOccurrenceArmed(store.state, 'event-1')).to.equal(
+          false,
         );
       });
 
-      it('should ignore a non-resize placeholder (e.g. an internal drag)', () => {
+      it('should return false when a different occurrence is armed', () => {
         const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        store.startEditing(editedOccurrence);
-
-        store.setOccurrencePlaceholder({
-          type: 'internal-drag',
-          surfaceType: 'time-grid',
-          start: adapter.date('2025-07-03T12:00:00Z', 'default'),
-          end: adapter.date('2025-07-03T13:00:00Z', 'default'),
-          eventId: 'event-1',
-          occurrenceKey: 'event-1',
-          originalOccurrence: editedOccurrence,
-          resourceId: null,
-        });
-
-        expect(schedulerOtherSelectors.editingOccurrenceWithResizePreview(store.state)).to.equal(
-          editedOccurrence,
+        store.startEditing(occurrence('event-2'), 'armed');
+        expect(schedulerOtherSelectors.isEditedOccurrenceArmed(store.state, 'event-1')).to.equal(
+          false,
         );
       });
     });

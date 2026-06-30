@@ -160,10 +160,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog description label element"
     },
-    "eventDialogEditButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the event dialog edit button element"
-    },
     "eventDialogEndsRadioGroup": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog ends radio group element"
@@ -347,6 +343,18 @@
     "eventSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event skeleton element"
+    },
+    "eventToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the armed-event toolbar root element"
+    },
+    "eventToolbarDeleteButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the armed-event toolbar delete button element"
+    },
+    "eventToolbarEditButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the armed-event toolbar edit button element"
     },
     "grid": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the grid element" },
     "header": {

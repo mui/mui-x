@@ -33,22 +33,18 @@ const EventDialogTitle = styled(Typography, {
 type ReadonlyContentProps = {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
-  /**
-   * Switches the dialog to the editing form. Omitted for read-only events (no form).
-   */
-  onEdit?: () => void;
   dragHandlerRef: React.RefObject<HTMLElement | null>;
 };
 
 export default function ReadonlyContent(props: ReadonlyContentProps) {
-  const { occurrence, onClose, onEdit, dragHandlerRef } = props;
+  const { occurrence, onClose, dragHandlerRef } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
 
   return (
     <ReadonlyContentDragContainer ref={dragHandlerRef}>
-      <EventDialogHeader onClose={onClose} onEdit={onEdit}>
+      <EventDialogHeader onClose={onClose}>
         <EventDialogTitle
           variant="h6"
           id={`${schedulerId}-event-dialog-title`}

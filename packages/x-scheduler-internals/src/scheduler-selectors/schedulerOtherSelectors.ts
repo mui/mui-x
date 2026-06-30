@@ -1,6 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
-import { processDate } from '../process-date';
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
@@ -14,33 +13,10 @@ export const schedulerOtherSelectors = {
       editedOccurrenceKey != null && editedOccurrenceKey === occurrenceKey,
   ),
   /**
-   * The edited occurrence with the live resize preview applied, or `null`.
-   * During a resize new times live on the `internal-resize` placeholder (occurrence updates only on
-   * pointer-up); surfaces read this to preview the in-progress times.
+   * The occurrence currently being edited (existing or a creation draft), or `null`.
+   * The editing surfaces (dialog / drawer) read from here.
    */
-  editingOccurrenceWithResizePreview: createSelectorMemoized(
-    (state: State) => state.adapter,
-    (state: State) => state.editingOccurrence?.occurrence ?? null,
-    (state: State) => state.occurrencePlaceholder,
-    (adapter, occurrence, placeholder) => {
-      if (
-        occurrence == null ||
-        placeholder?.type !== 'internal-resize' ||
-        placeholder.occurrenceKey !== occurrence.key
-      ) {
-        return occurrence;
-      }
-
-      return {
-        ...occurrence,
-        displayTimezone: {
-          ...occurrence.displayTimezone,
-          start: processDate(placeholder.start, adapter),
-          end: processDate(placeholder.end, adapter),
-        },
-      };
-    },
-  ),
+  editingOccurrence: createSelector((state: State) => state.editingOccurrence?.occurrence ?? null),
   visibleDate: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
@@ -48,10 +24,20 @@ export const schedulerOtherSelectors = {
     (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
   ),
   /**
-   * Which face the surface shows (`'readonly'` summary or `'edit'` form), or `null` when idle.
-   * Drives the read-only-vs-form swap and whether the edited event stays resizable.
+   * Which face the edited occurrence is in (`'armed'` toolbar or `'edit'` surface), or `null` when idle.
+   * Drives the toolbar-vs-surface swap and whether the edited event stays resizable.
    */
   editingMode: createSelector((state: State) => state.editingOccurrence?.mode ?? null),
+  /**
+   * Returns `true` when the occurrence with the given key is armed (`'armed'`): it shows its resize
+   * handles + action toolbar and no surface is open.
+   */
+  isEditedOccurrenceArmed: createSelector(
+    (state: State) => state.editingOccurrence?.occurrence.key ?? null,
+    (state: State) => state.editingOccurrence?.mode ?? null,
+    (editedOccurrenceKey, mode, occurrenceKey: string | undefined) =>
+      mode === 'armed' && editedOccurrenceKey != null && editedOccurrenceKey === occurrenceKey,
+  ),
   /**
    * Returns `true` when the occurrence with the given key is being edited in the form (`'edit'`).
    * Resizing is disabled then — the form is the only way to change times.

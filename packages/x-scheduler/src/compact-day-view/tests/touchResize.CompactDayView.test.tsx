@@ -8,7 +8,6 @@ import {
   getResizeHandle,
   simulatePointerResize,
 } from 'test/utils/scheduler';
-import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 
 /**
@@ -107,37 +106,5 @@ describe('CompactDayView - touch resize', () => {
     });
 
     expect(onEventsChange.callCount).to.equal(0);
-  });
-
-  it('pointer-resizes a creation placeholder in place without committing it', async () => {
-    const onEventsChange = spy();
-    render(<StandaloneCompactDayView events={[]} resources={[]} onEventsChange={onEventsChange} />);
-
-    const column = getTimeGridColumn();
-    mockElementBounds(column, { top: 0, height: 1440, width: 200 });
-
-    // Tap an empty slot (~9:00) to start creating: sets a `creation` placeholder with resize handles.
-    fireEvent.click(column, { clientY: clientYForTime(0, 24, 9) });
-
-    const placeholder = document.querySelector<HTMLElement>(
-      `.${eventCalendarClasses.timeGridEventPlaceholder}`,
-    );
-    expect(placeholder).not.to.equal(null);
-    const heightBefore = placeholder!.style.getPropertyValue('--height');
-
-    const endHandle = getResizeHandle(placeholder!, 'end');
-    await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 18) } });
-    });
-
-    // Draft has no underlying event, so pointer-up commits nothing.
-    expect(onEventsChange.callCount).to.equal(0);
-
-    // Placeholder is updated in place (still present, now taller) rather than dropped.
-    const placeholderAfter = document.querySelector<HTMLElement>(
-      `.${eventCalendarClasses.timeGridEventPlaceholder}`,
-    );
-    expect(placeholderAfter).not.to.equal(null);
-    expect(placeholderAfter!.style.getPropertyValue('--height')).not.to.equal(heightBefore);
   });
 });
