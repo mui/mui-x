@@ -8,7 +8,7 @@ import {
   EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { isJSDOM } from 'test/utils/skipIf';
 
 // Tab between events only works on top of real layout (the handler reads

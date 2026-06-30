@@ -7,7 +7,7 @@ import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/us
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
-import { StandaloneWeekViewPremiumProps } from './WeekViewPremium.types';
+import type { StandaloneWeekViewPremiumProps } from './WeekViewPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',

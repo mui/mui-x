@@ -7,7 +7,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { isJSDOM } from 'test/utils/skipIf';
 
 function getTitleColumnWidth(): number {
