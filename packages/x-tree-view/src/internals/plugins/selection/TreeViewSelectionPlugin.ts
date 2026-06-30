@@ -308,8 +308,10 @@ function propagateSelection({
     if (selectionPropagation.descendants) {
       const selectDescendants = (itemId: TreeViewItemId) => {
         if (itemId !== addedItemId) {
-          shouldRegenerateModel = true;
-          newModelLookup[itemId] = true;
+          if (selectionSelectors.canItemBeSelected(store.state, itemId)) {
+            shouldRegenerateModel = true;
+            newModelLookup[itemId] = true;
+          }
         }
 
         itemsSelectors.itemOrderedChildrenIds(store.state, itemId).forEach(selectDescendants);

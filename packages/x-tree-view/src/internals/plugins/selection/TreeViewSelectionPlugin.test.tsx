@@ -866,6 +866,19 @@ describeTreeView<TreeViewAnyStore>(
           expect(view.getSelectedTreeItems()).to.deep.equal(['1.1', '1.2']);
         });
 
+        it('should not select disabled children when selecting a parent', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2', disabled: true }] }],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { descendants: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1']);
+        });
+
         it('should not unselect the parent when unselecting a children', () => {
           const view = render({
             multiSelect: true,
