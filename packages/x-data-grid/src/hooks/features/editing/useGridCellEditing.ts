@@ -456,9 +456,12 @@ export const useGridCellEditing = (
         }
       } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
-          prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
-          // Revert the mode in the cellModesModel prop back to "edit"
-          updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+          // The row might have been deleted
+          if (prevCellModesModel.current[id]?.[field]) {
+            prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
+            // Revert the mode in the cellModesModel prop back to "edit"
+            updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+          }
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
