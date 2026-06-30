@@ -38,7 +38,6 @@ import {
 import type { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
-import type { ChartStore } from '../../models/chart';
 
 const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
 
@@ -133,7 +132,6 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
     seriesLayout: SeriesLayout<SeriesType>,
     axesConfig: TooltipPositionGetterAxesConfig,
     placement: 'top' | 'bottom' | 'left' | 'right' | undefined,
-    store: ChartStore,
   ) {
     if (!identifier) {
       return null;
@@ -154,7 +152,6 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
         axesConfig,
         identifier,
         placement: placement ?? 'top',
-        store,
       }) ?? null
     );
   },

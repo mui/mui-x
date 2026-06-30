@@ -16,12 +16,14 @@ import type { TriggerOptions } from './utils';
 import { useUtilityClasses } from './chartsTooltipClasses';
 import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
-import type { ChartState, ChartStore } from '../internals/plugins/models/chart';
+import type { TooltipItemPositionSelector } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import {
   selectorChartsLastInteraction,
   selectorChartsPointerType,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
+  selectorChartsTooltipItem,
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
@@ -66,24 +68,15 @@ const defaultAnchorByTrigger = {
   none: 'pointer',
 } as const;
 
-/**
- * Shared shape of the tooltip position selectors. The axis and null selectors
- * take fewer parameters than the item selector, so they stay assignable to it.
- */
-type TooltipPositionSelector = (
-  state: ChartState<
-    [UseChartCartesianAxisSignature, UseChartInteractionSignature, UseChartTooltipSignature]
-  >,
-  position: ChartsTooltipContainerProps['position'],
-  store: ChartStore,
-) => { x: number; y: number } | null;
-
+// The axis and null selectors take a state the item selector's state is
+// assignable to, so they all converge to `TooltipItemPositionSelector`.
 const getPositionSelectorByAnchor = (
   anchor: 'pointer' | 'node' | 'chart',
-): TooltipPositionSelector => {
+  itemPositionSelector: TooltipItemPositionSelector,
+): TooltipItemPositionSelector => {
   switch (anchor) {
     case 'node':
-      return selectorChartsTooltipItemPosition;
+      return itemPositionSelector;
     case 'chart':
       return selectorChartsTooltipAxisPosition;
     default:
@@ -223,10 +216,18 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const pointerAnchorUnavailable = lastInteraction === 'keyboard' || pointerType === null;
   const computedAnchor = pointerAnchorUnavailable ? defaultAnchorByTrigger[trigger] : anchor;
 
+  // A series type can override how its item tooltip is positioned (e.g. map
+  // shapes position from the geo projection); otherwise the generic item
+  // selector is used.
+  const tooltipItem = store.use(selectorChartsTooltipItem);
+  const seriesConfig = store.use(selectorChartSeriesConfig);
+  const itemPositionSelector: TooltipItemPositionSelector =
+    (tooltipItem && seriesConfig[tooltipItem.type]?.tooltipItemPositionSelector) ||
+    selectorChartsTooltipItemPosition;
+
   const itemPosition = store.use(
-    getPositionSelectorByAnchor(computedAnchor),
+    getPositionSelectorByAnchor(computedAnchor, itemPositionSelector),
     props.position,
-    store,
   );
 
   const isTooltipNodeAnchored = itemPosition !== null;

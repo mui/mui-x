@@ -6,7 +6,7 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
 import keyboardFocusHandler from './keyboardFocusHandler';
-import tooltipItemPositionGetter from './tooltipPosition';
+import tooltipItemPositionSelector from './tooltipPosition';
 import identifierSerializer from './identifierSerializer';
 import identifierCleaner from './identifierCleaner';
 import { createIsHighlighted, createIsFaded } from './highlight';
@@ -16,7 +16,7 @@ export const mapShapeSeriesConfig: ChartSeriesTypeConfig<'mapShape'> = {
   colorProcessor: getColor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  tooltipItemPositionSelector,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer,
