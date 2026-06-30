@@ -16,6 +16,7 @@ import type { TriggerOptions } from './utils';
 import { useUtilityClasses } from './chartsTooltipClasses';
 import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
+import type { ChartStore } from '../internals/plugins/models/chart';
 import {
   selectorChartsLastInteraction,
   selectorChartsPointerType,
@@ -65,14 +66,17 @@ const defaultAnchorByTrigger = {
   none: 'pointer',
 } as const;
 
-const getPositionSelectorByAnchor = (anchor: 'pointer' | 'node' | 'chart') => {
+const getPositionSelectorByAnchor = (
+  anchor: 'pointer' | 'node' | 'chart',
+): typeof selectorChartsTooltipItemPosition => {
   switch (anchor) {
     case 'node':
       return selectorChartsTooltipItemPosition;
     case 'chart':
-      return selectorChartsTooltipAxisPosition;
+      // The axis and null selectors ignore the extra `store` argument.
+      return selectorChartsTooltipAxisPosition as typeof selectorChartsTooltipItemPosition;
     default:
-      return selectorReturnNull;
+      return selectorReturnNull as typeof selectorChartsTooltipItemPosition;
   }
 };
 
@@ -208,7 +212,11 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const pointerAnchorUnavailable = lastInteraction === 'keyboard' || pointerType === null;
   const computedAnchor = pointerAnchorUnavailable ? defaultAnchorByTrigger[trigger] : anchor;
 
-  const itemPosition = store.use(getPositionSelectorByAnchor(computedAnchor), props.position);
+  const itemPosition = store.use(
+    getPositionSelectorByAnchor(computedAnchor),
+    props.position,
+    store as ChartStore,
+  );
 
   const isTooltipNodeAnchored = itemPosition !== null;
 

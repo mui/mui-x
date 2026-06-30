@@ -1,8 +1,9 @@
 import { geoPath } from '@mui/x-charts-vendor/d3-geo';
 import type { TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { useGeoProjectionSelectors } from '@mui/x-charts/internals';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'mapShape'> = (params) => {
-  const { series, identifier, axesConfig, placement } = params;
+  const { series, identifier, store, placement } = params;
 
   if (!identifier || identifier.name === undefined) {
     return null;
@@ -13,11 +14,11 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'mapShape'> = (params
     return null;
   }
 
-  if (axesConfig.geo === undefined) {
-    return null;
-  }
-
-  const { projection, geoData, featureIndexesByName } = axesConfig.geo;
+  // The geo projection lives in a feature plugin only registered by map charts,
+  // so the map series reads it from the store here instead of the core tooltip
+  // plugin injecting it for every chart (which would bundle d3-geo everywhere).
+  const { projection, geoData, featureIndexesByName } =
+    useGeoProjectionSelectors.selectorGeoTooltipPosition(store.state as any);
 
   if (projection == null || geoData == null) {
     return null;

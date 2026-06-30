@@ -1,3 +1,4 @@
+import type { Store } from '@mui/x-internals/store';
 import type { ChartAnyPluginSignature } from './plugin';
 import type { MergeSignaturesProperty } from './helpers';
 import type { ChartCorePluginSignatures } from '../corePlugins';
@@ -16,6 +17,12 @@ export type ChartPublicAPI<
   Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
 
 export type ChartStateCacheKey = { id: number };
+
+/**
+ * A loosely-typed chart store, accepting any plugin signatures. Useful where a
+ * helper needs the store but should not be coupled to a specific plugin set.
+ */
+export type ChartStore = Store<ChartState<ChartAnyPluginSignature[]>>;
 
 export type ChartState<
   TSignatures extends readonly ChartAnyPluginSignature[],
