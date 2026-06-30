@@ -5,6 +5,7 @@ import {
   SchedulerProcessedDate,
   SchedulerEventOccurrence,
   SchedulerEventId,
+  SchedulerResourceId,
 } from '../../models';
 import { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
@@ -76,7 +77,8 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
-    if (event.resource && visibleResources[event.resource] === false) {
+    const primaryResourceId = getPrimaryResourceId(event.resource);
+    if (primaryResourceId && visibleResources[primaryResourceId] === false) {
       continue;
     }
 
@@ -120,6 +122,40 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
   }
 
   return occurrences;
+}
+
+/**
+ * Returns the resource IDs for the given resource.
+ * @param resource
+ * @returns The resource IDs for the given resource.
+ */
+export function getEventResourceIds(
+  resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
+): SchedulerResourceId[] {
+  if (resource == null) {
+    return [];
+  }
+
+  return Array.isArray(resource) ? resource : [resource];
+}
+
+/**
+ * Returns the primary resource ID for the given resource.
+ * @param resource
+ * @returns The primary resource ID for the given resource.
+ */
+export function getPrimaryResourceId(
+  resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
+): SchedulerResourceId | null {
+  if (resource == null) {
+    return null;
+  }
+
+  if (Array.isArray(resource)) {
+    return resource[0] ?? null;
+  }
+
+  return resource;
 }
 
 export interface GetOccurrencesFromEventsParameters {

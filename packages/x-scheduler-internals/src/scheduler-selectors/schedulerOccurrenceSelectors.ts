@@ -9,7 +9,7 @@ import {
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
-import { getOccurrencesFromEvents } from '../internals/utils/event-utils';
+import { getOccurrencesFromEvents, getPrimaryResourceId } from '../internals/utils/event-utils';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
@@ -45,7 +45,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     });
 
     for (const occurrence of occurrences) {
-      const resourceId = occurrence.resource;
+      const resourceId = getPrimaryResourceId(occurrence.resource);
 
       if (resourceId) {
         if (!occurrencesGroupedByResource.has(resourceId)) {
