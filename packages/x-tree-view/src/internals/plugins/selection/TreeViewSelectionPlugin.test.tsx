@@ -921,6 +921,51 @@ describeTreeView<TreeViewAnyStore>(
           fireEvent.click(view.getItemCheckboxInput('1.1.1'));
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
         });
+
+        it('should select the parent when all non-disabled children are selected', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2', disabled: true }] }],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { parents: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1.1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1']);
+        });
+
+        it('should not select the parent when only some non-disabled children are selected', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              {
+                id: '1',
+                children: [{ id: '1.1' }, { id: '1.2' }, { id: '1.3', disabled: true }],
+              },
+            ],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { parents: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1.1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1.1']);
+        });
+
+        it('should show the parent checkbox as checked when all non-disabled children are selected', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2', disabled: true }] }],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { parents: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1.1'));
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('false');
+          expect(view.getItemCheckboxInput('1').checked).to.equal(true);
+        });
       });
     });
 
@@ -1285,6 +1330,29 @@ describeTreeView<TreeViewAnyStore>(
 
             fireEvent.click(view.getItemContent('3'), { shiftKey: true });
             expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
+          });
+        });
+
+        describe('with selectionPropagation.parents = true', () => {
+          it('should select the parent when all selectable children are selected (non-selectable sibling ignored)', () => {
+            const view = render({
+              multiSelect: true,
+              checkboxSelection: true,
+              items: [
+                {
+                  id: '1',
+                  children: [{ id: '1.1' }, { id: '1.2', children: [{ id: '1.2.1' }] }],
+                },
+              ],
+              defaultExpandedItems: ['1', '1.2'],
+              selectionPropagation: { parents: true },
+              // Make '1.2' (a parent with children) non-selectable
+              isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
+            });
+
+            fireEvent.click(view.getItemCheckboxInput('1.1'));
+            fireEvent.click(view.getItemCheckboxInput('1.2.1'));
+            expect(view.getSelectedTreeItems()).to.deep.equal(['1.1', '1.2.1']);
           });
         });
       },
