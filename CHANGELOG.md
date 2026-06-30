@@ -4,12 +4,13 @@
 
 _Jun 25, 2026_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 Special thanks go out to these community members for their valuable contributions:
-@Anexus5919, @code-infra-renovate[bot], @mustafajw07
+@Anexus5919, @mustafajw07
 
 The following team members contributed to this release:
 @alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @romgrk, @sai6855, @siriwatknp
@@ -18,14 +19,13 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.7.0`
 
-- [DataGrid] Fix Demo CustomColumnMenuGrid crashing (#22897) @sai6855
-- [DataGrid] Fix crash in `getRowValue` when `colDef` is undefined (#22838) @LukasTy
+- [DataGrid] Fix `CustomColumnMenuGrid` demo crashing (#22897) @sai6855
+- [DataGrid] Fix crash in `getRowValue` when `colDef` is `undefined` (#22838) @LukasTy
 - [DataGrid] Fix `longText` expand button submitting surrounding form (#22450) @siriwatknp
 - [DataGrid] Remove filename ignore list from `removePropTypesPlugin` in Babel config (#22727) @sai6855
 - [DataGrid] Deduplicate scroll-preserving focus logic (#22916) @sai6855
 - [DataGrid] Fix `singleSelect` clearing to use empty string instead of `null` (#22881) @michelengelen
 - [DataGrid] Wait for rows before reacting on `autosizeOnMount` (#22698) @MBilalShafi
-- [DataGrid] Fix panel placement jump on mount (#22930) @cherniavski
 
 #### `@mui/x-data-grid-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -41,9 +41,8 @@ Same changes as in `@mui/x-data-grid-pro@9.7.0`.
 
 - [fields] Announce cardinal day in the day section `aria-valuetext` (#22922) @LukasTy
 - [fields] Avoid focusing the field on blank space clicks (#22285) @LukasTy
-- [pickers] Commit TimeClock value when the drag ends outside the clock (#22877) @LukasTy
+- [pickers] Commit `TimeClock` value when the drag ends outside the clock (#22877) @LukasTy
 - [pickers] Respect explicit `notched` prop on the outlined PickersTextField (#22875) @LukasTy
-- [docs] Document e2e testing patterns for picker field components (#22565) @LukasTy
 
 #### `@mui/x-date-pickers-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -60,7 +59,7 @@ Same changes as in `@mui/x-date-pickers@9.7.0`.
 - [charts] Stable progressive scatter batching + responsive zoom/pan (#22862) @JCQuintas
 - [charts] Strip dev-only console diagnostics from production (#22917) @sai6855
 - [docs] Fix scatter renderer table blocking column (#22904) @JCQuintas
-- [docs] Make ScatterAsyncRenderer button bar responsive (#22905) @JCQuintas
+- [docs] Make `ScatterAsyncRenderer` button bar responsive (#22905) @JCQuintas
 
 #### `@mui/x-charts-pro@9.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -102,14 +101,11 @@ Internal changes.
 - [code-infra] Reduce Netlify build parallelism to 2 (#22925) @LukasTy
 - [code-infra] Use Turbopack for docs in dev (#22882) @brijeshb42
 - [docs-infra] Pre-render API page descriptions (#22919) @brijeshb42
-- [code-infra] Add infra bot to `if` condition (#22951) @michelengelen
-- [internal] Use @base-ui/utils/platform for platform detection (#22710) @romgrk
+- [internal] Use `@base-ui/utils/platform` for platform detection (#22710) @romgrk
 - [internal] Enforce top-level type imports (#22679) @Janpot
 
 ### Miscellaneous
 
-- [internal] Bump MUI public packages (#22894) @code-infra-renovate[bot]
-- [internal] Pin dependencies (#22896) @code-infra-renovate[bot]
 - [internal] Enable mui/no-floating-cleanup and fix leaks (#22872) @romgrk
 - [infra] Update `.gitignore` to exclude `.claude` sub-directories (#22435) @michelengelen
 - [virtualizer] Improve the dimensions' initial state (#22885) @arminmeh
