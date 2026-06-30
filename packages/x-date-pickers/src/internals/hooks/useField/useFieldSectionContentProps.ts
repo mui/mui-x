@@ -5,9 +5,10 @@ import { FieldSection, MuiPickersAdapter, PickerManager } from '../../../models'
 import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
 import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
-import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
-import { FieldRangeSection } from '../../models';
-import { PickersSectionElement } from '../../../PickersSectionList';
+import { removeLocalizedDigits } from './useField.utils';
+import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
+import type { FieldRangeSection } from '../../models';
+import type { PickersSectionElement } from '../../../PickersSectionList';
 
 /**
  * Generate the props to pass to the content element of each section of the field.
@@ -34,6 +35,7 @@ export function useFieldSectionContentProps(
       sectionsValueBoundaries,
       state,
       value,
+      localizedDigits,
 
       // Methods to update the states
       clearActiveSection,
@@ -175,11 +177,11 @@ export function useFieldSectionContentProps(
 
         // Aria attributes
         'aria-readonly': readOnly,
-        'aria-valuenow': getSectionValueNow(section, adapter),
+        'aria-valuenow': getSectionValueNow(section, adapter, localizedDigits),
         'aria-valuemin': sectionBoundaries.minimum,
         'aria-valuemax': sectionBoundaries.maximum,
         'aria-valuetext': section.value
-          ? getSectionValueText(section, adapter)
+          ? getSectionValueText(section, adapter, localizedDigits)
           : translations.empty,
         'aria-label': translations[section.type],
         'aria-disabled': disabled,
@@ -206,6 +208,7 @@ export function useFieldSectionContentProps(
       isEditable,
       translations,
       adapter,
+      localizedDigits,
       handleInput,
       handlePaste,
       handleMouseUp,
@@ -234,6 +237,7 @@ type UseFieldSectionContentPropsReturnValue = (
 function getSectionValueText(
   section: FieldSection,
   adapter: MuiPickersAdapter,
+  localizedDigits: string[],
 ): string | undefined {
   if (!section.value) {
     return undefined;
@@ -241,7 +245,10 @@ function getSectionValueText(
   switch (section.type) {
     case 'month': {
       if (section.contentType === 'digit') {
-        const dateWithMonth = adapter.setMonth(adapter.date(), Number(section.value) - 1);
+        const dateWithMonth = adapter.setMonth(
+          adapter.date(),
+          Number(removeLocalizedDigits(section.value, localizedDigits)) - 1,
+        );
         return adapter.isValid(dateWithMonth) ? adapter.format(dateWithMonth, 'month') : '';
       }
       const parsedDate = adapter.parse(section.value, section.format);
@@ -253,7 +260,7 @@ function getSectionValueText(
       if (section.contentType === 'digit') {
         const dateWithDay = adapter.setDate(
           adapter.startOfYear(adapter.date()),
-          Number(section.value),
+          Number(removeLocalizedDigits(section.value, localizedDigits)),
         );
         return adapter.isValid(dateWithDay) ? adapter.format(dateWithDay, 'dayOfMonthFull') : '';
       }
@@ -266,17 +273,22 @@ function getSectionValueText(
   }
 }
 
-function getSectionValueNow(section: FieldSection, adapter: MuiPickersAdapter): number | undefined {
+function getSectionValueNow(
+  section: FieldSection,
+  adapter: MuiPickersAdapter,
+  localizedDigits: string[],
+): number | undefined {
   if (!section.value) {
     return undefined;
   }
+  const nonLocalizedValue = removeLocalizedDigits(section.value, localizedDigits);
   switch (section.type) {
     case 'weekDay': {
       if (section.contentType === 'letter') {
         // TODO: improve by resolving the week day number from a letter week day
         return undefined;
       }
-      return Number(section.value);
+      return Number(nonLocalizedValue);
     }
     case 'meridiem': {
       const parsedDate = adapter.parse(
@@ -290,16 +302,16 @@ function getSectionValueNow(section: FieldSection, adapter: MuiPickersAdapter): 
     }
     case 'day':
       return section.contentType === 'digit-with-letter'
-        ? parseInt(section.value, 10)
-        : Number(section.value);
+        ? parseInt(nonLocalizedValue, 10)
+        : Number(nonLocalizedValue);
     case 'month': {
       if (section.contentType === 'digit') {
-        return Number(section.value);
+        return Number(nonLocalizedValue);
       }
       const parsedDate = adapter.parse(section.value, section.format);
       return parsedDate ? adapter.getMonth(parsedDate) + 1 : undefined;
     }
     default:
-      return section.contentType !== 'letter' ? Number(section.value) : undefined;
+      return section.contentType !== 'letter' ? Number(nonLocalizedValue) : undefined;
   }
 }

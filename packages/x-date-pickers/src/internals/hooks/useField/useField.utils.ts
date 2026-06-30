@@ -98,7 +98,7 @@ export const getLetterEditingOptions = (
 
 // This format should be the same on all the adapters
 // If some adapter does not respect this convention, then we will need to hardcode the format on each adapter.
-export const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
+const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
 
 const NON_LOCALIZED_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
