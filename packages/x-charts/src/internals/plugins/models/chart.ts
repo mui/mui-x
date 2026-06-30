@@ -1,4 +1,4 @@
-import type { Store } from '@mui/x-internals/store';
+import type { ReadonlyStore } from '@mui/x-internals/store';
 import type { ChartAnyPluginSignature } from './plugin';
 import type { MergeSignaturesProperty } from './helpers';
 import type { ChartCorePluginSignatures } from '../corePlugins';
@@ -19,10 +19,13 @@ export type ChartPublicAPI<
 export type ChartStateCacheKey = { id: number };
 
 /**
- * A loosely-typed chart store, accepting any plugin signatures. Useful where a
- * helper needs the store but should not be coupled to a specific plugin set.
+ * A loosely-typed, read-only view of a chart store, accepting any plugin
+ * signatures. Useful where a helper only needs to read state (e.g. a series
+ * type sourcing extra state for its tooltip) and should not be coupled to a
+ * specific plugin set. Being read-only, a concretely-typed store is assignable
+ * to it without a cast.
  */
-export type ChartStore = Store<ChartState<ChartAnyPluginSignature[]>>;
+export type ChartStore = ReadonlyStore<ChartState<ChartAnyPluginSignature[]>>;
 
 export type ChartState<
   TSignatures extends readonly ChartAnyPluginSignature[],

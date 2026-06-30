@@ -16,7 +16,7 @@ import type { TriggerOptions } from './utils';
 import { useUtilityClasses } from './chartsTooltipClasses';
 import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
-import type { ChartStore } from '../internals/plugins/models/chart';
+import type { ChartState, ChartStore } from '../internals/plugins/models/chart';
 import {
   selectorChartsLastInteraction,
   selectorChartsPointerType,
@@ -66,17 +66,30 @@ const defaultAnchorByTrigger = {
   none: 'pointer',
 } as const;
 
+/**
+ * Common shape of the tooltip position selectors. The item selector reads the
+ * extra `store` argument (to let a series type source its own state); the axis
+ * and null selectors simply take fewer parameters, so they remain assignable to
+ * this type without a cast.
+ */
+type TooltipPositionSelector = (
+  state: ChartState<
+    [UseChartCartesianAxisSignature, UseChartInteractionSignature, UseChartTooltipSignature]
+  >,
+  position: ChartsTooltipContainerProps['position'],
+  store: ChartStore,
+) => { x: number; y: number } | null;
+
 const getPositionSelectorByAnchor = (
   anchor: 'pointer' | 'node' | 'chart',
-): typeof selectorChartsTooltipItemPosition => {
+): TooltipPositionSelector => {
   switch (anchor) {
     case 'node':
       return selectorChartsTooltipItemPosition;
     case 'chart':
-      // The axis and null selectors ignore the extra `store` argument.
-      return selectorChartsTooltipAxisPosition as typeof selectorChartsTooltipItemPosition;
+      return selectorChartsTooltipAxisPosition;
     default:
-      return selectorReturnNull as typeof selectorChartsTooltipItemPosition;
+      return selectorReturnNull;
   }
 };
 
@@ -215,7 +228,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const itemPosition = store.use(
     getPositionSelectorByAnchor(computedAnchor),
     props.position,
-    store as ChartStore,
+    store,
   );
 
   const isTooltipNodeAnchored = itemPosition !== null;

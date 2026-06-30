@@ -18,7 +18,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'mapShape'> = (params
   // so the map series reads it from the store here instead of the core tooltip
   // plugin injecting it for every chart (which would bundle d3-geo everywhere).
   const { projection, geoData, featureIndexesByName } =
-    useGeoProjectionSelectors.selectorGeoTooltipPosition(store.state as any);
+    useGeoProjectionSelectors.selectorGeoTooltipPosition(store.state);
 
   if (projection == null || geoData == null) {
     return null;
