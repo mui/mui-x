@@ -125,7 +125,7 @@ function ColumnInteractiveLayer({
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventEditingContext();
+  const { startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
 
   // Ref hooks

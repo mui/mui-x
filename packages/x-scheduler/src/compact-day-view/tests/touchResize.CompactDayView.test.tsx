@@ -91,6 +91,29 @@ describe('CompactDayView - touch resize', () => {
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
   });
 
+  it('keeps a prior armed resize when an unrelated field is then edited from the form', async () => {
+    const { onEventsChange } = renderResizableEvent();
+    const eventElement = armEvent();
+
+    const endHandle = getResizeHandle(eventElement, 'end');
+    await act(async () => {
+      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+    });
+
+    // Open the editing form from the armed toolbar and change only the title.
+    fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+    fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
+      target: { value: 'Renamed Meeting' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    const updatedEvents = onEventsChange.lastCall.args[0];
+    // Saving the form must preserve the resized end time, not revert it to the pre-resize value.
+    expect(updatedEvents[0].title).to.equal('Renamed Meeting');
+    expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
+    expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
+  });
+
   it('does not commit a resize that is cancelled', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = armEvent();

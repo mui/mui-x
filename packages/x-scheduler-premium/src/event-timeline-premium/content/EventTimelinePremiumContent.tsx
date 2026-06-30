@@ -569,7 +569,7 @@ function EventRowContent({
 }) {
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
-  const { onOpen: startEditing } = useEventEditingContext();
+  const { startEditing } = useEventEditingContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 

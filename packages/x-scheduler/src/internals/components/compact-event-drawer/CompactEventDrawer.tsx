@@ -28,7 +28,7 @@ const CompactEventDrawerRoot = styled(SwipeableDrawer, {
   },
   [`& .${drawerClasses.paper}`]: {
     position: 'absolute',
-    height: '95%',
+    height: 'calc(95% - 56px)',
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
@@ -64,8 +64,8 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
   const { containerRef } = props;
 
   const store = useEventCalendarStoreContext();
-  // Open/close state comes from the shared editing surface.
-  const { onClose } = useEventEditingContext();
+  // Closing the drawer clears the store editing state via the shared editing context.
+  const { stopEditing } = useEventEditingContext();
 
   const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
@@ -75,10 +75,10 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
   // The scope confirmation reads its own open state and renders its own centered-dialog shell.
   const { recurringScopeDialog: RecurringScopeDialogRenderer } = useEventEditingOptionalRenderers();
 
-  // The drawer is only shown while editing; arming shows the bottom toolbar instead (see CompactDayTimeGrid).
   const open = editingMode === 'edit';
 
   const dragHandlerRef = React.useRef<HTMLElement | null>(null);
+  const paperRef = React.useRef<HTMLDivElement>(null);
 
   return (
     <React.Fragment>
@@ -86,24 +86,41 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
         anchor="bottom"
         open={open}
         // Swipe-down, backdrop press, and escape all close the drawer; mirror that on the store.
-        onClose={() => onClose()}
+        onClose={() => stopEditing()}
         // The drawer is opened programmatically (from the toolbar), never by an edge swipe.
         onOpen={() => {}}
         disableSwipeToOpen
+        container={() => containerRef.current}
+        // The focus trap would otherwise focus the paper while it's still slid off-screen, making
+        // the browser scroll it into view and shove the grid up. Skip the auto-focus: the editable
+        // form focuses its own title field (with `preventScroll`), and read-only content has no
+        // field, so we move focus to the paper once it has slid into place.
+        disableAutoFocus
+        slotProps={{
+          transition: {
+            onEntered: isReadOnly
+              ? () => paperRef.current?.focus({ preventScroll: true })
+              : undefined,
+          },
+          paper: { ref: paperRef },
+        }}
         ModalProps={{
-          container: () => containerRef.current,
           disableScrollLock: true,
         }}
       >
-        {occurrence && (
+        {/* `SwipeableDrawer` keeps its children mounted even while closed, so the content is only
+            rendered once the drawer is actually open. Otherwise the form mounts while the event is
+            merely armed and freezes its initial times; a subsequent armed resize would then be
+            discarded on save because the form never re-reads the updated occurrence. */}
+        {open && occurrence && (
           <CompactEventDrawerContent>
             {isReadOnly ? (
-              <CompactReadonlyContent occurrence={occurrence} onClose={onClose} />
+              <CompactReadonlyContent occurrence={occurrence} onClose={stopEditing} />
             ) : (
               <FormContent
                 key={occurrence.key}
                 occurrence={occurrence}
-                onClose={onClose}
+                onClose={stopEditing}
                 dragHandlerRef={dragHandlerRef}
                 isDraggable={false}
               />

@@ -60,7 +60,7 @@ export function DayGridCell(props: DayGridCellProps) {
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventEditingContext();
+  const { startEditing } = useEventEditingContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
 
   // Ref hooks

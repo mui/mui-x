@@ -139,7 +139,12 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.start,
   );
 
-  const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
+  // `preventScroll` so focusing the title doesn't scroll a still-off-screen drawer into view
+  // (the compact drawer slides up from the bottom, which would otherwise shove the grid).
+  const titleInputRef = React.useCallback(
+    (input: HTMLInputElement | null) => input?.focus({ preventScroll: true }),
+    [],
+  );
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');

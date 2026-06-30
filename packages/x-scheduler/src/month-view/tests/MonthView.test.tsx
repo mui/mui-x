@@ -186,6 +186,30 @@ describe('<MonthView />', () => {
         });
       });
     });
+
+    it('should stay open while editing and close once the editing surface closes', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      // Activating an event opens the editing dialog; the popover stays open behind it.
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(document.body.contains(popover)).to.equal(true);
+
+      // Closing the editing surface clears the store editing state, which closes the popover with it.
+      const dialog = screen.getByRole('dialog');
+      await user.click(within(dialog).getByRole('button', { name: /close/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+    });
   });
 
   describe('All day events', () => {

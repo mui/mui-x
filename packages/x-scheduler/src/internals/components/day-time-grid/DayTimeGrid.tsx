@@ -16,7 +16,10 @@ import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -340,7 +343,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const { isOpen: isEditing, onClose: stopEditing } = useEventEditingContext();
+  const { stopEditing } = useEventEditingContext();
+  // An occurrence in the store means an editing surface is open (armed or edit).
+  const isEditing = useStore(store, schedulerOtherSelectors.editingOccurrence) != null;
 
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);

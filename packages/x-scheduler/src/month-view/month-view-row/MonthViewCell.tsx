@@ -176,7 +176,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes, localeText } = useEventCalendarStyledContext();
-  const { onOpen: startEditing } = useEventEditingContext();
+  const { startEditing } = useEventEditingContext();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);

@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { Toolbar } from '@base-ui/react/toolbar';
+import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
 import EditRounded from '@mui/icons-material/EditRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import { useStore } from '@base-ui/utils/store';
@@ -10,7 +11,8 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 
-const EventToolbarRoot = styled(Toolbar.Root, {
+// `Paper` (elevation 3) supplies the `background.paper` fill and `shadows[3]` box shadow.
+const EventToolbarRoot = styled(Paper, {
   name: 'MuiEventDialog',
   slot: 'Toolbar',
 })(({ theme }) => ({
@@ -19,28 +21,18 @@ const EventToolbarRoot = styled(Toolbar.Root, {
   gap: theme.spacing(0.5),
   padding: theme.spacing(0.5),
   borderRadius: 50,
-  backgroundColor: (theme.vars || theme).palette.background.paper,
-  boxShadow: (theme.vars || theme).shadows[3],
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
-const EventToolbarButton = styled(Toolbar.Button, {
+const EventToolbarButton = styled(IconButton, {
   name: 'MuiEventDialog',
   slot: 'ToolbarButton',
 })(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
   width: 40,
   height: 40,
   padding: 0,
-  margin: 0,
-  border: 0,
   borderRadius: theme.shape.borderRadius,
-  background: 'none',
   color: (theme.vars || theme).palette.text.primary,
-  cursor: 'pointer',
-  font: 'inherit',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
@@ -54,19 +46,11 @@ interface EventToolbarProps {
   occurrence: SchedulerRenderableEventOccurrence;
 }
 
-/**
- * Action toolbar shown next to an armed event (touch only). Replaces the read-only intermediary:
- * Edit opens the editing surface, Delete removes the event (opening the recurring scope dialog when
- * the event is recurring). Mounted anchored beside the event in the desktop layout and at the bottom
- * of the view in the compact layout. Read-only events never arm, so both actions always apply.
- */
 export function EventToolbar(props: EventToolbarProps) {
   const { occurrence } = props;
 
   const store = useSchedulerStoreContext();
-  // `onClose` clears both the editing surface (modal) and the store state; Delete must use it so the
-  // surface doesn't reopen on the just-deleted occurrence after `stopEditing` runs.
-  const { onClose } = useEventEditingContext();
+  const { stopEditing } = useEventEditingContext();
   const { classes, localeText } = useEventEditingStyledContext();
 
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
@@ -86,17 +70,17 @@ export function EventToolbar(props: EventToolbarProps) {
       store.deleteRecurringEvent({
         occurrenceStart: occurrence.displayTimezone.start.value,
         eventId: occurrence.id,
-        onSubmit: onClose,
+        onSubmit: stopEditing,
       });
       return;
     }
 
     store.deleteEvent(occurrence.id);
-    onClose();
+    stopEditing();
   };
 
   return (
-    <EventToolbarRoot className={classes.eventToolbar}>
+    <EventToolbarRoot className={classes.eventToolbar} elevation={3} role="toolbar">
       <EventToolbarButton
         className={classes.eventToolbarEditButton}
         aria-label={localeText.editEventButtonAriaLabel}

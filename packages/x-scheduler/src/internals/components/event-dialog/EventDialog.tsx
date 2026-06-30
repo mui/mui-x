@@ -8,7 +8,6 @@ import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   schedulerEventSelectors,
-  schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -18,9 +17,9 @@ import {
   EventEditingProvider,
   EventEditingOptionalRenderers,
   EventEditingOptionalRenderersContext,
+  useEventEditingContext,
   useEventEditingStyledContext,
   FormContent,
-  getInitialEditingMode,
 } from '../event-editing';
 import { calculatePosition } from '../../utils/dialog-utils';
 import { AnchoredEventToolbar } from '../event-toolbar';
@@ -157,17 +156,10 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   // Fall back to the prop while closing, when the editing occurrence has already been cleared.
   const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
   const occurrence = editingOccurrence ?? occurrenceProp;
-  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   // Ref hooks
   const dragHandlerRef = React.useRef<HTMLElement>(null);
-
-  // Armed (touch): show the action toolbar next to the event rather than the editing surface. The
-  // toolbar's Edit switches to `'edit'`, which swaps in the dialog below anchored to the same event.
-  if (editingMode === 'armed') {
-    return <AnchoredEventToolbar anchorRef={anchorRef} occurrence={occurrence} />;
-  }
 
   // Read-only events have no editing form; editable events open the form fresh on each occurrence
   // (keyed) so it initializes from the current times.
@@ -208,12 +200,57 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 });
 
 /**
- * Desktop editing surface: anchored, draggable dialog via `EventEditingProvider`, with the
- * recurring scope confirmation stacked on top when needed.
+ * Mounts the armed-event action toolbar next to the event while editing is in the `'armed'` stage.
+ * Rendered at the top level alongside (not inside) the dialog, so the toolbar and dialog stay
+ * independent. The toolbar's Edit switches the store to `'edit'`, which swaps in the dialog below.
+ */
+function AnchoredEventToolbarSurface() {
+  const store = useSchedulerStoreContext();
+  const { anchorRef } = useEventEditingContext();
+  const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
+
+  // Render only while armed, once we have both an occurrence and an anchor to position against.
+  if (editingMode !== 'armed' || editingOccurrence == null || anchorRef.current == null) {
+    return null;
+  }
+
+  return <AnchoredEventToolbar anchorRef={anchorRef} occurrence={editingOccurrence} />;
+}
+
+/**
+ * Mounts the desktop dialog while an occurrence is being edited in the `'edit'` stage, anchored to
+ * the element editing started from. Open/which all come from the store; the anchor comes from the
+ * editing context.
+ */
+function EventDialogSurface() {
+  const store = useSchedulerStoreContext();
+  const { anchorRef, stopEditing } = useEventEditingContext();
+  const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
+
+  // Render only the editing surface here; the armed toolbar is rendered separately. Needs both an
+  // edited occurrence and an anchor to position against.
+  if (editingMode !== 'edit' || editingOccurrence == null || anchorRef.current == null) {
+    return null;
+  }
+
+  return (
+    <EventDialogContent
+      open
+      anchorRef={anchorRef}
+      occurrence={editingOccurrence}
+      onClose={stopEditing}
+    />
+  );
+}
+
+/**
+ * Desktop editing surface: anchored, draggable dialog via `EventEditingProvider`, with the armed
+ * action toolbar and the recurring scope confirmation rendered as independent top-level siblings.
  */
 export function EventDialogProvider(props: EventDialogProviderProps) {
-  const { children, optionalRenderers, ...other } = props;
-  const store = useSchedulerStoreContext();
+  const { children, optionalRenderers } = props;
 
   // The recurring scope confirmation renders itself: it reads its own open state from the store.
   const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
@@ -222,29 +259,10 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
     <EventEditingOptionalRenderersContext.Provider
       value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
     >
-      <EventEditingProvider
-        render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
-          <EventDialogContent
-            open={isOpen}
-            anchorRef={anchorRef}
-            occurrence={occurrence}
-            onClose={onClose}
-            {...other}
-          />
-        )}
-        onOpen={(occurrence) => {
-          const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
-          const isReadOnly = schedulerEventSelectors.isReadOnly(store.state, occurrence.id);
-          store.startEditing(
-            occurrence,
-            getInitialEditingMode('dialog', { isCreating, isReadOnly }),
-          );
-        }}
-        onClose={() => {
-          store.stopEditing();
-        }}
-      >
+      <EventEditingProvider surface="dialog">
         {children}
+        <AnchoredEventToolbarSurface />
+        <EventDialogSurface />
         {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}
       </EventEditingProvider>
     </EventEditingOptionalRenderersContext.Provider>
