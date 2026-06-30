@@ -46,9 +46,9 @@
       "type": { "name": "func" },
       "default": "(item) => item.label",
       "signature": {
-        "type": "function(item: R) => string",
+        "type": "function(item: R) => string | React.ReactNode",
         "describedArgs": ["item"],
-        "returned": "string"
+        "returned": "string | React.ReactNode"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -77,6 +77,8 @@
       "default": "12px"
     },
     "itemHeight": { "type": { "name": "number" }, "default": "null" },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
+    "loadingItemsCount": { "type": { "name": "number" }, "default": "5" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
