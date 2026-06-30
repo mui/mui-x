@@ -64,6 +64,20 @@ export function useEventOccurrencesWithDayGridPosition(
       });
 
       // 3. Assign position to each occurrence
+
+      // Pre-reserve rows for events that are currently visible and will retain their
+      // row. Without this, a resurfacing event computes smallestAvailableIndex before
+      // those rows are claimed and can collide with a still-visible event.
+      for (const occurrence of sortedNeedsPosition) {
+        const active = activeSegments[occurrence.key];
+        if (active != null) {
+          const isCurrentlyVisible = maxEvents == null || active.position.index <= maxEvents;
+          if (isCurrentlyVisible) {
+            usedIndexes.add(active.position.index);
+          }
+        }
+      }
+
       const withPosition: useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition[] = [];
 
       for (const occurrence of sortedNeedsPosition) {
