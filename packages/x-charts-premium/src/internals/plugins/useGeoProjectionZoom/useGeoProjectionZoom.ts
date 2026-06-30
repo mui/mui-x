@@ -244,6 +244,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         [point.x, point.y],
         translationAllowed,
         maxEmptySpace,
+        store.state.geoProjectionZoom.translation ?? [0, 0],
       );
       projection.rotate?.(rotate);
       projection.scale(scale);

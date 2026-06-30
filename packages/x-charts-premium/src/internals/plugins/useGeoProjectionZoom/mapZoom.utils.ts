@@ -193,7 +193,7 @@ export function clampTranslationAxis(
   // Smallest `value` keeping the trailing-edge gap (`areaEnd` vs `boundingBox1` shifted) within `gap`.
   const min = areaEnd - boundingBox1 + init - gap;
   if (min > max) {
-    return (min + max) / 2;
+    return init;
   }
   return Math.min(max, Math.max(min, value));
 }
@@ -205,8 +205,9 @@ export function getTranslation(
   to: [number, number],
   translationAllowed: MapTranslationAxis = 'both',
   maxEmptySpace: number = 0,
+  currentTranslation: [number, number] = [0, 0],
 ): [number, number] | null {
-  if (!projection.invert) {
+  if (!projection.invert || translationAllowed === 'none') {
     return null;
   }
   const q = projection.invert(to);
@@ -228,35 +229,39 @@ export function getTranslation(
 
   const drawingArea = selectorChartDrawingArea(store.state);
 
-  let tx = initTranslation[0] + (allowX ? deltaX : 0);
-  let ty = initTranslation[1] + (allowY ? deltaY : 0);
+  let tx = currentTranslation[0];
+  let ty = currentTranslation[1];
 
   // Clamp translation
   const geoData = Number.isFinite(maxEmptySpace) ? selectorChartGeoData(store.state) : null;
   if (geoData) {
     const [[bx0, by0], [bx1, by1]] = geoPath(projection).bounds(geoData);
-    tx = clampTranslationAxis(
-      tx,
-      initTranslation[0],
-      bx0,
-      bx1,
-      drawingArea.left,
-      drawingArea.left + drawingArea.width,
-      maxEmptySpace * drawingArea.width,
-    );
-    ty = clampTranslationAxis(
-      ty,
-      initTranslation[1],
-      by0,
-      by1,
-      drawingArea.top,
-      drawingArea.top + drawingArea.height,
-      maxEmptySpace * drawingArea.height,
-    );
+
+    if (allowX) {
+      const translationX = clampTranslationAxis(
+        initTranslation[0] + deltaX,
+        initTranslation[0],
+        bx0,
+        bx1,
+        drawingArea.left,
+        drawingArea.left + drawingArea.width,
+        maxEmptySpace * drawingArea.width,
+      );
+      tx = (translationX - drawingArea.left - drawingArea.width / 2) / drawingArea.width;
+    }
+    if (allowY) {
+      const translationY = clampTranslationAxis(
+        initTranslation[1] + deltaY,
+        initTranslation[1],
+        by0,
+        by1,
+        drawingArea.top,
+        drawingArea.top + drawingArea.height,
+        maxEmptySpace * drawingArea.height,
+      );
+      ty = (translationY - drawingArea.top - drawingArea.height / 2) / drawingArea.height;
+    }
   }
 
-  return [
-    (tx - drawingArea.left - drawingArea.width / 2) / drawingArea.width,
-    (ty - drawingArea.top - drawingArea.height / 2) / drawingArea.height,
-  ];
+  return [tx, ty];
 }
