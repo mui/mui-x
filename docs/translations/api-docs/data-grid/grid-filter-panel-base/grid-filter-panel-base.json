@@ -1,0 +1,34 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "columnsSort": {
+      "description": "Changes how the options in the columns selector should be ordered. If not specified, the order is derived from the <code>columns</code> prop."
+    },
+    "disableAddFilterButton": {
+      "description": "If <code>true</code>, the <code>Add filter</code> button will not be displayed."
+    },
+    "disableRemoveAllButton": {
+      "description": "If <code>true</code>, the <code>Remove all</code> button will be disabled"
+    },
+    "filterFormProps": { "description": "Props passed to each filter form." },
+    "filterModel": { "description": "The filter model edited by the panel." },
+    "getColumnForNewFilter": {
+      "description": "Function that returns the next filter item to be picked as default filter.",
+      "typeDescriptions": {
+        "args": { "name": "args", "description": "Currently configured filters and columns." }
+      }
+    },
+    "logicOperators": { "description": "Sets the available logic operators." },
+    "onClose": {
+      "description": "Callback fired when the panel requests to be closed, e.g. after the last filter is removed. In <code>GridFilterPanel</code> it hides the grid filter panel; for standalone usage it is a no-op unless provided."
+    },
+    "onFilterModelChange": {
+      "description": "Callback fired when the filter model is changed through the panel.",
+      "typeDescriptions": { "model": { "name": "model", "description": "The new filter model." } }
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
+  "classDescriptions": {}
+}
