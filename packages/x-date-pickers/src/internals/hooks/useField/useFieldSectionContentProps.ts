@@ -7,7 +7,7 @@ import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { removeLocalizedDigits } from './useField.utils';
 import type { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
-import type { FieldRangeSection, PickerAnyManager } from '../../models';
+import type { FieldRangeSection } from '../../models';
 import type { PickersSectionElement } from '../../../PickersSectionList';
 
 /**

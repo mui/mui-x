@@ -108,6 +108,7 @@ describe('<AdapterMomentHijri />', () => {
         // Regression test for https://github.com/mui/mui-x/issues/20355.
         it('should expose valid aria attributes with localized digits', () => {
           const view = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
