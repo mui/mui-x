@@ -44,7 +44,6 @@ export default function SamplingMethodComparison() {
             xAxis={[{ data: xData, id: 'x', zoom: true }]}
             yAxis={[
               {
-                label: 'MW',
                 width: 40,
                 valueFormatter: (value: number) => compactFormatter.format(value),
               },
