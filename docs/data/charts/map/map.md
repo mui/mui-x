@@ -234,18 +234,22 @@ the `fade` option decides which items are dimmed
 Set prop `zoom` to `true` to enable zoom interactions.
 This props also accept a configuration objects.
 
-The zoom interaction modifies the projection center such that the user pointer stay on top of the same geographical coordinate during the gesture.
-If modifying the center does not succeed, it modifies the translation.
+The zoom interaction modifies the projection `center`—the geographical coordinate displayed at the center of the drawing area—such that the user pointer stays on top of the same geographical coordinate during the gesture.
+
+How the `center` is applied depends on the projection:
+
+- Azimuthal projections rotate the sphere so the `center` sits under the drawing-area center.
+- Other projections rotate the sphere along the longitude only, and place the latitude at the drawing-area center through a translation.
 
 The zoom object has two properties to limit this behavior:
 
-- `rotationAllowed`: `'both' | 'long' | 'lat' | 'none'` Limit how the center can be modified
-- `translationAllowed`: `'both' | 'x' | 'y' | 'none'` Limit how the translation can be modified
+- `rotationAllowed`: `'both' | 'long' | 'lat' | 'none'` Limit how the sphere can be rotated
+- `translationAllowed`: `'both' | 'x' | 'y' | 'none'` Limit how the map can be translated to place the latitude
 
 By default, both are derived from the chosen projection so each map behaves as expected without extra configuration:
 
-- Globe-like (azimuthal) and conic projections rotate the sphere (`{ rotationAllowed: 'both', translationAllowed: 'none' }`).
-- Flat (cylindrical) projections pan and wrap east–west (`{ rotationAllowed: 'long', translationAllowed: 'both' }`).
+- Globe-like (azimuthal) projections rotate the sphere (`{ rotationAllowed: 'both', translationAllowed: 'none' }`).
+- Flat (cylindrical) and conic projections rotate east–west and translate north–south (`{ rotationAllowed: 'long', translationAllowed: 'y' }`).
 
 You can also modify the zoom result with:
 
@@ -258,11 +262,10 @@ You can also modify the zoom result with:
 
 The maps have a `view` and `onViewChange` props that allow to controll the zoom.
 
-The view is made of three properties:
+The view is made of two properties:
 
 - `zoomLevel`: `number` A scaling ratio such that `1` correspond to the scale where all objects fit in the drawing area.
-- `center`: `[number, number]` The long/lat coordinates in degree of the point at the center of the projection.
-- `translation`: `[number, number]` The translation of the map as a ratio of the drawing area.
+- `center`: `[number, number]` The long/lat coordinates in degree of the point displayed at the center of the drawing area.
 
 {{"demo": "MapZoomControl.js"}}
 

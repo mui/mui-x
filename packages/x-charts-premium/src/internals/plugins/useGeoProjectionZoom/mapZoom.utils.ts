@@ -1,32 +1,18 @@
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { geoPath } from '@mui/x-charts-vendor/d3-geo';
-import { selectorChartDrawingArea } from '@mui/x-charts/internals';
-import type { ChartUsedStore, useGeoProjectionTypes } from '@mui/x-charts/internals';
+import { getProjectionFamily, selectorChartDrawingArea } from '@mui/x-charts/internals';
+import type {
+  ChartUsedStore,
+  ProjectionFamily,
+  useGeoProjectionTypes,
+} from '@mui/x-charts/internals';
 import { selectorChartGeoData } from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom.types';
 
 const DEG = Math.PI / 180;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
-type ProjectionFamily = 'azimuthal' | 'conic' | 'cylindrical' | 'albersUsa';
-
-const PROJECTION_FAMILY: Record<useGeoProjectionTypes.D3NamedProjection, ProjectionFamily> = {
-  azimuthalEqualArea: 'azimuthal',
-  azimuthalEquidistant: 'azimuthal',
-  gnomonic: 'azimuthal',
-  orthographic: 'azimuthal',
-  stereographic: 'azimuthal',
-  conicConformal: 'conic',
-  conicEqualArea: 'conic',
-  conicEquidistant: 'conic',
-  albers: 'conic',
-  albersUsa: 'albersUsa',
-  equirectangular: 'cylindrical',
-  mercator: 'cylindrical',
-  transverseMercator: 'cylindrical',
-  equalEarth: 'cylindrical',
-  naturalEarth1: 'cylindrical',
-};
+export { getProjectionFamily };
 
 /**
  * The interaction that feels natural for each projection family, used as the default for
@@ -41,36 +27,6 @@ const FAMILY_INTERACTION: Record<
   cylindrical: { rotationAllowed: 'long', translationAllowed: 'y' },
   albersUsa: { rotationAllowed: 'none', translationAllowed: 'both' },
 };
-
-export function getProjectionFamily(
-  projection: useGeoProjectionTypes.GeoProjectionInput | null,
-): ProjectionFamily {
-  if (projection == null) {
-    return 'cylindrical'; // fallback to avoid useless edge cases
-  }
-  if (typeof projection === 'string') {
-    return PROJECTION_FAMILY[projection] ?? 'cylindrical';
-  }
-
-  // Try to guess if users provided custom projection
-
-  // Conic projections expose the `parallels` accessor (e.g. conicConformal, albers).
-  if ('parallels' in projection) {
-    return 'conic';
-  }
-  // Composite projections such as `albersUsa` stitch several conics together and so drop `rotate`
-  // (there is no single sphere to spin). Treat them like the conic family they are built from.
-  if (typeof projection.rotate !== 'function') {
-    return 'conic';
-  }
-  // Azimuthal projections clip the sphere to a disc, so their clip angle sits strictly between 0 and
-  // 180° (e.g. 90° for orthographic). Flat projections leave it at 0° (no clipping).
-  const clipAngle = projection.clipAngle?.();
-  if (typeof clipAngle === 'number' && clipAngle > 0 && clipAngle < 180) {
-    return 'azimuthal';
-  }
-  return 'cylindrical';
-}
 
 export function getDefaultMapInteraction(
   projection: useGeoProjectionTypes.GeoProjectionInput | null,
@@ -201,7 +157,6 @@ export function getTranslation(
   geoPoint: [number, number],
   to: [number, number],
   translationAllowed: MapTranslationAxis = 'both',
-  maxEmptySpace: number = 0,
   currentTranslation: [number, number] = [0, 0],
 ): [number, number] | null {
   if (!projection.invert || translationAllowed === 'none') {
@@ -230,35 +185,142 @@ export function getTranslation(
   let ty = currentTranslation[1];
 
   // Clamp translation
-  const geoData = Number.isFinite(maxEmptySpace) ? selectorChartGeoData(store.state) : null;
-  if (geoData) {
-    const [[bx0, by0], [bx1, by1]] = geoPath(projection).bounds(geoData);
+  // const geoData = Number.isFinite(maxEmptySpace) ? selectorChartGeoData(store.state) : null;
+  // if (geoData) {
+  //   const [[bx0, by0], [bx1, by1]] = geoPath(projection).bounds(geoData);
 
-    if (allowX) {
-      const translationX = clampTranslationAxis(
-        initTranslation[0] + deltaX,
-        initTranslation[0],
-        bx0,
-        bx1,
-        drawingArea.left,
-        drawingArea.left + drawingArea.width,
-        maxEmptySpace * drawingArea.width,
-      );
-      tx = (translationX - drawingArea.left - drawingArea.width / 2) / drawingArea.width;
-    }
-    if (allowY) {
-      const translationY = clampTranslationAxis(
-        initTranslation[1] + deltaY,
-        initTranslation[1],
-        by0,
-        by1,
-        drawingArea.top,
-        drawingArea.top + drawingArea.height,
-        maxEmptySpace * drawingArea.height,
-      );
-      ty = (translationY - drawingArea.top - drawingArea.height / 2) / drawingArea.height;
-    }
+  if (allowX) {
+    const translationX = initTranslation[0] + deltaX;
+    tx = (translationX - drawingArea.left - drawingArea.width / 2) / drawingArea.width;
   }
+  if (allowY) {
+    const translationY = initTranslation[1] + deltaY;
+    ty = (translationY - drawingArea.top - drawingArea.height / 2) / drawingArea.height;
+  }
+  // }
 
   return [tx, ty];
+}
+
+
+function rotationAllowed(projectionFamily: ProjectionFamily): MapRotationAxis {
+  if (projectionFamily === 'azimuthal') {
+    return 'both';
+  }
+  if (projectionFamily === 'albersUsa') {
+    return 'none';
+  }
+  return 'long';
+}
+
+function translationAllowed(projectionFamily: ProjectionFamily): MapTranslationAxis {
+  const rotation = rotationAllowed(projectionFamily);
+  if (rotation === 'both') {
+    return 'none';
+  }
+  if (rotation === 'long') {
+    return 'y';
+  }
+  if (rotation === 'lat') {
+    return 'x';
+  }
+  return 'both';
+
+}
+
+
+/**
+ * Computes the new view `center` after a pan/zoom gesture that should keep `geoPoint` under the
+ * pointer (`to`), at the given zoom factor.
+ *
+ * The transform is applied to a temporary copy of the live projection (rotation along the allowed
+ * axes, then translation along the allowed axes), and the resulting `center` is read back as the
+ * geographic coordinate sitting under the drawing-area center — the single source of truth of the
+ * view. This unifies both families:
+ * - azimuthal: only the rotation moves, so `center` encodes the full `[lon, lat]` orientation.
+ * - others: the rotation moves the longitude and the translation moves the latitude, both of which
+ *   are folded back into `center`.
+ *
+ * The live projection is restored before returning: it is the memoized selector instance, so any
+ * lingering mutation would leak into the rendered map.
+ */
+export function getGestureCenter(
+  store: ChartUsedStore<any>,
+  projection: GeoProjection,
+  geoPoint: [number, number],
+  to: [number, number],
+  zoomFactor: number,
+): [number, number] | null {
+  if (!projection.invert) {
+    return null;
+  }
+
+
+  const projectionFamily = getProjectionFamily(projection);
+  const drawingArea = selectorChartDrawingArea(store.state);
+  const centerX = drawingArea.left + drawingArea.width / 2;
+  const centerY = drawingArea.top + drawingArea.height / 2;
+
+  const savedRotate = projection.rotate?.();
+  const savedScale = projection.scale();
+  const savedTranslate = projection.translate();
+
+  // Current translation as a ratio of the drawing area, used to keep the locked axes in place.
+  const currentTranslation: [number, number] = [
+    (savedTranslate[0] - centerX) / drawingArea.width,
+    (savedTranslate[1] - centerY) / drawingArea.height,
+  ];
+
+  // Apply the zoom factor before solving the rotation/translation so they account for the new scale.
+  if (zoomFactor !== 1) {
+    projection.scale(savedScale * zoomFactor);
+  }
+
+  // Rotation moves `geoPoint` toward `to` along the allowed axes: the full orientation for azimuthal
+  // families, the longitude only for the others.
+  const rotation = getRotation(projection, geoPoint, to, 1, rotationAllowed(projectionFamily));
+  if (rotation && projection.rotate) {
+    projection.rotate([-rotation[0], -rotation[1]]);
+  }
+
+  // Translation finishes moving `geoPoint` toward `to` for non-azimuthal families (e.g. the latitude).
+  const translation = getTranslation(
+    store,
+    projection,
+    geoPoint,
+    to,
+    translationAllowed(projectionFamily),
+    currentTranslation,
+  );
+  if (translation) {
+    projection.translate([
+      centerX + translation[0] * drawingArea.width,
+      centerY + translation[1] * drawingArea.height,
+    ]);
+  }
+
+  // By definition, `center` is the geographic coordinate under the drawing-area center.
+  const center = projection.invert?.([centerX, centerY]) as [number, number] | null;
+  if (!center || !center.every(Number.isFinite)) {
+    return null
+  }
+  const centerBack = projection(center);
+
+  if (!centerBack || centerBack[0] !== centerX || centerBack[1] !== centerY) {
+    return null
+  }
+
+
+  // Restore the live (memoized) projection instance.
+  if (savedRotate && projection.rotate) {
+    projection.rotate(savedRotate);
+  }
+  projection.scale(savedScale);
+  projection.translate(savedTranslate);
+
+  if (!rotation && !translation) {
+    return null;
+  }
+
+  return center ?? null;
 }

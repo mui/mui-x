@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
-import { getDefaultTranslation } from '@mui/x-charts/internals';
+import { getDefaultCenter } from '@mui/x-charts/internals';
 import type { ChartPlugin } from '@mui/x-charts/internals';
 import {
   useDragGesture,
@@ -15,7 +15,7 @@ import {
   selectorChartRawProjection,
 } from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapZoomView, UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
-import { getDefaultMapInteraction, getRotation, getTranslation } from './mapZoom.utils';
+import { getDefaultMapInteraction, getGestureCenter } from './mapZoom.utils';
 import { PROJECTION_FACTORIES } from '../useGeoProjection';
 
 /** Multiplicative zoom step applied per wheel tick. */
@@ -30,14 +30,11 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
 }) => {
   const { zoom, onViewChange, view } = params;
 
-  const interactionDefaults = getDefaultMapInteraction(selectorChartRawProjection(store.state));
 
   const {
     minZoomLevel = 0.5,
     maxZoomLevel = 8,
-    maxEmptySpace = 0,
-    rotationAllowed = interactionDefaults.rotationAllowed,
-    translationAllowed = interactionDefaults.translationAllowed,
+
   } = typeof zoom === 'object' ? zoom : {};
 
   // `zoom` is either a boolean or a config object; an object always enables the interaction.
@@ -58,12 +55,16 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
   // Callers are responsible for clamping `zoomLevel` (via `clampZoomLevel`) before applying it.
   const applyView = React.useCallback(
     (newView: MapZoomView) => {
+      console.log(JSON.stringify(newView));
+      if (!newView.center.every(Number.isFinite)) {
+        return;
+      }
+
       if (!isControlled) {
         store.set('geoProjectionZoom', {
           ...store.state.geoProjectionZoom,
           zoomLevel: newView.zoomLevel,
           center: newView.center,
-          translation: newView.translation,
         });
       }
       onViewChange?.(newView);
@@ -82,7 +83,6 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       ...store.state.geoProjectionZoom,
       zoomLevel: view.zoomLevel,
       center: view.center,
-      translation: view.translation,
     });
   }, [store, view]);
 
@@ -121,34 +121,19 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         dragCurrentPoint.current[0] + delta.x,
         dragCurrentPoint.current[1] + delta.y,
       ];
-      const center = getRotation(
-        projection,
-        geoPoint.current,
-        dragCurrentPoint.current,
-        1,
-        rotationAllowed,
-      );
 
-      const rotate = projection.rotate?.();
-      if (center) {
-        projection.rotate?.([-center[0], -center[1]]);
-      }
-      const translation = getTranslation(
+      const center = getGestureCenter(
         store,
         projection,
         geoPoint.current,
         dragCurrentPoint.current,
-        translationAllowed,
-        maxEmptySpace,
+        1,
       );
 
-      projection.rotate?.(rotate);
-
-      if (center || translation) {
+      if (center) {
         applyView({
           zoomLevel: store.state.geoProjectionZoom.zoomLevel ?? 1,
-          center: center ?? store.state.geoProjectionZoom.center ?? [0, 0],
-          translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
+          center,
         });
       }
     },
@@ -177,29 +162,18 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         return;
       }
 
-      const rotate = projection.rotate?.();
-      const scale = projection.scale();
-      const center = getRotation(projection, geoPoint, [point.x, point.y], factor, rotationAllowed);
-      if (center) {
-        projection.rotate?.([-center[0], -center[1]]);
-      }
-      projection.scale(scale * factor);
-      const translation = getTranslation(
+      const center = getGestureCenter(
         store,
         projection,
         geoPoint,
         [point.x, point.y],
-        translationAllowed,
-        maxEmptySpace,
+        factor,
       );
-      projection.rotate?.(rotate);
-      projection.scale(scale);
 
-      if (center || translation) {
+      if (center) {
         applyView({
           zoomLevel: nextZoom,
-          center: center ?? store.state.geoProjectionZoom.center ?? [0, 0],
-          translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
+          center,
         });
       }
     },
@@ -225,38 +199,27 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       if (!geoPoint) {
         return;
       }
-      const center = getRotation(projection, geoPoint, [point.x, point.y], factor, rotationAllowed);
-      const scale = projection.scale();
-      const rotate = projection.rotate?.();
-      if (center) {
-        projection.rotate?.([-center![0], -center![1]]);
-      }
-      projection.scale(scale * factor);
-      const translation = getTranslation(
+
+      const center = getGestureCenter(
         store,
         projection,
         geoPoint,
         [point.x, point.y],
-        translationAllowed,
-        maxEmptySpace,
-        store.state.geoProjectionZoom.translation ?? [0, 0],
+        factor,
       );
-      projection.rotate?.(rotate);
-      projection.scale(scale);
 
-      if (center || translation) {
+      if (center) {
         applyView({
           zoomLevel: nextZoom,
-          center: center ?? store.state.geoProjectionZoom.center ?? [0, 0],
-          translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
+          center,
         });
       }
     },
   });
 
   // Shared by both buttons: clamp through `applyView` (which also handles controlled mode and
-  // `onViewChange`), keeping the current center/translation. Bail out when already at a bound so a
-  // click at the limit stays a no-op.
+  // `onViewChange`), keeping the current center. Bail out when already at a bound so a click at the
+  // limit stays a no-op.
   const zoomBy = React.useCallback(
     (factor: number) => {
       const current = store.state.geoProjectionZoom;
@@ -268,7 +231,6 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       applyView({
         zoomLevel: nextZoom,
         center: current.center ?? [0, 0],
-        translation: current.translation ?? [0, 0],
       });
     },
     [store, clampZoomLevel, applyView],
@@ -282,7 +244,6 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
     applyView({
       zoomLevel: store.state.geoProjectionZoom.initialZoomLevel,
       center: store.state.geoProjectionZoom.initialCenter,
-      translation: store.state.geoProjectionZoom.initialTranslation,
     });
   }, [applyView, store]);
 
@@ -308,25 +269,19 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
 
 useGeoProjectionZoom.getInitialState = (params) => {
   const zoomLevel = params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1;
-  const center = params.view?.center ?? params.initialView?.center ?? [0, 0];
-  const translation = params.view?.translation ??
-    params.initialView?.translation ??
-    getDefaultTranslation(
-      params.projection,
-      PROJECTION_FACTORIES,
-      params.geoData,
-      params.parallels,
-      center,
-    ) ?? [0, 0];
+  // When no center is provided, default to the one that keeps the data centered in the drawing area.
+  const center = params.view?.center ??
+    params.initialView?.center ??
+    getDefaultCenter(params.projection, PROJECTION_FACTORIES, params.geoData, params.parallels) ?? [
+      0, 0,
+    ];
   return {
     geoProjectionZoom: {
       zoomLevel,
       center,
-      translation,
 
       initialZoomLevel: zoomLevel,
       initialCenter: center,
-      initialTranslation: translation,
     },
   };
 };

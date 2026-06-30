@@ -15,7 +15,7 @@ import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/u
 import type { UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
 import type { GeoTooltipPosition } from '../../corePlugins/useChartSeriesConfig';
 import type { ChartState } from '../../models/chart';
-import { getParallels, resolveProjectionInstance } from './projection.utils';
+import { getParallels, getProjectionFamily, resolveProjectionInstance } from './projection.utils';
 
 const ZERO_COORDINATES: [number, number] = [0, 0];
 
@@ -67,12 +67,6 @@ const selectorChartCenter = createSelectorMemoized(
   selectorChartGeoProjectionZoomState,
   function selectorChartCenter(geoProjectionZoom): [number, number] | null {
     return geoProjectionZoom?.center ?? ZERO_COORDINATES;
-  },
-);
-const selectorChartTranslation = createSelectorMemoized(
-  selectorChartGeoProjectionZoomState,
-  function selectorChartTranslation(geoProjectionZoom): [number, number] | null {
-    return geoProjectionZoom?.translation ?? null;
   },
 );
 
@@ -152,7 +146,13 @@ export const selectorFitScale = createSelector(
     if (projection === null) {
       return null;
     }
-    projection.rotate?.([-initialCenter[0], -initialCenter[1]]);
+    // Match the rotation convention of `selectorChartProjection` so the fit scale is computed for the
+    // same orientation the data is finally drawn with.
+    if (getProjectionFamily(projectionInput) === 'azimuthal') {
+      projection.rotate?.([-initialCenter[0], -initialCenter[1]]);
+    } else {
+      projection.rotate?.([-initialCenter[0], 0]);
+    }
 
     const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
     const currentScale = projection.scale();
@@ -177,10 +177,14 @@ export const selectorFitScale = createSelector(
  *
  * - String inputs (e.g. `'mercator'`) are mapped to the matching d3-geo factory.
  * - `GeoProjection` instances are used as-is, then fitted.
- * - The projection is first fitted to the data (the `zoomLevel === 1` baseline), then its
- *   scale is multiplied by `zoomLevel` and its translation is offset so `center` lands at the
- *   center of the drawing area. Keeping the view as `{ zoomLevel, center }` means the absolute
- *   scale/translation are derived here, never stored — so they stay correct across resizes.
+ * - The projection is first fitted to the data (the `zoomLevel === 1` baseline), then its scale is
+ *   multiplied by `zoomLevel` and `center` is applied so it lands at the center of the drawing area.
+ *   How `center` is applied depends on the projection family:
+ *   - Azimuthal projections rotate the sphere by `[-lon, -lat]`.
+ *   - Other projections rotate the sphere by `[-lon, 0]` and translate the map so `center` ends up
+ *     at the drawing-area center (the latitude is realized through a translation, never a rotation).
+ *   Keeping the view as `{ zoomLevel, center }` means the absolute scale/translation are derived
+ *   here, never stored — so they stay correct across resizes.
  * - Returns `null` when no projection is registered or the name is unknown.
  */
 export const selectorChartProjection = createSelectorMemoized(
@@ -189,7 +193,6 @@ export const selectorChartProjection = createSelectorMemoized(
   selectorChartParallels,
   selectorChartGeoData,
   selectorChartCenter,
-  selectorChartTranslation,
   selectorChartZoomLevel,
   selectorChartDrawingArea,
   selectorFitScale,
@@ -199,7 +202,6 @@ export const selectorChartProjection = createSelectorMemoized(
     parallels,
     geoData,
     center,
-    translation,
     zoomLevel,
     drawingArea,
     fitScale,
@@ -216,20 +218,39 @@ export const selectorChartProjection = createSelectorMemoized(
       return projection;
     }
 
+    const isAzimuthal = getProjectionFamily(projectionInput) === 'azimuthal';
+
     if (center) {
-      projection.rotate?.([-center[0], -center[1]]);
+      if (isAzimuthal) {
+        // The whole orientation is encoded in the rotation: `center` sits under the drawing-area
+        // center once we spin both longitude and latitude.
+        projection.rotate?.([-center[0], -center[1]]);
+      } else {
+        // Non-azimuthal families only spin along the longitude; the latitude is placed at the
+        // drawing-area center through the translation computed below.
+        projection.rotate?.([-center[0], 0]);
+      }
       // Edge case with conic conformal and albers:
       // rotate impacts the center of the projection, so we need to reset it.
-      projection.center([0, 0]);
+      projection.center?.([0, 0]);
     }
 
     // `fitScale` is the `zoomLevel === 1` reference scale, computed independently in
     // `selectorFitScale` so it stays stable across pan/zoom transforms.
     projection.scale(zoomLevel != null && zoomLevel !== 1 ? fitScale * zoomLevel : fitScale);
-    projection.translate([
-      drawingArea.left + drawingArea.width / 2 + (translation?.[0] ?? 0) * drawingArea.width,
-      drawingArea.top + drawingArea.height / 2 + (translation?.[1] ?? 0) * drawingArea.height,
-    ]);
+
+    const centerX = drawingArea.left + drawingArea.width / 2;
+    const centerY = drawingArea.top + drawingArea.height / 2;
+    projection.translate([centerX, centerY]);
+
+    if (center && !isAzimuthal) {
+      // Offset the translation so `center` projects exactly onto the drawing-area center. The
+      // longitude is already centered by the rotation above, so this mostly moves along the latitude.
+      const projectedCenter = projection(center);
+      if (projectedCenter) {
+        projection.translate([2 * centerX - projectedCenter[0], 2 * centerY - projectedCenter[1]]);
+      }
+    }
 
     return projection;
   },

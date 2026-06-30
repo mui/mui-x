@@ -103,7 +103,6 @@ export default function MapZoomControl() {
   const [view, setView] = React.useState<MapZoomView>({
     zoomLevel: 1,
     center: [0, 0],
-    translation: [0, 0],
   });
 
   return (
@@ -200,41 +199,6 @@ export default function MapZoomControl() {
               setView((prev) => ({
                 ...prev,
                 center: [prev.center[0], value as number],
-              }));
-            }}
-          />
-        </div>
-        <div>
-          <Typography gutterBottom variant="caption">
-            Translation (x, y as fraction of the drawing area)
-          </Typography>
-          <Slider
-            value={view.translation[0]}
-            min={-1}
-            max={1}
-            step={0.01}
-            size="small"
-            valueLabelDisplay="auto"
-            aria-label="translation x"
-            onChange={(event, value) => {
-              setView((prev) => ({
-                ...prev,
-                translation: [value as number, prev.translation[1]],
-              }));
-            }}
-          />
-          <Slider
-            value={view.translation[1]}
-            min={-1}
-            max={1}
-            step={0.01}
-            size="small"
-            valueLabelDisplay="auto"
-            aria-label="translation y"
-            onChange={(event, value) => {
-              setView((prev) => ({
-                ...prev,
-                translation: [prev.translation[0], value as number],
               }));
             }}
           />

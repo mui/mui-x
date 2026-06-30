@@ -41,7 +41,7 @@ export default function GeoFeatureKeyMapShape() {
           geoData={countries}
           geoFeatureKey={mergeSomaliland}
           projection="naturalEarth1"
-          initialView={{ zoomLevel: 5, center: [46, 6], translation: [0, 0] }}
+          initialView={{ zoomLevel: 5, center: [46, 6] }}
           height={360}
           series={[
             {

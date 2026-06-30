@@ -26,28 +26,19 @@ export interface MapZoomView {
   zoomLevel: number;
   /**
    * The geographic coordinate `[longitude, latitude]` displayed at the center of the drawing area.
+   *
+   * How it is applied depends on the projection family:
+   * - Azimuthal projections rotate the sphere so `center` sits under the drawing-area center.
+   * - Other projections rotate the sphere along the longitude only, and place the latitude at the
+   *   drawing-area center through a translation.
    */
   center: [number, number];
-  /**
-   * The map translation in percentage of the drawing area.
-   */
-  translation: [number, number];
 }
 /**
  * Fine-grained configuration for the map zoom/pan interaction, passed as the `zoom` parameter
  * instead of a plain `true`.
  */
 export interface MapZoomOptions {
-  /**
-   * Which axes the map can be rotated along while panning or zooming.
-   * For example, `'long'` lets the map rotate east–west but locks the north–south tilt.
-   */
-  rotationAllowed?: MapRotationAxis;
-  /**
-   * Which axes the map can be translated along while panning or zooming.
-   * For example, `'y'` lets the map translate vertically but locks the horizontal movement.
-   */
-  translationAllowed?: MapTranslationAxis;
   /**
    * The minimum zoom level, as a multiple of the scale that fits the data in the drawing area.
    * @default 1
@@ -79,7 +70,7 @@ export interface UseGeoProjectionZoomParameters {
    * The view to apply on mount, when the zoom is not controlled.
    * Use this to seed the map at a specific zoom level and center without controlling it.
    */
-  initialView?: Omit<MapZoomView, 'translation'> & Partial<Pick<MapZoomView, 'translation'>>;
+  initialView?: MapZoomView;
   /**
    * The view to display, in controlled mode.
    * When set, the component does not update the view on its own — drive it from `onViewChange`.
@@ -109,7 +100,7 @@ export interface UseGeoProjectionZoomPublicApi {
    */
   zoomOut: () => void;
   /**
-   * Reset the map to the default scale and translation that fit the data in the drawing area.
+   * Reset the map to the default zoom level and center that fit the data in the drawing area.
    */
   resetZoom: () => void;
 }
@@ -129,11 +120,6 @@ export interface UseGeoProjectionZoomState {
      * `null` keeps the data centered (the fit center).
      */
     center: [number, number] | null;
-    /**
-     * The map translation in percentage of the drawing area.
-     */
-    translation: [number, number] | null;
-    initialTranslation: [number, number];
     initialCenter: [number, number];
     initialZoomLevel: number;
   };
