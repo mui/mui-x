@@ -114,7 +114,7 @@ export interface UseGeoProjectionZoomPublicApi {
   resetZoom: () => void;
 }
 
-export interface UseGeoProjectionZoomInstance extends UseGeoProjectionZoomPublicApi { }
+export interface UseGeoProjectionZoomInstance extends UseGeoProjectionZoomPublicApi {}
 
 export interface UseGeoProjectionZoomState {
   geoProjectionZoom: {

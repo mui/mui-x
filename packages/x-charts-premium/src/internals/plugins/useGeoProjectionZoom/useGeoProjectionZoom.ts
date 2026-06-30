@@ -309,8 +309,7 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
 useGeoProjectionZoom.getInitialState = (params) => {
   const zoomLevel = params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1;
   const center = params.view?.center ?? params.initialView?.center ?? [0, 0];
-  const translation =
-    params.view?.translation ??
+  const translation = params.view?.translation ??
     params.initialView?.translation ??
     getDefaultTranslation(
       params.projection,
