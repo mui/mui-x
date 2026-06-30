@@ -80,8 +80,20 @@ const CONIC_PROJECTIONS = [
   'albers',
 ];
 
+const CYLINDRICAL_PROJECTIONS = [
+  'equirectangular',
+  'mercator',
+  'transverseMercator',
+  'equalEarth',
+  'naturalEarth1',
+];
+
 function isConicProjection(projection) {
   return CONIC_PROJECTIONS.includes(projection);
+}
+
+function isCylindricalProjection(projection) {
+  return CYLINDRICAL_PROJECTIONS.includes(projection);
 }
 
 export default function CountryProjectionShape() {
@@ -91,6 +103,7 @@ export default function CountryProjectionShape() {
 
   const { geoData, center } = LANDS[land];
   const conic = isConicProjection(projection);
+  const cylindrical = isCylindricalProjection(projection);
 
   const handleLandChange = (nextLand) => {
     const config = LANDS[nextLand];
@@ -112,8 +125,13 @@ export default function CountryProjectionShape() {
           geoData={geoData}
           projection={projection}
           parallels={conic ? parallels : undefined}
-          initialView={{ zoomLevel: 1, center }}
-          zoom
+          initialView={{
+            zoomLevel: 1,
+            center: cylindrical // if cylindrical do not rotate along latitude
+              ? [center[0], 0]
+              : center,
+          }}
+          zoom={{ minZoomLevel: 0.1 }}
           height={300}
         >
           <ChartsSurface>
