@@ -1,0 +1,17 @@
+{
+  "props": {
+    "count": { "type": { "name": "number" }, "required": true },
+    "size": { "type": { "name": "number" }, "required": true },
+    "value": { "type": { "name": "number" }, "required": true }
+  },
+  "name": "MapPointCluster",
+  "imports": [
+    "import { MapPointCluster } from '@mui/x-charts-premium/Map';",
+    "import { MapPointCluster } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiMapPointCluster",
+  "filename": "/packages/x-charts-premium/src/Map/MapPointCluster.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/map/\">Charts - Map <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>"
+}

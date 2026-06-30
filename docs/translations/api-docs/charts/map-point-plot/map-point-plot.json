@@ -1,6 +1,9 @@
 {
-  "componentDescription": "Renders series mapPoint items at their projected coordinates.",
+  "componentDescription": "Renders series mapPoint items at their projected coordinates.\n\nWith a size axis it behaves as a bubble map, scaling each marker from its `value`.\nWith `cluster` enabled, nearby points collapse into aggregated markers.",
   "propDescriptions": {
+    "cluster": {
+      "description": "Collapses points that are close to each other on screen into a single marker showing the member count. Pass <code>true</code> for the default radius, or an object to tune it. Clustering is zoom-aware: zooming in spreads points apart and splits clusters."
+    },
     "fill": {
       "description": "Fill color applied to every marker. Overrides item and series colors."
     },
@@ -8,7 +11,9 @@
     "showLabels": {
       "description": "If <code>true</code>, renders the label of each point next to its marker."
     },
-    "size": { "description": "The size of the markers, as the symbol area in square pixels." },
+    "size": {
+      "description": "The base size of the markers, as the symbol area in square pixels. Used as the fallback when no size axis is set, turning the series into a bubble map."
+    },
     "stroke": { "description": "Stroke color applied to every marker." },
     "strokeWidth": { "description": "Stroke width applied to every marker." }
   },

@@ -21,9 +21,7 @@ export function isCoordinateHidden(
     return true;
   }
   const back = projection.invert?.(point);
-  return (
-    !back || Math.abs(back[0] - coordinates[0]) > 1 || Math.abs(back[1] - coordinates[1]) > 1
-  );
+  return !back || Math.abs(back[0] - coordinates[0]) > 1 || Math.abs(back[1] - coordinates[1]) > 1;
 }
 
 /**

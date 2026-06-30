@@ -3,7 +3,9 @@ import type { SeriesProcessor, SeriesId, ChartSeriesDefaultized } from '@mui/x-c
 import type { MapPointValueType } from '../../models/seriesType/mapPoint';
 
 const defaultValueFormatter = ((v) =>
-  v == null ? '' : String(v.value)) as ChartSeriesDefaultized<'mapPoint'>['valueFormatter'];
+  v == null || v.value == null
+    ? ''
+    : String(v.value)) as ChartSeriesDefaultized<'mapPoint'>['valueFormatter'];
 
 const seriesProcessor: SeriesProcessor<'mapPoint'> = (
   { series, seriesOrder },
@@ -16,7 +18,10 @@ const seriesProcessor: SeriesProcessor<'mapPoint'> = (
     const input = series[seriesId];
     const datasetKeys = input.datasetKeys;
 
-    if (datasetKeys && (typeof datasetKeys.lon !== 'string' || typeof datasetKeys.lat !== 'string')) {
+    if (
+      datasetKeys &&
+      (typeof datasetKeys.lon !== 'string' || typeof datasetKeys.lat !== 'string')
+    ) {
       incompleteDatasetKeysError('MapPoint', seriesId, ['lon', 'lat']);
     }
 
@@ -34,6 +39,9 @@ const seriesProcessor: SeriesProcessor<'mapPoint'> = (
           }
           if (datasetKeys.value !== undefined) {
             rep.value = d[datasetKeys.value] as number;
+          }
+          if (datasetKeys.sizeValue !== undefined) {
+            rep.sizeValue = d[datasetKeys.sizeValue];
           }
           if (datasetKeys.colorValue !== undefined) {
             rep.colorValue = d[datasetKeys.colorValue];

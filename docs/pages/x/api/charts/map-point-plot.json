@@ -1,5 +1,9 @@
 {
   "props": {
+    "cluster": {
+      "type": { "name": "union", "description": "{ radius?: number }<br>&#124;&nbsp;bool" },
+      "default": "false"
+    },
     "fill": { "type": { "name": "string" } },
     "shape": {
       "type": {

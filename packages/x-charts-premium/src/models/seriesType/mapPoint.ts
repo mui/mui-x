@@ -22,8 +22,14 @@ export interface MapPointValueType {
   coordinates: [number, number];
   /**
    * Numeric value associated with the point.
+   * Used as the default magnitude for the size axis and summed when points are clustered.
    */
   value?: number;
+  /**
+   * The value used to compute the size of the marker through a size axis.
+   * Falls back to `value` when no `sizeValue` is provided.
+   */
+  sizeValue?: any;
   /**
    * The value used to compute the color of the item through a color axis.
    * Falls back to `value` when no `colorValue` is provided.
@@ -55,6 +61,13 @@ export interface MapPointSeriesType extends Omit<CommonSeriesType<'mapPoint'>, '
    */
   colorAxisId?: string;
   /**
+   * The id of the size axis used to compute the size of the markers.
+   * It points to the id of an axis defined with the `zAxis` prop.
+   * When set, the marker area is mapped from each point's `sizeValue` (or `value`)
+   * through the axis `sizeMap`, turning the series into a bubble map.
+   */
+  sizeAxisId?: string;
+  /**
    * A function to extract and transform the value from the `dataset` item.
    * It receives the full dataset item and should return a map point value.
    * Can be used as an alternative to `datasetKeys`.
@@ -85,6 +98,10 @@ export interface MapPointSeriesType extends Omit<CommonSeriesType<'mapPoint'>, '
      * The key used to retrieve the item numeric value from the dataset.
      */
     value?: string;
+    /**
+     * The key used to retrieve the size value from the dataset.
+     */
+    sizeValue?: string;
     /**
      * The key used to retrieve the color value from the dataset.
      */

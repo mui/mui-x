@@ -1,0 +1,9 @@
+{
+  "componentDescription": "Renders a single marker standing in for several points collapsed together,\nlabeled with the number of members.",
+  "propDescriptions": {
+    "count": { "description": "The number of points collapsed into the cluster." },
+    "size": { "description": "The marker area, in square pixels." },
+    "value": { "description": "The aggregated value of the cluster, shown in the native tooltip." }
+  },
+  "classDescriptions": {}
+}

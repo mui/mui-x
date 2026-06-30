@@ -7,10 +7,11 @@ const descriptionGetter: DescriptionGetter<'mapPoint'> = ({ identifier, series }
     return '';
   }
   const label = getLabel(item.label, 'tooltip');
+  const hasValue = item.value != null;
   if (label === undefined) {
-    return `${item.value}`;
+    return hasValue ? `${item.value}` : '';
   }
-  return `${label}: ${item.value}`;
+  return hasValue ? `${label}: ${item.value}` : label;
 };
 
 export default descriptionGetter;

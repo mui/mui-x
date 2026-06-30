@@ -359,6 +359,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
+    pathname: '/x/api/charts/map-point-cluster',
+    title: 'MapPointCluster',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/map-point-plot',
     title: 'MapPointPlot',
     plan: 'premium',

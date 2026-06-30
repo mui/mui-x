@@ -1,7 +1,7 @@
 ---
 title: React Map chart
 productId: x-charts
-components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape, MapPointPlot, MapPoint, FocusedMapPoint, Graticule, FocusedMapShape
+components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape, MapPointPlot, MapPoint, MapPointCluster, FocusedMapPoint, Graticule, FocusedMapShape
 ---
 
 # Charts - Map [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
@@ -92,7 +92,21 @@ Stacking it on top of a `GeoDataPlot` is convenient for highlighting a subset of
 
 Points hidden by the projection, such as those on the far side of an `orthographic` globe, are not rendered. Set `showLabels` to render each point's label next to its marker.
 
+### Bubble maps with size and color axes
+
+Each point accepts a `value`. By pointing the series `sizeAxisId` and `colorAxisId` at a `zAxis`, the marker area and color are derived from that value through the axis `sizeMap` and `colorMap`, the same scales used by the scatter chart. This turns the point series into a bubble map.
+
+Use `sizeValue` or `colorValue` on a point to drive size or color from a metric other than `value`.
+
 {{"demo": "MapPointPlotDemo.js"}}
+
+### Clustering nearby points
+
+Set `cluster` to collapse points that are close to each other on screen into a single marker labeled with the number of members. Pass `cluster={{ radius }}` to tune the merge distance in pixels.
+
+Clustering is zoom-aware: because it runs on projected pixel positions, zooming in spreads points apart and naturally splits clusters back into individual markers. When a size axis is set, the cluster marker is sized from the summed value of its members.
+
+{{"demo": "MapPointClusterDemo.js"}}
 
 ## Matching features with `geoFeatureKey`
 
