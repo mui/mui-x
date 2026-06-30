@@ -100,7 +100,7 @@ function MapShapePlot(props: MapShapePlotProps) {
                         onClick={
                           onItemClick &&
                           ((event) =>
-                            onItemClick(event, { type: 'mapShape', seriesId: id, dataIndex }))
+                            onItemClick(event, { type: 'mapShape', seriesId: id, name: item.name }))
                         }
                       />
                     );
