@@ -78,4 +78,30 @@ describe('<MapPointPlot />', () => {
       expect(marker?.getAttribute('fill')).to.equal('#ff0000');
     });
   });
+
+  it('honors the series colorGetter callback', async () => {
+    const { container } = render(
+      <ChartsGeoDataProviderPremium
+        geoData={worldGeoData}
+        projection="equirectangular"
+        width={400}
+        height={300}
+        series={[
+          {
+            type: 'mapPoint',
+            data: [{ coordinates: [0, 0] }],
+            colorGetter: ({ dataIndex }) => (dataIndex === 0 ? '#00ff00' : '#000000'),
+          },
+        ]}
+      >
+        <ChartsSurface>
+          <MapPointPlot />
+        </ChartsSurface>
+      </ChartsGeoDataProviderPremium>,
+    );
+    await waitFor(() => {
+      const marker = container.querySelector('path[data-index]');
+      expect(marker?.getAttribute('fill')).to.equal('#00ff00');
+    });
+  });
 });

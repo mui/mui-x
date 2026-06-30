@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useZAxes } from '@mui/x-charts/hooks';
+import { useDrawingArea, useZAxes } from '@mui/x-charts/hooks';
 import type { SymbolsTypes } from '@mui/x-charts/internals';
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { useGeoPath } from '../hooks/useGeoPath';
 import { useMapPointSeries } from '../hooks/useMapPointSeries';
-import { isCoordinateHidden } from './isHidden';
+import { projectVisiblePoint } from './isHidden';
 import { MapPoint } from './MapPoint';
 import { FocusedMapPoint } from './FocusedMapPoint';
 import { mapPointSeriesConfig } from './pointSeriesConfig';
@@ -59,6 +59,7 @@ function MapPointPlot(props: MapPointPlotProps) {
   } = props;
   const path = useGeoPath();
   const series = useMapPointSeries();
+  const drawingArea = useDrawingArea();
   const { zAxis, zAxisIds } = useZAxes();
 
   const projection = (path?.projection() ?? null) as GeoProjection | null;
@@ -86,10 +87,10 @@ function MapPointPlot(props: MapPointPlotProps) {
         return (
           <g key={id} data-series={id}>
             {data.map((item, dataIndex) => {
-              if (item.hidden || isCoordinateHidden(projection, item.coordinates)) {
+              if (item.hidden) {
                 return null;
               }
-              const point = projection(item.coordinates);
+              const point = projectVisiblePoint(projection, item.coordinates, drawingArea);
               if (!point) {
                 return null;
               }
