@@ -30,37 +30,37 @@
   "classes": [
     {
       "key": "element",
-      "className": "MuiBarLabel-element",
+      "className": "MuiBarChart-element",
       "description": "Styles applied to an individual bar element.",
       "isGlobal": false
     },
     {
       "key": "label",
-      "className": "MuiBarLabel-label",
+      "className": "MuiBarChart-label",
       "description": "Styles applied to an individual bar label.",
       "isGlobal": false
     },
     {
       "key": "labelAnimate",
-      "className": "MuiBarLabel-labelAnimate",
+      "className": "MuiBarChart-labelAnimate",
       "description": "Styles applied to a bar label when it is animated.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiBarLabel-root",
+      "className": "MuiBarChart-root",
       "description": "Styles applied to the bar plot element.",
       "isGlobal": false
     },
     {
       "key": "series",
-      "className": "MuiBarLabel-series",
+      "className": "MuiBarChart-series",
       "description": "Styles applied to the group surrounding a series' bar elements.",
       "isGlobal": false
     },
     {
       "key": "seriesLabels",
-      "className": "MuiBarLabel-seriesLabels",
+      "className": "MuiBarChart-seriesLabels",
       "description": "Styles applied to the group surrounding a series' labels.",
       "isGlobal": false
     }
@@ -68,6 +68,5 @@
   "muiName": "MuiBarLabel",
   "filename": "/packages/x-charts/src/BarChart/BarLabel/BarLabel.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>"
 }

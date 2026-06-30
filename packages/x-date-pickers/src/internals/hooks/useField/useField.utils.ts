@@ -1,11 +1,11 @@
-import {
+import type {
   FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
   FieldSectionValueBoundaries,
   FieldParsedSelectedSections,
 } from './useField.types';
-import {
+import type {
   FieldSectionType,
   FieldSection,
   MuiPickersAdapter,
@@ -18,7 +18,7 @@ import {
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
 import { convertToMeridiem } from '../../utils/time-utils';
-import { PickerValidValue } from '../../models';
+import type { PickerValidValue } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = (
   adapter: MuiPickersAdapter,
@@ -96,7 +96,7 @@ export const getLetterEditingOptions = (
 
 // This format should be the same on all the adapters
 // If some adapter does not respect this convention, then we will need to hardcode the format on each adapter.
-export const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
+const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
 
 const NON_LOCALIZED_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
@@ -179,6 +179,8 @@ export const cleanDigitSectionValue = (
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         [
           `MUI X: The token "${section.format}" is a digit format with letter in it.'
@@ -254,6 +256,8 @@ export const changeSectionValueFormat = (
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (getDateSectionConfigFromFormatToken(adapter, currentFormat).type === 'weekDay') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error("changeSectionValueFormat doesn't support week day formats");
     }
   }
@@ -580,8 +584,6 @@ export const mergeDateIntoReferenceDate = (
 
       return mergedDate;
     }, referenceDate);
-
-export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
   const neighbors: SectionNeighbors = {};

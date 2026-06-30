@@ -1,5 +1,6 @@
 import moment from 'moment';
 import jMoment from 'moment-jalaali';
+import type { AdapterName } from 'test/utils/pickers';
 import {
   buildFieldInteractions,
   getCleanedSelectedContent,
@@ -7,7 +8,13 @@ import {
   expectFieldValue,
 } from 'test/utils/pickers';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { FieldSectionType, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
+import type {
+  FieldSectionType,
+  MuiPickersAdapter,
+  PickerValidDate,
+} from '@mui/x-date-pickers/models';
 import {
   getDateSectionConfigFromFormatToken,
   cleanLeadingZeros,
@@ -43,19 +50,21 @@ function updateDate(
   }
 }
 
-const adapterToTest = [
-  'luxon',
-  'date-fns',
-  'dayjs',
-  'moment',
-  'date-fns-jalali',
+type AdapterConstructor = new (...args: any) => MuiPickersAdapter;
+const adapterToTest: ReadonlyArray<{ name: AdapterName; Adapter?: AdapterConstructor }> = [
+  { name: 'luxon' },
+  { name: 'date-fns' },
+  { name: 'dayjs' },
+  { name: 'moment' },
+  { name: 'date-fns-jalali', Adapter: AdapterDateFnsJalali },
   // 'moment-hijri',
-  'moment-jalaali',
-] as const;
+  { name: 'moment-jalaali', Adapter: AdapterMomentJalaali },
+];
 
 describe(`RTL - test arrows navigation`, () => {
   const { render, adapter } = createPickerRenderer({
     adapterName: 'moment-jalaali',
+    Adapter: AdapterMomentJalaali,
   });
 
   beforeAll(() => {
@@ -137,10 +146,11 @@ describe(`RTL - test arrows navigation`, () => {
   });
 });
 
-adapterToTest.forEach((adapterName) => {
+adapterToTest.forEach(({ name: adapterName, Adapter }) => {
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
     const { render, adapter } = createPickerRenderer({
       adapterName,
+      Adapter,
     });
 
     beforeEach(() => {

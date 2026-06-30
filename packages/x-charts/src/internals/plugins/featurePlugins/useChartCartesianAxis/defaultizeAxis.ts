@@ -1,5 +1,5 @@
-import { defaultizeZoom } from './defaultizeZoom';
-import { type ZoomOptions } from './zoom.types';
+import { defaultizeZoom, getEffectiveZoomReverse } from './defaultizeZoom';
+import type { ZoomOptions } from './zoom.types';
 import {
   DEFAULT_X_AXIS_KEY,
   DEFAULT_Y_AXIS_KEY,
@@ -7,9 +7,9 @@ import {
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
-import { type XAxis, type YAxis } from '../../../../models';
-import { type DefaultedXAxis, type DefaultedYAxis } from '../../../../models/axis';
-import { type DatasetType } from '../../../../models/seriesType/config';
+import type { XAxis, YAxis } from '../../../../models';
+import type { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
+import type { DatasetType } from '../../../../models/seriesType/config';
 
 type InXAxis = XAxis & { zoom?: boolean | ZoomOptions };
 
@@ -46,7 +46,12 @@ export function defaultizeXAxis(
       id,
       position,
       height,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'x', axisConfig.reverse),
+      zoom: defaultizeZoom(
+        axisConfig.zoom,
+        id,
+        'x',
+        getEffectiveZoomReverse('x', axisConfig.scaleType, axisConfig.reverse),
+      ),
     };
 
     // Increment the offset for the next axis
@@ -116,7 +121,12 @@ export function defaultizeYAxis(
       id,
       position,
       width,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'y', axisConfig.reverse),
+      zoom: defaultizeZoom(
+        axisConfig.zoom,
+        id,
+        'y',
+        getEffectiveZoomReverse('y', axisConfig.scaleType, axisConfig.reverse),
+      ),
     };
 
     // Increment the offset for the next axis

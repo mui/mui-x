@@ -1,8 +1,13 @@
-import { screen } from '@mui/internal-test-utils';
+import * as React from 'react';
+import { spy } from 'sinon';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import { ErrorContainer, SharedComponentsStyledContext } from '@mui/x-scheduler/internals';
 import {
   adapter,
   createSchedulerRenderer,
@@ -15,8 +20,8 @@ import {
   SchedulerEvent,
   SchedulerResource,
   TemporalSupportedObject,
-} from '@mui/x-scheduler-headless/models';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/models';
+} from '@mui/x-scheduler-internals/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
 const engineering = ResourceBuilder.new().build();
@@ -159,6 +164,59 @@ describe('<EventTimelinePremium />', () => {
       ).to.equal(null);
     });
 
+    it('should highlight only the clicked occurrence of a recurring event', async () => {
+      const recurringEvent = EventBuilder.new()
+        .title('Recurring standup')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .recurrent('DAILY')
+        .build();
+
+      const { user } = renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
+
+      const occurrences = screen.getAllByLabelText(recurringEvent.title);
+      expect(occurrences.length).to.be.greaterThan(1);
+      const clickedOccurrenceKey = occurrences[0].getAttribute('data-occurrence-key');
+      expect(clickedOccurrenceKey).not.to.equal(null);
+
+      await user.click(occurrences[0]);
+
+      const editedOccurrences = screen
+        .getAllByLabelText(recurringEvent.title)
+        .filter((occurrence) => occurrence.hasAttribute('data-editing'));
+      expect(editedOccurrences).to.have.length(1);
+      expect(editedOccurrences[0].getAttribute('data-occurrence-key')).to.equal(
+        clickedOccurrenceKey,
+      );
+    });
+
+    it('should clear the highlight when the edit dialog is closed', async () => {
+      const recurringEvent = EventBuilder.new()
+        .title('Recurring standup')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .recurrent('DAILY')
+        .build();
+
+      const { user } = renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
+
+      const occurrences = screen.getAllByLabelText(recurringEvent.title);
+      await user.click(occurrences[0]);
+      expect(
+        screen
+          .getAllByLabelText(recurringEvent.title)
+          .filter((occurrence) => occurrence.hasAttribute('data-editing')),
+      ).to.have.length(1);
+
+      await user.click(screen.getByRole('button', { name: 'Close' }));
+
+      expect(
+        screen
+          .getAllByLabelText(recurringEvent.title)
+          .filter((occurrence) => occurrence.hasAttribute('data-editing')),
+      ).to.have.length(0);
+    });
+
     it('should render events correctly in the dayAndHour preset', () => {
       const totalWidth = 6144; // 96 hours * 64px
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
@@ -223,8 +281,9 @@ describe('<EventTimelinePremium />', () => {
       // monthAndYear ticks per day (6px), so the total width depends on the actual
       // calendar days in the visible range — read it from the grid CSS variables.
       const grid = screen.getByRole('grid');
+      const container = grid.closest('section')!;
       const totalWidth =
-        parseFloat(grid.style.getPropertyValue('--unit-width')) *
+        parseFloat(container.style.getPropertyValue('--unit-width')) *
         parseFloat(grid.style.getPropertyValue('--unit-count'));
       const monthWidth = totalWidth / 36;
 
@@ -341,6 +400,338 @@ describe('<EventTimelinePremium />', () => {
     });
   });
 
+  describe('lazy loading', () => {
+    it('should call dataSource.getEvents when the timeline mounts', async () => {
+      const dataSource = {
+        getEvents: spy(async () => baseEvents),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.equal(1));
+    });
+
+    it('should call dataSource.getEvents again when navigating to a different range', async () => {
+      const dataSource = {
+        getEvents: spy(async () => baseEvents),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      function Test() {
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
+        return (
+          <React.Fragment>
+            <EventTimelinePremium
+              resources={baseResources}
+              dataSource={dataSource}
+              visibleDate={visibleDate}
+              defaultPreset="dayAndMonth"
+            />
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+              Next
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+      await waitFor(() => {
+        expect(screen.getByText(event1.title)).not.to.equal(null);
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+
+      const initialCount = dataSource.getEvents.callCount;
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount));
+    });
+
+    it('should render the skeleton while events are loading and remove it once they resolve', async () => {
+      let resolveFetch: (value: SchedulerEvent[]) => void = () => {};
+      const dataSource = {
+        getEvents: () =>
+          new Promise<SchedulerEvent[]>((resolve) => {
+            resolveFetch = resolve;
+          }),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.be.greaterThan(0);
+      });
+      // The timeline renders the `timeline-row` variant, which drives its own CSS.
+      expect(
+        document.querySelectorAll(
+          `.${eventTimelinePremiumClasses.eventSkeleton}[data-variant="timeline-row"]`,
+        ).length,
+      ).to.be.greaterThan(0);
+      expect(screen.queryByText(event1.title)).to.equal(null);
+
+      resolveFetch(baseEvents);
+
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+      expect(screen.getByText(event1.title)).not.to.equal(null);
+    });
+  });
+
+  describe('error handling', () => {
+    function renderErrorContainer(initialErrors: Error[]) {
+      const store = new EventTimelinePremiumStore(
+        { events: [], resources: baseResources },
+        adapter,
+      );
+      store.set(
+        'errors',
+        initialErrors.map((error, index) => ({ error, key: String(index) })),
+      );
+
+      return render(
+        <SchedulerStoreContext.Provider value={store as any}>
+          <SharedComponentsStyledContext.Provider value={{ classes: eventTimelinePremiumClasses }}>
+            <ErrorContainer />
+          </SharedComponentsStyledContext.Provider>
+        </SchedulerStoreContext.Provider>,
+      );
+    }
+
+    it('should render an error alert when dataSource.getEvents rejects', async () => {
+      const dataSource = {
+        getEvents: () => Promise.reject(new Error('Network error')),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Network error')).not.to.equal(null);
+      });
+    });
+
+    it('should render multiple alerts when state.errors contains multiple errors', () => {
+      renderErrorContainer([new Error('First error'), new Error('Second error')]);
+
+      expect(
+        document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
+      ).to.equal(2);
+      expect(screen.getByText('First error')).not.to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should remove only the dismissed alert and keep the others', async () => {
+      const { user } = renderErrorContainer([new Error('First error'), new Error('Second error')]);
+
+      const closeButtons = screen.getAllByRole('button', { name: /close/i });
+      expect(closeButtons.length).to.equal(2);
+
+      await user.click(closeButtons[0]);
+
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
+        ).to.equal(1);
+      });
+      expect(screen.queryByText('First error')).to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should clear the error alert when a subsequent fetch succeeds', async () => {
+      let callCount = 0;
+      const dataSource = {
+        getEvents: () => {
+          callCount += 1;
+          if (callCount === 1) {
+            return Promise.reject(new Error('Transient error'));
+          }
+          return Promise.resolve(baseEvents);
+        },
+        persistEvents: async () => ({ success: true }),
+      };
+
+      function Test() {
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
+        return (
+          <React.Fragment>
+            <EventTimelinePremium
+              resources={baseResources}
+              dataSource={dataSource}
+              visibleDate={visibleDate}
+              defaultPreset="dayAndMonth"
+            />
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+              Next
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Transient error')).not.to.equal(null);
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+
+      await waitFor(() => {
+        expect(screen.queryByText('Transient error')).to.equal(null);
+      });
+    });
+
+    it('should clear the error alert when navigating back to a cached range', async () => {
+      let callCount = 0;
+      const dataSource = {
+        getEvents: async () => {
+          callCount += 1;
+          // The second call (the navigation that follows the initial mount fetch) fails.
+          // The third call would normally re-fetch range A — but it's cached, so the
+          // plugin's cache-hit branch must clear `state.errors` without going to the
+          // network.
+          if (callCount === 2) {
+            throw new Error('Network failure');
+          }
+          return baseEvents;
+        },
+        persistEvents: async () => ({ success: true }),
+      };
+
+      function Test() {
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
+        return (
+          <React.Fragment>
+            <EventTimelinePremium
+              resources={baseResources}
+              dataSource={dataSource}
+              visibleDate={visibleDate}
+              defaultPreset="dayAndMonth"
+            />
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+              Next
+            </button>
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, -56))}>
+              Prev
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      await waitFor(() => {
+        expect(screen.getByText(event1.title)).not.to.equal(null);
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+      await waitFor(() => {
+        expect(screen.getByText('Network failure')).not.to.equal(null);
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Prev' }));
+      await waitFor(() => {
+        expect(screen.queryByText('Network failure')).to.equal(null);
+      });
+    });
+
+    it('should render a non-Error rejection by stringifying it', async () => {
+      // dataSource that rejects with a non-Error value (e.g. a `fetch` Response).
+      const nonError = { status: 500, toString: () => '500 Internal Server Error' };
+      const dataSource = {
+        getEvents: () => Promise.reject(nonError),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('500 Internal Server Error')).not.to.equal(null);
+      });
+    });
+
+    it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
+      const sharedError = new Error('Shared error');
+      const store = new EventTimelinePremiumStore(
+        { events: [], resources: baseResources },
+        adapter,
+      );
+      store.set('errors', [{ error: sharedError, key: '1' }]);
+
+      function Test() {
+        const styledContextValue = React.useMemo(
+          () => ({ classes: eventTimelinePremiumClasses }),
+          [],
+        );
+
+        return (
+          <SchedulerStoreContext.Provider value={store as any}>
+            <SharedComponentsStyledContext.Provider value={styledContextValue}>
+              <ErrorContainer />
+            </SharedComponentsStyledContext.Provider>
+          </SchedulerStoreContext.Provider>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      await user.click(screen.getByRole('button', { name: /close/i }));
+      await waitFor(() => {
+        expect(screen.queryByText('Shared error')).to.equal(null);
+      });
+
+      // Simulate the plugin re-pushing the same Error instance under a new key.
+      await act(async () => {
+        store.set('errors', [{ error: sharedError, key: '2' }]);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Shared error')).not.to.equal(null);
+      });
+    });
+  });
+
   describe('presets', () => {
     it('should set --unit-width to the preset tickWidth and render one row per header level', async () => {
       renderTimeline({
@@ -349,8 +740,9 @@ describe('<EventTimelinePremium />', () => {
       });
 
       let rootElement = screen.getByRole('grid');
+      let containerElement = rootElement.closest('section')!;
       // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('64px');
+      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('64px');
       expect(
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
@@ -361,8 +753,9 @@ describe('<EventTimelinePremium />', () => {
       });
 
       rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
+      containerElement = rootElement.closest('section')!;
       // day: tickWidth = 120px, 2 header rows (month + day).
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('120px');
+      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('120px');
       expect(
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);

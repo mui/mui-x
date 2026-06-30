@@ -10,14 +10,14 @@ import {
   SchedulerEventColor,
   SchedulerResourceId,
   SchedulerRenderableEventOccurrence,
-} from '@mui/x-scheduler-headless/models';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+} from '@mui/x-scheduler-internals/models';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
 import ResourceAndColorSection from './ResourceAndColorSection';
@@ -100,6 +100,10 @@ export function GeneralTab(props: GeneralTabProps) {
 
   // Selector hooks
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
   const isPropertyReadOnly = useStore(
     store,
     schedulerEventSelectors.isPropertyReadOnly,
@@ -143,17 +147,16 @@ export function GeneralTab(props: GeneralTabProps) {
   };
 
   const handleResourceChange = (newResource: SchedulerResourceId | null) => {
+    const nextErrors = { ...errors };
+    delete nextErrors.resource;
+    setErrors(nextErrors);
     const newState = { ...controlled, resourceId: newResource };
     pushPlaceholder(newState);
     setControlled(newState);
   };
 
-  const handleColorChange = (newColor: SchedulerEventColor) => {
-    if (!newColor) {
-      return;
-    }
-
-    const newState = { ...controlled, color: newColor === controlled.color ? null : newColor };
+  const handleColorChange = (newColor: SchedulerEventColor | null) => {
+    const newState = { ...controlled, color: newColor };
     pushPlaceholder(newState);
     setControlled(newState);
   };
@@ -183,6 +186,7 @@ export function GeneralTab(props: GeneralTabProps) {
                 slotProps={{
                   inputLabel: { shrink: true },
                   input: { readOnly: isPropertyReadOnly('start') },
+                  formHelperText: { role: 'alert' },
                 }}
                 error={!!errors.startDate}
                 helperText={errors.startDate}
@@ -259,6 +263,11 @@ export function GeneralTab(props: GeneralTabProps) {
             onResourceChange={handleResourceChange}
             onColorChange={handleColorChange}
             color={controlled.color}
+            error={
+              shouldEventRequireResource && typeof errors.resource === 'string'
+                ? errors.resource
+                : undefined
+            }
           />
         </SectionFieldset>
         <Divider />

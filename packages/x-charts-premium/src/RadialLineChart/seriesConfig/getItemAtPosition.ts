@@ -1,19 +1,23 @@
 import { getValueToPositionMapper } from '@mui/x-charts/hooks';
 import {
-  type ChartState,
-  type ProcessedSeries,
-  type UseChartPolarAxisSignature,
-  type ComputedAxis,
-  type ChartsRadiusAxisProps,
-  type ChartsRotationAxisProps,
   selectorAllSeriesOfType,
   selectorChartPolarCenter,
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
-  getPolarAxisIndex,
+  getRotationAxisIndex,
   isOrdinalScale,
+  evaluateCurveAtAngle,
+  clampAngleRad,
+  getAsNumber,
 } from '@mui/x-charts/internals';
-import { evaluateCurveAtAngle, clampAngleRad, getAsNumber } from '@mui/x-charts/internals';
+import type {
+  ChartState,
+  ProcessedSeries,
+  UseChartPolarAxisSignature,
+  ComputedAxis,
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+} from '@mui/x-charts/internals';
 import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
 /**
@@ -32,7 +36,7 @@ function getBracketIndices(
   }
 
   if (isOrdinalScale(scale)) {
-    const index = getPolarAxisIndex(rotationAxis, angle);
+    const index = getRotationAxisIndex(rotationAxis, angle);
     if (index === -1) {
       return null;
     }
@@ -219,7 +223,7 @@ export default function getItemAtPosition(
     const { left, right } = bracket;
     const { visibleStackedData, data, connectNulls, curve } = seriesItem;
 
-    const dataIndex = getPolarAxisIndex(rotationAxis, pointerAngle);
+    const dataIndex = getRotationAxisIndex(rotationAxis, pointerAngle);
     if (dataIndex === -1) {
       continue;
     }
@@ -372,7 +376,7 @@ export default function getItemAtPosition(
       const radiusMax = Math.max(innerRadius, outerRadius);
 
       if (pointerRadius >= radiusMin && pointerRadius <= radiusMax) {
-        const dataIndex = getPolarAxisIndex(rotationAxis, pointerAngle);
+        const dataIndex = getRotationAxisIndex(rotationAxis, pointerAngle);
         return {
           type: 'radialLine',
           seriesId,

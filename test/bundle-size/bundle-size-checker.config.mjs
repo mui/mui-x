@@ -3,6 +3,7 @@
  *
  * This file determines which packages and components will have their bundle sizes measured.
  */
+import fs from 'fs';
 import path from 'path';
 import { globby } from 'globby';
 import { defineConfig } from '@mui/internal-bundle-size-checker';
@@ -18,6 +19,29 @@ async function findComponents(packageFolder, packageName) {
     return `${packageName}/${componentName}`;
   });
   return pkgComponents;
+}
+
+// Sub-path exports that aren't renderable components and therefore shouldn't be
+// tracked individually for bundle size (types, locales, augmentations, internals).
+// Add to this denylist when introducing non-component sub-path exports (e.g. `utils`, `colors`).
+const NON_COMPONENT_EXPORTS = new Set(['models', 'locales', 'theme-augmentation', 'internals']);
+
+/**
+ * Lists the component entrypoints of a package from its `exports` field.
+ *
+ * Unlike `findComponents`, which scans the build output for PascalCase component
+ * folders, this reads the explicit kebab-case sub-path exports used by the
+ * scheduler packages, so newly added views are tracked automatically without
+ * hardcoding them here.
+ */
+function findComponentsFromExports(packageFolder, packageName) {
+  const pkgJsonPath = path.join(rootDir, `packages/${packageFolder}/package.json`);
+  const { exports: pkgExports } = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+  return Object.keys(pkgExports)
+    .filter((key) => key.startsWith('./'))
+    .map((key) => key.slice(2))
+    .filter((name) => !NON_COMPONENT_EXPORTS.has(name) && !name.startsWith('use-'))
+    .map((name) => `${packageName}/${name}`);
 }
 
 /**
@@ -71,6 +95,12 @@ export default defineConfig(async () => {
       ...treeViewComponents,
       '@mui/x-tree-view-pro',
       ...treeViewProComponents,
+      '@mui/x-scheduler',
+      ...findComponentsFromExports('x-scheduler', '@mui/x-scheduler'),
+      '@mui/x-scheduler-premium',
+      ...findComponentsFromExports('x-scheduler-premium', '@mui/x-scheduler-premium'),
+      '@mui/x-license',
+      '@mui/x-license/internals',
     ],
     upload: !!process.env.CI,
     replace: {

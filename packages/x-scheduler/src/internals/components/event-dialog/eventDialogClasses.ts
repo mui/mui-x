@@ -47,8 +47,10 @@ export interface EventDialogClasses {
   eventDialogResourceMenuListSubheader: string;
   /** Styles applied to the event dialog resource menu color dot element. */
   eventDialogResourceMenuColorDot: string;
-  /** Styles applied to the event dialog resource menu color radio button element. */
-  eventDialogResourceMenuColorRadioButton: string;
+  /** Styles applied to the event dialog resource menu color toggle group element. */
+  eventDialogResourceMenuColorToggleGroup: string;
+  /** Styles applied to the event dialog resource menu color toggle element. */
+  eventDialogResourceMenuColorToggle: string;
   /** Styles applied to the event dialog inline row element. */
   eventDialogInlineRow: string;
   /** Styles applied to the event dialog section header title element. */
@@ -122,7 +124,8 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogResourceMenuItem',
   'eventDialogResourceMenuListSubheader',
   'eventDialogResourceMenuColorDot',
-  'eventDialogResourceMenuColorRadioButton',
+  'eventDialogResourceMenuColorToggleGroup',
+  'eventDialogResourceMenuColorToggle',
   'eventDialogRecurrenceLabelContainer',
   'eventDialogRecurrenceSelectorContainer',
   'eventDialogInlineRow',
@@ -174,7 +177,8 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogResourceMenuItem: ['eventDialogResourceMenuItem'],
   eventDialogResourceMenuListSubheader: ['eventDialogResourceMenuListSubheader'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
-  eventDialogResourceMenuColorRadioButton: ['eventDialogResourceMenuColorRadioButton'],
+  eventDialogResourceMenuColorToggleGroup: ['eventDialogResourceMenuColorToggleGroup'],
+  eventDialogResourceMenuColorToggle: ['eventDialogResourceMenuColorToggle'],
   eventDialogRecurrenceLabelContainer: ['eventDialogRecurrenceLabelContainer'],
   eventDialogRecurrenceSelectorContainer: ['eventDialogRecurrenceSelectorContainer'],
   eventDialogInlineRow: ['eventDialogInlineRow'],

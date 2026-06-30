@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPro,
-  type DataGridProProps,
-  GRID_ROOT_GROUP_ID,
-  type GridApi,
-  type GridDataSource,
-  type GridGetRowsParams,
-  type GridGetRowsResponse,
-  type GridGroupNode,
-  useGridApiRef,
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPro, GRID_ROOT_GROUP_ID, useGridApiRef } from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps,
+  GridApi,
+  GridDataSource,
+  GridGetRowsParams,
+  GridGetRowsResponse,
+  GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -34,6 +32,20 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
+
+  // The mock server uses random data, so row 0 isn't guaranteed to be a
+  // parent — find the first one that is.
+  function findFirstParentRow() {
+    const tree = apiRef.current!.state.rows.tree;
+    const rootChildren = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
+    for (let i = 0; i < rootChildren.length; i += 1) {
+      const node = tree[rootChildren[i]];
+      if (node?.type === 'group') {
+        return { index: i, id: rootChildren[i] as string, cell: getCell(i, 0) };
+      }
+    }
+    throw new Error('No parent row found in root group');
+  }
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -153,7 +165,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
   it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
     const localFetchRowsSpy = spy();
-    const { unmount } = render(
+    const { setProps, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -165,22 +177,23 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
     });
 
-    vi.useFakeTimers();
-    localFetchRowsSpy.resetHistory();
+    const callCountAfterFirstFetch = localFetchRowsSpy.callCount;
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // With `dataSourceRevalidateMs` set, the grid refetches on an interval, so
+    // the call count keeps growing on its own without any further prop change.
+    await waitFor(() => {
+      expect(localFetchRowsSpy.callCount).to.be.greaterThan(callCountAfterFirstFetch);
     });
 
-    expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
-
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should periodically revalidate expanded nested rows when dataSourceRevalidateMs is set', async () => {
     const localFetchRowsSpy = spy();
-    const { user, unmount } = render(
+    const { setProps, user, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -193,34 +206,34 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const cell11 = getCell(0, 0);
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
       expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
     });
 
-    vi.useFakeTimers();
     localFetchRowsSpy.resetHistory();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // The expanded group is revalidated on the interval; wait for one of those
+    // background nested requests (a call carrying `groupKeys`) to be issued.
+    await waitFor(() => {
+      const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
+        const url = new URL(call.firstArg as string);
+        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
     });
 
-    const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
-      const url = new URL(call.firstArg as string);
-      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-      return groupKeys.length > 0;
-    });
-
-    expect(hasNestedGroupRequest).to.equal(true);
-
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should keep selected nested rows selected during background nested revalidation', async () => {
-    const { user, unmount } = render(
+    const { setProps, user, unmount } = render(
       <TestDataSource dataSourceCache={null} dataSourceRevalidateMs={1} />,
     );
 
@@ -229,9 +242,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
+    const { id: expandedRowId, cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -247,29 +258,29 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
 
-    vi.useFakeTimers();
     fetchRowsSpy.resetHistory();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // Wait for a background nested revalidation (a call carrying `groupKeys`).
+    await waitFor(() => {
+      const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
+        const url = new URL(call.firstArg as string);
+        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
     });
-
-    const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
-      const url = new URL(call.firstArg as string);
-      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-      return groupKeys.length > 0;
-    });
-    expect(hasNestedGroupRequest).to.equal(true);
 
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
 
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should not set children loading state during background nested revalidation', async () => {
     const localFetchRowsSpy = spy();
-    const { user, unmount } = render(
+    const { setProps, user, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -282,9 +293,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
+    const { id: expandedRowId, cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -293,28 +302,29 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
 
-    vi.useFakeTimers();
     localFetchRowsSpy.resetHistory();
     setChildrenLoadingSpy.resetHistory();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // Wait for a background nested revalidation (a call carrying `groupKeys`)...
+    await waitFor(() => {
+      const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
+        const url = new URL(call.firstArg as string);
+        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
     });
 
-    const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
-      const url = new URL(call.firstArg as string);
-      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-      return groupKeys.length > 0;
-    });
-    expect(hasNestedGroupRequest).to.equal(true);
-
+    // ...and confirm it never put the expanded group into a loading state.
     const hasLoadingTrueCall = setChildrenLoadingSpy
       .getCalls()
       .some((call) => call.args[0] === expandedRowId && call.args[1] === true);
     setChildrenLoadingSpy.restore();
     expect(hasLoadingTrueCall).to.equal(false);
 
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
@@ -347,9 +357,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
+    const { id: expandedRowId, cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -379,7 +387,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
-    const cell11 = getCell(0, 0);
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -387,9 +395,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
   });
 
   it('should keep the nested data visible after the root level re-fetch and remove any stale rows', async () => {
@@ -421,8 +433,8 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // the second row is part of the tree
     expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
 
-    // expand the first row
-    const cell11 = getCell(0, 0);
+    // expand the first parent row
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -431,9 +443,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     // children are part of the tree
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
 
     // refetch the root level
     act(() => {
@@ -444,13 +460,14 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(3);
     });
 
-    // children are still part of the tree
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
-
-    // test row is not part of the tree anymore
-    expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
+    // children are still part of the tree, and the stale test row has been
+    // removed once the background re-fetch settles.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+      expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
+    });
   });
 
   it('should collapse the nested data if refetching the root level with `keepChildrenExpanded` set to `false`', async () => {
@@ -461,7 +478,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
-    const cell11 = getCell(0, 0);
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -469,9 +486,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
 
     fetchRowsSpy.resetHistory();
 
@@ -483,7 +504,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
 
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+    // Children collapse once the re-fetch settles, leaving only the root rows.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+    });
   });
 
   // https://github.com/mui/mui-x/issues/21269
@@ -569,8 +593,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
-    const firstChildId = (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
+    const { id: firstChildId, cell: cell11 } = findFirstParentRow();
 
     await act(async () => {
       apiRef.current?.dataSource.fetchRows(firstChildId);
@@ -580,11 +603,14 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
     });
 
-    const cell11 = getCell(0, 0);
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
   });
 
   // https://github.com/mui/mui-x/issues/21263
@@ -690,15 +716,15 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-    // Expand the first row
-    const cell = getCell(0, 0);
+    // Expand the first parent row
+    const { cell } = findFirstParentRow();
     await user.click(within(cell).getByRole('button'));
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
     });
 
-    // Collapse the first row
+    // Collapse the first parent row
     await user.click(within(cell).getByRole('button'));
   });
 });

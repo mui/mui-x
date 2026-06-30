@@ -8,21 +8,22 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless message list
 
-<p class="description">Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.</p>
+<p class="description">Render an ordered chat thread with history loading, scroll anchoring, and unseen-message tracking.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-## Primitive set
+## Primitives
 
-The message list surface is built from:
+The message list surface includes the following primitives:
 
 - `MessageList.Root`
 - `MessageList.DateDivider`
 
-## `MessageList.Root`
+## Rendering the thread log
 
 `MessageList.Root` is the structural thread log.
-By default it sources row ids from `useMessageIds()`, but you can also pass a custom `items` array when the rendered order needs to differ from the store order.
+By default it sources row ids from `useMessageIds()`.
+Pass a custom `items` array when the rendered order needs to differ from the store order.
 
 ```tsx
 <MessageList.Root
@@ -42,33 +43,36 @@ It supports:
 - row rendering through `renderItem({ id, index })`
 - item reordering through the `items` prop
 - `onReachTop`
+- `onReachBottom`
 - automatic history loading when the list reaches the top edge
 - scroll anchoring when items are prepended
 - unseen-message counting while the list is away from the bottom
 - `aria-live="polite"` log semantics
 - an imperative `scrollToBottom()` handle
 
-Those behaviors make `MessageList.Root` the main place where the headless layer turns store-backed thread data into a real scrolling chat log.
-
 ## History loading
 
 When the list reaches the top, `MessageList.Root` can both fire `onReachTop` and trigger history loading through the runtime.
-Because the list owns the history-loading trigger, top-loading remains coordinated instead of being split across separate helpers.
+Keeping the trigger on the list coordinates top-loading in one place.
 
 ## Scroll behavior
 
 The list tracks whether the user is at the bottom of the thread and how many unseen messages have arrived since they moved away from the bottom.
 That behavior powers `Indicators.ScrollToBottomAffordance`.
 
-It also preserves the viewport when older messages are prepended, which is important for infinite-scroll chat histories.
-Without that anchoring, loading more history would make the thread jump unexpectedly.
+It also preserves the viewport when older messages are prepended, which keeps infinite-scroll histories from jumping as the user reads.
+
+The list fires `onReachBottom` once each time the viewport enters the bottom zone—within the auto-scroll `buffer` (150 px by default; `estimatedItemSize` when `autoScroll` is disabled).
+Programmatic scrolls (`scrollToBottom()`, the scroll-to-bottom affordance) and the forced scroll after the user sends a message count as entries.
+It does not refire while the list stays pinned to the bottom during streaming, and switching conversations never fires it by itself.
+The canonical use case is marking messages as read once the user scrolls to the latest message—see [read receipts](/x/react-chat/multi-conversation/read-receipts/).
 
 ### Imperative scroll handle
 
 `MessageList.Root` exposes a `scrollToBottom()` handle through `ref`.
-Use that when the surrounding app needs an explicit "jump to latest" action outside the list surface itself.
+Use it for an explicit "jump to latest" action outside the list.
 
-## `MessageList.DateDivider`
+## Inserting day boundaries
 
 `MessageList.DateDivider` inserts a separator when the current message starts a new calendar day compared to the previous message.
 
@@ -86,9 +90,7 @@ It supports:
 />
 ```
 
-The divider only renders when a real day boundary exists.
-
-That makes it safe to keep in the row pipeline for every message without extra filtering logic in app code.
+The divider only renders when a day boundary exists, so it's safe to keep in the row pipeline for every message.
 
 ## Recommended patterns
 
@@ -98,8 +100,8 @@ That makes it safe to keep in the row pipeline for every message without extra f
 
 ## See also
 
-- Continue with [Messages](/x/react-chat/headless/messages/) for the row-level primitives that usually appear inside `renderItem`.
-- Continue with [Indicators](/x/react-chat/headless/indicators/) for unread and scroll affordances powered by the list.
+- [Messages](/x/react-chat/headless/messages/) for the row-level primitives that appear inside `renderItem`.
+- [Indicators](/x/react-chat/headless/indicators/) for unread and scroll affordances powered by the list.
 
 ## API
 

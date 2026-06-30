@@ -14,9 +14,7 @@ const adapter = createEchoAdapter();
 
 function StreamingBadge() {
   const { isStreaming } = useChatStatus();
-  return isStreaming ? (
-    <Chip label="Responding..." color="info" size="small" />
-  ) : null;
+  return isStreaming ? <Chip label="Responding…" color="info" size="small" /> : null;
 }
 
 export default function ChatBoxWithHooks() {

@@ -9,11 +9,11 @@ import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
   schedulerResourceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
@@ -83,7 +83,7 @@ const EventItemTitle = styled('span', {
   margin: 0,
   color: (theme.vars || theme).palette.text.primary,
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)',
   lineHeight: 1.43,
   '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
@@ -177,7 +177,7 @@ export const EventItem = React.forwardRef(function EventItem(
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
+  const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
   // State hooks
   const id = useId(idProp);

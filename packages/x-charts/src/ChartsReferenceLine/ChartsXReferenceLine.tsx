@@ -3,17 +3,11 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useXScale } from '../hooks';
-import {
-  type CommonChartsReferenceLineProps,
-  DEFAULT_SPACING,
-  DEFAULT_SPACING_MIDDLE_OTHER_AXIS,
-  ReferenceLineRoot,
-} from './common';
+import { DEFAULT_SPACING, DEFAULT_SPACING_MIDDLE_OTHER_AXIS, ReferenceLineRoot } from './common';
+import type { CommonChartsReferenceLineProps } from './common';
 import { ChartsText } from '../ChartsText';
-import {
-  type ChartsReferenceLineClasses,
-  getReferenceLineUtilityClass,
-} from './chartsReferenceLineClasses';
+import { getReferenceLineUtilityClass } from './chartsReferenceLineClasses';
+import type { ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
 
 export type ChartsXReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
@@ -102,7 +96,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
     axisId,
   } = props;
 
-  const { top, height } = useDrawingArea();
+  const { top, height, left, width } = useDrawingArea();
   const xAxisScale = useXScale(axisId);
 
   const xPosition = xAxisScale(x as any);
@@ -114,6 +108,10 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
         'error',
       );
     }
+    return null;
+  }
+
+  if (xPosition < left || xPosition > left + width) {
     return null;
   }
   const d = `M ${xPosition} ${top} l 0 ${height}`;

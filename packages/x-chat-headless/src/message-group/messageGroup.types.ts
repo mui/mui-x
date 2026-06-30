@@ -9,6 +9,11 @@ export interface MessageGroupOwnerState {
   isLast: boolean;
   authorRole?: ChatRole;
   authorId?: string;
+  /**
+   * Whether the group's leading message is from the current user.
+   * Falls back to `authorRole === 'user'` when no `currentUser` is configured.
+   */
+  isOwnMessage: boolean;
   variant: ChatVariant;
   density: ChatDensity;
 }

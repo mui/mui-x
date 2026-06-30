@@ -1,13 +1,13 @@
-import {
-  GRID_ROOT_GROUP_ID,
-  type GridChildrenFromPathLookup,
-  type GridFilterState,
-  type GridGroupNode,
-  type GridLeafNode,
-  type GridRowId,
-  type GridRowTreeConfig,
-  type GridRowsState,
-  type GridTreeNode,
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type {
+  GridChildrenFromPathLookup,
+  GridFilterState,
+  GridGroupNode,
+  GridLeafNode,
+  GridRowId,
+  GridRowTreeConfig,
+  GridRowsState,
+  GridTreeNode,
 } from '@mui/x-data-grid';
 import type { GridTreeDepths } from '@mui/x-data-grid/internals';
 import type { RowTreeBuilderGroupingCriterion } from './models';
@@ -125,9 +125,9 @@ export const insertNodeInTree = (
     }
 
     if (groupingField == null) {
-      parentNode.childrenFromPath[groupingFieldName] = {
-        [groupingKeyName.toString()]: node.id,
-      };
+      const newGroupingField = Object.create(null);
+      newGroupingField[groupingKeyName.toString()] = node.id;
+      parentNode.childrenFromPath[groupingFieldName] = newGroupingField;
     } else {
       groupingField[groupingKeyName.toString()] = node.id;
     }
@@ -245,6 +245,9 @@ export const getVisibleRowsLookup = ({
   const visibleRowsLookup: GridStatePro['visibleRowsLookup'] = {};
 
   const handleTreeNode = (node: GridTreeNode, areAncestorsExpanded: boolean) => {
+    if (node == null) {
+      return;
+    }
     const isPassingFiltering = filteredRowsLookup[node.id] !== false;
 
     if (node.type === 'group') {
@@ -259,7 +262,6 @@ export const getVisibleRowsLookup = ({
       visibleRowsLookup[node.id] = isVisible;
     }
 
-    // TODO rows v6: Should we keep storing the visibility status of footer independently or rely on the group visibility in the selector ?
     if (node.type === 'group' && node.footerId != null) {
       const isFooterVisible = isPassingFiltering && areAncestorsExpanded && !!node.childrenExpanded;
       if (!isFooterVisible) {

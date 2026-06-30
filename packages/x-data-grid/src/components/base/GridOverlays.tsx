@@ -33,7 +33,7 @@ const GridOverlayWrapperRoot = styled('div', {
   loadingOverlayVariant !== 'skeleton'
     ? {
         position: 'sticky', // To stay in place while scrolling
-        top: 'var(--DataGrid-headersTotalHeight)', // TODO: take pinned rows into account
+        top: 'var(--DataGrid-topContainerHeight)',
         left: 0,
         right: `${right}px`,
         width: 0, // To stay above the content instead of shifting it down

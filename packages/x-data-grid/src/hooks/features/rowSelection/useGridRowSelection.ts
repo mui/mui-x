@@ -961,10 +961,6 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock multip
   }, [apiRef, canHaveMultipleSelection, checkboxSelection, isStateControlled, props.rowSelection]);
 
   React.useEffect(() => {
-    runIf(props.rowSelection, removeOutdatedSelection);
-  }, [props.rowSelection, removeOutdatedSelection]);
-
-  React.useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     }
