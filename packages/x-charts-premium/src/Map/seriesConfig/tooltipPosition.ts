@@ -11,8 +11,18 @@ import { selectorChartsTooltipItem, useGeoProjectionSelectors } from '@mui/x-cha
 const tooltipItemPositionSelector: TooltipItemPositionSelector = createSelectorMemoized(
   selectorChartsTooltipItem,
   useGeoProjectionSelectors.selectorGeoTooltipPosition,
-  (identifier, { projection, geoData, featureIndexesByName }, position) => {
-    if (identifier?.type !== 'mapShape' || projection == null || geoData == null) {
+  // `selectorChartsTooltipItem` is typed with the community series types, which
+  // don't include `mapShape`, so the identifier is matched structurally here.
+  (
+    identifier: { type: string; name?: string } | null,
+    { projection, geoData, featureIndexesByName },
+    position: 'top' | 'bottom' | 'left' | 'right' | undefined,
+  ) => {
+    if (identifier?.type !== 'mapShape' || identifier.name === undefined) {
+      return null;
+    }
+
+    if (projection == null || geoData == null) {
       return null;
     }
 
