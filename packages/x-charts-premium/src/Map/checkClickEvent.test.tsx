@@ -74,7 +74,7 @@ describe('MapShapePlot - click event', () => {
   describe('onItemClick', () => {
     it('should add cursor="pointer" to shape elements', () => {
       const { container } = render(renderMap({ onItemClick: () => {} }));
-      const shapes = container.querySelectorAll<HTMLElement>('path[data-index]');
+      const shapes = container.querySelectorAll<HTMLElement>('path[data-name]');
 
       expect(shapes.length).to.equal(2);
       expect(Array.from(shapes).map((shape) => shape.getAttribute('cursor'))).to.deep.equal([
@@ -86,7 +86,7 @@ describe('MapShapePlot - click event', () => {
     it('should provide the right context as second argument', async () => {
       const onItemClick = vi.fn();
       const { container, user } = render(renderMap({ onItemClick }));
-      const shapes = container.querySelectorAll<HTMLElement>('path[data-index]');
+      const shapes = container.querySelectorAll<HTMLElement>('path[data-name]');
 
       await user.click(shapes[0]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
