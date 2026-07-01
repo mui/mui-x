@@ -156,13 +156,6 @@ export const selectorFitScale = createSelector(
     const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
     const currentScale = projection.scale();
 
-    const scales = [
-      currentScale * (drawingArea.width / (x1 - x0)),
-      currentScale * (drawingArea.height / (y1 - y0)),
-    ];
-
-    projection.scale(Math.min(...scales));
-
     return Math.min(
       currentScale * (drawingArea.width / (x1 - x0)),
       currentScale * (drawingArea.height / (y1 - y0)),
