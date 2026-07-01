@@ -38,10 +38,8 @@ interface CompactReadonlyContentProps {
 }
 
 /**
- * The read-only summary shown inside the compact editing drawer.
- *
- * Renders the shared `ReadonlyEventDetails` (same as the desktop dialog) with lighter chrome:
- * a small heading + close button, no footer. While creating, the empty title shows a placeholder.
+ * The read-only summary shown inside the compact drawer: the shared `ReadonlyEventDetails` with
+ * lighter chrome (small heading + close button, no footer).
  */
 export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
   const { occurrence, onClose } = props;

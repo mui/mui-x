@@ -33,10 +33,8 @@ export function useEventEditingContext(): EventEditingContextValue {
 }
 
 /**
- * Surface-agnostic editing backbone. The editing state — *which* occurrence is edited and *which
- * stage* (`armed` vs `edit`) — lives on the store; this context only adds the anchor element the
- * surface positions against and the start/stop helpers. The concrete surface comes from consumers
- * (`EventDialogProvider` / `CompactEventEditingProvider`).
+ * Surface-agnostic editing backbone. Editing state (which occurrence, which stage) lives on the store;
+ * this context only adds the anchor element and the start/stop helpers. Consumers provide the surface.
  */
 export function EventEditingProvider(props: EventEditingProviderProps) {
   const { children, surface } = props;

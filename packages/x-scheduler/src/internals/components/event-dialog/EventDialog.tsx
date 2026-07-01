@@ -144,9 +144,8 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 });
 
 /**
- * Mounts the armed-event action toolbar next to the event while editing is in the `'armed'` stage.
- * Rendered at the top level alongside (not inside) the dialog, so the toolbar and dialog stay
- * independent. The toolbar's Edit switches the store to `'edit'`, which swaps in the dialog below.
+ * Mounts the armed-event toolbar next to the event during the `'armed'` stage, as a top-level sibling
+ * of the dialog. Its Edit switches the store to `'edit'`, swapping in the dialog below.
  */
 function AnchoredEventToolbarSurface() {
   const store = useSchedulerStoreContext();
@@ -163,9 +162,8 @@ function AnchoredEventToolbarSurface() {
 }
 
 /**
- * Mounts the desktop dialog while an occurrence is being edited in the `'edit'` stage, anchored to
- * the element editing started from. Open/which all come from the store; the anchor comes from the
- * editing context.
+ * Mounts the desktop dialog during the `'edit'` stage, anchored to the element editing started from.
+ * Open state comes from the store; the anchor comes from the editing context.
  */
 function EventDialogSurface() {
   const store = useSchedulerStoreContext();

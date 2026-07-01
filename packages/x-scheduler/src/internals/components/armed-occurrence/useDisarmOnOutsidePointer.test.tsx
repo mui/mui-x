@@ -62,6 +62,77 @@ describe('useDisarmOnOutsidePointer', () => {
     expect(event.defaultPrevented).to.equal(false);
   });
 
+  describe('global mode', () => {
+    let outside: HTMLButtonElement;
+
+    beforeEach(() => {
+      outside = document.createElement('button');
+      document.body.appendChild(outside);
+    });
+
+    afterEach(() => {
+      document.body.removeChild(outside);
+    });
+
+    it('disarms on a tap anywhere outside the surface, even out of its subtree', () => {
+      const onDisarm = spy();
+      renderUseDisarm({
+        ref: { current: container },
+        active: true,
+        onDisarm,
+        ignoreSelector: IGNORE_SELECTOR,
+        global: true,
+      });
+
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+      outside.dispatchEvent(event);
+
+      expect(onDisarm.callCount).to.equal(1);
+      expect(event.defaultPrevented).to.equal(true);
+    });
+
+    it('never disarms on a click inside the surface itself', () => {
+      const onDisarm = spy();
+      renderUseDisarm({
+        ref: { current: container },
+        active: true,
+        onDisarm,
+        ignoreSelector: IGNORE_SELECTOR,
+        global: true,
+      });
+
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+      inside.dispatchEvent(event);
+
+      expect(onDisarm.callCount).to.equal(0);
+      expect(event.defaultPrevented).to.equal(false);
+    });
+
+    it('still ignores clicks on the resize handle so a resize gesture keeps the surface armed', () => {
+      const onDisarm = spy();
+      renderUseDisarm({
+        ref: { current: container },
+        active: true,
+        onDisarm,
+        ignoreSelector: IGNORE_SELECTOR,
+        global: true,
+      });
+
+      // A handle outside the surface subtree (the armed event lives in the grid, not the toolbar).
+      const detachedHandle = document.createElement('div');
+      detachedHandle.className = 'resize-handle';
+      document.body.appendChild(detachedHandle);
+
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+      detachedHandle.dispatchEvent(event);
+
+      expect(onDisarm.callCount).to.equal(0);
+      expect(event.defaultPrevented).to.equal(false);
+
+      document.body.removeChild(detachedHandle);
+    });
+  });
+
   it('removes the listener when active becomes false', () => {
     const onDisarm = spy();
     const { rerender } = renderUseDisarm({

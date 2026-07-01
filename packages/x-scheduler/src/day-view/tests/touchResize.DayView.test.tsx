@@ -11,9 +11,8 @@ import {
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 
 /**
- * Touch behavior is device-adaptive, not bound to the compact views: arming and pointer resize work
- * in the normal Day View too. Driven via {@link simulatePointerResize}, whose non-`mouse` pointer
- * events take the pointer-resize path.
+ * Arming and pointer resize are device-adaptive, so they work in the normal Day View too. Driven via
+ * {@link simulatePointerResize}, whose non-`mouse` events take the pointer-resize path.
  */
 const createMatchMedia = (matches: boolean) => () =>
   ({

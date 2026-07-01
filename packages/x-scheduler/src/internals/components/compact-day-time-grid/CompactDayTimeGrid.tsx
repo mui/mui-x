@@ -10,9 +10,8 @@ import { CompactEventDrawer } from '../compact-event-drawer';
 import { CompactEventEditingProvider, useEventEditingStyledContext } from '../event-editing';
 import { EventToolbar } from '../event-toolbar';
 
-// `position: relative` so the editing drawer can overlay the view (not the viewport) via its portal;
-// `isolation: isolate` contains the overlay's stacking context so it sits above the grid events
-// (which set their own `z-index`) without escaping above the rest of the page.
+// `position: relative` lets the drawer overlay the view (not the viewport); `isolation: isolate`
+// keeps its stacking context above the grid events without escaping above the rest of the page.
 const CompactDayTimeGridRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'CompactDayTimeGridRoot',
@@ -87,12 +86,8 @@ const CompactDayTimeGridContainer = React.forwardRef(function CompactDayTimeGrid
 });
 
 /**
- * Shared layout for the compact (touch) views (`CompactDayView`, `CompactThreeDayView`,
- * `CompactWeekView`).
- *
- * Reuses `DayTimeGrid` (its events adapt to touch on their own); arming an event docks an action
- * toolbar at the bottom of the view, and its Edit opens the editing drawer overlaid on the view.
- * Each view only provides its own `days`.
+ * Shared layout for the compact (touch) views. Reuses `DayTimeGrid`; arming an event docks a toolbar
+ * at the bottom, whose Edit opens the drawer overlaid on the view. Each view provides its own `days`.
  */
 export const CompactDayTimeGrid = React.forwardRef(function CompactDayTimeGrid(
   props: DayTimeGridProps,

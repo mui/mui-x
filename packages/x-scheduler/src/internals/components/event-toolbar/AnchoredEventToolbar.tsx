@@ -4,8 +4,10 @@ import * as ReactDOM from 'react-dom';
 import { styled } from '@mui/material/styles';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { EventToolbar } from './EventToolbar';
-import { useEventEditingStyledContext } from '../event-editing';
+import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
+import { useBlockScrollWhileArmed, useDisarmOnOutsidePointer } from '../armed-occurrence';
+import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const AnchoredEventToolbarRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -23,17 +25,33 @@ interface AnchoredEventToolbarProps {
 }
 
 /**
- * Desktop mount for the armed-event toolbar: a portaled, fixed-positioned wrapper anchored next to
- * the event. Unlike the editing dialog it has no backdrop, so the grid stays interactive — the armed
- * event keeps its resize handles and an outside tap still disarms it. The event is positioned via
- * inline CSS variables, so a `MutationObserver` on its `style` keeps the toolbar following resizes.
+ * Desktop armed-event toolbar: a portaled, fixed wrapper anchored next to the event. Behaves like a
+ * modal (outside tap disarms, scroll blocked) but keeps the event's resize handles interactive.
  */
 export function AnchoredEventToolbar(props: AnchoredEventToolbarProps) {
   const { anchorRef, occurrence } = props;
   const { classes } = useEventEditingStyledContext();
+  const { stopEditing } = useEventEditingContext();
   const nodeRef = React.useRef<HTMLDivElement>(null);
 
   useAnchoredPosition({ anchorRef, popupRef: nodeRef });
+
+  // Modal behavior: an outside tap anywhere disarms and is swallowed, but a tap on the armed event's
+  // resize handle is left alone so a resize gesture doesn't close the toolbar.
+  useDisarmOnOutsidePointer({
+    ref: nodeRef,
+    active: true,
+    onDisarm: stopEditing,
+    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
+    global: true,
+  });
+
+  // Block scrolling everywhere while armed, so nothing scrolls out from under the toolbar. Only the
+  // resize handle is spared, so the armed event can still be resized.
+  useBlockScrollWhileArmed({
+    active: true,
+    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
+  });
 
   if (typeof document === 'undefined') {
     return null;

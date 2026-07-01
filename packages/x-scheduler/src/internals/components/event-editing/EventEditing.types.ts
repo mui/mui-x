@@ -21,9 +21,8 @@ export interface EventEditingContextValue {
    */
   anchorRef: React.RefObject<HTMLElement | null>;
   /**
-   * Reactive mirror of {@link anchorRef}: the element the editing surface currently anchors to, or
-   * `null`. Re-rendering on change lets the surface re-position when the anchored element is swapped
-   * (e.g. a recurring scope change detaches the edited occurrence onto a freshly-created element).
+   * Reactive mirror of {@link anchorRef}. Re-rendering on change lets the surface re-position when the
+   * anchored element is swapped (e.g. a recurring scope change).
    */
   anchor: HTMLElement | null;
   /**

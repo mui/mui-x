@@ -11,9 +11,8 @@ const createMatchMedia = (matches: boolean) => () =>
   }) as any;
 
 /**
- * On the desktop layout a coarse pointer arms the event (showing the action toolbar anchored next to
- * it); a fine pointer opens the editing dialog directly. Arming itself is pointer-driven, so the open
- * mode is forced here via `matchMedia`.
+ * A coarse pointer arms the event (toolbar); a fine pointer opens the dialog directly. The pointer
+ * type is forced here via `matchMedia`.
  */
 describe('DayView - event toolbar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });

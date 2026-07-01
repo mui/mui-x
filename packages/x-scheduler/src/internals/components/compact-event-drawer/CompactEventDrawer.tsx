@@ -94,10 +94,8 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
         onOpen={() => {}}
         disableSwipeToOpen
         container={() => containerRef.current}
-        // The focus trap would otherwise focus the paper while it's still slid off-screen, making
-        // the browser scroll it into view and shove the grid up. Skip the auto-focus: the editable
-        // form focuses its own title field (with `preventScroll`), and read-only content has no
-        // field, so we move focus to the paper once it has slid into place.
+        // Skip auto-focus: focusing the paper while it's still off-screen scrolls the grid up. The
+        // form focuses its own title field, and read-only content gets focus once slid into place.
         disableAutoFocus
         slotProps={{
           transition: {

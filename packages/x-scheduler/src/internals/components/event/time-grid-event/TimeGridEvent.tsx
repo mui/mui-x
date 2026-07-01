@@ -105,8 +105,7 @@ const timeFontSize = 'var(--EventCalendar-fontSize-timeText, 0.75rem)';
 
 /**
  * Container-query steps growing the title's line clamp with the available height. `reserveTimeLine`
- * keeps one line free for the time row; otherwise the title uses the full height. `extraConditions`
- * scopes the steps further (e.g. a max-width).
+ * keeps a line free for the time row; `extraConditions` scopes the steps further (e.g. a max-width).
  */
 function titleLineClampSteps(reserveTimeLine: boolean, extraConditions: string = ''): CSSObject {
   const steps: CSSObject = {};

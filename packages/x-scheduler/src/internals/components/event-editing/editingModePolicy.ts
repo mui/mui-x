@@ -1,8 +1,6 @@
 /**
- * Whether tapping an event should arm it (show its resize handles + action toolbar) rather than
- * opening the editing surface directly. A coarse pointer (touch/pen) can't hover to grab resize
- * handles, so it arms first; a fine pointer opens the surface. Mirrors the `@media (pointer: coarse)`
- * styling rules. Evaluated at interaction time, never during render, so it stays SSR-safe.
+ * Whether tapping an event should arm it rather than open the surface directly: a coarse pointer can't
+ * hover to grab resize handles, so it arms first. Evaluated at interaction time, so it stays SSR-safe.
  */
 export function prefersArmedOnTouch(): boolean {
   return (
@@ -15,12 +13,8 @@ export function prefersArmedOnTouch(): boolean {
 export type EditingSurface = 'dialog' | 'drawer';
 
 /**
- * Resolves the mode an occurrence opens in, keeping the decision in one place.
- * - When creating or when the event is read-only, the surface opens directly (`'edit'`): a creation
- *   draft has nothing to arm and a read-only event can be neither resized nor deleted.
- * - The compact drawer is the touch layout, so it always arms (`'armed'`).
- * - The dialog arms only on a coarse pointer; a fine pointer opens the surface directly (`'edit'`).
- *   See {@link prefersArmedOnTouch}.
+ * Resolves the mode an occurrence opens in: creating/read-only opens the surface directly (`'edit'`),
+ * the drawer always arms, and the dialog arms only on a coarse pointer ({@link prefersArmedOnTouch}).
  */
 export function getInitialEditingMode(
   surface: EditingSurface,
