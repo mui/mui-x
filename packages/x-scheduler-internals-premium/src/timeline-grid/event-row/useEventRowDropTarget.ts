@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import {
+import type {
   SchedulerResourceId,
   SchedulerEvent,
   TemporalSupportedObject,
@@ -14,7 +14,7 @@ import {
   EVENT_DRAG_PRECISION_MINUTE,
   EVENT_DRAG_PRECISION_MS,
 } from '@mui/x-scheduler-internals/constants';
-import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
+import type { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 

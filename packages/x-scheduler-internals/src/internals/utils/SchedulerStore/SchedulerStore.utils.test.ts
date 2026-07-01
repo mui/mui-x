@@ -1,5 +1,5 @@
 import { adapter } from 'test/utils/scheduler';
-import {
+import type {
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderCreation,
 } from '../../../models';

@@ -11,7 +11,7 @@ import {
   mockElementBounds,
   getResizeHandle,
 } from 'test/utils/scheduler';
-import { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();

@@ -214,6 +214,14 @@ series={[
 
 See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
+## Click event
+
+`MapShapePlot` accepts an `onItemClick` callback fired when the user clicks on a shape.
+It receives the click event and a `MapShapeItemIdentifier` that identifies the clicked item
+through its `seriesId` and `name`.
+
+{{"demo": "MapShapeClick.js"}}
+
 ## Managing the highlight with `highlightScope`
 
 Each `mapShape` series accepts a `highlightScope` property that controls how hovering an item

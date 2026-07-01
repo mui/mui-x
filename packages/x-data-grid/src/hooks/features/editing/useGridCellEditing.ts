@@ -456,9 +456,12 @@ export const useGridCellEditing = (
         }
       } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
-          prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
-          // Revert the mode in the cellModesModel prop back to "edit"
-          updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+          // The row might have been deleted
+          if (prevCellModesModel.current[id]?.[field]) {
+            prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
+            // Revert the mode in the cellModesModel prop back to "edit"
+            updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+          }
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
@@ -477,7 +480,9 @@ export const useGridCellEditing = (
         try {
           Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
-              apiRef.current.updateRows([finalRowUpdate]);
+              if (apiRef.current.getRow(id)) {
+                apiRef.current.updateRows([finalRowUpdate]);
+              }
               finishCellEditMode();
             })
             .catch(handleError);
@@ -485,7 +490,9 @@ export const useGridCellEditing = (
           handleError(errorThrown);
         }
       } else {
-        apiRef.current.updateRows([rowUpdate]);
+        if (apiRef.current.getRow(id)) {
+          apiRef.current.updateRows([rowUpdate]);
+        }
         finishCellEditMode();
       }
     },

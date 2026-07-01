@@ -1,5 +1,5 @@
 import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS, getPresetPxPerDay } from './preset-utils';
-import { EventTimelinePremiumPreset } from '../../models';
+import type { EventTimelinePremiumPreset } from '../../models';
 
 describe('getPresetPxPerDay', () => {
   // Concrete values prove the derivation formula `tickWidth × ticksPerDay[timeResolution]`

@@ -731,6 +731,7 @@
   { "name": "usePieSeriesContext", "kind": "Function" },
   { "name": "UsePieSeriesContextReturnValue", "kind": "TypeAlias" },
   { "name": "UsePieSeriesReturnValue", "kind": "TypeAlias" },
+  { "name": "usePolarGeometry", "kind": "Function" },
   { "name": "useRadarAxis", "kind": "Function" },
   { "name": "UseRadarAxisParams", "kind": "Interface" },
   { "name": "useRadarItemTooltip", "kind": "Variable" },
