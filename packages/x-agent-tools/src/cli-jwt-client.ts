@@ -81,13 +81,15 @@ export class CliJwtClient {
     if (this.isCachedTokenFresh()) {
       return this.cachedToken!;
     }
-    if (this.inflight) {
-      return this.inflight;
+    if (!this.inflight) {
+      // The refresh is shared across concurrent callers, so it is intentionally not tied to any one caller's signal.
+      // A cancelling caller only detaches its own wait (below);
+      // the exchange keeps running for the others and caches the minted token.
+      this.inflight = this.refresh().finally(() => {
+        this.inflight = null;
+      });
     }
-    this.inflight = this.refresh(options.signal).finally(() => {
-      this.inflight = null;
-    });
-    return this.inflight;
+    return waitForToken(this.inflight, options.signal);
   }
 
   /** Clears the cache. The next `getToken()` will refresh. */
@@ -114,7 +116,7 @@ export class CliJwtClient {
     return key;
   }
 
-  private async refresh(signal?: AbortSignal): Promise<string> {
+  private async refresh(): Promise<string> {
     const apiKey = this.resolveApiKey();
     const url = `${this.muiBackendBaseUrl}${CLI_TOKEN_PATH}`;
 
@@ -123,7 +125,6 @@ export class CliJwtClient {
       response = await this.fetcher(url, {
         method: 'POST',
         headers: { 'x-api-key': apiKey, accept: 'application/json' },
-        signal,
       });
     } catch (cause) {
       throw new CliJwtClientError(
@@ -178,4 +179,33 @@ export class CliJwtClient {
     this.cachedExpiresAt = new Date(data.expiresAt);
     return data.token;
   }
+}
+
+// Await the shared refresh, but let a caller abandon its own wait when its request is cancelled,
+// without aborting the exchange that other concurrent callers may still be awaiting.
+function waitForToken(inflight: Promise<string>, signal?: AbortSignal): Promise<string> {
+  if (!signal) {
+    return inflight;
+  }
+  if (signal.aborted) {
+    return Promise.reject(abortReason(signal));
+  }
+  return new Promise<string>((resolve, reject) => {
+    const onAbort = () => reject(abortReason(signal));
+    signal.addEventListener('abort', onAbort, { once: true });
+    inflight.then(
+      (token) => {
+        signal.removeEventListener('abort', onAbort);
+        resolve(token);
+      },
+      (error) => {
+        signal.removeEventListener('abort', onAbort);
+        reject(error);
+      },
+    );
+  });
+}
+
+function abortReason(signal: AbortSignal): unknown {
+  return signal.reason ?? new DOMException('The token request was aborted.', 'AbortError');
 }

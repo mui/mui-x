@@ -82,7 +82,7 @@ describe('CliJwtClient', () => {
     );
   });
 
-  it('forwards the abort signal to the token exchange fetch', async () => {
+  it('does not tie the shared token exchange fetch to a caller signal', async () => {
     const { signal } = new AbortController();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
@@ -90,10 +90,32 @@ describe('CliJwtClient', () => {
 
     await client.getToken({ signal });
 
-    expect(fetcher).toHaveBeenCalledWith(
-      `${baseUrl}/api/auth/tokens`,
-      expect.objectContaining({ signal }),
+    const [, init] = fetcher.mock.calls[0];
+    expect(init.signal).toBeUndefined();
+  });
+
+  it('lets one caller cancel its wait without aborting the shared refresh for others', async () => {
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    let resolveFetch: (response: Response) => void = () => {};
+    const fetcher = vi.fn().mockImplementation(
+      () =>
+        new Promise<Response>((resolve) => {
+          resolveFetch = resolve;
+        }),
     );
+    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+
+    const controller = new AbortController();
+    const cancelled = client.getToken({ signal: controller.signal });
+    const other = client.getToken(); // coalesces onto the same in-flight refresh
+
+    controller.abort();
+    await expect(cancelled).rejects.toThrow();
+
+    // The shared refresh keeps running: resolve it and the other caller still gets its token.
+    resolveFetch(makeOkResponse('jwt-shared', expiresAt));
+    await expect(other).resolves.toBe('jwt-shared');
+    expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
   it('returns the cached token without a second network call', async () => {

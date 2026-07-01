@@ -6,9 +6,9 @@ MUI's [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. E
 
 Three stdio-based tools, backed by [@mui/x-agent-tools](../x-agent-tools/):
 
-- **`useMuiDocs(urlList)`** : returns the docs catalog (URLs + summaries) for one or more MUI packages (for example `@mui/material`, `@mui/x-data-grid`). Agents typically use this first to find the right docs page.
-- **`fetchDocs(urls)`** : fetches the full content of one or more docs URLs (typically taken from a `useMuiDocs` response).
-- **`generateReactCode({ prompt, threadId?, designContext?, muiPairing?, model? })`** : generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major (see [Targeting a MUI version](#targeting-a-mui-version)).
+- `useMuiDocs(urlList)` : returns the docs catalog (URLs + summaries) for one or more MUI packages (for example `@mui/material`, `@mui/x-data-grid`). Agents typically use this first to find the right docs page.
+- `fetchDocs(urls)` : fetches the full content of one or more docs URLs (typically taken from a `useMuiDocs` response).
+- `generateReactCode({ prompt, threadId?, designContext?, muiPairing?, model? })` : generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major (see [Targeting a MUI version](#targeting-a-mui-version)).
 
 ## Quick start
 
@@ -51,11 +51,8 @@ Drop any `-e` line you don't need (codegen is the only tool that requires an API
 Test prompts:
 
 - Docs lookup:
-
   > Use `useMuiDocs` to look up the docs catalog for `@mui/material`. Then fetch the most relevant URL and summarize the `Button` component API.
-
 - Codegen (requires `MUI_RECIPES_API_KEY`):
-
   > Use `generateReactCode` to build a Tomato product card with image, title, price, and an Add-to-cart button.
 
 ### Claude Desktop / Cursor / other JSON-config clients
@@ -102,7 +99,7 @@ muiPairing: {
 
 **Default when omitted**: latest stable pairing (`{ material: 'v9', muiX: 'v9' }` today). Generation stays current with whatever the backend treats as latest.
 
-**Agents should detect and pass `muiPairing` for projects pinned to older majors.** Read the project's `package.json`, look at `@mui/material` and `@mui/x-data-grid` ranges, and forward the matching pair. A project pinned to `@mui/material ^7.x` + `@mui/x-data-grid ^8.x` should send `{ material: 'v7', muiX: 'v8' }`. Without this, the agent will silently get v9 code on a v7 codebase.
+**Agents should detect and pass** `muiPairing` **for projects pinned to older majors.** Read the project's `package.json`, look at `@mui/material` and `@mui/x-data-grid` ranges, and forward the matching pair. A project pinned to `@mui/material ^7.x` + `@mui/x-data-grid ^8.x` should send `{ material: 'v7', muiX: 'v8' }`. Without this, the agent will silently get v9 code on a v7 codebase.
 
 Example MCP client prompt the host can ship as a guideline:
 
@@ -141,7 +138,7 @@ This compounds with the tool's prescriptive description: the per-project hint re
 
 Across the MCP-host UIs we've tested (Claude Code Agent in WebStorm), the host agent treats `generateReactCode`'s output as a structured suggestion rather than a verbatim file dump. Expect:
 
-- **`App.tsx` is usually discarded or replaced.** The MCP emits an entry-file wrapper alongside the component. Host agents drop it when the project already has a host shell (Next.js page, Vite `main.tsx`, Storybook story, etc.).
+- `App.tsx` **is usually discarded or replaced.** The MCP emits an entry-file wrapper alongside the component. Host agents drop it when the project already has a host shell (Next.js page, Vite `main.tsx`, Storybook story, etc.).
 - **Component filenames get renamed to match project conventions.** `components/ContactForm.tsx` may become `contact-form.tsx`; PascalCase may become kebab-case. The `filename` we emit is advisory.
 - **Component bodies stay intact.** When the agent does adapt, it adjusts wrappers and paths, not the React code itself.
 - **Stack-mismatch warnings surface before writing.** On non-MUI projects (Radix, Tailwind-only, etc.) the agent typically asks before writing MUI-importing code, or surfaces a caveat. This is correct, conservative behavior.
@@ -193,7 +190,7 @@ Published to npm as [@mui/mcp](https://www.npmjs.com/package/@mui/mcp). End user
 ## Troubleshooting
 
 - **Client doesn't see the server.** Verify the path in your client's config is absolute and points at the actual built file. Restart the client after editing config.
-- **`MUI_DOCS_BASE_URL` errors.** Default backend may be cold-starting (Render free tier). Wait a few seconds and retry, or point at a local backend via env var.
-- **`Missing API key` from `generateReactCode`.** Set `MUI_RECIPES_API_KEY` in your client's env. Create a key at console.mui.com/products/recipes/api-keys.
-- **`Token exchange failed` / 401 on codegen.** Check `MUI_BACKEND_BASE_URL`. Default is `https://api.mui.com`; for local mui-backend, set it to `http://localhost:5002`. A 401 also means the API key was revoked: create a new one.
-- **`Generation stream ended unexpectedly` on codegen.** The recipes-backend SSE was truncated mid-stream (transient proxy hangup, backend restart, etc.). Retry.
+- `MUI_DOCS_BASE_URL` **errors.** Default backend may be cold-starting (Render free tier). Wait a few seconds and retry, or point at a local backend via env var.
+- `Missing API key` **from** `generateReactCode`**.** Set `MUI_RECIPES_API_KEY` in your client's env. Create a key at console.mui.com/products/recipes/api-keys.
+- `Token exchange failed` **/ 401 on codegen.** Check `MUI_BACKEND_BASE_URL`. Default is `https://api.mui.com`; for local mui-backend, set it to `http://localhost:5002`. A 401 also means the API key was revoked: create a new one.
+- `Generation stream ended unexpectedly` **on codegen.** The recipes-backend SSE was truncated mid-stream (transient proxy hangup, backend restart, etc.). Retry.
