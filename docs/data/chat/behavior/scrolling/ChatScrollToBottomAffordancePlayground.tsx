@@ -6,7 +6,7 @@ import type { SxProps, Theme } from '@mui/system';
 import { ChatMessageList, ChatScrollToBottomAffordance } from '@mui/x-chat';
 import {
   useChat,
-  type ChatAdapter,
+  useChatStore,
   type ChatConversation,
   type ChatMessage,
 } from '@mui/x-chat/headless';
@@ -42,6 +42,23 @@ function buildMessages(count: number): ChatMessage[] {
   }));
 }
 
+function buildAppendedMessage(n: number): ChatMessage {
+  return {
+    id: `scroll-extra-${n}`,
+    conversationId: conversation.id,
+    role: 'assistant',
+    author: users.assistant,
+    createdAt: new Date(Date.UTC(2026, 4, 3, 10, 0, n)).toISOString(),
+    status: 'read',
+    parts: [
+      {
+        type: 'text',
+        text: `New message #${n} arrived while you were scrolled up.`,
+      },
+    ],
+  };
+}
+
 type ScrollBehavior = 'auto' | 'instant' | 'smooth';
 
 type ClassKey = 'root';
@@ -51,13 +68,32 @@ const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
 ];
 
 /**
- * Reads the live message ids from the store so a runtime-appended message
- * (emitted as a `message-added` realtime event) shows up as a pure append —
- * which is what lets `unseenMessageCount` grow and the badge appear while the
- * user is scrolled up. Items must come from live state, never the seed array.
+ * Renders the live message list and appends a message on demand.
+ *
+ * The list is fed from live store state (`useChat().messages`), not the seed
+ * array, so an appended message shows up as a pure append — which is what grows
+ * the affordance's `unseenMessageCount` badge while the user is scrolled up.
+ *
+ * `appendRequest` is a counter owned by the parent (bumped by the "Append
+ * message" button). Adding a message to a chat is a store operation, so we call
+ * the public `useChatStore().addMessage()` from inside the provider rather than
+ * plumbing a callback back out to the button. Each new counter value appends one
+ * assistant message; `addMessage` is idempotent per id, so re-runs are harmless.
  */
-function ScrollPreview({ scrollBehavior, buttonSx }: ScrollPreviewProps) {
+function ScrollPreview({
+  scrollBehavior,
+  buttonSx,
+  appendRequest,
+}: ScrollPreviewProps) {
   const { messages: liveMessages } = useChat();
+  const store = useChatStore();
+
+  React.useEffect(() => {
+    if (appendRequest > 0) {
+      store.addMessage(buildAppendedMessage(appendRequest));
+    }
+  }, [store, appendRequest]);
+
   return (
     <Box
       sx={{
@@ -85,62 +121,20 @@ function ScrollPreview({ scrollBehavior, buttonSx }: ScrollPreviewProps) {
 interface ScrollPreviewProps {
   scrollBehavior: ScrollBehavior;
   buttonSx: SxProps<Theme>;
+  appendRequest: number;
 }
 
 export default function ChatScrollToBottomAffordancePlayground() {
   const [count, setCount] = React.useState(20);
   const [scrollBehavior, setScrollBehavior] =
     React.useState<ScrollBehavior>('smooth');
+  // Bumped by the "Append message" button; consumed by `ScrollPreview` inside
+  // the provider to append one message to the live store.
+  const [appendRequest, setAppendRequest] = React.useState(0);
   const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
   const messages = React.useMemo(() => buildMessages(count), [count]);
 
   const buttonSx = classesCustomizations.toClassesSx();
-
-  // Channel for pushing a runtime message into live chat state. The adapter
-  // captures `onEvent` on subscribe; the "Append message" button below emits a
-  // `message-added` event through it so the new message lands in the store
-  // without remounting the provider (the adapter is not part of the seed key).
-  const onEventRef = React.useRef<((event: any) => void) | null>(null);
-  const appendCountRef = React.useRef(0);
-
-  const adapter = React.useMemo<ChatAdapter>(
-    () => ({
-      async sendMessage() {
-        return new ReadableStream({
-          start(controller) {
-            controller.close();
-          },
-        });
-      },
-      subscribe({ onEvent }) {
-        onEventRef.current = onEvent;
-        return () => {
-          onEventRef.current = null;
-        };
-      },
-    }),
-    [],
-  );
-
-  const appendMessage = React.useCallback(() => {
-    appendCountRef.current += 1;
-    const n = appendCountRef.current;
-    const message: ChatMessage = {
-      id: `scroll-extra-${n}`,
-      conversationId: conversation.id,
-      role: 'assistant',
-      author: users.assistant,
-      createdAt: new Date(Date.UTC(2026, 4, 3, 10, 0, n)).toISOString(),
-      status: 'read',
-      parts: [
-        {
-          type: 'text',
-          text: `New message #${n} arrived while you were scrolled up.`,
-        },
-      ],
-    };
-    onEventRef.current?.({ type: 'message-added', message });
-  }, []);
 
   return (
     <PlaygroundCard
@@ -167,10 +161,18 @@ export default function ChatScrollToBottomAffordancePlayground() {
             min={5}
             max={60}
             // Changing the seed re-mounts the provider (see ScopedChat), which
-            // discards any runtime-appended messages and resets scroll state.
-            onChange={setCount}
+            // discards any appended messages and resets scroll state. Reset the
+            // append counter to match so the fresh provider starts clean.
+            onChange={(next) => {
+              setCount(next);
+              setAppendRequest(0);
+            }}
           />
-          <Button variant="outlined" size="small" onClick={appendMessage}>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => setAppendRequest((prev) => prev + 1)}
+          >
             Append message
           </Button>
           <Alert severity="info" sx={{ fontSize: '0.75rem', py: 0 }}>
@@ -185,9 +187,12 @@ export default function ChatScrollToBottomAffordancePlayground() {
           conversations={[conversation]}
           messages={messages}
           activeConversationId={conversation.id}
-          adapter={adapter}
         >
-          <ScrollPreview scrollBehavior={scrollBehavior} buttonSx={buttonSx} />
+          <ScrollPreview
+            scrollBehavior={scrollBehavior}
+            buttonSx={buttonSx}
+            appendRequest={appendRequest}
+          />
         </ScopedChat>
       }
     />
