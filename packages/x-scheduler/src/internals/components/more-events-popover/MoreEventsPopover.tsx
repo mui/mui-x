@@ -3,10 +3,13 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
-import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
+import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import type {
+  MoreEventsPopoverProps,
+  MoreEventsPopoverProviderProps,
+} from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';

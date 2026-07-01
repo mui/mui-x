@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { CalendarView } from '../../models';
+import type { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 

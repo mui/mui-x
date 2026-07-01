@@ -9,7 +9,7 @@ import {
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
-import { EventCalendarProps } from './EventCalendar.types';
+import type { EventCalendarProps } from './EventCalendar.types';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';

@@ -1,10 +1,10 @@
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   SchedulerChangeEventDetails,
 } from '@mui/x-scheduler-internals/internals';
-import { EventTimelinePremiumPreset } from '../models/preset';
-import { EventTimelinePremiumPreferences } from '../models/preferences';
+import type { EventTimelinePremiumPreset } from '../models/preset';
+import type { EventTimelinePremiumPreferences } from '../models/preferences';
 
 export interface EventTimelinePremiumState extends SchedulerState {
   /**
