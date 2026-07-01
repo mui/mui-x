@@ -718,9 +718,15 @@ const pages: MuiPage[] = [
             plan: 'premium',
           },
           {
-            pathname: '/x/react-charts/map',
+            pathname: '/x/react-charts-map',
+            title: 'Map',
             plan: 'premium',
             unstable: true,
+            children: [
+              { pathname: '/x/react-charts/map', title: 'Overview' },
+              { pathname: '/x/react-charts/map-shape', title: 'Map Shape' },
+              { pathname: '/x/react-charts/map-projection', title: 'Projection and Zoom' },
+            ],
           },
           {
             pathname: '/x/react-charts/#planned-charts',
