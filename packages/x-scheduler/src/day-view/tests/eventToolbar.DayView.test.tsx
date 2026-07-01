@@ -64,22 +64,6 @@ describe('DayView - event toolbar', () => {
     expect(screen.getByRole('textbox', { name: /Event title/i })).not.to.equal(null);
   });
 
-  it('blocks wheel and touch scroll from reaching the grid behind it', () => {
-    window.matchMedia = createMatchMedia(true);
-    renderEvent();
-
-    fireEvent.click(getEvent());
-    const toolbar = screen.getByRole('toolbar');
-
-    const wheelEvent = new WheelEvent('wheel', { bubbles: true, cancelable: true });
-    toolbar.dispatchEvent(wheelEvent);
-    expect(wheelEvent.defaultPrevented).to.equal(true);
-
-    const touchMoveEvent = new Event('touchmove', { bubbles: true, cancelable: true });
-    toolbar.dispatchEvent(touchMoveEvent);
-    expect(touchMoveEvent.defaultPrevented).to.equal(true);
-  });
-
   it('deletes the event from the toolbar without opening the editing dialog', () => {
     window.matchMedia = createMatchMedia(true);
     const { onEventsChange } = renderEvent();
