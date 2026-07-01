@@ -67,9 +67,7 @@ import {
   unstable_gridDefaultPromptResolver as promptResolver,
 } from '@mui/x-data-grid-premium';
 
-function processPrompt(prompt: string, context: string, conversationId?: string) {
-  return promptResolver('/api/prompt', prompt, context, conversationId);
-}
+const processPrompt = promptResolver.bind(null, '/api/prompt');
 
 // ...
 <DataGridPremium
