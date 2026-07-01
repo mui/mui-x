@@ -293,7 +293,7 @@
   "293": "MUI X Scheduler: The recurrence rule must include a FREQ value. The frequency (DAILY, WEEKLY, MONTHLY, or YEARLY) is required for recurrence rules. Provide a freq value.",
   "294": "MUI X Charts: Series \"%s\" has a duplicated name \"%s\".\nMap shapes are identified by their name, so duplicates cannot be told apart for coloring, tooltips, and highlighting.\nEnsure each data entry has a unique name.",
   "295": "MUI MCP: The MUI documentation catalog at %s returned no packages. The docs tools (useMuiDocs, fetchDocs) cannot work without it. Check that MUI_DOCS_BASE_URL points at a reachable backend that serves the package list, then retry.",
-  "296": "MUI X Agent Tools: Backend returned an SSE response with no body.",
+  "296": "MUI X Agent Tools: Backend returned an SSE response with no body, so the generation stream cannot be read. Check that MUI_RECIPES_BACKEND_BASE_URL points at recipes-backend (not a proxy or error page), then retry.",
   "297": "MUI X Agent Tools: SSE stream errored: %s",
   "298": "MUI X Agent Tools: Generation stream ended unexpectedly before `[DONE]`. Retry the request.",
   "299": "MUI X Agent Tools: %s",

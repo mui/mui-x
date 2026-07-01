@@ -298,7 +298,9 @@ async function consumeCodegenStream(
   explanation: string;
 }> {
   if (!response.body) {
-    throw new Error('MUI X Agent Tools: Backend returned an SSE response with no body.');
+    throw new Error(
+      'MUI X Agent Tools: Backend returned an SSE response with no body, so the generation stream cannot be read. Check that MUI_RECIPES_BACKEND_BASE_URL points at recipes-backend (not a proxy or error page), then retry.',
+    );
   }
 
   const files = new Map<string, string>(); // last-write-wins for a given filename
