@@ -1,5 +1,6 @@
 'use client';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import type { ChartPlugin, SamplingConfig, SamplingState } from '@mui/x-charts/internals';
 import type { UseChartProSamplingSignature } from './useChartProSampling.types';
 
@@ -11,7 +12,12 @@ export const useChartProSampling: ChartPlugin<UseChartProSamplingSignature> = ({
   const { sampling } = params;
 
   useEffectAfterFirstRender(() => {
-    store.set('sampling', toSamplingState(sampling));
+    // Skip the update when unchanged so an inlined `sampling` config (a new object each render, e.g.
+    // in composition) doesn't replace the state and force the pyramids to recompute every render.
+    const next = toSamplingState(sampling);
+    if (!isDeepEqual(store.state.sampling, next)) {
+      store.set('sampling', next);
+    }
   }, [sampling, store]);
 
   return {};

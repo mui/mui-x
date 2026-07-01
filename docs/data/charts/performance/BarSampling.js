@@ -27,7 +27,8 @@ export default function BarSampling() {
         label={`Sampling ${enabled ? 'on' : 'off'} (${data.length.toLocaleString()} bars — zoom in to reach the raw data)`}
       />
       <BarChartPro
-        xAxis={[{ data: categories, zoom: true, tickSpacing: 100 }]}
+        // Small `minSpan` so zooming steps through every sampling level down to the raw data.
+        xAxis={[{ data: categories, zoom: { minSpan: 1 }, tickSpacing: 100 }]}
         yAxis={[
           {
             label: 'Trips',

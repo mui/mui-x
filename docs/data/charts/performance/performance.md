@@ -153,6 +153,7 @@ Any method other than `'none'` enables it (bars always use a min/max envelope).
 ### Line sampling
 
 Lines support all three algorithms; pick the one that best fits your data.
+See [Comparing methods](#comparing-methods).
 
 ```jsx
 <LineChartPro series={series} sampling="m4" />
