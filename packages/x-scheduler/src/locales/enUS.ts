@@ -132,6 +132,10 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
 const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventDialogLocaleText> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',
+
+  // Timeline resource collapse toggle
+  timelineCollapseResource: (resourceTitle) => `Collapse ${resourceTitle}`,
+  timelineExpandResource: (resourceTitle) => `Expand ${resourceTitle}`,
 };
 
 export const enUS: SchedulerLocalization = getSchedulerLocalization({

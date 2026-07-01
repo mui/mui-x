@@ -118,7 +118,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
-  const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
+  const { schedulerId, classes, localeText } = useEventTimelinePremiumStyledContext();
   const reportTitleWidth = useReportTitleWidth();
 
   // Selector hooks
@@ -168,7 +168,11 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
           <ResourceCollapseToggle
             type="button"
             aria-expanded={!isCollapsed}
-            aria-label={`${isCollapsed ? 'Expand' : 'Collapse'} ${resource!.title}`}
+            aria-label={
+              isCollapsed
+                ? localeText.timelineExpandResource(resource!.title)
+                : localeText.timelineCollapseResource(resource!.title)
+            }
             onClick={(event) => store.toggleResourceCollapse(resourceId, event.nativeEvent)}
           >
             {isCollapsed ? <ChevronRightRounded /> : <ExpandMoreRounded />}

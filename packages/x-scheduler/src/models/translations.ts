@@ -137,4 +137,8 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
 export interface EventTimelineLocaleText extends EventDialogLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
+
+  // Timeline resource collapse toggle
+  timelineCollapseResource: (resourceTitle: string) => string;
+  timelineExpandResource: (resourceTitle: string) => string;
 }
