@@ -47,6 +47,10 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   },
 }));
 
+// Shared footprint for the collapse toggle and the leaf-row spacer, so leaf
+// titles stay aligned with collapsible siblings.
+const TOGGLE_SIZE = 20;
+
 const EventTimelinePremiumTitleCellContent = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'TitleCellContent',
@@ -55,6 +59,11 @@ const EventTimelinePremiumTitleCellContent = styled('span', {
   flexDirection: 'row',
   alignItems: 'center',
   gap: theme.spacing(1),
+  // Pin the line box to the toggle size so every row has the same integer
+  // height whether it renders a toggle or a spacer. Otherwise the title's
+  // fractional line box makes the label shift by a sub-pixel when rows are
+  // remeasured on collapse/expand — visible with Windows font rendering.
+  lineHeight: `${TOGGLE_SIZE}px`,
   // Render at the natural content width so the parent ResizeObserver can
   // measure the widest title; the cell root clips overflow until the
   // column expands.
@@ -76,10 +85,6 @@ const ResourceLegendColor = styled('span', {
   flexShrink: 0,
   backgroundColor: 'var(--event-surface-accent)',
 });
-
-// Shared footprint for the collapse toggle and the leaf-row spacer, so leaf
-// titles stay aligned with collapsible siblings.
-const TOGGLE_SIZE = 20;
 
 const ResourceCollapseToggle = styled(IconButton, {
   name: 'MuiEventTimeline',
