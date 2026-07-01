@@ -18,7 +18,7 @@ A map projection converts spherical (longitude, latitude) coordinates into flat 
 Every projection involves trade-offs—no flat map can preserve area, shape, distance, and direction all at once.
 
 | Use case               | Recommended projection                    |
-| ---------------------- | ----------------------------------------- |
+| :--------------------- | :---------------------------------------- |
 | World overview         | `"naturalEarth1"`, `"equalEarth"`         |
 | Navigation / web tiles | `"mercator"`                              |
 | Globe feel             | `"orthographic"`                          |
