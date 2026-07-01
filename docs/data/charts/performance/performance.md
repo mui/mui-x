@@ -115,8 +115,6 @@ See [Bar charts—WebGL renderer](/x/react-charts/bars/#webgl-renderer), [Scatte
 
 When a zoomable chart has more data than the drawing area can show without making elements
 too small, the data can be reduced to an appropriate level of detail before rendering.
-Levels are precomputed per zoom level, so panning and zooming stay smooth and the chart only
-draws as many elements as the view can resolve.
 
 `BarChartPro` and `LineChartPro` accept a `sampling` prop that selects the method:
 
