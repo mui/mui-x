@@ -35,7 +35,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     renderDragPreview,
     id: idProp,
     isDraggable = false,
-    canDrag,
     nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -109,7 +108,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     occurrenceKey,
     eventId,
     isDraggable,
-    canDrag,
     renderDragPreview,
     getDragData,
     collectionStart: columnStart,
@@ -132,8 +130,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
-    () => ({ ...draggableEventContextValue, getSharedDragData, canDrag }),
-    [draggableEventContextValue, getSharedDragData, canDrag],
+    () => ({ ...draggableEventContextValue, getSharedDragData }),
+    [draggableEventContextValue, getSharedDragData],
   );
 
   const element = useRenderElement('div', componentProps, {

@@ -13,7 +13,7 @@ import { useEventEditingContext, useEventEditingStyledContext } from '../event-e
 
 // `Paper` (elevation 3) supplies the `background.paper` fill and `shadows[3]` box shadow.
 const EventToolbarRoot = styled(Paper, {
-  name: 'MuiEventDialog',
+  name: 'MuiEventCalendar',
   slot: 'Toolbar',
 })(({ theme }) => ({
   display: 'inline-flex',
@@ -25,13 +25,14 @@ const EventToolbarRoot = styled(Paper, {
 }));
 
 const EventToolbarButton = styled(IconButton, {
-  name: 'MuiEventDialog',
+  name: 'MuiEventCalendar',
   slot: 'ToolbarButton',
 })(({ theme }) => ({
   width: 40,
   height: 40,
   padding: 0,
-  borderRadius: theme.shape.borderRadius,
+  // Circular icon button to match the pill-shaped toolbar container.
+  borderRadius: '50%',
   color: (theme.vars || theme).palette.text.primary,
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,

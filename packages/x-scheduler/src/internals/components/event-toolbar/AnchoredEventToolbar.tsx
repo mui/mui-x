@@ -4,10 +4,11 @@ import * as ReactDOM from 'react-dom';
 import { styled } from '@mui/material/styles';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { EventToolbar } from './EventToolbar';
+import { useEventEditingStyledContext } from '../event-editing';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
 
 const AnchoredEventToolbarRoot = styled('div', {
-  name: 'MuiEventDialog',
+  name: 'MuiEventCalendar',
   slot: 'AnchoredToolbar',
 })(({ theme }) => ({
   position: 'fixed',
@@ -29,6 +30,7 @@ interface AnchoredEventToolbarProps {
  */
 export function AnchoredEventToolbar(props: AnchoredEventToolbarProps) {
   const { anchorRef, occurrence } = props;
+  const { classes } = useEventEditingStyledContext();
   const nodeRef = React.useRef<HTMLDivElement>(null);
 
   useAnchoredPosition({ anchorRef, popupRef: nodeRef });
@@ -38,7 +40,7 @@ export function AnchoredEventToolbar(props: AnchoredEventToolbarProps) {
   }
 
   return ReactDOM.createPortal(
-    <AnchoredEventToolbarRoot ref={nodeRef}>
+    <AnchoredEventToolbarRoot ref={nodeRef} className={classes.anchoredEventToolbar}>
       <EventToolbar occurrence={occurrence} />
     </AnchoredEventToolbarRoot>,
     document.body,

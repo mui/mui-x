@@ -3,7 +3,6 @@ import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useStore } from '@base-ui/utils/store';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -25,13 +24,10 @@ export function useDraggableEvent(
     eventId,
     renderDragPreview,
     getDragData,
-    canDrag,
     collectionStart,
     collectionEnd,
     isDraggable = false,
   } = parameters;
-
-  const canDragStable = useStableCallback(() => canDrag?.() ?? true);
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -69,7 +65,6 @@ export function useDraggableEvent(
     // eslint-disable-next-line consistent-return
     return draggable({
       element: ref.current,
-      canDrag: () => canDragStable(),
       getInitialData: ({ input }) => getDragData(input),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -85,7 +80,7 @@ export function useDraggableEvent(
         preview.actions.onDrop();
       },
     });
-  }, [ref, getDragData, isDraggable, store, preview.actions, canDragStable]);
+  }, [ref, getDragData, isDraggable, store, preview.actions]);
 
   const contextValue: useDraggableEvent.ContextValue = React.useMemo(
     () => ({
@@ -117,10 +112,6 @@ export namespace useDraggableEvent {
      * @default false
      */
     isDraggable?: boolean;
-    /**
-     * Called before a drag starts; return `false` to abort and let pointer events bubble. Defaults to allowing the drag.
-     */
-    canDrag?: () => boolean;
     /**
      * The unique identifier of the event.
      */

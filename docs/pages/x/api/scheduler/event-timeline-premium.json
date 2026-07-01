@@ -109,6 +109,54 @@
   ],
   "classes": [
     {
+      "key": "anchoredEventToolbar",
+      "className": "MuiEventTimelinePremium-anchoredEventToolbar",
+      "description": "Styles applied to the anchored (desktop) armed-event toolbar wrapper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGrid",
+      "className": "MuiEventTimelinePremium-compactDayTimeGrid",
+      "description": "Styles applied to the compact (touch) day time grid root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactDayTimeGridContent",
+      "className": "MuiEventTimelinePremium-compactDayTimeGridContent",
+      "description": "Styles applied to the compact (touch) day time grid content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawer",
+      "className": "MuiEventTimelinePremium-compactEventDrawer",
+      "description": "Styles applied to the compact editing drawer root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerContent",
+      "className": "MuiEventTimelinePremium-compactEventDrawerContent",
+      "description": "Styles applied to the compact editing drawer content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyHeader",
+      "className": "MuiEventTimelinePremium-compactEventDrawerReadonlyHeader",
+      "description": "Styles applied to the compact editing drawer read-only header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventDrawerReadonlyTitle",
+      "className": "MuiEventTimelinePremium-compactEventDrawerReadonlyTitle",
+      "description": "Styles applied to the compact editing drawer read-only title element.",
+      "isGlobal": false
+    },
+    {
+      "key": "compactEventToolbarDock",
+      "className": "MuiEventTimelinePremium-compactEventToolbarDock",
+      "description": "Styles applied to the compact (touch) armed-event toolbar dock element.",
+      "isGlobal": false
+    },
+    {
       "key": "content",
       "className": "MuiEventTimelinePremium-content",
       "description": "Styles applied to the content section element.",

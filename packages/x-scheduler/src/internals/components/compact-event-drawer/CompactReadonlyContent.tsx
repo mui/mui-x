@@ -47,7 +47,7 @@ export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
   const { occurrence, onClose } = props;
 
   // Context hooks
-  const { localeText } = useEventEditingStyledContext();
+  const { localeText, classes } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -63,9 +63,13 @@ export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
 
   return (
     <React.Fragment>
-      <CompactReadonlyContentHeader>
-        <CompactReadonlyContentTitle variant="body1" noWrap>
-          {showPlaceholder ? localeText.eventTitlePlaceholder : occurrence?.title}
+      <CompactReadonlyContentHeader className={classes.compactEventDrawerReadonlyHeader}>
+        <CompactReadonlyContentTitle
+          className={classes.compactEventDrawerReadonlyTitle}
+          variant="body1"
+          noWrap
+        >
+          {showPlaceholder ? localeText.eventTitlePlaceholder : occurrence.title}
         </CompactReadonlyContentTitle>
         <IconButton
           size="small"

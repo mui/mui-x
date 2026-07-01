@@ -14,6 +14,7 @@ import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClass
 import {
   useEventEditingContext,
   useEventEditingOptionalRenderers,
+  useEventEditingStyledContext,
   FormContent,
 } from '../event-editing';
 import { CompactReadonlyContent } from './CompactReadonlyContent';
@@ -64,6 +65,7 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
   const { containerRef } = props;
 
   const store = useEventCalendarStoreContext();
+  const { classes } = useEventEditingStyledContext();
   // Closing the drawer clears the store editing state via the shared editing context.
   const { stopEditing } = useEventEditingContext();
 
@@ -83,6 +85,7 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
   return (
     <React.Fragment>
       <CompactEventDrawerRoot
+        className={classes.compactEventDrawer}
         anchor="bottom"
         open={open}
         // Swipe-down, backdrop press, and escape all close the drawer; mirror that on the store.
@@ -113,7 +116,7 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
             merely armed and freezes its initial times; a subsequent armed resize would then be
             discarded on save because the form never re-reads the updated occurrence. */}
         {open && occurrence && (
-          <CompactEventDrawerContent>
+          <CompactEventDrawerContent className={classes.compactEventDrawerContent}>
             {isReadOnly ? (
               <CompactReadonlyContent occurrence={occurrence} onClose={stopEditing} />
             ) : (

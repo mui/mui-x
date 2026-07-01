@@ -87,7 +87,6 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       side,
       enabled,
       getDragData,
-      canDrag: contextValue.canDrag,
     });
 
     useEventPointerResizeHandler({

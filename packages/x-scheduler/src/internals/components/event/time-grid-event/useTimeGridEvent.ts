@@ -62,6 +62,8 @@ export function useTimeGridEvent(
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
+  // Inclusive on purpose: an exactly-15-minute event gets the tightest (zero-padding) tier. See the
+  // `duration thresholds` boundary tests in `DayView.test.tsx`.
   const isLessThan15Minutes = durationMinutes <= 15;
 
   const rootDataAttributes = React.useMemo(

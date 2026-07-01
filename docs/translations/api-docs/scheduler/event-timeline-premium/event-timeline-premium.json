@@ -87,6 +87,38 @@
     }
   },
   "classDescriptions": {
+    "anchoredEventToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the anchored (desktop) armed-event toolbar wrapper element"
+    },
+    "compactDayTimeGrid": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact (touch) day time grid root element"
+    },
+    "compactDayTimeGridContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact (touch) day time grid content element"
+    },
+    "compactEventDrawer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer root element"
+    },
+    "compactEventDrawerContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer content element"
+    },
+    "compactEventDrawerReadonlyHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer read-only header element"
+    },
+    "compactEventDrawerReadonlyTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer read-only title element"
+    },
+    "compactEventToolbarDock": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact (touch) armed-event toolbar dock element"
+    },
     "content": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the content section element"

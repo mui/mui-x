@@ -16,6 +16,7 @@ import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
+import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 import { useTimeGridEvent } from './useTimeGridEvent';
 import {
   EVENT_CALENDAR_CONTAINER_NAME,
@@ -45,6 +46,9 @@ const TOUCH_RESIZE_HANDLE_HIT_INSET_PX = -(
   (TOUCH_RESIZE_HANDLE_HIT_SIZE_PX - TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX) /
   2
 );
+// Keep only a sliver of the dot inside the event (matching the touch padding) so it sits on the edge
+// without covering the title/time text.
+const TOUCH_RESIZE_HANDLE_EDGE_INSET_PX = 4;
 
 /**
  * Circular touch resize handle. A transparent `::before` expands the dot's hit area, biased outward
@@ -67,13 +71,13 @@ const getTouchResizeHandleStyles = (): CSSObject => ({
     insetInline: TOUCH_RESIZE_HANDLE_HIT_INSET_PX,
   },
   '&[data-start]': {
-    top: -TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX / 2,
+    top: -(TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX - TOUCH_RESIZE_HANDLE_EDGE_INSET_PX),
     left: 6,
     // Grow the hit area up, away from the end handle.
     '&::before': { top: TOUCH_RESIZE_HANDLE_HIT_INSET_PX, bottom: 0 },
   },
   '&[data-end]': {
-    bottom: -TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX / 2,
+    bottom: -(TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX - TOUCH_RESIZE_HANDLE_EDGE_INSET_PX),
     right: 6,
     // Grow the hit area down, away from the start handle.
     '&::before': { bottom: TOUCH_RESIZE_HANDLE_HIT_INSET_PX, top: 0 },
@@ -136,12 +140,19 @@ const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
   zIndex: 2,
   display: 'flex',
   flexDirection: 'column',
+  // Vertical-only gap between the stacked title and time (no effect on the single-child inline layout).
+  rowGap: theme.spacing(0.25),
   justifyContent: 'flex-start',
   alignContent: 'flex-start',
   minHeight: 11.5,
   containerType: 'size',
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
+  },
+  // Lift the armed/edited event — and the resize placeholder, which also carries `data-armed` — above
+  // neighboring events (`z-index: 2`) so its resize handles are never occluded by an overlapping column.
+  '&[data-armed], &[data-editing]': {
+    zIndex: 4,
   },
   '&:focus-visible': {
     outline: '2px solid var(--event-surface-accent)',
@@ -366,6 +377,11 @@ const TimeGridEventPlaceholderRoot = styled(CalendarGrid.TimeEvent, {
   padding: theme.spacing(0.5, 2, 0.5, 1.5),
   backgroundColor: 'var(--event-surface-subtle-hover)',
   color: 'var(--event-on-surface-subtle-primary)',
+  // The placeholder fill is lighter than a real event, so bump the time label to the primary tone for
+  // enough contrast (the time is hidden on touch, so this only affects the desktop creation preview).
+  [`& .${eventCalendarClasses.timeGridEventTime}`]: {
+    color: 'var(--event-on-surface-subtle-primary)',
+  },
   '&[data-under-fifteen-minutes="true"]': {
     padding: theme.spacing(0, 1),
   },

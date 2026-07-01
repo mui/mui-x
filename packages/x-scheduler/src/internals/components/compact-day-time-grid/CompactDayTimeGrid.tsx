@@ -7,7 +7,7 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import { DayTimeGrid } from '../day-time-grid/DayTimeGrid';
 import { DayTimeGridProps } from '../day-time-grid/DayTimeGrid.types';
 import { CompactEventDrawer } from '../compact-event-drawer';
-import { CompactEventEditingProvider } from '../event-editing';
+import { CompactEventEditingProvider, useEventEditingStyledContext } from '../event-editing';
 import { EventToolbar } from '../event-toolbar';
 
 // `position: relative` so the editing drawer can overlay the view (not the viewport) via its portal;
@@ -61,22 +61,23 @@ const CompactDayTimeGridContainer = React.forwardRef(function CompactDayTimeGrid
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const store = useEventCalendarStoreContext();
+  const { classes } = useEventEditingStyledContext();
   const viewRootRef = React.useRef<HTMLDivElement>(null);
 
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
-  const armedOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
+  const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
 
   // Outside-tap dismissal for the armed state comes from `DayTimeGrid`'s `useDisarmOnOutsidePointer`;
   // the editing drawer brings its own backdrop / swipe-to-dismiss.
   return (
     <React.Fragment>
-      <CompactDayTimeGridRoot ref={viewRootRef}>
-        <CompactDayTimeGridContent>
+      <CompactDayTimeGridRoot ref={viewRootRef} className={classes.compactDayTimeGrid}>
+        <CompactDayTimeGridContent className={classes.compactDayTimeGridContent}>
           <DayTimeGrid ref={forwardedRef} {...props} />
         </CompactDayTimeGridContent>
-        {editingMode === 'armed' && armedOccurrence && (
-          <CompactEventToolbarDock>
-            <EventToolbar occurrence={armedOccurrence} />
+        {editingMode === 'armed' && editingOccurrence && (
+          <CompactEventToolbarDock className={classes.compactEventToolbarDock}>
+            <EventToolbar occurrence={editingOccurrence} />
           </CompactEventToolbarDock>
         )}
       </CompactDayTimeGridRoot>

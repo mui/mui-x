@@ -10,10 +10,6 @@ export interface CalendarGridTimeEventContext extends useDraggableEvent.ContextV
    * @returns {CalendarGridTimeEvent.SharedDragData} The shared drag data.
    */
   getSharedDragData: (input?: { clientY: number }) => CalendarGridTimeEvent.SharedDragData;
-  /**
-   * Called before a drag (move or resize) starts; return `false` to abort. Defaults to always allowing.
-   */
-  canDrag?: () => boolean;
 }
 
 export const CalendarGridTimeEventContext = React.createContext<

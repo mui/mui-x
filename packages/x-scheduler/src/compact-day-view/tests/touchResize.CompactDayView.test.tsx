@@ -114,6 +114,23 @@ describe('CompactDayView - touch resize', () => {
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
 
+  it('removes the resize handles once the armed event is opened in the editing form', () => {
+    renderResizableEvent();
+    const eventElement = armEvent();
+    // Armed: the pointer-resize handles are present.
+    expect(getResizeHandle(eventElement, 'start')).not.to.equal(null);
+    expect(getResizeHandle(eventElement, 'end')).not.to.equal(null);
+
+    // Opening the form hands time control to the form, so resizing must be disabled to prevent a
+    // pointer resize and a form submit from fighting over the same times.
+    fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+
+    expect(eventElement).not.to.have.attribute('data-armed');
+    expect(eventElement).to.have.attribute('data-editing');
+    expect(eventElement.querySelector('[data-start]')).to.equal(null);
+    expect(eventElement.querySelector('[data-end]')).to.equal(null);
+  });
+
   it('does not commit a resize that is cancelled', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = armEvent();

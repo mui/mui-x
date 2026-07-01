@@ -7,6 +7,22 @@ export interface EventDialogClasses {
   eventToolbarEditButton: string;
   /** Styles applied to the armed-event toolbar delete button element. */
   eventToolbarDeleteButton: string;
+  /** Styles applied to the anchored (desktop) armed-event toolbar wrapper element. */
+  anchoredEventToolbar: string;
+  /** Styles applied to the compact (touch) day time grid root element. */
+  compactDayTimeGrid: string;
+  /** Styles applied to the compact (touch) day time grid content element. */
+  compactDayTimeGridContent: string;
+  /** Styles applied to the compact (touch) armed-event toolbar dock element. */
+  compactEventToolbarDock: string;
+  /** Styles applied to the compact editing drawer root element. */
+  compactEventDrawer: string;
+  /** Styles applied to the compact editing drawer content element. */
+  compactEventDrawerContent: string;
+  /** Styles applied to the compact editing drawer read-only header element. */
+  compactEventDrawerReadonlyHeader: string;
+  /** Styles applied to the compact editing drawer read-only title element. */
+  compactEventDrawerReadonlyTitle: string;
   /** Styles applied to the event dialog close button element. */
   eventDialogCloseButton: string;
   /** Styles applied to the event dialog header element. */
@@ -114,6 +130,14 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventToolbar',
   'eventToolbarEditButton',
   'eventToolbarDeleteButton',
+  'anchoredEventToolbar',
+  'compactDayTimeGrid',
+  'compactDayTimeGridContent',
+  'compactEventToolbarDock',
+  'compactEventDrawer',
+  'compactEventDrawerContent',
+  'compactEventDrawerReadonlyHeader',
+  'compactEventDrawerReadonlyTitle',
   'eventDialogCloseButton',
   'eventDialogHeader',
   'eventDialogHeaderActions',
@@ -171,6 +195,14 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventToolbar: ['eventToolbar'],
   eventToolbarEditButton: ['eventToolbarEditButton'],
   eventToolbarDeleteButton: ['eventToolbarDeleteButton'],
+  anchoredEventToolbar: ['anchoredEventToolbar'],
+  compactDayTimeGrid: ['compactDayTimeGrid'],
+  compactDayTimeGridContent: ['compactDayTimeGridContent'],
+  compactEventToolbarDock: ['compactEventToolbarDock'],
+  compactEventDrawer: ['compactEventDrawer'],
+  compactEventDrawerContent: ['compactEventDrawerContent'],
+  compactEventDrawerReadonlyHeader: ['compactEventDrawerReadonlyHeader'],
+  compactEventDrawerReadonlyTitle: ['compactEventDrawerReadonlyTitle'],
   eventDialogCloseButton: ['eventDialogCloseButton'],
   eventDialogHeader: ['eventDialogHeader'],
   eventDialogHeaderActions: ['eventDialogHeaderActions'],
