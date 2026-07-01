@@ -140,6 +140,22 @@ describe('ResourcesTree', () => {
       expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ sport: true });
     });
 
+    it('should re-expand a collapsed parent when the toggle is clicked again', async () => {
+      const { user, container } = render(
+        <EventCalendar events={[]} resources={buildNestedResources()} />,
+      );
+
+      await user.click(getExpandToggle(container, 'sport'));
+      await waitFor(() => {
+        expect(getTreeItem(container, 'tennis')).to.equal(null);
+      });
+
+      await user.click(getExpandToggle(container, 'sport'));
+      await waitFor(() => {
+        expect(getTreeItem(container, 'tennis')).not.to.equal(null);
+      });
+    });
+
     it('should call onCollapsedResourcesChange without collapsing when controlled', async () => {
       const onCollapsedResourcesChange = spy();
       const { user, container } = render(
@@ -156,6 +172,33 @@ describe('ResourcesTree', () => {
       // Controlled: the tree stays expanded until the prop changes, but the callback fires.
       expect(getTreeItem(container, 'tennis')).not.to.equal(null);
       expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ sport: true });
+    });
+
+    it('should collapse when the controlled collapsedResources prop changes', async () => {
+      const resources = buildNestedResources();
+      const { container, rerender } = render(
+        <EventCalendar
+          events={[]}
+          resources={resources}
+          collapsedResources={{}}
+          onCollapsedResourcesChange={() => {}}
+        />,
+      );
+
+      expect(getTreeItem(container, 'tennis')).not.to.equal(null);
+
+      rerender(
+        <EventCalendar
+          events={[]}
+          resources={resources}
+          collapsedResources={{ sport: true }}
+          onCollapsedResourcesChange={() => {}}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(getTreeItem(container, 'tennis')).to.equal(null);
+      });
     });
   });
 });
