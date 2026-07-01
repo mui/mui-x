@@ -1,5 +1,5 @@
-import { TreeViewItemId, TreeViewSelectionPropagation, TreeViewValidItem } from '../../models';
-import { TreeViewItemMeta } from '../models';
+import type { TreeViewItemId, TreeViewSelectionPropagation, TreeViewValidItem } from '../../models';
+import type { TreeViewItemMeta } from '../models';
 
 export interface MinimalTreeViewState<
   R extends TreeViewValidItem<R>,
