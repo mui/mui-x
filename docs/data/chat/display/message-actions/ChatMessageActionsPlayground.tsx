@@ -1,4 +1,6 @@
 import * as React from 'react';
+import CopyIcon from '@mui/icons-material/ContentCopy';
+import ThumbsUpIcon from '@mui/icons-material/ThumbUp';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -51,34 +53,6 @@ function makeMessage(role: Role, status: Status, text: string): ChatMessage {
     status,
     parts: [{ type: 'text', text }],
   };
-}
-
-function CopyIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="1em"
-      height="1em"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11z" />
-    </svg>
-  );
-}
-
-function ThumbsUpIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="1em"
-      height="1em"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M1 21h4V9H1zm22-11a2 2 0 0 0-2-2h-6.31l.95-4.57a4 4 0 0 0-1.04-3.61L13 0 7.59 5.41A2 2 0 0 0 7 6.83V19a2 2 0 0 0 2 2h9a2 2 0 0 0 1.84-1.21l3.02-7.05A2 2 0 0 0 23 12z" />
-    </svg>
-  );
 }
 
 type ClassKey = 'actions';
