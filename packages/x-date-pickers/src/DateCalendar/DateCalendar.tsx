@@ -352,6 +352,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
               yearsOrder={yearsOrder}
               yearsPerRow={yearsPerRow}
               referenceDate={referenceDate}
+              sx={views.length === 1 ? { maxHeight: VIEW_HEIGHT } : undefined}
             />
           )}
 
