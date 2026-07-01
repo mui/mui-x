@@ -242,6 +242,8 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
           accept: 'application/json',
         },
         body: JSON.stringify(input),
+        // Fail on redirects so the Bearer token can't be resent to another origin.
+        redirect: 'error',
         signal: options.signal,
       });
 
@@ -274,6 +276,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
             authorization: `Bearer ${token}`,
             accept: 'text/event-stream',
           },
+          redirect: 'error',
           signal: options.signal,
         },
       );

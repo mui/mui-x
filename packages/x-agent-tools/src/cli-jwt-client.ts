@@ -131,6 +131,8 @@ export class CliJwtClient {
       response = await this.fetcher(url, {
         method: 'POST',
         headers: { 'x-api-key': apiKey, accept: 'application/json' },
+        // Fail on redirects so the API key can't be resent to another origin.
+        redirect: 'error',
         signal: timeoutController.signal,
       });
     } catch (cause) {

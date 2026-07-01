@@ -130,12 +130,12 @@ describe('createGenerateReactCodeTool', () => {
     expect(fetcher).toHaveBeenNthCalledWith(
       1,
       expect.any(String),
-      expect.objectContaining({ signal: controller.signal }),
+      expect.objectContaining({ signal: controller.signal, redirect: 'error' }),
     );
     expect(fetcher).toHaveBeenNthCalledWith(
       2,
       expect.any(String),
-      expect.objectContaining({ signal: controller.signal }),
+      expect.objectContaining({ signal: controller.signal, redirect: 'error' }),
     );
     expect(getToken).toHaveBeenCalledWith({ signal: controller.signal });
   });

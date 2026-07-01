@@ -96,6 +96,17 @@ describe('CliJwtClient', () => {
     expect(init.signal).not.toBe(signal);
   });
 
+  it('rejects redirects on the token exchange so the API key never leaves the host', async () => {
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
+    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+
+    await client.getToken();
+
+    const [, init] = fetcher.mock.calls[0];
+    expect(init.redirect).toBe('error');
+  });
+
   it('times out a token exchange that never responds', async () => {
     vi.useFakeTimers();
     try {
