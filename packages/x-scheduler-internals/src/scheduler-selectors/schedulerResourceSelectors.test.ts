@@ -805,6 +805,13 @@ storeClasses.forEach((storeClass) => {
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
         expect(schedulerResourceSelectors.resourceHasChildren(state, leaf.id)).to.equal(false);
       });
+
+      it('should return false for an unknown resource id', () => {
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        expect(schedulerResourceSelectors.resourceHasChildren(state, 'non-existent')).to.equal(
+          false,
+        );
+      });
     });
 
     describe('hasNestedResources', () => {
@@ -840,6 +847,14 @@ storeClasses.forEach((storeClass) => {
           adapter,
         ).state;
         expect(schedulerResourceSelectors.isResourceCollapsed(state, parent.id)).to.equal(true);
+      });
+
+      it('should return false when explicitly registered as expanded', () => {
+        const state = new storeClass.Value(
+          { events: [], resources, defaultCollapsedResources: { [parent.id]: false } },
+          adapter,
+        ).state;
+        expect(schedulerResourceSelectors.isResourceCollapsed(state, parent.id)).to.equal(false);
       });
     });
   });

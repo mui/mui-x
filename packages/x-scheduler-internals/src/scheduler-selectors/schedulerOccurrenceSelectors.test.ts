@@ -292,13 +292,41 @@ describe('schedulerOccurrenceSelectors', () => {
     const start = DEFAULT_TESTING_VISIBLE_DATE;
     const end = adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 2);
 
-    const child1 = ResourceBuilder.new().title('Child 1').build();
+    const grandchild = ResourceBuilder.new().title('Grandchild').build();
+    const child1 = ResourceBuilder.new().title('Child 1').children([grandchild]).build();
     const child2 = ResourceBuilder.new().title('Child 2').build();
     const parent = ResourceBuilder.new().title('Parent').children([child1, child2]).build();
     const resources = [parent];
 
-    it('should list the parent and its children when expanded', () => {
+    it('should list the parent and all descendants when expanded', () => {
       const state = getEventTimelinePremiumStateFromParameters({ events: [], resources });
+
+      const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+      expect(result.map((entry) => entry.resource.id)).to.deep.equal([
+        parent.id,
+        child1.id,
+        grandchild.id,
+        child2.id,
+      ]);
+    });
+
+    it('should hide all descendants of a collapsed parent', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [],
+        resources,
+        defaultCollapsedResources: { [parent.id]: true },
+      });
+
+      const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+      expect(result.map((entry) => entry.resource.id)).to.deep.equal([parent.id]);
+    });
+
+    it('should hide only the collapsed branch when a mid-level resource is collapsed', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [],
+        resources,
+        defaultCollapsedResources: { [child1.id]: true },
+      });
 
       const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
       expect(result.map((entry) => entry.resource.id)).to.deep.equal([
@@ -308,12 +336,20 @@ describe('schedulerOccurrenceSelectors', () => {
       ]);
     });
 
-    it('should hide descendants of a collapsed parent', () => {
-      const state = getEventTimelinePremiumStateFromParameters({ events: [], resources });
-      state.collapsedResources = { [parent.id]: true };
+    it('should be a no-op when a leaf resource is collapsed', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [],
+        resources,
+        defaultCollapsedResources: { [child2.id]: true },
+      });
 
       const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
-      expect(result.map((entry) => entry.resource.id)).to.deep.equal([parent.id]);
+      expect(result.map((entry) => entry.resource.id)).to.deep.equal([
+        parent.id,
+        child1.id,
+        grandchild.id,
+        child2.id,
+      ]);
     });
   });
 });

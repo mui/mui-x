@@ -281,6 +281,63 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('Method: setCollapsedResources', () => {
+      it('should update collapsedResources and call onCollapsedResourcesChange when is uncontrolled', () => {
+        const onCollapsedResourcesChange = spy();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+
+        const newCollapsedResources: Record<SchedulerResourceId, boolean> = { r1: true };
+        store.setCollapsedResources(newCollapsedResources, new Event('click'));
+
+        expect(store.state.collapsedResources).to.equal(newCollapsedResources);
+        expect(onCollapsedResourcesChange.calledOnce).to.equal(true);
+        expect(onCollapsedResourcesChange.lastCall.firstArg).to.equal(newCollapsedResources);
+      });
+
+      it('should not change the state but call onCollapsedResourcesChange when is controlled', () => {
+        const onCollapsedResourcesChange = spy();
+        const controlledCollapsedResources: Record<SchedulerResourceId, boolean> = { r1: true };
+
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            collapsedResources: controlledCollapsedResources,
+            onCollapsedResourcesChange,
+          },
+          adapter,
+        );
+
+        const newCollapsedResources: Record<SchedulerResourceId, boolean> = { r2: true };
+        store.setCollapsedResources(newCollapsedResources, new Event('click'));
+
+        expect(store.state.collapsedResources).to.equal(controlledCollapsedResources);
+        expect(onCollapsedResourcesChange.calledOnce).to.equal(true);
+        expect(onCollapsedResourcesChange.lastCall.firstArg).to.equal(newCollapsedResources);
+      });
+
+      it('should do nothing if collapsedResources is the same reference (no state change, no callback)', () => {
+        const onCollapsedResourcesChange = spy();
+        const collapsedResources: Record<SchedulerResourceId, boolean> = { r1: true };
+
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            defaultCollapsedResources: collapsedResources,
+            onCollapsedResourcesChange,
+          },
+          adapter,
+        );
+
+        store.setCollapsedResources(collapsedResources, new Event('click'));
+
+        expect(store.state.collapsedResources).to.equal(collapsedResources);
+        expect(onCollapsedResourcesChange.called).to.equal(false);
+      });
+    });
+
     describe('Method: toggleResourceCollapse', () => {
       it('should toggle a resource collapse state', () => {
         const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
@@ -290,6 +347,33 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.collapsedResources).to.deep.equal({ [id]: true });
 
         store.toggleResourceCollapse(id, undefined);
+        expect(store.state.collapsedResources).to.deep.equal({ [id]: false });
+      });
+
+      it('should call onCollapsedResourcesChange when uncontrolled', () => {
+        const onCollapsedResourcesChange = spy();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+        const id = DEFAULT_PARAMS.resources[0].id;
+
+        store.toggleResourceCollapse(id, undefined);
+
+        expect(store.state.collapsedResources).to.deep.equal({ [id]: true });
+        expect(onCollapsedResourcesChange.callCount).to.equal(1);
+        expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ [id]: true });
+      });
+
+      it('should expand a resource collapsed through defaultCollapsedResources', () => {
+        const id = DEFAULT_PARAMS.resources[0].id;
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultCollapsedResources: { [id]: true } },
+          adapter,
+        );
+
+        store.toggleResourceCollapse(id, undefined);
+
         expect(store.state.collapsedResources).to.deep.equal({ [id]: false });
       });
 
