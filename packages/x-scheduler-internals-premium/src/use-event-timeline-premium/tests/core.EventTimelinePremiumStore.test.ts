@@ -59,6 +59,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         presets: ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
+        collapsedResources: {},
         isLoading: false,
         errors: [],
         hasInitialized: false,
