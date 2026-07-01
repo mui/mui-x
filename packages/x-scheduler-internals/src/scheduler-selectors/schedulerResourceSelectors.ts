@@ -131,8 +131,9 @@ export const schedulerResourceSelectors = {
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   ),
   resourceHasChildren: createSelector(
-    (state: State, resourceId: SchedulerResourceId) =>
-      (state.resourceChildrenIdLookup.get(resourceId)?.length ?? 0) > 0,
+    (state: State) => state.resourceChildrenIdLookup,
+    (childrenIdLookup, resourceId: SchedulerResourceId) =>
+      (childrenIdLookup.get(resourceId)?.length ?? 0) > 0,
   ),
   hasNestedResources: createSelector(
     resourceParentIdLookupSelector,

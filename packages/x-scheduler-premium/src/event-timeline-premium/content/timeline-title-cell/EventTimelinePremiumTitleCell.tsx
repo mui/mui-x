@@ -77,12 +77,16 @@ const ResourceLegendColor = styled('span', {
   backgroundColor: 'var(--event-surface-accent)',
 });
 
+// Shared footprint for the collapse toggle and the leaf-row spacer, so leaf
+// titles stay aligned with collapsible siblings.
+const TOGGLE_SIZE = 20;
+
 const ResourceCollapseToggle = styled(IconButton, {
   name: 'MuiEventTimeline',
   slot: 'TitleCellCollapseToggle',
 })({
-  width: 20,
-  height: 20,
+  width: TOGGLE_SIZE,
+  height: TOGGLE_SIZE,
   '& > svg': {
     fontSize: 18,
   },
@@ -95,8 +99,8 @@ const ResourceCollapseSpacer = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'TitleCellCollapseSpacer',
 })({
-  width: 20,
-  height: 20,
+  width: TOGGLE_SIZE,
+  height: TOGGLE_SIZE,
   flexShrink: 0,
   '[data-flat] &': {
     display: 'none',
