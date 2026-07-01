@@ -4,6 +4,7 @@ import { selectorChartDrawingArea } from '@mui/x-charts/internals';
 import type { ChartUsedStore, useGeoProjectionTypes } from '@mui/x-charts/internals';
 import { selectorChartGeoData } from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom.types';
+import { createGetVisibleCoordinate } from '../../createGetVisibleCoordinate';
 
 const DEG = Math.PI / 180;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -99,7 +100,7 @@ export function getRotation(
   projection.scale(scale * zoomFactor);
   projection.rotate?.([0, 0]);
 
-  const q = projection.invert(to);
+  const q = createGetVisibleCoordinate(projection)(to);
 
   // Reset projection modifications to avoid side effects.
   projection.rotate?.(rotate);
@@ -207,7 +208,7 @@ export function getTranslation(
   if (!projection.invert || translationAllowed === 'none') {
     return null;
   }
-  const q = projection.invert(to);
+  const q = createGetVisibleCoordinate(projection)(to);
 
   if (!geoPoint || !q) {
     return null;
@@ -216,8 +217,12 @@ export function getTranslation(
   const allowX = translationAllowed === 'both' || translationAllowed === 'x';
   const allowY = translationAllowed === 'both' || translationAllowed === 'y';
 
-  const projectedGeoPoint = projection(geoPoint) as [number, number];
-  const projectedQ = projection(q) as [number, number];
+  const projectedGeoPoint = projection(geoPoint);
+  const projectedQ = projection(q);
+
+  if (!projectedGeoPoint || !projectedQ) {
+    return null;
+  }
 
   const deltaX = projectedQ[0] - projectedGeoPoint[0];
   const deltaY = projectedQ[1] - projectedGeoPoint[1];
