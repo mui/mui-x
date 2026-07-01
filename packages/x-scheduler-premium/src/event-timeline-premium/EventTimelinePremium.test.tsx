@@ -98,42 +98,40 @@ describe('<EventTimelinePremium />', () => {
   });
 
   describe('collapsible resources', () => {
-    const nestedResources: SchedulerResource[] = [
-      {
-        id: 'parent',
-        title: 'Parent',
-        children: [{ id: 'child', title: 'Child' }],
-      },
-    ];
+    const child = ResourceBuilder.new().title('Child').build();
+    const parent = ResourceBuilder.new().title('Parent').children([child]).build();
+    const nestedResources: SchedulerResource[] = [parent];
+
+    const collapseToggleName = new RegExp(`collapse ${parent.title}`, 'i');
 
     it('should not render a collapse toggle for a leaf resource', () => {
       renderTimeline({ resources: nestedResources, events: [] });
 
-      expect(screen.queryByRole('button', { name: /child/i })).to.equal(null);
+      expect(screen.queryByRole('button', { name: new RegExp(child.title, 'i') })).to.equal(null);
     });
 
     it('should collapse a parent resource and hide its children when the toggle is clicked', async () => {
       const { user } = renderTimeline({ resources: nestedResources, events: [] });
 
-      expect(screen.getByText('Child')).not.to.equal(null);
+      expect(screen.getByText(child.title)).not.to.equal(null);
 
-      const toggle = screen.getByRole('button', { name: /collapse parent/i });
+      const toggle = screen.getByRole('button', { name: collapseToggleName });
       await user.click(toggle);
 
-      expect(screen.queryByText('Child')).to.equal(null);
+      expect(screen.queryByText(child.title)).to.equal(null);
     });
 
     it('should toggle collapse with the keyboard', async () => {
       const { user } = renderTimeline({ resources: nestedResources, events: [] });
 
-      const toggle = screen.getByRole('button', { name: /collapse parent/i });
+      const toggle = screen.getByRole('button', { name: collapseToggleName });
       act(() => {
         toggle.focus();
       });
       await user.keyboard('{Enter}');
 
       await waitFor(() => {
-        expect(screen.queryByText('Child')).to.equal(null);
+        expect(screen.queryByText(child.title)).to.equal(null);
       });
     });
   });

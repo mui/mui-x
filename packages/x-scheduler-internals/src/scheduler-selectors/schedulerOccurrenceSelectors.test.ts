@@ -292,34 +292,28 @@ describe('schedulerOccurrenceSelectors', () => {
     const start = DEFAULT_TESTING_VISIBLE_DATE;
     const end = adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 2);
 
-    const resources = [
-      {
-        id: 'parent',
-        title: 'Parent',
-        children: [
-          { id: 'child-1', title: 'Child 1' },
-          { id: 'child-2', title: 'Child 2' },
-        ],
-      },
-    ];
+    const child1 = ResourceBuilder.new().title('Child 1').build();
+    const child2 = ResourceBuilder.new().title('Child 2').build();
+    const parent = ResourceBuilder.new().title('Parent').children([child1, child2]).build();
+    const resources = [parent];
 
     it('should list the parent and its children when expanded', () => {
       const state = getEventTimelinePremiumStateFromParameters({ events: [], resources });
 
       const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
       expect(result.map((entry) => entry.resource.id)).to.deep.equal([
-        'parent',
-        'child-1',
-        'child-2',
+        parent.id,
+        child1.id,
+        child2.id,
       ]);
     });
 
     it('should hide descendants of a collapsed parent', () => {
       const state = getEventTimelinePremiumStateFromParameters({ events: [], resources });
-      state.collapsedResources = { parent: true };
+      state.collapsedResources = { [parent.id]: true };
 
       const result = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
-      expect(result.map((entry) => entry.resource.id)).to.deep.equal(['parent']);
+      expect(result.map((entry) => entry.resource.id)).to.deep.equal([parent.id]);
     });
   });
 });
