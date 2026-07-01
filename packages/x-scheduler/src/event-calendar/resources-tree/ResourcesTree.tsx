@@ -7,12 +7,13 @@ import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem, treeItemClasses, TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 import clsx from 'clsx';
-import { ResourcesTreeProps } from './ResourcesTree.types';
+import type { ResourcesTreeProps } from './ResourcesTree.types';
 import { getPaletteVariants } from '../../internals/utils/tokens';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 

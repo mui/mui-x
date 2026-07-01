@@ -1,5 +1,5 @@
 import type { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
-import {
+import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from './recurringEvent';

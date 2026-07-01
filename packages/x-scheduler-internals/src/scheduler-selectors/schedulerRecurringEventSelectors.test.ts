@@ -1,5 +1,5 @@
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
-import { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { getWeekDayCode } from '@mui/x-scheduler-internals-premium/internals';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
