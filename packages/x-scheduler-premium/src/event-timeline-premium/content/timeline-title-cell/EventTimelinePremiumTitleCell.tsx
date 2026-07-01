@@ -81,11 +81,8 @@ const ResourceCollapseToggle = styled(IconButton, {
   name: 'MuiEventTimeline',
   slot: 'TitleCellCollapseToggle',
 })({
-  padding: 0,
   width: 20,
   height: 20,
-  flexShrink: 0,
-  color: 'inherit',
   '& > svg': {
     fontSize: 18,
   },
