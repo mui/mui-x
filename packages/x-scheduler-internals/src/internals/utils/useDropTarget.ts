@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import {
+import type {
   SchedulerEvent,
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderExternalDrag,
@@ -11,21 +11,19 @@ import {
   TemporalSupportedObject,
   SchedulerResourceId,
 } from '../../models';
-import {
+import type {
   EventDropData,
   EventDropDataLookup,
 } from '../../build-is-valid-drop-target/buildIsValidDropTarget';
-import {
-  SchedulerStoreInContext,
-  useSchedulerStoreContext,
-} from '../../use-scheduler-store-context';
+import type { SchedulerStoreInContext } from '../../use-scheduler-store-context';
+import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
-import { StandaloneEvent } from '../../standalone-event';
+import type { StandaloneEvent } from '../../standalone-event';
 import { useAdapterContext } from '../../use-adapter-context';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(

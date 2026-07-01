@@ -1,15 +1,15 @@
 import * as React from 'react';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   createSchedulerRenderer,
   EventBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
-  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
-import { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 

@@ -1,4 +1,4 @@
-import { EventTimelinePremiumProps } from '../event-timeline-premium/EventTimelinePremium.types';
+import type { EventTimelinePremiumProps } from '../event-timeline-premium/EventTimelinePremium.types';
 
 export interface SchedulerPremiumComponentsPropsList {
   MuiEventTimeline: EventTimelinePremiumProps<any, any>;

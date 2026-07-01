@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
 import { useEventPointerResizeHandler } from '../../internals/utils/useEventPointerResizeHandler';
 import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
@@ -11,7 +11,7 @@ import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selecto
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeEventContext';
 import type { CalendarGridTimeEvent } from '../time-event/CalendarGridTimeEvent';
-import { SchedulerEventSide } from '../../models';
+import type { SchedulerEventSide } from '../../models';
 
 // Time grid events are never all-day; keep them that way on resize.
 function addPropertiesToResizedEvent() {

@@ -8,7 +8,7 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
-import {
+import type {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
@@ -20,7 +20,7 @@ import {
   SchedulerEventPasteProperties,
   SchedulerRenderableEventOccurrence,
 } from '../../../models';
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   UpdateRecurringEventParameters,
@@ -32,13 +32,13 @@ import {
   SchedulerEditingMode,
 } from './SchedulerStore.types';
 import { processDate } from '../../../process-date';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import {
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type {
   SchedulerEvents,
   SchedulerEventListener,
   SchedulerEventParameters,
 } from '../../models/events';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
 import {
   buildEventsState,

@@ -2,8 +2,10 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import Paper, { PaperProps } from '@mui/material/Paper';
-import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
+import type { PaperProps } from '@mui/material/Paper';
+import Paper from '@mui/material/Paper';
+import type { DialogProps } from '@mui/material/Dialog';
+import Dialog, { dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
@@ -12,10 +14,10 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
-import { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
+import type { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
+import type { EventEditingOptionalRenderers } from '../event-editing';
 import {
   EventEditingProvider,
-  EventEditingOptionalRenderers,
   EventEditingOptionalRenderersContext,
   useEventEditingContext,
   useEventEditingStyledContext,

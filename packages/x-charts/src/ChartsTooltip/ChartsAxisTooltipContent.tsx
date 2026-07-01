@@ -100,8 +100,8 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
   );
 }
 
-function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesType>(
-  props: AxisTooltipContentProps<T>,
+function DefaultContent(
+  props: AxisTooltipContentProps<Exclude<CartesianChartSeriesType, 'ohlc'> | PolarChartSeriesType>,
 ) {
   const classes = useUtilityClasses(props.classes);
   const { item } = props;
@@ -146,14 +146,24 @@ DefaultContent.propTypes /* remove-proptypes */ = {
   item: PropTypes.shape({
     color: PropTypes.string.isRequired,
     formattedLabel: PropTypes.string,
-    formattedValue: PropTypes.object.isRequired,
+    formattedValue: PropTypes.string.isRequired,
     markShape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye']),
     markType: PropTypes.oneOfType([
       PropTypes.oneOf(['circle', 'line', 'line+mark', 'square']),
       PropTypes.func,
     ]),
     seriesId: PropTypes.string.isRequired,
-    value: PropTypes.any.isRequired,
+    value: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        colorValue: PropTypes.any,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        sizeValue: PropTypes.any,
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired,
+        z: PropTypes.any,
+      }),
+    ]),
   }).isRequired,
 } as any;
 

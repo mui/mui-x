@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
-import { DayViewProps } from './DayView.types';
+import type { DayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import { createDayTimeGridViewConfig } from '../internals/utils/day-time-grid-view-config';
 

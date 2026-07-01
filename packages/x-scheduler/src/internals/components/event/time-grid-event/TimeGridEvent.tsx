@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { CSSObject, styled, Theme } from '@mui/material/styles';
+import type { CSSObject, Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { useStore } from '@base-ui/utils/store';
@@ -11,10 +12,11 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { TimeGridEventProps } from './TimeGridEvent.types';
+import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import type { PaletteName } from '../../../utils/tokens';
+import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 import { useTimeGridEvent } from './useTimeGridEvent';

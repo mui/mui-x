@@ -1,4 +1,4 @@
-import { CalendarView } from '@mui/x-scheduler-internals/models';
+import type { CalendarView } from '@mui/x-scheduler-internals/models';
 
 export type SchedulerWeekday =
   | 'monday'

@@ -1,16 +1,16 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { warn } from '@base-ui/utils/warn';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
   DEFAULT_SCHEDULER_PREFERENCES,
-  SchedulerParametersToStateMapper,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@mui/x-scheduler-internals/base-ui-copy';
-import { EventTimelinePremiumPreferences, EventTimelinePremiumPreset } from '../models';
-import {
+import type { EventTimelinePremiumPreferences, EventTimelinePremiumPreset } from '../models';
+import type {
   EventTimelinePremiumState,
   EventTimelinePremiumParameters,
 } from './EventTimelinePremiumStore.types';

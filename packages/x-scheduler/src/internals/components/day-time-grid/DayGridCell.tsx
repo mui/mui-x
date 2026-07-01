@@ -5,7 +5,7 @@ import { useStore } from '@base-ui/utils/store';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';

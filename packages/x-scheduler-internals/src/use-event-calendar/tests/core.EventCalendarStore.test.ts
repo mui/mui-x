@@ -7,7 +7,7 @@ import {
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
-import { CalendarView } from '../../models';
+import type { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 

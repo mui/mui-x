@@ -14,7 +14,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
-import {
+import type {
   RecurringEventFrequency,
   RecurringEventPresetKey,
   RecurringEventByDayValue,
@@ -29,10 +29,9 @@ import {
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
+import type { ControlledValue, EndsSelection } from '@mui/x-scheduler/internals';
 import {
   useEventEditingStyledContext,
-  ControlledValue,
-  EndsSelection,
   getEndsSelectionFromRRule,
   formatDayOfMonthAndMonthFullLetter,
   EventDialogTabPanel,

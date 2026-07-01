@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internals",
-  "version": "9.6.0",
+  "version": "9.7.0",
   "author": "MUI Team",
   "description": "Utility functions for the MUI X packages (internal use only).",
   "license": "MIT",
@@ -39,7 +39,6 @@
     "@babel/runtime": "catalog:",
     "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
-    "core-js-pure": "catalog:",
     "reselect": "catalog:",
     "use-sync-external-store": "catalog:"
   },

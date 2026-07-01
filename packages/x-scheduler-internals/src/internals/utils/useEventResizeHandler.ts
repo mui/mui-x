@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
-import { SchedulerEventSide } from '../../models';
+import type { SchedulerEventSide } from '../../models';
 
 /**
  * Native drag-and-drop resize for calendar events. The host picks this or the pointer-based resize

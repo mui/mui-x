@@ -1,6 +1,6 @@
-import { BaseUIChangeEventDetails } from '@base-ui/react';
-import { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
-import {
+import type { BaseUIChangeEventDetails } from '@base-ui/react';
+import type { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
+import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
@@ -17,8 +17,8 @@ import {
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
-import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 export interface StoredError {
   /**
@@ -381,7 +381,6 @@ export type UpdateRecurringEventParameters = {
   occurrenceStart: TemporalSupportedObject;
   /**
    * The changes to apply.
-   * Requires `start` and `end`, all other properties are optional.
    */
   changes: SchedulerEventUpdatedProperties;
   /**

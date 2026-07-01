@@ -1,6 +1,6 @@
 'use client';
 import { useStore } from '@base-ui/utils/store';
-import { SchedulerEventCreationConfig } from '../../models';
+import type { SchedulerEventCreationConfig } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import type { CreationPlaceholderFields } from './useEventCreation';

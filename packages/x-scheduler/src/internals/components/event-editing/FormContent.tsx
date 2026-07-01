@@ -10,7 +10,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import TextField from '@mui/material/TextField';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import {
+import type {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
   RecurringEventFrequency,
@@ -27,7 +27,8 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
-import { computeRange, ControlledValue, hasProp, validateRange } from '../event-dialog/utils';
+import type { ControlledValue } from '../event-dialog/utils';
+import { computeRange, hasProp, validateRange } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import { GeneralTab } from '../event-dialog/GeneralTab';
 

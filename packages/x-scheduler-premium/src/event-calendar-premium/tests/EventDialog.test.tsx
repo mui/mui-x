@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
@@ -8,17 +9,16 @@ import {
   SchedulerStoreRunner,
   StateWatcher,
   StoreSpy,
-  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
-import {
+import type {
   SchedulerResource,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import {
   EventCalendarProvider,

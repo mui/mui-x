@@ -1,13 +1,13 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
-import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import {
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type {
   SchedulerState,
   SchedulerParameters,
   SchedulerStore,
-  buildEventsState,
   SchedulerEventParameters,
   SchedulerPersistEventsResult,
 } from '@mui/x-scheduler-internals/internals';
+import { buildEventsState } from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
 

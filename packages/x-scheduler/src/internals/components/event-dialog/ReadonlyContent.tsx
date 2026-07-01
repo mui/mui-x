@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import EventDialogHeader from './EventDialogHeader';
 import { useEventEditingStyledContext, ReadonlyEventDetails } from '../event-editing';
 

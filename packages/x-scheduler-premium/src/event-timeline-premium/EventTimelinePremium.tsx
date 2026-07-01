@@ -19,12 +19,10 @@ import {
   EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
-import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
+import type { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
-import {
-  EventTimelinePremiumClasses,
-  getEventTimelinePremiumUtilityClass,
-} from './eventTimelinePremiumClasses';
+import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
+import { getEventTimelinePremiumUtilityClass } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 
 const packageInfo = {

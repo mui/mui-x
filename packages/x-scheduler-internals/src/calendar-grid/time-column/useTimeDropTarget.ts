@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useAdapterContext } from '../../use-adapter-context';
-import { SchedulerEvent, TemporalSupportedObject } from '../../models';
+import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
-import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
+import type { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';

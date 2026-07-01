@@ -92,16 +92,16 @@ GridActionsCellItem.propTypes /* remove-proptypes */ = {
     PropTypes.number,
     PropTypes.object,
     PropTypes.shape({
-      '__@iterator@659': PropTypes.func.isRequired,
+      '__@iterator@661': PropTypes.func.isRequired,
     }),
     PropTypes.shape({
-      '__@iterator@659': PropTypes.func.isRequired,
+      '__@iterator@661': PropTypes.func.isRequired,
       key: PropTypes.string,
       props: PropTypes.any.isRequired,
       type: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
     }),
     PropTypes.shape({
-      '__@toStringTag@1607': PropTypes.oneOf(['BigInt']).isRequired,
+      '__@toStringTag@1609': PropTypes.oneOf(['BigInt']).isRequired,
       key: PropTypes.string,
       props: PropTypes.any.isRequired,
       toLocaleString: PropTypes.func.isRequired,
@@ -110,13 +110,13 @@ GridActionsCellItem.propTypes /* remove-proptypes */ = {
       valueOf: PropTypes.func.isRequired,
     }),
     PropTypes.shape({
-      '__@toStringTag@1607': PropTypes.oneOf(['BigInt']).isRequired,
+      '__@toStringTag@1609': PropTypes.oneOf(['BigInt']).isRequired,
       toLocaleString: PropTypes.func.isRequired,
       toString: PropTypes.func.isRequired,
       valueOf: PropTypes.func.isRequired,
     }),
     PropTypes.shape({
-      '__@toStringTag@1607': PropTypes.string.isRequired,
+      '__@toStringTag@1609': PropTypes.string.isRequired,
       catch: PropTypes.func.isRequired,
       finally: PropTypes.func.isRequired,
       key: PropTypes.string,
@@ -125,7 +125,7 @@ GridActionsCellItem.propTypes /* remove-proptypes */ = {
       type: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
     }),
     PropTypes.shape({
-      '__@toStringTag@1607': PropTypes.string.isRequired,
+      '__@toStringTag@1609': PropTypes.string.isRequired,
       catch: PropTypes.func.isRequired,
       finally: PropTypes.func.isRequired,
       then: PropTypes.func.isRequired,

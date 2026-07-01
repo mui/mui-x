@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
@@ -20,7 +20,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
-import { AgendaViewProps } from './AgendaView.types';
+import type { AgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { EventSkeleton } from '../internals/components/event-skeleton';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';

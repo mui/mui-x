@@ -8,7 +8,7 @@ import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import {
+import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
@@ -21,7 +21,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
-import { DayTimeGridProps } from './DayTimeGrid.types';
+import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
