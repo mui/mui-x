@@ -10,7 +10,7 @@ import {
   ResponsiveTypographyContainer,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
-import { StandaloneCompactDayViewPremiumProps } from './CompactDayViewPremium.types';
+import type { StandaloneCompactDayViewPremiumProps } from './CompactDayViewPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',

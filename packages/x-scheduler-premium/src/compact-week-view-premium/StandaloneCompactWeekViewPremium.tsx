@@ -10,7 +10,7 @@ import {
   ResponsiveTypographyContainer,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
-import { StandaloneCompactWeekViewPremiumProps } from './CompactWeekViewPremium.types';
+import type { StandaloneCompactWeekViewPremiumProps } from './CompactWeekViewPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',

@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import {
+import type {
   CompactEventEditingProviderProps,
   EventEditingContextValue,
   EventEditingProviderProps,

@@ -5,7 +5,7 @@ import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -17,7 +17,8 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { getRecurrenceLabel, hasProp } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { getPaletteVariants, PaletteName } from '../../utils/tokens';
+import type { PaletteName } from '../../utils/tokens';
+import { getPaletteVariants } from '../../utils/tokens';
 
 const ReadonlyDetailsRoot = styled('div', {
   name: 'MuiEventDialog',

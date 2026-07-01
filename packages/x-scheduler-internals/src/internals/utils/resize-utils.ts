@@ -1,5 +1,5 @@
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { SchedulerEventSide, TemporalSupportedObject } from '../../models';
+import type { SchedulerEventSide, TemporalSupportedObject } from '../../models';
 
 /**
  * Whether a resize handler for the given side may run: its edge must be inside the collection

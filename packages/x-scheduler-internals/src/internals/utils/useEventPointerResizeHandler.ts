@@ -7,7 +7,7 @@ import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
 import { applyInternalDragOrResizeOccurrencePlaceholder } from './useDropTarget';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import { clampResizedEventEdge } from './resize-utils';
-import {
+import type {
   EventSurfaceType,
   SchedulerEvent,
   SchedulerEventId,

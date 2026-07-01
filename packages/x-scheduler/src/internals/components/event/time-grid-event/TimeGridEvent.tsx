@@ -215,6 +215,9 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   },
   // Touch devices: tighter padding, a selection outline, and no accent bar.
   [TOUCH_MEDIA]: {
+    // The armed outline is the only intended press feedback. Drop the native tap highlight so a tap
+    // that just dismisses another event's toolbar (two-tap contract) shows no misleading "tapped" flash.
+    WebkitTapHighlightColor: 'transparent',
     padding: theme.spacing(0.5, 0.7, 0.5, 0.7),
     '&[data-under-hour="true"]': {
       paddingTop: theme.spacing(0.25),

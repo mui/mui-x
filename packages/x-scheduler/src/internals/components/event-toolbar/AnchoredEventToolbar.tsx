@@ -2,7 +2,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { styled } from '@mui/material/styles';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { EventToolbar } from './EventToolbar';
 import { useEventEditingStyledContext } from '../event-editing';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';

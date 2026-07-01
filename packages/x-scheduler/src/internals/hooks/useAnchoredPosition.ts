@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { calculatePosition, Position } from '../utils/dialog-utils';
+import type { Position } from '../utils/dialog-utils';
+import { calculatePosition } from '../utils/dialog-utils';
 
 /** Positions a popup next to an anchor and keeps it in sync on resize/anchor changes. */
 export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) {

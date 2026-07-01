@@ -5,7 +5,7 @@ import { useStore } from '@base-ui/utils/store';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { DayTimeGrid } from '../day-time-grid/DayTimeGrid';
-import { DayTimeGridProps } from '../day-time-grid/DayTimeGrid.types';
+import type { DayTimeGridProps } from '../day-time-grid/DayTimeGrid.types';
 import { CompactEventDrawer } from '../compact-event-drawer';
 import { CompactEventEditingProvider, useEventEditingStyledContext } from '../event-editing';
 import { EventToolbar } from '../event-toolbar';

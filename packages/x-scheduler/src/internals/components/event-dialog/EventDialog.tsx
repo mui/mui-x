@@ -41,6 +41,8 @@ const EventDialogRoot = styled(Dialog, {
   },
   [`& .${dialogClasses.paper}`]: {
     margin: 0,
+    // Never let the anchored dialog grow past the viewport on narrow (mobile) screens.
+    maxWidth: '100%',
   },
 });
 

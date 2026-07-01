@@ -3,7 +3,7 @@ import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
   createSchedulerRenderer,
   EventBuilder,

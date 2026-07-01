@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { EditingSurface } from './editingModePolicy';
+import type * as React from 'react';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { EditingSurface } from './editingModePolicy';
 
 export interface EventEditingContextValue {
   /**

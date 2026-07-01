@@ -49,6 +49,8 @@ const DialogContent = styled(MuiDialogContent, {
   padding: 0,
   minWidth: 360,
   width: 450,
+  // Shrink to fit the paper (capped at the viewport) so the form doesn't overflow on mobile screens.
+  maxWidth: '100%',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
