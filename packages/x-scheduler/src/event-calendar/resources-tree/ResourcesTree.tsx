@@ -120,6 +120,7 @@ export const ResourcesTree = React.forwardRef(function ResourcesTree(
   );
   const flatList = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
   const visibleMap = useStore(store, schedulerResourceSelectors.visibleMap);
+  const collapsedResources = useStore(store, schedulerResourceSelectors.collapsedResources);
 
   const getItemChildren = React.useCallback(
     (item: SchedulerResource) => childrenLookup.get(item.id) ?? [],
@@ -142,9 +143,24 @@ export const ResourcesTree = React.forwardRef(function ResourcesTree(
     return flatList.filter((r) => fullyVisible.has(r.id)).map((r) => r.id);
   }, [flatList, visibleMap, childrenLookup]);
 
-  const defaultExpandedItems = React.useMemo(
-    () => Array.from(childrenLookup.keys()),
-    [childrenLookup],
+  // Expansion is controlled by the shared `collapsedResources` state (inverted:
+  // a parent is expanded unless it is collapsed), so it stays in sync with the timeline.
+  const expandedItems = React.useMemo(
+    () => Array.from(childrenLookup.keys()).filter((id) => collapsedResources[id] !== true),
+    [childrenLookup, collapsedResources],
+  );
+
+  const handleExpandedItemsChange = useStableCallback(
+    (event: React.SyntheticEvent | null, newExpandedIds: string[]) => {
+      const expanded = new Set(newExpandedIds);
+      const newCollapsedResources: Record<string, boolean> = {};
+      for (const parentId of childrenLookup.keys()) {
+        if (!expanded.has(parentId)) {
+          newCollapsedResources[parentId] = true;
+        }
+      }
+      store.setCollapsedResources(newCollapsedResources, event?.nativeEvent);
+    },
   );
 
   const handleSelectedItemsChange = useStableCallback(
@@ -210,7 +226,8 @@ export const ResourcesTree = React.forwardRef(function ResourcesTree(
         selectionPropagation={{ parents: true, descendants: true }}
         expansionTrigger="iconContainer"
         selectedItems={selectedItems}
-        defaultExpandedItems={defaultExpandedItems}
+        expandedItems={expandedItems}
+        onExpandedItemsChange={handleExpandedItemsChange}
         onSelectedItemsChange={handleSelectedItemsChange}
         onItemClick={handleItemClick}
         slots={{ item: ResourcesTreeItem }}

@@ -144,6 +144,7 @@ export const schedulerResourceSelectors = {
     (state: State, resourceId: SchedulerResourceId) =>
       state.collapsedResources[resourceId] === true,
   ),
+  collapsedResources: (state: State) => state.collapsedResources,
   resourceParentIdLookup: resourceParentIdLookupSelector,
   resourceDepthLookup: resourceDepthLookupSelector,
   resourceDepth: createSelector(

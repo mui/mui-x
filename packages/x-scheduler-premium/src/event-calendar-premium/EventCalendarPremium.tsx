@@ -136,7 +136,6 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
   classes: PropTypes.object,
   /**
    * The collapsed resources. A resource is expanded unless included here with a `true` value.
-   * Only applies to the timeline view.
    */
   collapsedResources: PropTypes.object,
   /**

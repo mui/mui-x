@@ -18,7 +18,7 @@
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "collapsedResources": {
-      "description": "The collapsed resources. A resource is expanded unless included here with a <code>true</code> value. Only applies to the timeline view."
+      "description": "The collapsed resources. A resource is expanded unless included here with a <code>true</code> value."
     },
     "dataSource": {
       "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."

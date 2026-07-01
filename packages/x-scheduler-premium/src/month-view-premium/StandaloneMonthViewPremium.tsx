@@ -77,7 +77,6 @@ StandaloneMonthViewPremium.propTypes /* remove-proptypes */ = {
   canDropEventsToTheOutside: PropTypes.bool,
   /**
    * The collapsed resources. A resource is expanded unless included here with a `true` value.
-   * Only applies to the timeline view.
    */
   collapsedResources: PropTypes.object,
   /**

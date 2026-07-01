@@ -14,7 +14,7 @@
       "description": "Whether events can be dragged from inside of the calendar and dropped outside of it. If true, when the mouse leaves the calendar, the event won&#39;t be rendered inside the calendar anymore. If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar."
     },
     "collapsedResources": {
-      "description": "The collapsed resources. A resource is expanded unless included here with a <code>true</code> value. Only applies to the timeline view."
+      "description": "The collapsed resources. A resource is expanded unless included here with a <code>true</code> value."
     },
     "dataSource": {
       "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."

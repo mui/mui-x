@@ -260,7 +260,6 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   ) => void;
   /**
    * The collapsed resources. A resource is expanded unless included here with a `true` value.
-   * Only applies to the timeline view.
    */
   collapsedResources?: Record<SchedulerResourceId, boolean>;
   /**
