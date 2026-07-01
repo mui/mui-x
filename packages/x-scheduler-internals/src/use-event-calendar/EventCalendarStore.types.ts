@@ -51,8 +51,9 @@ export interface EventCalendarSchedulerParametersOverrides {
 }
 
 /**
- * Parameter keys for collapsing resources. Only the timeline and the calendar
- * (with its resource tree) act on them, so the single-view components omit them.
+ * Parameter keys for collapsing resources. Only `EventTimelinePremium` (resource
+ * rows) and `EventCalendar` (resource tree) act on them, so the single-view
+ * components omit them.
  */
 export type CollapsibleResourcesParameterKeys =
   | 'collapsedResources'
