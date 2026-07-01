@@ -150,12 +150,12 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
  */
 function AnchoredEventToolbarSurface() {
   const store = useSchedulerStoreContext();
-  const { anchorRef } = useEventEditingContext();
+  const { anchorRef, anchor } = useEventEditingContext();
   const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
 
-  // Render only while armed, once we have both an occurrence and an anchor to position against.
-  if (editingMode !== 'armed' || editingOccurrence == null || anchorRef.current == null) {
+  // Gate on the reactive `anchor` so a re-anchor (e.g. a recurring scope change) re-positions.
+  if (editingMode !== 'armed' || editingOccurrence == null || anchor == null) {
     return null;
   }
 
@@ -173,8 +173,7 @@ function EventDialogSurface() {
   const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
 
-  // Render only the editing surface here; the armed toolbar is rendered separately. Needs both an
-  // edited occurrence and an anchor to position against.
+  // Resizing is disabled while editing, so the anchor can't be swapped here — the sync ref is enough.
   if (editingMode !== 'edit' || editingOccurrence == null || anchorRef.current == null) {
     return null;
   }

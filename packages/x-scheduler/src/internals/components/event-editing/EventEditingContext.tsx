@@ -1,10 +1,13 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
+  schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type {
@@ -38,7 +41,14 @@ export function useEventEditingContext(): EventEditingContextValue {
 export function EventEditingProvider(props: EventEditingProviderProps) {
   const { children, surface } = props;
   const store = useSchedulerStoreContext();
+  // `anchorRef` for same-tick reads; `anchor` is the reactive mirror that re-positions the surfaces.
   const anchorRef = React.useRef<HTMLElement | null>(null);
+  const [anchor, setAnchorState] = React.useState<HTMLElement | null>(null);
+
+  const setAnchor = useStableCallback((node: HTMLElement | null) => {
+    anchorRef.current = node;
+    setAnchorState(node);
+  });
 
   const startEditing = useStableCallback(
     (
@@ -47,7 +57,7 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
     ) => {
       // Set the anchor synchronously before the store write so the surface, which re-renders from the
       // store update, reads a populated anchor on the same tick.
-      anchorRef.current = forwardedAnchorRef?.current ?? null;
+      setAnchor(forwardedAnchorRef?.current ?? null);
       const isCreating = schedulerOccurrencePlaceholderSelectors.isCreating(store.state);
       const isReadOnly = schedulerEventSelectors.isReadOnly(store.state, occurrence.id);
       store.startEditing(occurrence, getInitialEditingMode(surface, { isCreating, isReadOnly }));
@@ -59,8 +69,8 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
   });
 
   const contextValue = React.useMemo<EventEditingContextValue>(
-    () => ({ startEditing, stopEditing, anchorRef }),
-    [startEditing, stopEditing],
+    () => ({ startEditing, stopEditing, anchorRef, anchor, setAnchor }),
+    [startEditing, stopEditing, anchor, setAnchor],
   );
 
   return (
@@ -75,7 +85,17 @@ export function EventEditingProvider(props: EventEditingProviderProps) {
 export function EventEditingTrigger(props: EventEditingTriggerProps) {
   const { occurrence, onClick, children } = props;
   const ref = React.useRef<HTMLElement | null>(null);
-  const { startEditing } = useEventEditingContext();
+  const store = useSchedulerStoreContext();
+  const { startEditing, setAnchor } = useEventEditingContext();
+
+  const isEdited = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
+
+  // Re-anchor while edited, so the surface follows a recurring scope change that swaps the node.
+  useIsoLayoutEffect(() => {
+    if (isEdited) {
+      setAnchor(ref.current);
+    }
+  }, [isEdited, setAnchor]);
 
   return React.cloneElement(children as React.ReactElement<any>, {
     ref,

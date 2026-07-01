@@ -8,8 +8,10 @@ import { calculatePosition } from '../utils/dialog-utils';
 export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) {
   const { anchorRef, popupRef, side = 'left', onReposition } = parameters;
 
+  // Re-run the effects below when the anchored node changes identity (e.g. a recurring scope swap).
+  const anchor = anchorRef.current;
+
   const updatePosition = React.useCallback(() => {
-    const anchor = anchorRef.current;
     const popup = popupRef.current;
     // Skip stale nodes: the anchor may have been detached.
     if (anchor != null && !anchor.isConnected) {
@@ -24,7 +26,7 @@ export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) 
       /* eslint-enable react-compiler/react-compiler */
       onReposition?.();
     }
-  }, [anchorRef, popupRef, side, onReposition]);
+  }, [anchor, popupRef, side, onReposition]);
 
   // Position before paint to avoid a flash at the wrong spot.
   useIsoLayoutEffect(() => {
@@ -33,7 +35,6 @@ export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) 
 
   React.useEffect(() => {
     const popup = popupRef.current;
-    const anchor = anchorRef.current;
     const reposition = () => updatePosition();
 
     const resizeObserver =
@@ -55,7 +56,7 @@ export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) 
       mutationObserver?.disconnect();
       window.removeEventListener('resize', reposition);
     };
-  }, [anchorRef, popupRef, updatePosition]);
+  }, [anchor, popupRef, updatePosition]);
 }
 
 export namespace useAnchoredPosition {

@@ -16,9 +16,20 @@ export interface EventEditingContextValue {
    */
   stopEditing: () => void;
   /**
-   * The element the editing surface (desktop dialog / toolbar) anchors to.
+   * The element the editing surface (desktop dialog / toolbar) anchors to. Synchronous handle, for
+   * same-tick reads; prefer {@link anchor} to react to anchor changes.
    */
   anchorRef: React.RefObject<HTMLElement | null>;
+  /**
+   * Reactive mirror of {@link anchorRef}: the element the editing surface currently anchors to, or
+   * `null`. Re-rendering on change lets the surface re-position when the anchored element is swapped
+   * (e.g. a recurring scope change detaches the edited occurrence onto a freshly-created element).
+   */
+  anchor: HTMLElement | null;
+  /**
+   * Re-anchors the editing surface to `node`, updating both {@link anchorRef} and {@link anchor}.
+   */
+  setAnchor: (node: HTMLElement | null) => void;
 }
 
 export interface EventEditingProviderProps {
