@@ -55,6 +55,9 @@ describe('<EventTimelinePremium />', () => {
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;
     localeText?: Partial<EventTimelineLocaleText>;
+    collapsedResources?: Record<string, boolean>;
+    defaultCollapsedResources?: Record<string, boolean>;
+    onCollapsedResourcesChange?: (collapsedResources: Record<string, boolean>) => void;
   }) {
     return render(
       <EventTimelinePremium
@@ -68,6 +71,9 @@ describe('<EventTimelinePremium />', () => {
         showCurrentTimeIndicator={options?.showCurrentTimeIndicator}
         resourceColumnLabel={options?.resourceColumnLabel}
         localeText={options?.localeText}
+        collapsedResources={options?.collapsedResources}
+        defaultCollapsedResources={options?.defaultCollapsedResources}
+        onCollapsedResourcesChange={options?.onCollapsedResourcesChange}
       />,
     );
   }
@@ -131,6 +137,40 @@ describe('<EventTimelinePremium />', () => {
       await user.click(toggle);
 
       expect(screen.queryByText(child.title)).to.equal(null);
+    });
+
+    it('should hide children initially when collapsedResources is controlled', () => {
+      renderTimeline({
+        resources: nestedResources,
+        events: [],
+        collapsedResources: { [parent.id]: true },
+      });
+
+      expect(screen.queryByText(child.title)).to.equal(null);
+    });
+
+    it('should hide children initially from defaultCollapsedResources', () => {
+      renderTimeline({
+        resources: nestedResources,
+        events: [],
+        defaultCollapsedResources: { [parent.id]: true },
+      });
+
+      expect(screen.queryByText(child.title)).to.equal(null);
+    });
+
+    it('should call onCollapsedResourcesChange when the toggle is clicked', async () => {
+      const onCollapsedResourcesChange = spy();
+      const { user } = renderTimeline({
+        resources: nestedResources,
+        events: [],
+        onCollapsedResourcesChange,
+      });
+
+      await user.click(screen.getByRole('button', { name: collapseToggleName }));
+
+      expect(onCollapsedResourcesChange.callCount).to.equal(1);
+      expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ [parent.id]: true });
     });
 
     it('should toggle collapse with the keyboard', async () => {
