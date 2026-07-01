@@ -73,9 +73,13 @@ const EventTimelinePremiumTitleCellContent = styled('span', {
   width: 'max-content',
   flexShrink: 0,
   whiteSpace: 'nowrap',
-  // Shared horizontal scroll for all title cells (the header title cell
-  // is not wrapped in this element and therefore does not move).
-  transform: 'translateX(calc(-1 * var(--title-scroll-left, 0) * 1px))',
+  // Shared horizontal scroll for all title cells (the header title cell is not
+  // wrapped in this element and therefore does not move). Uses `left` rather than
+  // `transform` so the text isn't promoted to its own compositing layer — that
+  // caused a sub-pixel vertical shift of the label on Windows when rows relaid
+  // out on collapse/expand.
+  position: 'relative',
+  left: 'calc(-1 * var(--title-scroll-left, 0) * 1px)',
 }));
 
 const ResourceLegendColor = styled('span', {
