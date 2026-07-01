@@ -11,17 +11,8 @@ const isConicProjection = (projection: GeoProjection): projection is GeoConicPro
 };
 
 const DEFAULT_PARALLELS: [number, number] = [30, 30];
-export function getParallels(
-  parallels: [number, number] | null | undefined,
-  center: [number, number] | null,
-): [number, number] {
-  if (parallels) {
-    return parallels;
-  }
-  if (center) {
-    return [-center[1] - 15, -center[1] + 15];
-  }
-  return DEFAULT_PARALLELS;
+export function getParallels(parallels: [number, number] | null | undefined): [number, number] {
+  return parallels ?? DEFAULT_PARALLELS;
 }
 
 /**
@@ -78,7 +69,7 @@ export function getDefaultTranslation(
   const projection = resolveProjectionInstance(
     projectionInput,
     projectionFactory,
-    getParallels(parallels, center),
+    getParallels(parallels),
   );
   if (!projection) {
     return null;

@@ -59,13 +59,13 @@ export const selectorChartProjectionFactory = createSelector(
 
 export const selectorChartZoomLevel = createSelector(
   selectorChartGeoProjectionZoomState,
-  function selectorChartZoomLevel(geoProjectionZoom): number | null {
+  function selectorChartZoomLevel(geoProjectionZoom): number {
     return geoProjectionZoom?.zoomLevel ?? 1;
   },
 );
 const selectorChartCenter = createSelectorMemoized(
   selectorChartGeoProjectionZoomState,
-  function selectorChartCenter(geoProjectionZoom): [number, number] | null {
+  function selectorChartCenter(geoProjectionZoom): [number, number] {
     return geoProjectionZoom?.center ?? ZERO_COORDINATES;
   },
 );
@@ -85,9 +85,8 @@ const selectorChartInitialCenter = createSelectorMemoized(
 
 const selectorChartParallels = createSelectorMemoized(
   selectorChartGeoProjectionState,
-  selectorChartCenter,
-  function selectorChartParallels(geoProjection, center): [number, number] {
-    return getParallels(geoProjection?.parallels, center);
+  function selectorChartParallels(geoProjection): [number, number] {
+    return getParallels(geoProjection?.parallels);
   },
 );
 /**
