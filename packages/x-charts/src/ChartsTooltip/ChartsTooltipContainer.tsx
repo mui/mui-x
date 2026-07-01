@@ -72,11 +72,11 @@ const defaultAnchorByTrigger = {
 // assignable to, so they all converge to `TooltipItemPositionSelector`.
 const getPositionSelectorByAnchor = (
   anchor: 'pointer' | 'node' | 'chart',
-  itemPositionSelector: TooltipItemPositionSelector,
+  selectorItemPosition: TooltipItemPositionSelector,
 ): TooltipItemPositionSelector => {
   switch (anchor) {
     case 'node':
-      return itemPositionSelector;
+      return selectorItemPosition;
     case 'chart':
       return selectorChartsTooltipAxisPosition;
     default:
@@ -221,12 +221,12 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   // selector is used.
   const tooltipItem = store.use(selectorChartsTooltipItem);
   const seriesConfig = store.use(selectorChartSeriesConfig);
-  const itemPositionSelector: TooltipItemPositionSelector =
+  const selectorItemPosition: TooltipItemPositionSelector =
     (tooltipItem && seriesConfig[tooltipItem.type]?.tooltipItemPositionSelector) ||
     selectorChartsTooltipItemPosition;
 
   const itemPosition = store.use(
-    getPositionSelectorByAnchor(computedAnchor, itemPositionSelector),
+    getPositionSelectorByAnchor(computedAnchor, selectorItemPosition),
     props.position,
   );
 
