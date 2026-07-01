@@ -122,6 +122,9 @@ const ukUACalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 const ukUATimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
+  // Timeline resource collapse toggle
+  // timelineCollapseResource: resourceTitle => `Collapse ${resourceTitle}`,
+  // timelineExpandResource: resourceTitle => `Expand ${resourceTitle}`,
 };
 
 export const ukUA: SchedulerLocalization = getSchedulerLocalization({

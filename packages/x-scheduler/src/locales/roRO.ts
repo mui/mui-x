@@ -129,6 +129,10 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 const roROTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titlul resursei',
+
+  // Timeline resource collapse toggle
+  // timelineCollapseResource: resourceTitle => `Collapse ${resourceTitle}`,
+  // timelineExpandResource: resourceTitle => `Expand ${resourceTitle}`,
 };
 
 export const roRO: SchedulerLocalization = getSchedulerLocalization({

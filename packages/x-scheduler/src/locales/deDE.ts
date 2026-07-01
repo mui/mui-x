@@ -129,6 +129,10 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 const deDETimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressourcentitel',
+
+  // Timeline resource collapse toggle
+  // timelineCollapseResource: resourceTitle => `Collapse ${resourceTitle}`,
+  // timelineExpandResource: resourceTitle => `Expand ${resourceTitle}`,
 };
 
 export const deDE: SchedulerLocalization = getSchedulerLocalization({

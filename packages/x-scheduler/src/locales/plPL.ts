@@ -141,6 +141,10 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',
+
+  // Timeline resource collapse toggle
+  // timelineCollapseResource: resourceTitle => `Collapse ${resourceTitle}`,
+  // timelineExpandResource: resourceTitle => `Expand ${resourceTitle}`,
 };
 
 export const plPL: SchedulerLocalization = getSchedulerLocalization({

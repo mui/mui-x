@@ -129,6 +129,10 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 const esESTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Nombre del recurso',
+
+  // Timeline resource collapse toggle
+  // timelineCollapseResource: resourceTitle => `Collapse ${resourceTitle}`,
+  // timelineExpandResource: resourceTitle => `Expand ${resourceTitle}`,
 };
 
 export const esES: SchedulerLocalization = getSchedulerLocalization({

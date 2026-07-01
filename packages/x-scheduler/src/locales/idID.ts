@@ -122,6 +122,9 @@ const idIDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 const idIDTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
+  // Timeline resource collapse toggle
+  // timelineCollapseResource: resourceTitle => `Collapse ${resourceTitle}`,
+  // timelineExpandResource: resourceTitle => `Expand ${resourceTitle}`,
 };
 
 export const idID: SchedulerLocalization = getSchedulerLocalization({
