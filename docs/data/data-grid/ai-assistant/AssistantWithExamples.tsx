@@ -128,7 +128,7 @@ export default function AssistantWithExamples() {
 
   const handlePanelClose = React.useCallback(() => {
     if (shouldClosePanelRef.current) {
-      apiRef.current.hidePreferences();
+      apiRef.current?.hidePreferences();
     }
     shouldClosePanelRef.current = true;
   }, [apiRef]);
