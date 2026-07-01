@@ -12,14 +12,14 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
 import keyboardFocusHandler from './keyboardFocusHandler';
-import tooltipItemPositionGetter from './tooltipPosition';
+import selectorTooltipItemPosition from './tooltipPosition';
 
 export const mapPointSeriesConfig: ChartSeriesTypeConfig<'mapPoint'> = {
   seriesProcessor,
   colorProcessor: getColor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,

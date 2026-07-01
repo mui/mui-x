@@ -1,5 +1,8 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import { EventCalendarViewConfig, SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import type {
+  EventCalendarViewConfig,
+  SchedulerProcessedDate,
+} from '@mui/x-scheduler-internals/models';
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';

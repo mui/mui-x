@@ -1,40 +1,53 @@
-import type { TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { createSelectorMemoized } from '@mui/x-internals/store';
+import type { SeriesId, TooltipItemPositionSelector } from '@mui/x-charts/internals';
+import {
+  selectorChartSeriesProcessed,
+  selectorChartsTooltipItem,
+  useGeoProjectionSelectors,
+} from '@mui/x-charts/internals';
 
-const tooltipItemPositionGetter: TooltipItemPositionGetter<'mapPoint'> = (params) => {
-  const { series, identifier, axesConfig } = params;
+/**
+ * Positions a map point tooltip from its projected coordinates. It lives in the map
+ * series config (rather than the core tooltip plugin) so the geo projection is a
+ * tracked dependency and d3-geo is only bundled with map charts.
+ */
+const selectorTooltipItemPosition: TooltipItemPositionSelector = createSelectorMemoized(
+  selectorChartsTooltipItem,
+  useGeoProjectionSelectors.selectorGeoTooltipPosition,
+  selectorChartSeriesProcessed,
+  // `selectorChartsTooltipItem` is typed with the community series types, which
+  // don't include `mapPoint`, so the identifier is matched structurally here.
+  (
+    identifier: { type: string; seriesId?: SeriesId; dataIndex?: number } | null,
+    { projection },
+    processedSeries,
+  ) => {
+    if (
+      identifier?.type !== 'mapPoint' ||
+      identifier.seriesId === undefined ||
+      identifier.dataIndex === undefined
+    ) {
+      return null;
+    }
 
-  if (!identifier || identifier.dataIndex === undefined) {
-    return null;
-  }
-  const itemSeries = series.mapPoint?.series[identifier.seriesId];
+    if (projection == null) {
+      return null;
+    }
 
-  if (itemSeries == null) {
-    return null;
-  }
+    const item = processedSeries.mapPoint?.series[identifier.seriesId]?.data[identifier.dataIndex];
 
-  if (axesConfig.geo === undefined) {
-    return null;
-  }
+    if (item == null) {
+      return null;
+    }
 
-  const { projection } = axesConfig.geo;
+    const point = projection(item.coordinates);
 
-  if (projection == null) {
-    return null;
-  }
+    if (point == null) {
+      return null;
+    }
 
-  const item = itemSeries.data?.[identifier.dataIndex];
+    return { x: point[0], y: point[1] };
+  },
+);
 
-  if (item == null) {
-    return null;
-  }
-
-  const point = projection(item.coordinates);
-
-  if (point == null) {
-    return null;
-  }
-
-  return { x: point[0], y: point[1] };
-};
-
-export default tooltipItemPositionGetter;
+export default selectorTooltipItemPosition;

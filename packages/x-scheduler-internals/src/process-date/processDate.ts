@@ -1,5 +1,5 @@
-import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import { Adapter } from '../use-adapter';
+import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
+import type { Adapter } from '../use-adapter';
 import { getDateKey } from '../internals/utils/date-utils';
 
 /**

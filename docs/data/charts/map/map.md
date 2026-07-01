@@ -1,7 +1,7 @@
 ---
 title: React Map chart
 productId: x-charts
-components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape, MapPointPlot, MapPoint, FocusedMapPoint, Graticule, FocusedMapShape
+components: ChartsGeoDataProviderPremium, GeoDataPlot, MapImagePlot, MapShapePlot, MapShape, MapPointPlot, MapPoint, FocusedMapPoint, Graticule, FocusedMapShape
 ---
 
 # Charts - Map [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
@@ -66,6 +66,34 @@ The `fill`, `stroke`, and `strokeWidth` props apply uniformly to all features,
 so use them to style the background layer.
 
 {{"demo": "GeoDataPlotDemo.js"}}
+
+## Adding a base map raster with `MapImagePlot`
+
+`MapImagePlot` draws a raster base map—such as a satellite mosaic—under the series.
+The image is reprojected to match the chart's `projection`, so it follows the geography
+instead of staying a flat rectangle, even when the projection curves the map.
+
+Pass the image URL through the `href` prop. The source is assumed to be equirectangular and
+to cover the whole globe; use `imageBounds` (`[[west, south], [east, north]]`) when it covers
+a smaller extent.
+
+```tsx
+<ChartsSurface>
+  <MapImagePlot href="/static/mars-viking.jpg" />
+  <MapShapePlot />
+</ChartsSurface>
+```
+
+The provider is not tied to Earth—`geoData` accepts any GeoJSON `FeatureCollection`.
+The demo below maps the 30 USGS Mars Chart quadrangles colored by mean elevation over a
+Viking surface mosaic, with notable landmarks and mission sites, and a projection toggle.
+
+{{"demo": "MarsMap.js"}}
+
+:::warning
+Reprojection reads the image pixels on a canvas, so the source must be same-origin or served
+with CORS headers.
+:::
 
 ## Modifying the projection
 
@@ -221,6 +249,14 @@ series={[
 ```
 
 See the [Dataset](/x/react-charts/dataset/) page to learn more.
+
+## Click event
+
+`MapShapePlot` accepts an `onItemClick` callback fired when the user clicks on a shape.
+It receives the click event and a `MapShapeItemIdentifier` that identifies the clicked item
+through its `seriesId` and `name`.
+
+{{"demo": "MapShapeClick.js"}}
 
 ## Managing the highlight with `highlightScope`
 

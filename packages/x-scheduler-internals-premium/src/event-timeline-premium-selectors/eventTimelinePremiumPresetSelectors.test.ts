@@ -3,7 +3,7 @@ import {
   getEventTimelinePremiumStateFromParameters,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import {
+import type {
   EventTimelinePremiumPreset,
   PresetHeaderUnit,
 } from '@mui/x-scheduler-internals-premium/models';
