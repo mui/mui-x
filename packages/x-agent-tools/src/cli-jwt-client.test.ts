@@ -82,6 +82,20 @@ describe('CliJwtClient', () => {
     );
   });
 
+  it('forwards the abort signal to the token exchange fetch', async () => {
+    const { signal } = new AbortController();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
+    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+
+    await client.getToken({ signal });
+
+    expect(fetcher).toHaveBeenCalledWith(
+      `${baseUrl}/api/auth/tokens`,
+      expect.objectContaining({ signal }),
+    );
+  });
+
   it('returns the cached token without a second network call', async () => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));

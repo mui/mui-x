@@ -77,14 +77,14 @@ export class CliJwtClient {
    * exchange endpoint if the cache is empty or near expiry. Concurrent callers during a
    * refresh share the same in-flight promise.
    */
-  public async getToken(): Promise<string> {
+  public async getToken(options: { signal?: AbortSignal } = {}): Promise<string> {
     if (this.isCachedTokenFresh()) {
       return this.cachedToken!;
     }
     if (this.inflight) {
       return this.inflight;
     }
-    this.inflight = this.refresh().finally(() => {
+    this.inflight = this.refresh(options.signal).finally(() => {
       this.inflight = null;
     });
     return this.inflight;
@@ -114,7 +114,7 @@ export class CliJwtClient {
     return key;
   }
 
-  private async refresh(): Promise<string> {
+  private async refresh(signal?: AbortSignal): Promise<string> {
     const apiKey = this.resolveApiKey();
     const url = `${this.muiBackendBaseUrl}${CLI_TOKEN_PATH}`;
 
@@ -123,6 +123,7 @@ export class CliJwtClient {
       response = await this.fetcher(url, {
         method: 'POST',
         headers: { 'x-api-key': apiKey, accept: 'application/json' },
+        signal,
       });
     } catch (cause) {
       throw new CliJwtClientError(

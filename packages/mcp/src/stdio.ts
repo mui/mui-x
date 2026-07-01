@@ -49,7 +49,7 @@ const main = async () => {
   const jwtClient = new CliJwtClient({ muiBackendBaseUrl });
   const baseCodegenOpts = {
     recipesBackendBaseUrl,
-    getToken: () => jwtClient.getToken(),
+    getToken: (opts?: { signal?: AbortSignal }) => jwtClient.getToken(opts),
     invalidateToken: () => jwtClient.invalidate(),
     logger,
   };

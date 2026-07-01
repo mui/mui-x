@@ -151,8 +151,9 @@ function translateBackendError(
 export type CreateGenerateReactCodeToolOptions = {
   /** Base URL of recipes-backend (no trailing slash). */
   recipesBackendBaseUrl: string;
-  // Returns a Bearer JWT; called once per tool invocation. Usually a `CliJwtClient`.
-  getToken: () => Promise<string>;
+  // Returns a Bearer JWT; called once per tool invocation. Usually a `CliJwtClient`. Receives the
+  // request signal so a slow/hung token exchange is aborted along with the codegen fetches.
+  getToken: (options?: { signal?: AbortSignal }) => Promise<string>;
   /** Called after a 401 so the next call mints a fresh JWT (clock skew, key rotation, revocation). */
   invalidateToken?: () => void;
   // Fires as the buffered SSE stream advances. Hosts translate these into MCP
@@ -218,7 +219,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
     inputSchema,
     outputSchema,
     execute: async (input) => {
-      const token = await options.getToken();
+      const token = await options.getToken({ signal: options.signal });
 
       // 1. Kick off the run.
       const generateResponse = await fetcher(`${recipesBackendBaseUrl}${CODEGEN_GENERATE_PATH}`, {

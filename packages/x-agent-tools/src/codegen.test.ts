@@ -137,6 +137,7 @@ describe('createGenerateReactCodeTool', () => {
       expect.any(String),
       expect.objectContaining({ signal: controller.signal }),
     );
+    expect(getToken).toHaveBeenCalledWith({ signal: controller.signal });
   });
 
   it('throws when the SSE response has no body', async () => {
