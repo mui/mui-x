@@ -216,12 +216,10 @@ export const selectorChartProjection = createSelectorMemoized(
       return projection;
     }
 
-    if (center) {
-      projection.rotate?.([-center[0], -center[1]]);
-      // Edge case with conic conformal and albers:
-      // rotate impacts the center of the projection, so we need to reset it.
-      projection.center([0, 0]);
-    }
+    projection.rotate?.([-center[0], -center[1]]);
+    // Edge case with conic conformal and albers:
+    // rotate impacts the center of the projection, so we need to reset it.
+    projection.center?.([0, 0]);
 
     // `fitScale` is the `zoomLevel === 1` reference scale, computed independently in
     // `selectorFitScale` so it stays stable across pan/zoom transforms.
