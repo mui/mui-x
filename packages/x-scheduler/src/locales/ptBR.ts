@@ -129,10 +129,6 @@ const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 const ptBRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Título do recurso',
-
-  // Timeline resource collapse toggle
-  // timelineCollapseResource: resourceTitle => `Collapse ${resourceTitle}`,
-  // timelineExpandResource: resourceTitle => `Expand ${resourceTitle}`,
 };
 
 export const ptBR: SchedulerLocalization = getSchedulerLocalization({

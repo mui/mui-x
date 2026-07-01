@@ -129,10 +129,6 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 const frFRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titre de la ressource',
-
-  // Timeline resource collapse toggle
-  // timelineCollapseResource: resourceTitle => `Collapse ${resourceTitle}`,
-  // timelineExpandResource: resourceTitle => `Expand ${resourceTitle}`,
 };
 
 export const frFR: SchedulerLocalization = getSchedulerLocalization({

@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
 import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 import { useStore } from '@base-ui/utils/store';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -49,6 +49,9 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   // while the browser still handles vertical row scrolling.
   touchAction: 'pan-y',
   variants: getPaletteVariants(theme),
+  '&[data-collapsible]': {
+    cursor: 'pointer',
+  },
   '&:focus-visible': {
     outline: 'none',
     boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
@@ -86,16 +89,22 @@ const ResourceLegendColor = styled('span', {
   backgroundColor: 'var(--event-surface-accent)',
 });
 
-const ResourceCollapseToggle = styled(IconButton, {
+// Decorative chevron; the whole cell is the interactive control.
+const ResourceCollapseChevron = styled('span', {
   name: 'MuiEventTimeline',
-  slot: 'TitleCellCollapseToggle',
-})({
+  slot: 'TitleCellCollapseChevron',
+})(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   width: TOGGLE_SIZE,
   height: TOGGLE_SIZE,
+  flexShrink: 0,
+  color: (theme.vars || theme).palette.action.active,
   '& > svg': {
     fontSize: 18,
   },
-});
+}));
 
 // Reserves the toggle's footprint on leaf resources so the legend colors and
 // titles stay aligned with collapsible siblings. Removed on a flat timeline
@@ -118,7 +127,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
-  const { schedulerId, classes, localeText } = useEventTimelinePremiumStyledContext();
+  const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
   const reportTitleWidth = useReportTitleWidth();
 
   // Selector hooks
@@ -154,6 +163,17 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
     return () => observer.disconnect();
   }, [resourceId, reportTitleWidth]);
 
+  const handleToggleCollapse = useStableCallback((event: React.SyntheticEvent) => {
+    store.toggleResourceCollapse(resourceId, event.nativeEvent);
+  });
+
+  const handleKeyDown = useStableCallback((event: React.KeyboardEvent) => {
+    if (hasVisibleChildren && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      store.toggleResourceCollapse(resourceId, event.nativeEvent);
+    }
+  });
+
   return (
     <EventTimelinePremiumTitleCellRoot
       ref={rootRef}
@@ -166,21 +186,17 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
         } as React.CSSProperties
       }
       data-palette={eventColor}
+      // The whole cell toggles a collapsible resource, via click or Enter/Space.
+      data-collapsible={hasVisibleChildren || undefined}
+      aria-expanded={hasVisibleChildren ? !isCollapsed : undefined}
+      onClick={hasVisibleChildren ? handleToggleCollapse : undefined}
+      onKeyDown={handleKeyDown}
     >
       <EventTimelinePremiumTitleCellContent ref={contentRef} className={classes.titleCellContent}>
         {hasVisibleChildren ? (
-          <ResourceCollapseToggle
-            size="small"
-            aria-expanded={!isCollapsed}
-            aria-label={
-              isCollapsed
-                ? localeText.timelineExpandResource(resource!.title)
-                : localeText.timelineCollapseResource(resource!.title)
-            }
-            onClick={(event) => store.toggleResourceCollapse(resourceId, event.nativeEvent)}
-          >
+          <ResourceCollapseChevron aria-hidden>
             {isCollapsed ? <ChevronRightRounded /> : <ExpandMoreRounded />}
-          </ResourceCollapseToggle>
+          </ResourceCollapseChevron>
         ) : (
           <ResourceCollapseSpacer aria-hidden />
         )}

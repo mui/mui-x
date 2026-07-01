@@ -122,9 +122,6 @@ const viVNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 const viVNTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
-  // Timeline resource collapse toggle
-  // timelineCollapseResource: resourceTitle => `Collapse ${resourceTitle}`,
-  // timelineExpandResource: resourceTitle => `Expand ${resourceTitle}`,
 };
 
 export const viVN: SchedulerLocalization = getSchedulerLocalization({

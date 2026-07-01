@@ -110,22 +110,34 @@ describe('<EventTimelinePremium />', () => {
     const parent = ResourceBuilder.new().title('Parent').children([child]).build();
     const nestedResources: SchedulerResource[] = [parent];
 
-    const collapseToggleName = new RegExp(`collapse ${parent.title}`, 'i');
+    const getTitleCell = (resourceId: string) =>
+      document.querySelector(
+        `[id$="-EventTimelinePremiumTitleCell-${resourceId}"]`,
+      ) as HTMLElement | null;
 
-    it('should not render a collapse toggle for a leaf resource', () => {
+    it('should not mark a leaf resource as collapsible', () => {
       renderTimeline({ resources: nestedResources, events: [] });
 
-      expect(screen.queryByRole('button', { name: new RegExp(child.title, 'i') })).to.equal(null);
+      const childCell = getTitleCell(child.id);
+      expect(childCell).not.to.equal(null);
+      expect(childCell!.getAttribute('data-collapsible')).to.equal(null);
+      expect(childCell!.getAttribute('aria-expanded')).to.equal(null);
     });
 
-    it('should not render a collapse toggle when all children are hidden', () => {
+    it('should not mark a parent collapsible when all children are hidden', () => {
       renderTimeline({
         resources: nestedResources,
         events: [],
         defaultVisibleResources: { [child.id]: false },
       });
 
-      expect(screen.queryByRole('button', { name: collapseToggleName })).to.equal(null);
+      expect(getTitleCell(parent.id)!.getAttribute('data-collapsible')).to.equal(null);
+    });
+
+    it('should mark a collapsible parent as expanded', () => {
+      renderTimeline({ resources: nestedResources, events: [] });
+
+      expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal('true');
     });
 
     it('should reserve the toggle column when the timeline has nested resources', () => {
@@ -140,15 +152,15 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.getByRole('grid').closest('[data-flat]')).not.to.equal(null);
     });
 
-    it('should collapse a parent resource and hide its children when the toggle is clicked', async () => {
+    it('should collapse a parent and hide its children when the cell is clicked', async () => {
       const { user } = renderTimeline({ resources: nestedResources, events: [] });
 
       expect(screen.getByText(child.title)).not.to.equal(null);
 
-      const toggle = screen.getByRole('button', { name: collapseToggleName });
-      await user.click(toggle);
+      await user.click(getTitleCell(parent.id)!);
 
       expect(screen.queryByText(child.title)).to.equal(null);
+      expect(getTitleCell(parent.id)!.getAttribute('aria-expanded')).to.equal('false');
     });
 
     it('should hide children initially when collapsedResources is controlled', () => {
@@ -171,7 +183,7 @@ describe('<EventTimelinePremium />', () => {
       expect(screen.queryByText(child.title)).to.equal(null);
     });
 
-    it('should call onCollapsedResourcesChange when the toggle is clicked', async () => {
+    it('should call onCollapsedResourcesChange when the cell is clicked', async () => {
       const onCollapsedResourcesChange = spy();
       const { user } = renderTimeline({
         resources: nestedResources,
@@ -179,7 +191,7 @@ describe('<EventTimelinePremium />', () => {
         onCollapsedResourcesChange,
       });
 
-      await user.click(screen.getByRole('button', { name: collapseToggleName }));
+      await user.click(getTitleCell(parent.id)!);
 
       expect(onCollapsedResourcesChange.callCount).to.equal(1);
       expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ [parent.id]: true });
@@ -188,9 +200,9 @@ describe('<EventTimelinePremium />', () => {
     it('should toggle collapse with the keyboard', async () => {
       const { user } = renderTimeline({ resources: nestedResources, events: [] });
 
-      const toggle = screen.getByRole('button', { name: collapseToggleName });
+      const parentCell = getTitleCell(parent.id)!;
       act(() => {
-        toggle.focus();
+        parentCell.focus();
       });
       await user.keyboard('{Enter}');
 
