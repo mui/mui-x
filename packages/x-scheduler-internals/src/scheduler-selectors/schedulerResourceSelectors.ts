@@ -126,6 +126,8 @@ export const schedulerResourceSelectors = {
     },
   ),
   childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
+  // Single-function createSelector is unmemoized; keep the body returning a
+  // stable ref (a Map value or EMPTY_ARRAY), never a freshly-built array.
   resourceChildrenIds: createSelector(
     (state: State, resourceId: SchedulerResourceId) =>
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
@@ -140,6 +142,7 @@ export const schedulerResourceSelectors = {
     resourceParentIdLookupSelector,
     (parentLookup) => parentLookup.size > 0,
   ),
+  // Unmemoized (returns a primitive); don't change the body to build an object.
   isResourceCollapsed: createSelector(
     (state: State, resourceId: SchedulerResourceId) =>
       state.collapsedResources[resourceId] === true,

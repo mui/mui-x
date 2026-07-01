@@ -346,8 +346,9 @@ storeClasses.forEach((storeClass) => {
         store.toggleResourceCollapse(id, undefined);
         expect(store.state.collapsedResources).to.deep.equal({ [id]: true });
 
+        // Expanding removes the key rather than writing `false`.
         store.toggleResourceCollapse(id, undefined);
-        expect(store.state.collapsedResources).to.deep.equal({ [id]: false });
+        expect(store.state.collapsedResources).to.deep.equal({});
       });
 
       it('should call onCollapsedResourcesChange when uncontrolled', () => {
@@ -374,7 +375,7 @@ storeClasses.forEach((storeClass) => {
 
         store.toggleResourceCollapse(id, undefined);
 
-        expect(store.state.collapsedResources).to.deep.equal({ [id]: false });
+        expect(store.state.collapsedResources).to.deep.equal({});
       });
 
       it('should call onCollapsedResourcesChange and not mutate state when controlled', () => {

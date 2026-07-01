@@ -758,10 +758,13 @@ export class SchedulerStore<
    */
   public toggleResourceCollapse = (resourceId: SchedulerResourceId, event: Event | undefined) => {
     const isCollapsed = this.state.collapsedResources[resourceId] === true;
-    this.setCollapsedResources(
-      { ...this.state.collapsedResources, [resourceId]: !isCollapsed },
-      event,
-    );
+    const nextCollapsedResources = { ...this.state.collapsedResources };
+    if (isCollapsed) {
+      delete nextCollapsedResources[resourceId];
+    } else {
+      nextCollapsedResources[resourceId] = true;
+    }
+    this.setCollapsedResources(nextCollapsedResources, event);
   };
 
   /**
