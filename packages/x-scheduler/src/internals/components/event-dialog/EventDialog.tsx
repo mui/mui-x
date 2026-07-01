@@ -21,7 +21,7 @@ import {
   useEventEditingStyledContext,
   FormContent,
 } from '../event-editing';
-import { calculatePosition } from '../../utils/dialog-utils';
+import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
 import { AnchoredEventToolbar } from '../event-toolbar';
 import ReadonlyContent from './ReadonlyContent';
 
@@ -76,67 +76,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   const { anchorRef, dragHandlerRef, className, ...other } = props;
   const resetDrag = useDraggableDialog(nodeRef, dragHandlerRef, mutateStyle);
 
-  const updatePosition = React.useCallback(
-    (shouldResetDrag = false) => {
-      // Anchor may have been detached (e.g. occurrence replaced by an exception); skip stale nodes.
-      if (anchorRef.current != null && !anchorRef.current.isConnected) {
-        return;
-      }
-      const position = calculatePosition(anchorRef.current, nodeRef.current, 'left');
-      if (position && nodeRef.current) {
-        nodeRef.current.style.top = `${position.top}px`;
-        nodeRef.current.style.left = `${position.left}px`;
-
-        if (shouldResetDrag) {
-          // Reset transform when position is recalculated
-          resetDrag();
-        }
-      }
-    },
-    [anchorRef, resetDrag, nodeRef],
-  );
-
-  // Position synchronously on mount, before paint, to avoid a flash at the wrong spot.
-  React.useLayoutEffect(() => {
-    updatePosition(true);
-  }, [updatePosition]);
-
-  // Keep the dialog anchored as things change, without coupling to the store: a `ResizeObserver`
-  // on the paper catches content/height swaps; a `MutationObserver` on the anchor catches its
-  // inline-style changes (the event is positioned via CSS custom properties).
-  React.useEffect(() => {
-    const reposition = () => updatePosition(true);
-
-    const paper = nodeRef.current;
-    const resizeObserver =
-      typeof ResizeObserver !== 'undefined' && paper ? new ResizeObserver(reposition) : null;
-    if (paper) {
-      resizeObserver?.observe(paper);
-    }
-
-    const anchor = anchorRef.current;
-    const mutationObserver =
-      typeof MutationObserver !== 'undefined' && anchor ? new MutationObserver(reposition) : null;
-    if (anchor) {
-      mutationObserver?.observe(anchor, { attributes: true, attributeFilter: ['style'] });
-    }
-
-    return () => {
-      resizeObserver?.disconnect();
-      mutationObserver?.disconnect();
-    };
-  }, [anchorRef, updatePosition]);
-
-  React.useEffect(() => {
-    const handleResize = () => {
-      updatePosition(false);
-      resetDrag();
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [updatePosition, resetDrag]);
+  useAnchoredPosition({ anchorRef, popupRef: nodeRef, onReposition: resetDrag });
 
   return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
 } as any as DialogProps['PaperComponent'];
