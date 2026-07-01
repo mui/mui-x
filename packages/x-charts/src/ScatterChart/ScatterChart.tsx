@@ -32,7 +32,7 @@ import { ChartsGrid } from '../ChartsGrid';
 import type { ChartsGridProps } from '../ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
-import { ChartsDataProvider } from '../ChartsDataProvider';
+import { ChartDataProviderInternal } from '../ChartsDataProvider/ChartDataProviderInternal';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
@@ -167,7 +167,9 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartsDataProvider<'scatter', ScatterChartPluginSignatures> {...chartsDataProviderProps}>
+    <ChartDataProviderInternal<'scatter', ScatterChartPluginSignatures>
+      {...chartsDataProviderProps}
+    >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -185,7 +187,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
         </ChartsSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartsDataProvider>
+    </ChartDataProviderInternal>
   );
 });
 

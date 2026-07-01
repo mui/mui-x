@@ -30,7 +30,7 @@ import type {
   ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useBarChartProps } from './useBarChartProps';
-import { ChartsDataProvider } from '../ChartsDataProvider';
+import { ChartDataProviderInternal } from '../ChartsDataProvider/ChartDataProviderInternal';
 import { ChartsSurface } from '../ChartsSurface';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
@@ -142,7 +142,7 @@ const BarChart = React.forwardRef(function BarChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartsDataProvider<'bar', BarChartPluginSignatures> {...chartsDataProviderProps}>
+    <ChartDataProviderInternal<'bar', BarChartPluginSignatures> {...chartsDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -160,7 +160,7 @@ const BarChart = React.forwardRef(function BarChart(
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartsDataProvider>
+    </ChartDataProviderInternal>
   );
 });
 

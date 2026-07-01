@@ -6,7 +6,6 @@ import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesCon
 import type { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/plugins/models';
 import type { ChartSeriesType } from '../models/seriesType/config';
 import type { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
-import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 import type { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 
@@ -22,7 +21,7 @@ export const useChartsDataProviderProps = <
   const {
     children,
     localeText,
-    plugins = DEFAULT_PLUGINS,
+    plugins,
     slots,
     slotProps,
     seriesConfig = defaultSeriesConfig,

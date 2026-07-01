@@ -9,12 +9,14 @@ import type { UseChartClosestPointSignature } from './useChartClosestPoint.types
 import { getChartPoint } from '../../../getChartPoint';
 import {
   selectorChartAxisZoomData,
-  selectorChartSeriesEmptyFlatbushMap,
-  selectorChartSeriesFlatbushMap,
   selectorChartXAxis,
   selectorChartYAxis,
   selectorChartZoomIsInteracting,
 } from '../useChartCartesianAxis';
+import {
+  selectorChartSeriesEmptyFlatbushMap,
+  selectorChartSeriesFlatbushMap,
+} from './useChartClosestPoint.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { findClosestPoints } from './findClosestPoints';
 

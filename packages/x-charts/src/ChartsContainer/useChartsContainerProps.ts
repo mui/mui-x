@@ -3,7 +3,6 @@ import type { ChartsSurfaceProps } from '../ChartsSurface';
 import type { ChartsDataProviderProps } from '../ChartsDataProvider';
 import type { ChartsContainerProps } from './ChartsContainer';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
@@ -109,7 +108,10 @@ export const useChartsContainerProps = <
     onHiddenItemsChange,
     hiddenItems,
     initialHiddenItems,
-    plugins: plugins ?? DEFAULT_PLUGINS,
+    // `plugins` is passed through as-is. Charts always provide their own list;
+    // the generic `ChartsContainer` renders the public `ChartsDataProvider`,
+    // which defaults `plugins` to `DEFAULT_PLUGINS` for standalone usage.
+    plugins,
     slots,
     slotProps,
   } as unknown as ChartsDataProviderProps<SeriesType, TSignatures>;

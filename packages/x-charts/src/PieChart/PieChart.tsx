@@ -25,7 +25,7 @@ import type {
   ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { ChartsSurface } from '../ChartsSurface';
-import { ChartsDataProvider } from '../ChartsDataProvider';
+import { ChartDataProviderInternal } from '../ChartsDataProvider/ChartDataProviderInternal';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { PIE_CHART_PLUGINS } from './PieChart.plugins';
@@ -144,7 +144,7 @@ const PieChart = React.forwardRef(function PieChart(
   const Toolbar = slots?.toolbar;
 
   return (
-    <ChartsDataProvider<'pie', PieChartPluginSignatures> {...chartsDataProviderProps}>
+    <ChartDataProviderInternal<'pie', PieChartPluginSignatures> {...chartsDataProviderProps}>
       <ChartsWrapper
         legendPosition={slotProps?.legend?.position}
         legendDirection={slotProps?.legend?.direction ?? 'vertical'}
@@ -169,7 +169,7 @@ const PieChart = React.forwardRef(function PieChart(
         </ChartsSurface>
         {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartsDataProvider>
+    </ChartDataProviderInternal>
   );
 });
 

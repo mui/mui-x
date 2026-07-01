@@ -9,7 +9,7 @@ import type {
   ChartsRotationAxisProps,
   PolarAxisConfig,
 } from '../../models/axis';
-import { ChartsDataProvider } from '../../ChartsDataProvider';
+import { ChartDataProviderInternal } from '../../ChartsDataProvider/ChartDataProviderInternal';
 import type { ChartsDataProviderProps } from '../../ChartsDataProvider';
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import { radarSeriesConfig } from '../seriesConfig';
@@ -109,7 +109,7 @@ function RadarDataProvider<
   );
 
   return (
-    <ChartsDataProvider<'radar', TSignatures>
+    <ChartDataProviderInternal<'radar', TSignatures>
       {...(other as unknown as ChartsDataProviderProps<'radar', TSignatures>)}
       series={defaultizedSeries}
       width={width}
@@ -123,7 +123,7 @@ function RadarDataProvider<
       seriesConfig={RADAR_SERIES_CONFIG}
     >
       {children}
-    </ChartsDataProvider>
+    </ChartDataProviderInternal>
   );
 }
 

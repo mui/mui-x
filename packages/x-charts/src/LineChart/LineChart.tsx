@@ -36,7 +36,7 @@ import type {
 } from '../ChartsOverlay';
 import { useLineChartProps } from './useLineChartProps';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
-import { ChartsDataProvider } from '../ChartsDataProvider';
+import { ChartDataProviderInternal } from '../ChartsDataProvider/ChartDataProviderInternal';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { LineChartPluginSignatures } from './LineChart.plugins';
@@ -168,7 +168,7 @@ const LineChart = React.forwardRef(function LineChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartsDataProvider<'line', LineChartPluginSignatures> {...chartsDataProviderProps}>
+    <ChartDataProviderInternal<'line', LineChartPluginSignatures> {...chartsDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -192,7 +192,7 @@ const LineChart = React.forwardRef(function LineChart(
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartsDataProvider>
+    </ChartDataProviderInternal>
   );
 });
 

@@ -1,18 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { defaultSlotsMaterial } from '../internals/material';
 import type { ChartsSlotProps, ChartsSlots } from '../internals/material';
-import { ChartsSlotsProvider } from '../context/ChartsSlotsContext';
-
-import { useChartsDataProviderProps } from './useChartsDataProviderProps';
-import { ChartsProvider } from '../context/ChartsProvider';
+import { ChartDataProviderInternal } from './ChartDataProviderInternal';
 import type { ChartsProviderProps } from '../context/ChartsProvider';
 import type { ChartSeriesType } from '../models/seriesType/config';
 import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
-
+import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ChartsLocalizationProvider } from '../ChartsLocalizationProvider';
 import type { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 
 export interface ChartsDataProviderSlots extends ChartsSlots {}
@@ -68,21 +63,19 @@ function ChartsDataProvider<
   SeriesType extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 >(props: ChartsDataProviderProps<SeriesType, TSignatures>) {
-  const { children, localeText, chartProviderProps, slots, slotProps } =
-    useChartsDataProviderProps(props);
-
+  // Standalone/composition usage doesn't provide a `plugins` list, so default it
+  // here. Chart components render `ChartDataProviderInternal` directly with their
+  // own list, keeping `DEFAULT_PLUGINS` out of their bundles.
   return (
-    <ChartsProvider<SeriesType, TSignatures> {...chartProviderProps}>
-      <ChartsLocalizationProvider localeText={localeText}>
-        <ChartsSlotsProvider
-          slots={slots}
-          slotProps={slotProps}
-          defaultSlots={defaultSlotsMaterial}
-        >
-          {children}
-        </ChartsSlotsProvider>
-      </ChartsLocalizationProvider>
-    </ChartsProvider>
+    <ChartDataProviderInternal<SeriesType, TSignatures>
+      {...props}
+      plugins={
+        (props.plugins ?? DEFAULT_PLUGINS) as ChartsProviderProps<
+          SeriesType,
+          TSignatures
+        >['plugins']
+      }
+    />
   );
 }
 
