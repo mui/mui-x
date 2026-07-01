@@ -76,10 +76,6 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
    */
   canDropEventsToTheOutside: PropTypes.bool,
   /**
-   * The collapsed resources. A resource is expanded unless included here with a `true` value.
-   */
-  collapsedResources: PropTypes.object,
-  /**
    * Data source for fetching events asynchronously.
    * When provided, events are fetched through the data source instead of the `events` prop.
    */
@@ -94,12 +90,6 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
    * @default enUS (English)
    */
   dateLocale: PropTypes.object,
-  /**
-   * The resources initially collapsed.
-   * To render a controlled scheduler, use the `collapsedResources` prop.
-   * @default {} - all resources are expanded
-   */
-  defaultCollapsedResources: PropTypes.object,
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
@@ -188,10 +178,6 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * Event handler called when the collapsed resources change.
-   */
-  onCollapsedResourcesChange: PropTypes.func,
   /**
    * Callback fired when some event of the calendar change.
    */
