@@ -35,7 +35,7 @@ Common built-in projections include:
 - `"orthographic"` — renders a globe view; useful to convey the spherical nature of the Earth
 - `"equalEarth"` — area-accurate alternative to Natural Earth
 
-See [Projection and Zoom](/x/react-charts/map-zoom/) for a full guide on choosing and customizing projections.
+See [Projection and Zoom](/x/react-charts/map-projection/) for a full guide on choosing and customizing projections.
 
 ## GeoJSON data
 
