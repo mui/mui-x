@@ -10,10 +10,15 @@
     },
     "canDragEventsFromTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
+    "collapsedResources": { "type": { "name": "object" } },
     "dataSource": {
       "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
     },
     "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
+    "defaultCollapsedResources": {
+      "type": { "name": "object" },
+      "default": "{} - all resources are expanded"
+    },
     "defaultPreferences": {
       "type": {
         "name": "shape",
@@ -55,6 +60,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
+    "onCollapsedResourcesChange": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPreferencesChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
