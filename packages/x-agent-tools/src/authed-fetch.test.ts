@@ -55,6 +55,16 @@ describe('createAuthedFetch', () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
+  it('wraps a fetch rejection (unreachable backend) in a prefixed Agent Tools error', async () => {
+    const getToken = vi.fn().mockResolvedValue('jwt');
+    const fetcher = vi.fn().mockRejectedValue(new TypeError('fetch failed'));
+    const authedFetch = createAuthedFetch({ fetcher, getToken });
+
+    await expect(authedFetch('https://chat-backend.mui.com/v1/x', buildInit)).rejects.toThrow(
+      /MUI X Agent Tools: Request to chat-backend\.mui\.com failed: fetch failed/,
+    );
+  });
+
   it('forwards the signal to getToken', async () => {
     const { signal } = new AbortController();
     const getToken = vi.fn().mockResolvedValue('jwt');

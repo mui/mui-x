@@ -16,12 +16,35 @@ export function createAuthedFetch(options: AuthedFetchOptions) {
     if (token === undefined) {
       token = await options.getToken({ signal: options.signal });
     }
-    const response = await options.fetcher(url, buildInit(token));
+    const response = await sendGuarded(options.fetcher, url, buildInit(token));
     if (response.status !== 401) {
       return response;
     }
     options.invalidateToken?.();
     token = await options.getToken({ signal: options.signal });
-    return options.fetcher(url, buildInit(token));
+    return sendGuarded(options.fetcher, url, buildInit(token));
   };
+}
+
+// Turn a fetch rejection (unreachable host, TLS/proxy failure) into a prefixed error, not a raw TypeError.
+async function sendGuarded(
+  fetcher: typeof fetch,
+  url: string,
+  init: RequestInit,
+): Promise<Response> {
+  try {
+    return await fetcher(url, init);
+  } catch (cause) {
+    throw new Error(
+      `MUI X Agent Tools: Request to ${hostOf(url)} failed: ${cause instanceof Error ? cause.message : String(cause)}. Check that the backend URL is reachable, then retry.`,
+    );
+  }
+}
+
+function hostOf(url: string): string {
+  try {
+    return new URL(url).host;
+  } catch {
+    return url;
+  }
 }
