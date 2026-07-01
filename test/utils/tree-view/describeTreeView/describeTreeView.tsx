@@ -109,7 +109,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
   const jsxRenderer: DescribeTreeViewJSXRenderer = (element) => {
     const result = render(element);
-    return getUtils(result);
+    return { ...getUtils(result), user: result.user };
   };
 
   const createRendererForComponentWithItemsProp = (
@@ -163,6 +163,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ items: newItems }),
         apiRef: apiRef as { current: TreeViewPublicAPI<TStore> },
+        user: result.user,
         ...getUtils(result, apiRef as { current: TreeViewPublicAPI<TStore> }),
       };
     };
@@ -211,6 +212,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ children: newItems.map(renderItem) }),
         apiRef: apiRef as { current: TreeViewPublicAPI<TStore> },
+        user: result.user,
         ...getUtils(result),
       };
     };
