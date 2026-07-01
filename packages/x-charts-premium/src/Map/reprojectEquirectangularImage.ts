@@ -1,4 +1,80 @@
-import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
+import type { GeoProjection, GeoStream } from '@mui/x-charts-vendor/d3-geo';
+
+// A `GeoStream` sink that only records whether a point passed through (and where),
+// so a projection/clip pipeline can be probed one point at a time.
+interface PointSink extends GeoStream {
+  hit: boolean;
+  x: number;
+  y: number;
+}
+
+function createPointSink(): PointSink {
+  const sink: PointSink = {
+    hit: false,
+    x: 0,
+    y: 0,
+    point(x, y) {
+      sink.hit = true;
+      sink.x = x;
+      sink.y = y;
+    },
+    lineStart() {},
+    lineEnd() {},
+    polygonStart() {},
+    polygonEnd() {},
+  };
+  return sink;
+}
+
+/**
+ * Builds a test that maps a device pixel to its `[lon, lat]`, or `null` when the
+ * pixel is not part of the visible map. It combines two clips that `projection.invert`
+ * alone misses:
+ *
+ * - the **post-clip** (cartesian) stream rejects device pixels outside the clip
+ *   rectangle — relevant once the map is panned/zoomed with a `clipExtent`;
+ * - streaming the inverted coordinate **back** through the projection applies the
+ *   pre-clip (spherical) boundary and checks the round trip: azimuthal projections
+ *   clamp `invert` outside the visible disk to the limb, and those clamped points do
+ *   not project back to the pixel they came from.
+ */
+function createVisibleCoordinate(projection: GeoProjection) {
+  const invert = projection.invert!;
+
+  const forwardSink = createPointSink();
+  const forwardStream = projection.stream(forwardSink);
+
+  const postClip = projection.postclip?.();
+  const clipSink = createPointSink();
+  const clipStream = postClip?.(clipSink);
+
+  return ([deviceX, deviceY]: [number, number]): [number, number] | null => {
+    if (clipStream) {
+      clipSink.hit = false;
+      clipStream.point(deviceX, deviceY);
+      if (!clipSink.hit) {
+        return null;
+      }
+    }
+
+    const coordinates = invert([deviceX, deviceY]);
+    if (!coordinates) {
+      return null;
+    }
+
+    forwardSink.hit = false;
+    forwardStream.point(coordinates[0], coordinates[1]);
+    if (
+      !forwardSink.hit ||
+      Math.abs(forwardSink.x - deviceX) > 0.5 ||
+      Math.abs(forwardSink.y - deviceY) > 0.5
+    ) {
+      return null;
+    }
+
+    return coordinates;
+  };
+}
 
 export interface ReprojectEquirectangularImageParams {
   /**
@@ -37,18 +113,12 @@ export interface ReprojectEquirectangularImageParams {
  *
  * For each destination pixel `(px, py)` of the drawing area:
  *
- * 1. Convert it to SVG coordinates `(left + px, top + py)` — the space the
- *    projection works in — and `projection.invert` it to a `[lon, lat]` coordinate.
- *    `invert` returns `null` for some pixels outside the domain, leaving them transparent.
+ * 1. Convert it to SVG coordinates `(left + px, top + py)` and resolve it to a
+ *    `[lon, lat]` coordinate with {@link createVisibleCoordinate}, which returns
+ *    `null` for pixels outside the visible map (post-clip and the spherical
+ *    round-trip), leaving them transparent.
  * 2. Discard coordinates outside `imageBounds` (no source data there).
- * 3. Round-trip test: forward-project `[lon, lat]` again. Projections such as
- *    `orthographic` clamp `invert` for points outside the visible disk to the limb
- *    rather than returning `null`, so those coordinates survive steps 1–2 and would
- *    smear edge colors across the background. If the round trip lands more than half
- *    a pixel away, the pixel is outside the visible footprint and is left transparent.
- *    (A single `{ type: 'Sphere' }` canvas mask would be cheaper, but projections with
- *    an unbounded outline — `gnomonic`, `stereographic` — make that path diverge.)
- * 4. Map `[lon, lat]` to a source pixel with nearest-neighbor sampling (the image
+ * 3. Map `[lon, lat]` to a source pixel with nearest-neighbor sampling (the image
  *    being equirectangular, both axes are linear) and copy its RGBA.
  *
  * ### Failure modes
@@ -57,17 +127,17 @@ export interface ReprojectEquirectangularImageParams {
  * source pixels throws because a cross-origin image without CORS headers has
  * tainted the canvas.
  *
- * Complexity is `O(width × height)` with two projection evaluations per pixel, so
- * callers should treat it as a per-resize computation rather than a per-frame one.
+ * Complexity is `O(width × height)`; callers should treat it as a per-resize
+ * computation rather than a per-frame one.
  */
 export function reprojectEquirectangularImage(
   params: ReprojectEquirectangularImageParams,
 ): string | null {
   const { image, projection, area, imageBounds } = params;
-  const { invert } = projection;
-  if (typeof invert !== 'function') {
+  if (typeof projection.invert !== 'function') {
     return null;
   }
+  const visibleCoordinateAt = createVisibleCoordinate(projection);
 
   const { left, top } = area;
   const outWidth = Math.max(1, Math.round(area.width));
@@ -105,11 +175,8 @@ export function reprojectEquirectangularImage(
 
   for (let py = 0; py < outHeight; py += 1) {
     for (let px = 0; px < outWidth; px += 1) {
-      const deviceX = left + px;
-      const deviceY = top + py;
-
-      // 1. Destination pixel -> geographic coordinate.
-      const coordinates = invert([deviceX, deviceY]);
+      // 1. Destination pixel -> geographic coordinate, or skip if not on the map.
+      const coordinates = visibleCoordinateAt([left + px, top + py]);
       if (!coordinates) {
         continue;
       }
@@ -121,20 +188,7 @@ export function reprojectEquirectangularImage(
         continue;
       }
 
-      // 3. Round-trip test: drop pixels hidden by the projection. Azimuthal
-      // projections clamp `invert` outside the visible disk to the limb instead
-      // of returning `null`, so those coordinates pass the bounds check and would
-      // smear edge colors; they do not project back to the pixel they came from.
-      const reprojected = projection([lon, lat]);
-      if (
-        !reprojected ||
-        Math.abs(reprojected[0] - deviceX) > 0.5 ||
-        Math.abs(reprojected[1] - deviceY) > 0.5
-      ) {
-        continue;
-      }
-
-      // 4. Geographic coordinate -> source pixel (nearest neighbor). When the
+      // 3. Geographic coordinate -> source pixel (nearest neighbor). When the
       // bounds wrap, longitudes past the antimeridian are offset by a full turn.
       const lonOffset = lonWraps && lon <= east ? lon - west + 360 : lon - west;
       let sx = Math.floor((lonOffset / lonSpan) * sourceWidth);
