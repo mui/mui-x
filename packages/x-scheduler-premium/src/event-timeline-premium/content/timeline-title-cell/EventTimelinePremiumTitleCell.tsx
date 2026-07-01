@@ -16,6 +16,13 @@ import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremium
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { useReportTitleWidth } from '../useTitleColumnWidth';
 
+// Shared footprint for the collapse toggle and the leaf-row spacer. Also drives
+// the per-depth indent so a child's toggle lines up under its parent's dot.
+const TOGGLE_SIZE = 20;
+
+// Diameter of the resource legend dot.
+const DOT_SIZE = 10;
+
 const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   name: 'MuiEventTimeline',
   slot: 'TitleCell',
@@ -26,7 +33,9 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
   padding: theme.spacing(2),
-  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ${theme.spacing(2)})`,
+  // Indent each level so a child's toggle center lines up under its parent's
+  // legend dot center: half the toggle + the gap + half the dot.
+  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ((${TOGGLE_SIZE}px + ${DOT_SIZE}px) / 2 + ${theme.spacing(1)}))`,
   alignContent: 'start',
   fontSize: theme.typography.body2.fontSize,
   display: 'flex',
@@ -46,10 +55,6 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
     borderRadius: theme.shape.borderRadius,
   },
 }));
-
-// Shared footprint for the collapse toggle and the leaf-row spacer, so leaf
-// titles stay aligned with collapsible siblings.
-const TOGGLE_SIZE = 20;
 
 const EventTimelinePremiumTitleCellContent = styled('span', {
   name: 'MuiEventTimeline',
@@ -79,8 +84,8 @@ const ResourceLegendColor = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'TitleCellLegendColor',
 })({
-  width: 10,
-  height: 10,
+  width: DOT_SIZE,
+  height: DOT_SIZE,
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-surface-accent)',
