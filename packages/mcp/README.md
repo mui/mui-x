@@ -6,9 +6,9 @@ MUI's [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. E
 
 Three stdio-based tools, backed by [@mui/x-agent-tools](../x-agent-tools/):
 
-- `useMuiDocs(urlList)` : returns the docs catalog (URLs + summaries) for one or more MUI packages (for example `@mui/material`, `@mui/x-data-grid`). Agents typically use this first to find the right docs page.
+- `useMuiDocs(sources)` : returns the docs catalog (URLs + summaries) for one or more MUI packages (for example `@mui/material`, `@mui/x-data-grid`). Each source is an llms.txt URL or a bare package name. Agents typically use this first to find the right docs page.
 - `fetchDocs(urls)` : fetches the full content of one or more docs URLs (typically taken from a `useMuiDocs` response).
-- `generateReactCode({ prompt, threadId?, designContext?, muiPairing?, model? })` : generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major (see [Targeting a MUI version](#targeting-a-mui-version)).
+- `generateReactCode({ prompt, threadId?, designContext?, muiPairing?, model?, mode?, images? })` : generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major (see [Targeting a MUI version](#targeting-a-mui-version)). `mode` and `images` are experimental and may change.
 
 ## Quick start
 
@@ -80,11 +80,11 @@ Drop any `env` key you don't need (only codegen requires `MUI_RECIPES_API_KEY`).
 
 ### MCP Inspector (debug, no client setup needed)
 
-```bash
-npx -y @modelcontextprotocol/inspector node packages/mcp/build/stdio.js
-```
+​`bash
+pnpm --filter @mui/mcp mcp-inspector
+​`
 
-Opens a web UI to call tools and inspect responses in isolation.
+Builds the server, then opens a web UI to call tools and inspect responses in isolation.
 
 ## Targeting a MUI version
 
@@ -177,7 +177,7 @@ packages/mcp/
 └── tsconfig.json
 ```
 
-Built with the standard `code-infra` toolchain. The docs/codegen logic lives in [@mui/x-agent-tools](../x-agent-tools/), a published dependency that pnpm links from its `build/` output, so it must be built first — the `build:local` script (`pnpm --filter @mui/mcp build:local`, which expands to `pnpm --filter "@mui/mcp..." build`) handles that.
+Built with the standard `code-infra` toolchain. The docs/codegen logic lives in [@mui/x-agent-tools](../x-agent-tools/), a published dependency that pnpm links from its `build/` output, so it must be built first: the `build:local` script (`pnpm --filter @mui/mcp build:local`, which expands to `pnpm --filter "@mui/mcp..." build`) handles that.
 
 ## Publishing
 

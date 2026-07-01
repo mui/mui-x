@@ -36,6 +36,7 @@
     "build": "code-infra build --flat --bundle cjs --buildTypes false",
     "build:local": "pnpm --filter \"@mui/mcp...\" build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "mcp-inspector": "pnpm build:local && npx -y @modelcontextprotocol/inspector node build/stdio.js",
     "test": "vitest run --config vitest.config.node.mts"
   },
   "imports": {
