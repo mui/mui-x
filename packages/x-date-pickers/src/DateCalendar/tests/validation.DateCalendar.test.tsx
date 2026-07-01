@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { screen, waitFor } from '@mui/internal-test-utils';
-import { DateCalendar, DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import type { DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 function WrappedDateCalendar(

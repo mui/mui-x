@@ -1,14 +1,14 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
-import { type SeriesId } from '../models/seriesType/common';
-import {
-  type ChartSeriesDefaultized,
-  type CartesianChartSeriesType,
-  type ChartsSeriesConfig,
-  type PolarChartSeriesType,
+import type { SeriesId } from '../models/seriesType/common';
+import type {
+  ChartSeriesDefaultized,
+  CartesianChartSeriesType,
+  ChartsSeriesConfig,
+  PolarChartSeriesType,
 } from '../models/seriesType/config';
-import { type ComputedAxis, type PolarAxisDefaultized, type AxisId } from '../models/axis';
+import type { ComputedAxis, PolarAxisDefaultized, AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
 import { getLabel } from '../internals/getLabel';
 import { utcFormatter } from './utils';
@@ -26,19 +26,17 @@ import { useZAxes } from '../hooks/useZAxis';
 import {
   selectorChartsInteractionTooltipXAxes,
   selectorChartsInteractionTooltipYAxes,
-  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsLabelMarkProps } from '../ChartsLabel';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { ChartsLabelMarkProps } from '../ChartsLabel';
 import {
   selectorChartsInteractionTooltipRadiusAxes,
   selectorChartsInteractionTooltipRotationAxes,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { isPolarSeriesType } from '../internals/isPolar';
 import { selectorIsItemVisibleGetter } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.selectors';
-import {
-  type ComposableCartesianChartSeriesType,
-  composableCartesianSeriesTypes,
-} from '../models/seriesType/composition';
+import { composableCartesianSeriesTypes } from '../models/seriesType/composition';
+import type { ComposableCartesianChartSeriesType } from '../models/seriesType/composition';
 import type { MarkShape } from '../models/seriesType';
 
 export interface UseAxesTooltipReturnValue<

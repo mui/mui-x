@@ -1,10 +1,10 @@
 import {
-  type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
   createIsFaded,
 } from '@mui/x-charts/internals';
+import type { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import { getExtremumX, getExtremumY } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';

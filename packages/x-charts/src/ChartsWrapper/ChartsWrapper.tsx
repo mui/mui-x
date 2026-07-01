@@ -2,11 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useForkRef from '@mui/utils/useForkRef';
-import { styled, type SxProps, type Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { useChartRootRef } from '../hooks/useChartRootRef';
-import { type Direction } from '../ChartsLegend';
-import { type Position } from '../models';
+import type { Direction } from '../ChartsLegend';
+import type { Position } from '../models';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartPropsHeight,

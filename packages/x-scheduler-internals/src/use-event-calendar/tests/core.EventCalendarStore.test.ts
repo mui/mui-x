@@ -7,7 +7,7 @@ import {
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
-import { CalendarView } from '../../models';
+import type { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -32,7 +32,7 @@ describe('Core - EventCalendarStore', () => {
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
-        editedEventId: null,
+        editedOccurrenceKey: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingRecurringEventOperation: null,

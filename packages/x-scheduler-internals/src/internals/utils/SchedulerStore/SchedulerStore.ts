@@ -8,7 +8,7 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
-import {
+import type {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
@@ -19,7 +19,7 @@ import {
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
 } from '../../../models';
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   UpdateRecurringEventParameters,
@@ -29,13 +29,13 @@ import {
   UpdateEventsParameters,
   SchedulerInstanceName,
 } from './SchedulerStore.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import {
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type {
   SchedulerEvents,
   SchedulerEventListener,
   SchedulerEventParameters,
 } from '../../models/events';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
 import {
   buildEventsState,
@@ -112,7 +112,7 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      editedEventId: null,
+      editedOccurrenceKey: null,
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingRecurringEventOperation: null,
@@ -775,11 +775,11 @@ export class SchedulerStore<
   };
 
   /**
-   * Sets the ID of the currently active event (e.g. open in the event dialog).
-   * Pass `null` to clear the active event.
+   * Sets the key of the currently active occurrence (e.g. open in the event dialog).
+   * Pass `null` to clear the active occurrence.
    */
-  public setEditedEventId = (eventId: SchedulerEventId | null) => {
-    this.set('editedEventId', eventId);
+  public setEditedOccurrenceKey = (occurrenceKey: string | null) => {
+    this.set('editedOccurrenceKey', occurrenceKey);
   };
 
   /**

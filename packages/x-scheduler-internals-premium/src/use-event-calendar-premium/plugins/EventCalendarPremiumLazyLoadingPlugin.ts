@@ -1,6 +1,6 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
-import {
+import type {
   EventCalendarPremiumState,
   EventCalendarPremiumParameters,
 } from '../EventCalendarPremiumStore.types';

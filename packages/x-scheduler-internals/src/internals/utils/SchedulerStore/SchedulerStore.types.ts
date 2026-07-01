@@ -1,6 +1,6 @@
-import { BaseUIChangeEventDetails } from '@base-ui/react';
-import { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
-import {
+import type { BaseUIChangeEventDetails } from '@base-ui/react';
+import type { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
+import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
@@ -16,8 +16,8 @@ import {
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
-import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 export interface StoredError {
   /**
@@ -168,10 +168,10 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The ID of the event currently active (e.g. open in the event dialog).
-   * `null` when no event is active.
+   * The key of the occurrence currently active (e.g. open in the event dialog).
+   * `null` when no occurrence is active.
    */
-  editedEventId: SchedulerEventId | null;
+  editedOccurrenceKey: string | null;
   /**
    * The event that has been copied or cut, if any.
    */
@@ -385,7 +385,6 @@ export type UpdateRecurringEventParameters = {
   occurrenceStart: TemporalSupportedObject;
   /**
    * The changes to apply.
-   * Requires `start` and `end`, all other properties are optional.
    */
   changes: SchedulerEventUpdatedProperties;
   /**

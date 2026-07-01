@@ -13,11 +13,12 @@ import {
 import { Button } from '@base-ui/react/button';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { EventItemProps } from './EventItem.types';
+import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
-import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import type { PaletteName } from '../../../utils/tokens';
+import { getPaletteVariants } from '../../../utils/tokens';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -177,7 +178,7 @@ export const EventItem = React.forwardRef(function EventItem(
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const isEditing = useStore(store, schedulerOtherSelectors.isEditedEvent, occurrence.id);
+  const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
   // State hooks
   const id = useId(idProp);

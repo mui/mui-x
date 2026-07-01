@@ -6,10 +6,8 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridSortDirection } from '../../models/gridSortModel';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
-import {
-  GridColumnHeaderSeparator,
-  type GridColumnHeaderSeparatorProps,
-} from './GridColumnHeaderSeparator';
+import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
+import type { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { GridColumnGroup } from '../../models/gridColumnGrouping';
 

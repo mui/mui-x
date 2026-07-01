@@ -2,9 +2,13 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { isHTMLElement } from '@mui/x-internals/domUtils';
-import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
-import { PickerRangeValue } from '@mui/x-date-pickers/internals';
-import { RangePosition } from '../models';
+import type {
+  MuiPickersAdapter,
+  PickersTimezone,
+  PickerValidDate,
+} from '@mui/x-date-pickers/models';
+import type { PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { RangePosition } from '../models';
 import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
 
 interface UseDragRangeParams {

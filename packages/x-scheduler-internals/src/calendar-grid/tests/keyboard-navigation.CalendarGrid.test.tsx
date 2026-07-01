@@ -2,7 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import { GridRowType } from '@mui/x-scheduler-internals/models';
+import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 

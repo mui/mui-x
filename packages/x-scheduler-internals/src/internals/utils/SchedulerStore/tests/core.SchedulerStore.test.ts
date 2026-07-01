@@ -1,5 +1,5 @@
 import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
-import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,

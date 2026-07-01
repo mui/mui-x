@@ -8,7 +8,8 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
 import type { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridFilteredTopLevelRowCountSelector } from '../filter';
 import { useGridLogger, useGridApiMethod, useGridEvent } from '../../utils';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import {
   gridPaginationRowCountSelector,
   gridPaginationMetaSelector,

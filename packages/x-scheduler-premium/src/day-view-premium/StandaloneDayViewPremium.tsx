@@ -7,7 +7,7 @@ import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/us
 import { DayView } from '@mui/x-scheduler/day-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
-import { StandaloneDayViewPremiumProps } from './DayViewPremium.types';
+import type { StandaloneDayViewPremiumProps } from './DayViewPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',

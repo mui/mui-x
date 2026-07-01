@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { useRadarAxisHighlight } from './useRadarAxisHighlight';
 
-import { type RadarClasses, useUtilityClasses } from '../radarClasses';
+import { useUtilityClasses } from '../radarClasses';
+import type { RadarClasses } from '../radarClasses';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 export interface RadarAxisHighlightProps {

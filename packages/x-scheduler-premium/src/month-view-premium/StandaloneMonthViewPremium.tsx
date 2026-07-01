@@ -7,7 +7,7 @@ import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/us
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
-import { StandaloneMonthViewPremiumProps } from './MonthViewPremium.types';
+import type { StandaloneMonthViewPremiumProps } from './MonthViewPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',

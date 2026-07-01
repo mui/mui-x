@@ -1,4 +1,5 @@
-import { timer, type Timer, now, timeout } from '@mui/x-charts-vendor/d3-timer';
+import { timer, now, timeout } from '@mui/x-charts-vendor/d3-timer';
+import type { Timer } from '@mui/x-charts-vendor/d3-timer';
 
 /**
  * A resumable transition class inspired by d3-transition.

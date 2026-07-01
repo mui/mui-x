@@ -1,21 +1,20 @@
 import { warn } from '@base-ui/utils/warn';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import {
+import type {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarViewConfig,
   TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
-import { Adapter } from '../use-adapter/useAdapter.types';
-import {
-  DEFAULT_SCHEDULER_PREFERENCES,
+import type { Adapter } from '../use-adapter/useAdapter.types';
+import type {
   SchedulerParametersToStateMapper,
-  SchedulerStore,
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
-import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
+import { DEFAULT_SCHEDULER_PREFERENCES, SchedulerStore } from '../internals/utils/SchedulerStore';
+import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
@@ -132,10 +131,12 @@ export class ExtendableEventCalendarStore<
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
       this.assertViewValidity(this.state.view);
-      this.subscribe((state) => {
-        this.assertViewValidity(state.view);
-        return null;
-      });
+      this.disposables.defer(
+        this.subscribe((state) => {
+          this.assertViewValidity(state.view);
+          return null;
+        }),
+      );
     }
   }
 

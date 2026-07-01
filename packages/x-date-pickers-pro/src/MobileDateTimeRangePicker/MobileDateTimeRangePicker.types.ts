@@ -1,10 +1,10 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   UseMobileRangePickerSlots,
   UseMobileRangePickerSlotProps,
   MobileRangeOnlyPickerProps,
 } from '../internals/hooks/useMobileRangePicker';
-import {
+import type {
   BaseDateTimeRangePickerProps,
   BaseDateTimeRangePickerSlots,
   BaseDateTimeRangePickerSlotProps,
