@@ -6,6 +6,11 @@ import { selectorChartGeoData } from '../useGeoProjection/useGeoProjection.selec
 import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom.types';
 import { createGetVisibleCoordinate } from '../../createGetVisibleCoordinate';
 
+/** Multiplicative zoom step applied per wheel tick. */
+export const WHEEL_ZOOM_STEP = 1.1;
+/** Multiplicative zoom step applied per `zoomIn`/`zoomOut` call. */
+export const BUTTON_ZOOM_STEP = 1.3;
+
 const DEG = Math.PI / 180;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
