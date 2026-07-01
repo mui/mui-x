@@ -1,5 +1,5 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import {
+import type {
   EventCalendarViewDefinition,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';

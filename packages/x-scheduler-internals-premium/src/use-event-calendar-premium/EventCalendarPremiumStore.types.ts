@@ -1,4 +1,4 @@
-import {
+import type {
   EventCalendarState,
   EventCalendarParameters,
 } from '@mui/x-scheduler-internals/use-event-calendar';

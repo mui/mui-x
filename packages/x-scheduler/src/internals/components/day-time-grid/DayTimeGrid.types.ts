@@ -1,4 +1,4 @@
-import { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 
 export interface DayTimeGridProps extends ExportedDayTimeGridProps {
   /**

@@ -1,12 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
-import { CompactDayViewProps } from './CompactDayView.types';
+import type { CompactDayViewProps } from './CompactDayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import {
-  DayTimeGridInternalRenderers,
-  DayTimeGridInternalRenderersContext,
-} from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
+import type { DayTimeGridInternalRenderers } from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
+import { DayTimeGridInternalRenderersContext } from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
 import { createDayTimeGridViewDefinition } from '../internals/utils/day-time-grid-view-definition';
 import { TimeGridEventTouch } from '../internals/components/event/time-grid-event/TimeGridEventTouch';
 

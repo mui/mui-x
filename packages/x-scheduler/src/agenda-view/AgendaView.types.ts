@@ -1,6 +1,6 @@
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { Theme } from '@mui/material/styles';
-import {
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import type {
   EventCalendarParameters,
   EventCalendarSchedulerParametersOverrides,
 } from '@mui/x-scheduler-internals/use-event-calendar';

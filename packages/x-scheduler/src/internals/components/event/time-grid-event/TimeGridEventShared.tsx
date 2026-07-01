@@ -1,9 +1,11 @@
 'use client';
-import * as React from 'react';
-import { CSSObject, styled, Theme } from '@mui/material/styles';
+import type * as React from 'react';
+import type { CSSObject, Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EVENT_CALENDAR_CONTAINER_NAME } from '../../../constants';
-import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import type { PaletteName } from '../../../utils/tokens';
+import { getPaletteVariants } from '../../../utils/tokens';
 
 export const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   display: '-webkit-box',

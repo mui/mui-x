@@ -1,4 +1,4 @@
-import { SchedulerEventColor, SchedulerEventCreationConfig } from '../models';
+import type { SchedulerEventColor, SchedulerEventCreationConfig } from '../models';
 
 export const EVENT_CREATION_PRECISION_MINUTE = 30;
 

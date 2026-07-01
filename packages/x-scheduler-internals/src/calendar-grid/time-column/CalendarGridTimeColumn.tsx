@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
@@ -167,9 +167,7 @@ export namespace CalendarGridTimeColumn {
     current: boolean;
   }
 
-  export interface Props
-    extends BaseUIComponentProps<'div', State>,
-      useTimeDropTarget.Parameters {
+  export interface Props extends BaseUIComponentProps<'div', State>, useTimeDropTarget.Parameters {
     /**
      * First displayed minute of the day, as an offset from midnight.
      * Derived from the view's whole-hour window so it stays aligned with the

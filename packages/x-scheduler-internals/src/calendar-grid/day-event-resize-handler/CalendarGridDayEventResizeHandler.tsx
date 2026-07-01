@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
 import { useCalendarGridDayEventContext } from '../day-event/CalendarGridDayEventContext';
 import type { CalendarGridDayEvent } from '../day-event/CalendarGridDayEvent';
-import { SchedulerEventSide } from '../../models';
+import type { SchedulerEventSide } from '../../models';
 
 export const CalendarGridDayEventResizeHandler = React.forwardRef(
   function CalendarGridDayEventResizeHandler(

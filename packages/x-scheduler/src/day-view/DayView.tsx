@@ -4,7 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { DayViewProps } from './DayView.types';
+import type { DayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import { createDayTimeGridViewDefinition } from '../internals/utils/day-time-grid-view-definition';
 

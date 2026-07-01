@@ -1,21 +1,20 @@
 import { warn } from '@base-ui/utils/warn';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import {
+import type {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarViewDefinition,
   TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
-import { Adapter } from '../use-adapter/useAdapter.types';
-import {
-  DEFAULT_SCHEDULER_PREFERENCES,
+import type { Adapter } from '../use-adapter/useAdapter.types';
+import type {
   SchedulerParametersToStateMapper,
-  SchedulerStore,
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
-import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
+import { DEFAULT_SCHEDULER_PREFERENCES, SchedulerStore } from '../internals/utils/SchedulerStore';
+import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 

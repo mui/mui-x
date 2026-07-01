@@ -1,11 +1,11 @@
-import {
+import type {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarPreferencesMenuConfig,
   EventCalendarViewConfig,
   EventCalendarViewDefinition,
 } from '../models';
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   SchedulerChangeEventDetails,

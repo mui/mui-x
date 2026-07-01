@@ -18,7 +18,7 @@ import {
   useEventCalendarUtilityClasses,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
-import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
+import type { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
