@@ -44,25 +44,23 @@ describe('fetchRemotePackages', () => {
     await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/ECONNREFUSED/);
   });
 
-  it('propagates JSON parse errors (malformed body from upstream)', async () => {
+  it('wraps a non-JSON 200 body in an actionable MUI MCP error', async () => {
     const fetcher = vi.fn().mockResolvedValue(
       new Response('not valid json', {
         status: 200,
         headers: { 'content-type': 'application/json' },
       }),
     );
-    await expect(fetchRemotePackages(fetcher)).rejects.toThrow();
+    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/MUI MCP: .*non-JSON response/);
   });
 
-  it('throws when the response body is HTML (e.g. proxy error page on non-200)', async () => {
-    // Even with non-200 status, current behavior is to read the body and try to parse as
-    // JSON. HTML body throws on `.json()`, which we propagate. This locks the contract.
+  it('throws an actionable MUI MCP error on a non-ok response (e.g. a 502 proxy page)', async () => {
     const fetcher = vi.fn().mockResolvedValue(
       new Response('<html>502 Bad Gateway</html>', {
         status: 502,
         headers: { 'content-type': 'text/html' },
       }),
     );
-    await expect(fetchRemotePackages(fetcher)).rejects.toThrow();
+    await expect(fetchRemotePackages(fetcher)).rejects.toThrow(/MUI MCP: .*HTTP 502/);
   });
 });

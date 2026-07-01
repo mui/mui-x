@@ -90,4 +90,50 @@ describe('registerDocsTools', () => {
       expect.any(Error),
     );
   });
+
+  it('retries the catalog fetch before giving up (recovers from a cold start)', async () => {
+    const server = makeServer();
+    const getPackagesList = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('cold start'))
+      .mockResolvedValueOnce([{ name: '@mui/material' }]);
+    const deps = makeDeps({
+      getPackagesList,
+      // Consume getPackagesList so the retry wrapper runs; no real delay between retries.
+      createUseMuiDocsTool: vi.fn(async (opts: any) => {
+        await opts.getPackagesList();
+        return fakeTool('useMuiDocs');
+      }),
+      retryDelaysMs: [0],
+    });
+
+    const registered = await registerDocsTools(
+      server as unknown as Server,
+      deps as unknown as Deps,
+    );
+
+    expect(registered).toBe(true);
+    expect(getPackagesList).toHaveBeenCalledTimes(2); // failed once, retried once
+  });
+
+  it('fails soft after exhausting catalog retries', async () => {
+    const server = makeServer();
+    const getPackagesList = vi.fn().mockRejectedValue(new Error('down'));
+    const deps = makeDeps({
+      getPackagesList,
+      createUseMuiDocsTool: vi.fn(async (opts: any) => {
+        await opts.getPackagesList();
+        return fakeTool('useMuiDocs');
+      }),
+      retryDelaysMs: [0, 0],
+    });
+
+    const registered = await registerDocsTools(
+      server as unknown as Server,
+      deps as unknown as Deps,
+    );
+
+    expect(registered).toBe(false);
+    expect(getPackagesList).toHaveBeenCalledTimes(3); // initial + 2 retries
+  });
 });

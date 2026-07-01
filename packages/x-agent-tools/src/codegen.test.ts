@@ -510,9 +510,9 @@ describe('createGenerateReactCodeTool', () => {
     );
   });
 
-  it('invokes invalidateToken on 401 from the POST so the next call mints a fresh JWT', async () => {
+  it('on a persistent 401 from the POST, invalidates and retries once before throwing', async () => {
     const invalidateToken = vi.fn();
-    const fetcher = vi.fn().mockResolvedValueOnce(makeJsonResponse(401, { statusCode: 401 }));
+    const fetcher = vi.fn().mockResolvedValue(makeJsonResponse(401, { statusCode: 401 }));
 
     const tool = createGenerateReactCodeTool({
       recipesBackendBaseUrl: baseUrl,
@@ -522,14 +522,36 @@ describe('createGenerateReactCodeTool', () => {
     });
     await expect(tool.execute({ prompt: 'hi' })).rejects.toThrow(/JWT rejected/i);
     expect(invalidateToken).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(2); // original + one retry
   });
 
-  it('invokes invalidateToken on 401 from the SSE GET as well', async () => {
+  it('recovers when a 401 on the POST is fixed by a fresh token', async () => {
+    const invalidateToken = vi.fn();
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(makeJsonResponse(401, { statusCode: 401 })) // first token expired
+      .mockResolvedValueOnce(makeJsonResponse(202, { threadId: 'chat-1', runId: 'msg-1' })) // retry ok
+      .mockResolvedValueOnce(makeSseResponse([sseFrame('[DONE]')]));
+
+    const tool = createGenerateReactCodeTool({
+      recipesBackendBaseUrl: baseUrl,
+      getToken,
+      invalidateToken,
+      fetcher,
+    });
+    const result = await tool.execute({ prompt: 'hi' });
+
+    expect(result.threadId).toBe('chat-1');
+    expect(invalidateToken).toHaveBeenCalledTimes(1);
+    expect(getToken).toHaveBeenCalledTimes(2); // initial + fresh mint after the 401
+  });
+
+  it('on a persistent 401 from the SSE GET, invalidates and retries once', async () => {
     const invalidateToken = vi.fn();
     const fetcher = vi
       .fn()
       .mockResolvedValueOnce(makeJsonResponse(202, { threadId: 'chat-1', runId: 'msg-1' }))
-      .mockResolvedValueOnce(makeJsonResponse(401, { statusCode: 401 }));
+      .mockResolvedValue(makeJsonResponse(401, { statusCode: 401 }));
 
     const tool = createGenerateReactCodeTool({
       recipesBackendBaseUrl: baseUrl,
@@ -557,11 +579,11 @@ describe('createGenerateReactCodeTool', () => {
     expect(invalidateToken).not.toHaveBeenCalled();
   });
 
-  it('translates 401 (JWT expired mid-run) into a retry hint', async () => {
+  it('translates a persistent 401 (JWT expired mid-run) into a retry hint', async () => {
     const fetcher = vi
       .fn()
       .mockResolvedValueOnce(makeJsonResponse(202, { threadId: 'chat-1', runId: 'msg-1' }))
-      .mockResolvedValueOnce(makeJsonResponse(401, { statusCode: 401 }));
+      .mockResolvedValue(makeJsonResponse(401, { statusCode: 401 }));
 
     const tool = createGenerateReactCodeTool({ recipesBackendBaseUrl: baseUrl, getToken, fetcher });
     await expect(tool.execute({ prompt: 'hi' })).rejects.toThrow(/JWT rejected.*retry/i);

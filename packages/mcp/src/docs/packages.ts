@@ -8,7 +8,25 @@ export const fetchRemotePackages = async (
   const baseUrl = process.env[DOCS_BASE_URL_ENV] ?? DEFAULT_DOCS_BASE_URL;
   const packagesListUrl = new URL(PACKAGES_LIST_PATH, baseUrl).toString();
   const response = await fetcher(packagesListUrl);
-  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      `MUI MCP: The MUI documentation catalog at ${packagesListUrl} is unavailable (HTTP ${response.status}). ` +
+        `The docs tools (useMuiDocs, fetchDocs) cannot work without it. ` +
+        `Check that MUI_DOCS_BASE_URL points at a reachable backend, then retry.`,
+    );
+  }
+
+  let data: unknown;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error(
+      `MUI MCP: The MUI documentation catalog at ${packagesListUrl} returned a non-JSON response. ` +
+        `The docs tools (useMuiDocs, fetchDocs) cannot work without it. ` +
+        `Check that MUI_DOCS_BASE_URL serves the package list (not a proxy or error page), then retry.`,
+    );
+  }
 
   if (!Array.isArray(data) || !data.length) {
     throw new Error(
@@ -18,5 +36,5 @@ export const fetchRemotePackages = async (
     );
   }
 
-  return data;
+  return data as PackageData[];
 };

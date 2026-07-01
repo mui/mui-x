@@ -3,6 +3,8 @@ import { LRUCache } from './cache';
 import { PackageData, QueueOptions, ToolOverrides } from './types';
 import { wrapTool, urlListFetcher, type Logger } from './utils';
 
+const DEFAULT_DOCS_CONCURRENCY = 10;
+
 export async function createUseMuiDocsTool(options: {
   getPackagesList: () => Promise<PackageData[]>;
   fetcher?: typeof fetch;
@@ -21,8 +23,8 @@ export async function createUseMuiDocsTool(options: {
 }) {
   const PQueue = await import('p-queue').then((m) => m.default);
   const queue = new PQueue({
-    // p-queue v8 rejects an explicit `undefined`; fall back to its unbounded default.
-    concurrency: options.queue?.concurrency ?? Number.POSITIVE_INFINITY,
+    // Bounded default so a caller omitting queue config can't fire unbounded parallel fetches.
+    concurrency: options.queue?.concurrency ?? DEFAULT_DOCS_CONCURRENCY,
     throwOnTimeout: options.queue?.throwOnTimeout ?? true,
     timeout: options.queue?.timeout,
   });
@@ -85,7 +87,7 @@ export async function createFetchDocTool(options: {
   const fetcher = options.fetcher ?? fetch;
   const PQueue = await import('p-queue').then((m) => m.default);
   const queue = new PQueue({
-    concurrency: options.queue?.concurrency ?? 1,
+    concurrency: options.queue?.concurrency ?? DEFAULT_DOCS_CONCURRENCY,
     throwOnTimeout: options.queue?.throwOnTimeout ?? true,
     timeout: options.queue?.timeout,
   });

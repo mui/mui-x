@@ -1,10 +1,15 @@
 import type { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { PackageData } from '@mui/x-agent-tools';
+import { withRetry } from '../retry';
 import { buildDocsHandler } from './handler';
 
 type XAgentTools = typeof import('@mui/x-agent-tools');
 type Logger = (message: string, error?: unknown) => void;
+
+// Backoff for the startup catalog fetch (~63s total), so a cold-starting backend (e.g. a Render
+// free tier, ~30-60s spin-up) doesn't leave the docs tools disabled for the whole session.
+const DEFAULT_RETRY_DELAYS_MS = [1000, 2000, 4000, 8000, 16000, 32000];
 
 export interface RegisterDocsToolsDeps {
   createUseMuiDocsTool: XAgentTools['createUseMuiDocsTool'];
@@ -14,6 +19,8 @@ export interface RegisterDocsToolsDeps {
   logger: Logger;
   concurrency: number;
   fetchDocsDescription: string;
+  /** Retry backoff for the catalog fetch. Defaults to `DEFAULT_RETRY_DELAYS_MS`; override in tests. */
+  retryDelaysMs?: number[];
 }
 
 /**
@@ -30,8 +37,16 @@ export async function registerDocsTools(
   deps: RegisterDocsToolsDeps,
 ): Promise<boolean> {
   try {
+    const getPackagesList = () =>
+      withRetry(
+        deps.getPackagesList,
+        deps.retryDelaysMs ?? DEFAULT_RETRY_DELAYS_MS,
+        (error, delayMs) =>
+          deps.logger(`MUI MCP: docs catalog fetch failed, retrying in ${delayMs}ms.`, error),
+      );
+
     const useMuiDocsTool = await deps.createUseMuiDocsTool({
-      getPackagesList: deps.getPackagesList,
+      getPackagesList,
       queue: { concurrency: deps.concurrency },
       cache: true,
       logger: deps.logger,

@@ -297,5 +297,7 @@
   "297": "MUI X Agent Tools: SSE stream errored: %s",
   "298": "MUI X Agent Tools: Generation stream ended unexpectedly before `[DONE]`. Retry the request.",
   "299": "MUI X Agent Tools: %s",
-  "300": "MUI X Agent Tools: The codegen backend returned an unexpected response (not valid JSON, or missing runId). Check that MUI_RECIPES_BACKEND_BASE_URL points at recipes-backend (not a proxy or error page), then retry."
+  "300": "MUI X Agent Tools: The codegen backend returned an unexpected response (not valid JSON, or missing runId). Check that MUI_RECIPES_BACKEND_BASE_URL points at recipes-backend (not a proxy or error page), then retry.",
+  "301": "MUI MCP: The MUI documentation catalog at %s is unavailable (HTTP %s). The docs tools (useMuiDocs, fetchDocs) cannot work without it. Check that MUI_DOCS_BASE_URL points at a reachable backend, then retry.",
+  "302": "MUI MCP: The MUI documentation catalog at %s returned a non-JSON response. The docs tools (useMuiDocs, fetchDocs) cannot work without it. Check that MUI_DOCS_BASE_URL serves the package list (not a proxy or error page), then retry."
 }

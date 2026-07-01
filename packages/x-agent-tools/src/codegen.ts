@@ -2,6 +2,7 @@
 import { createParser, type EventSourceMessage } from 'eventsource-parser';
 import { z } from 'zod';
 import type { ToolOverrides } from './types';
+import { createAuthedFetch } from './authed-fetch';
 import { wrapTool } from './utils';
 
 export const CODEGEN_GENERATE_PATH = '/v1/codegen/generate';
@@ -231,26 +232,31 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
     inputSchema,
     outputSchema,
     execute: async (input) => {
-      const token = await options.getToken({ signal: options.signal });
-
-      // 1. Kick off the run.
-      const generateResponse = await fetcher(`${recipesBackendBaseUrl}${CODEGEN_GENERATE_PATH}`, {
-        method: 'POST',
-        headers: {
-          authorization: `Bearer ${token}`,
-          'content-type': 'application/json',
-          accept: 'application/json',
-        },
-        body: JSON.stringify(input),
-        // Fail on redirects so the Bearer token can't be resent to another origin.
-        redirect: 'error',
+      const authedFetch = createAuthedFetch({
+        fetcher,
+        getToken: options.getToken,
+        invalidateToken: options.invalidateToken,
         signal: options.signal,
       });
 
+      // 1. Kick off the run.
+      const generateResponse = await authedFetch(
+        `${recipesBackendBaseUrl}${CODEGEN_GENERATE_PATH}`,
+        (token) => ({
+          method: 'POST',
+          headers: {
+            authorization: `Bearer ${token}`,
+            'content-type': 'application/json',
+            accept: 'application/json',
+          },
+          body: JSON.stringify(input),
+          // Fail on redirects so the Bearer token can't be resent to another origin.
+          redirect: 'error',
+          signal: options.signal,
+        }),
+      );
+
       if (!generateResponse.ok) {
-        if (generateResponse.status === 401) {
-          options.invalidateToken?.();
-        }
         const body = await safeJson(generateResponse);
         throw new Error(
           `MUI X Agent Tools: ${translateBackendError(generateResponse.status, body)}`,
@@ -268,9 +274,9 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
       }
 
       // 2. Open the SSE stream + buffer chunks until `[DONE]`.
-      const streamResponse = await fetcher(
+      const streamResponse = await authedFetch(
         `${recipesBackendBaseUrl}${codegenRunPath(generated.runId)}`,
-        {
+        (token) => ({
           method: 'GET',
           headers: {
             authorization: `Bearer ${token}`,
@@ -278,13 +284,10 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
           },
           redirect: 'error',
           signal: options.signal,
-        },
+        }),
       );
 
       if (!streamResponse.ok) {
-        if (streamResponse.status === 401) {
-          options.invalidateToken?.();
-        }
         const body = await safeJson(streamResponse);
         throw new Error(`MUI X Agent Tools: ${translateBackendError(streamResponse.status, body)}`);
       }
