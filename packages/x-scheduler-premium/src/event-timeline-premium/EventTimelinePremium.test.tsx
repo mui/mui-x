@@ -111,15 +111,15 @@ describe('<EventTimelinePremium />', () => {
     });
 
     it('should reserve the toggle column when the timeline has nested resources', () => {
-      const { container } = renderTimeline({ resources: nestedResources, events: [] });
+      renderTimeline({ resources: nestedResources, events: [] });
 
-      expect(container.querySelector('[data-flat]')).to.equal(null);
+      expect(screen.getByRole('grid').closest('[data-flat]')).to.equal(null);
     });
 
     it('should not reserve the toggle column on a flat timeline', () => {
-      const { container } = renderTimeline({ resources: baseResources, events: [] });
+      renderTimeline({ resources: baseResources, events: [] });
 
-      expect(container.querySelector('[data-flat]')).not.to.equal(null);
+      expect(screen.getByRole('grid').closest('[data-flat]')).not.to.equal(null);
     });
 
     it('should collapse a parent resource and hide its children when the toggle is clicked', async () => {
