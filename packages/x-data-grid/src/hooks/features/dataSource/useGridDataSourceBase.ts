@@ -304,11 +304,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
-        // `handleDataUpdate` is the `Default` strategy processor, so honouring
-        // `dataSourceKeepPreviousData` here doesn't affect tree-data / grouped strategies.
-        if (!props.dataSourceKeepPreviousData) {
-          apiRef.current.setRows([]);
-        }
+        // Reset the rows on error, even with `dataSourceKeepPreviousData`. The previous
+        // rows belong to the previous query while the pagination/sorting/filtering controls
+        // already reflect the failed request, so keeping them would present stale data as if
+        // it satisfied the new query. This matches TanStack Query, where `keepPreviousData`
+        // clears the placeholder once the query settles with an error.
+        apiRef.current.setRows([]);
         return;
       }
 
@@ -324,7 +325,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       );
       startPolling();
     },
-    [apiRef, props.dataSourceKeepPreviousData, startPolling],
+    [apiRef, startPolling],
   );
 
   const dataSourceUpdateRow = props.dataSource?.updateRow;

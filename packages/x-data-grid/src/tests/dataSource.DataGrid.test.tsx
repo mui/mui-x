@@ -705,7 +705,10 @@ describe('<DataGrid /> - Data source', () => {
       expect(NoRowsOverlay.callCount).to.equal(0);
     });
 
-    it('should keep the previous rows visible when the refetch errors', async () => {
+    it('should reset the rows when the refetch errors', async () => {
+      // Even with `dataSourceKeepPreviousData`, a failed refetch resets the rows: the
+      // previous rows no longer match the query the controls now reflect. Mirrors TanStack
+      // Query, which clears the `keepPreviousData` placeholder once the query errors.
       const initialResponse: GridGetRowsResponse = {
         rows: [{ id: 1, value: 'first' }],
         rowCount: 2,
@@ -757,8 +760,9 @@ describe('<DataGrid /> - Data source', () => {
       await waitFor(() => {
         expect(onDataSourceError.callCount).to.equal(1);
       });
-      expect(localApiRef.current?.getRowsCount()).to.equal(1);
-      expect(localApiRef.current?.getRow(1)).to.deep.equal({ id: 1, value: 'first' });
+      // The previous rows are reset once the request fails.
+      expect(localApiRef.current?.getRowsCount()).to.equal(0);
+      expect(localApiRef.current?.getRow(1)).to.equal(null);
       expect(localApiRef.current?.state.rows.loading).to.equal(false);
     });
   });

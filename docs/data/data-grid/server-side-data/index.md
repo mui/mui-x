@@ -180,8 +180,8 @@ The loading overlay is rendered on top of the previous rows, which prevents the 
 
 {{"demo": "ServerSideDataGridKeepPreviousData.js", "bg": "inline"}}
 
-If the request fails, the previous rows remain visible, but the pagination, sorting, and filtering controls already reflect the new request.
-The displayed rows might therefore not match the current query state, so handle the error through the [`onDataSourceError`](/x/react-data-grid/server-side-data/#error-handling) callback.
+If the request fails, the previous rows are reset, because they no longer match the pagination, sorting, and filtering controls, which already reflect the failed request.
+Handle the error through the [`onDataSourceError`](/x/react-data-grid/server-side-data/#error-handling) callback.
 
 :::warning
 `dataSourceKeepPreviousData` only applies to flat data.
