@@ -765,11 +765,7 @@
     },
     "sidePanelDrawer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the side panel drawer root (popup) element (small screens)"
-    },
-    "sidePanelDrawerBackButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the side panel drawer back button element"
+      "nodeName": "the side panel drawer paper (popup) element (small screens)"
     },
     "sidePanelDrawerBackdrop": {
       "description": "Styles applied to {{nodeName}}.",
@@ -793,11 +789,7 @@
     },
     "sidePanelDrawerPreferencesList": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the side panel drawer preferences options list element"
-    },
-    "sidePanelDrawerPreferencesPopup": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the side panel drawer nested preferences popup element"
+      "nodeName": "the side panel drawer collapsible preferences options list element"
     },
     "sidePanelDrawerTitle": {
       "description": "Styles applied to {{nodeName}}.",
@@ -813,7 +805,7 @@
     },
     "sidePanelDrawerViewport": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the side panel drawer viewport element"
+      "nodeName": "the side panel drawer root (modal) element"
     },
     "standaloneEvent": {
       "description": "Styles applied to {{nodeName}}.",

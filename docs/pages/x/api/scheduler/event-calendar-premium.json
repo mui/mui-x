@@ -1135,13 +1135,7 @@
     {
       "key": "sidePanelDrawer",
       "className": "MuiEventCalendarPremium-sidePanelDrawer",
-      "description": "Styles applied to the side panel drawer root (popup) element (small screens).",
-      "isGlobal": false
-    },
-    {
-      "key": "sidePanelDrawerBackButton",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerBackButton",
-      "description": "Styles applied to the side panel drawer back button element.",
+      "description": "Styles applied to the side panel drawer paper (popup) element (small screens).",
       "isGlobal": false
     },
     {
@@ -1177,13 +1171,7 @@
     {
       "key": "sidePanelDrawerPreferencesList",
       "className": "MuiEventCalendarPremium-sidePanelDrawerPreferencesList",
-      "description": "Styles applied to the side panel drawer preferences options list element.",
-      "isGlobal": false
-    },
-    {
-      "key": "sidePanelDrawerPreferencesPopup",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferencesPopup",
-      "description": "Styles applied to the side panel drawer nested preferences popup element.",
+      "description": "Styles applied to the side panel drawer collapsible preferences options list element.",
       "isGlobal": false
     },
     {
@@ -1207,7 +1195,7 @@
     {
       "key": "sidePanelDrawerViewport",
       "className": "MuiEventCalendarPremium-sidePanelDrawerViewport",
-      "description": "Styles applied to the side panel drawer viewport element.",
+      "description": "Styles applied to the side panel drawer root (modal) element.",
       "isGlobal": false
     },
     {

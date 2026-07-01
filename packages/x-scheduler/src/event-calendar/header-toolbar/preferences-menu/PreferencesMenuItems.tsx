@@ -8,7 +8,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import ListSubheader from '@mui/material/ListSubheader';
-import {
+import type {
   CalendarView,
   EventCalendarPreferences,
   EventCalendarPreferencesMenuConfig,
