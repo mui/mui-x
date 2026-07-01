@@ -1,6 +1,8 @@
 'use client';
 import { ChatBox } from '@mui/x-chat';
 
+import { createChunkStream } from 'docs/data/chat/core/examples/shared/demoUtils';
+
 const CONVERSATION_ID = 'reasoning-demo';
 
 const initialConversations = [{ id: CONVERSATION_ID, title: 'Reasoning' }];
@@ -25,52 +27,40 @@ const initialMessages = [
   },
 ];
 
-// Emit one chunk per pull, with a small delay, so the disclosure visibly streams.
-function streamChunks(chunks) {
-  let index = 0;
-  return new ReadableStream({
-    pull(controller) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          if (index < chunks.length) {
-            controller.enqueue(chunks[index]);
-            index += 1;
-          } else {
-            controller.close();
-          }
-          resolve();
-        }, 100);
-      });
-    },
-  });
-}
-
 const adapter = {
   async sendMessage({ message }) {
     const messageId = `reply-${message.id}`;
-    return streamChunks([
-      { type: 'start', messageId },
-      // Reasoning section — auto-expanded and labelled "Thinking…" while streaming.
-      { type: 'reasoning-start', id: 'r1' },
-      {
-        type: 'reasoning-delta',
-        id: 'r1',
-        delta: 'Let me think about how to answer this. ',
-      },
-      {
-        type: 'reasoning-delta',
-        id: 'r1',
-        delta: 'The question is straightforward, ',
-      },
-      { type: 'reasoning-delta', id: 'r1', delta: 'so a concise reply works best.' },
-      { type: 'reasoning-end', id: 'r1' },
-      // Final answer — the reasoning collapses to a "Reasoning" summary as this streams.
-      { type: 'text-start', id: 't1' },
-      { type: 'text-delta', id: 't1', delta: 'Here is the answer, now that ' },
-      { type: 'text-delta', id: 't1', delta: 'the reasoning above has finished.' },
-      { type: 'text-end', id: 't1' },
-      { type: 'finish', messageId },
-    ]);
+    // Emit one chunk at a time, with a small delay, so the disclosure visibly streams.
+    return createChunkStream(
+      [
+        { type: 'start', messageId },
+        // Reasoning section — auto-expanded and labelled "Thinking…" while streaming.
+        { type: 'reasoning-start', id: 'r1' },
+        {
+          type: 'reasoning-delta',
+          id: 'r1',
+          delta: 'Let me think about how to answer this. ',
+        },
+        {
+          type: 'reasoning-delta',
+          id: 'r1',
+          delta: 'The question is straightforward, ',
+        },
+        {
+          type: 'reasoning-delta',
+          id: 'r1',
+          delta: 'so a concise reply works best.',
+        },
+        { type: 'reasoning-end', id: 'r1' },
+        // Final answer — the reasoning collapses to a "Reasoning" summary as this streams.
+        { type: 'text-start', id: 't1' },
+        { type: 'text-delta', id: 't1', delta: 'Here is the answer, now that ' },
+        { type: 'text-delta', id: 't1', delta: 'the reasoning above has finished.' },
+        { type: 'text-end', id: 't1' },
+        { type: 'finish', messageId },
+      ],
+      { delayMs: 100 },
+    );
   },
 };
 

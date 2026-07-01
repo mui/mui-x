@@ -21,11 +21,11 @@ import type {
   ChatConversation as ChatConversationModel,
   ChatMessage,
 } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   inboxConversations,
   inboxThreads,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 // The conversation that ships unread in the shared demo data.
 const UNREAD_CONVERSATION_ID = inboxConversations.find(

@@ -5,8 +5,8 @@ import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from 'docs/data/chat/material/examples/shared/demoData';
-import { randomId } from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoData';
+import { randomId } from 'docs/data/chat/core/examples/shared/demoUtils';
 import type { ChatAdapter, ChatMessageChunk } from '@mui/x-chat/headless';
 
 function splitIntoDeltas(text: string, size = 15): string[] {

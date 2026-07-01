@@ -14,13 +14,13 @@ import {
   ChoiceControl,
   NumberControl,
 } from 'docs/src/modules/components/chat-playground/controls';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   inboxConversations,
   inboxThreads,
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 // Enough height to show the conversation list, header, and a few messages at once.
 const PREVIEW_HEIGHT = 540;

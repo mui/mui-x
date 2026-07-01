@@ -30,11 +30,11 @@ import type {
 import {
   createEchoAdapter,
   syncConversationPreview,
-} from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   inboxConversations,
   inboxThreads,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const adapter = createEchoAdapter({
   respond: (text) =>
