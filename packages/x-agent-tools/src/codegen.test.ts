@@ -140,6 +140,27 @@ describe('createGenerateReactCodeTool', () => {
     expect(getToken).toHaveBeenCalledWith({ signal: controller.signal });
   });
 
+  // Only the images regex is our own logic; the rest of the schema is plain Zod, not worth testing.
+  describe('images reference validation', () => {
+    const inputSchema = () =>
+      createGenerateReactCodeTool({ recipesBackendBaseUrl: baseUrl, getToken, fetcher: vi.fn() })
+        .inputSchema;
+
+    it.each(['data:image/png;base64,iVBORw0KGgo=', 'https://cdn.example.com/foo.png'])(
+      'accepts a data URL or https reference: %s',
+      (img) => {
+        expect(inputSchema().safeParse({ prompt: 'x', images: [img] }).success).toBe(true);
+      },
+    );
+
+    it.each(['iVBORw0KGgo=', 'http://cdn.example.com/foo.png', '/tmp/foo.png'])(
+      'rejects raw base64, non-TLS, and file paths: %s',
+      (img) => {
+        expect(inputSchema().safeParse({ prompt: 'x', images: [img] }).success).toBe(false);
+      },
+    );
+  });
+
   it('throws when the SSE response has no body', async () => {
     const fetcher = vi
       .fn()
