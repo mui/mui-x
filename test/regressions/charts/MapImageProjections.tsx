@@ -6,18 +6,17 @@ import { marsRegions } from 'docs/data/charts/map/marsRegions';
 
 const MARS_IMAGE = '/static/x/charts/mars-viking-mdim21.jpg';
 
-// Every named d3-geo projection the provider supports.
+// Named d3-geo projections that the provider fits into the drawing area.
+// The conic family (`conicConformal`, `conicEqualArea`, `conicEquidistant`,
+// `albers`) and `albersUsa` are omitted: the provider does not yet translate
+// conic projections into view (they render blank/off-canvas), and their fit is
+// being reworked in the zoom PR — see the discussion on this file.
 const PROJECTIONS: D3NamedProjection[] = [
   'azimuthalEqualArea',
   'azimuthalEquidistant',
   'gnomonic',
   'orthographic',
   'stereographic',
-  'conicConformal',
-  'conicEqualArea',
-  'conicEquidistant',
-  'albers',
-  'albersUsa',
   'equirectangular',
   'mercator',
   'transverseMercator',
