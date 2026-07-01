@@ -92,7 +92,7 @@ const idIDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // Preferences menu
   // amPm12h: '12-hour (1:00PM)',
   // hour24h: '24-hour (13:00)',
-  // preferencesMenu: 'Settings',
+  // preferencesMenu: 'Preferences',
   // showWeekends: 'Show weekends',
   // showEmptyDaysInAgenda: 'Show empty days',
   // showWeekNumber: 'Show week number',
