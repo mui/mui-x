@@ -86,10 +86,7 @@ GridActionsCellItem.propTypes /* remove-proptypes */ = {
    */
   component: PropTypes.elementType,
   disabled: PropTypes.bool,
-  icon: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.elementType,
-    PropTypes.node,
-  ]),
+  icon: PropTypes /* @typescript-to-proptypes-ignore */.element,
   label: PropTypes.node,
   showInMenu: PropTypes.bool,
   style: PropTypes.object,
