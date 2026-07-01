@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 import { useStore } from '@base-ui/utils/store';
@@ -76,30 +77,19 @@ const ResourceLegendColor = styled('span', {
   backgroundColor: 'var(--event-surface-accent)',
 });
 
-const ResourceCollapseToggle = styled('button', {
+const ResourceCollapseToggle = styled(IconButton, {
   name: 'MuiEventTimeline',
   slot: 'TitleCellCollapseToggle',
-})(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+})({
   padding: 0,
   width: 20,
   height: 20,
   flexShrink: 0,
-  border: 'none',
-  background: 'transparent',
-  cursor: 'pointer',
   color: 'inherit',
-  borderRadius: theme.shape.borderRadius,
-  '&:focus-visible': {
-    outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
-    outlineOffset: 1,
-  },
   '& > svg': {
     fontSize: 18,
   },
-}));
+});
 
 // Reserves the toggle's footprint on leaf resources so the legend colors and
 // titles stay aligned in a single column regardless of whether a row can collapse.
@@ -166,7 +156,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       <EventTimelinePremiumTitleCellContent ref={contentRef} className={classes.titleCellContent}>
         {hasChildren ? (
           <ResourceCollapseToggle
-            type="button"
+            size="small"
             aria-expanded={!isCollapsed}
             aria-label={
               isCollapsed
