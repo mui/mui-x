@@ -90,8 +90,33 @@ describe('CliJwtClient', () => {
 
     await client.getToken({ signal });
 
+    // The fetch carries the client's internal timeout signal, never the caller's.
     const [, init] = fetcher.mock.calls[0];
-    expect(init.signal).toBeUndefined();
+    expect(init.signal).toBeDefined();
+    expect(init.signal).not.toBe(signal);
+  });
+
+  it('times out a token exchange that never responds', async () => {
+    vi.useFakeTimers();
+    try {
+      const fetcher = vi.fn().mockImplementation(
+        (_url: string, init: RequestInit) =>
+          new Promise<Response>((_resolve, reject) => {
+            init.signal?.addEventListener('abort', () => reject(new Error('aborted by timeout')));
+          }),
+      );
+      const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+
+      // Attach the rejection expectation before advancing timers so the rejection is never
+      // momentarily unhandled while the fake timer fires.
+      const expectation = expect(client.getToken()).rejects.toThrow(
+        /MUI X Agent Tools: Token exchange failed/,
+      );
+      await vi.advanceTimersByTimeAsync(30_000);
+      await expectation;
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('lets one caller cancel its wait without aborting the shared refresh for others', async () => {

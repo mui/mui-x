@@ -3,6 +3,8 @@
 export const DEFAULT_REFRESH_THRESHOLD_MS = 30_000;
 export const RECIPES_API_KEY_ENV = 'MUI_RECIPES_API_KEY';
 export const CLI_TOKEN_PATH = '/api/auth/tokens';
+// Bound a token exchange so a hung endpoint can't wedge the shared refresh (and every caller reusing it).
+const TOKEN_EXCHANGE_TIMEOUT_MS = 30_000;
 
 export type CliJwtClientOptions = {
   /** Base URL of mui-backend (no trailing slash). */
@@ -120,11 +122,16 @@ export class CliJwtClient {
     const apiKey = this.resolveApiKey();
     const url = `${this.muiBackendBaseUrl}${CLI_TOKEN_PATH}`;
 
+    // Internal timeout (not a caller signal) so a never-responding endpoint can't wedge `inflight`.
+    const timeoutController = new AbortController();
+    const timeout = setTimeout(() => timeoutController.abort(), TOKEN_EXCHANGE_TIMEOUT_MS);
+
     let response: Response;
     try {
       response = await this.fetcher(url, {
         method: 'POST',
         headers: { 'x-api-key': apiKey, accept: 'application/json' },
+        signal: timeoutController.signal,
       });
     } catch (cause) {
       throw new CliJwtClientError(
@@ -132,6 +139,8 @@ export class CliJwtClient {
         `MUI X Agent Tools: Token exchange failed: ${cause instanceof Error ? cause.message : String(cause)}. Retry shortly.`,
         { cause },
       );
+    } finally {
+      clearTimeout(timeout);
     }
 
     if (response.status === 401) {
