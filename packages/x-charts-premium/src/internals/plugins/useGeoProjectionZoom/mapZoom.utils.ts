@@ -38,8 +38,8 @@ const FAMILY_INTERACTION: Record<
   { rotationAllowed: MapRotationAxis; translationAllowed: MapTranslationAxis }
 > = {
   azimuthal: { rotationAllowed: 'both', translationAllowed: 'none' },
-  conic: { rotationAllowed: 'long', translationAllowed: 'y' },
   cylindrical: { rotationAllowed: 'long', translationAllowed: 'y' },
+  conic: { rotationAllowed: 'none', translationAllowed: 'both' },
   albersUsa: { rotationAllowed: 'none', translationAllowed: 'both' },
 };
 
