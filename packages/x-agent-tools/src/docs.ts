@@ -99,7 +99,7 @@ export async function createFetchDocTool(options: {
     publicName: 'fetchDocs',
     description: `Fetch and parse documentation from a given URL or local file.
 
-Use this tool after list_mui_doc_sources to:
+Use this tool after useMuiDocs to:
 1. First fetch the llms.txt file from a documentation source
 2. Analyze the URLs listed in the llms.txt file
 3. Then fetch specific documentation pages relevant to the user's question`,
