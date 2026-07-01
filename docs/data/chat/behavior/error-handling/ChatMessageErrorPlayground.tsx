@@ -145,7 +145,7 @@ export default function ChatMessageErrorPlayground() {
               display: 'flex',
               flexDirection: 'column',
               gap: 1,
-              ...(errorRowSx as object),
+              ...errorRowSx,
             }}
             onClickCapture={(event) => {
               const target = event.target as HTMLElement;

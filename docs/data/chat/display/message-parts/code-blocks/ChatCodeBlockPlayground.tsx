@@ -163,7 +163,7 @@ export default function ChatCodeBlockPlayground() {
           <ChatCodeBlock
             language={language}
             highlighter={HIGHLIGHTERS[highlighter]}
-            sx={blockSx as any}
+            sx={blockSx}
           >
             {code}
           </ChatCodeBlock>

@@ -191,7 +191,7 @@ export default function ChatConversationHeaderPlayground() {
               sx={{
                 width: '100%',
                 overflow: 'hidden',
-                ...(wrapperSx as object),
+                ...wrapperSx,
               }}
             >
               <ChatConversationHeader>

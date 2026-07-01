@@ -100,7 +100,7 @@ export default function ChatConfirmationPlayground() {
             cancelLabel={cancelLabel}
             onConfirm={() => setResolution('confirm')}
             onCancel={() => setResolution('cancel')}
-            sx={cardSx as any}
+            sx={cardSx}
           />
           <Snackbar
             open={resolution !== null}

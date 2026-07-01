@@ -109,7 +109,7 @@ export default function ChatComposerAttachButtonPlayground() {
           conversations={[emptyConversation]}
           activeConversationId={emptyConversation.id}
         >
-          <Box sx={{ width: '100%', ...(wrapperSx as object) }}>
+          <Box sx={{ width: '100%', ...wrapperSx }}>
             <ChatComposer
               features={{
                 attachments: {

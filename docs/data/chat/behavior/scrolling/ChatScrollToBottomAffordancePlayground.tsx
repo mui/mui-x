@@ -2,6 +2,7 @@ import * as React from 'react';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import type { SxProps, Theme } from '@mui/system';
 import { ChatMessageList, ChatScrollToBottomAffordance } from '@mui/x-chat';
 import {
   useChat,
@@ -73,7 +74,7 @@ function ScrollPreview({ scrollBehavior, buttonSx }: ScrollPreviewProps) {
         overlay={
           <ChatScrollToBottomAffordance
             scrollBehavior={scrollBehavior}
-            sx={buttonSx as any}
+            sx={buttonSx}
           />
         }
       />
@@ -83,7 +84,7 @@ function ScrollPreview({ scrollBehavior, buttonSx }: ScrollPreviewProps) {
 
 interface ScrollPreviewProps {
   scrollBehavior: ScrollBehavior;
-  buttonSx: unknown;
+  buttonSx: SxProps<Theme>;
 }
 
 export default function ChatScrollToBottomAffordancePlayground() {

@@ -206,7 +206,7 @@ export default function ChatMessagePlayground() {
                 <ChatMessageComponent
                   messageId={message.id}
                   isGrouped={grouped}
-                  sx={messageSx as any}
+                  sx={messageSx}
                 >
                   <ChatMessageAvatar />
                   <ChatMessageContent />

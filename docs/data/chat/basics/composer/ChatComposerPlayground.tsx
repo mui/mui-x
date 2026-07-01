@@ -252,7 +252,7 @@ export default function ChatComposerPlayground() {
                   variant="default"
                   disabled={disabled}
                   features={{ attachments: attachmentConfig }}
-                  sx={composerSx as any}
+                  sx={composerSx}
                 >
                   {attachments ? <ChatComposerAttachmentList /> : null}
                   <ChatComposerTextArea placeholder={placeholder} />
@@ -277,7 +277,7 @@ export default function ChatComposerPlayground() {
                   variant="compact"
                   disabled={disabled}
                   features={{ attachments: attachmentConfig }}
-                  sx={composerSx as any}
+                  sx={composerSx}
                 >
                   {attachments ? <ChatComposerAttachmentList /> : null}
                   {attachments ? (

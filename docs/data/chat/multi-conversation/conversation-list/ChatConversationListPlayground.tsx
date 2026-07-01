@@ -178,7 +178,7 @@ export default function ChatConversationListPlayground() {
               overflow: 'hidden',
             }}
           >
-            <ChatConversationList variant={variant} sx={listSx as any} />
+            <ChatConversationList variant={variant} sx={listSx} />
           </Box>
         </ScopedChat>
       }

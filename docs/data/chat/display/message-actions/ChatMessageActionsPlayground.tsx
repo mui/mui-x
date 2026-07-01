@@ -168,7 +168,7 @@ export default function ChatMessageActionsPlayground() {
                     visibility: 'visible',
                   },
                 }),
-                ...(wrapperSx as object),
+                ...wrapperSx,
               }}
             >
               <ChatMessageGroup messageId={message.id}>
