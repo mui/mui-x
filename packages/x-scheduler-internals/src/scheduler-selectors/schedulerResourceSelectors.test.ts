@@ -807,6 +807,24 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('hasNestedResources', () => {
+      it('should return true when at least one resource has children', () => {
+        const child = ResourceBuilder.new().title('Child').build();
+        const parent = ResourceBuilder.new().title('Parent').children([child]).build();
+        const state = new storeClass.Value({ events: [], resources: [parent] }, adapter).state;
+        expect(schedulerResourceSelectors.hasNestedResources(state)).to.equal(true);
+      });
+
+      it('should return false for a flat resource list', () => {
+        const resources = [
+          ResourceBuilder.new().title('A').build(),
+          ResourceBuilder.new().title('B').build(),
+        ];
+        const state = new storeClass.Value({ events: [], resources }, adapter).state;
+        expect(schedulerResourceSelectors.hasNestedResources(state)).to.equal(false);
+      });
+    });
+
     describe('isResourceCollapsed', () => {
       const parent = ResourceBuilder.new().title('Parent').build();
       const resources = [parent];

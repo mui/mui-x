@@ -89,7 +89,8 @@ const ResourceCollapseToggle = styled(IconButton, {
 });
 
 // Reserves the toggle's footprint on leaf resources so the legend colors and
-// titles stay aligned in a single column regardless of whether a row can collapse.
+// titles stay aligned with collapsible siblings. Removed on a flat timeline
+// (no nested resources), where the content root sets `data-flat`.
 const ResourceCollapseSpacer = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'TitleCellCollapseSpacer',
@@ -97,6 +98,9 @@ const ResourceCollapseSpacer = styled('span', {
   width: 20,
   height: 20,
   flexShrink: 0,
+  '[data-flat] &': {
+    display: 'none',
+  },
 });
 
 export default function EventTimelinePremiumTitleCell(props: { resourceId: SchedulerResourceId }) {

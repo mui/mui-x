@@ -134,6 +134,10 @@ export const schedulerResourceSelectors = {
     (state: State, resourceId: SchedulerResourceId) =>
       (state.resourceChildrenIdLookup.get(resourceId)?.length ?? 0) > 0,
   ),
+  hasNestedResources: createSelector(
+    resourceParentIdLookupSelector,
+    (parentLookup) => parentLookup.size > 0,
+  ),
   isResourceCollapsed: createSelector(
     (state: State, resourceId: SchedulerResourceId) =>
       state.collapsedResources[resourceId] === true,

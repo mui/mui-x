@@ -28,6 +28,7 @@ import {
   schedulerNowSelectors,
   schedulerOccurrenceSelectors,
   schedulerOtherSelectors,
+  schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
@@ -664,6 +665,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     schedulerNowSelectors.showCurrentTimeIndicator,
   );
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const hasNestedResources = useStore(store, schedulerResourceSelectors.hasNestedResources);
   const isNowInView = React.useMemo(
     () => adapter.isWithinRange(now, [presetConfig.start, presetConfig.end]),
     [adapter, now, presetConfig.start, presetConfig.end],
@@ -857,6 +859,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   return (
     <EventTimelinePremiumContentRoot
       className={classes.content}
+      data-flat={!hasNestedResources || undefined}
       {...props}
       {...containerProps}
       ref={containerMergedRef}
