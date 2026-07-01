@@ -36,13 +36,13 @@ export function AnchoredEventToolbar(props: AnchoredEventToolbarProps) {
 
   useAnchoredPosition({ anchorRef, popupRef: nodeRef });
 
-  // Modal behavior: an outside tap anywhere disarms and is swallowed, but a tap on the armed event's
-  // resize handle is left alone so a resize gesture doesn't close the toolbar.
+  // Modal behavior: an outside tap disarms, except on the resize handle (so a resize gesture doesn't
+  // close the toolbar) or inside a dialog (swallowing it would break the dialog's own controls).
   useDisarmOnOutsidePointer({
     ref: nodeRef,
     active: true,
     onDisarm: stopEditing,
-    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
+    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}, [role="dialog"]`,
     global: true,
   });
 
