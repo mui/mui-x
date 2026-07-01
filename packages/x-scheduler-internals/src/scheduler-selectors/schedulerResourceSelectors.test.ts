@@ -790,27 +790,56 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
-    describe('resourceHasChildren', () => {
-      const child = ResourceBuilder.new().title('Child').build();
-      const parent = ResourceBuilder.new().title('Parent').children([child]).build();
+    describe('resourceHasVisibleChildren', () => {
+      const child1 = ResourceBuilder.new().title('Child 1').build();
+      const child2 = ResourceBuilder.new().title('Child 2').build();
+      const parent = ResourceBuilder.new().title('Parent').children([child1, child2]).build();
       const leaf = ResourceBuilder.new().title('Leaf').build();
       const resources = [parent, leaf];
 
-      it('should return true for a resource with children', () => {
+      it('should return true when a resource has at least one visible child', () => {
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        expect(schedulerResourceSelectors.resourceHasChildren(state, parent.id)).to.equal(true);
+        expect(schedulerResourceSelectors.resourceHasVisibleChildren(state, parent.id)).to.equal(
+          true,
+        );
+      });
+
+      it('should return true when only some children are hidden', () => {
+        const state = new storeClass.Value(
+          { events: [], resources, defaultVisibleResources: { [child1.id]: false } },
+          adapter,
+        ).state;
+        expect(schedulerResourceSelectors.resourceHasVisibleChildren(state, parent.id)).to.equal(
+          true,
+        );
+      });
+
+      it('should return false when all children are hidden', () => {
+        const state = new storeClass.Value(
+          {
+            events: [],
+            resources,
+            defaultVisibleResources: { [child1.id]: false, [child2.id]: false },
+          },
+          adapter,
+        ).state;
+        expect(schedulerResourceSelectors.resourceHasVisibleChildren(state, parent.id)).to.equal(
+          false,
+        );
       });
 
       it('should return false for a leaf resource', () => {
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        expect(schedulerResourceSelectors.resourceHasChildren(state, leaf.id)).to.equal(false);
+        expect(schedulerResourceSelectors.resourceHasVisibleChildren(state, leaf.id)).to.equal(
+          false,
+        );
       });
 
       it('should return false for an unknown resource id', () => {
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        expect(schedulerResourceSelectors.resourceHasChildren(state, 'non-existent')).to.equal(
-          false,
-        );
+        expect(
+          schedulerResourceSelectors.resourceHasVisibleChildren(state, 'non-existent'),
+        ).to.equal(false);
       });
     });
 

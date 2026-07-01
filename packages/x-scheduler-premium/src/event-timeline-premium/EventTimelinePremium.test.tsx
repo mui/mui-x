@@ -58,6 +58,7 @@ describe('<EventTimelinePremium />', () => {
     collapsedResources?: Record<string, boolean>;
     defaultCollapsedResources?: Record<string, boolean>;
     onCollapsedResourcesChange?: (collapsedResources: Record<string, boolean>) => void;
+    defaultVisibleResources?: Record<string, boolean>;
   }) {
     return render(
       <EventTimelinePremium
@@ -74,6 +75,7 @@ describe('<EventTimelinePremium />', () => {
         collapsedResources={options?.collapsedResources}
         defaultCollapsedResources={options?.defaultCollapsedResources}
         onCollapsedResourcesChange={options?.onCollapsedResourcesChange}
+        defaultVisibleResources={options?.defaultVisibleResources}
       />,
     );
   }
@@ -114,6 +116,16 @@ describe('<EventTimelinePremium />', () => {
       renderTimeline({ resources: nestedResources, events: [] });
 
       expect(screen.queryByRole('button', { name: new RegExp(child.title, 'i') })).to.equal(null);
+    });
+
+    it('should not render a collapse toggle when all children are hidden', () => {
+      renderTimeline({
+        resources: nestedResources,
+        events: [],
+        defaultVisibleResources: { [child.id]: false },
+      });
+
+      expect(screen.queryByRole('button', { name: collapseToggleName })).to.equal(null);
     });
 
     it('should reserve the toggle column when the timeline has nested resources', () => {

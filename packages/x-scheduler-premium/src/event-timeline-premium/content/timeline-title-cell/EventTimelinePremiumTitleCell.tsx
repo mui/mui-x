@@ -120,7 +120,11 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
   const resource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
   const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resourceId);
-  const hasChildren = useStore(store, schedulerResourceSelectors.resourceHasChildren, resourceId);
+  const hasVisibleChildren = useStore(
+    store,
+    schedulerResourceSelectors.resourceHasVisibleChildren,
+    resourceId,
+  );
   const isCollapsed = useStore(store, schedulerResourceSelectors.isResourceCollapsed, resourceId);
   const pinnedLeftOffset = virtualizerStore.use(Virtualization.selectors.pinnedLeftOffsetSelector);
 
@@ -159,7 +163,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       data-palette={eventColor}
     >
       <EventTimelinePremiumTitleCellContent ref={contentRef} className={classes.titleCellContent}>
-        {hasChildren ? (
+        {hasVisibleChildren ? (
           <ResourceCollapseToggle
             size="small"
             aria-expanded={!isCollapsed}
