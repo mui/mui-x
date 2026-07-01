@@ -57,16 +57,13 @@ const EventCalendarRootStyled = styled('div', {
   overflow: 'hidden',
   fontFamily: theme.typography.fontFamily,
 
-  // Establishes the root container so the header toolbar and the side-panel
-  // drawer can react to the *overall* calendar width with CSS only (distinct
-  // from the content-scoped responsive-typography container one level down).
+  // Root container so the toolbar and drawer react to the overall calendar width
+  // with CSS (distinct from the content-scoped typography container one level down).
   containerType: 'inline-size',
   containerName: EVENT_CALENDAR_ROOT_CONTAINER_NAME,
 
-  // Calendar-wide desktop/mobile toggle: both layouts are always rendered (SSR
-  // safe) and switched purely with the root container query — no JS breakpoint
-  // detection. Any descendant tagged `data-desktop-only` is hidden in the mobile
-  // layout, and `data-mobile-only` in the desktop layout.
+  // Desktop/mobile toggle via the root container query (both layouts always
+  // rendered, SSR-safe): hide `data-desktop-only` on mobile, `data-mobile-only` on desktop.
   [eventCalendarRootMobileQuery]: {
     '& [data-desktop-only]': {
       display: 'none',
@@ -131,9 +128,8 @@ const EventCalendarContent = styled('section', {
   height: '100%',
   maxHeight: '100%',
 
-  // The container itself lives on ResponsiveTypographyContainer one level up;
-  // these @container rules fire against that ancestor and retarget the
-  // effective vars on this slot, which descendants inherit.
+  // The container lives on ResponsiveTypographyContainer one level up; these rules
+  // fire against it and retarget the effective vars on this slot for descendants.
   ...responsiveTypographyContainerQueries,
 
   '&[data-side-panel-open="false"]': {

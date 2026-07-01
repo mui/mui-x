@@ -2,16 +2,17 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
-import { Drawer } from '@base-ui/react/drawer';
 import { styled } from '@mui/material/styles';
 import Close from '@mui/icons-material/Close';
-import ArrowBack from '@mui/icons-material/ArrowBack';
-import ChevronRight from '@mui/icons-material/ChevronRight';
+import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
+import ExpandLessOutlined from '@mui/icons-material/ExpandLessOutlined';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import CalendarViewMonthOutlined from '@mui/icons-material/CalendarViewMonthOutlined';
 import CalendarViewWeekOutlined from '@mui/icons-material/CalendarViewWeekOutlined';
 import CalendarViewDayOutlined from '@mui/icons-material/CalendarViewDayOutlined';
 import ViewAgendaOutlined from '@mui/icons-material/ViewAgendaOutlined';
+import Collapse from '@mui/material/Collapse';
+import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
@@ -24,64 +25,32 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import { ResourcesTree } from '../resources-tree';
 import { usePreferencesMenuItems } from '../header-toolbar/preferences-menu';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
-import { SidePanelDrawerProps } from './SidePanelDrawer.types';
+import type { SidePanelDrawerProps } from './SidePanelDrawer.types';
 
-const SidePanelDrawerBackdrop = styled(Drawer.Backdrop, {
+const SidePanelDrawerRoot = styled(Drawer, {
   name: 'MuiEventCalendar',
-  slot: 'SidePanelDrawerBackdrop',
+  slot: 'SidePanelDrawer',
 })(({ theme }) => ({
+  // Scope the modal to the calendar root (which is `position: relative` and owns the
+  // root container query), instead of the default fixed, full-viewport overlay.
   position: 'absolute',
-  inset: 0,
   zIndex: theme.zIndex.drawer,
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  // Fades out as the popup is swiped away, then in/out with the open transition.
-  opacity: 'calc(1 - var(--drawer-swipe-progress, 0))',
-  transition: theme.transitions.create('opacity', {
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  '&[data-starting-style], &[data-ending-style]': {
-    opacity: 0,
+  '& .MuiBackdrop-root': {
+    position: 'absolute',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  '&[data-swiping]': {
-    transition: 'none',
-  },
-}));
-
-const SidePanelDrawerViewport = styled(Drawer.Viewport, {
-  name: 'MuiEventCalendar',
-  slot: 'SidePanelDrawerViewport',
-})(({ theme }) => ({
-  position: 'absolute',
-  inset: 0,
-  zIndex: theme.zIndex.drawer,
-  display: 'flex',
-  justifyContent: 'flex-start',
-}));
-
-const SidePanelDrawerPopup = styled(Drawer.Popup, {
-  name: 'MuiEventCalendar',
-  slot: 'SidePanelDrawerPopup',
-})(({ theme }) => ({
-  boxSizing: 'border-box',
-  width: 'min(20rem, 85%)',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  backgroundColor: (theme.vars || theme).palette.background.paper,
-  borderRight: '1px solid',
-  borderColor: (theme.vars || theme).palette.divider,
-  outline: 0,
-  overflowY: 'auto',
-  overscrollBehavior: 'contain',
-  willChange: 'transform',
-  // Follows the finger while swiping; the open/close transition animates from
-  // the off-screen position declared in the starting/ending styles below.
-  transform: 'translateX(var(--drawer-swipe-movement-x, 0px))',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  '&[data-starting-style], &[data-ending-style]': {
-    transform: 'translateX(-100%)',
+  '& .MuiDrawer-paper': {
+    position: 'absolute',
+    boxSizing: 'border-box',
+    width: 'min(20rem, 85%)',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: (theme.vars || theme).palette.background.paper,
+    borderRight: '1px solid',
+    borderColor: (theme.vars || theme).palette.divider,
+    overflowY: 'auto',
+    overscrollBehavior: 'contain',
   },
 }));
 
@@ -97,7 +66,7 @@ const SidePanelDrawerHeader = styled('div', {
   padding: theme.spacing(2),
 }));
 
-const SidePanelDrawerTitle = styled(Drawer.Title, {
+const SidePanelDrawerTitle = styled('h2', {
   name: 'MuiEventCalendar',
   slot: 'SidePanelDrawerTitle',
 })(({ theme }) => ({
@@ -119,7 +88,6 @@ const SidePanelDrawerResources = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'SidePanelDrawerResources',
 })(({ theme }) => ({
-  flexGrow: 1,
   flexShrink: 0,
   display: 'flex',
   flexDirection: 'column',
@@ -135,20 +103,8 @@ const VIEW_ICONS = {
 };
 
 /**
- * Mobile-only side panel built on the Base UI `Drawer`. It mirrors the desktop
- * side panel actions (view switching, resources, preferences) but is laid out
- * for touch, and slides in from the leading edge with focus trapping, Escape /
- * backdrop dismissal, and swipe-to-dismiss handled by the primitive.
- *
- * It is portaled into the calendar root (`container`) rather than `document.body`,
- * so it stays scoped to the calendar's root container query (mobile-only, since
- * its only trigger — the header menu button — is hidden on wider screens) and is
- * positioned relative to the calendar instead of the viewport. It is SSR-safe:
- * closed on first paint and only mounted while open.
- *
- * The preferences options live in a nested `Drawer` that stacks over the main
- * one and is dismissed with the back button (or a swipe), replacing the previous
- * in-place layer swap.
+ * Mobile-only side panel (MUI temporary `Drawer`) with view switching, resources, and
+ * preferences (inline `Collapse`). Portaled into the calendar root to stay container-scoped.
  */
 export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
   props: SidePanelDrawerProps,
@@ -158,7 +114,7 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
 
   const store = useEventCalendarStoreContext();
   const adapter = useAdapterContext();
-  const { classes, localeText } = useEventCalendarStyledContext();
+  const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
 
   const views = useStore(store, eventCalendarViewSelectors.views);
   const view = useStore(store, eventCalendarViewSelectors.view);
@@ -170,131 +126,106 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
 
   const showViewSwitcher = views.length > 1;
 
-  // Close the preferences layer when the drawer closes, so the next open always
-  // starts on the main layer.
+  const titleId = `${schedulerId}-side-panel-drawer-title`;
+
+  // Scope the drawer to the calendar root so it renders inside its bounds and
+  // container query rather than portaling to `document.body`.
+  const portalContainer = container?.current ?? undefined;
+
+  // Collapse the preferences section when the drawer closes, so the next open
+  // always starts with it collapsed.
   React.useEffect(() => {
     if (!open) {
       setPreferencesOpen(false);
     }
   }, [open]);
 
-  const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) {
-      onClose();
-    }
-  };
-
   return (
-    <Drawer.Provider>
-      <Drawer.Root
-        open={open}
-        onOpenChange={handleOpenChange}
-        swipeDirection="left"
-        modal="trap-focus"
-      >
-        <Drawer.Portal container={container}>
-          <SidePanelDrawerBackdrop className={classes.sidePanelDrawerBackdrop} />
-          <SidePanelDrawerViewport className={classes.sidePanelDrawerViewport}>
-            <SidePanelDrawerPopup
-              ref={forwardedRef}
-              {...other}
-              className={clsx(className, classes.sidePanelDrawer)}
+    <SidePanelDrawerRoot
+      anchor="left"
+      open={open}
+      onClose={onClose}
+      className={classes.sidePanelDrawerViewport}
+      slotProps={{
+        root: { container: portalContainer, disableScrollLock: true },
+        backdrop: { className: classes.sidePanelDrawerBackdrop },
+        paper: {
+          ref: forwardedRef,
+          ...other,
+          className: clsx(className, classes.sidePanelDrawer),
+          role: 'dialog',
+          'aria-modal': true,
+          'aria-labelledby': titleId,
+        },
+      }}
+    >
+      <SidePanelDrawerHeader className={classes.sidePanelDrawerHeader}>
+        <SidePanelDrawerTitle id={titleId} className={classes.sidePanelDrawerTitle}>
+          {adapter.format(visibleDate, 'monthFullLetter')}{' '}
+          {adapter.format(visibleDate, 'yearPadded')}
+        </SidePanelDrawerTitle>
+        <IconButton
+          className={classes.sidePanelDrawerCloseButton}
+          aria-label={localeText.closeSidePanel}
+          onClick={onClose}
+        >
+          <Close />
+        </IconButton>
+      </SidePanelDrawerHeader>
+
+      {showViewSwitcher && (
+        <SidePanelDrawerViewList className={classes.sidePanelDrawerViewList} role="listbox">
+          {views.map((viewItem) => (
+            <MenuItem
+              key={viewItem}
+              className={classes.sidePanelDrawerViewItem}
+              role="option"
+              selected={view === viewItem}
+              aria-selected={view === viewItem}
+              onClick={(event) => store.setView(viewItem, event.nativeEvent)}
             >
-              <SidePanelDrawerHeader className={classes.sidePanelDrawerHeader}>
-                <SidePanelDrawerTitle className={classes.sidePanelDrawerTitle}>
-                  {adapter.format(visibleDate, 'monthFullLetter')}{' '}
-                  {adapter.format(visibleDate, 'yearPadded')}
-                </SidePanelDrawerTitle>
-                <IconButton
-                  className={classes.sidePanelDrawerCloseButton}
-                  aria-label={localeText.closeSidePanel}
-                  onClick={onClose}
-                >
-                  <Close />
-                </IconButton>
-              </SidePanelDrawerHeader>
+              <ListItemIcon>{VIEW_ICONS[viewItem]}</ListItemIcon>
+              <ListItemText>{localeText[viewItem]}</ListItemText>
+            </MenuItem>
+          ))}
+        </SidePanelDrawerViewList>
+      )}
 
-              {showViewSwitcher && (
-                <SidePanelDrawerViewList className={classes.sidePanelDrawerViewList} role="listbox">
-                  {views.map((viewItem) => (
-                    <MenuItem
-                      key={viewItem}
-                      className={classes.sidePanelDrawerViewItem}
-                      role="option"
-                      selected={view === viewItem}
-                      aria-selected={view === viewItem}
-                      onClick={(event) => store.setView(viewItem, event.nativeEvent)}
-                    >
-                      <ListItemIcon>{VIEW_ICONS[viewItem]}</ListItemIcon>
-                      <ListItemText>{localeText[viewItem]}</ListItemText>
-                    </MenuItem>
-                  ))}
-                </SidePanelDrawerViewList>
-              )}
+      <SidePanelDrawerResources>
+        <ResourcesTree />
+      </SidePanelDrawerResources>
 
-              <SidePanelDrawerResources>
-                <ResourcesTree />
-              </SidePanelDrawerResources>
-
-              {hasAnyOption && (
-                <React.Fragment>
-                  <MenuList
-                    className={classes.sidePanelDrawerPreferences}
-                    aria-label={localeText.preferencesMenu}
-                  >
-                    <MenuItem
-                      className={classes.sidePanelDrawerPreferencesButton}
-                      role="button"
-                      onClick={() => setPreferencesOpen(true)}
-                    >
-                      <ListItemIcon>
-                        <SettingsOutlined />
-                      </ListItemIcon>
-                      <ListItemText>{localeText.preferencesMenu}</ListItemText>
-                      <ListItemIcon>
-                        <ChevronRight />
-                      </ListItemIcon>
-                    </MenuItem>
-                  </MenuList>
-
-                  <Drawer.Root
-                    open={preferencesOpen}
-                    onOpenChange={setPreferencesOpen}
-                    swipeDirection="left"
-                    modal="trap-focus"
-                  >
-                    <Drawer.Portal container={container}>
-                      <SidePanelDrawerBackdrop className={classes.sidePanelDrawerBackdrop} />
-                      <SidePanelDrawerViewport className={classes.sidePanelDrawerViewport}>
-                        <SidePanelDrawerPopup className={classes.sidePanelDrawerPreferencesPopup}>
-                          <SidePanelDrawerHeader className={classes.sidePanelDrawerHeader}>
-                            <IconButton
-                              className={classes.sidePanelDrawerBackButton}
-                              aria-label={localeText.back}
-                              onClick={() => setPreferencesOpen(false)}
-                            >
-                              <ArrowBack />
-                            </IconButton>
-                            <SidePanelDrawerTitle className={classes.sidePanelDrawerTitle}>
-                              {localeText.preferencesMenu}
-                            </SidePanelDrawerTitle>
-                          </SidePanelDrawerHeader>
-                          <MenuList
-                            className={classes.sidePanelDrawerPreferencesList}
-                            aria-label={localeText.preferencesMenu}
-                          >
-                            {preferencesItems}
-                          </MenuList>
-                        </SidePanelDrawerPopup>
-                      </SidePanelDrawerViewport>
-                    </Drawer.Portal>
-                  </Drawer.Root>
-                </React.Fragment>
-              )}
-            </SidePanelDrawerPopup>
-          </SidePanelDrawerViewport>
-        </Drawer.Portal>
-      </Drawer.Root>
-    </Drawer.Provider>
+      {hasAnyOption && (
+        <React.Fragment>
+          <MenuList
+            className={classes.sidePanelDrawerPreferences}
+            aria-label={localeText.preferencesMenu}
+          >
+            <MenuItem
+              className={classes.sidePanelDrawerPreferencesButton}
+              role="button"
+              aria-expanded={preferencesOpen}
+              onClick={() => setPreferencesOpen((prev) => !prev)}
+            >
+              <ListItemIcon>
+                <SettingsOutlined />
+              </ListItemIcon>
+              <ListItemText>{localeText.preferencesMenu}</ListItemText>
+              <ListItemIcon>
+                {preferencesOpen ? <ExpandLessOutlined /> : <ExpandMoreOutlined />}
+              </ListItemIcon>
+            </MenuItem>
+          </MenuList>
+          <Collapse in={preferencesOpen} unmountOnExit>
+            <MenuList
+              className={classes.sidePanelDrawerPreferencesList}
+              aria-label={localeText.preferencesMenu}
+            >
+              {preferencesItems}
+            </MenuList>
+          </Collapse>
+        </React.Fragment>
+      )}
+    </SidePanelDrawerRoot>
   );
 });

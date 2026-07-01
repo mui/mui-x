@@ -2,30 +2,17 @@ import type { CSSObject } from '@mui/material/styles';
 
 export const EVENT_CALENDAR_CONTAINER_NAME = 'mui-event-calendar-content';
 
-// Container-query breakpoints (px) at which the effective typography vars are
-// retargeted. Shared between the queries below and any slot that needs to
-// react to the same widths (e.g. the day-number circle in `DayTimeGrid`), so
-// the tiers stay in sync from a single source.
+// Container-query breakpoints (px) for retargeting the typography vars. Shared so
+// slots like the day-number circle react to the same widths from a single source.
 export const RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM = 550;
 export const RESPONSIVE_TYPOGRAPHY_BREAKPOINT_MD = 800;
 
-// Container declared on the calendar root (`EventCalendarRootStyled`). Unlike
-// `EVENT_CALENDAR_CONTAINER_NAME` — which lives on `ResponsiveTypographyContainer`
-// and only wraps the content area, so it reflects the *content* width (and shrinks
-// when the side panel opens) — this one wraps the whole calendar, so the header
-// toolbar and the side-panel drawer can react to the *overall* available width
-// with CSS only (no JS breakpoint detection, SSR-safe). It reuses the same
-// `RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM` so the mobile cutover stays in lockstep
-// with responsive typography. Nested containers with distinct names don't
-// conflict: typography `@container` rules still resolve to the content container,
-// while these resolve to the root.
+// Wraps the whole calendar (vs. content-only `EVENT_CALENDAR_CONTAINER_NAME`), so the
+// toolbar and drawer react to the overall width via CSS. Distinct names never conflict.
 export const EVENT_CALENDAR_ROOT_CONTAINER_NAME = 'mui-event-calendar-root';
 
-// Single source for every `@container` width rule in the scheduler. Building the
-// at-rule strings from the shared breakpoint constants (instead of hand-writing
-// `@container … (width < 550px)` at each call site) keeps every breakpoint in
-// lockstep — it is what stops a stray hardcoded `550px` from silently drifting
-// out of sync with the typography tiers.
+// Builds every `@container` at-rule from the shared breakpoint constants, so no
+// hardcoded `550px` drifts out of sync with the typography tiers.
 const containerWidthBelow = (containerName: string, widthPx: number) =>
   `@container ${containerName} (width < ${widthPx}px)`;
 const containerWidthFrom = (containerName: string, widthPx: number) =>
@@ -33,10 +20,8 @@ const containerWidthFrom = (containerName: string, widthPx: number) =>
 const containerWidthBetween = (containerName: string, minWidthPx: number, maxWidthPx: number) =>
   `@container ${containerName} (${minWidthPx}px <= width < ${maxWidthPx}px)`;
 
-// Root-container queries — react to the *overall* calendar width to switch
-// between the "desktop" and "mobile" layouts. Tag any descendant of the calendar
-// root `data-desktop-only` (hidden below the breakpoint) or `data-mobile-only`
-// (hidden at/above it); the toggle rules live on `EventCalendarRootStyled`.
+// Root-container queries: switch desktop/mobile layout on the overall width. Tag
+// descendants `data-desktop-only` / `data-mobile-only`; toggle rules live on the root.
 export const eventCalendarRootMobileQuery = containerWidthBelow(
   EVENT_CALENDAR_ROOT_CONTAINER_NAME,
   RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
@@ -46,24 +31,15 @@ export const eventCalendarRootDesktopQuery = containerWidthFrom(
   RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
 );
 
-// Content-container query — reacts to the *content* width (which shrinks when the
-// side panel opens) at the same small-screen breakpoint. Used by slots that scale
-// with the room the views actually have, e.g. event cards and the day-number
-// circle, so they stay in sync with the responsive-typography tiers below.
+// Content-container query: reacts to content width (shrinks with the side panel) at
+// the same breakpoint, for slots that scale with the views' available room.
 export const eventCalendarContentMobileQuery = containerWidthBelow(
   EVENT_CALENDAR_CONTAINER_NAME,
   RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
 );
 
-// Each token is declared in two layers:
-// 1. Three tier vars (`-sm`, `-md`, `-lg`) hold the per-tier font sizes.
-//    They are declared unconditionally on the `ResponsiveTypographyContainer`
-//    slot. Consumers can override a single tier by targeting that slot via
-//    theme.components.MuiEventCalendar.styleOverrides.responsiveTypographyContainer
-//    without copying the @container blocks below.
-// 2. An unsuffixed effective var (e.g. `--EventCalendar-fontSize-eventTitle`)
-//    is what styled slots reference. It defaults to the lg tier and is
-//    retargeted at narrower widths by the @container queries below.
+// Two layers per token: three tier vars (`-sm`/`-md`/`-lg`) declared unconditionally,
+// and an effective var (lg by default) retargeted at narrower widths by the queries below.
 export const responsiveTypographyTokens: CSSObject = {
   // Event title — DayGridEventTitle, TimeGridEventTitle, EventItemTitle.
   '--EventCalendar-fontSize-eventTitle-sm': '0.6rem',
@@ -80,24 +56,19 @@ export const responsiveTypographyTokens: CSSObject = {
   '--EventCalendar-fontSize-agendaDayNumber-md': '1.2rem',
   '--EventCalendar-fontSize-agendaDayNumber-lg': '1.5rem',
 
-  // Time labels — DayTimeGridTimeAxisText (time-axis ticks on the
-  // week/day views), TimeGridEventTime (time on event cards in the
-  // time-grid), and DayTimeGridAllDayEventsHeaderCell (the "all day"
-  // label above the time axis).
+  // Time labels — time-axis ticks, event-card times, and the "all day" label.
   '--EventCalendar-fontSize-timeText-sm': '0.6rem',
   '--EventCalendar-fontSize-timeText-md': '0.7rem',
   '--EventCalendar-fontSize-timeText-lg': '0.75rem',
 
-  // Recurring-event icon on event cards — TimeGridEventRecurringIcon.
-  // lg matches the historical `fontSize="small"` (1.25rem) so the widest tier is
-  // unchanged; narrower tiers shrink it alongside the text.
+  // Recurring-event icon. lg matches the historical `fontSize="small"` (1.25rem);
+  // narrower tiers shrink it alongside the text.
   '--EventCalendar-fontSize-recurringIcon-sm': '1rem',
   '--EventCalendar-fontSize-recurringIcon-md': '1.125rem',
   '--EventCalendar-fontSize-recurringIcon-lg': '1.25rem',
 
-  // Effective vars. Slots reference these; they default to the lg tier and
-  // are retargeted by the @container rules in
-  // `responsiveTypographyContainerQueries` at narrower widths.
+  // Effective vars: slots reference these; default to lg, retargeted at narrower
+  // widths by `responsiveTypographyContainerQueries`.
   '--EventCalendar-fontSize-eventTitle': 'var(--EventCalendar-fontSize-eventTitle-lg)',
   '--EventCalendar-fontSize-dayNumber': 'var(--EventCalendar-fontSize-dayNumber-lg)',
   '--EventCalendar-fontSize-agendaDayNumber': 'var(--EventCalendar-fontSize-agendaDayNumber-lg)',
@@ -106,20 +77,14 @@ export const responsiveTypographyTokens: CSSObject = {
 };
 
 export const responsiveTokens: CSSObject = {
-  // Width of the fixed left column in the week/day views — hosts the
-  // all-day label cell (DayTimeGridAllDayEventsHeaderCell) at the top and
-  // the time-axis labels (DayTimeGridTimeAxisText) below. Consumed by
-  // DayTimeGridContainer via its local `--fixed-cell-width` var.
+  // Width of the fixed left column in week/day views (all-day label + time axis).
   '--EventCalendar-size-fixedCellWidth': '68px',
   // Typography tokens
   ...responsiveTypographyTokens,
 };
 
-// Inert unless an ancestor declares container-type=inline-size and the
-// matching container-name. `ResponsiveTypographyContainer` is that ancestor:
-// it wraps `EventCalendarContent` inside the full calendar and the view tree
-// inside every `Standalone*View`, so these queries fire in both cases — no
-// manual opt-in is required from the consumer.
+// Inert unless an ancestor sets container-type + name; `ResponsiveTypographyContainer`
+// is that ancestor, so these queries fire for both the calendar and standalone views.
 export const responsiveTypographyContainerQueries: CSSObject = {
   [eventCalendarContentMobileQuery]: {
     // fixed cell width

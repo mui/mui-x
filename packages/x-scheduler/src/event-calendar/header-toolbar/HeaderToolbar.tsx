@@ -23,9 +23,8 @@ import { ViewSwitcher } from './view-switcher';
 import { PreferencesMenu } from './preferences-menu';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 
-// Desktop vs. mobile toolbar elements (tagged `data-desktop-only` /
-// `data-mobile-only`) are both rendered for SSR safety; the calendar root
-// toggles them with the root container query — see `EventCalendarRootStyled`.
+// Both toolbar layouts render for SSR safety; the root container query toggles them
+// via `data-desktop-only` / `data-mobile-only` (see `EventCalendarRootStyled`).
 const HeaderToolbarRoot = styled('header', {
   name: 'MuiEventCalendar',
   slot: 'HeaderToolbar',

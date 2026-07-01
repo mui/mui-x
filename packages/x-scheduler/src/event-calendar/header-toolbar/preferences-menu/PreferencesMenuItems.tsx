@@ -41,9 +41,8 @@ const PreferencesMenuListSubheader = styled(ListSubheader, {
 }));
 
 /**
- * Computes which preference options are visible based on the menu config and the
- * current view. Shared by the desktop `PreferencesMenu` (dropdown) and the mobile
- * `SidePanelDrawer` (inline layer) so both render the exact same set of options.
+ * Computes which preference options are visible from the menu config and current view.
+ * Shared by the desktop `PreferencesMenu` and the mobile `SidePanelDrawer`.
  */
 export function usePreferencesMenuModel() {
   const store = useEventCalendarStoreContext();
@@ -123,11 +122,8 @@ export function usePreferencesMenuModel() {
 }
 
 /**
- * Builds the list of preference options (toggles, time format, week start, and
- * view-specific options) as a flat array of elements. Returned as an array — not
- * a wrapper component — so it can be spread directly into a Material `Menu`
- * (desktop) or `MenuList` (mobile drawer) and keep `React.Children`-based focus
- * management working in both. `hasAnyOption` is `false` when nothing is visible.
+ * Builds the preference options as a flat array of elements, so they spread into a
+ * `Menu` (desktop) or `MenuList` (drawer). `hasAnyOption` is `false` when none show.
  */
 export function usePreferencesMenuItems(): {
   hasAnyOption: boolean;

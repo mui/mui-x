@@ -275,11 +275,11 @@ export interface EventCalendarClasses
   headerToolbarMobileMenuButton: string;
   /** Styles applied to the header toolbar mobile today button element (small screens). */
   headerToolbarMobileTodayButton: string;
-  /** Styles applied to the side panel drawer root (popup) element (small screens). */
+  /** Styles applied to the side panel drawer paper (popup) element (small screens). */
   sidePanelDrawer: string;
   /** Styles applied to the side panel drawer backdrop element. */
   sidePanelDrawerBackdrop: string;
-  /** Styles applied to the side panel drawer viewport element. */
+  /** Styles applied to the side panel drawer root (modal) element. */
   sidePanelDrawerViewport: string;
   /** Styles applied to the side panel drawer header element. */
   sidePanelDrawerHeader: string;
@@ -287,8 +287,6 @@ export interface EventCalendarClasses
   sidePanelDrawerTitle: string;
   /** Styles applied to the side panel drawer close button element. */
   sidePanelDrawerCloseButton: string;
-  /** Styles applied to the side panel drawer back button element. */
-  sidePanelDrawerBackButton: string;
   /** Styles applied to the side panel drawer view list element. */
   sidePanelDrawerViewList: string;
   /** Styles applied to side panel drawer view list item elements. */
@@ -297,9 +295,7 @@ export interface EventCalendarClasses
   sidePanelDrawerPreferencesButton: string;
   /** Styles applied to the side panel drawer preferences entry list element. */
   sidePanelDrawerPreferences: string;
-  /** Styles applied to the side panel drawer nested preferences popup element. */
-  sidePanelDrawerPreferencesPopup: string;
-  /** Styles applied to the side panel drawer preferences options list element. */
+  /** Styles applied to the side panel drawer collapsible preferences options list element. */
   sidePanelDrawerPreferencesList: string;
 }
 
@@ -446,12 +442,10 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'sidePanelDrawerHeader',
     'sidePanelDrawerTitle',
     'sidePanelDrawerCloseButton',
-    'sidePanelDrawerBackButton',
     'sidePanelDrawerViewList',
     'sidePanelDrawerViewItem',
     'sidePanelDrawerPreferencesButton',
     'sidePanelDrawerPreferences',
-    'sidePanelDrawerPreferencesPopup',
     'sidePanelDrawerPreferencesList',
     ...errorContainerClassKeys,
     ...eventSkeletonClassKeys,
@@ -594,12 +588,10 @@ const slots = {
   sidePanelDrawerHeader: ['sidePanelDrawerHeader'],
   sidePanelDrawerTitle: ['sidePanelDrawerTitle'],
   sidePanelDrawerCloseButton: ['sidePanelDrawerCloseButton'],
-  sidePanelDrawerBackButton: ['sidePanelDrawerBackButton'],
   sidePanelDrawerViewList: ['sidePanelDrawerViewList'],
   sidePanelDrawerViewItem: ['sidePanelDrawerViewItem'],
   sidePanelDrawerPreferencesButton: ['sidePanelDrawerPreferencesButton'],
   sidePanelDrawerPreferences: ['sidePanelDrawerPreferences'],
-  sidePanelDrawerPreferencesPopup: ['sidePanelDrawerPreferencesPopup'],
   sidePanelDrawerPreferencesList: ['sidePanelDrawerPreferencesList'],
   ...errorContainerSlots,
   ...eventSkeletonSlots,

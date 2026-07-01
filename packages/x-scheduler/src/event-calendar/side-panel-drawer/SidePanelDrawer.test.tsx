@@ -9,9 +9,9 @@ describe('<SidePanelDrawer />', () => {
     return document.querySelector<HTMLElement>(`.${eventCalendarClasses.sidePanelDrawer}`);
   }
 
-  function getPreferencesPopup() {
+  function getPreferencesList() {
     return document.querySelector<HTMLElement>(
-      `.${eventCalendarClasses.sidePanelDrawerPreferencesPopup}`,
+      `.${eventCalendarClasses.sidePanelDrawerPreferencesList}`,
     );
   }
 
@@ -61,31 +61,27 @@ describe('<SidePanelDrawer />', () => {
     ).to.have.attribute('aria-selected', 'true');
   });
 
-  it('opens the nested preferences drawer and returns via the back button', async () => {
+  it('expands and collapses the preferences options inline', async () => {
     render(<EventCalendar events={[]} />);
     openDrawer();
 
     const drawer = getDrawer()!;
-    // Main layer: the view list is present and the preferences drawer is not open yet.
+    // The view list is present and the preferences options are collapsed by default.
     expect(drawer.querySelector(`.${eventCalendarClasses.sidePanelDrawerViewList}`)).not.to.equal(
       null,
     );
-    expect(getPreferencesPopup()).to.equal(null);
+    expect(getPreferencesList()).to.equal(null);
 
-    // Open the preferences drawer.
+    // Expand the preferences options inside the drawer.
     fireEvent.click(
       drawer.querySelector(`.${eventCalendarClasses.sidePanelDrawerPreferencesButton}`)!,
     );
-    const preferences = getPreferencesPopup();
-    expect(preferences).not.to.equal(null);
-    expect(
-      preferences!.querySelector(`.${eventCalendarClasses.sidePanelDrawerBackButton}`),
-    ).not.to.equal(null);
+    expect(getPreferencesList()).not.to.equal(null);
 
-    // Go back to the main layer.
+    // Collapse them again.
     fireEvent.click(
-      preferences!.querySelector(`.${eventCalendarClasses.sidePanelDrawerBackButton}`)!,
+      drawer.querySelector(`.${eventCalendarClasses.sidePanelDrawerPreferencesButton}`)!,
     );
-    await waitFor(() => expect(getPreferencesPopup()).to.equal(null));
+    await waitFor(() => expect(getPreferencesList()).to.equal(null));
   });
 });
