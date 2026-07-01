@@ -42,10 +42,13 @@
       }
     },
     "getItemLabel": {
-      "description": "Used to determine the string label for a given item.",
+      "description": "Used to determine the label for a given item.<br>Return a string for items that participate in keyboard type-ahead navigation. Return a <code>React.ReactNode</code> (e.g. <code>&lt;Skeleton /&gt;</code>) for decorative or loading labels — these are rendered as-is but are excluded from type-ahead search.",
       "typeDescriptions": {
         "item": { "name": "item", "description": "The item to check." },
-        "string": { "name": "string", "description": "The label of the item." }
+        "string | React.ReactNode": {
+          "name": "string | React.ReactNode",
+          "description": "The label of the item."
+        }
       }
     },
     "id": {
@@ -77,6 +80,12 @@
     },
     "itemHeight": {
       "description": "Sets the height in pixel of an item. Set to <code>null</code> to explicitly remove any item height restriction when items have different heights."
+    },
+    "loading": {
+      "description": "If <code>true</code>, a skeleton loading UI is displayed instead of the tree items."
+    },
+    "loadingItemsCount": {
+      "description": "The number of skeleton items to display when <code>loading</code> is <code>true</code>."
     },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {

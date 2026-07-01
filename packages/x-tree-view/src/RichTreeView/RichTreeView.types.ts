@@ -41,6 +41,16 @@ export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListEle
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * If `true`, a skeleton loading UI is displayed instead of the tree items.
+   * @default false
+   */
+  loading?: boolean;
+  /**
+   * The number of skeleton items to display when `loading` is `true`.
+   * @default 5
+   */
+  loadingItemsCount?: number;
 }
 
 export interface RichTreeViewProps<R extends {}, Multiple extends boolean | undefined>

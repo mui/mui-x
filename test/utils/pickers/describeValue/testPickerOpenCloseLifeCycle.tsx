@@ -209,7 +209,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', async () => {
+    // DateTimeRangePicker variants require ~24 user interactions (day + hours + minutes + meridiem
+    // × 4 cycles + tab navigation), each taking ~250 ms in jsdom — totalling ~6-7 s.
+    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', { timeout: 15_000 }, async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
