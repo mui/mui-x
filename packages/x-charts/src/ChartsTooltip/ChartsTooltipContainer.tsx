@@ -222,7 +222,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const tooltipItem = store.use(selectorChartsTooltipItem);
   const seriesConfig = store.use(selectorChartSeriesConfig);
   const selectorItemPosition: TooltipItemPositionSelector =
-    (tooltipItem && seriesConfig[tooltipItem.type]?.tooltipItemPositionSelector) ||
+    (tooltipItem && seriesConfig[tooltipItem.type]?.selectorTooltipItemPosition) ||
     selectorChartsTooltipItemPosition;
 
   const itemPosition = store.use(

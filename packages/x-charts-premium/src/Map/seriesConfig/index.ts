@@ -16,7 +16,7 @@ export const mapShapeSeriesConfig: ChartSeriesTypeConfig<'mapShape'> = {
   colorProcessor: getColor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionSelector: selectorTooltipItemPosition,
+  selectorTooltipItemPosition,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer,

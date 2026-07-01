@@ -50,7 +50,7 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
    * whose position depends on state the core tooltip plugin doesn't track.
    * Takes precedence over `tooltipItemPositionGetter`.
    */
-  tooltipItemPositionSelector?: TooltipItemPositionSelector;
+  selectorTooltipItemPosition?: TooltipItemPositionSelector;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<SeriesType>;
   keyboardFocusHandler?: KeyboardFocusHandler<SeriesType>;
   /**
