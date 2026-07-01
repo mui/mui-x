@@ -186,7 +186,11 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       style={
         {
           '--resource-depth': depth,
-          transform: `translateX(${pinnedLeftOffset}px)`,
+          // Only apply the pinning transform while actually scrolled. At rest the
+          // transform would still promote the label to its own compositing layer,
+          // causing a sub-pixel vertical shift on Windows when rows relaid out on
+          // collapse/expand.
+          transform: pinnedLeftOffset ? `translateX(${pinnedLeftOffset}px)` : undefined,
         } as React.CSSProperties
       }
       data-palette={eventColor}
