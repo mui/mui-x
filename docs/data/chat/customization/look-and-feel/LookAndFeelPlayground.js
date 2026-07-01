@@ -1,17 +1,19 @@
 'use client';
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
-import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ChatBox } from '@mui/x-chat';
 
+import {
+  ChoiceControl,
+  NumberControl,
+} from 'docs/src/modules/components/chat-playground/controls';
 import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   inboxConversations,
@@ -19,6 +21,11 @@ import {
   minimalConversation,
   minimalMessages,
 } from 'docs/data/chat/material/examples/shared/demoData';
+
+// Enough height to show the conversation list, header, and a few messages at once.
+const PREVIEW_HEIGHT = 540;
+// `shape.borderRadius` stays in a range that reads on chat bubbles without turning them into pills.
+const MAX_BORDER_RADIUS = 28;
 
 const PRIMARY_PRESETS = [
   { label: 'Indigo', value: '#5b6cff' },
@@ -65,7 +72,7 @@ export default function LookAndFeelPlayground() {
         <Paper
           variant="outlined"
           sx={{
-            height: 540,
+            height: PREVIEW_HEIGHT,
             overflow: 'hidden',
             borderRadius: 2,
             backgroundColor: 'background.paper',
@@ -90,121 +97,71 @@ export default function LookAndFeelPlayground() {
         </Paper>
       </ThemeProvider>
 
-      <Stack
-        spacing={2}
-        sx={{
-          p: 2,
-          border: '1px dashed',
-          borderColor: 'divider',
-          borderRadius: 2,
-          alignSelf: 'flex-start',
-        }}
-      >
-        <Stack spacing={0.25}>
-          <Typography variant="overline" color="text.secondary">
-            Props
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            Every change re-themes the live chat on the left.
-          </Typography>
-        </Stack>
+      <Stack spacing={1.5} sx={{ alignSelf: 'flex-start' }}>
+        <Typography variant="caption" color="text.secondary">
+          Every change re-themes the live chat on the left.
+        </Typography>
 
-        <Stack spacing={0.5}>
-          <Typography variant="caption" color="text.secondary">
-            variant
-          </Typography>
-          <ButtonGroup size="small" variant="outlined" fullWidth>
-            {['default', 'compact'].map((value) => (
-              <Button
-                key={value}
-                variant={variant === value ? 'contained' : 'outlined'}
-                onClick={() => setVariant(value)}
-              >
-                {value}
-              </Button>
-            ))}
-          </ButtonGroup>
-        </Stack>
-
-        <Stack spacing={0.5}>
-          <Typography variant="caption" color="text.secondary">
-            density
-          </Typography>
-          <ButtonGroup size="small" variant="outlined" fullWidth>
-            {['compact', 'standard', 'comfortable'].map((value) => (
-              <Button
-                key={value}
-                variant={density === value ? 'contained' : 'outlined'}
-                onClick={() => setDensity(value)}
-              >
-                {value}
-              </Button>
-            ))}
-          </ButtonGroup>
-        </Stack>
-
-        <Divider flexItem />
+        <ChoiceControl
+          label="variant"
+          value={variant}
+          options={['default', 'compact']}
+          onChange={setVariant}
+        />
+        <ChoiceControl
+          label="density"
+          value={density}
+          options={['compact', 'standard', 'comfortable']}
+          onChange={setDensity}
+        />
         <Stack spacing={0.5}>
           <Typography variant="caption" color="text.secondary">
             palette.primary.main
           </Typography>
-          <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+          <ToggleButtonGroup
+            exclusive
+            size="small"
+            value={primary}
+            onChange={(_, next) => {
+              if (next !== null) {
+                setPrimary(next);
+              }
+            }}
+            aria-label="palette.primary.main"
+            sx={{ flexWrap: 'wrap', gap: 0.5, border: 0 }}
+          >
             {PRIMARY_PRESETS.map((preset) => (
-              <Box
+              <ToggleButton
                 key={preset.value}
-                component="button"
+                value={preset.value}
                 aria-label={preset.label}
                 title={preset.label}
-                onClick={() => setPrimary(preset.value)}
                 sx={{
                   width: 28,
                   height: 28,
-                  borderRadius: '50%',
-                  border: '2px solid',
-                  borderColor:
-                    primary === preset.value ? 'text.primary' : 'transparent',
+                  p: 0,
+                  borderRadius: '50% !important',
+                  border: '2px solid transparent',
                   backgroundColor: preset.value,
-                  cursor: 'pointer',
-                  padding: 0,
-                  outline: 'none',
-                  transition: 'transform 120ms',
-                  '&:hover': { transform: 'scale(1.05)' },
+                  '&.Mui-selected': {
+                    borderColor: 'text.primary',
+                    backgroundColor: preset.value,
+                  },
+                  '&:hover, &.Mui-selected:hover': { backgroundColor: preset.value },
                 }}
               />
             ))}
-          </Stack>
+          </ToggleButtonGroup>
         </Stack>
 
-        <Stack spacing={0.5}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'baseline',
-            }}
-          >
-            <Typography variant="caption" color="text.secondary">
-              shape.borderRadius
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.primary"
-              sx={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              {radius}px
-            </Typography>
-          </Box>
-          <Slider
-            size="small"
-            value={radius}
-            min={0}
-            max={28}
-            step={1}
-            onChange={(_, next) =>
-              setRadius(typeof next === 'number' ? next : next[0])
-            }
-          />
-        </Stack>
+        <NumberControl
+          label="shape.borderRadius"
+          value={radius}
+          min={0}
+          max={MAX_BORDER_RADIUS}
+          valueFormatter={(value) => `${value}px`}
+          onChange={setRadius}
+        />
       </Stack>
     </Box>
   );
