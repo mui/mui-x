@@ -18,7 +18,7 @@ import {
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getWeekNumber } from '@mui/x-scheduler-internals/internals';
-import { HeaderToolbarProps } from './HeaderToolbar.types';
+import type { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { PreferencesMenu } from './preferences-menu';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';

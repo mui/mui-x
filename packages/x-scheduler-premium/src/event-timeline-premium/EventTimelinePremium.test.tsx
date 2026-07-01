@@ -16,13 +16,13 @@ import {
   EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import {
+import type {
   SchedulerEvent,
   SchedulerResource,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
-import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();

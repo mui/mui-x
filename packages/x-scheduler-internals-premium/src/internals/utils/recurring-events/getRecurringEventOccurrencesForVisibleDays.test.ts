@@ -1,5 +1,5 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 import { getWeekDayCode } from './internal-utils';
 

@@ -57,8 +57,8 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
       panelState.open && panelState.openedPanelValue === GridPreferencePanelsValue.columns;
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
-    const { columnsPanelTriggerRef } = useGridPanelContext();
-    const handleRef = useForkRef(ref, columnsPanelTriggerRef);
+    const { triggers } = useGridPanelContext();
+    const handleRef = useForkRef(ref, triggers.columnsPanel.setRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {

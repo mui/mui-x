@@ -1,18 +1,18 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
+import type { EventDialogClasses } from '../internals/components/event-dialog/eventDialogClasses';
 import {
-  EventDialogClasses,
   eventDialogClassKeys,
   eventDialogSlots,
 } from '../internals/components/event-dialog/eventDialogClasses';
+import type { ErrorContainerClasses } from '../internals/components/error-container/errorContainerClasses';
 import {
-  ErrorContainerClasses,
   errorContainerClassKeys,
   errorContainerSlots,
 } from '../internals/components/error-container/errorContainerClasses';
+import type { EventSkeletonClasses } from '../internals/components/event-skeleton/eventSkeletonClasses';
 import {
-  EventSkeletonClasses,
   eventSkeletonClassKeys,
   eventSkeletonSlots,
 } from '../internals/components/event-skeleton/eventSkeletonClasses';

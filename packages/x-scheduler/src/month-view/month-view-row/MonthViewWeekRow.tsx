@@ -8,7 +8,7 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getWeekNumber } from '@mui/x-scheduler-internals/internals';
-import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
+import type { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 
