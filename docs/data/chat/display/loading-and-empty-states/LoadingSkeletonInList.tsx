@@ -46,6 +46,9 @@ export default function LoadingSkeletonInList() {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
+    if (!loading) {
+      return undefined;
+    }
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, [loading]);

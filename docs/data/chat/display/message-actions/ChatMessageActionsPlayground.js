@@ -25,7 +25,7 @@ import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const conversation = {
   id: 'actions-playground',
-  title: 'Parts',
+  title: 'Actions',
   participants: [users.me, users.assistant],
 };
 
