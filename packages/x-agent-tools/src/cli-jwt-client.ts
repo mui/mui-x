@@ -84,9 +84,8 @@ export class CliJwtClient {
       return this.cachedToken!;
     }
     if (!this.inflight) {
-      // The refresh is shared across concurrent callers, so it is intentionally not tied to any one caller's signal.
-      // A cancelling caller only detaches its own wait (below);
-      // the exchange keeps running for the others and caches the minted token.
+      // Shared across concurrent callers, so it's not tied to any one caller's signal: a cancelling
+      // caller only detaches its own wait (below); the exchange keeps running and caches the token.
       this.inflight = this.refresh().finally(() => {
         this.inflight = null;
       });

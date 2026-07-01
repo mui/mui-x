@@ -7,10 +7,9 @@ export type Logger = (message: string, error?: unknown) => void;
 const noopLogger: Logger = () => {};
 
 /**
- * Hosts MUI serves docs and `llms.txt` from. This is a positive allowlist: only these hosts (plus
- * the explicitly configured backends) are fetchable, which closes the whole SSRF class at once. An
- * attacker-supplied host is never on the list, regardless of how it's spelled or what it resolves
- * to (private IPs, IPv4-mapped, redirects, DNS rebinding), so it can't reach internal services.
+ * Hosts MUI serves docs / `llms.txt` from. Positive allowlist: only these (plus configured backends)
+ * are fetchable, closing the SSRF class regardless of how an attacker host is spelled or resolves
+ * (private IPs, IPv4-mapped, redirects, DNS rebinding).
  */
 function isMuiDocsHost(host: string): boolean {
   return (
@@ -81,10 +80,8 @@ export interface UrlListFetcherOptions {
   resolveDocLinks?: boolean;
 }
 
-// Rewrite site-absolute markdown link targets (`](/path)`) to absolute URLs against `baseUrl`'s
-// origin. `llms.txt` indexes list relative paths; absolutizing them keeps the next fetch valid (a
-// bare `/path` is not a valid URL and would be rejected by the SSRF guard). Other targets
-// (already-absolute URLs, anchors, mailto, etc.) are left untouched.
+// Rewrite site-absolute markdown links (`](/path)`) to absolute URLs against `baseUrl`'s origin, so
+// the relative paths in `llms.txt` indexes stay fetchable. Absolute URLs, anchors, mailto are left as-is.
 export function absolutizeDocLinks(markdown: string, baseUrl: string): string {
   let origin: string;
   try {

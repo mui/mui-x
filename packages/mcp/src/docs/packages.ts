@@ -1,7 +1,7 @@
 import type { PackageData } from '@mui/x-agent-tools';
 import { DEFAULT_DOCS_BASE_URL, DOCS_BASE_URL_ENV, PACKAGES_LIST_PATH } from '../constants';
 
-/** Fetch the docs-catalog package list. Throws if the response isn't a non-empty array. */
+/** Fetch the docs-catalog package list. Throws a prefixed error if it isn't a non-empty JSON array. */
 export const fetchRemotePackages = async (
   fetcher: typeof fetch = globalThis.fetch,
 ): Promise<PackageData[]> => {

@@ -38,7 +38,6 @@ export class LRUCache {
       return null;
     }
 
-    // Check if cache entry is still valid
     if (Date.now() - entry.timestamp >= this.cache_ttl_ms) {
       this.cache.delete(url);
       return null;

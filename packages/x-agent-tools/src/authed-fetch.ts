@@ -6,9 +6,10 @@ export interface AuthedFetchOptions {
 }
 
 /**
- * Build a fetch that attaches a Bearer JWT via `buildInit(token)` and, on a 401 (token expired
- * mid-flight), invalidates the cached token, mints a fresh one, and retries the request once. The
- * token is fetched lazily and reused across calls, so create one per logical operation.
+ * Build a JWT-authed fetch: it attaches a Bearer token via `buildInit(token)` and, on a 401 (token
+ * expired mid-flight), invalidates the token, mints a fresh one, and retries the request once.
+ * Returns a function (rather than taking the token as an arg) so the token is fetched once and
+ * reused across requests, without assuming the caller's `getToken` caches. Create one per operation.
  */
 export function createAuthedFetch(options: AuthedFetchOptions) {
   let token: string | undefined;
