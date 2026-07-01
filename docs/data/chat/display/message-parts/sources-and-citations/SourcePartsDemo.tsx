@@ -66,7 +66,7 @@ export default function SourcePartsDemo() {
     >
       <Box
         sx={{
-          height: 320,
+          height: 360,
           overflow: 'hidden',
         }}
       >

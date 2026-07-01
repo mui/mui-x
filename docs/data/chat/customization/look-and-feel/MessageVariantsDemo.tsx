@@ -35,7 +35,7 @@ function VariantPanel({ variant, caption }: VariantPanelProps) {
       <Typography variant="caption" color="text.secondary">
         {caption}
       </Typography>
-      <Box sx={{ height: 380 }}>
+      <Box sx={{ height: 360 }}>
         <ChatBox
           adapter={adapter}
           currentUser={demoUsers.you}

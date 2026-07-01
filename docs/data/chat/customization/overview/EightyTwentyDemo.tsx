@@ -32,7 +32,7 @@ export default function EightyTwentyDemo() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      sx={{ height: 480 }}
+      sx={{ height: 500 }}
     />
   );
 

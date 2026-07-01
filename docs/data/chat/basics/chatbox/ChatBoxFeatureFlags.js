@@ -82,7 +82,7 @@ export default function ChatBoxFeatureFlags() {
       initialActiveConversationId={CONVERSATION_ID}
       initialMessages={messages}
       sx={{
-        height: 480,
+        height: 500,
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: 1,

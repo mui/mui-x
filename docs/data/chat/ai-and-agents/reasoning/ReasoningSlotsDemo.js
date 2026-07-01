@@ -142,7 +142,7 @@ export default function ReasoningSlotsDemo() {
         },
       }}
       sx={{
-        height: 480,
+        height: 500,
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: 1,

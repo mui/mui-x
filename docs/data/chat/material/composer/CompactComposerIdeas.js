@@ -199,7 +199,7 @@ function CompactIdea({ idea }) {
           initialMessages={minimalMessages}
           features={{ conversationHeader: false }}
           sx={{
-            height: 300,
+            height: 360,
             border: '1px solid',
             borderColor: 'divider',
             borderRadius: 1,

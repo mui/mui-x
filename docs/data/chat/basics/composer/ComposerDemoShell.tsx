@@ -58,7 +58,7 @@ export function ComposerDemoShell(props: ComposerDemoShellProps) {
         {beforeComposer}
         <Box
           sx={{
-            height: 320,
+            height: 360,
             overflow: 'hidden',
           }}
         >
