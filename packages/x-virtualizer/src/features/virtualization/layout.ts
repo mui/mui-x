@@ -296,6 +296,111 @@ export class LayoutList extends Layout<ListElements> {
   };
 }
 
+/**
+ * List layout based on the "inverse sticky" technique
+ * (https://pierre.computer/writing/on-rendering-diffs).
+ *
+ * The rendered window is placed in the normal flow at `offsetTop` (through the positioner
+ * spacer) and given `position: sticky` with `top` & `bottom` set to
+ * `-(renderedHeight - viewportHeight)`. Within that range the browser moves the window
+ * natively with the scroll (no JS needed per frame). When the scroll position moves past
+ * the rendered window before the render context updates, the window clamps to the viewport
+ * edge instead of scrolling out of view, so stale content is shown instead of a blank area.
+ *
+ * Expected DOM structure:
+ * ```tsx
+ * <div {...containerProps}>         // scroller
+ *   <div {...contentProps}>         // in-flow, full content height, sticky containing block
+ *     <div {...positionerProps} />  // spacer, height: offsetTop
+ *     <div {...windowProps}>        // sticky rendered window
+ *       {rows}
+ *     </div>
+ *   </div>
+ * </div>
+ * ```
+ */
+export class LayoutListSticky extends Layout<ListElements> {
+  static elements = ['scroller', 'container', 'content', 'positioner', 'window'] as const;
+
+  use(
+    store: Store<BaseState>,
+    _params: ParamsWithDefaults,
+    _api: RequiredAPI,
+    layoutParams: VirtualizationLayoutParams,
+  ) {
+    const { scrollerRef, containerRef } = layoutParams;
+
+    const mergedRef = useForkRef(scrollerRef, containerRef);
+
+    store.state.virtualization.context = {
+      mergedRef,
+    };
+  }
+
+  static selectors = {
+    containerProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      Dimensions.selectors.autoHeight,
+      Dimensions.selectors.needsHorizontalScrollbar,
+      (context, autoHeight, needsHorizontalScrollbar) => ({
+        ref: context.mergedRef,
+        style: {
+          overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
+          overflowY: autoHeight ? 'hidden' : undefined,
+          position: 'relative',
+          // The positioner height changes on each render context update; native scroll
+          // anchoring would fight those updates by adjusting the scroll position.
+          overflowAnchor: 'none',
+        } as React.CSSProperties,
+        role: 'presentation',
+        // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
+        // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
+        tabIndex: platform.engine.gecko ? -1 : undefined,
+      }),
+    ),
+
+    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => ({
+      style: {
+        // In-flow (not absolutely positioned): the sticky window is clamped to its
+        // containing block, which must span the full content height.
+        position: 'relative',
+        height: contentHeight,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
+
+    positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
+      style: {
+        height: offsetTop,
+      } as React.CSSProperties,
+    })),
+
+    windowProps: createSelectorMemoized(
+      Virtualization.selectors.renderContext,
+      Dimensions.selectors.rowPositions,
+      Dimensions.selectors.contentHeight,
+      Dimensions.selectors.dimensions,
+      (renderContext, rowPositions, contentHeight, dimensions) => {
+        const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
+        // `lastRowIndex` is exclusive: when it points past the last row, the window
+        // extends to the end of the content.
+        const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
+        const renderedHeight = lastPosition - firstPosition;
+        // Clamped to 0: if the rendered window is smaller than the viewport (few rows),
+        // sticky positioning must stay inert.
+        const stickyOffset = Math.min(0, -(renderedHeight - dimensions.viewportInnerSize.height));
+        return {
+          style: {
+            position: 'sticky',
+            top: stickyOffset,
+            bottom: stickyOffset,
+          } as React.CSSProperties,
+        };
+      },
+    ),
+  };
+}
+
 type ScrollProperty = 'scrollTop' | 'scrollLeft';
 
 function useScrollbarRefCallback(
