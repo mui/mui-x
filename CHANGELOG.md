@@ -56,13 +56,9 @@ Same changes as in `@mui/x-date-pickers@9.8.0`, plus:
 
 #### `@mui/x-charts@9.8.0`
 
-- [charts] Extract shared WebGL utilities across bar/scatter/heatmap renderers (#22466) @sai6855
-- [charts] Add MapImagePlot for raster base maps (#22977) @JCQuintas
 - [charts] Decouple d3-geo from the universal tooltip (#23011) @sai6855
-- [charts] Deduplicate getGroupingConfig() (#22889) @sai6855
+- [charts] Deduplicate `getGroupingConfig` (#22889) @sai6855
 - [charts] Expose `usePolarGeometry` hook for radial overlays (#22892) @mustafajw07
-- [docs][charts] Add map example for arbitrary GeoJSON shapes (#22976) @JCQuintas
-- [docs][charts] Double point count in `ScatterAsyncRenderer` demo (#22906) @JCQuintas
 
 #### `@mui/x-charts-pro@9.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -75,6 +71,8 @@ Same changes as in `@mui/x-charts-pro@9.8.0`, plus:
 - [charts-premium] Add `onItemClick` support for the Map shapes (#22876) @sai6855
 - [charts-premium] Replace dataIndex with `name` in map identifier (#22891) @sai6855
 - [charts-premium] Share helper function (#23030) @alexfauquette
+- [charts-premium] Extract shared WebGL utilities across bar/scatter/heatmap renderers (#22466) @sai6855
+- [charts-premium] Add `MapImagePlot` for raster base maps (#22977) @JCQuintas
 
 ### Tree View
 
