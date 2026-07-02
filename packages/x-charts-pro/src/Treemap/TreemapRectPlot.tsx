@@ -2,9 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import type { TreemapItemIdentifierWithData } from './treemap.types';
 import { TreemapRectElement } from './TreemapRectElement';
 import { useTreemapLayout, useTreemapSeries } from '../hooks/useTreemapSeries';
+import { useTreemapHighlightGetter } from './treemapHighlightHooks';
 import { useUtilityClasses } from './treemapClasses';
 import type { TreemapClasses } from './treemapClasses';
 
@@ -13,15 +13,6 @@ export interface TreemapRectPlotProps {
    * Classes applied to the various elements.
    */
   classes?: Partial<TreemapClasses>;
-  /**
-   * Callback fired when a treemap tile is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {TreemapItemIdentifierWithData} item The treemap item identifier.
-   */
-  onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    item: TreemapItemIdentifierWithData,
-  ) => void;
 }
 
 const TreemapRectPlotRoot = styled('g', {
@@ -34,12 +25,23 @@ const TreemapRectPlotRoot = styled('g', {
 });
 
 function TreemapRectPlot(props: TreemapRectPlotProps) {
-  const { classes: inputClasses, onItemClick } = props;
+  const { classes: inputClasses } = props;
 
   const classes = useUtilityClasses({ classes: inputClasses });
 
   const treemapSeries = useTreemapSeries()[0];
   const layout = useTreemapLayout();
+  const getHighlightState = useTreemapHighlightGetter();
+
+  const renderMode = treemapSeries?.nodeOptions?.renderMode ?? 'all';
+  // The (possibly synthetic) root at depth 0 is structural and never rendered.
+  const renderableNodes = React.useMemo(
+    () =>
+      (layout?.nodes ?? []).filter(
+        (node) => node.depth >= 1 && (renderMode === 'all' || node.height === 0),
+      ),
+    [layout, renderMode],
+  );
 
   if (!treemapSeries) {
     throw new Error(
@@ -51,25 +53,22 @@ function TreemapRectPlot(props: TreemapRectPlotProps) {
     return null;
   }
 
-  const renderMode = treemapSeries.nodeOptions?.renderMode ?? 'all';
   const borderRadius = treemapSeries.nodeOptions?.borderRadius;
-
-  // The (possibly synthetic) root at depth 0 is structural and never rendered.
-  const renderableNodes = layout.nodes.filter(
-    (node) => node.depth >= 1 && (renderMode === 'all' || node.height === 0),
-  );
 
   return (
     <TreemapRectPlotRoot className={classes.cells}>
-      {renderableNodes.map((node) => (
-        <TreemapRectElement
-          key={node.id}
-          seriesId={treemapSeries.id}
-          node={node}
-          borderRadius={borderRadius}
-          onClick={onItemClick}
-        />
-      ))}
+      {renderableNodes.map((node) => {
+        const highlightState = getHighlightState(node.id);
+        return (
+          <TreemapRectElement
+            key={node.id}
+            node={node}
+            borderRadius={borderRadius}
+            isHighlighted={highlightState === 'highlighted'}
+            isFaded={highlightState === 'faded'}
+          />
+        );
+      })}
     </TreemapRectPlotRoot>
   );
 }
@@ -83,12 +82,6 @@ TreemapRectPlot.propTypes /* remove-proptypes */ = {
    * Classes applied to the various elements.
    */
   classes: PropTypes.object,
-  /**
-   * Callback fired when a treemap tile is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {TreemapItemIdentifierWithData} item The treemap item identifier.
-   */
-  onItemClick: PropTypes.func,
 } as any;
 
 export { TreemapRectPlot };

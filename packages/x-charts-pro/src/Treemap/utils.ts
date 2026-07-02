@@ -52,54 +52,63 @@ export function getTilingMethod(method: TreemapTilingMethod = 'squarify') {
   }
 }
 
-/** Whether `ancestorId` is a (strict) ancestor of `nodeId` in the layout tree. */
-function isTreemapAncestor(
+function collectTreemapDescendants(
   layout: TreemapLayout,
-  ancestorId: TreemapItemId,
   nodeId: TreemapItemId,
-): boolean {
+  set: Set<TreemapItemId>,
+) {
+  layout.byId.get(nodeId)?.childrenIds.forEach((childId) => {
+    set.add(childId);
+    collectTreemapDescendants(layout, childId, set);
+  });
+}
+
+function collectTreemapAncestors(
+  layout: TreemapLayout,
+  nodeId: TreemapItemId,
+  set: Set<TreemapItemId>,
+) {
   let currentId = layout.byId.get(nodeId)?.parentId ?? null;
   while (currentId != null) {
-    if (currentId === ancestorId) {
-      return true;
-    }
+    set.add(currentId);
     currentId = layout.byId.get(currentId)?.parentId ?? null;
   }
-  return false;
 }
 
 /**
- * Whether the tile `targetId` should be highlighted given the `highlight` scope and the
- * currently hovered tile `hoveredId`. The hovered tile is always highlighted.
+ * Collects, once per hovered tile, the set of node ids in the given hierarchy scope
+ * relative to `hoveredId` (always including the hovered tile itself, except for 'none').
+ * Rendering then does an O(1) `Set.has` lookup per tile instead of a per-tile traversal.
  */
-export function isTreemapNodeHighlighted(
+export function collectTreemapScope(
   layout: TreemapLayout,
-  highlight: TreemapHighlight,
+  scope: TreemapHighlight,
   hoveredId: TreemapItemId,
-  targetId: TreemapItemId,
-): boolean {
-  if (highlight === 'none') {
-    return false;
-  }
-  if (targetId === hoveredId) {
-    return true;
-  }
+): Set<TreemapItemId> {
+  const set = new Set<TreemapItemId>();
   const hovered = layout.byId.get(hoveredId);
-  const target = layout.byId.get(targetId);
-  if (!hovered || !target) {
-    return false;
+  if (scope === 'none' || !hovered) {
+    return set;
   }
-  switch (highlight) {
-    case 'parent':
-      return targetId === hovered.parentId;
-    case 'child':
-      return target.parentId === hoveredId;
-    case 'parents':
-      return isTreemapAncestor(layout, targetId, hoveredId);
+  set.add(hoveredId);
+  switch (scope) {
     case 'children':
-      return isTreemapAncestor(layout, hoveredId, targetId);
+      collectTreemapDescendants(layout, hoveredId, set);
+      break;
+    case 'parents':
+      collectTreemapAncestors(layout, hoveredId, set);
+      break;
+    case 'parent':
+      if (hovered.parentId != null) {
+        set.add(hovered.parentId);
+      }
+      break;
+    case 'child':
+      hovered.childrenIds.forEach((childId) => set.add(childId));
+      break;
     case 'node':
     default:
-      return false;
+      break;
   }
+  return set;
 }

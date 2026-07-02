@@ -3,6 +3,7 @@ import {
   useChartInteraction,
   useChartKeyboardNavigation,
   useChartHighlight,
+  useChartItemClick,
 } from '@mui/x-charts/internals';
 import type {
   ConvertSignaturesIntoPlugins,
@@ -10,6 +11,7 @@ import type {
   UseChartInteractionSignature,
   UseChartKeyboardNavigationSignature,
   UseChartHighlightSignature,
+  UseChartItemClickSignature,
 } from '@mui/x-charts/internals';
 import { useChartProExport } from '../internals/plugins/useChartProExport';
 import type { UseChartProExportSignature } from '../internals/plugins/useChartProExport';
@@ -20,12 +22,14 @@ export type TreemapChartPluginSignatures = [
   UseChartHighlightSignature<'treemap'>,
   UseChartProExportSignature,
   UseChartKeyboardNavigationSignature,
+  UseChartItemClickSignature<'treemap'>,
 ];
 
-export const TREEMAP_CHART_PLUGINS: ConvertSignaturesIntoPlugins<TreemapChartPluginSignatures> = [
+export const TREEMAP_CHART_PLUGINS = [
   useChartTooltip,
   useChartInteraction,
   useChartHighlight,
   useChartProExport,
   useChartKeyboardNavigation,
-];
+  useChartItemClick,
+] as ConvertSignaturesIntoPlugins<TreemapChartPluginSignatures>;

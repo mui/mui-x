@@ -1,5 +1,6 @@
-import { createRenderer } from '@mui/internal-test-utils';
+import { act, createRenderer } from '@mui/internal-test-utils';
 import { hsl } from '@mui/x-charts-vendor/d3-color';
+import { isJSDOM } from 'test/utils/skipIf';
 import { Treemap, treemapClasses } from '@mui/x-charts-pro/Treemap';
 
 describe('<Treemap />', () => {
@@ -242,5 +243,45 @@ describe('<Treemap />', () => {
     expect(container.querySelector('[data-node="group"]')).not.to.equal(null);
     expect(container.querySelector('[data-node="leaf1"]')).not.to.equal(null);
     expect(container.querySelector('[data-node="leaf2"]')).not.to.equal(null);
+  });
+
+  // Central hit-testing resolves the tile from the pointer position, so it needs real
+  // client coordinates that JSDOM does not provide.
+  describe('central pointer interaction', () => {
+    const clickable = { id: 's', ...twoLeaves } as const;
+
+    it.skipIf(isJSDOM)('fires onItemClick with the clicked tile', async () => {
+      const { userEvent } = await import('vitest/browser');
+      const onItemClick = vi.fn();
+      const { container } = render(
+        <Treemap width={200} height={200} margin={0} series={clickable} onItemClick={onItemClick} />,
+      );
+
+      const bTile = container.querySelector<HTMLElement>(`.${treemapClasses.cell}[data-node="B"]`)!;
+      // eslint-disable-next-line testing-library/no-unnecessary-act
+      await act(async () => {
+        await userEvent.click(bTile);
+      });
+
+      expect(onItemClick).toHaveBeenLastCalledWith(
+        expect.anything(),
+        expect.objectContaining({ type: 'treemap', seriesId: 's', nodeId: 'B' }),
+      );
+    });
+
+    it.skipIf(isJSDOM)('highlights the tile under the pointer', async () => {
+      const { userEvent } = await import('vitest/browser');
+      const { container } = render(
+        <Treemap width={200} height={200} margin={0} series={clickable} />,
+      );
+
+      const bTile = container.querySelector<HTMLElement>(`.${treemapClasses.cell}[data-node="B"]`)!;
+      // eslint-disable-next-line testing-library/no-unnecessary-act
+      await act(async () => {
+        await userEvent.hover(bTile);
+      });
+
+      expect(bTile.getAttribute('data-highlighted')).to.equal('true');
+    });
   });
 });

@@ -9,6 +9,7 @@ import identifierCleaner from './identifierCleaner';
 import { createTreemapIsHighlighted } from './createIsHighlighted';
 import { createTreemapIsFaded } from './createIsFaded';
 import descriptionGetter from './descriptionGetter';
+import getItemAtPosition from './getItemAtPosition';
 
 // Colors are resolved per-node in `getSeriesWithDefaultValues`, so these are passthroughs.
 const seriesProcessor = (series: any) => series;
@@ -33,6 +34,7 @@ export const treemapSeriesConfig: ChartSeriesTypeConfig<'treemap'> = {
   tooltipGetter,
   tooltipItemPositionGetter,
   getSeriesWithDefaultValues,
+  getItemAtPosition,
   keyboardFocusHandler,
   identifierSerializer,
   identifierCleaner,

@@ -1,6 +1,8 @@
 'use client';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTreemapLayout, useTreemapSeries } from '../hooks/useTreemapSeries';
+import { useTreemapHighlightGetter } from './treemapHighlightHooks';
 import { useUtilityClasses } from './treemapClasses';
 import type { TreemapClasses } from './treemapClasses';
 import { TreemapLabel } from './TreemapLabel';
@@ -20,6 +22,26 @@ function TreemapLabelPlot(props: TreemapLabelPlotProps) {
 
   const treemapSeries = useTreemapSeries()[0];
   const layout = useTreemapLayout();
+  const getHighlightState = useTreemapHighlightGetter();
+
+  const nodeOptions = treemapSeries?.nodeOptions;
+  const showLabels = nodeOptions?.showLabels ?? true;
+  const renderMode = nodeOptions?.renderMode ?? 'all';
+  const labelPadding = resolveLabelPadding(nodeOptions?.labelPadding);
+
+  // Every rendered tile is labeled by default; a custom predicate takes full control.
+  const labelled = React.useMemo(() => {
+    if (showLabels === false) {
+      return [];
+    }
+    const isCustom = typeof showLabels === 'function';
+    return (layout?.nodes ?? []).filter(
+      (node) =>
+        node.depth >= 1 &&
+        (renderMode === 'all' || node.height === 0) &&
+        (isCustom ? showLabels(node) : true),
+    );
+  }, [layout, renderMode, showLabels]);
 
   if (!treemapSeries) {
     throw new Error(
@@ -27,37 +49,19 @@ function TreemapLabelPlot(props: TreemapLabelPlotProps) {
     );
   }
 
-  if (!layout || !layout.nodes) {
+  if (!layout || !layout.nodes || showLabels === false) {
     return null;
   }
-
-  const { nodeOptions } = treemapSeries;
-  const showLabels = nodeOptions?.showLabels ?? true;
-  if (showLabels === false) {
-    return null;
-  }
-
-  const renderMode = nodeOptions?.renderMode ?? 'all';
-  const isCustom = typeof showLabels === 'function';
-  const labelPadding = resolveLabelPadding(nodeOptions?.labelPadding);
-
-  // Every rendered tile is labeled by default; a custom predicate takes full control.
-  const shouldLabel = (node: (typeof layout.nodes)[number]) => (isCustom ? showLabels(node) : true);
-
-  // Only tiles that are actually rendered can carry a label.
-  const labelled = layout.nodes.filter(
-    (node) => node.depth >= 1 && (renderMode === 'all' || node.height === 0) && shouldLabel(node),
-  );
 
   return (
     <g className={classes.labels}>
       {labelled.map((node) => (
         <TreemapLabel
           key={`label-${node.id}`}
-          seriesId={treemapSeries.id}
           node={node}
           paddingX={labelPadding.x}
           paddingY={labelPadding.y}
+          isFaded={getHighlightState(node.id) === 'faded'}
         />
       ))}
     </g>

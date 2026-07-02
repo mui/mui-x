@@ -79,12 +79,14 @@ export const useTreemapProps = (props: TreemapProps) => {
     sx,
     highlightedItem,
     onHighlightChange,
+    // The central item-click plugin types the item as the bare identifier, but at runtime
+    // `getItemAtPosition` returns the identifier with its layout node, matching `onItemClick`.
+    onItemClick: onItemClick as ChartsContainerProProps<
+      'treemap',
+      TreemapChartPluginSignatures
+    >['onItemClick'],
     apiRef,
     plugins: TREEMAP_CHART_PLUGINS,
-  };
-
-  const treemapPlotProps = {
-    onItemClick,
   };
 
   const overlayProps: ChartsOverlayProps = {
@@ -101,7 +103,6 @@ export const useTreemapProps = (props: TreemapProps) => {
 
   return {
     chartsContainerProps,
-    treemapPlotProps,
     overlayProps,
     chartsWrapperProps,
     children,

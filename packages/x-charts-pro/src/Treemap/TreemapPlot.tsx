@@ -1,9 +1,7 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import type { TreemapItemIdentifierWithData } from './treemap.types';
 import { useTreemapLayout, useTreemapSeries } from '../hooks/useTreemapSeries';
 import { useUtilityClasses } from './treemapClasses';
 import type { TreemapClasses } from './treemapClasses';
@@ -19,15 +17,6 @@ export interface TreemapPlotProps {
    * Classes applied to the various elements.
    */
   classes?: Partial<TreemapClasses>;
-  /**
-   * Callback fired when a treemap tile is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {TreemapItemIdentifierWithData} item The treemap item identifier.
-   */
-  onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    item: TreemapItemIdentifierWithData,
-  ) => void;
 }
 
 const TreemapPlotRoot = styled('g', {
@@ -39,7 +28,7 @@ const TreemapPlotRoot = styled('g', {
  * Renders a treemap plot.
  */
 function TreemapPlot(props: TreemapPlotProps) {
-  const { className, classes: inputClasses, onItemClick } = props;
+  const { className, classes: inputClasses } = props;
 
   const classes = useUtilityClasses({ classes: inputClasses });
 
@@ -60,7 +49,7 @@ function TreemapPlot(props: TreemapPlotProps) {
 
   return (
     <TreemapPlotRoot className={clsx(classes.root, className)}>
-      <TreemapRectPlot classes={classes} onItemClick={onItemClick} />
+      <TreemapRectPlot classes={classes} />
       {showLabels !== false && <TreemapLabelPlot classes={classes} />}
     </TreemapPlotRoot>
   );
@@ -79,12 +68,6 @@ TreemapPlot.propTypes /* remove-proptypes */ = {
    * A CSS class name applied to the root element.
    */
   className: PropTypes.string,
-  /**
-   * Callback fired when a treemap tile is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {TreemapItemIdentifierWithData} item The treemap item identifier.
-   */
-  onItemClick: PropTypes.func,
 } as any;
 
 export { TreemapPlot };

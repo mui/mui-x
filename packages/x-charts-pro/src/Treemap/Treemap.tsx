@@ -25,7 +25,14 @@ export interface TreemapProps
   extends
     Omit<
       ChartsContainerProProps<'treemap', TreemapChartPluginSignatures>,
-      'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
+      | 'plugins'
+      | 'series'
+      | 'slotProps'
+      | 'slots'
+      | 'dataset'
+      | 'hideLegend'
+      | 'skipAnimation'
+      | 'onItemClick'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     TreemapSlotExtension {
@@ -40,11 +47,11 @@ export interface TreemapProps
   classes?: Partial<TreemapClasses>;
   /**
    * Callback fired when a treemap tile is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The event source of the callback.
    * @param {TreemapItemIdentifierWithData} item The treemap item identifier.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     item: TreemapItemIdentifierWithData,
   ) => void;
 }
@@ -69,7 +76,7 @@ const Treemap = React.forwardRef(function Treemap(
 ) {
   const themedProps = useThemeProps({ props, name: 'MuiTreemap' });
 
-  const { chartsContainerProps, treemapPlotProps, overlayProps, chartsWrapperProps, children } =
+  const { chartsContainerProps, overlayProps, chartsWrapperProps, children } =
     useTreemapProps(themedProps);
   const {
     chartsDataProviderProProps: { series, ...chartsDataProviderProProps },
@@ -82,7 +89,7 @@ const Treemap = React.forwardRef(function Treemap(
     <TreemapDataProvider series={series as TreemapSeriesType[]} {...chartsDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         <ChartsSurface {...chartsSurfaceProps}>
-          <TreemapPlot {...treemapPlotProps} classes={themedProps.classes} />
+          <TreemapPlot classes={themedProps.classes} />
           <ChartsOverlay {...overlayProps} />
           <FocusedTreemapRect />
           {children}

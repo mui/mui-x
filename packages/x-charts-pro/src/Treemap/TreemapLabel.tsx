@@ -1,9 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import type { SeriesId } from '@mui/x-charts/internals';
 import type { TreemapLayoutNode } from './treemap.types';
-import { useTreemapItemHighlightState } from './treemapHighlightHooks';
 import { useUtilityClasses } from './treemapClasses';
 
 export interface TreemapLabelProps {
@@ -12,10 +10,6 @@ export interface TreemapLabelProps {
    */
   node: TreemapLayoutNode;
   /**
-   * The series id.
-   */
-  seriesId: SeriesId;
-  /**
    * The horizontal padding between the tile edge and the label, in pixels.
    */
   paddingX: number;
@@ -23,54 +17,56 @@ export interface TreemapLabelProps {
    * The vertical padding between the tile edge and the label, in pixels.
    */
   paddingY: number;
+  /**
+   * Whether the tile is faded.
+   */
+  isFaded?: boolean;
 }
 
 /**
  * @ignore - internal component.
  */
-export const TreemapLabel = React.forwardRef<SVGTextElement, TreemapLabelProps>(
-  function TreemapLabel(props, ref) {
-    const { node, seriesId, paddingX, paddingY } = props;
-    const theme = useTheme();
-    const classes = useUtilityClasses();
+function TreemapLabel(props: TreemapLabelProps) {
+  const { node, paddingX, paddingY, isFaded } = props;
+  const theme = useTheme();
+  const classes = useUtilityClasses();
 
-    const highlightState = useTreemapItemHighlightState(
-      React.useMemo(
-        () => ({ type: 'treemap' as const, seriesId, nodeId: node.id }),
-        [seriesId, node.id],
-      ),
-    );
-
-    if (!node.label) {
-      return null;
+  const fill = React.useMemo(() => {
+    const fallback = (theme.vars || theme).palette.text.primary;
+    if (!node.color) {
+      return fallback;
     }
-
-    let fill = (theme.vars || theme).palette.text.primary;
-    if (node.color) {
-      try {
-        fill = theme.palette.getContrastText(node.color);
-      } catch {
-        // node.color is a format MUI can't decompose (e.g. a named CSS color); keep the default.
-      }
+    try {
+      return theme.palette.getContrastText(node.color);
+    } catch {
+      // node.color is a format MUI can't decompose (e.g. a named CSS color); keep the default.
+      return fallback;
     }
+  }, [node.color, theme]);
 
-    return (
-      <text
-        ref={ref}
-        className={classes.label}
-        x={node.x0 + paddingX}
-        y={node.y0 + paddingY}
-        textAnchor="start"
-        dominantBaseline="hanging"
-        fill={fill}
-        fontSize={theme.typography.caption.fontSize}
-        fontFamily={theme.typography.fontFamily}
-        pointerEvents="none"
-        opacity={highlightState === 'faded' ? 0.3 : 1}
-        data-node={node.id}
-      >
-        {node.label}
-      </text>
-    );
-  },
-);
+  if (!node.label) {
+    return null;
+  }
+
+  return (
+    <text
+      className={classes.label}
+      x={node.x0 + paddingX}
+      y={node.y0 + paddingY}
+      textAnchor="start"
+      dominantBaseline="hanging"
+      fill={fill}
+      fontSize={theme.typography.caption.fontSize}
+      fontFamily={theme.typography.fontFamily}
+      pointerEvents="none"
+      opacity={isFaded ? 0.3 : 1}
+      data-node={node.id}
+    >
+      {node.label}
+    </text>
+  );
+}
+
+const MemoTreemapLabel = React.memo(TreemapLabel);
+
+export { MemoTreemapLabel as TreemapLabel };

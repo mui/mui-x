@@ -1,66 +1,67 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import {
   useStore,
   selectorChartsHighlightedItem,
   selectorChartSeriesLayout,
   selectorChartsHighlightScopePerSeriesId,
 } from '@mui/x-charts/internals';
-import type { TreemapItemIdentifier } from './treemap.types';
-import { isTreemapNodeHighlighted } from './utils';
+import type { TreemapItemId } from './treemap.types';
+import { collectTreemapScope } from './utils';
+
+export type TreemapHighlightState = 'highlighted' | 'faded' | undefined;
+
+const alwaysUndefined = () => undefined;
 
 /**
- * Computes the highlight state of a treemap tile. Unlike the generic highlight helpers,
- * this reads the computed layout so it can resolve hierarchy-aware scopes
- * (`children`, `parents`, `parent`, `child`) from the hovered tile.
+ * Returns a getter `(nodeId) => 'highlighted' | 'faded' | undefined` computed once per
+ * hover/layout/scope change. It precomputes the highlighted/faded sets from the hovered
+ * tile (mirroring the core `selectorChartsHighlightStateCallback`), so the plot subscribes
+ * once and each tile does an O(1) lookup — no per-tile store subscription or traversal.
  */
-const selectorTreemapItemHighlightState = createSelector(
+const selectorTreemapHighlightStateGetter = createSelectorMemoized(
   selectorChartsHighlightedItem,
   selectorChartSeriesLayout,
   selectorChartsHighlightScopePerSeriesId,
-  function selectorTreemapItemHighlightState(
+  (
     highlightedItem,
     seriesLayout,
     scopePerSeriesId,
-    identifier: TreemapItemIdentifier,
-  ): 'highlighted' | 'faded' | undefined {
-    if (
-      !highlightedItem ||
-      highlightedItem.type !== 'treemap' ||
-      highlightedItem.seriesId !== identifier.seriesId
-    ) {
-      return undefined;
+  ): ((nodeId: TreemapItemId) => TreemapHighlightState) => {
+    if (!highlightedItem || highlightedItem.type !== 'treemap') {
+      return alwaysUndefined;
     }
-
-    const layout = seriesLayout?.treemap?.[identifier.seriesId]?.treemapLayout;
+    const { seriesId, nodeId: hoveredId } = highlightedItem;
+    const layout = seriesLayout?.treemap?.[seriesId]?.treemapLayout;
     if (!layout) {
-      return undefined;
+      return alwaysUndefined;
     }
 
-    const scope = scopePerSeriesId.treemap?.get(identifier.seriesId);
+    const scope = scopePerSeriesId.treemap?.get(seriesId);
     const highlight = scope?.highlight ?? 'node';
     const fade = scope?.fade ?? 'none';
-    const { nodeId: hoveredId } = highlightedItem;
 
-    if (isTreemapNodeHighlighted(layout, highlight, hoveredId, identifier.nodeId)) {
-      return 'highlighted';
-    }
-    if (fade === 'none') {
+    const highlightedSet = collectTreemapScope(layout, highlight, hoveredId);
+    const fadedSet =
+      fade === 'none' || fade === 'global' ? null : collectTreemapScope(layout, fade, hoveredId);
+
+    return (nodeId) => {
+      if (highlightedSet.has(nodeId)) {
+        return 'highlighted';
+      }
+      if (fade === 'global') {
+        return 'faded';
+      }
+      if (fadedSet?.has(nodeId)) {
+        return 'faded';
+      }
       return undefined;
-    }
-    // `global` fades everything that isn't highlighted; otherwise the fade follows the
-    // same hierarchy scopes as the highlight.
-    if (fade === 'global') {
-      return 'faded';
-    }
-    if (isTreemapNodeHighlighted(layout, fade, hoveredId, identifier.nodeId)) {
-      return 'faded';
-    }
-    return undefined;
+    };
   },
 );
 
-export function useTreemapItemHighlightState(identifier: TreemapItemIdentifier) {
+/** Subscribes once to the treemap highlight getter. */
+export function useTreemapHighlightGetter() {
   const store = useStore();
 
-  return store.use(selectorTreemapItemHighlightState, identifier);
+  return store.use(selectorTreemapHighlightStateGetter);
 }
