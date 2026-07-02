@@ -1404,12 +1404,30 @@ describeTreeView<TreeViewAnyStore>(
               items: [
                 {
                   id: '1',
+                  children: [{ id: '1.1' }, { id: '1.2' }],
+                },
+              ],
+              defaultExpandedItems: ['1'],
+              selectionPropagation: { parents: true },
+              isItemSelectionDisabled: (item: any) => item.id === '1.2',
+            });
+
+            await view.user.click(view.getItemCheckboxInput('1.1'));
+            expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1']);
+          });
+
+          it('should not select a non-selectable parent even when all its selectable children are selected', async () => {
+            const view = render({
+              multiSelect: true,
+              checkboxSelection: true,
+              items: [
+                {
+                  id: '1',
                   children: [{ id: '1.1' }, { id: '1.2', children: [{ id: '1.2.1' }] }],
                 },
               ],
               defaultExpandedItems: ['1', '1.2'],
               selectionPropagation: { parents: true },
-              // Make '1.2' (a parent with children) non-selectable
               isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
             });
 
