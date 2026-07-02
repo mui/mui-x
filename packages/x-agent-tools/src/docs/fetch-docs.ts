@@ -5,17 +5,23 @@ import type { Logger } from '../types';
 const noopLogger: Logger = () => {};
 
 export interface UrlListFetcherOptions {
-  // Reads/writes responses here when set; omit to skip caching. The host owns the instance.
+  /** Reads/writes responses here when set; omit to skip caching. The host owns the instance. */
   cache?: LRUCache;
-  // Surfaces swallowed fetch/cache failures. Silent by default.
+  /** Surfaces swallowed fetch/cache failures. Silent by default. */
   logger?: Logger;
-  // Checks each URL before fetching. Returning false blocks it (SSRF guard) with an error string.
-  // Omit to allow any URL (hosts should set this).
+  /**
+   * Checks each URL before fetching. Returning false blocks it (SSRF guard) with an error string.
+   * Omit to allow any URL (hosts should set this).
+   * @param {string} url The absolute URL about to be fetched (initial or redirect hop).
+   * @returns {boolean} Whether the URL may be fetched.
+   */
   isUrlAllowed?: (url: string) => boolean;
-  // When true, rewrites site-absolute markdown links (e.g. `](/x/.../foo.md)` from `llms.txt`) to
-  // absolute URLs so the agent can pass them straight to the next fetch.
+  /**
+   * When true, rewrites site-absolute markdown links (e.g. `](/x/.../foo.md)` from `llms.txt`) to
+   * absolute URLs so the agent can pass them straight to the next fetch.
+   */
   resolveDocLinks?: boolean;
-  // Aborts the in-flight fetches when the host cancels the request.
+  /** Aborts the in-flight fetches when the host cancels the request. */
   signal?: AbortSignal;
 }
 

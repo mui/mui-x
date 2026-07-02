@@ -11,9 +11,9 @@ import { compareVersions, formatUnknownSourceError } from './packages';
 interface DocsToolOptions {
   fetcher?: typeof fetch;
   overrides?: ToolOverrides;
-  // Shared when `createDocsTools` passes one; omit for a default per-tool queue.
+  /** Shared when `createDocsTools` passes one; omit for a default per-tool queue. */
   queue?: PQueueType;
-  // `true`: fresh owned cache; `LRUCache`: shared instance; omit: none.
+  /** `true`: fresh owned cache; `LRUCache`: shared instance; omit: none. */
   cache?: boolean | LRUCache;
   logger?: Logger;
   isUrlAllowed?: (url: string) => boolean;

@@ -14,14 +14,18 @@ type UseMuiDocsTool = Awaited<ReturnType<typeof createUseMuiDocsTool>>;
 type FetchDocsTool = Awaited<ReturnType<typeof createFetchDocTool>>;
 
 export interface DocsTools {
+  /** Always available; needs no catalog. */
   fetchDocsTool: FetchDocsTool;
   /** `null` when the docs catalog was unreachable after retries; `fetchDocs` still works. */
   useMuiDocsTool: UseMuiDocsTool | null;
 }
 
 export interface CreateDocsToolsOptions {
+  /** Docs-catalog backend base URL; also added to the SSRF allowlist. */
   docsBaseUrl: string;
+  /** Surfaces swallowed failures (catalog retries, blocked fetches). Silent by default. */
   logger?: Logger;
+  /** Override `globalThis.fetch`. Useful for tests. */
   fetcher?: typeof fetch;
   /** Retry backoff for the catalog fetch. Defaults to a ~63s ramp; override in tests. */
   retryDelaysMs?: number[];

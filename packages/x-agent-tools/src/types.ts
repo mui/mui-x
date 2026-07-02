@@ -9,7 +9,7 @@ export type ToolProgressEvent =
 
 /** Per-call context, so signal/progress aren't fixed at tool construction. */
 export interface ToolExecutionContext {
-  // Aborts the tool's in-flight fetches when the host cancels the request.
+  /** Aborts the tool's in-flight fetches when the host cancels the request. */
   signal?: AbortSignal;
   onProgress?: (event: ToolProgressEvent) => void | Promise<void>;
 }

@@ -1,5 +1,3 @@
-/** API-key -> JWT exchange client. In-memory cache, 30s refresh window, concurrent-call dedup. */
-
 export const DEFAULT_REFRESH_THRESHOLD_MS = 30_000;
 export const RECIPES_API_KEY_ENV = 'MUI_RECIPES_API_KEY';
 export const TOKEN_EXCHANGE_PATH = '/api/auth/tokens';
@@ -46,6 +44,7 @@ type TokenExchangeResponse = {
   expiresAt: string;
 };
 
+/** API-key -> JWT exchange client. In-memory cache, 30s refresh window, concurrent-call dedup. */
 export class ApiKeyJwtClient {
   private readonly muiBackendBaseUrl: string;
 

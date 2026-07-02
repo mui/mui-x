@@ -47,7 +47,7 @@ describe('ApiKeyJwtClient', () => {
     );
   });
 
-  it('wraps a non-JSON token response (e.g. an HTML error page) as a ApiKeyJwtClientError', async () => {
+  it('wraps a non-JSON token response (e.g. an HTML error page) as an ApiKeyJwtClientError', async () => {
     const fetcher = vi.fn().mockResolvedValue(
       new Response('<html>Bad Gateway</html>', {
         status: 200,

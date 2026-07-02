@@ -1,6 +1,6 @@
 /** Async codegen tool: POST + SSE GET, buffered into `{ threadId, files, explanation }`. */
 import { z } from 'zod';
-import type { ToolOverrides } from '../types';
+import type { Logger, ToolOverrides } from '../types';
 import { createAuthedFetch } from '../auth/authed-fetch';
 import { wrapTool } from '../utils/wrap-tool';
 import { generateResponseSchema, inputSchema, outputSchema, type MuiPairing } from './schemas';
@@ -14,13 +14,18 @@ export const codegenRunPath = (runId: string): string =>
 export type CreateGenerateReactCodeToolOptions = {
   /** Base URL of recipes-backend (no trailing slash). */
   recipesBackendBaseUrl: string;
-  // Returns a Bearer JWT, once per call. Usually a `CliJwtClient`. Gets the request signal so a
-  // slow token exchange is aborted with the codegen fetches.
+  /**
+   * Returns a Bearer JWT, once per call. Usually an `ApiKeyJwtClient`. Gets the request signal so
+   * a slow token exchange is aborted with the codegen fetches.
+   * @param {object} [options] Per-call options.
+   * @param {AbortSignal} [options.signal] Drops this caller's wait when the request is cancelled.
+   * @returns {Promise<string>} The Bearer JWT to send.
+   */
   getToken: (options?: { signal?: AbortSignal }) => Promise<string>;
   /** Called after a 401 so the next call mints a fresh JWT (clock skew, key rotation, revocation). */
   invalidateToken?: () => void;
-  // Silent by default. Host wires a logger to surface swallowed `onProgress` failures.
-  logger?: (message: string, error?: unknown) => void;
+  /** Silent by default. Host wires a logger to surface swallowed `onProgress` failures. */
+  logger?: Logger;
   /** Override `globalThis.fetch`. Useful for tests. */
   fetcher?: typeof fetch;
   /** Override the tool's name / description (e.g. when restraining the agent's tool selection). */

@@ -7,7 +7,9 @@ export interface CreateCodegenToolOptions {
   muiBackendBaseUrl: string;
   /** recipes-backend base URL, where codegen runs. */
   recipesBackendBaseUrl: string;
+  /** Surfaces swallowed failures (e.g. `onProgress` bugs). Silent by default. */
   logger?: Logger;
+  /** Override `globalThis.fetch`. Useful for tests. */
   fetcher?: typeof fetch;
 }
 
