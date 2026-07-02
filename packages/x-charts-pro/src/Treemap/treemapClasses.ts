@@ -9,10 +9,6 @@ export interface TreemapClasses {
   cells: string;
   /** Styles applied to an individual cell (tile) element. */
   cell: string;
-  /** Styles applied to the labels container. */
-  labels: string;
-  /** Styles applied to an individual cell label element. */
-  label: string;
 }
 
 export type TreemapClassKey = keyof TreemapClasses;
@@ -25,8 +21,6 @@ export const treemapClasses: TreemapClasses = generateUtilityClasses('MuiTreemap
   'root',
   'cells',
   'cell',
-  'labels',
-  'label',
 ]);
 
 export const useUtilityClasses = (options?: { classes?: Partial<TreemapClasses> }) => {
@@ -36,8 +30,6 @@ export const useUtilityClasses = (options?: { classes?: Partial<TreemapClasses> 
     root: ['root'],
     cells: ['cells'],
     cell: ['cell'],
-    labels: ['labels'],
-    label: ['label'],
   };
 
   return composeClasses(slots, getTreemapUtilityClass, classes);

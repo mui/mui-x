@@ -60,14 +60,6 @@ export interface TreemapTilingOptions {
   paddingTop?: number;
 }
 
-export interface TreemapNodeOptions {
-  /**
-   * Whether every rendered tile displays a label.
-   * @default true
-   */
-  showLabels?: boolean;
-}
-
 export type TreemapValueFormatterContext = {
   /**
    * Where the value will be displayed.
@@ -101,10 +93,6 @@ export interface TreemapSeriesType {
    * Options for the tiling algorithm and padding.
    */
   tiling?: TreemapTilingOptions;
-  /**
-   * Options for the nodes style, layout, and interaction behavior.
-   */
-  nodeOptions?: TreemapNodeOptions;
   /**
    * Formatter used to render values in the tooltip or on labels.
    * @param {number} value The value to render.

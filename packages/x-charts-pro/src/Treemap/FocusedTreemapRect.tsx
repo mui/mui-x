@@ -3,6 +3,9 @@ import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks';
 import { useTreemapLayout } from '../hooks/useTreemapSeries';
 
+/**
+ * @ignore - internal component.
+ */
 export function FocusedTreemapRect(props: React.SVGAttributes<SVGRectElement>) {
   const focusedItem = useFocusedItem();
   const layout = useTreemapLayout();

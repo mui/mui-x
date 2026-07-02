@@ -1,7 +1,7 @@
 ---
 title: React Treemap chart
 productId: x-charts
-components: Treemap, TreemapPlot, TreemapRectPlot, TreemapLabelPlot, FocusedTreemapRect, TreemapDataProvider, TreemapTooltip, TreemapTooltipContent
+components: Treemap, TreemapPlot, TreemapDataProvider
 ---
 
 # Charts - Treemap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') 🧪
@@ -25,7 +25,7 @@ The `series.data` prop accepts a single root node, or an array of root nodes tha
 Each node can define:
 
 - `id`: a unique identifier. When omitted, it's derived from the node's position in the tree.
-- `label`: the text shown on the tile and in the tooltip. Defaults to the `id`.
+- `label`: the text shown in the tooltip. Defaults to the `id`.
 - `value`: the size of a leaf node. Parent nodes derive their value from the sum of their descendants.
 - `children`: the nested nodes.
 - `color`: an explicit color override.
@@ -37,13 +37,6 @@ Parent tiles are drawn behind their children, and leaf tiles are drawn on top.
 
 {{"demo": "TreemapNested.js"}}
 
-## Colors
-
-By default, each top-level branch is assigned a color from the chart's palette, and its descendants inherit that color.
-Set the `color` property on a node to override it.
-
-{{"demo": "TreemapColors.js"}}
-
 ## Tiling
 
 The `tiling` option controls how a node is subdivided into its children.
@@ -51,13 +44,6 @@ The default `'squarify'` method keeps tiles close to a square aspect ratio.
 Use `paddingInner`, `paddingOuter`, and `paddingTop` to control the spacing between tiles.
 
 {{"demo": "TreemapTiling.js"}}
-
-## Labels
-
-By default every tile is labeled.
-Set `nodeOptions.showLabels: false` to hide the labels.
-
-{{"demo": "TreemapLabels.js"}}
 
 ## Click event
 

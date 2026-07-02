@@ -1,5 +1,4 @@
 import { act, createRenderer } from '@mui/internal-test-utils';
-import { hsl } from '@mui/x-charts-vendor/d3-color';
 import { isJSDOM } from 'test/utils/skipIf';
 import { Treemap, treemapClasses } from '@mui/x-charts-pro/Treemap';
 
@@ -63,45 +62,6 @@ describe('<Treemap />', () => {
         />,
       ),
     ).not.to.throw();
-  });
-
-  it('shades levels so deeper tiles are lighter than shallower ones', () => {
-    const { container } = render(
-      <Treemap
-        width={200}
-        height={200}
-        margin={0}
-        series={{
-          data: {
-            id: 'root',
-            children: [{ id: 'group', children: [{ id: 'leaf', value: 10 }] }],
-          },
-        }}
-      />,
-    );
-
-    const lightnessOf = (selector: string) =>
-      hsl(container.querySelector(selector)!.getAttribute('fill')!).l;
-
-    // 'group' is shallower (painted behind) so it is darker than its deeper 'leaf'.
-    expect(lightnessOf('[data-node="leaf"]')).to.be.greaterThan(lightnessOf('[data-node="group"]'));
-  });
-
-  it('always labels the root layer in multi-level treemaps', () => {
-    const { container } = render(
-      <Treemap
-        width={300}
-        height={200}
-        margin={0}
-        series={{
-          data: { id: 'root', children: [{ id: 'group', children: [{ id: 'leaf', value: 10 }] }] },
-        }}
-      />,
-    );
-
-    expect(container.querySelector(`.${treemapClasses.label}[data-node="group"]`)).not.to.equal(
-      null,
-    );
   });
 
   it('renders nested group and leaf tiles', () => {

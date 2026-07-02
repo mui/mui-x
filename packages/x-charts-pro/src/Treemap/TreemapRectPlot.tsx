@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { TreemapRectElement } from './TreemapRectElement';
 import { useTreemapLayout, useTreemapSeries } from '../hooks/useTreemapSeries';
@@ -19,6 +18,9 @@ const TreemapRectPlotRoot = styled('g', {
   shouldForwardProp: undefined,
 })({});
 
+/**
+ * @ignore - internal component.
+ */
 function TreemapRectPlot(props: TreemapRectPlotProps) {
   const { classes: inputClasses } = props;
 
@@ -51,16 +53,5 @@ function TreemapRectPlot(props: TreemapRectPlotProps) {
     </TreemapRectPlotRoot>
   );
 }
-
-TreemapRectPlot.propTypes /* remove-proptypes */ = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Classes applied to the various elements.
-   */
-  classes: PropTypes.object,
-} as any;
 
 export { TreemapRectPlot };

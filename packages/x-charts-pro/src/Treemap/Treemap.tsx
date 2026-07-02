@@ -7,12 +7,12 @@ import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { TreemapPlot } from './TreemapPlot';
 import { useTreemapProps } from './useTreemapProps';
 import type { TreemapSeriesType, TreemapItemIdentifierWithData } from './treemap.types';
 import type { TreemapClasses } from './treemapClasses';
-import { TreemapTooltip } from './TreemapTooltip';
 import type { TreemapSlotExtension } from './treemapSlots.types';
 import { FocusedTreemapRect } from './FocusedTreemapRect';
 import { TreemapDataProvider } from './TreemapDataProvider';
@@ -83,7 +83,7 @@ const Treemap = React.forwardRef(function Treemap(
     chartsSurfaceProps,
   } = useChartsContainerProProps<'treemap', TreemapChartPluginSignatures>(chartsContainerProps);
 
-  const Tooltip = themedProps.slots?.tooltip ?? TreemapTooltip;
+  const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
   return (
     <TreemapDataProvider series={series as TreemapSeriesType[]} {...chartsDataProviderProProps}>

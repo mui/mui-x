@@ -6,7 +6,6 @@ import { useTreemapLayout, useTreemapSeries } from '../hooks/useTreemapSeries';
 import { useUtilityClasses } from './treemapClasses';
 import type { TreemapClasses } from './treemapClasses';
 import { TreemapRectPlot } from './TreemapRectPlot';
-import { TreemapLabelPlot } from './TreemapLabelPlot';
 
 export interface TreemapPlotProps {
   /**
@@ -45,12 +44,9 @@ function TreemapPlot(props: TreemapPlotProps) {
     return null;
   }
 
-  const showLabels = treemapSeries.nodeOptions?.showLabels ?? true;
-
   return (
     <TreemapPlotRoot className={clsx(classes.root, className)}>
       <TreemapRectPlot classes={classes} />
-      {showLabels !== false && <TreemapLabelPlot classes={classes} />}
     </TreemapPlotRoot>
   );
 }

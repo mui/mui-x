@@ -1,6 +1,5 @@
 import { hierarchy } from '@mui/x-charts-vendor/d3-hierarchy';
 import type { HierarchyNode } from '@mui/x-charts-vendor/d3-hierarchy';
-import { hsl } from '@mui/x-charts-vendor/d3-color';
 import type { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
 import type { TreemapItemId, TreemapLayoutNode, TreemapSeriesData } from '../treemap.types';
 import { TREEMAP_ROOT_ID } from '../utils';
@@ -47,17 +46,10 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
 
   root = root.sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
-  // A node inherits the palette hue of its top-level (depth 1) ancestor so that
-  // a subtree shares a hue. An explicit `color` on the data node wins.
+  // A node takes the palette color of its top-level (depth 1) ancestor, so a subtree
+  // shares one color. An explicit `color` on the data node wins.
   const branchIndex = new Map<HierarchyNode<NormalizedTreemapNode>, number>();
   root.children?.forEach((child, index) => branchIndex.set(child, index));
-
-  // Fill lightness tracks level: deepest (front) keeps the base hue, shallower levels
-  // darken progressively (up to LIGHTNESS_DARKEN) so parents frame their children.
-  // `root.height` is the deepest rendered level (depths 1..maxDepth).
-  const LIGHTNESS_DARKEN = 0.32;
-  const maxDepth = root.height;
-  const darkenStep = maxDepth > 1 ? LIGHTNESS_DARKEN / (maxDepth - 1) : 0;
 
   const resolveColor = (node: HierarchyNode<NormalizedTreemapNode>): string => {
     if (node.data.color) {
@@ -72,16 +64,7 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
     if (!branch || colors.length === 0) {
       return colors[0] ?? '';
     }
-    const base = colors[(branchIndex.get(branch) ?? 0) % colors.length] ?? '';
-    if (!base || darkenStep === 0) {
-      return base;
-    }
-    const shaded = hsl(base);
-    if (Number.isNaN(shaded.l)) {
-      return base;
-    }
-    shaded.l = Math.max(0, shaded.l - (maxDepth - node.depth) * darkenStep);
-    return shaded.formatHex();
+    return colors[(branchIndex.get(branch) ?? 0) % colors.length] ?? '';
   };
 
   const nodes: TreemapLayoutNode<false>[] = [];

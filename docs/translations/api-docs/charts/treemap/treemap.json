@@ -73,14 +73,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cells container"
     },
-    "label": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "an individual cell label element"
-    },
-    "labels": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the labels container"
-    },
     "root": { "description": "Styles applied to the root element." }
   },
   "slotDescriptions": {
