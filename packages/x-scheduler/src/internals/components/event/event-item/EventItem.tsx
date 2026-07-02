@@ -20,6 +20,9 @@ import { useEventCalendarStyledContext } from '../../../../event-calendar/EventC
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 
+const ARROW_DEPTH = 8;
+const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
+
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'EventItemCard',
@@ -50,6 +53,12 @@ const EventItemCard = styled('div', {
       '&:hover': {
         backgroundColor: 'var(--event-surface-selected-hover)',
       },
+    },
+    '&[data-starting-before-edge]': {
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      clipPath: LEFT_ARROW_CLIP,
+      paddingLeft: ARROW_DEPTH,
     },
   },
   '&[data-variant="regular"]': {
