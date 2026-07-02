@@ -111,7 +111,7 @@ export default function MapZoomOptions() {
   const apiRef = useChartPremiumApiRef<'mapShape'>();
 
   const [rotationAllowed, setRotationAllowed] = React.useState<
-    'both' | 'long' | 'lat' | 'none'
+    'both' | 'both+roll' | 'long' | 'none'
   >('long');
   const [translationAllowed, setTranslationAllowed] = React.useState<
     'both' | 'x' | 'y' | 'none'
@@ -185,8 +185,8 @@ export default function MapZoomOptions() {
               }}
             >
               <ToggleButton value="both">both</ToggleButton>
-              <ToggleButton value="long">longitude</ToggleButton>
-              <ToggleButton value="lat">latitude</ToggleButton>
+              <ToggleButton value="both+roll">both+roll</ToggleButton>
+              <ToggleButton value="long">long</ToggleButton>
               <ToggleButton value="none">none</ToggleButton>
             </ToggleButtonGroup>
           </div>

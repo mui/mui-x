@@ -75,6 +75,12 @@ const selectorChartTranslation = createSelectorMemoized(
     return geoProjectionZoom?.translation ?? null;
   },
 );
+const selectorChartRoll = createSelector(
+  selectorChartGeoProjectionZoomState,
+  function selectorChartRoll(geoProjectionZoom): number {
+    return geoProjectionZoom?.roll ?? 0;
+  },
+);
 
 const selectorChartInitialCenter = createSelectorMemoized(
   selectorChartGeoProjectionZoomState,
@@ -182,6 +188,7 @@ export const selectorChartProjection = createSelectorMemoized(
   selectorChartGeoData,
   selectorChartCenter,
   selectorChartTranslation,
+  selectorChartRoll,
   selectorChartZoomLevel,
   selectorChartDrawingArea,
   selectorFitScale,
@@ -192,6 +199,7 @@ export const selectorChartProjection = createSelectorMemoized(
     geoData,
     center,
     translation,
+    roll,
     zoomLevel,
     drawingArea,
     fitScale,
@@ -208,7 +216,7 @@ export const selectorChartProjection = createSelectorMemoized(
       return projection;
     }
 
-    projection.rotate?.([-center[0], -center[1]]);
+    projection.rotate?.([-center[0], -center[1], roll]);
     // Edge case with conic conformal and albers:
     // rotate impacts the center of the projection, so we need to reset it.
     projection.center?.([0, 0]);

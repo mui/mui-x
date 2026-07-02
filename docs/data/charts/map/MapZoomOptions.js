@@ -168,8 +168,8 @@ export default function MapZoomOptions() {
               }}
             >
               <ToggleButton value="both">both</ToggleButton>
-              <ToggleButton value="long">longitude</ToggleButton>
-              <ToggleButton value="lat">latitude</ToggleButton>
+              <ToggleButton value="both+roll">both+roll</ToggleButton>
+              <ToggleButton value="long">long</ToggleButton>
               <ToggleButton value="none">none</ToggleButton>
             </ToggleButtonGroup>
           </div>

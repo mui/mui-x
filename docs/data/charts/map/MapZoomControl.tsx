@@ -104,6 +104,7 @@ export default function MapZoomControl() {
     zoomLevel: 1,
     center: [0, 0],
     translation: [0, 0],
+    roll: 0,
   });
 
   return (
@@ -203,6 +204,29 @@ export default function MapZoomControl() {
               }));
             }}
           />
+          {[
+            'azimuthalEqualArea',
+            'azimuthalEquidistant',
+            'gnomonic',
+            'orthographic',
+            'stereographic',
+          ].includes(projection) && (
+            <Slider
+              value={view.roll}
+              min={-180}
+              max={180}
+              step={1}
+              size="small"
+              valueLabelDisplay="auto"
+              aria-label="map roll"
+              onChange={(event, value) => {
+                setView((prev) => ({
+                  ...prev,
+                  roll: value as number,
+                }));
+              }}
+            />
+          )}
         </div>
         <div>
           <Typography gutterBottom variant="caption">

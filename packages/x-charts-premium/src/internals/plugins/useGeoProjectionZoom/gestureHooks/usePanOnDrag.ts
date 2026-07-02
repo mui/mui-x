@@ -57,7 +57,7 @@ export const usePanOnDrag = (
         dragCurrentPoint.current[0] + delta.x,
         dragCurrentPoint.current[1] + delta.y,
       ];
-      const center = getRotation(
+      const nextRotation = getRotation(
         projection,
         geoPoint.current,
         dragCurrentPoint.current,
@@ -66,8 +66,8 @@ export const usePanOnDrag = (
       );
 
       const rotate = projection.rotate?.();
-      if (center) {
-        projection.rotate?.([-center[0], -center[1]]);
+      if (nextRotation) {
+        projection.rotate?.([-nextRotation[0], -nextRotation[1], nextRotation[2]]);
       }
       const translation = getTranslation(
         store,
@@ -80,11 +80,14 @@ export const usePanOnDrag = (
 
       projection.rotate?.(rotate);
 
-      if (center || translation) {
+      if (nextRotation || translation) {
         applyView({
           zoomLevel: store.state.geoProjectionZoom.zoomLevel ?? 1,
-          center: center ?? store.state.geoProjectionZoom.center ?? [0, 0],
+          center: nextRotation
+            ? [nextRotation[0], nextRotation[1]]
+            : (store.state.geoProjectionZoom.center ?? [0, 0]),
           translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
+          roll: nextRotation ? nextRotation[2] : (store.state.geoProjectionZoom.roll ?? 0),
         });
       }
     },

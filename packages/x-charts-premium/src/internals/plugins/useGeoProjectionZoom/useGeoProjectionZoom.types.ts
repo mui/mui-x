@@ -3,12 +3,12 @@ import type { UseGeoProjectionSignature } from '../useGeoProjection/useGeoProjec
 
 /**
  * Which rotation axes a pan/zoom gesture may move:
- * - `'both'`: rotate freely along longitude and latitude.
+ * - `'both'`: rotate freely along longitude and latitude, keeping the roll fixed.
  * - `'long'`: rotate along longitude only (lock the north–south tilt).
- * - `'lat'`: rotate along latitude only (lock the east–west spin).
- * - `'none'`: lock both axes.
+ * - `'none'`: lock every axis.
+ * - `'both+roll'`: rotate freely along longitude and latitude, and allow rolling the map around the center.
  */
-export type MapRotationAxis = 'both' | 'lat' | 'long' | 'none';
+export type MapRotationAxis = 'both' | 'long' | 'none' | 'both+roll';
 
 export type MapTranslationAxis = 'both' | 'x' | 'y' | 'none';
 
@@ -32,6 +32,12 @@ export interface MapZoomView {
    * The map translation in percentage of the drawing area.
    */
   translation: [number, number];
+  /**
+   * The roll of the map, in degrees.
+   * This spins the map around the point displayed at the center of the drawing area, independently
+   * of the `center` (which controls longitude/latitude).
+   */
+  roll: number;
 }
 /**
  * Fine-grained configuration for the map zoom/pan interaction, passed as the `zoom` parameter
@@ -79,7 +85,8 @@ interface UseGeoProjectionZoomParameters {
    * The view to apply on mount, when the zoom is not controlled.
    * Use this to seed the map at a specific zoom level and center without controlling it.
    */
-  initialView?: Omit<MapZoomView, 'translation'> & Partial<Pick<MapZoomView, 'translation'>>;
+  initialView?: Omit<MapZoomView, 'translation' | 'roll'> &
+    Partial<Pick<MapZoomView, 'translation' | 'roll'>>;
   /**
    * The view to display, in controlled mode.
    * When set, the component does not update the view on its own — drive it from `onViewChange`.
@@ -123,19 +130,24 @@ interface UseGeoProjectionZoomState {
      * `null` (the default) and `1` both mean fit-to-data. The absolute projection scale is
      * derived as `fitScale * zoomLevel`, so this stays valid across resizes.
      */
-    zoomLevel: number | null;
+    zoomLevel: number;
     /**
      * The geographic coordinate `[longitude, latitude]` displayed at the center of the drawing area.
      * `null` keeps the data centered (the fit center).
      */
-    center: [number, number] | null;
+    center: [number, number];
     /**
      * The map translation in percentage of the drawing area.
      */
     translation: [number, number] | null;
+    /**
+     * The roll of the map, in degrees. `null` keeps the map upright (no roll).
+     */
+    roll: number;
     initialTranslation: [number, number];
     initialCenter: [number, number];
     initialZoomLevel: number;
+    initialRoll: number;
   };
 }
 export type UseGeoProjectionZoomSignature = ChartPluginSignature<{

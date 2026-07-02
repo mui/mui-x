@@ -50,11 +50,17 @@ export const useZoomOnPinch = (
       if (!geoPoint) {
         return;
       }
-      const center = getRotation(projection, geoPoint, [point.x, point.y], factor, rotationAllowed);
+      const nextRotation = getRotation(
+        projection,
+        geoPoint,
+        [point.x, point.y],
+        factor,
+        rotationAllowed,
+      );
       const scale = projection.scale();
       const rotate = projection.rotate?.();
-      if (center) {
-        projection.rotate?.([-center![0], -center![1]]);
+      if (nextRotation) {
+        projection.rotate?.([-nextRotation[0], -nextRotation[1], nextRotation[2]]);
       }
       projection.scale(scale * factor);
       const translation = getTranslation(
@@ -69,11 +75,14 @@ export const useZoomOnPinch = (
       projection.rotate?.(rotate);
       projection.scale(scale);
 
-      if (center || translation) {
+      if (nextRotation || translation) {
         applyView({
           zoomLevel: nextZoom,
-          center: center ?? store.state.geoProjectionZoom.center ?? [0, 0],
+          center: nextRotation
+            ? [nextRotation[0], nextRotation[1]]
+            : (store.state.geoProjectionZoom.center ?? [0, 0]),
           translation: translation ?? store.state.geoProjectionZoom.translation ?? [0, 0],
+          roll: nextRotation ? nextRotation[2] : (store.state.geoProjectionZoom.roll ?? 0),
         });
       }
     },

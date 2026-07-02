@@ -30,7 +30,7 @@ function projectAfterRotation(
   if (!center) {
     return null;
   }
-  projection.scale(projection.scale() * zoomFactor).rotate([-center[0], -center[1]]);
+  projection.scale(projection.scale() * zoomFactor).rotate([-center[0], -center[1], center[2]]);
   return projection(geoPoint) as [number, number];
 }
 
@@ -61,6 +61,57 @@ describe('mapZoomUtils', () => {
       expect(projected![1]).to.be.closeTo(150, 1e-4);
     });
 
+    it("keeps the roll fixed at zero for a diagonal drag ('both')", () => {
+      const projection = geoOrthographic().fitExtent(EXTENT, sphere);
+      const grabbed = projection.invert!([220, 140]) as [number, number];
+      const rotation = getRotation(projection, grabbed, [380, 300], 1, 'both');
+      expect(rotation).not.to.equal(null);
+      // 'both' leaves both axes free but must not touch the roll...
+      expect(rotation![2]).to.equal(0);
+      // ...while still landing the grabbed point under the cursor.
+      projection.rotate([-rotation![0], -rotation![1], rotation![2]]);
+      const projected = projection(grabbed) as [number, number];
+      expect(projected[0]).to.be.closeTo(380, 1e-4);
+      expect(projected[1]).to.be.closeTo(300, 1e-4);
+    });
+
+    it("preserves an existing non-zero roll ('both')", () => {
+      const projection = geoOrthographic().fitExtent(EXTENT, sphere);
+      projection.rotate([-10, -5, 25]);
+      const grabbed = projection.invert!([260, 170]) as [number, number];
+      const rotation = getRotation(projection, grabbed, [340, 250], 1, 'both');
+      expect(rotation).not.to.equal(null);
+      expect(rotation![2]).to.equal(25); // roll unchanged
+      projection.rotate([-rotation![0], -rotation![1], rotation![2]]);
+      const projected = projection(grabbed) as [number, number];
+      expect(projected[0]).to.be.closeTo(340, 1e-4);
+      expect(projected[1]).to.be.closeTo(250, 1e-4);
+    });
+
+    it("lets the roll drift minimally, staying near zero for an equatorial drag ('both+roll')", () => {
+      const projection = geoOrthographic().fitExtent(EXTENT, sphere);
+      // Grab a point on the equator near the center and drag it horizontally along the equator.
+      const grabbed = projection.invert!([300, 200]) as [number, number];
+      const rotation = getRotation(projection, grabbed, [360, 200], 1, 'both+roll');
+      expect(rotation).not.to.equal(null);
+      // A rotation purely about the vertical (screen) axis introduces no roll.
+      expect(rotation![2]).to.be.closeTo(0, 1e-6);
+    });
+
+    it("introduces the roll required by a diagonal drag ('both+roll')", () => {
+      const projection = geoOrthographic().fitExtent(EXTENT, sphere);
+      const grabbed = projection.invert!([220, 140]) as [number, number];
+      const rotation = getRotation(projection, grabbed, [380, 300], 1, 'both+roll');
+      expect(rotation).not.to.equal(null);
+      // The shortest-arc rotation of a diagonal globe drag carries a non-zero roll...
+      expect(Math.abs(rotation![2])).to.be.greaterThan(1e-3);
+      // ...and still lands the grabbed point under the cursor.
+      projection.rotate([-rotation![0], -rotation![1], rotation![2]]);
+      const projected = projection(grabbed) as [number, number];
+      expect(projected[0]).to.be.closeTo(380, 1e-4);
+      expect(projected[1]).to.be.closeTo(300, 1e-4);
+    });
+
     it('returns null when the projection is not invertible', () => {
       const projection = { invert: undefined } as unknown as GeoProjection;
       expect(getRotation(projection, [0, 0], [0, 0])).to.equal(null);
@@ -84,19 +135,19 @@ describe('mapZoomUtils', () => {
         expect(center![0]).not.to.be.closeTo(10, 1e-3); // longitude moved
       });
 
-      it("keeps the longitude fixed when rotation is restricted to 'lat'", () => {
-        const projection = rotatedProjection();
-        const center = getRotation(projection, grabbed, target, 1, 'lat');
+      it("keeps the latitude and roll fixed while panning east–west ('long')", () => {
+        const projection = geoMercator().fitExtent(EXTENT, sphere);
+        projection.rotate([-10, -20, 15]); // start from a rolled orientation
+        const center = getRotation(projection, grabbed, target, 1, 'long');
         expect(center).not.to.equal(null);
-        expect(center![0]).to.be.closeTo(10, 1e-9); // longitude unchanged
-        expect(center![1]).not.to.be.closeTo(20, 1e-3); // latitude moved
+        expect(center![1]).to.be.closeTo(20, 1e-9); // latitude unchanged
+        expect(center![2]).to.be.closeTo(15, 1e-9); // roll unchanged
+        expect(center![0]).not.to.be.closeTo(10, 1e-3); // longitude moved
       });
 
-      it("leaves the center unchanged when rotation is 'none'", () => {
+      it("returns null (no rotation) when rotation is 'none'", () => {
         const projection = rotatedProjection();
-        const center = getRotation(projection, grabbed, target, 1, 'none');
-        expect(center![0]).to.be.closeTo(10, 1e-9);
-        expect(center![1]).to.be.closeTo(20, 1e-9);
+        expect(getRotation(projection, grabbed, target, 1, 'none')).to.equal(null);
       });
     });
   });

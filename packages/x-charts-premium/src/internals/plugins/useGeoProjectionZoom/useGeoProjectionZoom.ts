@@ -48,6 +48,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
           zoomLevel: newView.zoomLevel,
           center: newView.center,
           translation: newView.translation,
+          roll: newView.roll,
         });
       }
       onViewChange?.(newView);
@@ -67,6 +68,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       zoomLevel: view.zoomLevel,
       center: view.center,
       translation: view.translation,
+      roll: view.roll,
     });
   }, [store, view]);
 
@@ -111,6 +113,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
         zoomLevel: nextZoom,
         center: current.center ?? [0, 0],
         translation: current.translation ?? [0, 0],
+        roll: current.roll ?? 0,
       });
     },
     [store, clampZoomLevel, applyView],
@@ -125,6 +128,7 @@ export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = 
       zoomLevel: store.state.geoProjectionZoom.initialZoomLevel,
       center: store.state.geoProjectionZoom.initialCenter,
       translation: store.state.geoProjectionZoom.initialTranslation,
+      roll: store.state.geoProjectionZoom.initialRoll,
     });
   }, [applyView, store]);
 
@@ -151,6 +155,7 @@ useGeoProjectionZoom.getDefaultizedParams = ({ params }) => ({
 useGeoProjectionZoom.getInitialState = (params) => {
   const zoomLevel = params.view?.zoomLevel ?? params.initialView?.zoomLevel ?? 1;
   const center = params.view?.center ?? params.initialView?.center ?? [0, 0];
+  const roll = params.view?.roll ?? params.initialView?.roll ?? 0;
   const translation = params.view?.translation ??
     params.initialView?.translation ??
     getDefaultTranslation(
@@ -165,10 +170,12 @@ useGeoProjectionZoom.getInitialState = (params) => {
       zoomLevel,
       center,
       translation,
+      roll,
 
       initialZoomLevel: zoomLevel,
       initialCenter: center,
       initialTranslation: translation,
+      initialRoll: roll,
     },
   };
 };

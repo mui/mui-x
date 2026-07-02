@@ -275,7 +275,7 @@ If modifying the center does not succeed, it modifies the translation.
 
 The zoom object has two properties to limit this behavior:
 
-- `rotationAllowed`: `'both' | 'long' | 'lat' | 'none'` Limit how the center can be modified
+- `rotationAllowed`: `'both' | 'both+roll' | 'long' | 'none'` Limit how the center can be modified
 - `translationAllowed`: `'both' | 'x' | 'y' | 'none'` Limit how the translation can be modified
 
 By default, both are derived from the chosen projection so each map behaves as expected without extra configuration:

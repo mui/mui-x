@@ -6,14 +6,12 @@ import { selectorChartGeoData } from '../useGeoProjection/useGeoProjection.selec
 import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom.types';
 import { createGetVisibleCoordinate } from '../../createGetVisibleCoordinate';
 import type { D3NamedProjection, GeoProjectionInput } from '../useGeoProjection';
+import { getLongitudeRotation, getMinimalRollRotation, getNoRollRotation } from './rotationMath';
 
 /** Multiplicative zoom step applied per wheel tick. */
 export const WHEEL_ZOOM_STEP = 1.1;
 /** Multiplicative zoom step applied per `zoomIn`/`zoomOut` call. */
 export const BUTTON_ZOOM_STEP = 1.3;
-
-const DEG = Math.PI / 180;
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 type ProjectionFamily = 'azimuthal' | 'conic' | 'cylindrical' | 'albersUsa';
 
@@ -85,9 +83,17 @@ export function getDefaultMapInteraction(projection: GeoProjectionInput | null):
 }
 
 /**
- * For a given projection,
- * apply a zoom factor to the scale and return
- * the rotation that will allow the `geoPoint` to be rendered at the `to` pixel coordinates.
+ * For a given projection, apply a zoom factor to the scale and return the rotation that renders
+ * `geoPoint` at the `to` pixel coordinates, as `[longitude, latitude, roll]` (the view `center` plus
+ * the third d3 rotation angle).
+ *
+ * - With `rotationAllowed: 'both+roll'`, the roll is free to move but kept as stable as possible: the
+ *   shortest-arc rotation dragging `geoPoint` onto `to` is composed with the current orientation, so
+ *   the roll only drifts as much as strictly required.
+ * - With `rotationAllowed: 'both'`, both longitude and latitude are free but the roll is kept fixed at
+ *   the current value.
+ * - With `rotationAllowed: 'long'`, only the longitude is solved; the latitude and roll are kept fixed.
+ * - With `rotationAllowed: 'none'`, `null` is returned so the caller keeps the current rotation.
  */
 export function getRotation(
   projection: GeoProjection,
@@ -95,7 +101,7 @@ export function getRotation(
   to: [number, number],
   zoomFactor: number = 1,
   rotationAllowed: MapRotationAxis = 'both',
-): [number, number] | null {
+): [number, number, number] | null {
   if (!projection.invert || !projection.rotate) {
     return null;
   }
@@ -115,60 +121,17 @@ export function getRotation(
     return null;
   }
 
-  // Solve `geoRotation([-c0, -c1])(geoPoint) === q` for the yaw `c0` and pitch `c1` (radians).
-  const allowLon = rotationAllowed === 'both' || rotationAllowed === 'long';
-  const allowLat = rotationAllowed === 'both' || rotationAllowed === 'lat';
-
-  // The map's current rotation, used to lock a disallowed axis (`rotate` is `[-c0, -c1, ...]` deg).
-  const currentLon = -rotate[0];
-  const currentLat = -rotate[1];
-
-  const lonG = geoPoint[0] * DEG;
-  const latG = geoPoint[1] * DEG;
-  const lonQ = q[0] * DEG;
-  const latQ = q[1] * DEG;
-
-  const x = Math.cos(lonQ) * Math.cos(latQ);
-  const y = Math.sin(lonQ) * Math.cos(latQ);
-  const z = Math.sin(latQ);
-
-  // Pitch: locked to the current latitude when latitude rotation is disallowed, otherwise solved
-  // from `A·cos(c1) + B·sin(c1) = sin(latG)` with `A = z`, `B = x`.
-  let c1: number;
-  if (allowLat) {
-    const hyp = Math.hypot(z, x);
-    if (hyp === 0 || Math.abs(Math.sin(latG)) > hyp) {
-      // Target latitude is out of reach for a pitch-only rotation of `geoPoint`.
+  switch (rotationAllowed) {
+    case 'both+roll':
+      return getMinimalRollRotation(rotate as [number, number, number], geoPoint, q);
+    case 'both':
+      return getNoRollRotation(rotate as [number, number, number], geoPoint, q);
+    case 'long':
+      return getLongitudeRotation(rotate as [number, number, number], geoPoint, q);
+    case 'none':
+    default:
       return null;
-    }
-    // Two branches solve the equation; pick the one closest to the previous one for drag continuity.
-    const base = Math.atan2(x, z);
-    const offset = Math.acos(clamp(Math.sin(latG) / hyp, -1, 1));
-    const c1a = base - offset;
-    const c1b = base + offset;
-    const ref = currentLat * DEG;
-    c1 = Math.abs(c1a - ref) <= Math.abs(c1b - ref) ? c1a : c1b;
-  } else {
-    c1 = currentLat * DEG;
   }
-
-  // Yaw: locked to the current longitude when longitude rotation is disallowed, otherwise derived
-  // from the pitch so `geoPoint` lands at `to`'s longitude.
-  let lon: number;
-  if (allowLon) {
-    const c0 = lonG - Math.atan2(y, x * Math.cos(c1) - z * Math.sin(c1));
-    // Normalize the longitude into `[-180, 180]`.
-    lon = (c0 / DEG) % 360;
-    if (lon > 180) {
-      lon -= 360;
-    } else if (lon < -180) {
-      lon += 360;
-    }
-  } else {
-    lon = currentLon;
-  }
-
-  return [lon, c1 / DEG];
 }
 
 export function clampTranslationAxis(
