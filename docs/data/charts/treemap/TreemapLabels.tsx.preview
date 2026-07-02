@@ -1,10 +1,12 @@
-<FormControlLabel
-  control={
-    <Switch
-      checked={showLabels}
-      onChange={(event) => setShowLabels(event.target.checked)}
-    />
-  }
-  label="Show labels"
-/>
+<TextField
+  select
+  label="Labels"
+  value={mode}
+  onChange={(event) => setMode(event.target.value)}
+  sx={{ maxWidth: 220 }}
+>
+  <MenuItem value="default">Default</MenuItem>
+  <MenuItem value="large">Value ≥ 20 only</MenuItem>
+  <MenuItem value="hidden">Hidden</MenuItem>
+</TextField>
 <Treemap series={{ data, nodeOptions: { showLabels } }} height={300} />

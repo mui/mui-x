@@ -35,7 +35,7 @@ export default function TreemapNested() {
     <Treemap
       series={{
         data,
-        tiling: { paddingInner: 2, paddingOuter: 2 },
+        tiling: { paddingInner: 2, paddingOuter: 2, paddingTop: 20 },
         nodeOptions: { borderRadius: 2 },
       }}
       height={300}

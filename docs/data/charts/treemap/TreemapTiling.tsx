@@ -60,7 +60,10 @@ export default function TreemapTiling() {
         ))}
       </TextField>
       <Treemap
-        series={{ data, tiling: { method, paddingInner: 2, paddingOuter: 2 } }}
+        series={{
+          data,
+          tiling: { method, paddingInner: 2, paddingOuter: 2, paddingTop: 20 },
+        }}
         height={300}
       />
     </Stack>
