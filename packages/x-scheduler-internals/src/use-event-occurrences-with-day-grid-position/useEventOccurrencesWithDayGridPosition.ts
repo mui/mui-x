@@ -141,8 +141,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
   }
 
   export type EventRenderableOccurrenceWithPosition =
-    | EventOccurrenceWithPosition
-    | EventOccurrencePlaceholderWithPosition;
+    EventOccurrenceWithPosition | EventOccurrencePlaceholderWithPosition;
 
   export interface DayData extends SchedulerProcessedDate {
     /**
