@@ -132,9 +132,7 @@ type CodegenChunk = {
 };
 
 type ChunkOutcome =
-  | { kind: 'file'; filename: string }
-  | { kind: 'error'; message: string }
-  | { kind: 'noop' };
+  { kind: 'file'; filename: string } | { kind: 'error'; message: string } | { kind: 'noop' };
 
 function handleCodegenChunk(
   chunk: unknown,

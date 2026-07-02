@@ -4,8 +4,7 @@ export type Logger = (message: string, error?: unknown) => void;
 
 /** Progress event a run emits (codegen only). */
 export type ToolProgressEvent =
-  | { kind: 'file'; filename: string; filesSeen: number }
-  | { kind: 'done'; filesSeen: number };
+  { kind: 'file'; filename: string; filesSeen: number } | { kind: 'done'; filesSeen: number };
 
 /** Per-call context, so signal/progress aren't fixed at tool construction. */
 export interface ToolExecutionContext {

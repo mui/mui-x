@@ -17,10 +17,7 @@ export type ApiKeyJwtClientOptions = {
 
 export class ApiKeyJwtClientError extends Error {
   public readonly code:
-    | 'missing_api_key'
-    | 'api_key_invalid'
-    | 'api_key_forbidden'
-    | 'token_exchange_failed';
+    'missing_api_key' | 'api_key_invalid' | 'api_key_forbidden' | 'token_exchange_failed';
 
   public readonly status?: number;
 
