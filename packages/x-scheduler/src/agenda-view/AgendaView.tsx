@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import type { EventCalendarViewDefinition } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
@@ -156,7 +156,7 @@ const AgendaViewWeekNumberRow = styled('div', {
   }),
 }));
 
-const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
+const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addDays(
       schedulerOtherSelectors.visibleDate(state),
@@ -188,7 +188,7 @@ export const AgendaView = React.memo(
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
     // Feature hooks
-    const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
+    const { days } = useEventCalendarView(AGENDA_VIEW_DEFINITION);
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     // Selector hooks

@@ -5,6 +5,7 @@ import type {
   EventCalendarSchedulerParametersOverrides,
   CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
+import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 
 export interface MonthViewProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -13,9 +14,16 @@ export interface StandaloneMonthViewProps<TEvent extends object, TResource exten
     MonthViewProps,
     Omit<
       EventCalendarParameters<TEvent, TResource>,
-      keyof EventCalendarSchedulerParametersOverrides | CollapsibleResourcesParameterKeys
+      | 'viewConfig'
+      | keyof EventCalendarSchedulerParametersOverrides
+      | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
+  /**
+   * Configuration applied to the view, keyed by the view name.
+   * The `month` view does not support any configuration keys yet.
+   */
+  viewConfig?: Omit<EventCalendarViewConfig, 'day' | 'week'>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

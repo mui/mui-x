@@ -3,6 +3,7 @@ import type {
   CalendarView,
   EventCalendarPreferencesMenuConfig,
   EventCalendarViewConfig,
+  EventCalendarViewDefinition,
 } from '../models';
 import type {
   SchedulerState,
@@ -29,10 +30,14 @@ export interface EventCalendarState extends SchedulerState {
    */
   preferencesMenuConfig: EventCalendarPreferencesMenuConfig | false;
   /**
-   * Config of the current view.
+   * User configuration applied to each view, keyed by the view name.
+   */
+  viewConfig: EventCalendarViewConfig;
+  /**
+   * Definition of the current view.
    * Should not be used in selectors, only in event handlers.
    */
-  viewConfig: EventCalendarViewConfig | null;
+  viewDefinition: EventCalendarViewDefinition | null;
 }
 
 /**
@@ -105,4 +110,11 @@ export interface EventCalendarParameters<
    * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig?: Partial<EventCalendarPreferencesMenuConfig> | false;
+  /**
+   * Configuration applied to each view, keyed by the view name.
+   * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { week: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig?: EventCalendarViewConfig;
 }
