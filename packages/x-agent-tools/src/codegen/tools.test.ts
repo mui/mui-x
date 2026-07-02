@@ -659,15 +659,14 @@ describe('createGenerateReactCodeTool', () => {
     await expect(tool.execute({ prompt: 'hi' })).rejects.toThrow(/I'm a teapot/);
   });
 
-  it('exposes the expected default name / publicName / description (MCP contract)', () => {
+  it('exposes the expected default name / description (MCP contract)', () => {
     const tool = createGenerateReactCodeTool({
       recipesBackendBaseUrl: baseUrl,
       getToken,
       fetcher: vi.fn(),
     });
 
-    expect(tool.name).toBe('generate_react_code');
-    expect(tool.publicName).toBe('generateReactCode');
+    expect(tool.name).toBe('generateReactCode');
     // A/B test in progress: description temporarily reverted to descriptive wording.
     // Tighten back to prescriptive + `muiPairing` assertions when restoring.
     expect(tool.description).toMatch(/Material UI|MUI/);
@@ -683,8 +682,6 @@ describe('createGenerateReactCodeTool', () => {
 
     expect(tool.name).toBe('custom_codegen');
     expect(tool.description).toBe('restricted variant');
-    // publicName is not in ToolOverrides, so it stays at the default.
-    expect(tool.publicName).toBe('generateReactCode');
   });
 
   it('fires onProgress for each file-update chunk with running filesSeen, and a final `done`', async () => {

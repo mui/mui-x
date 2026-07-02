@@ -14,12 +14,12 @@ export interface ToolExecutionContext {
   onProgress?: (event: ToolProgressEvent) => void | Promise<void>;
 }
 
-export interface ChatTool<
+export interface AgentTool<
   Input extends z.AnyZodObject = z.AnyZodObject,
   Output extends z.ZodTypeAny = z.ZodTypeAny,
 > {
+  /** Public tool name a host registers (e.g. `useMuiDocs`). Override via `ToolOverrides`. */
   name: string;
-  publicName: string;
   description: string;
   inputSchema: Input;
   outputSchema: Output;

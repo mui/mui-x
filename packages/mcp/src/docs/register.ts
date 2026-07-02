@@ -43,7 +43,7 @@ export async function registerDocsTools(
       isUrlAllowed: deps.isUrlAllowed,
     });
     server.registerTool(
-      fetchDocsTool.publicName,
+      fetchDocsTool.name,
       {
         description: fetchDocsTool.description,
         inputSchema: fetchDocsTool.inputSchema.shape,
@@ -73,7 +73,7 @@ export async function registerDocsTools(
     });
 
     server.registerTool(
-      useMuiDocsTool.publicName,
+      useMuiDocsTool.name,
       {
         description: useMuiDocsTool.description,
         inputSchema: useMuiDocsTool.inputSchema.shape,

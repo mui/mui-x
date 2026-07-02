@@ -4,7 +4,7 @@ import { buildDocsHandler } from './handler';
 describe('buildDocsHandler', () => {
   it('wraps the tool result in MCP `content` shape (single text block)', async () => {
     const execute = vi.fn().mockResolvedValue('the docs content');
-    const tool = { publicName: 'useMuiDocs', execute };
+    const tool = { name: 'useMuiDocs', execute };
     const handler = buildDocsHandler(tool, vi.fn());
 
     const result = await handler({ sources: ['x'] });
@@ -13,10 +13,10 @@ describe('buildDocsHandler', () => {
     expect(execute).toHaveBeenCalledWith({ sources: ['x'] }, { signal: undefined });
   });
 
-  it('logs success duration with the tool publicName', async () => {
+  it('logs success duration with the tool name', async () => {
     const log = vi.fn();
     const handler = buildDocsHandler(
-      { publicName: 'fetchDocs', execute: vi.fn().mockResolvedValue('ok') },
+      { name: 'fetchDocs', execute: vi.fn().mockResolvedValue('ok') },
       log,
     );
     await handler({ urls: ['x'] });
@@ -27,7 +27,7 @@ describe('buildDocsHandler', () => {
 
   it('propagates tool errors (no swallowing - callers expect them surfaced to the agent)', async () => {
     const handler = buildDocsHandler(
-      { publicName: 'fetchDocs', execute: vi.fn().mockRejectedValue(new Error('fetch failed')) },
+      { name: 'fetchDocs', execute: vi.fn().mockRejectedValue(new Error('fetch failed')) },
       vi.fn(),
     );
     await expect(handler({ urls: ['x'] })).rejects.toThrow(/fetch failed/);

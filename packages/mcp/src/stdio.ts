@@ -26,7 +26,7 @@ const main = async () => {
     createDocsUrlGuard,
     fetchRemotePackages,
     buildCombinedLogger,
-    CliJwtClient,
+    ApiKeyJwtClient,
     formatCodegenText,
   } = await import('@mui/x-agent-tools');
 
@@ -48,7 +48,7 @@ const main = async () => {
 
   // JWT client is eager; API key only resolved on first `getToken()`.
   // Signal/progress are per-call, so one tool instance serves every request.
-  const jwtClient = new CliJwtClient({ muiBackendBaseUrl });
+  const jwtClient = new ApiKeyJwtClient({ muiBackendBaseUrl });
   const codegenTool = createGenerateReactCodeTool({
     recipesBackendBaseUrl,
     getToken: (opts?: { signal?: AbortSignal }) => jwtClient.getToken(opts),

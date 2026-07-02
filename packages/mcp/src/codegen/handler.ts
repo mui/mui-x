@@ -5,7 +5,7 @@ type FormatCodegenText = (result: GenerateReactCodeResult) => string;
 
 /** Per-request handler for the `generateReactCode` MCP tool. */
 export const buildCodegenHandler = (deps: {
-  tool: Pick<GenerateReactCodeTool, 'publicName' | 'execute'>;
+  tool: Pick<GenerateReactCodeTool, 'name' | 'execute'>;
   formatText: FormatCodegenText;
   log?: (message: string, error?: unknown) => void;
 }) => {
@@ -16,7 +16,7 @@ export const buildCodegenHandler = (deps: {
     // Forward the request's abort signal + progress hook per call, so codegen stops on cancel.
     try {
       const result = await tool.execute(input, { onProgress, signal: extra?.signal });
-      log(`Executed ${tool.publicName} in ${Date.now() - startTime}ms`);
+      log(`Executed ${tool.name} in ${Date.now() - startTime}ms`);
       return {
         // Backward-compat: clients ignoring `structuredContent` still need the files in text.
         content: [{ type: 'text' as const, text: formatText(result) }],
@@ -24,7 +24,7 @@ export const buildCodegenHandler = (deps: {
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      log(`${tool.publicName} failed in ${Date.now() - startTime}ms: ${message}`);
+      log(`${tool.name} failed in ${Date.now() - startTime}ms: ${message}`);
       return {
         content: [{ type: 'text' as const, text: message }],
         isError: true,

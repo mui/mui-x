@@ -5,7 +5,6 @@ import { wrapTool } from './wrap-tool';
 const makeTool = (execute = vi.fn(async () => 'ok')) =>
   wrapTool({
     name: 't',
-    publicName: 't',
     description: 'd',
     inputSchema: z.object({ q: z.string().min(1) }),
     outputSchema: z.string(),

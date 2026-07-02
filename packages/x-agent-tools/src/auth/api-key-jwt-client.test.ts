@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CliJwtClient, CliJwtClientError } from './cli-jwt-client';
+import { ApiKeyJwtClient, ApiKeyJwtClientError } from './api-key-jwt-client';
 
 function makeOkResponse(token: string, expiresAtIso: string): Response {
   return new Response(JSON.stringify({ token, expiresAt: expiresAtIso }), {
@@ -15,7 +15,7 @@ function makeErrorResponse(status: number, body: unknown = { error: 'nope' }): R
   });
 }
 
-describe('CliJwtClient', () => {
+describe('ApiKeyJwtClient', () => {
   const baseUrl = 'http://localhost:5002';
   const apiKey = 'mui_recipes_test_key';
 
@@ -24,13 +24,15 @@ describe('CliJwtClient', () => {
   });
 
   it('constructor throws when muiBackendBaseUrl is missing', () => {
-    expect(() => new CliJwtClient({ muiBackendBaseUrl: '', apiKey })).toThrow(CliJwtClientError);
+    expect(() => new ApiKeyJwtClient({ muiBackendBaseUrl: '', apiKey })).toThrow(
+      ApiKeyJwtClientError,
+    );
   });
 
   it('fetches and caches a token on the first call', async () => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     const token = await client.getToken();
 
@@ -45,14 +47,14 @@ describe('CliJwtClient', () => {
     );
   });
 
-  it('wraps a non-JSON token response (e.g. an HTML error page) as a CliJwtClientError', async () => {
+  it('wraps a non-JSON token response (e.g. an HTML error page) as a ApiKeyJwtClientError', async () => {
     const fetcher = vi.fn().mockResolvedValue(
       new Response('<html>Bad Gateway</html>', {
         status: 200,
         headers: { 'content-type': 'text/html' },
       }),
     );
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await expect(client.getToken()).rejects.toThrow(
       /MUI X Agent Tools: Token exchange returned a non-JSON response/,
@@ -61,7 +63,7 @@ describe('CliJwtClient', () => {
 
   it('throws on a non-ok token exchange status (e.g. HTTP 500)', async () => {
     const fetcher = vi.fn().mockResolvedValue(makeErrorResponse(500));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await expect(client.getToken()).rejects.toThrow(
       /MUI X Agent Tools: Token exchange failed with HTTP 500/,
@@ -75,7 +77,7 @@ describe('CliJwtClient', () => {
         headers: { 'content-type': 'application/json' },
       }),
     );
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await expect(client.getToken()).rejects.toThrow(
       /Token exchange succeeded but the response was missing token\/expiresAt/,
@@ -84,7 +86,7 @@ describe('CliJwtClient', () => {
 
   it('rejects an unparseable expiresAt instead of silently disabling the cache', async () => {
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', 'not-a-date'));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await expect(client.getToken()).rejects.toThrow(/unparseable expiresAt/);
   });
@@ -93,7 +95,7 @@ describe('CliJwtClient', () => {
     const { signal } = new AbortController();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await client.getToken({ signal });
 
@@ -106,7 +108,7 @@ describe('CliJwtClient', () => {
   it('rejects redirects on the token exchange so the API key never leaves the host', async () => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await client.getToken();
 
@@ -123,7 +125,7 @@ describe('CliJwtClient', () => {
             init.signal?.addEventListener('abort', () => reject(new Error('aborted by timeout')));
           }),
       );
-      const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+      const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
       // Attach the rejection expectation before advancing timers so the rejection is never
       // momentarily unhandled while the fake timer fires.
@@ -152,7 +154,7 @@ describe('CliJwtClient', () => {
             }),
         } as unknown as Response),
       );
-      const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+      const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
       const expectation = expect(client.getToken()).rejects.toThrow(
         /MUI X Agent Tools: Token exchange returned a non-JSON response/,
@@ -173,7 +175,7 @@ describe('CliJwtClient', () => {
           resolveFetch = resolve;
         }),
     );
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     const controller = new AbortController();
     const cancelled = client.getToken({ signal: controller.signal });
@@ -191,7 +193,7 @@ describe('CliJwtClient', () => {
   it('returns the cached token without a second network call', async () => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await client.getToken();
     const second = await client.getToken();
@@ -208,7 +210,7 @@ describe('CliJwtClient', () => {
       .mockResolvedValueOnce(
         makeOkResponse('jwt-new', new Date(Date.now() + 10 * 60 * 1000).toISOString()),
       );
-    const client = new CliJwtClient({
+    const client = new ApiKeyJwtClient({
       muiBackendBaseUrl: baseUrl,
       apiKey,
       refreshThresholdMs: 30_000, // refresh anything <30s out
@@ -231,7 +233,7 @@ describe('CliJwtClient', () => {
           resolveFetch = resolve;
         }),
     );
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     const [p1, p2, p3] = [client.getToken(), client.getToken(), client.getToken()];
     resolveFetch(makeOkResponse('jwt-shared', expiresAt));
@@ -247,7 +249,7 @@ describe('CliJwtClient', () => {
     process.env.MUI_RECIPES_API_KEY = 'mui_recipes_env_key';
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, fetcher });
 
     await client.getToken();
 
@@ -261,10 +263,10 @@ describe('CliJwtClient', () => {
 
   it('throws missing_api_key when neither override nor env is set', async () => {
     const fetcher = vi.fn();
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, fetcher });
 
     await expect(client.getToken()).rejects.toMatchObject({
-      name: 'CliJwtClientError',
+      name: 'ApiKeyJwtClientError',
       code: 'missing_api_key',
     });
     expect(fetcher).not.toHaveBeenCalled();
@@ -272,7 +274,7 @@ describe('CliJwtClient', () => {
 
   it('throws api_key_invalid and clears the cache on 401', async () => {
     const fetcher = vi.fn().mockResolvedValue(makeErrorResponse(401));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await expect(client.getToken()).rejects.toMatchObject({
       code: 'api_key_invalid',
@@ -289,7 +291,7 @@ describe('CliJwtClient', () => {
 
   it('throws api_key_forbidden on 403', async () => {
     const fetcher = vi.fn().mockResolvedValue(makeErrorResponse(403));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await expect(client.getToken()).rejects.toMatchObject({
       code: 'api_key_forbidden',
@@ -299,7 +301,7 @@ describe('CliJwtClient', () => {
 
   it('throws token_exchange_failed on network error', async () => {
     const fetcher = vi.fn().mockRejectedValue(new Error('ECONNREFUSED'));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await expect(client.getToken()).rejects.toMatchObject({
       code: 'token_exchange_failed',
@@ -313,9 +315,9 @@ describe('CliJwtClient', () => {
         headers: { 'content-type': 'application/json' },
       }),
     );
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
-    await expect(client.getToken()).rejects.toBeInstanceOf(CliJwtClientError);
+    await expect(client.getToken()).rejects.toBeInstanceOf(ApiKeyJwtClientError);
   });
 
   it('invalidate() clears the cache so the next getToken() refetches', async () => {
@@ -324,7 +326,7 @@ describe('CliJwtClient', () => {
       .fn()
       .mockResolvedValueOnce(makeOkResponse('jwt-1', expiresAt))
       .mockResolvedValueOnce(makeOkResponse('jwt-2', expiresAt));
-    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+    const client = new ApiKeyJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
 
     await client.getToken();
     client.invalidate();
@@ -337,7 +339,7 @@ describe('CliJwtClient', () => {
   it('strips trailing slashes from the base URL', async () => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', expiresAt));
-    const client = new CliJwtClient({
+    const client = new ApiKeyJwtClient({
       muiBackendBaseUrl: `${baseUrl}/`,
       apiKey,
       fetcher,

@@ -41,8 +41,7 @@ describe('createUseMuiDocsTool', () => {
   it('builds a tool with the expected identity and schema metadata', async () => {
     const tool = await createUseMuiDocsTool({ getPackagesList: async () => samplePackages });
 
-    expect(tool.name).toBe('use_mui_docs');
-    expect(tool.publicName).toBe('useMuiDocs');
+    expect(tool.name).toBe('useMuiDocs');
   });
 
   it('embeds the available package list (name@version + llms URL) in the description', async () => {
@@ -264,8 +263,7 @@ describe('createFetchDocTool', () => {
   it('builds a tool with the expected identity', async () => {
     const tool = await createFetchDocTool({});
 
-    expect(tool.name).toBe('fetch_docs');
-    expect(tool.publicName).toBe('fetchDocs');
+    expect(tool.name).toBe('fetchDocs');
   });
 
   it('fetches and joins the requested URLs on execute', async () => {

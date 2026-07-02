@@ -17,7 +17,7 @@ const buildDeps = (
   const execute = overrides.execute ?? vi.fn().mockResolvedValue(sampleResult);
   const formatText = overrides.formatText ?? vi.fn().mockReturnValue('formatted text body');
   const log = overrides.log ?? vi.fn();
-  const tool = { publicName: 'generateReactCode', execute };
+  const tool = { name: 'generateReactCode', execute };
   return {
     deps: { tool, formatText, log } as unknown as Parameters<typeof buildCodegenHandler>[0],
     execute,

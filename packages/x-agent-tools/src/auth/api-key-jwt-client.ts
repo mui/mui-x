@@ -2,11 +2,11 @@
 
 export const DEFAULT_REFRESH_THRESHOLD_MS = 30_000;
 export const RECIPES_API_KEY_ENV = 'MUI_RECIPES_API_KEY';
-export const CLI_TOKEN_PATH = '/api/auth/tokens';
+export const TOKEN_EXCHANGE_PATH = '/api/auth/tokens';
 // Cap the exchange so a hung endpoint can't wedge the shared refresh.
 const TOKEN_EXCHANGE_TIMEOUT_MS = 30_000;
 
-export type CliJwtClientOptions = {
+export type ApiKeyJwtClientOptions = {
   /** Base URL of mui-backend (no trailing slash). */
   muiBackendBaseUrl: string;
   /** Override the API key resolved from `MUI_RECIPES_API_KEY`. Useful for tests. */
@@ -17,7 +17,7 @@ export type CliJwtClientOptions = {
   fetcher?: typeof fetch;
 };
 
-export class CliJwtClientError extends Error {
+export class ApiKeyJwtClientError extends Error {
   public readonly code:
     | 'missing_api_key'
     | 'api_key_invalid'
@@ -29,12 +29,12 @@ export class CliJwtClientError extends Error {
   public readonly cause?: unknown;
 
   public constructor(
-    code: CliJwtClientError['code'],
+    code: ApiKeyJwtClientError['code'],
     message: string,
     options: { status?: number; cause?: unknown } = {},
   ) {
     super(message);
-    this.name = 'CliJwtClientError';
+    this.name = 'ApiKeyJwtClientError';
     this.code = code;
     this.status = options.status;
     this.cause = options.cause;
@@ -46,7 +46,7 @@ type TokenExchangeResponse = {
   expiresAt: string;
 };
 
-export class CliJwtClient {
+export class ApiKeyJwtClient {
   private readonly muiBackendBaseUrl: string;
 
   private readonly apiKeyOverride: string | undefined;
@@ -61,9 +61,9 @@ export class CliJwtClient {
 
   private inflight: Promise<string> | null = null;
 
-  public constructor(options: CliJwtClientOptions) {
+  public constructor(options: ApiKeyJwtClientOptions) {
     if (!options.muiBackendBaseUrl) {
-      throw new CliJwtClientError(
+      throw new ApiKeyJwtClientError(
         'token_exchange_failed',
         'MUI X Agent Tools: muiBackendBaseUrl is required to exchange the API key for a JWT.',
       );
@@ -108,9 +108,9 @@ export class CliJwtClient {
   private resolveApiKey(): string {
     const key = this.apiKeyOverride ?? process.env[RECIPES_API_KEY_ENV];
     if (!key) {
-      throw new CliJwtClientError(
+      throw new ApiKeyJwtClientError(
         'missing_api_key',
-        `MUI X Agent Tools: Missing API key. Set the ${RECIPES_API_KEY_ENV} env var (or pass apiKey to CliJwtClient). Create a key at console.mui.com/products/recipes/api-keys.`,
+        `MUI X Agent Tools: Missing API key. Set the ${RECIPES_API_KEY_ENV} env var (or pass apiKey to ApiKeyJwtClient). Create a key at console.mui.com/products/recipes/api-keys.`,
       );
     }
     return key;
@@ -118,7 +118,7 @@ export class CliJwtClient {
 
   private async refresh(): Promise<string> {
     const apiKey = this.resolveApiKey();
-    const url = `${this.muiBackendBaseUrl}${CLI_TOKEN_PATH}`;
+    const url = `${this.muiBackendBaseUrl}${TOKEN_EXCHANGE_PATH}`;
 
     // Internal timeout so a dead endpoint can't wedge `inflight`; covers the body read too, since
     // the fetch signal also aborts a stalled response stream.
@@ -136,7 +136,7 @@ export class CliJwtClient {
           signal: timeoutController.signal,
         });
       } catch (cause) {
-        throw new CliJwtClientError(
+        throw new ApiKeyJwtClientError(
           'token_exchange_failed',
           `MUI X Agent Tools: Token exchange failed: ${cause instanceof Error ? cause.message : String(cause)}. Retry shortly.`,
           { cause },
@@ -145,7 +145,7 @@ export class CliJwtClient {
 
       if (response.status === 401) {
         this.invalidate();
-        throw new CliJwtClientError(
+        throw new ApiKeyJwtClientError(
           'api_key_invalid',
           'MUI X Agent Tools: API key invalid or revoked. Create a new one at console.mui.com/products/recipes/api-keys.',
           { status: 401 },
@@ -153,14 +153,14 @@ export class CliJwtClient {
       }
       if (response.status === 403) {
         this.invalidate();
-        throw new CliJwtClientError(
+        throw new ApiKeyJwtClientError(
           'api_key_forbidden',
           "MUI X Agent Tools: API key is not authorized to mint a JWT (organization membership may have been lost). Verify the key's owner and try again.",
           { status: 403 },
         );
       }
       if (!response.ok) {
-        throw new CliJwtClientError(
+        throw new ApiKeyJwtClientError(
           'token_exchange_failed',
           `MUI X Agent Tools: Token exchange failed with HTTP ${response.status}. Retry shortly.`,
           { status: response.status },
@@ -171,14 +171,14 @@ export class CliJwtClient {
       try {
         data = (await response.json()) as Partial<TokenExchangeResponse>;
       } catch (cause) {
-        throw new CliJwtClientError(
+        throw new ApiKeyJwtClientError(
           'token_exchange_failed',
           'MUI X Agent Tools: Token exchange returned a non-JSON response. Check that MUI_BACKEND_BASE_URL points at the API backend (not a proxy or error page), then retry.',
           { cause },
         );
       }
       if (!data?.token || !data.expiresAt) {
-        throw new CliJwtClientError(
+        throw new ApiKeyJwtClientError(
           'token_exchange_failed',
           'MUI X Agent Tools: Token exchange succeeded but the response was missing token/expiresAt. Check that MUI_BACKEND_BASE_URL points at the API backend (not the wrong route or a proxy), then retry.',
         );
@@ -187,7 +187,7 @@ export class CliJwtClient {
       const expiresAt = new Date(data.expiresAt);
       if (Number.isNaN(expiresAt.getTime())) {
         // Otherwise `isCachedTokenFresh` is always false and every call re-exchanges silently.
-        throw new CliJwtClientError(
+        throw new ApiKeyJwtClientError(
           'token_exchange_failed',
           "MUI X Agent Tools: Token exchange returned an unparseable expiresAt, so the JWT can't be cached. Check that MUI_BACKEND_BASE_URL points at the API backend (not a proxy), then retry.",
         );

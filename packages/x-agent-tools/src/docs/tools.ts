@@ -65,8 +65,7 @@ export async function createUseMuiDocsTool(
   const knownNames = Array.from(latestByName.keys());
 
   return wrapTool({
-    name: 'use_mui_docs',
-    publicName: 'useMuiDocs',
+    name: 'useMuiDocs',
     description: `
       You must use this tool to answer any questions related to MUI components or documentation.
 
@@ -125,8 +124,7 @@ export async function createFetchDocTool(options: DocsToolOptions) {
   const { logger, isUrlAllowed } = options;
 
   return wrapTool({
-    name: 'fetch_docs',
-    publicName: 'fetchDocs',
+    name: 'fetchDocs',
     description: `Fetch and parse documentation from a given URL.
 
 Use this tool after useMuiDocs to:

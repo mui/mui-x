@@ -17,7 +17,7 @@ export function registerCodegenTool(server: McpServer, deps: RegisterCodegenTool
   const { tool, formatText, logger } = deps;
 
   server.registerTool(
-    tool.publicName,
+    tool.name,
     {
       description: tool.description,
       inputSchema: tool.inputSchema.shape,

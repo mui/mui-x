@@ -8,7 +8,7 @@ type Deps = Parameters<typeof registerCodegenTool>[1];
 const makeServer = () => ({ registerTool: vi.fn() });
 
 const tool = {
-  publicName: 'generateReactCode',
+  name: 'generateReactCode',
   description: 'generate code',
   inputSchema: z.object({ prompt: z.string() }),
   outputSchema: z.object({

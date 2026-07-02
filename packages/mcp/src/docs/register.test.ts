@@ -5,9 +5,9 @@ import { registerDocsTools } from './register';
 type Server = Parameters<typeof registerDocsTools>[0];
 type Deps = Parameters<typeof registerDocsTools>[1];
 
-const fakeTool = (publicName: string) => ({
-  publicName,
-  description: `${publicName} description`,
+const fakeTool = (name: string) => ({
+  name,
+  description: `${name} description`,
   inputSchema: z.object({ q: z.string() }),
   outputSchema: z.string(),
   execute: vi.fn(async () => 'docs content'),
