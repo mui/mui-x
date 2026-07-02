@@ -184,8 +184,16 @@ export class CliJwtClient {
         );
       }
 
+      const expiresAt = new Date(data.expiresAt);
+      if (Number.isNaN(expiresAt.getTime())) {
+        // Otherwise `isCachedTokenFresh` is always false and every call re-exchanges silently.
+        throw new CliJwtClientError(
+          'token_exchange_failed',
+          "MUI X Agent Tools: Token exchange returned an unparseable expiresAt, so the JWT can't be cached. Check that MUI_BACKEND_BASE_URL points at the API backend (not a proxy), then retry.",
+        );
+      }
       this.cachedToken = data.token;
-      this.cachedExpiresAt = new Date(data.expiresAt);
+      this.cachedExpiresAt = expiresAt;
       return data.token;
     } finally {
       clearTimeout(timeout);

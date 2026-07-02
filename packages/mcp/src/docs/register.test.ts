@@ -38,9 +38,10 @@ describe('registerDocsTools', () => {
 
     expect(registered).toBe(true);
     expect(server.registerTool).toHaveBeenCalledTimes(2);
+    // fetchDocs registers first (no catalog dependency), then useMuiDocs.
     expect(server.registerTool.mock.calls.map((call) => call[0])).toEqual([
-      'useMuiDocs',
       'fetchDocs',
+      'useMuiDocs',
     ]);
   });
 
@@ -69,7 +70,7 @@ describe('registerDocsTools', () => {
     );
   });
 
-  it('does not throw and registers nothing when the catalog is unreachable', async () => {
+  it('still registers fetchDocs (and fails soft) when the catalog is unreachable', async () => {
     const server = makeServer();
     const deps = makeDeps({
       createUseMuiDocsTool: vi.fn(async () => {
@@ -82,11 +83,12 @@ describe('registerDocsTools', () => {
       deps as unknown as Deps,
     );
 
-    // Fails soft: codegen registration downstream still runs.
+    // Fails soft: useMuiDocs is skipped, but fetchDocs (catalog-independent) still registers.
     expect(registered).toBe(false);
-    expect(server.registerTool).not.toHaveBeenCalled();
+    expect(server.registerTool).toHaveBeenCalledTimes(1);
+    expect(server.registerTool.mock.calls[0][0]).toBe('fetchDocs');
     expect(deps.logger).toHaveBeenCalledWith(
-      expect.stringContaining('generateReactCode is still available'),
+      expect.stringContaining('fetchDocs and generateReactCode are still available'),
       expect.any(Error),
     );
   });

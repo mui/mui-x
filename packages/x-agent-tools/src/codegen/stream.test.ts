@@ -90,6 +90,21 @@ describe('consumeCodegenStream', () => {
     );
   });
 
+  it('preserves an AbortError from the stream instead of relabeling it a stream failure', async () => {
+    const abort = new DOMException('This operation was aborted', 'AbortError');
+    const stream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.error(abort);
+      },
+    });
+    const response = new Response(stream, {
+      status: 200,
+      headers: { 'content-type': 'text/event-stream' },
+    });
+
+    await expect(consumeCodegenStream(response)).rejects.toBe(abort);
+  });
+
   it('reads the filename from `filename` when `fileName` is absent, and defaults empty contents', async () => {
     const response = makeSseResponse([
       sseFrame({ type: 'file-update', filename: 'B.tsx' }),

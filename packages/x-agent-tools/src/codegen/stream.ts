@@ -52,7 +52,7 @@ export async function consumeCodegenStream(
           return;
         }
 
-        // Producer emits `[DONE]` as a literal token, JSON-encoded or not.
+        // The backend emits `[DONE]` as a literal token, JSON-encoded or not.
         if (raw === '[DONE]' || raw === '"[DONE]"') {
           finished = true;
           fireProgress({ kind: 'done', filesSeen: files.size });
@@ -65,7 +65,7 @@ export async function consumeCodegenStream(
         try {
           chunk = JSON.parse(raw);
         } catch {
-          // Producer emits JSON chunks only; ignore anything that isn't parseable.
+          // The backend emits JSON chunks only; ignore anything that isn't parseable.
           return;
         }
 
@@ -85,22 +85,32 @@ export async function consumeCodegenStream(
       },
     });
 
-    void pumpStream(response.body!, parser, (err) => {
-      if (finished) {
-        return;
-      }
-      finished = true;
-      if (err) {
-        reject(new Error(`MUI X Agent Tools: SSE stream errored: ${err.message}`));
-      } else {
-        // Stream closed without `[DONE]`: treat as truncated so the agent retries.
-        reject(
-          new Error(
-            'MUI X Agent Tools: Generation stream ended unexpectedly before `[DONE]`. Retry the request.',
-          ),
-        );
-      }
-    });
+    void pumpStream(
+      response.body!,
+      parser,
+      (err) => {
+        if (finished) {
+          return;
+        }
+        finished = true;
+        if (err) {
+          // Preserve cancellation so hosts can detect it; don't relabel it as a stream failure.
+          if (err.name === 'AbortError') {
+            reject(err);
+          } else {
+            reject(new Error(`MUI X Agent Tools: SSE stream errored: ${err.message}`));
+          }
+        } else {
+          // Stream closed without `[DONE]`: treat as truncated so the agent retries.
+          reject(
+            new Error(
+              'MUI X Agent Tools: Generation stream ended unexpectedly before `[DONE]`. Retry the request.',
+            ),
+          );
+        }
+      },
+      () => finished,
+    );
   });
 
   return {
@@ -154,7 +164,7 @@ function handleCodegenChunk(
     return { kind: 'noop' };
   }
 
-  // Skip reasoning chunks (model chain-of-thought isn't part of the reply).
+  // Collect the user-facing reply text. (`reasoning` chunks are a separate type, left uncollected.)
   if (type === 'text-delta' || type === 'body' || type === 'text') {
     const text =
       (typeof c.textDelta === 'string' && c.textDelta) ||
@@ -184,17 +194,19 @@ async function pumpStream(
   body: ReadableStream<Uint8Array>,
   parser: ReturnType<typeof createParser>,
   onDone: (err?: Error) => void,
+  isFinished: () => boolean,
 ): Promise<void> {
   const decoder = new TextDecoder();
   try {
-    // ReadableStream is async-iterable in Node >=18; the loop is sequential by nature (each chunk
-    // depends on the previous one).
     for await (const value of body as unknown as AsyncIterable<Uint8Array>) {
       parser.feed(decoder.decode(value, { stream: true }));
+      // Finished early: break to cancel the stream (via the iterator's `return()`) and free the connection.
+      if (isFinished()) {
+        break;
+      }
     }
     onDone();
   } catch (err) {
-    // Wrap a non-Error rejection; the message is dynamic, so it can't be minified to a code.
-    onDone(err instanceof Error ? err : /* minify-error-disabled */ new Error(String(err)));
+    onDone(err instanceof Error ? err : new Error(String(err)));
   }
 }

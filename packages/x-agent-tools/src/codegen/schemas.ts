@@ -15,8 +15,8 @@ const designContextSchema = z.discriminatedUnion('type', [
   }),
 ]);
 
-// Mirrors the backend's `MuiPairing`, kept self-contained. Sync with
-// `apps/recipes-backend/src/services/mui-versioning/mui-pairing.ts`.
+// Mirrors the recipes-backend's `MuiPairing`, kept self-contained. Keep in sync when the backend
+// adds a new major version.
 const muiPairingSchema = z.object({
   material: z
     .enum(['v5', 'v6', 'v7', 'v9'])

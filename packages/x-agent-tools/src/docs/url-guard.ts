@@ -5,6 +5,10 @@ const noopLogger: Logger = () => {};
 /**
  * Hosts MUI serves docs / `llms.txt` from. Allowlist only: nothing else is fetchable, no matter how
  * an attacker host is spelled or resolves (private IPs, IPv4-mapped, redirects, DNS rebinding).
+ *
+ * Known boundary: this trusts any `*.mui.com` subdomain, any port on `mui.com`, and any Netlify site
+ * matching `*--material-ui-docs.netlify.app`. Docs fetches carry no credentials, so the worst case is
+ * prompt injection from attacker-controlled content, not a key leak.
  */
 function isMuiDocsHost(host: string): boolean {
   return (

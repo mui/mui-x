@@ -58,7 +58,8 @@ export class LRUCache {
       this.cache.delete(url);
     } else if (this.cache.size >= this.max_cache_size) {
       const firstKey = this.cache.keys().next().value;
-      if (firstKey) {
+      // `!== undefined`, not truthiness: `''` is a valid key and must still be evicted at capacity.
+      if (firstKey !== undefined) {
         this.cache.delete(firstKey);
       }
     }

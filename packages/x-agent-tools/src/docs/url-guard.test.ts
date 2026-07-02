@@ -28,6 +28,12 @@ describe('createDocsUrlGuard', () => {
     expect(createDocsUrlGuard([])(url)).toBe(false);
   });
 
+  it('allows any `<prefix>--material-ui-docs.netlify.app` deploy preview (known boundary, no credentials)', () => {
+    // Pins the deploy-preview branch: any prefix matches, which is the accepted SSRF boundary.
+    const guard = createDocsUrlGuard([]);
+    expect(guard('https://deploy-preview-42--material-ui-docs.netlify.app/x/llms.txt')).toBe(true);
+  });
+
   it('allows an explicitly configured origin even when it is localhost (dev backend)', () => {
     const guard = createDocsUrlGuard(['http://localhost:5003']);
     expect(guard('http://localhost:5003/v1/public/packages/list')).toBe(true);

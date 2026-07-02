@@ -81,7 +81,7 @@ const main = async () => {
 };
 
 main().catch((error: unknown) => {
-  // Startup failure path: logger isn't constructed yet, so fall back to bare console.error.
+  // Startup failure: the combined logger may not exist yet, so fall back to bare console.error.
   console.error(STARTUP_ERROR_MESSAGE);
   console.error(error);
   process.exit(1);

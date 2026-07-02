@@ -35,6 +35,10 @@ async function sendGuarded(
   try {
     return await fetcher(url, init);
   } catch (cause) {
+    // Let cancellation through unchanged (hosts detect `error.name === 'AbortError'`); it's no failure.
+    if (cause instanceof Error && cause.name === 'AbortError') {
+      throw cause;
+    }
     throw new Error(
       `MUI X Agent Tools: Request to ${hostOf(url)} failed: ${cause instanceof Error ? cause.message : String(cause)}. Check that the backend URL is reachable, then retry.`,
     );

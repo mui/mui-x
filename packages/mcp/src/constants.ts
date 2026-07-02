@@ -1,9 +1,9 @@
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import { version } from '../package.json';
+
+export { SERVER_VERSION } from './version';
 
 export const SERVER_NAME = 'mui-mcp';
-export const SERVER_VERSION = version;
 
 /** Local log file; ~/.mui-mcp.log. Tail with `tail -f ~/.mui-mcp.log`. */
 export const DEFAULT_LOG_PATH = join(homedir(), '.mui-mcp.log');

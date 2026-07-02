@@ -13,16 +13,23 @@ const LIST_PATH = '/v1/public/packages/list';
 const json = (data: unknown, status = 200): Response =>
   new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json' } });
 
+const samplePkg = {
+  name: '@mui/material',
+  version: '9.1.2',
+  llmsUrl: 'https://llms.mui.com/material-ui/9.1.2/llms.txt',
+  llmsFullUrl: 'https://llms.mui.com/material-ui/9.1.2/llms-full.txt',
+};
+
 describe('fetchRemotePackages', () => {
   it('composes the list path against the docs base URL it is given', async () => {
-    const fetcher = vi.fn().mockResolvedValue(json([{ name: '@mui/material' }]));
+    const fetcher = vi.fn().mockResolvedValue(json([samplePkg]));
     const result = await fetchRemotePackages(DOCS_BASE_URL, fetcher);
     expect(fetcher).toHaveBeenCalledWith(`${DOCS_BASE_URL}${LIST_PATH}`);
-    expect(result).toEqual([{ name: '@mui/material' }]);
+    expect(result).toEqual([samplePkg]);
   });
 
   it('composes the list path against a local dev base URL', async () => {
-    const fetcher = vi.fn().mockResolvedValue(json([{ name: '@mui/material' }]));
+    const fetcher = vi.fn().mockResolvedValue(json([samplePkg]));
     await fetchRemotePackages('http://localhost:5003', fetcher);
     expect(fetcher).toHaveBeenCalledWith(`http://localhost:5003${LIST_PATH}`);
   });
@@ -30,14 +37,22 @@ describe('fetchRemotePackages', () => {
   it('throws an actionable MUI X error when the response is an empty array', async () => {
     const fetcher = vi.fn().mockResolvedValue(json([]));
     await expect(fetchRemotePackages(DOCS_BASE_URL, fetcher)).rejects.toThrow(
-      /MUI X Agent Tools: .*returned no packages/,
+      /MUI X Agent Tools: .*returned no usable packages/,
     );
   });
 
   it('throws an actionable MUI X error when the response is not an array', async () => {
     const fetcher = vi.fn().mockResolvedValue(json({ unexpected: 'shape' }));
     await expect(fetchRemotePackages(DOCS_BASE_URL, fetcher)).rejects.toThrow(
-      /MUI X Agent Tools: .*returned no packages/,
+      /MUI X Agent Tools: .*returned no usable packages/,
+    );
+  });
+
+  it('rejects a catalog whose entries are missing required fields (shape drift)', async () => {
+    // Entries without `llmsUrl` would otherwise flow undefined URLs into the tool description.
+    const fetcher = vi.fn().mockResolvedValue(json([{ name: '@mui/material', version: '9.1.2' }]));
+    await expect(fetchRemotePackages(DOCS_BASE_URL, fetcher)).rejects.toThrow(
+      /MUI X Agent Tools: .*returned no usable packages/,
     );
   });
 

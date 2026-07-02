@@ -4,8 +4,8 @@ import { buildDocsHandler } from './handler';
 
 type XAgentTools = typeof import('@mui/x-agent-tools');
 
-// Backoff for the startup catalog fetch (~63s total), so a cold-starting backend (e.g. a Render
-// free tier, ~30-60s spin-up) doesn't leave the docs tools disabled for the whole session.
+// Backoff for the startup catalog fetch (~63s total), so a cold-starting backend (~30-60s spin-up)
+// doesn't leave the docs tools disabled for the whole session.
 const DEFAULT_RETRY_DELAYS_MS = [1000, 2000, 4000, 8000, 16000, 32000];
 
 export interface RegisterDocsToolsDeps {
@@ -33,6 +33,24 @@ export async function registerDocsTools(
   server: McpServer,
   deps: RegisterDocsToolsDeps,
 ): Promise<boolean> {
+  // fetchDocs needs no catalog, so register it first and independent of catalog health.
+  const fetchDocsTool = await deps.createFetchDocTool({
+    overrides: { description: deps.fetchDocsDescription },
+    queue: { concurrency: deps.concurrency },
+    cache: true,
+    logger: deps.logger,
+    isUrlAllowed: deps.isUrlAllowed,
+  });
+  server.registerTool(
+    fetchDocsTool.publicName,
+    {
+      description: fetchDocsTool.description,
+      inputSchema: fetchDocsTool.inputSchema.shape,
+    },
+    buildDocsHandler(fetchDocsTool, deps.logger),
+  );
+
+  // useMuiDocs needs the catalog at startup; isolate its failure so it can't take fetchDocs down.
   try {
     const getPackagesList = () =>
       withRetry(
@@ -50,37 +68,20 @@ export async function registerDocsTools(
       isUrlAllowed: deps.isUrlAllowed,
     });
 
-    const fetchDocsTool = await deps.createFetchDocTool({
-      overrides: { description: deps.fetchDocsDescription },
-      queue: { concurrency: deps.concurrency },
-      cache: true,
-      logger: deps.logger,
-      isUrlAllowed: deps.isUrlAllowed,
-    });
-
     server.registerTool(
       useMuiDocsTool.publicName,
       {
         description: useMuiDocsTool.description,
         inputSchema: useMuiDocsTool.inputSchema.shape,
       },
-      buildDocsHandler(useMuiDocsTool),
-    );
-
-    server.registerTool(
-      fetchDocsTool.publicName,
-      {
-        description: fetchDocsTool.description,
-        inputSchema: fetchDocsTool.inputSchema.shape,
-      },
-      buildDocsHandler(fetchDocsTool),
+      buildDocsHandler(useMuiDocsTool, deps.logger),
     );
 
     return true;
   } catch (error) {
     deps.logger(
-      'MUI MCP: Could not register the docs tools (the docs catalog was unreachable at startup). ' +
-        'generateReactCode is still available; restart the server once the docs backend recovers.',
+      'MUI MCP: Could not register useMuiDocs (the docs catalog was unreachable at startup). ' +
+        'fetchDocs and generateReactCode are still available; restart once the docs backend recovers.',
       error,
     );
     return false;

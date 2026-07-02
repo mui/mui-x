@@ -68,10 +68,12 @@ async function fetchFollowingGuardedRedirects(
     if (!location) {
       return response;
     }
+    // We only need the Location header; release the hop's connection instead of leaking it.
+    void response.body?.cancel();
     target = new URL(location, target).toString();
   }
   // Caught below and folded into the "Could not fetch …" string, so it never surfaces alone.
-  throw /* minify-error-disabled */ new Error(`Exceeded ${MAX_REDIRECTS} redirects`);
+  throw new Error(`Exceeded ${MAX_REDIRECTS} redirects`);
 }
 
 export function urlListFetcher(
@@ -83,44 +85,55 @@ export function urlListFetcher(
   const { cache, logger = noopLogger, isUrlAllowed, resolveDocLinks, signal } = options;
   return Promise.all(
     urlList.map((url) =>
-      queue.add(async () => {
-        if (cache) {
-          const cachedContent = cache.get(url);
-          if (cachedContent !== null) {
-            return cachedContent;
-          }
-        }
-
-        try {
-          const response = await fetchFollowingGuardedRedirects(fetcher, url, isUrlAllowed, signal);
-          if (!response.ok) {
-            // Caught below and folded into the "Could not fetch …" string, so it never surfaces alone.
-            throw /* minify-error-disabled */ new Error(`HTTP error! status: ${response.status}`);
-          }
-          const rawText = await response.text();
-          const responseText = resolveDocLinks ? absolutizeDocLinks(rawText, url) : rawText;
-
+      queue
+        .add(async () => {
           if (cache) {
-            queueMicrotask(() => {
-              try {
-                cache.set(url, responseText);
-              } catch (error) {
-                logger('Failed to update cache:', error);
-              }
-            });
+            const cachedContent = cache.get(url);
+            if (cachedContent !== null) {
+              return cachedContent;
+            }
           }
 
-          return responseText;
-        } catch (error) {
-          if (error instanceof BlockedUrlError) {
-            logger(`Blocked fetch for disallowed URL: ${error.url}`);
-            return `Could not fetch ${url}: URL is not an allowed docs source (blocked for security).`;
+          try {
+            const response = await fetchFollowingGuardedRedirects(
+              fetcher,
+              url,
+              isUrlAllowed,
+              signal,
+            );
+            if (!response.ok) {
+              // Caught below and folded into the "Could not fetch …" string, so it never surfaces alone.
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const rawText = await response.text();
+            const responseText = resolveDocLinks ? absolutizeDocLinks(rawText, url) : rawText;
+
+            if (cache) {
+              queueMicrotask(() => {
+                try {
+                  cache.set(url, responseText);
+                } catch (error) {
+                  logger('Failed to update cache:', error);
+                }
+              });
+            }
+
+            return responseText;
+          } catch (error) {
+            if (error instanceof BlockedUrlError) {
+              logger(`Blocked fetch for disallowed URL: ${error.url}`);
+              return `Could not fetch ${url}: URL is not an allowed docs source (blocked for security).`;
+            }
+            logger(`Failed to fetch ${url}:`, error);
+            // Name the URL that failed (and why) so the agent isn't left with a generic blob.
+            return `Could not fetch ${url}: ${error instanceof Error ? error.message : String(error)}`;
           }
-          logger(`Failed to fetch ${url}:`, error);
-          // Name the URL that failed (and why) so the agent isn't left with a generic blob.
-          return `Could not fetch ${url}: ${error instanceof Error ? error.message : String(error)}`;
-        }
-      }),
+        })
+        .catch(
+          // A queue-level rejection (e.g. p-queue timeout) escapes the task's try/catch; fold it in too.
+          (error: unknown) =>
+            `Could not fetch ${url}: ${error instanceof Error ? error.message : String(error)}`,
+        ),
     ),
   ).then((docs) => {
     const validDocs = docs.filter(Boolean) as string[];

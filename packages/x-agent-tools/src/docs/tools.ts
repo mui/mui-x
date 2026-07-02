@@ -12,7 +12,8 @@ interface DocsToolOptions {
   fetcher?: typeof fetch;
   overrides?: ToolOverrides;
   queue?: QueueOptions;
-  // `true`: fresh cache; `LRUCache`: share one (host owns its lifecycle); omit: no cache.
+  // `true`: a fresh cache this tool owns (not host-disposable, fine for a server's lifetime);
+  // `LRUCache`: share an instance the host owns and can `dispose()`; omit: no cache.
   cache?: boolean | LRUCache;
   logger?: Logger;
   isUrlAllowed?: (url: string) => boolean;
@@ -51,7 +52,7 @@ export async function createUseMuiDocsTool(
       latestByName.set(pkg.name, pkg);
     }
   }
-  // Versions per package + known names, so a bad shorthand gets a helpful hint, not the scary guard error.
+  // Versions per package + known names, so a bad shorthand gets a helpful hint, not the guard's security error.
   const versionsByName = new Map<string, string[]>();
   for (const pkg of packages) {
     const list = versionsByName.get(pkg.name) ?? [];
@@ -69,7 +70,7 @@ export async function createUseMuiDocsTool(
     description: `
       You must use this tool to answer any questions related to MUI components or documentation.
 
-      The description of the tool contains links to llms.txt files or local file paths that the user has made available.
+      The description of the tool contains links to llms.txt files that the user has made available.
 
       ${availablePackagesText}
 
@@ -88,7 +89,7 @@ export async function createUseMuiDocsTool(
     outputSchema: z.string().describe('A string containing the fetched documentation content'),
     execute: async (input, context) => {
       // Turn each source into a URL to fetch, or a friendly "unknown package" note. Real URLs pass
-      // through to the guard; a bad shorthand shouldn't get the scary security error.
+      // through to the guard; a bad shorthand shouldn't get the guard's security error.
       const urls: string[] = [];
       const errors: string[] = [];
       for (const entry of input.sources) {
@@ -126,7 +127,7 @@ export async function createFetchDocTool(options: DocsToolOptions) {
   return wrapTool({
     name: 'fetch_docs',
     publicName: 'fetchDocs',
-    description: `Fetch and parse documentation from a given URL or local file.
+    description: `Fetch and parse documentation from a given URL.
 
 Use this tool after useMuiDocs to:
 1. First fetch the llms.txt file from a documentation source

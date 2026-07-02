@@ -1,6 +1,6 @@
 import { appendFileSync, statSync, truncateSync } from 'node:fs';
 
-/** Cap the log at 5 MB so a long-lived process can't grow it forever. */
+/** Truncate the log past 5 MB, checked on startup: bounds growth across restarts, not within one run. */
 export const MAX_LOG_BYTES = 5 * 1024 * 1024;
 
 const formatError = (error: unknown): string => {

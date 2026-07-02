@@ -65,6 +65,16 @@ describe('createAuthedFetch', () => {
     );
   });
 
+  it('lets an AbortError through unchanged instead of wrapping it as a network failure', async () => {
+    const abort = new DOMException('This operation was aborted', 'AbortError');
+    const getToken = vi.fn().mockResolvedValue('jwt');
+    const fetcher = vi.fn().mockRejectedValue(abort);
+    const authedFetch = createAuthedFetch({ fetcher, getToken });
+
+    // Hosts detect cancellation via `error.name === 'AbortError'`; it must not become a retry error.
+    await expect(authedFetch('https://api/a', buildInit)).rejects.toBe(abort);
+  });
+
   it('forwards the signal to getToken', async () => {
     const { signal } = new AbortController();
     const getToken = vi.fn().mockResolvedValue('jwt');

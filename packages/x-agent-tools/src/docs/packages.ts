@@ -1,6 +1,16 @@
+import { z } from 'zod';
 import type { PackageData } from '../types';
 
 export const PACKAGES_LIST_PATH = '/v1/public/packages/list';
+
+const catalogSchema = z.array(
+  z.object({
+    name: z.string(),
+    version: z.string(),
+    llmsUrl: z.string(),
+    llmsFullUrl: z.string(),
+  }),
+);
 
 /**
  * Fetch the docs-catalog package list from `docsBaseUrl`. Throws a prefixed error if the catalog is
@@ -10,7 +20,8 @@ export async function fetchRemotePackages(
   docsBaseUrl: string,
   fetcher: typeof fetch = globalThis.fetch,
 ): Promise<PackageData[]> {
-  const packagesListUrl = new URL(PACKAGES_LIST_PATH, docsBaseUrl).toString();
+  // Concatenate like the JWT/codegen clients so a base path prefix (`https://host/api`) survives.
+  const packagesListUrl = `${docsBaseUrl.replace(/\/+$/, '')}${PACKAGES_LIST_PATH}`;
   const response = await fetcher(packagesListUrl);
 
   if (!response.ok) {
@@ -32,15 +43,17 @@ export async function fetchRemotePackages(
     );
   }
 
-  if (!Array.isArray(data) || !data.length) {
+  // Validate entries so a backend shape drift can't leak `undefined` URLs into the tool description.
+  const catalog = catalogSchema.safeParse(data);
+  if (!catalog.success || catalog.data.length === 0) {
     throw new Error(
-      `MUI X Agent Tools: The MUI documentation catalog at ${packagesListUrl} returned no packages. ` +
+      `MUI X Agent Tools: The MUI documentation catalog at ${packagesListUrl} returned no usable packages (empty or unexpected shape). ` +
         `The docs tools (useMuiDocs, fetchDocs) cannot work without it. ` +
         `Check that MUI_DOCS_BASE_URL points at a reachable backend that serves the package list, then retry.`,
     );
   }
 
-  return data as PackageData[];
+  return catalog.data;
 }
 
 // Compare `major.minor.patch` (>0 / <0 / 0), ranking a prerelease below its release

@@ -50,8 +50,11 @@ export function translateBackendError(
     const field = body?.data?.field;
     return `The design payload is too large${field ? ` (\`${field}\`)` : ''} (256 KB per field cap). Send a smaller subtree or drop variables.`;
   }
-  if (status === 429 || code === 'thread_already_streaming') {
+  if (code === 'thread_already_streaming') {
     return 'Another generation is already in flight on this thread. Retry in a moment.';
+  }
+  if (status === 429) {
+    return 'Rate limited by the backend. Retry in a moment.';
   }
   if (status === 401) {
     return 'JWT rejected by recipes-backend. The token may have expired mid-run; retry.';
