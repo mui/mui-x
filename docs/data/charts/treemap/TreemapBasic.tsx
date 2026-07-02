@@ -1,19 +1,23 @@
 import * as React from 'react';
 import { Treemap } from '@mui/x-charts-pro/Treemap';
 
-const data = {
-  id: 'languages',
-  children: [
-    { id: 'JavaScript', value: 62 },
-    { id: 'Python', value: 51 },
-    { id: 'TypeScript', value: 39 },
-    { id: 'Java', value: 30 },
-    { id: 'C#', value: 27 },
-    { id: 'Go', value: 14 },
-    { id: 'Rust', value: 12 },
-  ],
-};
-
 export default function TreemapBasic() {
-  return <Treemap series={{ data }} height={300} />;
+  return (
+    <Treemap
+      series={{
+        data: {
+          id: 'root',
+          children: [
+            { id: 'Documents', value: 40 },
+            { id: 'Photos', value: 30 },
+            { id: 'Music', value: 20 },
+            { id: 'Videos', value: 18 },
+            { id: 'Apps', value: 12 },
+            { id: 'Other', value: 6 },
+          ],
+        },
+      }}
+      height={300}
+    />
+  );
 }

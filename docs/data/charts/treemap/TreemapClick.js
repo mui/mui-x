@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import { Treemap } from '@mui/x-charts-pro/Treemap';
 
 const data = {
@@ -15,15 +15,31 @@ const data = {
 };
 
 export default function TreemapClick() {
-  const [clicked, setClicked] = React.useState(null);
+  const [item, setItem] = React.useState(null);
 
   return (
     <Stack sx={{ width: '100%' }} spacing={2}>
-      <Typography>Last clicked tile: {clicked ?? 'none'}</Typography>
+      <Box
+        component="pre"
+        sx={{
+          m: 0,
+          p: 1,
+          minHeight: 120,
+          borderRadius: 1,
+          bgcolor: 'action.hover',
+          fontSize: 12,
+          overflow: 'auto',
+          whiteSpace: 'pre-wrap',
+        }}
+      >
+        {item
+          ? JSON.stringify(item, null, 2)
+          : 'Click a tile to see the item payload.'}
+      </Box>
       <Treemap
         series={{ data }}
         height={300}
-        onItemClick={(event, item) => setClicked(String(item.nodeId))}
+        onItemClick={(event, clicked) => setItem(clicked)}
       />
     </Stack>
   );
