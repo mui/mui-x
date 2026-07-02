@@ -25,6 +25,8 @@
       "isPremiumPlan": true
     },
     "align": { "type": { "description": "GridAlignment" } },
+    "autosizeMaxWidth": { "type": { "description": "number" } },
+    "autosizeMinWidth": { "type": { "description": "number" } },
     "availableAggregationFunctions": {
       "type": { "description": "string[]" },
       "isPremiumPlan": true

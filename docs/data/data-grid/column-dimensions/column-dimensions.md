@@ -92,6 +92,29 @@ The `autosizeOptions` only applies to the [column header separator](#column-head
 It **does not** apply to the `autosizeColumns()` method when you call it programmatically, you have to pass the options directly.
 :::
 
+### Autosize min and max width
+
+Use `autosizeMinWidth` and `autosizeMaxWidth` in `GridColDef` to constrain column width during autosizing without affecting manual resizing.
+
+```tsx
+// Floor the autosized width at 180px; manual resize is unrestricted
+{ field: 'name', autosizeMinWidth: 180 }
+
+// Cap the autosized width at 120px; manual resize is unrestricted
+{ field: 'role', autosizeMaxWidth: 120 }
+```
+
+When `minWidth` or `maxWidth` are also set, the most restrictive value wins:
+
+- `minWidth: 200, autosizeMinWidth: 80` → autosize floor is **200** (`minWidth` wins)
+- `minWidth: 50, autosizeMinWidth: 180` → autosize floor is **180** (`autosizeMinWidth` wins)
+- `maxWidth: 80, autosizeMaxWidth: 300` → autosize ceiling is **80** (`maxWidth` wins)
+- `maxWidth: 500, autosizeMaxWidth: 120` → autosize ceiling is **120** (`autosizeMaxWidth` wins)
+
+Note that `minWidth` and `maxWidth` still apply as usual during manual resizing regardless of any `autosizeMinWidth` or `autosizeMaxWidth` values.
+
+{{"demo": "ColumnAutosizingMinMaxWidth.js", "disableAd": true, "bg": "inline"}}
+
 ### Column header separator
 
 Autosizing can be triggered by double-clicking the column header separator.

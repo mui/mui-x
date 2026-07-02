@@ -267,6 +267,8 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   checkboxColDef: PropTypes.shape({
     aggregable: PropTypes.bool,
     align: PropTypes.oneOf(['center', 'left', 'right']),
+    autosizeMaxWidth: PropTypes.number,
+    autosizeMinWidth: PropTypes.number,
     availableAggregationFunctions: PropTypes.arrayOf(PropTypes.string),
     cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     chartable: PropTypes.bool,

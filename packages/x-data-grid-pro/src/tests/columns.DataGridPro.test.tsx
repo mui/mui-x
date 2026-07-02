@@ -805,6 +805,111 @@ describe('<DataGridPro /> - Columns', () => {
         });
       });
     });
+
+    describe('autosizeMinWidth and autosizeMaxWidth column properties', () => {
+      it('autosizeMinWidth constrains the minimum width during autosizing', async () => {
+        render(
+          <Test rows={rows} columns={[{ field: 'id', headerName: 'ID', autosizeMinWidth: 200 }]} />,
+        );
+        await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: false }));
+        await waitFor(() => {
+          expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.be.at.least(200);
+        });
+      });
+
+      it('autosizeMaxWidth constrains the maximum width during autosizing', async () => {
+        render(
+          <Test
+            rows={rows}
+            columns={[{ field: 'brand', headerName: 'Brand', autosizeMaxWidth: 60 }]}
+          />,
+        );
+        await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: false }));
+        await waitFor(() => {
+          expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.be.at.most(60);
+        });
+      });
+
+      it('autosizeMinWidth wins over minWidth when it is more restrictive', async () => {
+        // autosizeMinWidth: 200 > minWidth: 50 → effective floor is 200
+        render(
+          <Test
+            rows={rows}
+            columns={[{ field: 'id', headerName: 'ID', minWidth: 50, autosizeMinWidth: 200 }]}
+          />,
+        );
+        await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: false }));
+        await waitFor(() => {
+          expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.be.at.least(200);
+        });
+      });
+
+      it('minWidth wins over autosizeMinWidth when it is more restrictive', async () => {
+        // minWidth: 200 > autosizeMinWidth: 50 → effective floor is 200
+        render(
+          <Test
+            rows={rows}
+            columns={[{ field: 'id', headerName: 'ID', minWidth: 200, autosizeMinWidth: 50 }]}
+          />,
+        );
+        await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: false }));
+        await waitFor(() => {
+          expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.be.at.least(200);
+        });
+      });
+
+      it('autosizeMaxWidth wins over maxWidth when it is more restrictive', async () => {
+        // autosizeMaxWidth: 60 < maxWidth: 500 → effective ceiling is 60
+        render(
+          <Test
+            rows={rows}
+            columns={[{ field: 'brand', headerName: 'Brand', maxWidth: 500, autosizeMaxWidth: 60 }]}
+          />,
+        );
+        await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: false }));
+        await waitFor(() => {
+          expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.be.at.most(60);
+        });
+      });
+
+      it('maxWidth wins over autosizeMaxWidth when it is more restrictive', async () => {
+        // maxWidth: 60 < autosizeMaxWidth: 500 → effective ceiling is 60
+        render(
+          <Test
+            rows={rows}
+            columns={[{ field: 'brand', headerName: 'Brand', maxWidth: 60, autosizeMaxWidth: 500 }]}
+          />,
+        );
+        await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: false }));
+        await waitFor(() => {
+          expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.be.at.most(60);
+        });
+      });
+
+      it('autosizeMinWidth does not affect manual resizing', async () => {
+        render(
+          <Test rows={rows} columns={[{ field: 'id', headerName: 'ID', autosizeMinWidth: 200 }]} />,
+        );
+        const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+        fireEvent.mouseDown(separator, { clientX: 100 });
+        fireEvent.mouseMove(separator, { clientX: 160, buttons: 1 });
+        fireEvent.mouseUp(separator);
+        // Width should be 60px (100 + 60 = 160), not constrained to autosizeMinWidth of 200
+        expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.be.lessThan(200);
+      });
+
+      it('autosizeMaxWidth does not affect manual resizing', async () => {
+        render(
+          <Test rows={rows} columns={[{ field: 'id', headerName: 'ID', autosizeMaxWidth: 60 }]} />,
+        );
+        const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+        fireEvent.mouseDown(separator, { clientX: 100 });
+        fireEvent.mouseMove(separator, { clientX: 400, buttons: 1 });
+        fireEvent.mouseUp(separator);
+        // Width should be 400px (100 + 300 = 400), not constrained to autosizeMaxWidth of 60
+        expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.be.greaterThan(60);
+      });
+    });
   });
 
   describe('column pipe processing', () => {
