@@ -92,6 +92,7 @@ Same changes as in `@mui/x-tree-view@9.8.0`.
 - [scheduler] Enforce top-level type imports (#22931) @Janpot
 - [scheduler] Keep the occurrence date when editing only one recurring event (#23007) @Anexus5919
 - [scheduler] Track bundle size of scheduler packages (#22682) @flaviendelangle
+- [scheduler] Add `viewConfig` prop to limit displayed hours in the day and week views (#22929) @flaviendelangle
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
