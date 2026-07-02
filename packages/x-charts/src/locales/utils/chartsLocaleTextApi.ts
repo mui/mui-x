@@ -590,6 +590,19 @@ export interface ChartsLocaleText {
     targetLabel: string;
   }) => string;
   /**
+   * The description of a treemap node for accessibility purpose.
+   * @param {object} params - The parameters for the description getter.
+   * @param {number} params.value - The value of the treemap node.
+   * @param {string} params.formattedValue - The formatted value of the treemap node.
+   * @param {string} params.label - The label for the node.
+   * @returns {string} The localized description for the treemap node.
+   */
+  treemapItemDescription: (params: {
+    value: number;
+    formattedValue: string;
+    label: string;
+  }) => string;
+  /**
    * The description of a range bar series item for accessibility purpose.
    * @param {object} params - The parameters for the description getter.
    * @param {[number, number]|null} params.value - The value of the range bar item.
