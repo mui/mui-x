@@ -49,6 +49,15 @@ describe('<Treemap />', () => {
     expect(container.querySelector('[data-node="root"]')).to.equal(null);
   });
 
+  it('labels every rendered tile by default', () => {
+    const { container } = render(
+      <Treemap width={200} height={200} margin={0} series={twoLeaves} />,
+    );
+
+    expect(container.querySelector(`.${treemapClasses.label}[data-node="A"]`)).not.to.equal(null);
+    expect(container.querySelector(`.${treemapClasses.label}[data-node="B"]`)).not.to.equal(null);
+  });
+
   it('does not crash when a node uses a named CSS color', () => {
     expect(() =>
       render(

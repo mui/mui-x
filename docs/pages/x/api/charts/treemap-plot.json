@@ -22,6 +22,18 @@
       "isGlobal": false
     },
     {
+      "key": "label",
+      "className": "MuiTreemap-label",
+      "description": "Styles applied to an individual cell label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labels",
+      "className": "MuiTreemap-labels",
+      "description": "Styles applied to the labels container.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiTreemap-root",
       "description": "Styles applied to the root element.",

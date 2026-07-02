@@ -1,11 +1,1 @@
-<TextField
-  select
-  label="Labels"
-  value={showLabels ? 'shown' : 'hidden'}
-  onChange={(event) => setShowLabels(event.target.value === 'shown')}
-  sx={{ maxWidth: 220 }}
->
-  <MenuItem value="shown">Shown</MenuItem>
-  <MenuItem value="hidden">Hidden</MenuItem>
-</TextField>
-<Treemap series={{ data, nodeOptions: { showLabels } }} height={300} />
+<Treemap series={{ data }} height={300} />

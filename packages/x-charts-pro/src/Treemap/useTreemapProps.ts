@@ -3,10 +3,11 @@ import { defaultizeMargin } from '@mui/x-charts/internals';
 import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import type { TreemapProps } from './Treemap';
+import type { TreemapSeriesData } from './treemap.types';
 import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import { TREEMAP_CHART_PLUGINS } from './Treemap.plugins';
 import type { TreemapChartPluginSignatures } from './Treemap.plugins';
-import { DEFAULT_TILE_PADDING } from './utils';
+import { DEFAULT_TILE_PADDING, DEFAULT_HEADER_HEIGHT } from './utils';
 
 /**
  * Extracts the props for the child components of `Treemap` from its input props.
@@ -33,9 +34,16 @@ export const useTreemapProps = (props: TreemapProps) => {
 
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
+  // The default top padding reserves a header band for the labels of nested group tiles.
+  const topLevelNodes: readonly TreemapSeriesData[] = Array.isArray(series.data)
+    ? series.data
+    : ((series.data as TreemapSeriesData)?.children ?? []);
+  const hasRenderedGroups = topLevelNodes.some((node) => (node.children?.length ?? 0) > 0);
+
   const defaultTiling = {
     paddingInner: DEFAULT_TILE_PADDING,
     paddingOuter: DEFAULT_TILE_PADDING,
+    paddingTop: hasRenderedGroups ? DEFAULT_HEADER_HEIGHT : 0,
   };
 
   const chartsContainerProps: ChartsContainerProProps<'treemap', TreemapChartPluginSignatures> = {

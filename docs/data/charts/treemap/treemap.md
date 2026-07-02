@@ -45,6 +45,12 @@ Use `paddingInner`, `paddingOuter`, and `paddingTop` to control the spacing betw
 
 {{"demo": "TreemapTiling.js"}}
 
+## Labels
+
+Every tile is labeled with its `label`, which defaults to the node `id`.
+
+{{"demo": "TreemapLabels.js"}}
+
 ## Click event
 
 The `onItemClick` callback fires when a tile is clicked, with the clicked item's identifier.

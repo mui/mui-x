@@ -28,7 +28,6 @@ function TreemapRectElement(props: TreemapRectElementProps) {
       width={Math.max(0, width)}
       height={Math.max(0, height)}
       fill={node.color}
-      stroke="none"
       data-node={node.id}
       className={classes.cell}
     />
