@@ -245,8 +245,7 @@ describe('<Treemap />', () => {
     expect(container.querySelector('[data-node="leaf2"]')).not.to.equal(null);
   });
 
-  // Central hit-testing resolves the tile from the pointer position, so it needs real
-  // client coordinates that JSDOM does not provide.
+  // Central hit-testing needs real client coordinates, unavailable in JSDOM.
   describe('central pointer interaction', () => {
     const clickable = { id: 's', ...twoLeaves } as const;
 

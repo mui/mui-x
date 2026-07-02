@@ -13,10 +13,9 @@ export type TreemapHighlightState = 'highlighted' | 'faded' | undefined;
 const alwaysUndefined = () => undefined;
 
 /**
- * Returns a getter `(nodeId) => 'highlighted' | 'faded' | undefined` computed once per
- * hover/layout/scope change. It precomputes the highlighted/faded sets from the hovered
- * tile (mirroring the core `selectorChartsHighlightStateCallback`), so the plot subscribes
- * once and each tile does an O(1) lookup — no per-tile store subscription or traversal.
+ * Getter `(nodeId) => 'highlighted' | 'faded' | undefined`, rebuilt once per
+ * hover/layout/scope change. Builds the highlighted/faded sets once so the plot subscribes
+ * once and each tile is an O(1) lookup — no per-tile subscription or traversal.
  */
 const selectorTreemapHighlightStateGetter = createSelectorMemoized(
   selectorChartsHighlightedItem,

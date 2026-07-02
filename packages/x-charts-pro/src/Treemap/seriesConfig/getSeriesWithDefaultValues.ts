@@ -55,11 +55,9 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
   const branchIndex = new Map<HierarchyNode<NormalizedTreemapNode>, number>();
   root.children?.forEach((child, index) => branchIndex.set(child, index));
 
-  // In multi-level treemaps the fill lightness is driven by the node's level:
-  // the front (deepest) level keeps the base hue, and each level behind it is
-  // progressively darker so the parent reads as a frame around its children.
-  // `root.height` is the deepest rendered level (rendered depths are 1..maxDepth).
-  // The shallowest level is darkened by at most LIGHTNESS_DARKEN.
+  // Fill lightness tracks level: deepest (front) keeps the base hue, shallower levels
+  // darken progressively (up to LIGHTNESS_DARKEN) so parents frame their children.
+  // `root.height` is the deepest rendered level (depths 1..maxDepth).
   const LIGHTNESS_DARKEN = 0.32;
   const maxDepth = root.height;
   const darkenStep = maxDepth > 1 ? LIGHTNESS_DARKEN / (maxDepth - 1) : 0;

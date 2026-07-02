@@ -34,7 +34,6 @@ export function getPreviousNonEmptySeries<
       : -1;
 
   if (currentSeriesIndex <= 0) {
-    // If no current series, or if it's the first series
     return nonEmptySeries[nonEmptySeries.length - 1];
   }
   return nonEmptySeries[(currentSeriesIndex - 1 + nonEmptySeries.length) % nonEmptySeries.length];
