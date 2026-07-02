@@ -14,7 +14,9 @@ export interface StandaloneAgendaViewProps<TEvent extends object, TResource exte
     AgendaViewProps,
     Omit<
       EventCalendarParameters<TEvent, TResource>,
-      'viewConfig' | keyof EventCalendarSchedulerParametersOverrides | CollapsibleResourcesParameterKeys
+      | 'viewConfig'
+      | keyof EventCalendarSchedulerParametersOverrides
+      | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
   /**

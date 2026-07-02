@@ -13,7 +13,9 @@ export interface StandaloneWeekViewPremiumProps<TEvent extends object, TResource
     WeekViewProps,
     Omit<
       EventCalendarPremiumParameters<TEvent, TResource>,
-      'viewConfig' | keyof EventCalendarSchedulerParametersOverrides | CollapsibleResourcesParameterKeys
+      | 'viewConfig'
+      | keyof EventCalendarSchedulerParametersOverrides
+      | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
   /**

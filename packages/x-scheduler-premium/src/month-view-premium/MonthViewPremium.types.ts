@@ -13,7 +13,9 @@ export interface StandaloneMonthViewPremiumProps<TEvent extends object, TResourc
     MonthViewProps,
     Omit<
       EventCalendarPremiumParameters<TEvent, TResource>,
-      'viewConfig' | keyof EventCalendarSchedulerParametersOverrides | CollapsibleResourcesParameterKeys
+      | 'viewConfig'
+      | keyof EventCalendarSchedulerParametersOverrides
+      | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
   /**
