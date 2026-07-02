@@ -70,6 +70,23 @@ const resourceDepthLookupSelector = createSelectorMemoized(
   },
 );
 
+// Memoized so the O(children) scan runs only when the structure or visibility
+// changes, not on every store notification. Read per resource in O(1) below.
+const resourceHasVisibleChildrenLookupSelector = createSelectorMemoized(
+  (state: State) => state.resourceChildrenIdLookup,
+  (state: State) => state.visibleResources,
+  (childrenIdLookup, visibleResources) => {
+    const result = new Map<SchedulerResourceId, boolean>();
+    for (const [resourceId, childrenIds] of childrenIdLookup) {
+      result.set(
+        resourceId,
+        childrenIds.some((childId) => visibleResources[childId] !== false),
+      );
+    }
+    return result;
+  },
+);
+
 export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
@@ -132,11 +149,11 @@ export const schedulerResourceSelectors = {
     (state: State, resourceId: SchedulerResourceId) =>
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   ),
+  // O(1) read from the memoized lookup; a resource with no entry (a leaf) has no
+  // visible children.
   resourceHasVisibleChildren: createSelector(
-    (state: State) => state.resourceChildrenIdLookup,
-    (state: State) => state.visibleResources,
-    (childrenIdLookup, visibleResources, resourceId: SchedulerResourceId) =>
-      childrenIdLookup.get(resourceId)?.some((id) => visibleResources[id] !== false) ?? false,
+    resourceHasVisibleChildrenLookupSelector,
+    (lookup, resourceId: SchedulerResourceId) => lookup.get(resourceId) ?? false,
   ),
   hasNestedResources: createSelector(
     resourceParentIdLookupSelector,
