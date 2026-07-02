@@ -28,6 +28,14 @@ import type {
   SankeyItemIdentifierWithData,
 } from '../SankeyChart/sankey.types';
 import type { SankeyHighlightScope } from '../SankeyChart/sankey.highlight.types';
+import type {
+  TreemapLayout,
+  TreemapSeriesType,
+  DefaultizedTreemapSeriesType,
+  TreemapItemIdentifier,
+  TreemapItemIdentifierWithData,
+} from '../Treemap/treemap.types';
+import type { TreemapHighlightScope } from '../Treemap/treemap.highlight.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -94,6 +102,23 @@ declare module '@mui/x-charts/internals' {
         series: DefaultizedSankeySeriesType;
       };
       highlightIdentifier: SankeyItemIdentifier;
+    };
+    treemap: {
+      seriesInput: DefaultizedTreemapSeriesType;
+      series: DefaultizedTreemapSeriesType;
+      seriesLayout: {
+        treemapLayout: TreemapLayout<true>;
+      };
+      seriesProp: TreemapSeriesType;
+      itemIdentifier: TreemapItemIdentifier;
+      itemIdentifierWithData: TreemapItemIdentifierWithData<true>;
+      valueType: number;
+      highlightScope: TreemapHighlightScope;
+      descriptionGetterParams: {
+        identifier: TreemapItemIdentifier;
+        series: DefaultizedTreemapSeriesType;
+      };
+      highlightIdentifier: TreemapItemIdentifier;
     };
   }
 
