@@ -89,7 +89,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * Collapse status for each resource.
    * A resource is expanded unless it is registered here with a `true` value.
-   * Collapsing a resource hides its descendant rows in the timeline.
+   * Collapsing a resource hides its descendants.
    */
   collapsedResources: Record<SchedulerResourceId, boolean>;
   /**
