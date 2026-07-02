@@ -6,10 +6,8 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import {
-  useChatMessageSourceUtilityClasses,
-  type ChatMessageSourceClasses,
-} from './chatMessageSourceClasses';
+import { useChatMessageSourceUtilityClasses } from './chatMessageSourceClasses';
+import type { ChatMessageSourceClasses } from './chatMessageSourceClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageSource');
 

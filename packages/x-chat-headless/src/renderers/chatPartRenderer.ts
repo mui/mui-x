@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatOnToolCall } from '../types/chat-callbacks';
 import type { ChatMessagePart } from '../types/chat-message-parts';

@@ -8,14 +8,13 @@ import {
   useChatStore,
   useChatVariant,
   useStreamingIndicatorVisibility,
-  type ChatMessage,
-  type MessageOwnerState,
-  type StreamingIndicatorMode,
 } from '@mui/x-chat-headless';
+import type { ChatMessage, MessageOwnerState, StreamingIndicatorMode } from '@mui/x-chat-headless';
 import { styled } from '../internals/zero-styled';
 import { resolveSlotProps } from '../internals/mergeSlotProps';
 import { ChatMessageAvatar } from '../ChatMessage/ChatMessageAvatar';
-import { ChatStreamingIndicator, type ChatStreamingIndicatorProps } from './ChatStreamingIndicator';
+import { ChatStreamingIndicator } from './ChatStreamingIndicator';
+import type { ChatStreamingIndicatorProps } from './ChatStreamingIndicator';
 import { useChatStreamingIndicatorUtilityClasses } from './chatStreamingIndicatorClasses';
 
 export interface ChatStreamingIndicatorRowProps {

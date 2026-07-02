@@ -3,13 +3,11 @@ import * as React from 'react';
 import type { ChatAdapter } from './adapters';
 import { useChatController } from './internals/useChatController';
 import { useChatInstance } from './internals/useChatInstance';
-import {
-  ChatRuntimeContext,
-  type ChatRuntimeContextValue,
-} from './internals/useChatRuntimeContext';
+import { ChatRuntimeContext } from './internals/useChatRuntimeContext';
+import type { ChatRuntimeContextValue } from './internals/useChatRuntimeContext';
 import type { ChatPartRendererMap } from './renderers';
 import { defaultPartRenderers } from './renderers/defaultPartRenderers';
-import { type ChatStoreConstructor, type ChatStoreParameters } from './store';
+import type { ChatStoreConstructor, ChatStoreParameters } from './store';
 import type { ChatOnData, ChatOnError, ChatOnFinish, ChatOnToolCall } from './types';
 import { ChatStoreContext } from './internals/useChatStoreContext';
 

@@ -2,14 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import { SuggestionsRoot, type SuggestionsRootProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { SuggestionsRoot } from '@mui/x-chat-headless';
+import type { SuggestionsRootProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import {
-  useChatSuggestionsUtilityClasses,
-  type ChatSuggestionsClasses,
-} from './chatSuggestionsClasses';
+import { useChatSuggestionsUtilityClasses } from './chatSuggestionsClasses';
+import type { ChatSuggestionsClasses } from './chatSuggestionsClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatSuggestions');
 

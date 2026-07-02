@@ -2,14 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { keyframes, SxProps, Theme } from '@mui/system';
-import { StreamingIndicator, type StreamingIndicatorProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { keyframes } from '@mui/system';
+import { StreamingIndicator } from '@mui/x-chat-headless';
+import type { StreamingIndicatorProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import {
-  useChatStreamingIndicatorUtilityClasses,
-  type ChatStreamingIndicatorClasses,
-} from './chatStreamingIndicatorClasses';
+import { useChatStreamingIndicatorUtilityClasses } from './chatStreamingIndicatorClasses';
+import type { ChatStreamingIndicatorClasses } from './chatStreamingIndicatorClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatStreamingIndicator');
 
