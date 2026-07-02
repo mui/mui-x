@@ -1,0 +1,8 @@
+<Treemap
+  series={{
+    data,
+    tiling: { paddingInner: 2, paddingOuter: 2 },
+    nodeOptions: { borderRadius: 2 },
+  }}
+  height={300}
+/>

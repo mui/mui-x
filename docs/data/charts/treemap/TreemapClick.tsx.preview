@@ -1,0 +1,6 @@
+<Typography>Last clicked tile: {clicked ?? 'none'}</Typography>
+<Treemap
+  series={{ data }}
+  height={300}
+  onItemClick={(event, item) => setClicked(String(item.nodeId))}
+/>

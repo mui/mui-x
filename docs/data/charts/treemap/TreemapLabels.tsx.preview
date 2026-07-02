@@ -1,0 +1,10 @@
+<FormControlLabel
+  control={
+    <Switch
+      checked={showLabels}
+      onChange={(event) => setShowLabels(event.target.checked)}
+    />
+  }
+  label="Show labels"
+/>
+<Treemap series={{ data, nodeOptions: { showLabels } }} height={300} />
