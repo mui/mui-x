@@ -60,18 +60,6 @@ const inputSchema = z.object({
       "Target MUI / MUI X version pairing. Detect from the project's `package.json` (`@mui/material` and `@mui/x-data-grid` ranges) and pass accordingly. Omit to default to the latest stable pairing (currently Material UI v9 + MUI X v9).",
     ),
   model: z.string().optional().describe('Optional model override; otherwise the backend default.'),
-  mode: z
-    .enum(['styled', 'scaffold'])
-    .optional()
-    .describe(
-      "[EXPERIMENTAL] Output mode. `'styled'` (default) returns production-ready MUI components with `sx` styling. `'scaffold'` returns unstyled semantic MUI markup (component shells with correct structure and no styling) suitable for layout planning or as a starting point for further iteration. May change or be removed in future versions.",
-    ),
-  images: z
-    .array(z.string().regex(/^(data:image\/|https:\/\/)/, 'must be a data URL or an https URL'))
-    .optional()
-    .describe(
-      '[EXPERIMENTAL] Optional images to use as visual reference (screenshots, mockups, wireframes, exported design frames). Each entry is a data URL (`data:image/...;base64,...`) or an HTTPS URL. Works with both `styled` and `scaffold` modes: the backend uses image-capable models when images are present, and both modes treat the images as visual context to inform the generated code. Interface may change; see release notes for updates.',
-    ),
 });
 
 const outputSchema = z.object({
@@ -227,7 +215,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
     name: 'generate_react_code',
     publicName: 'generateReactCode',
     description:
-      'generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major. Some parameters are marked `[EXPERIMENTAL]` in their descriptions; those are opt-in and may change or be removed in future `@mui/x-agent-tools` versions. Callers relying on stable behavior should omit them.',
+      'generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major.',
     ...options.overrides,
     inputSchema,
     outputSchema,

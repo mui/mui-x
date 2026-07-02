@@ -8,7 +8,7 @@ Three stdio-based tools, backed by [@mui/x-agent-tools](../x-agent-tools/):
 
 - `useMuiDocs(sources)` : returns the docs catalog (URLs + summaries) for one or more MUI packages (for example `@mui/material`, `@mui/x-data-grid`). Each source is an llms.txt URL or a bare package name. Agents typically use this first to find the right docs page.
 - `fetchDocs(urls)` : fetches the full content of one or more docs URLs (typically taken from a `useMuiDocs` response).
-- `generateReactCode({ prompt, threadId?, designContext?, muiPairing?, model?, mode?, images? })` : generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major (see [Targeting a MUI version](#targeting-a-mui-version)). `mode` and `images` are experimental and may change.
+- `generateReactCode({ prompt, threadId?, designContext?, muiPairing?, model? })` : generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major (see [Targeting a MUI version](#targeting-a-mui-version)).
 
 ## Quick start
 
