@@ -1,7 +1,9 @@
 import { createFetchDocTool, createUseMuiDocsTool } from './tools';
+import { createDocsQueue } from './queue';
 import { fetchRemotePackages } from './packages';
 import { createDocsUrlGuard } from './url-guard';
 import { withRetry } from '../utils/retry';
+import { LRUCache } from '../utils/cache';
 import type { Logger } from '../types';
 
 // Backoff for the startup catalog fetch (~63s total), so a cold-starting backend (~30-60s spin-up)
@@ -44,9 +46,14 @@ export async function createDocsTools(options: CreateDocsToolsOptions): Promise<
   // Docs fetchers may only reach MUI docs origins + the configured docs base URL.
   const isUrlAllowed = createDocsUrlGuard([docsBaseUrl], logger);
 
+  // One queue and one raw-text cache shared across both docs tools.
+  const queue = createDocsQueue();
+  const cache = new LRUCache();
+
   const fetchDocsTool = await createFetchDocTool({
     ...(fetchDocsDescription ? { overrides: { description: fetchDocsDescription } } : {}),
-    cache: true,
+    queue,
+    cache,
     logger,
     fetcher,
     isUrlAllowed,
@@ -66,7 +73,8 @@ export async function createDocsTools(options: CreateDocsToolsOptions): Promise<
       );
     useMuiDocsTool = await createUseMuiDocsTool({
       getPackagesList,
-      cache: true,
+      queue,
+      cache,
       logger,
       fetcher,
       isUrlAllowed,

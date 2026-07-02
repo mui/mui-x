@@ -37,9 +37,3 @@ export interface ToolOverrides {
   name?: string;
   description?: string;
 }
-
-export interface QueueOptions {
-  throwOnTimeout?: boolean;
-  concurrency?: number;
-  timeout?: number;
-}

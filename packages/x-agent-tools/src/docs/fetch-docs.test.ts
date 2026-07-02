@@ -89,6 +89,27 @@ describe('urlListFetcher', () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
+  it('caches raw text and rewrites links per call, so one cache serves both the raw and rewritten views', async () => {
+    const queue = new PQueue({ concurrency: 1 });
+    const cache = makeCache();
+    const url = 'https://mui.com/x/llms.txt';
+    const fetcher = vi.fn().mockResolvedValue(ok('see [a](/x/foo.md)'));
+
+    // The raw view (fetchDocs) populates the cache with unmodified text.
+    const raw = await urlListFetcher(queue, fetcher, [url], { cache });
+    expect(raw).toBe('see [a](/x/foo.md)');
+
+    // Flush the queued cache write before reading it back.
+    await new Promise((resolve) => {
+      setTimeout(resolve, 0);
+    });
+
+    // The rewritten view (useMuiDocs) reads the same cached raw entry and absolutizes on the way out.
+    const rewritten = await urlListFetcher(queue, fetcher, [url], { cache, resolveDocLinks: true });
+    expect(rewritten).toBe('see [a](https://mui.com/x/foo.md)');
+    expect(fetcher).toHaveBeenCalledTimes(1); // served from cache, not refetched
+  });
+
   it('does not cache when no cache is provided (default)', async () => {
     const queue = new PQueue({ concurrency: 1 });
     const fetcher = vi.fn().mockResolvedValue(ok('body'));

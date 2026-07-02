@@ -1,41 +1,37 @@
 import { z } from 'zod';
+import type PQueueType from 'p-queue';
 import { LRUCache, resolveCache } from '../utils/cache';
-import type { Logger, PackageData, QueueOptions, ToolOverrides } from '../types';
+import type { Logger, PackageData, ToolOverrides } from '../types';
 import { wrapTool } from '../utils/wrap-tool';
 import { isUrlLike } from '../utils/url';
 import { urlListFetcher } from './fetch-docs';
+import { createDocsQueue } from './queue';
 import { compareVersions, formatUnknownSourceError } from './packages';
-
-const DEFAULT_DOCS_CONCURRENCY = 10;
 
 interface DocsToolOptions {
   fetcher?: typeof fetch;
   overrides?: ToolOverrides;
-  queue?: QueueOptions;
-  // `true`: a fresh cache this tool owns (not host-disposable, fine for a server's lifetime);
-  // `LRUCache`: share an instance the host owns and can `dispose()`; omit: no cache.
+  // Shared when `createDocsTools` passes one; omit for a default per-tool queue.
+  queue?: PQueueType;
+  // `true`: fresh owned cache; `LRUCache`: shared instance; omit: none.
   cache?: boolean | LRUCache;
   logger?: Logger;
   isUrlAllowed?: (url: string) => boolean;
 }
 
 /** Shared queue + fetcher + cache setup for both docs tools, so their defaults can't drift apart. */
-async function createDocsToolRuntime(options: DocsToolOptions) {
-  const PQueue = await import('p-queue').then((m) => m.default);
-  const queue = new PQueue({
-    // Bounded default so omitting queue config can't fire unbounded parallel fetches.
-    concurrency: options.queue?.concurrency ?? DEFAULT_DOCS_CONCURRENCY,
-    throwOnTimeout: options.queue?.throwOnTimeout ?? true,
-    timeout: options.queue?.timeout,
-  });
-  const fetcher = options.fetcher ?? fetch;
-  return { queue, fetcher, cache: resolveCache(options.cache) };
+function createDocsToolRuntime(options: DocsToolOptions) {
+  return {
+    queue: options.queue ?? createDocsQueue(),
+    fetcher: options.fetcher ?? fetch,
+    cache: resolveCache(options.cache),
+  };
 }
 
 export async function createUseMuiDocsTool(
   options: DocsToolOptions & { getPackagesList: () => Promise<PackageData[]> },
 ) {
-  const { queue, fetcher, cache } = await createDocsToolRuntime(options);
+  const { queue, fetcher, cache } = createDocsToolRuntime(options);
   const { logger, isUrlAllowed } = options;
   const packages = await options.getPackagesList();
   const availablePackagesText = packages
@@ -120,7 +116,7 @@ export async function createUseMuiDocsTool(
 }
 
 export async function createFetchDocTool(options: DocsToolOptions) {
-  const { queue, fetcher, cache } = await createDocsToolRuntime(options);
+  const { queue, fetcher, cache } = createDocsToolRuntime(options);
   const { logger, isUrlAllowed } = options;
 
   return wrapTool({

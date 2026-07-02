@@ -89,10 +89,13 @@ export function urlListFetcher(
     urlList.map((url) =>
       queue
         .add(async () => {
+          // Cache holds raw text; apply the link-rewriting view on read so one cache serves both tools.
+          const render = (raw: string) => (resolveDocLinks ? absolutizeDocLinks(raw, url) : raw);
+
           if (cache) {
-            const cachedContent = cache.get(url);
-            if (cachedContent !== null) {
-              return cachedContent;
+            const cachedRaw = cache.get(url);
+            if (cachedRaw !== null) {
+              return render(cachedRaw);
             }
           }
 
@@ -108,19 +111,18 @@ export function urlListFetcher(
               throw new Error(`HTTP error! status: ${response.status}`);
             }
             const rawText = await response.text();
-            const responseText = resolveDocLinks ? absolutizeDocLinks(rawText, url) : rawText;
 
             if (cache) {
               queueMicrotask(() => {
                 try {
-                  cache.set(url, responseText);
+                  cache.set(url, rawText);
                 } catch (error) {
                   logger('Failed to update cache:', error);
                 }
               });
             }
 
-            return responseText;
+            return render(rawText);
           } catch (error) {
             if (error instanceof BlockedUrlError) {
               logger(`Blocked fetch for disallowed URL: ${error.url}`);

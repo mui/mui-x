@@ -5,7 +5,6 @@ export type {
   ToolProgressEvent,
   PackageData,
   ToolOverrides,
-  QueueOptions,
 } from './types';
 
 // Composition layer: the recommended entry point for a host (MCP, CLI, ACP).
