@@ -17,14 +17,6 @@ export interface TreemapLabelProps {
    * The series id.
    */
   seriesId: SeriesId;
-  /**
-   * Minimum tile width in pixels for the label to be displayed.
-   */
-  minLabelWidth: number;
-  /**
-   * Minimum tile height in pixels for the label to be displayed.
-   */
-  minLabelHeight: number;
 }
 
 /**
@@ -32,7 +24,7 @@ export interface TreemapLabelProps {
  */
 export const TreemapLabel = React.forwardRef<SVGTextElement, TreemapLabelProps>(
   function TreemapLabel(props, ref) {
-    const { node, seriesId, minLabelWidth, minLabelHeight } = props;
+    const { node, seriesId } = props;
     const theme = useTheme();
     const classes = useUtilityClasses();
 
@@ -43,10 +35,7 @@ export const TreemapLabel = React.forwardRef<SVGTextElement, TreemapLabelProps>(
       ),
     );
 
-    const width = node.x1 - node.x0;
-    const height = node.y1 - node.y0;
-
-    if (!node.label || width < minLabelWidth || height < minLabelHeight) {
+    if (!node.label) {
       return null;
     }
 

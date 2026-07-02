@@ -54,9 +54,9 @@ Use `paddingInner`, `paddingOuter`, and `paddingTop` to add spacing between tile
 
 ## Labels
 
-By default the root layer (the top-level tiles) is always labeled, and deeper leaves are labeled when their tile is larger than `minLabelWidth` and `minLabelHeight`.
+By default every tile is labeled.
 
-Set `showLabels: false` to hide every label, or pass a function `(node) => boolean` to decide per tile which labels to display. Labels chosen by the function ignore the size thresholds.
+Set `showLabels: false` to hide every label, or pass a function `(node) => boolean` to decide per tile which labels to display.
 
 {{"demo": "TreemapLabels.js"}}
 

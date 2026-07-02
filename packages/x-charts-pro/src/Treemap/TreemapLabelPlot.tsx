@@ -36,14 +36,11 @@ function TreemapLabelPlot(props: TreemapLabelPlotProps) {
     return null;
   }
 
-  const minLabelWidth = nodeOptions?.minLabelWidth ?? 30;
-  const minLabelHeight = nodeOptions?.minLabelHeight ?? 18;
   const renderMode = nodeOptions?.renderMode ?? 'all';
   const isCustom = typeof showLabels === 'function';
 
-  // The root layer (depth 1) is always labeled; a custom predicate takes full control.
-  const shouldLabel = (node: (typeof layout.nodes)[number]) =>
-    isCustom ? showLabels(node) : node.depth === 1 || node.height === 0;
+  // Every rendered tile is labeled by default; a custom predicate takes full control.
+  const shouldLabel = (node: (typeof layout.nodes)[number]) => (isCustom ? showLabels(node) : true);
 
   // Only tiles that are actually rendered can carry a label.
   const labelled = layout.nodes.filter(
@@ -52,19 +49,9 @@ function TreemapLabelPlot(props: TreemapLabelPlotProps) {
 
   return (
     <g className={classes.labels}>
-      {labelled.map((node) => {
-        // Root-layer and explicitly-selected labels ignore the size thresholds.
-        const alwaysShow = isCustom || node.depth === 1;
-        return (
-          <TreemapLabel
-            key={`label-${node.id}`}
-            seriesId={treemapSeries.id}
-            node={node}
-            minLabelWidth={alwaysShow ? 0 : minLabelWidth}
-            minLabelHeight={alwaysShow ? 0 : minLabelHeight}
-          />
-        );
-      })}
+      {labelled.map((node) => (
+        <TreemapLabel key={`label-${node.id}`} seriesId={treemapSeries.id} node={node} />
+      ))}
     </g>
   );
 }
