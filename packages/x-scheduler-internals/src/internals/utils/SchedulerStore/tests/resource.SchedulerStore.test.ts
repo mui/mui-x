@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import {
+import type {
   SchedulerResourceId,
   SchedulerResourceModelStructure,
 } from '@mui/x-scheduler-internals/models';

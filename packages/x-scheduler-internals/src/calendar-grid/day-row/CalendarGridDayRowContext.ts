@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { TemporalSupportedObject } from '../../models';
+import type { TemporalSupportedObject } from '../../models';
 
 export interface CalendarGridDayRowContext {
   /**

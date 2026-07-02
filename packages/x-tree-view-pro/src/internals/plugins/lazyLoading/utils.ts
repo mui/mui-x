@@ -1,5 +1,5 @@
-import { TreeViewItemId, TreeViewValidItem } from '@mui/x-tree-view/models';
-import { TreeViewLazyLoadingPlugin } from './TreeViewLazyLoadingPlugin';
+import type { TreeViewItemId, TreeViewValidItem } from '@mui/x-tree-view/models';
+import type { TreeViewLazyLoadingPlugin } from './TreeViewLazyLoadingPlugin';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 

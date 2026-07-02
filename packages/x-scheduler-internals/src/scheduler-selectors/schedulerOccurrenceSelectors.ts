@@ -1,12 +1,12 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import {
+import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
   SchedulerResource,
   TemporalSupportedObject,
 } from '../models';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { getOccurrencesFromEvents } from '../internals/utils/event-utils';

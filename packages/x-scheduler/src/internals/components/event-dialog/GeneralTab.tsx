@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
-import {
+import type {
   SchedulerEventColor,
   SchedulerResourceId,
   SchedulerRenderableEventOccurrence,
@@ -19,7 +19,8 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import { computeRange, ControlledValue, hasProp } from './utils';
+import type { ControlledValue } from './utils';
+import { computeRange, hasProp } from './utils';
 import ResourceAndColorSection from './ResourceAndColorSection';
 import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
