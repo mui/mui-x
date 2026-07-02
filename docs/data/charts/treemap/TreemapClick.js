@@ -18,13 +18,26 @@ export default function TreemapClick() {
   const [item, setItem] = React.useState(null);
 
   return (
-    <Stack sx={{ width: '100%' }} spacing={2}>
+    <Stack
+      direction={{ xs: 'column', md: 'row' }}
+      spacing={2}
+      sx={{ width: '100%', alignItems: 'stretch' }}
+    >
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Treemap
+          series={{ data }}
+          height={300}
+          onItemClick={(event, clicked) => setItem(clicked)}
+        />
+      </Box>
       <Box
         component="pre"
         sx={{
+          flex: 1,
+          minWidth: 0,
           m: 0,
           p: 1,
-          minHeight: 120,
+          maxHeight: { md: 300 },
           borderRadius: 1,
           bgcolor: 'action.hover',
           fontSize: 12,
@@ -36,11 +49,6 @@ export default function TreemapClick() {
           ? JSON.stringify(item, null, 2)
           : 'Click a tile to see the item payload.'}
       </Box>
-      <Treemap
-        series={{ data }}
-        height={300}
-        onItemClick={(event, clicked) => setItem(clicked)}
-      />
     </Stack>
   );
 }
