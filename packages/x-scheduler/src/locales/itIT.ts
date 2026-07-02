@@ -89,7 +89,6 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   openSidePanel: 'Apri pannello laterale',
 
   // SidePanelDrawer (small screens)
-  // back: 'Back',
   // openMenu: 'Open menu',
 
   // Preferences menu

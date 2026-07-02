@@ -89,7 +89,6 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   openSidePanel: 'Åpne sidepanel',
 
   // SidePanelDrawer (small screens)
-  // back: 'Back',
   // openMenu: 'Open menu',
 
   // Preferences menu

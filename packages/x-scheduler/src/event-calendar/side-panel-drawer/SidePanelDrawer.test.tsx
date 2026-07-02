@@ -21,7 +21,13 @@ describe('<SidePanelDrawer />', () => {
     );
   }
 
-  it('is closed by default and opens via the mobile menu button', () => {
+  function expandPreferences() {
+    fireEvent.click(
+      getDrawer()!.querySelector(`.${eventCalendarClasses.sidePanelDrawerPreferencesButton}`)!,
+    );
+  }
+
+  it('should be closed by default and open via the mobile menu button', () => {
     render(<EventCalendar events={[]} />);
 
     // The drawer is only mounted while open.
@@ -31,7 +37,7 @@ describe('<SidePanelDrawer />', () => {
     expect(getDrawer()).not.to.equal(null);
   });
 
-  it('closes via the close button', async () => {
+  it('should close via the close button', async () => {
     render(<EventCalendar events={[]} />);
     openDrawer();
 
@@ -41,7 +47,7 @@ describe('<SidePanelDrawer />', () => {
     await waitFor(() => expect(getDrawer()).to.equal(null));
   });
 
-  it('lists the views and reflects the selection when one is picked', () => {
+  it('should list the views and reflect the selection when one is picked', () => {
     render(<EventCalendar events={[]} />);
     openDrawer();
 
@@ -61,7 +67,16 @@ describe('<SidePanelDrawer />', () => {
     ).to.have.attribute('aria-selected', 'true');
   });
 
-  it('expands and collapses the preferences options inline', async () => {
+  it('should not render the view list when a single view is available', () => {
+    render(<EventCalendar events={[]} views={['week']} />);
+    openDrawer();
+
+    expect(getDrawer()!.querySelector(`.${eventCalendarClasses.sidePanelDrawerViewList}`)).to.equal(
+      null,
+    );
+  });
+
+  it('should expand and collapse the preferences options inline', async () => {
     render(<EventCalendar events={[]} />);
     openDrawer();
 
@@ -73,15 +88,43 @@ describe('<SidePanelDrawer />', () => {
     expect(getPreferencesList()).to.equal(null);
 
     // Expand the preferences options inside the drawer.
-    fireEvent.click(
-      drawer.querySelector(`.${eventCalendarClasses.sidePanelDrawerPreferencesButton}`)!,
-    );
+    expandPreferences();
     expect(getPreferencesList()).not.to.equal(null);
 
     // Collapse them again.
-    fireEvent.click(
-      drawer.querySelector(`.${eventCalendarClasses.sidePanelDrawerPreferencesButton}`)!,
-    );
+    expandPreferences();
     await waitFor(() => expect(getPreferencesList()).to.equal(null));
   });
+
+  it('should toggle a preference when its option is picked inside the drawer', () => {
+    render(<EventCalendar events={[]} />);
+    openDrawer();
+    expandPreferences();
+
+    const option = within(getPreferencesList()!).getByRole('menuitemcheckbox', {
+      name: /show weekends/i,
+    });
+    const initialChecked = option.getAttribute('aria-checked');
+
+    fireEvent.click(option);
+
+    expect(
+      within(getPreferencesList()!)
+        .getByRole('menuitemcheckbox', { name: /show weekends/i })
+        .getAttribute('aria-checked'),
+    ).not.to.equal(initialChecked);
+  });
+
+  it('should not render the preferences section when the config is disabled', () => {
+    render(<EventCalendar events={[]} preferencesMenuConfig={false} />);
+    openDrawer();
+
+    expect(
+      getDrawer()!.querySelector(`.${eventCalendarClasses.sidePanelDrawerPreferencesButton}`),
+    ).to.equal(null);
+  });
+
+  // NOTE: The desktop/mobile switch (drawer vs. inline side panel) is driven by CSS
+  // container queries, which jsdom does not evaluate. These tests exercise the drawer's
+  // own behavior; the responsive show/hide toggling is not covered here.
 });

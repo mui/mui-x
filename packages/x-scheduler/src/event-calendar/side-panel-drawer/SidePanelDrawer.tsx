@@ -16,6 +16,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -29,7 +30,7 @@ import type { SidePanelDrawerProps } from './SidePanelDrawer.types';
 
 const SidePanelDrawerRoot = styled(Drawer, {
   name: 'MuiEventCalendar',
-  slot: 'SidePanelDrawer',
+  slot: 'SidePanelDrawerViewport',
 })(({ theme }) => ({
   // Scope the modal to the calendar root (which is `position: relative` and owns the
   // root container query), instead of the default fixed, full-viewport overlay.
@@ -146,6 +147,9 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
       open={open}
       onClose={onClose}
       className={classes.sidePanelDrawerViewport}
+      // Hide the drawer on the desktop layout via the root container query, so an
+      // open mobile drawer can never linger over the desktop calendar after a resize.
+      data-mobile-only=""
       slotProps={{
         root: { container: portalContainer, disableScrollLock: true },
         backdrop: { className: classes.sidePanelDrawerBackdrop },
@@ -197,13 +201,9 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
 
       {hasAnyOption && (
         <React.Fragment>
-          <MenuList
-            className={classes.sidePanelDrawerPreferences}
-            aria-label={localeText.preferencesMenu}
-          >
-            <MenuItem
+          <div className={classes.sidePanelDrawerPreferences}>
+            <ListItemButton
               className={classes.sidePanelDrawerPreferencesButton}
-              role="button"
               aria-expanded={preferencesOpen}
               onClick={() => setPreferencesOpen((prev) => !prev)}
             >
@@ -214,8 +214,8 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
               <ListItemIcon>
                 {preferencesOpen ? <ExpandLessOutlined /> : <ExpandMoreOutlined />}
               </ListItemIcon>
-            </MenuItem>
-          </MenuList>
+            </ListItemButton>
+          </div>
           <Collapse in={preferencesOpen} unmountOnExit>
             <MenuList
               className={classes.sidePanelDrawerPreferencesList}

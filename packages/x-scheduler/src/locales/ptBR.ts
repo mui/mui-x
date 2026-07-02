@@ -89,7 +89,6 @@ const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   openSidePanel: 'Abrir painel lateral',
 
   // SidePanelDrawer (small screens)
-  // back: 'Back',
   // openMenu: 'Open menu',
 
   // Preferences menu

@@ -89,7 +89,6 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   openSidePanel: 'Deschide panoul lateral',
 
   // SidePanelDrawer (small screens)
-  // back: 'Back',
   // openMenu: 'Open menu',
 
   // Preferences menu

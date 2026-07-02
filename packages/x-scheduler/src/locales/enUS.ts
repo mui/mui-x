@@ -89,7 +89,6 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   openSidePanel: 'Open side panel',
 
   // SidePanelDrawer (small screens)
-  back: 'Back',
   openMenu: 'Open menu',
 
   // Preferences menu

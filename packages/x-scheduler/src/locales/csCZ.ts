@@ -87,7 +87,6 @@ const csCZCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // closeSidePanel: 'Close side panel',
   // openSidePanel: 'Open side panel',
   // SidePanelDrawer (small screens)
-  // back: 'Back',
   // openMenu: 'Open menu',
   // Preferences menu
   // amPm12h: '12-hour (1:00PM)',
