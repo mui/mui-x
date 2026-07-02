@@ -266,6 +266,7 @@ export default defineConfig(
       `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
     ],
     ignores: [
       // Vendored copy of Base UI internals — keep in sync with upstream, don't edit.
