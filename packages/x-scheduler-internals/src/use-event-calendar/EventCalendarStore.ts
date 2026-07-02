@@ -4,7 +4,7 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type {
   EventCalendarPreferences,
   CalendarView,
-  EventCalendarViewConfig,
+  EventCalendarViewDefinition,
   TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
@@ -51,7 +51,7 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
         `See https://mui.com/x/react-scheduler/event-calendar/views/ for more details.`,
     );
   }
-  return { views };
+  return { views, viewConfig: parameters.viewConfig ?? EMPTY_OBJECT };
 };
 
 function warnIfShouldEventRequireResourceMisconfigured(
@@ -86,7 +86,7 @@ const mapper: SchedulerParametersToStateMapper<
               ...DEFAULT_PREFERENCES_MENU_CONFIG,
               ...parameters.preferencesMenuConfig,
             },
-      viewConfig: null,
+      viewDefinition: null,
       view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
       shouldEventRequireResource,
     };
@@ -195,10 +195,10 @@ export class ExtendableEventCalendarStore<
   };
 
   private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
-    const siblingVisibleDateGetter = this.state.viewConfig?.siblingVisibleDateGetter;
+    const siblingVisibleDateGetter = this.state.viewDefinition?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
-        'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+        'MUI X Scheduler: No definition found for the current view. Please use useEventCalendarView in your custom view.',
       );
       return;
     }
@@ -271,9 +271,9 @@ export class ExtendableEventCalendarStore<
    * Sets the method used to determine the previous / next visible date.
    * Returns the cleanup function.
    */
-  public setViewConfig = (config: EventCalendarViewConfig) => {
-    this.set('viewConfig', config);
-    return () => this.set('viewConfig', null);
+  public setViewDefinition = (definition: EventCalendarViewDefinition) => {
+    this.set('viewDefinition', definition);
+    return () => this.set('viewDefinition', null);
   };
 
   public buildPublicAPI() {

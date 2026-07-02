@@ -72,8 +72,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       }
 
       const calculateFocusedItem = seriesConfig[seriesType]?.keyboardFocusHandler?.(event) as
-        | FocusedItemUpdater<typeof seriesType>
-        | undefined;
+        FocusedItemUpdater<typeof seriesType> | undefined;
 
       if (!calculateFocusedItem) {
         return;

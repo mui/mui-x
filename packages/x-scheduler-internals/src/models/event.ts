@@ -290,8 +290,7 @@ export interface SchedulerEventOccurrencePlaceholder extends SchedulerProcessedE
  * Includes both real event occurrences and temporary placeholder occurrences.
  */
 export type SchedulerRenderableEventOccurrence =
-  | SchedulerEventOccurrence
-  | SchedulerEventOccurrencePlaceholder;
+  SchedulerEventOccurrence | SchedulerEventOccurrencePlaceholder;
 
 export type SchedulerEventId = string | number;
 

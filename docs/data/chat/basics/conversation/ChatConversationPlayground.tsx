@@ -39,12 +39,7 @@ const DEFAULTS = {
 };
 
 type ClassKey =
-  | 'root'
-  | 'header'
-  | 'headerInfo'
-  | 'headerActions'
-  | 'title'
-  | 'subtitle';
+  'root' | 'header' | 'headerInfo' | 'headerActions' | 'title' | 'subtitle';
 
 const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   { name: 'root', description: 'The outermost element of ChatConversation.' },

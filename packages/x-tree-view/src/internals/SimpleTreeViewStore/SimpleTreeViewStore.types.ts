@@ -1,4 +1,4 @@
-import { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
+import type { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
 
 export interface SimpleTreeViewState<
   Multiple extends boolean | undefined,
