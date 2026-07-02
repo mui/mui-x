@@ -26,8 +26,7 @@ export default function getItemAtPosition(
   }
 
   const layout = selectorChartSeriesLayout(state)?.treemap?.[seriesId]?.treemapLayout as
-    | TreemapLayout<true>
-    | undefined;
+    TreemapLayout<true> | undefined;
   if (!layout) {
     return undefined;
   }

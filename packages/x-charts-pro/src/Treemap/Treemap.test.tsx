@@ -109,7 +109,13 @@ describe('<Treemap />', () => {
       const { userEvent } = await import('vitest/browser');
       const onItemClick = vi.fn();
       const { container } = render(
-        <Treemap width={200} height={200} margin={0} series={clickable} onItemClick={onItemClick} />,
+        <Treemap
+          width={200}
+          height={200}
+          margin={0}
+          series={clickable}
+          onItemClick={onItemClick}
+        />,
       );
 
       const bTile = container.querySelector<HTMLElement>(`.${treemapClasses.cell}[data-node="B"]`)!;

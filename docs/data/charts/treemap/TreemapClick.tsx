@@ -46,7 +46,9 @@ export default function TreemapClick() {
           whiteSpace: 'pre-wrap',
         }}
       >
-        {item ? JSON.stringify(item, null, 2) : 'Click a tile to see the item payload.'}
+        {item
+          ? JSON.stringify(item, null, 2)
+          : 'Click a tile to see the item payload.'}
       </Box>
     </Stack>
   );
