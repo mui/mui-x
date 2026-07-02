@@ -53,11 +53,15 @@ export const useTreemapProps = (props: TreemapProps) => {
   const labelPadding = resolveLabelPadding(series.nodeOptions?.labelPadding);
   const headerHeight = Math.ceil(measuredLabelHeight || 16) + 2 * labelPadding.y;
 
-  const defaultTiling = {
-    paddingInner: DEFAULT_TILE_PADDING,
-    paddingOuter: DEFAULT_TILE_PADDING,
-    paddingTop: hasRenderedGroups && labelsEnabled ? headerHeight : 0,
-  };
+  // In 'leaf' mode only leaf tiles render, so there is no header band nor group gaps.
+  const isLeafMode = series.nodeOptions?.renderMode === 'leaf';
+  const defaultTiling = isLeafMode
+    ? { paddingInner: DEFAULT_TILE_PADDING, paddingOuter: 0, paddingTop: 0 }
+    : {
+        paddingInner: DEFAULT_TILE_PADDING,
+        paddingOuter: DEFAULT_TILE_PADDING,
+        paddingTop: hasRenderedGroups && labelsEnabled ? headerHeight : 0,
+      };
 
   const chartsContainerProps: ChartsContainerProProps<'treemap', TreemapChartPluginSignatures> = {
     ...other,
