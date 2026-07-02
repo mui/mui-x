@@ -62,7 +62,7 @@ export default function TreemapTiling() {
       <Treemap
         series={{
           data,
-          tiling: { method, paddingInner: 2, paddingOuter: 2, paddingTop: 20 },
+          tiling: { method },
         }}
         height={300}
       />

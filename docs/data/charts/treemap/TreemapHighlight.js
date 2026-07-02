@@ -79,14 +79,7 @@ export default function TreemapHighlight() {
           ))}
         </TextField>
       </Stack>
-      <Treemap
-        series={{
-          data,
-          tiling: { paddingInner: 2, paddingOuter: 2, paddingTop: 20 },
-          nodeOptions: { highlight, fade },
-        }}
-        height={360}
-      />
+      <Treemap series={{ data, nodeOptions: { highlight, fade } }} height={360} />
     </Stack>
   );
 }

@@ -32,13 +32,6 @@ const data = {
 
 export default function TreemapNested() {
   return (
-    <Treemap
-      series={{
-        data,
-        tiling: { paddingInner: 2, paddingOuter: 2, paddingTop: 20 },
-        nodeOptions: { borderRadius: 2 },
-      }}
-      height={300}
-    />
+    <Treemap series={{ data, nodeOptions: { borderRadius: 2 } }} height={300} />
   );
 }
