@@ -165,9 +165,7 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
   const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
   const computedSize = (size ?? textFieldDefaults.size) as 'small' | 'medium' | undefined;
   const computedVariant = (textFieldDefaults.variant ?? 'outlined') as
-    | 'standard'
-    | 'filled'
-    | 'outlined';
+    'standard' | 'filled' | 'outlined';
   const menuProps = {
     slotProps: { paper: { onKeyDown } },
   } as Partial<MUIMenuProps>;

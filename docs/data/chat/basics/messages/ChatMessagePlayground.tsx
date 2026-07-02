@@ -52,12 +52,7 @@ const DEFAULTS = {
 };
 
 type ClassKey =
-  | 'root'
-  | 'bubble'
-  | 'roleUser'
-  | 'roleAssistant'
-  | 'streaming'
-  | 'error';
+  'root' | 'bubble' | 'roleUser' | 'roleAssistant' | 'streaming' | 'error';
 
 const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   { name: 'root', description: 'The message row.' },

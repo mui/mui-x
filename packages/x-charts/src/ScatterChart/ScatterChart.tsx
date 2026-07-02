@@ -130,8 +130,7 @@ export interface ScatterChartProps
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?:
-    | ScatterPlotProps['onItemClick']
-    | UseChartClosestPointSignature['params']['onItemClick'];
+    ScatterPlotProps['onItemClick'] | UseChartClosestPointSignature['params']['onItemClick'];
 }
 
 /**
