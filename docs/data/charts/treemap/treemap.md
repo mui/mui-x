@@ -4,9 +4,13 @@ productId: x-charts
 components: Treemap, TreemapPlot, TreemapDataProvider, TreemapTooltip, TreemapTooltipContent
 ---
 
-# Charts - Treemap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Charts - Treemap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') 🧪
 
 <p class="description">Treemaps display hierarchical data as nested rectangles, sizing each tile in proportion to its value.</p>
+
+:::warning
+This feature is in preview. It is not yet ready for production use, and its API, visuals and behavior may change in future minor or patch releases.
+:::
 
 ## Overview
 

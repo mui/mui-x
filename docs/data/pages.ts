@@ -703,7 +703,6 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-charts/sankey', plan: 'pro' },
-          { pathname: '/x/react-charts/treemap', plan: 'pro' },
           {
             pathname: '/x/react-charts/candlestick',
             plan: 'premium',
