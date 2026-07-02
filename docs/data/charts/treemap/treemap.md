@@ -51,6 +51,12 @@ The default `'squarify'` method keeps tiles close to a square aspect ratio.
 
 {{"demo": "TreemapTiling.js"}}
 
+### Sorting
+
+`tiling.sort` controls the order of sibling tiles that the tiling algorithm lays out: `'auto'` (default) orders them by descending value, while `'fixed'` keeps the order from the data. Tile areas stay proportional to the values; only the order changes.
+
+{{"demo": "TreemapSort.js"}}
+
 ## Render mode
 
 `nodeOptions.renderMode` sets which nodes render a tile: `'all'` (default) draws the nested group tiles and their leaves, while `'leaf'` draws only the leaves for a flat treemap.

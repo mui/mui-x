@@ -1,6 +1,8 @@
+import * as React from 'react';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 import { Treemap } from '@mui/x-charts-pro/Treemap';
-import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 
 const data = {
   id: 'root',
@@ -30,33 +32,21 @@ const data = {
 };
 
 export default function TreemapRenderMode() {
-  return (
-    <ChartsUsageDemo
-      componentName="Treemap render mode"
-      data={{
-        renderMode: {
-          knob: 'select',
-          defaultValue: 'all',
-          options: ['all', 'leaf'],
-        },
-      }}
-      renderDemo={(props) => (
-        <Stack sx={{ width: '100%' }}>
-          <Treemap
-            series={{ data, nodeOptions: { renderMode: props.renderMode } }}
-            height={300}
-          />
-        </Stack>
-      )}
-      getCode={({ props }) => `import { Treemap } from '@mui/x-charts-pro/Treemap';
+  const [renderMode, setRenderMode] = React.useState('all');
 
-<Treemap
-  series={{
-    // ...
-    nodeOptions: { renderMode: '${props.renderMode}' }
-  }}
-/>
-`}
-    />
+  return (
+    <Stack sx={{ width: '100%' }} spacing={2}>
+      <TextField
+        select
+        label="Render mode"
+        value={renderMode}
+        onChange={(event) => setRenderMode(event.target.value)}
+        sx={{ maxWidth: 220 }}
+      >
+        <MenuItem value="all">all</MenuItem>
+        <MenuItem value="leaf">leaf</MenuItem>
+      </TextField>
+      <Treemap series={{ data, nodeOptions: { renderMode } }} height={300} />
+    </Stack>
   );
 }
