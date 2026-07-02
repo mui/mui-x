@@ -1,7 +1,10 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { SchedulerEventCreationConfig, SchedulerOccurrencePlaceholderCreation } from '../../models';
+import type {
+  SchedulerEventCreationConfig,
+  SchedulerOccurrencePlaceholderCreation,
+} from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 

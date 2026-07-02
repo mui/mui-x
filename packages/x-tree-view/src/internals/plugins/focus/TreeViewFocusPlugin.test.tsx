@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { TreeViewAnyStore } from '../../models';
+import type { TreeViewAnyStore } from '../../models';
 
 /**
  * All tests related to keyboard navigation (e.g.: type-ahead when using `props.disabledItemsFocusable`)

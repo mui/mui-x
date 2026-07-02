@@ -1,15 +1,15 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { createSelector, useStore } from '@mui/x-internals/store';
-import {
+import type {
   TreeViewItemId,
   TreeViewCancellableEvent,
   TreeViewCancellableEventHandler,
 } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { TreeViewAnyStore, TreeViewItemPlugin } from '../../models';
+import type { TreeViewAnyStore, TreeViewItemPlugin } from '../../models';
 import { itemsSelectors } from '../items/selectors';
 import { selectionSelectors } from './selectors';
-import { MinimalTreeViewState } from '../../MinimalTreeViewStore';
+import type { MinimalTreeViewState } from '../../MinimalTreeViewStore';
 
 const selectorCheckboxSelectionStatus = createSelector(
   (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) => {

@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { EventCalendarState } from '../EventCalendarStore.types';
+import type { EventCalendarState } from '../EventCalendarStore.types';
 
 const DEFAULT_PARAMS = { events: [] };
 

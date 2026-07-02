@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { StandaloneDayViewProps } from './DayView.types';
+import type { StandaloneDayViewProps } from './DayView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';

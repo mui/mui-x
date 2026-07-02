@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useTreeViewContext } from './TreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
 import { itemsSelectors } from '../plugins/items/selectors';
-import { SimpleTreeViewStore } from '../SimpleTreeViewStore';
+import type { SimpleTreeViewStore } from '../SimpleTreeViewStore';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);

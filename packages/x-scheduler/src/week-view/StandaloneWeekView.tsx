@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { StandaloneWeekViewProps } from './WeekView.types';
+import type { StandaloneWeekViewProps } from './WeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';

@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { act, createEvent, fireEvent, screen } from '@mui/internal-test-utils';
-import {
-  describeTreeView,
-  DescribeTreeViewRendererUtils,
-} from 'test/utils/tree-view/describeTreeView';
+import type { DescribeTreeViewRendererUtils } from 'test/utils/tree-view/describeTreeView';
+import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeViewAnyStore } from '../internals/models';
+import type { TreeViewAnyStore } from '../internals/models';
 
 describeTreeView<TreeViewAnyStore>(
   'useTreeItem hook',
