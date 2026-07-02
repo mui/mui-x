@@ -263,17 +263,13 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
    */
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
   /**
-   * Configuration applied to each view, keyed by the view name.
-   * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
+   * Configuration applied to the view, keyed by the view name.
+   * For the `day` view, `startTime` and `endTime` (whole hours between 0 and 24)
    * limit the hours displayed in the time grid.
-   * @example { week: { startTime: 8, endTime: 20 } }
+   * @example { day: { startTime: 8, endTime: 20 } }
    */
   viewConfig: PropTypes.shape({
     day: PropTypes.shape({
-      endTime: PropTypes.number,
-      startTime: PropTypes.number,
-    }),
-    week: PropTypes.shape({
       endTime: PropTypes.number,
       startTime: PropTypes.number,
     }),

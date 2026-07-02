@@ -94,7 +94,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ day?: { endTime?: number, startTime?: number }, week?: { endTime?: number, startTime?: number } }"
+        "description": "{ day?: { endTime?: number, startTime?: number } }"
       }
     },
     "views": {

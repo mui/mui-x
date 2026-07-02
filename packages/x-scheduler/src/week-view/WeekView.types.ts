@@ -4,6 +4,7 @@ import type {
   EventCalendarParameters,
   EventCalendarSchedulerParametersOverrides,
 } from '@mui/x-scheduler-internals/use-event-calendar';
+import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import type { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/DayTimeGrid.types';
 
 export interface WeekViewProps extends ExportedDayTimeGridProps {}
@@ -13,9 +14,16 @@ export interface StandaloneWeekViewProps<TEvent extends object, TResource extend
     WeekViewProps,
     Omit<
       EventCalendarParameters<TEvent, TResource>,
-      keyof EventCalendarSchedulerParametersOverrides
+      'viewConfig' | keyof EventCalendarSchedulerParametersOverrides
     >,
     EventCalendarSchedulerParametersOverrides {
+  /**
+   * Configuration applied to the view, keyed by the view name.
+   * For the `week` view, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { week: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig?: Pick<EventCalendarViewConfig, 'week'>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

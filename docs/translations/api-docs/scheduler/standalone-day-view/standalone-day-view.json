@@ -71,7 +71,7 @@
     },
     "view": { "description": "The view currently displayed in the calendar." },
     "viewConfig": {
-      "description": "Configuration applied to each view, keyed by the view name. For the <code>day</code> and <code>week</code> views, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid."
+      "description": "Configuration applied to the view, keyed by the view name. For the <code>day</code> view, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid."
     },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
