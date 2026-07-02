@@ -255,20 +255,31 @@ export default defineConfig(
     files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
     rules: {
       'import/no-cycle': 'error',
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          fixStyle: 'inline-type-imports',
-        },
-      ],
       // Charts have no semantics, so we often need to query by container
       'testing-library/no-container': 'off',
     },
   },
   {
-    files: [`packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`],
+    files: [
+      `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
+    ],
+    ignores: [
+      // Vendored copy of Base UI internals — keep in sync with upstream, don't edit.
+      // Base UI will be brought under this rule separately, after which this ignore
+      // can be lifted.
+      'packages/x-scheduler-internals/src/base-ui-copy/**',
+    ],
     rules: {
-      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'separate-type-imports',
+        },
+      ],
+      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     },
   },
   {

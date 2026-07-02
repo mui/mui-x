@@ -1,4 +1,4 @@
-import { SchedulerEventCreationProperties, SchedulerProcessedEvent } from '../../models';
+import type { SchedulerEventCreationProperties, SchedulerProcessedEvent } from '../../models';
 
 /**
  * Builds the creation payload for a standalone event derived from `source`, linked via `extractedFromId`.

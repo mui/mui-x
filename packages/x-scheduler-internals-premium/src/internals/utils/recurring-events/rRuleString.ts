@@ -1,6 +1,6 @@
-import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import {
+import type { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type {
   RecurringEventByDayValue,
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,

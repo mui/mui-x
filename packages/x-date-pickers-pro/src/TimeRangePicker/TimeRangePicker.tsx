@@ -7,7 +7,7 @@ import refType from '@mui/utils/refType';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '@mui/x-date-pickers/internals';
 import { DesktopTimeRangePicker } from '../DesktopTimeRangePicker';
 import { MobileTimeRangePicker } from '../MobileTimeRangePicker';
-import { TimeRangePickerProps } from './TimeRangePicker.types';
+import type { TimeRangePickerProps } from './TimeRangePicker.types';
 
 type TimePickerComponent = ((
   props: TimeRangePickerProps & React.RefAttributes<HTMLDivElement>,

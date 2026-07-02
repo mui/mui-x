@@ -18,7 +18,8 @@ import {
 import { gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
-import { GridDataSourceCacheDefault, type GridDataSourceCacheDefaultConfig } from './cache';
+import { GridDataSourceCacheDefault } from './cache';
+import type { GridDataSourceCacheDefaultConfig } from './cache';
 import { GridGetRowsError, GridUpdateRowError } from './gridDataSourceError';
 
 import type { GridDataSourceApi, GridDataSourceApiBase, GridDataSourceBaseOptions } from './models';

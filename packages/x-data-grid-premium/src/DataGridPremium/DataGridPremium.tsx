@@ -2,22 +2,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import {
-  GridRoot,
-  GridContextProvider,
-  type GridValidRowModel,
-  useGridSelector,
-} from '@mui/x-data-grid-pro';
+import { GridRoot, GridContextProvider, useGridSelector } from '@mui/x-data-grid-pro';
+import type { GridValidRowModel } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
-  type PropValidator,
   validateProps,
-  type GridConfiguration,
   useGridApiInitialization,
   getRowValue,
   GridMultiSelectMeasurer,
 } from '@mui/x-data-grid-pro/internals';
+import type { PropValidator, GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';

@@ -1,5 +1,5 @@
 import { adapter } from 'test/utils/scheduler';
-import {
+import type {
   RecurringEventByDayValue,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';

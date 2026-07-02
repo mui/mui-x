@@ -1,6 +1,9 @@
 import { spy } from 'sinon';
 import { describe, expect, it, vi } from 'vitest';
-import { SchedulerEventId, SchedulerEventModelStructure } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventModelStructure,
+} from '@mui/x-scheduler-internals/models';
 import { adapter, premiumStoreClasses, ResourceBuilder } from 'test/utils/scheduler';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { DEBOUNCE_MS } from '../utils/queue';

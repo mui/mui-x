@@ -1,4 +1,4 @@
-import {
+import type {
   SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
@@ -7,8 +7,8 @@ import {
   SchedulerProcessedDate,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { EventDialogLocaleText, SchedulerWeekday } from '../../../models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { EventDialogLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 export interface ControlledValue {

@@ -1,20 +1,20 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import {
-  geoPath,
-  type ExtendedFeatureCollection,
-  type GeoProjection,
-  type GeoPath,
-  type GeoConicProjection,
+import { geoPath } from '@mui/x-charts-vendor/d3-geo';
+import type {
+  ExtendedFeatureCollection,
+  GeoProjection,
+  GeoPath,
+  GeoConicProjection,
 } from '@mui/x-charts-vendor/d3-geo';
 import type {
   D3NamedProjection,
   GeoProjectionInput,
+  GeoTooltipPosition,
   UseGeoProjectionSignature,
   UseGeoProjectionState,
 } from './useGeoProjection.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
-import { type ChartState } from '../../models/chart';
-import { type GeoTooltipPosition } from '../../corePlugins/useChartSeriesConfig';
+import type { ChartState } from '../../models/chart';
 
 const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
   return 'parallels' in projection && typeof projection.parallels === 'function';

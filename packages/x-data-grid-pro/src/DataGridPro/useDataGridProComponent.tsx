@@ -53,9 +53,9 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
-  type GridConfiguration,
   useFirstRender,
 } from '@mui/x-data-grid/internals';
+import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 // Pro-only features

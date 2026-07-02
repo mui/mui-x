@@ -1,6 +1,7 @@
-import { type useGeoProjectionTypes } from '@mui/x-charts/internals';
+import type { useGeoProjectionTypes } from '@mui/x-charts/internals';
 
 export * from './GeoDataPlot';
+export * from './MapImagePlot';
 export * from './MapShapePlot';
 export * from './MapShape';
 export * from './FocusedMapShape';

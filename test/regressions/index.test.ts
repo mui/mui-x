@@ -70,6 +70,17 @@ const TEST_RULES: RouteRule[] = [
     // Dedicated tests handle mouse positioning.
     enabled: false,
   },
+  {
+    test: '/test-regressions-charts/MapImageProjections',
+    // `MapImagePlot` reprojects each raster on a canvas asynchronously; the demo
+    // reveals this sentinel once every projection has finished rendering.
+    waitForSelector: '[data-testid="map-images-ready"]',
+  },
+  {
+    test: '/test-regressions-charts/MapImageAntimeridian',
+    // Same async reprojection sentinel as MapImageProjections.
+    waitForSelector: '[data-testid="map-images-ready"]',
+  },
 
   // Overview composites embed desktop-breakpoint media queries that don't
   // match at the default 1000x700 viewport, leaving panes hidden in
@@ -747,10 +758,14 @@ async function newTestPage(browser: Browser, newPageOptions: NewPageOptions = {}
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
+  const allowedImages = [
+    'https://flagcdn.com',
+    // Map raster base maps are reprojected on a canvas, so they must actually load.
+    '/static/x/charts/mars-viking-mdim21.jpg',
+  ];
   await page.route(/./, async (route, request) => {
     const type = request.resourceType();
-    // Block all images except the flags
-    if (type === 'image' && !request.url().startsWith('https://flagcdn.com')) {
+    if (type === 'image' && !allowedImages.some((allowed) => request.url().includes(allowed))) {
       route.abort();
     } else {
       route.continue();

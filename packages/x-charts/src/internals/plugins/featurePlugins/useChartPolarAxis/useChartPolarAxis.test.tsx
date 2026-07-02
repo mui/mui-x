@@ -1,6 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
-import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
+import type { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useChartPolarAxis } from './useChartPolarAxis';
 
 describe('useChartPolarAxis', () => {

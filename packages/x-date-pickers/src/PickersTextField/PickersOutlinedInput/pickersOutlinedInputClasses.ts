@@ -1,6 +1,7 @@
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { PickersInputBaseClasses, pickersInputBaseClasses } from '../PickersInputBase';
+import type { PickersInputBaseClasses } from '../PickersInputBase';
+import { pickersInputBaseClasses } from '../PickersInputBase';
 
 export interface PickersOutlinedInputClasses extends PickersInputBaseClasses {
   /** Styles applied to the NotchedOutline element. */

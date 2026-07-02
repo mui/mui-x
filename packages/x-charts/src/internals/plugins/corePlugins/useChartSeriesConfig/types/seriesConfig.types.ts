@@ -10,19 +10,22 @@ import type { ColorProcessor } from './colorProcessor.types';
 import type { CartesianExtremumGetter } from './cartesianExtremumGetter.types';
 import type { LegendGetter } from './legendGetter.types';
 import type { AxisTooltipGetter, TooltipGetter } from './tooltipGetter.types';
-import { type PolarExtremumGetter } from './polarExtremumGetter.types';
-import { type GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
-import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
-import { type SeriesLayoutGetter } from './seriesLayout.types';
-import { type KeyboardFocusHandler } from '../../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
-import { type IdentifierSerializer } from './identifierSerializer.types';
-import { type IdentifierCleaner } from './identifierCleaner.types';
-import { type GetItemAtPosition } from './getItemAtPosition.types';
-import { type DescriptionGetter } from './descriptionGetter.types';
-import { type UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
-import { type UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
-import { type HighlightCreator } from '../../../featurePlugins/useChartHighlight/highlightCreator.types';
-import { type AxisTooltipContentProps, type ItemTooltipContentProps } from './TooltipContent.types';
+import type { PolarExtremumGetter } from './polarExtremumGetter.types';
+import type { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
+import type {
+  TooltipItemPositionGetter,
+  TooltipItemPositionSelector,
+} from './tooltipItemPositionGetter.types';
+import type { SeriesLayoutGetter } from './seriesLayout.types';
+import type { KeyboardFocusHandler } from '../../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
+import type { IdentifierSerializer } from './identifierSerializer.types';
+import type { IdentifierCleaner } from './identifierCleaner.types';
+import type { GetItemAtPosition } from './getItemAtPosition.types';
+import type { DescriptionGetter } from './descriptionGetter.types';
+import type { UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
+import type { UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
+import type { HighlightCreator } from '../../../featurePlugins/useChartHighlight/highlightCreator.types';
+import type { AxisTooltipContentProps, ItemTooltipContentProps } from './TooltipContent.types';
 
 export type ChartSeriesTypeRequiredPlugins<SeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[SeriesType] extends { axisType: 'cartesian' }
@@ -42,6 +45,12 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
   tooltipGetter: TooltipGetter<SeriesType>;
   ItemTooltipContent?: React.ComponentType<ItemTooltipContentProps<SeriesType>>;
   tooltipItemPositionGetter?: TooltipItemPositionGetter<SeriesType>;
+  /**
+   * Computes the item tooltip position from the chart state, for series types
+   * whose position depends on state the core tooltip plugin doesn't track.
+   * Takes precedence over `tooltipItemPositionGetter`.
+   */
+  selectorTooltipItemPosition?: TooltipItemPositionSelector;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<SeriesType>;
   keyboardFocusHandler?: KeyboardFocusHandler<SeriesType>;
   /**

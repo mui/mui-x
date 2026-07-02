@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridDataSource,
-  type GridGetRowsParams,
-  type GridDataSourceGroupNode,
-  type GridGetRowsResponse,
-  type GridGroupNode,
-  GRID_ROOT_GROUP_ID,
-  useGridApiRef,
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPremium, GRID_ROOT_GROUP_ID, useGridApiRef } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridDataSource,
+  GridGetRowsParams,
+  GridDataSourceGroupNode,
+  GridGetRowsResponse,
+  GridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';

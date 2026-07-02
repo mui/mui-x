@@ -2,12 +2,8 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { styled } from '@mui/material/styles';
-import {
-  getDataGridUtilityClass,
-  GridMenu,
-  type GridSlotProps,
-  useGridSelector,
-} from '@mui/x-data-grid-pro';
+import { getDataGridUtilityClass, GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
+import type { GridSlotProps } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { gridPivotActiveSelector, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
