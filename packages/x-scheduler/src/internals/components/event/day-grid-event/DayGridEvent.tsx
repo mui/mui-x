@@ -410,6 +410,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ref: forwardedRef,
     'data-variant': variant,
     'data-palette': color,
+    ...(occurrence.position.isContinuation ? { 'data-starting-before-edge': '' } : {}),
     style: {
       '--grid-row': occurrence.position.index,
       '--grid-column-span': occurrence.position.daySpan,

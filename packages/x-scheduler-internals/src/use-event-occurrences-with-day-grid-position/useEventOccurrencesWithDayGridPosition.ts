@@ -24,7 +24,6 @@ export function useEventOccurrencesWithDayGridPosition(
       [occurrenceKey: string]: {
         position: useEventOccurrencesWithDayGridPosition.EventOccurrencePosition;
         startDayIndex: number;
-        wasHidden: boolean;
       };
     } = {};
 
@@ -112,7 +111,6 @@ export function useEventOccurrencesWithDayGridPosition(
             activeSegments[occurrence.key] = {
               position,
               startDayIndex: dayIndex,
-              wasHidden: false,
             };
           } else {
             // Still hidden even after checking — stay invisible in the overflow row.
@@ -122,7 +120,6 @@ export function useEventOccurrencesWithDayGridPosition(
           // First time we're seeing this occurrence — assign the smallest available index.
           const durationInDays =
             adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1;
-          const isHidden = maxEvents != null && smallestAvailableIndex > maxEvents;
           position = {
             index: smallestAvailableIndex,
             daySpan: Math.min(durationInDays, dayListSize - dayIndex),
@@ -130,7 +127,6 @@ export function useEventOccurrencesWithDayGridPosition(
           activeSegments[occurrence.key] = {
             position,
             startDayIndex: dayIndex,
-            wasHidden: isHidden,
           };
         }
 
