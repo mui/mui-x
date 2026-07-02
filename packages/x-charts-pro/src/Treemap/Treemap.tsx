@@ -105,6 +105,12 @@ Treemap.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      exportAsImage: PropTypes.func.isRequired,
+      exportAsPrint: PropTypes.func.isRequired,
+    }),
+  }),
   /**
    * Classes applied to the various elements.
    */
@@ -112,16 +118,22 @@ Treemap.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
    * The description of the chart.
+   * Used to provide an accessible description for the chart.
    */
   desc: PropTypes.string,
   /**
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -130,13 +142,20 @@ Treemap.propTypes /* remove-proptypes */ = {
    * The highlighted item.
    * Used when the highlight is controlled.
    */
-  highlightedItem: PropTypes.shape({
-    nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    seriesId: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['treemap']),
-  }),
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+    }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['treemap']).isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
   /**
@@ -150,6 +169,9 @@ Treemap.propTypes /* remove-proptypes */ = {
   localeText: PropTypes.object,
   /**
    * The margin between the SVG and the drawing area.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
   margin: PropTypes.oneOfType([
     PropTypes.number,
@@ -162,19 +184,32 @@ Treemap.propTypes /* remove-proptypes */ = {
   ]),
   /**
    * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a treemap tile is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The event source of the callback.
    * @param {TreemapItemIdentifierWithData} item The treemap item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
   /**
    * The series to display in the treemap.
    * A single object is expected.
    */
   series: PropTypes.object.isRequired,
+  /**
+   * The configuration for the series types.
+   * This is used to define how each series type should be processed, colored, and displayed.
+   */
+  seriesConfig: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -193,8 +228,24 @@ Treemap.propTypes /* remove-proptypes */ = {
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The title of the chart.
+   * Used to provide an accessible label for the chart.
    */
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+    }),
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['treemap']).isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

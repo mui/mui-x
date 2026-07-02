@@ -1,7 +1,7 @@
 ---
 title: React Treemap chart
 productId: x-charts
-components: Treemap, TreemapPlot, TreemapDataProvider, TreemapTooltip, TreemapTooltipContent
+components: Treemap, TreemapPlot, TreemapRectPlot, TreemapLabelPlot, FocusedTreemapRect, TreemapDataProvider, TreemapTooltip, TreemapTooltipContent
 ---
 
 # Charts - Treemap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') 🧪
