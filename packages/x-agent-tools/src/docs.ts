@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { LRUCache } from './cache';
 import { PackageData, QueueOptions, ToolOverrides } from './types';
-import { wrapTool, urlListFetcher, type Logger } from './utils';
+import { wrapTool, urlListFetcher, compareVersions, type Logger } from './utils';
 
 const DEFAULT_DOCS_CONCURRENCY = 10;
 
@@ -36,9 +36,17 @@ export async function createUseMuiDocsTool(options: {
   const availablePackagesText = packages
     .map((it) => `[${it.name}@${it.version}](${it.llmsUrl})`)
     .join('\n');
-  // Resolve a bare package name (e.g. `@mui/x-data-grid`) to its llms.txt URL, so the agent can
-  // pass either the URL from the list above or just the package name and still get docs back.
-  const llmsUrlByPackageName = new Map(packages.map((it) => [it.name, it.llmsUrl]));
+  // Index every `name@version` exactly, and each bare name to its highest-semver entry, so a source
+  // entry can be an llms.txt URL, a `name@version` shorthand, or a bare name (which gets the latest).
+  const llmsUrlByNameVersion = new Map<string, string>();
+  const latestByName = new Map<string, PackageData>();
+  for (const pkg of packages) {
+    llmsUrlByNameVersion.set(`${pkg.name}@${pkg.version}`, pkg.llmsUrl);
+    const latest = latestByName.get(pkg.name);
+    if (!latest || compareVersions(pkg.version, latest.version) > 0) {
+      latestByName.set(pkg.name, pkg);
+    }
+  }
 
   return wrapTool({
     name: 'use_mui_docs',
@@ -64,8 +72,10 @@ export async function createUseMuiDocsTool(options: {
     }),
     outputSchema: z.string().describe('A string containing the fetched documentation content'),
     execute: async (input) => {
-      // Accept package names as well as URLs: map any known package name to its llms.txt URL.
-      const urls = input.sources.map((entry) => llmsUrlByPackageName.get(entry) ?? entry);
+      // Accept package names and `name@version` shorthands as well as URLs.
+      const urls = input.sources.map(
+        (entry) => llmsUrlByNameVersion.get(entry) ?? latestByName.get(entry)?.llmsUrl ?? entry,
+      );
       return urlListFetcher(queue, fetcher, urls, {
         cache,
         logger,

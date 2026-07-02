@@ -2,7 +2,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import PQueue from 'p-queue';
 import { z } from 'zod';
 import { LRUCache } from './cache';
-import { wrapTool, urlListFetcher, createDocsUrlGuard, absolutizeDocLinks } from './utils';
+import {
+  wrapTool,
+  urlListFetcher,
+  createDocsUrlGuard,
+  absolutizeDocLinks,
+  compareVersions,
+} from './utils';
 
 const ok = (body: string): Response => new Response(body, { status: 200 });
 
@@ -260,5 +266,29 @@ describe('absolutizeDocLinks', () => {
   it('returns the markdown unchanged when the base URL is invalid', () => {
     const md = '[a](/x/a.md)';
     expect(absolutizeDocLinks(md, 'not a url')).toBe(md);
+  });
+});
+
+describe('compareVersions', () => {
+  it('orders by major, then minor, then patch', () => {
+    expect(compareVersions('9.1.2', '5.18.0')).toBeGreaterThan(0);
+    expect(compareVersions('5.18.0', '9.1.2')).toBeLessThan(0);
+    expect(compareVersions('8.29.0', '8.30.0')).toBeLessThan(0);
+    expect(compareVersions('8.29.1', '8.29.0')).toBeGreaterThan(0);
+  });
+
+  it('does not compare version parts as strings', () => {
+    // "18" > "9" numerically, even though "18" < "9" lexically.
+    expect(compareVersions('5.18.0', '5.9.0')).toBeGreaterThan(0);
+  });
+
+  it('treats equal versions as equal', () => {
+    expect(compareVersions('9.1.2', '9.1.2')).toBe(0);
+  });
+
+  it('ranks a prerelease below its release', () => {
+    expect(compareVersions('9.1.2-beta.1', '9.1.2')).toBeLessThan(0);
+    expect(compareVersions('9.1.2', '9.1.2-beta.1')).toBeGreaterThan(0);
+    expect(compareVersions('9.1.2-beta.2', '9.1.2-beta.1')).toBeGreaterThan(0);
   });
 });

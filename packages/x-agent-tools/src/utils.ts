@@ -92,6 +92,35 @@ export function absolutizeDocLinks(markdown: string, baseUrl: string): string {
   return markdown.replace(/\]\((\/[^)]*)\)/g, (_match, path) => `](${origin}${path})`);
 }
 
+// Compare `major.minor.patch` versions (returns >0 / <0 / 0), ranking a prerelease below its
+// release (`1.0.0-beta` < `1.0.0`). Enough to pick the latest docs version from the catalog.
+export function compareVersions(a: string, b: string): number {
+  const parse = (version: string) => {
+    const [core, prerelease] = version.split('-', 2);
+    const nums = core.split('.').map((part) => parseInt(part, 10) || 0);
+    return { nums, prerelease };
+  };
+  const parsedA = parse(a);
+  const parsedB = parse(b);
+  for (let i = 0; i < 3; i += 1) {
+    const diff = (parsedA.nums[i] ?? 0) - (parsedB.nums[i] ?? 0);
+    if (diff !== 0) {
+      return diff;
+    }
+  }
+  // Equal core: the release outranks a prerelease; otherwise compare prerelease tags lexically.
+  if (parsedA.prerelease === parsedB.prerelease) {
+    return 0;
+  }
+  if (!parsedA.prerelease) {
+    return 1;
+  }
+  if (!parsedB.prerelease) {
+    return -1;
+  }
+  return parsedA.prerelease < parsedB.prerelease ? -1 : 1;
+}
+
 export function wrapTool<SchemaInputT extends ZodObjectAny, SchemaOutputT extends ZodObjectAny>(
   obj: ChatTool<SchemaInputT, SchemaOutputT>,
 ) {
