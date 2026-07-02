@@ -126,9 +126,10 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   }, []);
 
   // When the focused resource row is removed (e.g. an ancestor collapses), move
-  // focus to the nearest surviving row in the same column. Runs as a passive
-  // effect so the removed rows' unmount cleanup clears `focusedCell` first and
-  // this write wins.
+  // focus to the row now at the clamped position in the same column — the
+  // positionally-nearest survivor, not necessarily the collapsed parent. Runs as
+  // a passive effect so the removed rows' unmount cleanup clears `focusedCell`
+  // first and this write wins.
   React.useEffect(() => {
     const focused = focusedResourceRef.current;
     if (focused === null) {

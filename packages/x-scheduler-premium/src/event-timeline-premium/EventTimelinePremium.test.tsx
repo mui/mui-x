@@ -253,6 +253,37 @@ describe('<EventTimelinePremium />', () => {
       // Focus is re-homed to the surviving parent row instead of falling to <body>.
       expect(document.activeElement).to.equal(getTitleCell(parent.id));
     });
+
+    it('should re-home focus to the positionally-nearest row on a mid-tree collapse', async () => {
+      const a1 = ResourceBuilder.new().title('A1').build();
+      const a2 = ResourceBuilder.new().title('A2').build();
+      const parentA = ResourceBuilder.new().title('Parent A').children([a1, a2]).build();
+      const b1 = ResourceBuilder.new().title('B1').build();
+      const b2 = ResourceBuilder.new().title('B2').build();
+      const parentB = ResourceBuilder.new().title('Parent B').children([b1, b2]).build();
+
+      const { setProps } = renderTimeline({
+        resources: [parentA, parentB],
+        events: [],
+        collapsedResources: {},
+      });
+
+      // Rows: [Parent A, A1, A2, Parent B, B1, B2]. Focus a child of Parent A (index 2).
+      const a2Cell = getTitleCell(a2.id)!;
+      act(() => {
+        a2Cell.focus();
+      });
+      expect(document.activeElement).to.equal(a2Cell);
+
+      setProps({ collapsedResources: { [parentA.id]: true } });
+
+      await waitFor(() => {
+        expect(screen.queryByText(a2.title)).to.equal(null);
+      });
+      // Rows become [Parent A, Parent B, B1, B2]; clamping the old index (2) lands
+      // on B1 — the row now at that position, not the collapsed Parent A.
+      expect(document.activeElement).to.equal(getTitleCell(b1.id));
+    });
   });
 
   describe('events', () => {
