@@ -824,9 +824,9 @@ function updateScrollPosition(
     return null;
   }
 
-  const update: Partial<VirtualizationState> = isControlled
+  const update: Partial<VirtualizationState> | null = isControlled
     ? { scrollPosition: { current: { ...currentState.scrollPosition.current } } }
-    : {};
+    : null;
 
   if (returnStoreUpdate) {
     return update;
