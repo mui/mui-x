@@ -302,7 +302,7 @@ export type TreeViewSelectionReadonlyValue<Multiple extends boolean | undefined>
   Multiple extends true
     ? Multiple extends false
       ? // Multiple === boolean, the type cannot be simplified further
-          TreeViewItemId | null | readonly TreeViewItemId[]
+        TreeViewItemId | null | readonly TreeViewItemId[]
       : // Multiple === true, the selection is multiple
         readonly TreeViewItemId[]
     : // Multiple === false | undefined, the selection is single
@@ -311,7 +311,7 @@ export type TreeViewSelectionReadonlyValue<Multiple extends boolean | undefined>
 export type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
   ? Multiple extends false
     ? // Multiple === boolean, the type cannot be simplified further
-        TreeViewItemId | null | TreeViewItemId[]
+      TreeViewItemId | null | TreeViewItemId[]
     : // Multiple === true, the selection is multiple
       TreeViewItemId[]
   : // Multiple === false | undefined, the selection is single

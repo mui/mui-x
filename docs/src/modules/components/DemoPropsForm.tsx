@@ -128,12 +128,7 @@ type TitleDataType = {
 } & DefaultTypes;
 
 export type DataType =
-  | NumberDataType
-  | SelectDataType
-  | RadioDataType
-  | SwitchDataType
-  | InputDataType
-  | TitleDataType;
+  NumberDataType | SelectDataType | RadioDataType | SwitchDataType | InputDataType | TitleDataType;
 
 export type PropsFromData<Data extends Record<string, DataType>> = {
   [K in keyof Data]: Data[K] extends { options: readonly (infer T)[] }
