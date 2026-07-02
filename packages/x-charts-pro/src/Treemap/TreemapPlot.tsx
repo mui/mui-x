@@ -61,7 +61,7 @@ function TreemapPlot(props: TreemapPlotProps) {
   return (
     <TreemapPlotRoot className={clsx(classes.root, className)}>
       <TreemapRectPlot classes={classes} onItemClick={onItemClick} />
-      {showLabels && <TreemapLabelPlot classes={classes} />}
+      {showLabels !== false && <TreemapLabelPlot classes={classes} />}
     </TreemapPlotRoot>
   );
 }

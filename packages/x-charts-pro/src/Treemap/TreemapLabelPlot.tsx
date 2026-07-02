@@ -31,27 +31,40 @@ function TreemapLabelPlot(props: TreemapLabelPlotProps) {
   }
 
   const { nodeOptions } = treemapSeries;
-  if ((nodeOptions?.showLabels ?? true) === false) {
+  const showLabels = nodeOptions?.showLabels ?? true;
+  if (showLabels === false) {
     return null;
   }
 
   const minLabelWidth = nodeOptions?.minLabelWidth ?? 30;
   const minLabelHeight = nodeOptions?.minLabelHeight ?? 18;
+  const renderMode = nodeOptions?.renderMode ?? 'all';
+  const isCustom = typeof showLabels === 'function';
 
-  // Labels are placed on leaf tiles, which are painted on top and are never covered.
-  const leaves = layout.nodes.filter((node) => node.height === 0 && node.depth >= 1);
+  // The root layer (depth 1) is always labeled; a custom predicate takes full control.
+  const shouldLabel = (node: (typeof layout.nodes)[number]) =>
+    isCustom ? showLabels(node) : node.depth === 1 || node.height === 0;
+
+  // Only tiles that are actually rendered can carry a label.
+  const labelled = layout.nodes.filter(
+    (node) => node.depth >= 1 && (renderMode === 'all' || node.height === 0) && shouldLabel(node),
+  );
 
   return (
     <g className={classes.labels}>
-      {leaves.map((node) => (
-        <TreemapLabel
-          key={`label-${node.id}`}
-          seriesId={treemapSeries.id}
-          node={node}
-          minLabelWidth={minLabelWidth}
-          minLabelHeight={minLabelHeight}
-        />
-      ))}
+      {labelled.map((node) => {
+        // Root-layer and explicitly-selected labels ignore the size thresholds.
+        const alwaysShow = isCustom || node.depth === 1;
+        return (
+          <TreemapLabel
+            key={`label-${node.id}`}
+            seriesId={treemapSeries.id}
+            node={node}
+            minLabelWidth={alwaysShow ? 0 : minLabelWidth}
+            minLabelHeight={alwaysShow ? 0 : minLabelHeight}
+          />
+        );
+      })}
     </g>
   );
 }

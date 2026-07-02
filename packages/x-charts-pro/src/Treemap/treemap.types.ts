@@ -78,10 +78,15 @@ export interface TreemapNodeOptions extends TreemapHighlightScope {
    */
   renderMode?: 'leaf' | 'all';
   /**
-   * If `true`, labels are displayed on the tiles.
+   * Controls which tiles display a label.
+   * - `true` (default): the root layer (top-level tiles) is always labeled, and deeper
+   *   leaves are labeled when their tile is large enough.
+   * - `false`: no labels.
+   * - a function: called per tile, return `true` to display its label. Labels selected
+   *   this way ignore the `minLabelWidth`/`minLabelHeight` thresholds.
    * @default true
    */
-  showLabels?: boolean;
+  showLabels?: boolean | ((node: TreemapLayoutNode) => boolean);
   /**
    * Minimum tile width in pixels for a label to be displayed.
    * @default 30
