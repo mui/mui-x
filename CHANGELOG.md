@@ -98,7 +98,9 @@ Same changes as in `@mui/x-tree-view@9.8.0`.
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-scheduler@9.0.0-beta.4`.
+Same changes as in `@mui/x-scheduler@9.0.0-beta.4`, plus:
+
+- [scheduler] Collapsible resources in the timeline (#22920) @rita-codes
 
 ### Codemod
 
