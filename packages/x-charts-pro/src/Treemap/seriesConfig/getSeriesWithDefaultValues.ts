@@ -56,15 +56,13 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
   root.children?.forEach((child, index) => branchIndex.set(child, index));
 
   // In multi-level treemaps the fill lightness is driven by the node's level:
-  // the middle level keeps the base hue, shallower levels (painted behind) are
-  // darker, and deeper levels (painted in front) are lighter. `root.height` is
-  // the deepest rendered level (rendered depths are 1..maxDepth).
-  // The lightness deviates by at most LIGHTNESS_SPREAD / 2 at the shallowest and
-  // deepest levels, regardless of how many levels there are.
-  const LIGHTNESS_SPREAD = 0.36;
+  // the front (deepest) level keeps the base hue, and each level behind it is
+  // progressively darker so the parent reads as a frame around its children.
+  // `root.height` is the deepest rendered level (rendered depths are 1..maxDepth).
+  // The shallowest level is darkened by at most LIGHTNESS_DARKEN.
+  const LIGHTNESS_DARKEN = 0.32;
   const maxDepth = root.height;
-  const middleDepth = (1 + maxDepth) / 2;
-  const lightnessStep = maxDepth > 1 ? LIGHTNESS_SPREAD / (maxDepth - 1) : 0;
+  const darkenStep = maxDepth > 1 ? LIGHTNESS_DARKEN / (maxDepth - 1) : 0;
 
   const resolveColor = (node: HierarchyNode<NormalizedTreemapNode>): string => {
     if (node.data.color) {
@@ -80,14 +78,14 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
       return colors[0] ?? '';
     }
     const base = colors[(branchIndex.get(branch) ?? 0) % colors.length] ?? '';
-    if (!base || lightnessStep === 0) {
+    if (!base || darkenStep === 0) {
       return base;
     }
     const shaded = hsl(base);
     if (Number.isNaN(shaded.l)) {
       return base;
     }
-    shaded.l = Math.min(1, Math.max(0, shaded.l + (node.depth - middleDepth) * lightnessStep));
+    shaded.l = Math.max(0, shaded.l - (maxDepth - node.depth) * darkenStep);
     return shaded.formatHex();
   };
 
