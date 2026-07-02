@@ -404,9 +404,12 @@ storeClasses.forEach((storeClass) => {
 
       it('should not update the state when the change event details are canceled', () => {
         const onCollapsedResourcesChange = spy(
-          (_collapsedResources: Record<SchedulerResourceId, boolean>, eventDetails: {
-            cancel: () => void;
-          }) => {
+          (
+            _collapsedResources: Record<SchedulerResourceId, boolean>,
+            eventDetails: {
+              cancel: () => void;
+            },
+          ) => {
             eventDetails.cancel();
           },
         );
