@@ -65,6 +65,13 @@ Set `showLabels: false` to hide every label, or pass a function `(node) => boole
 
 {{"demo": "TreemapLabels.js"}}
 
+### Label padding
+
+`nodeOptions.labelPadding` sets the space between a tile's edge and its label, as a number or `{ x, y }`.
+For nested treemaps, the default top padding of a group grows to fit the label padding, so headers keep their spacing.
+
+{{"demo": "TreemapLabelPadding.js"}}
+
 ## Highlighting
 
 Use `nodeOptions.highlight` to control which tiles are highlighted with the hovered one, following the hierarchy:

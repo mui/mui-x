@@ -1,9 +1,6 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import Slider from '@mui/material/Slider';
-import Typography from '@mui/material/Typography';
-import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { Treemap } from '@mui/x-charts-pro/Treemap';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 
 const data = {
   id: 'root',
@@ -34,72 +31,49 @@ const data = {
 };
 
 export default function TreemapStyling() {
-  const [borderRadius, setBorderRadius] = React.useState(4);
-  const [paddingInner, setPaddingInner] = React.useState(2);
-  const [paddingOuter, setPaddingOuter] = React.useState(2);
-  const [paddingTop, setPaddingTop] = React.useState(24);
-
-  const controls = [
-    {
-      label: 'Border radius',
-      value: borderRadius,
-      setValue: setBorderRadius,
-      max: 20,
-    },
-    {
-      label: 'Padding inner',
-      value: paddingInner,
-      setValue: setPaddingInner,
-      max: 20,
-    },
-    {
-      label: 'Padding outer',
-      value: paddingOuter,
-      setValue: setPaddingOuter,
-      max: 20,
-    },
-    { label: 'Padding top', value: paddingTop, setValue: setPaddingTop, max: 40 },
-  ];
-
   return (
-    <Stack direction="column" spacing={2} sx={{ width: '100%' }}>
-      <Stack direction="row" spacing={4} sx={{ flexWrap: 'wrap' }}>
-        {controls.map((control) => (
-          <Stack
-            key={control.label}
-            direction="column"
-            sx={{ flex: 1, minWidth: 140 }}
-          >
-            <Typography gutterBottom>{control.label}</Typography>
-            <Slider
-              value={control.value}
-              onChange={(event, value) => control.setValue(value)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={control.max}
-            />
-          </Stack>
-        ))}
-      </Stack>
-      <Treemap
-        series={{
-          data,
-          tiling: { paddingInner, paddingOuter, paddingTop },
-          nodeOptions: { borderRadius },
-        }}
-        height={320}
-      />
-      <HighlightedCode
-        code={`<Treemap
+    <ChartsUsageDemo
+      componentName="Treemap padding and radius"
+      data={{
+        borderRadius: { knob: 'slider', defaultValue: 4, min: 0, max: 20 },
+        paddingInner: { knob: 'slider', defaultValue: 2, min: 0, max: 20 },
+        paddingOuter: { knob: 'slider', defaultValue: 2, min: 0, max: 20 },
+        paddingTop: { knob: 'slider', defaultValue: 24, min: 0, max: 40 },
+        labelPadding: { knob: 'slider', defaultValue: 4, min: 0, max: 16 },
+      }}
+      renderDemo={(props) => (
+        <Stack sx={{ width: '100%' }}>
+          <Treemap
+            series={{
+              data,
+              tiling: {
+                paddingInner: props.paddingInner,
+                paddingOuter: props.paddingOuter,
+                paddingTop: props.paddingTop,
+              },
+              nodeOptions: {
+                borderRadius: props.borderRadius,
+                labelPadding: props.labelPadding,
+              },
+            }}
+            height={320}
+          />
+        </Stack>
+      )}
+      getCode={({ props }) => `import { Treemap } from '@mui/x-charts-pro/Treemap';
+
+<Treemap
   series={{
     // ...
-    tiling: { paddingInner: ${paddingInner}, paddingOuter: ${paddingOuter}, paddingTop: ${paddingTop} },
-    nodeOptions: { borderRadius: ${borderRadius} },
+    tiling: {
+      paddingInner: ${props.paddingInner},
+      paddingOuter: ${props.paddingOuter},
+      paddingTop: ${props.paddingTop}
+    },
+    nodeOptions: { borderRadius: ${props.borderRadius}, labelPadding: ${props.labelPadding} }
   }}
-/>`}
-        language="jsx"
-        copyButtonHidden
-      />
-    </Stack>
+/>
+`}
+    />
   );
 }
