@@ -1,32 +1,45 @@
-import type { TooltipItemPositionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { createSelectorMemoized } from '@mui/x-internals/store';
+import { selectorChartsTooltipItem } from '../../internals/plugins/featurePlugins/useChartTooltip/useChartTooltip.selectors';
+import { selectorChartSeriesProcessed } from '../../internals/plugins/corePlugins/useChartSeries';
+import {
+  selectorChartXAxis,
+  selectorChartYAxis,
+} from '../../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import type { TooltipItemPositionSelector } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
-const tooltipItemPositionGetter: TooltipItemPositionGetter<'scatter'> = (params) => {
-  const { series, identifier, axesConfig } = params;
+export const selectorTooltipItemPosition: TooltipItemPositionSelector = createSelectorMemoized(
+  selectorChartsTooltipItem,
+  selectorChartSeriesProcessed,
+  selectorChartXAxis,
+  selectorChartYAxis,
+  function selectorTooltipItemPosition(identifier, series, xAxes, yAxes) {
+    if (!identifier || identifier.type !== 'scatter' || identifier.dataIndex === undefined) {
+      return null;
+    }
 
-  if (!identifier || identifier.dataIndex === undefined) {
-    return null;
-  }
-  const itemSeries = series.scatter?.series[identifier.seriesId];
+    const itemSeries = series.scatter?.series[identifier.seriesId];
 
-  if (itemSeries == null) {
-    return null;
-  }
+    if (itemSeries == null) {
+      return null;
+    }
 
-  if (axesConfig.x === undefined || axesConfig.y === undefined) {
-    return null;
-  }
+    const xAxis = xAxes.axis[itemSeries.xAxisId ?? xAxes.axisIds[0]];
+    const yAxis = yAxes.axis[itemSeries.yAxisId ?? yAxes.axisIds[0]];
 
-  const xValue = itemSeries.data?.[identifier.dataIndex].x;
-  const yValue = itemSeries.data?.[identifier.dataIndex].y;
+    if (xAxis === undefined || yAxis === undefined) {
+      return null;
+    }
 
-  if (xValue == null || yValue == null) {
-    return null;
-  }
+    const xValue = itemSeries.data?.[identifier.dataIndex].x;
+    const yValue = itemSeries.data?.[identifier.dataIndex].y;
 
-  return {
-    x: axesConfig.x.scale(xValue)!,
-    y: axesConfig.y.scale(yValue)!,
-  };
-};
+    if (xValue == null || yValue == null) {
+      return null;
+    }
 
-export default tooltipItemPositionGetter;
+    return {
+      x: xAxis.scale(xValue)!,
+      y: yAxis.scale(yValue)!,
+    };
+  },
+);
