@@ -89,6 +89,98 @@ describe('Core - EventCalendarStore', () => {
     });
   });
 
+  describe('editing state machine', () => {
+    // The editing methods only read `occurrence.key` / `displayTimezone`, so a minimal occurrence suffices.
+    const occurrence = (id: string) => ({ id, key: id }) as any;
+
+    it('startEditing records the occurrence in edit mode by default', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const edited = occurrence('event-1');
+
+      store.startEditing(edited);
+
+      expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+    });
+
+    it('startEditing honors an explicit mode', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+
+      store.startEditing(occurrence('event-1'), 'armed');
+
+      expect(store.state.editingOccurrence?.mode).to.equal('armed');
+    });
+
+    it('setEditingMode swaps the mode while keeping the same occurrence', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      const edited = occurrence('event-1');
+      store.startEditing(edited, 'armed');
+
+      store.setEditingMode('edit');
+
+      expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+    });
+
+    it('setEditingMode is a no-op when nothing is being edited', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+
+      store.setEditingMode('edit');
+
+      expect(store.state.editingOccurrence).to.equal(null);
+    });
+
+    it('setEditingMode keeps the same reference when the mode is unchanged', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      store.startEditing(occurrence('event-1'), 'armed');
+      const before = store.state.editingOccurrence;
+
+      store.setEditingMode('armed');
+
+      expect(store.state.editingOccurrence).to.equal(before);
+    });
+
+    it('setEditingOccurrenceTimes refreshes the edited occurrence times, keeping the mode', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      store.startEditing(occurrence('event-1'), 'armed');
+      const start = adapter.date('2024-01-15T10:00:00', 'default');
+      const end = adapter.date('2024-01-15T11:30:00', 'default');
+
+      store.setEditingOccurrenceTimes(start, end);
+
+      const editing = store.state.editingOccurrence!;
+      expect(editing.occurrence.displayTimezone.start.value).toEqualDateTime(start);
+      expect(editing.occurrence.displayTimezone.end.value).toEqualDateTime(end);
+      expect(editing.mode).to.equal('armed');
+    });
+
+    it('setEditingOccurrenceTimes is a no-op when nothing is being edited', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+
+      store.setEditingOccurrenceTimes(
+        adapter.date('2024-01-15T10:00:00', 'default'),
+        adapter.date('2024-01-15T11:30:00', 'default'),
+      );
+
+      expect(store.state.editingOccurrence).to.equal(null);
+    });
+
+    it('stopEditing clears the editing state and any in-progress creation placeholder', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      store.startEditing(occurrence('event-1'), 'edit');
+      store.setOccurrencePlaceholder({
+        type: 'creation',
+        surfaceType: 'time-grid',
+        start: adapter.date('2024-01-15T10:00:00', 'default'),
+        end: adapter.date('2024-01-15T11:00:00', 'default'),
+        resourceId: null,
+      });
+
+      store.stopEditing();
+
+      expect(store.state.editingOccurrence).to.equal(null);
+      expect(store.state.occurrencePlaceholder).to.equal(null);
+    });
+  });
+
   describe('updater', () => {
     it('should sync partial state from new parameters (views)', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);

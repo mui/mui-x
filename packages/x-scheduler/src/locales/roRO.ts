@@ -16,6 +16,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   closeButtonLabel: 'Închide',
   // editEventButtonAriaLabel: 'Edit event',
   // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Șterge evenimentul',
   descriptionLabel: 'Descriere',
   endDateLabel: 'Data de sfârșit',

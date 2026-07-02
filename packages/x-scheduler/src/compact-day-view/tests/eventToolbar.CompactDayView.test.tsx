@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { screen, within, fireEvent } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 
@@ -86,5 +86,9 @@ describe('CompactDayView - event toolbar', () => {
     expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
     // No editable form either.
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+
+    // The read-only summary renders: its Close button + title (scoped to the header to skip the grid event).
+    const summaryHeader = screen.getByRole('button', { name: 'Close' }).closest('header')!;
+    expect(within(summaryHeader).getByText('Morning Meeting')).not.to.equal(null);
   });
 });

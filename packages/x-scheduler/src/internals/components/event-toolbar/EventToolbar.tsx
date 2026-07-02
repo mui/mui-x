@@ -10,6 +10,7 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
+import { useDisarmOnEscape } from '../armed-occurrence';
 
 // `Paper` (elevation 3) supplies the `background.paper` fill and `shadows[3]` box shadow.
 const EventToolbarRoot = styled(Paper, {
@@ -60,6 +61,9 @@ export function EventToolbar(props: EventToolbarProps) {
     schedulerOtherSelectors.areRecurringEventsAvailable,
   );
 
+  // Rendered only while armed (desktop anchored surface + mobile dock), so Escape here disarms both.
+  useDisarmOnEscape({ active: true, onDisarm: stopEditing });
+
   const handleEdit = () => {
     store.setEditingMode('edit');
   };
@@ -81,7 +85,12 @@ export function EventToolbar(props: EventToolbarProps) {
   };
 
   return (
-    <EventToolbarRoot className={classes.eventToolbar} elevation={3} role="toolbar">
+    <EventToolbarRoot
+      className={classes.eventToolbar}
+      elevation={3}
+      role="toolbar"
+      aria-label={localeText.eventActionsToolbarAriaLabel}
+    >
       <EventToolbarButton
         className={classes.eventToolbarEditButton}
         aria-label={localeText.editEventButtonAriaLabel}

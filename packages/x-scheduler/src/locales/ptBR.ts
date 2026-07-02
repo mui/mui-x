@@ -16,6 +16,7 @@ const ptBRDialog: Partial<EventDialogLocaleText> = {
   closeButtonLabel: 'Fechar',
   // editEventButtonAriaLabel: 'Edit event',
   // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Excluir evento',
   descriptionLabel: 'Descrição',
   endDateLabel: 'Data de término',

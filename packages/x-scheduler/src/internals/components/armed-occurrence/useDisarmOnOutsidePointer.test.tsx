@@ -133,6 +133,24 @@ describe('useDisarmOnOutsidePointer', () => {
     });
   });
 
+  it('does not disarm when the composed target is not an Element (e.g. a scrollbar/native-UI click)', () => {
+    const onDisarm = spy();
+    renderUseDisarm({
+      ref: { current: container },
+      active: true,
+      onDisarm,
+      ignoreSelector: IGNORE_SELECTOR,
+      global: true,
+    });
+
+    // A click whose composed target resolves to the document, not an element.
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+    document.dispatchEvent(event);
+
+    expect(onDisarm.callCount).to.equal(0);
+    expect(event.defaultPrevented).to.equal(false);
+  });
+
   it('removes the listener when active becomes false', () => {
     const onDisarm = spy();
     const { rerender } = renderUseDisarm({

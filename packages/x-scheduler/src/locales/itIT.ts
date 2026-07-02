@@ -16,6 +16,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   closeButtonLabel: 'Chiudi',
   // editEventButtonAriaLabel: 'Edit event',
   // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Elimina evento',
   descriptionLabel: 'Descrizione',
   endDateLabel: 'Data di fine',

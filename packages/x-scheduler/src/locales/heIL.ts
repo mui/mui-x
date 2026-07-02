@@ -16,6 +16,7 @@ const heILDialog: Partial<EventDialogLocaleText> = {
   // closeButtonLabel: 'Close',
   // editEventButtonAriaLabel: 'Edit event',
   // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   // deleteEvent: 'Delete event',
   // descriptionLabel: 'Description',
   // endDateLabel: 'End date',

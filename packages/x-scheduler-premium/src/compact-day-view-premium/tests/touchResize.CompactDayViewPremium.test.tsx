@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
@@ -37,20 +38,30 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     )!;
   }
 
-  // Controlled wrapper so a committed resize actually re-renders with the resulting events: that is what
-  // re-creates the (re-keyed) occurrence whose armed state we are asserting.
-  function ControlledView({ initialEvent }: { initialEvent: SchedulerEvent }) {
+  // Controlled wrapper so a committed resize re-renders with the resulting events (re-creating the
+  // re-keyed occurrence we assert on). `onChange` mirrors each commit out for the time assertion.
+  function ControlledView({
+    initialEvent,
+    onChange,
+  }: {
+    initialEvent: SchedulerEvent;
+    onChange: (events: SchedulerEvent[]) => void;
+  }) {
     const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
     return (
       <StandaloneCompactDayViewPremium
         events={events}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        onEventsChange={setEvents}
+        onEventsChange={(next) => {
+          setEvents(next);
+          onChange(next);
+        }}
       />
     );
   }
 
   function renderResizableRecurringEvent() {
+    const onEventsChange = spy();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Daily Standup')
@@ -59,12 +70,22 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
       .resizable(true)
       .build();
 
-    const { user } = render(<ControlledView initialEvent={event} />);
+    const { user } = render(<ControlledView initialEvent={event} onChange={onEventsChange} />);
 
     // Geometry resolver maps pointer Y to a time via the column's bounds.
     mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
 
-    return { user };
+    return { user, onEventsChange };
+  }
+
+  // Whatever the scope, some resulting event must carry the resized 16:00 end — else the re-key/detach
+  // dropped it.
+  function expectResizedEndCommitted(onEventsChange: ReturnType<typeof spy>) {
+    const updatedEvents: SchedulerEvent[] = onEventsChange.lastCall.args[0];
+    const committedResizedEnd = updatedEvents.some(
+      (item) => new Date(item.end).getUTCHours() === 16,
+    );
+    expect(committedResizedEnd).to.equal(true);
   }
 
   /** Taps the event to arm it, revealing its resize handles. */
@@ -81,7 +102,7 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
   }
 
   it('keeps the resized occurrence armed after confirming the scope dialog', async () => {
-    const { user } = renderResizableRecurringEvent();
+    const { user, onEventsChange } = renderResizableRecurringEvent();
     const eventElement = armEvent();
 
     const endHandle = getResizeHandle(eventElement, 'end');
@@ -97,10 +118,12 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     // The occurrence — now on the new event — stays armed: the selection outline + toolbar persist
     // instead of dropping because the new event's occurrence key differs from the original.
     expect(getEventElement()).to.have.attribute('data-armed');
+    // ...and the detached occurrence kept the resized end.
+    expectResizedEndCommitted(onEventsChange);
   });
 
   it('keeps the resized occurrence armed when applying the change to all events', async () => {
-    const { user } = renderResizableRecurringEvent();
+    const { user, onEventsChange } = renderResizableRecurringEvent();
     const eventElement = armEvent();
 
     const endHandle = getResizeHandle(eventElement, 'end');
@@ -113,10 +136,11 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
     expect(getEventElement()).to.have.attribute('data-armed');
+    expectResizedEndCommitted(onEventsChange);
   });
 
   it('keeps the resized occurrence armed when splitting the series (this and following)', async () => {
-    const { user } = renderResizableRecurringEvent();
+    const { user, onEventsChange } = renderResizableRecurringEvent();
     const eventElement = armEvent();
 
     const endHandle = getResizeHandle(eventElement, 'end');
@@ -130,5 +154,6 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
     expect(getEventElement()).to.have.attribute('data-armed');
+    expectResizedEndCommitted(onEventsChange);
   });
 });

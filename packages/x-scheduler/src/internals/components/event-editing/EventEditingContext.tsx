@@ -88,7 +88,9 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
 
   const isEdited = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
-  // Re-anchor while edited, so the surface follows a recurring scope change that swaps the node.
+  // Re-anchor while edited, so the surface follows a recurring scope change that swaps the node: the
+  // repointed occurrence's trigger mounts and re-anchors as the old node unmounts. Relies on the grid
+  // mounting every occurrence of a rendered day (no time virtualization); revisit if that changes.
   useIsoLayoutEffect(() => {
     if (isEdited) {
       setAnchor(ref.current);

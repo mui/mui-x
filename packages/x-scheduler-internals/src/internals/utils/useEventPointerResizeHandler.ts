@@ -251,7 +251,8 @@ export namespace useEventPointerResizeHandler {
      */
     addPropertiesToResizedEvent?: () => Partial<SchedulerEvent>;
     /**
-     * The minimum duration, in minutes, the event must keep.
+     * The resize granularity, in minutes: both the snap step and the minimum duration the event must
+     * keep (intentionally coupled — see {@link clampResizedEventEdge}).
      * @default EVENT_DRAG_PRECISION_MINUTE
      */
     precisionMinute?: number;

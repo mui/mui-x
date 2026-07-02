@@ -494,6 +494,9 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         occurrenceKey={occurrence.key}
         renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
         data-armed={placeholderHasResizeHandles || undefined}
+        // Inert preview — hide its button role/empty name from assistive tech (handles are
+        // pointer-only, so this doesn't trap focus).
+        aria-hidden="true"
         {...rootDataAttributes}
         {...sharedProps}
         className={clsx(classes.timeGridEventPlaceholder, sharedProps.className)}

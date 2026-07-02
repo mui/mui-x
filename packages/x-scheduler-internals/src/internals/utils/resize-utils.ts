@@ -20,6 +20,8 @@ export function isResizeHandlerEnabled(parameters: {
 /**
  * Clamps the moving edge so the event keeps at least `precisionMinute` of duration, leaving the
  * fixed edge untouched. Shared by the native and pointer resize paths.
+ *
+ * `precisionMinute` is the snap step reused as the minimum duration — intentionally the same value.
  */
 export function clampResizedEventEdge(parameters: {
   adapter: Adapter;

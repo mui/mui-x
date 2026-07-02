@@ -83,6 +83,55 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('editingMode', () => {
+      it('should return null when nothing is being edited', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        expect(schedulerOtherSelectors.editingMode(store.state)).to.equal(null);
+      });
+
+      it('should return the mode the edited occurrence is in', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.startEditing(occurrence('event-1'), 'armed');
+        expect(schedulerOtherSelectors.editingMode(store.state)).to.equal('armed');
+
+        store.setEditingMode('edit');
+        expect(schedulerOtherSelectors.editingMode(store.state)).to.equal('edit');
+      });
+    });
+
+    describe('isEditedOccurrenceInEditMode', () => {
+      it('should return false when nothing is being edited', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        expect(
+          schedulerOtherSelectors.isEditedOccurrenceInEditMode(store.state, 'event-1'),
+        ).to.equal(false);
+      });
+
+      it('should return true when the matching occurrence is being edited in the form', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.startEditing(occurrence('event-1'), 'edit');
+        expect(
+          schedulerOtherSelectors.isEditedOccurrenceInEditMode(store.state, 'event-1'),
+        ).to.equal(true);
+      });
+
+      it('should return false when the matching occurrence is only armed', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.startEditing(occurrence('event-1'), 'armed');
+        expect(
+          schedulerOtherSelectors.isEditedOccurrenceInEditMode(store.state, 'event-1'),
+        ).to.equal(false);
+      });
+
+      it('should return false when a different occurrence is being edited', () => {
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.startEditing(occurrence('event-2'), 'edit');
+        expect(
+          schedulerOtherSelectors.isEditedOccurrenceInEditMode(store.state, 'event-1'),
+        ).to.equal(false);
+      });
+    });
+
     describe('visibleDate', () => {
       it('should return the visibleDate with the default display timezone applied', () => {
         const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');

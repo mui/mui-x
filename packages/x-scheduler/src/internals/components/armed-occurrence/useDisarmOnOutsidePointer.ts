@@ -30,15 +30,18 @@ export function useDisarmOnOutsidePointer(parameters: {
     const listenerTarget = global ? node.ownerDocument : node;
     const onClickCapture = (event: MouseEvent) => {
       // Real target from the composed path, so detection works inside a shadow root too.
-      const target = event.composedPath()[0];
-      if (target instanceof Element) {
-        // The surface itself (e.g. the toolbar buttons) must keep working while modal.
-        if (global && node.contains(target)) {
-          return;
-        }
-        if (ignoreSelector && target.closest(ignoreSelector)) {
-          return;
-        }
+      const composedPath = event.composedPath();
+      const target = composedPath[0];
+      // A non-Element target (e.g. `Document` on a scrollbar click) isn't "outside": leave it armed.
+      if (!(target instanceof Element)) {
+        return;
+      }
+      // The surface itself must keep working while modal; `composedPath` is shadow-safe.
+      if (global && composedPath.includes(node)) {
+        return;
+      }
+      if (ignoreSelector && target.closest(ignoreSelector)) {
+        return;
       }
       // Swallow the click so it reaches neither a create handler nor an event's open trigger.
       event.stopPropagation();

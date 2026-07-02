@@ -9,8 +9,8 @@ import { useCalendarGridDayEventContext } from '../day-event/CalendarGridDayEven
 import type { CalendarGridDayEvent } from '../day-event/CalendarGridDayEvent';
 import type { SchedulerEventSide } from '../../models';
 
-// Touch resize not implemented here yet — add it like the time grid via `useEventPointerResizeHandler`
-// with a horizontal `getDateAtPointer` resolver (clientX -> date).
+// Day-grid resize is native drag only; touch/pointer resize is a follow-up (add it like the time grid
+// via `useEventPointerResizeHandler` with a horizontal `getDateAtPointer`). Only `enabled` is shared.
 export const CalendarGridDayEventResizeHandler = React.forwardRef(
   function CalendarGridDayEventResizeHandler(
     componentProps: CalendarGridDayEventResizeHandler.Props,

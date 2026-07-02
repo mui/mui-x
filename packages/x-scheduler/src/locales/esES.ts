@@ -16,6 +16,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   closeButtonLabel: 'Cerrar',
   // editEventButtonAriaLabel: 'Edit event',
   // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Eliminar evento',
   descriptionLabel: 'Descripción',
   endDateLabel: 'Fecha de fin',

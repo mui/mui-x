@@ -19,6 +19,7 @@ export interface EventDialogLocaleText {
   closeButtonLabel: string;
   editEventButtonAriaLabel: string;
   deleteEventButtonAriaLabel: string;
+  eventActionsToolbarAriaLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
   endDateLabel: string;
