@@ -56,9 +56,7 @@ export interface EventCalendarSchedulerParametersOverrides {
  * components omit them.
  */
 export type CollapsibleResourcesParameterKeys =
-  | 'collapsedResources'
-  | 'defaultCollapsedResources'
-  | 'onCollapsedResourcesChange';
+  'collapsedResources' | 'defaultCollapsedResources' | 'onCollapsedResourcesChange';
 
 export interface EventCalendarParameters<
   TEvent extends object,
