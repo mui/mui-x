@@ -1,3 +1,4 @@
+import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import type { ChartState } from '../../../models';
 import type { UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
 import type { UseChartInteractionSignature } from '../../../featurePlugins/useChartInteraction';
@@ -12,9 +13,13 @@ import type { UseChartTooltipSignature } from '../../../featurePlugins/useChartT
  * @param {'top' | 'bottom' | 'left' | 'right' | undefined} position The preferred placement of the tooltip.
  * @returns {{ x: number; y: number } | null} The tooltip anchor position, or `null` when it cannot be computed.
  */
-export type TooltipItemPositionSelector = (
+export type TooltipItemPositionSelector<SeriesType extends ChartSeriesType> = (
   state: ChartState<
-    [UseChartCartesianAxisSignature, UseChartInteractionSignature, UseChartTooltipSignature]
+    [
+      UseChartCartesianAxisSignature<SeriesType>,
+      UseChartInteractionSignature,
+      UseChartTooltipSignature<SeriesType>,
+    ]
   >,
   position: 'top' | 'bottom' | 'left' | 'right' | undefined,
 ) => { x: number; y: number } | null;

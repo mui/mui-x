@@ -17,6 +17,7 @@ import { useUtilityClasses } from './chartsTooltipClasses';
 import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
 import type { TooltipItemPositionSelector } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ChartSeriesType } from '../models/seriesType/config';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import {
   selectorChartsLastInteraction,
@@ -71,8 +72,8 @@ const defaultAnchorByTrigger = {
 // assignable to, so they all converge to `TooltipItemPositionSelector`.
 const getPositionSelectorByAnchor = (
   anchor: 'pointer' | 'node' | 'chart',
-  selectorItemPosition: TooltipItemPositionSelector,
-): TooltipItemPositionSelector => {
+  selectorItemPosition: TooltipItemPositionSelector<ChartSeriesType>,
+): TooltipItemPositionSelector<ChartSeriesType> => {
   switch (anchor) {
     case 'node':
       return selectorItemPosition;
@@ -220,7 +221,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   // provide one, the tooltip falls back to following the pointer.
   const tooltipItem = store.use(selectorChartsTooltipItem);
   const seriesConfig = store.use(selectorChartSeriesConfig);
-  const selectorItemPosition: TooltipItemPositionSelector =
+  const selectorItemPosition: TooltipItemPositionSelector<ChartSeriesType> =
     (tooltipItem && seriesConfig[tooltipItem.type]?.selectorTooltipItemPosition) ||
     selectorReturnNull;
 

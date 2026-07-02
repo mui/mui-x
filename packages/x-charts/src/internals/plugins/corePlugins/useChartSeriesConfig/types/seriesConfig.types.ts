@@ -46,7 +46,7 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
    * the series type so it reads only the state it needs (axes, layout, geo
    * projection, …). When omitted, the item tooltip follows the pointer.
    */
-  selectorTooltipItemPosition?: TooltipItemPositionSelector;
+  selectorTooltipItemPosition?: TooltipItemPositionSelector<SeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<SeriesType>;
   keyboardFocusHandler?: KeyboardFocusHandler<SeriesType>;
   /**
