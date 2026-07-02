@@ -25,7 +25,6 @@ import {
 import {
   selectorChartsTooltipItem,
   selectorChartsTooltipItemIsDefined,
-  selectorChartsTooltipItemPosition,
 } from '../internals/plugins/featurePlugins/useChartTooltip';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -216,14 +215,14 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const pointerAnchorUnavailable = lastInteraction === 'keyboard' || pointerType === null;
   const computedAnchor = pointerAnchorUnavailable ? defaultAnchorByTrigger[trigger] : anchor;
 
-  // A series type can override how its item tooltip is positioned (e.g. map
-  // shapes position from the geo projection); otherwise the generic item
-  // selector is used.
+  // Each series type computes its own item tooltip position (e.g. bar from the
+  // axes, map shapes from the geo projection). When a series type doesn't
+  // provide one, the tooltip falls back to following the pointer.
   const tooltipItem = store.use(selectorChartsTooltipItem);
   const seriesConfig = store.use(selectorChartSeriesConfig);
   const selectorItemPosition: TooltipItemPositionSelector =
     (tooltipItem && seriesConfig[tooltipItem.type]?.selectorTooltipItemPosition) ||
-    selectorChartsTooltipItemPosition;
+    selectorReturnNull;
 
   const itemPosition = store.use(
     getPositionSelectorByAnchor(computedAnchor, selectorItemPosition),

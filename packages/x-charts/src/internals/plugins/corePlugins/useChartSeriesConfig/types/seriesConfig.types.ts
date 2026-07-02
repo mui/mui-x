@@ -12,10 +12,7 @@ import type { LegendGetter } from './legendGetter.types';
 import type { AxisTooltipGetter, TooltipGetter } from './tooltipGetter.types';
 import type { PolarExtremumGetter } from './polarExtremumGetter.types';
 import type { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
-import type {
-  TooltipItemPositionGetter,
-  TooltipItemPositionSelector,
-} from './tooltipItemPositionGetter.types';
+import type { TooltipItemPositionSelector } from './tooltipItemPositionSelector.types';
 import type { SeriesLayoutGetter } from './seriesLayout.types';
 import type { KeyboardFocusHandler } from '../../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import type { IdentifierSerializer } from './identifierSerializer.types';
@@ -44,11 +41,10 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
   legendGetter: LegendGetter<SeriesType>;
   tooltipGetter: TooltipGetter<SeriesType>;
   ItemTooltipContent?: React.ComponentType<ItemTooltipContentProps<SeriesType>>;
-  tooltipItemPositionGetter?: TooltipItemPositionGetter<SeriesType>;
   /**
-   * Computes the item tooltip position from the chart state, for series types
-   * whose position depends on state the core tooltip plugin doesn't track.
-   * Takes precedence over `tooltipItemPositionGetter`.
+   * Computes the item tooltip anchor position from the chart state. Provided by
+   * the series type so it reads only the state it needs (axes, layout, geo
+   * projection, …). When omitted, the item tooltip follows the pointer.
    */
   selectorTooltipItemPosition?: TooltipItemPositionSelector;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<SeriesType>;
