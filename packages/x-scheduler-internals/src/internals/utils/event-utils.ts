@@ -77,8 +77,10 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
-    const primaryResourceId = getPrimaryResourceId(event.resource);
-    if (primaryResourceId && visibleResources[primaryResourceId] === false) {
+    const eventResourceIds = getEventResourceIds(event.resource);
+    const allHidden =
+      eventResourceIds.length > 0 && eventResourceIds.every((id) => visibleResources[id] === false);
+    if (allHidden) {
       continue;
     }
 
@@ -125,9 +127,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 }
 
 /**
- * Returns the resource IDs for the given resource.
- * @param resource
- * @returns The resource IDs for the given resource.
+ * Returns the resource IDs for the given resource, or an empty array if the resource is null or undefined.
  */
 export function getEventResourceIds(
   resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
@@ -140,9 +140,7 @@ export function getEventResourceIds(
 }
 
 /**
- * Returns the primary resource ID for the given resource.
- * @param resource
- * @returns The primary resource ID for the given resource.
+ * Returns the primary resource ID for the given resource, or null if the resource is null or undefined.
  */
 export function getPrimaryResourceId(
   resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
