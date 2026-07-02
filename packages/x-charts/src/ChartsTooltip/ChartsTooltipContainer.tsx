@@ -216,9 +216,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const pointerAnchorUnavailable = lastInteraction === 'keyboard' || pointerType === null;
   const computedAnchor = pointerAnchorUnavailable ? defaultAnchorByTrigger[trigger] : anchor;
 
-  // Each series type computes its own item tooltip position (e.g. bar from the
-  // axes, map shapes from the geo projection). When a series type doesn't
-  // provide one, the tooltip falls back to following the pointer.
   const tooltipItem = store.use(selectorChartsTooltipItem);
   const seriesConfig = store.use(selectorChartSeriesConfig);
   const selectorItemPosition: TooltipItemPositionSelector<ChartSeriesType> =
