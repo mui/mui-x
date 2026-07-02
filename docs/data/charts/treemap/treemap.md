@@ -51,6 +51,12 @@ The default `'squarify'` method keeps tiles close to a square aspect ratio.
 
 {{"demo": "TreemapTiling.js"}}
 
+## Render mode
+
+`nodeOptions.renderMode` sets which nodes render a tile: `'all'` (default) draws the nested group tiles and their leaves, while `'leaf'` draws only the leaves for a flat treemap.
+
+{{"demo": "TreemapRenderMode.js"}}
+
 ## Padding and rounded corners
 
 `tiling.paddingInner` sets the gap between sibling tiles, `tiling.paddingOuter` the inset inside a group, and `tiling.paddingTop` the header band reserved for a group's label. `nodeOptions.borderRadius` rounds the tile corners.
