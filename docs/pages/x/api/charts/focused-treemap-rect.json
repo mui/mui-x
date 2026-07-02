@@ -1,0 +1,13 @@
+{
+  "props": {},
+  "name": "FocusedTreemapRect",
+  "imports": [
+    "import { FocusedTreemapRect } from '@mui/x-charts-pro/Treemap';",
+    "import { FocusedTreemapRect } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiFocusedTreemapRect",
+  "filename": "/packages/x-charts-pro/src/Treemap/FocusedTreemapRect.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/treemap/\">Charts - Treemap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a> 🧪</a></li></ul>"
+}

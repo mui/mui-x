@@ -30,6 +30,12 @@ export function useNoData() {
         return seriesItem.data.links.length === 0;
       }
 
+      // @ts-ignore, treemap type is not declared in the base package
+      if (seriesItem.type === 'treemap') {
+        // @ts-ignore, treemap data is a layout object, not an array
+        return (seriesItem.data?.nodes?.length ?? 0) === 0;
+      }
+
       return seriesItem.data.length === 0;
     });
   });

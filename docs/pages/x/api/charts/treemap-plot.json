@@ -1,0 +1,47 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } }
+  },
+  "name": "TreemapPlot",
+  "imports": [
+    "import { TreemapPlot } from '@mui/x-charts-pro/Treemap';",
+    "import { TreemapPlot } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "cell",
+      "className": "MuiTreemap-cell",
+      "description": "Styles applied to an individual cell (tile) element.",
+      "isGlobal": false
+    },
+    {
+      "key": "cells",
+      "className": "MuiTreemap-cells",
+      "description": "Styles applied to the cells container.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiTreemap-label",
+      "description": "Styles applied to an individual cell label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labels",
+      "className": "MuiTreemap-labels",
+      "description": "Styles applied to the labels container.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiTreemap-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiTreemapPlot",
+  "filename": "/packages/x-charts-pro/src/Treemap/TreemapPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/treemap/\">Charts - Treemap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a> 🧪</a></li></ul>"
+}

@@ -262,6 +262,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/focused-treemap-rect',
+    title: 'FocusedTreemapRect',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/funnel-chart',
     title: 'FunnelChart',
     plan: 'pro',
@@ -544,6 +549,41 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/toolbar-button',
     title: 'ToolbarButton',
+  },
+  {
+    pathname: '/x/api/charts/treemap',
+    title: 'Treemap',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/treemap-data-provider',
+    title: 'TreemapDataProvider',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/treemap-label-plot',
+    title: 'TreemapLabelPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/treemap-plot',
+    title: 'TreemapPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/treemap-rect-plot',
+    title: 'TreemapRectPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/treemap-tooltip',
+    title: 'TreemapTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/treemap-tooltip-content',
+    title: 'TreemapTooltipContent',
+    plan: 'pro',
   },
 ];
 export default chartsApiPages;
