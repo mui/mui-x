@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Treemap } from '@mui/x-charts-pro/Treemap';
 
 const data = {
-  id: 'fruits',
+  id: 'portfolio',
   children: [
-    { id: 'Apple', value: 30, color: '#e53935' },
-    { id: 'Banana', value: 25, color: '#fdd835' },
-    { id: 'Grape', value: 20, color: '#8e24aa' },
-    { id: 'Orange', value: 18, color: '#fb8c00' },
-    { id: 'Kiwi', value: 15, color: '#7cb342' },
+    { id: 'Stocks', value: 45, color: '#112e81' },
+    { id: 'Bonds', value: 25, color: '#4647ae' },
+    { id: 'Real estate', value: 15, color: '#4382df' },
+    { id: 'Cash', value: 10, color: '#7fb2dd' },
+    { id: 'Crypto', value: 5, color: '#aaccd6' },
   ],
 };
 
