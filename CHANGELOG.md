@@ -26,6 +26,7 @@ The following team members contributed to this release:
 - [DataGrid] Prevent cell editing from resurrecting a deleted row (#22958) @Anexus5919
 - [DataGrid] Avoid reading `type` of `undefined` in `gridRowUtils` (#21808) @timbuckley
 - [DataGrid] Improved get started tutorial (#22911) @joserodolfofreitas
+- [l10n] Improve Japanese (ja-JP) locale (#23001) @greymoth-jp
 
 #### `@mui/x-data-grid-pro@9.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -45,6 +46,7 @@ Same changes as in `@mui/x-data-grid-pro@9.8.0`, plus:
 - [pickers] Flag the first and last visible day cell across year boundaries (#22981) @Anexus5919
 - [pickers] Use calendar day tokens in `AdapterMomentHijri` and `AdapterMomentJalaali` formats (#22974) @Anexus5919
 - [pickers] Use the Hijri day token in `AdapterMomentHijri` `normalDateWithWeekday` (#22972) @Anexus5919
+- [l10n] Improve Romanian (ro-RO) locale (#22969) @aromanio
 
 #### `@mui/x-date-pickers-pro@9.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -126,8 +128,6 @@ Internal changes.
 - [internals] Fix `ERR_UNSUPPORTED_DIR_IMPORT` for `core-js-pure` in Node ESM (#22985) @michelengelen
 - [internals] Harden `useDisposable` React internals read with safeReact (#22986) @rita-codes
 - [internals] Replace core-js `DisposableStack` ponyfill with a minimal fallback (#23002) @sai6855
-- [l10n] Improve Japanese (ja-JP) locale (#23001) @greymoth-jp
-- [l10n] Improve Romanian (ro-RO) locale (#22969) @aromanio
 - [test] Assert the edited `dateTime` cell value in the e2e edit test (#22982) @voidmatcha
 - [virtualizer] Remeasure scrollbars when layout changes (#22914) @arminmeh
 
