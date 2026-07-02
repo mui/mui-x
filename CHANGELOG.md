@@ -5,6 +5,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.29.2
+
+_Jul 2, 2026_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @timbuckley
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @brijeshb42, @cherniavskii, @LukasTy, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.29.2`
+
+- [DataGrid] Avoid reading `type` of `undefined` in `gridRowUtils` (#22963) @timbuckley
+- [DataGrid] Define `overflowAnchor` style at the right element (#22860) @arminmeh
+- [DataGrid] Fix panel placement jump on mount (#22946) @cherniavskii
+- [DataGrid] Fix scrollbars not showing up on scroll on iOS (#22884) @cherniavskii
+- [DataGrid] Wait for rows before reacting on `autosizeOnMount` (#22886) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@8.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.29.2`.
+
+#### `@mui/x-data-grid-premium@8.29.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.29.2`, plus:
+
+- [DataGridPremium] Escape `singleSelect` values in Excel export with `escapeFormulas` enabled (#22966) @Anexus5919
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.29.2`
+
+- [pickers] Fix localized digit crash (#23010) @alexfauquette
+- [pickers] Respect explicit `notched` prop on the outlined `PickersTextField` (#22875) (#22893) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.29.2`.
+
+### Charts
+
+#### `@mui/x-charts@8.29.2`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.29.2`.
+
+#### `@mui/x-charts-premium@8.29.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.29.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.29.2`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.29.2`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.29.2`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Pin mui-public actions to nearest git hash (#22824) @brijeshb42
+- [internal] Switch resolutions to workspace overrides (#22865) @cherniavskii
+
+### Miscellaneous
+
+- [virtualizer] Improve the dimensions' initial state (#22890) @arminmeh
+- [virtualizer] Remeasure scrollbars when layout changes (#23003) @arminmeh
+
 ## 8.29.1
 
 _Jun 11, 2026_
