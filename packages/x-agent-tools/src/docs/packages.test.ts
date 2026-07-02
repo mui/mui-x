@@ -1,5 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
-import { compareVersions, fetchRemotePackages } from './packages';
+import {
+  compareVersions,
+  fetchRemotePackages,
+  formatUnknownSourceError,
+  normalizePackageName,
+  suggestPackageNames,
+} from './packages';
 
 const DOCS_BASE_URL = 'https://chat-backend.mui.com';
 const LIST_PATH = '/v1/public/packages/list';
@@ -86,5 +92,81 @@ describe('compareVersions', () => {
     expect(compareVersions('9.1.2-beta.1', '9.1.2')).toBeLessThan(0);
     expect(compareVersions('9.1.2', '9.1.2-beta.1')).toBeGreaterThan(0);
     expect(compareVersions('9.1.2-beta.2', '9.1.2-beta.1')).toBeGreaterThan(0);
+  });
+});
+
+describe('normalizePackageName', () => {
+  it('lowercases and strips non-alphanumerics', () => {
+    expect(normalizePackageName('@mui/X-Data-Grid')).toBe('muixdatagrid');
+    expect(normalizePackageName('@mui/x-data-grid')).toBe('muixdatagrid');
+  });
+
+  it('returns an empty string for input with no alphanumerics', () => {
+    expect(normalizePackageName('@/-')).toBe('');
+  });
+});
+
+describe('suggestPackageNames', () => {
+  const known = ['@mui/material', '@mui/x-data-grid', '@mui/x-charts', '@mui/x-tree-view'];
+
+  it('matches despite case and punctuation differences (dash typo)', () => {
+    expect(suggestPackageNames('@mui/X-DataGrid', known)).toContain('@mui/x-data-grid');
+  });
+
+  it('matches when the query is contained in a known name', () => {
+    expect(suggestPackageNames('material', known)).toContain('@mui/material');
+  });
+
+  it('returns an empty array when nothing is close', () => {
+    expect(suggestPackageNames('@acme/widget', known)).toEqual([]);
+  });
+
+  it('returns an empty array for a query with no alphanumerics', () => {
+    expect(suggestPackageNames('@/-', known)).toEqual([]);
+  });
+
+  it('caps suggestions at 5', () => {
+    const many = Array.from({ length: 8 }, (_, i) => `@mui/x-thing-${i}`);
+    // Each name contains the normalized query, so all match, but the result is capped.
+    expect(suggestPackageNames('@mui/x-thing', many)).toHaveLength(5);
+  });
+});
+
+describe('formatUnknownSourceError', () => {
+  const versionsByName = new Map<string, string[]>([
+    ['@mui/x-data-grid', ['8.29.1', '9.7.0']],
+    ['@mui/material', ['5.18.0', '9.1.2']],
+  ]);
+  const knownNames = ['@mui/material', '@mui/x-data-grid'];
+
+  it('lists available versions when the package is known but the version is not', () => {
+    const msg = formatUnknownSourceError('@mui/x-data-grid@8.29.0', versionsByName, knownNames);
+    expect(msg).toBe(
+      'Unknown package or version: "@mui/x-data-grid@8.29.0". Available versions of @mui/x-data-grid: 8.29.1, 9.7.0.',
+    );
+  });
+
+  it('suggests a near match for a typo in the package name', () => {
+    const msg = formatUnknownSourceError('@mui/x-datagrid', versionsByName, knownNames); // missing dash
+    expect(msg).toBe('Unknown package: "@mui/x-datagrid". Did you mean one of: @mui/x-data-grid?');
+  });
+
+  it('falls back to listing all packages when there is no near match', () => {
+    const msg = formatUnknownSourceError('@mui/nonexistent', versionsByName, knownNames);
+    expect(msg).toBe(
+      'Unknown package: "@mui/nonexistent". Available packages: @mui/material, @mui/x-data-grid.',
+    );
+  });
+
+  it('treats the scope `@` as part of the name, not a version separator', () => {
+    const msg = formatUnknownSourceError('@mui/unknown', versionsByName, knownNames);
+    expect(msg).toContain('Unknown package: "@mui/unknown"');
+    expect(msg).not.toContain('Unknown package or version');
+  });
+
+  it('reports an unknown package (not version) when the package itself is not shipped', () => {
+    const msg = formatUnknownSourceError('@mui/ghost@1.0.0', versionsByName, knownNames);
+    expect(msg).toContain('Unknown package: "@mui/ghost"');
+    expect(msg).not.toContain('1.0.0');
   });
 });

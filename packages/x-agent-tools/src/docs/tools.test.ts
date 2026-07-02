@@ -209,7 +209,7 @@ describe('createUseMuiDocsTool', () => {
     expect(fetcher).toHaveBeenCalledWith('https://llms.example/material/5.18.0', expect.anything());
   });
 
-  it('rejects a `name@version` that is not in the catalog (unresolved string is blocked)', async () => {
+  it('returns a friendly "unknown version" message (not a security error) for a version not in the catalog', async () => {
     const fetcher = vi.fn().mockResolvedValue(ok('should not be fetched'));
     const tool = await createUseMuiDocsTool({
       getPackagesList: async () => multiVersionPackages,
@@ -217,11 +217,46 @@ describe('createUseMuiDocsTool', () => {
       isUrlAllowed: (url) => url.startsWith('https://llms.example/'),
     });
 
-    // Not in the map, so it stays a bare string, isn't a valid URL, and is blocked (never fetched).
     const result = await tool.execute({ sources: ['@mui/material@99.99.99'] });
 
-    expect(result).toContain('not an allowed docs source');
+    expect(result).toContain('Unknown package or version');
+    expect(result).toContain('9.1.2'); // lists the versions we actually ship
+    expect(result).not.toContain('blocked for security');
     expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it('suggests near matches for an unknown package name (typo)', async () => {
+    const tool = await createUseMuiDocsTool({ getPackagesList: async () => multiVersionPackages });
+
+    const result = await tool.execute({ sources: ['@mui/x-datagrid'] }); // missing dash
+
+    expect(result).toContain('Unknown package');
+    expect(result).toContain('@mui/x-data-grid'); // did-you-mean suggestion
+  });
+
+  it('returns docs for known sources and errors for unknown ones in a mixed batch', async () => {
+    const fetcher = vi.fn().mockResolvedValue(ok('material docs'));
+    const tool = await createUseMuiDocsTool({
+      getPackagesList: async () => multiVersionPackages,
+      fetcher,
+    });
+
+    const result = await tool.execute({ sources: ['@mui/material', '@mui/nonexistent'] });
+
+    expect(result).toContain('material docs');
+    expect(result).toContain('Unknown package');
+  });
+
+  it('still returns the security error for an actual disallowed URL', async () => {
+    const tool = await createUseMuiDocsTool({
+      getPackagesList: async () => multiVersionPackages,
+      isUrlAllowed: (url) => url.startsWith('https://llms.example/'),
+    });
+
+    const result = await tool.execute({ sources: ['https://evil.example.com/steal.md'] });
+
+    expect(result).toContain('blocked for security');
+    expect(result).not.toContain('Unknown package');
   });
 });
 

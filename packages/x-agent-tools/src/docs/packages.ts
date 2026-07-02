@@ -71,3 +71,41 @@ export function compareVersions(a: string, b: string): number {
   }
   return parsedA.prerelease < parsedB.prerelease ? -1 : 1;
 }
+
+export function normalizePackageName(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+// Known names that look like the query, for a "did you mean" hint.
+export function suggestPackageNames(query: string, knownNames: string[]): string[] {
+  const q = normalizePackageName(query);
+  if (!q) {
+    return [];
+  }
+  return knownNames
+    .filter((name) => {
+      const n = normalizePackageName(name);
+      return n.includes(q) || q.includes(n);
+    })
+    .slice(0, 5);
+}
+
+/** Friendlier "unknown package/version" message when a `useMuiDocs` shorthand isn't in the catalog. */
+export function formatUnknownSourceError(
+  entry: string,
+  versionsByName: Map<string, string[]>,
+  knownNames: string[],
+): string {
+  // Split on the version `@`, not the scope's leading `@`.
+  const at = entry.lastIndexOf('@');
+  const name = at > 0 ? entry.slice(0, at) : entry;
+  const versions = versionsByName.get(name);
+  if (at > 0 && versions) {
+    return `Unknown package or version: "${entry}". Available versions of ${name}: ${versions.join(', ')}.`;
+  }
+  const suggestions = suggestPackageNames(name, knownNames);
+  const hint = suggestions.length
+    ? ` Did you mean one of: ${suggestions.join(', ')}?`
+    : ` Available packages: ${knownNames.join(', ')}.`;
+  return `Unknown package: "${name}".${hint}`;
+}

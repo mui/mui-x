@@ -2,8 +2,9 @@ import { z } from 'zod';
 import { LRUCache, resolveCache } from '../utils/cache';
 import type { Logger, PackageData, QueueOptions, ToolOverrides } from '../types';
 import { wrapTool } from '../utils/wrap-tool';
+import { isUrlLike } from '../utils/url';
 import { urlListFetcher } from './fetch-docs';
-import { compareVersions } from './packages';
+import { compareVersions, formatUnknownSourceError } from './packages';
 
 const DEFAULT_DOCS_CONCURRENCY = 10;
 
@@ -50,6 +51,17 @@ export async function createUseMuiDocsTool(
       latestByName.set(pkg.name, pkg);
     }
   }
+  // Versions per package + known names, so a bad shorthand gets a helpful hint, not the scary guard error.
+  const versionsByName = new Map<string, string[]>();
+  for (const pkg of packages) {
+    const list = versionsByName.get(pkg.name) ?? [];
+    list.push(pkg.version);
+    versionsByName.set(pkg.name, list);
+  }
+  for (const list of versionsByName.values()) {
+    list.sort((a, b) => compareVersions(a, b));
+  }
+  const knownNames = Array.from(latestByName.keys());
 
   return wrapTool({
     name: 'use_mui_docs',
@@ -75,17 +87,34 @@ export async function createUseMuiDocsTool(
     }),
     outputSchema: z.string().describe('A string containing the fetched documentation content'),
     execute: async (input, context) => {
-      // Accept package names and `name@version` shorthands as well as URLs.
-      const urls = input.sources.map(
-        (entry) => llmsUrlByNameVersion.get(entry) ?? latestByName.get(entry)?.llmsUrl ?? entry,
+      // Turn each source into a URL to fetch, or a friendly "unknown package" note. Real URLs pass
+      // through to the guard; a bad shorthand shouldn't get the scary security error.
+      const urls: string[] = [];
+      const errors: string[] = [];
+      for (const entry of input.sources) {
+        const resolved = llmsUrlByNameVersion.get(entry) ?? latestByName.get(entry)?.llmsUrl;
+        if (resolved) {
+          urls.push(resolved);
+        } else if (isUrlLike(entry)) {
+          urls.push(entry);
+        } else {
+          errors.push(formatUnknownSourceError(entry, versionsByName, knownNames));
+        }
+      }
+
+      const fetched = urls.length
+        ? await urlListFetcher(queue, fetcher, urls, {
+            cache,
+            logger,
+            isUrlAllowed,
+            resolveDocLinks: true,
+            signal: context?.signal,
+          })
+        : '';
+
+      return (
+        [fetched, ...errors].filter(Boolean).join('\n\n') || 'No documentation could be retrieved'
       );
-      return urlListFetcher(queue, fetcher, urls, {
-        cache,
-        logger,
-        isUrlAllowed,
-        resolveDocLinks: true,
-        signal: context?.signal,
-      });
     },
   });
 }
