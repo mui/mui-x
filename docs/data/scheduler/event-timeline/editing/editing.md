@@ -103,7 +103,7 @@ The priority order for read-only behavior is:
 ```
 
 :::success
-If the property isn't defined on the resource, the closest ancestor resource with that property defined takes precedence.
+If a property isn't defined on the resource, the closest ancestor resource with that property defined takes precedence.
 :::
 
 3. The `readOnly` prop assigned to the Event Timeline
