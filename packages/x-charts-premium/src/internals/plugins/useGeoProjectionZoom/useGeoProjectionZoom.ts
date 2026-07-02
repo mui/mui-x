@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
-import { getDefaultTranslation } from '@mui/x-charts/internals';
 import type { ChartPlugin } from '@mui/x-charts/internals';
 import { useRegisterZoomGestures } from '@mui/x-charts-pro/internals';
 import { selectorChartRawProjection } from '../useGeoProjection/useGeoProjection.selectors';
@@ -11,6 +10,7 @@ import { PROJECTION_FACTORIES } from '../useGeoProjection';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
+import { getDefaultTranslation } from '../useGeoProjection/projection.utils';
 
 export const useGeoProjectionZoom: ChartPlugin<UseGeoProjectionZoomSignature> = ({
   store,

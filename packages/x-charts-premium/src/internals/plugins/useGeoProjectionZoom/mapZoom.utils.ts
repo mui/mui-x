@@ -1,10 +1,11 @@
 import type { GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { geoPath } from '@mui/x-charts-vendor/d3-geo';
 import { selectorChartDrawingArea } from '@mui/x-charts/internals';
-import type { ChartUsedStore, useGeoProjectionTypes } from '@mui/x-charts/internals';
+import type { ChartUsedStore } from '@mui/x-charts/internals';
 import { selectorChartGeoData } from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapRotationAxis, MapTranslationAxis } from './useGeoProjectionZoom.types';
 import { createGetVisibleCoordinate } from '../../createGetVisibleCoordinate';
+import type { D3NamedProjection, GeoProjectionInput } from '../useGeoProjection';
 
 /** Multiplicative zoom step applied per wheel tick. */
 export const WHEEL_ZOOM_STEP = 1.1;
@@ -16,7 +17,7 @@ const clamp = (value: number, min: number, max: number) => Math.min(max, Math.ma
 
 type ProjectionFamily = 'azimuthal' | 'conic' | 'cylindrical' | 'albersUsa';
 
-const PROJECTION_FAMILY: Record<useGeoProjectionTypes.D3NamedProjection, ProjectionFamily> = {
+const PROJECTION_FAMILY: Record<D3NamedProjection, ProjectionFamily> = {
   azimuthalEqualArea: 'azimuthal',
   azimuthalEquidistant: 'azimuthal',
   gnomonic: 'azimuthal',
@@ -48,9 +49,7 @@ const FAMILY_INTERACTION: Record<
   albersUsa: { rotationAllowed: 'none', translationAllowed: 'both' },
 };
 
-export function getProjectionFamily(
-  projection: useGeoProjectionTypes.GeoProjectionInput | null,
-): ProjectionFamily {
+export function getProjectionFamily(projection: GeoProjectionInput | null): ProjectionFamily {
   if (projection == null) {
     return 'cylindrical'; // fallback to avoid useless edge cases
   }
@@ -78,9 +77,10 @@ export function getProjectionFamily(
   return 'cylindrical';
 }
 
-export function getDefaultMapInteraction(
-  projection: useGeoProjectionTypes.GeoProjectionInput | null,
-): { rotationAllowed: MapRotationAxis; translationAllowed: MapTranslationAxis } {
+export function getDefaultMapInteraction(projection: GeoProjectionInput | null): {
+  rotationAllowed: MapRotationAxis;
+  translationAllowed: MapTranslationAxis;
+} {
   return FAMILY_INTERACTION[getProjectionFamily(projection)];
 }
 
