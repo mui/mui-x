@@ -24,7 +24,7 @@ The following team members contributed to this release:
 #### `@mui/x-data-grid@9.8.0`
 
 - [DataGrid] Prevent cell editing from resurrecting a deleted row (#22958) @Anexus5919
-- [DataGrid] Avoid reading `type` of undefined in `gridRowUtils` (#21808) @timbuckley
+- [DataGrid] Avoid reading `type` of `undefined` in `gridRowUtils` (#21808) @timbuckley
 - [DataGrid] Improved get started tutorial (#22911) @joserodolfofreitas
 
 #### `@mui/x-data-grid-pro@9.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -56,7 +56,7 @@ Same changes as in `@mui/x-date-pickers@9.8.0`, plus:
 
 #### `@mui/x-charts@9.8.0`
 
-- [charts] Decouple d3-geo from the universal tooltip (#23011) @sai6855
+- [charts] Decouple `d3-geo` from the universal tooltip (#23011) @sai6855
 - [charts] Deduplicate `getGroupingConfig` (#22889) @sai6855
 - [charts] Expose `usePolarGeometry` hook for radial overlays (#22892) @mustafajw07
 
@@ -69,7 +69,7 @@ Same changes as in `@mui/x-charts@9.8.0`.
 Same changes as in `@mui/x-charts-pro@9.8.0`, plus:
 
 - [charts-premium] Add `onItemClick` support for the Map shapes (#22876) @sai6855
-- [charts-premium] Replace dataIndex with `name` in map identifier (#22891) @sai6855
+- [charts-premium] Replace `dataIndex` with `name` in map identifier (#22891) @sai6855
 - [charts-premium] Share helper function (#23030) @alexfauquette
 - [charts-premium] Extract shared WebGL utilities across bar/scatter/heatmap renderers (#22466) @sai6855
 - [charts-premium] Add `MapImagePlot` for raster base maps (#22977) @JCQuintas
@@ -92,7 +92,6 @@ Same changes as in `@mui/x-tree-view@9.8.0`.
 - [scheduler] Enforce top-level type imports (#22931) @Janpot
 - [scheduler] Keep the occurrence date when editing only one recurring event (#23007) @Anexus5919
 - [scheduler] Track bundle size of scheduler packages (#22682) @flaviendelangle
-- [docs][scheduler] Another copyediting pass across the Scheduler docs (#22619) @mapache-salvaje
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -114,19 +113,19 @@ Internal changes.
 - [docs] Clarify that `fieldRef.current.focusField()` is the canonical way to focus a field (#22937) @michelengelen
 - [docs][scheduler] Another copyediting pass across the Scheduler docs (#22619) @mapache-salvaje
 - [docs][charts] Add map example for arbitrary GeoJSON shapes (#22976) @JCQuintas
-- [docs][charts] Double point count in ScatterAsyncRenderer demo (#22906) @JCQuintas
+- [docs][charts] Double point count in `ScatterAsyncRenderer` demo (#22906) @JCQuintas
 
 ### Core
 
 - [code-infra] Fix tracking branch bug in release script (#22956) @michelengelen
 - [code-infra] Remove mark-duplicate workflow (#22994) @cherniavskii
-- [code-infra] Revert nanoid@3.3.15 minimumReleaseAge exemption (#22953) @LukasTy
+- [code-infra] Revert `nanoid@3.3.15` `minimumReleaseAge` exemption (#22953) @LukasTy
 
 ### Miscellaneous
 
 - [internals] Fix `ERR_UNSUPPORTED_DIR_IMPORT` for `core-js-pure` in Node ESM (#22985) @michelengelen
 - [internals] Harden `useDisposable` React internals read with safeReact (#22986) @rita-codes
-- [internals] Replace core-js DisposableStack ponyfill with a minimal fallback (#23002) @sai6855
+- [internals] Replace core-js `DisposableStack` ponyfill with a minimal fallback (#23002) @sai6855
 - [l10n] Improve Japanese (ja-JP) locale (#23001) @greymoth-jp
 - [l10n] Improve Romanian (ro-RO) locale (#22969) @aromanio
 - [test] Assert the edited `dateTime` cell value in the e2e edit test (#22982) @voidmatcha
