@@ -401,6 +401,173 @@ export class LayoutListSticky extends Layout<ListElements> {
   };
 }
 
+/**
+ * Grid layout based on the "inverse sticky" technique. Same principle as
+ * `LayoutListSticky`, extended with pinned sections:
+ * - the top/bottom containers (headers, pinned rows) are classic sticky elements,
+ * - pinned column cells use `position: sticky; left/right` inside each row, unchanged
+ *   from the regular flow: sticky constraints resolve against the scrollport, so they
+ *   compose with the vertically-sticky window,
+ * - the window's sticky offsets are asymmetric so it clamps against the inner viewport
+ *   edges (below the top container, above the bottom container) rather than the
+ *   scrollport edges.
+ *
+ * Expected DOM structure:
+ * ```tsx
+ * <div {...containerProps}>              // scroller
+ *   <div {...contentProps}>              // in-flow, sticky containing block
+ *     <div {...topContainerProps}>       // sticky top: headers + pinned top rows
+ *     <div {...spacerTopProps} />        // height: rowPositions[firstRowIndex]
+ *     <div {...windowProps}>             // sticky rendered window
+ *       {rows}
+ *     </div>
+ *     <div {...spacerBottomProps} />     // height: remaining content height
+ *     <div {...bottomContainerProps}>    // sticky bottom: pinned bottom rows
+ *   </div>
+ * </div>
+ * ```
+ */
+export class LayoutGridSticky extends Layout<ListElements> {
+  static elements = [
+    'scroller',
+    'container',
+    'content',
+    'topContainer',
+    'spacerTop',
+    'window',
+    'spacerBottom',
+    'bottomContainer',
+  ] as const;
+
+  use(
+    store: Store<BaseState>,
+    _params: ParamsWithDefaults,
+    _api: RequiredAPI,
+    layoutParams: VirtualizationLayoutParams,
+  ) {
+    const { scrollerRef, containerRef } = layoutParams;
+
+    const mergedRef = useForkRef(scrollerRef, containerRef);
+
+    store.state.virtualization.context = {
+      mergedRef,
+    };
+  }
+
+  static selectors = {
+    containerProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      Dimensions.selectors.autoHeight,
+      (context, autoHeight) => ({
+        ref: context.mergedRef,
+        style: {
+          overflowY: autoHeight ? 'hidden' : undefined,
+          position: 'relative',
+          // The spacer heights change on each render context update; native scroll
+          // anchoring would fight those updates by adjusting the scroll position.
+          overflowAnchor: 'none',
+        } as React.CSSProperties,
+        role: 'presentation',
+        // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
+        // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
+        tabIndex: platform.engine.gecko ? -1 : undefined,
+      }),
+    ),
+
+    contentProps: createSelectorMemoized(() => ({
+      style: {
+        // `max-content` makes the content span the full columns width so that the
+        // sticky elements' containing blocks cover the whole scrollable area.
+        width: 'max-content',
+        minWidth: '100%',
+        position: 'relative',
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
+
+    topContainerProps: createSelectorMemoized(() => ({
+      style: {
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
+
+    bottomContainerProps: createSelectorMemoized(() => ({
+      style: {
+        position: 'sticky',
+        bottom: 0,
+        zIndex: 2,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
+
+    spacerTopProps: createSelectorMemoized(
+      Virtualization.selectors.renderContext,
+      Dimensions.selectors.rowPositions,
+      (renderContext, rowPositions) => ({
+        style: {
+          height: rowPositions[renderContext.firstRowIndex] ?? 0,
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
+    ),
+
+    spacerBottomProps: createSelectorMemoized(
+      Virtualization.selectors.renderContext,
+      Dimensions.selectors.rowPositions,
+      Dimensions.selectors.contentHeight,
+      (renderContext, rowPositions, contentHeight) => ({
+        style: {
+          height: contentHeight - (rowPositions[renderContext.lastRowIndex] ?? contentHeight),
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
+    ),
+
+    windowProps: createSelectorMemoized(
+      Virtualization.selectors.renderContext,
+      Dimensions.selectors.rowPositions,
+      Dimensions.selectors.contentHeight,
+      Dimensions.selectors.dimensions,
+      (renderContext, rowPositions, contentHeight, dimensions) => {
+        const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
+        const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
+        const renderedHeight = lastPosition - firstPosition;
+
+        const { viewportInnerSize, topContainerHeight, bottomContainerHeight } = dimensions;
+        // Asymmetric offsets: scrolling down, the window's bottom edge clamps at the
+        // top of the bottom container; scrolling up, its top edge clamps below the
+        // top container. Derivation: with P the scrollport height,
+        // `viewportInnerSize.height = P - topContainerHeight - bottomContainerHeight`,
+        // so `-(renderedHeight - (P - bottomContainerHeight))` simplifies to the
+        // expressions below.
+        const stickyTop = Math.min(
+          0,
+          -(renderedHeight - (viewportInnerSize.height + topContainerHeight)),
+        );
+        const stickyBottom = Math.min(
+          0,
+          -(renderedHeight - (viewportInnerSize.height + bottomContainerHeight)),
+        );
+
+        return {
+          style: {
+            position: 'sticky',
+            top: stickyTop,
+            bottom: stickyBottom,
+            // Explicit height: keeps the sticky clamping math immune to flow height
+            // discrepancies from out-of-flow children (detail panels, focus rows).
+            height: renderedHeight,
+          } as React.CSSProperties,
+          role: 'presentation',
+        };
+      },
+    ),
+  };
+}
+
 type ScrollProperty = 'scrollTop' | 'scrollLeft';
 
 function useScrollbarRefCallback(
