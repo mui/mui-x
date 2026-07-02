@@ -1,6 +1,6 @@
 /* eslint-disable react-compiler/react-compiler -- intentional `react-hooks/exhaustive-deps` disable below */
 import * as React from 'react';
-import { EventCalendarParameters } from './EventCalendarStore.types';
+import type { EventCalendarParameters } from './EventCalendarStore.types';
 
 export function useExtractEventCalendarParameters<
   TEvent extends object,
@@ -12,7 +12,9 @@ export function useExtractEventCalendarParameters<
     areEventsResizable,
     canDragEventsFromTheOutside,
     canDropEventsToTheOutside,
+    collapsedResources,
     dateLocale,
+    defaultCollapsedResources,
     defaultPreferences,
     defaultView,
     defaultVisibleDate,
@@ -22,6 +24,7 @@ export function useExtractEventCalendarParameters<
     eventCreation,
     eventModelStructure,
     events,
+    onCollapsedResourcesChange,
     onEventsChange,
     onViewChange,
     onVisibleDateChange,
@@ -47,7 +50,9 @@ export function useExtractEventCalendarParameters<
       areEventsResizable,
       canDragEventsFromTheOutside,
       canDropEventsToTheOutside,
+      collapsedResources,
       dateLocale,
+      defaultCollapsedResources,
       defaultPreferences,
       defaultView,
       defaultVisibleDate,
@@ -57,6 +62,7 @@ export function useExtractEventCalendarParameters<
       eventCreation,
       eventModelStructure,
       events,
+      onCollapsedResourcesChange,
       onEventsChange,
       onViewChange,
       onVisibleDateChange,
@@ -84,7 +90,9 @@ export function useExtractEventCalendarParameters<
       areEventsResizable,
       canDragEventsFromTheOutside,
       canDropEventsToTheOutside,
+      collapsedResources,
       dateLocale,
+      defaultCollapsedResources,
       defaultPreferences,
       defaultView,
       defaultVisibleDate,
@@ -94,6 +102,7 @@ export function useExtractEventCalendarParameters<
       eventCreation,
       eventModelStructure,
       events,
+      onCollapsedResourcesChange,
       onEventsChange,
       onViewChange,
       onVisibleDateChange,

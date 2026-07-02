@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { StandaloneEvent as UnstyledStandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
-import { StandaloneEventProps } from './StandaloneEvent.types';
+import type { StandaloneEventProps } from './StandaloneEvent.types';
 import { EventDragPreview } from '../internals/components/event-drag-preview';
 import { EventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
 

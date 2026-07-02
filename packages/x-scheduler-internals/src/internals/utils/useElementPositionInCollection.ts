@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAdapterContext } from '../../use-adapter-context';
-import { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
+import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
 
 // Fixed 24h grid (visual time, not real-time duration)
 const FIXED_24H_GRID_MINUTES = 24 * 60;
