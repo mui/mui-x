@@ -23,7 +23,6 @@
     "@babel/runtime": "catalog:",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@mui/x-agent-tools": "workspace:^",
-    "@mui/x-internals": "workspace:^",
     "zod": "^3.25.65"
   },
   "devDependencies": {
@@ -38,9 +37,6 @@
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
     "mcp-inspector": "pnpm build:local && npx -y @modelcontextprotocol/inspector node build/stdio.js",
     "test": "vitest run --config vitest.config.node.mts"
-  },
-  "imports": {
-    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   },
   "engines": {
     "node": ">=20.19"

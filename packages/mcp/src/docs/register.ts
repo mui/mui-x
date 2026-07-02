@@ -21,34 +21,38 @@ export interface RegisterDocsToolsDeps {
 }
 
 /**
- * Build and register the docs tools (`useMuiDocs`, `fetchDocs`) on the MCP server.
+ * Register the docs tools on the MCP server. `fetchDocs` needs no catalog and always registers;
+ * `useMuiDocs` needs the catalog at startup, so if that fetch fails this logs and skips only
+ * `useMuiDocs` (fetchDocs and generateReactCode stay available). Each registration is isolated so a
+ * failure can't escape to `main().catch` and exit the server.
  *
- * They need the docs catalog at startup, so this is isolated from the rest of registration: if the
- * catalog is unreachable, it logs and returns `false` instead of throwing, leaving
- * `generateReactCode` (which doesn't need the catalog) free to register.
- *
- * @returns `true` if both docs tools registered, `false` if they were skipped due to an error.
+ * @returns `true` if `useMuiDocs` registered, `false` if it was skipped due to a catalog error.
  */
 export async function registerDocsTools(
   server: McpServer,
   deps: RegisterDocsToolsDeps,
 ): Promise<boolean> {
-  // fetchDocs needs no catalog, so register it first and independent of catalog health.
-  const fetchDocsTool = await deps.createFetchDocTool({
-    overrides: { description: deps.fetchDocsDescription },
-    queue: { concurrency: deps.concurrency },
-    cache: true,
-    logger: deps.logger,
-    isUrlAllowed: deps.isUrlAllowed,
-  });
-  server.registerTool(
-    fetchDocsTool.publicName,
-    {
-      description: fetchDocsTool.description,
-      inputSchema: fetchDocsTool.inputSchema.shape,
-    },
-    buildDocsHandler(fetchDocsTool, deps.logger),
-  );
+  // fetchDocs needs no catalog: register it first, in its own try so a setup failure logs rather
+  // than crashing the server.
+  try {
+    const fetchDocsTool = await deps.createFetchDocTool({
+      overrides: { description: deps.fetchDocsDescription },
+      queue: { concurrency: deps.concurrency },
+      cache: true,
+      logger: deps.logger,
+      isUrlAllowed: deps.isUrlAllowed,
+    });
+    server.registerTool(
+      fetchDocsTool.publicName,
+      {
+        description: fetchDocsTool.description,
+        inputSchema: fetchDocsTool.inputSchema.shape,
+      },
+      buildDocsHandler(fetchDocsTool, deps.logger),
+    );
+  } catch (error) {
+    deps.logger('MUI MCP: Could not register fetchDocs.', error);
+  }
 
   // useMuiDocs needs the catalog at startup; isolate its failure so it can't take fetchDocs down.
   try {

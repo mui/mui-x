@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@mui/x-internals": "workspace:^",
     "zod": "^3.25.65",
     "p-queue": "^8.1.0",
     "eventsource-parser": "^3.0.0"
@@ -38,9 +37,6 @@
   },
   "exports": {
     ".": "./src/index.ts"
-  },
-  "imports": {
-    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   },
   "engines": {
     "node": ">=20.19"

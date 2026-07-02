@@ -69,7 +69,9 @@ async function fetchFollowingGuardedRedirects(
       return response;
     }
     // We only need the Location header; release the hop's connection instead of leaking it.
-    void response.body?.cancel();
+    // `cancel()` on an already-errored body rejects, so swallow it (an unhandled rejection would
+    // otherwise crash the process).
+    void response.body?.cancel().catch(() => {});
     target = new URL(location, target).toString();
   }
   // Caught below and folded into the "Could not fetch …" string, so it never surfaces alone.

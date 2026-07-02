@@ -776,9 +776,6 @@ importers:
       '@mui/x-agent-tools':
         specifier: workspace:^
         version: link:../x-agent-tools/build
-      '@mui/x-internals':
-        specifier: workspace:^
-        version: link:../x-internals/build
       zod:
         specifier: ^3.25.65
         version: 3.25.76
@@ -799,9 +796,6 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
-      '@mui/x-internals':
-        specifier: workspace:^
-        version: link:../x-internals/build
       eventsource-parser:
         specifier: ^3.0.0
         version: 3.1.0

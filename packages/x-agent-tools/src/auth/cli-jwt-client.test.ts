@@ -82,6 +82,13 @@ describe('CliJwtClient', () => {
     );
   });
 
+  it('rejects an unparseable expiresAt instead of silently disabling the cache', async () => {
+    const fetcher = vi.fn().mockResolvedValue(makeOkResponse('jwt-1', 'not-a-date'));
+    const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+
+    await expect(client.getToken()).rejects.toThrow(/unparseable expiresAt/);
+  });
+
   it('does not tie the shared token exchange fetch to a caller signal', async () => {
     const { signal } = new AbortController();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
