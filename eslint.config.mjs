@@ -265,6 +265,7 @@ export default defineConfig(
       `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
     ],
     ignores: [
       // Vendored copy of Base UI internals — keep in sync with upstream, don't edit.

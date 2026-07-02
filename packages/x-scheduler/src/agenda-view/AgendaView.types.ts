@@ -3,6 +3,7 @@ import type { Theme } from '@mui/material/styles';
 import type {
   EventCalendarParameters,
   EventCalendarSchedulerParametersOverrides,
+  CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 
 export interface AgendaViewProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -12,7 +13,7 @@ export interface StandaloneAgendaViewProps<TEvent extends object, TResource exte
     AgendaViewProps,
     Omit<
       EventCalendarParameters<TEvent, TResource>,
-      keyof EventCalendarSchedulerParametersOverrides
+      keyof EventCalendarSchedulerParametersOverrides | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
   /**

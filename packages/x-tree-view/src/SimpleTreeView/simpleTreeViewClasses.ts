@@ -1,6 +1,6 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { TreeViewClasses } from '../internals/TreeViewProvider/TreeViewStyleContext';
+import type { TreeViewClasses } from '../internals/TreeViewProvider/TreeViewStyleContext';
 
 export interface SimpleTreeViewClasses extends Omit<
   TreeViewClasses,

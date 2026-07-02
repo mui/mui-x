@@ -8,7 +8,7 @@ components: EventCalendar, EventCalendarPremium
 
 # Event Calendar - Navigation
 
-<p class="description">Navigate in time to find the events you are looking for.</p>
+<p class="description">Control the visible date and navigate programmatically with the imperative API.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -39,7 +39,7 @@ return (
 
 ## Imperative API
 
-To use the `apiRef` object, you need to initialize it using the `useEventCalendarApiRef()` or `useEventCalendarPremiumApiRef()` hook as follows:
+To use the `apiRef` object, initialize it with the `useEventCalendarApiRef()` or `useEventCalendarPremiumApiRef()` hook:
 
 ```tsx
 // Community package

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { TreeViewValidItem } from '../models';
-import { RichTreeViewProps } from './RichTreeView.types';
-import { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
-import { RichTreeViewStore } from '../internals/RichTreeViewStore';
+import type { TreeViewValidItem } from '../models';
+import type { RichTreeViewProps } from './RichTreeView.types';
+import type { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
+import type { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
 export function useExtractRichTreeViewParameters<
   R extends TreeViewValidItem<R>,
