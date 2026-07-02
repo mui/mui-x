@@ -1,4 +1,7 @@
-import type { CacheEntry } from './types';
+export type CacheEntry = {
+  content: string;
+  timestamp: number;
+};
 
 const DEFAULT_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 1 day in milliseconds
 const DEFAULT_MAX_CACHE_SIZE = 1000;
@@ -75,4 +78,12 @@ export class LRUCache {
       }
     }
   }
+}
+
+/** Resolve a `cache` option: reuse an instance, make a fresh one for `true`, disable when falsy. */
+export function resolveCache(cache?: boolean | LRUCache): LRUCache | undefined {
+  if (cache instanceof LRUCache) {
+    return cache;
+  }
+  return cache ? new LRUCache() : undefined;
 }

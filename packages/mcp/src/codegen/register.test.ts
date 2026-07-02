@@ -7,7 +7,7 @@ type Deps = Parameters<typeof registerCodegenTool>[1];
 
 const makeServer = () => ({ registerTool: vi.fn() });
 
-const codegenStatic = {
+const tool = {
   publicName: 'generateReactCode',
   description: 'generate code',
   inputSchema: z.object({ prompt: z.string() }),
@@ -17,11 +17,11 @@ const codegenStatic = {
     explanation: z.string(),
     muiPairing: z.object({ material: z.string(), muiX: z.string() }).optional(),
   }),
+  execute: vi.fn(),
 };
 
 const makeDeps = () => ({
-  codegenStatic,
-  createPerCallTool: vi.fn(),
+  tool,
   formatText: vi.fn(),
   logger: vi.fn(),
 });

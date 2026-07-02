@@ -1,8 +1,7 @@
+import { z } from 'zod';
 import type PQueueType from 'p-queue';
 import type { LRUCache } from './cache';
-import { ChatTool, ZodObjectAny } from './types';
-
-export type Logger = (message: string, error?: unknown) => void;
+import type { ChatTool, Logger } from './types';
 
 const noopLogger: Logger = () => {};
 
@@ -78,6 +77,8 @@ export interface UrlListFetcherOptions {
   // as listed in MUI `llms.txt` indexes) are rewritten to absolute URLs against the source URL's
   // origin, so the agent can pass them straight to the next fetch without resolving paths itself.
   resolveDocLinks?: boolean;
+  // Aborts the in-flight fetches when the host cancels the request.
+  signal?: AbortSignal;
 }
 
 // Rewrite site-absolute markdown links (`](/path)`) to absolute URLs against `baseUrl`'s origin, so
@@ -121,8 +122,8 @@ export function compareVersions(a: string, b: string): number {
   return parsedA.prerelease < parsedB.prerelease ? -1 : 1;
 }
 
-export function wrapTool<SchemaInputT extends ZodObjectAny, SchemaOutputT extends ZodObjectAny>(
-  obj: ChatTool<SchemaInputT, SchemaOutputT>,
+export function wrapTool<Input extends z.AnyZodObject, Output extends z.ZodTypeAny>(
+  obj: ChatTool<Input, Output>,
 ) {
   return obj;
 }
@@ -147,9 +148,10 @@ async function fetchFollowingGuardedRedirects(
   fetcher: typeof fetch,
   startUrl: string,
   isUrlAllowed?: (url: string) => boolean,
+  signal?: AbortSignal,
 ): Promise<Response> {
   if (!isUrlAllowed) {
-    return fetcher(startUrl);
+    return signal ? fetcher(startUrl, { signal }) : fetcher(startUrl);
   }
   let target = startUrl;
   for (let redirects = 0; redirects <= MAX_REDIRECTS; redirects += 1) {
@@ -157,7 +159,7 @@ async function fetchFollowingGuardedRedirects(
       throw new BlockedUrlError(target);
     }
     // eslint-disable-next-line no-await-in-loop -- redirects are sequential by nature.
-    const response = await fetcher(target, { redirect: 'manual' });
+    const response = await fetcher(target, { redirect: 'manual', signal });
     const location = REDIRECT_STATUSES.has(response.status)
       ? response.headers.get('location')
       : null;
@@ -177,7 +179,7 @@ export function urlListFetcher(
   urlList: string[],
   options: UrlListFetcherOptions = {},
 ) {
-  const { cache, logger = noopLogger, isUrlAllowed, resolveDocLinks } = options;
+  const { cache, logger = noopLogger, isUrlAllowed, resolveDocLinks, signal } = options;
   return Promise.all(
     urlList.map((url) =>
       queue.add(async () => {
@@ -189,7 +191,7 @@ export function urlListFetcher(
         }
 
         try {
-          const response = await fetchFollowingGuardedRedirects(fetcher, url, isUrlAllowed);
+          const response = await fetchFollowingGuardedRedirects(fetcher, url, isUrlAllowed, signal);
           if (!response.ok) {
             // Caught just below and folded into the "Could not fetch …" string, so it never
             // surfaces standalone: no need for an error code.

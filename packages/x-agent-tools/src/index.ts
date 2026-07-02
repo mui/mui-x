@@ -2,4 +2,6 @@ export * from './types';
 export * from './cli-jwt-client';
 export * from './codegen';
 export * from './docs';
-export { createDocsUrlGuard, type Logger } from './utils';
+export * from './packages';
+export { LRUCache, type CacheEntry } from './cache';
+export { createDocsUrlGuard } from './utils';

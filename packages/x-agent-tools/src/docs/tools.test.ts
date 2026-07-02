@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createUseMuiDocsTool, createFetchDocTool } from './docs';
+import { LRUCache } from './cache';
 import { compareVersions } from './utils';
 
 const ok = (body: string): Response => new Response(body, { status: 200 });
@@ -76,7 +77,7 @@ describe('createUseMuiDocsTool', () => {
     expect(fetcher).toHaveBeenCalledWith('https://llms.example/material');
   });
 
-  it('resolves a `name@version` shorthand to that version\'s llms.txt URL', async () => {
+  it("resolves a `name@version` shorthand to that version's llms.txt URL", async () => {
     const fetcher = vi.fn().mockResolvedValue(ok('material-ui 9.1.2 docs'));
     const tool = await createUseMuiDocsTool({
       getPackagesList: async () => multiVersionPackages,
@@ -238,5 +239,36 @@ describe('createFetchDocTool', () => {
 
     expect(result).toContain('blocked for security');
     expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it('forwards the abort signal from the call context to the underlying fetch', async () => {
+    const controller = new AbortController();
+    const fetcher = vi.fn().mockResolvedValue(ok('docs'));
+    const tool = await createFetchDocTool({ fetcher });
+
+    await tool.execute({ urls: ['https://llms.example/a'] }, { signal: controller.signal });
+
+    expect(fetcher).toHaveBeenCalledWith(
+      'https://llms.example/a',
+      expect.objectContaining({ signal: controller.signal }),
+    );
+  });
+
+  it('reuses a shared LRUCache across tools so the second tool serves from cache', async () => {
+    const cache = new LRUCache();
+    const fetcher = vi.fn().mockResolvedValue(ok('shared docs'));
+
+    const toolA = await createFetchDocTool({ fetcher, cache });
+    await toolA.execute({ urls: ['https://llms.example/a'] });
+    // Let the queued microtask that writes the cache flush before the second read.
+    await new Promise((resolve) => {
+      setTimeout(resolve, 0);
+    });
+
+    const toolB = await createFetchDocTool({ fetcher, cache });
+    const result = await toolB.execute({ urls: ['https://llms.example/a'] });
+
+    expect(result).toBe('shared docs');
+    expect(fetcher).toHaveBeenCalledTimes(1);
   });
 });

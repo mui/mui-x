@@ -17,7 +17,9 @@ export async function withRetry<T>(
     const [delayMs, ...remaining] = delaysMs;
     onRetry?.(error, delayMs);
     await new Promise<void>((resolve) => {
-      setTimeout(resolve, delayMs);
+      // `unref()` so a pending backoff can't keep the process alive after the transport closes.
+      const timer = setTimeout(resolve, delayMs);
+      timer.unref?.();
     });
     return withRetry(fn, remaining, onRetry);
   }

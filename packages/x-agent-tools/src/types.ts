@@ -1,14 +1,29 @@
 import { z } from 'zod';
 
-export type ZodObjectAny = z.ZodObject<any, any, any, any> | z.ZodString;
+export type Logger = (message: string, error?: unknown) => void;
 
-export interface ChatTool<Input extends ZodObjectAny, Output extends ZodObjectAny> {
+/** Progress event a run emits (codegen only). */
+export type ToolProgressEvent =
+  | { kind: 'file'; filename: string; filesSeen: number }
+  | { kind: 'done'; filesSeen: number };
+
+/** Per-call context, so signal/progress aren't fixed at tool construction. */
+export interface ToolExecutionContext {
+  // Aborts the tool's in-flight fetches when the host cancels the request.
+  signal?: AbortSignal;
+  onProgress?: (event: ToolProgressEvent) => void | Promise<void>;
+}
+
+export interface ChatTool<
+  Input extends z.AnyZodObject = z.AnyZodObject,
+  Output extends z.ZodTypeAny = z.ZodTypeAny,
+> {
   name: string;
   publicName: string;
   description: string;
   inputSchema: Input;
   outputSchema: Output;
-  execute: (input: z.input<Input>) => Promise<z.output<Output>>;
+  execute: (input: z.input<Input>, context?: ToolExecutionContext) => Promise<z.output<Output>>;
 }
 
 export interface PackageData {
@@ -28,8 +43,3 @@ export interface QueueOptions {
   concurrency?: number;
   timeout?: number;
 }
-
-export type CacheEntry = {
-  content: string;
-  timestamp: number;
-};

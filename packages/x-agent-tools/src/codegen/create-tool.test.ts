@@ -119,13 +119,8 @@ describe('createGenerateReactCodeTool', () => {
       .mockResolvedValueOnce(makeJsonResponse(202, { threadId: 'chat-1', runId: 'msg-1' }))
       .mockResolvedValueOnce(makeSseResponse([sseFrame('[DONE]')]));
 
-    const tool = createGenerateReactCodeTool({
-      recipesBackendBaseUrl: baseUrl,
-      getToken,
-      fetcher,
-      signal: controller.signal,
-    });
-    await tool.execute({ prompt: 'Build a card' });
+    const tool = createGenerateReactCodeTool({ recipesBackendBaseUrl: baseUrl, getToken, fetcher });
+    await tool.execute({ prompt: 'Build a card' }, { signal: controller.signal });
 
     expect(fetcher).toHaveBeenNthCalledWith(
       1,
@@ -710,10 +705,9 @@ describe('createGenerateReactCodeTool', () => {
     const tool = createGenerateReactCodeTool({
       recipesBackendBaseUrl: baseUrl,
       getToken,
-      onProgress,
       fetcher,
     });
-    await tool.execute({ prompt: 'hi' });
+    await tool.execute({ prompt: 'hi' }, { onProgress });
 
     expect(onProgress).toHaveBeenCalledTimes(3);
     expect(onProgress).toHaveBeenNthCalledWith(1, {
@@ -747,11 +741,10 @@ describe('createGenerateReactCodeTool', () => {
     const tool = createGenerateReactCodeTool({
       recipesBackendBaseUrl: baseUrl,
       getToken,
-      onProgress,
       logger,
       fetcher,
     });
-    await tool.execute({ prompt: 'hi' });
+    await tool.execute({ prompt: 'hi' }, { onProgress });
 
     // One log per failing event (file + done). Message + the original error are forwarded.
     expect(logger).toHaveBeenCalledTimes(2);
@@ -777,10 +770,9 @@ describe('createGenerateReactCodeTool', () => {
     const tool = createGenerateReactCodeTool({
       recipesBackendBaseUrl: baseUrl,
       getToken,
-      onProgress,
       fetcher,
     });
-    await expect(tool.execute({ prompt: 'hi' })).resolves.toMatchObject({
+    await expect(tool.execute({ prompt: 'hi' }, { onProgress })).resolves.toMatchObject({
       files: [{ filename: 'App.tsx', contents: 'v1' }],
     });
     // Called for both the file-update AND the done events, both threw, both swallowed.
@@ -804,10 +796,9 @@ describe('createGenerateReactCodeTool', () => {
     const tool = createGenerateReactCodeTool({
       recipesBackendBaseUrl: baseUrl,
       getToken,
-      onProgress,
       fetcher,
     });
-    await expect(tool.execute({ prompt: 'hi' })).resolves.toMatchObject({
+    await expect(tool.execute({ prompt: 'hi' }, { onProgress })).resolves.toMatchObject({
       files: [{ filename: 'App.tsx', contents: 'v1' }],
     });
     expect(onProgress).toHaveBeenCalledTimes(2);
@@ -839,10 +830,9 @@ describe('createGenerateReactCodeTool', () => {
     const tool = createGenerateReactCodeTool({
       recipesBackendBaseUrl: baseUrl,
       getToken,
-      onProgress,
       fetcher,
     });
-    const executePromise = tool.execute({ prompt: 'hi' });
+    const executePromise = tool.execute({ prompt: 'hi' }, { onProgress });
 
     // Give the stream parser a tick to process chunks AND queue the chained progress.
     await new Promise((r) => {

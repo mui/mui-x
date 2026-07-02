@@ -14,7 +14,6 @@ import {
   SERVER_VERSION,
   STARTUP_ERROR_MESSAGE,
 } from './constants';
-import { fetchRemotePackages } from './docs/packages';
 import { buildCombinedLogger } from './logger';
 import { registerCodegenTool } from './codegen/register';
 import { registerDocsTools } from './docs/register';
@@ -25,6 +24,7 @@ const main = async () => {
     createFetchDocTool,
     createGenerateReactCodeTool,
     createDocsUrlGuard,
+    fetchRemotePackages,
     CliJwtClient,
     formatCodegenText,
   } = await import('@mui/x-agent-tools');
@@ -46,21 +46,18 @@ const main = async () => {
   });
 
   // JWT client is eager; API key only resolved on first `getToken()`.
+  // Signal/progress are per-call, so one tool instance serves every request.
   const jwtClient = new CliJwtClient({ muiBackendBaseUrl });
-  const baseCodegenOpts = {
+  const codegenTool = createGenerateReactCodeTool({
     recipesBackendBaseUrl,
     getToken: (opts?: { signal?: AbortSignal }) => jwtClient.getToken(opts),
     invalidateToken: () => jwtClient.invalidate(),
     logger,
-  };
-  // Static tool only for registration metadata; per-call tool is built per request below.
-  const codegenStatic = createGenerateReactCodeTool(baseCodegenOpts);
+  });
 
   // Codegen needs no network at startup, so register it first and connect right away.
   registerCodegenTool(server, {
-    codegenStatic,
-    createPerCallTool: ({ onProgress, signal }) =>
-      createGenerateReactCodeTool({ ...baseCodegenOpts, onProgress, signal }),
+    tool: codegenTool,
     formatText: formatCodegenText,
     logger,
   });
@@ -74,7 +71,7 @@ const main = async () => {
   await registerDocsTools(server, {
     createUseMuiDocsTool,
     createFetchDocTool,
-    getPackagesList: fetchRemotePackages,
+    getPackagesList: () => fetchRemotePackages(docsBaseUrl),
     isUrlAllowed,
     logger,
     concurrency: DOCS_FETCH_CONCURRENCY,

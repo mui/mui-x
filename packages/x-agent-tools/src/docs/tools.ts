@@ -1,26 +1,22 @@
 import { z } from 'zod';
-import { LRUCache } from './cache';
-import { PackageData, QueueOptions, ToolOverrides } from './types';
-import { wrapTool, urlListFetcher, compareVersions, type Logger } from './utils';
+import { LRUCache, resolveCache } from './cache';
+import type { Logger, PackageData, QueueOptions, ToolOverrides } from './types';
+import { wrapTool, urlListFetcher, compareVersions } from './utils';
 
 const DEFAULT_DOCS_CONCURRENCY = 10;
 
-export async function createUseMuiDocsTool(options: {
-  getPackagesList: () => Promise<PackageData[]>;
+interface DocsToolOptions {
   fetcher?: typeof fetch;
-  overrides?: {
-    name?: string;
-    description?: string;
-  };
-  queue?: {
-    throwOnTimeout?: boolean;
-    concurrency?: number;
-    timeout?: number;
-  };
-  cache?: boolean;
+  overrides?: ToolOverrides;
+  queue?: QueueOptions;
+  // `true`: fresh cache; `LRUCache`: share one (host owns its lifecycle); omit: no cache.
+  cache?: boolean | LRUCache;
   logger?: Logger;
   isUrlAllowed?: (url: string) => boolean;
-}) {
+}
+
+/** Shared queue + fetcher + cache setup for both docs tools, so their defaults can't drift apart. */
+async function createDocsToolRuntime(options: DocsToolOptions) {
   const PQueue = await import('p-queue').then((m) => m.default);
   const queue = new PQueue({
     // Bounded default so a caller omitting queue config can't fire unbounded parallel fetches.
@@ -29,8 +25,13 @@ export async function createUseMuiDocsTool(options: {
     timeout: options.queue?.timeout,
   });
   const fetcher = options.fetcher ?? fetch;
-  // The cache lives for the lifetime of this tool; the host owns it, not a module-level singleton.
-  const cache = options.cache ? new LRUCache() : undefined;
+  return { queue, fetcher, cache: resolveCache(options.cache) };
+}
+
+export async function createUseMuiDocsTool(
+  options: DocsToolOptions & { getPackagesList: () => Promise<PackageData[]> },
+) {
+  const { queue, fetcher, cache } = await createDocsToolRuntime(options);
   const { logger, isUrlAllowed } = options;
   const packages = await options.getPackagesList();
   const availablePackagesText = packages
@@ -71,7 +72,7 @@ export async function createUseMuiDocsTool(options: {
         ),
     }),
     outputSchema: z.string().describe('A string containing the fetched documentation content'),
-    execute: async (input) => {
+    execute: async (input, context) => {
       // Accept package names and `name@version` shorthands as well as URLs.
       const urls = input.sources.map(
         (entry) => llmsUrlByNameVersion.get(entry) ?? latestByName.get(entry)?.llmsUrl ?? entry,
@@ -81,29 +82,14 @@ export async function createUseMuiDocsTool(options: {
         logger,
         isUrlAllowed,
         resolveDocLinks: true,
+        signal: context?.signal,
       });
     },
   });
 }
 
-export async function createFetchDocTool(options: {
-  fetcher?: typeof fetch;
-  overrides?: ToolOverrides;
-  queue?: QueueOptions;
-  cache?: boolean;
-  logger?: Logger;
-  isUrlAllowed?: (url: string) => boolean;
-}) {
-  const fetcher = options.fetcher ?? fetch;
-  const PQueue = await import('p-queue').then((m) => m.default);
-  const queue = new PQueue({
-    concurrency: options.queue?.concurrency ?? DEFAULT_DOCS_CONCURRENCY,
-    throwOnTimeout: options.queue?.throwOnTimeout ?? true,
-    timeout: options.queue?.timeout,
-  });
-
-  // The cache lives for the lifetime of this tool; the host owns it, not a module-level singleton.
-  const cache = options.cache ? new LRUCache() : undefined;
+export async function createFetchDocTool(options: DocsToolOptions) {
+  const { queue, fetcher, cache } = await createDocsToolRuntime(options);
   const { logger, isUrlAllowed } = options;
 
   return wrapTool({
@@ -124,8 +110,13 @@ Use this tool after useMuiDocs to:
       .describe(
         'The concatenated list of all fetched documentation content converted to markdown, or an error message if the request fails or the URL is blocked (only MUI documentation origins are allowed).',
       ),
-    execute: async (input) => {
-      return urlListFetcher(queue, fetcher, input.urls, { cache, logger, isUrlAllowed });
+    execute: async (input, context) => {
+      return urlListFetcher(queue, fetcher, input.urls, {
+        cache,
+        logger,
+        isUrlAllowed,
+        signal: context?.signal,
+      });
     },
   });
 }

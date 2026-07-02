@@ -165,7 +165,6 @@ packages/mcp/
 │   ├── constants.ts        # shared constants (name, version, env vars, defaults)
 │   ├── logger.ts           # combined stderr + ~/.mui-mcp.log logger
 │   ├── docs/
-│   │   ├── packages.ts     # fetchRemotePackages: the MUI docs catalog source
 │   │   ├── handler.ts      # adapts the docs tools to MCP handlers
 │   │   └── register.ts     # builds + registers useMuiDocs / fetchDocs
 │   └── codegen/

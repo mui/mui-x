@@ -1,11 +1,9 @@
-import type { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { PackageData } from '@mui/x-agent-tools';
+import type { Logger, PackageData } from '@mui/x-agent-tools';
 import { withRetry } from '../retry';
 import { buildDocsHandler } from './handler';
 
 type XAgentTools = typeof import('@mui/x-agent-tools');
-type Logger = (message: string, error?: unknown) => void;
 
 // Backoff for the startup catalog fetch (~63s total), so a cold-starting backend (e.g. a Render
 // free tier, ~30-60s spin-up) doesn't leave the docs tools disabled for the whole session.
@@ -65,7 +63,7 @@ export async function registerDocsTools(
       useMuiDocsTool.publicName,
       {
         description: useMuiDocsTool.description,
-        inputSchema: (useMuiDocsTool.inputSchema as z.AnyZodObject).shape,
+        inputSchema: useMuiDocsTool.inputSchema.shape,
       },
       buildDocsHandler(useMuiDocsTool),
     );
@@ -74,7 +72,7 @@ export async function registerDocsTools(
       fetchDocsTool.publicName,
       {
         description: fetchDocsTool.description,
-        inputSchema: (fetchDocsTool.inputSchema as z.AnyZodObject).shape,
+        inputSchema: fetchDocsTool.inputSchema.shape,
       },
       buildDocsHandler(fetchDocsTool),
     );

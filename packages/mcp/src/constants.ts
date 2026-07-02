@@ -4,7 +4,6 @@ export const SERVER_NAME = 'mui-mcp';
 export const SERVER_VERSION = version;
 
 export const DEFAULT_DOCS_BASE_URL = 'https://chat-backend.mui.com';
-export const PACKAGES_LIST_PATH = '/v1/public/packages/list';
 export const DOCS_FETCH_CONCURRENCY = 10;
 
 // Token exchange (mui-backend) + codegen (recipes-backend); override per host via env vars.

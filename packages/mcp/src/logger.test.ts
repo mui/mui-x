@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildCombinedLogger, DEFAULT_LOG_PATH } from './logger';
+import { buildCombinedLogger, DEFAULT_LOG_PATH, MAX_LOG_BYTES } from './logger';
 
 describe('buildCombinedLogger', () => {
   it('writes to both stderr (console) AND the log file', () => {
@@ -46,5 +46,38 @@ describe('buildCombinedLogger', () => {
 
   it('defaults to ~/.mui-mcp.log when no path is passed', () => {
     expect(DEFAULT_LOG_PATH).toMatch(/\.mui-mcp\.log$/);
+  });
+
+  it('truncates the log file on construction when it exceeds the size cap', () => {
+    const truncate = vi.fn();
+    buildCombinedLogger('/tmp/big.log', vi.fn(), vi.fn(), {
+      statSize: () => MAX_LOG_BYTES + 1,
+      truncate,
+    });
+
+    expect(truncate).toHaveBeenCalledWith('/tmp/big.log');
+  });
+
+  it('leaves a log file under the cap untouched', () => {
+    const truncate = vi.fn();
+    buildCombinedLogger('/tmp/small.log', vi.fn(), vi.fn(), {
+      statSize: () => 10,
+      truncate,
+    });
+
+    expect(truncate).not.toHaveBeenCalled();
+  });
+
+  it('never throws when the log file cannot be stat-ed (e.g. first run)', () => {
+    const truncate = vi.fn();
+    expect(() =>
+      buildCombinedLogger('/tmp/missing.log', vi.fn(), vi.fn(), {
+        statSize: () => {
+          throw new Error('ENOENT');
+        },
+        truncate,
+      }),
+    ).not.toThrow();
+    expect(truncate).not.toHaveBeenCalled();
   });
 });

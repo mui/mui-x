@@ -1,22 +1,10 @@
-import type { z } from 'zod';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import type { GenerateReactCodeResult, GenerateReactCodeTool, Logger } from '@mui/x-agent-tools';
 import { buildCodegenHandler } from './handler';
 
-type Logger = (message: string, error?: unknown) => void;
-
-type CodegenStaticTool = {
-  publicName: string;
-  description: string;
-  inputSchema: unknown;
-  outputSchema: unknown;
-};
-
-type CodegenHandlerDeps = Parameters<typeof buildCodegenHandler>[0];
-
 export interface RegisterCodegenToolDeps {
-  codegenStatic: CodegenStaticTool;
-  createPerCallTool: CodegenHandlerDeps['createPerCallTool'];
-  formatText: CodegenHandlerDeps['formatText'];
+  tool: GenerateReactCodeTool;
+  formatText: (result: GenerateReactCodeResult) => string;
   logger: Logger;
 }
 
@@ -26,22 +14,17 @@ export interface RegisterCodegenToolDeps {
  * clients can discover and validate the structured result the handler returns.
  */
 export function registerCodegenTool(server: McpServer, deps: RegisterCodegenToolDeps): void {
-  const { codegenStatic, createPerCallTool, formatText, logger } = deps;
+  const { tool, formatText, logger } = deps;
 
   server.registerTool(
-    codegenStatic.publicName,
+    tool.publicName,
     {
-      description: codegenStatic.description,
-      inputSchema: (codegenStatic.inputSchema as z.AnyZodObject).shape,
+      description: tool.description,
+      inputSchema: tool.inputSchema.shape,
       // Advertise the structured output (files, threadId, muiPairing) so clients can discover and
       // validate it; the handler returns a matching `structuredContent` on success.
-      outputSchema: (codegenStatic.outputSchema as z.AnyZodObject).shape,
+      outputSchema: tool.outputSchema.shape,
     },
-    buildCodegenHandler({
-      codegenStatic,
-      createPerCallTool,
-      formatText,
-      log: logger,
-    }),
+    buildCodegenHandler({ tool, formatText, log: logger }),
   );
 }

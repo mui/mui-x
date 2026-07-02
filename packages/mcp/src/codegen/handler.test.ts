@@ -17,18 +17,13 @@ const buildDeps = (
   const execute = overrides.execute ?? vi.fn().mockResolvedValue(sampleResult);
   const formatText = overrides.formatText ?? vi.fn().mockReturnValue('formatted text body');
   const log = overrides.log ?? vi.fn();
-  const createPerCallTool = vi.fn().mockReturnValue({ publicName: 'generateReactCode', execute });
+  const tool = { publicName: 'generateReactCode', execute };
   return {
-    deps: {
-      codegenStatic: { publicName: 'generateReactCode' },
-      createPerCallTool,
-      formatText,
-      log,
-    } as unknown as Parameters<typeof buildCodegenHandler>[0],
+    deps: { tool, formatText, log } as unknown as Parameters<typeof buildCodegenHandler>[0],
     execute,
     formatText,
     log,
-    createPerCallTool,
+    tool,
   };
 };
 
@@ -57,33 +52,32 @@ describe('buildCodegenHandler', () => {
     });
   });
 
-  it('builds the per-call tool with the request-bound progress forwarder', async () => {
-    const { deps, createPerCallTool } = buildDeps();
+  it('passes a request-bound progress forwarder to execute when a progressToken is present', async () => {
+    const { deps, execute } = buildDeps();
     const handler = buildCodegenHandler(deps);
     await handler({ prompt: 'hi' }, { _meta: { progressToken: 'tok' }, sendNotification: vi.fn() });
 
-    // onProgress should be defined when a progressToken was present in `extra._meta`.
-    const [opts] = createPerCallTool.mock.calls[0];
-    expect(opts.onProgress).toBeTypeOf('function');
+    const [, ctx] = execute.mock.calls[0];
+    expect(ctx.onProgress).toBeTypeOf('function');
   });
 
-  it('does NOT wire a progress forwarder when the request has no progressToken', async () => {
-    const { deps, createPerCallTool } = buildDeps();
+  it('passes no progress forwarder to execute when the request has no progressToken', async () => {
+    const { deps, execute } = buildDeps();
     const handler = buildCodegenHandler(deps);
     await handler({ prompt: 'hi' }, {});
 
-    const [opts] = createPerCallTool.mock.calls[0];
-    expect(opts.onProgress).toBeUndefined();
+    const [, ctx] = execute.mock.calls[0];
+    expect(ctx.onProgress).toBeUndefined();
   });
 
-  it('forwards the request abort signal to the per-call tool', async () => {
-    const { deps, createPerCallTool } = buildDeps();
+  it('forwards the request abort signal to execute', async () => {
+    const { deps, execute } = buildDeps();
     const handler = buildCodegenHandler(deps);
     const { signal } = new AbortController();
     await handler({ prompt: 'hi' }, { signal });
 
-    const [opts] = createPerCallTool.mock.calls[0];
-    expect(opts.signal).toBe(signal);
+    const [, ctx] = execute.mock.calls[0];
+    expect(ctx.signal).toBe(signal);
   });
 
   it('logs success duration', async () => {

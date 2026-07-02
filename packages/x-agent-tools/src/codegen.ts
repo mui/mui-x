@@ -1,7 +1,7 @@
 /** Async codegen tool: POST + SSE GET, buffered into `{ threadId, files, explanation }`. */
 import { createParser, type EventSourceMessage } from 'eventsource-parser';
 import { z } from 'zod';
-import type { ToolOverrides } from './types';
+import type { ToolOverrides, ToolProgressEvent } from './types';
 import { createAuthedFetch } from './authed-fetch';
 import { wrapTool } from './utils';
 
@@ -157,24 +157,15 @@ export type CreateGenerateReactCodeToolOptions = {
   getToken: (options?: { signal?: AbortSignal }) => Promise<string>;
   /** Called after a 401 so the next call mints a fresh JWT (clock skew, key rotation, revocation). */
   invalidateToken?: () => void;
-  // Fires as the buffered SSE stream advances. Hosts translate these into MCP
-  // `notifications/progress` so the agent UI shows progress while the wrapper is still
-  // buffering. No-op if not provided. Total file count is unknown until completion.
-  onProgress?: (event: CodegenProgressEvent) => void | Promise<void>;
   // Silent by default. Host wires a logger to surface swallowed `onProgress` failures.
   logger?: (message: string, error?: unknown) => void;
   /** Override `globalThis.fetch`. Useful for tests. */
   fetcher?: typeof fetch;
-  // Abort signal from the host (e.g. the MCP request). When it fires, the in-flight POST and SSE
-  // fetches are cancelled so the server stops streaming and the backend can stop the run.
-  signal?: AbortSignal;
   /** Override the tool's name / description (e.g. when restraining the agent's tool selection). */
   overrides?: ToolOverrides;
 };
 
-export type CodegenProgressEvent =
-  | { kind: 'file'; filename: string; filesSeen: number }
-  | { kind: 'done'; filesSeen: number };
+export type CodegenProgressEvent = ToolProgressEvent;
 
 // From the response schema, so the footer renders whatever effective pairing the backend returns.
 type MuiPairing = z.infer<typeof muiPairingResponseSchema>;
@@ -219,12 +210,13 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
     ...options.overrides,
     inputSchema,
     outputSchema,
-    execute: async (input) => {
+    execute: async (input, context) => {
+      const signal = context?.signal;
       const authedFetch = createAuthedFetch({
         fetcher,
         getToken: options.getToken,
         invalidateToken: options.invalidateToken,
-        signal: options.signal,
+        signal,
       });
 
       // 1. Kick off the run.
@@ -240,7 +232,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
           body: JSON.stringify(input),
           // Fail on redirects so the Bearer token can't be resent to another origin.
           redirect: 'error',
-          signal: options.signal,
+          signal,
         }),
       );
 
@@ -271,7 +263,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
             accept: 'text/event-stream',
           },
           redirect: 'error',
-          signal: options.signal,
+          signal,
         }),
       );
 
@@ -282,7 +274,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
 
       const { files, explanation } = await consumeCodegenStream(
         streamResponse,
-        options.onProgress,
+        context?.onProgress,
         options.logger,
       );
       return {
@@ -294,6 +286,12 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
     },
   });
 }
+
+/** Structured result of a `generateReactCode` run. Hosts import this instead of re-declaring it. */
+export type GenerateReactCodeResult = z.output<typeof outputSchema>;
+
+/** The `generateReactCode` tool, as returned by `createGenerateReactCodeTool`. */
+export type GenerateReactCodeTool = ReturnType<typeof createGenerateReactCodeTool>;
 
 // Buffer the SSE stream. Handles both server-shape and client-shape chunks; both end with `[DONE]`.
 async function consumeCodegenStream(

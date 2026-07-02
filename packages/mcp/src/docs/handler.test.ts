@@ -10,7 +10,7 @@ describe('buildDocsHandler', () => {
     const result = await handler({ sources: ['x'] });
 
     expect(result).toEqual({ content: [{ type: 'text', text: 'the docs content' }] });
-    expect(execute).toHaveBeenCalledWith({ sources: ['x'] });
+    expect(execute).toHaveBeenCalledWith({ sources: ['x'] }, { signal: undefined });
   });
 
   it('logs success duration with the tool publicName', async () => {
