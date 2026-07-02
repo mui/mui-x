@@ -75,6 +75,7 @@ export const TreemapRectElement = React.forwardRef<SVGRectElement, TreemapRectEl
         data-faded={isFaded || undefined}
         ref={ref}
         data-node={node.id}
+        data-depth={node.depth}
         className={classes.cell}
         {...interactionProps}
       />
