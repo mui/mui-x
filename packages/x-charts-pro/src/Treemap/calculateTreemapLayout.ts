@@ -43,13 +43,36 @@ Ensure every node has a unique id (ids are coerced to strings, so 1 and '1' coll
   // treemap tiling receives a consistent value on every node.
   stratified.sum((node) => (node.childrenIds.length ? 0 : node.value));
 
-  const laidOut = treemap<TreemapLayoutNode<false>>()
+  const treemapGenerator = treemap<TreemapLayoutNode<false>>()
     .size([Math.max(0, drawingArea.width), Math.max(0, drawingArea.height)])
     .tile(getTilingMethod(tiling?.method))
-    .paddingInner(tiling?.paddingInner ?? 0)
-    .paddingOuter(tiling?.paddingOuter ?? 0)
-    .paddingTop(tiling?.paddingTop ?? 0)
-    .round(true)(stratified);
+    .round(true);
+
+  // Apply padding broad -> specific, mirroring d3: `padding` sets inner + outer,
+  // `paddingOuter` sets the four edges, then per-edge values override.
+  if (tiling?.padding != null) {
+    treemapGenerator.padding(tiling.padding);
+  }
+  if (tiling?.paddingInner != null) {
+    treemapGenerator.paddingInner(tiling.paddingInner);
+  }
+  if (tiling?.paddingOuter != null) {
+    treemapGenerator.paddingOuter(tiling.paddingOuter);
+  }
+  if (tiling?.paddingTop != null) {
+    treemapGenerator.paddingTop(tiling.paddingTop);
+  }
+  if (tiling?.paddingRight != null) {
+    treemapGenerator.paddingRight(tiling.paddingRight);
+  }
+  if (tiling?.paddingBottom != null) {
+    treemapGenerator.paddingBottom(tiling.paddingBottom);
+  }
+  if (tiling?.paddingLeft != null) {
+    treemapGenerator.paddingLeft(tiling.paddingLeft);
+  }
+
+  const laidOut = treemapGenerator(stratified);
 
   const nodes: TreemapLayoutNode<true>[] = [];
   const byId = new Map<TreemapItemId, TreemapLayoutNode<true>>();

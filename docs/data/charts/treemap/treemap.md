@@ -48,9 +48,14 @@ Set the `color` property on a node to override it.
 
 The `tiling` option controls how a node is subdivided into its children.
 The default `'squarify'` method keeps tiles close to a square aspect ratio.
-Use `paddingInner`, `paddingOuter`, and `paddingTop` to add spacing between tiles.
 
 {{"demo": "TreemapTiling.js"}}
+
+## Padding and rounded corners
+
+`tiling.paddingInner` sets the gap between sibling tiles, `tiling.paddingOuter` the inset inside a group, and `tiling.paddingTop` the header band reserved for a group's label. `nodeOptions.borderRadius` rounds the tile corners.
+
+{{"demo": "TreemapStyling.js"}}
 
 ## Labels
 

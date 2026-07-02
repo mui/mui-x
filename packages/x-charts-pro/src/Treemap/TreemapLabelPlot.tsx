@@ -4,6 +4,7 @@ import { useTreemapLayout, useTreemapSeries } from '../hooks/useTreemapSeries';
 import { useUtilityClasses } from './treemapClasses';
 import type { TreemapClasses } from './treemapClasses';
 import { TreemapLabel } from './TreemapLabel';
+import { resolveLabelPadding } from './utils';
 
 export interface TreemapLabelPlotProps {
   /**
@@ -38,6 +39,7 @@ function TreemapLabelPlot(props: TreemapLabelPlotProps) {
 
   const renderMode = nodeOptions?.renderMode ?? 'all';
   const isCustom = typeof showLabels === 'function';
+  const labelPadding = resolveLabelPadding(nodeOptions?.labelPadding);
 
   // Every rendered tile is labeled by default; a custom predicate takes full control.
   const shouldLabel = (node: (typeof layout.nodes)[number]) => (isCustom ? showLabels(node) : true);
@@ -50,7 +52,13 @@ function TreemapLabelPlot(props: TreemapLabelPlotProps) {
   return (
     <g className={classes.labels}>
       {labelled.map((node) => (
-        <TreemapLabel key={`label-${node.id}`} seriesId={treemapSeries.id} node={node} />
+        <TreemapLabel
+          key={`label-${node.id}`}
+          seriesId={treemapSeries.id}
+          node={node}
+          paddingX={labelPadding.x}
+          paddingY={labelPadding.y}
+        />
       ))}
     </g>
   );

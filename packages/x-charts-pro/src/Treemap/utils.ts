@@ -17,6 +17,22 @@ export const TREEMAP_LABEL_PADDING = 4;
 /** Default gap, in pixels, between tiles (inner and outer padding). */
 export const DEFAULT_TILE_PADDING = 2;
 
+/** Resolves the `labelPadding` option to explicit x/y pixel values. */
+export function resolveLabelPadding(
+  labelPadding: number | { x?: number; y?: number } | undefined,
+): { x: number; y: number } {
+  if (labelPadding == null) {
+    return { x: TREEMAP_LABEL_PADDING, y: TREEMAP_LABEL_PADDING };
+  }
+  if (typeof labelPadding === 'number') {
+    return { x: labelPadding, y: labelPadding };
+  }
+  return {
+    x: labelPadding.x ?? TREEMAP_LABEL_PADDING,
+    y: labelPadding.y ?? TREEMAP_LABEL_PADDING,
+  };
+}
+
 /**
  * Maps a public tiling method name to the corresponding d3-hierarchy tile function.
  */

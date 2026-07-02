@@ -5,7 +5,6 @@ import type { SeriesId } from '@mui/x-charts/internals';
 import type { TreemapLayoutNode } from './treemap.types';
 import { useTreemapItemHighlightState } from './treemapHighlightHooks';
 import { useUtilityClasses } from './treemapClasses';
-import { TREEMAP_LABEL_PADDING } from './utils';
 
 export interface TreemapLabelProps {
   /**
@@ -16,6 +15,14 @@ export interface TreemapLabelProps {
    * The series id.
    */
   seriesId: SeriesId;
+  /**
+   * The horizontal padding between the tile edge and the label, in pixels.
+   */
+  paddingX: number;
+  /**
+   * The vertical padding between the tile edge and the label, in pixels.
+   */
+  paddingY: number;
 }
 
 /**
@@ -23,7 +30,7 @@ export interface TreemapLabelProps {
  */
 export const TreemapLabel = React.forwardRef<SVGTextElement, TreemapLabelProps>(
   function TreemapLabel(props, ref) {
-    const { node, seriesId } = props;
+    const { node, seriesId, paddingX, paddingY } = props;
     const theme = useTheme();
     const classes = useUtilityClasses();
 
@@ -51,8 +58,8 @@ export const TreemapLabel = React.forwardRef<SVGTextElement, TreemapLabelProps>(
       <text
         ref={ref}
         className={classes.label}
-        x={node.x0 + TREEMAP_LABEL_PADDING}
-        y={node.y0 + TREEMAP_LABEL_PADDING}
+        x={node.x0 + paddingX}
+        y={node.y0 + paddingY}
         textAnchor="start"
         dominantBaseline="hanging"
         fill={fill}

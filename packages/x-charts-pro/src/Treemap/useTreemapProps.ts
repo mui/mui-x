@@ -8,7 +8,7 @@ import type { TreemapSeriesData } from './treemap.types';
 import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import { TREEMAP_CHART_PLUGINS } from './Treemap.plugins';
 import type { TreemapChartPluginSignatures } from './Treemap.plugins';
-import { TREEMAP_LABEL_PADDING, DEFAULT_TILE_PADDING } from './utils';
+import { DEFAULT_TILE_PADDING, resolveLabelPadding } from './utils';
 
 /**
  * Extracts the props for the child components of `Treemap` from its input props.
@@ -49,7 +49,9 @@ export const useTreemapProps = (props: TreemapProps) => {
     fontSize: theme.typography.caption.fontSize,
     fontFamily: theme.typography.fontFamily,
   }).height;
-  const headerHeight = Math.ceil(measuredLabelHeight || 16) + 2 * TREEMAP_LABEL_PADDING;
+  // The header band must fit the label plus its top and bottom padding.
+  const labelPadding = resolveLabelPadding(series.nodeOptions?.labelPadding);
+  const headerHeight = Math.ceil(measuredLabelHeight || 16) + 2 * labelPadding.y;
 
   const defaultTiling = {
     paddingInner: DEFAULT_TILE_PADDING,

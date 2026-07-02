@@ -46,20 +46,36 @@ export interface TreemapTilingOptions {
    */
   method?: TreemapTilingMethod;
   /**
+   * Shorthand that sets both `paddingInner` and `paddingOuter`, in pixels.
+   */
+  padding?: number;
+  /**
    * The gap between sibling tiles, in pixels.
-   * @default 0
+   * @default 2
    */
   paddingInner?: number;
   /**
-   * The inset applied inside a node before laying out its children, in pixels.
-   * @default 0
+   * Shorthand that sets `paddingTop`, `paddingRight`, `paddingBottom` and `paddingLeft`, in pixels.
+   * @default 2
    */
   paddingOuter?: number;
   /**
-   * The space reserved at the top of a node for its own label, in pixels.
-   * @default 0
+   * The inset at the top of a node before laying out its children, in pixels.
+   * By default, it reserves a header band sized to fit the group's label.
    */
   paddingTop?: number;
+  /**
+   * The inset at the right of a node before laying out its children, in pixels.
+   */
+  paddingRight?: number;
+  /**
+   * The inset at the bottom of a node before laying out its children, in pixels.
+   */
+  paddingBottom?: number;
+  /**
+   * The inset at the left of a node before laying out its children, in pixels.
+   */
+  paddingLeft?: number;
   /**
    * How to sort sibling nodes.
    * - 'auto': descending by value.
@@ -85,6 +101,12 @@ export interface TreemapNodeOptions extends TreemapHighlightScope {
    * @default true
    */
   showLabels?: boolean | ((node: TreemapLayoutNode) => boolean);
+  /**
+   * The padding between a tile's edge and its label, in pixels.
+   * A number applies to both axes, or pass `{ x, y }` to set each independently.
+   * @default 4
+   */
+  labelPadding?: number | { x?: number; y?: number };
   /**
    * The border radius of the tiles, in pixels.
    * @default 0
