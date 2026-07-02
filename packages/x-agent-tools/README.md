@@ -8,7 +8,7 @@ This is a library used by host packages such as [@mui/mcp](../mcp/), not somethi
 
 - **Composition layer**: `resolveAgentToolsConfig` reads the backend config from env vars, and `createMuiAgentToolset` assembles the full toolset (SSRF guard, catalog retry, fail-soft, shared cache/queue baked in). The recommended entry point for a host.
 - **Docs tools**: `createDocsTools` builds the `useMuiDocs` / `fetchDocs` tools that look up and fetch MUI docs (`createUseMuiDocsTool` / `createFetchDocTool` are the lower-level factories). `fetchRemotePackages` loads the docs catalog.
-- **Codegen**: `createCodegenTool` generates React + Material UI code from a prompt (POST + buffered SSE). `formatCodegenText` renders the result for a text client.
+- **Codegen**: `createCodegenTool` generates React + Material UI code from a prompt (POST + buffered SSE). `formatCodegenText` renders the result for a text client.
 - **Auth**: `ApiKeyJwtClient` exchanges a `MUI_RECIPES_API_KEY` for a short-lived JWT (in-memory cache, refresh window, concurrent-call dedup).
 - **Utils**: `LRUCache`, `buildCombinedLogger`, and `createDocsUrlGuard` (the SSRF allowlist for docs fetches).
 
