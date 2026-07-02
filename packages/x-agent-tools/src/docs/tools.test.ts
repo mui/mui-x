@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createUseMuiDocsTool, createFetchDocTool } from './docs';
-import { LRUCache } from './cache';
-import { compareVersions } from './utils';
+import { createUseMuiDocsTool, createFetchDocTool } from './tools';
+import { LRUCache } from '../utils/cache';
+import { compareVersions } from './packages';
 
 const ok = (body: string): Response => new Response(body, { status: 200 });
 
@@ -188,6 +188,40 @@ describe('createUseMuiDocsTool', () => {
     expect(result).toContain('material-ui 9.1.2');
     expect(result).not.toContain('blocked for security');
     expect(fetcher).toHaveBeenCalledWith('https://llms.example/material/9.1.2', expect.anything());
+  });
+
+  // Regression: an older (non-latest) version listed in the catalog must resolve AND clear the
+  // guard, not just the latest per package. Resolution indexes every version; the guard is
+  // host-based, not version-gated.
+  it('resolves a non-latest `name@version` and clears the allowlist guard', async () => {
+    const fetcher = vi.fn().mockResolvedValue(ok('material-ui 5.18.0 docs'));
+    const tool = await createUseMuiDocsTool({
+      getPackagesList: async () => multiVersionPackages,
+      fetcher,
+      isUrlAllowed: (url) => url.startsWith('https://llms.example/'),
+    });
+
+    // 5.18.0 is NOT the latest material entry (9.1.2 is), yet it must still resolve + pass the guard.
+    const result = await tool.execute({ sources: ['@mui/material@5.18.0'] });
+
+    expect(result).toContain('material-ui 5.18.0');
+    expect(result).not.toContain('blocked for security');
+    expect(fetcher).toHaveBeenCalledWith('https://llms.example/material/5.18.0', expect.anything());
+  });
+
+  it('rejects a `name@version` that is not in the catalog (unresolved string is blocked)', async () => {
+    const fetcher = vi.fn().mockResolvedValue(ok('should not be fetched'));
+    const tool = await createUseMuiDocsTool({
+      getPackagesList: async () => multiVersionPackages,
+      fetcher,
+      isUrlAllowed: (url) => url.startsWith('https://llms.example/'),
+    });
+
+    // Not in the map, so it stays a bare string, isn't a valid URL, and is blocked (never fetched).
+    const result = await tool.execute({ sources: ['@mui/material@99.99.99'] });
+
+    expect(result).toContain('not an allowed docs source');
+    expect(fetcher).not.toHaveBeenCalled();
   });
 });
 

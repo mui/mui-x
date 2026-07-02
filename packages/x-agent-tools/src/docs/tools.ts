@@ -1,7 +1,9 @@
 import { z } from 'zod';
-import { LRUCache, resolveCache } from './cache';
-import type { Logger, PackageData, QueueOptions, ToolOverrides } from './types';
-import { wrapTool, urlListFetcher, compareVersions } from './utils';
+import { LRUCache, resolveCache } from '../utils/cache';
+import type { Logger, PackageData, QueueOptions, ToolOverrides } from '../types';
+import { wrapTool } from '../utils/wrap-tool';
+import { urlListFetcher } from './fetch-docs';
+import { compareVersions } from './packages';
 
 const DEFAULT_DOCS_CONCURRENCY = 10;
 
@@ -19,7 +21,7 @@ interface DocsToolOptions {
 async function createDocsToolRuntime(options: DocsToolOptions) {
   const PQueue = await import('p-queue').then((m) => m.default);
   const queue = new PQueue({
-    // Bounded default so a caller omitting queue config can't fire unbounded parallel fetches.
+    // Bounded default so omitting queue config can't fire unbounded parallel fetches.
     concurrency: options.queue?.concurrency ?? DEFAULT_DOCS_CONCURRENCY,
     throwOnTimeout: options.queue?.throwOnTimeout ?? true,
     timeout: options.queue?.timeout,
@@ -37,8 +39,8 @@ export async function createUseMuiDocsTool(
   const availablePackagesText = packages
     .map((it) => `[${it.name}@${it.version}](${it.llmsUrl})`)
     .join('\n');
-  // Index every `name@version` exactly, and each bare name to its highest-semver entry, so a source
-  // entry can be an llms.txt URL, a `name@version` shorthand, or a bare name (which gets the latest).
+  // Index each `name@version` exactly and each bare name to its latest version, so a source can be
+  // an llms.txt URL, a `name@version` shorthand, or a bare name (which gets the latest).
   const llmsUrlByNameVersion = new Map<string, string>();
   const latestByName = new Map<string, PackageData>();
   for (const pkg of packages) {

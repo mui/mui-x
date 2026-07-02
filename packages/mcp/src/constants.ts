@@ -1,7 +1,12 @@
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 import { version } from '../package.json';
 
 export const SERVER_NAME = 'mui-mcp';
 export const SERVER_VERSION = version;
+
+/** Local log file; ~/.mui-mcp.log. Tail with `tail -f ~/.mui-mcp.log`. */
+export const DEFAULT_LOG_PATH = join(homedir(), '.mui-mcp.log');
 
 export const DEFAULT_DOCS_BASE_URL = 'https://chat-backend.mui.com';
 export const DOCS_FETCH_CONCURRENCY = 10;
@@ -9,8 +14,8 @@ export const DOCS_FETCH_CONCURRENCY = 10;
 // Token exchange (mui-backend) + codegen (recipes-backend); override per host via env vars.
 // `api.mui.com` is the public alias for mui-backend.
 export const DEFAULT_MUI_BACKEND_BASE_URL = 'https://api.mui.com';
-// Same host as DEFAULT_DOCS_BASE_URL today (recipes-backend serves both); kept separate so
-// each tool keeps its own env-var override.
+// Same host as DEFAULT_DOCS_BASE_URL today (recipes-backend serves both);
+// kept separate so each tool keeps its own env-var override.
 export const DEFAULT_RECIPES_BACKEND_BASE_URL = 'https://chat-backend.mui.com';
 
 export const MUI_BACKEND_BASE_URL_ENV = 'MUI_BACKEND_BASE_URL';

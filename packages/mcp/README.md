@@ -147,7 +147,7 @@ If you're building an integration around `generateReactCode`, design for "the ag
 
 ## Development
 
-Tool implementations live in [@mui/x-agent-tools](../x-agent-tools/). This package is a thin SDK wrapper that registers them over the MCP protocol.
+This package is a thin adapter that registers MUI's agent tools over the MCP protocol. The tool logic and shared infrastructure (auth, logging, retry, caching) live in [@mui/x-agent-tools](../x-agent-tools/); this package only maps them onto MCP handlers.
 
 Dev loop: edit `src/`, rebuild, restart your MCP client (Inspector reloads automatically). `build:local`
 also rebuilds `@mui/x-agent-tools` when you change it (skipped when unchanged).
@@ -162,8 +162,7 @@ Source layout:
 packages/mcp/
 ├── src/
 │   ├── stdio.ts            # entry: builds the server and registers the tools
-│   ├── constants.ts        # shared constants (name, version, env vars, defaults)
-│   ├── logger.ts           # combined stderr + ~/.mui-mcp.log logger
+│   ├── constants.ts        # shared constants (name, version, env vars, log path, defaults)
 │   ├── docs/
 │   │   ├── handler.ts      # adapts the docs tools to MCP handlers
 │   │   └── register.ts     # builds + registers useMuiDocs / fetchDocs

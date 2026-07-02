@@ -3,6 +3,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
   DEFAULT_DOCS_BASE_URL,
+  DEFAULT_LOG_PATH,
   DEFAULT_MUI_BACKEND_BASE_URL,
   DEFAULT_RECIPES_BACKEND_BASE_URL,
   DOCS_BASE_URL_ENV,
@@ -14,7 +15,6 @@ import {
   SERVER_VERSION,
   STARTUP_ERROR_MESSAGE,
 } from './constants';
-import { buildCombinedLogger } from './logger';
 import { registerCodegenTool } from './codegen/register';
 import { registerDocsTools } from './docs/register';
 
@@ -25,11 +25,12 @@ const main = async () => {
     createGenerateReactCodeTool,
     createDocsUrlGuard,
     fetchRemotePackages,
+    buildCombinedLogger,
     CliJwtClient,
     formatCodegenText,
   } = await import('@mui/x-agent-tools');
 
-  const logger = buildCombinedLogger();
+  const logger = buildCombinedLogger(DEFAULT_LOG_PATH);
 
   const docsBaseUrl = process.env[DOCS_BASE_URL_ENV] ?? DEFAULT_DOCS_BASE_URL;
   const muiBackendBaseUrl = process.env[MUI_BACKEND_BASE_URL_ENV] ?? DEFAULT_MUI_BACKEND_BASE_URL;

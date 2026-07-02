@@ -1,6 +1,5 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { Logger, PackageData } from '@mui/x-agent-tools';
-import { withRetry } from '../retry';
+import { withRetry, type Logger, type PackageData } from '@mui/x-agent-tools';
 import { buildDocsHandler } from './handler';
 
 type XAgentTools = typeof import('@mui/x-agent-tools');

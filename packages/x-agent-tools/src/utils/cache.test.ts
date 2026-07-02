@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { LRUCache } from './cache';
+import { LRUCache, resolveCache } from './cache';
 
 const HOUR_MS = 60 * 60 * 1000;
 
@@ -108,5 +108,31 @@ describe('LRUCache', () => {
 
     expect(cleanupSpy).toHaveBeenCalledTimes(1);
     cleanupSpy.mockRestore();
+  });
+});
+
+describe('resolveCache', () => {
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.useRealTimers();
+  });
+
+  it('returns undefined when no cache is requested', () => {
+    expect(resolveCache(undefined)).toBeUndefined();
+    expect(resolveCache(false)).toBeUndefined();
+  });
+
+  it('creates a fresh LRUCache when cache is true', () => {
+    vi.useFakeTimers();
+    const cache = resolveCache(true);
+    expect(cache).toBeInstanceOf(LRUCache);
+    cache?.dispose();
+  });
+
+  it('reuses the provided instance instead of wrapping it', () => {
+    vi.useFakeTimers();
+    const existing = new LRUCache();
+    expect(resolveCache(existing)).toBe(existing);
+    existing.dispose();
   });
 });

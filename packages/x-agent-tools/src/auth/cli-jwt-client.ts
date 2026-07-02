@@ -3,7 +3,7 @@
 export const DEFAULT_REFRESH_THRESHOLD_MS = 30_000;
 export const RECIPES_API_KEY_ENV = 'MUI_RECIPES_API_KEY';
 export const CLI_TOKEN_PATH = '/api/auth/tokens';
-// Bound a token exchange so a hung endpoint can't wedge the shared refresh (and every caller reusing it).
+// Cap the exchange so a hung endpoint can't wedge the shared refresh.
 const TOKEN_EXCHANGE_TIMEOUT_MS = 30_000;
 
 export type CliJwtClientOptions = {
@@ -75,17 +75,16 @@ export class CliJwtClient {
   }
 
   /**
-   * Returns a JWT valid for at least `refreshThresholdMs` from now. Refreshes via the
-   * exchange endpoint if the cache is empty or near expiry. Concurrent callers during a
-   * refresh share the same in-flight promise.
+   * Returns a JWT that's fresh for at least `refreshThresholdMs`, refreshing if the cache is empty
+   * or near expiry. Concurrent callers share the one in-flight refresh.
    */
   public async getToken(options: { signal?: AbortSignal } = {}): Promise<string> {
     if (this.isCachedTokenFresh()) {
       return this.cachedToken!;
     }
     if (!this.inflight) {
-      // Shared across concurrent callers, so it's not tied to any one caller's signal: a cancelling
-      // caller only detaches its own wait (below); the exchange keeps running and caches the token.
+      // Shared by all callers, so it's not tied to one caller's signal: cancelling just drops that
+      // caller's wait (below); the exchange keeps going and caches the token.
       this.inflight = this.refresh().finally(() => {
         this.inflight = null;
       });
@@ -121,8 +120,8 @@ export class CliJwtClient {
     const apiKey = this.resolveApiKey();
     const url = `${this.muiBackendBaseUrl}${CLI_TOKEN_PATH}`;
 
-    // Internal timeout (not a caller signal) so a never-responding endpoint can't wedge `inflight`.
-    // Kept alive through the body read (the fetch signal aborts a stalled response stream too).
+    // Internal timeout so a dead endpoint can't wedge `inflight`; covers the body read too, since
+    // the fetch signal also aborts a stalled response stream.
     const timeoutController = new AbortController();
     const timeout = setTimeout(() => timeoutController.abort(), TOKEN_EXCHANGE_TIMEOUT_MS);
 
@@ -194,8 +193,8 @@ export class CliJwtClient {
   }
 }
 
-// Await the shared refresh, but let a caller abandon its own wait when its request is cancelled,
-// without aborting the exchange that other concurrent callers may still be awaiting.
+// Wait on the shared refresh, but let a cancelled caller drop its own wait without killing the
+// exchange the other callers are still awaiting.
 function waitForToken(inflight: Promise<string>, signal?: AbortSignal): Promise<string> {
   if (!signal) {
     return inflight;

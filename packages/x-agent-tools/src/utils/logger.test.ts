@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildCombinedLogger, DEFAULT_LOG_PATH, MAX_LOG_BYTES } from './logger';
+import { buildCombinedLogger, MAX_LOG_BYTES } from './logger';
 
 describe('buildCombinedLogger', () => {
   it('writes to both stderr (console) AND the log file', () => {
@@ -42,10 +42,6 @@ describe('buildCombinedLogger', () => {
     expect(consoleErr).toHaveBeenCalledTimes(2);
     expect(consoleErr.mock.calls[1][0]).toMatch(/log file write failed.*\/readonly\/path\.log/);
     expect(consoleErr.mock.calls[1][1]).toBeInstanceOf(Error);
-  });
-
-  it('defaults to ~/.mui-mcp.log when no path is passed', () => {
-    expect(DEFAULT_LOG_PATH).toMatch(/\.mui-mcp\.log$/);
   });
 
   it('truncates the log file on construction when it exceeds the size cap', () => {

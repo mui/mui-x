@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
-import { createGenerateReactCodeTool, formatCodegenText } from './codegen';
+import { createGenerateReactCodeTool, formatCodegenText } from './tools';
 
 const baseUrl = 'http://localhost:5003';
 const token = 'jwt-test';

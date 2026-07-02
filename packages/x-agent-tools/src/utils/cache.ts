@@ -24,13 +24,12 @@ export class LRUCache {
     this.cache = new Map();
     this.cache_ttl_ms = cache_ttl_ms;
     this.max_cache_size = max_cache_size;
-    // Periodically evict expired entries. `unref()` lets the process exit even if a cache is
-    // still alive (the interval must not keep the event loop running on its own).
+    // Periodically evict expired entries. `unref()` so the timer never keeps the process alive.
     this.cleanupTimer = setInterval(() => this.cleanupExpiredEntries(), clean_up_freq_ms);
     this.cleanupTimer.unref?.();
   }
 
-  // Stop the background cleanup timer. Call when discarding a cache so it can be garbage collected.
+  // Stop the cleanup timer when discarding a cache so it can be garbage collected.
   dispose(): void {
     clearInterval(this.cleanupTimer);
   }
@@ -46,7 +45,7 @@ export class LRUCache {
       return null;
     }
 
-    // Move the key to the end (most recently used) by deleting and re-adding
+    // Re-insert to mark most-recently-used (Map preserves insertion order).
     this.cache.delete(url);
     this.cache.set(url, entry);
 
@@ -55,7 +54,7 @@ export class LRUCache {
 
   set(url: string, content: string): void {
     if (this.cache.has(url)) {
-      // Re-insert so a refresh becomes most-recently-used (Map.set alone keeps the original position).
+      // Re-insert so a refresh counts as most-recently-used (Map.set alone keeps its spot).
       this.cache.delete(url);
     } else if (this.cache.size >= this.max_cache_size) {
       const firstKey = this.cache.keys().next().value;

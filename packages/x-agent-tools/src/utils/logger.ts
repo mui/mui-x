@@ -1,11 +1,6 @@
 import { appendFileSync, statSync, truncateSync } from 'node:fs';
-import { homedir } from 'node:os';
-import { join } from 'node:path';
 
-/** Local log file per machine; ~/.mui-mcp.log. Tail with `tail -f ~/.mui-mcp.log`. */
-export const DEFAULT_LOG_PATH = join(homedir(), '.mui-mcp.log');
-
-/** Cap the log at 5 MB so a long-lived CLI can't grow it forever. */
+/** Cap the log at 5 MB so a long-lived process can't grow it forever. */
 export const MAX_LOG_BYTES = 5 * 1024 * 1024;
 
 const formatError = (error: unknown): string => {
@@ -18,9 +13,9 @@ const formatError = (error: unknown): string => {
   return '';
 };
 
-/** Log to both stderr (visible in MCP host UI) and a file (persisted for later). */
+/** Log to both stderr (visible in the host UI) and `logPath` (persisted for later). */
 export const buildCombinedLogger = (
-  logPath: string = DEFAULT_LOG_PATH,
+  logPath: string,
   consoleErr: (message: string, error?: unknown) => void = console.error,
   appendFile: (path: string, line: string) => void = appendFileSync,
   fsOps: {
@@ -41,9 +36,9 @@ export const buildCombinedLogger = (
     try {
       appendFile(logPath, `[${new Date().toISOString()}] ${message}${formatError(error)}\n`);
     } catch (writeErr) {
-      // Surface the reason once (permission denied, disk full, etc.) so users aren't left
-      // wondering why ~/.mui-mcp.log is empty. Logging itself must never crash the MCP.
-      consoleErr(`mui-mcp: log file write failed (${logPath})`, writeErr);
+      // Surface the reason once (permission denied, disk full, …) so users aren't left wondering
+      // why the log is empty. Logging must never crash the host.
+      consoleErr(`log file write failed (${logPath})`, writeErr);
     }
   };
 };
