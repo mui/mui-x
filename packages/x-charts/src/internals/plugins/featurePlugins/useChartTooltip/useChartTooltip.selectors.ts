@@ -6,6 +6,8 @@ import {
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
+import type { SeriesItemIdentifierWithType } from '../../../../models';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
 
@@ -23,7 +25,11 @@ export const selectorChartsTooltipItem = createSelector(
   selectorChartsLastInteraction,
   selectorChartsTooltipPointerItem,
   selectorChartsKeyboardItem,
-  (lastInteraction, pointerItem, keyboardItem) =>
+  (
+    lastInteraction,
+    pointerItem,
+    keyboardItem,
+  ): SeriesItemIdentifierWithType<ChartSeriesType> | null =>
     lastInteraction === 'keyboard' ? keyboardItem : (pointerItem ?? null),
 );
 
