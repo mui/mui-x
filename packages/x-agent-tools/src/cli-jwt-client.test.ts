@@ -130,6 +130,33 @@ describe('CliJwtClient', () => {
     }
   });
 
+  it('times out a token exchange whose body never finishes (timeout covers the read)', async () => {
+    vi.useFakeTimers();
+    try {
+      // Headers arrive, but the body read hangs until the timeout aborts (mimics real fetch, whose
+      // body stream honors the request signal). If the timeout were cleared after headers, this hangs.
+      const fetcher = vi.fn().mockImplementation((_url: string, init: RequestInit) =>
+        Promise.resolve({
+          status: 200,
+          ok: true,
+          json: () =>
+            new Promise((_resolve, reject) => {
+              init.signal?.addEventListener('abort', () => reject(new Error('aborted by timeout')));
+            }),
+        } as unknown as Response),
+      );
+      const client = new CliJwtClient({ muiBackendBaseUrl: baseUrl, apiKey, fetcher });
+
+      const expectation = expect(client.getToken()).rejects.toThrow(
+        /MUI X Agent Tools: Token exchange returned a non-JSON response/,
+      );
+      await vi.advanceTimersByTimeAsync(30_000);
+      await expectation;
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('lets one caller cancel its wait without aborting the shared refresh for others', async () => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     let resolveFetch: (response: Response) => void = () => {};

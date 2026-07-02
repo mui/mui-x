@@ -122,72 +122,75 @@ export class CliJwtClient {
     const url = `${this.muiBackendBaseUrl}${CLI_TOKEN_PATH}`;
 
     // Internal timeout (not a caller signal) so a never-responding endpoint can't wedge `inflight`.
+    // Kept alive through the body read (the fetch signal aborts a stalled response stream too).
     const timeoutController = new AbortController();
     const timeout = setTimeout(() => timeoutController.abort(), TOKEN_EXCHANGE_TIMEOUT_MS);
 
-    let response: Response;
     try {
-      response = await this.fetcher(url, {
-        method: 'POST',
-        headers: { 'x-api-key': apiKey, accept: 'application/json' },
-        // Fail on redirects so the API key can't be resent to another origin.
-        redirect: 'error',
-        signal: timeoutController.signal,
-      });
-    } catch (cause) {
-      throw new CliJwtClientError(
-        'token_exchange_failed',
-        `MUI X Agent Tools: Token exchange failed: ${cause instanceof Error ? cause.message : String(cause)}. Retry shortly.`,
-        { cause },
-      );
+      let response: Response;
+      try {
+        response = await this.fetcher(url, {
+          method: 'POST',
+          headers: { 'x-api-key': apiKey, accept: 'application/json' },
+          // Fail on redirects so the API key can't be resent to another origin.
+          redirect: 'error',
+          signal: timeoutController.signal,
+        });
+      } catch (cause) {
+        throw new CliJwtClientError(
+          'token_exchange_failed',
+          `MUI X Agent Tools: Token exchange failed: ${cause instanceof Error ? cause.message : String(cause)}. Retry shortly.`,
+          { cause },
+        );
+      }
+
+      if (response.status === 401) {
+        this.invalidate();
+        throw new CliJwtClientError(
+          'api_key_invalid',
+          'MUI X Agent Tools: API key invalid or revoked. Create a new one at console.mui.com/products/recipes/api-keys.',
+          { status: 401 },
+        );
+      }
+      if (response.status === 403) {
+        this.invalidate();
+        throw new CliJwtClientError(
+          'api_key_forbidden',
+          "MUI X Agent Tools: API key is not authorized to mint a JWT (organization membership may have been lost). Verify the key's owner and try again.",
+          { status: 403 },
+        );
+      }
+      if (!response.ok) {
+        throw new CliJwtClientError(
+          'token_exchange_failed',
+          `MUI X Agent Tools: Token exchange failed with HTTP ${response.status}. Retry shortly.`,
+          { status: response.status },
+        );
+      }
+
+      let data: Partial<TokenExchangeResponse>;
+      try {
+        data = (await response.json()) as Partial<TokenExchangeResponse>;
+      } catch (cause) {
+        throw new CliJwtClientError(
+          'token_exchange_failed',
+          'MUI X Agent Tools: Token exchange returned a non-JSON response. Check that MUI_BACKEND_BASE_URL points at the API backend (not a proxy or error page), then retry.',
+          { cause },
+        );
+      }
+      if (!data?.token || !data.expiresAt) {
+        throw new CliJwtClientError(
+          'token_exchange_failed',
+          'MUI X Agent Tools: Token exchange succeeded but the response was missing token/expiresAt. Check that MUI_BACKEND_BASE_URL points at the API backend (not the wrong route or a proxy), then retry.',
+        );
+      }
+
+      this.cachedToken = data.token;
+      this.cachedExpiresAt = new Date(data.expiresAt);
+      return data.token;
     } finally {
       clearTimeout(timeout);
     }
-
-    if (response.status === 401) {
-      this.invalidate();
-      throw new CliJwtClientError(
-        'api_key_invalid',
-        'MUI X Agent Tools: API key invalid or revoked. Create a new one at console.mui.com/products/recipes/api-keys.',
-        { status: 401 },
-      );
-    }
-    if (response.status === 403) {
-      this.invalidate();
-      throw new CliJwtClientError(
-        'api_key_forbidden',
-        "MUI X Agent Tools: API key is not authorized to mint a JWT (organization membership may have been lost). Verify the key's owner and try again.",
-        { status: 403 },
-      );
-    }
-    if (!response.ok) {
-      throw new CliJwtClientError(
-        'token_exchange_failed',
-        `MUI X Agent Tools: Token exchange failed with HTTP ${response.status}. Retry shortly.`,
-        { status: response.status },
-      );
-    }
-
-    let data: Partial<TokenExchangeResponse>;
-    try {
-      data = (await response.json()) as Partial<TokenExchangeResponse>;
-    } catch (cause) {
-      throw new CliJwtClientError(
-        'token_exchange_failed',
-        'MUI X Agent Tools: Token exchange returned a non-JSON response. Check that MUI_BACKEND_BASE_URL points at the API backend (not a proxy or error page), then retry.',
-        { cause },
-      );
-    }
-    if (!data?.token || !data.expiresAt) {
-      throw new CliJwtClientError(
-        'token_exchange_failed',
-        'MUI X Agent Tools: Token exchange succeeded but the response was missing token/expiresAt. Check that MUI_BACKEND_BASE_URL points at the API backend (not the wrong route or a proxy), then retry.',
-      );
-    }
-
-    this.cachedToken = data.token;
-    this.cachedExpiresAt = new Date(data.expiresAt);
-    return data.token;
   }
 }
 
