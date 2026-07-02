@@ -118,6 +118,8 @@ export class SchedulerStore<
       pendingRecurringEventOperation: null,
       visibleResources:
         parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
+      collapsedResources:
+        parameters.collapsedResources ?? parameters.defaultCollapsedResources ?? EMPTY_OBJECT,
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
@@ -246,6 +248,7 @@ export class SchedulerStore<
 
     updateModel(newSchedulerState, 'visibleDate', 'defaultVisibleDate');
     updateModel(newSchedulerState, 'visibleResources', 'defaultVisibleResources');
+    updateModel(newSchedulerState, 'collapsedResources', 'defaultCollapsedResources');
 
     const newState = this.mapper.updateStateFromParameters(
       newSchedulerState,
@@ -729,6 +732,39 @@ export class SchedulerStore<
         this.set('visibleResources', visibleResources);
       }
     }
+  };
+
+  /**
+   * Updates the collapsed resources.
+   */
+  public setCollapsedResources = (
+    collapsedResources: Record<SchedulerResourceId, boolean>,
+    event: Event | undefined,
+  ) => {
+    const { collapsedResources: collapsedResourcesProp, onCollapsedResourcesChange } =
+      this.parameters;
+    const hasChange = this.state.collapsedResources !== collapsedResources;
+    if (hasChange) {
+      const eventDetails = createChangeEventDetails('none', event);
+      onCollapsedResourcesChange?.(collapsedResources, eventDetails);
+      if (!eventDetails.isCanceled && collapsedResourcesProp === undefined) {
+        this.set('collapsedResources', collapsedResources);
+      }
+    }
+  };
+
+  /**
+   * Toggles the collapsed state of a single resource.
+   */
+  public toggleResourceCollapse = (resourceId: SchedulerResourceId, event: Event | undefined) => {
+    const isCollapsed = this.state.collapsedResources[resourceId] === true;
+    const nextCollapsedResources = { ...this.state.collapsedResources };
+    if (isCollapsed) {
+      delete nextCollapsedResources[resourceId];
+    } else {
+      nextCollapsedResources[resourceId] = true;
+    }
+    this.setCollapsedResources(nextCollapsedResources, event);
   };
 
   /**

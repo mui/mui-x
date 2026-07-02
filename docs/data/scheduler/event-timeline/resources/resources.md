@@ -57,12 +57,41 @@ const resources = [
 
 {{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Default collapsed resources
+
+Parent resources can be collapsed to hide their descendants.
+Use the `defaultCollapsedResources` prop to initialize the collapsed resources.
+A resource is expanded unless it is present in the object with a `true` value.
+
+{{"demo": "DefaultCollapsedResources.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Controlled collapsed resources
+
+You can also control the collapsed resources using `collapsedResources` and `onCollapsedResourcesChange` props:
+
+```tsx
+const [collapsedResources, setCollapsedResources] = React.useState<
+  Record<string, boolean>
+>({});
+
+return (
+  <EventTimelinePremium
+    collapsedResources={collapsedResources}
+    onCollapsedResourcesChange={setCollapsedResources}
+  />
+);
+```
+
 ## Visible resources
+
+### Default visible resources
 
 Use the `defaultVisibleResources` prop to initialize the visible resources.
 A resource is visible if it's absent from the object or set to `true`.
 
 {{"demo": "DefaultVisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Controlled visible resources
 
 You can also control the visible resources using `visibleResources` and `onVisibleResourcesChange` props:
 
