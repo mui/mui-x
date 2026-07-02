@@ -210,6 +210,49 @@ describe('<EventTimelinePremium />', () => {
         expect(screen.queryByText(child.title)).to.equal(null);
       });
     });
+
+    it('should toggle collapse with the Space key and emit the shared collapsed state', async () => {
+      const onCollapsedResourcesChange = spy();
+      const { user } = renderTimeline({
+        resources: nestedResources,
+        events: [],
+        onCollapsedResourcesChange,
+      });
+
+      const parentCell = getTitleCell(parent.id)!;
+      act(() => {
+        parentCell.focus();
+      });
+      await user.keyboard('[Space]');
+
+      await waitFor(() => {
+        expect(screen.queryByText(child.title)).to.equal(null);
+      });
+      expect(parentCell.getAttribute('aria-expanded')).to.equal('false');
+      expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ [parent.id]: true });
+    });
+
+    it('should move focus to the parent when a controlled collapse removes the focused child row', async () => {
+      const { setProps } = renderTimeline({
+        resources: nestedResources,
+        events: [],
+        collapsedResources: {},
+      });
+
+      const childCell = getTitleCell(child.id)!;
+      act(() => {
+        childCell.focus();
+      });
+      expect(document.activeElement).to.equal(childCell);
+
+      setProps({ collapsedResources: { [parent.id]: true } });
+
+      await waitFor(() => {
+        expect(screen.queryByText(child.title)).to.equal(null);
+      });
+      // Focus is re-homed to the surviving parent row instead of falling to <body>.
+      expect(document.activeElement).to.equal(getTitleCell(parent.id));
+    });
   });
 
   describe('events', () => {

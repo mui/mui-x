@@ -153,6 +153,8 @@ export const ResourcesTree = React.forwardRef(function ResourcesTree(
   const handleExpandedItemsChange = useStableCallback(
     (event: React.SyntheticEvent | null, newExpandedIds: string[]) => {
       const expanded = new Set(newExpandedIds);
+      // Rebuilt from the parent ids only, so the map keeps the `true`-only shape
+      // (leaves have no descendants and never carry a collapsed entry).
       const newCollapsedResources: Record<string, boolean> = {};
       for (const parentId of childrenLookup.keys()) {
         if (!expanded.has(parentId)) {
