@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
-import { SchedulerResource, SchedulerResourceId } from '../models';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerResource, SchedulerResourceId } from '../models';
 
 const resourceParentIdLookupSelector = createSelectorMemoized(
   (state: State) => state.resourceChildrenIdLookup,

@@ -1,7 +1,7 @@
-import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
+import type { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import { itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
-import { TreeViewItemItemReorderingValidActions, TreeViewItemReorderPosition } from './types';
-import { RichTreeViewProStore } from '../../RichTreeViewProStore/RichTreeViewProStore';
+import type { TreeViewItemItemReorderingValidActions, TreeViewItemReorderPosition } from './types';
+import type { RichTreeViewProStore } from '../../RichTreeViewProStore/RichTreeViewProStore';
 import { itemsReorderingSelectors } from './selectors';
 import { chooseActionToApply, isAncestor, moveItemInTree } from './utils';
 import { useTreeViewItemsReorderingItemPlugin } from './itemPlugin';

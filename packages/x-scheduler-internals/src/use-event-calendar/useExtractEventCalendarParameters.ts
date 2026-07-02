@@ -1,6 +1,6 @@
 /* eslint-disable react-compiler/react-compiler -- intentional `react-hooks/exhaustive-deps` disable below */
 import * as React from 'react';
-import { EventCalendarParameters } from './EventCalendarStore.types';
+import type { EventCalendarParameters } from './EventCalendarStore.types';
 
 export function useExtractEventCalendarParameters<
   TEvent extends object,

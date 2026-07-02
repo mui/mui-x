@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
-import {
+import type {
   EventCalendarViewConfig,
   GridRowType,
   SchedulerProcessedDate,
@@ -20,7 +20,7 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
-import { MonthViewProps } from './MonthView.types';
+import type { MonthViewProps } from './MonthView.types';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
