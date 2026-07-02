@@ -1,17 +1,18 @@
-import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import {
+import type {
   SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   getDateKey,
   getOccurrenceEnd,
   mergeDateAndTime,
+  normalizeAllDayBounds,
 } from '@mui/x-scheduler-internals/internals';
 import {
   dayInWeek,
@@ -207,14 +208,14 @@ class RecurringEventExpander {
       occurrenceStart: occurrenceStartOriginal,
     });
 
-    const occurrenceStartDisplayTimezone = this.adapter.setTimezone(
-      occurrenceStartOriginal,
-      this.displayTimezone,
-    );
-    const occurrenceEndDisplayTimezone = this.adapter.setTimezone(
-      occurrenceEndOriginal,
-      this.displayTimezone,
-    );
+    // All-day occurrences span the whole day, like the base event in processEvent.
+    const { start: occurrenceStartDisplayTimezone, end: occurrenceEndDisplayTimezone } =
+      normalizeAllDayBounds(
+        this.adapter,
+        this.adapter.setTimezone(occurrenceStartOriginal, this.displayTimezone),
+        this.adapter.setTimezone(occurrenceEndOriginal, this.displayTimezone),
+        this.event.allDay,
+      );
     occurrences.push({
       ...this.event,
       key: `${this.event.id}::${dateKey}`,

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
 import { useChartProApiContext } from '../context';
-import { type ChartImageExportOptions } from '../internals/plugins/useChartProExport';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartImageExportOptions } from '../internals/plugins/useChartProExport';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 
 export interface ChartsToolbarImageExportOptions
   extends Omit<ChartImageExportOptions, 'type'>, Required<Pick<ChartImageExportOptions, 'type'>> {}
@@ -54,7 +55,7 @@ const ChartsToolbarImageExportTrigger = forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarImageExportTrigger.propTypes = {
+ChartsToolbarImageExportTrigger.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

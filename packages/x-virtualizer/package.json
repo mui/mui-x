@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-virtualizer",
-  "version": "9.0.0-alpha.7",
+  "version": "0.5.0",
   "author": "MUI Team",
   "description": "MUI virtualization library",
   "license": "MIT",
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:^"
   },

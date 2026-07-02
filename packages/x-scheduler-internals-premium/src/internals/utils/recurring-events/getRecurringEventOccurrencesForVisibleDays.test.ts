@@ -1,5 +1,5 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 import { getWeekDayCode } from './internal-utils';
 
@@ -153,6 +153,52 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(result).to.have.length(1);
       expect(adapter.getDate(result[0].displayTimezone.start.value)).to.equal(3);
       expect(adapter.getDate(result[0].displayTimezone.end.value)).to.equal(6);
+    });
+
+    it('normalizes all-day occurrences to whole days even when authored with sub-day times', () => {
+      const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
+      // All-day daily event authored with non-midnight times (09:00 -> 18:00).
+      const event = EventBuilder.new()
+        .span('2025-01-10T09:00:00Z', '2025-01-10T18:00:00Z', { allDay: true })
+        .rrule({ freq: 'DAILY', interval: 1 })
+        .toProcessed();
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        adapter.addDays(visibleStart, 4),
+        adapter,
+        'default',
+      );
+
+      expect(result).to.have.length(5);
+      for (const occ of result) {
+        expect(occ.displayTimezone.start.minutesInDay).to.equal(0);
+        expect(occ.displayTimezone.end.minutesInDay).to.equal(1439);
+      }
+    });
+
+    it('keeps multi-day all-day occurrences whole-day on both ends when authored with sub-day times', () => {
+      const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
+      // All-day event spanning Jan 10-12 with non-midnight times.
+      const event = EventBuilder.new()
+        .span('2025-01-10T09:00:00Z', '2025-01-12T18:00:00Z', { allDay: true })
+        .rrule({ freq: 'DAILY', interval: 7 })
+        .toProcessed();
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        adapter.addDays(visibleStart, 4),
+        adapter,
+        'default',
+      );
+
+      expect(result).to.have.length(1);
+      expect(adapter.getDate(result[0].displayTimezone.start.value)).to.equal(10);
+      expect(adapter.getDate(result[0].displayTimezone.end.value)).to.equal(12);
+      expect(result[0].displayTimezone.start.minutesInDay).to.equal(0);
+      expect(result[0].displayTimezone.end.minutesInDay).to.equal(1439);
     });
 
     it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {

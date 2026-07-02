@@ -15,7 +15,7 @@ import {
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
-import { RichTreeViewProProps } from './RichTreeViewPro.types';
+import type { RichTreeViewProProps } from './RichTreeViewPro.types';
 import { useExtractRichTreeViewProParameters } from './useExtractRichTreeViewProParameters';
 import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 import { RichTreeViewVirtualizedItems } from '../components/RichTreeViewVirtualizedItems';
@@ -155,7 +155,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   );
 }) as RichTreeViewProComponent;
 
-RichTreeViewPro.propTypes = {
+RichTreeViewPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

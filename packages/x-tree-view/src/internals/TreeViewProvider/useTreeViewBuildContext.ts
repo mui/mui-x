@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import {
+import type {
   TreeViewContextValue,
   TreeViewItemPluginsRunner,
   TreeViewStoreInContext,
 } from './TreeViewProvider.types';
-import {
+import type {
   TreeViewItemPluginSlotPropsEnhancers,
   TreeViewItemPluginSlotPropsEnhancerParams,
   TreeViewAnyStore,

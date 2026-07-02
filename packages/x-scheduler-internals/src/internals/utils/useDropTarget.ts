@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import {
+import type {
   SchedulerEvent,
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderExternalDrag,
@@ -11,20 +11,18 @@ import {
   TemporalSupportedObject,
   SchedulerResourceId,
 } from '../../models';
-import {
+import type {
   EventDropData,
   EventDropDataLookup,
 } from '../../build-is-valid-drop-target/buildIsValidDropTarget';
-import {
-  SchedulerStoreInContext,
-  useSchedulerStoreContext,
-} from '../../use-scheduler-store-context';
+import type { SchedulerStoreInContext } from '../../use-scheduler-store-context';
+import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
-import { StandaloneEvent } from '../../standalone-event';
+import type { StandaloneEvent } from '../../standalone-event';
 import { useAdapterContext } from '../../use-adapter-context';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
@@ -201,11 +199,11 @@ export namespace useDropTarget {
 /**
  * Applies the data from the placeholder occurrence to the event it represents.
  */
-async function applyInternalDragOrResizeOccurrencePlaceholder(
+function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
   placeholder: SchedulerOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
-): Promise<void> {
+): void {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
 

@@ -2,15 +2,14 @@ import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
 import {
-  type ProcessedSeries,
   selectorChartSeriesProcessed,
   selectorChartSeriesLayout,
-  type SeriesLayout,
 } from '../../corePlugins/useChartSeries';
-import {
-  type TooltipPositionGetterAxesConfig,
-  type ChartSeriesConfig,
-  selectorChartSeriesConfig,
+import type { ProcessedSeries, SeriesLayout } from '../../corePlugins/useChartSeries';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type {
+  TooltipPositionGetterAxesConfig,
+  ChartSeriesConfig,
 } from '../../corePlugins/useChartSeriesConfig';
 import {
   selectorChartXAxis,
@@ -132,7 +131,7 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
     series: ProcessedSeries<SeriesType>,
     seriesLayout: SeriesLayout<SeriesType>,
     axesConfig: TooltipPositionGetterAxesConfig,
-    placement: 'top' | 'bottom' | 'left' | 'right',
+    placement: 'top' | 'bottom' | 'left' | 'right' | undefined,
   ) {
     if (!identifier) {
       return null;
@@ -152,7 +151,7 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
         drawingArea,
         axesConfig,
         identifier,
-        placement,
+        placement: placement ?? 'top',
       }) ?? null
     );
   },

@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const ptBRDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
@@ -39,7 +37,7 @@ const ptBRDialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Recorrência',
   recurrenceMainSelectCustomLabel: 'Recorrência',
   recurrenceWeeklyFrequencyLabel: 'semanas',
-  recurrenceWeeklyPresetLabel: (weekday) => `Repete semanalmente (${weekday})`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Repete semanalmente (${weekdayName})`,
   recurrenceMonthlyFrequencyLabel: 'meses',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dia ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} da última semana do mês`,
@@ -51,6 +49,7 @@ const ptBRDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'anos',
   recurrenceYearlyPresetLabel: (date) => `Repete anualmente em ${date}`,
   noResourceAriaLabel: 'Sem recurso',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Recurso',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvar',
@@ -105,8 +104,6 @@ const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'O dia todo',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} mais…`,
   nextTimeSpan: (timeSpan) => `Próximo(a) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
@@ -121,6 +118,9 @@ const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendário',
   miniCalendarGoToPreviousMonth: 'Mostrar mês anterior no calendário',
   miniCalendarGoToNextMonth: 'Mostrar próximo mês no calendário',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Título do recurso',

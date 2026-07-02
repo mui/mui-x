@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const bnBDDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
@@ -39,7 +37,9 @@ const bnBDDialog: Partial<EventDialogLocaleText> = {
   // recurrenceTabLabel: 'Recurrence',
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
-  // recurrenceWeeklyPresetLabel: weekday => `Repeats weekly on ${weekday}`,
+  // recurrenceWeeklyPresetLabel: ({
+  //   weekdayName
+  // }) => `Repeats weekly on ${weekdayName}`,
   // recurrenceMonthlyFrequencyLabel: 'months',
   // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
   // recurrenceMonthlyLastWeekAriaLabel: weekDay => `${weekDay} of the last week of the month`,
@@ -51,6 +51,7 @@ const bnBDDialog: Partial<EventDialogLocaleText> = {
   // recurrenceYearlyFrequencyLabel: 'years',
   // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
   // noResourceAriaLabel: 'No specific resource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   // resourceLabel: 'Resource',
   // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
@@ -100,7 +101,6 @@ const bnBDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // weekdaySaturday: 'Saturday',
   // WeekView
   // allDay: 'All day',
-  // MonthView
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
@@ -113,6 +113,8 @@ const bnBDCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // miniCalendarLabel: 'Calendar',
   // miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   // miniCalendarGoToNextMonth: 'Show next month in calendar',
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

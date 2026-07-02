@@ -1,3 +1,4 @@
+export { StreamingIndicator } from './StreamingIndicator';
 export { TypingIndicator } from './TypingIndicator';
 export { UnreadMarker } from './UnreadMarker';
 export { ScrollToBottomAffordance } from './ScrollToBottomAffordance';
@@ -8,6 +9,11 @@ export type {
   ScrollToBottomAffordanceSlots,
 } from './ScrollToBottomAffordance';
 export type {
+  StreamingIndicatorProps,
+  StreamingIndicatorSlotProps,
+  StreamingIndicatorSlots,
+} from './StreamingIndicator';
+export type {
   TypingIndicatorProps,
   TypingIndicatorSlotProps,
   TypingIndicatorSlots,
@@ -15,6 +21,7 @@ export type {
 export type { UnreadMarkerProps, UnreadMarkerSlotProps, UnreadMarkerSlots } from './UnreadMarker';
 export type {
   ScrollToBottomAffordanceOwnerState,
+  StreamingIndicatorOwnerState,
   TypingIndicatorOwnerState,
   UnreadMarkerOwnerState,
 } from './indicators.types';

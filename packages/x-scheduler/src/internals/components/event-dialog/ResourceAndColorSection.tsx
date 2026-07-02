@@ -2,7 +2,8 @@
 import * as React from 'react';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import ListSubheader from '@mui/material/ListSubheader';
@@ -21,9 +22,10 @@ import {
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
-import { getPaletteVariants, PaletteName } from '../../utils/tokens';
+import type { PaletteName } from '../../utils/tokens';
+import { getPaletteVariants } from '../../utils/tokens';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
 const NO_RESOURCE_VALUE = '';
@@ -307,7 +309,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           <ResourceMenuColorToggle
             key={colorOption}
             value={colorOption}
-            aria-label={`Select ${colorOption} as event color`}
+            aria-label={localeText.selectColorAriaLabel(colorOption)}
             data-palette={colorOption}
             className={classes.eventDialogResourceMenuColorToggle}
           >

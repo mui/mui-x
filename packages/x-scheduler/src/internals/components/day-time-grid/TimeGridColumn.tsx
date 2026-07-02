@@ -2,20 +2,20 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventSkeleton } from '../event-skeleton';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
+import { useDayTimeGridInternalRenderers } from './DayTimeGridInternalRenderersContext';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -29,9 +29,6 @@ const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   position: 'relative',
   '&[data-weekend]': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
-  },
-  ':last-of-type': {
-    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
   '&:focus-visible': {
     outline: 'none',
@@ -130,6 +127,7 @@ function ColumnInteractiveLayer({
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const { classes } = useEventCalendarStyledContext();
+  const { timeGridEvent: TimeGridEvent } = useDayTimeGridInternalRenderers();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);

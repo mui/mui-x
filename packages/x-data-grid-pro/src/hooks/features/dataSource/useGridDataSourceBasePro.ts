@@ -4,18 +4,20 @@ import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
-  type GridDataSourceGroupNode,
   useGridSelector,
   GridGetRowsError,
   gridRowIdSelector,
   gridRowNodeSelector,
-  type GridRowModelUpdate,
-  type GridRowModel,
   gridRowTreeSelector,
-  type GridUpdateRowParams,
-  type GridRowId,
   GRID_ROOT_GROUP_ID,
   gridRowsLookupSelector,
+} from '@mui/x-data-grid';
+import type {
+  GridDataSourceGroupNode,
+  GridRowModelUpdate,
+  GridRowModel,
+  GridUpdateRowParams,
+  GridRowId,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -24,10 +26,9 @@ import {
   gridGetRowsParamsSelector,
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
-  type GridDataSourceBaseOptions,
-  type GridStrategyProcessor,
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
+import type { GridDataSourceBaseOptions, GridStrategyProcessor } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -242,7 +243,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
               cause: childrenFetchError,
             }),
           );
-        } else {
+        } else if (process.env.NODE_ENV !== 'production') {
           warnOnce(
             [
               'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',

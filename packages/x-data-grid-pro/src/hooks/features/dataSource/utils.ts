@@ -1,11 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  GRID_ROOT_GROUP_ID,
-  type GridGroupNode,
-  type GridKeyValue,
-  type GridRowId,
-  type GridRowTreeConfig,
-} from '@mui/x-data-grid';
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type { GridGroupNode, GridKeyValue, GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models';
 import type { GridGetRowsParamsPro } from './models';
 

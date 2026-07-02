@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { FormControlProps } from '@mui/material/FormControl';
-import { FormHelperTextProps } from '@mui/material/FormHelperText';
-import { InputLabelProps } from '@mui/material/InputLabel';
-import { TextFieldVariants } from '@mui/material/TextField';
-import {
+import type * as React from 'react';
+import type { FormControlProps } from '@mui/material/FormControl';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
+import type { InputLabelProps } from '@mui/material/InputLabel';
+import type { TextFieldVariants } from '@mui/material/TextField';
+import type {
   PickersInputBaseProps,
   PickersInputPropsUsedByField,
 } from './PickersInputBase/PickersInputBase.types';

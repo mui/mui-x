@@ -8,7 +8,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
-import { SchedulerEventId, TemporalSupportedObject } from '../../models';
+import type { SchedulerEventId, TemporalSupportedObject } from '../../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
 import { useAdapterContext } from '../../use-adapter-context';
@@ -42,7 +42,7 @@ export function useDraggableEvent(
   const event = useStore(store, schedulerEventSelectors.processedEvent, eventId)!;
 
   // Feature hooks
-  const { state: eventState } = useEvent({ start, end, eventId });
+  const { state: eventState } = useEvent({ start, end, occurrenceKey });
 
   const preview = useDragPreview({
     type: 'internal-event',

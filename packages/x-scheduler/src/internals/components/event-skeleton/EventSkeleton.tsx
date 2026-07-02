@@ -1,38 +1,57 @@
 'use client';
-// TODO #22309: unify with EventTimelinePremiumSkeleton — diverges in props (`data-variant` required here), sizing (variant-based absolute positioning vs theme-derived height), and styled context. On unification, prefer the timeline's theme-derived sizing.
-import Skeleton from '@mui/material/Skeleton';
-import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import Skeleton from '@mui/material/Skeleton';
+import type { CSSObject } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { useSharedComponentsStyledContext } from '../SharedComponentsStyledContext';
+
+export type EventSkeletonVariant = 'time-column' | 'day-grid' | 'agenda' | 'timeline-row';
 
 export interface EventSkeletonProps {
-  'data-variant': 'time-column' | 'day-grid' | 'agenda';
+  'data-variant': EventSkeletonVariant;
   className?: string;
 }
 
 const EventSkeletonRoot = styled(Skeleton, {
-  name: 'MuiEventCalendar',
-  slot: 'EventSkeleton',
-})({
-  opacity: 0.5,
-  '&[data-variant="time-column"]': {
-    position: 'absolute',
-    left: 0,
-    right: 12,
-    top: 0,
-    height: '100%',
-    borderRadius: 0,
-  },
-  '&[data-variant="day-grid"]': {
-    height: 18,
-  },
-  '&[data-variant="agenda"]': {
-    height: 28,
-  },
+  name: 'MuiEventSkeleton',
+  slot: 'Root',
+})(({ theme }) => {
+  // Typing the styles per variant makes adding a new `EventSkeletonVariant`
+  // without a matching style block a compile error.
+  const variantStyles: Record<EventSkeletonVariant, CSSObject> = {
+    'time-column': {
+      position: 'absolute',
+      left: 0,
+      right: 12,
+      top: 0,
+      height: '100%',
+      borderRadius: 0,
+    },
+    'day-grid': {
+      height: 18,
+    },
+    agenda: {
+      height: 28,
+    },
+    'timeline-row': {
+      height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1.125)})`,
+      width: '100%',
+    },
+  };
+
+  return {
+    opacity: 0.5,
+    ...Object.fromEntries(
+      Object.entries(variantStyles).map(([variant, style]) => [
+        `&[data-variant="${variant}"]`,
+        style,
+      ]),
+    ),
+  };
 });
 
 export function EventSkeleton(props: EventSkeletonProps) {
-  const { classes } = useEventCalendarStyledContext();
+  const { classes } = useSharedComponentsStyledContext();
 
   return (
     <EventSkeletonRoot

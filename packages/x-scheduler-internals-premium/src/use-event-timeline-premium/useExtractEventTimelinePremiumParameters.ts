@@ -1,6 +1,6 @@
 /* eslint-disable react-compiler/react-compiler -- intentional `react-hooks/exhaustive-deps` disable below */
 import * as React from 'react';
-import { EventTimelinePremiumParameters } from './EventTimelinePremiumStore.types';
+import type { EventTimelinePremiumParameters } from './EventTimelinePremiumStore.types';
 
 export function useExtractEventTimelinePremiumParameters<
   TEvent extends object,
@@ -24,7 +24,6 @@ export function useExtractEventTimelinePremiumParameters<
     eventModelStructure,
     events,
     onEventsChange,
-    onPreferencesChange,
     onPresetChange,
     onVisibleDateChange,
     onVisibleResourcesChange,
@@ -59,7 +58,6 @@ export function useExtractEventTimelinePremiumParameters<
       eventModelStructure,
       events,
       onEventsChange,
-      onPreferencesChange,
       onPresetChange,
       onVisibleDateChange,
       onVisibleResourcesChange,
@@ -95,7 +93,6 @@ export function useExtractEventTimelinePremiumParameters<
       eventModelStructure,
       events,
       onEventsChange,
-      onPreferencesChange,
       onPresetChange,
       onVisibleDateChange,
       onVisibleResourcesChange,

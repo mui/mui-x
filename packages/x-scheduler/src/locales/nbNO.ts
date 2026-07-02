@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const nbNODialog: Partial<EventDialogLocaleText> = {
   // EventDialog
@@ -39,7 +37,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Gjentakelse',
   recurrenceMainSelectCustomLabel: 'Gjentakelse',
   recurrenceWeeklyFrequencyLabel: 'uker',
-  recurrenceWeeklyPresetLabel: (weekday) => `Gjentas ukentlig på ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Gjentas ukentlig på ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'måneder',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dag ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} i siste uke av måneden`,
@@ -51,6 +49,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'år',
   recurrenceYearlyPresetLabel: (date) => `Gjentas årlig den ${date}`,
   noResourceAriaLabel: 'Ingen spesifikk ressurs',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressurs',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Lagre',
@@ -105,8 +104,6 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Hele dagen',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} til..`,
   nextTimeSpan: (timeSpan) => `Neste ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Forrige ${timeSpan}`,
@@ -121,6 +118,9 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Kalender',
   miniCalendarGoToPreviousMonth: 'Vis forrige måned i kalender',
   miniCalendarGoToNextMonth: 'Vis neste måned i kalender',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressurstittel',

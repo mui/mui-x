@@ -1,24 +1,21 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ChartsProvider,
-  ChartsSlotsProvider,
-  type ChartsProviderProps,
-  type ChartAnyPluginSignature,
-  type PolarChartSeriesType,
-  type ChartSeriesConfig,
+import { ChartsProvider, ChartsSlotsProvider } from '@mui/x-charts/internals';
+import type {
+  ChartsProviderProps,
+  ChartAnyPluginSignature,
+  PolarChartSeriesType,
+  ChartSeriesConfig,
 } from '@mui/x-charts/internals';
-import { type ChartsRadialDataProviderProps } from '@mui/x-charts/ChartsRadialDataProvider';
+import type { ChartsRadialDataProviderProps } from '@mui/x-charts/ChartsRadialDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { ChartsWatermark, defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
 import { useLicenseVerifier } from '@mui/x-license/internals';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '@mui/x-charts-pro/internals';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '@mui/x-charts-pro/internals';
 import { useChartsRadialDataProviderPremiumProps } from './useChartsRadialDataProviderPremiumProps';
-import {
-  RADIAL_PREMIUM_PLUGINS,
-  type RadialPremiumPluginSignatures,
-} from './ChartsRadialDataProviderPremium.plugins';
+import { RADIAL_PREMIUM_PLUGINS } from './ChartsRadialDataProviderPremium.plugins';
+import type { RadialPremiumPluginSignatures } from './ChartsRadialDataProviderPremium.plugins';
 import { radialLineSeriesConfig } from '../RadialLineChart/seriesConfig';
 
 const packageInfo = {
@@ -95,7 +92,7 @@ function ChartsRadialDataProviderPremium<
   );
 }
 
-ChartsRadialDataProviderPremium.propTypes = {
+ChartsRadialDataProviderPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -108,6 +105,14 @@ ChartsRadialDataProviderPremium.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
+  dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.any,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

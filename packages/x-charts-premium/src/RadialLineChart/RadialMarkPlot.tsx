@@ -1,8 +1,10 @@
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { getSymbol } from '@mui/x-charts/internals';
 import { useRadialLinePlotData } from './useRadialLinePlotData';
-import { type RadialLineClasses, useUtilityClasses } from './radialLineClasses';
+import { useUtilityClasses } from './radialLineClasses';
+import type { RadialLineClasses } from './radialLineClasses';
 import { useItemHighlightStateGetter } from '../hooks';
 
 const RadialMarkPlotRoot = styled('g', {
@@ -14,7 +16,7 @@ export interface RadialMarkPlotProps {
   classes?: Partial<Pick<RadialLineClasses, 'mark' | 'markPlot'>>;
 }
 
-export function RadialMarkPlot(props: RadialMarkPlotProps) {
+function RadialMarkPlot(props: RadialMarkPlotProps) {
   const { classes: inClasses } = props;
   const completedData = useRadialLinePlotData();
 
@@ -72,3 +74,13 @@ export function RadialMarkPlot(props: RadialMarkPlotProps) {
     </RadialMarkPlotRoot>
   );
 }
+
+RadialMarkPlot.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+} as any;
+
+export { RadialMarkPlot };

@@ -1,9 +1,12 @@
 'use client';
 import * as React from 'react';
-import { MessageMeta } from '@mui/x-chat-headless';
+import PropTypes from 'prop-types';
+import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { styled } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { chatMessageClasses } from './chatMessageClasses';
 
 /**
  * Invisible inline element that reserves space for the absolutely-positioned meta.
@@ -31,8 +34,8 @@ const ChatMessageInlineMetaSpacer = styled('span', {
 const ChatMessageInlineMetaContainer = styled('span', {
   name: 'MuiChatMessage',
   slot: 'InlineMeta',
-})<{ ownerState?: { role?: string } }>(({ theme, ownerState }) => {
-  const isUser = ownerState?.role === 'user';
+})<{ ownerState?: { role?: string; isOwnMessage?: boolean } }>(({ theme, ownerState }) => {
+  const isOwn = ownerState?.isOwnMessage ?? false;
 
   return {
     position: 'absolute',
@@ -47,13 +50,13 @@ const ChatMessageInlineMetaContainer = styled('span', {
     pointerEvents: 'none',
     userSelect: 'none',
     // Light mode: primary.main is dark blue → white meta is readable.
-    // Dark mode (user): primary.main becomes a lighter blue → switch to dark meta for contrast.
-    color: isUser ? 'rgba(255,255,255,0.65)' : (theme.vars || theme).palette.text.disabled,
-    ...(isUser &&
+    // Dark mode (own): primary.main becomes a lighter blue → switch to dark meta for contrast.
+    color: isOwn ? 'rgba(255,255,255,0.65)' : (theme.vars || theme).palette.text.disabled,
+    ...(isOwn &&
       theme.applyStyles('dark', {
         color: 'rgba(0,0,0,0.55)',
       })),
-    ...(!isUser &&
+    ...(!isOwn &&
       theme.applyStyles('dark', {
         color: 'rgba(255,255,255,0.45)',
       })),
@@ -90,6 +93,8 @@ const InlineStatusSlot = React.forwardRef<HTMLSpanElement, any>(function InlineS
   );
 });
 
+export interface ChatMessageInlineMetaProps extends MessageMetaProps {}
+
 /**
  * Wrapper that renders a spacer + the MessageMeta absolutely positioned at the
  * bottom-right of the parent bubble. Uses the Telegram-style "spacer + absolute
@@ -98,19 +103,41 @@ const InlineStatusSlot = React.forwardRef<HTMLSpanElement, any>(function InlineS
  *
  * Must be rendered inside a bubble with `position: relative`.
  */
+function ChatMessageInlineMeta(props: ChatMessageInlineMetaProps) {
+  const { slots, slotProps, ...other } = props;
 
-function ChatMessageInlineMeta() {
   return (
     <React.Fragment>
-      <ChatMessageInlineMetaSpacer aria-hidden="true" />
+      <ChatMessageInlineMetaSpacer
+        className={chatMessageClasses.inlineMetaSpacer}
+        aria-hidden="true"
+      />
       <MessageMeta
+        {...other}
         slots={{
           meta: ChatMessageInlineMetaContainer,
           status: InlineStatusSlot,
+          ...slots,
+        }}
+        slotProps={{
+          ...slotProps,
+          meta: mergeSlotProps(
+            { className: chatMessageClasses.inlineMeta },
+            slotProps?.meta,
+          ) as any,
         }}
       />
     </React.Fragment>
   );
 }
+
+ChatMessageInlineMeta.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
 
 export { ChatMessageInlineMeta };

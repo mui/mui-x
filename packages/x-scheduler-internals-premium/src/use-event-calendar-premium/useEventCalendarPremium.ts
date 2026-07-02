@@ -1,23 +1,20 @@
 'use client';
-import { useOnMount } from '@base-ui/utils/useOnMount';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
+import { useDisposable } from '@mui/x-internals/useDisposable';
 import { useAdapter } from '@mui/x-scheduler-internals/use-adapter';
 import { EventCalendarPremiumStore } from './EventCalendarPremiumStore';
-import { EventCalendarPremiumParameters } from './EventCalendarPremiumStore.types';
+import type { EventCalendarPremiumParameters } from './EventCalendarPremiumStore.types';
 
 export function useEventCalendarPremium<TEvent extends object, TResource extends object>(
   parameters: EventCalendarPremiumParameters<TEvent, TResource>,
 ): EventCalendarPremiumStore<TEvent, TResource> {
   const adapter = useAdapter(parameters.dateLocale);
-  const store = useRefWithInit(() => new EventCalendarPremiumStore(parameters, adapter)).current;
+  const store = useDisposable(() => new EventCalendarPremiumStore(parameters, adapter));
 
   useIsoLayoutEffect(
     () => store.updateStateFromParameters(parameters, adapter),
     [store, adapter, parameters],
   );
-
-  useOnMount(store.disposeEffect);
 
   return store;
 }

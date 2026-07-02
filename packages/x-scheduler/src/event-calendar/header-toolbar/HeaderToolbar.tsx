@@ -16,7 +16,8 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { HeaderToolbarProps } from './HeaderToolbar.types';
+import { getWeekNumber } from '@mui/x-scheduler-internals/internals';
+import type { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { PreferencesMenu } from './preferences-menu';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
@@ -56,7 +57,6 @@ const HeaderToolbarLeftElement = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-start',
-
   gap: theme.spacing(2),
 }));
 
@@ -68,6 +68,25 @@ const HeaderToolbarLabel = styled('p', {
   ...theme.typography.h6,
   fontWeight: theme.typography.fontWeightBold,
   lineHeight: 1.4,
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+}));
+
+const HeaderToolbarWeekNumber = styled('span', {
+  name: 'MuiEventCalendar',
+  slot: 'HeaderToolbarWeekNumber',
+})(({ theme }) => ({
+  padding: theme.spacing(0.1, 0.7),
+  borderRadius: theme.shape.borderRadius,
+  fontSize: '0.875rem',
+  fontWeight: theme.typography.fontWeightRegular,
+  color: (theme.vars || theme).palette.text.primary,
+  textAlign: 'center',
+  backgroundColor: (theme.vars || theme).palette.grey[200],
+  ...theme.applyStyles('dark', {
+    backgroundColor: (theme.vars || theme).palette.grey[900],
+  }),
 }));
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
@@ -84,8 +103,12 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const view = useStore(store, eventCalendarViewSelectors.view);
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
+  const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
+  const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
+  const weekNumber = getWeekNumber(adapter, visibleDate, weekStartsOn);
   const showViewSwitcher = views.length > 1;
+  const showWeekLabel = showWeekNumber && (view === 'week' || view === 'day');
 
   return (
     <HeaderToolbarRoot
@@ -107,6 +130,11 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         <HeaderToolbarLabel aria-live="polite">
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
+          {showWeekLabel && (
+            <HeaderToolbarWeekNumber className={classes.headerToolbarWeekNumber}>
+              {`${localeText.week} ${weekNumber}`}
+            </HeaderToolbarWeekNumber>
+          )}
         </HeaderToolbarLabel>
       </HeaderToolbarLeftElement>
       <HeaderToolbarActions className={classes.headerToolbarActions}>

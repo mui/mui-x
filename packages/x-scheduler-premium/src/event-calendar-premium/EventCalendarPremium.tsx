@@ -9,17 +9,16 @@ import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarPremium } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import {
-  useEventCalendarUtilityClasses,
-  EventCalendarStyledContext,
-} from '@mui/x-scheduler/event-calendar';
-import {
   EventDialogStyledContext,
   EventDialogProvider,
   EventCalendarRoot,
+  SharedComponentsStyledContext,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+  EventCalendarStyledContext,
+  useEventCalendarUtilityClasses,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
-import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
+import type { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -72,22 +71,26 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
     [schedulerId, classes, mergedLocaleText],
   );
 
+  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
+
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-            <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-              {watermark}
-            </EventCalendarRoot>
-          </EventDialogProvider>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+              <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                {watermark}
+              </EventCalendarRoot>
+            </EventDialogProvider>
+          </SharedComponentsStyledContext.Provider>
         </EventDialogStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarPremiumComponent;
 
-EventCalendarPremium.propTypes = {
+EventCalendarPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -210,6 +213,12 @@ EventCalendarPremium.propTypes = {
     'red',
     'teal',
   ]),
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
       duration: PropTypes.number,
@@ -269,7 +278,7 @@ EventCalendarPremium.propTypes = {
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig: PropTypes.oneOfType([
     PropTypes.oneOf([false]),

@@ -1,6 +1,8 @@
 export * from '@mui/x-data-grid/internals';
 
 export { GridColumnHeaders } from '../components/GridColumnHeaders';
+export { GridMultiSelectMeasurer } from '../components/cell/GridMultiSelectMeasurer';
+export { registerMultiSelectColumnType } from '../colDef/registerMultiSelectColumnType';
 export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
 /*

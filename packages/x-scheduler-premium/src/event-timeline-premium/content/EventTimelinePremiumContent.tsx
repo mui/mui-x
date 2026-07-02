@@ -1,29 +1,22 @@
 'use client';
 import * as React from 'react';
-import { styled, useTheme, Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import {
-  useVirtualizer,
-  LayoutDataGrid,
-  Dimensions,
-  Virtualization,
-  ColumnWithWidth,
-  PinnedColumns,
-} from '@mui/x-virtualizer';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
+import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import {
-  computeOccurrencesMaxIndex,
-  useEventOccurrencesWithTimelinePosition,
-} from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import { computeOccurrencesMaxIndex } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
   schedulerNowSelectors,
   schedulerOccurrenceSelectors,
@@ -33,16 +26,16 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   EventDialogProvider,
   EventDialogTrigger,
+  EventSkeleton,
   useEventDialogContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
 import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
-import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
+import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
-import { EventTimelinePremiumSkeleton } from './event-skeleton';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import {
   EventTimelinePremiumVirtualizerContext,
@@ -168,7 +161,6 @@ const EventTimelinePremiumEventsHeaderCellContent = styled('div', {
   height: '100%',
   width: 'calc(var(--unit-count) * var(--unit-width))',
   minWidth: '100%',
-  transform: 'translateX(calc(-1 * var(--events-scroll-left, 0) * 1px))',
 });
 
 const EventTimelinePremiumScrollerContent = styled('div', {
@@ -218,7 +210,6 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   alignContent: 'start',
   zIndex: 1,
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  transform: 'translateX(calc(-1 * var(--events-scroll-left, 0) * 1px))',
   '&:focus-visible': {
     outline: 'none',
     backgroundColor: getCellFocusBackground(theme),
@@ -589,7 +580,7 @@ function EventRowContent({
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   if (isLoading) {
-    return <EventTimelinePremiumSkeleton />;
+    return <EventSkeleton data-variant="timeline-row" />;
   }
 
   return (
@@ -871,7 +862,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           '--header-height': `${headerHeight}px`,
           '--filler-height': `${fillerHeight}px`,
           '--has-scroll-x': Number(hasBottomScrollbar),
-          '--has-scroll-y': Number(hasScrollY),
         } as React.CSSProperties
       }
     >

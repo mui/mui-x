@@ -1,10 +1,10 @@
-import {
+import type {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarPreferencesMenuConfig,
   EventCalendarViewConfig,
 } from '../models';
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   SchedulerChangeEventDetails,
@@ -33,6 +33,21 @@ export interface EventCalendarState extends SchedulerState {
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: EventCalendarViewConfig | null;
+}
+
+/**
+ * Subset of `SchedulerParameters` properties whose documented defaults differ in the
+ * EventCalendar surfaces (EventCalendar, EventCalendarPremium, and the standalone views).
+ * Surfaces in the EventCalendar family `Omit` these keys from `EventCalendarParameters`
+ * and intersect with this interface so the documented defaults reach the API docs and
+ * PropTypes generators.
+ */
+export interface EventCalendarSchedulerParametersOverrides {
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default false
+   */
+  shouldEventRequireResource?: boolean;
 }
 
 export interface EventCalendarParameters<
@@ -79,7 +94,7 @@ export interface EventCalendarParameters<
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig?: Partial<EventCalendarPreferencesMenuConfig> | false;
 }

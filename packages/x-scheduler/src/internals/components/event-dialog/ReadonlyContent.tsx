@@ -5,7 +5,7 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -18,7 +18,8 @@ import EventDialogHeader from './EventDialogHeader';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { getPaletteVariants, PaletteName } from '../../utils/tokens';
+import type { PaletteName } from '../../utils/tokens';
+import { getPaletteVariants } from '../../utils/tokens';
 
 const ReadonlyContentDragContainer = styled('section', {
   name: 'MuiEventDialog',
@@ -157,7 +158,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
       <EventDialogHeader onClose={onClose}>
         <EventDialogTitle
           variant="h6"
-          id={`${schedulerId}-draggable-dialog-title`}
+          id={`${schedulerId}-event-dialog-title`}
           className={classes.eventDialogTitle}
         >
           {occurrence.title}

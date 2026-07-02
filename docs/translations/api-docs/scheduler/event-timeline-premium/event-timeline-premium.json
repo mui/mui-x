@@ -41,6 +41,9 @@
     "eventColor": {
       "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
     },
+    "eventCreation": {
+      "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
+    },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
@@ -49,7 +52,6 @@
       "description": "Set the locale text of the Event Timeline. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts\">the source</a> in the GitHub repository."
     },
     "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
-    "onPreferencesChange": { "description": "Event handler called when the preferences change." },
     "onPresetChange": { "description": "Event handler called when the preset changes." },
     "onVisibleDateChange": { "description": "Event handler called when the visible date changes." },
     "onVisibleResourcesChange": {
@@ -99,7 +101,7 @@
     },
     "errorAlert": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "error alert elements"
+      "nodeName": "the error alert element"
     },
     "errorContainer": {
       "description": "Styles applied to {{nodeName}}.",
@@ -107,7 +109,7 @@
     },
     "errorMessage": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "error message elements"
+      "nodeName": "the error message element"
     },
     "event": { "description": "Styles applied to {{nodeName}}.", "nodeName": "event elements" },
     "eventDialog": {
@@ -336,7 +338,7 @@
     },
     "eventSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "event skeleton elements rendered while events are loading"
+      "nodeName": "the event skeleton element"
     },
     "grid": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the grid element" },
     "header": {

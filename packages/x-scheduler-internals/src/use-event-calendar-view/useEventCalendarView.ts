@@ -1,6 +1,6 @@
 import { useOnMount } from '@base-ui/utils/useOnMount';
-import { useStore } from '@base-ui/utils/store/useStore';
-import { EventCalendarViewConfig } from '../models';
+import { useStore } from '@base-ui/utils/store';
+import type { EventCalendarViewConfig } from '../models';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 
 /**

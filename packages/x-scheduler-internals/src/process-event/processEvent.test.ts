@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler/adapters';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
-import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 
 describe('processEvent', () => {

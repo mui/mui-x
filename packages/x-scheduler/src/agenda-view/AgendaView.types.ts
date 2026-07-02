@@ -1,16 +1,20 @@
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { Theme } from '@mui/material/styles';
-import { EventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import type {
+  EventCalendarParameters,
+  EventCalendarSchedulerParametersOverrides,
+} from '@mui/x-scheduler-internals/use-event-calendar';
 
 export interface AgendaViewProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export interface StandaloneAgendaViewProps<TEvent extends object, TResource extends object>
-  extends AgendaViewProps, EventCalendarParameters<TEvent, TResource> {
-  /**
-   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
-   * @default false
-   */
-  shouldEventRequireResource?: boolean;
+  extends
+    AgendaViewProps,
+    Omit<
+      EventCalendarParameters<TEvent, TResource>,
+      keyof EventCalendarSchedulerParametersOverrides
+    >,
+    EventCalendarSchedulerParametersOverrides {
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

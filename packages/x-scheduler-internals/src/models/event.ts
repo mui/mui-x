@@ -1,5 +1,5 @@
 import type { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
-import {
+import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from './recurringEvent';
@@ -459,15 +459,15 @@ export type SchedulerEventPasteProperties = Partial<
 export type EventSurfaceType = 'day-grid' | 'time-grid' | 'timeline';
 
 export type SchedulerEventModelStructure<TEvent extends object> = {
-  [key in keyof SchedulerEvent]?: {
-    getter: (event: TEvent) => SchedulerEvent[key];
+  [K in keyof SchedulerEvent]?: {
+    getter: (event: TEvent) => SchedulerEvent[K];
     /**
      * Setter for the event property.
      * If not provided, the property won't be editable.
      */
     setter?: (
       event: TEvent | Partial<TEvent>,
-      value: SchedulerEvent[key],
+      value: SchedulerEvent[K],
     ) => TEvent | Partial<TEvent>;
   };
 };

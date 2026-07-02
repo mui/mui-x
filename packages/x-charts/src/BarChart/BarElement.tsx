@@ -2,10 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { useUtilityClasses } from './barClasses';
+import type { BarElementOwnerState } from './barClasses';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
-import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
+import { AnimatedBarElement } from './AnimatedBarElement';
+import type { BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
 import type { BarPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
@@ -121,13 +123,14 @@ function BarElement(props: BarElementProps) {
   return <Bar {...barProps} />;
 }
 
-BarElement.propTypes = {
+BarElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
+  hidden: PropTypes.bool,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   seriesId: PropTypes.string.isRequired,
   skipAnimation: PropTypes.bool.isRequired,

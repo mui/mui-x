@@ -20,12 +20,13 @@ import { defaultGridFilterLookup, getDefaultGridFilterModel } from './gridFilter
 import { gridFilterModelSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowsLookupSelector } from '../rows';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import {
   GRID_DEFAULT_STRATEGY,
-  type GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '../../core/strategyProcessing';
+import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import {
   buildAggregatedFilterApplier,
   sanitizeFilterModel,

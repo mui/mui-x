@@ -2,9 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { StandaloneDayViewProps } from './DayView.types';
+import type { StandaloneDayViewProps } from './DayView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
+import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { DayView } from './DayView';
 
 /**
@@ -24,15 +25,17 @@ const StandaloneDayView = React.forwardRef(function StandaloneDayView<
   >(props);
 
   return (
-    <EventCalendarProvider {...parameters}>
-      <EventDialogProvider>
-        <DayView ref={forwardedRef} {...forwardedProps} />
-      </EventDialogProvider>
-    </EventCalendarProvider>
+    <ResponsiveTypographyContainer>
+      <EventCalendarProvider {...parameters}>
+        <EventDialogProvider>
+          <DayView ref={forwardedRef} {...forwardedProps} />
+        </EventDialogProvider>
+      </EventCalendarProvider>
+    </ResponsiveTypographyContainer>
   );
 }) as StandaloneDayViewComponent;
 
-StandaloneDayView.propTypes = {
+StandaloneDayView.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -142,6 +145,12 @@ StandaloneDayView.propTypes = {
     'red',
     'teal',
   ]),
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
       duration: PropTypes.number,
@@ -195,7 +204,7 @@ StandaloneDayView.propTypes = {
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig: PropTypes.oneOfType([
     PropTypes.oneOf([false]),

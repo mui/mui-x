@@ -2,9 +2,9 @@ import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { Unstable_ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
-import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
-import { Unstable_ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
+import { ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
+import { ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
+import { ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
 
 export default function RotationAxisPlayground() {
   return (
@@ -14,6 +14,7 @@ export default function RotationAxisPlayground() {
         {
           disableLine: { knob: 'switch', defaultValue: false },
           disableTicks: { knob: 'switch', defaultValue: false },
+          disableTickLabel: { knob: 'switch', defaultValue: false },
           tickPosition: {
             knob: 'select',
             options: ['after', 'before'],
@@ -56,7 +57,7 @@ export default function RotationAxisPlayground() {
             height: 300,
           }}
         >
-          <Unstable_ChartsRadialDataProvider
+          <ChartsRadialDataProvider
             height={400}
             rotationAxis={[
               {
@@ -78,10 +79,11 @@ export default function RotationAxisPlayground() {
           >
             <ChartsLayerContainer>
               <ChartsSvgLayer>
-                <Unstable_ChartsRadialGrid rotation radius />
+                <ChartsRadialGrid rotation radius />
                 <ChartsRotationAxis
                   disableLine={props.disableLine}
                   disableTicks={props.disableTicks}
+                  disableTickLabel={props.disableTickLabel}
                   position={props.position}
                   tickSize={props.tickSize}
                   tickLabelPosition={props.tickLabelPosition}
@@ -89,10 +91,10 @@ export default function RotationAxisPlayground() {
                 />
               </ChartsSvgLayer>
             </ChartsLayerContainer>
-          </Unstable_ChartsRadialDataProvider>
+          </ChartsRadialDataProvider>
         </Box>
       )}
-      getCode={({ props }) => `<Unstable_ChartsRadialDataProvider
+      getCode={({ props }) => `<ChartsRadialDataProvider
   rotationAxis={[{
     startAngle: ${props.startAngle},
     endAngle: ${props.endAngle},
@@ -101,6 +103,7 @@ ${[
   `tickSize: ${props.tickSize},`,
   props.disableLine && 'disableLine: true,',
   props.disableTicks && 'disableTicks: true,',
+  props.disableTickLabel && 'disableTickLabel: true,',
   props.position && `position: "${props.position}",`,
   props.tickPosition && `tickPosition: "${props.tickPosition}",`,
   props.tickLabelPosition && `tickLabelPosition: "${props.tickLabelPosition}",`,
@@ -114,9 +117,9 @@ ${[
     maxRadius: ${props.maxRadius},
   }]}
 >
-  <Unstable_ChartsRadialGrid rotation radius />
+  <ChartsRadialGrid rotation radius />
   <ChartsRotationAxis />
-</Unstable_ChartsRadialDataProvider>`}
+</ChartsRadialDataProvider>`}
     />
   );
 }

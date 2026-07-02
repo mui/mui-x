@@ -1,10 +1,10 @@
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   SchedulerChangeEventDetails,
 } from '@mui/x-scheduler-internals/internals';
-import { EventTimelinePremiumPreset } from '../models/preset';
-import { EventTimelinePremiumPreferences } from '../models/preferences';
+import type { EventTimelinePremiumPreset } from '../models/preset';
+import type { EventTimelinePremiumPreferences } from '../models/preferences';
 
 export interface EventTimelinePremiumState extends SchedulerState {
   /**
@@ -67,11 +67,4 @@ export interface EventTimelinePremiumParameters<
    * Preferences currently displayed in the timeline.
    */
   preferences?: Partial<EventTimelinePremiumPreferences>;
-  /**
-   * Event handler called when the preferences change.
-   */
-  onPreferencesChange?: (
-    preferences: Partial<EventTimelinePremiumPreferences>,
-    event: React.UIEvent | Event,
-  ) => void;
 }

@@ -201,6 +201,5 @@
   "muiName": "MuiRadarChartPro",
   "filename": "/packages/x-charts-pro/src/RadarChartPro/RadarChartPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>"
 }

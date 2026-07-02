@@ -1,6 +1,6 @@
-import {
-  type ChartsTooltipContainerProps,
-  type ChartsTooltipClasses,
+import type {
+  ChartsTooltipContainerProps,
+  ChartsTooltipClasses,
 } from '@mui/x-charts/ChartsTooltip';
 import type { TooltipPropsOverrides } from '@mui/x-charts/models';
 

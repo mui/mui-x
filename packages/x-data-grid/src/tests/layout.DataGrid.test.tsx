@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -9,14 +9,8 @@ import {
   act,
 } from '@mui/internal-test-utils';
 import { stub, spy } from 'sinon';
-import {
-  DataGrid,
-  type DataGridProps,
-  type GridColDef,
-  gridClasses,
-  useGridApiRef,
-  type GridApi,
-} from '@mui/x-data-grid';
+import { DataGrid, gridClasses, useGridApiRef } from '@mui/x-data-grid';
+import type { DataGridProps, GridColDef, GridApi } from '@mui/x-data-grid';
 import { ptBR } from '@mui/x-data-grid/locales';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -126,6 +120,34 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
         expect(ref.current).to.be.instanceof(window.HTMLDivElement);
         expect(ref.current).to.equal(container.firstChild?.firstChild);
+      });
+
+      it('mounts the root element during the first SPA commit', () => {
+        let rootElementInLayoutEffect: HTMLDivElement | null | undefined;
+        let renderCount = 0;
+
+        function TestCase() {
+          const apiRef = useGridApiRef();
+
+          React.useLayoutEffect(() => {
+            renderCount += 1;
+            if (renderCount === 1) {
+              rootElementInLayoutEffect = apiRef.current!.rootElementRef.current;
+            }
+          }, [apiRef]);
+
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid apiRef={apiRef} {...baselineProps} />
+            </div>
+          );
+        }
+
+        render(<TestCase />);
+
+        // Assert against the actual mounted root node because `rootElementInLayoutEffect` starts as `undefined`.
+        // A plain null check would pass if the effect never captured the node.
+        expect(rootElementInLayoutEffect).to.equal(document.querySelector(`.${gridClasses.root}`));
       });
 
       describe('`classes` prop', () => {
