@@ -467,6 +467,4 @@ export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
  * Used by context hooks to assert the store type at runtime.
  */
 export type SchedulerInstanceName =
-  | 'EventCalendarStore'
-  | 'EventCalendarPremiumStore'
-  | 'EventTimelinePremiumStore';
+  'EventCalendarStore' | 'EventCalendarPremiumStore' | 'EventTimelinePremiumStore';

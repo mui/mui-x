@@ -1,13 +1,7 @@
 import type { CalendarView } from '@mui/x-scheduler-internals/models';
 
 export type SchedulerWeekday =
-  | 'monday'
-  | 'tuesday'
-  | 'wednesday'
-  | 'thursday'
-  | 'friday'
-  | 'saturday'
-  | 'sunday';
+  'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 export interface EventDialogLocaleText {
   // EventDialog

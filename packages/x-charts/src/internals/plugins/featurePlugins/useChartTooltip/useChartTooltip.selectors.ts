@@ -87,8 +87,7 @@ const selectorChartsTooltipAxisConfig = createSelectorMemoized(
     }
 
     const itemSeries = series[identifier.type as SeriesType]?.series[identifier.seriesId] as
-      | ChartSeriesDefaultized<SeriesType>
-      | undefined;
+      ChartSeriesDefaultized<SeriesType> | undefined;
 
     if (!itemSeries) {
       return {};
@@ -138,8 +137,7 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
     }
 
     const itemSeries = series[identifier.type as SeriesType]?.series[identifier.seriesId] as
-      | ChartSeriesDefaultized<SeriesType>
-      | undefined;
+      ChartSeriesDefaultized<SeriesType> | undefined;
 
     if (!itemSeries) {
       return null;

@@ -6,11 +6,7 @@ import type {
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 
 export type EventTimelinePremiumPreset =
-  | 'dayAndHour'
-  | 'dayAndMonth'
-  | 'dayAndWeek'
-  | 'monthAndYear'
-  | 'year';
+  'dayAndHour' | 'dayAndMonth' | 'dayAndWeek' | 'monthAndYear' | 'year';
 
 /**
  * Time unit a header row (or the tick grid) operates on.

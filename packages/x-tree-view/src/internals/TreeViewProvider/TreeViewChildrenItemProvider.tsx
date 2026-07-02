@@ -43,8 +43,8 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
     const childrenElements = rootRef.current.querySelectorAll(
       `${itemId == null ? '' : `*[id="${escapedIdAttr}"] `}[role="treeitem"]:not(*[id="${escapedIdAttr}"] [role="treeitem"] [role="treeitem"])`,
     );
-    const childrenIds = Array.from(childrenElements).map(
-      (child) => childrenIdAttrToIdRef.current.get(child.id)!,
+    const childrenIds = Array.from(childrenElements).map((child) =>
+      childrenIdAttrToIdRef.current.get(child.id)!,
     );
 
     const hasChanged =
