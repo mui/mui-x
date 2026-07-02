@@ -1,4 +1,0 @@
-<Treemap
-  series={{ data, nodeOptions: { highlight: 'item', fade: 'global' } }}
-  height={300}
-/>

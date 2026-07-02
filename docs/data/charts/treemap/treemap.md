@@ -62,8 +62,15 @@ Set `showLabels: false` to hide every label, or pass a function `(node) => boole
 
 ## Highlighting
 
-Use `nodeOptions.highlight` and `nodeOptions.fade` to control how tiles react to hovering.
-Set `fade: 'global'` to fade every tile except the hovered one.
+Use `nodeOptions.highlight` to control which tiles are highlighted with the hovered one, following the hierarchy:
+
+- `'node'`: only the hovered tile.
+- `'children'`: the hovered tile and all of its descendants.
+- `'parents'`: the hovered tile and all of its ancestors.
+- `'parent'`: the hovered tile and its immediate parent.
+- `'child'`: the hovered tile and its immediate children.
+
+`nodeOptions.fade` controls which tiles fade: `'node'`, `'children'`, or `'parents'` to fade that relationship, or `'global'` to fade every tile that isn't highlighted. Highlighting takes precedence over fading.
 
 {{"demo": "TreemapHighlight.js"}}
 

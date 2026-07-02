@@ -5,7 +5,8 @@ import {
   treemapSlice,
   treemapSliceDice,
 } from '@mui/x-charts-vendor/d3-hierarchy';
-import type { TreemapTilingMethod } from './treemap.types';
+import type { TreemapItemId, TreemapLayout, TreemapTilingMethod } from './treemap.types';
+import type { TreemapHighlight } from './treemap.highlight.types';
 
 /** Id assigned to the synthetic root wrapping an array of root nodes. */
 export const TREEMAP_ROOT_ID = '__mui-treemap-root__';
@@ -26,5 +27,57 @@ export function getTilingMethod(method: TreemapTilingMethod = 'squarify') {
     case 'squarify':
     default:
       return treemapSquarify;
+  }
+}
+
+/** Whether `ancestorId` is a (strict) ancestor of `nodeId` in the layout tree. */
+function isTreemapAncestor(
+  layout: TreemapLayout,
+  ancestorId: TreemapItemId,
+  nodeId: TreemapItemId,
+): boolean {
+  let currentId = layout.byId.get(nodeId)?.parentId ?? null;
+  while (currentId != null) {
+    if (currentId === ancestorId) {
+      return true;
+    }
+    currentId = layout.byId.get(currentId)?.parentId ?? null;
+  }
+  return false;
+}
+
+/**
+ * Whether the tile `targetId` should be highlighted given the `highlight` scope and the
+ * currently hovered tile `hoveredId`. The hovered tile is always highlighted.
+ */
+export function isTreemapNodeHighlighted(
+  layout: TreemapLayout,
+  highlight: TreemapHighlight,
+  hoveredId: TreemapItemId,
+  targetId: TreemapItemId,
+): boolean {
+  if (highlight === 'none') {
+    return false;
+  }
+  if (targetId === hoveredId) {
+    return true;
+  }
+  const hovered = layout.byId.get(hoveredId);
+  const target = layout.byId.get(targetId);
+  if (!hovered || !target) {
+    return false;
+  }
+  switch (highlight) {
+    case 'parent':
+      return targetId === hovered.parentId;
+    case 'child':
+      return target.parentId === hoveredId;
+    case 'parents':
+      return isTreemapAncestor(layout, targetId, hoveredId);
+    case 'children':
+      return isTreemapAncestor(layout, hoveredId, targetId);
+    case 'node':
+    default:
+      return false;
   }
 }

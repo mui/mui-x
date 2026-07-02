@@ -126,6 +126,96 @@ describe('<Treemap />', () => {
     expect(container.querySelector(`.${treemapClasses.label}[data-node="B"]`)).to.equal(null);
   });
 
+  describe('highlight scopes', () => {
+    // root
+    // ├─ A
+    // │  ├─ A1 ─ (A1a, A1b)
+    // │  └─ A2
+    // └─ B
+    const hierarchy = {
+      id: 'root',
+      children: [
+        {
+          id: 'A',
+          children: [
+            {
+              id: 'A1',
+              children: [
+                { id: 'A1a', value: 5 },
+                { id: 'A1b', value: 4 },
+              ],
+            },
+            { id: 'A2', value: 8 },
+          ],
+        },
+        { id: 'B', value: 12 },
+      ],
+    };
+
+    const renderScope = (highlight: string, nodeId: string, fade?: string) =>
+      render(
+        <Treemap
+          width={400}
+          height={300}
+          margin={0}
+          series={{
+            id: 's',
+            data: hierarchy,
+            nodeOptions: { highlight: highlight as any, fade: fade as any },
+          }}
+          highlightedItem={{ type: 'treemap', seriesId: 's', nodeId }}
+        />,
+      );
+
+    const attr = (container: HTMLElement, id: string, name: string) =>
+      container.querySelector(`.${treemapClasses.cell}[data-node="${id}"]`)?.getAttribute(name) ===
+      'true';
+    const highlighted = (container: HTMLElement, id: string) =>
+      attr(container, id, 'data-highlighted');
+    const faded = (container: HTMLElement, id: string) => attr(container, id, 'data-faded');
+
+    it("'children' highlights the tile and all its descendants", () => {
+      const { container } = renderScope('children', 'A');
+      ['A', 'A1', 'A2', 'A1a', 'A1b'].forEach((id) =>
+        expect(highlighted(container, id)).to.equal(true),
+      );
+      expect(highlighted(container, 'B')).to.equal(false);
+    });
+
+    it("'child' highlights the tile and its immediate children only", () => {
+      const { container } = renderScope('child', 'A');
+      ['A', 'A1', 'A2'].forEach((id) => expect(highlighted(container, id)).to.equal(true));
+      ['A1a', 'A1b', 'B'].forEach((id) => expect(highlighted(container, id)).to.equal(false));
+    });
+
+    it("'parents' highlights the tile and all its ancestors", () => {
+      const { container } = renderScope('parents', 'A1a');
+      ['A1a', 'A1', 'A'].forEach((id) => expect(highlighted(container, id)).to.equal(true));
+      ['A1b', 'A2', 'B'].forEach((id) => expect(highlighted(container, id)).to.equal(false));
+    });
+
+    it("'parent' highlights the tile and its immediate parent only", () => {
+      const { container } = renderScope('parent', 'A1a');
+      ['A1a', 'A1'].forEach((id) => expect(highlighted(container, id)).to.equal(true));
+      ['A', 'A1b', 'A2', 'B'].forEach((id) => expect(highlighted(container, id)).to.equal(false));
+    });
+
+    it('fade accepts hierarchy scopes', () => {
+      // Highlight only A, fade its descendants.
+      const { container } = renderScope('node', 'A', 'children');
+      expect(highlighted(container, 'A')).to.equal(true);
+      ['A1', 'A2', 'A1a', 'A1b'].forEach((id) => expect(faded(container, id)).to.equal(true));
+      expect(faded(container, 'B')).to.equal(false);
+      expect(highlighted(container, 'B')).to.equal(false);
+    });
+
+    it("'global' fade dims everything that is not highlighted", () => {
+      const { container } = renderScope('children', 'A', 'global');
+      ['A', 'A1', 'A2', 'A1a', 'A1b'].forEach((id) => expect(faded(container, id)).to.equal(false));
+      expect(faded(container, 'B')).to.equal(true);
+    });
+  });
+
   it('renders nested group and leaf tiles', () => {
     const { container } = render(
       <Treemap

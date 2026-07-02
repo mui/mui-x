@@ -2,7 +2,7 @@ import type { ChartSeriesType } from '@mui/x-charts/internals';
 import type { HighlightItemIdentifierWithType } from '@mui/x-charts/models';
 import type { TreemapHighlightScope } from '../treemap.highlight.types';
 
-const DEFAULT_HIGHLIGHT = 'item';
+const DEFAULT_HIGHLIGHT = 'node';
 
 function alwaysFalse(): boolean {
   return false;

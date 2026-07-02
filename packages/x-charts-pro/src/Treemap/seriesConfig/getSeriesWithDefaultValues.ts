@@ -112,7 +112,7 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
     ...seriesData,
     valueFormatter: seriesData.valueFormatter ?? defaultTreemapValueFormatter,
     highlightScope: {
-      highlight: seriesData.nodeOptions?.highlight ?? 'item',
+      highlight: seriesData.nodeOptions?.highlight ?? 'node',
       fade: seriesData.nodeOptions?.fade ?? 'none',
     },
     data: { nodes, byId, rootId: normalizedRoot.id },

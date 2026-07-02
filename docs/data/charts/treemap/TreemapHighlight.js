@@ -1,22 +1,92 @@
 import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 import { Treemap } from '@mui/x-charts-pro/Treemap';
+
+const highlights = ['node', 'children', 'parents', 'parent', 'child'];
+
+const fades = ['none', 'global', 'node', 'children', 'parents'];
 
 const data = {
   id: 'root',
   children: [
-    { id: 'Europe', value: 45 },
-    { id: 'Asia', value: 60 },
-    { id: 'Americas', value: 38 },
-    { id: 'Africa', value: 22 },
-    { id: 'Oceania', value: 10 },
+    {
+      id: 'Tech',
+      children: [
+        {
+          id: 'Frontend',
+          children: [
+            { id: 'React', value: 30 },
+            { id: 'Vue', value: 15 },
+          ],
+        },
+        {
+          id: 'Backend',
+          children: [
+            { id: 'Node', value: 25 },
+            { id: 'Go', value: 12 },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'Design',
+      children: [
+        {
+          id: 'UX',
+          children: [
+            { id: 'Research', value: 12 },
+            { id: 'Prototyping', value: 8 },
+          ],
+        },
+      ],
+    },
   ],
 };
 
 export default function TreemapHighlight() {
+  const [highlight, setHighlight] = React.useState('children');
+  const [fade, setFade] = React.useState('global');
+
   return (
-    <Treemap
-      series={{ data, nodeOptions: { highlight: 'item', fade: 'global' } }}
-      height={300}
-    />
+    <Stack sx={{ width: '100%' }} spacing={2}>
+      <Stack direction="row" spacing={2}>
+        <TextField
+          select
+          label="Highlight"
+          value={highlight}
+          onChange={(event) => setHighlight(event.target.value)}
+          sx={{ minWidth: 160 }}
+        >
+          {highlights.map((value) => (
+            <MenuItem key={value} value={value}>
+              {value}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          select
+          label="Fade"
+          value={fade}
+          onChange={(event) => setFade(event.target.value)}
+          sx={{ minWidth: 160 }}
+        >
+          {fades.map((value) => (
+            <MenuItem key={value} value={value}>
+              {value}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Stack>
+      <Treemap
+        series={{
+          data,
+          tiling: { paddingInner: 2, paddingOuter: 2, paddingTop: 20 },
+          nodeOptions: { highlight, fade },
+        }}
+        height={360}
+      />
+    </Stack>
   );
 }
