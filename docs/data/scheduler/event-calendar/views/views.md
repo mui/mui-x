@@ -8,7 +8,7 @@ components: EventCalendar, EventCalendarPremium, StandaloneAgendaView, Standalon
 
 # Event Calendar - Views
 
-<p class="description">Choose which views are available in the Event Calendar.</p>
+<p class="description">Configure available views including week, day, month, and agenda, and control the default view.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 

@@ -14,10 +14,15 @@
     "canDragEventsFromTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "collapsedResources": { "type": { "name": "object" } },
     "dataSource": {
       "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
     },
     "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
+    "defaultCollapsedResources": {
+      "type": { "name": "object" },
+      "default": "{} - all resources are expanded"
+    },
     "defaultPreferences": {
       "type": {
         "name": "shape",
@@ -60,6 +65,7 @@
       "default": "[]"
     },
     "localeText": { "type": { "name": "object" } },
+    "onCollapsedResourcesChange": { "type": { "name": "func" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPreferencesChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
@@ -1199,5 +1205,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/event-calendar-premium/EventCalendarPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/drag-interactions/\">Event Calendar - Drag Interaction</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/editing/\">Event Calendar - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/events/\">Event Calendar - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/lazy-loading/\">Event Calendar - Lazy loading events <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/localization/\">Event Calendar - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/navigation/\">Event Calendar - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/preferences/\">Event Calendar - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/resources/\">Event Calendar - Resources</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/drag-interactions/\">Event Calendar - Drag Interactions</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/editing/\">Event Calendar - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/events/\">Event Calendar - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/lazy-loading/\">Event Calendar - Lazy Loading Events <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/localization/\">Event Calendar - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/navigation/\">Event Calendar - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/preferences/\">Event Calendar - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/resources/\">Event Calendar - Resources</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
 }

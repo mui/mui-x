@@ -55,6 +55,14 @@ export interface EventCalendarSchedulerParametersOverrides {
   shouldEventRequireResource?: boolean;
 }
 
+/**
+ * Parameter keys for collapsing resources. Only `EventTimelinePremium` (resource
+ * rows) and `EventCalendar` (resource tree) act on them, so the single-view
+ * components omit them.
+ */
+export type CollapsibleResourcesParameterKeys =
+  'collapsedResources' | 'defaultCollapsedResources' | 'onCollapsedResourcesChange';
+
 export interface EventCalendarParameters<
   TEvent extends object,
   TResource extends object,

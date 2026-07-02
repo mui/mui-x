@@ -3,6 +3,7 @@ import type { Theme } from '@mui/material/styles';
 import type {
   EventCalendarParameters,
   EventCalendarSchedulerParametersOverrides,
+  CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 
@@ -13,7 +14,7 @@ export interface StandaloneAgendaViewProps<TEvent extends object, TResource exte
     AgendaViewProps,
     Omit<
       EventCalendarParameters<TEvent, TResource>,
-      'viewConfig' | keyof EventCalendarSchedulerParametersOverrides
+      'viewConfig' | keyof EventCalendarSchedulerParametersOverrides | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
   /**

@@ -53,6 +53,7 @@ describe('Core - EventCalendarStore', () => {
         views: DEFAULT_VIEWS,
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
+        collapsedResources: {},
         isLoading: false,
         errors: [],
       };
