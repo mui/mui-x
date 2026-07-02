@@ -2,6 +2,16 @@ import type { GeoProjection, ExtendedFeatureCollection } from '@mui/x-charts-ven
 import type { ChartPluginSignature } from '../../models/plugin';
 import type { UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
 
+/**
+ * Geo data used to position a map series tooltip: the resolved projection, the
+ * feature collection, and a feature-name-to-index lookup.
+ */
+export type GeoTooltipPosition = {
+  geoData: ExtendedFeatureCollection | null;
+  projection: GeoProjection | null;
+  featureIndexesByName: ReadonlyMap<string, number[]>;
+};
+
 export type D3NamedProjection =
   | 'azimuthalEqualArea'
   | 'azimuthalEquidistant'

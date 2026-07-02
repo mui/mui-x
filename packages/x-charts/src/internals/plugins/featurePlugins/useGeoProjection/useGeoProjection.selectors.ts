@@ -8,12 +8,12 @@ import type {
 import type {
   D3NamedProjection,
   GeoProjectionInput,
+  GeoTooltipPosition,
   UseGeoProjectionSignature,
   UseGeoProjectionState,
 } from './useGeoProjection.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import type { UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
-import type { GeoTooltipPosition } from '../../corePlugins/useChartSeriesConfig';
 import type { ChartState } from '../../models/chart';
 import { getParallels, resolveProjectionInstance } from './projection.utils';
 
