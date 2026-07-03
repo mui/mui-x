@@ -40,9 +40,11 @@ Ensure every node has a unique id (ids are coerced to strings, so 1 and '1' coll
   }
 
   // Reuse the values already summed in `getSeriesWithDefaultValues` rather than summing
-  // again with a second, divergable rule; the tiling only needs `node.value` set.
+  // again with a second rule that could drift; the tiling only needs `node.value` set.
+  // d3 types mark `value` readonly, but it is the field the tiling reads and is what
+  // `.sum()` itself writes.
   stratified.each((node) => {
-    node.value = node.data.value;
+    (node as { value?: number }).value = node.data.value;
   });
 
   const treemapGenerator = treemap<TreemapLayoutNode<false>>()
