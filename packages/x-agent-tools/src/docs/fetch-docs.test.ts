@@ -71,9 +71,9 @@ describe('urlListFetcher', () => {
     const queue = new PQueue({ concurrency: 1 });
     const fetcher = vi.fn().mockRejectedValue(new Error('network down'));
 
-    await expect(
-      urlListFetcher(queue, fetcher, ['u1'], { isUrlAllowed: allowAll }),
-    ).resolves.toBe('Could not fetch u1: network down');
+    await expect(urlListFetcher(queue, fetcher, ['u1'], { isUrlAllowed: allowAll })).resolves.toBe(
+      'Could not fetch u1: network down',
+    );
   });
 
   it('serves a cached body on the second call without re-fetching when a cache is provided', async () => {

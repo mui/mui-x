@@ -71,7 +71,10 @@ export async function fetchRemotePackages(
 // latest docs version; the catalog is stable releases, so beta-vs-final ties don't matter here.
 export function compareVersions(a: string, b: string): number {
   const parseCore = (version: string) =>
-    version.split('-', 1)[0].split('.').map((part) => parseInt(part, 10) || 0);
+    version
+      .split('-', 1)[0]
+      .split('.')
+      .map((part) => parseInt(part, 10) || 0);
   const numsA = parseCore(a);
   const numsB = parseCore(b);
   for (let i = 0; i < 3; i += 1) {
