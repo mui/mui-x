@@ -1,11 +1,14 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import type { DayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import { createDayTimeGridViewConfig } from '../internals/utils/day-time-grid-view-config';
+import { createDayTimeGridViewDefinition } from '../internals/utils/day-time-grid-view-definition';
 
-const DAY_VIEW_CONFIG = createDayTimeGridViewConfig(1);
+const DAY_VIEW_DEFINITION = createDayTimeGridViewDefinition(1);
 
 /**
  * A Day View to use inside the Event Calendar.
@@ -18,9 +21,23 @@ export const DayView = React.memo(
     props: DayViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    // Feature hooks
-    const { days } = useEventCalendarView(DAY_VIEW_CONFIG);
+    // Context hooks
+    const store = useEventCalendarStoreContext();
 
-    return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
+    // Feature hooks
+    const { days } = useEventCalendarView(DAY_VIEW_DEFINITION);
+
+    // Selector hooks
+    const config = useStore(store, eventCalendarViewSelectors.timeGridConfig, 'day');
+
+    return (
+      <DayTimeGrid
+        ref={forwardedRef}
+        days={days}
+        startTime={config?.startTime}
+        endTime={config?.endTime}
+        {...props}
+      />
+    );
   }),
 );

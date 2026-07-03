@@ -61,8 +61,7 @@ export function useTimeGridEvent(
   const rootDataAttributes = React.useMemo(
     () => ({
       'data-under-hour': (isLessThan30Minutes || isBetween30and60Minutes || undefined) as
-        | true
-        | undefined,
+        true | undefined,
       'data-under-fifteen-minutes': (isLessThan15Minutes || undefined) as true | undefined,
       'data-recurrent': (isRecurring || undefined) as true | undefined,
       'data-palette': palette,

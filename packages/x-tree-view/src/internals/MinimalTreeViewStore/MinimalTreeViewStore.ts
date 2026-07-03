@@ -6,13 +6,13 @@ import {
   disposeSymbol,
   unwrapSuppressedErrors,
 } from '@mui/x-internals/disposable';
-import {
+import type {
   TreeViewModelUpdater,
   MinimalTreeViewParameters,
   TreeViewParametersToStateMapper,
   MinimalTreeViewState,
 } from './MinimalTreeViewStore.types';
-import { TreeViewValidItem } from '../../models';
+import type { TreeViewValidItem } from '../../models';
 import {
   createMinimalInitialState,
   createTreeViewDefaultId,
@@ -25,7 +25,7 @@ import { TreeViewItemsPlugin } from '../plugins/items/TreeViewItemsPlugin';
 import { TreeViewSelectionPlugin } from '../plugins/selection/TreeViewSelectionPlugin';
 import { TreeViewExpansionPlugin } from '../plugins/expansion';
 import { TreeViewItemPluginManager } from './TreeViewItemPluginManager';
-import {
+import type {
   TreeViewEventEvent,
   TreeViewEventListener,
   TreeViewEventParameters,

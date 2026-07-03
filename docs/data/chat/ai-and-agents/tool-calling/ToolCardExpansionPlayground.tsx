@@ -83,16 +83,9 @@ const SEED_MESSAGE: ChatMessage = {
 };
 
 type StateOption =
-  | 'input-streaming'
-  | 'input-available'
-  | 'output-available'
-  | 'output-error';
+  'input-streaming' | 'input-available' | 'output-available' | 'output-error';
 type PresetKey =
-  | 'builtin'
-  | 'collapseWhenDone'
-  | 'openWhileStreaming'
-  | 'alwaysOpen'
-  | 'collapsed';
+  'builtin' | 'collapseWhenDone' | 'openWhileStreaming' | 'alwaysOpen' | 'collapsed';
 
 const PRESETS: Record<
   PresetKey,

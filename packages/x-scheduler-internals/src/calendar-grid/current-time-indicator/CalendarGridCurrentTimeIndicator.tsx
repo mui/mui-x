@@ -28,7 +28,12 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       ...elementProps
     } = componentProps;
 
-    const { start: columnStart, end: columnEnd } = useCalendarGridTimeColumnContext();
+    const {
+      start: columnStart,
+      end: columnEnd,
+      dayStartMinute,
+      dayEndMinute,
+    } = useCalendarGridTimeColumnContext();
     const store = useEventCalendarStoreContext();
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
 
@@ -47,6 +52,8 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       end: endForCalc,
       collectionStart: columnStart,
       collectionEnd: columnEnd,
+      dayStartMinute,
+      dayEndMinute,
     });
 
     const isOutOfRange =

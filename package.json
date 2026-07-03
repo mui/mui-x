@@ -1,5 +1,5 @@
 {
-  "version": "9.7.0",
+  "version": "9.8.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -105,7 +105,7 @@
     "@vitest/browser": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "axe-core": "4.11.4",
+    "axe-core": "4.12.1",
     "babel-plugin-react-remove-properties": "catalog:",
     "babel-plugin-search-and-replace": "1.1.1",
     "babel-plugin-transform-replace-expressions": "0.2.0",
@@ -127,7 +127,7 @@
     "picomatch": "4.0.4",
     "pkg-pr-new": "0.0.75",
     "playwright": "catalog:",
-    "prettier": "3.8.3",
+    "prettier": "3.9.3",
     "pretty-quick": "4.2.2",
     "react": "catalog:",
     "react-dom": "catalog:",
