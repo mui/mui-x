@@ -37,7 +37,7 @@ function TreemapPlot(props: TreemapPlotProps) {
 
   if (!treemapSeries) {
     throw new Error(
-      `MUI X Charts: Treemap series context is missing. Ensure the TreemapPlot is used inside a properly configured ChartsDataProviderPro.`,
+      `MUI X Charts: Treemap series context is missing. Ensure the TreemapPlot is used inside a properly configured ChartsDataProviderPremium.`,
     );
   }
 

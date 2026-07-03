@@ -1,17 +1,17 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import type { ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 import type { TreemapSeriesType } from './treemap.types';
 import { TREEMAP_CHART_PLUGINS } from './Treemap.plugins';
 import type { TreemapChartPluginSignatures } from './Treemap.plugins';
-import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
+import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { treemapSeriesConfig } from './seriesConfig';
 
 const seriesConfig = { treemap: treemapSeriesConfig };
 
 export interface TreemapDataProviderProps extends Omit<
-  ChartsContainerProProps<'treemap', TreemapChartPluginSignatures>,
+  ChartsContainerPremiumProps<'treemap', TreemapChartPluginSignatures>,
   'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
 > {
   children?: React.ReactNode;
@@ -29,7 +29,7 @@ export interface TreemapDataProviderProps extends Omit<
  */
 function TreemapDataProvider(props: TreemapDataProviderProps) {
   return (
-    <ChartsDataProviderPro<'treemap', TreemapChartPluginSignatures>
+    <ChartsDataProviderPremium<'treemap', TreemapChartPluginSignatures>
       {...props}
       seriesConfig={seriesConfig}
       plugins={TREEMAP_CHART_PLUGINS}

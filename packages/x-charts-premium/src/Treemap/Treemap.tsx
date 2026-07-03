@@ -8,7 +8,7 @@ import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
 import { TreemapPlot } from './TreemapPlot';
 import { useTreemapProps } from './useTreemapProps';
 import type { TreemapSeriesType, TreemapItemIdentifierWithData } from './treemap.types';
@@ -16,7 +16,7 @@ import type { TreemapClasses } from './treemapClasses';
 import type { TreemapSlotExtension } from './treemapSlots.types';
 import { FocusedTreemapRect } from './FocusedTreemapRect';
 import { TreemapDataProvider } from './TreemapDataProvider';
-import type { ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 import type { TreemapChartPluginSignatures } from './Treemap.plugins';
 
 export type TreemapSeries = MakeOptional<TreemapSeriesType, 'type'>;
@@ -24,7 +24,7 @@ export type TreemapSeries = MakeOptional<TreemapSeriesType, 'type'>;
 export interface TreemapProps
   extends
     Omit<
-      ChartsContainerProProps<'treemap', TreemapChartPluginSignatures>,
+      ChartsContainerPremiumProps<'treemap', TreemapChartPluginSignatures>,
       | 'plugins'
       | 'series'
       | 'slotProps'
@@ -79,14 +79,14 @@ const Treemap = React.forwardRef(function Treemap(
   const { chartsContainerProps, overlayProps, chartsWrapperProps, children } =
     useTreemapProps(themedProps);
   const {
-    chartsDataProviderProProps: { series, ...chartsDataProviderProProps },
+    chartsDataProviderPremiumProps: { series, ...chartsDataProviderPremiumProps },
     chartsSurfaceProps,
-  } = useChartsContainerProProps<'treemap', TreemapChartPluginSignatures>(chartsContainerProps);
+  } = useChartsContainerPremiumProps<'treemap', TreemapChartPluginSignatures>(chartsContainerProps);
 
   const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <TreemapDataProvider series={series as TreemapSeriesType[]} {...chartsDataProviderProProps}>
+    <TreemapDataProvider series={series as TreemapSeriesType[]} {...chartsDataProviderPremiumProps}>
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         <ChartsSurface {...chartsSurfaceProps}>
           <TreemapPlot classes={themedProps.classes} />

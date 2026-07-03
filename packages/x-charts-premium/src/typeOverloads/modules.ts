@@ -32,6 +32,13 @@ import type {
   RangeBarItemIdentifier,
 } from '../models/seriesType/rangeBar';
 import type { BarSeries } from '../BarChart';
+import type {
+  TreemapLayout,
+  TreemapSeriesType,
+  DefaultizedTreemapSeriesType,
+  TreemapItemIdentifier,
+  TreemapItemIdentifierWithData,
+} from '../Treemap/treemap.types';
 
 declare module '@mui/x-charts/internals' {
   interface UseBarChartPropsExtensions {
@@ -149,6 +156,23 @@ declare module '@mui/x-charts/internals' {
         seriesId: SeriesId;
         dataIndex: number;
       };
+    };
+    treemap: {
+      seriesInput: DefaultizedTreemapSeriesType;
+      series: DefaultizedTreemapSeriesType;
+      seriesLayout: {
+        treemapLayout: TreemapLayout<true>;
+      };
+      seriesProp: TreemapSeriesType;
+      itemIdentifier: TreemapItemIdentifier;
+      itemIdentifierWithData: TreemapItemIdentifierWithData<true>;
+      valueType: number;
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: TreemapItemIdentifier;
+        series: DefaultizedTreemapSeriesType;
+      };
+      highlightIdentifier: TreemapItemIdentifier;
     };
   }
 }

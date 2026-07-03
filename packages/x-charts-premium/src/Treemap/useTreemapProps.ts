@@ -4,7 +4,7 @@ import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import type { TreemapProps } from './Treemap';
 import type { TreemapSeriesData } from './treemap.types';
-import type { ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 import { TREEMAP_CHART_PLUGINS } from './Treemap.plugins';
 import type { TreemapChartPluginSignatures } from './Treemap.plugins';
 import { DEFAULT_TILE_PADDING, DEFAULT_HEADER_HEIGHT } from './utils';
@@ -46,7 +46,7 @@ export const useTreemapProps = (props: TreemapProps) => {
     paddingTop: hasRenderedGroups ? DEFAULT_HEADER_HEIGHT : 0,
   };
 
-  const chartsContainerProps: ChartsContainerProProps<'treemap', TreemapChartPluginSignatures> = {
+  const chartsContainerProps: ChartsContainerPremiumProps<'treemap', TreemapChartPluginSignatures> = {
     ...other,
     series: [
       {
@@ -64,7 +64,7 @@ export const useTreemapProps = (props: TreemapProps) => {
     onHighlightChange,
     // The central item-click plugin types the item as the bare identifier, but at runtime
     // `getItemAtPosition` returns the identifier with its layout node, matching `onItemClick`.
-    onItemClick: onItemClick as ChartsContainerProProps<
+    onItemClick: onItemClick as ChartsContainerPremiumProps<
       'treemap',
       TreemapChartPluginSignatures
     >['onItemClick'],

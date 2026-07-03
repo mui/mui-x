@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import { Treemap } from '@mui/x-charts-pro/Treemap';
-import type { TreemapItemIdentifierWithData } from '@mui/x-charts-pro/Treemap';
+import { Treemap } from '@mui/x-charts-premium/Treemap';
+import type { TreemapItemIdentifierWithData } from '@mui/x-charts-premium/Treemap';
 
 const data = {
   id: 'root',

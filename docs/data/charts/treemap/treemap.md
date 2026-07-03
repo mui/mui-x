@@ -4,7 +4,7 @@ productId: x-charts
 components: Treemap, TreemapPlot, TreemapDataProvider
 ---
 
-# Charts - Treemap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') 🧪
+# Charts - Treemap [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
 
 <p class="description">Treemaps display hierarchical data as nested rectangles, sizing each tile in proportion to its value.</p>
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Treemap } from '@mui/x-charts-pro/Treemap';
+import { Treemap } from '@mui/x-charts-premium/Treemap';
 
 const data = {
   id: 'tech',

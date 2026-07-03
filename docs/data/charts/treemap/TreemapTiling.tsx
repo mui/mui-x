@@ -2,8 +2,8 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import { Treemap } from '@mui/x-charts-pro/Treemap';
-import type { TreemapTilingMethod } from '@mui/x-charts-pro/Treemap';
+import { Treemap } from '@mui/x-charts-premium/Treemap';
+import type { TreemapTilingMethod } from '@mui/x-charts-premium/Treemap';
 
 const methods: TreemapTilingMethod[] = [
   'squarify',

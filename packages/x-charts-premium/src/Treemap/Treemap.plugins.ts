@@ -13,8 +13,8 @@ import type {
   UseChartHighlightSignature,
   UseChartItemClickSignature,
 } from '@mui/x-charts/internals';
-import { useChartProExport } from '../internals/plugins/useChartProExport';
-import type { UseChartProExportSignature } from '../internals/plugins/useChartProExport';
+import { useChartProExport } from '@mui/x-charts-pro/plugins';
+import type { UseChartProExportSignature } from '@mui/x-charts-pro/plugins';
 
 export type TreemapChartPluginSignatures = [
   UseChartTooltipSignature<'treemap'>,

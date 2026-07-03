@@ -5,8 +5,8 @@
   },
   "name": "TreemapPlot",
   "imports": [
-    "import { TreemapPlot } from '@mui/x-charts-pro/Treemap';",
-    "import { TreemapPlot } from '@mui/x-charts-pro';"
+    "import { TreemapPlot } from '@mui/x-charts-premium/Treemap';",
+    "import { TreemapPlot } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {
@@ -41,7 +41,7 @@
     }
   ],
   "muiName": "MuiTreemapPlot",
-  "filename": "/packages/x-charts-pro/src/Treemap/TreemapPlot.tsx",
+  "filename": "/packages/x-charts-premium/src/Treemap/TreemapPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/treemap/\">Charts - Treemap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a> 🧪</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/treemap/\">Charts - Treemap <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>"
 }
