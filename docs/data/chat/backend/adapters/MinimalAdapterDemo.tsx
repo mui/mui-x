@@ -31,9 +31,11 @@ const adapter: ChatAdapter = {
     const chunks: ChatMessageChunk[] = [
       { type: 'start', messageId, author: demoUsers.agent },
       { type: 'text-start', id: textId },
-      ...splitIntoDeltas(reply).map(
-        (delta): ChatMessageChunk => ({ type: 'text-delta', id: textId, delta }),
-      ),
+      ...splitIntoDeltas(reply).map((delta): ChatMessageChunk => ({
+        type: 'text-delta',
+        id: textId,
+        delta,
+      })),
       { type: 'text-end', id: textId },
       { type: 'finish', messageId },
     ];

@@ -2,10 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useStore } from '@mui/x-internals/store';
-import { TreeItemProviderProps } from './TreeItemProvider.types';
+import type { TreeItemProviderProps } from './TreeItemProvider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { idSelectors } from '../internals/plugins/id';
-import { TreeViewAnyStore } from '../internals/models';
+import type { TreeViewAnyStore } from '../internals/models';
 
 function TreeItemProvider(props: TreeItemProviderProps) {
   const { children, itemId, id } = props;

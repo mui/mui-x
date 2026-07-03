@@ -14,12 +14,7 @@ import {
 } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 type ClassKey =
-  | 'root'
-  | 'icon'
-  | 'message'
-  | 'actions'
-  | 'confirmButton'
-  | 'cancelButton';
+  'root' | 'icon' | 'message' | 'actions' | 'confirmButton' | 'cancelButton';
 
 const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   { name: 'root', description: 'The confirmation card.' },

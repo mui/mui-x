@@ -47,10 +47,7 @@ export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorG
 }
 
 export type ControlledModel =
-  | 'messages'
-  | 'conversations'
-  | 'activeConversationId'
-  | 'composerValue';
+  'messages' | 'conversations' | 'activeConversationId' | 'composerValue';
 
 export interface ChatStoreConstructor<Cursor = string> {
   new (parameters: ChatStoreParameters<Cursor>): ChatStore<Cursor>;

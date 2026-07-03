@@ -41,7 +41,7 @@
     "react-dom": "catalog:",
     "react-router": "catalog:",
     "react-transition-group": "catalog:",
-    "semver": "7.8.1",
+    "semver": "7.8.5",
     "stylis": "catalog:"
   }
 }

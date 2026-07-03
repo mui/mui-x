@@ -9,12 +9,12 @@ import type {
 import type {
   D3NamedProjection,
   GeoProjectionInput,
+  GeoTooltipPosition,
   UseGeoProjectionSignature,
   UseGeoProjectionState,
 } from './useGeoProjection.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import type { ChartState } from '../../models/chart';
-import type { GeoTooltipPosition } from '../../corePlugins/useChartSeriesConfig';
 
 const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
   return 'parallels' in projection && typeof projection.parallels === 'function';

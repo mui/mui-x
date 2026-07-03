@@ -12,7 +12,10 @@ import type { LegendGetter } from './legendGetter.types';
 import type { AxisTooltipGetter, TooltipGetter } from './tooltipGetter.types';
 import type { PolarExtremumGetter } from './polarExtremumGetter.types';
 import type { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
-import type { TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
+import type {
+  TooltipItemPositionGetter,
+  TooltipItemPositionSelector,
+} from './tooltipItemPositionGetter.types';
 import type { SeriesLayoutGetter } from './seriesLayout.types';
 import type { KeyboardFocusHandler } from '../../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import type { IdentifierSerializer } from './identifierSerializer.types';
@@ -23,6 +26,7 @@ import type { UseChartCartesianAxisSignature } from '../../../featurePlugins/use
 import type { UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
 import type { HighlightCreator } from '../../../featurePlugins/useChartHighlight/highlightCreator.types';
 import type { AxisTooltipContentProps, ItemTooltipContentProps } from './TooltipContent.types';
+import type { SamplingStrategy } from '../../../featurePlugins/useChartCartesianAxis/sampling.types';
 
 export type ChartSeriesTypeRequiredPlugins<SeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[SeriesType] extends { axisType: 'cartesian' }
@@ -42,6 +46,12 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
   tooltipGetter: TooltipGetter<SeriesType>;
   ItemTooltipContent?: React.ComponentType<ItemTooltipContentProps<SeriesType>>;
   tooltipItemPositionGetter?: TooltipItemPositionGetter<SeriesType>;
+  /**
+   * Computes the item tooltip position from the chart state, for series types
+   * whose position depends on state the core tooltip plugin doesn't track.
+   * Takes precedence over `tooltipItemPositionGetter`.
+   */
+  selectorTooltipItemPosition?: TooltipItemPositionSelector;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<SeriesType>;
   keyboardFocusHandler?: KeyboardFocusHandler<SeriesType>;
   /**
@@ -58,6 +68,11 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
    */
   identifierCleaner: IdentifierCleaner<SeriesType>;
   getItemAtPosition?: GetItemAtPosition<SeriesType>;
+  /**
+   * Optional sampling strategy used to render large datasets. When set and sampling is enabled,
+   * the series is reduced to a zoom-appropriate level of detail before rendering.
+   */
+  sampler?: SamplingStrategy<SeriesType>;
   descriptionGetter: DescriptionGetter<SeriesType>;
   isHighlightedCreator: HighlightCreator<SeriesType>;
   isFadedCreator: HighlightCreator<SeriesType>;
