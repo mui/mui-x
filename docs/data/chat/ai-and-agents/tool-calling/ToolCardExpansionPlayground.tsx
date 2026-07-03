@@ -76,10 +76,7 @@ const SEED_MESSAGE: ChatMessage = {
 };
 
 type StateOption =
-  | 'input-streaming'
-  | 'input-available'
-  | 'output-available'
-  | 'output-error';
+  'input-streaming' | 'input-available' | 'output-available' | 'output-error';
 
 // Each preset is a single `defaultExpanded` value for the `write` tool — the value
 // passed to the component below. The displayed snippet is derived from it (see

@@ -31,11 +31,7 @@ import {
 } from './AiThumbs';
 
 export type ChatGallerySectionId =
-  | 'full-surfaces'
-  | 'messages'
-  | 'composer'
-  | 'states'
-  | 'ai-and-rich-content';
+  'full-surfaces' | 'messages' | 'composer' | 'states' | 'ai-and-rich-content';
 
 export type ChatGalleryStatus = 'core' | 'compound' | 'slot' | 'state' | 'presentational';
 
