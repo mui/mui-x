@@ -36,7 +36,8 @@ export default function ChartsYHighlight(props: {
     return null;
   }
 
-  return axisYValues.map(({ axisId, value, dataIndex }) => {
+  return axisYValues.map((axisValue) => {
+    const { axisId, value } = axisValue;
     const yAxis = yAxes.axis[axisId];
     const yScale = yAxis.scale;
     const getYPosition = getValueToPositionMapper(yScale);
@@ -63,7 +64,7 @@ export default function ChartsYHighlight(props: {
       ({ bandStart, bandSize } = getSampledBandHighlight({
         scale: yScale,
         value,
-        dataIndex,
+        dataIndex: axisValue.dataIndex,
         data: yAxis.data,
         bucketSize: bucketSizeByAxis.get(axisId) ?? 1,
       }));

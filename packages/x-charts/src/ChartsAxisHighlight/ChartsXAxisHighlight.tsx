@@ -36,7 +36,8 @@ export default function ChartsXHighlight(props: {
     return null;
   }
 
-  return axisXValues.map(({ axisId, value, dataIndex }) => {
+  return axisXValues.map((axisValue) => {
+    const { axisId, value } = axisValue;
     const xAxis = xAxes.axis[axisId];
 
     const xScale = xAxis.scale;
@@ -64,7 +65,7 @@ export default function ChartsXHighlight(props: {
       ({ bandStart, bandSize } = getSampledBandHighlight({
         scale: xScale,
         value,
-        dataIndex,
+        dataIndex: axisValue.dataIndex,
         data: xAxis.data,
         bucketSize: bucketSizeByAxis.get(axisId) ?? 1,
       }));
