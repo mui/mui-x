@@ -15,12 +15,12 @@ export interface UrlListFetcherOptions {
   /** Surfaces swallowed fetch/cache failures. Silent by default. */
   logger?: Logger;
   /**
-   * Checks each URL before fetching. Returning false blocks it (SSRF guard) with an error string.
-   * Omit to allow any URL (hosts should set this).
+   * SSRF guard, checked on every hop (initial + each redirect). Returning false blocks the URL with
+   * an error string. Required: these tools fetch model-supplied URLs, so there is no safe default.
    * @param {string} url The absolute URL about to be fetched (initial or redirect hop).
    * @returns {boolean} Whether the URL may be fetched.
    */
-  isUrlAllowed?: (url: string) => boolean;
+  isUrlAllowed: (url: string) => boolean;
   /**
    * When true, rewrites site-absolute markdown links (e.g. `](/x/.../foo.md)` from `llms.txt`) to
    * absolute URLs so the agent can pass them straight to the next fetch.
@@ -58,16 +58,13 @@ class BlockedUrlError extends Error {
 }
 
 // Fetch `startUrl`, following redirects by hand so the guard runs on every hop. Otherwise a public
-// URL could redirect to localhost/metadata and slip past it. No guard set: use the default fetch.
+// URL could redirect to localhost/metadata and slip past it.
 async function fetchFollowingGuardedRedirects(
   fetcher: typeof fetch,
   startUrl: string,
-  isUrlAllowed?: (url: string) => boolean,
+  isUrlAllowed: (url: string) => boolean,
   signal?: AbortSignal,
 ): Promise<Response> {
-  if (!isUrlAllowed) {
-    return signal ? fetcher(startUrl, { signal }) : fetcher(startUrl);
-  }
   let target = startUrl;
   for (let redirects = 0; redirects <= MAX_REDIRECTS; redirects += 1) {
     if (!isUrlAllowed(target)) {
@@ -95,7 +92,7 @@ export function urlListFetcher(
   queue: PQueueType,
   fetcher: typeof fetch,
   urlList: string[],
-  options: UrlListFetcherOptions = {},
+  options: UrlListFetcherOptions,
 ) {
   const {
     cache,

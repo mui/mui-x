@@ -103,10 +103,12 @@ describe('compareVersions', () => {
     expect(compareVersions('9.1.2', '9.1.2')).toBe(0);
   });
 
-  it('ranks a prerelease below its release', () => {
-    expect(compareVersions('9.1.2-beta.1', '9.1.2')).toBeLessThan(0);
-    expect(compareVersions('9.1.2', '9.1.2-beta.1')).toBeGreaterThan(0);
-    expect(compareVersions('9.1.2-beta.2', '9.1.2-beta.1')).toBeGreaterThan(0);
+  it('ignores prerelease/build suffixes and compares the core version only', () => {
+    // A prerelease and its final release compare equal; we don't distinguish betas.
+    expect(compareVersions('9.1.2-beta.1', '9.1.2')).toBe(0);
+    expect(compareVersions('9.1.2-beta.2', '9.1.2-beta.1')).toBe(0);
+    // The core numbers still decide across different versions.
+    expect(compareVersions('9.2.0-beta.1', '9.1.0')).toBeGreaterThan(0);
   });
 });
 

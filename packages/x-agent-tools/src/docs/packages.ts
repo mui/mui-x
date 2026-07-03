@@ -67,33 +67,20 @@ export async function fetchRemotePackages(
   return catalog.data;
 }
 
-// Compare `major.minor.patch` (>0 / <0 / 0), ranking a prerelease below its release
-// (`1.0.0-beta` < `1.0.0`). Enough to pick the latest docs version.
+// Compare `major.minor.patch` (>0 / <0 / 0), ignoring any prerelease/build suffix. Enough to pick the
+// latest docs version; the catalog is stable releases, so beta-vs-final ties don't matter here.
 export function compareVersions(a: string, b: string): number {
-  const parse = (version: string) => {
-    const [core, prerelease] = version.split('-', 2);
-    const nums = core.split('.').map((part) => parseInt(part, 10) || 0);
-    return { nums, prerelease };
-  };
-  const parsedA = parse(a);
-  const parsedB = parse(b);
+  const parseCore = (version: string) =>
+    version.split('-', 1)[0].split('.').map((part) => parseInt(part, 10) || 0);
+  const numsA = parseCore(a);
+  const numsB = parseCore(b);
   for (let i = 0; i < 3; i += 1) {
-    const diff = (parsedA.nums[i] ?? 0) - (parsedB.nums[i] ?? 0);
+    const diff = (numsA[i] ?? 0) - (numsB[i] ?? 0);
     if (diff !== 0) {
       return diff;
     }
   }
-  // Equal core: the release outranks a prerelease; otherwise compare prerelease tags lexically.
-  if (parsedA.prerelease === parsedB.prerelease) {
-    return 0;
-  }
-  if (!parsedA.prerelease) {
-    return 1;
-  }
-  if (!parsedB.prerelease) {
-    return -1;
-  }
-  return parsedA.prerelease < parsedB.prerelease ? -1 : 1;
+  return 0;
 }
 
 export function normalizePackageName(value: string): string {

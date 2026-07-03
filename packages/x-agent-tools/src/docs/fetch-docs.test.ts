@@ -8,6 +8,9 @@ const ok = (body: string): Response => new Response(body, { status: 200 });
 const redirectTo = (location: string): Response =>
   new Response(null, { status: 302, headers: { location } });
 
+// Guard is required; allow-all keeps the non-security tests focused on their own behavior.
+const allowAll = () => true;
+
 describe('urlListFetcher', () => {
   const caches: LRUCache[] = [];
   const makeCache = () => {
@@ -25,7 +28,9 @@ describe('urlListFetcher', () => {
     const queue = new PQueue({ concurrency: 2 });
     const fetcher = vi.fn().mockResolvedValue(ok('doc body'));
 
-    const result = await urlListFetcher(queue, fetcher, ['https://docs/a']);
+    const result = await urlListFetcher(queue, fetcher, ['https://docs/a'], {
+      isUrlAllowed: allowAll,
+    });
 
     expect(result).toBe('doc body');
     expect(fetcher).toHaveBeenCalledWith('https://docs/a', expect.anything());
@@ -35,7 +40,7 @@ describe('urlListFetcher', () => {
     const queue = new PQueue({ concurrency: 2 });
     const fetcher = vi.fn().mockResolvedValueOnce(ok('first')).mockResolvedValueOnce(ok('second'));
 
-    const result = await urlListFetcher(queue, fetcher, ['u1', 'u2']);
+    const result = await urlListFetcher(queue, fetcher, ['u1', 'u2'], { isUrlAllowed: allowAll });
 
     expect(result).toBe('first\nsecond');
   });
@@ -45,7 +50,7 @@ describe('urlListFetcher', () => {
     const fetcher = vi.fn().mockResolvedValue(new Response('boom', { status: 500 }));
     const logger = vi.fn();
 
-    const result = await urlListFetcher(queue, fetcher, ['u1'], { logger });
+    const result = await urlListFetcher(queue, fetcher, ['u1'], { logger, isUrlAllowed: allowAll });
 
     expect(result).toBe('Could not fetch u1: HTTP error! status: 500');
     expect(logger).toHaveBeenCalled();
@@ -56,7 +61,7 @@ describe('urlListFetcher', () => {
     const fetcher = vi.fn().mockRejectedValue(new Error('network down'));
     const logger = vi.fn();
 
-    const result = await urlListFetcher(queue, fetcher, ['u1'], { logger });
+    const result = await urlListFetcher(queue, fetcher, ['u1'], { logger, isUrlAllowed: allowAll });
 
     expect(result).toBe('Could not fetch u1: network down');
     expect(logger).toHaveBeenCalledWith('Failed to fetch u1:', expect.any(Error));
@@ -66,9 +71,9 @@ describe('urlListFetcher', () => {
     const queue = new PQueue({ concurrency: 1 });
     const fetcher = vi.fn().mockRejectedValue(new Error('network down'));
 
-    await expect(urlListFetcher(queue, fetcher, ['u1'])).resolves.toBe(
-      'Could not fetch u1: network down',
-    );
+    await expect(
+      urlListFetcher(queue, fetcher, ['u1'], { isUrlAllowed: allowAll }),
+    ).resolves.toBe('Could not fetch u1: network down');
   });
 
   it('serves a cached body on the second call without re-fetching when a cache is provided', async () => {
@@ -76,7 +81,10 @@ describe('urlListFetcher', () => {
     const cache = makeCache();
     const fetcher = vi.fn().mockResolvedValue(ok('cached body'));
 
-    const first = await urlListFetcher(queue, fetcher, ['https://docs/x'], { cache });
+    const first = await urlListFetcher(queue, fetcher, ['https://docs/x'], {
+      cache,
+      isUrlAllowed: allowAll,
+    });
     expect(first).toBe('cached body');
 
     // The cache write is scheduled via queueMicrotask; flush the task queue.
@@ -84,7 +92,10 @@ describe('urlListFetcher', () => {
       setTimeout(resolve, 0);
     });
 
-    const second = await urlListFetcher(queue, fetcher, ['https://docs/x'], { cache });
+    const second = await urlListFetcher(queue, fetcher, ['https://docs/x'], {
+      cache,
+      isUrlAllowed: allowAll,
+    });
     expect(second).toBe('cached body');
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
@@ -96,7 +107,7 @@ describe('urlListFetcher', () => {
     const fetcher = vi.fn().mockResolvedValue(ok('see [a](/x/foo.md)'));
 
     // The raw view (fetchDocs) populates the cache with unmodified text.
-    const raw = await urlListFetcher(queue, fetcher, [url], { cache });
+    const raw = await urlListFetcher(queue, fetcher, [url], { cache, isUrlAllowed: allowAll });
     expect(raw).toBe('see [a](/x/foo.md)');
 
     // Flush the queued cache write before reading it back.
@@ -105,7 +116,11 @@ describe('urlListFetcher', () => {
     });
 
     // The rewritten view (useMuiDocs) reads the same cached raw entry and absolutizes on the way out.
-    const rewritten = await urlListFetcher(queue, fetcher, [url], { cache, resolveDocLinks: true });
+    const rewritten = await urlListFetcher(queue, fetcher, [url], {
+      cache,
+      resolveDocLinks: true,
+      isUrlAllowed: allowAll,
+    });
     expect(rewritten).toBe('see [a](https://mui.com/x/foo.md)');
     expect(fetcher).toHaveBeenCalledTimes(1); // served from cache, not refetched
   });
@@ -114,8 +129,8 @@ describe('urlListFetcher', () => {
     const queue = new PQueue({ concurrency: 1 });
     const fetcher = vi.fn().mockResolvedValue(ok('body'));
 
-    await urlListFetcher(queue, fetcher, ['https://docs/y']);
-    await urlListFetcher(queue, fetcher, ['https://docs/y']);
+    await urlListFetcher(queue, fetcher, ['https://docs/y'], { isUrlAllowed: allowAll });
+    await urlListFetcher(queue, fetcher, ['https://docs/y'], { isUrlAllowed: allowAll });
 
     expect(fetcher).toHaveBeenCalledTimes(2);
   });
@@ -211,7 +226,10 @@ describe('urlListFetcher', () => {
         }),
     );
 
-    const result = await urlListFetcher(queue, fetcher, ['https://docs/slow'], { timeoutMs: 5 });
+    const result = await urlListFetcher(queue, fetcher, ['https://docs/slow'], {
+      timeoutMs: 5,
+      isUrlAllowed: allowAll,
+    });
 
     expect(result).toContain('Could not fetch https://docs/slow');
   });
