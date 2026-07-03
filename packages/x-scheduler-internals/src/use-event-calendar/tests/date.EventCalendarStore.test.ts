@@ -195,7 +195,7 @@ describe('Date - EventCalendarStore', () => {
         adapter,
       );
 
-      store.setViewConfig({
+      store.setViewDefinition({
         siblingVisibleDateGetter,
         visibleDaysSelector: () => [],
       });
@@ -221,7 +221,7 @@ describe('Date - EventCalendarStore', () => {
         adapter,
       );
 
-      store.setViewConfig({
+      store.setViewDefinition({
         siblingVisibleDateGetter,
         visibleDaysSelector: () => [],
       });

@@ -14,7 +14,9 @@ export interface StandaloneCompactThreeDayViewProps<TEvent extends object, TReso
     CompactThreeDayViewProps,
     Omit<
       EventCalendarParameters<TEvent, TResource>,
-      keyof EventCalendarSchedulerParametersOverrides | CollapsibleResourcesParameterKeys
+      | 'viewConfig'
+      | keyof EventCalendarSchedulerParametersOverrides
+      | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
   /**

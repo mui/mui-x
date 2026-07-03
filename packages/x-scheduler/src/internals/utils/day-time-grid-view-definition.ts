@@ -1,6 +1,6 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import type {
-  EventCalendarViewConfig,
+  EventCalendarViewDefinition,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
@@ -21,16 +21,16 @@ const DAYS_IN_WEEK = 7;
 export type DayTimeGridDayCount = 1 | 3 | 7;
 
 /**
- * Builds an `EventCalendarViewConfig` for a day-time-grid based view.
+ * Builds an `EventCalendarViewDefinition` for a day-time-grid based view.
  *
- * When `dayCount === 7` the config is week-aligned: it snaps the visible range to
+ * When `dayCount === 7` the definition is week-aligned: it snaps the visible range to
  * `startOfWeek` and honors the `showWeekends` and `weekStartsOn` preferences. For any
- * other value, the config shows `dayCount` consecutive days starting from the current
+ * other value, the definition shows `dayCount` consecutive days starting from the current
  * visible date.
  */
-export function createDayTimeGridViewConfig(
+export function createDayTimeGridViewDefinition(
   dayCount: DayTimeGridDayCount,
-): EventCalendarViewConfig {
+): EventCalendarViewDefinition {
   if (dayCount === DAYS_IN_WEEK) {
     return {
       siblingVisibleDateGetter: ({ state, delta }) =>
