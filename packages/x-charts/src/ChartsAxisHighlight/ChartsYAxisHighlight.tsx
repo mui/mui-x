@@ -5,6 +5,7 @@ import { isOrdinalScale } from '../internals/scaleGuards';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsHighlightYAxisValue,
+  selectorChartHighlightBucketSize,
   selectorChartYAxis,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -28,6 +29,7 @@ export default function ChartsYHighlight(props: {
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const axisYValues = store.use(selectorChartsHighlightYAxisValue);
   const yAxes = store.use(selectorChartYAxis);
+  const bucketSizeByAxis = store.use(selectorChartHighlightBucketSize);
 
   if (axisYValues.length === 0) {
     return null;
@@ -54,13 +56,32 @@ export default function ChartsYHighlight(props: {
       }
     }
 
+    // When the bars are sampled, widen the band highlight to cover the whole merged bucket.
+    let bandStart = 0;
+    let bandSize = 0;
+    if (isYScaleOrdinal) {
+      const step = yScale.step();
+      bandStart = yScale(value)! - (step - yScale.bandwidth()) / 2;
+      bandSize = step;
+
+      const data = yAxis.data;
+      const bucketSize = bucketSizeByAxis.get(axisId) ?? 1;
+      if (bucketSize > 1 && data) {
+        const index = data.indexOf(value);
+        if (index >= 0) {
+          const bucketStart = Math.floor(index / bucketSize) * bucketSize;
+          const bucketEnd = Math.min(bucketStart + bucketSize - 1, data.length - 1);
+          bandStart = yScale(data[bucketStart])! - (step - yScale.bandwidth()) / 2;
+          bandSize = (bucketEnd - bucketStart + 1) * step;
+        }
+      }
+    }
+
     return (
       <React.Fragment key={`${axisId}-${value}`}>
         {isYScaleOrdinal && yScale(value) !== undefined && (
           <ChartsAxisHighlightPath
-            d={`M ${left} ${
-              yScale(value)! - (yScale.step() - yScale.bandwidth()) / 2
-            } l 0 ${yScale.step()} l ${width} 0 l 0 ${-yScale.step()} Z`}
+            d={`M ${left} ${bandStart} l 0 ${bandSize} l ${width} 0 l 0 ${-bandSize} Z`}
             className={classes.root}
             ownerState={{ axisHighlight: 'band' }}
           />
