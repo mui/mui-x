@@ -39,6 +39,8 @@ export interface CreateDocsToolsOptions {
   retryDelaysMs?: number[];
   /** Per-attempt catalog-fetch timeout. Defaults to 30s; override in tests. */
   catalogTimeoutMs?: number;
+  /** Cancels the background catalog load (e.g. on host shutdown), so a pending backoff can't linger. */
+  signal?: AbortSignal;
   /** Override the `fetchDocs` tool description (its default lives in the tool factory). */
   fetchDocsDescription?: string;
 }
@@ -55,6 +57,7 @@ export async function createDocsTools(options: CreateDocsToolsOptions): Promise<
     fetcher,
     retryDelaysMs = DEFAULT_RETRY_DELAYS_MS,
     catalogTimeoutMs = DEFAULT_CATALOG_TIMEOUT_MS,
+    signal,
     fetchDocsDescription,
   } = options;
 
@@ -84,6 +87,7 @@ export async function createDocsTools(options: CreateDocsToolsOptions): Promise<
     isUrlAllowed,
     retryDelaysMs,
     catalogTimeoutMs,
+    signal,
   });
 
   return { fetchDocsTool, useMuiDocsReady };
@@ -98,11 +102,13 @@ interface LoadUseMuiDocsDeps {
   isUrlAllowed: (url: string) => boolean;
   retryDelaysMs: number[];
   catalogTimeoutMs: number;
+  signal?: AbortSignal;
 }
 
 /**
- * Fetch the catalog (retried, per-attempt timeout) and build `useMuiDocs`. Resolves to `null` on
- * failure instead of rejecting, so a caller's `await` on it can never take `fetchDocs` down.
+ * Fetch the catalog (retried, per-attempt timeout, host-cancellable) and build `useMuiDocs`.
+ * Resolves to `null` on failure instead of rejecting, so a caller's `await` can never take
+ * `fetchDocs` down.
  */
 async function loadUseMuiDocs(deps: LoadUseMuiDocsDeps): Promise<UseMuiDocsTool | null> {
   const {
@@ -114,17 +120,19 @@ async function loadUseMuiDocs(deps: LoadUseMuiDocsDeps): Promise<UseMuiDocsTool 
     isUrlAllowed,
     retryDelaysMs,
     catalogTimeoutMs,
+    signal,
   } = deps;
   try {
     const getPackagesList = () =>
       withRetry(
-        () => fetchRemotePackages(docsBaseUrl, fetcher, catalogTimeoutMs),
+        () => fetchRemotePackages(docsBaseUrl, fetcher, catalogTimeoutMs, signal),
         retryDelaysMs,
         (error, delayMs) =>
           logger?.(
             `MUI X Agent Tools: docs catalog fetch failed, retrying in ${delayMs}ms.`,
             error,
           ),
+        signal,
       );
     return await createUseMuiDocsTool({
       getPackagesList,
@@ -135,11 +143,14 @@ async function loadUseMuiDocs(deps: LoadUseMuiDocsDeps): Promise<UseMuiDocsTool 
       isUrlAllowed,
     });
   } catch (error) {
-    logger?.(
-      'MUI X Agent Tools: docs catalog unreachable at startup; useMuiDocs is unavailable ' +
-        '(fetchDocs still works). Restart once the backend recovers.',
-      error,
-    );
+    // A host cancellation (shutdown) is expected, not a backend outage; don't cry wolf.
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      logger?.(
+        'MUI X Agent Tools: docs catalog unreachable at startup; useMuiDocs is unavailable ' +
+          '(fetchDocs still works). Restart once the backend recovers.',
+        error,
+      );
+    }
     return null;
   }
 }

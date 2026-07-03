@@ -13,6 +13,8 @@ export interface CreateMuiAgentToolsetOptions {
   retryDelaysMs?: number[];
   /** Per-attempt catalog-fetch timeout. Defaults to 30s; override in tests. */
   catalogTimeoutMs?: number;
+  /** Cancels the background catalog load (e.g. on host shutdown), so a pending backoff can't linger. */
+  signal?: AbortSignal;
   /** Override the `fetchDocs` tool description (its default lives in the tool factory). */
   fetchDocsDescription?: string;
 }
@@ -35,7 +37,8 @@ export async function createMuiAgentToolset(
   config: AgentToolsConfig,
   options: CreateMuiAgentToolsetOptions = {},
 ): Promise<MuiAgentToolset> {
-  const { logger, fetcher, retryDelaysMs, catalogTimeoutMs, fetchDocsDescription } = options;
+  const { logger, fetcher, retryDelaysMs, catalogTimeoutMs, signal, fetchDocsDescription } =
+    options;
 
   const codegenTool = createCodegenTool({
     muiBackendBaseUrl: config.muiBackendBaseUrl,
@@ -50,6 +53,7 @@ export async function createMuiAgentToolset(
     fetcher,
     retryDelaysMs,
     catalogTimeoutMs,
+    signal,
     fetchDocsDescription,
   });
 

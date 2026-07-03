@@ -101,4 +101,37 @@ describe('createDocsTools', () => {
       expect.any(Error),
     );
   });
+
+  it('cancels the background catalog load when the host signal aborts (settles to null, no scary log)', async () => {
+    const logger = vi.fn();
+    const controller = new AbortController();
+    // A catalog fetch that only ends when its (combined) signal aborts.
+    const fetcher = vi.fn(
+      (_url: string | URL | Request, init?: RequestInit): Promise<Response> =>
+        new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () =>
+            reject(new DOMException('aborted', 'AbortError')),
+          );
+        }),
+    );
+
+    const { fetchDocsTool, useMuiDocsReady } = await createDocsTools({
+      docsBaseUrl,
+      fetcher,
+      logger,
+      signal: controller.signal,
+      retryDelaysMs: [10000],
+      catalogTimeoutMs: 10000,
+    });
+
+    expect(fetchDocsTool.name).toBe('fetchDocs');
+    controller.abort();
+
+    expect(await useMuiDocsReady).toBeNull();
+    // A host abort is expected shutdown, not a backend outage, so no "unavailable" log.
+    expect(logger).not.toHaveBeenCalledWith(
+      expect.stringContaining('useMuiDocs is unavailable'),
+      expect.anything(),
+    );
+  });
 });

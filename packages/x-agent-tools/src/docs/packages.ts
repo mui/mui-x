@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { PackageData } from '../types';
+import { combineAbortSignals } from '../utils/abort-signal';
 
 export const PACKAGES_LIST_PATH = '/v1/public/packages/list';
 
@@ -14,18 +15,24 @@ const catalogSchema = z.array(
 
 /**
  * Fetch the docs-catalog package list from `docsBaseUrl`. Throws a prefixed error if the catalog is
- * unreachable, non-JSON, or empty (the docs tools can't work without it). Pass `timeoutMs` to abort
- * a hung connection (accepted but never answered) so the caller's retry can proceed.
+ * unreachable, non-JSON, or empty (the docs tools can't work without it). `timeoutMs` aborts a hung
+ * connection (accepted but never answered); `signal` lets a host cancel (e.g. on shutdown).
  */
 export async function fetchRemotePackages(
   docsBaseUrl: string,
   fetcher: typeof fetch = globalThis.fetch,
   timeoutMs?: number,
+  signal?: AbortSignal,
 ): Promise<PackageData[]> {
   // Concatenate like the JWT/codegen clients so a base path prefix (`https://host/api`) survives.
   const packagesListUrl = `${docsBaseUrl.replace(/\/+$/, '')}${PACKAGES_LIST_PATH}`;
-  const response = timeoutMs
-    ? await fetcher(packagesListUrl, { signal: AbortSignal.timeout(timeoutMs) })
+  // Abort on either the per-attempt timeout or the host's cancellation, whichever fires first.
+  const fetchSignal = combineAbortSignals(
+    timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined,
+    signal,
+  );
+  const response = fetchSignal
+    ? await fetcher(packagesListUrl, { signal: fetchSignal })
     : await fetcher(packagesListUrl);
 
   if (!response.ok) {

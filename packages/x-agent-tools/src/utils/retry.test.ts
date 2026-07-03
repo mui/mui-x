@@ -32,4 +32,19 @@ describe('withRetry', () => {
     await expect(withRetry(fn, [])).rejects.toThrow(/x/);
     expect(fn).toHaveBeenCalledTimes(1);
   });
+
+  it('stops retrying and rejects with the abort reason when the signal fires mid-backoff', async () => {
+    const fn = vi.fn().mockRejectedValue(new Error('fail'));
+    const controller = new AbortController();
+
+    const promise = withRetry(fn, [1000, 1000], undefined, controller.signal);
+    // Let the first attempt fail and enter the backoff sleep, then abort it.
+    await new Promise((resolve) => {
+      setTimeout(resolve, 0);
+    });
+    controller.abort(new DOMException('stop', 'AbortError'));
+
+    await expect(promise).rejects.toThrow(/stop/);
+    expect(fn).toHaveBeenCalledTimes(1); // aborted during the first backoff, no second attempt
+  });
 });

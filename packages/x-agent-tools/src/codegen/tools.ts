@@ -108,7 +108,12 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
       let generated: z.infer<typeof generateResponseSchema>;
       try {
         generated = generateResponseSchema.parse(await generateResponse.json());
-      } catch {
+      } catch (error) {
+        // A cancellation during the body read rejects with AbortError from the same signal;
+        // let it through so hosts detect cancellation, not a fake "unexpected response".
+        if (error instanceof Error && error.name === 'AbortError') {
+          throw error;
+        }
         throw new Error(
           'MUI X Agent Tools: The codegen backend returned an unexpected response (not valid JSON, or missing runId). Check that MUI_RECIPES_BACKEND_BASE_URL points at recipes-backend (not a proxy or error page), then retry.',
         );

@@ -21,10 +21,15 @@ const main = async () => {
 
   const logger = buildCombinedLogger(DEFAULT_LOG_PATH);
 
+  // Cancel the background catalog load when the client disconnects, so a pending retry backoff can't
+  // keep the process alive after the transport closes.
+  const shutdown = new AbortController();
+
   // The lib owns backend config, the SSRF guard, catalog retry, and the fail-soft policy; this host
   // only maps the tools onto MCP.
   const toolset = await createMuiAgentToolset(resolveAgentToolsConfig(), {
     logger,
+    signal: shutdown.signal,
     fetchDocsDescription: `Fetch documentation for one or more URLs extracted from previous tool calls responses. The URLs should be passed as an array in the "urls" argument.`,
   });
 
@@ -40,6 +45,13 @@ const main = async () => {
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
+
+  // Fire the shutdown signal on disconnect, chained so the SDK's own close handling still runs.
+  const sdkOnClose = transport.onclose;
+  transport.onclose = () => {
+    shutdown.abort();
+    sdkOnClose?.();
+  };
 
   // useMuiDocs needs the catalog; register it when that settles (or log if unreachable), announced
   // via tools/listChanged so a slow or hung backend never blocks startup, codegen, or fetchDocs.
