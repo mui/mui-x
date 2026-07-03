@@ -39,9 +39,11 @@ Ensure every node has a unique id (ids are coerced to strings, so 1 and '1' coll
     );
   }
 
-  // Re-derive values (leaves contribute their value, parents are summed) so the
-  // treemap tiling receives a consistent value on every node.
-  stratified.sum((node) => (node.childrenIds.length ? 0 : node.value));
+  // Reuse the values already summed in `getSeriesWithDefaultValues` rather than summing
+  // again with a second, divergable rule; the tiling only needs `node.value` set.
+  stratified.each((node) => {
+    node.value = node.data.value;
+  });
 
   const treemapGenerator = treemap<TreemapLayoutNode<false>>()
     .size([Math.max(0, drawingArea.width), Math.max(0, drawingArea.height)])
