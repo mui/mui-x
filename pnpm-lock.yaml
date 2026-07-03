@@ -277,8 +277,8 @@ importers:
         specifier: 2.0.8-canary.27
         version: 2.0.8-canary.27(@babel/core@7.29.7)
       '@mui/internal-bundle-size-checker':
-        specifier: 1.0.9-canary.81
-        version: 1.0.9-canary.81(@types/node@22.19.19)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.0.3)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
+        specifier: 1.0.9-canary.83
+        version: 1.0.9-canary.83(@types/node@22.19.19)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.0.3)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
       '@mui/internal-code-infra':
         specifier: 0.0.4-canary.66
         version: 0.0.4-canary.66(@next/eslint-plugin-next@16.2.9)(@types/node@22.19.19)(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.15)(prettier@3.9.3)(stylelint@17.12.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.8)
@@ -2235,6 +2235,9 @@ importers:
       '@mui/x-charts-pro':
         specifier: workspace:^
         version: link:../../packages/x-charts-pro/build
+      '@mui/x-chat':
+        specifier: workspace:^
+        version: link:../../packages/x-chat/build
       '@mui/x-data-grid':
         specifier: workspace:^
         version: link:../../packages/x-data-grid/build
@@ -2253,6 +2256,12 @@ importers:
       '@mui/x-license':
         specifier: workspace:^
         version: link:../../packages/x-license/build
+      '@mui/x-scheduler':
+        specifier: workspace:^
+        version: link:../../packages/x-scheduler/build
+      '@mui/x-scheduler-premium':
+        specifier: workspace:^
+        version: link:../../packages/x-scheduler-premium/build
       '@mui/x-tree-view':
         specifier: workspace:^
         version: link:../../packages/x-tree-view/build
@@ -4294,8 +4303,8 @@ packages:
       react-dom: ^18.0.0 || ^19.0.0
       vitest: '>=4.1'
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.81':
-    resolution: {integrity: sha512-omgJCN/8RNOpO3FF0/ilW0PaImjDXeqDZStIGSaf6BEH1L7VwcXU7812ivHzMtTwLh8et/pq7q07j0j46B31JA==}
+  '@mui/internal-bundle-size-checker@1.0.9-canary.83':
+    resolution: {integrity: sha512-lmR9P2ITjA1kWgQNafGviA/3k4KLHv+gqvYyZjChzkEIv0dNKpf7pyF1KRzdGfGQwHFIBTIbS07pGXUtgsMm7g==}
     hasBin: true
 
   '@mui/internal-code-infra@0.0.4-canary.66':
@@ -13323,7 +13332,7 @@ snapshots:
       - babel-plugin-react-compiler
       - vite
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.81(@types/node@22.19.19)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.0.3)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)':
+  '@mui/internal-bundle-size-checker@1.0.9-canary.83(@types/node@22.19.19)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.0.3)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)':
     dependencies:
       '@octokit/rest': 22.0.1
       chalk: 5.6.2
