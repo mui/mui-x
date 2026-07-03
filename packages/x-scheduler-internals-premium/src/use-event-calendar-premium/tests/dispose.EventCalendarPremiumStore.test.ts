@@ -13,7 +13,7 @@ import {
 } from '../../internals/tests/disposeTestHelpers';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
-const buildViewConfig = (): any => ({
+const buildViewDefinition = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
   visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
     const days: SchedulerProcessedDate[] = [];
@@ -49,7 +49,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -72,7 +72,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     // Initial fetch is immediate; let it settle.
     await flushEffect();
@@ -98,7 +98,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       persistEvents: spy(noopPersistEvents),
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -128,7 +128,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -150,7 +150,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -165,7 +165,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     // First fetch hydrates the cache for the initial range.
     await flushEffect();
@@ -197,7 +197,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
       persistEvents: spy(() => persistPromise),
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();

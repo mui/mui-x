@@ -10,7 +10,6 @@ import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfi
 import type {
   TooltipPositionGetterAxesConfig,
   ChartSeriesConfig,
-  GeoTooltipPosition,
 } from '../../corePlugins/useChartSeriesConfig';
 import {
   selectorChartXAxis,
@@ -39,7 +38,6 @@ import {
 import type { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
-import { selectorGeoTooltipPosition } from '../useGeoProjection/useGeoProjection.selectors';
 
 const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
 
@@ -76,7 +74,6 @@ const selectorChartsTooltipAxisConfig = createSelectorMemoized(
   selectorChartRotationAxis,
   selectorChartRadiusAxis,
   selectorChartSeriesProcessed,
-  selectorGeoTooltipPosition,
   function selectorChartsTooltipAxisConfig<SeriesType extends ChartSeriesType>(
     identifier: SeriesItemIdentifierWithType<SeriesType> | null,
     { axis: xAxis, axisIds: xAxisIds }: ComputeResult<ChartsXAxisProps>,
@@ -84,15 +81,13 @@ const selectorChartsTooltipAxisConfig = createSelectorMemoized(
     rotationAxes: ComputePolarResult<ChartsRotationAxisProps>,
     radiusAxes: ComputePolarResult<ChartsRadiusAxisProps>,
     series: ProcessedSeries<SeriesType>,
-    geo: GeoTooltipPosition,
   ) {
     if (!identifier) {
       return {};
     }
 
     const itemSeries = series[identifier.type as SeriesType]?.series[identifier.seriesId] as
-      | ChartSeriesDefaultized<SeriesType>
-      | undefined;
+      ChartSeriesDefaultized<SeriesType> | undefined;
 
     if (!itemSeries) {
       return {};
@@ -115,9 +110,6 @@ const selectorChartsTooltipAxisConfig = createSelectorMemoized(
     if (yAxisId !== undefined) {
       axesConfig.y = yAxis[yAxisId];
     }
-    if (geo) {
-      axesConfig.geo = geo;
-    }
 
     return axesConfig;
   },
@@ -138,15 +130,14 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
     series: ProcessedSeries<SeriesType>,
     seriesLayout: SeriesLayout<SeriesType>,
     axesConfig: TooltipPositionGetterAxesConfig,
-    placement: 'top' | 'bottom' | 'left' | 'right',
+    placement: 'top' | 'bottom' | 'left' | 'right' | undefined,
   ) {
     if (!identifier) {
       return null;
     }
 
     const itemSeries = series[identifier.type as SeriesType]?.series[identifier.seriesId] as
-      | ChartSeriesDefaultized<SeriesType>
-      | undefined;
+      ChartSeriesDefaultized<SeriesType> | undefined;
 
     if (!itemSeries) {
       return null;
@@ -158,7 +149,7 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
         drawingArea,
         axesConfig,
         identifier,
-        placement,
+        placement: placement ?? 'top',
       }) ?? null
     );
   },

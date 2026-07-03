@@ -1,5 +1,5 @@
-import { TemporalTimezone } from '../../base-ui-copy/types/temporal';
-import {
+import type { TemporalTimezone } from '../../base-ui-copy/types/temporal';
+import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
@@ -7,8 +7,8 @@ import {
   SchedulerEventId,
   SchedulerResourceId,
 } from '../../models';
-import { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
-import { Adapter } from '../../use-adapter/useAdapter.types';
+import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
+import type { Adapter } from '../../use-adapter/useAdapter.types';
 
 export function generateOccurrenceFromEvent({
   event,

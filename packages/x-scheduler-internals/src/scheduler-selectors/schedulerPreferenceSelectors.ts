@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { DEFAULT_SCHEDULER_PREFERENCES } from '../internals/utils/SchedulerStore';
 
 const allSchedulerPreferencesSelector = createSelectorMemoized(

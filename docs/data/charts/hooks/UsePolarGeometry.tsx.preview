@@ -1,0 +1,14 @@
+<RadialBarChart
+  dataset={trustData}
+  series={[{ dataKey: 'trust' }]}
+  rotationAxis={[{ dataKey: 'country', scaleType: 'band' }]}
+  radiusAxis={[{ scaleType: 'linear' }]}
+  margin={{ top: 50, bottom: 50, left: 50, right: 50 }}
+  width={400}
+  height={400}
+>
+  <ChartsRadiusAxis />
+  <ChartsRotationAxis />
+  <RadialBarPlot />
+  <PolarGeometryOverlay />
+</RadialBarChart>

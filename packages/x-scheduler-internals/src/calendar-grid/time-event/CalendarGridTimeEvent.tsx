@@ -4,7 +4,7 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useId } from '@base-ui/utils/useId';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
+import type { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
@@ -14,7 +14,11 @@ import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
-import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
+import type {
+  SchedulerEventId,
+  SchedulerEventOccurrence,
+  TemporalSupportedObject,
+} from '../../models';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { generateOccurrenceFromEvent } from '../../internals/utils/event-utils';
 
@@ -51,6 +55,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const {
     start: columnStart,
     end: columnEnd,
+    dayStartMinute,
+    dayEndMinute,
     index: columnIndex,
     hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
@@ -121,6 +127,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     end,
     collectionStart: columnStart,
     collectionEnd: columnEnd,
+    dayStartMinute,
+    dayEndMinute,
   });
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);

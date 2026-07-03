@@ -110,3 +110,55 @@ This trades item-level interactivity for the ability to render hundreds of thous
 ```
 
 See [Bar charts—WebGL renderer](/x/react-charts/bars/#webgl-renderer), [Scatter charts—WebGL renderer](/x/react-charts/scatter/#webgl-renderer), and [Heatmap—WebGL renderer](/x/react-charts/heatmap/#webgl-renderer) for details and demos.
+
+## Sampling [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+When a zoomable chart has more data than the drawing area can show without making elements
+too small, the data can be reduced to an appropriate level of detail before rendering.
+
+`BarChartPro` and `LineChartPro` accept a `sampling` prop that selects the method:
+
+- `'none'` (default): render every element.
+- `'minmax'`: keep the min and max of each bucket.
+- `'m4'`: pixel-accurate—keep the first, min, max, and last point of each bucket (line series).
+- `'lttb'`: [Largest-Triangle-Three-Buckets](https://skemman.is/handle/1946/15343), keeps one representative point per bucket to preserve the shape (line series).
+
+Zoom in to progressively reveal more detail; sampling turns off once the view can resolve every element.
+
+Sampling also keeps a hard ceiling on the number of rendered elements (2,000). Once the view fits under it, the chart renders every visible element untouched; while a zoomed-in view still holds more than that, it stays sampled even when each element would be wide enough to draw on its own—so a very dense dataset never floods the renderer at any zoom level.
+
+:::info
+The zoom `minSpan` is a percentage, so the most zoomed-in view always renders about `dataLength × minSpan / 100` elements. On a very large dataset, keep the axis `zoom.minSpan` small so the deepest zoom doesn't render too many elements at once.
+:::
+
+### Comparing methods
+
+The same 8,784-point series rendered with each method at the same zoom. `'none'` is the reference (every point); the others approximate it with far fewer elements while preserving the overall shape.
+
+{{"demo": "SamplingMethodComparison.js"}}
+
+### Bar sampling
+
+Bars are merged into buckets that keep each range's value envelope, so spikes and troughs survive.
+Any method other than `'none'` enables it (bars always use a min/max envelope).
+
+```jsx
+<BarChartPro series={series} sampling="minmax" />
+```
+
+{{"demo": "BarSampling.js"}}
+
+### Line sampling
+
+Lines support all three algorithms; pick the one that best fits your data.
+See [Comparing methods](#comparing-methods).
+
+```jsx
+<LineChartPro series={series} sampling="m4" />
+```
+
+{{"demo": "LineSampling.js"}}
+
+Series with `null` values are still sampled; the gaps are preserved, so the line breaks at them instead of bridging them.
+
+{{"demo": "LineSamplingNulls.js"}}

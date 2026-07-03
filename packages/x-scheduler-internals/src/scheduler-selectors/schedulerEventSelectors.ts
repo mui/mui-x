@@ -1,6 +1,11 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { SchedulerEvent, SchedulerEventId, SchedulerEventSide, SchedulerResource } from '../models';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type {
+  SchedulerEvent,
+  SchedulerEventId,
+  SchedulerEventSide,
+  SchedulerResource,
+} from '../models';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { resolveResourceProperty } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 import { getPrimaryResourceId } from '../internals/utils/event-utils';
