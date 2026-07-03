@@ -14,15 +14,19 @@ const catalogSchema = z.array(
 
 /**
  * Fetch the docs-catalog package list from `docsBaseUrl`. Throws a prefixed error if the catalog is
- * unreachable, non-JSON, or empty (the docs tools can't work without it).
+ * unreachable, non-JSON, or empty (the docs tools can't work without it). Pass `timeoutMs` to abort
+ * a hung connection (accepted but never answered) so the caller's retry can proceed.
  */
 export async function fetchRemotePackages(
   docsBaseUrl: string,
   fetcher: typeof fetch = globalThis.fetch,
+  timeoutMs?: number,
 ): Promise<PackageData[]> {
   // Concatenate like the JWT/codegen clients so a base path prefix (`https://host/api`) survives.
   const packagesListUrl = `${docsBaseUrl.replace(/\/+$/, '')}${PACKAGES_LIST_PATH}`;
-  const response = await fetcher(packagesListUrl);
+  const response = timeoutMs
+    ? await fetcher(packagesListUrl, { signal: AbortSignal.timeout(timeoutMs) })
+    : await fetcher(packagesListUrl);
 
   if (!response.ok) {
     throw new Error(

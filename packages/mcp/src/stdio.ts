@@ -6,7 +6,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { SERVER_VERSION } from './version';
 import { registerCodegenTool } from './codegen/register';
-import { registerDocsTools } from './docs/register';
+import { registerFetchDocsTool, registerUseMuiDocsTool } from './docs/register';
 
 const SERVER_NAME = 'mui-mcp';
 
@@ -14,6 +14,8 @@ const SERVER_NAME = 'mui-mcp';
 const DEFAULT_LOG_PATH = join(homedir(), '.mui-mcp.log');
 
 const main = async () => {
+  // Loaded here, not at top level, so a failure loading the lib hits main().catch below
+  // (friendly startup error) instead of an uncaught crash at module load.
   const { resolveAgentToolsConfig, createMuiAgentToolset, buildCombinedLogger, formatCodegenText } =
     await import('@mui/x-agent-tools');
 
@@ -21,27 +23,27 @@ const main = async () => {
 
   // The lib owns backend config, the SSRF guard, catalog retry, and the fail-soft policy; this host
   // only maps the tools onto MCP.
-  const toolset = createMuiAgentToolset(resolveAgentToolsConfig(), {
+  const toolset = await createMuiAgentToolset(resolveAgentToolsConfig(), {
     logger,
     fetchDocsDescription: `Fetch documentation for one or more URLs extracted from previous tool calls responses. The URLs should be passed as an array in the "urls" argument.`,
   });
 
   const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION });
 
-  // Codegen needs no network at startup, so register it first and connect right away.
+  // Codegen and fetchDocs need no catalog, so register both and connect right away.
   registerCodegenTool(server, {
     tool: toolset.codegenTool,
     formatText: formatCodegenText,
     logger,
   });
+  registerFetchDocsTool(server, toolset.fetchDocsTool, logger);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
 
-  // Docs tools arrive after the catalog fetch (fetchDocs always; useMuiDocs only if the catalog was
-  // reachable), announced via tools/listChanged so a slow backend never blocks startup or codegen.
-  const { fetchDocsTool, useMuiDocsTool } = await toolset.docsToolsReady;
-  registerDocsTools(server, { fetchDocsTool, useMuiDocsTool, logger });
+  // useMuiDocs needs the catalog; register it when that settles (or log if unreachable), announced
+  // via tools/listChanged so a slow or hung backend never blocks startup, codegen, or fetchDocs.
+  registerUseMuiDocsTool(server, await toolset.useMuiDocsReady, logger);
 };
 
 main().catch((error: unknown) => {

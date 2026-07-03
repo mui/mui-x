@@ -2,35 +2,42 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { DocsTools, Logger } from '@mui/x-agent-tools';
 import { buildDocsHandler } from './handler';
 
-export interface RegisterDocsToolsDeps extends DocsTools {
-  logger: Logger;
+type FetchDocsTool = DocsTools['fetchDocsTool'];
+type UseMuiDocsTool = NonNullable<Awaited<DocsTools['useMuiDocsReady']>>;
+
+/** Register `fetchDocs` (no catalog needed), so it's in the initial tools list before `connect`. */
+export function registerFetchDocsTool(
+  server: McpServer,
+  tool: FetchDocsTool,
+  logger: Logger,
+): void {
+  server.registerTool(
+    tool.name,
+    { description: tool.description, inputSchema: tool.inputSchema.shape },
+    buildDocsHandler(tool, logger),
+  );
 }
 
 /**
- * Register the docs tools the toolset produced. `fetchDocs` always registers; `useMuiDocs` registers
- * only when the catalog was reachable (`null` otherwise). Called after `server.connect`, so both
- * reach clients via tools/listChanged.
+ * Register `useMuiDocs` once the catalog settles (announced via tools/listChanged), or log that it's
+ * unavailable when the catalog was unreachable. `fetchDocs` and `generateReactCode` work regardless.
  */
-export function registerDocsTools(server: McpServer, deps: RegisterDocsToolsDeps): void {
-  const { fetchDocsTool, useMuiDocsTool, logger } = deps;
-
-  server.registerTool(
-    fetchDocsTool.name,
-    { description: fetchDocsTool.description, inputSchema: fetchDocsTool.inputSchema.shape },
-    buildDocsHandler(fetchDocsTool, logger),
-  );
-
-  if (useMuiDocsTool) {
-    server.registerTool(
-      useMuiDocsTool.name,
-      { description: useMuiDocsTool.description, inputSchema: useMuiDocsTool.inputSchema.shape },
-      buildDocsHandler(useMuiDocsTool, logger),
+export function registerUseMuiDocsTool(
+  server: McpServer,
+  tool: UseMuiDocsTool | null,
+  logger: Logger,
+): void {
+  if (!tool) {
+    logger(
+      'MUI MCP: useMuiDocs is unavailable (docs catalog was unreachable at startup). ' +
+        'fetchDocs and generateReactCode still work; restart once the backend recovers.',
     );
     return;
   }
 
-  logger(
-    'MUI MCP: useMuiDocs is unavailable (docs catalog was unreachable at startup). ' +
-      'fetchDocs and generateReactCode still work; restart once the backend recovers.',
+  server.registerTool(
+    tool.name,
+    { description: tool.description, inputSchema: tool.inputSchema.shape },
+    buildDocsHandler(tool, logger),
   );
 }

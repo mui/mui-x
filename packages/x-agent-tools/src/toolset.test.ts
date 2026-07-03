@@ -21,14 +21,14 @@ const jsonResponse = (data: unknown, status = 200): Response =>
   new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json' } });
 
 describe('createMuiAgentToolset', () => {
-  it('composes the codegen tool (immediate) and the docs tools (async)', async () => {
+  it('exposes codegen + fetchDocs immediately and resolves useMuiDocs after the catalog settles', async () => {
     const fetcher = vi.fn().mockResolvedValue(jsonResponse(catalog));
 
-    const toolset = createMuiAgentToolset(config, { fetcher, retryDelaysMs: [] });
+    const toolset = await createMuiAgentToolset(config, { fetcher, retryDelaysMs: [] });
 
     expect(toolset.codegenTool.name).toBe('generateReactCode');
-    const { fetchDocsTool, useMuiDocsTool } = await toolset.docsToolsReady;
-    expect(fetchDocsTool.name).toBe('fetchDocs');
+    expect(toolset.fetchDocsTool.name).toBe('fetchDocs');
+    const useMuiDocsTool = await toolset.useMuiDocsReady;
     expect(useMuiDocsTool?.name).toBe('useMuiDocs');
   });
 });

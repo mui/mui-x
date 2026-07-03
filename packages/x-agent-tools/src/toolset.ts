@@ -11,26 +11,31 @@ export interface CreateMuiAgentToolsetOptions {
   fetcher?: typeof fetch;
   /** Retry backoff for the catalog fetch. Defaults to a ~63s ramp; override in tests. */
   retryDelaysMs?: number[];
+  /** Per-attempt catalog-fetch timeout. Defaults to 30s; override in tests. */
+  catalogTimeoutMs?: number;
   /** Override the `fetchDocs` tool description (its default lives in the tool factory). */
   fetchDocsDescription?: string;
 }
 
-export interface MuiAgentToolset {
+/**
+ * `codegenTool` and `fetchDocsTool` are ready immediately (no catalog needed); `useMuiDocsReady`
+ * resolves after the catalog settles, so a slow or hung catalog never blocks the other two.
+ */
+export interface MuiAgentToolset extends DocsTools {
   /** Ready immediately: needs no network at startup. */
   codegenTool: GenerateReactCodeTool;
-  /** The docs tools, once the catalog fetch settles. Never rejects (fail-soft). */
-  docsToolsReady: Promise<DocsTools>;
 }
 
 /**
  * Assemble MUI's full agent toolset from backend config by composing the codegen and docs builders.
- * A host only wires transport, registration, and rendering on top.
+ * Resolves once `codegen` + `fetchDocs` are ready; the catalog-dependent `useMuiDocs` loads in the
+ * background (`useMuiDocsReady`). A host only wires transport, registration, and rendering on top.
  */
-export function createMuiAgentToolset(
+export async function createMuiAgentToolset(
   config: AgentToolsConfig,
   options: CreateMuiAgentToolsetOptions = {},
-): MuiAgentToolset {
-  const { logger, fetcher, retryDelaysMs, fetchDocsDescription } = options;
+): Promise<MuiAgentToolset> {
+  const { logger, fetcher, retryDelaysMs, catalogTimeoutMs, fetchDocsDescription } = options;
 
   const codegenTool = createCodegenTool({
     muiBackendBaseUrl: config.muiBackendBaseUrl,
@@ -39,13 +44,14 @@ export function createMuiAgentToolset(
     fetcher,
   });
 
-  const docsToolsReady = createDocsTools({
+  const docsTools = await createDocsTools({
     docsBaseUrl: config.docsBaseUrl,
     logger,
     fetcher,
     retryDelaysMs,
+    catalogTimeoutMs,
     fetchDocsDescription,
   });
 
-  return { codegenTool, docsToolsReady };
+  return { codegenTool, ...docsTools };
 }

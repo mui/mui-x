@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { registerDocsTools } from './register';
+import { registerFetchDocsTool, registerUseMuiDocsTool } from './register';
 
-type Server = Parameters<typeof registerDocsTools>[0];
-type Deps = Parameters<typeof registerDocsTools>[1];
+type Server = Parameters<typeof registerFetchDocsTool>[0];
+type FetchTool = Parameters<typeof registerFetchDocsTool>[1];
+type UseTool = NonNullable<Parameters<typeof registerUseMuiDocsTool>[1]>;
 
 const fakeTool = (name: string) => ({
   name,
@@ -15,42 +16,42 @@ const fakeTool = (name: string) => ({
 
 const makeServer = () => ({ registerTool: vi.fn() });
 
-describe('registerDocsTools', () => {
-  it('registers both docs tools when useMuiDocs is available', () => {
+describe('registerFetchDocsTool', () => {
+  it('registers fetchDocs', () => {
     const server = makeServer();
 
-    registerDocsTools(
+    registerFetchDocsTool(
       server as unknown as Server,
-      {
-        fetchDocsTool: fakeTool('fetchDocs'),
-        useMuiDocsTool: fakeTool('useMuiDocs'),
-        logger: vi.fn(),
-      } as unknown as Deps,
-    );
-
-    expect(server.registerTool).toHaveBeenCalledTimes(2);
-    // fetchDocs first, then useMuiDocs.
-    expect(server.registerTool.mock.calls.map((call) => call[0])).toEqual([
-      'fetchDocs',
-      'useMuiDocs',
-    ]);
-  });
-
-  it('registers only fetchDocs and logs when the catalog was unreachable (useMuiDocs null)', () => {
-    const server = makeServer();
-    const logger = vi.fn();
-
-    registerDocsTools(
-      server as unknown as Server,
-      {
-        fetchDocsTool: fakeTool('fetchDocs'),
-        useMuiDocsTool: null,
-        logger,
-      } as unknown as Deps,
+      fakeTool('fetchDocs') as unknown as FetchTool,
+      vi.fn(),
     );
 
     expect(server.registerTool).toHaveBeenCalledTimes(1);
     expect(server.registerTool.mock.calls[0][0]).toBe('fetchDocs');
+  });
+});
+
+describe('registerUseMuiDocsTool', () => {
+  it('registers useMuiDocs when the catalog was reachable', () => {
+    const server = makeServer();
+
+    registerUseMuiDocsTool(
+      server as unknown as Server,
+      fakeTool('useMuiDocs') as unknown as UseTool,
+      vi.fn(),
+    );
+
+    expect(server.registerTool).toHaveBeenCalledTimes(1);
+    expect(server.registerTool.mock.calls[0][0]).toBe('useMuiDocs');
+  });
+
+  it('registers nothing and logs when useMuiDocs is null (catalog unreachable)', () => {
+    const server = makeServer();
+    const logger = vi.fn();
+
+    registerUseMuiDocsTool(server as unknown as Server, null, logger);
+
+    expect(server.registerTool).not.toHaveBeenCalled();
     expect(logger).toHaveBeenCalledWith(expect.stringContaining('useMuiDocs is unavailable'));
   });
 });
