@@ -73,16 +73,6 @@
       "type": { "description": "(id: GridRowId, field: string) =&gt; HTMLDivElement | null" },
       "required": true
     },
-    "getCellFormula": {
-      "type": { "description": "(id: GridRowId, field: string) =&gt; string | null" },
-      "required": true,
-      "isPremiumPlan": true
-    },
-    "getCellFormulaResult": {
-      "type": { "description": "(id: GridRowId, field: string) =&gt; GridFormulaResult | null" },
-      "required": true,
-      "isPremiumPlan": true
-    },
     "getCellMode": {
       "type": { "description": "(id: GridRowId, field: string) =&gt; GridCellMode" },
       "required": true
@@ -289,11 +279,6 @@
       "isProPlan": true
     },
     "publishEvent": { "type": { "description": "GridEventPublisher" }, "required": true },
-    "reevaluateFormulas": {
-      "type": { "description": "() =&gt; void" },
-      "required": true,
-      "isPremiumPlan": true
-    },
     "removeRowGroupingCriteria": {
       "type": { "description": "(groupingCriteriaField: string) =&gt; void" },
       "required": true,
@@ -352,11 +337,6 @@
     "setCellFocus": {
       "type": { "description": "(id: GridRowId, field: string) =&gt; void" },
       "required": true
-    },
-    "setCellFormula": {
-      "type": { "description": "(id: GridRowId, field: string, formula: string) =&gt; void" },
-      "required": true,
-      "isPremiumPlan": true
     },
     "setCellSelectionModel": {
       "type": { "description": "(newModel: GridCellSelectionModel) =&gt; void" },
@@ -626,11 +606,6 @@
     "upsertFilterItems": {
       "type": { "description": "(items: GridFilterItem[]) =&gt; void" },
       "required": true
-    },
-    "validateCellFormula": {
-      "type": { "description": "(formula: string) =&gt; GridFormulaValidationResult" },
-      "required": true,
-      "isPremiumPlan": true
     }
   }
 }

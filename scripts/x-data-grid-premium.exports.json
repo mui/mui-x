@@ -434,7 +434,6 @@
   { "name": "GridFooterContainerProps", "kind": "TypeAlias" },
   { "name": "GridFooterNode", "kind": "Interface" },
   { "name": "GridFooterPlaceholder", "kind": "Function" },
-  { "name": "GridFormulaApi", "kind": "Interface" },
   { "name": "GridFormulaCellKey", "kind": "TypeAlias" },
   { "name": "GridFormulaErrorCode", "kind": "TypeAlias" },
   { "name": "GridFormulaFunctionArg", "kind": "TypeAlias" },

@@ -1,5 +1,4 @@
 export type {
-  GridFormulaApi,
   GridFormulaCellKey,
   GridFormulaErrorCode,
   GridFormulaFunctionArg,

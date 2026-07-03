@@ -250,8 +250,11 @@ automatically. Hook-registration order makes formula recompute run before filter
 `applyAggregation()` once after `setState`. Pivoting + formulas unsupported in v1 (evaluation
 skipped while pivot is active, dev warning).
 
-**D15. Public API & types.** `GridFormulaApi`: `setCellFormula`, `getCellFormula`,
-`getCellFormulaResult`, `validateCellFormula`, `reevaluateFormulas`. Private:
+**D15. Public API & types.** _Amended 2026-07-03: the formula API methods are **private**
+(`GridFormulaPrivateApi`) until a userland use case justifies exposing them — the former public
+`GridFormulaApi` interface was merged into it and removed from `GridApiPremium` and the barrel;
+tests reach the methods through `unwrapPrivateAPI`._ Methods: `setCellFormula`, `getCellFormula`,
+`getCellFormulaResult`, `validateCellFormula`, `reevaluateFormulas`, plus
 `applyFormulaEvaluation`. Event `formulaEvaluationEnd: { changedCells: GridCellCoordinates[] }` in
 `GridEventLookupPremium` (no model → no `registerControlState`). Types: `GridFormulaResult` union,
 branded `GridFormulaCellKey` with the format `` `${id} ${field}` `` — **NUL separator**

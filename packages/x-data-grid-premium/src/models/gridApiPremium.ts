@@ -19,10 +19,7 @@ import type {
   GridDataSourceApiPremium,
 } from '../hooks/features/dataSource/models';
 import type { GridAggregationPrivateApi } from '../hooks/features/aggregation/gridAggregationInterfaces';
-import type {
-  GridFormulaApi,
-  GridFormulaPrivateApi,
-} from '../hooks/features/formula/gridFormulaInterfaces';
+import type { GridFormulaPrivateApi } from '../hooks/features/formula/gridFormulaInterfaces';
 import type {
   GridPivotingApi,
   GridPivotingPrivateApi,
@@ -51,7 +48,6 @@ export interface GridApiPremium
     GridRowPinningApi,
     GridDataSourceApiPremium,
     GridCellSelectionApi,
-    GridFormulaApi,
     GridPivotingApi,
     GridAiAssistantApi,
     GridSidebarApi,

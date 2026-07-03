@@ -229,7 +229,7 @@ export interface GridFormulaInternalCache {
   pasteOrigin: { rowPosition: number | undefined; columnPosition: number | undefined } | null;
 }
 
-export interface GridFormulaApi {
+export interface GridFormulaPrivateApi {
   /**
    * Stores a formula as the cell's row-data value and re-evaluates.
    * @param {GridRowId} id The row id.
@@ -265,9 +265,6 @@ export interface GridFormulaApi {
    * Escape hatch for in-place row mutations the grid cannot observe.
    */
   reevaluateFormulas: () => void;
-}
-
-export interface GridFormulaPrivateApi {
   /**
    * Runs a full formula evaluation pass and refreshes dependent features.
    */

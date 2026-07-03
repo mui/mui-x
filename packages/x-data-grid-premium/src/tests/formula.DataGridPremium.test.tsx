@@ -20,6 +20,7 @@ import type {
 } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
+import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import { getCaretOffset, setCaretOffset } from '../components/formulaEditorCaret';
 
 const baselineProps: DataGridPremiumProps = {
@@ -89,6 +90,9 @@ describe('<DataGridPremium /> - Formulas', () => {
   };
 
   let apiRef: RefObject<GridApi | null>;
+
+  // The formula API methods are private for now.
+  const formulaApi = () => unwrapPrivateAPI<GridPrivateApiPremium, GridApi>(apiRef.current!);
 
   function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
@@ -186,7 +190,7 @@ describe('<DataGridPremium /> - Formulas', () => {
         />,
       );
       expect(getColumnValues(1)).to.deep.equal(['2']);
-      expect(apiRef.current!.getCellFormulaResult(0, 'total')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'total')).to.deep.equal({
         type: 'value',
         value: 2,
       });
@@ -340,7 +344,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(1)).to.deep.equal(['4', '50']);
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, _action: 'delete' }]));
-      expect(apiRef.current!.getCellFormulaResult(0, 'total')).to.equal(null);
+      expect(formulaApi().getCellFormulaResult(0, 'total')).to.equal(null);
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, price: 9, total: 100 }]));
       expect(apiRef.current!.getCellValue(0, 'total')).to.equal(100);
@@ -602,7 +606,7 @@ describe('<DataGridPremium /> - Formulas', () => {
         }),
       );
       expect(getColumnValues(2)).to.deep.equal(['#REF!', '']);
-      const result = apiRef.current!.getCellFormulaResult(0, 'summary');
+      const result = formulaApi().getCellFormulaResult(0, 'summary');
       expect(result?.type === 'error' && result.message).to.include(
         'has no position in the current view',
       );
@@ -641,14 +645,14 @@ describe('<DataGridPremium /> - Formulas', () => {
           ]}
         />,
       );
-      expect(apiRef.current!.getCellFormulaResult(0, 'top')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'top')).to.deep.equal({
         type: 'value',
         value: 30,
       });
 
       await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'asc' }]));
       // The first view row is now id 1.
-      expect(apiRef.current!.getCellFormulaResult(0, 'top')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'top')).to.deep.equal({
         type: 'value',
         value: 10,
       });
@@ -735,7 +739,7 @@ describe('<DataGridPremium /> - Formulas', () => {
           ]}
         />,
       );
-      expect(apiRef.current!.getCellFormulaResult(0, 'top')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'top')).to.deep.equal({
         type: 'value',
         value: 5,
       });
@@ -791,7 +795,7 @@ describe('<DataGridPremium /> - Formulas', () => {
         />,
       );
       // Anchors at view positions 1 and 2: rows 0 and 1.
-      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
         value: 9,
       });
@@ -799,7 +803,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       await act(async () => apiRef.current!.setSortModel([{ field: 'price', sort: 'asc' }]));
       // View order is now [0, 2, 3, 1]: the anchors sit at positions 1 and 4,
       // so the rectangle covers every row (D6: positional bind-time resolution).
-      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
         value: 15,
       });
@@ -854,7 +858,7 @@ describe('<DataGridPremium /> - Formulas', () => {
         />,
       );
       // The position context ignores pagination: all 4 rows take part.
-      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
         value: 15,
       });
@@ -892,7 +896,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       // The escaped literal contributes its unescaped display value, not the
       // raw `'=x` source.
-      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
         value: '=xy',
       });
@@ -915,11 +919,11 @@ describe('<DataGridPremium /> - Formulas', () => {
         />,
       );
       // The parent is a real data row: position 1 is the parent, 2 the child.
-      expect(apiRef.current!.getCellFormulaResult(0, 'top')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'top')).to.deep.equal({
         type: 'value',
         value: 10,
       });
-      expect(apiRef.current!.getCellFormulaResult(1, 'top')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(1, 'top')).to.deep.equal({
         type: 'value',
         value: 5,
       });
@@ -938,7 +942,7 @@ describe('<DataGridPremium /> - Formulas', () => {
         />,
       );
       // Position 1 is the first data column, not the `__check__` column.
-      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
         value: 5,
       });
@@ -1097,7 +1101,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       await waitFor(() => {
         expect(apiRef.current!.getRow(0).total).to.equal(42);
       });
-      expect(apiRef.current!.getCellFormulaResult(0, 'total')).to.equal(null);
+      expect(formulaApi().getCellFormulaResult(0, 'total')).to.equal(null);
       expect(getColumnValues(3)).to.deep.equal(['42', '5', '8']);
     });
   });
@@ -1201,7 +1205,7 @@ describe('<DataGridPremium /> - Formulas', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
         value: 10,
       });
@@ -1226,7 +1230,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       // Position 1 is the first leaf, not the autogenerated group header
       // (whose `price` would resolve to null).
-      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
         value: 2,
       });
@@ -1251,7 +1255,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       // The autogenerated grouping column takes no position: position 1 is
       // the first data column, `category` (a leaf cell of the grouping
       // column would resolve to null).
-      expect(apiRef.current!.getCellFormulaResult(0, 'summary')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'summary')).to.deep.equal({
         type: 'value',
         value: 'x',
       });
@@ -1342,7 +1346,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       // In-place mutation: no rows cascade runs, the formula pass triggers
       // the row spanning reset itself.
       apiRef.current!.getRow(0).price = 5;
-      await act(async () => apiRef.current!.reevaluateFormulas());
+      await act(async () => formulaApi().reevaluateFormulas());
       await waitFor(() => {
         expect(getSpannedCells()).to.deep.equal({});
       });
@@ -1443,7 +1447,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       await microtasks();
 
       expect(apiRef.current!.getRow(0).total).to.equal(42);
-      expect(apiRef.current!.getCellFormulaResult(0, 'total')).to.equal(null);
+      expect(formulaApi().getCellFormulaResult(0, 'total')).to.equal(null);
       expect(getColumnValues(3)).to.deep.equal(['42', '5', '8']);
     });
 
@@ -1483,8 +1487,8 @@ describe('<DataGridPremium /> - Formulas', () => {
       fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
 
-      expect(apiRef.current!.getCellFormula(0, 'total')).to.equal(null);
-      expect(apiRef.current!.getCellFormulaResult(0, 'total')).to.equal(null);
+      expect(formulaApi().getCellFormula(0, 'total')).to.equal(null);
+      expect(formulaApi().getCellFormulaResult(0, 'total')).to.equal(null);
     });
 
     it('should round-trip an escaped literal through the editor', async () => {
@@ -1665,44 +1669,44 @@ describe('<DataGridPremium /> - Formulas', () => {
   describe('api', () => {
     it('should set a formula with setCellFormula', async () => {
       await render(<Test />);
-      await act(async () => apiRef.current!.setCellFormula(2, 'total', '=price + quantity'));
+      await act(async () => formulaApi().setCellFormula(2, 'total', '=price + quantity'));
       expect(apiRef.current!.getRow(2).total).to.equal('=price + quantity');
       expect(getColumnValues(3)).to.deep.equal(['6', '5', '6']);
     });
 
     it('should throw when setCellFormula targets a column without allowFormulas', async () => {
       await render(<Test />);
-      expect(() => apiRef.current!.setCellFormula(0, 'item', '=price')).to.throw(
+      expect(() => formulaApi().setCellFormula(0, 'item', '=price')).to.throw(
         'does not allow formulas',
       );
     });
 
     it('should throw when setCellFormula receives a non-formula value', async () => {
       await render(<Test />);
-      expect(() => apiRef.current!.setCellFormula(0, 'total', 'price')).to.throw(
+      expect(() => formulaApi().setCellFormula(0, 'total', 'price')).to.throw(
         'expects a formula source starting with `=`',
       );
     });
 
     it('should return the source from getCellFormula and null for plain cells', async () => {
       await render(<Test />);
-      expect(apiRef.current!.getCellFormula(0, 'total')).to.equal('=price * quantity');
-      expect(apiRef.current!.getCellFormula(2, 'total')).to.equal(null);
+      expect(formulaApi().getCellFormula(0, 'total')).to.equal('=price * quantity');
+      expect(formulaApi().getCellFormula(2, 'total')).to.equal(null);
     });
 
     it('should return the evaluation result from getCellFormulaResult', async () => {
       await render(<Test />);
-      expect(apiRef.current!.getCellFormulaResult(0, 'total')).to.deep.equal({
+      expect(formulaApi().getCellFormulaResult(0, 'total')).to.deep.equal({
         type: 'value',
         value: 6,
       });
-      expect(apiRef.current!.getCellFormulaResult(2, 'total')).to.equal(null);
+      expect(formulaApi().getCellFormulaResult(2, 'total')).to.equal(null);
     });
 
     it('should validate formulas with validateCellFormula', async () => {
       await render(<Test />);
-      expect(apiRef.current!.validateCellFormula('=price * quantity').valid).to.equal(true);
-      const invalid = apiRef.current!.validateCellFormula('=NOPE(1)');
+      expect(formulaApi().validateCellFormula('=price * quantity').valid).to.equal(true);
+      const invalid = formulaApi().validateCellFormula('=NOPE(1)');
       expect(invalid.valid).to.equal(false);
       expect(invalid.issues[0].code).to.equal('#NAME?');
     });
@@ -1716,7 +1720,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       );
       expect(getColumnValues(3)).to.deep.equal(['6']);
       apiRef.current!.getRow(0).price = 100;
-      await act(async () => apiRef.current!.reevaluateFormulas());
+      await act(async () => formulaApi().reevaluateFormulas());
       expect(getColumnValues(3)).to.deep.equal(['300']);
     });
   });

@@ -38,7 +38,6 @@ import {
 } from './gridFormulaPositionContext';
 import type {
   GridFormulaActiveEdit,
-  GridFormulaApi,
   GridFormulaLookup,
   GridFormulaPrivateApi,
 } from './gridFormulaInterfaces';
@@ -231,7 +230,7 @@ export const useGridFormula = (
   /**
    * API METHODS
    */
-  const setCellFormula = React.useCallback<GridFormulaApi['setCellFormula']>(
+  const setCellFormula = React.useCallback<GridFormulaPrivateApi['setCellFormula']>(
     (id, field, formula) => {
       const colDef = apiRef.current.getColumn(field);
       if (!colDef || !colDef.allowFormulas) {
@@ -258,7 +257,7 @@ export const useGridFormula = (
     [apiRef],
   );
 
-  const getCellFormula = React.useCallback<GridFormulaApi['getCellFormula']>(
+  const getCellFormula = React.useCallback<GridFormulaPrivateApi['getCellFormula']>(
     (id, field) => {
       const raw = apiRef.current.getRow(id)?.[field];
       return isFormulaSource(raw) ? raw : null;
@@ -266,12 +265,12 @@ export const useGridFormula = (
     [apiRef],
   );
 
-  const getCellFormulaResult = React.useCallback<GridFormulaApi['getCellFormulaResult']>(
+  const getCellFormulaResult = React.useCallback<GridFormulaPrivateApi['getCellFormulaResult']>(
     (id, field) => gridCellFormulaResultSelector(apiRef, { id, field }),
     [apiRef],
   );
 
-  const validateCellFormula = React.useCallback<GridFormulaApi['validateCellFormula']>(
+  const validateCellFormula = React.useCallback<GridFormulaPrivateApi['validateCellFormula']>(
     (formula) =>
       validateFormulaExpression(getFormulaExpression(typeof formula === 'string' ? formula : ''), {
         functions: apiRef.current.caches.formula.registry,
@@ -288,7 +287,7 @@ export const useGridFormula = (
     triggerDependentFeatures(runPass('full'), { aggregation: true, rowSpanning: true });
   }, [runPass, triggerDependentFeatures]);
 
-  const reevaluateFormulas = React.useCallback<GridFormulaApi['reevaluateFormulas']>(() => {
+  const reevaluateFormulas = React.useCallback<GridFormulaPrivateApi['reevaluateFormulas']>(() => {
     apiRef.current.applyFormulaEvaluation();
   }, [apiRef]);
 
@@ -312,20 +311,17 @@ export const useGridFormula = (
     [apiRef],
   );
 
-  const formulaApi: GridFormulaApi = {
+  // The formula API stays private until a userland use case justifies exposing it.
+  const formulaPrivateApi: GridFormulaPrivateApi = {
     setCellFormula,
     getCellFormula,
     getCellFormulaResult,
     validateCellFormula,
     reevaluateFormulas,
-  };
-
-  const formulaPrivateApi: GridFormulaPrivateApi = {
     applyFormulaEvaluation,
     setFormulaActiveEdit,
   };
 
-  useGridApiMethod(apiRef, formulaApi, 'public');
   useGridApiMethod(apiRef, formulaPrivateApi, 'private');
 
   /**
