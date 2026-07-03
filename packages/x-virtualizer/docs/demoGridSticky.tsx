@@ -7,6 +7,7 @@ import {
   useVirtualizer,
   Virtualizer,
   Virtualization,
+  Dimensions,
   LayoutGridSticky,
   computeOffsetLeft,
 } from '@mui/x-virtualizer';
@@ -49,14 +50,19 @@ const cellStyle: React.CSSProperties = {
   whiteSpace: 'nowrap',
 };
 
+/* The horizontal axis is controlled: pinned cells are absolutely positioned with
+ * JS offsets, since sticky positioning ignores the positioner's transform. */
 const pinnedCellStyle: React.CSSProperties = {
   ...cellStyle,
-  position: 'sticky',
+  position: 'absolute',
+  top: 0,
+  height: '100%',
   zIndex: 1,
   background: '#f5f5f5',
 };
 
 const rowStyle: React.CSSProperties = {
+  position: 'relative',
   display: 'flex',
   width: columnsTotalWidth,
   height: ROW_HEIGHT,
@@ -66,6 +72,8 @@ const rowStyle: React.CSSProperties = {
 };
 
 const VirtualizerContext = React.createContext(null as unknown as Virtualizer);
+
+const PinnedOffsetsContext = React.createContext({ left: 0, right: 0 });
 
 const JankContext = React.createContext({ current: false });
 
@@ -99,13 +107,20 @@ function Row(props: {
   background?: string;
 }) {
   const { id, offsetLeft, firstColumnIndex, lastColumnIndex, background } = props;
+  const offsets = React.useContext(PinnedOffsetsContext);
 
   const cells = [];
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     cells.push(
       <div
         key={i}
-        style={i === firstColumnIndex ? { ...cellStyle, marginLeft: offsetLeft } : cellStyle}
+        style={
+          i === firstColumnIndex
+            ? // `offsetLeft` is relative to the end of the left pinned section; since the
+              // pinned cells are out of the flow, add their width back.
+              { ...cellStyle, marginLeft: offsetLeft + COLUMN_WIDTH }
+            : cellStyle
+        }
       >
         {id} × {i}
       </div>,
@@ -116,9 +131,9 @@ function Row(props: {
 
   return (
     <div style={background ? { ...rowStyle, background } : rowStyle}>
-      <div style={{ ...pinnedStyle, left: 0 }}>{id} × 0</div>
+      <div style={{ ...pinnedStyle, left: offsets.left }}>{id} × 0</div>
       {cells}
-      <div style={{ ...pinnedStyle, right: 0, marginLeft: 'auto' }}>
+      <div style={{ ...pinnedStyle, right: offsets.right }}>
         {id} × {COLUMN_COUNT - 1}
       </div>
     </div>
@@ -127,8 +142,14 @@ function Row(props: {
 
 function HeaderRow() {
   const virtualizer = React.useContext(VirtualizerContext);
+  const offsets = React.useContext(PinnedOffsetsContext);
   const renderContext = virtualizer.store.use(Virtualization.selectors.renderContext);
-  const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
+  const offsetLeft = computeOffsetLeft(
+    columnPositions,
+    renderContext,
+    pinnedColumns.left.length,
+    'controlled',
+  );
 
   const cells = [];
   for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
@@ -146,13 +167,13 @@ function HeaderRow() {
     );
   }
 
-  const headerCellStyle = { ...pinnedCellStyle, fontWeight: 600 };
+  const headerCellStyle = { ...pinnedCellStyle, fontWeight: 600, background: '#e8e8e8' };
 
   return (
     <div style={{ ...rowStyle, height: HEADER_HEIGHT, background: '#e8e8e8' }}>
-      <div style={{ ...headerCellStyle, left: 0, background: '#e8e8e8' }}>{columns[0].field}</div>
+      <div style={{ ...headerCellStyle, left: offsets.left }}>{columns[0].field}</div>
       {cells}
-      <div style={{ ...headerCellStyle, right: 0, marginLeft: 'auto', background: '#e8e8e8' }}>
+      <div style={{ ...headerCellStyle, right: offsets.right }}>
         {columns[COLUMN_COUNT - 1].field}
       </div>
     </div>
@@ -206,39 +227,59 @@ function Grid() {
   const bottomContainerProps = virtualizer.store.use(
     LayoutGridSticky.selectors.bottomContainerProps,
   );
+  const positionerProps = virtualizer.store.use(LayoutGridSticky.selectors.positionerProps);
+
+  const scrollPosition = virtualizer.store.use(Virtualization.selectors.scrollPosition);
+  const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
+  const pinnedOffsets = React.useMemo(
+    () => ({
+      left: scrollPosition.current.left,
+      right: Math.max(
+        0,
+        columnsTotalWidth - dimensions.viewportInnerSize.width - scrollPosition.current.left,
+      ),
+    }),
+    [scrollPosition, dimensions],
+  );
 
   const { getRows } = virtualizer.api.getters;
 
   return (
     <VirtualizerContext.Provider value={virtualizer}>
-      <Box
-        {...containerProps}
-        sx={{
-          height: 480,
-          overflow: 'auto',
-          border: `1px solid ${borderColor}`,
-          borderRadius: 1,
-          background: '#fff',
-          color: '#000',
-          fontFamily: 'monospace',
-          fontSize: 13,
-        }}
-      >
-        <div className="Grid--content" {...contentProps}>
-          <div className="Grid--topContainer" {...topContainerProps}>
-            <HeaderRow />
-            {getRows({ position: 'top', rows: pinnedRows.top })}
+      <PinnedOffsetsContext.Provider value={pinnedOffsets}>
+        <Box
+          {...containerProps}
+          sx={{
+            height: 480,
+            overflow: 'auto',
+            border: `1px solid ${borderColor}`,
+            borderRadius: 1,
+            background: '#fff',
+            color: '#000',
+            fontFamily: 'monospace',
+            fontSize: 13,
+          }}
+        >
+          <div className="Grid--content" {...contentProps}>
+            <div className="Grid--topContainer" {...topContainerProps}>
+              <div {...positionerProps}>
+                <HeaderRow />
+                {getRows({ position: 'top', rows: pinnedRows.top })}
+              </div>
+            </div>
+            <div className="Grid--spacerTop" {...spacerTopProps} />
+            <div className="Grid--window" {...windowProps}>
+              <div {...positionerProps}>{getRows()}</div>
+            </div>
+            <div className="Grid--spacerBottom" {...spacerBottomProps} />
+            <div className="Grid--bottomContainer" {...bottomContainerProps}>
+              <div {...positionerProps}>
+                {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
+              </div>
+            </div>
           </div>
-          <div className="Grid--spacerTop" {...spacerTopProps} />
-          <div className="Grid--window" {...windowProps}>
-            {getRows()}
-          </div>
-          <div className="Grid--spacerBottom" {...spacerBottomProps} />
-          <div className="Grid--bottomContainer" {...bottomContainerProps}>
-            {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
-          </div>
-        </div>
-      </Box>
+        </Box>
+      </PinnedOffsetsContext.Provider>
     </VirtualizerContext.Provider>
   );
 }

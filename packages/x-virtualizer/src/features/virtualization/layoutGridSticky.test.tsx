@@ -4,6 +4,7 @@ import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
   useVirtualizer,
   Virtualization,
+  Dimensions,
   LayoutGridSticky,
   computeOffsetLeft,
 } from '@mui/x-virtualizer';
@@ -41,12 +42,18 @@ const cellStyle: React.CSSProperties = {
   boxSizing: 'border-box',
 };
 
+/* The horizontal axis is controlled: pinned cells are absolutely positioned with
+ * JS offsets, since sticky positioning ignores the positioner's transform. */
 const pinnedCellStyle: React.CSSProperties = {
   ...cellStyle,
-  position: 'sticky',
+  position: 'absolute',
+  top: 0,
+  height: '100%',
   zIndex: 1,
   background: '#eee',
 };
+
+const PinnedOffsetsContext = React.createContext({ left: 0, right: 0 });
 
 function Row(props: {
   id: any;
@@ -56,6 +63,7 @@ function Row(props: {
   lastColumnIndex: number;
 }) {
   const { id, height, offsetLeft, firstColumnIndex, lastColumnIndex } = props;
+  const offsets = React.useContext(PinnedOffsetsContext);
 
   const cells = [];
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
@@ -63,7 +71,13 @@ function Row(props: {
       <div
         key={i}
         data-col={i}
-        style={i === firstColumnIndex ? { ...cellStyle, marginLeft: offsetLeft } : cellStyle}
+        style={
+          i === firstColumnIndex
+            ? // `offsetLeft` is relative to the end of the left pinned section; since the
+              // pinned cells are out of the flow, add their width back.
+              { ...cellStyle, marginLeft: offsetLeft + COLUMN_WIDTH }
+            : cellStyle
+        }
       >
         {id}:{i}
       </div>,
@@ -74,13 +88,19 @@ function Row(props: {
     <div
       data-testid="row"
       data-id={id}
-      style={{ display: 'flex', width: columnsTotalWidth, height, background: '#fff' }}
+      style={{
+        position: 'relative',
+        display: 'flex',
+        width: columnsTotalWidth,
+        height,
+        background: '#fff',
+      }}
     >
-      <div data-col={0} style={{ ...pinnedCellStyle, left: 0 }}>
+      <div data-col={0} style={{ ...pinnedCellStyle, left: offsets.left }}>
         {id}:0
       </div>
       {cells}
-      <div data-col={COLUMN_COUNT - 1} style={{ ...pinnedCellStyle, right: 0, marginLeft: 'auto' }}>
+      <div data-col={COLUMN_COUNT - 1} style={{ ...pinnedCellStyle, right: offsets.right }}>
         {id}:{COLUMN_COUNT - 1}
       </div>
     </div>
@@ -128,6 +148,7 @@ function StickyGrid() {
     columnPositions,
     renderContext,
     pinnedColumns.left.length,
+    'controlled',
   );
 
   const containerProps = virtualizer.store.use(LayoutGridSticky.selectors.containerProps);
@@ -138,6 +159,20 @@ function StickyGrid() {
   const spacerBottomProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerBottomProps);
   const bottomContainerProps = virtualizer.store.use(
     LayoutGridSticky.selectors.bottomContainerProps,
+  );
+  const positionerProps = virtualizer.store.use(LayoutGridSticky.selectors.positionerProps);
+
+  const scrollPosition = virtualizer.store.use(Virtualization.selectors.scrollPosition);
+  const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
+  const pinnedOffsets = React.useMemo(
+    () => ({
+      left: scrollPosition.current.left,
+      right: Math.max(
+        0,
+        columnsTotalWidth - dimensions.viewportInnerSize.width - scrollPosition.current.left,
+      ),
+    }),
+    [scrollPosition, dimensions],
   );
 
   const { getRows } = virtualizer.api.getters;
@@ -160,50 +195,60 @@ function StickyGrid() {
   }
 
   return (
-    <div
-      {...containerProps}
-      data-testid="scroller"
-      style={{
-        ...containerProps.style,
-        width: VIEWPORT_WIDTH,
-        height: VIEWPORT_HEIGHT,
-        overflow: 'auto',
-      }}
-    >
-      <div {...contentProps}>
-        <div {...topContainerProps} data-testid="top-container">
-          <div
-            data-testid="header"
-            style={{
-              display: 'flex',
-              width: columnsTotalWidth,
-              height: HEADER_HEIGHT,
-              background: '#ddd',
-            }}
-          >
-            <div data-col={0} style={{ ...pinnedCellStyle, left: 0, background: '#ddd' }}>
-              {columns[0].field}
-            </div>
-            {headerCells}
-            <div
-              data-col={COLUMN_COUNT - 1}
-              style={{ ...pinnedCellStyle, right: 0, marginLeft: 'auto', background: '#ddd' }}
-            >
-              {columns[COLUMN_COUNT - 1].field}
+    <PinnedOffsetsContext.Provider value={pinnedOffsets}>
+      <div
+        {...containerProps}
+        data-testid="scroller"
+        style={{
+          ...containerProps.style,
+          width: VIEWPORT_WIDTH,
+          height: VIEWPORT_HEIGHT,
+          overflow: 'auto',
+        }}
+      >
+        <div {...contentProps}>
+          <div {...topContainerProps} data-testid="top-container">
+            <div {...positionerProps}>
+              <div
+                data-testid="header"
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  width: columnsTotalWidth,
+                  height: HEADER_HEIGHT,
+                  background: '#ddd',
+                }}
+              >
+                <div
+                  data-col={0}
+                  style={{ ...pinnedCellStyle, left: pinnedOffsets.left, background: '#ddd' }}
+                >
+                  {columns[0].field}
+                </div>
+                {headerCells}
+                <div
+                  data-col={COLUMN_COUNT - 1}
+                  style={{ ...pinnedCellStyle, right: pinnedOffsets.right, background: '#ddd' }}
+                >
+                  {columns[COLUMN_COUNT - 1].field}
+                </div>
+              </div>
+              {getRows({ position: 'top', rows: pinnedRows.top })}
             </div>
           </div>
-          {getRows({ position: 'top', rows: pinnedRows.top })}
-        </div>
-        <div {...spacerTopProps} />
-        <div {...windowProps} data-testid="window">
-          {getRows()}
-        </div>
-        <div {...spacerBottomProps} />
-        <div {...bottomContainerProps} data-testid="bottom-container">
-          {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
+          <div {...spacerTopProps} />
+          <div {...windowProps} data-testid="window">
+            <div {...positionerProps}>{getRows()}</div>
+          </div>
+          <div {...spacerBottomProps} />
+          <div {...bottomContainerProps} data-testid="bottom-container">
+            <div {...positionerProps}>
+              {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </PinnedOffsetsContext.Provider>
   );
 }
 
@@ -333,7 +378,7 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     const scrollerRect = rect('scroller');
     const row = document.querySelector('[data-id="0"]')!;
 
-    // Pinned cells stick to the scrollport edges.
+    // Pinned cells stay at the scrollport edges.
     const pinnedLeft = row.querySelector('[data-col="0"]')!.getBoundingClientRect();
     expect(pinnedLeft.left).to.be.closeTo(scrollerRect.left, 1);
     const pinnedRight = row
@@ -341,12 +386,43 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       .getBoundingClientRect();
     expect(pinnedRight.right).to.be.closeTo(scrollerRect.left + scroller.clientWidth, 1);
 
-    // Middle cells are at their flow position.
+    // Middle cells are at their scrolled position.
     const middle = row.querySelector('[data-col="10"]')!.getBoundingClientRect();
     expect(middle.left - scrollerRect.left).to.be.closeTo(10 * COLUMN_WIDTH - scrollLeft, 1);
 
     // The header is virtualized with the same context.
     expect(document.querySelector('[data-testid="header"] [data-col="10"]')).not.to.equal(null);
+  });
+
+  it('keeps the viewport covered when scrolling right past the rendered columns', async () => {
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+
+    const before = document.querySelector('[data-id="0"] [data-col="3"]')!.getBoundingClientRect();
+
+    act(() => {
+      scroller.scrollLeft = 8 * COLUMN_WIDTH;
+    });
+    // Horizontal axis is controlled: until the virtualizer receives the scroll event,
+    // nothing moves — the previously rendered columns still cover the viewport
+    // (stale content, no gap).
+    const after = document.querySelector('[data-id="0"] [data-col="3"]')!.getBoundingClientRect();
+    expect(after.left).to.be.closeTo(before.left, 1);
+
+    const windowRect = rect('window');
+    const scrollerRect = rect('scroller');
+    expect(windowRect.left).to.be.closeTo(scrollerRect.left, 1);
+    expect(windowRect.width).to.be.closeTo(scroller.clientWidth, 1);
+
+    // Once the virtualizer catches up, the correct columns are rendered in place.
+    await act(async () => {
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(document.querySelector('[data-id="0"] [data-col="10"]')).not.to.equal(null);
+    });
+    const middle = document.querySelector('[data-id="0"] [data-col="10"]')!.getBoundingClientRect();
+    expect(middle.left - scrollerRect.left).to.be.closeTo(10 * COLUMN_WIDTH - 8 * COLUMN_WIDTH, 1);
   });
 
   it('extends the rendered window in the scroll direction (dynamic buffers)', async () => {

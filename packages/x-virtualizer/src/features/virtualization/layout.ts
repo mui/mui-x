@@ -403,26 +403,37 @@ export class LayoutListSticky extends Layout<ListElements> {
 
 /**
  * Grid layout based on the "inverse sticky" technique. Same principle as
- * `LayoutListSticky`, extended with pinned sections:
- * - the top/bottom containers (headers, pinned rows) are classic sticky elements,
- * - pinned column cells use `position: sticky; left/right` inside each row, unchanged
- *   from the regular flow: sticky constraints resolve against the scrollport, so they
- *   compose with the vertically-sticky window,
- * - the window's sticky offsets are asymmetric so it clamps against the inner viewport
- *   edges (below the top container, above the bottom container) rather than the
- *   scrollport edges.
+ * `LayoutListSticky`, extended with pinned sections. The two axes use different
+ * strategies:
+ * - Vertical: inverse sticky. The window's sticky offsets are asymmetric so it clamps
+ *   against the inner viewport edges (below the top container, above the bottom
+ *   container) rather than the scrollport edges. The top/bottom containers (headers,
+ *   pinned rows) are classic sticky elements.
+ * - Horizontal: controlled. The window is pinned to the scrollport (`left: 0`, sized to
+ *   the viewport, `overflow: hidden`) and an inner positioner translates the rows by
+ *   `-scrollLeft`. Stale columns can never leave the viewport, so horizontal render gaps
+ *   are impossible; the trade-off is that horizontal movement is applied per scroll
+ *   event instead of natively. As in the `controlled` layout mode, pinned column cells
+ *   must use absolute positioning with JS offsets: sticky constraints ignore the
+ *   positioner's transform.
  *
  * Expected DOM structure:
  * ```tsx
  * <div {...containerProps}>              // scroller
  *   <div {...contentProps}>              // in-flow, sticky containing block
  *     <div {...topContainerProps}>       // sticky top: headers + pinned top rows
+ *       <div {...positionerProps}>       // horizontal translate
+ *     </div>
  *     <div {...spacerTopProps} />        // height: rowPositions[firstRowIndex]
  *     <div {...windowProps}>             // sticky rendered window
- *       {rows}
+ *       <div {...positionerProps}>       // horizontal translate
+ *         {rows}
+ *       </div>
  *     </div>
  *     <div {...spacerBottomProps} />     // height: remaining content height
  *     <div {...bottomContainerProps}>    // sticky bottom: pinned bottom rows
+ *       <div {...positionerProps}>       // horizontal translate
+ *     </div>
  *   </div>
  * </div>
  * ```
@@ -503,6 +514,16 @@ export class LayoutGridSticky extends Layout<ListElements> {
       role: 'presentation',
     })),
 
+    positionerProps: createSelectorMemoized(
+      Virtualization.selectors.scrollPosition,
+      (scrollPosition) => ({
+        style: {
+          transform: `translate3d(${-scrollPosition.current.left}px, 0, 0)`,
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
+    ),
+
     spacerTopProps: createSelectorMemoized(
       Virtualization.selectors.renderContext,
       Dimensions.selectors.rowPositions,
@@ -557,6 +578,11 @@ export class LayoutGridSticky extends Layout<ListElements> {
             position: 'sticky',
             top: stickyTop,
             bottom: stickyBottom,
+            // Horizontal axis is controlled: the window is pinned to the scrollport and
+            // sized to the viewport, the positioner inside translates by `-scrollLeft`.
+            left: 0,
+            width: viewportInnerSize.width,
+            overflow: 'hidden',
             // Explicit height: keeps the sticky clamping math immune to flow height
             // discrepancies from out-of-flow children (detail panels, focus rows).
             height: renderedHeight,
