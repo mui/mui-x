@@ -1,7 +1,9 @@
 <DataGridPremium
   rows={rows}
   columns={columns}
-  formulaFunctions={formulaFunctions}
+  formulaA1Notation
+  cellSelection
+  cellSelectionFillHandle
   rowSelection={false}
   density="compact"
   showCellVerticalBorder

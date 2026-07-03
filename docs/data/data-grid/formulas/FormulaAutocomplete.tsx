@@ -12,90 +12,125 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
+const percentFormatter = new Intl.NumberFormat('en-US', {
+  style: 'percent',
+  maximumFractionDigits: 1,
+});
+
 // A custom function appears in the suggestion dropdown with the optional
 // `signature`, `description` and `category` metadata it declares.
-const DISCOUNT: GridFormulaFunctionDefinition = {
-  name: 'DISCOUNT',
+const MARGIN: GridFormulaFunctionDefinition = {
+  name: 'MARGIN',
   minArgs: 2,
   maxArgs: 2,
-  signature: 'DISCOUNT(amount, percent)',
-  description: 'Subtracts a percentage from an amount.',
-  category: 'Custom',
-  apply: ([amount, percent], context) => {
-    const base = context.coerce.toNumber(amount);
-    const rate = context.coerce.toNumber(percent);
-    if (typeof base !== 'number') {
-      return base;
+  signature: 'MARGIN(revenue, cost)',
+  description: 'Gross margin as a fraction of revenue.',
+  category: 'Finance',
+  apply: ([revenue, cost], context) => {
+    const income = context.coerce.toNumber(revenue);
+    const expense = context.coerce.toNumber(cost);
+    if (typeof income !== 'number') {
+      return income;
     }
-    if (typeof rate !== 'number') {
-      return rate;
+    if (typeof expense !== 'number') {
+      return expense;
     }
-    return base * (1 - rate / 100);
+    return (income - expense) / income;
   },
 };
 
-const formulaFunctions = { ...GRID_FORMULA_FUNCTIONS, DISCOUNT };
+const formulaFunctions = { ...GRID_FORMULA_FUNCTIONS, MARGIN };
 
 const columns: GridColDef[] = [
-  { field: 'item', headerName: 'Item', width: 150 },
+  { field: 'product', headerName: 'Product', width: 190 },
   {
-    field: 'price',
-    headerName: 'Price',
+    field: 'revenue',
+    headerName: 'Revenue',
     type: 'number',
-    width: 100,
-    editable: true,
-  },
-  {
-    field: 'quantity',
-    headerName: 'Qty',
-    type: 'number',
-    width: 80,
-    editable: true,
-  },
-  {
-    field: 'total',
-    headerName: 'Total',
-    type: 'number',
-    width: 220,
-    allowFormulas: true,
+    width: 120,
     editable: true,
     valueFormatter: (value) =>
       typeof value === 'number' ? currencyFormatter.format(value) : value,
   },
+  {
+    field: 'cost',
+    headerName: 'Cost',
+    type: 'number',
+    width: 120,
+    editable: true,
+    valueFormatter: (value) =>
+      typeof value === 'number' ? currencyFormatter.format(value) : value,
+  },
+  {
+    field: 'margin',
+    headerName: 'Gross margin',
+    type: 'number',
+    width: 170,
+    allowFormulas: true,
+    editable: true,
+    valueFormatter: (value) =>
+      typeof value === 'number' ? percentFormatter.format(value) : value,
+  },
 ];
 
 const rows: GridRowsProp = [
-  { id: 1, item: 'Keyboard', price: 89, quantity: 3, total: '=price * quantity' },
+  {
+    id: 1,
+    product: 'Cloud subscription',
+    revenue: 148000,
+    cost: 31000,
+    margin: '=MARGIN(revenue, cost)',
+  },
   {
     id: 2,
-    item: 'Mouse',
-    price: 45,
-    quantity: 5,
-    total: '=DISCOUNT(price * quantity, 10)',
+    product: 'Enterprise support',
+    revenue: 96500,
+    cost: 54200,
+    margin: '=MARGIN(revenue, cost)',
   },
   {
     id: 3,
-    item: 'Monitor',
-    price: 320,
-    quantity: 2,
-    total: '=ROUND(price * quantity, 2)',
+    product: 'Implementation services',
+    revenue: 72400,
+    cost: 61800,
+    margin: '=MARGIN(revenue, cost)',
   },
   {
     id: 4,
-    item: 'Webcam',
-    price: 60,
-    quantity: 2,
-    total: '=SUM(COLUMN_VALUES("price"))',
+    product: 'Training workshops',
+    revenue: 28900,
+    cost: 16400,
+    margin: '=MARGIN(revenue, cost)',
+  },
+  {
+    id: 5,
+    product: 'Hardware resale',
+    revenue: 54100,
+    cost: 47600,
+    margin: '=MARGIN(revenue, cost)',
+  },
+  // The last margin is left empty on purpose: click it and type `=M` to see
+  // the custom MARGIN function in the dropdown, with its signature help.
+  {
+    id: 6,
+    product: 'Marketplace add-ons',
+    revenue: 19700,
+    cost: 8300,
   },
 ];
 
 export default function FormulaAutocomplete() {
   return (
-    <div style={{ height: 300, width: '100%' }}>
+    <div style={{ height: 340, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}
         formulaFunctions={formulaFunctions}
+        rowSelection={false}
+        density="compact"
+        showCellVerticalBorder
+        showColumnVerticalBorder
+        disablePivoting
       />
     </div>
   );
