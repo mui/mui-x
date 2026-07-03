@@ -35,8 +35,12 @@ export const selectorTooltipItemPosition: TooltipItemPositionSelector<'bar'> =
         return null;
       }
 
-      const xAxisId = itemSeries.xAxisId ?? xAxes.axisIds[0];
-      const yAxisId = itemSeries.yAxisId ?? yAxes.axisIds[0];
+      const xAxis = xAxes.axis[itemSeries.xAxisId ?? xAxes.axisIds[0]];
+      const yAxis = yAxes.axis[itemSeries.yAxisId ?? yAxes.axisIds[0]];
+
+      if (!xAxis || !yAxis) {
+        return null;
+      }
 
       const groupIndex = series.bar.stackingGroups.findIndex((group) =>
         group.ids.includes(itemSeries.id),
@@ -44,8 +48,8 @@ export const selectorTooltipItemPosition: TooltipItemPositionSelector<'bar'> =
 
       const dimensions = createGetBarDimensions({
         verticalLayout: itemSeries.layout === 'vertical',
-        xAxisConfig: xAxes.axis[xAxisId],
-        yAxisConfig: yAxes.axis[yAxisId],
+        xAxisConfig: xAxis,
+        yAxisConfig: yAxis,
         series: itemSeries,
         numberOfGroups: series.bar.stackingGroups.length,
       })(identifier.dataIndex, groupIndex);
