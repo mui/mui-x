@@ -114,13 +114,7 @@ function Row(props: {
     cells.push(
       <div
         key={i}
-        style={
-          i === firstColumnIndex
-            ? // `offsetLeft` is relative to the end of the left pinned section; since the
-              // pinned cells are out of the flow, add their width back.
-              { ...cellStyle, marginLeft: offsetLeft + COLUMN_WIDTH }
-            : cellStyle
-        }
+        style={i === firstColumnIndex ? { ...cellStyle, marginLeft: offsetLeft } : cellStyle}
       >
         {id} × {i}
       </div>,
@@ -148,7 +142,7 @@ function HeaderRow() {
     columnPositions,
     renderContext,
     pinnedColumns.left.length,
-    'controlled',
+    'sticky',
   );
 
   const cells = [];
@@ -195,7 +189,7 @@ function Grid() {
       leftPinnedWidth: COLUMN_WIDTH,
       rightPinnedWidth: COLUMN_WIDTH,
     },
-    virtualization: {},
+    virtualization: { layoutMode: 'sticky' },
 
     rows,
     range,

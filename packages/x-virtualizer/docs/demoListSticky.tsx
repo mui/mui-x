@@ -51,7 +51,7 @@ function StickyList() {
     dimensions: {
       rowHeight: 48,
     },
-    virtualization: {},
+    virtualization: { layoutMode: 'sticky' },
 
     rows: items,
     range,

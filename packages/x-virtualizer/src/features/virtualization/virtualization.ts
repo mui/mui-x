@@ -45,9 +45,12 @@ export type VirtualizationParams = {
    * Controls how the container and render zones are positioned:
    * - 'uncontrolled': uses CSS sticky positioning (default)
    * - 'controlled': uses CSS absolute positioning with JS-computed offsets
+   * - 'sticky': inverse-sticky vertical positioning (native scrolling within the
+   *   directional row buffers, clamping instead of blanking beyond them) with
+   *   controlled horizontal positioning (exact column window, no buffers)
    * @default 'uncontrolled'
    */
-  layoutMode?: 'controlled' | 'uncontrolled';
+  layoutMode?: 'controlled' | 'uncontrolled' | 'sticky';
 };
 
 export type VirtualizationState<K extends string = string> = {
@@ -58,7 +61,7 @@ export type VirtualizationState<K extends string = string> = {
   props: Record<K, Record<string, any>>;
   context: Record<string, any>;
   scrollPosition: { current: ScrollPosition };
-  layoutMode: 'controlled' | 'uncontrolled';
+  layoutMode: 'controlled' | 'uncontrolled' | 'sticky';
 };
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
@@ -385,7 +388,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         updateRenderContext(nextRenderContext);
       });
 
-      if (layoutMode === 'uncontrolled') {
+      if (layoutMode !== 'controlled') {
         scrollTimeout.start(1000, triggerUpdateRenderContext);
       }
     } else {
@@ -910,10 +913,12 @@ function computeRenderContext(
         atStart: true,
         lastPosition: inputs.columnsTotalWidth,
       });
+      // In controlled & sticky modes, the horizontal window is clipped to the viewport
+      // and the pinned-right section overlays it, so it can be excluded from the bounds.
       const rightBound =
-        inputs.layoutMode === 'controlled'
-          ? realLeft + inputs.viewportInnerWidth - inputs.rightPinnedWidth
-          : realLeft + inputs.viewportInnerWidth;
+        inputs.layoutMode === 'uncontrolled'
+          ? realLeft + inputs.viewportInnerWidth
+          : realLeft + inputs.viewportInnerWidth - inputs.rightPinnedWidth;
       lastColumnIndex = binarySearch(rightBound, inputs.columnPositions);
     }
 
@@ -1158,6 +1163,13 @@ function bufferForDirection(
 ) {
   if (layoutMode === 'controlled') {
     return EMPTY_BUFFER;
+  }
+  if (layoutMode === 'sticky') {
+    // The horizontal axis is controlled: the column window is clipped to the viewport,
+    // so column buffers would only render invisible cells. The row buffers are the
+    // native-scroll headroom of the sticky window and are kept.
+    columnBufferPx = 0;
+    horizontalBuffer = 0;
   }
 
   if (isRtl) {

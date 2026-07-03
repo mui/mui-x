@@ -71,13 +71,7 @@ function Row(props: {
       <div
         key={i}
         data-col={i}
-        style={
-          i === firstColumnIndex
-            ? // `offsetLeft` is relative to the end of the left pinned section; since the
-              // pinned cells are out of the flow, add their width back.
-              { ...cellStyle, marginLeft: offsetLeft + COLUMN_WIDTH }
-            : cellStyle
-        }
+        style={i === firstColumnIndex ? { ...cellStyle, marginLeft: offsetLeft } : cellStyle}
       >
         {id}:{i}
       </div>,
@@ -122,7 +116,7 @@ function StickyGrid() {
       leftPinnedWidth: COLUMN_WIDTH,
       rightPinnedWidth: COLUMN_WIDTH,
     },
-    virtualization: {},
+    virtualization: { layoutMode: 'sticky' },
 
     rows,
     range,
@@ -148,7 +142,7 @@ function StickyGrid() {
     columnPositions,
     renderContext,
     pinnedColumns.left.length,
-    'controlled',
+    'sticky',
   );
 
   const containerProps = virtualizer.store.use(LayoutGridSticky.selectors.containerProps);
@@ -301,6 +295,23 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     expect(firstRow.children.length).to.be.lessThan(COLUMN_COUNT);
 
     expectInnerViewportCovered();
+  });
+
+  it('renders the exact column window, without column buffers', async () => {
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+
+    // At scrollLeft = 0, the visible middle columns end at the viewport edge; only one
+    // extra column may be rendered past it (the search boundary), none beyond.
+    const lastVisibleColumn = Math.floor(scroller.clientWidth / COLUMN_WIDTH);
+    const middleColumns = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-id="0"] [data-col]'),
+    )
+      .map((cell) => Number(cell.dataset.col))
+      .filter((col) => col !== 0 && col !== COLUMN_COUNT - 1);
+
+    expect(Math.max(...middleColumns)).to.be.at.most(lastVisibleColumn + 1);
+    expect(Math.min(...middleColumns)).to.equal(1);
   });
 
   it('keeps the inner viewport covered when scrolling down past the rendered window', async () => {

@@ -25,7 +25,7 @@ function StickyList(props: { rows?: RowEntry[] }) {
     dimensions: {
       rowHeight: ROW_HEIGHT,
     },
-    virtualization: {},
+    virtualization: { layoutMode: 'sticky' },
 
     rows,
     range: { firstRowIndex: 0, lastRowIndex: rows.length },
