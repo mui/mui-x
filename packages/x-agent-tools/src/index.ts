@@ -1,11 +1,4 @@
-export type {
-  AgentTool,
-  Logger,
-  ToolExecutionContext,
-  ToolProgressEvent,
-  PackageData,
-  ToolOverrides,
-} from './types';
+export type { AgentTool, Logger, ToolExecutionContext, PackageData, ToolOverrides } from './types';
 
 // Composition layer: the recommended entry point for a host (MCP, CLI, ACP).
 export { resolveAgentToolsConfig, type AgentToolsConfig } from './config';

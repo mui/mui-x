@@ -5,7 +5,7 @@ import { createAuthedFetch } from '../auth/authed-fetch';
 import { wrapTool } from '../utils/wrap-tool';
 import { generateResponseSchema, inputSchema, outputSchema, type MuiPairing } from './schemas';
 import { safeJson, translateBackendError } from './errors';
-import { consumeCodegenStream } from './stream';
+import { consumeCodegenStream, type CodegenProgressEvent } from './stream';
 
 export const CODEGEN_GENERATE_PATH = '/v1/codegen/generate';
 export const codegenRunPath = (runId: string): string =>
@@ -64,7 +64,7 @@ export function createGenerateReactCodeTool(options: CreateGenerateReactCodeTool
   const recipesBackendBaseUrl = options.recipesBackendBaseUrl.replace(/\/+$/, '');
   const fetcher = options.fetcher ?? globalThis.fetch;
 
-  return wrapTool({
+  return wrapTool<typeof inputSchema, typeof outputSchema, CodegenProgressEvent>({
     name: 'generateReactCode',
     description:
       'generates React + Material UI code from a natural-language prompt (optionally grounded in a Figma frame). Returns the generated files plus a short explanation. Requires `MUI_RECIPES_API_KEY`. Pass `threadId` back on subsequent calls to keep multi-turn conversations on the same chat. Pass `muiPairing` to target a specific MUI / MUI X major.',
@@ -158,4 +158,4 @@ export type GenerateReactCodeTool = ReturnType<typeof createGenerateReactCodeToo
 
 // Re-export the public codegen types so the barrel only needs this module.
 export type { GenerateReactCodeResult } from './schemas';
-export type { CodegenProgressEvent } from './stream';
+export type { CodegenProgressEvent };

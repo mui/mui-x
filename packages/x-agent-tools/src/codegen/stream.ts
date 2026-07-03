@@ -1,8 +1,9 @@
 /** Buffer the codegen SSE stream into `{ files, explanation }`. */
 import { createParser, type EventSourceMessage } from 'eventsource-parser';
-import type { ToolProgressEvent } from '../types';
 
-export type CodegenProgressEvent = ToolProgressEvent;
+/** Progress event the codegen run emits as files stream in. */
+export type CodegenProgressEvent =
+  { kind: 'file'; filename: string; filesSeen: number } | { kind: 'done'; filesSeen: number };
 
 // Buffer the SSE stream. Handles both server-shape and client-shape chunks; both end with `[DONE]`.
 export async function consumeCodegenStream(
