@@ -28,7 +28,7 @@ describe('urlListFetcher', () => {
     const result = await urlListFetcher(queue, fetcher, ['https://docs/a']);
 
     expect(result).toBe('doc body');
-    expect(fetcher).toHaveBeenCalledWith('https://docs/a');
+    expect(fetcher).toHaveBeenCalledWith('https://docs/a', expect.anything());
   });
 
   it('joins multiple docs with newlines, preserving input order', async () => {
@@ -147,7 +147,10 @@ describe('urlListFetcher', () => {
 
     expect(result).toBe('doc');
     // The guard follows redirects manually, so it fetches with `redirect: 'manual'`.
-    expect(fetcher).toHaveBeenCalledWith('https://allowed/page', { redirect: 'manual' });
+    expect(fetcher).toHaveBeenCalledWith(
+      'https://allowed/page',
+      expect.objectContaining({ redirect: 'manual' }),
+    );
   });
 
   it('blocks a redirect that points at a disallowed host (redirect SSRF)', async () => {
@@ -162,7 +165,10 @@ describe('urlListFetcher', () => {
     expect(result).toContain('blocked for security');
     // The redirect target (localhost) is never fetched.
     expect(fetcher).toHaveBeenCalledTimes(1);
-    expect(fetcher).toHaveBeenCalledWith('https://allowed/start', { redirect: 'manual' });
+    expect(fetcher).toHaveBeenCalledWith(
+      'https://allowed/start',
+      expect.objectContaining({ redirect: 'manual' }),
+    );
   });
 
   it('follows a redirect to an allowed host', async () => {
@@ -191,6 +197,23 @@ describe('urlListFetcher', () => {
     });
 
     expect(result).toMatch(/Could not fetch .*redirects/i);
+  });
+
+  it('times out a hung page fetch and folds it into the per-URL error', async () => {
+    const queue = new PQueue({ concurrency: 1 });
+    // A fetch that only ends when its (timeout) signal aborts.
+    const fetcher = vi.fn(
+      (_url: string | URL | Request, init?: RequestInit): Promise<Response> =>
+        new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () =>
+            reject(new DOMException('timed out', 'TimeoutError')),
+          );
+        }),
+    );
+
+    const result = await urlListFetcher(queue, fetcher, ['https://docs/slow'], { timeoutMs: 5 });
+
+    expect(result).toContain('Could not fetch https://docs/slow');
   });
 });
 

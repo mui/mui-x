@@ -1,8 +1,13 @@
 import type PQueueType from 'p-queue';
 import type { LRUCache } from '../utils/cache';
 import type { Logger } from '../types';
+import { combineAbortSignals } from '../utils/abort-signal';
 
 const noopLogger: Logger = () => {};
+
+// Per-request timeout for a doc-page fetch (covering all redirect hops), so one hung origin can't
+// hold a queue slot until the whole tool call is cancelled.
+const DEFAULT_PAGE_TIMEOUT_MS = 30000;
 
 export interface UrlListFetcherOptions {
   /** Reads/writes responses here when set; omit to skip caching. The host owns the instance. */
@@ -23,6 +28,8 @@ export interface UrlListFetcherOptions {
   resolveDocLinks?: boolean;
   /** Aborts the in-flight fetches when the host cancels the request. */
   signal?: AbortSignal;
+  /** Per-request timeout (ms) for each URL's fetch, including redirects. Defaults to 30s. */
+  timeoutMs?: number;
 }
 
 // Rewrite site-absolute markdown links (`](/path)`) to absolute URLs against `baseUrl`'s origin, so
@@ -90,7 +97,14 @@ export function urlListFetcher(
   urlList: string[],
   options: UrlListFetcherOptions = {},
 ) {
-  const { cache, logger = noopLogger, isUrlAllowed, resolveDocLinks, signal } = options;
+  const {
+    cache,
+    logger = noopLogger,
+    isUrlAllowed,
+    resolveDocLinks,
+    signal,
+    timeoutMs = DEFAULT_PAGE_TIMEOUT_MS,
+  } = options;
   return Promise.all(
     urlList.map((url) =>
       queue
@@ -105,12 +119,14 @@ export function urlListFetcher(
             }
           }
 
+          // Bound this URL's fetch (all redirect hops) with a timeout, plus the host's cancellation.
+          const requestSignal = combineAbortSignals(AbortSignal.timeout(timeoutMs), signal);
           try {
             const response = await fetchFollowingGuardedRedirects(
               fetcher,
               url,
               isUrlAllowed,
-              signal,
+              requestSignal,
             );
             if (!response.ok) {
               // Caught below and folded into the "Could not fetch …" string, so it never surfaces alone.

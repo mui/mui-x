@@ -328,17 +328,20 @@ describe('createFetchDocTool', () => {
     expect(fetcher).not.toHaveBeenCalled();
   });
 
-  it('forwards the abort signal from the call context to the underlying fetch', async () => {
+  it('forwards the call context abort into the underlying fetch (combined with the timeout)', async () => {
     const controller = new AbortController();
     const fetcher = vi.fn().mockResolvedValue(ok('docs'));
     const tool = await createFetchDocTool({ fetcher });
 
     await tool.execute({ urls: ['https://llms.example/a'] }, { signal: controller.signal });
 
-    expect(fetcher).toHaveBeenCalledWith(
-      'https://llms.example/a',
-      expect.objectContaining({ signal: controller.signal }),
-    );
+    // The fetch gets a signal that combines the per-request timeout with the host's; aborting the
+    // host signal must abort that combined signal.
+    const passedSignal = fetcher.mock.calls[0][1]?.signal as AbortSignal;
+    expect(passedSignal).toBeInstanceOf(AbortSignal);
+    expect(passedSignal.aborted).toBe(false);
+    controller.abort();
+    expect(passedSignal.aborted).toBe(true);
   });
 
   it('reuses a shared LRUCache across tools so the second tool serves from cache', async () => {
