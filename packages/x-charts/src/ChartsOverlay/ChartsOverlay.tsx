@@ -32,8 +32,10 @@ export function useNoData() {
 
       // @ts-ignore, treemap type is not declared in the base package
       if (seriesItem.type === 'treemap') {
+        // The layout always emits the (possibly synthetic) root, so a data-less treemap
+        // still has one node; treat root-only as empty.
         // @ts-ignore, treemap data is a layout object, not an array
-        return (seriesItem.data?.nodes?.length ?? 0) === 0;
+        return (seriesItem.data?.nodes?.length ?? 0) <= 1;
       }
 
       return seriesItem.data.length === 0;

@@ -51,7 +51,8 @@ const getParent: FocusedItemUpdater<'treemap', 'treemap'> = (currentItem, state)
   }
   const data = state.series.defaultizedSeries.treemap?.series[currentItem.seriesId]?.data;
   const node = data?.byId.get(currentItem.nodeId);
-  if (!data || !node || node.parentId == null) {
+  // Stop at depth 1: the depth-0 root is structural and never rendered.
+  if (!data || !node || node.depth <= 1 || node.parentId == null) {
     return currentItem;
   }
   return { seriesId: currentItem.seriesId, type: 'treemap', nodeId: node.parentId };

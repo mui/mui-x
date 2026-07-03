@@ -86,8 +86,8 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
   });
 
   return {
-    id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     ...seriesData,
+    id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     valueFormatter: seriesData.valueFormatter ?? defaultTreemapValueFormatter,
     highlightScope: { highlight: 'none', fade: 'none' },
     data: { nodes, byId, rootId: normalizedRoot.id },

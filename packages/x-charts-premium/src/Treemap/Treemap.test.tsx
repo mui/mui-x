@@ -1,4 +1,4 @@
-import { act, createRenderer } from '@mui/internal-test-utils';
+import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { Treemap, treemapClasses } from '@mui/x-charts-premium/Treemap';
 
@@ -39,6 +39,12 @@ describe('<Treemap />', () => {
       area('[data-node="A"]') * 3,
       area('[data-node="A"]'),
     );
+  });
+
+  it('renders the "No data to display" overlay for an empty treemap', () => {
+    render(<Treemap width={200} height={200} margin={0} series={{ data: [] }} />);
+
+    expect(screen.getByText('No data to display')).toBeVisible();
   });
 
   it('does not render a tile for the root node', () => {
