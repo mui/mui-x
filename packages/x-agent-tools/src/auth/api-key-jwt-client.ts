@@ -117,7 +117,9 @@ export class ApiKeyJwtClient {
     const url = `${this.muiBackendBaseUrl}${TOKEN_EXCHANGE_PATH}`;
 
     // Internal timeout so a dead endpoint can't wedge `inflight`; covers the body read too, since
-    // the fetch signal also aborts a stalled response stream.
+    // the fetch signal also aborts a stalled response stream. Deliberately uses only this timeout,
+    // not a host signal: the refresh is shared across callers, so it shouldn't die when one caller
+    // (or host shutdown) cancels. A host shutdown may thus leave this exchange running until it fires.
     const timeoutController = new AbortController();
     const timeout = setTimeout(() => timeoutController.abort(), TOKEN_EXCHANGE_TIMEOUT_MS);
 

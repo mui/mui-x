@@ -46,10 +46,12 @@ const main = async () => {
   const transport = new StdioServerTransport();
   await server.connect(transport);
 
-  // Fire the shutdown signal on disconnect, chained so the SDK's own close handling still runs.
+  // On disconnect, cancel the background catalog load and tear down the docs cache/queue,
+  // chained so the SDK's own close handling still runs.
   const sdkOnClose = transport.onclose;
   transport.onclose = () => {
     shutdown.abort();
+    toolset.dispose();
     sdkOnClose?.();
   };
 

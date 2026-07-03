@@ -32,7 +32,7 @@ export type CreateGenerateReactCodeToolOptions = {
   overrides?: ToolOverrides;
 };
 
-/** Serialize a codegen result into MCP text content: explanation + fenced files + threadId footer. */
+/** Render a codegen result as markdown: explanation + fenced files + threadId footer. */
 export function formatCodegenText(result: {
   threadId: string;
   explanation: string;

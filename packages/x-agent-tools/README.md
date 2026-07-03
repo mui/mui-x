@@ -4,6 +4,8 @@ The building blocks behind MUI's AI agent integrations. It implements the MUI do
 
 This is a library used by host packages such as [@mui/mcp](../mcp/), not something end users install directly.
 
+`zod` is a peer dependency: a host that installs `@mui/x-agent-tools` must also install `zod`, so the tool schemas share a single zod instance across the boundary.
+
 ## What's inside
 
 - **Composition layer**: `resolveAgentToolsConfig` reads the backend config from env vars, and `createMuiAgentToolset` assembles the full toolset (SSRF guard, catalog retry, fail-soft, shared cache/queue baked in). The recommended entry point for a host.
@@ -19,14 +21,21 @@ A host composes the toolset and adapts it to its protocol. Minimal sketch:
 ```ts
 import { resolveAgentToolsConfig, createMuiAgentToolset } from '@mui/x-agent-tools';
 
-const toolset = createMuiAgentToolset(resolveAgentToolsConfig(), { logger });
+const toolset = await createMuiAgentToolset(resolveAgentToolsConfig(), { logger });
 
-// Ready immediately; needs no network at startup.
-const result = await toolset.codegenTool.execute({ prompt: 'Build a product card' }, { signal });
+// codegenTool and fetchDocsTool are ready immediately; neither needs the catalog.
+const code = await toolset.codegenTool.execute({ prompt: 'Build a product card' }, { signal });
+const docs = await toolset.fetchDocsTool.execute({ urls: ['https://mui.com/x/...'] }, { signal });
 
-// Resolves once the docs catalog fetch settles; never rejects (fail-soft).
-const { fetchDocsTool, useMuiDocsTool } = await toolset.docsToolsReady;
-// useMuiDocsTool is null when the catalog was unreachable; fetchDocsTool always works.
+// useMuiDocs needs the catalog; useMuiDocsReady resolves once it settles. Never rejects (fail-soft).
+const useMuiDocsTool = await toolset.useMuiDocsReady;
+if (useMuiDocsTool) {
+  // null when the catalog was unreachable; codegenTool + fetchDocsTool still work.
+  const grid = await useMuiDocsTool.execute({ sources: ['@mui/x-data-grid'] }, { signal });
+}
+
+// On host shutdown, release the toolset's background resources (docs cache timer + fetch queue).
+toolset.dispose();
 ```
 
 Every tool exposes `{ name, description, inputSchema, outputSchema, execute(input, ctx?) }`, where `ctx` carries an optional `signal` and `onProgress`. `execute` validates its input against `inputSchema`, so hosts don't need a validation layer of their own. See [@mui/mcp](../mcp/src/) for a full host wiring.

@@ -120,6 +120,8 @@ export async function createUseMuiDocsTool(
   });
 }
 
+// Kept async on purpose: no await today, but this is a published API and going
+// sync -> async later would be a breaking change for callers.
 export async function createFetchDocTool(options: DocsToolOptions) {
   const { queue, fetcher, cache } = createDocsToolRuntime(options);
   const { logger, isUrlAllowed } = options;

@@ -80,9 +80,9 @@ Drop any `env` key you don't need (only codegen requires `MUI_RECIPES_API_KEY`).
 
 ### MCP Inspector (debug, no client setup needed)
 
-​`bash
+```bash
 pnpm --filter @mui/mcp mcp-inspector
-​`
+```
 
 Builds the server, then opens a web UI to call tools and inspect responses in isolation.
 
@@ -162,7 +162,7 @@ Source layout:
 packages/mcp/
 ├── src/
 │   ├── stdio.ts            # entry: builds the server and registers the tools
-│   ├── constants.ts        # shared constants (name, version, env vars, log path, defaults)
+│   ├── version.ts          # reads the package version (works in the flat published layout)
 │   ├── docs/
 │   │   ├── handler.ts      # adapts the docs tools to MCP handlers
 │   │   └── register.ts     # builds + registers useMuiDocs / fetchDocs

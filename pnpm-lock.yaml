@@ -802,9 +802,6 @@ importers:
       p-queue:
         specifier: ^8.1.0
         version: 8.1.1
-      zod:
-        specifier: ^3.25.65
-        version: 3.25.76
     devDependencies:
       '@types/node':
         specifier: 22.19.19
@@ -815,6 +812,9 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.1.8(@types/node@22.19.19)(@vitest/browser-playwright@4.1.8)(@vitest/coverage-v8@4.1.8)(jsdom@29.1.1)(vite@8.0.16(@types/node@22.19.19)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      zod:
+        specifier: ^3.25.65
+        version: 3.25.76
     publishDirectory: build
 
   packages/x-charts:

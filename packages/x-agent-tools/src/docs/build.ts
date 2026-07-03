@@ -26,6 +26,12 @@ export interface DocsTools {
    * is available without awaiting it, so a slow or hung catalog never blocks it.
    */
   useMuiDocsReady: Promise<UseMuiDocsTool | null>;
+  /**
+   * Tear down the shared cache cleanup timer and drop any queued fetches. Call once when the host is
+   * done with the tools; a host that builds many toolsets in one process leaks a timer + Map without it.
+   * @returns {void}
+   */
+  dispose(): void;
 }
 
 export interface CreateDocsToolsOptions {
@@ -90,7 +96,13 @@ export async function createDocsTools(options: CreateDocsToolsOptions): Promise<
     signal,
   });
 
-  return { fetchDocsTool, useMuiDocsReady };
+  // Stop the cache's cleanup interval (which otherwise keeps its Map alive) and drop queued fetches.
+  const dispose = () => {
+    cache.dispose();
+    queue.clear();
+  };
+
+  return { fetchDocsTool, useMuiDocsReady, dispose };
 }
 
 interface LoadUseMuiDocsDeps {

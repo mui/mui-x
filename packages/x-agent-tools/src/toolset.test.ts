@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createMuiAgentToolset } from './toolset';
+import { LRUCache } from './utils/cache';
 import type { AgentToolsConfig } from './config';
 
 const config: AgentToolsConfig = {
@@ -30,5 +31,18 @@ describe('createMuiAgentToolset', () => {
     expect(toolset.fetchDocsTool.name).toBe('fetchDocs');
     const useMuiDocsTool = await toolset.useMuiDocsReady;
     expect(useMuiDocsTool?.name).toBe('useMuiDocs');
+  });
+
+  it('exposes dispose() that tears down the docs resources', async () => {
+    const cacheDispose = vi.spyOn(LRUCache.prototype, 'dispose');
+    const fetcher = vi.fn().mockResolvedValue(jsonResponse(catalog));
+
+    const toolset = await createMuiAgentToolset(config, { fetcher, retryDelaysMs: [] });
+    await toolset.useMuiDocsReady;
+
+    toolset.dispose();
+
+    expect(cacheDispose).toHaveBeenCalledTimes(1);
+    cacheDispose.mockRestore();
   });
 });

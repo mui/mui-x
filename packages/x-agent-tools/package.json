@@ -26,14 +26,17 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "zod": "^3.25.65",
     "p-queue": "^8.1.0",
     "eventsource-parser": "^3.0.0"
+  },
+  "peerDependencies": {
+    "zod": "^3.25.65"
   },
   "devDependencies": {
     "@types/node": "22.19.19",
     "rimraf": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zod": "^3.25.65"
   },
   "exports": {
     ".": "./src/index.ts"

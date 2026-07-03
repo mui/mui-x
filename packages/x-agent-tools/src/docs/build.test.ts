@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createDocsTools } from './build';
+import { LRUCache } from '../utils/cache';
 
 const docsBaseUrl = 'https://chat-backend.mui.com';
 
@@ -133,5 +134,18 @@ describe('createDocsTools', () => {
       expect.stringContaining('useMuiDocs is unavailable'),
       expect.anything(),
     );
+  });
+
+  it('dispose() tears down the shared cache (stops its cleanup timer)', async () => {
+    const cacheDispose = vi.spyOn(LRUCache.prototype, 'dispose');
+    const fetcher = vi.fn().mockResolvedValue(jsonResponse(catalog));
+
+    const tools = await createDocsTools({ docsBaseUrl, fetcher, retryDelaysMs: [] });
+    await tools.useMuiDocsReady;
+
+    tools.dispose();
+
+    expect(cacheDispose).toHaveBeenCalledTimes(1); // one shared cache across both tools
+    cacheDispose.mockRestore();
   });
 });
