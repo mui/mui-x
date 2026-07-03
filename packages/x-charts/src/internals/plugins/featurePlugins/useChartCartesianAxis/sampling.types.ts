@@ -21,9 +21,11 @@ export type BarSamplingMethod = 'none' | 'minmax';
  * `BarSeriesExtension`). Empty in community-only builds.
  */
 export type SamplingConfig = {
-  [K in keyof ChartsSeriesConfig as ChartsSeriesConfig[K] extends { samplingMethod: any }
-    ? K
-    : never]?: ChartsSeriesConfig[K] extends { samplingMethod: infer M } ? M : never;
+  [
+    K in keyof ChartsSeriesConfig as ChartsSeriesConfig[K] extends { samplingMethod: any }
+      ? K
+      : never
+  ]?: ChartsSeriesConfig[K] extends { samplingMethod: infer M } ? M : never;
 };
 
 /** State set by the pro `useChartProSampling` plugin; absent in community. */
