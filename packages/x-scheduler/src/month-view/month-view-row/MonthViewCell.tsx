@@ -260,6 +260,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               );
             }
 
+            const startsBeforeThisDay =
+              !adapter.isSameDay(occurrence.displayTimezone.start.value, day.value) &&
+              adapter.isBefore(occurrence.displayTimezone.start.value, day.value);
+
             return (
               <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
@@ -267,6 +271,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                   variant={
                     isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
                   }
+                  {...(startsBeforeThisDay ? { 'data-starting-before-edge': '' } : {})}
                 />
               </EventDialogTrigger>
             );

@@ -70,10 +70,10 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     });
   });
 
-  it('should mark a hidden event as isContinuation when a visible row opens up', () => {
+  it('should resurface a hidden event into a visible row when one opens up', () => {
     // A (row 1) spans days 1–3, B (row 2) spans days 1–2 only.
     // C first appears on day 2 as a new event and gets hidden (row 3 > maxEvents=2).
-    // On day 3 B is absent → row 2 is free → C resurfaces with isContinuation.
+    // On day 3 B is absent → row 2 is free → C resurfaces at a visible index.
     const result = testHook(
       [
         // endAt('2024-01-17Z') → endOfDay(Jan 17) → event IS visible on Jan 17 (day 3)
@@ -91,9 +91,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       2,
     );
 
-    // C resurfaces on day 3 as a continuation in a visible row
+    // C resurfaces on day 3 into a visible row
     const cDay3 = result.days[2].withPosition.find((o) => o.id === 'C')!;
-    expect(cDay3.position.isContinuation).to.equal(true);
     expect(cDay3.position.index).to.be.lessThanOrEqual(2);
   });
 

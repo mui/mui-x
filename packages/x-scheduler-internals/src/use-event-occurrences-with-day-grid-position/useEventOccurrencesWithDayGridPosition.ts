@@ -44,23 +44,28 @@ export function useEventOccurrencesWithDayGridPosition(
         }
       }
 
-      // 2. Sort: multi-day events first (so they claim top rows), then by start date
-      const sortedNeedsPosition = sortEventOccurrences(needsPosition).sort((a, b) => {
-        const aIsActive = activeSegments[a.key] != null ? 0 : 1;
-        const bIsActive = activeSegments[b.key] != null ? 0 : 1;
-        if (aIsActive !== bIsActive) {
-          return aIsActive - bIsActive;
-        }
-        const aSpan = adapter.differenceInDays(
-          a.displayTimezone.end.value,
-          a.displayTimezone.start.value,
-        );
-        const bSpan = adapter.differenceInDays(
-          b.displayTimezone.end.value,
-          b.displayTimezone.start.value,
-        );
-        return bSpan - aSpan;
-      });
+      // 2. Sort: multi-day events first (so they claim top rows), then by start date.
+      // The active-first, then-by-span secondary sort is only needed in overflow mode —
+      const baseSorted = sortEventOccurrences(needsPosition);
+      const sortedNeedsPosition =
+        maxEvents == null
+          ? baseSorted
+          : baseSorted.sort((a, b) => {
+              const aIsActive = activeSegments[a.key] != null ? 0 : 1;
+              const bIsActive = activeSegments[b.key] != null ? 0 : 1;
+              if (aIsActive !== bIsActive) {
+                return aIsActive - bIsActive;
+              }
+              const aSpan = adapter.differenceInDays(
+                a.displayTimezone.end.value,
+                a.displayTimezone.start.value,
+              );
+              const bSpan = adapter.differenceInDays(
+                b.displayTimezone.end.value,
+                b.displayTimezone.start.value,
+              );
+              return bSpan - aSpan;
+            });
 
       // 3. Assign position to each occurrence
 
@@ -106,7 +111,6 @@ export function useEventOccurrencesWithDayGridPosition(
                 adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1,
                 dayListSize - dayIndex,
               ),
-              isContinuation: true,
             };
             activeSegments[occurrence.key] = {
               position,
@@ -139,6 +143,27 @@ export function useEventOccurrencesWithDayGridPosition(
 
       return { ...day, withPosition, withoutPosition };
     });
+
+    if (maxEvents != null) {
+      for (let dayIndex = 1; dayIndex < dayListSize; dayIndex += 1) {
+        const { withPosition } = processedDays[dayIndex];
+        if (!withPosition.some((o) => o.position.index > maxEvents)) {
+          continue;
+        }
+        const sliced = withPosition.find(
+          (o) => o.position.index === maxEvents && o.position.isInvisible,
+        );
+        if (sliced) {
+          const segment = activeSegments[sliced.key];
+          if (segment) {
+            segment.position.daySpan = Math.min(
+              segment.position.daySpan,
+              dayIndex - segment.startDayIndex,
+            );
+          }
+        }
+      }
+    }
 
     const usedIndexesFlat = usedIndexesByDay.flatMap((set) => Array.from(set));
 
@@ -187,11 +212,6 @@ export namespace useEventOccurrencesWithDayGridPosition {
      * Invisible events are used to reserve space for events that started on a previous day.
      */
     isInvisible?: boolean;
-    /**
-     * Whether this segment is a continuation of an event that was previously hidden in overflow.
-     * When true, the renderer should show a left-pointing arrow to indicate the event started earlier.
-     */
-    isContinuation?: boolean;
   }
 
   export interface EventOccurrenceWithPosition extends SchedulerEventOccurrence {

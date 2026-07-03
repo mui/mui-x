@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import type {
   MoreEventsPopoverProps,
@@ -51,7 +52,7 @@ const MoreEventsPopoverBody = styled('div', {
 }));
 
 interface MoreEventsData {
-  occurrences: EventOccurrenceWithPosition[];
+  occurrences: SchedulerEventOccurrence[];
   count: number;
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
@@ -62,9 +63,6 @@ const MoreEventsPopover = createModal<MoreEventsData>({
 
 export const MoreEventsPopoverContext = MoreEventsPopover.Context;
 export const useMoreEventsPopoverContext = MoreEventsPopover.useContext;
-
-type EventOccurrenceWithPosition =
-  useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition;
 
 export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
   const { open, anchor, occurrences, day, onClose } = props;
@@ -99,7 +97,6 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
               occurrence={occurrence}
               date={day}
               ariaLabelledBy={`${schedulerId}-PopoverHeader-${day.key}`}
-              {...(occurrence.position.isContinuation ? { 'data-starting-before-edge': '' } : {})}
             />
           </EventDialogTrigger>
         ))}
@@ -130,7 +127,7 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
 }
 
 interface MoreEventsPopoverTriggerProps extends React.HTMLAttributes<HTMLElement> {
-  occurrences: EventOccurrenceWithPosition[];
+  occurrences: SchedulerEventOccurrence[];
   day: useEventOccurrencesWithDayGridPosition.DayData;
   children: React.ReactNode;
 }
