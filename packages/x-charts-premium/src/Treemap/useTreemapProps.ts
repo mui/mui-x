@@ -46,31 +46,32 @@ export const useTreemapProps = (props: TreemapProps) => {
     paddingTop: hasRenderedGroups ? DEFAULT_HEADER_HEIGHT : 0,
   };
 
-  const chartsContainerProps: ChartsContainerPremiumProps<'treemap', TreemapChartPluginSignatures> = {
-    ...other,
-    series: [
-      {
-        type: 'treemap' as const,
-        ...series,
-        tiling: { ...defaultTiling, ...series.tiling },
-      },
-    ],
-    width,
-    height,
-    margin,
-    colors,
-    sx,
-    highlightedItem,
-    onHighlightChange,
-    // The central item-click plugin types the item as the bare identifier, but at runtime
-    // `getItemAtPosition` returns the identifier with its layout node, matching `onItemClick`.
-    onItemClick: onItemClick as ChartsContainerPremiumProps<
-      'treemap',
-      TreemapChartPluginSignatures
-    >['onItemClick'],
-    apiRef,
-    plugins: TREEMAP_CHART_PLUGINS,
-  };
+  const chartsContainerProps: ChartsContainerPremiumProps<'treemap', TreemapChartPluginSignatures> =
+    {
+      ...other,
+      series: [
+        {
+          type: 'treemap' as const,
+          ...series,
+          tiling: { ...defaultTiling, ...series.tiling },
+        },
+      ],
+      width,
+      height,
+      margin,
+      colors,
+      sx,
+      highlightedItem,
+      onHighlightChange,
+      // The central item-click plugin types the item as the bare identifier, but at runtime
+      // `getItemAtPosition` returns the identifier with its layout node, matching `onItemClick`.
+      onItemClick: onItemClick as ChartsContainerPremiumProps<
+        'treemap',
+        TreemapChartPluginSignatures
+      >['onItemClick'],
+      apiRef,
+      plugins: TREEMAP_CHART_PLUGINS,
+    };
 
   const overlayProps: ChartsOverlayProps = {
     slots,
