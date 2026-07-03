@@ -16,7 +16,12 @@ interface DocsToolOptions {
   /** `true`: fresh owned cache; `LRUCache`: shared instance; omit: none. */
   cache?: boolean | LRUCache;
   logger?: Logger;
-  isUrlAllowed?: (url: string) => boolean;
+  /**
+   * Required SSRF guard for the model-supplied URLs these tools fetch; return false to block a URL.
+   * @param {string} url The absolute URL about to be fetched.
+   * @returns {boolean} Whether the URL may be fetched.
+   */
+  isUrlAllowed: (url: string) => boolean;
 }
 
 /** Shared queue + fetcher + cache setup for both docs tools, so their defaults can't drift apart. */

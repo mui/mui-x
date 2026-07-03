@@ -1,7 +1,24 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createUseMuiDocsTool, createFetchDocTool } from './tools';
+import {
+  createUseMuiDocsTool as baseUseMuiDocsTool,
+  createFetchDocTool as baseFetchDocTool,
+} from './tools';
 import { LRUCache } from '../utils/cache';
 import { compareVersions } from './packages';
+
+const allowAll = () => true;
+
+// The docs factories require an SSRF guard; default it to allow-all so functional tests don't repeat it.
+// Guard tests pass their own `isUrlAllowed`, which overrides this default.
+type UseMuiDocsOptions = Parameters<typeof baseUseMuiDocsTool>[0];
+const createUseMuiDocsTool = (
+  options: Omit<UseMuiDocsOptions, 'isUrlAllowed'> & { isUrlAllowed?: (url: string) => boolean },
+) => baseUseMuiDocsTool({ isUrlAllowed: allowAll, ...options });
+
+type FetchDocOptions = Parameters<typeof baseFetchDocTool>[0];
+const createFetchDocTool = (
+  options: Omit<FetchDocOptions, 'isUrlAllowed'> & { isUrlAllowed?: (url: string) => boolean },
+) => baseFetchDocTool({ isUrlAllowed: allowAll, ...options });
 
 const ok = (body: string): Response => new Response(body, { status: 200 });
 
@@ -60,7 +77,7 @@ describe('createUseMuiDocsTool', () => {
     const result = await tool.execute({ sources: ['https://llms.example/material'] });
 
     expect(result).toBe('the docs');
-    expect(fetcher).toHaveBeenCalledWith('https://llms.example/material');
+    expect(fetcher).toHaveBeenCalledWith('https://llms.example/material', expect.anything());
   });
 
   it('resolves a bare package name to its llms.txt URL', async () => {
@@ -73,7 +90,7 @@ describe('createUseMuiDocsTool', () => {
     const result = await tool.execute({ sources: ['@mui/material'] });
 
     expect(result).toBe('the docs');
-    expect(fetcher).toHaveBeenCalledWith('https://llms.example/material');
+    expect(fetcher).toHaveBeenCalledWith('https://llms.example/material', expect.anything());
   });
 
   it("resolves a `name@version` shorthand to that version's llms.txt URL", async () => {
@@ -86,7 +103,7 @@ describe('createUseMuiDocsTool', () => {
     const result = await tool.execute({ sources: ['@mui/material@9.1.2'] });
 
     expect(result).toContain('material-ui 9.1.2');
-    expect(fetcher).toHaveBeenCalledWith('https://llms.example/material/9.1.2');
+    expect(fetcher).toHaveBeenCalledWith('https://llms.example/material/9.1.2', expect.anything());
   });
 
   it('resolves a `name@version` shorthand per package (no cross-package regression)', async () => {
@@ -99,7 +116,10 @@ describe('createUseMuiDocsTool', () => {
     const result = await tool.execute({ sources: ['@mui/x-data-grid@8.29.0'] });
 
     expect(result).toContain('x-data-grid 8.29.0');
-    expect(fetcher).toHaveBeenCalledWith('https://llms.example/x-data-grid/8.29.0');
+    expect(fetcher).toHaveBeenCalledWith(
+      'https://llms.example/x-data-grid/8.29.0',
+      expect.anything(),
+    );
   });
 
   it('resolves a bare package name to its highest-semver entry, not the last listed', async () => {
@@ -117,7 +137,7 @@ describe('createUseMuiDocsTool', () => {
 
     await tool.execute({ sources: ['@mui/material'] });
 
-    expect(fetcher).toHaveBeenCalledWith(latest.llmsUrl);
+    expect(fetcher).toHaveBeenCalledWith(latest.llmsUrl, expect.anything());
     expect(latest.version).toBe('9.1.2');
   });
 
@@ -337,5 +357,22 @@ describe('createFetchDocTool', () => {
 
     expect(result).toBe('shared docs');
     expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('SSRF guard is required at the type level', () => {
+  it('does not let the factories be called without isUrlAllowed', () => {
+    // Never invoked: the real assertions are the `@ts-expect-error` directives below, checked by
+    // `tsc`. If a refactor makes `isUrlAllowed` optional again, these directives go unused and the
+    // typecheck fails, so the security guard can't silently become opt-in. Uses the un-wrapped
+    // factories (`baseFetchDocTool`/`baseUseMuiDocsTool`), since the local wrappers default the guard.
+    const omittingGuardMustNotCompile = () => {
+      // @ts-expect-error - isUrlAllowed is required.
+      baseFetchDocTool({});
+      // @ts-expect-error - isUrlAllowed is required.
+      baseUseMuiDocsTool({ getPackagesList: async () => [] });
+    };
+
+    expect(omittingGuardMustNotCompile).toBeTypeOf('function');
   });
 });
