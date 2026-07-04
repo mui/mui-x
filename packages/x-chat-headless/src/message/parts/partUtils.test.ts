@@ -108,6 +108,10 @@ describe('safeUri', () => {
   it('blocks data: protocol', () => {
     expect(safeUri('data:text/html,<h1>Hi</h1>')).to.equal('');
   });
+
+  it('blocks protocol-relative //host', () => {
+    expect(safeUri('//evil.com/pixel.png')).to.equal('');
+  });
 });
 
 describe('normalizeMarkdownForRender', () => {
