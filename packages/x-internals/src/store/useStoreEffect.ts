@@ -15,6 +15,7 @@ export function useStoreEffect<State, Value>(
 ): void {
   const instance = useLazyRef(initialize, { store, selector }).current;
   instance.effect = effect;
+  instance.selector = selector;
   useOnMount(instance.onMount);
 }
 
@@ -29,13 +30,14 @@ function initialize<State, Value>(params?: {
 
   const instance = {
     effect: noop as (previous: Value, next: Value) => void,
+    selector,
     dispose: null as Function | null,
     // We want a single subscription done right away and cleared on unmount only,
     // but React triggers `useOnMount` multiple times in dev, so we need to manage
     // the subscription anyway.
     subscribe: () => {
       instance.dispose ??= store.subscribe((state) => {
-        const nextState = selector(state);
+        const nextState = instance.selector(state);
         if (!Object.is(previousState, nextState)) {
           const prev = previousState;
           previousState = nextState;
