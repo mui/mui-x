@@ -9,7 +9,7 @@ describe('useStoreEffect', () => {
   const { render } = createRenderer();
 
   it('runs the effect when the selected value changes', () => {
-    const store = new Store({ value: 0, other: 0 });
+    const store = Store.create({ value: 0, other: 0 });
     const effect = spy();
 
     function Test() {
@@ -28,7 +28,7 @@ describe('useStoreEffect', () => {
   });
 
   it('uses the latest selector when the store updates', () => {
-    const store = new Store({ a: 0, b: 100 });
+    const store = Store.create({ a: 0, b: 100 });
     const effect = spy();
 
     function Test(props: { field: 'a' | 'b' }) {
