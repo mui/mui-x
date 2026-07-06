@@ -1,5 +1,7 @@
-export type { D3NamedProjection } from '../internals/plugins/useGeoProjection/useGeoProjection.types';
-export type { GeoProjectionInput } from '../internals/plugins/useGeoProjection/useGeoProjection.types';
+export type {
+  GeoProjectionInput,
+  D3NamedProjection,
+} from '../internals/plugins/useGeoProjection/useGeoProjection.types';
 
 export * from './GeoDataPlot';
 export * from './MapImagePlot';

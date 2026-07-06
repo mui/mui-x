@@ -70,8 +70,6 @@ export interface UseGeoProjectionState {
     geoData: ExtendedFeatureCollection | null;
     geoFeatureKey:
       string | ((feature: ExtendedFeatureCollection['features'][number]) => string | null);
-    // TODO: Remove factories from the state when some maps move to MIT package.
-    factories: Record<D3NamedProjection, (() => GeoProjection) | undefined>;
     projection: GeoProjectionInput | null;
     /**
      * The two standard parallels used by conic projections, if applicable.

@@ -4,7 +4,8 @@ import type {
   GeoProjection,
   GeoConicProjection,
 } from '@mui/x-charts-vendor/d3-geo';
-import type { D3NamedProjection, GeoProjectionInput } from './useGeoProjection.types';
+import type { GeoProjectionInput } from './useGeoProjection.types';
+import { PROJECTION_FACTORIES } from './factories';
 
 const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
   return 'parallels' in projection && typeof projection.parallels === 'function';
@@ -26,7 +27,6 @@ export function getParallels(parallels: [number, number] | null | undefined): [n
  */
 export function resolveProjectionInstance(
   projectionInput: GeoProjectionInput | null,
-  projectionFactory: Record<D3NamedProjection, (() => GeoProjection) | undefined> | null,
   parallels: [number, number],
 ): GeoProjection | null {
   if (projectionInput === null) {
@@ -35,12 +35,12 @@ export function resolveProjectionInstance(
   if (typeof projectionInput !== 'string') {
     return projectionInput;
   }
-  const factory = projectionFactory?.[projectionInput];
+  const factory = PROJECTION_FACTORIES?.[projectionInput];
   if (!factory) {
     if (process.env.NODE_ENV !== 'production') {
       console.error(
         `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-          `Expected one of: ${Object.keys(projectionFactory ?? {}).join(', ')}.`,
+          `Expected one of: ${Object.keys(PROJECTION_FACTORIES ?? {}).join(', ')}.`,
       );
     }
     return null;
@@ -57,7 +57,6 @@ export function resolveProjectionInstance(
  */
 export function getDefaultTranslation(
   projectionInput: GeoProjectionInput | null | undefined,
-  projectionFactory: Record<D3NamedProjection, (() => GeoProjection) | undefined> | null,
   geoData: ExtendedFeatureCollection | null | undefined,
   parallels: [number, number] | null | undefined,
   center: [number, number],
@@ -66,11 +65,7 @@ export function getDefaultTranslation(
     return null;
   }
 
-  const projection = resolveProjectionInstance(
-    projectionInput,
-    projectionFactory,
-    getParallels(parallels),
-  );
+  const projection = resolveProjectionInstance(projectionInput, getParallels(parallels));
   if (!projection) {
     return null;
   }

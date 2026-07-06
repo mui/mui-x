@@ -6,7 +6,6 @@ import { useRegisterZoomGestures } from '@mui/x-charts-pro/internals';
 import { selectorChartRawProjection } from '../useGeoProjection/useGeoProjection.selectors';
 import type { MapZoomView, UseGeoProjectionZoomSignature } from './useGeoProjectionZoom.types';
 import { BUTTON_ZOOM_STEP, getDefaultMapInteraction } from './mapZoom.utils';
-import { PROJECTION_FACTORIES } from '../useGeoProjection';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
@@ -158,20 +157,13 @@ useGeoProjectionZoom.getInitialState = (params) => {
   const roll = params.view?.roll ?? params.initialView?.roll ?? 0;
   const translation = params.view?.translation ??
     params.initialView?.translation ??
-    getDefaultTranslation(
-      params.projection,
-      PROJECTION_FACTORIES,
-      params.geoData,
-      params.parallels,
-      center,
-    ) ?? [0, 0];
+    getDefaultTranslation(params.projection, params.geoData, params.parallels, center) ?? [0, 0];
   return {
     geoProjectionZoom: {
       zoomLevel,
       center,
       translation,
       roll,
-
       initialZoomLevel: zoomLevel,
       initialCenter: center,
       initialTranslation: translation,

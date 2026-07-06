@@ -8,7 +8,6 @@ import type {
 import { selectorChartDrawingArea } from '@mui/x-charts/internals';
 import type { ChartState } from '@mui/x-charts/internals';
 import type {
-  D3NamedProjection,
   GeoProjectionInput,
   GeoTooltipPosition,
   UseGeoProjectionSignature,
@@ -36,25 +35,12 @@ export const selectorChartGeoData: (
 
 export const selectorChartGeoFeatureKey = createSelector(
   selectorChartGeoProjectionState,
-  function selectorChartGeoFeatureKey(geoProjection) {
-    return geoProjection?.geoFeatureKey ?? 'name';
-  },
+  (geoProjection) => geoProjection?.geoFeatureKey ?? 'name',
 );
 
 export const selectorChartRawProjection = createSelector(
   selectorChartGeoProjectionState,
-  function selectorChartRawProjection(geoProjection): GeoProjectionInput | null {
-    return geoProjection?.projection ?? null;
-  },
-);
-
-export const selectorChartProjectionFactory = createSelector(
-  selectorChartGeoProjectionState,
-  function selectorChartProjectionFactory(
-    geoProjection,
-  ): Record<D3NamedProjection, (() => GeoProjection) | undefined> | null {
-    return geoProjection?.factories ?? null;
-  },
+  (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
 );
 
 export const selectorChartZoomLevel = createSelector(
@@ -75,6 +61,7 @@ const selectorChartTranslation = createSelectorMemoized(
     return geoProjectionZoom?.translation ?? null;
   },
 );
+
 const selectorChartRoll = createSelector(
   selectorChartGeoProjectionZoomState,
   function selectorChartRoll(geoProjectionZoom): number {
@@ -95,6 +82,7 @@ const selectorChartParallels = createSelectorMemoized(
     return getParallels(geoProjection?.parallels);
   },
 );
+
 /**
  * Map a feature's `properties.name` to its index in `geoData.features`,
  * for fast lookup by name when joining series rows to features.
@@ -105,11 +93,7 @@ const selectorChartParallels = createSelectorMemoized(
 export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   selectorChartGeoData,
   selectorChartGeoFeatureKey,
-  function selectorChartGeoFeatureIndexesByName(
-    geoData: ExtendedFeatureCollection | null,
-    geoFeatureKey:
-      string | ((feature: ExtendedFeatureCollection['features'][number]) => string | null),
-  ): ReadonlyMap<string, number[]> {
+  (geoData, geoFeatureKey): ReadonlyMap<string, number[]> => {
     const map = new Map<string, number[]>();
     if (!geoData) {
       return map;
@@ -134,7 +118,6 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
 
 export const selectorFitScale = createSelector(
   selectorChartRawProjection,
-  selectorChartProjectionFactory,
   selectorChartParallels,
   selectorChartInitialCenter,
   selectorChartGeoData,
@@ -142,7 +125,6 @@ export const selectorFitScale = createSelector(
 
   function selectorFitScale(
     projectionInput,
-    projectionFactory,
     parallels,
     initialCenter,
     geoData,
@@ -152,7 +134,7 @@ export const selectorFitScale = createSelector(
       return null;
     }
 
-    const projection = resolveProjectionInstance(projectionInput, projectionFactory, parallels);
+    const projection = resolveProjectionInstance(projectionInput, parallels);
     if (projection === null) {
       return null;
     }
@@ -182,7 +164,6 @@ export const selectorFitScale = createSelector(
  */
 export const selectorChartProjection = createSelectorMemoized(
   selectorChartRawProjection,
-  selectorChartProjectionFactory,
   selectorChartParallels,
   selectorChartGeoData,
   selectorChartCenter,
@@ -191,9 +172,8 @@ export const selectorChartProjection = createSelectorMemoized(
   selectorChartZoomLevel,
   selectorChartDrawingArea,
   selectorFitScale,
-  function selectorChartProjection(
+  (
     projectionInput,
-    projectionFactory,
     parallels,
     geoData,
     center,
@@ -202,11 +182,8 @@ export const selectorChartProjection = createSelectorMemoized(
     zoomLevel,
     drawingArea,
     fitScale,
-  ): GeoProjection | null {
-    // A fresh projection is built on every recompute (i.e. whenever any input below changes). The
-    // view transform mutates it in place, so reusing a shared instance would return the same object
-    // reference and store subscribers would render one update behind.
-    const projection = resolveProjectionInstance(projectionInput, projectionFactory, parallels);
+  ): GeoProjection | null => {
+    const projection = resolveProjectionInstance(projectionInput, parallels);
     if (!projection) {
       return null;
     }
@@ -227,7 +204,6 @@ export const selectorChartProjection = createSelectorMemoized(
       drawingArea.left + drawingArea.width / 2 + (translation?.[0] ?? 0) * drawingArea.width,
       drawingArea.top + drawingArea.height / 2 + (translation?.[1] ?? 0) * drawingArea.height,
     ]);
-
     return projection;
   },
 );
@@ -238,7 +214,7 @@ export const selectorChartProjection = createSelectorMemoized(
  */
 export const selectorChartGeoPath = createSelectorMemoized(
   selectorChartProjection,
-  function selectorChartGeoPath(projection): GeoPath | null {
+  (projection): GeoPath | null => {
     if (!projection) {
       return null;
     }
