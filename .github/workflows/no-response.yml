@@ -16,4 +16,4 @@ jobs:
       issues: write
       pull-requests: write
     name: Handle stale issues and PRs
-    uses: mui/mui-public/.github/workflows/general_handle-stale-issues-and-prs.yml@4e18082e2410a90d523866a414c4e67296b9892c # master
+    uses: mui/mui-public/.github/workflows/general_handle-stale-issues-and-prs.yml@9590da6ae303c6afa7e67aebb6bc46232fac164e # master
