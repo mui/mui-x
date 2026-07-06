@@ -24,6 +24,7 @@ export function useEventOccurrencesWithDayGridPosition(
       [occurrenceKey: string]: {
         position: useEventOccurrencesWithDayGridPosition.EventOccurrencePosition;
         startDayIndex: number;
+        hidden: boolean;
       };
     } = {};
 
@@ -45,7 +46,8 @@ export function useEventOccurrencesWithDayGridPosition(
       }
 
       // 2. Sort: multi-day events first (so they claim top rows), then by start date.
-      // The active-first, then-by-span secondary sort is only needed in overflow mode —
+      // The active-first, then-by-span secondary sort only matters in overflow mode, so it
+      // is skipped when there is no maxEvents limit.
       const baseSorted = sortEventOccurrences(needsPosition);
       const sortedNeedsPosition =
         maxEvents == null
@@ -69,16 +71,21 @@ export function useEventOccurrencesWithDayGridPosition(
 
       // 3. Assign position to each occurrence
 
-      // Pre-reserve rows for events that are currently visible and will retain their
-      // row. Without this, a resurfacing event computes smallestAvailableIndex before
-      // those rows are claimed and can collide with a still-visible event.
+      // When a day has more events than fit, the last visible row is taken by the
+      // "+N more" button, so only maxEvents - 1 events can actually show. An event is
+      // visible on a day only if its index is within this effective limit.
+      let effectiveMax = Infinity;
+      if (maxEvents != null) {
+        effectiveMax = needsPosition.length > maxEvents ? maxEvents - 1 : maxEvents;
+      }
+
+      // Pre-reserve rows for events that keep showing on their current row. Without this,
+      // a resurfacing event computes smallestAvailableIndex before those rows are claimed
+      // and can collide with a still-visible event.
       for (const occurrence of sortedNeedsPosition) {
         const active = activeSegments[occurrence.key];
-        if (active != null) {
-          const isCurrentlyVisible = maxEvents == null || active.position.index <= maxEvents;
-          if (isCurrentlyVisible) {
-            usedIndexes.add(active.position.index);
-          }
+        if (active != null && !active.hidden && active.position.index <= effectiveMax) {
+          usedIndexes.add(active.position.index);
         }
       }
 
@@ -93,18 +100,20 @@ export function useEventOccurrencesWithDayGridPosition(
         const active = activeSegments[occurrence.key];
         let position: useEventOccurrencesWithDayGridPosition.EventOccurrencePosition;
 
-        if (active != null) {
-          const currentIndex = active.position.index;
-          const isCurrentlyVisible = maxEvents == null || currentIndex <= maxEvents;
-          const wouldNewIndexBeVisible = maxEvents == null || smallestAvailableIndex <= maxEvents;
-
-          if (isCurrentlyVisible) {
-            // Event is visible in its current row — never split it, keep the bar continuous.
-            position = { index: currentIndex, daySpan: 1, isInvisible: true };
-          } else if (wouldNewIndexBeVisible) {
-            // Event was hidden (overflowed) and a visible row just opened up — start a new
-            // segment with a continuation arrow so the user knows it started earlier.
+        if (active != null && !active.hidden && active.position.index <= effectiveMax) {
+          // The visible run continues on the same row — keep the bar continuous.
+          position = { index: active.position.index, daySpan: 1, isInvisible: true };
+        } else {
+          // The event is not continuing a visible run: it is new, resurfacing from
+          // overflow, or a visible bar that no longer fits (bumped by the "+N more"
+          // button). In the last case, close the previous segment on this day.
+          if (active != null && !active.hidden) {
             active.position.daySpan = dayIndex - active.startDayIndex;
+          }
+
+          if (smallestAvailableIndex <= effectiveMax) {
+            // Visible: first appearance or resurfacing into a freed row. The renderer
+            // derives the continuation arrow from the event range vs the day.
             position = {
               index: smallestAvailableIndex,
               daySpan: Math.min(
@@ -112,26 +121,14 @@ export function useEventOccurrencesWithDayGridPosition(
                 dayListSize - dayIndex,
               ),
             };
-            activeSegments[occurrence.key] = {
-              position,
-              startDayIndex: dayIndex,
-            };
+            activeSegments[occurrence.key] = { position, startDayIndex: dayIndex, hidden: false };
           } else {
-            // Still hidden even after checking — stay invisible in the overflow row.
-            position = { index: currentIndex, daySpan: 1, isInvisible: true };
+            // Hidden this day: shown inside the "+N more" overflow. Keep a stable index
+            // (the one it already had) so hidden events don't swap rows between days.
+            const hiddenIndex = active != null ? active.position.index : smallestAvailableIndex;
+            position = { index: hiddenIndex, daySpan: 1, isInvisible: true };
+            activeSegments[occurrence.key] = { position, startDayIndex: dayIndex, hidden: true };
           }
-        } else {
-          // First time we're seeing this occurrence — assign the smallest available index.
-          const durationInDays =
-            adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1;
-          position = {
-            index: smallestAvailableIndex,
-            daySpan: Math.min(durationInDays, dayListSize - dayIndex),
-          };
-          activeSegments[occurrence.key] = {
-            position,
-            startDayIndex: dayIndex,
-          };
         }
 
         usedIndexes.add(position.index);
@@ -143,27 +140,6 @@ export function useEventOccurrencesWithDayGridPosition(
 
       return { ...day, withPosition, withoutPosition };
     });
-
-    if (maxEvents != null) {
-      for (let dayIndex = 1; dayIndex < dayListSize; dayIndex += 1) {
-        const { withPosition } = processedDays[dayIndex];
-        if (!withPosition.some((o) => o.position.index > maxEvents)) {
-          continue;
-        }
-        const sliced = withPosition.find(
-          (o) => o.position.index === maxEvents && o.position.isInvisible,
-        );
-        if (sliced) {
-          const segment = activeSegments[sliced.key];
-          if (segment) {
-            segment.position.daySpan = Math.min(
-              segment.position.daySpan,
-              dayIndex - segment.startDayIndex,
-            );
-          }
-        }
-      }
-    }
 
     const usedIndexesFlat = usedIndexesByDay.flatMap((set) => Array.from(set));
 

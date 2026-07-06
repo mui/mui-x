@@ -124,6 +124,37 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     }
   });
 
+  it('should split a bumped multi-day event and resurface it after the overflow day', () => {
+    // A and B fill rows 1-2 across all days. C appears on day 2 only, so that day
+    // overflows and the "+N more" button takes row 2 — B is bumped into the overflow
+    // there, then must resurface as a visible bar on day 3 instead of vanishing.
+    const result = testHook(
+      [
+        EventBuilder.new().id('A').startAt('2024-01-15Z').endAt('2024-01-17Z').toProcessed(),
+        EventBuilder.new().id('B').startAt('2024-01-15Z').endAt('2024-01-17Z').toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-16Z').toProcessed(),
+      ],
+      2,
+    );
+
+    const bDay1 = result.days[0].withPosition.find((o) => o.id === 'B')!;
+    const bDay2 = result.days[1].withPosition.find((o) => o.id === 'B')!;
+    const bDay3 = result.days[2].withPosition.find((o) => o.id === 'B')!;
+
+    // Day 1: B shows as a visible bar on row 2, truncated so it does not run over the
+    // "+N more" button that appears on day 2.
+    expect(bDay1.position.index).to.equal(2);
+    expect(bDay1.position.isInvisible).to.not.equal(true);
+    expect(bDay1.position.daySpan).to.equal(1);
+
+    // Day 2 overflows: B is bumped into the "+N more" overflow, not rendered as a bar.
+    expect(bDay2.position.isInvisible).to.equal(true);
+
+    // Day 3: B resurfaces as a visible bar again instead of staying hidden.
+    expect(bDay3.position.index).to.equal(2);
+    expect(bDay3.position.isInvisible).to.not.equal(true);
+  });
+
   it('should find gaps in the indexes and use the lower available', () => {
     const result = testHook([
       EventBuilder.new().id('A').startAt('2024-01-15Z').endAt('2024-01-16Z').toProcessed(),
