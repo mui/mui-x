@@ -6,7 +6,7 @@ packages:
   - bundle-size
 
 catalog:
-  '@atlaskit/pragmatic-drag-and-drop': ^1.8.1
+  '@atlaskit/pragmatic-drag-and-drop': ^2.0.1
   '@babel/cli': ^7.29.7
   '@babel/core': ^7.29.7
   '@babel/plugin-transform-modules-commonjs': ^7.29.7
