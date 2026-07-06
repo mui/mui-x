@@ -13,7 +13,7 @@ import type {
   UseGeoProjectionSignature,
   UseGeoProjectionState,
 } from './useGeoProjection.types';
-import type { UseGeoProjectionZoomSignature } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
+import type { UseGeoProjectionZoomSignature, UseGeoProjectionZoomState } from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
 import { getParallels, resolveProjectionInstance } from './projection.utils';
 
 const ZERO_COORDINATES: [number, number] = [0, 0];
@@ -24,7 +24,7 @@ export const selectorChartGeoProjectionState = (
 
 const selectorChartGeoProjectionZoomState = (
   state: ChartState<[], [UseGeoProjectionZoomSignature]>,
-) => state.geoProjectionZoom;
+): UseGeoProjectionZoomState['geoProjectionZoom'] | undefined => state.geoProjectionZoom;
 
 export const selectorChartGeoData: (
   state: ChartState<[], [UseGeoProjectionSignature]>,

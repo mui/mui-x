@@ -86,7 +86,7 @@ interface UseGeoProjectionZoomParameters {
    * Use this to seed the map at a specific zoom level and center without controlling it.
    */
   initialView?: Omit<MapZoomView, 'translation' | 'roll'> &
-    Partial<Pick<MapZoomView, 'translation' | 'roll'>>;
+  Partial<Pick<MapZoomView, 'translation' | 'roll'>>;
   /**
    * The view to display, in controlled mode.
    * When set, the component does not update the view on its own — drive it from `onViewChange`.
@@ -121,9 +121,9 @@ interface UseGeoProjectionZoomPublicApi {
   resetZoom: () => void;
 }
 
-interface UseGeoProjectionZoomInstance extends UseGeoProjectionZoomPublicApi {}
+interface UseGeoProjectionZoomInstance extends UseGeoProjectionZoomPublicApi { }
 
-interface UseGeoProjectionZoomState {
+export interface UseGeoProjectionZoomState {
   geoProjectionZoom: {
     /**
      * The zoom level, as a multiple of the scale that fits the data in the drawing area.
