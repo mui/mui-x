@@ -3,6 +3,7 @@ import type { Theme } from '@mui/material/styles';
 import type {
   EventCalendarParameters,
   EventCalendarSchedulerParametersOverrides,
+  CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/DayTimeGrid.types';
 
@@ -13,7 +14,9 @@ export interface StandaloneCompactThreeDayViewProps<TEvent extends object, TReso
     CompactThreeDayViewProps,
     Omit<
       EventCalendarParameters<TEvent, TResource>,
-      keyof EventCalendarSchedulerParametersOverrides
+      | 'viewConfig'
+      | keyof EventCalendarSchedulerParametersOverrides
+      | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
   /**

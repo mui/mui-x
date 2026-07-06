@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-chat",
-  "version": "9.0.0-alpha.11",
+  "version": "9.0.0-alpha.12",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Chat components.",
   "license": "MIT",
@@ -37,7 +37,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {

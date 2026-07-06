@@ -17,6 +17,7 @@ export const alias = [
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
     { lib: 'x-scheduler', plans: ['premium'] },
     { lib: 'x-scheduler-internals', plans: ['premium'] },
+    { lib: 'x-agent-tools' },
     { lib: 'x-internals' },
     { lib: 'x-internal-gestures' },
     { lib: 'x-license' },

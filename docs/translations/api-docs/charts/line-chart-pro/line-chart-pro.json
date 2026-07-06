@@ -114,6 +114,9 @@
         "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
       }
     },
+    "sampling": {
+      "description": "Sampling method used to render large datasets when zoomed out. - <code>&#39;none&#39;</code>: render every point (no sampling). - <code>&#39;minmax&#39;</code>: keep the min and max per bucket. - <code>&#39;m4&#39;</code>: pixel-accurate—keep the first, min, max, and last per bucket. - <code>&#39;lttb&#39;</code>: Largest-Triangle-Three-Buckets, preserves the visual shape."
+    },
     "series": {
       "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series/'>LineSeries</a> objects."
     },
