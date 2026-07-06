@@ -66,6 +66,7 @@
     "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo"
   },
   "devDependencies": {
+    "@vraksha/gh-helper": "latest",
     "@atlaskit/pragmatic-drag-and-drop-unit-testing": "1.1.1",
     "@babel/core": "catalog:",
     "@babel/plugin-syntax-typescript": "7.29.7",

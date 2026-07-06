@@ -354,6 +354,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 4.1.8(@vitest/browser@4.1.8)(vitest@4.1.8)
+      '@vraksha/gh-helper':
+        specifier: latest
+        version: 1.0.0
       axe-core:
         specifier: 4.12.1
         version: 4.12.1
@@ -5938,6 +5941,10 @@ packages:
   '@vitest/utils@4.1.8':
     resolution: {integrity: sha512-uOJamYALNhfJ6iolExyQM40yIQwDqYnkKtQ5VCiSe17E33H0aQ/u+1GlRuz4LZBk6Mm3sg90G9hEbmEt37C1Zg==}
 
+  '@vraksha/gh-helper@1.0.0':
+    resolution: {integrity: sha512-Gq74eZy7JVVsMKWgk7prFUIdmjKxdvEyuVtnLQk1DVI/GMnqVzkYYHh9XIjNozfZW+ohmzk5sSKe0bSRklOaoA==}
+    hasBin: true
+
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
 
@@ -6670,6 +6677,7 @@ packages:
   conventional-changelog-core@5.0.1:
     resolution: {integrity: sha512-Rvi5pH+LvgsqGwZPZ3Cq/tz4ty7mjijhr3qR4m9IBXNbxGGYgTVVO+duXzz9aArmHxFtwZ+LRkrNIMDQzgoY4A==}
     engines: {node: '>=14'}
+    deprecated: Deprecated and no longer maintained. Please use conventional-changelog instead.
 
   conventional-changelog-preset-loader@3.0.0:
     resolution: {integrity: sha512-qy9XbdSLmVnwnvzEisjxdDiLA4OmV3o8db+Zdg4WiFw14fP3B6XNz98X0swPPpkTd/pc1K7+adKgEDM1JCUMiA==}
@@ -15229,6 +15237,8 @@ snapshots:
       '@vitest/pretty-format': 4.1.8
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
+
+  '@vraksha/gh-helper@1.0.0': {}
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
