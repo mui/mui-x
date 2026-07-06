@@ -99,7 +99,7 @@ trustPolicy: no-downgrade
 # community review; supply-chain risk is most relevant within a shorter window.
 # TODO: drop once @babel/core stops depending on semver@^6.3.1 (no 6.x semver release has
 # provenance), and the other legacy packages restore provenance.
-trustPolicyIgnoreAfter: 525600
+trustPolicyIgnoreAfter: 1
 
 enablePrePostScripts: true
 
