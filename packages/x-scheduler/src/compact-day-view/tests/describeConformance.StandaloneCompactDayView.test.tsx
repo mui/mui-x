@@ -1,4 +1,4 @@
-import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
+import { Unstable_StandaloneCompactDayView as StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 import { eventCalendarClasses as classes } from '@mui/x-scheduler/event-calendar';
 import {
   createSchedulerRenderer,

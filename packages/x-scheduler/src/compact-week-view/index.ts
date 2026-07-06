@@ -1,3 +1,6 @@
-export * from './CompactWeekView';
-export * from './CompactWeekView.types';
-export * from './StandaloneCompactWeekView';
+export { CompactWeekView as Unstable_CompactWeekView } from './CompactWeekView';
+export { StandaloneCompactWeekView as Unstable_StandaloneCompactWeekView } from './StandaloneCompactWeekView';
+export type {
+  CompactWeekViewProps,
+  StandaloneCompactWeekViewProps,
+} from './CompactWeekView.types';

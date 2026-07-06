@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
-import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
+import { Unstable_StandaloneCompactDayView as StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 import {
   initialEvents,
   defaultVisibleDate,

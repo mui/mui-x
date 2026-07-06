@@ -4,7 +4,7 @@ import {
   EventBuilder,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
-import { CompactDayView } from '@mui/x-scheduler/compact-day-view';
+import { Unstable_CompactDayView as CompactDayView } from '@mui/x-scheduler/compact-day-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';

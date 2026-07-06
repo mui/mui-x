@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
-import { StandaloneCompactWeekView } from '@mui/x-scheduler/compact-week-view';
+import { Unstable_StandaloneCompactWeekView as StandaloneCompactWeekView } from '@mui/x-scheduler/compact-week-view';
 import {
   initialEvents,
   defaultVisibleDate,

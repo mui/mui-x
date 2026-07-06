@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StandaloneCompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
+import { Unstable_StandaloneCompactThreeDayView as StandaloneCompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
 import {
   initialEvents,
   defaultVisibleDate,

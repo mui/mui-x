@@ -10,6 +10,9 @@ import { CompactThreeDayView } from './CompactThreeDayView';
 /**
  * A touch-optimized 3-Day View (3 days) for narrow widths that can be used outside of the
  * Event Calendar.
+ *
+ * @warning This component is unstable. We are actively improving the Scheduler's mobile experience,
+ * so its behavior and API may change in a future release.
  */
 const StandaloneCompactThreeDayView = React.forwardRef(function StandaloneCompactThreeDayView<
   TEvent extends object,

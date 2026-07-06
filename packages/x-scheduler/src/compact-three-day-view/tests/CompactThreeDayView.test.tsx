@@ -4,7 +4,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
 } from 'test/utils/scheduler';
 import { within } from '@mui/internal-test-utils';
-import { CompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
+import { Unstable_CompactThreeDayView as CompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';

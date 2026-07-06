@@ -1,4 +1,4 @@
-import { StandaloneCompactWeekView } from '@mui/x-scheduler/compact-week-view';
+import { Unstable_StandaloneCompactWeekView as StandaloneCompactWeekView } from '@mui/x-scheduler/compact-week-view';
 import { eventCalendarClasses as classes } from '@mui/x-scheduler/event-calendar';
 import {
   createSchedulerRenderer,

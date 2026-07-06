@@ -16,6 +16,9 @@ const COMPACT_THREE_DAY_VIEW_RENDERERS: DayTimeGridInternalRenderers = {
 
 /**
  * A touch-optimized 3-Day View (3 days) for narrow widths, to use inside the Event Calendar.
+ *
+ * @warning This component is unstable. We are actively improving the Scheduler's mobile experience,
+ * so its behavior and API may change in a future release.
  */
 export const CompactThreeDayView = React.memo(
   React.forwardRef(function CompactThreeDayView(
