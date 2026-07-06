@@ -87,7 +87,7 @@ catalog:
 engineStrict: true
 updateNotifier: false
 blockExoticSubdeps: true
-minimumReleaseAge: 4320
+minimumReleaseAge: 1
 minimumReleaseAgeExclude:
   - '@mui/*'
   - '@base-ui/*'
