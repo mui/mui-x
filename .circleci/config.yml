@@ -145,7 +145,7 @@ jobs:
     <<: *default-job
     environment:
       <<: *default-environment
-      NODE_OPTIONS: --max-old-space-size=4096
+      NODE_OPTIONS: --max-old-space-size=3584
     steps:
       - checkout
       - install-deps
