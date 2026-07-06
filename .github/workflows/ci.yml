@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ github.actor }}"
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           # fetch all tags which are required for `pnpm release:changelog`
           fetch-depth: 0
@@ -32,6 +32,6 @@ jobs:
       - run: pnpm install
       - run: pnpm release:build
       - name: Publish packages to pkg.pr.new and npm dry-run
-        uses: mui/mui-public/.github/actions/ci-publish@963630fef652d2ac707df1af5041d49a7b574889 # master
+        uses: mui/mui-public/.github/actions/ci-publish@9590da6ae303c6afa7e67aebb6bc46232fac164e # master
         with:
           npm-dry-run: true
