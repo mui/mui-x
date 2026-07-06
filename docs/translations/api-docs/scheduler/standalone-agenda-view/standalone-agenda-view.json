@@ -70,6 +70,9 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "view": { "description": "The view currently displayed in the calendar." },
+    "viewConfig": {
+      "description": "Configuration applied to the view, keyed by the view name. The <code>agenda</code> view does not support any configuration keys yet."
+    },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
       "description": "The date currently used to determine the visible date range."

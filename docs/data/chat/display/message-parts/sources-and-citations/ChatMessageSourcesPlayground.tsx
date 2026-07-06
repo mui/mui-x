@@ -67,7 +67,7 @@ export default function ChatMessageSourcesPlayground() {
         </React.Fragment>
       }
       preview={
-        <ChatMessageSources label={label} sx={rootSx as any}>
+        <ChatMessageSources label={label} sx={rootSx}>
           {POOL.slice(0, count).map((source, i) => (
             <ChatMessageSource
               key={source.href}

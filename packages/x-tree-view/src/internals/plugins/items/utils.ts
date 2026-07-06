@@ -1,5 +1,5 @@
-import { TreeViewValidItem, TreeViewItemId } from '../../../models';
-import { TreeViewItemMeta } from '../../models';
+import type { TreeViewValidItem, TreeViewItemId } from '../../../models';
+import type { TreeViewItemMeta } from '../../models';
 import type { MinimalTreeViewParameters, MinimalTreeViewState } from '../../MinimalTreeViewStore';
 
 export const TREE_VIEW_ROOT_PARENT_ID = '__TREE_VIEW_ROOT_PARENT_ID__';

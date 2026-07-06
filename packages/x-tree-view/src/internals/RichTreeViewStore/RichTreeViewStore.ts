@@ -1,7 +1,7 @@
-import { TreeViewValidItem } from '../../models';
+import type { TreeViewValidItem } from '../../models';
 import { TreeViewLabelEditingPlugin } from '../plugins/labelEditing';
 import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
-import { RichTreeViewStoreParameters, RichTreeViewState } from './RichTreeViewStore.types';
+import type { RichTreeViewStoreParameters, RichTreeViewState } from './RichTreeViewStore.types';
 import { parametersToStateMapper } from './RichTreeViewStore.utils';
 
 export class ExtendableRichTreeViewStore<

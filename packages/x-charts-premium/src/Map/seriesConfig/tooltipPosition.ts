@@ -9,7 +9,7 @@ import { selectorGeoTooltipPosition } from '../../internals/plugins/useGeoProjec
  * series config (rather than the core tooltip plugin) so the geo projection is a
  * tracked dependency and d3-geo is only bundled with map charts.
  */
-const selectorTooltipItemPosition: TooltipItemPositionSelector = createSelectorMemoized(
+const selectorTooltipItemPosition: TooltipItemPositionSelector<'mapShape'> = createSelectorMemoized(
   selectorChartsTooltipItem,
   selectorGeoTooltipPosition,
   // `selectorChartsTooltipItem` is typed with the community series types, which
