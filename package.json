@@ -22,7 +22,7 @@
     "docs:deploy": "pnpm --filter docs run deploy",
     "deduplicate": "pnpm dedupe",
     "dataset:file-tree": "tsx ./scripts/treeDataFromFileTree.ts",
-    "extract-error-codes": "code-infra extract-error-codes --detection opt-out --errorCodesPath docs/public/static/error-codes.json --skip @mui/x-codemod eslint-plugin-mui-x @mui/x-telemetry @mui/x-charts-vendor",
+    "extract-error-codes": "code-infra extract-error-codes --detection opt-out --errorCodesPath docs/public/static/error-codes.json --skip @mui/x-codemod eslint-plugin-mui-x @mui/x-telemetry @mui/x-charts-vendor @mui/mcp @mui/x-agent-tools",
     "l10n": "tsx ./scripts/l10n.ts",
     "l10n:llm": "tsx ./scripts/translateWithLLMs/cli.ts",
     "eslint": "eslint . --cache --report-unused-disable-directives --max-warnings 0",
