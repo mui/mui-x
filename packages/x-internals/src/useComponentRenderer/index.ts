@@ -1,1 +1,1 @@
-export * from './useComponentRenderer';
+export * from '@base-ui/utils/useComponentRenderer';

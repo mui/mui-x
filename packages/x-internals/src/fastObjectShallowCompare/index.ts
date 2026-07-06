@@ -1,1 +1,1 @@
-export { fastObjectShallowCompare } from './fastObjectShallowCompare';
+export { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';

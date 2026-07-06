@@ -1,1 +1,1 @@
-export * from './hash';
+export { hash } from '@base-ui/utils/hash';
