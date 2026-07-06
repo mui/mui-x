@@ -54,7 +54,7 @@ catalog:
   clsx: ^2.1.1
   cross-env: ^10.1.0
   csstype: ^3.2.3
-  date-fns: ^4.2.1
+  date-fns: ^4.4.0
   date-fns-jalali: ^4.1.0-0
   dayjs: ^1.11.21
   es-toolkit: ^1.46.1
