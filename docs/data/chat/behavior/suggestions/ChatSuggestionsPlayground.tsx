@@ -108,7 +108,7 @@ export default function ChatSuggestionsPlayground() {
               suggestions={suggestions}
               autoSubmit={autoSubmit}
               alwaysVisible={alwaysVisible}
-              sx={rootSx as any}
+              sx={rootSx}
             />
           </Box>
         </ScopedChat>
