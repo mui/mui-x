@@ -8,7 +8,7 @@ import type {
   ChatConversation as ChatConversationType,
   ChatMessage,
 } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const adapter = createEchoAdapter();
 

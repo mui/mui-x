@@ -23,6 +23,7 @@ import type { UseChartCartesianAxisSignature } from '../../../featurePlugins/use
 import type { UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
 import type { HighlightCreator } from '../../../featurePlugins/useChartHighlight/highlightCreator.types';
 import type { AxisTooltipContentProps, ItemTooltipContentProps } from './TooltipContent.types';
+import type { SamplingStrategy } from '../../../featurePlugins/useChartCartesianAxis/sampling.types';
 
 export type ChartSeriesTypeRequiredPlugins<SeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[SeriesType] extends { axisType: 'cartesian' }
@@ -63,6 +64,11 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
    */
   identifierCleaner: IdentifierCleaner<SeriesType>;
   getItemAtPosition?: GetItemAtPosition<SeriesType>;
+  /**
+   * Optional sampling strategy used to render large datasets. When set and sampling is enabled,
+   * the series is reduced to a zoom-appropriate level of detail before rendering.
+   */
+  sampler?: SamplingStrategy<SeriesType>;
   descriptionGetter: DescriptionGetter<SeriesType>;
   isHighlightedCreator: HighlightCreator<SeriesType>;
   isFadedCreator: HighlightCreator<SeriesType>;

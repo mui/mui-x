@@ -56,6 +56,8 @@
       "@mui/x-license/*": ["./packages/x-license/src/*"],
       "@mui/x-internals": ["./packages/x-internals/src"],
       "@mui/x-internals/*": ["./packages/x-internals/src/*"],
+      "@mui/x-agent-tools": ["./packages/x-agent-tools/src"],
+      "@mui/x-agent-tools/*": ["./packages/x-agent-tools/src/*"],
       "@mui/x-internal-gestures/*": ["./packages/x-internal-gestures/src/*"],
       "@mui/x-telemetry": ["./packages/x-telemetry/src"],
       "@mui/x-telemetry/*": ["./packages/x-telemetry/src/*"],
