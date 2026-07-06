@@ -56,7 +56,9 @@ default-job: &default-job
     # For example, when creating v9 from v8, `master -> v8.x`
     BASE_BRANCH: master
   working_directory: /tmp/mui
-  executor: code-infra/mui-node
+  executor:
+    name: code-infra/mui-node
+    node-version: 22.23.1
   resource_class: medium.gen2
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
@@ -143,7 +145,7 @@ jobs:
     <<: *default-job
     environment:
       <<: *default-environment
-      NODE_OPTIONS: --max-old-space-size=4096
+      NODE_OPTIONS: --max-old-space-size=3584
     steps:
       - checkout
       - install-deps

@@ -8,7 +8,7 @@ import { selectorChartsTooltipItem, useGeoProjectionSelectors } from '@mui/x-cha
  * series config (rather than the core tooltip plugin) so the geo projection is a
  * tracked dependency and d3-geo is only bundled with map charts.
  */
-const selectorTooltipItemPosition: TooltipItemPositionSelector = createSelectorMemoized(
+const selectorTooltipItemPosition: TooltipItemPositionSelector<'mapShape'> = createSelectorMemoized(
   selectorChartsTooltipItem,
   useGeoProjectionSelectors.selectorGeoTooltipPosition,
   // `selectorChartsTooltipItem` is typed with the community series types, which
