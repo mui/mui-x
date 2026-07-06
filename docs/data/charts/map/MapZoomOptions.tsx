@@ -111,8 +111,8 @@ export default function MapZoomOptions() {
   const apiRef = useChartPremiumApiRef<'mapShape'>();
 
   const [rotationAllowed, setRotationAllowed] = React.useState<
-    'both' | 'both+roll' | 'long' | 'none'
-  >('long');
+    'both' | 'both+roll' | 'longitude' | 'none'
+  >('longitude');
   const [translationAllowed, setTranslationAllowed] = React.useState<
     'both' | 'x' | 'y' | 'none'
   >('y');

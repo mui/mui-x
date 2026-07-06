@@ -97,7 +97,7 @@ export default function MapZoomOptions() {
   const [projection, setProjection] = React.useState('naturalEarth1');
   const apiRef = useChartPremiumApiRef();
 
-  const [rotationAllowed, setRotationAllowed] = React.useState('long');
+  const [rotationAllowed, setRotationAllowed] = React.useState('longitude');
   const [translationAllowed, setTranslationAllowed] = React.useState('y');
   const [maxEmptySpace, setMaxEmptySpace] = React.useState(0);
 
