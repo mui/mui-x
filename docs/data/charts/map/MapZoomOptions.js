@@ -134,7 +134,7 @@ export default function MapZoomOptions() {
               setRotationAllowed('none');
               setTranslationAllowed('both');
             } else if (isConicProjection(value) || isCylindricalProjection(value)) {
-              setRotationAllowed('long');
+              setRotationAllowed('longitude');
               setTranslationAllowed('y');
             } else {
               setRotationAllowed('both');

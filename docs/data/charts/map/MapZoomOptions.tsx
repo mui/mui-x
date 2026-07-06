@@ -19,7 +19,6 @@ import {
   Graticule,
 } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-
 import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 
 const countries = topojsonFeature(
@@ -151,7 +150,7 @@ export default function MapZoomOptions() {
               setRotationAllowed('none');
               setTranslationAllowed('both');
             } else if (isConicProjection(value) || isCylindricalProjection(value)) {
-              setRotationAllowed('long');
+              setRotationAllowed('longitude');
               setTranslationAllowed('y');
             } else {
               setRotationAllowed('both');
