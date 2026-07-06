@@ -108,8 +108,7 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   function selectorChartGeoFeatureIndexesByName(
     geoData: ExtendedFeatureCollection | null,
     geoFeatureKey:
-      | string
-      | ((feature: ExtendedFeatureCollection['features'][number]) => string | null),
+      string | ((feature: ExtendedFeatureCollection['features'][number]) => string | null),
   ): ReadonlyMap<string, number[]> {
     const map = new Map<string, number[]>();
     if (!geoData) {

@@ -49,8 +49,7 @@ export interface UseGeoProjectionParameters {
    * @default 'name'
    */
   geoFeatureKey?:
-    | string
-    | ((feature: ExtendedFeatureCollection['features'][number]) => string | null);
+    string | ((feature: ExtendedFeatureCollection['features'][number]) => string | null);
   /**
    * The d3-geo projection used to map geographic coordinates to SVG coordinates.
    * Accepts a d3-geo projection name (e.g. `'mercator'`, `'naturalEarth1'`)
@@ -70,8 +69,7 @@ export interface UseGeoProjectionState {
   geoProjection: {
     geoData: ExtendedFeatureCollection | null;
     geoFeatureKey:
-      | string
-      | ((feature: ExtendedFeatureCollection['features'][number]) => string | null);
+      string | ((feature: ExtendedFeatureCollection['features'][number]) => string | null);
     // TODO: Remove factories from the state when some maps move to MIT package.
     factories: Record<D3NamedProjection, (() => GeoProjection) | undefined>;
     projection: GeoProjectionInput | null;
