@@ -127,18 +127,18 @@ describe('mapZoomUtils', () => {
       const grabbed: [number, number] = [33, 25];
       const target: [number, number] = [120, 250];
 
-      it("keeps the latitude fixed when rotation is restricted to 'long'", () => {
+      it("keeps the latitude fixed when rotation is restricted to 'longitude'", () => {
         const projection = rotatedProjection();
-        const center = getRotation(projection, grabbed, target, 1, 'long');
+        const center = getRotation(projection, grabbed, target, 1, 'longitude');
         expect(center).not.to.equal(null);
         expect(center![1]).to.be.closeTo(20, 1e-9); // latitude unchanged
         expect(center![0]).not.to.be.closeTo(10, 1e-3); // longitude moved
       });
 
-      it("keeps the latitude and roll fixed while panning east–west ('long')", () => {
+      it("keeps the latitude and roll fixed while panning east–west ('longitude')", () => {
         const projection = geoMercator().fitExtent(EXTENT, sphere);
         projection.rotate([-10, -20, 15]); // start from a rolled orientation
-        const center = getRotation(projection, grabbed, target, 1, 'long');
+        const center = getRotation(projection, grabbed, target, 1, 'longitude');
         expect(center).not.to.equal(null);
         expect(center![1]).to.be.closeTo(20, 1e-9); // latitude unchanged
         expect(center![2]).to.be.closeTo(15, 1e-9); // roll unchanged

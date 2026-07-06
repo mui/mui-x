@@ -275,13 +275,32 @@ If modifying the center does not succeed, it modifies the translation.
 
 The zoom object has two properties to limit this behavior:
 
-- `rotationAllowed`: `'both' | 'both+roll' | 'long' | 'none'` Limit how the center can be modified
+- `rotationAllowed`: `'both' | 'both+roll' | 'longitude' | 'none'` Limit how the center can be modified
 - `translationAllowed`: `'both' | 'x' | 'y' | 'none'` Limit how the translation can be modified
+
+:::info
+The **rotation** is a applied on the 3D sphere before projecting it to the 2D plan.
+
+The **translation** is applied after the projection, it allows drag it but does not impact the projection.
+
+The rotation allows infinite dragging because a rotation of 360deg bring user back to the initial point.
+But for some projection rotating the sphere along latitude or roll angles can have two impacts:
+
+- Cylindrical projections usually represent latitude/longitude as horizontal/vertical lines. Rotating along latitude or using the roll will transform those straight lines into curves.
+- Cylindrical and conic projections will apply different distortion to shapes according to the latitude/roll angle. So shapes will vary while dragging the map.
+
+:::
 
 By default, both are derived from the chosen projection so each map behaves as expected without extra configuration:
 
-- Globe-like (azimuthal) and conic projections rotate the sphere (`{ rotationAllowed: 'both', translationAllowed: 'none' }`).
-- Flat (cylindrical) projections pan and wrap east–west (`{ rotationAllowed: 'long', translationAllowed: 'both' }`).
+- azimuthal (globe-like) projections: `{ rotationAllowed: 'both', translationAllowed: 'none' }`
+- cylindrical: `{ rotationAllowed: 'long', translationAllowed: 'y' }`
+- conic: `{ rotationAllowed: 'none', translationAllowed: 'both' }`
+
+:::info
+With azimuthal projections, you can replace `rotationAllowed: 'both'` by `'both+roll'` to get a smoother dragging interaction.
+But the north/south axis will move more easily.
+:::
 
 You can also modify the zoom result with:
 

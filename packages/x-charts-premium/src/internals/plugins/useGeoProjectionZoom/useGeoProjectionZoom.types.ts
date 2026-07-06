@@ -4,11 +4,11 @@ import type { UseGeoProjectionSignature } from '../useGeoProjection/useGeoProjec
 /**
  * Which rotation axes a pan/zoom gesture may move:
  * - `'both'`: rotate freely along longitude and latitude, keeping the roll fixed.
- * - `'long'`: rotate along longitude only (lock the north–south tilt).
+ * - `'longitude'`: rotate along longitude only (lock the north–south tilt).
  * - `'none'`: lock every axis.
  * - `'both+roll'`: rotate freely along longitude and latitude, and allow rolling the map around the center.
  */
-export type MapRotationAxis = 'both' | 'long' | 'none' | 'both+roll';
+export type MapRotationAxis = 'both' | 'longitude' | 'none' | 'both+roll';
 
 export type MapTranslationAxis = 'both' | 'x' | 'y' | 'none';
 
@@ -46,7 +46,7 @@ export interface MapZoomView {
 export interface MapZoomOptions {
   /**
    * Which axes the map can be rotated along while panning or zooming.
-   * For example, `'long'` lets the map rotate east–west but locks the north–south tilt.
+   * For example, `'longitude'` lets the map rotate east–west but locks the north–south tilt.
    */
   rotationAllowed?: MapRotationAxis;
   /**

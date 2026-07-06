@@ -42,7 +42,7 @@ const FAMILY_INTERACTION: Record<
   { rotationAllowed: MapRotationAxis; translationAllowed: MapTranslationAxis }
 > = {
   azimuthal: { rotationAllowed: 'both', translationAllowed: 'none' },
-  cylindrical: { rotationAllowed: 'long', translationAllowed: 'y' },
+  cylindrical: { rotationAllowed: 'longitude', translationAllowed: 'y' },
   conic: { rotationAllowed: 'none', translationAllowed: 'both' },
   albersUsa: { rotationAllowed: 'none', translationAllowed: 'both' },
 };
@@ -92,7 +92,7 @@ export function getDefaultMapInteraction(projection: GeoProjectionInput | null):
  *   the roll only drifts as much as strictly required.
  * - With `rotationAllowed: 'both'`, both longitude and latitude are free but the roll is kept fixed at
  *   the current value.
- * - With `rotationAllowed: 'long'`, only the longitude is solved; the latitude and roll are kept fixed.
+ * - With `rotationAllowed: 'longitude'`, only the longitude is solved; the latitude and roll are kept fixed.
  * - With `rotationAllowed: 'none'`, `null` is returned so the caller keeps the current rotation.
  */
 export function getRotation(
@@ -126,7 +126,7 @@ export function getRotation(
       return getMinimalRollRotation(rotate as [number, number, number], geoPoint, q);
     case 'both':
       return getNoRollRotation(rotate as [number, number, number], geoPoint, q);
-    case 'long':
+    case 'longitude':
       return getLongitudeRotation(rotate as [number, number, number], geoPoint, q);
     case 'none':
     default:

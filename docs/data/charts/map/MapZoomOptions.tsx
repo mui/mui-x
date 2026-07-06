@@ -186,7 +186,7 @@ export default function MapZoomOptions() {
             >
               <ToggleButton value="both">both</ToggleButton>
               <ToggleButton value="both+roll">both+roll</ToggleButton>
-              <ToggleButton value="long">long</ToggleButton>
+              <ToggleButton value="longitude">longitude</ToggleButton>
               <ToggleButton value="none">none</ToggleButton>
             </ToggleButtonGroup>
           </div>
