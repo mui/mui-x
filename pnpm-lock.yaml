@@ -199,8 +199,8 @@ catalogs:
       specifier: 19.2.6
       version: 19.2.6
     react-router:
-      specifier: ^7.16.0
-      version: 7.16.0
+      specifier: ^7.18.1
+      version: 7.18.1
     react-transition-group:
       specifier: ^4.4.5
       version: 4.4.5
@@ -659,7 +659,7 @@ importers:
         version: 7.76.1(react@19.2.6)
       react-router:
         specifier: 'catalog:'
-        version: 7.16.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 7.18.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-runner:
         specifier: ^1.0.5
         version: 1.0.5(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -2213,7 +2213,7 @@ importers:
         version: 19.2.6(react@19.2.6)
       react-router:
         specifier: 'catalog:'
-        version: 7.16.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 7.18.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -2333,7 +2333,7 @@ importers:
         version: 19.2.6(react@19.2.6)
       react-router:
         specifier: 'catalog:'
-        version: 7.16.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 7.18.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -2465,7 +2465,7 @@ importers:
         version: 19.2.6(react@19.2.6)
       react-router:
         specifier: 'catalog:'
-        version: 7.16.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 7.18.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -6670,6 +6670,7 @@ packages:
   conventional-changelog-core@5.0.1:
     resolution: {integrity: sha512-Rvi5pH+LvgsqGwZPZ3Cq/tz4ty7mjijhr3qR4m9IBXNbxGGYgTVVO+duXzz9aArmHxFtwZ+LRkrNIMDQzgoY4A==}
     engines: {node: '>=14'}
+    deprecated: Deprecated and no longer maintained. Please use conventional-changelog instead.
 
   conventional-changelog-preset-loader@3.0.0:
     resolution: {integrity: sha512-qy9XbdSLmVnwnvzEisjxdDiLA4OmV3o8db+Zdg4WiFw14fP3B6XNz98X0swPPpkTd/pc1K7+adKgEDM1JCUMiA==}
@@ -9842,8 +9843,8 @@ packages:
   react-is@19.2.7:
     resolution: {integrity: sha512-kZFnouyVv7eP/Phmrlo9FK+zcAdriZJvzxXHF1Sl1P377WSGe2G/JxVolhTrB/jeV47lKImhNUsijjHAAbcl/A==}
 
-  react-router@7.16.0:
-    resolution: {integrity: sha512-wArC8lVyJb3+jM9OpDyW6hLCizACWkvQR/sSGqSs+o5uEXEtGlqdZ4v8hENR3Jad6i+LRkK93q/+bQAcvl6V1A==}
+  react-router@7.18.1:
+    resolution: {integrity: sha512-GDLgg3i3uM0aeJO3Fm+TCS+sDQ7gu12T6x0qdTEzcwqEfleci7JwugVNIF3U//0FWKnJT7ptG+20B2jfDqnZAg==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -19894,7 +19895,7 @@ snapshots:
 
   react-is@19.2.7: {}
 
-  react-router@7.16.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  react-router@7.18.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       cookie: 1.1.1
       react: 19.2.6
