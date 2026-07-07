@@ -1,7 +1,12 @@
 import { geoPath } from '@mui/x-charts-vendor/d3-geo';
 import { createSelectorMemoized } from '@mui/x-internals/store';
 import type { TooltipItemPositionSelector } from '@mui/x-charts/internals';
-import { selectorChartsTooltipItem, useGeoProjectionSelectors } from '@mui/x-charts/internals';
+import { selectorChartsTooltipItem } from '@mui/x-charts/internals';
+import {
+  selectorChartGeoData,
+  selectorChartGeoFeatureIndexesByName,
+  selectorChartProjection,
+} from '../../internals/plugins/useGeoProjection/useGeoProjection.selectors';
 
 /**
  * Positions a map shape tooltip from the geo projection. It lives in the map
@@ -10,12 +15,14 @@ import { selectorChartsTooltipItem, useGeoProjectionSelectors } from '@mui/x-cha
  */
 const selectorTooltipItemPosition: TooltipItemPositionSelector<'mapShape'> = createSelectorMemoized(
   selectorChartsTooltipItem,
-  useGeoProjectionSelectors.selectorGeoTooltipPosition,
-  // `selectorChartsTooltipItem` is typed with the community series types, which
-  // don't include `mapShape`, so the identifier is matched structurally here.
+  selectorChartGeoData,
+  selectorChartGeoFeatureIndexesByName,
+  selectorChartProjection,
   (
     identifier: { type: string; name?: string } | null,
-    { projection, geoData, featureIndexesByName },
+    geoData,
+    featureIndexesByName,
+    projection,
     position: 'top' | 'bottom' | 'left' | 'right' | undefined,
   ) => {
     if (identifier?.type !== 'mapShape' || identifier.name === undefined) {
