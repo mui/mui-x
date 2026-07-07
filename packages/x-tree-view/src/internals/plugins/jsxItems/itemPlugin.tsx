@@ -4,7 +4,7 @@ import { useStore } from '@mui/x-internals/store';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import { TreeItemWrapper, TreeViewItemPlugin } from '../../models';
+import type { TreeItemWrapper, TreeViewItemPlugin } from '../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import {
   TreeViewChildrenItemContext,
@@ -13,7 +13,7 @@ import {
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
 import { idSelectors } from '../id';
-import { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
+import type { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
 
 export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
   const { store } = useTreeViewContext<SimpleTreeViewStore<any>>();

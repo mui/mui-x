@@ -1,18 +1,28 @@
 import * as React from 'react';
 import { useAdapterContext } from '../../use-adapter-context';
-import { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
+import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
 
-// Fixed 24h grid (visual time, not real-time duration)
+// Default visual window: the full 24h day (visual time, not real-time duration)
 const FIXED_24H_GRID_MINUTES = 24 * 60;
 
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
 ): useElementPositionInCollection.ReturnValue {
-  const { start, end, collectionStart, collectionEnd } = parameters;
+  const {
+    start,
+    end,
+    collectionStart,
+    collectionEnd,
+    dayStartMinute = 0,
+    dayEndMinute = FIXED_24H_GRID_MINUTES,
+  } = parameters;
 
   const adapter = useAdapterContext();
 
   return React.useMemo(() => {
+    // Number of minutes displayed per day. With the default window this is the full day (1440).
+    const dayMinutes = Math.max(1, dayEndMinute - dayStartMinute);
+
     const startDayIndex = adapter.differenceInDays(
       adapter.startOfDay(start.value),
       adapter.startOfDay(collectionStart),
@@ -23,13 +33,13 @@ export function useElementPositionInCollection(
       adapter.startOfDay(collectionStart),
     );
 
-    const startIndexMinutes = startDayIndex * FIXED_24H_GRID_MINUTES + start.minutesInDay;
+    const startIndexMinutes = startDayIndex * dayMinutes + (start.minutesInDay - dayStartMinute);
 
-    let endIndexMinutes = endDayIndex * FIXED_24H_GRID_MINUTES + end.minutesInDay;
+    let endIndexMinutes = endDayIndex * dayMinutes + (end.minutesInDay - dayStartMinute);
 
     // If the event ends before it starts, it means it spans over midnight(s)
     if (endIndexMinutes < startIndexMinutes) {
-      endIndexMinutes += FIXED_24H_GRID_MINUTES;
+      endIndexMinutes += dayMinutes;
     }
 
     const totalDays =
@@ -38,7 +48,7 @@ export function useElementPositionInCollection(
         adapter.startOfDay(collectionStart),
       ) + 1;
 
-    const totalMinutes = Math.max(1, totalDays * FIXED_24H_GRID_MINUTES);
+    const totalMinutes = Math.max(1, totalDays * dayMinutes);
 
     const clampToTimeline = (value: number) => Math.min(Math.max(value, 0), totalMinutes);
 
@@ -54,7 +64,7 @@ export function useElementPositionInCollection(
       startingBeforeEdge,
       endingAfterEdge,
     };
-  }, [adapter, start, end, collectionStart, collectionEnd]);
+  }, [adapter, start, end, collectionStart, collectionEnd, dayStartMinute, dayEndMinute]);
 }
 
 namespace useElementPositionInCollection {
@@ -63,6 +73,18 @@ namespace useElementPositionInCollection {
     end: SchedulerProcessedDate;
     collectionStart: TemporalSupportedObject;
     collectionEnd: TemporalSupportedObject;
+    /**
+     * First displayed minute of the day, as an offset from midnight.
+     * Used by the time-grid views to limit the visible hour range.
+     * @default 0
+     */
+    dayStartMinute?: number;
+    /**
+     * Last displayed minute of the day, as an offset from midnight.
+     * Used by the time-grid views to limit the visible hour range.
+     * @default 1440
+     */
+    dayEndMinute?: number;
   }
 
   export interface ReturnValue {

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {
+import type {
   SchedulerEventOccurrence,
   SchedulerEventOccurrencePlaceholder,
   SchedulerProcessedDate,
 } from '../models';
-import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
+import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { useAdapterContext } from '../use-adapter-context';
 import { sortEventOccurrences } from '../sort-event-occurrences';
 
@@ -141,8 +141,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
   }
 
   export type EventRenderableOccurrenceWithPosition =
-    | EventOccurrenceWithPosition
-    | EventOccurrencePlaceholderWithPosition;
+    EventOccurrenceWithPosition | EventOccurrencePlaceholderWithPosition;
 
   export interface DayData extends SchedulerProcessedDate {
     /**

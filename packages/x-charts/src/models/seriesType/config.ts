@@ -25,6 +25,12 @@ import type {
 } from '../axis';
 import type { CommonHighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 
+/** Bar series-config extension point. Empty in community; pro augments it. */
+export interface BarSeriesExtension {}
+
+/** Line series-config extension point. Empty in community; pro augments it. */
+export interface LineSeriesExtension {}
+
 export interface ChartsSeriesConfig {
   bar: {
     /**
@@ -68,7 +74,7 @@ export interface ChartsSeriesConfig {
       seriesId: SeriesId;
       dataIndex?: number | undefined;
     };
-  };
+  } & BarSeriesExtension;
   line: {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
       MakeRequired<SeriesColor<number | null>, 'color'>;
@@ -92,7 +98,7 @@ export interface ChartsSeriesConfig {
       seriesId: SeriesId;
       dataIndex?: number;
     };
-  };
+  } & LineSeriesExtension;
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
       MakeRequired<SeriesColor<ScatterValueType>, 'color'>;

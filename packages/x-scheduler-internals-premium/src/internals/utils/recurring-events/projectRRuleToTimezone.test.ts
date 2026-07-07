@@ -1,5 +1,5 @@
 import { adapter } from 'test/utils/scheduler';
-import { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import { projectRRuleToTimezone } from './projectRRuleToTimezone';
 
 describe('recurring-events/projectRRuleToTimezone', () => {
