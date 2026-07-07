@@ -1,25 +1,42 @@
-/* Preload (NODE_OPTIONS=--require) that evicts each page's compiled server bundle
- * from require.cache after it renders, countering Next's lack of static-generation
- * worker recycling. Next's dist exports are non-configurable getters, so we wrap
- * the load-components module in a Proxy to intercept `loadComponents`. */
+/* Preload (NODE_OPTIONS=--require): section-aware eviction of compiled server
+ * bundles to counter Next's lack of static-generation worker recycling, WITHOUT
+ * the per-page re-compile churn that OOMs the worker's small default heap.
+ *
+ * Pages render in path order, so each product section (`/x/<section>/...`) is
+ * contiguous. We accumulate a section's compiled modules while it renders (chunks
+ * stay cached -> no churn), and evict them from require.cache only once the next
+ * section starts (they are not needed again). Peak ~= one section's footprint. */
 /* eslint-disable no-underscore-dangle */
 const Module = require('module');
 const path = require('path');
 
 let sharedSnapshot = null;
-let prevAdded = null;
+let currentSection = null;
+let sectionKeysBefore = null; // require.cache keys at the section's first page
 let evicted = 0;
 let pages = 0;
 
 const evictable = (k) => !k.includes(`${path.sep}node_modules${path.sep}`);
 
+function sectionOf(page) {
+  // '/x/react-data-grid/overview' -> 'x/react-data-grid'; fall back to the page itself.
+  const parts = String(page || '')
+    .split('/')
+    .filter(Boolean);
+  return parts.slice(0, 2).join('/') || '(root)';
+}
+
 function makeWrapped(orig) {
-  return async function patchedLoadComponents(...args) {
+  return async function patchedLoadComponents(options) {
+    const section = sectionOf(options && options.page);
     if (sharedSnapshot === null) {
       sharedSnapshot = new Set(Object.keys(require.cache));
-    } else if (prevAdded) {
-      for (const k of prevAdded) {
-        if (!sharedSnapshot.has(k)) {
+      sectionKeysBefore = sharedSnapshot;
+      currentSection = section;
+    } else if (section !== currentSection) {
+      // Section boundary: free the finished section's compiled modules.
+      for (const k of Object.keys(require.cache)) {
+        if (!sectionKeysBefore.has(k) && !sharedSnapshot.has(k) && evictable(k)) {
           delete require.cache[k];
           evicted += 1;
         }
@@ -27,15 +44,16 @@ function makeWrapped(orig) {
       if (global.gc) {
         global.gc();
       }
+      currentSection = section;
+      sectionKeysBefore = new Set(Object.keys(require.cache));
     }
-    const before = new Set(Object.keys(require.cache));
-    const result = await orig.apply(this, args);
-    prevAdded = Object.keys(require.cache).filter((k) => !before.has(k) && evictable(k));
+    const result = await orig.call(this, options);
     pages += 1;
     if (pages % 25 === 0) {
       const mb = Math.round(process.memoryUsage().rss / 1048576);
+      const heap = Math.round(process.memoryUsage().heapUsed / 1048576);
       process.stderr.write(
-        `[evict] pid ${process.pid}: ${pages} pages, ${evicted} evicted, rss ${mb}MB\n`,
+        `[evict] pid ${process.pid}: ${pages} pages, section ${currentSection}, ${evicted} evicted, rss ${mb}MB heap ${heap}MB\n`,
       );
     }
     return result;
