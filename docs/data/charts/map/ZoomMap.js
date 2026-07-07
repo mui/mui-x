@@ -1,48 +1,45 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
-import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
+import { MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
+import { ContinuousColorLegend } from '@mui/x-charts-premium/ChartsLegend';
 
-import { countryData } from '../dataset/countryData';
 import { internetUsageByCountry } from '../dataset/internetUsageByCountry';
+import { withCountryCodeAsName, countryData } from '../dataset/countryData';
 
-const countries = topojsonFeature(countriesTopology, 'countries');
+const countries = withCountryCodeAsName(
+  topojsonFeature(countriesTopology, 'countries'),
+);
 
-// Treat the state of Somaliland as part of Somalia to match our World in data dataset.
-const mergeSomaliland = (feature) =>
-  feature.properties?.name === 'Somaliland'
-    ? 'Somalia'
-    : (feature.properties?.name ?? null);
+const data = Object.keys(countryData).map((code) => ({
+  name: code,
+  label: countryData[code].country,
+  colorValue: internetUsageByCountry[code],
+}));
 
-const data = Object.entries(countryData)
-  .filter(([, country]) => country.worldAtlasName)
-  .map(([code, country]) => ({
-    name: country.worldAtlasName,
-    label: country.country,
-    colorValue: internetUsageByCountry[code],
-  }));
-
-export default function GeoFeatureKeyMapShape() {
+export default function ZoomMap() {
   return (
-    <Stack spacing={2} sx={{ width: '100%', maxWidth: 500 }}>
+    <Stack spacing={2} sx={{ width: '100%', maxWidth: 800 }}>
+      <Typography variant="body2" component="h6" sx={{ textAlign: 'end' }}>
+        Share of the population using the Internet in 2020
+      </Typography>
       <Box sx={{ width: '100%' }}>
         <ChartsGeoDataProviderPremium
           geoData={countries}
-          geoFeatureKey={mergeSomaliland}
           projection="naturalEarth1"
-          initialView={{ zoomLevel: 5, center: [46, 6], translation: [0, 0] }}
           height={360}
+          zoom
           series={[
             {
               type: 'mapShape',
               label: 'Internet usage',
               data,
-              highlightScope: { highlight: 'item', fade: 'global' },
               valueFormatter: (point) =>
                 point.colorValue == null
                   ? 'No data'
@@ -57,15 +54,16 @@ export default function GeoFeatureKeyMapShape() {
                 min: 0,
                 max: 100,
                 color: ['#e3f2fd', '#0d47a1'],
+                unknownColor: '#f5f5f5',
               },
             },
           ]}
         >
           <ChartsSurface>
-            <GeoDataPlot fill="#f5f5f5" stroke="#bdbdbd" />
-            <MapShapePlot />
+            <MapShapePlot stroke="#fff" strokeWidth={0.3} />
           </ChartsSurface>
           <ChartsTooltip trigger="item" />
+          <ContinuousColorLegend axisDirection="z" sx={{ maxWidth: 150 }} />
         </ChartsGeoDataProviderPremium>
       </Box>
     </Stack>
