@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rimraf ./export && cross-env NODE_ENV=production next build --webpack && pnpm build-sw && pnpm link-check",
+    "build:sharded": "rimraf ./export && cross-env NODE_ENV=production node ./scripts/buildShardedDocs.mjs && pnpm build-sw && pnpm link-check",
     "build:clean": "rimraf .next && pnpm build",
     "build-sw": "node ./scripts/buildServiceWorker.js",
     "dev": "cross-env-shell 'next dev --port ${PORT:-3001}'",

@@ -10,6 +10,8 @@ import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
 import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
 // eslint-disable-next-line import/extensions
 import generateReleaseInfo from '../scripts/generateReleaseInfo.mjs';
+// eslint-disable-next-line import/extensions
+import { shardOfPathname } from './scripts/docsBuildShards.mjs';
 
 declare global {
   interface MUIEnv {
@@ -250,6 +252,22 @@ export default withDeploymentConfig({
     }
 
     traverse(pages);
+
+    // When building in shards (`docs:build:sharded`), emit only this shard's
+    // pages, matching the `--debug-build-paths` subset the shard compiled.
+    const shardEnv = process.env.DOCS_BUILD_SHARD;
+    if (shardEnv !== undefined) {
+      const shard = Number(shardEnv);
+      const filtered = {};
+      Object.keys(map).forEach((key) => {
+        // @ts-ignore
+        if (shardOfPathname(map[key].page) === shard) {
+          // @ts-ignore
+          filtered[key] = map[key];
+        }
+      });
+      return filtered;
+    }
 
     return map;
   },
