@@ -9,6 +9,10 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'scatter'> = (
     ...seriesData,
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     color: seriesData.color ?? colors[seriesIndex % colors.length],
+    highlightScope: {
+      highlight: 'item',
+      ...seriesData.highlightScope,
+    },
   };
 };
 
