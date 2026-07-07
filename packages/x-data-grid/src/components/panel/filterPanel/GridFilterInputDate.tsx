@@ -10,11 +10,6 @@ import type { TextFieldProps } from '../../../models/gridBaseSlots';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps<TextFieldProps> & {
   type?: 'date' | 'datetime-local';
-  /**
-   * If `true`, filter value changes are applied immediately without debouncing.
-   * @default false
-   */
-  disableDebounce?: boolean;
 };
 
 function convertFilterItemValueToInputValue(

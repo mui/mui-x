@@ -10,11 +10,6 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldProps> & {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
-  /**
-   * If `true`, filter value changes are applied immediately without debouncing.
-   * @default false
-   */
-  disableDebounce?: boolean;
 };
 
 export type ItemPlusTag = GridFilterItem & { fromInput?: string };
