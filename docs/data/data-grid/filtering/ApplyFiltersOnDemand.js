@@ -31,7 +31,12 @@ const columns = [
 // `GridFilterPanelBase` (which are disabled below) so they operate on the draft model, and adds an
 // "Apply" button next to "Remove all".
 function CustomFilterPanelFooter(props) {
-  const { filterModel, onFilterModelChange, onApply } = props;
+  const {
+    filterModel,
+    onFilterModelChange,
+    onApply,
+    disableApplyButton: applyDisabled,
+  } = props;
   const apiRef = useGridApiContext();
 
   const handleAddFilter = () => {
@@ -77,7 +82,12 @@ function CustomFilterPanelFooter(props) {
         >
           Remove all
         </Button>
-        <Button size="small" variant="contained" onClick={onApply}>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={onApply}
+          disabled={applyDisabled}
+        >
           Apply
         </Button>
       </Box>
@@ -94,20 +104,32 @@ function DeferredFilterPanel(props) {
   const [draftFilterModel, setDraftFilterModel] = React.useState(() =>
     gridFilterModelSelector(apiRef),
   );
+  const [isDirty, setIsDirty] = React.useState(false);
+
+  const handleFilterModelChange = (model) => {
+    setDraftFilterModel(model);
+    setIsDirty(true);
+  };
+
+  const handleApply = () => {
+    apiRef.current.setFilterModel(draftFilterModel);
+    setIsDirty(false);
+  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <GridFilterPanelBase
         {...props}
         filterModel={draftFilterModel}
-        onFilterModelChange={setDraftFilterModel}
+        onFilterModelChange={handleFilterModelChange}
         disableAddFilterButton
         disableRemoveAllButton
       />
       <CustomFilterPanelFooter
         filterModel={draftFilterModel}
-        onFilterModelChange={setDraftFilterModel}
-        onApply={() => apiRef.current.setFilterModel(draftFilterModel)}
+        onFilterModelChange={handleFilterModelChange}
+        onApply={handleApply}
+        disableApplyButton={!isDirty}
       />
     </Box>
   );
