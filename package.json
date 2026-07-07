@@ -15,6 +15,7 @@
     "docs:llms:build": "rimraf --glob ./docs/public/x/ && tsx ./scripts/buildLlmsDocs/index.ts --projectSettings scripts/buildApiDocs/projectSettings.ts",
     "docs:link-check": "pnpm --filter docs link-check",
     "docs:build": "pnpm --filter @mui/x-charts-vendor build && pnpm docs:llms:build && pnpm --filter docs build",
+    "docs:build:evict": "pnpm --filter @mui/x-charts-vendor build && pnpm docs:llms:build && pnpm --filter docs build:evict",
     "docs:typescript:formatted": "pnpm --filter docs typescript:transpile",
     "docs:populate:demos": "pnpm --filter docs populate:demos",
     "docs:importDocsStatic": "node scripts/importDocsStatic.mjs",

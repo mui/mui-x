@@ -100,6 +100,11 @@ export default withDeploymentConfig({
   reactStrictMode: true,
   experimental: {
     esmExternals: undefined,
+    // EXPERIMENT: serialize static generation so the require-cache eviction preload
+    // (docs/scripts/evictPageCache.cjs) can free each page's compiled bundle between
+    // renders without racing concurrent renders. Goal: bound peak build memory in a
+    // single build (vs the sharded workaround).
+    staticGenerationMaxConcurrency: 1,
   },
   typescript: {
     tsconfigPath: './tsconfig.json',

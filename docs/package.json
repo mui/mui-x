@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rimraf ./export && cross-env NODE_ENV=production next build --webpack && pnpm build-sw && pnpm link-check",
+    "build:evict": "rimraf ./export && cross-env NODE_ENV=production NODE_OPTIONS=\"--require ./scripts/evictPageCache.cjs --expose-gc --max-old-space-size=8192\" next build --webpack && pnpm build-sw && pnpm link-check",
     "build:clean": "rimraf .next && pnpm build",
     "build-sw": "node ./scripts/buildServiceWorker.js",
     "dev": "cross-env-shell 'next dev --port ${PORT:-3001}'",
