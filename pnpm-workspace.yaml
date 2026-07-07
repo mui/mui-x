@@ -20,14 +20,14 @@ catalog:
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
-  '@mui/icons-material': 9.1.1
+  '@mui/icons-material': 9.2.0
   '@mui/internal-test-utils': 2.0.18-canary.25
   '@mui/internal-core-docs': 9.1.2-canary.2
-  '@mui/material': 9.1.2
+  '@mui/material': 9.2.0
   '@mui/stylis-plugin-rtl': 9.1.1
-  '@mui/system': 9.1.2
+  '@mui/system': 9.2.0
   '@mui/types': 9.1.1
-  '@mui/utils': ^9.1.1
+  '@mui/utils': ^9.2.0
   '@mui/x-internal-exceljs-fork': 5.0.0
   '@playwright/test': 1.60.0
   '@react-spring/web': ^10.1.2
