@@ -78,6 +78,11 @@ export interface GridFilterPanelProps extends Pick<
 
 export interface GridFilterPanelBaseProps extends GridFilterPanelProps {
   /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default true
+   */
+  disableDebounce?: boolean;
+  /**
    * The filter model edited by the panel.
    */
   filterModel: GridFilterModel;
@@ -121,6 +126,7 @@ const GridFilterPanelBase = forwardRef<HTMLDivElement, GridFilterPanelBaseProps>
       children,
       disableAddFilterButton = false,
       disableRemoveAllButton = false,
+      disableDebounce = true,
       filterModel,
       onFilterModelChange,
       onClose,
@@ -300,6 +306,7 @@ const GridFilterPanelBase = forwardRef<HTMLDivElement, GridFilterPanelBaseProps>
               readOnly
               logicOperators={logicOperators}
               columnsSort={columnsSort}
+              disableDebounce={disableDebounce}
               {...filterFormProps}
             />
           ))}
@@ -317,6 +324,7 @@ const GridFilterPanelBase = forwardRef<HTMLDivElement, GridFilterPanelBaseProps>
               focusElementRef={index === validFilters.length - 1 ? lastFilterRef : null}
               logicOperators={logicOperators}
               columnsSort={columnsSort}
+              disableDebounce={disableDebounce}
               {...filterFormProps}
             />
           ))}
@@ -371,6 +379,11 @@ GridFilterPanelBase.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disableAddFilterButton: PropTypes.bool,
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default true
+   */
+  disableDebounce: PropTypes.bool,
   /**
    * If `true`, the `Remove all` button will be disabled
    * @default false

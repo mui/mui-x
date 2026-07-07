@@ -10,6 +10,11 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldProps> & {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default false
+   */
+  disableDebounce?: boolean;
 };
 
 export type ItemPlusTag = GridFilterItem & { fromInput?: string };
@@ -23,6 +28,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     focusElementRef,
     tabIndex,
     disabled,
+    disableDebounce = false,
     isFilterActive,
     slotProps,
     clearButton,
@@ -38,24 +44,32 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
+  const debounceMs = disableDebounce ? 0 : rootProps.filterDebounceMs;
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = sanitizeFilterItemValue(event.target.value);
 
       setFilterValueState(value);
+
+      const newItem = {
+        ...item,
+        value: type === 'number' && !Number.isNaN(Number(value)) ? Number(value) : value,
+        fromInput: id!,
+      };
+
+      if (debounceMs === 0) {
+        applyValue(newItem);
+        return;
+      }
+
       setIsApplying(true);
-      filterTimeout.start(rootProps.filterDebounceMs, () => {
-        const newItem = {
-          ...item,
-          value: type === 'number' && !Number.isNaN(Number(value)) ? Number(value) : value,
-          fromInput: id!,
-        };
+      filterTimeout.start(debounceMs, () => {
         applyValue(newItem);
         setIsApplying(false);
       });
     },
-    [filterTimeout, rootProps.filterDebounceMs, item, type, id, applyValue],
+    [filterTimeout, debounceMs, item, type, id, applyValue],
   );
 
   React.useEffect(() => {
@@ -78,9 +92,10 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         slotProps={{
           ...textFieldProps?.slotProps,
           input: {
-            endAdornment: applying ? (
-              <rootProps.slots.loadIcon fontSize="small" color="action" />
-            ) : null,
+            endAdornment:
+              applying && debounceMs > 0 ? (
+                <rootProps.slots.loadIcon fontSize="small" color="action" />
+              ) : null,
             ...textFieldProps?.slotProps?.input,
           },
           htmlInput: {
@@ -119,6 +134,11 @@ GridFilterInputValue.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   clearButton: PropTypes.node,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default false
+   */
+  disableDebounce: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,

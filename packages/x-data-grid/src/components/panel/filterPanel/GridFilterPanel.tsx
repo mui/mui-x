@@ -33,6 +33,7 @@ const GridFilterPanel = forwardRef<HTMLDivElement, GridFilterPanelProps>(
         onFilterModelChange={handleFilterModelChange}
         onClose={handleClose}
         ref={ref}
+        disableDebounce={false}
       />
     );
   },

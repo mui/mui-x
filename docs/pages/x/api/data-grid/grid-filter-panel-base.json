@@ -17,6 +17,7 @@
     },
     "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
     "disableAddFilterButton": { "type": { "name": "bool" }, "default": "false" },
+    "disableDebounce": { "type": { "name": "bool" }, "default": "true" },
     "disableRemoveAllButton": { "type": { "name": "bool" }, "default": "false" },
     "filterFormProps": {
       "type": {

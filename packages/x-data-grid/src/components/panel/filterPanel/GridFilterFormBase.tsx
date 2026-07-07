@@ -130,6 +130,10 @@ export interface GridFilterFormProps {
 
 export interface GridFilterFormBaseProps extends GridFilterFormProps {
   /**
+   * @default false
+   */
+  disableDebounce?: boolean;
+  /**
    * The filter model that populates the form.
    * Its `logicOperator` drives the logic operator field and its `items` are used to compute the
    * columns available in the column selector (e.g. via the `filterColumns` callback).
@@ -229,6 +233,7 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
       operatorInputProps = {},
       columnInputProps = {},
       valueInputProps = {},
+      disableDebounce = false,
       readOnly,
       filterModel,
       children,
@@ -590,6 +595,7 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
               applyValue={applyFilterChanges}
               focusElementRef={valueRef}
               disabled={readOnly}
+              disableDebounce={disableDebounce}
               key={item.field}
               slotProps={{
                 root: { size: 'small' },

@@ -7,6 +7,9 @@
     "disableAddFilterButton": {
       "description": "If <code>true</code>, the <code>Add filter</code> button will not be displayed."
     },
+    "disableDebounce": {
+      "description": "If <code>true</code>, filter value changes are applied immediately without debouncing."
+    },
     "disableRemoveAllButton": {
       "description": "If <code>true</code>, the <code>Remove all</code> button will be disabled"
     },
