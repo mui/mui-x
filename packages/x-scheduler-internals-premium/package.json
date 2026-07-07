@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-internals-premium",
-  "version": "9.0.0-beta.2",
+  "version": "9.0.0-beta.4",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Scheduler internals.",
   "license": "SEE LICENSE IN LICENSE",
@@ -39,7 +39,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {

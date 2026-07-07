@@ -305,8 +305,7 @@ export const demoSlotProps = {
       textTransform: 'uppercase' as const,
       marginLeft: ownerState.authorRole === 'user' ? 0 : 42,
       textAlign: (ownerState.authorRole === 'user' ? 'right' : 'left') as
-        | 'right'
-        | 'left',
+        'right' | 'left',
       marginRight: ownerState.authorRole === 'user' ? 42 : 0,
     },
   })) as any,

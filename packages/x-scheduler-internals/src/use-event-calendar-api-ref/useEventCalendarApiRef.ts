@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { SchedulerPublicAPI } from '../internals/models/publicAPI';
-import { EventCalendarStore } from '../use-event-calendar/EventCalendarStore';
+import type { SchedulerPublicAPI } from '../internals/models/publicAPI';
+import type { EventCalendarStore } from '../use-event-calendar/EventCalendarStore';
 
 /**
  * Creates the ref to pass to the `apiRef` prop of the `EventCalendar` component.
