@@ -1,4 +1,5 @@
 import type { D3OrdinalScale } from '../models/axis';
+import { findDataIndex } from './findDataIndex';
 
 interface SampledBandHighlightParams {
   scale: D3OrdinalScale;
@@ -30,7 +31,7 @@ export function getSampledBandHighlight({
   let bandSize = step;
 
   if (bucketSize > 1 && data) {
-    const index = dataIndex ?? data.indexOf(value);
+    const index = dataIndex ?? findDataIndex(data, value);
     if (index >= 0) {
       const bucketStart = Math.floor(index / bucketSize) * bucketSize;
       const bucketEnd = Math.min(bucketStart + bucketSize - 1, data.length - 1);
