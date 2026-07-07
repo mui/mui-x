@@ -155,10 +155,3 @@ export function mergeSlotProps<OwnerState>(
   }
   return mergeResolvedSlotProps(base, ((consumer as AnySlotProps) ?? {}) as AnySlotProps);
 }
-
-export function resolveSlotProps<OwnerState>(
-  slotProps: AnySlotProps | ((ownerState: OwnerState) => AnySlotProps),
-  ownerState: OwnerState,
-): AnySlotProps {
-  return typeof slotProps === 'function' ? slotProps(ownerState) : slotProps;
-}
