@@ -152,9 +152,6 @@ export default function ApplyFiltersOnDemand() {
           showToolbar
           slots={{
             filterPanel: DeferredFilterPanel,
-            // render empty component, so loading indicator in filter panel form inputs is not shown
-            // when
-            loadIcon: () => null,
           }}
           onFilterModelChange={() => setAppliedCount((count) => count + 1)}
         />
