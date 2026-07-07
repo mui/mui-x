@@ -1,0 +1,98 @@
+---
+title: Chat - Model selector
+productId: x-chat
+packageName: '@mui/x-chat'
+githubLabel: 'scope: chat'
+---
+
+# Chat - Model selector
+
+<p class="description">Let users switch between AI models from the conversation header.</p>
+
+The demo below shows how to place a Material UI `Select` inside the conversation header so users can switch between AI models.
+No new component is needed—drop any Material UI control into `slots.conversationHeaderActions`.
+
+The demo below shows a `Select` mounted in the `conversationHeaderActions` slot, with model state owned by the selector component:
+
+{{"demo": "ModelSelector.js", "bg": "inline"}}
+
+## Mounting the model selector
+
+```tsx
+function MyModelSelector() {
+  const [model, setModel] = React.useState('gpt-4o');
+  return (
+    <Select value={model} onChange={(e) => setModel(e.target.value)} size="small">
+      <MenuItem value="gpt-4o">GPT-4o</MenuItem>
+      <MenuItem value="claude-3-5-sonnet">Claude 3.5 Sonnet</MenuItem>
+    </Select>
+  );
+}
+
+<ChatBox slots={{ conversationHeaderActions: MyModelSelector }} />;
+```
+
+## Passing the model to the adapter
+
+The demo above keeps model state inside the selector.
+To pass the selected model to `adapter.sendMessage`, hoist state to the parent and construct the adapter with `React.useMemo`:
+
+```tsx
+export default function App() {
+  const [model, setModel] = React.useState('gpt-4o');
+
+  const adapter = React.useMemo(
+    () => ({
+      async sendMessage({ message, signal }) {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          body: JSON.stringify({ message, model }),
+          signal,
+        });
+        return res.body;
+      },
+    }),
+    [model],
+  );
+
+  // Stable reference—defined outside or memoized to avoid remounts
+  const HeaderActions = React.useMemo(
+    () =>
+      function ModelSelector() {
+        return (
+          <Select
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            size="small"
+          >
+            <MenuItem value="gpt-4o">GPT-4o</MenuItem>
+            <MenuItem value="claude-3-5-sonnet">Claude 3.5 Sonnet</MenuItem>
+          </Select>
+        );
+      },
+    [model],
+  );
+
+  return (
+    <ChatBox
+      adapter={adapter}
+      slots={{ conversationHeaderActions: HeaderActions }}
+    />
+  );
+}
+```
+
+## Implementation notes
+
+- `ChatConversationHeaderActions` applies `marginInlineStart: 'auto'` so the selector aligns to the end of the header.
+- Define the slot component **outside** the render function, or stabilize it with `React.useMemo`, to avoid remounting the header on every render.
+- Use `size="small"` on `Select` to match the default header height.
+
+## See also
+
+- See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for details on replacing deeper subcomponents.
+- See [Customization](/x/react-chat/material/customization/) for the full slot key reference.
+
+## API
+
+- [`ChatRoot`](/x/api/chat/chat-root/)

@@ -1,13 +1,13 @@
 import {
   adapterToUse,
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   formatFullTimeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeField /> - Describe Value', () => {
   const { render } = createPickerRenderer();
@@ -28,12 +28,12 @@ describe('<TimeField /> - Describe Value', () => {
         expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
       }
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection, pressKey }) => {
+    setNewValue: async (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addHours(value!, 1);
-      selectSection('hours');
-      pressKey(undefined, 'ArrowUp');
+      await selectSection('hours');
+      await pressKey('ArrowUp');
 
       return newValue;
     },

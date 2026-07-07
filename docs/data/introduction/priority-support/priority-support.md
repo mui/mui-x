@@ -24,7 +24,6 @@ Priority support covers _all_ MUI products, including:
 - Base UI
 - MUI System
 - Pigment CSS
-- Joy UI
 
 ### Service-level agreement (SLA)
 

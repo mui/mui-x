@@ -7,13 +7,11 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon } from '@mui/x-date-pickers/icons';
-import { ExportedBaseTabsProps } from '@mui/x-date-pickers/internals';
+import type { ExportedBaseTabsProps } from '@mui/x-date-pickers/internals';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
-import {
-  TimeRangePickerTabsClasses,
-  getTimeRangePickerTabsUtilityClass,
-} from './timeRangePickerTabsClasses';
-import { RangePosition } from '../models';
+import type { TimeRangePickerTabsClasses } from './timeRangePickerTabsClasses';
+import { getTimeRangePickerTabsUtilityClass } from './timeRangePickerTabsClasses';
+import type { RangePosition } from '../models';
 import { usePickerRangePositionContext } from '../hooks';
 
 export interface ExportedTimeRangePickerTabsProps extends ExportedBaseTabsProps {
@@ -130,7 +128,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
   );
 };
 
-TimeRangePickerTabs.propTypes = {
+TimeRangePickerTabs.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

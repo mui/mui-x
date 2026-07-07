@@ -1,0 +1,12 @@
+<ChatProvider
+  adapter={adapter}
+  initialActiveConversationId={conversation.id}
+  initialConversations={[conversation]}
+  initialMessages={messages}
+>
+  <Box sx={{ height: 360, overflow: 'hidden' }}>
+    <ChatConversation>
+      <ChatMessageList />
+    </ChatConversation>
+  </Box>
+</ChatProvider>

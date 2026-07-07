@@ -63,6 +63,7 @@ export type {
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export {
+  DAY_SIZE,
   DAY_MARGIN,
   DIALOG_WIDTH,
   VIEW_HEIGHT,
@@ -74,8 +75,7 @@ export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
   useFieldInternalPropsWithDefaults,
-  createDateStrForV7HiddenInputFromSections,
-  createDateStrForV6InputFromSections,
+  createDateStrForHiddenInputFromSections,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
@@ -119,7 +119,6 @@ export type {
   PickerAnyManager,
   PickerManagerFieldInternalProps,
   PickerManagerFieldInternalPropsWithDefaults,
-  PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerError,
   PickerValueManager,
 } from './models/manager';
@@ -180,6 +179,7 @@ export {
 export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,
+  extractRootForwardedProps,
   getActiveElement,
   onSpaceOrEnter,
   mergeSx,
@@ -202,7 +202,7 @@ export { useCalendarState } from '../DateCalendar/useCalendarState';
 
 export { DateTimePickerToolbarOverrideContext } from '../DateTimePicker/DateTimePickerToolbar';
 
-export { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
+export { usePickerDayOwnerState } from './hooks/usePickerDayOwnerState';
 
 export { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 export { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';

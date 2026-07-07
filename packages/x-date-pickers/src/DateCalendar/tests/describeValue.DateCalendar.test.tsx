@@ -1,7 +1,7 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import { pickerDayClasses } from '@mui/x-date-pickers/PickerDay';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { adapterToUse, createPickerRenderer, describeValue } from 'test/utils/pickers';
 
 describe('<DateCalendar /> - Describe Value', () => {
@@ -13,7 +13,7 @@ describe('<DateCalendar /> - Describe Value', () => {
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     assertRenderedValue: (expectedValue: any) => {
-      const selectedCells = document.querySelectorAll(`.${pickersDayClasses.selected}`);
+      const selectedCells = document.querySelectorAll(`.${pickerDayClasses.selected}`);
       if (expectedValue == null) {
         expect(selectedCells).to.have.length(0);
       } else {
@@ -21,9 +21,9 @@ describe('<DateCalendar /> - Describe Value', () => {
         expect(selectedCells[0]).to.have.text(adapterToUse.getDate(expectedValue).toString());
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value, { user }) => {
       const newValue = adapterToUse.addDays(value!, 1);
-      fireEvent.click(
+      await user.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 

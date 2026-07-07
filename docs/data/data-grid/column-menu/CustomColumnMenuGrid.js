@@ -6,7 +6,7 @@ import {
   GridColumnMenuColumnsItem,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import Stack from '@mui/material/Stack';
+import MenuList from '@mui/material/MenuList';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 
@@ -25,18 +25,18 @@ function CustomColumnMenu(props) {
   };
   return (
     <React.Fragment>
-      <Stack px={0.5} py={0.5}>
+      <MenuList>
         <GridColumnMenuSortItem {...itemProps} />
         {/* Only provide filtering on desk */}
         {itemProps.colDef.field === 'desk' ? (
           <GridColumnMenuFilterItem {...itemProps} />
         ) : null}
-      </Stack>
+      </MenuList>
       <Divider />
-      <Stack px={0.5} py={0.5}>
+      <MenuList>
         <GridColumnMenuColumnsItem {...itemProps} />
         <MenuCloseComponent {...itemProps} />
-      </Stack>
+      </MenuList>
     </React.Fragment>
   );
 }

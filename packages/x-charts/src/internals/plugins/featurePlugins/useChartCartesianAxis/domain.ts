@@ -1,20 +1,19 @@
-import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
-import {
-  type AxisId,
-  type ChartsAxisProps,
-  type ContinuousScaleName,
-  type DefaultedAxis,
-  type DefaultedXAxis,
-  type DefaultedYAxis,
-  isBandScaleConfig,
-  isPointScaleConfig,
-  type ScaleName,
+import type { NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import { isBandScaleConfig, isPointScaleConfig } from '../../../../models/axis';
+import type {
+  AxisId,
+  ChartsAxisProps,
+  ContinuousScaleName,
+  DefaultedAxis,
+  DefaultedXAxis,
+  DefaultedYAxis,
+  ScaleName,
 } from '../../../../models/axis';
 import { getScale } from '../../../getScale';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
 import { getTickNumber } from '../../../ticks';
-import { type TickParams } from '../../../../hooks/useTicks';
+import type { TickParams } from '../../../../hooks/useTicks';
 
 function niceDomain(
   scaleType: ContinuousScaleName | undefined,
@@ -30,7 +29,7 @@ function niceDomain(
  * Calculates the initial domain and tick number for a given axis.
  * The domain should still run through the zoom filterMode after this step.
  */
-export function calculateInitialDomainAndTickNumber(
+function calculateInitialDomainAndTickNumber(
   axis: DefaultedAxis<ContinuousScaleName>,
   axisDirection: 'x' | 'y',
   axisIndex: number,
@@ -110,7 +109,7 @@ function getActualAxisExtrema(
     min = axisExtrema.max;
   }
 
-  if ('min' in axisExtrema && axisExtrema.min != null && axisExtrema.min > minData) {
+  if ('min' in axisExtrema && axisExtrema.min != null && axisExtrema.min > maxData) {
     max = axisExtrema.min;
   }
 

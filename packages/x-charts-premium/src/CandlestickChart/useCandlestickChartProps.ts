@@ -1,19 +1,17 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { type ChartsGridProps } from '@mui/x-charts/ChartsGrid';
-import { type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
-import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
-import { type ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
-import { type ChartsAxisProps, type XAxis } from '@mui/x-charts/internals';
-import { type ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
+import type { ChartsGridProps } from '@mui/x-charts/ChartsGrid';
+import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
+import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import type { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
+import type { ChartsAxisProps, XAxis } from '@mui/x-charts/internals';
+import type { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import type { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
-import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
-import { type CandlestickChartProps } from './CandlestickChart';
-import { type CandlestickPlotProps } from './CandlestickPlot';
-import {
-  CANDLESTICK_CHART_PLUGINS,
-  type CandlestickChartPluginSignatures,
-} from './CandlestickChart.plugins';
+import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
+import type { CandlestickChartProps } from './CandlestickChart';
+import type { CandlestickPlotProps } from './CandlestickPlot';
+import { CANDLESTICK_CHART_PLUGINS } from './CandlestickChart.plugins';
+import type { CandlestickChartPluginSignatures } from './CandlestickChart.plugins';
 
 /**
  * A helper function that extracts CandlestickChartProps from the input props
@@ -81,7 +79,6 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     width,
     height,
     margin,
-    colors,
     dataset,
     xAxis: xAxisWithDefault,
     yAxis,

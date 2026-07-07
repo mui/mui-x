@@ -10,6 +10,7 @@ import {
   chartsAxisZoomSliderThumbClasses,
   useUtilityClasses,
 } from './chartsAxisZoomSliderThumbClasses';
+import { ZOOM_SLIDER_TOUCH_TARGET } from './constants';
 
 const Rect = styled('rect', {
   slot: 'internal',
@@ -31,6 +32,17 @@ const Rect = styled('rect', {
   },
 }));
 
+/**
+ * Invisible touch target that is only active on coarse pointer devices (touch).
+ * On fine pointer devices (mouse), it disables pointer events so it doesn't
+ * interfere with precise interactions on small zoom ranges.
+ */
+const TouchTarget = styled('rect')({
+  '@media (pointer: fine)': {
+    pointerEvents: 'none',
+  },
+});
+
 export interface ChartsZoomSliderThumbOwnerState {
   onMove: (event: PointerEvent) => void;
   orientation: 'horizontal' | 'vertical';
@@ -38,10 +50,9 @@ export interface ChartsZoomSliderThumbOwnerState {
 }
 
 export interface ChartsZoomSliderThumbProps
-  extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartsZoomSliderThumbOwnerState {}
-
-function preventDefault(event: Event) {
-  event.preventDefault();
+  extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartsZoomSliderThumbOwnerState {
+  onInteractionStart?: () => void;
+  onInteractionEnd?: () => void;
 }
 
 /**
@@ -52,59 +63,119 @@ export const ChartsAxisZoomSliderThumb = React.forwardRef<
   SVGRectElement,
   ChartsZoomSliderThumbProps
 >(function ChartsAxisZoomSliderThumb(
-  { className, onMove, orientation, placement, rx = 4, ry = 4, ...other },
+  {
+    className,
+    onMove,
+    orientation,
+    placement,
+    rx = 4,
+    ry = 4,
+    x,
+    y,
+    width,
+    height,
+    onInteractionStart,
+    onInteractionEnd,
+    onPointerEnter,
+    onPointerLeave,
+    ...other
+  },
   forwardedRef,
 ) {
   const classes = useUtilityClasses({ onMove, orientation, placement });
 
+  const groupRef = React.useRef<SVGGElement>(null);
   const thumbRef = React.useRef<SVGRectElement>(null);
   const ref = useForkRef(thumbRef, forwardedRef);
+  const isDraggingRef = React.useRef(false);
 
   const onMoveEvent = useEventCallback(onMove);
 
-  React.useEffect(() => {
-    const thumb = thumbRef.current;
+  const throttledMove = React.useMemo(
+    () => rafThrottle((event: PointerEvent) => onMoveEvent(event)),
+    [onMoveEvent],
+  );
 
-    if (!thumb) {
-      return () => {};
+  React.useEffect(() => () => throttledMove.clear(), [throttledMove]);
+
+  const handlePointerDown = useEventCallback((event: React.PointerEvent<SVGGElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // setPointerCapture can fail if the pointer is no longer active,
+      // e.g., during touch→mouse compatibility events.
+      return;
     }
+    isDraggingRef.current = true;
+    onInteractionStart?.();
+  });
 
-    // Prevent scrolling on touch devices when dragging the thumb
-    thumb.addEventListener('touchmove', preventDefault, { passive: false });
+  const handlePointerMove = useEventCallback((event: React.PointerEvent<SVGGElement>) => {
+    if (!isDraggingRef.current) {
+      return;
+    }
+    throttledMove(event.nativeEvent);
+  });
 
-    const onPointerMove = rafThrottle((event: PointerEvent) => {
-      onMoveEvent(event);
-    });
+  const handlePointerEnd = useEventCallback((event: React.PointerEvent<SVGGElement>) => {
+    if (!isDraggingRef.current) {
+      return;
+    }
+    try {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    } catch {
+      // Ignore if pointer is no longer active
+    }
+    isDraggingRef.current = false;
+    onInteractionEnd?.();
+  });
 
-    const onPointerEnd = (event: PointerEvent) => {
-      thumb.removeEventListener('pointermove', onPointerMove);
-      thumb.removeEventListener('pointerup', onPointerEnd);
-      thumb.removeEventListener('pointercancel', onPointerEnd);
-      thumb.releasePointerCapture(event.pointerId);
-    };
+  const numX = Number(x) || 0;
+  const numY = Number(y) || 0;
+  const numWidth = Number(width) || 0;
+  const numHeight = Number(height) || 0;
 
-    const onPointerDown = (event: PointerEvent) => {
-      // Prevent text selection when dragging the thumb
-      event.preventDefault();
-      event.stopPropagation();
-      thumb.setPointerCapture(event.pointerId);
+  // Compute a larger invisible touch target centered on the visible thumb
+  const touchWidth = Math.max(numWidth, ZOOM_SLIDER_TOUCH_TARGET);
+  const touchHeight = Math.max(numHeight, ZOOM_SLIDER_TOUCH_TARGET);
+  const touchX = numX - (touchWidth - numWidth) / 2;
+  const touchY = numY - (touchHeight - numHeight) / 2;
 
-      thumb.addEventListener('pointermove', onPointerMove);
-      thumb.addEventListener('pointercancel', onPointerEnd);
-      thumb.addEventListener('pointerup', onPointerEnd);
-    };
-
-    thumb.addEventListener('pointerdown', onPointerDown);
-
-    return () => {
-      thumb.removeEventListener('pointerdown', onPointerDown);
-      thumb.removeEventListener('pointermove', onPointerMove);
-      thumb.removeEventListener('pointercancel', onPointerEnd);
-      thumb.removeEventListener('pointerup', onPointerEnd);
-      thumb.removeEventListener('touchmove', preventDefault);
-      onPointerMove.clear();
-    };
-  }, [onMoveEvent, orientation]);
-
-  return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...other} />;
+  return (
+    <g
+      ref={groupRef}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerEnd}
+      onPointerCancel={handlePointerEnd}
+    >
+      <Rect
+        ref={ref}
+        className={clsx(classes.root, className)}
+        rx={rx}
+        ry={ry}
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
+        {...other}
+      />
+      {/* Invisible touch target rendered on top for easier interaction on touch devices */}
+      <TouchTarget
+        x={touchX}
+        y={touchY}
+        width={touchWidth}
+        height={touchHeight}
+        fill="transparent"
+        stroke="none"
+        cursor={orientation === 'horizontal' ? 'ew-resize' : 'ns-resize'}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
+      />
+    </g>
+  );
 });

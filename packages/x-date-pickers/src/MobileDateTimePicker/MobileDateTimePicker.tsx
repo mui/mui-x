@@ -5,11 +5,11 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
-import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
+import type { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateDateTime } from '../validation';
-import { PickerOwnerState } from '../models';
+import type { PickerOwnerState } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import {
@@ -17,8 +17,8 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import type { PickerViewRendererLookup } from '../internals/hooks/usePicker';
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
 import {
   multiSectionDigitalClockClasses,
@@ -26,15 +26,14 @@ import {
 } from '../MultiSectionDigitalClock';
 import { mergeSx } from '../internals/utils/utils';
 import { digitalClockClasses } from '../DigitalClock';
-import { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
+import type { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
 import { EXPORTED_TIME_VIEWS } from '../internals/utils/time-utils';
 import { DATE_VIEWS } from '../internals/utils/date-utils';
 
 const STEPS: PickerStep[] = [{ views: DATE_VIEWS }, { views: EXPORTED_TIME_VIEWS }];
 
-type MobileDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MobileDateTimePickerComponent = ((
+  props: MobileDateTimePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -47,18 +46,17 @@ type MobileDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extend
  *
  * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
  */
-const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
+const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker(
+  inProps: MobileDateTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
-  const defaultizedProps = useDateTimePickerDefaultizedProps<
-    MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileDateTimePicker');
+  const defaultizedProps = useDateTimePickerDefaultizedProps<MobileDateTimePickerProps>(
+    inProps,
+    'MuiMobileDateTimePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -143,11 +141,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     },
   };
 
-  const { renderPicker } = useMobilePicker<
-    DateOrTimeViewWithMeridiem,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useMobilePicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -159,7 +153,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   return renderPicker();
 }) as MobileDateTimePickerComponent;
 
-MobileDateTimePicker.propTypes = {
+MobileDateTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -211,7 +205,7 @@ MobileDateTimePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -235,10 +229,6 @@ MobileDateTimePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -420,7 +410,7 @@ MobileDateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('es-ES');
 
@@ -74,7 +71,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operadores',
   filterPanelOperatorAnd: 'Y',
   filterPanelOperatorOr: 'O',
-  filterPanelColumns: 'Columnas',
+  filterPanelColumn: 'Columnas',
   filterPanelInputLabel: 'Valor',
   filterPanelInputPlaceholder: 'Valor de filtro',
 

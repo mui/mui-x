@@ -1,30 +1,31 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  type AxisId,
   useStore,
   useAreaPlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  type SeriesId,
 } from '@mui/x-charts/internals';
-import { type PreviewPlotProps } from './PreviewPlot.types';
+import type { AxisId, SeriesId } from '@mui/x-charts/internals';
+import type { PreviewPlotProps } from './PreviewPlot.types';
 
 const AreaPlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
 })({});
 
-interface AreaPreviewPlotProps extends Pick<PreviewPlotProps, 'axisId'> {}
+interface AreaPreviewPlotProps extends Pick<PreviewPlotProps, 'axisId' | 'seriesIds'> {}
 
-export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
+export function AreaPreviewPlot({ axisId, seriesIds }: AreaPreviewPlotProps) {
   const completedData = useAreaPreviewData(axisId);
+  const seriesIdsSet = seriesIds ? new Set(seriesIds) : undefined;
 
   return (
     <AreaPlotRoot>
       {completedData.map(
         ({ d, seriesId, color, area, gradientId }) =>
-          !!area && (
+          !!area &&
+          (!seriesIdsSet || seriesIdsSet.has(seriesId)) && (
             <PreviewAreaElement
               key={seriesId}
               seriesId={seriesId}

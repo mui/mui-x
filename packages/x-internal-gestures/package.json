@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-internal-gestures",
-  "version": "0.4.1-alpha.0",
-  "description": "The core engine of GestureEvents, a modern and robust multi-pointer gesture detection library for JavaScript.",
+  "version": "9.8.0",
   "author": "MUI Team",
+  "description": "The core engine of GestureEvents, a modern and robust multi-pointer gesture detection library for JavaScript.",
   "license": "MIT",
   "keywords": [
     "multitouch",
@@ -35,11 +35,12 @@
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "dependencies": {
-    "@babel/runtime": "catalog:"
+    "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:"
   },
   "sideEffects": false,
   "exports": {

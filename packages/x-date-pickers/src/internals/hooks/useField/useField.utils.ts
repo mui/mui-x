@@ -1,11 +1,11 @@
-import {
+import type {
   FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
   FieldSectionValueBoundaries,
   FieldParsedSelectedSections,
 } from './useField.types';
-import {
+import type {
   FieldSectionType,
   FieldSection,
   MuiPickersAdapter,
@@ -17,7 +17,8 @@ import {
   InferFieldSection,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
-import { PickerValidValue } from '../../models';
+import { convertToMeridiem } from '../../utils/time-utils';
+import type { PickerValidValue } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = (
   adapter: MuiPickersAdapter,
@@ -95,7 +96,7 @@ export const getLetterEditingOptions = (
 
 // This format should be the same on all the adapters
 // If some adapter does not respect this convention, then we will need to hardcode the format on each adapter.
-export const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
+const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
 
 const NON_LOCALIZED_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
@@ -178,6 +179,8 @@ export const cleanDigitSectionValue = (
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         [
           `MUI X: The token "${section.format}" is a digit format with letter in it.'
@@ -253,6 +256,8 @@ export const changeSectionValueFormat = (
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (getDateSectionConfigFromFormatToken(adapter, currentFormat).type === 'weekDay') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error("changeSectionValueFormat doesn't support week day formats");
     }
   }
@@ -347,7 +352,7 @@ export const getDateFromDateSections = (
   return adapter.parse(dateWithoutSeparatorStr, formatWithoutSeparator)!;
 };
 
-export const createDateStrForV7HiddenInputFromSections = (sections: FieldSection[]) =>
+export const createDateStrForHiddenInputFromSections = (sections: FieldSection[]) =>
   sections
     .map((section) => {
       return `${section.startSeparator}${section.value || section.placeholder}${
@@ -355,35 +360,6 @@ export const createDateStrForV7HiddenInputFromSections = (sections: FieldSection
       }`;
     })
     .join('');
-
-export const createDateStrForV6InputFromSections = (
-  sections: FieldSection[],
-  localizedDigits: string[],
-  isRtl: boolean,
-) => {
-  const formattedSections = sections.map((section) => {
-    const dateValue = getSectionVisibleValue(
-      section,
-      isRtl ? 'input-rtl' : 'input-ltr',
-      localizedDigits,
-    );
-
-    return `${section.startSeparator}${dateValue}${section.endSeparator}`;
-  });
-
-  const dateStr = formattedSections.join('');
-
-  if (!isRtl) {
-    return dateStr;
-  }
-
-  // \u2066: start left-to-right isolation
-  // \u2067: start right-to-left isolation
-  // \u2068: start first strong character isolation
-  // \u2069: pop isolation
-  // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
-  return `\u2066${dateStr}\u2069`;
-};
 
 export const getSectionsBoundaries = (
   adapter: MuiPickersAdapter,
@@ -438,28 +414,39 @@ export const getSectionsBoundaries = (
     },
     hours: ({ format }) => {
       const lastHourInDay = adapter.getHours(endOfDay);
-      const hasMeridiem =
+
+      const formattedMidnight = Number(
+        removeLocalizedDigits(
+          adapter.formatByString(adapter.startOfDay(today), format),
+          localizedDigits,
+        ),
+      );
+
+      const formattedEndOfDay = Number(
         removeLocalizedDigits(
           adapter.formatByString(adapter.endOfDay(today), format),
           localizedDigits,
-        ) !== lastHourInDay.toString();
+        ),
+      );
+
+      const hasMeridiem = formattedEndOfDay !== lastHourInDay;
 
       if (hasMeridiem) {
-        return {
-          minimum: 1,
-          maximum: Number(
-            removeLocalizedDigits(
-              adapter.formatByString(adapter.startOfDay(today), format),
-              localizedDigits,
-            ),
-          ),
-        };
+        // K/KK format (hour 0-11): midnight formats as 0
+        if (formattedMidnight === 0) {
+          return { minimum: 0, maximum: formattedEndOfDay };
+        }
+        // h/hh format (hour 1-12): midnight formats as 12
+        return { minimum: 1, maximum: formattedMidnight };
       }
 
-      return {
-        minimum: 0,
-        maximum: lastHourInDay,
-      };
+      // k/kk format (hour 1-24): midnight formats as 24 (> lastHourInDay)
+      if (formattedMidnight > lastHourInDay) {
+        return { minimum: 1, maximum: formattedMidnight };
+      }
+
+      // H/HH format (hour 0-23)
+      return { minimum: 0, maximum: lastHourInDay };
     },
     minutes: () => ({
       minimum: 0,
@@ -544,18 +531,8 @@ const transferDateSectionValue = (
     }
 
     case 'meridiem': {
-      const isAM = adapter.getHours(dateToTransferFrom) < 12;
-      const mergedDateHours = adapter.getHours(dateToTransferTo);
-
-      if (isAM && mergedDateHours >= 12) {
-        return adapter.addHours(dateToTransferTo, -12);
-      }
-
-      if (!isAM && mergedDateHours < 12) {
-        return adapter.addHours(dateToTransferTo, 12);
-      }
-
-      return dateToTransferTo;
+      const meridiem = adapter.getHours(dateToTransferFrom) < 12 ? 'am' : 'pm';
+      return convertToMeridiem(dateToTransferTo, meridiem, true, adapter);
     }
 
     case 'hours': {
@@ -608,61 +585,14 @@ export const mergeDateIntoReferenceDate = (
       return mergedDate;
     }, referenceDate);
 
-export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
-
-// TODO v9: Remove
-export const getSectionOrder = (
-  sections: FieldSection[],
-  shouldApplyRTL: boolean,
-): SectionOrdering => {
+export const getSectionOrder = (sections: FieldSection[]): SectionOrdering => {
   const neighbors: SectionNeighbors = {};
-  if (!shouldApplyRTL) {
-    sections.forEach((_, index) => {
-      const leftIndex = index === 0 ? null : index - 1;
-      const rightIndex = index === sections.length - 1 ? null : index + 1;
-      neighbors[index] = { leftIndex, rightIndex };
-    });
-    return { neighbors, startIndex: 0, endIndex: sections.length - 1 };
-  }
-
-  type PositionMapping = { [from: number]: number };
-  const rtl2ltr: PositionMapping = {};
-  const ltr2rtl: PositionMapping = {};
-
-  let groupedSectionsStart = 0;
-  let groupedSectionsEnd = 0;
-  let RTLIndex = sections.length - 1;
-
-  while (RTLIndex >= 0) {
-    groupedSectionsEnd = sections.findIndex(
-      // eslint-disable-next-line @typescript-eslint/no-loop-func
-      (section, index) =>
-        index >= groupedSectionsStart &&
-        section.endSeparator?.includes(' ') &&
-        // Special case where the spaces were not there in the initial input
-        section.endSeparator !== ' / ',
-    );
-    if (groupedSectionsEnd === -1) {
-      groupedSectionsEnd = sections.length - 1;
-    }
-
-    for (let i = groupedSectionsEnd; i >= groupedSectionsStart; i -= 1) {
-      ltr2rtl[i] = RTLIndex;
-      rtl2ltr[RTLIndex] = i;
-      RTLIndex -= 1;
-    }
-    groupedSectionsStart = groupedSectionsEnd + 1;
-  }
-
   sections.forEach((_, index) => {
-    const rtlIndex = ltr2rtl[index];
-    const leftIndex = rtlIndex === 0 ? null : rtl2ltr[rtlIndex - 1];
-    const rightIndex = rtlIndex === sections.length - 1 ? null : rtl2ltr[rtlIndex + 1];
-
+    const leftIndex = index === 0 ? null : index - 1;
+    const rightIndex = index === sections.length - 1 ? null : index + 1;
     neighbors[index] = { leftIndex, rightIndex };
   });
-
-  return { neighbors, startIndex: rtl2ltr[0], endIndex: rtl2ltr[sections.length - 1] };
+  return { neighbors, startIndex: 0, endIndex: sections.length - 1 };
 };
 
 export const parseSelectedSections = (

@@ -1,0 +1,181 @@
+import type { ChatMessageStatus, ChatUser } from '../../types/chat-entities';
+import type { ChatToolInvocationState } from '../../types/chat-message-parts';
+
+export type ChatLocaleTypingUser = Pick<ChatUser, 'id' | 'displayName'>;
+
+export interface ChatLocaleText {
+  composerInputPlaceholder: string;
+  composerInputAriaLabel: string;
+  composerSendButtonLabel: string;
+  composerAttachButtonLabel: string;
+  composerAttachInputLabel: string;
+  composerAttachmentFallbackLabel: string;
+  composerRemoveAttachmentLabel(fileName: string): string;
+  messageCopyButtonLabel: string;
+  messageCopyCodeButtonLabel: string;
+  messageCopiedCodeButtonLabel: string;
+  messageEditedLabel: string;
+  messageDeletedLabel: string;
+  messageReasoningLabel: string;
+  messageReasoningStreamingLabel: string;
+  messageToolInputLabel: string;
+  messageToolOutputLabel: string;
+  messageToolApproveButtonLabel: string;
+  messageToolDenyButtonLabel: string;
+  conversationListNoConversationsLabel: string;
+  conversationListSearchPlaceholder: string;
+  unreadMarkerLabel: string;
+  retryButtonLabel: string;
+  reconnectButtonLabel: string;
+  scrollToBottomLabel: string;
+  threadNoMessagesLabel: string;
+  threadNoMessagesHelperText: string;
+  genericErrorLabel: string;
+  loadingLabel: string;
+  messageStatusLabel(status: ChatMessageStatus): string;
+  toolStateLabel(state: ChatToolInvocationState): string;
+  messageTimestampLabel(dateTime: string): string;
+  conversationTimestampLabel(dateTime: string): string;
+  typingIndicatorLabel(users: ChatLocaleTypingUser[]): string;
+  scrollToBottomWithCountLabel(unseenCount: number): string;
+  suggestionsLabel: string;
+  messageListLabel: string;
+  messageLabel: string;
+  conversationHeaderMenuLabel: string;
+  conversationHeaderBackLabel: string;
+  conversationHeaderCloseLabel: string;
+  conversationHeaderNewChatLabel: string;
+  conversationHeaderSettingsLabel: string;
+  /** Default author label used when a message's `role` is `'user'` and no
+   * displayName was resolved from `message.author`, members, or `currentUser`. */
+  messageAuthorUserLabel: string;
+  /** Default author label used when a message's `role` is `'assistant'`
+   * and no displayName was resolved from `message.author` or members. */
+  messageAuthorAssistantLabel: string;
+  /** Default author label used when a message's `role` is `'system'`
+   * and no displayName was resolved from `message.author` or members. */
+  messageAuthorSystemLabel: string;
+  /** Accessible name of the conversations sidebar `navigation` landmark. */
+  conversationListLandmarkLabel: string;
+  /** Accessible name of the active-conversation (thread) `region` landmark. */
+  threadLandmarkLabel: string;
+  /** Accessible name of the composer `form` landmark. */
+  composerLandmarkLabel: string;
+  /** Accessible name of a message's actions container. */
+  messageActionsLabel: string;
+  /** Announced (politely) when the assistant starts streaming a response. */
+  responseStreamingStartedAnnouncement: string;
+  /** Announced (politely) when a streaming response completes. */
+  responseStreamingCompletedAnnouncement: string;
+}
+
+function getUserLabel(user: ChatLocaleTypingUser) {
+  return user.displayName ?? user.id;
+}
+
+function formatMessageTimestamp(dateTime: string): string {
+  const d = new Date(dateTime);
+  if (Number.isNaN(d.getTime())) {
+    return dateTime;
+  }
+  return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatConversationTimestamp(dateTime: string): string {
+  const d = new Date(dateTime);
+  if (Number.isNaN(d.getTime())) {
+    return dateTime;
+  }
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const messageDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.round((today.getTime() - messageDay.getTime()) / 86400000);
+
+  if (diffDays === 0) {
+    return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  }
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
+const messageStatusLabels: Record<ChatMessageStatus, string> = {
+  pending: 'Pending',
+  sending: 'Sending',
+  streaming: 'Streaming',
+  sent: 'Sent',
+  read: 'Read',
+  error: 'Error',
+  cancelled: 'Cancelled',
+};
+
+const toolStateLabels: Record<ChatToolInvocationState, string> = {
+  'input-streaming': 'Running…',
+  'input-available': 'Running…',
+  'approval-requested': 'Awaiting approval',
+  'approval-responded': 'Running…',
+  'output-available': 'Completed',
+  'output-error': 'Failed',
+  'output-denied': 'Denied',
+};
+
+export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
+  composerInputPlaceholder: 'Type a message',
+  composerInputAriaLabel: 'Message',
+  composerSendButtonLabel: 'Send message',
+  composerAttachButtonLabel: 'Add attachment',
+  composerAttachInputLabel: 'Upload file',
+  composerAttachmentFallbackLabel: 'Attachment',
+  composerRemoveAttachmentLabel: (fileName) => `Remove ${fileName}`,
+  messageCopyButtonLabel: 'Copy',
+  messageCopyCodeButtonLabel: 'Copy code',
+  messageCopiedCodeButtonLabel: 'Copied',
+  messageEditedLabel: 'Edited',
+  messageDeletedLabel: 'Deleted',
+  messageReasoningLabel: 'Reasoning',
+  messageReasoningStreamingLabel: 'Thinking…',
+  messageToolInputLabel: 'Tool called',
+  messageToolOutputLabel: 'Tool result',
+  messageToolApproveButtonLabel: 'Approve',
+  messageToolDenyButtonLabel: 'Deny',
+  conversationListNoConversationsLabel: 'No conversations',
+  conversationListSearchPlaceholder: 'Search conversations',
+  unreadMarkerLabel: 'New messages',
+  retryButtonLabel: 'Retry',
+  reconnectButtonLabel: 'Reconnect',
+  scrollToBottomLabel: 'Scroll to bottom',
+  threadNoMessagesLabel: 'No messages yet',
+  threadNoMessagesHelperText: 'Type a message to get started',
+  genericErrorLabel: 'Something went wrong',
+  loadingLabel: 'Loading…',
+  messageStatusLabel: (status) => messageStatusLabels[status],
+  toolStateLabel: (state) => toolStateLabels[state],
+  messageTimestampLabel: (dateTime) => formatMessageTimestamp(dateTime),
+  conversationTimestampLabel: (dateTime) => formatConversationTimestamp(dateTime),
+  typingIndicatorLabel: (users) => {
+    const names = users.map(getUserLabel).join(', ');
+
+    if (users.length === 1) {
+      return `${names} is typing`;
+    }
+
+    return `${names} are typing`;
+  },
+  scrollToBottomWithCountLabel: (unseenCount) => `Scroll to bottom, ${unseenCount} new messages`,
+  suggestionsLabel: 'Suggested prompts',
+  messageListLabel: 'Message log',
+  messageLabel: 'Message',
+  conversationHeaderMenuLabel: 'Open conversations',
+  conversationHeaderBackLabel: 'Back to conversations',
+  conversationHeaderCloseLabel: 'Close conversations',
+  conversationHeaderNewChatLabel: 'New chat',
+  conversationHeaderSettingsLabel: 'Settings',
+  messageAuthorUserLabel: 'User',
+  messageAuthorAssistantLabel: 'Assistant',
+  messageAuthorSystemLabel: 'System',
+  conversationListLandmarkLabel: 'Conversations',
+  threadLandmarkLabel: 'Conversation',
+  composerLandmarkLabel: 'Message composer',
+  messageActionsLabel: 'Message actions',
+  responseStreamingStartedAnnouncement: 'Assistant is responding',
+  responseStreamingCompletedAnnouncement: 'Response complete',
+};

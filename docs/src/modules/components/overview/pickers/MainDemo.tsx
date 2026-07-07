@@ -15,7 +15,7 @@ import PickerButton from './mainDemo/PickerButton';
 import '@mui/x-date-pickers-pro/themeAugmentation';
 
 const components: Components<Theme> = {
-  MuiPickersDay: {
+  MuiPickerDay: {
     styleOverrides: {
       root: {
         fontWeight: 400,
@@ -77,7 +77,7 @@ export default function MainDemo() {
   const brandingTheme = useTheme();
   const isMobile = useMediaQuery(brandingTheme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(brandingTheme.breakpoints.up('md'));
-  const isDesktop = useMediaQuery(brandingTheme.breakpoints.up('xl'));
+  const isDesktop = useMediaQuery(brandingTheme.breakpoints.up('lg'));
 
   const [showCustomTheme, setShowCustomTheme] = React.useState(false);
 

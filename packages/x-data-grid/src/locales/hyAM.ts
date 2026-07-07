@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const hyAMGrid: Partial<GridLocaleText> = {
   // Root
@@ -75,7 +76,7 @@ const hyAMGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Օպերատոր',
   filterPanelOperatorAnd: 'Եվ',
   filterPanelOperatorOr: 'Կամ',
-  filterPanelColumns: 'Սյունակներ',
+  filterPanelColumn: 'Սյունակներ',
   filterPanelInputLabel: 'Արժեք',
   filterPanelInputPlaceholder: 'Զտիչի արժեք',
 

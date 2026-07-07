@@ -4,17 +4,19 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import Divider from '@mui/material/Divider';
-import {
-  isDatePickerView,
-  isInternalTimeView,
+import type {
   PickerViewRenderer,
-  resolveDateTimeFormat,
   PickerRangeValue,
   PickerViewRendererLookup,
   PickerRendererInterceptorProps,
 } from '@mui/x-date-pickers/internals';
+import {
+  isDatePickerView,
+  isInternalTimeView,
+  resolveDateTimeFormat,
+} from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -27,17 +29,17 @@ import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
-import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
+import type { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateTimeRange } from '../validation';
-import { DateTimeRangePickerView } from '../internals/models';
+import type { DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
-import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 import { resolveReferenceDate } from '../internals/utils/date-range-manager';
 
 const STEPS: PickerRangeStep[] = [
@@ -98,9 +100,8 @@ const rendererInterceptor = function RendererInterceptor(
   );
 };
 
-type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = ((
+  props: DesktopDateTimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -113,17 +114,16 @@ type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exte
  *
  * - [DesktopDateTimeRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-range-picker/)
  */
-const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker(
+  inProps: DesktopDateTimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
   // Props with the default values common to all date time range pickers
-  const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
-    DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDateTimeRangePicker');
+  const defaultizedProps = useDateTimeRangePickerDefaultizedProps<DesktopDateTimeRangePickerProps>(
+    inProps,
+    'MuiDesktopDateTimeRangePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -179,11 +179,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<
-    DateTimeRangePickerView,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopRangePicker<DateTimeRangePickerView, typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,
@@ -196,7 +192,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   return renderPicker();
 }) as DesktopDateRangePickerComponent;
 
-DesktopDateTimeRangePicker.propTypes = {
+DesktopDateTimeRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -269,7 +265,7 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -293,10 +289,6 @@ DesktopDateTimeRangePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -474,7 +466,7 @@ DesktopDateTimeRangePicker.propTypes = {
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
+   * @default () => "…"
    */
   renderLoading: PropTypes.func,
   /**

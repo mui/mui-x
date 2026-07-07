@@ -1,14 +1,27 @@
-import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
-import {
-  type CartesianSeriesType,
-  type CommonDefaultizedProps,
-  type CommonSeriesType,
-  type SeriesId,
+import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
+import type {
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  SeriesId,
 } from './common';
+import type { DatasetElementType } from './config';
 
 export type ScatterValueType = {
   x: number;
   y: number;
+  /**
+   * The value used to compute the color of the scatter point through a color axis.
+   */
+  colorValue?: any;
+  /**
+   * The value used to compute the size of the scatter point through a size axis.
+   */
+  sizeValue?: any;
+  /**
+   * The value used to compute the color of the scatter point through a color axis.
+   * @deprecated Use `colorValue` instead.
+   */
   z?: any;
   /**
    * A unique identifier for the scatter point
@@ -16,8 +29,7 @@ export type ScatterValueType = {
   id?: string | number;
 };
 
-export interface ScatterSeriesType
-  extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
+export interface ScatterSeriesType extends CommonSeriesType<'scatter'>, CartesianSeriesType {
   type: 'scatter';
   data?: readonly ScatterValueType[];
   /**
@@ -29,15 +41,34 @@ export interface ScatterSeriesType
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
+   * The id of the color axis used to compute the color of the scatter points.
+   * It points to the id of an axis defined with the `zAxis` prop.
+   */
+  colorAxisId?: string;
+  /**
+   * The id of the size axis used to compute the size of the scatter points.
+   * It points to the id of an axis defined with the `zAxis` prop.
+   */
+  sizeAxisId?: string;
+  /**
    * The id of the z-axis used to render the series.
+   * @deprecated Use `colorAxisId` instead.
    */
   zAxisId?: string;
 
   /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return a scatter value.
+   * Can be used as an alternative to `datasetKeys`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {ScatterValueType} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => ScatterValueType;
+  /**
    * The keys used to retrieve data from the dataset.
    *
-   * When this prop is provided, all of `x`, `y`, and `id` must be provided.
-   * While `z` is optional.
+   * When this prop is provided, both `x` and `y` must be provided.
+   * While `color`, `size`, and `id` are optional.
    */
   datasetKeys?: {
     /**
@@ -49,7 +80,16 @@ export interface ScatterSeriesType
      */
     y: string;
     /**
+     * The key used to retrieve data from the dataset for the color value.
+     */
+    colorValue?: string;
+    /**
+     * The key used to retrieve data from the dataset for the size value.
+     */
+    sizeValue?: string;
+    /**
      * The key used to retrieve data from the dataset for the Z axis.
+     * @deprecated Use `colorValue` instead.
      */
     z?: string;
     /**

@@ -1,31 +1,25 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import { DateValidationError, BuiltInFieldTextFieldProps } from '../models';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { ExportedValidateDateProps } from '../validation/validateDate';
-import { PickerValue } from '../internals/models';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { DateValidationError, BuiltInFieldTextFieldProps } from '../models';
+import type { UseFieldInternalProps } from '../internals/hooks/useField';
+import type { ExportedValidateDateProps } from '../validation/validateDate';
+import type { PickerValue } from '../internals/models';
+import type {
   ExportedPickerFieldUIProps,
   PickerFieldUISlotProps,
   PickerFieldUISlots,
 } from '../internals/components/PickerFieldUI';
 
-export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface UseDateFieldProps
   extends
-    MakeOptional<
-      UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>,
-      'format'
-    >,
+    MakeOptional<UseFieldInternalProps<PickerValue, DateValidationError>, 'format'>,
     ExportedValidateDateProps,
     ExportedPickerFieldUIProps {}
 
-export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
+export type DateFieldProps =
   // The hook props
-  UseDateFieldProps<TEnableAccessibleFieldDOMStructure> &
+  UseDateFieldProps &
     // The TextField props
-    Omit<
-      BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
-      keyof UseDateFieldProps<TEnableAccessibleFieldDOMStructure>
-    > & {
+    Omit<BuiltInFieldTextFieldProps, keyof UseDateFieldProps> & {
       /**
        * Overridable component slots.
        * @default {}
@@ -38,8 +32,7 @@ export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = 
       slotProps?: DateFieldSlotProps;
     };
 
-export type DateFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
-  DateFieldProps<TEnableAccessibleFieldDOMStructure>;
+export type DateFieldOwnerState = DateFieldProps;
 
 export interface DateFieldSlots extends PickerFieldUISlots {}
 

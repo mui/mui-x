@@ -1,22 +1,17 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import PropTypes from 'prop-types';
-import { useDateTimeRangeManager, UseDateTimeRangeManagerReturnValue } from '../managers';
+import type { UseDateTimeRangeManagerReturnValue } from '../managers';
+import { useDateTimeRangeManager } from '../managers';
+import type { MultiInputRangeFieldProps } from '../internals/utils/createMultiInputRangeField';
 import {
   // The alias is needed to have the doc gen working.
   createMultiInputRangeField as createMultiInputDateTimeRangeField,
-  MultiInputRangeFieldProps,
 } from '../internals/utils/createMultiInputRangeField';
-import {
-  getMultiInputDateTimeRangeFieldUtilityClass,
-  MultiInputDateTimeRangeFieldClasses,
-} from './multiInputDateTimeRangeFieldClasses';
+import type { MultiInputDateTimeRangeFieldClasses } from './multiInputDateTimeRangeFieldClasses';
+import { getMultiInputDateTimeRangeFieldUtilityClass } from './multiInputDateTimeRangeFieldClasses';
 
-export interface MultiInputDateTimeRangeFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MultiInputRangeFieldProps<
-  UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-> {
+export interface MultiInputDateTimeRangeFieldProps extends MultiInputRangeFieldProps<UseDateTimeRangeManagerReturnValue> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
    * Override or extend the styles applied to the component.
@@ -24,11 +19,8 @@ export interface MultiInputDateTimeRangeFieldProps<
   classes?: Partial<MultiInputDateTimeRangeFieldClasses>;
 }
 
-type MultiInputDateTimeRangeFieldComponent = (<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MultiInputDateTimeRangeFieldComponent = ((
+  props: MultiInputDateTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -47,7 +39,7 @@ const MultiInputDateTimeRangeField = createMultiInputDateTimeRangeField({
   useManager: useDateTimeRangeManager,
 }) as MultiInputDateTimeRangeFieldComponent;
 
-MultiInputDateTimeRangeField.propTypes = {
+MultiInputDateTimeRangeField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -58,7 +50,7 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   ampm: PropTypes.bool,
   /**
-   * If `true`, the `input` element is focused during the first mount.
+   * If `true`, the field is focused during the first mount.
    * @default false
    */
   autoFocus: PropTypes.bool,
@@ -112,10 +104,6 @@ MultiInputDateTimeRangeField.propTypes = {
    * Add an element between each child.
    */
   divider: PropTypes.node,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * The ref object used to interact with the end field imperatively.
    */
@@ -298,7 +286,7 @@ MultiInputDateTimeRangeField.propTypes = {
   /**
    * If `true`, the CSS flexbox `gap` is used instead of applying `margin` to children.
    *
-   * While CSS `gap` removes the [known limitations](https://mui.com/joy-ui/react-stack/#limitations),
+   * While CSS `gap` removes the known limitations,
    * it is not fully supported in some browsers. We recommend checking https://caniuse.com/?search=flex%20gap before using this flag.
    *
    * To enable this flag globally, follow the [theme's default props](https://mui.com/material-ui/customization/theme-components/#default-props) configuration.

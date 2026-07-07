@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { BrandingProvider } from '@mui/docs/branding';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
+import { BrandingProvider } from '@mui/internal-core-docs/branding';
 import { styled, Theme, alpha, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Tabs from '@mui/material/Tabs';
@@ -145,7 +145,7 @@ function StylingApproachTabs({ value, onChange, options }: TabsProps) {
         value={value}
         onChange={onChange}
         aria-label="Customization option"
-        TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+        slotProps={{ indicator: { children: <span className="MuiTabs-indicatorSpan" /> } }}
       >
         {(Object.keys(options) as Array<keyof typeof options>)?.map((option) => (
           <Tab value={option} key={option} label={options[option]} />

@@ -11,11 +11,13 @@ export const alias = [
   // Generates resolver aliases for all packages and their plans.
   ...[
     { lib: 'x-charts', plans: ['pro', 'premium'] },
+    { lib: 'x-chat', plans: ['headless', 'unstyled'] },
     { lib: 'x-date-pickers', plans: ['pro'] },
     { lib: 'x-tree-view', plans: ['pro'] },
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
     { lib: 'x-scheduler', plans: ['premium'] },
-    { lib: 'x-scheduler-headless', plans: ['premium'] },
+    { lib: 'x-scheduler-internals', plans: ['premium'] },
+    { lib: 'x-agent-tools' },
     { lib: 'x-internals' },
     { lib: 'x-internal-gestures' },
     { lib: 'x-license' },
@@ -53,16 +55,20 @@ export default defineConfig({
     'process.env.NODE_ENV': '"test"',
     __ALLOW_TEST_LICENSES__: 'true',
   },
-  esbuild: {
-    minifyIdentifiers: false,
-    keepNames: true,
-  },
   resolve: {
     alias,
   },
   test: {
     globals: true,
     setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
+    // Inline so Vite resolves @mui/material's `react-transition-group/TransitionGroupContext`
+    // directory import (legacy `main`/`module`, no `exports`), which native ESM rejects.
+    // @TODO: Remove once https://github.com/mui/material-ui/pull/48645 is merged.
+    server: {
+      deps: {
+        inline: [/@mui\/material/, /react-transition-group/],
+      },
+    },
     // Required for some tests that contain early returns or conditional tests.
     passWithNoTests: true,
     env: {
@@ -110,14 +116,14 @@ export default defineConfig({
     // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
-      // Important to avoid timeouts on CI.
-      fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
-      testTimeout: 30000,
+      // Tests run ~3x slower under React 19 stable than React 18 (CPU-bound,
+      // mostly @testing-library/user-event async timing); the slowest legitimate
+      // tests touch ~17s in CI, so 30s leaves no headroom for noise.
+      testTimeout: 60000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
-      // Reduce the number of workers to avoid CI timeouts.
-      maxWorkers: 1,
+      maxWorkers: 2,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },

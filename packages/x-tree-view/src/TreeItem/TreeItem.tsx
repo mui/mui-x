@@ -4,16 +4,18 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import unsupportedProp from '@mui/utils/unsupportedProp';
-import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
-import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
+import type { CheckboxProps } from '@mui/material/Checkbox';
+import MuiCheckbox from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { TreeItemProps } from './TreeItem.types';
-import { useTreeItem, UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
-import { getTreeItemUtilityClass, TreeItemClasses } from './treeItemClasses';
+import type { TreeItemProps } from './TreeItem.types';
+import type { UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
+import { useTreeItem } from '../useTreeItem';
+import type { TreeItemClasses } from './treeItemClasses';
+import { getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
@@ -65,31 +67,29 @@ export const TreeItemContent = styled('div', {
     backgroundColor: (theme.vars || theme).palette.action.focus,
   },
   '&[data-selected]': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.selectedOpacity,
+    ),
     '&:hover': {
-      backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
-        : alpha(
-            theme.palette.primary.main,
-            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-          ),
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.hoverOpacity}`,
+      ),
       // Reset on touch devices, it doesn't add specificity
       '@media (hover: none)': {
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-          : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+        backgroundColor: theme.alpha(
+          (theme.vars || theme).palette.primary.main,
+          (theme.vars || theme).palette.action.selectedOpacity,
+        ),
       },
     },
   },
   '&[data-selected][data-focused]': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
-      : alpha(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
-        ),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
+    ),
   },
 }));
 
@@ -387,7 +387,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   );
 }) as TreeItemComponent;
 
-TreeItem.propTypes = {
+TreeItem.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventTimelinePremium
 ---
 
 # Event Timeline - Preferences
 
-<p class="description">Let your user customize the component to their needs.</p>
+<p class="description">Customize timeline preferences including the time format.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Initialize the preferences
 
@@ -25,23 +26,29 @@ const defaultPreferences = {
 
 Available properties:
 
-- `ampm`: Whether the component should display the time in 12-hour format with AM/PM meridiem.
+- `ampm`: Whether the component displays time in 12-hour format with AM/PM.
+- `weekStartsOn`: The day the week starts on (`0` = Sunday, `1` = Monday, `6` = Saturday).
 
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::success
-You can also control the preferences using `preferences` and `onPreferencesChange` props:
+You can also control the preferences using the `preferences` prop.
+The Event Timeline has no built-in preferences UI, so changes are driven entirely from your own UI:
 
 ```tsx
 const [preferences, setPreferences] = React.useState<
   Partial<EventTimelinePremiumPreferences>
->({});
+>({ ampm: false });
 
 return (
-  <EventTimelinePremium
-    preferences={preferences}
-    onPreferencesChange={setPreferences}
-  />
+  <React.Fragment>
+    <button
+      onClick={() => setPreferences((prev) => ({ ...prev, ampm: !prev.ampm }))}
+    >
+      Toggle AM/PM
+    </button>
+    <EventTimelinePremium preferences={preferences} />
+  </React.Fragment>
 );
 ```
 

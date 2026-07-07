@@ -7,7 +7,7 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '@mui/x-charts/internals';
-import { type OHLCItemIdentifier } from '../../models';
+import type { OHLCItemIdentifier } from '../../models';
 
 export const selectorCandlestickItemAtPosition = createSelector(
   selectorChartXAxis,
@@ -25,6 +25,10 @@ export const selectorCandlestickItemAtPosition = createSelector(
 
     for (const seriesId of seriesOrder ?? []) {
       const aSeries = (series ?? {})[seriesId];
+
+      if (aSeries.hidden) {
+        continue;
+      }
 
       const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
       const yAxisId = aSeries.yAxisId ?? defaultYAxisId;

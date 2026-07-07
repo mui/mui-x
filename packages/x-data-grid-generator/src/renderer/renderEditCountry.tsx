@@ -5,7 +5,8 @@ import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import { COUNTRY_ISO_OPTIONS, type CountryIsoOption } from '../services/static-data';
+import { COUNTRY_ISO_OPTIONS } from '../services/static-data';
+import type { CountryIsoOption } from '../services/static-data';
 import { useEditDropdownState } from '../hooks/useEditDropdownState';
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
@@ -80,10 +81,10 @@ function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
             inputRef={inputRef}
             onKeyDown={handleAutocompleteInputKeyDown}
             inputProps={{
-              ...params.inputProps,
+              ...params.slotProps.htmlInput,
               autoComplete: 'new-password', // disable autocomplete and autofill
             }}
-            {...params.InputProps}
+            {...params.slotProps.input}
           />
         )}
       />

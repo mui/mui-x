@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const bgBGGrid: Partial<GridLocaleText> = {
   // Root
@@ -67,7 +68,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
-  filterPanelColumns: 'Колони',
+  filterPanelColumn: 'Колони',
   filterPanelInputLabel: 'Стойност',
   filterPanelInputPlaceholder: 'Стойност на филтъра',
 

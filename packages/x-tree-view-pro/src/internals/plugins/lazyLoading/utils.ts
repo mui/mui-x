@@ -1,5 +1,5 @@
-import { TreeViewItemId } from '@mui/x-tree-view/models';
-import { TreeViewLazyLoadingPlugin } from './TreeViewLazyLoadingPlugin';
+import type { TreeViewItemId, TreeViewValidItem } from '@mui/x-tree-view/models';
+import type { TreeViewLazyLoadingPlugin } from './TreeViewLazyLoadingPlugin';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
@@ -22,12 +22,12 @@ export class NestedDataManager {
 
   private settledRequests: Set<TreeViewItemId> = new Set();
 
-  private lazyLoadingPlugin: TreeViewLazyLoadingPlugin;
+  private lazyLoadingPlugin: TreeViewLazyLoadingPlugin<TreeViewValidItem<any>>;
 
   private maxConcurrentRequests: number;
 
   constructor(
-    lazyLoadingPlugin: TreeViewLazyLoadingPlugin,
+    lazyLoadingPlugin: TreeViewLazyLoadingPlugin<TreeViewValidItem<any>>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
     this.lazyLoadingPlugin = lazyLoadingPlugin;

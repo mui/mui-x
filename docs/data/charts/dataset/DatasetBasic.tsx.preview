@@ -1,0 +1,9 @@
+<BarChart
+  dataset={dataset}
+  xAxis={[{ dataKey: 'month', scaleType: 'band' }]}
+  series={[
+    { dataKey: 'london', label: 'London' },
+    { dataKey: 'paris', label: 'Paris' },
+  ]}
+  height={300}
+/>

@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import useId from '@mui/utils/useId';
 import { ChartsClipPath } from '@mui/x-charts-premium/ChartsClipPath';
-import { Unstable_CandlestickPlot as CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';
+import { CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';
 import { LinePlot } from '@mui/x-charts-premium/LineChart';
 import { BarPlot } from '@mui/x-charts-premium/BarChart';
 import { ChartsXAxis } from '@mui/x-charts-premium/ChartsXAxis';
@@ -169,7 +169,9 @@ export default function CandlestickComposition() {
 
 function CandlestickTooltip() {
   const drawingArea = useDrawingArea();
-  const axesTooltipData = useAxesTooltip({ directions: ['x'] });
+  const axesTooltipData = useAxesTooltip({
+    directions: ['x'],
+  });
 
   const tooltipData = axesTooltipData?.[0];
 
@@ -194,28 +196,28 @@ function CandlestickTooltip() {
     >
       <Stack
         direction="column"
-        gap={0.5}
         sx={(theme) => ({
           ...theme.typography.caption,
           pointerEvents: 'none',
           marginLeft: theme.spacing(1),
           marginTop: theme.spacing(1),
+          gap: 0.5,
         })}
       >
         <Stack
           direction="row"
-          gap={1}
           sx={(theme) => ({
             width: 'min-content',
             paddingX: theme.spacing(1),
             paddingY: theme.spacing(0.5),
             background: theme.palette.background.paper,
+            gap: 1,
           })}
         >
-          <span>O:{formatTooltipDollarValue(ohlcItem.value[0])}</span>
-          <span>H:{formatTooltipDollarValue(ohlcItem.value[1])}</span>
-          <span>L:{formatTooltipDollarValue(ohlcItem.value[2])}</span>
-          <span>C:{formatTooltipDollarValue(ohlcItem.value[3])}</span>
+          <span>O:{formatTooltipDollarValue(ohlcItem.value.open)}</span>
+          <span>H:{formatTooltipDollarValue(ohlcItem.value.high)}</span>
+          <span>L:{formatTooltipDollarValue(ohlcItem.value.low)}</span>
+          <span>C:{formatTooltipDollarValue(ohlcItem.value.close)}</span>
           <span>V:{formatVolume(volumeItem.value)}</span>
         </Stack>
         {movingAverageItem.value != null && (

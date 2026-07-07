@@ -1,22 +1,24 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
-import { useEventCalendarPremium } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
-import {
-  useEventCalendarUtilityClasses,
-  EventCalendarStyledContext,
-} from '@mui/x-scheduler/event-calendar';
+import { useId } from '@base-ui/utils/useId';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
+import { useEventCalendarPremium } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import {
   EventDialogStyledContext,
   EventDialogProvider,
   EventCalendarRoot,
+  SharedComponentsStyledContext,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+  EventCalendarStyledContext,
+  useEventCalendarUtilityClasses,
 } from '@mui/x-scheduler/internals';
-import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
+import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
+import type { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -26,10 +28,9 @@ const packageInfo = {
 const watermark = <Watermark packageInfo={packageInfo} />;
 
 /**
- * Premium version of EventCalendar with lazy loading support.
- * Uses EventCalendarPremiumStore which extends EventCalendarStore with lazy loading plugin.
+ * Premium version of EventCalendar with support for lazy loading and recurring events.
  */
-export const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
+const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   TEvent extends object,
   TResource extends object,
 >(
@@ -53,38 +54,332 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   const { localeText, apiRef, ...other } = forwardedProps;
   useInitializeApiRef(store, apiRef);
 
+  const schedulerId = useId();
+
   const mergedLocaleText = React.useMemo(
     () => ({ ...EVENT_CALENDAR_DEFAULT_LOCALE_TEXT, ...localeText }),
     [localeText],
   );
 
   const calendarStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ schedulerId, classes, localeText: mergedLocaleText }),
+    [schedulerId, classes, mergedLocaleText],
   );
 
   const dialogStyledContextValue = React.useMemo(
-    () => ({ classes, localeText: mergedLocaleText }),
-    [classes, mergedLocaleText],
+    () => ({ schedulerId, classes, localeText: mergedLocaleText }),
+    [schedulerId, classes, mergedLocaleText],
   );
+
+  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventDialogProvider>
-            <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-              {watermark}
-            </EventCalendarRoot>
-          </EventDialogProvider>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+              <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                {watermark}
+              </EventCalendarRoot>
+            </EventDialogProvider>
+          </SharedComponentsStyledContext.Provider>
         </EventDialogStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarPremiumComponent;
 
-type EventCalendarPremiumComponent = <TEvent extends object, TResource extends object>(
-  props: EventCalendarPremiumProps<TEvent, TResource> & {
-    ref?: React.ForwardedRef<HTMLDivElement>;
-  },
-) => React.JSX.Element;
+EventCalendarPremium.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The ref object that allows Event Calendar manipulation.
+   * Can be instantiated with `useEventCalendarPremiumApiRef()`.
+   */
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setVisibleDate: PropTypes.func,
+    }),
+  }),
+  /**
+   * Whether the event can be dragged to change its start and end dates without changing the duration.
+   * @default true
+   */
+  areEventsDraggable: PropTypes.bool,
+  /**
+   * Whether the event start or end can be dragged to change its duration without changing its other date.
+   * If `true`, both start and end can be resized.
+   * If `false`, the events are not resizable.
+   * If `"start"`, only the start can be resized.
+   * If `"end"`, only the end can be resized.
+   * @default true
+   */
+  areEventsResizable: PropTypes.oneOfType([PropTypes.oneOf(['end', 'start']), PropTypes.bool]),
+  /**
+   * Whether events can be dragged from outside of the calendar and dropped into it.
+   * @default false
+   */
+  canDragEventsFromTheOutside: PropTypes.bool,
+  /**
+   * Whether events can be dragged from inside of the calendar and dropped outside of it.
+   * If true, when the mouse leaves the calendar, the event won't be rendered inside the calendar anymore.
+   * If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar.
+   * @default false
+   */
+  canDropEventsToTheOutside: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   */
+  collapsedResources: PropTypes.object,
+  /**
+   * Data source for fetching events asynchronously.
+   * When provided, events are fetched through the data source instead of the `events` prop.
+   */
+  dataSource: PropTypes.shape({
+    getEvents: PropTypes.func.isRequired,
+    persistEvents: PropTypes.func.isRequired,
+  }),
+  /**
+   * The locale object from `date-fns` used to format dates.
+   * This affects day names, month names, week start day, and other locale-dependent formatting.
+   * Import a locale from `date-fns/locale` and pass it to this prop.
+   * @default enUS (English)
+   */
+  dateLocale: PropTypes.object,
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources: PropTypes.object,
+  /**
+   * The default preferences for the calendar.
+   * To use controlled preferences, use the `preferences` prop.
+   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }
+   */
+  defaultPreferences: PropTypes.shape({
+    ampm: PropTypes.bool,
+    isSidePanelOpen: PropTypes.bool,
+    showEmptyDaysInAgenda: PropTypes.bool,
+    showWeekends: PropTypes.bool,
+    showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+  }),
+  /**
+   * The view initially displayed in the calendar.
+   * To render a controlled calendar, use the `view` prop.
+   * @default "week"
+   */
+  defaultView: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
+  /**
+   * The date initially used to determine the visible date range.
+   * To render a controlled component, use the `visibleDate` prop.
+   * @default today
+   */
+  defaultVisibleDate: PropTypes.instanceOf(Date),
+  /**
+   * The IDs of the resources initially visible.
+   * To render a controlled scheduler, use the `visibleResources` prop.
+   * @default {} - all resources are visible
+   */
+  defaultVisibleResources: PropTypes.object,
+  /**
+   * The timezone used to display events in the scheduler.
+   *
+   * Accepts any valid IANA timezone name
+   * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
+   * or keywords understood by the adapter, such as
+   * "default" (use the adapter's default timezone),
+   * "locale" (use the user's current locale timezone),
+   * or "UTC".
+   *
+   * This timezone only affects rendering, events keep their original data timezone.
+   * @default "default"
+   */
+  displayTimezone: PropTypes.string,
+  /**
+   * The color palette used for all events.
+   * Can be overridden per resource using the `eventColor` property on the resource model.
+   * Can be overridden per event using the `color` property on the event model.
+   * @default "teal"
+   */
+  eventColor: PropTypes.oneOf([
+    'amber',
+    'blue',
+    'green',
+    'grey',
+    'indigo',
+    'lime',
+    'orange',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+  ]),
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
+  eventCreation: PropTypes.oneOfType([
+    PropTypes.shape({
+      duration: PropTypes.number,
+      interaction: PropTypes.oneOf(['click', 'double-click']),
+    }),
+    PropTypes.bool,
+  ]),
+  /**
+   * The structure of the event model.
+   * It defines how to read and write the properties of the event model.
+   * If not provided, the event model is assumed to match the `CalendarEvent` interface.
+   */
+  eventModelStructure: PropTypes.object,
+  /**
+   * The events currently available in the calendar.
+   * @default []
+   */
+  events: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Set the locale text of the Event Calendar.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
+   * in the GitHub repository.
+   */
+  localeText: PropTypes.object,
+  /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange: PropTypes.func,
+  /**
+   * Callback fired when some event of the calendar change.
+   */
+  onEventsChange: PropTypes.func,
+  /**
+   * Event handler called when the preferences change.
+   */
+  onPreferencesChange: PropTypes.func,
+  /**
+   * Event handler called when the view changes.
+   */
+  onViewChange: PropTypes.func,
+  /**
+   * Event handler called when the visible date changes.
+   */
+  onVisibleDateChange: PropTypes.func,
+  /**
+   * Event handler called when the visible resources change.
+   */
+  onVisibleResourcesChange: PropTypes.func,
+  /**
+   * Preferences currently displayed in the calendar.
+   */
+  preferences: PropTypes.shape({
+    ampm: PropTypes.bool,
+    isSidePanelOpen: PropTypes.bool,
+    showEmptyDaysInAgenda: PropTypes.bool,
+    showWeekends: PropTypes.bool,
+    showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+  }),
+  /**
+   * Config of the preferences menu.
+   * Defines which options are visible in the menu.
+   * If `false`, the menu will be entirely hidden.
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
+   */
+  preferencesMenuConfig: PropTypes.oneOfType([
+    PropTypes.oneOf([false]),
+    PropTypes.shape({
+      toggleAmpm: PropTypes.bool,
+      toggleEmptyDaysInAgenda: PropTypes.bool,
+      toggleWeekendVisibility: PropTypes.bool,
+      toggleWeekNumberVisibility: PropTypes.bool,
+      toggleWeekStartsOn: PropTypes.bool,
+    }),
+  ]),
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readOnly: PropTypes.bool,
+  /**
+   * The structure of the resource model.
+   * It defines how to read and write the properties of the resource model.
+   * If not provided, the resource model is assumed to match the `CalendarResource` interface.
+   */
+  resourceModelStructure: PropTypes.object,
+  /**
+   * The resources the events can be assigned to.
+   */
+  resources: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default false
+   */
+  shouldEventRequireResource: PropTypes.bool,
+  /**
+   * Whether the component should display the current time indicator.
+   * @default true
+   */
+  showCurrentTimeIndicator: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  /**
+   * The view currently displayed in the calendar.
+   */
+  view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
+  /**
+   * Configuration applied to each view, keyed by the view name.
+   * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { week: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig: PropTypes.shape({
+    day: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+    week: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
+  /**
+   * The views available in the calendar.
+   * @default ["day", "week", "month", "agenda"]
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['agenda', 'day', 'month', 'week']).isRequired),
+  /**
+   * The date currently used to determine the visible date range.
+   */
+  visibleDate: PropTypes.instanceOf(Date),
+  /**
+   * The IDs of the resources currently visible.
+   * A resource is visible if it is not included in this object or if it is included with `true` value.
+   */
+  visibleResources: PropTypes.object,
+} as any;
+
+export { EventCalendarPremium };
+
+interface EventCalendarPremiumComponent {
+  <TEvent extends object, TResource extends object>(
+    props: EventCalendarPremiumProps<TEvent, TResource> & {
+      ref?: React.ForwardedRef<HTMLDivElement>;
+    },
+  ): React.JSX.Element;
+  propTypes?: any;
+}

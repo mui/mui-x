@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
+import { useYAxis } from '@mui/x-charts/hooks';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -156,6 +157,58 @@ describe('<BarChart />', () => {
     },
   );
 
+  it('should support axis valueGetter', async () => {
+    const dataset = [
+      { date: '2025-01-01', value: 100 },
+      { date: '2025-02-01', value: 200 },
+      { date: '2025-03-01', value: 300 },
+    ];
+
+    render(
+      <BarChart
+        dataset={dataset}
+        xAxis={[
+          {
+            scaleType: 'band',
+            valueGetter: (item) =>
+              new Date(item.date as string).toLocaleDateString('en-US', { month: 'short' }),
+          },
+        ]}
+        series={[{ dataKey: 'value' }]}
+        width={500}
+        height={300}
+      />,
+    );
+
+    const label = await screen.findByText('Jan');
+    expect(label).toBeVisible();
+  });
+
+  it('should support series valueGetter', async () => {
+    const dataset = [
+      { version: 'v1', count: '100' },
+      { version: 'v2', count: '200' },
+    ];
+
+    render(
+      <BarChart
+        dataset={dataset}
+        xAxis={[{ dataKey: 'version' }]}
+        series={[
+          {
+            valueGetter: (item) => parseFloat(item.count as string),
+            label: 'Count',
+          },
+        ]}
+        width={500}
+        height={300}
+      />,
+    );
+
+    const label = await screen.findByText('v1');
+    expect(label).toBeVisible();
+  });
+
   it('should support dataset with missing values', async () => {
     const dataset = [
       {
@@ -202,5 +255,56 @@ describe('<BarChart />', () => {
 
     const labelY = await screen.findByText('600');
     expect(labelY).toBeVisible();
+  });
+
+  it('should handle hidden series', async () => {
+    const dataset = [
+      {
+        version: 'data-0',
+        a1: 500,
+        a2: 600,
+        unusedProp: 'test',
+      },
+      {
+        version: 'data-1',
+        a1: 100,
+        a2: 200,
+        unusedProp: ['test'],
+      },
+    ];
+
+    const yAxisDomainRef: { current: any[] } = { current: [] };
+    function DomainSpy() {
+      const yAxis = useYAxis();
+      React.useEffect(() => {
+        yAxisDomainRef.current = yAxis.scale.domain();
+      });
+      return null;
+    }
+
+    const series = [
+      { id: 'a1', dataKey: 'a1', label: 'Series A', stack: 'stack-1' },
+      { id: 'a2', dataKey: 'a2', label: 'Series B', stack: 'stack-1' },
+    ];
+
+    const { setProps } = render(
+      <BarChart
+        dataset={dataset}
+        xAxis={[{ dataKey: 'version' }]}
+        yAxis={[{ domainSeries: 'visible' }]}
+        series={series}
+        hiddenItems={[]}
+        width={500}
+        height={300}
+      >
+        <DomainSpy />
+      </BarChart>,
+    );
+
+    expect(yAxisDomainRef.current).to.deep.equal([0, 1200]);
+
+    setProps({ hiddenItems: [{ type: 'bar', seriesId: 'a2' }] });
+
+    expect(yAxisDomainRef.current).to.deep.equal([0, 500]);
   });
 });

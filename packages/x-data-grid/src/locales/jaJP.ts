@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('ja-JP');
 
@@ -11,8 +8,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '行がありません。',
   noResultsOverlayLabel: '結果がありません。',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: '列がありません。',
+  noColumnsOverlayManageColumns: '列管理',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
@@ -63,7 +60,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'カラムなし',
   columnsManagementShowHideAllText: 'すべて表示/非表示',
   columnsManagementReset: 'リセット',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'クリア',
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
@@ -73,7 +70,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '演算子',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
-  filterPanelColumns: '列',
+  filterPanelColumn: '列',
   filterPanelInputLabel: '値',
   filterPanelInputPlaceholder: '値を入力…',
 
@@ -131,7 +128,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'メニュー',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} 列メニュー`,
   columnMenuShowColumns: '列表示',
   columnMenuManageColumns: '列管理',
   columnMenuFilter: 'フィルター',

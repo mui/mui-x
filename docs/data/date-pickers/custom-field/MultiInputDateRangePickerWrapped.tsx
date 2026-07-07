@@ -7,9 +7,7 @@ import {
 } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
-function WrappedMultiInputDateRangeField(
-  props: MultiInputDateRangeFieldProps<true>,
-) {
+function WrappedMultiInputDateRangeField(props: MultiInputDateRangeFieldProps) {
   return <MultiInputDateRangeField spacing={4} {...props} />;
 }
 

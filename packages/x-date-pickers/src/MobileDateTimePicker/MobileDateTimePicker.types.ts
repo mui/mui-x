@@ -1,10 +1,10 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   UseMobilePickerSlots,
   ExportedUseMobilePickerSlotProps,
   MobileOnlyPickerProps,
 } from '../internals/hooks/useMobilePicker';
-import {
+import type {
   BaseDateTimePickerProps,
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
@@ -13,15 +13,10 @@ import {
 export interface MobileDateTimePickerSlots
   extends BaseDateTimePickerSlots, MakeOptional<UseMobilePickerSlots, 'field'> {}
 
-export interface MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends
-    BaseDateTimePickerSlotProps,
-    ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+export interface MobileDateTimePickerSlotProps
+  extends BaseDateTimePickerSlotProps, ExportedUseMobilePickerSlotProps {}
 
-export interface MobileDateTimePickerProps<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->
-  extends BaseDateTimePickerProps, MobileOnlyPickerProps {
+export interface MobileDateTimePickerProps extends BaseDateTimePickerProps, MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -31,5 +26,5 @@ export interface MobileDateTimePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: MobileDateTimePickerSlotProps;
 }

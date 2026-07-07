@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, type SxProps, type Theme } from '@mui/system';
+import { styled } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -30,7 +31,11 @@ const VirtualScrollerContentRoot = styled('div', {
       ownerState.overflowedContent && styles['virtualScrollerContent--overflowed'],
     ];
   },
-})<{ ownerState: OwnerState }>({});
+})<{ ownerState: OwnerState }>({
+  flex: '1 0 auto',
+  display: 'flex',
+  flexDirection: 'column',
+});
 
 const GridVirtualScrollerContent = forwardRef<
   HTMLDivElement,

@@ -111,6 +111,12 @@ When the zoom slider is enabled, preview the zoomed area by enabling the `zoom.s
 
 {{"demo": "ZoomSliderPreview.js"}}
 
+### Series filter
+
+Use `zoom.slider.preview.seriesIds` to select the series to display in the preview.
+
+{{"demo": "ZoomSliderPreviewSeriesFilter.js"}}
+
 ### Scatter marker size
 
 The size of the preview marker in scatter charts is 1px by default.
@@ -136,6 +142,36 @@ The `zoom` state is an array of objects that define the zoom state for each axis
 - **end**: The ending percentage of the zoom range
 
 {{"demo": "ExternalZoomManagement.js"}}
+
+#### Initialize with a range value
+
+Instead of percentages, an `initialZoom` entry can describe the range to display with `{ axisId, value }`.
+The `value` accepts the same formats as the [toolbar range buttons](/x/react-charts/toolbar/#range-button-values): a calendar interval, an absolute range, a function, or `null`.
+
+```jsx
+<LineChartPro
+  // Show the last 3 months of data
+  initialZoom={[{ axisId: 'x', value: { unit: 'month', step: 3 } }]}
+/>
+```
+
+For ordinal (band/point) axes, an absolute range can also be expressed with the axis values themselves:
+
+```jsx
+<BarChartPro
+  // Zoom from the 'Feb' category to the 'May' category
+  initialZoom={[{ axisId: 'x', value: ['Feb', 'May'] }]}
+/>
+```
+
+Range values are only supported by the uncontrolled `initialZoom` prop. The controlled `zoomData` prop still expects explicit percentages.
+
+:::info
+This feature does not support SSR.
+When providing a range value, the initial frame is rendered un-zoomed and the zoom is applied on the client right after hydration.
+:::
+
+{{"demo": "ZoomInitialRange.js"}}
 
 ### Zoom synchronization
 

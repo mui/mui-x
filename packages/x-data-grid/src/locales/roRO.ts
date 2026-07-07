@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const roROGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const roROGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'Și',
   filterPanelOperatorOr: 'Sau',
-  filterPanelColumns: 'Coloane',
+  filterPanelColumn: 'Coloane',
   filterPanelInputLabel: 'Valoare',
   filterPanelInputPlaceholder: 'Filtrare valoare',
 

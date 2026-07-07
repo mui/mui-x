@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const daDKGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
-  filterPanelColumns: 'Kolonner',
+  filterPanelColumn: 'Kolonner',
   filterPanelInputLabel: 'Værdi',
   filterPanelInputPlaceholder: 'Filterværdi',
 

@@ -1,9 +1,8 @@
 {
   "name": "@mui/x-scheduler",
-  "version": "0.0.1-alpha.0",
-  "private": true,
-  "description": "The community edition of the Scheduler component (MUI X).",
+  "version": "9.0.0-beta.4",
   "author": "MUI Team",
+  "description": "The community edition of the Scheduler component (MUI X).",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -14,7 +13,11 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
+    ".": "./src/index.ts",
     "./agenda-view": "./src/agenda-view/index.ts",
+    "./compact-day-view": "./src/compact-day-view/index.ts",
+    "./compact-three-day-view": "./src/compact-three-day-view/index.ts",
+    "./compact-week-view": "./src/compact-week-view/index.ts",
     "./day-view": "./src/day-view/index.ts",
     "./event-calendar": "./src/event-calendar/index.ts",
     "./models": "./src/models/index.ts",
@@ -48,7 +51,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -58,17 +61,21 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/react": "^1.0.0",
-    "@base-ui/utils": "^0.2.3",
-    "@mui/x-internals": "workspace:*",
-    "@mui/x-scheduler-headless": "workspace:*",
-    "clsx": "catalog:"
+    "@base-ui/react": "catalog:",
+    "@base-ui/utils": "catalog:",
+    "@mui/utils": "catalog:",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-scheduler-internals": "workspace:^",
+    "@mui/x-tree-view": "workspace:^",
+    "clsx": "catalog:",
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/icons-material": "^7.3.0 || ^9.0.0",
+    "@mui/material": "^7.3.0 || ^9.0.0",
+    "@mui/system": "^7.3.0 || ^9.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
@@ -81,11 +88,11 @@
     }
   },
   "devDependencies": {
+    "@mui/icons-material": "catalog:",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
-    "@mui/icons-material": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

@@ -18,7 +18,7 @@ import {
   gridFocusCellSelector,
   gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
-import { doesSupportPreventScroll } from '../../../utils/doesSupportPreventScroll';
+import { focusElement } from '../../../utils/focusElement';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -104,13 +104,7 @@ export const useGridFocus = (
           return;
         }
 
-        if (doesSupportPreventScroll()) {
-          cellElement.focus({ preventScroll: true });
-        } else {
-          const scrollPosition = apiRef.current.getScrollPosition();
-          cellElement.focus();
-          apiRef.current.scroll(scrollPosition);
-        }
+        focusElement(cellElement, apiRef);
 
         return;
       }
@@ -373,6 +367,10 @@ export const useGridFocus = (
   const handleBlur = React.useCallback<GridEventListener<'columnHeaderBlur'>>(
     (_, event) => {
       if (event.relatedTarget?.getAttribute('class')?.includes(gridClasses.columnHeader)) {
+        return;
+      }
+      // Don't clear focus when it moves to a body cell — setCellFocus already set it
+      if (event.relatedTarget?.getAttribute('class')?.includes(gridClasses.cell)) {
         return;
       }
       logger.debug(`Clearing focus`);

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
 import { useChartProApiContext } from '../context';
-import { type ChartPrintExportOptions } from '../internals/plugins/useChartProExport';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartPrintExportOptions } from '../internals/plugins/useChartProExport';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 
 export interface ChartsToolbarPrintExportOptions extends ChartPrintExportOptions {
   /**
@@ -59,7 +60,7 @@ const ChartsToolbarPrintExportTrigger = forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarPrintExportTrigger.propTypes = {
+ChartsToolbarPrintExportTrigger.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -82,6 +83,7 @@ ChartsToolbarPrintExportTrigger.propTypes = {
    * A function to customize the rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
   tabIndex: PropTypes.number,
 } as any;

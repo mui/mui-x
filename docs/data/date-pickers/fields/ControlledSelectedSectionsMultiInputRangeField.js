@@ -9,21 +9,21 @@ import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDate
 
 export default function ControlledSelectedSectionsMultiInputRangeField() {
   const [selectedSections, setSelectedSections] = React.useState(null);
-  const startInputRef = React.useRef(null);
-  const endInputRef = React.useRef(null);
+  const startFieldRef = React.useRef(null);
+  const endFieldRef = React.useRef(null);
 
   const setSelectedSectionType = (selectedSectionType, position) => {
     if (position === 'start') {
-      startInputRef.current?.focus();
+      startFieldRef.current?.focusField();
     } else {
-      endInputRef.current?.focus();
+      endFieldRef.current?.focusField();
     }
     setSelectedSections(selectedSectionType);
   };
 
   const renderDateHeader = (position) => (
-    <Stack spacing={2} alignItems="center">
-      <Typography textTransform="capitalize">{position}</Typography>
+    <Stack spacing={2} sx={{ alignItems: 'center' }}>
+      <Typography sx={{ textTransform: 'capitalize' }}>{position}</Typography>
       <Stack direction="row" spacing={1}>
         {['month', 'day', 'year'].map((sectionName) => (
           <Button
@@ -41,18 +41,14 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2}>
-        <Stack spacing={2} justifyContent="space-between">
+        <Stack spacing={2} sx={{ justifyContent: 'space-between' }}>
           {renderDateHeader('start')}
           {renderDateHeader('end')}
         </Stack>
         <MultiInputDateRangeField
           sx={{ minWidth: 300 }}
-          slotProps={{
-            textField: (ownerState) => ({
-              inputRef:
-                ownerState.position === 'start' ? startInputRef : endInputRef,
-            }),
-          }}
+          startFieldRef={startFieldRef}
+          endFieldRef={endFieldRef}
           selectedSections={selectedSections}
           onSelectedSectionsChange={setSelectedSections}
         />

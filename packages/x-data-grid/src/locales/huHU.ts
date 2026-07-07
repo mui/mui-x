@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const huHUGrid: Partial<GridLocaleText> = {
   // Root
@@ -67,7 +68,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operátorok',
   filterPanelOperatorAnd: 'És',
   filterPanelOperatorOr: 'Vagy',
-  filterPanelColumns: 'Oszlopok',
+  filterPanelColumn: 'Oszlopok',
   filterPanelInputLabel: 'Érték',
   filterPanelInputPlaceholder: 'Érték szűrése',
 

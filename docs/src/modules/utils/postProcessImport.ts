@@ -1,11 +1,5 @@
 export type AdapterLibrary =
-  | 'date-fns'
-  | 'date-fns-jalali'
-  | 'dayjs'
-  | 'luxon'
-  | 'moment'
-  | 'moment-hijri'
-  | 'moment-jalaali';
+  'date-fns' | 'date-fns-jalali' | 'dayjs' | 'luxon' | 'moment' | 'moment-hijri' | 'moment-jalaali';
 
 export const ADAPTER_TO_LIBRARY: Record<string, AdapterLibrary> = {
   AdapterDateFns: 'date-fns',
@@ -17,9 +11,16 @@ export const ADAPTER_TO_LIBRARY: Record<string, AdapterLibrary> = {
   AdapterMomentJalaali: 'moment-jalaali',
 };
 
-const PICKERS_ADAPTER_REGEX = /^@mui\/(lab|x-date-pickers(?:-pro)?)\/(?<adapterName>Adapter.*)/;
+const PICKERS_ADAPTER_REGEX = /^@mui\/(x-date-pickers(?:-pro)?)\/(?<adapterName>Adapter.*)/;
 
 export const postProcessImport = (importName: string): Record<string, string> | null => {
+  // Direct date-fns imports (e.g. `import { getHours } from 'date-fns/getHours'`)
+  if (importName === 'date-fns' || importName.startsWith('date-fns/')) {
+    return {
+      'date-fns': JSON.parse(process.env.PICKERS_ADAPTERS_DEPS!)['date-fns'] ?? 'latest',
+    };
+  }
+
   // for example date-fns
   const dateAdapterMatch = PICKERS_ADAPTER_REGEX.exec(importName);
   if (dateAdapterMatch !== null) {

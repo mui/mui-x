@@ -4,13 +4,13 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
-import {
+import type {
   PickerViewsRendererProps,
   UsePickerParameters,
   UsePickerProps,
   UsePickerReturnValue,
 } from './usePicker.types';
-import {
+import type {
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
   PickerValidValue,
@@ -18,15 +18,15 @@ import {
 } from '../../models';
 import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 import { useReduceAnimations } from '../useReduceAnimations';
-import { FieldRef, InferError, PickerOwnerState } from '../../../models';
-import {
+import type { FieldRef, InferError, PickerOwnerState } from '../../../models';
+import type {
   PickerActionsContextValue,
   PickerContextValue,
   PickerPrivateContextValue,
 } from '../../components/PickerProvider';
 import { isTimeView } from '../../utils/time-utils';
 import { useViews } from '../useViews';
-import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
+import type { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
 import { useOrientation } from './hooks/useOrientation';
 import { useValueAndOpenStates } from './hooks/useValueAndOpenStates';
 import type { PickersActionBarAction } from '../../../PickersActionBar';
@@ -67,7 +67,6 @@ export const usePicker = <
     readOnly,
     // Field props
     formatDensity,
-    enableAccessibleFieldDOMStructure,
     selectedSections,
     onSelectedSectionsChange,
     format,
@@ -378,18 +377,11 @@ export const usePicker = <
   const fieldPrivateContextValue = React.useMemo<PickerFieldPrivateContextValue>(
     () => ({
       formatDensity,
-      enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       internalFieldRef,
     }),
-    [
-      formatDensity,
-      enableAccessibleFieldDOMStructure,
-      selectedSections,
-      onSelectedSectionsChange,
-      internalFieldRef,
-    ],
+    [formatDensity, selectedSections, onSelectedSectionsChange, internalFieldRef],
   );
 
   const isValidContextValue = (testedValue: TValue) => {

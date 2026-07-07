@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import type { FieldChangeHandler } from './useField.types';
-import {
+import type {
   PickerAnyManager,
   PickerManagerError,
   PickerManagerFieldInternalProps,
@@ -63,7 +63,6 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
         focused: pickerContext.open ? true : undefined,
         format: pickerContext.fieldFormat,
         formatDensity: fieldPrivateContext.formatDensity,
-        enableAccessibleFieldDOMStructure: fieldPrivateContext.enableAccessibleFieldDOMStructure,
         selectedSections: fieldPrivateContext.selectedSections,
         onSelectedSectionsChange: fieldPrivateContext.onSelectedSectionsChange,
         fieldRef: handleFieldRef,

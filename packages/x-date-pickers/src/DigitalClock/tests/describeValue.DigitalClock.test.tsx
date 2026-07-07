@@ -7,7 +7,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<DigitalClock /> - Describe Value', () => {
   const { render } = createPickerRenderer();
@@ -29,9 +29,9 @@ describe('<DigitalClock /> - Describe Value', () => {
         expect(selectedItem).to.have.text(formatFullTimeValue(adapterToUse, expectedValue));
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value, { user }) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 30);
-      digitalClockHandler.setViewValue(adapterToUse, newValue);
+      await digitalClockHandler.setViewValue(user, adapterToUse, newValue);
 
       return newValue;
     },

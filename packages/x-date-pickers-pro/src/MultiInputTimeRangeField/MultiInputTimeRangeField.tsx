@@ -1,22 +1,17 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTimeRangeManager, UseTimeRangeManagerReturnValue } from '../managers';
+import type { UseTimeRangeManagerReturnValue } from '../managers';
+import { useTimeRangeManager } from '../managers';
+import type { MultiInputRangeFieldProps } from '../internals/utils/createMultiInputRangeField';
 import {
   // The alias is needed to have the doc gen working.
   createMultiInputRangeField as createMultiInputTimeRangeField,
-  MultiInputRangeFieldProps,
 } from '../internals/utils/createMultiInputRangeField';
-import {
-  getMultiInputTimeRangeFieldUtilityClass,
-  MultiInputTimeRangeFieldClasses,
-} from './multiInputTimeRangeFieldClasses';
+import type { MultiInputTimeRangeFieldClasses } from './multiInputTimeRangeFieldClasses';
+import { getMultiInputTimeRangeFieldUtilityClass } from './multiInputTimeRangeFieldClasses';
 
-export interface MultiInputTimeRangeFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MultiInputRangeFieldProps<
-  UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-> {
+export interface MultiInputTimeRangeFieldProps extends MultiInputRangeFieldProps<UseTimeRangeManagerReturnValue> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
    * Override or extend the styles applied to the component.
@@ -24,11 +19,8 @@ export interface MultiInputTimeRangeFieldProps<
   classes?: Partial<MultiInputTimeRangeFieldClasses>;
 }
 
-type MultiInputTimeRangeFieldComponent = (<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MultiInputTimeRangeFieldComponent = ((
+  props: MultiInputTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -48,7 +40,7 @@ const MultiInputTimeRangeField = createMultiInputTimeRangeField({
   allowTriggerShifting: true,
 }) as MultiInputTimeRangeFieldComponent;
 
-MultiInputTimeRangeField.propTypes = {
+MultiInputTimeRangeField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -59,7 +51,7 @@ MultiInputTimeRangeField.propTypes = {
    */
   ampm: PropTypes.bool,
   /**
-   * If `true`, the `input` element is focused during the first mount.
+   * If `true`, the field is focused during the first mount.
    * @default false
    */
   autoFocus: PropTypes.bool,
@@ -113,10 +105,6 @@ MultiInputTimeRangeField.propTypes = {
    * Add an element between each child.
    */
   divider: PropTypes.node,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
    * The ref object used to interact with the end field imperatively.
    */
@@ -271,7 +259,7 @@ MultiInputTimeRangeField.propTypes = {
   /**
    * If `true`, the CSS flexbox `gap` is used instead of applying `margin` to children.
    *
-   * While CSS `gap` removes the [known limitations](https://mui.com/joy-ui/react-stack/#limitations),
+   * While CSS `gap` removes the known limitations,
    * it is not fully supported in some browsers. We recommend checking https://caniuse.com/?search=flex%20gap before using this flag.
    *
    * To enable this flag globally, follow the [theme's default props](https://mui.com/material-ui/customization/theme-components/#default-props) configuration.

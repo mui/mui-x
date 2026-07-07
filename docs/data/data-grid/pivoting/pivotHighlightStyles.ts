@@ -18,7 +18,7 @@ const getColors = (colorScheme: 'light' | 'dark') => {
 export const pivotHeightlightStyles: DataGridPremiumProps['sx'] = (theme) => {
   const colors = getColors(theme.palette.mode);
   return {
-    '& .MuiDataGrid-virtualScrollerContent .MuiDataGrid-cell[data-field="__row_group_by_columns_group__"]':
+    '& .MuiDataGrid-virtualScrollerRenderZone .MuiDataGrid-cell[data-field="__row_group_by_columns_group__"]':
       {
         backgroundColor: colors.rows,
       },
@@ -42,7 +42,7 @@ export const pivotHeightlightStyles: DataGridPremiumProps['sx'] = (theme) => {
       {
         backgroundColor: colors.values,
       },
-    '& .MuiDataGrid-virtualScrollerContent .MuiDataGrid-cell:not([data-field="__row_group_by_columns_group__"]):not(.MuiDataGrid-cellEmpty)':
+    '& .MuiDataGrid-virtualScrollerRenderZone .MuiDataGrid-cell:not([data-field="__row_group_by_columns_group__"]):not(.MuiDataGrid-cellEmpty)':
       {
         backgroundColor: colors.values,
       },

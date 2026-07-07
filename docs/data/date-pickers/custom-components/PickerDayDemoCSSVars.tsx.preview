@@ -1,0 +1,10 @@
+<StaticDatePicker
+  slotProps={{
+    day: {
+      sx: {
+        '--PickerDay-horizontalMargin': '8px',
+        '--PickerDay-size': '24px',
+      },
+    },
+  }}
+/>

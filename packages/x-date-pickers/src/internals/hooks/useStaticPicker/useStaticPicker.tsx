@@ -1,13 +1,13 @@
 'use client';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
+import type { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
 import { PickerProvider } from '../../components/PickerProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import { mergeSx } from '../../utils/utils';
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import { extractRootForwardedProps, mergeSx } from '../../utils/utils';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
 const PickerStaticLayout = styled(PickersLayout, {
@@ -51,6 +51,7 @@ export const useStaticPicker = <
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
       <Layout
+        {...extractRootForwardedProps(props)}
         {...slotProps?.layout}
         slots={slots}
         slotProps={slotProps}

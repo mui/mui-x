@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const viVNGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Toán tử',
   filterPanelOperatorAnd: 'Và',
   filterPanelOperatorOr: 'Hoặc',
-  filterPanelColumns: 'Cột',
+  filterPanelColumn: 'Cột',
   filterPanelInputLabel: 'Giá trị',
   filterPanelInputPlaceholder: 'Lọc giá trị',
 

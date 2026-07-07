@@ -1,22 +1,33 @@
-import {
-  type AxisId,
-  type ChartsXAxisProps,
-  type ChartsYAxisProps,
-  type ComputedAxis,
-} from '../models/axis';
+import * as React from 'react';
+import type { AxisId, ChartsXAxisProps, ChartsYAxisProps, ComputedAxis } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
-import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
+import type { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import type { SeriesProcessorResult } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
-import { createGetBarDimensions } from '../internals/createGetBarDimensions';
-import { type ChartDrawingArea } from '../hooks/useDrawingArea';
+import type { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import {
+  createGetBarDimensions,
+  createGetBucketBarDimensions,
+} from '../internals/createGetBarDimensions';
+import type { ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
+import { useStore } from '../internals/store/useStore';
+import { selectorChartSamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
+import type {
+  SampledSeriesLookup,
+  SamplingStrategy,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import {
+  selectorChartZoomMap,
+  selectorChartZoomOptionsLookup,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import type { ZoomData } from '../internals/plugins/featurePlugins/useChartCartesianAxis/zoom.types';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
-import { type SeriesId } from '../models/seriesType';
+import type { SeriesId } from '../models/seriesType';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -34,15 +45,42 @@ export function useBarPlotData(
 
   const chartId = useChartId();
 
-  return processBarDataForPlot(
-    drawingArea,
-    chartId,
-    seriesData.stackingGroups,
-    seriesData.series,
-    xAxes,
-    yAxes,
-    defaultXAxisId,
-    defaultYAxisId,
+  const store = useStore();
+  const samplingPyramids = store.use(selectorChartSamplingPyramids);
+  const zoomMap = store.use(selectorChartZoomMap);
+  const zoomOptions = store.use(selectorChartZoomOptionsLookup);
+  const sampler = store.use(selectorChartSeriesConfig).bar?.sampler;
+
+  return React.useMemo(
+    () =>
+      processBarDataForPlot(
+        drawingArea,
+        chartId,
+        seriesData.stackingGroups,
+        seriesData.series,
+        xAxes,
+        yAxes,
+        defaultXAxisId,
+        defaultYAxisId,
+        samplingPyramids,
+        zoomMap,
+        sampler,
+        zoomOptions,
+      ),
+    [
+      drawingArea,
+      chartId,
+      seriesData.stackingGroups,
+      seriesData.series,
+      xAxes,
+      yAxes,
+      defaultXAxisId,
+      defaultYAxisId,
+      samplingPyramids,
+      zoomMap,
+      sampler,
+      zoomOptions,
+    ],
   );
 }
 
@@ -55,6 +93,10 @@ export function processBarDataForPlot(
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
   defaultXAxisId: AxisId,
   defaultYAxisId: AxisId,
+  samplingPyramids: SampledSeriesLookup = {},
+  zoomMap?: Map<AxisId, ZoomData>,
+  sampler?: SamplingStrategy<'bar'>,
+  zoomOptions?: Record<AxisId, { minSpan: number }>,
 ) {
   const masks: Record<string, MaskData> = {};
 
@@ -96,42 +138,19 @@ export function processBarDataForPlot(
       const yOrigin = Math.round(yScale(0) ?? 0);
 
       const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
+      const stackId = series[seriesId].stack;
 
       const seriesDataPoints: ProcessedBarData[] = [];
-      const getBarDimensions = createGetBarDimensions({
-        verticalLayout,
-        xAxisConfig,
-        yAxisConfig,
-        series: series[seriesId],
-        numberOfGroups: stackingGroups.length,
-      });
 
-      for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
-        const barDimensions = getBarDimensions(dataIndex, groupIndex);
-
-        if (barDimensions == null) {
-          continue;
-        }
-
-        const stackId = series[seriesId].stack;
-
-        const result: ProcessedBarData = {
-          seriesId,
-          dataIndex,
-          hidden: series[seriesId].hidden,
-          ...barDimensions,
-          color: colorGetter(dataIndex),
-          value: series[seriesId].data[dataIndex],
-          maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
-        };
-
+      // Culls off-screen bars then records the bar's border-radius side and mask contribution.
+      const registerResult = (result: ProcessedBarData, dataIndex: number) => {
         if (
           result.x > xMax ||
           result.x + result.width < xMin ||
           result.y > yMax ||
           result.y + result.height < yMin
         ) {
-          continue;
+          return;
         }
 
         const lastNegative = lastNegativePerIndex.get(dataIndex);
@@ -179,6 +198,94 @@ export function processBarDataForPlot(
         mask.hasPositive = mask.hasPositive || (reverse ? value < 0 : value > 0);
 
         seriesDataPoints.push(result);
+      };
+
+      const makeResult = (
+        dataIndex: number,
+        barDimensions: { x: number; y: number; width: number; height: number },
+      ): ProcessedBarData => ({
+        seriesId,
+        dataIndex,
+        hidden: series[seriesId].hidden,
+        ...barDimensions,
+        color: colorGetter(dataIndex),
+        value: series[seriesId].data[dataIndex],
+        maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
+      });
+
+      const pyramid = samplingPyramids[seriesId];
+      const baseAxisId = verticalLayout ? xAxisId : yAxisId;
+      const zoom = zoomMap?.get(baseAxisId);
+      const availableSize = verticalLayout ? drawingArea.width : drawingArea.height;
+      const minSpan = zoomOptions?.[baseAxisId]?.minSpan ?? 0;
+      // The sampler (pro) owns the level-of-detail math; community renders one merged rect per
+      // bucket, spanning its index range with the bucket's min-base/max-top envelope.
+      const sampledBuckets =
+        pyramid && zoom && sampler?.sample
+          ? sampler.sample({ built: pyramid, zoom, availableSize, minSpan })
+          : null;
+
+      if (sampledBuckets) {
+        const getBucketBarDimensions = createGetBucketBarDimensions({
+          verticalLayout,
+          xAxisConfig,
+          yAxisConfig,
+          series: series[seriesId],
+          numberOfGroups: stackingGroups.length,
+        });
+        const stacked = series[seriesId].visibleStackedData;
+
+        for (const { startIndex, endIndex, indices } of sampledBuckets) {
+          let low = Infinity;
+          let high = -Infinity;
+          for (let k = 0; k < indices.length; k += 1) {
+            const point = stacked[indices[k]];
+            // Both coords, so diverging/negative bars (`[0, -5]`, base > top) keep their full extent.
+            low = Math.min(low, point[0], point[1]);
+            high = Math.max(high, point[0], point[1]);
+          }
+          const dimensions = getBucketBarDimensions(startIndex, endIndex, low, high, groupIndex);
+          registerResult(makeResult(startIndex, dimensions), startIndex);
+        }
+      } else {
+        const getBarDimensions = createGetBarDimensions({
+          verticalLayout,
+          xAxisConfig,
+          yAxisConfig,
+          series: series[seriesId],
+          numberOfGroups: stackingGroups.length,
+        });
+
+        // Narrow to the visible index window so panning/zoom doesn't compute every off-screen bar.
+        // `firstIndex`/`lastIndex` bound the band axis range; the cull in `registerResult` stays
+        // exact. A 1-bucket margin covers grouped-bar offsets and partial edge bars.
+        const baseData = baseScaleConfig.data!;
+        const dataLength = baseData.length;
+        let firstIndex = 0;
+        let lastIndex = dataLength - 1;
+        if (dataLength > 1) {
+          const baseScale = baseScaleConfig.scale;
+          const p0 = baseScale(baseData[0])!;
+          const slope = baseScale(baseData[1])! - p0; // signed px per index (handles reversed axis)
+          if (slope !== 0) {
+            const winLo = verticalLayout ? xMin : yMin;
+            const winHi = verticalLayout ? xMax : yMax;
+            const ia = (winLo - p0) / slope;
+            const ib = (winHi - p0) / slope;
+            firstIndex = Math.max(0, Math.floor(Math.min(ia, ib)) - 1);
+            lastIndex = Math.min(dataLength - 1, Math.ceil(Math.max(ia, ib)) + 1);
+          }
+        }
+
+        for (let dataIndex = firstIndex; dataIndex <= lastIndex; dataIndex += 1) {
+          const barDimensions = getBarDimensions(dataIndex, groupIndex);
+
+          if (barDimensions == null) {
+            continue;
+          }
+
+          registerResult(makeResult(dataIndex, barDimensions), dataIndex);
+        }
       }
 
       return {

@@ -7,19 +7,17 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
-import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickersDay, PickerDayOwnerState, PickersDayProps } from '../PickersDay';
-import { ExportedPickersDayProps } from '../PickersDay/PickersDay.types';
+import type { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { PickerDayOwnerStateBase, PickerDayProps } from '../PickerDay';
+import { PickerDay } from '../PickerDay';
+import type { ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
-import { PickerOnChangeFn } from '../internals/hooks/useViews';
+import type { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import {
-  PickersSlideTransition,
-  SlideDirection,
-  SlideTransitionProps,
-} from './PickersSlideTransition';
-import {
+import type { SlideDirection, SlideTransitionProps } from './PickersSlideTransition';
+import { PickersSlideTransition } from './PickersSlideTransition';
+import type {
   BaseDateValidationProps,
   DayValidationProps,
   MonthValidationProps,
@@ -27,26 +25,27 @@ import {
 } from '../internals/models/validation';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
-import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { PickerValidDate, TimezoneProps } from '../models';
-import { DateCalendarClasses } from './dateCalendarClasses';
-import { FormProps } from '../internals/models/formProps';
-import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
+import type { DayCalendarClasses } from './dayCalendarClasses';
+import { getDayCalendarUtilityClass } from './dayCalendarClasses';
+import type { PickerValidDate, TimezoneProps } from '../models';
+import type { DateCalendarClasses } from './dateCalendarClasses';
+import type { FormProps } from '../internals/models/formProps';
+import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
 
 export interface DayCalendarSlots {
   /**
    * Custom component for day.
-   * Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @default PickersDay
+   * Check the [PickerDay](https://mui.com/x/api/date-pickers/picker-day/) component.
+   * @default PickerDay
    */
-  day?: React.ElementType<PickersDayProps>;
+  day?: React.ElementType<PickerDayProps>;
 }
 
 export interface DayCalendarSlotProps {
-  day?: SlotComponentPropsFromProps<PickersDayProps, {}, PickerDayOwnerState>;
+  day?: SlotComponentPropsFromProps<PickerDayProps, {}, PickerDayOwnerStateBase>;
 }
 
-export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
+export interface ExportedDayCalendarProps extends ExportedPickerDayProps {
   /**
    * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
@@ -56,7 +55,7 @@ export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
+   * @default () => "…"
    */
   renderLoading?: () => React.ReactNode;
   /**
@@ -134,12 +133,12 @@ const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) =>
 
 const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
-const PickersCalendarDayRoot = styled('div', {
+const PickerCalendarDayRoot = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Root',
 })({});
 
-const PickersCalendarDayHeader = styled('div', {
+const PickerCalendarDayHeader = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Header',
 })({
@@ -148,7 +147,7 @@ const PickersCalendarDayHeader = styled('div', {
   alignItems: 'center',
 });
 
-const PickersCalendarWeekDayLabel = styled(Typography, {
+const PickerCalendarWeekDayLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekDayLabel',
 })(({ theme }) => ({
@@ -162,7 +161,7 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
   color: (theme.vars || theme).palette.text.secondary,
 }));
 
-const PickersCalendarWeekNumberLabel = styled(Typography, {
+const PickerCalendarWeekNumberLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumberLabel',
 })(({ theme }) => ({
@@ -176,7 +175,7 @@ const PickersCalendarWeekNumberLabel = styled(Typography, {
   color: (theme.vars || theme).palette.text.disabled,
 }));
 
-const PickersCalendarWeekNumber = styled(Typography, {
+const PickerCalendarWeekNumber = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumber',
 })(({ theme }) => ({
@@ -192,7 +191,7 @@ const PickersCalendarWeekNumber = styled(Typography, {
   display: 'inline-flex',
 }));
 
-const PickersCalendarLoadingContainer = styled('div', {
+const PickerCalendarLoadingContainer = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'LoadingContainer',
 })({
@@ -202,19 +201,19 @@ const PickersCalendarLoadingContainer = styled('div', {
   minHeight: weeksContainerHeight,
 });
 
-const PickersCalendarSlideTransition = styled(PickersSlideTransition, {
+const PickerCalendarSlideTransition = styled(PickersSlideTransition, {
   name: 'MuiDayCalendar',
   slot: 'SlideTransition',
 })({
   minHeight: weeksContainerHeight,
 });
 
-const PickersCalendarWeekContainer = styled('div', {
+const PickerCalendarWeekContainer = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'MonthContainer',
 })({ overflow: 'hidden' });
 
-const PickersCalendarWeek = styled('div', {
+const PickerCalendarWeek = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'WeekContainer',
 })({
@@ -232,7 +231,7 @@ function WrappedDay({
   currentMonthNumber,
   isViewFocused,
   ...other
-}: Pick<PickersDayProps, 'onFocus' | 'onBlur' | 'onKeyDown' | 'onDaySelect'> & {
+}: Pick<PickerDayProps, 'onFocus' | 'onBlur' | 'onKeyDown' | 'onDaySelect'> & {
   parentProps: DayCalendarProps;
   day: PickerValidDate;
   isViewFocused: boolean;
@@ -242,6 +241,7 @@ function WrappedDay({
   currentMonthNumber: number;
 }) {
   const {
+    currentMonth,
     disabled,
     disableHighlightToday,
     isMonthSwitchingAnimating,
@@ -267,18 +267,17 @@ function WrappedDay({
     [adapter, day, currentMonthNumber],
   );
 
-  const ownerState = usePickerDayOwnerState({
+  const ownerStateBase = usePickerDayOwnerState({
     day,
     selected: isSelected,
     disabled: isDisabled,
     today: isToday,
     outsideCurrentMonth: isOutsideCurrentMonth,
-    disableMargin: undefined, // This prop can only be defined using slotProps.day so the ownerState for useSlotProps cannot have its value.
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
   });
 
-  const Day = slots?.day ?? PickersDay;
+  const Day = slots?.day ?? PickerDay;
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
   const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,
@@ -292,24 +291,24 @@ function WrappedDay({
       'data-timestamp': adapter.toJsDate(day).valueOf(),
       ...other,
     },
-    ownerState: { ...ownerState, day, isDayDisabled: isDisabled, isDaySelected: isSelected },
+    ownerState: { ...ownerStateBase, day, isDayDisabled: isDisabled, isDaySelected: isSelected },
   });
 
   const isFirstVisibleCell = React.useMemo(() => {
-    const startOfMonth = adapter.startOfMonth(adapter.setMonth(day, currentMonthNumber));
+    const startOfMonth = adapter.startOfMonth(currentMonth);
     if (!showDaysOutsideCurrentMonth) {
       return adapter.isSameDay(day, startOfMonth);
     }
     return adapter.isSameDay(day, adapter.startOfWeek(startOfMonth));
-  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, adapter]);
+  }, [currentMonth, day, showDaysOutsideCurrentMonth, adapter]);
 
   const isLastVisibleCell = React.useMemo(() => {
-    const endOfMonth = adapter.endOfMonth(adapter.setMonth(day, currentMonthNumber));
+    const endOfMonth = adapter.endOfMonth(currentMonth);
     if (!showDaysOutsideCurrentMonth) {
       return adapter.isSameDay(day, endOfMonth);
     }
     return adapter.isSameDay(day, adapter.endOfWeek(endOfMonth));
-  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, adapter]);
+  }, [currentMonth, day, showDaysOutsideCurrentMonth, adapter]);
 
   return (
     <Day
@@ -348,7 +347,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
     onMonthSwitchingAnimationEnd,
     readOnly,
     reduceAnimations,
-    renderLoading = () => <span data-testid="loading-progress">...</span>,
+    renderLoading = () => <span data-testid="loading-progress">…</span>,
     slideDirection,
     TransitionProps,
     disablePast,
@@ -518,20 +517,20 @@ export function DayCalendar(inProps: DayCalendarProps) {
   }, [currentMonth, fixedWeekNumber, adapter]);
 
   return (
-    <PickersCalendarDayRoot role="grid" aria-labelledby={gridLabelId} className={classes.root}>
-      <PickersCalendarDayHeader role="row" className={classes.header}>
+    <PickerCalendarDayRoot role="grid" aria-labelledby={gridLabelId} className={classes.root}>
+      <PickerCalendarDayHeader role="row" className={classes.header}>
         {displayWeekNumber && (
-          <PickersCalendarWeekNumberLabel
+          <PickerCalendarWeekNumberLabel
             variant="caption"
             role="columnheader"
             aria-label={translations.calendarWeekNumberHeaderLabel}
             className={classes.weekNumberLabel}
           >
             {translations.calendarWeekNumberHeaderText}
-          </PickersCalendarWeekNumberLabel>
+          </PickerCalendarWeekNumberLabel>
         )}
         {getWeekdays(adapter, now).map((weekday, i) => (
-          <PickersCalendarWeekDayLabel
+          <PickerCalendarWeekDayLabel
             key={i.toString()}
             variant="caption"
             role="columnheader"
@@ -539,16 +538,16 @@ export function DayCalendar(inProps: DayCalendarProps) {
             className={classes.weekDayLabel}
           >
             {dayOfWeekFormatter(weekday)}
-          </PickersCalendarWeekDayLabel>
+          </PickerCalendarWeekDayLabel>
         ))}
-      </PickersCalendarDayHeader>
+      </PickerCalendarDayHeader>
 
       {loading ? (
-        <PickersCalendarLoadingContainer className={classes.loadingContainer}>
+        <PickerCalendarLoadingContainer className={classes.loadingContainer}>
           {renderLoading()}
-        </PickersCalendarLoadingContainer>
+        </PickerCalendarLoadingContainer>
       ) : (
-        <PickersCalendarSlideTransition
+        <PickerCalendarSlideTransition
           transKey={transitionKey}
           onExited={onMonthSwitchingAnimationEnd}
           reduceAnimations={reduceAnimations}
@@ -557,14 +556,14 @@ export function DayCalendar(inProps: DayCalendarProps) {
           {...TransitionProps}
           nodeRef={slideNodeRef}
         >
-          <PickersCalendarWeekContainer
+          <PickerCalendarWeekContainer
             data-testid="pickers-calendar"
             ref={slideNodeRef}
             role="rowgroup"
             className={classes.monthContainer}
           >
             {weeksToDisplay.map((week, index) => (
-              <PickersCalendarWeek
+              <PickerCalendarWeek
                 role="row"
                 key={`week-${week[0]}`}
                 className={classes.weekContainer}
@@ -573,7 +572,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
                 aria-rowindex={index + 1}
               >
                 {displayWeekNumber && (
-                  <PickersCalendarWeekNumber
+                  <PickerCalendarWeekNumber
                     className={classes.weekNumber}
                     role="rowheader"
                     aria-label={translations.calendarWeekNumberAriaLabelText(
@@ -581,7 +580,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
                     )}
                   >
                     {translations.calendarWeekNumberText(adapter.getWeekNumber(week[0]))}
-                  </PickersCalendarWeekNumber>
+                  </PickerCalendarWeekNumber>
                 )}
                 {week.map((day, dayIndex) => (
                   <WrappedDay
@@ -601,11 +600,11 @@ export function DayCalendar(inProps: DayCalendarProps) {
                     aria-colindex={dayIndex + 1}
                   />
                 ))}
-              </PickersCalendarWeek>
+              </PickerCalendarWeek>
             ))}
-          </PickersCalendarWeekContainer>
-        </PickersCalendarSlideTransition>
+          </PickerCalendarWeekContainer>
+        </PickerCalendarSlideTransition>
       )}
-    </PickersCalendarDayRoot>
+    </PickerCalendarDayRoot>
   );
 }

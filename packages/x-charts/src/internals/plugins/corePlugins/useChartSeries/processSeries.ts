@@ -1,13 +1,13 @@
-import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
-import { type SeriesId } from '../../../../models/seriesType/common';
-import { type AllSeriesType } from '../../../../models/seriesType';
-import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
-import { type ChartSeriesConfig, type SeriesProcessorParams } from '../useChartSeriesConfig';
-import {
-  type DefaultizedSeriesGroups,
-  type ProcessedSeries,
-  type SeriesIdToType,
-  type SeriesLayout,
+import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import type { SeriesId } from '../../../../models/seriesType/common';
+import type { AllSeriesType } from '../../../../models/seriesType';
+import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
+import type { ChartSeriesConfig, SeriesProcessorParams } from '../useChartSeriesConfig';
+import type {
+  DefaultizedSeriesGroups,
+  ProcessedSeries,
+  SeriesIdToType,
+  SeriesLayout,
 } from './useChartSeries.types';
 import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';
 
@@ -21,10 +21,12 @@ import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibil
 export const defaultizeSeries = <SeriesType extends ChartSeriesType>({
   series,
   colors,
+  theme,
   seriesConfig,
 }: {
   series: Readonly<AllSeriesType<SeriesType>[]>;
   colors: readonly string[];
+  theme: 'light' | 'dark';
   seriesConfig: ChartSeriesConfig<SeriesType>;
 }): {
   defaultizedSeries: DefaultizedSeriesGroups<SeriesType>;
@@ -39,6 +41,7 @@ export const defaultizeSeries = <SeriesType extends ChartSeriesType>({
       seriesData,
       seriesIndex,
       colors,
+      theme,
     );
 
     const id: SeriesId = seriesWithDefaultValues.id;

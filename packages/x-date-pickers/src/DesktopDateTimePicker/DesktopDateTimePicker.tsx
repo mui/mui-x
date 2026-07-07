@@ -6,15 +6,15 @@ import refType from '@mui/utils/refType';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
-import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
+import type { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { validateDateTime, extractValidationProps } from '../validation';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
-import { PickerOwnerState } from '../models';
+import type { PickerOwnerState } from '../models';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -27,7 +27,7 @@ import {
 import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import {
+import type {
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
 } from '../internals/hooks/usePicker';
@@ -87,9 +87,8 @@ const rendererInterceptor = function RendererInterceptor(
   );
 };
 
-type DesktopDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopDateTimePickerComponent = ((
+  props: DesktopDateTimePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -102,18 +101,17 @@ type DesktopDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure exten
  *
  * - [DesktopDateTimePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-picker/)
  */
-const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  inProps: DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker(
+  inProps: DesktopDateTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
-  const defaultizedProps = useDateTimePickerDefaultizedProps<
-    DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDateTimePicker');
+  const defaultizedProps = useDateTimePickerDefaultizedProps<DesktopDateTimePickerProps>(
+    inProps,
+    'MuiDesktopDateTimePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -171,11 +169,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     },
   };
 
-  const { renderPicker } = useDesktopPicker<
-    DateOrTimeViewWithMeridiem,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopPicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -188,7 +182,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   return renderPicker();
 }) as DesktopDateTimePickerComponent;
 
-DesktopDateTimePicker.propTypes = {
+DesktopDateTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -240,7 +234,7 @@ DesktopDateTimePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -264,10 +258,6 @@ DesktopDateTimePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -449,7 +439,7 @@ DesktopDateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

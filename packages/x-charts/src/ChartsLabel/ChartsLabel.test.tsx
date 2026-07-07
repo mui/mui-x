@@ -22,7 +22,6 @@ describe('<ChartsLabel />', () => {
       'themeCustomPalette',
       'themeDefaultProps',
       'componentProp',
-      'componentsProp',
     ],
   }));
 });

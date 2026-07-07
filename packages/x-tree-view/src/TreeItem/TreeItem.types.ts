@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { TransitionProps } from '@mui/material/transitions';
-import { SlotComponentProps } from '@mui/utils/types';
-import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
-import { TreeItemClasses } from './treeItemClasses';
-import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
-import { TreeViewCancellableEventHandler } from '../models';
+import type * as React from 'react';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { TransitionProps } from '@mui/material/transitions';
+import type { SlotComponentProps } from '@mui/utils/types';
+import type { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
+import type { TreeItemClasses } from './treeItemClasses';
+import type { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
+import type { TreeViewCancellableEventHandler } from '../models';
 
 export interface TreeItemSlots extends TreeItemIconSlots {
   /**
@@ -59,7 +59,7 @@ export interface TreeItemSlots extends TreeItemIconSlots {
    */
   errorIcon?: React.ElementType;
   /**
-   * The component that is rendered when the item is in an loading state.
+   * The component that is rendered when the item is in a loading state.
    * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
    * @default TreeItemLoadingContainer
    */

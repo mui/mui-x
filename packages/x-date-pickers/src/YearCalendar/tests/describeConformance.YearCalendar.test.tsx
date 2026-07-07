@@ -11,6 +11,6 @@ describe('<YearCalendar /> - Describe Conformance', () => {
     render,
     muiName: 'MuiYearCalendar',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'themeVariants'],
   }));
 });

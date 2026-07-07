@@ -3,10 +3,13 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
-import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
+import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import type {
+  MoreEventsPopoverProps,
+  MoreEventsPopoverProviderProps,
+} from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
@@ -66,11 +69,11 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { classes } = useEventCalendarStyledContext();
+  const { schedulerId, classes } = useEventCalendarStyledContext();
   const { subscribeCloseHandler } = useEventDialogContext();
 
   React.useEffect(() => {
-    subscribeCloseHandler(() => {
+    return subscribeCloseHandler(() => {
       onClose();
     });
   }, [subscribeCloseHandler, onClose]);
@@ -79,7 +82,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     <Popover className={classes.moreEventsPopover} open={open} anchorEl={anchor} onClose={onClose}>
       <MoreEventsPopoverHeader
         className={classes.moreEventsPopoverHeader}
-        id={`PopoverHeader-${day.key}`}
+        id={`${schedulerId}-PopoverHeader-${day.key}`}
         aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
       >
         <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>
@@ -93,7 +96,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
-              ariaLabelledBy={`PopoverHeader-${day.key}`}
+              ariaLabelledBy={`${schedulerId}-PopoverHeader-${day.key}`}
             />
           </EventDialogTrigger>
         ))}

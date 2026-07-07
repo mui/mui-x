@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('fr-FR');
 
@@ -74,7 +71,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Opérateur',
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',
-  filterPanelColumns: 'Colonne',
+  filterPanelColumn: 'Colonne',
   filterPanelInputLabel: 'Valeur',
   filterPanelInputPlaceholder: 'Filtrer la valeur',
 

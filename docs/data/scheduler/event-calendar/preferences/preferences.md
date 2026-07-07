@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventCalendar, EventCalendarPremium
 ---
 
 # Event Calendar - Preferences
 
-<p class="description">Let your user customize the component to their needs.</p>
+<p class="description">Customize calendar preferences including time format, weekend visibility, and side panel state.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Initialize the preferences
 
@@ -27,11 +28,11 @@ const defaultPreferences = {
 
 Available properties:
 
-- `ampm`: Whether the component should display the time in 12-hour format with AM/PM meridiem.
-- `showWeekends`: Whether weekends are shown in the calendar.
-- `showWeekNumber`: Whether the week number is shown in the calendar.
+- `ampm`: Whether the component displays time in 12-hour format with AM/PM.
+- `showWeekends`: Whether the calendar shows weekends.
+- `showWeekNumber`: Whether the calendar shows the week number.
 - `isSidePanelOpen`: Whether the side panel is open.
-- `showEmptyDaysInAgenda`: Whether days with no event are shown in the agenda view.
+- `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events.
 
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -52,13 +53,14 @@ return (
 
 ## Preferences menu
 
-The preferences menu lets the users change their preferences to customize the component to their needs.
+The preferences menu lets users customize the component to their needs.
 
 You can customize which preferences are available in the preferences menu using the `preferencesMenuConfig` prop:
 
 Available properties:
 
 - `toggleAmpm`: Show/hide the menu item that toggles 12/24‑hour time format.
+- `toggleWeekStartsOn`: Show/hide the menu item that changes the first day of the week.
 - `toggleWeekendVisibility`: Show/hide the menu item that toggles weekend visibility.
 - `toggleWeekNumberVisibility`: Show/hide the menu item that toggles week number visibility.
 - `toggleEmptyDaysInAgenda`: Show/hide the menu item that toggles the visibility of days with no event in the agenda view.

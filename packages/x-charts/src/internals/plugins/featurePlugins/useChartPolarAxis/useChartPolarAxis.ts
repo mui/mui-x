@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
-import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { type ChartPlugin } from '../../models';
-import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
+import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import type { ChartPlugin } from '../../models';
+import type { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
@@ -16,11 +16,13 @@ import { getChartPoint } from '../../../getChartPoint';
 import {
   generatePolar2svg,
   generateSvg2polar,
+  generateSvg2radius,
   generateSvg2rotation,
 } from './coordinateTransformation';
-import { getAxisIndex } from './getAxisIndex';
+import { getRadiusAxisIndex, getRotationAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
+import { isPolarSeriesType } from '../../../isPolar';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -222,10 +224,15 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       const svgPoint = getChartPoint(element, event.detail.srcEvent);
 
       const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
-      const rotationIndex = getAxisIndex(rotationAxisWithScale[usedRotationAxisId], rotation);
+      const rotationIndex = getRotationAxisIndex(
+        rotationAxisWithScale[usedRotationAxisId],
+        rotation,
+      );
+      const radius = generateSvg2radius(center)(svgPoint.x, svgPoint.y);
+      const radiusIndex = getRadiusAxisIndex(radiusAxisWithScale[usedRadiusAxisId], radius);
       isRotationAxis = rotationIndex !== -1;
 
-      dataIndex = isRotationAxis ? rotationIndex : null; // radius index is not yet implemented.
+      dataIndex = isRotationAxis ? rotationIndex : radiusIndex;
 
       const USED_AXIS_ID = isRotationAxis ? usedRotationAxisId : usedRadiusAxisId;
       if (dataIndex == null || dataIndex === -1) {
@@ -239,7 +246,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       const seriesValues: Record<string, number | null | undefined> = {};
 
       Object.keys(processedSeries)
-        .filter((seriesType): seriesType is 'radar' => seriesType === 'radar')
+        .filter(isPolarSeriesType)
         .forEach((seriesType) => {
           processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
             const seriesItem = processedSeries[seriesType]!.series[seriesId];

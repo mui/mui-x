@@ -1,16 +1,17 @@
-import { type AxisConfig } from '../../../../models/axis';
-import { type PolarChartSeriesType } from '../../../../models/seriesType/config';
-import {
-  type ChartSeriesConfig,
-  type PolarExtremumGetterResult,
+import type { ChartsRadialAxisProps, ScaleName, PolarAxisConfig } from '../../../../models/axis';
+import type { PolarChartSeriesType } from '../../../../models/seriesType/config';
+import type {
+  PolarExtremumGetter,
+  ChartSeriesConfig,
+  PolarExtremumGetterResult,
 } from '../../corePlugins/useChartSeriesConfig';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { isPolarSeriesType } from '../../../isPolar';
 
 const axisExtremumCallback = <SeriesType extends PolarChartSeriesType>(
   acc: PolarExtremumGetterResult,
   chartType: SeriesType,
-  axis: AxisConfig,
+  axis: PolarAxisConfig<ScaleName, any, ChartsRadialAxisProps>,
   axisDirection: 'rotation' | 'radius',
   seriesConfig: ChartSeriesConfig<SeriesType>,
   axisIndex: number,
@@ -22,7 +23,7 @@ const axisExtremumCallback = <SeriesType extends PolarChartSeriesType>(
       : seriesConfig[chartType].radiusExtremumGetter;
   const series = formattedSeries[chartType]?.series ?? {};
 
-  const [minChartTypeData, maxChartTypeData] = getter?.({
+  const [minChartTypeData, maxChartTypeData] = (getter as PolarExtremumGetter<SeriesType>)?.({
     series,
     axis,
     axisIndex,
@@ -35,7 +36,7 @@ const axisExtremumCallback = <SeriesType extends PolarChartSeriesType>(
 };
 
 export const getAxisExtremum = <SeriesType extends PolarChartSeriesType>(
-  axis: AxisConfig,
+  axis: PolarAxisConfig<ScaleName, any, ChartsRadialAxisProps>,
   axisDirection: 'rotation' | 'radius',
   seriesConfig: ChartSeriesConfig<SeriesType>,
   axisIndex: number,

@@ -26,16 +26,14 @@ const series = [
       )
       .map((item) => ({ x: item.year, y: item.density as number, id: item.id })),
   },
-  ...constructors.map(
-    (constructor): ScatterSeries => ({
-      label: constructor,
-      highlightScope: { highlight: 'series', fade: 'global' },
-      markerSize: 3,
-      data: data
-        .filter((item) => item.constructor === constructor && item.density !== null)
-        .map((item) => ({ x: item.year, y: item.density as number, id: item.id })),
-    }),
-  ),
+  ...constructors.map((constructor): ScatterSeries => ({
+    label: constructor,
+    highlightScope: { highlight: 'series', fade: 'global' },
+    markerSize: 3,
+    data: data
+      .filter((item) => item.constructor === constructor && item.density !== null)
+      .map((item) => ({ x: item.year, y: item.density as number, id: item.id })),
+  })),
 ] satisfies ScatterSeries[];
 
 const numberFormatter = new Intl.NumberFormat('en-US').format;
@@ -93,7 +91,7 @@ function CustomTooltip() {
 
 export default function ScatterOverview() {
   return (
-    <Stack width="100%">
+    <Stack sx={{ width: '100%' }}>
       <Typography align="center">Processor density (in transistor/mm²)</Typography>
       <ScatterChart
         height={300}

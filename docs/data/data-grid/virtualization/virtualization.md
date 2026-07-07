@@ -38,6 +38,38 @@ Column virtualization is disabled when dynamic row height is enabled.
 See [dynamic row height and column virtualization](/x/react-data-grid/row-height/#column-virtualization) to learn more.
 :::
 
+## Scrolling without render gaps
+
+:::warning
+This feature is experimental.
+It may change or be removed in a future release.
+:::
+
+The virtualizer supports two layout modes that differ in how scrolling and row positioning work:
+
+- **Uncontrolled mode** (default). The rows' positions are set relative to the native scroll container.
+  A JavaScript logic updates the virtualized rows asynchronously to cover the current scroll position.\
+  _(For example, the data grid uses CSS `sticky` positioning to keep headers and pinned rows in place, rendered rows are positioned inside a filler element that stretches the scroll container to the correct total height.)_\
+  The downsides:
+  - During fast scrolling, the native scroll update can outpace the JavaScript rendering logic, which produces brief empty row areas.
+
+- **Controlled mode**. The rows' positions are set in absolute. A JavaScript logic updates the virtualized rows asynchronously to cover the current scroll position.
+  Headers, pinned rows, and data rows always move as one unit.\
+  The downsides:
+  - During fast scrolling, depending on the browser, the JavaScript rendering logic can be slower than what the native scroll would be, leading to a feeling of lag.
+  - Safari row position update is capped at 60Hz, even on higher refresh-rate displays, because of `requestAnimationFrames()`: [webkit#173434](https://bugs.webkit.org/show_bug.cgi?id=173434).
+
+Use the `virtualizerLayoutMode` key inside `experimentalFeatures` to opt in to the controlled mode:
+
+```tsx
+<DataGrid experimentalFeatures={{ virtualizerLayoutMode: 'controlled' }} />
+```
+
+The demo below lets you switch between modes and scroll quickly to see the difference.
+If you don't see the difference, consider setting [CPU Throttling in Chrome Dev Tools](https://developer.chrome.com/docs/devtools/settings/throttling) to simulate a lower-end device.
+
+{{"demo": "VirtualizerLayoutMode.js", "bg": "inline"}}
+
 ## Disable virtualization
 
 The virtualization can be disabled completely using the `disableVirtualization` prop.

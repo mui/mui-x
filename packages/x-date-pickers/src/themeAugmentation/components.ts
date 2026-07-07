@@ -1,19 +1,19 @@
-import { ComponentsProps } from '@mui/material/styles';
-import { ComponentsOverrides } from '../internals/models/helpers';
-import { PickerTextFieldOwnerState } from '../models/fields';
-import { ClockOwnerState } from '../TimeClock/Clock';
-import { ClockNumberOwnerState } from '../TimeClock/ClockNumber';
-import { ClockPointerOwnerState } from '../TimeClock/ClockPointer';
-import { PickerOwnerState } from '../models/pickers';
-import { PickerToolbarOwnerState } from '../internals/hooks/useToolbarOwnerState';
-import { PickerDayOwnerState } from '../PickersDay';
-import { DigitalClockOwnerState } from '../DigitalClock/DigitalClock.types';
-import { MultiSectionDigitalClockSectionOwnerState } from '../MultiSectionDigitalClock/MultiSectionDigitalClockSection';
-import { PickerPopperOwnerState } from '../internals/components/PickerPopper/PickerPopper';
-import { PickerLayoutOwnerState } from '../PickersLayout';
-import { PickerInputOwnerState } from '../PickersTextField/PickersInput/PickersInput';
-import { PickerFilledInputOwnerState } from '../PickersTextField/PickersFilledInput/PickersFilledInput';
-import { PickerSlideTransitionOwnerState } from '../DateCalendar/PickersSlideTransition';
+import type { ComponentsProps } from '@mui/material/styles';
+import type { ComponentsOverrides } from '../internals/models/helpers';
+import type { PickerTextFieldOwnerState } from '../models/fields';
+import type { ClockOwnerState } from '../TimeClock/Clock';
+import type { ClockNumberOwnerState } from '../TimeClock/ClockNumber';
+import type { ClockPointerOwnerState } from '../TimeClock/ClockPointer';
+import type { PickerOwnerState } from '../models/pickers';
+import type { PickerToolbarOwnerState } from '../internals/hooks/useToolbarOwnerState';
+import type { PickerDayOwnerState } from '../PickerDay';
+import type { DigitalClockOwnerState } from '../DigitalClock/DigitalClock.types';
+import type { MultiSectionDigitalClockSectionOwnerState } from '../MultiSectionDigitalClock/MultiSectionDigitalClockSection';
+import type { PickerPopperOwnerState } from '../internals/components/PickerPopper/PickerPopper';
+import type { PickerLayoutOwnerState } from '../PickersLayout';
+import type { PickerInputOwnerState } from '../PickersTextField/PickersInput/PickersInput';
+import type { PickerFilledInputOwnerState } from '../PickersTextField/PickersFilledInput/PickersFilledInput';
+import type { PickerSlideTransitionOwnerState } from '../DateCalendar/PickersSlideTransition';
 
 export interface PickerComponents<Theme = unknown> {
   MuiClock?: {
@@ -91,13 +91,9 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiPickersCalendarHeader'];
     styleOverrides?: ComponentsOverrides<Theme, PickerOwnerState>['MuiPickersCalendarHeader'];
   };
-  MuiPickersDay?: {
-    defaultProps?: ComponentsProps['MuiPickersDay'];
-    styleOverrides?: ComponentsOverrides<Theme, PickerDayOwnerState>['MuiPickersDay'];
-  };
-  MuiPickerDay2?: {
-    defaultProps?: ComponentsProps['MuiPickerDay2'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPickerDay2'];
+  MuiPickerDay?: {
+    defaultProps?: ComponentsProps['MuiPickerDay'];
+    styleOverrides?: ComponentsOverrides<Theme, PickerDayOwnerState>['MuiPickerDay'];
   };
   MuiPickersFadeTransitionGroup?: {
     defaultProps?: ComponentsProps['MuiPickersFadeTransitionGroup'];

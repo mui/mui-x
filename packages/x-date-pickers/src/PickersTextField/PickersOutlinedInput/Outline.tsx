@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
 
 interface OutlineProps extends React.HTMLAttributes<HTMLFieldSetElement> {
   notched: boolean;
@@ -32,7 +32,7 @@ const OutlineRoot = styled('fieldset', {
     overflow: 'hidden',
     minWidth: '0%',
     borderColor: theme.vars
-      ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.23)`
+      ? theme.alpha(theme.vars.palette.common.onBackground, 0.23)
       : borderColor,
   };
 });

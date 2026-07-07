@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { frFR } from '@mui/x-scheduler/locales';
@@ -9,9 +9,12 @@ import {
   resources,
 } from '../../datasets/personal-agenda';
 
-const theme = createTheme(frFR);
-
 export default function LocaleTextCalendar() {
+  const existingTheme = useTheme();
+  const theme = React.useMemo(
+    () => createTheme(existingTheme, frFR),
+    [existingTheme],
+  );
   const [events, setEvents] = React.useState(initialEvents);
 
   return (

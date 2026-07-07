@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const bnBDGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'অপারেটর',
   filterPanelOperatorAnd: 'এবং',
   filterPanelOperatorOr: 'অথবা',
-  filterPanelColumns: 'কলাম',
+  filterPanelColumn: 'কলাম',
   filterPanelInputLabel: 'মান',
   filterPanelInputPlaceholder: 'ফিল্টার মান',
 

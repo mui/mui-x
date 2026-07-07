@@ -2,12 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import {
+import type {
   TimeViewWithMeridiem,
-  resolveTimeFormat,
   PickerRangeValue,
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
+} from '@mui/x-date-pickers/internals';
+import {
+  resolveTimeFormat,
   mergeSx,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '@mui/x-date-pickers/internals';
@@ -22,17 +24,17 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '@mui/x-date-pickers/timeViewRenderers';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
-import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
+import type { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
 import { SingleInputTimeRangeField } from '../SingleInputTimeRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
-import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
 const STEPS: PickerRangeStep[] = [
   { views: null, rangePosition: 'start' },
@@ -74,23 +76,21 @@ const rendererInterceptor = function RendererInterceptor(
   );
 };
 
-type DesktopTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopTimeRangePickerComponent = ((
+  props: DesktopTimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker(
+  inProps: DesktopTimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all time range pickers
-  const defaultizedProps = useTimeRangePickerDefaultizedProps<
-    DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopTimeRangePicker');
+  const defaultizedProps = useTimeRangePickerDefaultizedProps<DesktopTimeRangePickerProps>(
+    inProps,
+    'MuiDesktopTimeRangePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -150,11 +150,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<
-    TimeViewWithMeridiem,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopRangePicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,
@@ -167,7 +163,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   return renderPicker();
 }) as DesktopTimeRangePickerComponent;
 
-DesktopTimeRangePicker.propTypes = {
+DesktopTimeRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -228,10 +224,6 @@ DesktopTimeRangePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.

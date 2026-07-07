@@ -2,19 +2,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import { GridRoot, GridContextProvider, type GridValidRowModel } from '@mui/x-data-grid';
+import { GridRoot, GridContextProvider } from '@mui/x-data-grid';
+import type { GridValidRowModel } from '@mui/x-data-grid';
 import {
-  type GridConfiguration,
   validateProps,
   useGridApiInitialization,
   useGridParamsOverridableMethods,
   useIsCellEditable,
 } from '@mui/x-data-grid/internals';
+import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { GridMultiSelectMeasurer } from '../components/cell/GridMultiSelectMeasurer';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import type { DataGridProProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps, DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
@@ -23,7 +25,7 @@ import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration<GridPrivateApiPro> = {
+const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedProps> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
@@ -72,6 +74,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         ref={ref}
       >
         {watermark}
+        <GridMultiSelectMeasurer />
       </GridRoot>
     </GridContextProvider>
   );
@@ -93,7 +96,7 @@ interface DataGridProComponent {
  */
 export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
-DataGridProRaw.propTypes = {
+DataGridProRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -275,6 +278,13 @@ DataGridProRaw.propTypes = {
     set: PropTypes.func.isRequired,
   }),
   /**
+   * If `true`, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, or filtering changes.
+   * The loading overlay is rendered on top of the previous rows.
+   * Only applies to flat data; tree data and row grouping always reset the rows on refetch to keep the order consistent with the new response.
+   * @default false
+   */
+  dataSourceKeepPreviousData: PropTypes.bool,
+  /**
    * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
    * If the refetched rows are different from the current rows, the grid will update the rows.
    * Set to `0` to disable polling.
@@ -403,6 +413,7 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -931,7 +942,7 @@ DataGridProRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * Prefer to use {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} unless it doesn't fulfill your needs.
    */
   onRowsScrollEnd: PropTypes.func,
   /**

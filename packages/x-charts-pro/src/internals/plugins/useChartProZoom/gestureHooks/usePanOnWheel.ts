@@ -1,14 +1,13 @@
 'use client';
 import * as React from 'react';
 import {
-  type ChartPlugin,
   getChartPoint,
   selectorChartDrawingArea,
-  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
+import type { ChartPlugin, ZoomData } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type UseChartProZoomSignature } from '../useChartProZoom.types';
+import type { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { selectorPanInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
@@ -55,7 +54,7 @@ export const usePanOnWheel = (
       });
 
       // This prevents a pan event from being triggered when the mouse is outside the chart area.
-      // The timeout is used to prevent an weird behavior where if the mouse is outside but enters due to
+      // The timeout is used to prevent a weird behavior where if the mouse is outside but enters due to
       // scrolling, then the pan event is triggered.
       if (startedOutsideRef.current || !instance.isPointInside(point.x, point.y)) {
         startedOutsideRef.current = true;

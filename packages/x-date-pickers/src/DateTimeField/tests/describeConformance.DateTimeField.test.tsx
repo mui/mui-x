@@ -12,6 +12,6 @@ describe('<DateTimeField /> - Describe Conformance', () => {
     render,
     muiName: 'MuiDateTimeField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
+    skip: ['componentProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 });

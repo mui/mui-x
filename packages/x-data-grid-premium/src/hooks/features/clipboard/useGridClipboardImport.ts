@@ -1,30 +1,33 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import {
-  type GridColDef,
-  type GridRowId,
-  type GridValidRowModel,
   GRID_CHECKBOX_SELECTION_FIELD,
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
-  type GridRowModel,
   useGridEventPriority,
   useGridEvent,
-  type GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowSelectionIdsSelector,
   gridRowSelectionCountSelector,
 } from '@mui/x-data-grid';
+import type {
+  GridColDef,
+  GridRowId,
+  GridValidRowModel,
+  GridRowModel,
+  GridEventListener,
+} from '@mui/x-data-grid';
 import {
   getRowIdFromRowModel,
   getActiveElement,
-  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   getPublicApiRef,
   isPasteShortcut,
   useGridLogger,
+  isEventTargetInPortal,
 } from '@mui/x-data-grid/internals';
+import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import debounce from '@mui/utils/debounce';
@@ -84,7 +87,7 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
 }
 
 // Keeps track of updated rows during clipboard paste
-class CellValueUpdater {
+export class CellValueUpdater {
   rowsToUpdate: Map<GridRowId, GridValidRowModel> = new Map();
 
   updateRow: (row: GridRowModel) => void;
@@ -371,6 +374,11 @@ export const useGridClipboardImport = (
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
+      // Ignore portal
+      // Do not apply shortcuts if the focus is not on the cell root component
+      if (isEventTargetInPortal(event)) {
+        return;
+      }
       if (!enableClipboardPaste) {
         return;
       }

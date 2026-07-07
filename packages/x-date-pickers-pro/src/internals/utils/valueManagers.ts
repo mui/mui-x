@@ -1,17 +1,18 @@
-import {
+import type {
   PickerValueManager,
-  replaceInvalidDateByNull,
   FieldValueManager,
-  createDateStrForV7HiddenInputFromSections,
-  createDateStrForV6InputFromSections,
-  areDatesEqual,
-  getTodayDate,
-  getDefaultReferenceDate,
   PickerRangeValue,
   PickerNonNullableRangeValue,
   FieldRangeSection,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import {
+  replaceInvalidDateByNull,
+  createDateStrForHiddenInputFromSections,
+  areDatesEqual,
+  getTodayDate,
+  getDefaultReferenceDate,
+} from '@mui/x-date-pickers/internals';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type {
   DateRangeValidationError,
@@ -22,9 +23,7 @@ import type {
 
 type RangePickerValueManager<
   TError extends
-    | DateRangeValidationError
-    | TimeRangeValidationError
-    | DateTimeRangeValidationError = any,
+    DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError = any,
 > = PickerValueManager<PickerRangeValue, TError>;
 
 export const rangeValueManager: RangePickerValueManager = {
@@ -118,20 +117,12 @@ export const getRangeFieldValueManager = ({
 
     return [...getSections(start, 'start'), ...getSections(end, 'end')];
   },
-  getV7HiddenInputValueFromSections: (sections) => {
+  getHiddenInputValueFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForV7HiddenInputFromSections([
+    return createDateStrForHiddenInputFromSections([
       ...dateRangeSections.startDate,
       ...dateRangeSections.endDate,
     ]);
-  },
-  getV6InputValueFromSections: (sections, localizedDigits, isRtl) => {
-    const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForV6InputFromSections(
-      [...dateRangeSections.startDate, ...dateRangeSections.endDate],
-      localizedDigits,
-      isRtl,
-    );
   },
   parseValueStr: (valueStr, referenceValue, parseDate) => {
     // TODO: Improve because it would not work if some section have the same separator as the dateSeparator.

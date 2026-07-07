@@ -3,21 +3,22 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventCalendar, EventCalendarPremium
 ---
 
 # Event Calendar - Editing
 
-<p class="description">Configure how events are created and edited.</p>
+<p class="description">Configure event creation, editing interactions, and read-only behavior.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Event creation
 
-Use the `eventCreation` prop to customize how newly created events are defined:
+Use the `eventCreation` prop to customize event creation behavior:
 
 ### Disable event creation
 
-Pass `eventCreation={false}` to disable the event creation:
+Pass `eventCreation={false}` to disable event creation:
 
 ```tsx
 <EventCalendar eventCreation={false} />
@@ -25,7 +26,7 @@ Pass `eventCreation={false}` to disable the event creation:
 
 ### Custom default duration
 
-Pass a custom value to `eventCreation.duration` to change the default duration of newly created event:
+Pass a custom value to `eventCreation.duration` to change the default duration of newly created events:
 
 ```tsx
 <EventCalendar eventCreation={{ duration: 60 }} />
@@ -33,12 +34,12 @@ Pass a custom value to `eventCreation.duration` to change the default duration o
 
 {{"demo": "EventCreationDuration.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Create event on click
+### Create event on double-click
 
-Set `eventCreation.interaction` to `"click"` to open the creation form when clicking a cell instead of double-clicking:
+Set `eventCreation.interaction` to `"double-click"` to open the creation form when double-clicking a cell instead of clicking:
 
 ```tsx
-<EventCalendar eventCreation={{ interaction: 'click' }} />
+<EventCalendar eventCreation={{ interaction: 'double-click' }} />
 ```
 
 {{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -50,14 +51,17 @@ Clicking an event or creating a new one opens the event dialog.
 The dialog has two tabs:
 
 - **General**: title, start/end date and time, all-day toggle, resource and color selectors, and description.
-- **Recurrence**: frequency, interval, days of the week, and end condition. Only available with the Premium package (`@mui/x-scheduler-premium`).
+- **Recurrence**: frequency, interval, days of the week, and end condition.
+  Only available with the Premium package (`@mui/x-scheduler-premium`).
 
-Click on any event in the demo below to open the dialog. From there you can edit the event details or delete it.
+Click any event in the demo below to open the dialog.
+From there you can edit the event details or delete it.
 
 {{"demo": "EventDialog.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
-This demo uses `EventCalendarPremium` to showcase the Recurrence tab. All other dialog features (editing title, dates, resources, colors, description, and deleting events) are available in the standard `EventCalendar` component.
+:::info
+This demo uses `EventCalendarPremium` to showcase the Recurrence tab.
+All other dialog features (editing title, dates, resources, colors, description, and deleting events) are available in the standard `EventCalendar` component.
 :::
 
 :::info
@@ -66,7 +70,7 @@ Events with `readOnly: true` (or belonging to a read-only resource) open the dia
 
 ## Read-only
 
-Use the `readOnly` prop to disable all editing interactions (event creation, drag and drop, resizing, and popover editing):
+Use the `readOnly` prop to disable all editing interactions (event creation, drag-and-drop, resizing, and popover editing):
 
 ```tsx
 <EventCalendar readOnly />
@@ -100,7 +104,7 @@ const resource = {
 
 #### Priority order
 
-The priority order for determining if an event is read-only is:
+The priority order for read-only behavior is:
 
 1. The `readOnly` property assigned to the event
 
@@ -122,8 +126,8 @@ The priority order for determining if an event is read-only is:
 />
 ```
 
-:::success
-If one of the properties is not defined on the resource, it checks for the closest ancestor with this property defined.
+:::info
+If a property isn't defined on the resource, the closest ancestor resource with that property defined takes precedence.
 :::
 
 3. The `readOnly` prop assigned to the Event Calendar
@@ -132,7 +136,7 @@ If one of the properties is not defined on the resource, it checks for the close
 <EventCalendar readOnly />
 ```
 
-For example, with the following code, all "work" events are read-only except `"event-3"`:
+For example, with the following code, all work events are read-only except `"event-3"`:
 
 ```tsx
 function App() {
@@ -150,3 +154,21 @@ function App() {
   return <EventCalendar resources={resources} events={events} />;
 }
 ```
+
+## Copy and paste events 🚧
+
+:::warning
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/19986) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
+:::
+
+With this feature, users would be able to copy and paste events within the calendar.
+
+## Undo and redo 🚧
+
+:::warning
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21583) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
+:::
+
+With this feature, users would be able to undo and redo changes made to events.

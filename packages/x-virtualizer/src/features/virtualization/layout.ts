@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
-import * as platform from '@mui/x-internals/platform';
+import { platform } from '@base-ui/utils/platform';
 import { Store, createSelectorMemoized } from '@mui/x-internals/store';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
@@ -37,7 +37,7 @@ export abstract class Layout<E extends AnyElements = AnyElements> {
 
   refSetter(name: keyof E) {
     return (node: HTMLDivElement | null) => {
-      if (node && this.refs[name].current !== node) {
+      if (this.refs[name].current !== node) {
         this.refs[name].current = node;
       }
     };
@@ -62,7 +62,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
   use(
     store: Store<BaseState>,
     _params: ParamsWithDefaults,
-    _api: RequiredAPI,
+    api: RequiredAPI,
     layoutParams: VirtualizationLayoutParams,
   ) {
     const { scrollerRef, containerRef } = layoutParams;
@@ -71,11 +71,13 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       this.refs.scroller,
       this.refSetter('scrollbarVertical'),
       'scrollTop',
+      api.updateDimensions,
     );
     const scrollbarHorizontalRef = useScrollbarRefCallback(
       this.refs.scroller,
       this.refSetter('scrollbarHorizontal'),
       'scrollLeft',
+      api.updateDimensions,
     );
 
     store.state.virtualization.context = {
@@ -99,16 +101,71 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
         ref: context.scrollerRef,
         style: {
           // TODO: fall back to overflow: 'auto' if no overflowX or overflowY is set?
-          overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
-          overflowY: autoHeight ? 'hidden' : undefined,
+          overflowX: !needsHorizontalScrollbar ? ('hidden' as const) : undefined,
+          overflowY: autoHeight ? ('hidden' as const) : undefined,
           // TODO: should include display: 'flex', flexDirection: 'column' since the Content has flexBasis and flexShrink?
         },
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
         // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-        tabIndex: platform.isFirefox ? -1 : undefined,
+        tabIndex: platform.engine.gecko ? -1 : undefined,
       }),
     ),
+
+    scrollerContentProps: createSelectorMemoized(
+      Virtualization.selectors.layoutMode,
+      Dimensions.selectors.dimensions,
+      Dimensions.selectors.needsVerticalScrollbar,
+      Dimensions.selectors.needsHorizontalScrollbar,
+      (layoutMode, dimensions, needsVerticalScrollbar, needsHorizontalScrollbar) => {
+        let style: React.CSSProperties | undefined;
+        if (layoutMode === 'controlled') {
+          const {
+            contentSize,
+            scrollbarSize,
+            topContainerHeight,
+            bottomContainerHeight,
+            minimalContentHeight,
+            columnsTotalWidth,
+            viewportOuterSize,
+          } = dimensions;
+
+          const verticalScrollbarSize = needsVerticalScrollbar ? scrollbarSize : 0;
+          const horizontalScrollbarSize = needsHorizontalScrollbar ? scrollbarSize : 0;
+
+          const contentHeight =
+            contentSize.height === 0 ? minimalContentHeight : contentSize.height;
+
+          const width = needsHorizontalScrollbar
+            ? verticalScrollbarSize + columnsTotalWidth
+            : 'auto';
+
+          const height = cssAdd(
+            cssAdd(cssAdd(contentHeight, topContainerHeight), bottomContainerHeight),
+            horizontalScrollbarSize,
+          );
+
+          style = {
+            width: cssMax(width, viewportOuterSize.width - verticalScrollbarSize),
+            height: cssMax(height, viewportOuterSize.height - horizontalScrollbarSize),
+            flex: '0 0 auto',
+          } as React.CSSProperties;
+        }
+
+        return {
+          style,
+          role: 'presentation',
+        };
+      },
+    ),
+
+    viewportProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
+      style: {
+        width: dimensions.viewportOuterSize.width,
+        height: dimensions.viewportOuterSize.height,
+      },
+      role: 'presentation',
+    })),
 
     contentProps: createSelectorMemoized(
       Dimensions.selectors.contentHeight,
@@ -118,18 +175,39 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       (contentHeight, minimalContentHeight, columnsTotalWidth, needsHorizontalScrollbar) => ({
         style: {
           width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-          flexBasis: contentHeight === 0 ? minimalContentHeight : contentHeight,
-          flexShrink: 0,
+          height: contentHeight === 0 ? minimalContentHeight : contentHeight,
+          flex: '0 0 auto',
         } as React.CSSProperties,
         role: 'presentation',
       }),
     ),
 
-    positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
-      style: {
-        transform: `translate3d(0, ${offsetTop}px, 0)`,
-      },
-    })),
+    positionerProps: createSelectorMemoized(
+      Virtualization.selectors.layoutMode,
+      Virtualization.selectors.offsetTop,
+      Virtualization.selectors.scrollPosition,
+      (layoutMode, offsetTop, scrollPosition) => ({
+        style: {
+          transform:
+            layoutMode === 'uncontrolled'
+              ? `translate3d(0, ${offsetTop}px, 0)`
+              : `translate3d(${-scrollPosition.current.left}px, ${offsetTop - scrollPosition.current.top}px, 0)`,
+        },
+      }),
+    ),
+
+    containerVerticalProps: createSelectorMemoized(
+      Virtualization.selectors.layoutMode,
+      Virtualization.selectors.scrollPosition,
+      (layoutMode, scrollPosition) =>
+        layoutMode === 'uncontrolled'
+          ? undefined
+          : {
+              style: {
+                transform: `translate3d(${-scrollPosition.current.left}px, 0, 0)`,
+              },
+            },
+    ),
 
     scrollbarHorizontalProps: createSelectorMemoized(
       Virtualization.selectors.context,
@@ -156,40 +234,6 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       }),
     ),
   };
-}
-
-// The current virtualizer API is exposed on one of the DataGrid slots, so we need to keep
-// the old API for backward compatibility. This API prevents using fine-grained reactivity
-// as all props are returned in a single object, so everything re-renders on any change.
-//
-// TODO(v9): Remove the legacy API.
-export class LayoutDataGridLegacy extends LayoutDataGrid {
-  use(
-    store: Store<BaseState>,
-    _params: ParamsWithDefaults,
-    _api: RequiredAPI,
-    layoutParams: VirtualizationLayoutParams,
-  ) {
-    super.use(store, _params, _api, layoutParams);
-
-    const containerProps = store.use(LayoutDataGrid.selectors.containerProps);
-    const scrollerProps = store.use(LayoutDataGrid.selectors.scrollerProps);
-    const contentProps = store.use(LayoutDataGrid.selectors.contentProps);
-    const positionerProps = store.use(LayoutDataGrid.selectors.positionerProps);
-    const scrollbarVerticalProps = store.use(LayoutDataGrid.selectors.scrollbarVerticalProps);
-    const scrollbarHorizontalProps = store.use(LayoutDataGrid.selectors.scrollbarHorizontalProps);
-    const scrollAreaProps = store.use(LayoutDataGrid.selectors.scrollAreaProps);
-
-    return {
-      getContainerProps: () => containerProps,
-      getScrollerProps: () => scrollerProps,
-      getContentProps: () => contentProps,
-      getPositionerProps: () => positionerProps,
-      getScrollbarVerticalProps: () => scrollbarVerticalProps,
-      getScrollbarHorizontalProps: () => scrollbarHorizontalProps,
-      getScrollAreaProps: () => scrollAreaProps,
-    };
-  }
 }
 
 type ListElements = BaseElements;
@@ -227,24 +271,22 @@ export class LayoutList extends Layout<ListElements> {
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
         // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-        tabIndex: platform.isFirefox ? -1 : undefined,
+        tabIndex: platform.engine.gecko ? -1 : undefined,
       }),
     ),
 
-    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => {
-      return {
-        style: {
-          position: 'absolute',
-          display: 'inline-block',
-          width: '100%',
-          height: contentHeight,
-          top: 0,
-          left: 0,
-          zIndex: -1,
-        } as React.CSSProperties,
-        role: 'presentation',
-      };
-    }),
+    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => ({
+      style: {
+        position: 'absolute',
+        display: 'inline-block',
+        width: '100%',
+        height: contentHeight,
+        top: 0,
+        left: 0,
+        zIndex: -1,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
 
     positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
       style: {
@@ -260,6 +302,7 @@ function useScrollbarRefCallback(
   scrollerRef: React.RefObject<HTMLElement | null>,
   refSetter: (node: HTMLDivElement | null) => void,
   scrollProperty: ScrollProperty,
+  updateDimensions: () => void,
 ) {
   const isLocked = React.useRef(false);
   const lastPosition = React.useRef(0);
@@ -302,10 +345,13 @@ function useScrollbarRefCallback(
 
   return useRefCallback((scrollbar) => {
     refSetter(scrollbar);
+    updateDimensions();
 
     const scroller = scrollerRef.current;
     if (!scroller) {
-      return undefined;
+      return () => {
+        refSetter(null);
+      };
     }
 
     const onScrollerScroll = () => handleScrollerScroll(scrollbar);
@@ -318,6 +364,31 @@ function useScrollbarRefCallback(
     return () => {
       scroller.removeEventListener('scroll', onScrollerScroll);
       scrollbar.removeEventListener('scroll', onScrollbarScroll);
+      refSetter(null);
     };
   });
+}
+
+function cssAdd(a: string | number | undefined, b: string | number | undefined) {
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a + b;
+  }
+  return `calc(${valueToCSSString(a)} + ${valueToCSSString(b)})`;
+}
+
+function cssMax(a: string | number | undefined, b: string | number | undefined) {
+  if (typeof a === 'number' && typeof b === 'number') {
+    return Math.max(a, b);
+  }
+  return `max(${valueToCSSString(a)}, ${valueToCSSString(b)})`;
+}
+
+function valueToCSSString(value: string | number | undefined) {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (typeof value === 'undefined') {
+    return '0';
+  }
+  return `${value}px`;
 }

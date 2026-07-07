@@ -2,14 +2,14 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
+import type { DateOrTimeViewWithMeridiem, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   usePicker,
   PickerPopper,
-  DateOrTimeViewWithMeridiem,
   PickerProvider,
-  PickerRangeValue,
+  extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
-import {
+import type {
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
@@ -20,18 +20,12 @@ import { createRangePickerStepNavigation } from '../../utils/createRangePickerSt
 
 export const useDesktopRangePicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseDesktopRangePickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseDesktopRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
   steps,
   ...pickerParams
-}: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseDesktopRangePickerParams<TView, TExternalProps>) => {
   useLicenseVerifier({
     releaseDate: '__RELEASE_INFO__',
     version: process.env.MUI_VERSION!,
@@ -75,6 +69,7 @@ export const useDesktopRangePicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
+    externalForwardedProps: extractRootForwardedProps(props),
     ownerState,
     additionalProps: {
       'data-active-range-position': providerProps.contextValue.open

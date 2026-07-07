@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { useRtl } from '@mui/system/RtlProvider';
 import { usePickerAdapter } from './usePickerAdapter';
 import { buildSectionsFromFormat } from '../internals/hooks/useField/buildSectionsFromFormat';
 import { getLocalizedDigits } from '../internals/hooks/useField/useField.utils';
@@ -25,7 +24,6 @@ interface UseParsedFormatParameters {
 export const useParsedFormat = (parameters: UseParsedFormatParameters = {}) => {
   const pickerContext = useNullablePickerContext();
   const adapter = usePickerAdapter();
-  const isRtl = useRtl();
   const translations = usePickerTranslations();
   const localizedDigits = React.useMemo(() => getLocalizedDigits(adapter), [adapter]);
   const { format = pickerContext?.fieldFormat ?? adapter.formats.fullDate } = parameters;
@@ -35,17 +33,17 @@ export const useParsedFormat = (parameters: UseParsedFormatParameters = {}) => {
       adapter,
       format,
       formatDensity: 'dense',
-      isRtl,
+      // Pass `isRtl: false` to prevent RTL format reversal.
+      // `useParsedFormat` builds a display string, not a field layout.
+      isRtl: false,
       shouldRespectLeadingZeros: true,
       localeText: translations,
       localizedDigits,
       date: null,
-      // TODO v9: Make sure we still don't reverse in `buildSectionsFromFormat` when using `useParsedFormat`.
-      enableAccessibleFieldDOMStructure: false,
     });
 
     return sections
       .map((section) => `${section.startSeparator}${section.placeholder}${section.endSeparator}`)
       .join('');
-  }, [adapter, isRtl, translations, localizedDigits, format]);
+  }, [adapter, translations, localizedDigits, format]);
 };

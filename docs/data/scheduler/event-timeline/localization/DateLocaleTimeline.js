@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { fr } from 'date-fns/locale/fr';
 
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -10,9 +10,12 @@ import {
   resources,
 } from '../../datasets/company-roadmap';
 
-const theme = createTheme(frFR, createDateLocaleTheme(fr));
-
 export default function DateLocaleTimeline() {
+  const existingTheme = useTheme();
+  const theme = React.useMemo(
+    () => createTheme(existingTheme, frFR, createDateLocaleTheme(fr)),
+    [existingTheme],
+  );
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
@@ -23,7 +26,7 @@ export default function DateLocaleTimeline() {
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          defaultView="months"
+          defaultPreset="monthAndYear"
         />
       </ThemeProvider>
     </div>

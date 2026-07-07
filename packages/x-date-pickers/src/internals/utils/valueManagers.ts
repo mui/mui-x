@@ -1,13 +1,13 @@
-import type { PickerValueManager } from '../models';
-import { DateValidationError, TimeValidationError, DateTimeValidationError } from '../../models';
+import type { PickerValueManager, PickerValue } from '../models';
+import type {
+  DateValidationError,
+  TimeValidationError,
+  DateTimeValidationError,
+} from '../../models';
 import type { FieldValueManager } from '../hooks/useField';
 import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
 import { getDefaultReferenceDate } from './getDefaultReferenceDate';
-import {
-  createDateStrForV7HiddenInputFromSections,
-  createDateStrForV6InputFromSections,
-} from '../hooks/useField/useField.utils';
-import { PickerValue } from '../models';
+import { createDateStrForHiddenInputFromSections } from '../hooks/useField/useField.utils';
 
 export type SingleItemPickerValueManager<
   TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
@@ -41,8 +41,7 @@ export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
   updateReferenceValue: (adapter, value, prevReferenceValue) =>
     adapter.isValid(value) ? value : prevReferenceValue,
   getSectionsFromValue: (date, getSectionsFromDate) => getSectionsFromDate(date),
-  getV7HiddenInputValueFromSections: createDateStrForV7HiddenInputFromSections,
-  getV6InputValueFromSections: createDateStrForV6InputFromSections,
+  getHiddenInputValueFromSections: createDateStrForHiddenInputFromSections,
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
   getDateFromSection: (value) => value,

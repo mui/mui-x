@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
@@ -8,24 +9,39 @@ import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
+import type { PickersInputBaseClasses } from './pickersInputBaseClasses';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
-  PickersInputBaseClasses,
 } from './pickersInputBaseClasses';
-import { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersSectionElement, PickersSectionListSlotProps } from '../../PickersSectionList';
 import {
   Unstable_PickersSectionList as PickersSectionList,
   Unstable_PickersSectionListRoot as PickersSectionListRoot,
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
-  PickersSectionElement,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerOwnerState } from '../../models/pickers';
+
+function mergePickersInputBaseSectionContentSlotProps(
+  consumerSlotProps: PickersSectionListSlotProps['sectionContent'],
+  baseClassName: string,
+): PickersSectionListSlotProps['sectionContent'] {
+  return (ownerState: PickerOwnerState) => {
+    const resolved = resolveComponentProps(consumerSlotProps, ownerState) ?? {};
+    return {
+      ...resolved,
+      className: clsx(baseClassName, resolved.className),
+    };
+  };
+}
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
@@ -43,6 +59,10 @@ export const PickersInputBaseRoot = styled('div', {
   position: 'relative',
   boxSizing: 'border-box', // Prevent padding issue with fullWidth.
   letterSpacing: `${round(0.15 / 16)}em`,
+  [`&.${pickersInputBaseClasses.disabled}`]: {
+    color: (theme.vars || theme).palette.action.disabled,
+    cursor: 'default',
+  },
   variants: [
     {
       props: { isInputInFullWidth: true },
@@ -143,6 +163,20 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
   letterSpacing: 'inherit',
   width: 'fit-content',
   outline: 'none',
+  // Disables Chromium's focus-delegation onto contenteditable descendants
+  // while the field is not focused. The bug is Chromium-only, and applying
+  // `WebkitUserModify` on WebKit breaks Playwright's `fill()` editability
+  // check, so we gate on a Chromium-only CSS property (`-webkit-app-region`,
+  // a Blink/Electron extension WebKit never adopted) via `@supports`.
+  // The WebKit exclusion is empirical, not guaranteed across versions: the
+  // regression guard is the WebKit `fill()` cases in the browser e2e suite,
+  // which would fail if a future WebKit started matching this `@supports`.
+  '@supports (-webkit-app-region: drag)': {
+    [`.${pickersInputBaseClasses.root}:not(:focus-within) &`]: {
+      WebkitUserModify: 'read-only',
+      userSelect: 'none',
+    },
+  },
 }));
 
 const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparator, {
@@ -306,7 +340,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     fullWidth,
     name,
     readOnly,
-    inputProps,
     inputRef,
     sectionListRef,
     onFocus,
@@ -321,7 +354,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   const activeBarRef = React.useRef<HTMLDivElement>(null);
   const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
-  const handleInputRef = useForkRef(inputProps?.ref, inputRef);
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
@@ -399,6 +431,14 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
+  const HtmlInputComponent = slots?.htmlInput || PickersInputBaseInput;
+  const { ref: resolvedHtmlInputRef, ...htmlInputProps } = useSlotProps({
+    elementType: HtmlInputComponent,
+    externalSlotProps: slotProps?.htmlInput,
+    ownerState,
+  }) as React.ComponentPropsWithRef<'input'>;
+  const handleInputRef = useForkRef(resolvedHtmlInputRef, inputRef);
+
   const isSingleInputRange = elements.some(
     (element) => element.content['data-range-position'] !== undefined,
   );
@@ -438,7 +478,10 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
             ...slotProps?.input,
             ownerState,
           } as any,
-          sectionContent: { className: pickersInputBaseClasses.sectionContent },
+          sectionContent: mergePickersInputBaseSectionContentSlotProps(
+            slotProps?.sectionContent,
+            pickersInputBaseClasses.sectionContent,
+          ),
           sectionSeparator: ({ separatorPosition }) => ({
             className:
               separatorPosition === 'before'
@@ -453,7 +496,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
             ...muiFormControl,
           })
         : null}
-      <PickersInputBaseInput
+      <HtmlInputComponent
         name={name}
         className={classes.input}
         value={value}
@@ -467,7 +510,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         // Hidden input element cannot be focused, trigger the root focus instead
         // This allows to maintain the ability to do `inputRef.current.focus()` to focus the field
         onFocus={handleHiddenInputFocus}
-        {...inputProps}
+        {...htmlInputProps}
         ref={handleInputRef}
       />
       {isSingleInputRange && (
@@ -481,7 +524,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   );
 });
 
-PickersInputBase.propTypes = {
+PickersInputBase.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -492,8 +535,8 @@ PickersInputBase.propTypes = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
   className: PropTypes.string,
-  component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
@@ -512,18 +555,37 @@ PickersInputBase.propTypes = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
+  /**
+   * End `InputAdornment` for this component.
+   */
   endAdornment: PropTypes.node,
+  /**
+   * If `true`, the input will take up the full width of its container.
+   * @default false
+   */
   fullWidth: PropTypes.bool,
+  /**
+   * The id of the `input` element.
+   */
   id: PropTypes.string,
-  inputProps: PropTypes.object,
+  /**
+   * Pass a ref to the `input` element.
+   */
   inputRef: refType,
+  /**
+   * The label content.
+   */
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  /**
+   * Name attribute of the `input` element.
+   */
   name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
@@ -550,8 +612,10 @@ PickersInputBase.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Start `InputAdornment` for this component.
+   */
   startAdornment: PropTypes.node,
-  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
 import { useStoreEffect } from '@mui/x-internals/store';
 import type { GridEventListener } from '../../../models/events';
@@ -27,7 +28,6 @@ import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
-import { isJSDOM } from '../../../utils/isJSDOM';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -148,7 +148,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       if (!getRootDimensions().isReady) {
         return;
       }
-      if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
+      if (size.height === 0 && !errorShown.current && !props.autoHeight && !platform.env.jsdom) {
         logger.error(
           [
             'The parent DOM element of the Data Grid has an empty height.',
@@ -160,7 +160,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
         );
         errorShown.current = true;
       }
-      if (size.width === 0 && !errorShown.current && !isJSDOM) {
+      if (size.width === 0 && !errorShown.current && !platform.env.jsdom) {
         logger.error(
           [
             'The parent DOM element of the Data Grid has an empty width.',
@@ -187,6 +187,14 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       if (apiRef.current.rootElementRef.current) {
         setCSSVariables(apiRef.current.rootElementRef.current, next);
       }
+      const virtualScroller = apiRef.current.virtualScrollerRef?.current;
+      if (virtualScroller) {
+        const maxScrollLeft = Math.max(0, next.rowWidth - next.viewportOuterSize.width);
+        const currentScrollLeft = Math.abs(virtualScroller.scrollLeft);
+        if (currentScrollLeft > maxScrollLeft) {
+          apiRef.current.scroll({ left: maxScrollLeft });
+        }
+      }
 
       if (!areElementSizesEqual(next.viewportInnerSize, previous.viewportInnerSize)) {
         apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);
@@ -210,6 +218,10 @@ function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {
   set('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
   set('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
   set('--DataGrid-bottomContainerHeight', `${dimensions.bottomContainerHeight}px`);
+  set(
+    '--DataGrid-horizontalFiller',
+    `${Math.max(0, dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth)}px`,
+  );
   set('--height', `${dimensions.rowHeight}px`);
 }
 

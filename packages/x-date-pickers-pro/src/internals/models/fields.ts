@@ -1,7 +1,7 @@
-import { SlotComponentProps } from '@mui/utils/types';
-import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import type { SlotComponentProps } from '@mui/utils/types';
+import type { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import type {
   MultiInputFieldRefs,
   MultiInputFieldSlotRootProps,
@@ -14,7 +14,7 @@ import type {
  */
 export interface BaseMultiInputFieldProps
   extends
-    Pick<UseFieldInternalProps<PickerRangeValue, boolean, unknown>, 'readOnly' | 'autoFocus'>,
+    Pick<UseFieldInternalProps<PickerRangeValue, unknown>, 'readOnly' | 'autoFocus'>,
     MultiInputFieldRefs {
   slots?: {
     root?: React.ElementType;

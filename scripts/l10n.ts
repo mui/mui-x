@@ -47,6 +47,14 @@ const packagesWithL10n = [
     localesRelativePath: 'packages/x-charts/src/locales',
     documentationReportPath: 'docs/data/charts/localization/data.json',
   },
+  {
+    key: 'scheduler',
+    reportName: '📅 Scheduler',
+    constantsRelativePath: 'packages/x-scheduler/src/locales/enUS.ts',
+    localesRelativePath: 'packages/x-scheduler/src/locales',
+    documentationReportPath: 'docs/data/scheduler/localization/data.json',
+    objectNames: ['Dialog', 'Calendar', 'Timeline'],
+  },
 ];
 
 const BABEL_PLUGINS = [require.resolve('@babel/plugin-syntax-typescript')];
@@ -400,6 +408,228 @@ ${newMessage}
     });
 }
 
+// --- Multi-object locale file support (e.g., Scheduler) ---
+
+/**
+ * Extract translations from the English source file, grouped by which object variable they belong to.
+ * For example, keys in `enUSDialog` go to index 0, `enUSCalendar` to index 1, etc.
+ */
+function extractTranslationsByObject(
+  translationsPath: string,
+  objectNames: string[],
+): [TranslationsByGroup[], Translations] {
+  const file = fs.readFileSync(translationsPath, 'utf-8');
+  const ast = babel.parseSync(file, {
+    plugins: BABEL_PLUGINS,
+    configFile: false,
+  });
+
+  const translations: Translations = {};
+  const translationsByObjectGroup: TranslationsByGroup[] = objectNames.map(() => ({}));
+
+  traverse(ast!, {
+    VariableDeclarator(visitorPath) {
+      const { node } = visitorPath;
+
+      if (!node.init || !babelTypes.isObjectExpression(node.init)) {
+        visitorPath.skip();
+        return;
+      }
+
+      if (!babelTypes.isIdentifier(node.id)) {
+        visitorPath.skip();
+        return;
+      }
+
+      // Determine which object this variable belongs to
+      const objectIndex = objectNames.findIndex((suffix) =>
+        (node.id as babelTypes.Identifier).name.endsWith(suffix),
+      );
+      if (objectIndex === -1) {
+        visitorPath.skip();
+        return;
+      }
+
+      let group = 'No group';
+
+      node.init.properties.forEach((property) => {
+        if (!babelTypes.isObjectProperty(property)) {
+          return;
+        }
+
+        const key =
+          (property.key as babelTypes.Identifier).name ||
+          `'${(property.key as babelTypes.StringLiteral).value}'`;
+
+        if (key.startsWith('Mui')) {
+          return;
+        }
+
+        if (Array.isArray(property.leadingComments) && property.leadingComments.length > 0) {
+          group = property.leadingComments[0].value.trim();
+        }
+
+        if (!translationsByObjectGroup[objectIndex][group]) {
+          translationsByObjectGroup[objectIndex][group] = {};
+        }
+
+        translationsByObjectGroup[objectIndex][group][key] = property.value;
+        translations[key] = property.value;
+      });
+    },
+  });
+
+  return [translationsByObjectGroup, translations];
+}
+
+/**
+ * Extract existing translations from a multi-object locale file, grouped by object.
+ */
+function extractMultiObjectTranslations(
+  localePath: string,
+  objectNames: string[],
+): { translationsByObject: Translations[]; allTranslations: Translations } {
+  const file = fs.readFileSync(localePath, 'utf-8');
+  const ast = babel.parseSync(file, {
+    plugins: BABEL_PLUGINS,
+    configFile: false,
+  });
+
+  const allTranslations: Translations = {};
+  const translationsByObject: Translations[] = objectNames.map(() => ({}));
+
+  traverse(ast!, {
+    VariableDeclarator(visitorPath) {
+      const { node } = visitorPath;
+
+      if (!node.init || !babelTypes.isObjectExpression(node.init)) {
+        visitorPath.skip();
+        return;
+      }
+
+      if (!babelTypes.isIdentifier(node.id)) {
+        visitorPath.skip();
+        return;
+      }
+
+      const objectIndex = objectNames.findIndex((suffix) =>
+        (node.id as babelTypes.Identifier).name.endsWith(suffix),
+      );
+      if (objectIndex === -1) {
+        visitorPath.skip();
+        return;
+      }
+
+      node.init.properties.forEach((property) => {
+        if (
+          !babelTypes.isObjectProperty(property) ||
+          !(babelTypes.isIdentifier(property.key) || babelTypes.isStringLiteral(property.key))
+        ) {
+          return;
+        }
+
+        const key = babelTypes.isIdentifier(property.key)
+          ? property.key.name
+          : `'${property.key.value}'`;
+
+        translationsByObject[objectIndex][key] = property.value;
+        allTranslations[key] = property.value;
+      });
+    },
+  });
+
+  return { translationsByObject, allTranslations };
+}
+
+/**
+ * Build a single translation object content (the part inside `{ ... }`).
+ */
+function buildObjectContent(
+  existingTranslations: Translations,
+  baseTranslationsByGroup: TranslationsByGroup,
+): string {
+  const lines: string[] = [];
+
+  Object.entries(baseTranslationsByGroup).forEach(([group, groupTranslations]) => {
+    lines.push(`\n\n// ${group}`);
+
+    Object.entries(groupTranslations).forEach(([key, value]) => {
+      const valueToTransform =
+        existingTranslations[key] || existingTranslations[`'${key}'`] || value;
+      const isKeyStringLiteral = !existingTranslations[key] && existingTranslations[`'${key}'`];
+      const ast = babel.template(`const _ = %%value%%;`)({
+        value: valueToTransform,
+      }) as babelTypes.Statement;
+      const result = babel.transformFromAstSync(babelTypes.program([ast]), undefined, {
+        plugins: BABEL_PLUGINS,
+        configFile: false,
+      });
+
+      const valueAsCode = result!.code!.replace(/^const _ = (.*);/gs, '$1');
+      const comment = !existingTranslations[key] && !existingTranslations[`'${key}'`] ? '// ' : '';
+      const content = `${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`;
+
+      lines.push(...content.split('\n').map((line) => `${comment}${line}`));
+    });
+  });
+
+  return `{${lines.join('\n')}\n}`;
+}
+
+/**
+ * Sync a multi-object locale file by replacing each translation object's content
+ * while preserving the file's imports, types, and export structure.
+ */
+function syncMultiObjectLocaleFile(
+  localePath: string,
+  objectNames: string[],
+  baseTranslationsByObject: TranslationsByGroup[],
+  existingTranslationsByObject: Translations[],
+): string {
+  let source = fs.readFileSync(localePath, 'utf-8');
+  const ast = babel.parseSync(source, {
+    plugins: BABEL_PLUGINS,
+    configFile: false,
+  });
+
+  const replacements: { start: number; end: number; content: string }[] = [];
+
+  traverse(ast!, {
+    VariableDeclarator(visitorPath) {
+      const { node } = visitorPath;
+      if (!babelTypes.isIdentifier(node.id) || !babelTypes.isObjectExpression(node.init)) {
+        return;
+      }
+
+      const objectIndex = objectNames.findIndex((suffix) =>
+        (node.id as babelTypes.Identifier).name.endsWith(suffix),
+      );
+      if (objectIndex === -1) {
+        return;
+      }
+
+      const content = buildObjectContent(
+        existingTranslationsByObject[objectIndex],
+        baseTranslationsByObject[objectIndex],
+      );
+
+      replacements.push({
+        start: node.init.start!,
+        end: node.init.end!,
+        content,
+      });
+    },
+  });
+
+  // Apply replacements in reverse order to preserve positions
+  replacements.sort((a, b) => b.start - a.start);
+  for (const { start, end, content } of replacements) {
+    source = source.slice(0, start) + content + source.slice(end);
+  }
+
+  return source;
+}
+
 interface HandlerArgv {
   report: boolean;
   githubToken?: string;
@@ -417,75 +647,147 @@ async function run(argv: ArgumentsCamelCase<HandlerArgv>) {
   await Promise.all(
     packagesWithL10n.map(async (packageInfo) => {
       const constantsPath = path.join(workspaceRoot, packageInfo.constantsRelativePath);
-      const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
-
-      baseTranslationsNumber[packageInfo.key] = Object.keys(baseTranslations).length;
-
       const localesDirectory = path.resolve(workspaceRoot, packageInfo.localesRelativePath);
       const locales = findLocales(localesDirectory, constantsPath);
 
-      await Promise.all(
-        locales.map(async ([localePath, localeCode]) => {
-          const { translations: existingTranslations, transformedCode } =
-            extractAndReplaceTranslations(localePath);
+      if (packageInfo.objectNames) {
+        // Multi-object locale files (e.g., packages with translations split across multiple objects)
+        const [baseTranslationsByObject, baseTranslations] = extractTranslationsByObject(
+          constantsPath,
+          packageInfo.objectNames,
+        );
 
-          if (!transformedCode || Object.keys(existingTranslations).length === 0) {
-            return;
-          }
+        baseTranslationsNumber[packageInfo.key] = Object.keys(baseTranslations).length;
 
-          const codeWithNewTranslations = injectTranslations(
-            transformedCode,
-            existingTranslations,
-            baseTranslationsByGroup,
-          );
+        await Promise.all(
+          locales.map(async ([localePath, localeCode]) => {
+            const {
+              translationsByObject: existingByObject,
+              allTranslations: existingTranslations,
+            } = extractMultiObjectTranslations(localePath, packageInfo.objectNames!);
 
-          const prettierConfigPath = await resolvePrettierConfigPath();
-          const prettierConfig = await prettier.resolveConfig(localePath, {
-            config: prettierConfigPath,
-          });
+            const codeWithNewTranslations = syncMultiObjectLocaleFile(
+              localePath,
+              packageInfo.objectNames!,
+              baseTranslationsByObject,
+              existingByObject,
+            );
 
-          const prettifiedCode = await prettier.format(codeWithNewTranslations, {
-            ...prettierConfig,
-            filepath: localePath,
-          });
+            const prettierConfigPath = await resolvePrettierConfigPath();
+            const prettierConfig = await prettier.resolveConfig(localePath, {
+              config: prettierConfigPath,
+            });
 
-          // We always set the `locations` to [] such that we can differentiate translation completed from un-existing translations
-          if (!missingTranslations[localeCode]) {
-            missingTranslations[localeCode] = {};
-          }
-          if (!missingTranslations[localeCode][packageInfo.key]) {
-            missingTranslations[localeCode][packageInfo.key] = {
-              // prettier-ignore
-              path: localePath
-                .replace(workspaceRoot, '').slice(1) // Remove leading slash
-                .split(path.sep).join('/'), // Ensure the path is using forward slashes even on Windows machines
-              missingKeys: [],
-            };
-          }
-          const lines = codeWithNewTranslations.split('\n');
-          Object.entries(baseTranslations).forEach(([key]) => {
-            if (!existingTranslations[key] && !existingTranslations[`'${key}'`]) {
-              const location = lines.findIndex(
-                (line) =>
-                  line.trim().startsWith(`// ${key}:`) || line.trim().startsWith(`// '${key}':`),
-              );
-              // Ignore when both the translation and the placeholder are missing
-              if (location >= 0) {
-                missingTranslations[localeCode][packageInfo.key].missingKeys.push({
-                  currentLineContent: lines[location].trim().slice(3),
-                  lineIndex: location + 1,
-                });
-              }
+            const prettifiedCode = await prettier.format(codeWithNewTranslations, {
+              ...prettierConfig,
+              filepath: localePath,
+            });
+
+            // Track missing translations
+            if (!missingTranslations[localeCode]) {
+              missingTranslations[localeCode] = {};
             }
-          });
+            if (!missingTranslations[localeCode][packageInfo.key]) {
+              missingTranslations[localeCode][packageInfo.key] = {
+                // prettier-ignore
+                path: localePath
+                  .replace(workspaceRoot, '').slice(1)
+                  .split(path.sep).join('/'),
+                missingKeys: [],
+              };
+            }
+            const lines = codeWithNewTranslations.split('\n');
+            Object.entries(baseTranslations).forEach(([key]) => {
+              if (!existingTranslations[key] && !existingTranslations[`'${key}'`]) {
+                const location = lines.findIndex(
+                  (line) =>
+                    line.trim().startsWith(`// ${key}:`) || line.trim().startsWith(`// '${key}':`),
+                );
+                if (location >= 0) {
+                  missingTranslations[localeCode][packageInfo.key].missingKeys.push({
+                    currentLineContent: lines[location].trim().slice(3),
+                    lineIndex: location + 1,
+                  });
+                }
+              }
+            });
 
-          if (!report) {
-            fs.writeFileSync(localePath, prettifiedCode);
-            // eslint-disable-next-line no-console
-            console.log(`Wrote ${localeCode} locale.`);
-          }
-        }),
-      );
+            if (!report) {
+              fs.writeFileSync(localePath, prettifiedCode);
+              // eslint-disable-next-line no-console
+              console.log(`Wrote ${localeCode} locale.`);
+            }
+          }),
+        );
+      } else {
+        // Single-object locale files (data-grid, pickers, charts)
+        const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
+
+        baseTranslationsNumber[packageInfo.key] = Object.keys(baseTranslations).length;
+
+        await Promise.all(
+          locales.map(async ([localePath, localeCode]) => {
+            const { translations: existingTranslations, transformedCode } =
+              extractAndReplaceTranslations(localePath);
+
+            if (!transformedCode || Object.keys(existingTranslations).length === 0) {
+              return;
+            }
+
+            const codeWithNewTranslations = injectTranslations(
+              transformedCode,
+              existingTranslations,
+              baseTranslationsByGroup,
+            );
+
+            const prettierConfigPath = await resolvePrettierConfigPath();
+            const prettierConfig = await prettier.resolveConfig(localePath, {
+              config: prettierConfigPath,
+            });
+
+            const prettifiedCode = await prettier.format(codeWithNewTranslations, {
+              ...prettierConfig,
+              filepath: localePath,
+            });
+
+            // We always set the `locations` to [] such that we can differentiate translation completed from un-existing translations
+            if (!missingTranslations[localeCode]) {
+              missingTranslations[localeCode] = {};
+            }
+            if (!missingTranslations[localeCode][packageInfo.key]) {
+              missingTranslations[localeCode][packageInfo.key] = {
+                // prettier-ignore
+                path: localePath
+                  .replace(workspaceRoot, '').slice(1) // Remove leading slash
+                  .split(path.sep).join('/'), // Ensure the path is using forward slashes even on Windows machines
+                missingKeys: [],
+              };
+            }
+            const lines = codeWithNewTranslations.split('\n');
+            Object.entries(baseTranslations).forEach(([key]) => {
+              if (!existingTranslations[key] && !existingTranslations[`'${key}'`]) {
+                const location = lines.findIndex(
+                  (line) =>
+                    line.trim().startsWith(`// ${key}:`) || line.trim().startsWith(`// '${key}':`),
+                );
+                // Ignore when both the translation and the placeholder are missing
+                if (location >= 0) {
+                  missingTranslations[localeCode][packageInfo.key].missingKeys.push({
+                    currentLineContent: lines[location].trim().slice(3),
+                    lineIndex: location + 1,
+                  });
+                }
+              }
+            });
+
+            if (!report) {
+              fs.writeFileSync(localePath, prettifiedCode);
+              // eslint-disable-next-line no-console
+              console.log(`Wrote ${localeCode} locale.`);
+            }
+          }),
+        );
+      }
     }),
   );
 

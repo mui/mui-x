@@ -27,29 +27,29 @@ export default function CommunityOrPro({
     <React.Fragment>
       <Stack
         direction={{ xs: 'column', md: 'row' }}
-        alignItems={{ md: 'flex-end', xs: 'space-between' }}
-        justifyContent={{ md: 'space-between', xs: 'flex-end' }}
-        flexGrow={1}
-        sx={{ maxWidth: { xs: '500px', md: '100%' } }}
+        sx={{
+          alignItems: { md: 'flex-end', xs: 'space-between' },
+          justifyContent: { md: 'space-between', xs: 'flex-end' },
+          flexGrow: 1,
+          maxWidth: { xs: '500px', md: '100%' },
+          width: '100%',
+        }}
       >
         <Stack
-          flexBasis={{ xs: '100%', md: '65%' }}
-          sx={{ marginBottom: { xs: '16px', md: 0 } }}
           spacing={1}
+          sx={{ flexBasis: { xs: '100%', md: '65%' }, marginBottom: { xs: '16px', md: 0 } }}
         >
-          <Typography variant="body2" color="primary" fontWeight="semiBold">
+          <Typography variant="body2" color="primary" sx={{ fontWeight: 'semiBold' }}>
             {caption}
           </Typography>
           <Typography
             variant="h4"
             component="h2"
-            fontWeight="semiBold"
-            color="text.primary"
-            fontSize="1.625rem"
+            sx={{ fontWeight: 'semiBold', color: 'text.primary', fontSize: '1.625rem' }}
           >
             {title}
           </Typography>
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
             {description}
           </Typography>
         </Stack>

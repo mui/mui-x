@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const urPKGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'آپریٹر',
   filterPanelOperatorAnd: 'اور',
   filterPanelOperatorOr: 'یا',
-  filterPanelColumns: 'کالمز',
+  filterPanelColumn: 'کالمز',
   filterPanelInputLabel: 'ویلیو',
   filterPanelInputPlaceholder: 'ویلیو کو فلٹر کریں',
 

@@ -96,14 +96,7 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 ### Supported versions
 
-| MUI X version | Release    | Supported                                                                       |
-| ------------: | :--------- | :------------------------------------------------------------------------------ |
-|        ^9.0.0 | March 2026 | 🚧 Pre release (Continuous support)                                             |
-|        ^8.0.0 | 2025-04-17 | ✅ Current stable major (Continuous support).                                   |
-|        ^7.0.0 | 2024-03-23 | ⚠️ LTS - Support for security issues and regressions **until April 17th 2027**. |
-|        ^6.0.0 | 2023-03-03 | ⚠️ LTS - Support for security issues and regressions **until March 23th 2026**. |
-|        ^5.0.0 | 2021-11-23 | ❌                                                                              |
-|        ^4.0.0 | 2021-09-28 | ❌                                                                              |
+{{"demo": "SupportedVersions.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
 
 ## Community
 
@@ -111,17 +104,6 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 The MUI X community is active on both [X/Twitter](https://x.com/MUI_hq) and [LinkedIn](https://www.linkedin.com/company/mui/).
 These are great platforms to share what you're working on and connect with other developers.
-
-### Discord
-
-We have a [Discord Server](https://mui.com/r/discord/) to bring the MUI X community together.
-Our tools are used by thousands of developers and teams all around the world, many of whom actively engage with the community.
-
-You can join Discord to engage in lively discussions, share your projects, and interact with developers just like you from all around the world. We'd love for you to join us!
-
-:::warning
-How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
-:::
 
 ## Custom work
 

@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  gridClasses,
-  type GridColDef,
-  type GridPivotModel,
-  type GridApi,
+import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridColDef,
+  GridPivotModel,
+  GridApi,
 } from '@mui/x-data-grid-premium';
 import {
   $$,
@@ -462,7 +461,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
     await user.click(screen.getByRole('button', { name: 'Filters' }));
 
-    const columnSelector = screen.getByRole('combobox', { name: 'Columns' });
+    const columnSelector = screen.getByRole('combobox', { name: 'Column' });
     await user.click(columnSelector);
 
     const options = screen.getAllByRole('option').map((option) => option.textContent);
@@ -589,6 +588,42 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await waitFor(() => {
       expect(getAvailableFields()).to.deep.equal(['ID', 'Price', 'Type']);
     });
+  });
+
+  it('should not list multiSelect columns as available pivot fields', async () => {
+    render(
+      <Test
+        columns={[
+          { field: 'id', headerName: 'ID' },
+          { field: 'ticker', headerName: 'Ticker' },
+          {
+            field: 'tags',
+            headerName: 'Tags',
+            type: 'multiSelect',
+            valueOptions: ['A', 'B'],
+          },
+        ]}
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: { rows: [{ field: 'ticker' }], columns: [], values: [] },
+            panelOpen: true,
+          },
+        }}
+      />,
+    );
+
+    const getAvailableFields = () =>
+      Array.from(
+        document.querySelectorAll<HTMLElement>(
+          '.MuiDataGrid-pivotPanelAvailableFields .MuiDataGrid-pivotPanelField',
+        ),
+      ).map((field) => field.textContent);
+
+    await waitFor(() => {
+      expect(getAvailableFields()).to.include('ID');
+    });
+    expect(getAvailableFields()).not.to.include('Tags');
   });
 
   it('should recalculate pivot values when a row is updated while in pivot mode', async () => {

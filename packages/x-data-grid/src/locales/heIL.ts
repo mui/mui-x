@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('he-IL');
 
@@ -74,7 +71,7 @@ const heILGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'אופרטור',
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
-  filterPanelColumns: 'עמודות',
+  filterPanelColumn: 'עמודות',
   filterPanelInputLabel: 'ערך',
   filterPanelInputPlaceholder: 'ערך מסנן',
 

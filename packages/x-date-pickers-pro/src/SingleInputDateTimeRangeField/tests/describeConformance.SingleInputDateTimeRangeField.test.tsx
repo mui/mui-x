@@ -11,6 +11,6 @@ describe('<SingleInputDateTimeRangeField /> - Describe Conformance', () => {
     render,
     muiName: 'MuiSingleInputDateTimeRangeField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
+    skip: ['componentProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 });

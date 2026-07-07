@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('pt-BR');
 
@@ -75,7 +72,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operador',
   filterPanelOperatorAnd: 'E',
   filterPanelOperatorOr: 'Ou',
-  filterPanelColumns: 'Colunas',
+  filterPanelColumn: 'Colunas',
   filterPanelInputLabel: 'Valor',
   filterPanelInputPlaceholder: 'Filtrar valor',
 

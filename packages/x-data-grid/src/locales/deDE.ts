@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('de-DE');
 
@@ -75,7 +72,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operatoren',
   filterPanelOperatorAnd: 'Und',
   filterPanelOperatorOr: 'Oder',
-  filterPanelColumns: 'Spalten',
+  filterPanelColumn: 'Spalten',
   filterPanelInputLabel: 'Wert',
   filterPanelInputPlaceholder: 'Wert filtern',
 

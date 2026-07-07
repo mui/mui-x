@@ -4,23 +4,24 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { createSelector, useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import {
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import type {
   SchedulerEventSide,
   SchedulerRenderableEventOccurrence,
-} from '@mui/x-scheduler-headless/models';
-import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
+} from '@mui/x-scheduler-internals/models';
+import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { DayGridEventProps } from './DayGridEvent.types';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import type { PaletteName } from '../../../utils/tokens';
+import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 
@@ -33,7 +34,7 @@ const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
   borderRadius: theme.shape.borderRadius * 0.75,
   minWidth: 18,
-  height: 'auto',
+  height: 18,
   cursor: 'pointer',
   position: 'relative',
   zIndex: 1,
@@ -43,7 +44,7 @@ const DayGridEventBaseStyles = (theme: any) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * ${theme.spacing(0.5)})`,
+  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * (2 * ${theme.spacing(0.5)} + 1px))`,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
@@ -56,6 +57,10 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
 })<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder'; palette?: PaletteName }>(
   ({ theme }) => ({
     ...(DayGridEventBaseStyles(theme) as any),
+    '&:focus-visible': {
+      outline: '2px solid var(--event-surface-accent)',
+      outlineOffset: 1,
+    },
     '&[data-variant="filled"]': {
       backgroundColor: 'var(--event-surface-bold)',
       '&:active': {},
@@ -85,6 +90,10 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       },
       '&[data-starting-before-edge][data-ending-after-edge]': {
         clipPath: BOTH_ARROWS_CLIP,
+      },
+      '&[data-starting-before-edge]:focus-visible, &[data-ending-after-edge]:focus-visible': {
+        clipPath: 'none',
+        borderRadius: (theme.shape.borderRadius as number) * 0.75,
       },
     },
     '&[data-variant="invisible"]': {
@@ -127,7 +136,7 @@ const DayGridEventTitle = styled('p', {
 })(({ theme }) => ({
   margin: 0,
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)',
   lineHeight: 1.43,
   flexGrow: 1,
   '[data-variant="filled"] &': {

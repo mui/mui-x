@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('cs-CZ');
 
@@ -81,7 +78,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',
-  filterPanelColumns: 'Sloupce',
+  filterPanelColumn: 'Sloupce',
   filterPanelInputLabel: 'Hodnota',
   filterPanelInputPlaceholder: 'Hodnota filtru',
 

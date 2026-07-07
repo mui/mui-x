@@ -32,21 +32,23 @@ export default function FeatureHighlight() {
   return (
     <React.Fragment>
       <Divider />
-      <Stack spacing={4} py={8} alignItems="center">
+      <Stack spacing={4} sx={{ py: 8, alignItems: 'center' }}>
         <Stack spacing={1} sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
-          <Typography variant="body2" color="primary" fontWeight="semiBold" textAlign="center">
+          <Typography
+            variant="body2"
+            color="primary"
+            sx={{ fontWeight: 'semiBold', textAlign: 'center' }}
+          >
             Using MUI X Date Pickers
           </Typography>
           <Typography
             variant="h4"
             component="h2"
-            fontWeight="semiBold"
-            color="text.primary"
-            textAlign="center"
+            sx={{ fontWeight: 'semiBold', color: 'text.primary', textAlign: 'center' }}
           >
             First-class developer experience
           </Typography>
-          <Typography variant="body1" color="text.secondary" textAlign="center">
+          <Typography variant="body1" sx={{ color: 'text.secondary', textAlign: 'center' }}>
             MUI X Date and Time Pickers are designed to be delightful and intuitive for developers
             and users alike.
           </Typography>

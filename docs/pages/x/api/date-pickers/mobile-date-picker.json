@@ -107,7 +107,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span>...</span>",
+      "default": "() => <span>…</span>",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
@@ -224,8 +224,8 @@
     },
     {
       "name": "day",
-      "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
-      "default": "PickersDay",
+      "description": "Custom component for day.\nCheck the [PickerDay](https://mui.com/x/api/date-pickers/picker-day/) component.",
+      "default": "PickerDay",
       "class": null
     },
     {
@@ -324,7 +324,7 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     },
     {
@@ -341,12 +341,11 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiMobileDatePicker",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MobileDatePicker/MobileDatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>"
 }

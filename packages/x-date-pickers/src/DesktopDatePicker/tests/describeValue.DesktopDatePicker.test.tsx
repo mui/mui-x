@@ -1,13 +1,13 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<DesktopDatePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();
@@ -26,18 +26,18 @@ describe('<DesktopDatePicker /> - Describe Value', () => {
         ? adapterToUse.format(expectedValue, 'keyboardDate')
         : 'MM/DD/YYYY';
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
+    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey, user }) => {
       const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
 
       if (isOpened) {
-        fireEvent.click(
+        await user.click(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
-        selectSection('day');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('day');
+        await pressKey('ArrowUp');
       }
 
       return newValue;

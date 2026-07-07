@@ -2,10 +2,8 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useRotationScale } from '../../hooks/useScale';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
-import {
-  selectorChartPolarCenter,
-  type UseChartPolarAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import { selectorChartPolarCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { isOrdinalScale } from '../../internals/scaleGuards';
 import { degToRad } from '../../internals/degToRad';
 import { clampAngle } from '../../internals/clampAngle';
@@ -30,7 +28,7 @@ export interface UseRadarAxisParams {
 }
 
 /**
- * Returns an array with on item par metrics with the different point to label.
+ * Returns an array with one item per metric with the different points to label.
  */
 export function useRadarAxis(params: UseRadarAxisParams) {
   const { metric, angle, divisions = 1 } = params;
@@ -47,10 +45,10 @@ export function useRadarAxis(params: UseRadarAxisParams) {
 
   const existingMetrics = rotationScale.domain() as (string | number)[];
 
-  if (!existingMetrics.includes(metric)) {
+  if (process.env.NODE_ENV !== 'production' && !existingMetrics.includes(metric)) {
     warnOnce([
-      `MUI X Charts: You radar axis try displaying values for the metric "${metric}" which does nto exist.`,
-      `either add this metric to your radar, or pick one from the existing metrics: ${existingMetrics.join(', ')}`,
+      `MUI X Charts: Your radar axis tries to display values for the metric "${metric}" which does not exist.`,
+      `Either add this metric to your radar, or pick one from the existing metrics: ${existingMetrics.join(', ')}`,
     ]);
   }
 

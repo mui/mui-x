@@ -1,4 +1,5 @@
-import { type AxisTooltipGetter, getLabel, type TooltipGetter } from '@mui/x-charts/internals';
+import { getLabel } from '@mui/x-charts/internals';
+import type { AxisTooltipGetter, TooltipGetter } from '@mui/x-charts/internals';
 
 const tooltipGetter: TooltipGetter<'ohlc'> = (params) => {
   const { series, getColor, identifier } = params;
@@ -14,14 +15,20 @@ const tooltipGetter: TooltipGetter<'ohlc'> = (params) => {
     return null;
   }
 
-  const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
+  const { dataIndex } = identifier;
+  const [open, high, low, close] = value;
 
   return {
     identifier,
     color: getColor(identifier.dataIndex),
     label,
-    value,
-    formattedValue,
+    value: { open, high, low, close },
+    formattedValue: {
+      open: series.valueFormatter(open, { dataIndex, field: 'open' }),
+      high: series.valueFormatter(high, { dataIndex, field: 'high' }),
+      low: series.valueFormatter(low, { dataIndex, field: 'low' }),
+      close: series.valueFormatter(close, { dataIndex, field: 'close' }),
+    },
     markType: series.labelMarkType,
   };
 };

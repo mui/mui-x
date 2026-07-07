@@ -46,7 +46,7 @@ describe('<PiecewiseColorLegend />', () => {
     ThemeProvider,
     createTheme,
     // SKIP
-    skip: ['themeVariants', 'componentProp', 'componentsProp'],
+    skip: ['themeVariants', 'componentProp'],
   }));
 
   it('should apply inline-start class when labelPosition="inline-start"', () => {

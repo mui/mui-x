@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const isISGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const isISGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Virkir',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eða',
-  filterPanelColumns: 'Dálkar',
+  filterPanelColumn: 'Dálkar',
   filterPanelInputLabel: 'Gildi',
   filterPanelInputPlaceholder: 'Síu gildi',
 

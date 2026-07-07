@@ -1,6 +1,6 @@
-import {
-  type CartesianExtremumFilter,
-  type CartesianExtremumGetter,
+import type {
+  CartesianExtremumFilter,
+  CartesianExtremumGetter,
 } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { findMinMax } from '../../internals/findMinMax';
 
@@ -42,12 +42,15 @@ export const getExtremumY: CartesianExtremumGetter<'line'> = (params) => {
 
   return Object.keys(series)
     .filter((seriesId) => {
+      if (axis.domainSeries === 'visible' && series[seriesId].hidden) {
+        return false;
+      }
       const yAxisId = series[seriesId].yAxisId;
       return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
     })
     .reduce(
       (acc, seriesId) => {
-        const { area, stackedData, data } = series[seriesId];
+        const { area, stackedData, visibleStackedData, data } = series[seriesId];
         const isArea = area !== undefined;
 
         const filter = getFilters?.({
@@ -63,7 +66,12 @@ export const getExtremumY: CartesianExtremumGetter<'line'> = (params) => {
             ? (d) => d
             : (d) => [d[1], d[1]];
 
-        const seriesExtremums = getSeriesExtremums(getValues, data, stackedData, filter);
+        const seriesExtremums = getSeriesExtremums(
+          getValues,
+          data,
+          axis.domainSeries === 'visible' ? visibleStackedData : stackedData,
+          filter,
+        );
 
         const [seriesMin, seriesMax] = seriesExtremums;
         return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];

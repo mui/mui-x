@@ -2,10 +2,12 @@ import { getPreviousNonEmptySeries } from './plugins/featurePlugins/useChartKeyb
 import { getMaxSeriesLength } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getMaxSeriesLength';
 import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
 import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNextNonEmptySeries';
+import { findVisibleDataIndex } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/findVisibleDataIndex';
 import type { ChartState } from './plugins/models/chart';
 import { seriesHasData } from './seriesHasData';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { SeriesId, FocusedItemIdentifier } from '../models/seriesType';
+import type { SeriesId } from '../models/seriesType';
+import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 
 type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
@@ -14,10 +16,31 @@ type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
   dataIndex: number;
 } | null;
 
+/**
+ * The item the navigators work on. Decoupled from the public `FocusedItemIdentifier` because
+ * navigation is position-based: series keyed differently (e.g. `mapShape`, keyed by `name`)
+ * reuse these helpers by translating to a `dataIndex` at their boundary.
+ */
+type WorkingItem = {
+  type: Exclude<ChartSeriesType, 'sankey' | 'heatmap'>;
+  seriesId: SeriesId;
+  dataIndex?: number;
+};
+
 type StateParameters<SeriesType extends ChartSeriesType> = Pick<
   ChartState<[UseChartKeyboardNavigationSignature], [], SeriesType>,
   'series'
 >;
+
+function isSeriesHidden(
+  processedSeries: ProcessedSeries<ChartSeriesType>,
+  type: ChartSeriesType,
+  seriesId: SeriesId,
+): boolean {
+  const seriesItem = processedSeries[type]?.series[seriesId];
+  return Boolean(seriesItem && 'hidden' in seriesItem && seriesItem.hidden);
+}
+
 export function createGetNextIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
@@ -30,9 +53,13 @@ export function createGetNextIndexFocusedItem<
    * If true, allows cycling from the last item to the first one.
    */
   allowCycles: boolean = false,
+  /**
+   * If true, series max index is defined by the current series length and not all series.
+   */
+  useCurrentSeriesMaxLength: boolean = false,
 ) {
   return function getNextIndexFocusedItem(
-    currentItem: FocusedItemIdentifier<InSeriesType> | null,
+    currentItem: WorkingItem | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
@@ -40,7 +67,12 @@ export function createGetNextIndexFocusedItem<
     );
     let seriesId = currentItem?.seriesId;
     let type = currentItem?.type;
-    if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
+    if (
+      !type ||
+      seriesId == null ||
+      !seriesHasData(processedSeries, type, seriesId) ||
+      isSeriesHidden(processedSeries, type, seriesId)
+    ) {
       const nextSeries = getNextNonEmptySeries<OutSeriesType>(
         processedSeries,
         compatibleSeriesTypes,
@@ -54,7 +86,9 @@ export function createGetNextIndexFocusedItem<
       seriesId = nextSeries.seriesId;
     }
 
-    const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+    const maxLength = useCurrentSeriesMaxLength
+      ? (processedSeries[type]?.series[seriesId]?.data.length ?? 0)
+      : getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
 
     let dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex + 1;
     if (allowCycles) {
@@ -63,10 +97,24 @@ export function createGetNextIndexFocusedItem<
       dataIndex = Math.min(maxLength - 1, dataIndex);
     }
 
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex: dataIndex,
+      dataLength: maxLength,
+      direction: 1,
+      allowCycles,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
     return {
       type: type as OutSeriesType,
       seriesId,
-      dataIndex,
+      dataIndex: visibleDataIndex,
     };
   };
 }
@@ -83,9 +131,13 @@ export function createGetPreviousIndexFocusedItem<
    * If true, allows cycling from the last item to the first one.
    */
   allowCycles: boolean = false,
+  /**
+   * If true, series max index is defined by the current series length and not all series.
+   */
+  useCurrentSeriesMaxLength: boolean = false,
 ) {
   return function getPreviousIndexFocusedItem(
-    currentItem: FocusedItemIdentifier<InSeriesType> | null,
+    currentItem: WorkingItem | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
@@ -93,7 +145,12 @@ export function createGetPreviousIndexFocusedItem<
     );
     let seriesId = currentItem?.seriesId;
     let type = currentItem?.type;
-    if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
+    if (
+      !type ||
+      seriesId == null ||
+      !seriesHasData(processedSeries, type, seriesId) ||
+      isSeriesHidden(processedSeries, type, seriesId)
+    ) {
       const previousSeries = getPreviousNonEmptySeries<OutSeriesType>(
         processedSeries,
         compatibleSeriesTypes,
@@ -107,7 +164,9 @@ export function createGetPreviousIndexFocusedItem<
       seriesId = previousSeries.seriesId;
     }
 
-    const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+    const maxLength = useCurrentSeriesMaxLength
+      ? (processedSeries[type]?.series[seriesId]?.data.length ?? 0)
+      : getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
 
     let dataIndex = currentItem?.dataIndex == null ? maxLength - 1 : currentItem.dataIndex - 1;
     if (allowCycles) {
@@ -116,10 +175,24 @@ export function createGetPreviousIndexFocusedItem<
       dataIndex = Math.max(0, dataIndex);
     }
 
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex: dataIndex,
+      dataLength: maxLength,
+      direction: -1,
+      allowCycles,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
     return {
       type: type as OutSeriesType,
       seriesId,
-      dataIndex,
+      dataIndex: visibleDataIndex,
     };
   };
 }
@@ -134,7 +207,7 @@ export function createGetNextSeriesFocusedItem<
   compatibleSeriesTypes: Set<OutSeriesType>,
 ) {
   return function getNextSeriesFocusedItem(
-    currentItem: FocusedItemIdentifier<InSeriesType> | null,
+    currentItem: WorkingItem | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
@@ -156,12 +229,27 @@ export function createGetNextSeriesFocusedItem<
     type = nextSeries.type;
     seriesId = nextSeries.seriesId;
 
-    const dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex;
+    const data = processedSeries[type as OutSeriesType]!.series[seriesId].data;
+    const startIndex =
+      currentItem?.dataIndex == null ? 0 : Math.min(currentItem.dataIndex, data.length - 1);
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex,
+      dataLength: data.length,
+      direction: 1,
+      allowCycles: true,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
 
     return {
       type: type as OutSeriesType,
       seriesId,
-      dataIndex,
+      dataIndex: visibleDataIndex,
     };
   };
 }
@@ -176,7 +264,7 @@ export function createGetPreviousSeriesFocusedItem<
   compatibleSeriesTypes: Set<OutSeriesType>,
 ) {
   return function getPreviousSeriesFocusedItem(
-    currentItem: FocusedItemIdentifier<InSeriesType> | null,
+    currentItem: WorkingItem | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
@@ -198,12 +286,28 @@ export function createGetPreviousSeriesFocusedItem<
     seriesId = previousSeries.seriesId;
 
     const data = processedSeries[type as OutSeriesType]!.series[seriesId].data;
-    const dataIndex = currentItem?.dataIndex == null ? data.length - 1 : currentItem.dataIndex;
+    const startIndex =
+      currentItem?.dataIndex == null
+        ? data.length - 1
+        : Math.min(currentItem.dataIndex, data.length - 1);
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex,
+      dataLength: data.length,
+      direction: -1,
+      allowCycles: true,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
 
     return {
       type: type as OutSeriesType,
       seriesId,
-      dataIndex,
+      dataIndex: visibleDataIndex,
     };
   };
 }

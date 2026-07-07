@@ -14,7 +14,81 @@ const COMPONENTS_WITHOUT_PROPTYPES = [
   'AnimatedBarElement',
   /* RadarDataProvider is disabled because many `any` were being generated. More info: https://github.com/mui/mui-x/pull/17968 */
   'RadarDataProvider',
+  /* The compact views are internal for now: exported only for experiments, no public propTypes yet. */
+  '/StandaloneCompactDayView.tsx',
+  '/StandaloneCompactThreeDayView.tsx',
+  '/StandaloneCompactWeekView.tsx',
 ];
+
+/**
+ * Canonical, structure-only key for a parsed propType node. Independent of the
+ * order TypeScript happened to enumerate union members (which is sensitive to
+ * the module/import graph), so it can be used to sort them deterministically.
+ */
+function getPropTypeSortKey(propType: any): string {
+  if (propType == null) {
+    return '';
+  }
+  switch (propType.type) {
+    case 'LiteralNode':
+      return `Literal(${String(propType.value)})`;
+    case 'InstanceOfNode':
+      return `InstanceOf(${propType.instance})`;
+    case 'ElementNode':
+      return `Element(${propType.elementType})`;
+    case 'array':
+      return `array(${getPropTypeSortKey(propType.arrayType)})`;
+    case 'InterfaceNode': {
+      const entries: ReadonlyArray<[string, any]> = propType.types ?? [];
+      const members = entries
+        .map(([name, value]) => `${name}:${getPropTypeSortKey(value)}`)
+        .sort()
+        .join('|');
+      return `Interface(${members})`;
+    }
+    case 'UnionNode': {
+      const members: any[] = propType.types ?? [];
+      return `Union(${members.map(getPropTypeSortKey).sort().join('|')})`;
+    }
+    default:
+      return propType.type;
+  }
+}
+
+/**
+ * Recursively sorts the members of every `UnionNode` so the generated
+ * `PropTypes.oneOfType([...])` order is stable regardless of import order.
+ * Post-order: children are normalized before a parent union is sorted.
+ */
+function sortPropTypeUnions(propType: any): void {
+  if (propType == null) {
+    return;
+  }
+  if (propType.type === 'array') {
+    sortPropTypeUnions(propType.arrayType);
+    return;
+  }
+  if (propType.type === 'InterfaceNode') {
+    (propType.types ?? []).forEach(([, value]: [string, any]) => sortPropTypeUnions(value));
+    return;
+  }
+  if (propType.type === 'UnionNode') {
+    const members: any[] = propType.types ?? [];
+    members.forEach(sortPropTypeUnions);
+    members.sort((a, b) => getPropTypeSortKey(a).localeCompare(getPropTypeSortKey(b)));
+  }
+}
+
+/**
+ * Normalizes the order of union members across every component prop so that
+ * the generated propTypes do not churn when the TypeScript module graph
+ * changes (e.g. switching a barrel import to a deep import).
+ */
+function makePropTypesDeterministic(components: any[]): void {
+  components.forEach((component) => {
+    component.types?.forEach((definition: any) => sortPropTypeUnions(definition.propType));
+  });
+}
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const isDateObject = (name: string) => {
@@ -80,9 +154,16 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'endFieldRef',
         'series',
         'axis',
+        'xAxis',
+        'yAxis',
+        'rotationAxis',
+        'radiusAxis',
         'plugins',
         'seriesConfig',
         'manager',
+        'eventModelStructure',
+        'resourceModelStructure',
+        'dateLocale',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
@@ -101,6 +182,10 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     return;
   }
 
+  // Sort union members deterministically so the output does not depend on the
+  // order TypeScript enumerated them (which shifts with the import graph).
+  makePropTypesDeterministic(components);
+
   const sourceContent = await fs.readFile(sourceFile, 'utf8');
 
   const result = injectPropTypesInFile({
@@ -108,6 +193,11 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     target: sourceContent,
     options: {
       disablePropTypesTypeChecking: true,
+      // Annotate the generated propTypes with `/* remove-proptypes */` so
+      // babel-plugin-transform-react-remove-prop-types wraps them in a
+      // production guard even for components it cannot detect on its own
+      // (components returning portals, arrays, or a render callback result).
+      ensureBabelPluginTransformReactRemovePropTypesIntegration: true,
       comment: [
         '----------------------------- Warning --------------------------------',
         '| These PropTypes are generated from the TypeScript type definitions |',
@@ -129,14 +219,6 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
           return false;
         }
         let shouldExclude = false;
-
-        if (prop.propType.type === 'InterfaceNode') {
-          if (prop.propType.types.some((type) => type[0] === '_lastToId')) {
-            // Try to catch proptypes from react-spring.
-            // Better solution should be to simplify the proptype instead of ignoring it.
-            return false;
-          }
-        }
 
         prop.filenames.forEach((filename) => {
           const definedInNodeModule = /node_modules/.test(filename);

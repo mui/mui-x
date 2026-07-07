@@ -1,4 +1,4 @@
-import { ThemeOptions } from '@mui/material/styles';
+import { ThemeOptions, Theme } from '@mui/material/styles';
 import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
 import { Config, PaletteMode } from './themes.types';
 
@@ -290,9 +290,9 @@ export const getMD3Theme = (mode: PaletteMode, config: Config): ThemeOptions => 
           }),
         },
       },
-      MuiPickersDay: {
+      MuiPickerDay: {
         styleOverrides: {
-          root: ({ theme }) => ({
+          root: ({ theme }: { theme: Theme }) => ({
             display: 'flex',
             fontSize: '14px',
             margin: 0,

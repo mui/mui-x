@@ -1,16 +1,14 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridApi,
-  useGridApiRef,
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridColDef,
-} from '@mui/x-data-grid-premium';
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGridPremium } from '@mui/x-data-grid-premium';
+import type { GridApi, DataGridPremiumProps, GridColDef } from '@mui/x-data-grid-premium';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { type SinonSpy, spy, stub, type SinonStub } from 'sinon';
+import { spy, stub } from 'sinon';
+import type { SinonSpy, SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
+import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
@@ -1256,6 +1254,86 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getCell(1, 1)).to.have.text('11');
       // Should not be empty
       expect(getCell(2, 1)).to.have.text('GBPEUR');
+    });
+
+    // https://github.com/mui/mui-x/issues/21891
+    it.skipIf(isJSDOM)(
+      'should not intercept paste shortcuts from portaled elements inside a cell',
+      async () => {
+        function PortalCell() {
+          return (
+            <Portal>
+              <input type="text" name="portal-input" />
+            </Portal>
+          );
+        }
+
+        const columns: GridColDef[] = [
+          { field: 'id', renderCell: () => <PortalCell />, editable: true },
+          { field: 'name', editable: true },
+        ];
+        const rows = [
+          { id: 1, name: 'Alice' },
+          { id: 2, name: 'Bob' },
+        ];
+
+        const { user } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              cellSelection
+              disableRowSelectionOnClick
+            />
+          </div>,
+        );
+
+        const portalInput = document.querySelector(
+          'input[name="portal-input"]',
+        ) as HTMLInputElement;
+
+        // First click on a cell to establish grid focus, then focus the portal input
+        const cell = getCell(0, 0);
+        await user.click(cell);
+        await act(() => portalInput.focus());
+        expect(portalInput).toHaveFocus();
+
+        // Simulate Ctrl+V on the portal input — the grid should ignore this.
+        // fireEvent is used because isPasteShortcut() requires keyCode (deprecated),
+        // which user.keyboard does not set.
+        fireEvent.keyDown(portalInput, { key: 'v', keyCode: 86, ctrlKey: true });
+
+        // Without the fix, getTextFromClipboard() creates a hidden <input> inside the grid
+        // root element and steals focus from the portal input.
+        // With the fix, the portal input retains focus.
+        expect(portalInput).toHaveFocus();
+      },
+    );
+
+    it('should wire pasted csv through pastedValueParser into a multiSelect array', async () => {
+      const columns: GridColDef[] = [
+        {
+          field: 'tags',
+          type: 'multiSelect',
+          editable: true,
+          width: 280,
+          valueOptions: ['React', 'TypeScript', 'Node.js'],
+        },
+      ];
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium apiRef={apiRef} columns={columns} rows={[{ id: 0, tags: ['React'] }]} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await user.click(cell);
+
+      paste(cell, 'React, TypeScript');
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).tags).to.deep.equal(['React', 'TypeScript']);
+      });
     });
   });
 });

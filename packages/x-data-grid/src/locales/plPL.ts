@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('pl-PL');
 
@@ -73,7 +70,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',
-  filterPanelColumns: 'Kolumny',
+  filterPanelColumn: 'Kolumny',
   filterPanelInputLabel: 'Wartość',
   filterPanelInputPlaceholder: 'Filtrowana wartość',
 

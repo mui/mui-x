@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const elGRGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Τελεστές',
   filterPanelOperatorAnd: 'Καί',
   filterPanelOperatorOr: 'Ή',
-  filterPanelColumns: 'Στήλες',
+  filterPanelColumn: 'Στήλες',
   filterPanelInputLabel: 'Τιμή',
   filterPanelInputPlaceholder: 'Τιμή φίλτρου',
 

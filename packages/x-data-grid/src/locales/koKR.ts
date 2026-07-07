@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('ko-KR');
 
@@ -73,7 +70,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '연산자',
   filterPanelOperatorAnd: '그리고',
   filterPanelOperatorOr: '또는',
-  filterPanelColumns: '목록',
+  filterPanelColumn: '목록',
   filterPanelInputLabel: '값',
   filterPanelInputPlaceholder: '값 입력',
 

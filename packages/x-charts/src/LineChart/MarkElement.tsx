@@ -5,12 +5,20 @@ import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import type { SeriesId } from '../models/seriesType';
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
 import { getSymbol } from '../internals/getSymbol';
-import {
-  lineClasses,
-  type MarkElementOwnerState,
-  useUtilityClasses as useLineUtilityClasses,
-} from './lineClasses';
+import { lineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { LineClasses } from './lineClasses';
+
+export interface MarkElementOwnerState {
+  seriesId: SeriesId;
+  isFaded: boolean;
+  isHighlighted: boolean;
+  classes?: Partial<Pick<LineClasses, 'mark'>>;
+  skipAnimation?: boolean;
+}
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
@@ -84,6 +92,11 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
+  const store = useStore();
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+    'enablePositionBasedPointerInteraction',
+  );
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
   const ownerState = {
@@ -98,7 +111,7 @@ function MarkElement(props: MarkElementProps) {
   return (
     <MarkElementPath
       {...other}
-      {...interactionProps}
+      {...(enablePositionBasedPointerInteraction ? {} : interactionProps)}
       style={{
         ...style,
         transform: `translate(${x}px, ${y}px)`,
@@ -122,7 +135,7 @@ function MarkElement(props: MarkElementProps) {
   );
 }
 
-MarkElement.propTypes = {
+MarkElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -137,7 +150,6 @@ MarkElement.propTypes = {
    * @default false
    */
   hidden: PropTypes.bool,
-  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, the marker is faded.
    * @default false
@@ -148,6 +160,7 @@ MarkElement.propTypes = {
    * @default false
    */
   isHighlighted: PropTypes.bool,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The shape of the marker.
    */
@@ -155,6 +168,7 @@ MarkElement.propTypes = {
     .isRequired,
   /**
    * If `true`, animations are skipped.
+   * @default false
    */
   skipAnimation: PropTypes.bool,
 } as any;

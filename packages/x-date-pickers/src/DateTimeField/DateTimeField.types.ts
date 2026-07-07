@@ -1,37 +1,27 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import { DateTimeValidationError, BuiltInFieldTextFieldProps } from '../models';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { ExportedValidateDateTimeProps } from '../validation/validateDateTime';
-import { AmPmProps } from '../internals/models/props/time';
-import { PickerValue } from '../internals/models';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { DateTimeValidationError, BuiltInFieldTextFieldProps } from '../models';
+import type { UseFieldInternalProps } from '../internals/hooks/useField';
+import type { ExportedValidateDateTimeProps } from '../validation/validateDateTime';
+import type { AmPmProps } from '../internals/models/props/time';
+import type { PickerValue } from '../internals/models';
+import type {
   ExportedPickerFieldUIProps,
   PickerFieldUISlotProps,
   PickerFieldUISlots,
 } from '../internals/components/PickerFieldUI';
 
-export interface UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface UseDateTimeFieldProps
   extends
-    MakeOptional<
-      UseFieldInternalProps<
-        PickerValue,
-        TEnableAccessibleFieldDOMStructure,
-        DateTimeValidationError
-      >,
-      'format'
-    >,
+    MakeOptional<UseFieldInternalProps<PickerValue, DateTimeValidationError>, 'format'>,
     ExportedValidateDateTimeProps,
     ExportedPickerFieldUIProps,
     AmPmProps {}
 
-export type DateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
+export type DateTimeFieldProps =
   // The hook props
-  UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
+  UseDateTimeFieldProps &
     // The TextField props
-    Omit<
-      BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
-      keyof UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure>
-    > & {
+    Omit<BuiltInFieldTextFieldProps, keyof UseDateTimeFieldProps> & {
       /**
        * Overridable component slots.
        * @default {}

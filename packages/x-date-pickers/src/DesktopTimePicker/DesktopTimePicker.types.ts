@@ -1,22 +1,22 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
-import {
+import type {
   BaseTimePickerProps,
   BaseTimePickerSlots,
   BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
-import { TimeViewWithMeridiem } from '../internals/models';
-import { DigitalTimePickerProps } from '../internals/models/props/time';
-import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
-import {
+import type { TimeViewWithMeridiem } from '../internals/models';
+import type { DigitalTimePickerProps } from '../internals/models/props/time';
+import type { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
+import type {
   MultiSectionDigitalClockSlots,
   MultiSectionDigitalClockSlotProps,
 } from '../MultiSectionDigitalClock';
-import { TimeView } from '../models';
+import type { TimeView } from '../models';
 
 export interface DesktopTimePickerSlots
   extends
@@ -25,14 +25,14 @@ export interface DesktopTimePickerSlots
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
-export interface DesktopTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface DesktopTimePickerSlotProps
   extends
     BaseTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    ExportedUseDesktopPickerSlotProps,
     DigitalClockSlotProps,
     MultiSectionDigitalClockSlotProps {}
 
-export interface DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+export interface DesktopTimePickerProps
   extends
     BaseTimePickerProps<TimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
@@ -50,5 +50,5 @@ export interface DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure exten
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopTimePickerSlotProps;
 }

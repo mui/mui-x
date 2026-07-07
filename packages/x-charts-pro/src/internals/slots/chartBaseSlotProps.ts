@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { type ChartBaseCommonProps } from '@mui/x-charts/models';
+import type { ChartBaseCommonProps } from '@mui/x-charts/models';
 
 export type ChartBaseTooltipProps = ChartBaseCommonProps & {
   children: React.ReactElement<any, any>;
@@ -22,11 +22,7 @@ type AutoPlacement = 'auto' | 'auto-start' | 'auto-end';
 export type Placement = AutoPlacement | BasePlacement | VariationPlacement;
 
 type ClickAwayMouseEventHandler =
-  | 'onClick'
-  | 'onMouseDown'
-  | 'onMouseUp'
-  | 'onPointerDown'
-  | 'onPointerUp';
+  'onClick' | 'onMouseDown' | 'onMouseUp' | 'onPointerDown' | 'onPointerUp';
 type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
 
 export type ChartBasePopperProps = ChartBaseCommonProps & {

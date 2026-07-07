@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const trTRGrid: Partial<GridLocaleText> = {
   // Root
@@ -67,7 +68,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operatör',
   filterPanelOperatorAnd: 'Ve',
   filterPanelOperatorOr: 'Veya',
-  filterPanelColumns: 'Sütunlar',
+  filterPanelColumn: 'Sütunlar',
   filterPanelInputLabel: 'Değer',
   filterPanelInputPlaceholder: 'Filtre değeri',
 

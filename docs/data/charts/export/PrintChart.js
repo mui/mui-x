@@ -14,7 +14,7 @@ import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
-import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -51,13 +51,10 @@ export default function PrintChart() {
   const handleChange = (event) => setChartType(event.target.value);
 
   return (
-    <Stack width="100%" sx={{ display: 'block' }}>
+    <Stack sx={{ width: '100%', display: 'block' }}>
       <Stack
-        width="100%"
         direction="row"
-        gap={2}
-        justifyContent="center"
-        sx={{ mb: 1 }}
+        sx={{ width: '100%', gap: 2, justifyContent: 'center', mb: 1 }}
       >
         <FormControl sx={{ minWidth: 200 }}>
           <InputLabel id="chart-type-label">Chart Type</InputLabel>
@@ -185,9 +182,7 @@ function Chart({ apiRef, type }) {
       );
 
     case 'sankey':
-      return (
-        <Unstable_SankeyChart apiRef={apiRef} height={300} series={sankeySeries} />
-      );
+      return <SankeyChart apiRef={apiRef} height={300} series={sankeySeries} />;
 
     default:
       throw new Error(`Unknown chart type: ${type}`);

@@ -1,12 +1,10 @@
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import {
-  DataGrid,
-  type DataGridProps,
-  GridToolbarFilterButton,
-  type GridColDef,
-  type GridFilterItem,
-  GridPreferencePanelsValue,
-  type GridFilterOperator,
+import { DataGrid, GridToolbarFilterButton, GridPreferencePanelsValue } from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridColDef,
+  GridFilterItem,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -1439,6 +1437,34 @@ describe('<DataGrid /> - Filter', () => {
       expect(getFilterCount({ field: 'brand', operator: 'isAnyOf', value: [] })).to.equal(0);
       expect(getFilterCount({ field: 'year', operator: '=', value: undefined })).to.equal(0);
       expect(getFilterCount({ field: 'year', operator: '=', value: '' })).to.equal(0);
+    });
+
+    it('should include custom operators with an array containing an empty string value', () => {
+      const filterOperators: GridFilterOperator[] = [
+        {
+          value: 'isAnyOf',
+          getApplyFilterFn: (filterItem) => {
+            if (!filterItem.value?.length) {
+              return null;
+            }
+
+            return (value) => filterItem.value.includes(value ?? '');
+          },
+          InputComponent: () => null,
+        },
+      ];
+
+      render(
+        <TestCase
+          rows={[]}
+          columns={[{ field: 'brand', type: 'string', filterOperators }]}
+          filterModel={{
+            items: [{ field: 'brand', operator: 'isAnyOf', value: [''] }],
+          }}
+        />,
+      );
+
+      expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
     });
 
     it('should include value-less operators', () => {

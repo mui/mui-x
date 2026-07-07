@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('zh-CN');
 
@@ -73,7 +70,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '操作器',
   filterPanelOperatorAnd: '与',
   filterPanelOperatorOr: '或',
-  filterPanelColumns: '列',
+  filterPanelColumn: '列',
   filterPanelInputLabel: '值',
   filterPanelInputPlaceholder: '筛选值',
 

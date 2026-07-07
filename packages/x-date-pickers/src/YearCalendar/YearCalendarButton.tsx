@@ -1,21 +1,18 @@
 'use client';
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import {
+import type {
   YearButtonOwnerState,
   YearCalendarSlotProps,
   YearCalendarSlots,
 } from './YearCalendar.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { PickerOwnerState } from '../models/pickers';
-import {
-  getYearCalendarUtilityClass,
-  yearCalendarClasses,
-  YearCalendarClasses,
-} from './yearCalendarClasses';
+import type { PickerOwnerState } from '../models/pickers';
+import type { YearCalendarClasses } from './yearCalendarClasses';
+import { getYearCalendarUtilityClass, yearCalendarClasses } from './yearCalendarClasses';
 
 export interface YearCalendarButtonProps {
   value: number;
@@ -68,14 +65,16 @@ const DefaultYearButton = styled('button', {
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.focusOpacity})`
-      : alpha(theme.palette.action.active, theme.palette.action.focusOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.action.active,
+      (theme.vars || theme).palette.action.focusOpacity,
+    ),
   },
   '&:hover': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.action.active,
+      (theme.vars || theme).palette.action.hoverOpacity,
+    ),
   },
   '&:disabled': {
     cursor: 'auto',

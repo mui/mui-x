@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import Stack, { StackProps } from '@mui/material/Stack';
-import MuiTextField from '@mui/material/TextField';
+import type { StackProps } from '@mui/material/Stack';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
@@ -16,13 +16,13 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
-import {
+import type {
   CreateMultiInputRangeFieldParameters,
   CreateMultiInputRangeFieldReturnValue,
   MultiInputRangeFieldProps,
 } from './createMultiInputRangeField.types';
 import { useMultiInputRangeField } from '../../../hooks/useMultiInputRangeField';
-import { PickerAnyRangeManager } from '../../models/managers';
+import type { PickerAnyRangeManager } from '../../models/managers';
 import { useTextFieldProps } from './useTextFieldProps';
 
 export function createMultiInputRangeField<TManager extends PickerAnyRangeManager>({
@@ -42,7 +42,13 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
 
   const MultiInputRangeFieldRoot = styled(
     React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-      <Stack ref={ref} spacing={2} direction="row" alignItems="baseline" {...props} />
+      <Stack
+        ref={ref}
+        spacing={2}
+        direction="row"
+        {...props}
+        sx={[{ alignItems: 'baseline' }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
+      />
     )),
     {
       name,
@@ -71,7 +77,6 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
     const pickerContext = useNullablePickerContext();
 
     const manager = useManager({
-      enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
       dateSeparator: props.dateSeparator,
     });
     const { internalProps: rawInternalProps, forwardedProps } = useSplitFieldProps(
@@ -140,10 +145,7 @@ export function createMultiInputRangeField<TManager extends PickerAnyRangeManage
     const cleanStartTextFieldResponse = cleanFieldResponse(fieldResponse.startTextField);
     const cleanEndTextFieldResponse = cleanFieldResponse(fieldResponse.endTextField);
 
-    const TextField =
-      slots?.textField ??
-      pickerFieldUIContext.slots.textField ??
-      (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
+    const TextField = slots?.textField ?? pickerFieldUIContext.slots.textField ?? PickersTextField;
 
     return (
       <Root {...fieldResponse.root}>

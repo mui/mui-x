@@ -1,4 +1,4 @@
-import { type CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+import type { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
 export type CurveOptions = {
   /**
@@ -43,12 +43,7 @@ export type CurveOptions = {
 };
 
 export type FunnelCurveType =
-  | 'linear'
-  | 'linear-sharp'
-  | 'step'
-  | 'bump'
-  | 'pyramid'
-  | 'step-pyramid';
+  'linear' | 'linear-sharp' | 'step' | 'bump' | 'pyramid' | 'step-pyramid';
 
 export type FunnelPointShape = 'square' | 'sharp';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -49,8 +49,7 @@ export default function LabelEditingDemo() {
     <DemoWrapper link="/x/react-tree-view/rich-tree-view/editing/">
       <Stack
         spacing={1}
-        sx={{ width: '100%', padding: 2, minHeight: '600px' }}
-        justifyContent="space-between"
+        sx={{ justifyContent: 'space-between', width: '100%', padding: 2, minHeight: '600px' }}
       >
         <Box
           sx={{

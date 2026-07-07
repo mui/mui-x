@@ -1,21 +1,16 @@
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  GRID_STRING_COL_DEF,
-  type GridColDef,
-  type GridComparatorFn,
-  type GridRenderCellParams,
-  type GridGroupingColDefOverride,
-  type GridGroupNode,
-  type GridTreeNodeWithRender,
-  type GridValueFormatter,
-  gridRowIdSelector,
-  gridRowNodeSelector,
+import { GRID_STRING_COL_DEF, gridRowIdSelector, gridRowNodeSelector } from '@mui/x-data-grid-pro';
+import type {
+  GridColDef,
+  GridComparatorFn,
+  GridRenderCellParams,
+  GridGroupingColDefOverride,
+  GridGroupNode,
+  GridTreeNodeWithRender,
+  GridValueFormatter,
 } from '@mui/x-data-grid-pro';
-import {
-  type GridColumnRawLookup,
-  isSingleSelectColDef,
-  RowGroupingStrategy,
-} from '@mui/x-data-grid-pro/internals';
+import { isSingleSelectColDef, RowGroupingStrategy } from '@mui/x-data-grid-pro/internals';
+import type { GridColumnRawLookup } from '@mui/x-data-grid-pro/internals';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
@@ -139,8 +134,8 @@ function getGroupingCriteriaProperties(
       const rowNode = gridRowNodeSelector(apiRef, rowId);
       if (rowNode?.type === 'group') {
         const originalColDef = rowNode.groupingField ? columnsLookup[rowNode.groupingField] : null;
-        if (originalColDef?.type === 'singleSelect') {
-          // the default valueFormatter of a singleSelect colDef won't work with the grouping column values
+        if (originalColDef?.type === 'singleSelect' || originalColDef?.type === 'multiSelect') {
+          // the default valueFormatter of singleSelect/multiSelect colDef won't work with the grouping column values
           return value;
         }
         const columnValueFormatter = originalColDef?.valueFormatter;
@@ -150,6 +145,9 @@ function getGroupingCriteriaProperties(
       }
       return value;
     };
+  } else if (groupedByColDef.type === 'multiSelect') {
+    // The default valueFormatter of multiSelect expects an array; the grouping key is a string.
+    valueFormatter = undefined;
   } else {
     valueFormatter = groupedByColDef.valueFormatter
       ? groupedByColValueFormatter(groupedByColDef)

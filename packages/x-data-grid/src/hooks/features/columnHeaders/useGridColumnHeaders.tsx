@@ -19,6 +19,7 @@ import {
   gridVerticalScrollbarWidthSelector,
 } from '../dimensions/gridDimensionsSelectors';
 import { gridRenderContextColumnsSelector } from '../virtualization';
+import { gridVirtualizationLayoutModeSelector } from '../virtualization/gridVirtualizationSelectors';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import type { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -27,11 +28,11 @@ import type { GridFilterActiveItemsLookup } from '../filter';
 import type { GridColumnGroupIdentifier, GridColumnIdentifier } from '../focus';
 import type { GridColumnMenuState } from '../columnMenu';
 import {
-  type GridColumnVisibilityModel,
   gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
   gridColumnLookupSelector,
 } from '../columns';
+import type { GridColumnVisibilityModel } from '../columns';
 import type { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
@@ -110,7 +111,13 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
-  const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
+  const layoutMode = useGridSelector(apiRef, gridVirtualizationLayoutModeSelector);
+  const offsetLeft = computeOffsetLeft(
+    columnPositions,
+    renderContext,
+    pinnedColumns.left.length,
+    layoutMode,
+  );
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
   const headerHeight = useGridSelector(apiRef, gridHeaderHeightSelector);
@@ -191,13 +198,14 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     return (
       <React.Fragment>
-        {isNotPinned && <div role="presentation" style={{ width: leftOffsetWidth }} />}
+        {isNotPinned && <div role="none" style={{ width: leftOffsetWidth }} />}
         {children}
         {isNotPinned && (
           <div
-            role="presentation"
+            role="none"
             className={clsx(
               gridClasses.filler,
+              gridClasses['filler--horizontal'],
               borderBottom && gridClasses['filler--borderBottom'],
             )}
           />
@@ -297,7 +305,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
         className={gridClasses['row--borderBottom']}
-        style={{ height: headerHeight }}
+        style={{ height: headerHeight, '--height': `${headerHeight}px` } as React.CSSProperties}
       >
         {leftRenderContext &&
           getColumnHeaders(
@@ -470,7 +478,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           role="row"
           aria-rowindex={depth + 1}
           ownerState={rootProps}
-          style={{ height: groupHeaderHeight }}
+          style={
+            {
+              height: groupHeaderHeight,
+              '--height': `${groupHeaderHeight}px`,
+            } as React.CSSProperties
+          }
         >
           {leftRenderContext &&
             getColumnGroupHeaders({

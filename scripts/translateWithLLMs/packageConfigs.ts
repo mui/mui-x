@@ -1,6 +1,6 @@
 export interface TranslatePackageConfig {
   englishSource: string;
-  englishVariableName: string;
+  englishVariableName: string | string[];
   localesDir: string;
   excludeFiles: string[];
   getLocaleVariableName: (localeCode: string) => string;
@@ -31,9 +31,9 @@ export const PACKAGE_CONFIGS: Record<string, TranslatePackageConfig> = {
       localeCode === 'frFR' ? `${localeCode}LocalText` : `${localeCode}LocaleText`,
   },
   'x-scheduler': {
-    englishSource: 'packages/x-scheduler/src/translations/enUS.ts',
-    englishVariableName: 'enUS',
-    localesDir: 'packages/x-scheduler/src/translations',
+    englishSource: 'packages/x-scheduler/src/locales/enUS.ts',
+    englishVariableName: ['enUSDialog', 'enUSCalendar', 'enUSTimeline'],
+    localesDir: 'packages/x-scheduler/src/locales',
     excludeFiles: ['index.ts', 'enUS.ts'],
     getLocaleVariableName: (localeCode) => localeCode,
   },

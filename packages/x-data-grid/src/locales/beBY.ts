@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
@@ -91,7 +92,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Аператары',
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',
-  filterPanelColumns: 'Слупкі',
+  filterPanelColumn: 'Слупкі',
   filterPanelInputLabel: 'Значэнне',
   filterPanelInputPlaceholder: 'Значэнне фільтра',
 

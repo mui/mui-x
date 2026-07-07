@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
@@ -13,9 +13,9 @@ describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer();
 
   describe('picker state', () => {
-    it('should fire a change event when meridiem changes', () => {
+    it('should fire a change event when meridiem changes', async () => {
       const handleChange = spy();
-      render(
+      const { user } = render(
         <MobileTimePicker
           ampm
           onChange={handleChange}
@@ -26,7 +26,7 @@ describe('<MobileTimePicker />', () => {
       );
       const buttonPM = screen.getByRole('button', { name: 'PM' });
 
-      fireEvent.click(buttonPM);
+      await user.click(buttonPM);
 
       expect(handleChange.callCount).to.equal(1);
       expect(handleChange.firstCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
@@ -47,29 +47,37 @@ describe('<MobileTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time' });
+      await openPicker(user, { type: 'time' });
+
+      // `getClockTouchEvent` returns coordinates relative to the clock origin;
+      // turn them into viewport coordinates using the live mask rect so the
+      // selection resolves correctly wherever the clock is rendered (the rect is
+      // `0, 0` in jsdom but reflects the actual position in the browser).
+      const getClockCoords = (clockEvent: ReturnType<typeof getClockTouchEvent>) => {
+        const rect = screen.getByTestId('clock').getBoundingClientRect();
+        return {
+          clientX: rect.left + clockEvent.changedTouches[0].clientX,
+          clientY: rect.top + clockEvent.changedTouches[0].clientY,
+        };
+      };
 
       // Change the hours
-      const hourClockEvent = getClockTouchEvent(11, '12hours');
-
       await user.pointer([
         {
           keys: '[TouchA]',
           target: screen.getByTestId('clock'),
-          coords: hourClockEvent.changedTouches[0],
+          coords: getClockCoords(getClockTouchEvent(11, '12hours')),
         },
       ]);
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:00:00'));
 
       // Change the minutes
-      const minuteClockEvent = getClockTouchEvent(53, 'minutes');
-
       await user.pointer([
         {
           keys: '[TouchA]',
           target: screen.getByTestId('clock'),
-          coords: minuteClockEvent.changedTouches[0],
+          coords: getClockCoords(getClockTouchEvent(53, 'minutes')),
         },
       ]);
       expect(onChange.callCount).to.equal(2);

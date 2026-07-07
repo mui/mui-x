@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('nb-NO');
 
@@ -74,7 +71,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
-  filterPanelColumns: 'Kolonner',
+  filterPanelColumn: 'Kolonner',
   filterPanelInputLabel: 'Verdi',
   filterPanelInputPlaceholder: 'Filter verdi',
 

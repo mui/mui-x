@@ -31,7 +31,7 @@ describe('<ChartsLabelGradient />', () => {
     ThemeProvider,
     createTheme,
     // SKIP
-    skip: ['themeVariants', 'componentProp', 'componentsProp'],
+    skip: ['themeVariants', 'componentProp'],
   }));
 
   // JSDOM does not support SVGMatrix
@@ -194,7 +194,7 @@ describe('<ChartsLabelGradient />', () => {
 
 function Gradient({ id }: any) {
   return (
-    <svg width="0" height="0" viewBox="0 0 0 0" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="0" height="0" viewBox="0 0 0 0" fill="none">
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
           <stop offset="0" stopColor="#CAD4EE" />

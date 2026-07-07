@@ -53,6 +53,15 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * Sets the layout mode of the virtualizer.
+   * - `'uncontrolled'` (default): the browser controls scrolling and the virtualizer
+   *   positions rows using a filler element.
+   * - `'controlled'`: the virtualizer controls scrolling by translating the viewport,
+   *   enabling features such as sticky pinned rows and columns without extra DOM cost.
+   * @default 'uncontrolled'
+   */
+  virtualizerLayoutMode: 'controlled' | 'uncontrolled';
 }
 
 /**
@@ -365,6 +374,13 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default 0
    */
   dataSourceRevalidateMs: number;
+  /**
+   * If `true`, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, or filtering changes.
+   * The loading overlay is rendered on top of the previous rows.
+   * Only applies to flat data; tree data and row grouping always reset the rows on refetch to keep the order consistent with the new response.
+   * @default false
+   */
+  dataSourceKeepPreviousData: boolean;
   /**
    * If `true`, reordering columns is disabled.
    * @default false

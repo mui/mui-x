@@ -1,8 +1,11 @@
-import * as React from 'react';
-import { BoxProps } from '@mui/material/Box';
-import { MuiEvent } from '@mui/x-internals/types';
-import { PickersSectionListProps } from '../../PickersSectionList';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import type * as React from 'react';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { MuiEvent } from '@mui/x-internals/types';
+import type {
+  PickersSectionListProps,
+  PickersSectionListSlotProps,
+} from '../../PickersSectionList';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersInputPropsUsedByField extends Pick<
   PickersSectionListProps,
@@ -16,29 +19,92 @@ export interface PickersInputPropsUsedByField extends Pick<
   areAllSectionsEmpty: boolean;
 
   onClick: React.MouseEventHandler<HTMLDivElement>;
+  onMouseDown: React.MouseEventHandler<HTMLDivElement>;
   onKeyDown: React.EventHandler<MuiEvent<React.KeyboardEvent<HTMLDivElement>>>;
   onInput: React.FormEventHandler<HTMLDivElement>;
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;
 
+  /**
+   * End `InputAdornment` for this component.
+   */
   endAdornment?: React.ReactNode;
+  /**
+   * Start `InputAdornment` for this component.
+   */
   startAdornment?: React.ReactNode;
 
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 
+  /**
+   * The label content.
+   */
   label?: React.ReactNode;
+  /**
+   * The id of the `input` element.
+   */
   id?: string;
+  /**
+   * If `true`, the input will take up the full width of its container.
+   * @default false
+   */
   fullWidth?: boolean;
   readOnly?: boolean;
+  /**
+   * Name attribute of the `input` element.
+   */
   name?: string;
 
-  inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
+  /**
+   * Pass a ref to the `input` element.
+   */
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
-export interface PickersInputBaseProps
-  extends Omit<BoxProps, keyof PickersInputPropsUsedByField>, PickersInputPropsUsedByField {
+export interface PickersInputBaseSlots {
+  root?: React.ElementType;
+  input?: React.ElementType;
+  htmlInput?: React.ElementType;
+}
+
+export interface PickersInputBaseRootSlotProps extends React.ComponentPropsWithRef<'div'> {
+  /**
+   * Variant-specific. Forwarded by `PickersFilledInput` / `PickersInput` to render an underline.
+   */
+  disableUnderline?: boolean;
   ownerState?: PickerTextFieldOwnerState;
+}
+
+export interface PickersInputBaseInputSlotProps extends React.ComponentPropsWithRef<'div'> {
+  /**
+   * Variant-specific. Forwarded by `PickersFilledInput` to hide the label.
+   */
+  hiddenLabel?: boolean;
+  ownerState?: PickerTextFieldOwnerState;
+}
+
+export interface PickersInputBaseSlotProps {
+  root?: PickersInputBaseRootSlotProps;
+  input?: PickersInputBaseInputSlotProps;
+  htmlInput?: React.ComponentPropsWithRef<'input'>;
+  /**
+   * Props forwarded to each section's content element inside `PickersSectionList`.
+   * Merged with the built-in section content styles.
+   */
+  sectionContent?: PickersSectionListSlotProps['sectionContent'];
+}
+
+export interface PickersInputBaseProps
+  extends
+    Omit<React.HTMLAttributes<HTMLDivElement>, keyof PickersInputPropsUsedByField>,
+    PickersInputPropsUsedByField {
+  ownerState?: PickerTextFieldOwnerState;
+  className?: string;
+  classes?: Record<string, string>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   margin?: 'dense' | 'none' | 'normal';
   renderSuffix?: (state: {
     disabled?: boolean;
@@ -55,17 +121,11 @@ export interface PickersInputBaseProps
    *
    * @default {}
    */
-  slots?: {
-    root?: React.ElementType;
-    input?: React.ElementType;
-  };
+  slots?: PickersInputBaseSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: {
-    root?: any;
-    input?: any;
-  };
+  slotProps?: PickersInputBaseSlotProps;
   'data-multi-input'?: string;
 }

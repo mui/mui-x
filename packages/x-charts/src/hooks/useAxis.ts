@@ -1,5 +1,5 @@
 'use client';
-import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -7,19 +7,18 @@ import {
 import {
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
-  type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useStore } from '../internals/store/useStore';
-import {
-  type AxisId,
-  type ChartsRadiusAxisProps,
-  type ChartsRotationAxisProps,
-  type PolarAxisDefaultized,
-  type ScaleName,
-  type AxisScaleConfig,
-  type ChartsXAxisProps,
-  type ChartsYAxisProps,
-  type ComputedAxis,
+import type {
+  AxisId,
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+  ScaleName,
+  AxisScaleConfig,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  ComputedAxis,
 } from '../models/axis';
 
 /**
@@ -185,7 +184,7 @@ export function useRadiusAxes() {
  */
 export function useRotationAxis(
   axisId?: AxisId,
-): PolarAxisDefaultized<ScaleName, any, ChartsRotationAxisProps> | undefined {
+): ComputedAxis<ScaleName, any, ChartsRotationAxisProps> | undefined {
   const store = useStore<[UseChartPolarAxisSignature]>();
   const { axis: rotationAxis, axisIds: rotationAxisIds } = store.use(selectorChartRotationAxis);
 
@@ -215,7 +214,7 @@ export function useRotationAxis(
  */
 export function useRadiusAxis(
   axisId?: AxisId,
-): PolarAxisDefaultized<ScaleName, any, ChartsRadiusAxisProps> | undefined {
+): ComputedAxis<ScaleName, any, ChartsRadiusAxisProps> | undefined {
   const store = useStore<[UseChartPolarAxisSignature]>();
   const { axis: radiusAxis, axisIds: radiusAxisIds } = store.use(selectorChartRadiusAxis);
 

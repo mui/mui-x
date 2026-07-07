@@ -1,0 +1,15 @@
+<CandlestickChart
+  dataset={dataset}
+  xAxis={[
+    {
+      dataKey: 'date',
+      zoom: { minSpan: 1, filterMode: 'discard' },
+    },
+  ]}
+  series={[
+    {
+      datasetKeys: { open: 'open', high: 'high', low: 'low', close: 'close' },
+    },
+  ]}
+  height={400}
+/>

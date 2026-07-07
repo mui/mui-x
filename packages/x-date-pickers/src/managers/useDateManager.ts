@@ -6,32 +6,26 @@ import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
-import { PickerManager, DateValidationError } from '../models';
+import type { PickerManager, DateValidationError } from '../models';
 import { validateDate } from '../validation';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { ExportedValidateDateProps, ValidateDateProps } from '../validation/validateDate';
-import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
+import type { UseFieldInternalProps } from '../internals/hooks/useField';
+import type { ExportedValidateDateProps, ValidateDateProps } from '../validation/validateDate';
+import type { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
 import { useDefaultDates } from '../internals/hooks/useUtils';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 
-export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  parameters: UseDateManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
-): UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure> {
-  const { enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure } =
-    parameters;
-
+export function useDateManager(): UseDateManagerReturnValue {
   return React.useMemo(
     () => ({
       valueType: 'date',
       validator: validateDate,
       internal_valueManager: singleItemValueManager,
       internal_fieldValueManager: singleItemFieldValueManager,
-      internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
       internal_useApplyDefaultValuesToFieldInternalProps:
         useApplyDefaultValuesToDateFieldInternalProps,
       internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     }),
-    [enableAccessibleFieldDOMStructure],
+    [],
   );
 }
 
@@ -45,13 +39,9 @@ function useOpenPickerButtonAriaLabel(value: PickerValue) {
   }, [value, translations, adapter]);
 }
 
-function useApplyDefaultValuesToDateFieldInternalProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  internalProps: DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-): PickerManagerFieldInternalPropsWithDefaults<
-  UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-> {
+function useApplyDefaultValuesToDateFieldInternalProps(
+  internalProps: DateManagerFieldInternalProps,
+): PickerManagerFieldInternalPropsWithDefaults<UseDateManagerReturnValue> {
   const adapter = usePickerAdapter();
   const validationProps = useApplyDefaultValuesToDateValidationProps(internalProps);
 
@@ -66,10 +56,7 @@ function useApplyDefaultValuesToDateFieldInternalProps<
 }
 
 type SharedDateAndDateRangeValidationProps =
-  | 'disablePast'
-  | 'disableFuture'
-  | 'minDate'
-  | 'maxDate';
+  'disablePast' | 'disableFuture' | 'minDate' | 'maxDate';
 
 export function useApplyDefaultValuesToDateValidationProps(
   props: Pick<ExportedValidateDateProps, SharedDateAndDateRangeValidationProps>,
@@ -88,23 +75,14 @@ export function useApplyDefaultValuesToDateValidationProps(
   );
 }
 
-export interface UseDateManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
-  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
-}
+export type UseDateManagerReturnValue = PickerManager<
+  PickerValue,
+  DateValidationError,
+  ValidateDateProps,
+  DateManagerFieldInternalProps
+>;
 
-export type UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure extends boolean> =
-  PickerManager<
-    PickerValue,
-    TEnableAccessibleFieldDOMStructure,
-    DateValidationError,
-    ValidateDateProps,
-    DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
-  >;
-
-export interface DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface DateManagerFieldInternalProps
   extends
-    MakeOptional<
-      UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>,
-      'format'
-    >,
+    MakeOptional<UseFieldInternalProps<PickerValue, DateValidationError>, 'format'>,
     ExportedValidateDateProps {}

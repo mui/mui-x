@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,10 +14,11 @@ import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { DigitalClockClasses, getDigitalClockUtilityClass } from './digitalClockClasses';
-import { DigitalClockOwnerState, DigitalClockProps } from './DigitalClock.types';
+import type { DigitalClockClasses } from './digitalClockClasses';
+import { getDigitalClockUtilityClass } from './digitalClockClasses';
+import type { DigitalClockOwnerState, DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
-import { PickerValidDate } from '../models';
+import type { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -76,9 +77,10 @@ export const DigitalClockItem = styled(MenuItem, {
     marginTop: 4,
   },
   '&:hover': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.hoverOpacity,
+    ),
   },
   '&.Mui-selected': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
@@ -88,9 +90,10 @@ export const DigitalClockItem = styled(MenuItem, {
     },
   },
   '&.Mui-focusVisible': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.focusOpacity,
+    ),
   },
 }));
 
@@ -384,7 +387,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   );
 }) as DigitalClockComponent;
 
-DigitalClock.propTypes = {
+DigitalClock.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -3,17 +3,20 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
+import type {
+  ExportedBaseToolbarProps,
+  DateOrTimeViewWithMeridiem,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import {
   usePicker,
   PickersModalDialog,
-  ExportedBaseToolbarProps,
-  DateOrTimeViewWithMeridiem,
   PickerProvider,
-  PickerRangeValue,
+  extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import {
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type {
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';
@@ -24,18 +27,12 @@ import { createRangePickerStepNavigation } from '../../utils/createRangePickerSt
 
 export const useMobileRangePicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseMobileRangePickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseMobileRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
   steps,
   ...pickerParams
-}: UseMobileRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseMobileRangePickerParams<TView, TExternalProps>) => {
   useLicenseVerifier({
     releaseDate: '__RELEASE_INFO__',
     version: process.env.MUI_VERSION!,
@@ -78,6 +75,7 @@ export const useMobileRangePicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
+    externalForwardedProps: extractRootForwardedProps(props),
     additionalProps: {
       ...(isSingleInput &&
         isToolbarHidden && {

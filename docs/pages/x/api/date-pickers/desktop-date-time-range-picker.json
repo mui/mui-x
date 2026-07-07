@@ -125,7 +125,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => \"...\"",
+      "default": "() => \"…\"",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
@@ -237,8 +237,8 @@
     },
     {
       "name": "day",
-      "description": "Custom component for day in range pickers.\nCheck the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
-      "default": "DateRangePickersDay",
+      "description": "Custom component for day in range pickers.\nCheck the [DateRangePickerDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
+      "default": "DateRangePickerDay",
       "class": null
     },
     {
@@ -355,7 +355,7 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     },
     {
@@ -366,12 +366,11 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiDesktopDateTimeRangePicker",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DesktopDateTimeRangePicker/DesktopDateTimeRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-picker/\">Date Time Range Picker <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>"
 }

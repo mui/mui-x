@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -27,12 +27,7 @@ type ExportedElements = keyof typeof exportedElements;
 
 interface State {
   valueType:
-    | 'date'
-    | 'time'
-    | 'dateTime'
-    | 'dateRange'
-    | 'timeRange'
-    | 'dateTimeRange';
+    'date' | 'time' | 'dateTime' | 'dateRange' | 'timeRange' | 'dateTimeRange';
   family: 'field' | 'view' | 'picker';
 }
 
@@ -212,7 +207,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
           <div>
             {docPages.map((docPage) => (
               <div key={docPage.path}>
-                <Link href={docPage.path} rel="noopener" target="_blank">
+                <Link href={docPage.path} target="_blank">
                   {docPage.name} documentation
                 </Link>
               </div>

@@ -1,17 +1,15 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import {
-  MultiSectionDigitalClockSectionClasses,
-  getMultiSectionDigitalClockSectionUtilityClass,
-} from './multiSectionDigitalClockSectionClasses';
+import type { MultiSectionDigitalClockSectionClasses } from './multiSectionDigitalClockSectionClasses';
+import { getMultiSectionDigitalClockSectionUtilityClass } from './multiSectionDigitalClockSectionClasses';
 import type {
   MultiSectionDigitalClockOption,
   MultiSectionDigitalClockSlots,
@@ -22,10 +20,10 @@ import {
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '../internals/constants/dimensions';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
-import { FormProps } from '../internals/models/formProps';
-import { PickerOwnerState } from '../models/pickers';
+import type { FormProps } from '../internals/models/formProps';
+import type { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
+import type { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
@@ -107,9 +105,10 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
     marginTop: 4,
   },
   '&:hover': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.hoverOpacity,
+    ),
   },
   '&.Mui-selected': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
@@ -119,9 +118,10 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
     },
   },
   '&.Mui-focusVisible': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      (theme.vars || theme).palette.action.focusOpacity,
+    ),
   },
 }));
 

@@ -1,23 +1,23 @@
-import * as React from 'react';
-import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { BasePickerProps } from '../../models/props/basePickerProps';
-import {
+import type * as React from 'react';
+import type { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { BasePickerProps } from '../../models/props/basePickerProps';
+import type {
   PickerPopperSlots,
   PickerPopperSlotProps,
 } from '../../components/PickerPopper/PickerPopper';
-import { UsePickerParameters, UsePickerNonStaticProps, UsePickerProps } from '../usePicker';
-import { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
-import {
+import type { UsePickerParameters, UsePickerNonStaticProps, UsePickerProps } from '../usePicker';
+import type { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
+import type {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
   PickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import {
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import type {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
 } from '../../components/PickerFieldUI';
-import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
+import type { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseDesktopPickerSlots
   extends
@@ -30,24 +30,16 @@ export interface UseDesktopPickerSlots
   field: React.ElementType;
 }
 
-export interface ExportedUseDesktopPickerSlotProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->
+export interface ExportedUseDesktopPickerSlotProps
   extends
     PickerPopperSlotProps,
     ExportedPickersLayoutSlotProps<PickerValue>,
     PickerFieldUISlotPropsFromContext {
-  field?: SlotComponentPropsFromProps<
-    PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
-    {},
-    PickerOwnerState
-  >;
+  field?: SlotComponentPropsFromProps<PickerFieldSlotProps<PickerValue>, {}, PickerOwnerState>;
 }
 
-export interface UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
+export interface UseDesktopPickerSlotProps
+  extends ExportedUseDesktopPickerSlotProps, Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface DesktopOnlyPickerProps extends UsePickerNonStaticProps {
   /**
@@ -59,7 +51,6 @@ export interface DesktopOnlyPickerProps extends UsePickerNonStaticProps {
 
 export interface UseDesktopPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
 >
@@ -75,18 +66,12 @@ export interface UseDesktopPickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseDesktopPickerSlotProps;
 }
 
 export interface UseDesktopPickerParams<
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseDesktopPickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseDesktopPickerProps<TView, any, TExternalProps>,
 > extends Pick<
   UsePickerParameters<PickerValue, TView, TExternalProps>,
   'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'

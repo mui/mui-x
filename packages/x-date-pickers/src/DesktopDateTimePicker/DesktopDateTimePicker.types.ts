@@ -1,31 +1,27 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
-import {
+import type {
   BaseDateTimePickerProps,
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
-import { DateOrTimeView } from '../models';
-import { DigitalTimePickerProps } from '../internals/models/props/time';
-import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
+import type { DateOrTimeView } from '../models';
+import type { DigitalTimePickerProps } from '../internals/models/props/time';
+import type { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDateTimePickerSlots
   extends
     BaseDateTimePickerSlots,
     MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
-export interface DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends
-    BaseDateTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+export interface DesktopDateTimePickerSlotProps
+  extends BaseDateTimePickerSlotProps, ExportedUseDesktopPickerSlotProps {}
 
-export interface DesktopDateTimePickerProps<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->
+export interface DesktopDateTimePickerProps
   extends
     BaseDateTimePickerProps,
     DesktopOnlyPickerProps,
@@ -40,7 +36,7 @@ export interface DesktopDateTimePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDateTimePickerSlotProps;
   /**
    * Available views.
    */

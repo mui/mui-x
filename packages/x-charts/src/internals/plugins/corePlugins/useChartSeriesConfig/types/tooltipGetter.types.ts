@@ -4,17 +4,17 @@ import type {
   ChartSeriesType,
   ChartsSeriesConfig,
 } from '../../../../../models/seriesType/config';
-import { type SeriesId } from '../../../../../models/seriesType/common';
-import {
-  type AxisId,
-  type ChartsRotationAxisProps,
-  type ChartsRadiusAxisProps,
-  type PolarAxisDefaultized,
-  type ComputedXAxis,
-  type ComputedYAxis,
+import type { SeriesId } from '../../../../../models/seriesType/common';
+import type {
+  AxisId,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  PolarAxisDefaultized,
+  ComputedXAxis,
+  ComputedYAxis,
 } from '../../../../../models/axis';
-import { type ChartsLabelMarkProps } from '../../../../../ChartsLabel/ChartsLabelMark';
-import { type ColorGetter } from './colorProcessor.types';
+import type { ChartsLabelMarkProps } from '../../../../../ChartsLabel/ChartsLabelMark';
+import type { ColorGetter } from './colorProcessor.types';
 
 export interface ItemTooltipValue<SeriesType extends ChartSeriesType> {
   /**
@@ -24,11 +24,17 @@ export interface ItemTooltipValue<SeriesType extends ChartSeriesType> {
   /**
    * The value.
    */
-  value: SeriesType extends 'heatmap' ? number | null : ChartsSeriesConfig[SeriesType]['valueType'];
+  value: SeriesType extends 'heatmap'
+    ? number | null
+    : SeriesType extends 'ohlc'
+      ? { open: number; high: number; low: number; close: number } | null
+      : ChartsSeriesConfig[SeriesType]['valueType'];
   /**
    * The value formatted with context set to "tooltip".
    */
-  formattedValue: string | null;
+  formattedValue: SeriesType extends 'ohlc'
+    ? { open: string | null; high: string | null; low: string | null; close: string | null }
+    : string | null;
   /**
    * The series mark type.
    */
@@ -66,16 +72,21 @@ export interface TooltipGetterAxesConfig {
   radius?: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
 }
 
-export type TooltipGetter<SeriesType extends ChartSeriesType> = (params: {
+export interface TooltipGetterParams<SeriesType extends ChartSeriesType> {
   series: ChartSeriesDefaultized<SeriesType>;
   axesConfig: TooltipGetterAxesConfig;
   getColor: ColorGetter<SeriesType>;
   identifier: SeriesItemIdentifierWithType<SeriesType> | null;
-}) =>
+}
+export type TooltipGetterResult<SeriesType extends ChartSeriesType> =
   | (SeriesType extends 'radar'
       ? ItemTooltipWithMultipleValues<SeriesType>
       : ItemTooltip<SeriesType>)
   | null;
+
+export type TooltipGetter<SeriesType extends ChartSeriesType> = (
+  params: TooltipGetterParams<SeriesType>,
+) => TooltipGetterResult<SeriesType>;
 
 /**
  * If `axisId` is set to undefined, the default axis will be used.

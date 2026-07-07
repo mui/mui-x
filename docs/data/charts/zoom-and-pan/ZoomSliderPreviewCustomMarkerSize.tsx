@@ -7,7 +7,7 @@ import {
   ScatterChartProProps,
 } from '@mui/x-charts-pro/ScatterChartPro';
 import Slider from '@mui/material/Slider';
-import { globalGdpPerCapita } from '../dataset/globalGdpPerCapita';
+import { globalCo2GdpPopulation } from '../dataset/globalCo2GdpPopulation';
 import { globalBirthPerWoman } from '../dataset/globalBirthsPerWoman';
 import {
   continents,
@@ -29,7 +29,7 @@ const dataPerContinent = continents.map((continent) =>
   countriesInContinent[continent]
     .map((code) => ({
       id: code,
-      x: globalGdpPerCapita.find((d) => d.code === code)?.gdpPerCapita,
+      x: globalCo2GdpPopulation.find((d) => d.code === code)?.gdpPerCapita,
       y: globalBirthPerWoman.find((d) => d.code === code)?.rate,
     }))
     .filter(
@@ -55,13 +55,15 @@ export default function ZoomSliderPreviewCustomMarkerSize() {
 
   return (
     <Stack
-      width="100%"
-      gap={2}
       direction="row"
-      justifyContent="center"
-      flexWrap={{ xs: 'wrap-reverse', sm: 'nowrap' }}
+      sx={{
+        width: '100%',
+        gap: 2,
+        justifyContent: 'center',
+        flexWrap: { xs: 'wrap-reverse', sm: 'nowrap' },
+      }}
     >
-      <Stack width="100%" gap={2}>
+      <Stack sx={{ width: '100%', gap: 2 }}>
         <Typography variant="h6" sx={{ alignSelf: 'center' }}>
           Births per woman vs GDP per capita (USD, 2023)
         </Typography>
@@ -77,12 +79,13 @@ export default function ZoomSliderPreviewCustomMarkerSize() {
           Source: Our World in Data. Updated: 2023.
         </Typography>
       </Stack>
-
       <Stack
-        minWidth="120px"
-        justifyContent="center"
-        alignItems="center"
-        alignSelf="center"
+        sx={{
+          minWidth: '120px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          alignSelf: 'center',
+        }}
       >
         <Typography id="marker-size-slider" gutterBottom>
           Marker Size: {markerSize}

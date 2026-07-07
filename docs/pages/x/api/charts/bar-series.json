@@ -33,7 +33,16 @@
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "valueFormatter": {
+      "type": {
+        "description": "SeriesValueFormatter&lt;ChartsSeriesConfig[SeriesType]['valueType']&gt;"
+      }
+    },
+    "valueGetter": {
+      "type": {
+        "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; BarValueType | null"
+      }
+    },
     "xAxisId": { "type": { "description": "AxisId" } },
     "yAxisId": { "type": { "description": "AxisId" } }
   }

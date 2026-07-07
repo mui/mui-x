@@ -1,0 +1,13 @@
+<LineChart
+  dataset={dataset}
+  xAxis={[
+    {
+      scaleType: 'time',
+      valueGetter: (item) => new Date(item.date as string),
+      valueFormatter: (value: Date) =>
+        value.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+    },
+  ]}
+  series={[{ dataKey: 'value', label: 'Readings' }]}
+  height={300}
+/>

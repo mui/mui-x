@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Stack, { StackProps, stackClasses } from '@mui/material/Stack';
+import type { StackProps } from '@mui/material/Stack';
+import Stack, { stackClasses } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { textFieldClasses } from '@mui/material/TextField';
 import { pickersTextFieldClasses } from '../../PickersTextField';
 
@@ -69,15 +70,14 @@ interface DemoItemProps extends Omit<StackProps, 'component'> {
  * Please do not use it in your application.
  */
 export function DemoItem(props: DemoItemProps) {
-  const { label, children, component, sx: sxProp, alignItems = 'stretch' } = props;
+  const { label, children, component, sx: sxProp } = props;
 
   let spacing: StackProps['spacing'];
-  let sx = sxProp;
+  let sx: SxProps<Theme> = {};
 
   if (component && getChildTypeFromChildName(component) === 'multi-input-range-field') {
     spacing = 1.5;
     sx = {
-      ...sx,
       [`& .${textFieldClasses.root}`]: {
         flexGrow: 1,
       },
@@ -87,7 +87,11 @@ export function DemoItem(props: DemoItemProps) {
   }
 
   return (
-    <Stack direction="column" alignItems={alignItems} spacing={spacing} sx={sx}>
+    <Stack
+      direction="column"
+      spacing={spacing}
+      sx={[...(Array.isArray(sxProp) ? sxProp : [sxProp]), sx]}
+    >
       {label && <Typography variant="body2">{label}</Typography>}
       {children}
     </Stack>
@@ -198,7 +202,12 @@ export function DemoContainer(props: DemoGridProps) {
         if (React.isValidElement(child) && isDemoItem(child)) {
           // Inject sx styles to the `DemoItem` if it is a direct child of `DemoContainer`.
           // @ts-ignore
-          return React.cloneElement(child, { sx: { ...extraSx, ...demoItemSx } });
+          return React.cloneElement(child, {
+            sx: [
+              { ...extraSx, ...demoItemSx },
+              ...(Array.isArray(child.props.sx) ? child.props.sx : [child.props.sx]),
+            ],
+          });
         }
         return child;
       })}

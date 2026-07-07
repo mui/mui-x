@@ -7,23 +7,25 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
+import type { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DayCalendar } from './DayCalendar';
 import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
 import { useViews } from '../internals/hooks/useViews';
-import { PickersCalendarHeader, PickersCalendarHeaderProps } from '../PickersCalendarHeader';
+import type { PickersCalendarHeaderProps } from '../PickersCalendarHeader';
+import { PickersCalendarHeader } from '../PickersCalendarHeader';
 import { findClosestEnabledDate, mergeDateAndTime } from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
-import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
-import { BaseDateValidationProps } from '../internals/models/validation';
+import type { DateCalendarClasses } from './dateCalendarClasses';
+import { getDateCalendarUtilityClass } from './dateCalendarClasses';
+import type { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { PickerOwnerState, PickerValidDate } from '../models';
+import type { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
@@ -56,7 +58,7 @@ function useDateCalendarDefaultizedProps(
     views: themeProps.views ?? ['year', 'day'],
     reduceAnimations,
     renderLoading:
-      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
+      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">…</span>),
   };
 }
 
@@ -400,7 +402,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   );
 }) as DateCalendarComponent;
 
-DateCalendar.propTypes = {
+DateCalendar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -441,7 +443,7 @@ DateCalendar.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -541,7 +543,7 @@ DateCalendar.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

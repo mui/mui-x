@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const faIRGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'عملگرها',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'یا',
-  filterPanelColumns: 'ستون‌ها',
+  filterPanelColumn: 'ستون‌ها',
   filterPanelInputLabel: 'مقدار',
   filterPanelInputPlaceholder: 'فیلتر مقدار',
 

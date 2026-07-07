@@ -2,23 +2,26 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { styled, Theme } from '@mui/material/styles';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   eventCalendarPreferenceSelectors,
   eventCalendarViewSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { responsiveTypographyContainerQueries } from '../internals/constants/responsiveTypography';
+import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { ErrorContainer } from '../internals/components/error-container';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
-import { ResourcesLegend } from './resources-legend';
+import { ResourcesTree } from './resources-tree';
 import { MiniCalendar } from './mini-calendar';
 import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
@@ -38,6 +41,7 @@ const EventCalendarRootStyled = styled('div', {
   '*, *::before, *::after': {
     boxSizing: 'inherit',
   },
+  position: 'relative',
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -89,6 +93,11 @@ const EventCalendarContent = styled('section', {
   height: '100%',
   maxHeight: '100%',
 
+  // The container itself lives on ResponsiveTypographyContainer one level up;
+  // these @container rules fire against that ancestor and retarget the
+  // effective vars on this slot, which descendants inherit.
+  ...responsiveTypographyContainerQueries,
+
   '&[data-side-panel-open="false"]': {
     gridColumn: '1 / -1',
   },
@@ -104,7 +113,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     const { children, className, ...other } = props;
 
     const store = useEventCalendarStoreContext();
-    const { classes } = useEventCalendarStyledContext();
+    const { classes, localeText } = useEventCalendarStyledContext();
 
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
@@ -147,18 +156,20 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             <EventCalendarSidePanel className={classes.sidePanel}>
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />
-              <ResourcesLegend />
+              <ResourcesTree />
             </EventCalendarSidePanel>
           </Collapse>
 
-          <EventCalendarContent
-            className={classes.content}
-            data-view={view}
-            data-side-panel-open={isSidePanelOpen}
-            aria-label="Calendar content"
-          >
-            {content}
-          </EventCalendarContent>
+          <ResponsiveTypographyContainer>
+            <EventCalendarContent
+              className={classes.content}
+              data-view={view}
+              data-side-panel-open={isSidePanelOpen}
+              aria-label={localeText.calendarContentAriaLabel}
+            >
+              {content}
+            </EventCalendarContent>
+          </ResponsiveTypographyContainer>
         </EventCalendarMainPanel>
         <ErrorContainer />
         {children}

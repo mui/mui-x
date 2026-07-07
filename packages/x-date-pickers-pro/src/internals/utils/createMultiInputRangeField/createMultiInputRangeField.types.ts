@@ -1,20 +1,16 @@
 import type { TypographyProps } from '@mui/material/Typography';
 import type { StackProps } from '@mui/material/Stack';
-import type { TextFieldProps } from '@mui/material/TextField';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import {
-  PickerManagerEnableAccessibleFieldDOMStructure,
-  PickerManagerFieldInternalProps,
-} from '@mui/x-date-pickers/internals';
-import {
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerManagerFieldInternalProps } from '@mui/x-date-pickers/internals';
+import type {
   FieldType,
   MultiInputFieldRefs,
   RangeFieldSeparatorProps,
   RangePosition,
 } from '../../../models';
-import { PickerAnyRangeManager } from '../../models/managers';
+import type { PickerAnyRangeManager } from '../../models/managers';
 
 export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
   MultiInputFieldRefs &
@@ -55,7 +51,7 @@ export interface MultiInputRangeFieldSlots {
   /**
    * Form control with an input to render a date.
    * It is rendered twice: once for the start date and once for the end date.
-   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
+   * @default <PickersTextField />
    */
   textField?: React.ElementType;
   /**
@@ -68,7 +64,7 @@ export interface MultiInputRangeFieldSlots {
 export interface MultiInputRangeFieldSlotProps {
   root?: SlotComponentPropsFromProps<StackProps, {}, FieldOwnerState>;
   textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
+    PickersTextFieldProps,
     {},
     FieldOwnerState & {
       position: RangePosition;
@@ -87,11 +83,7 @@ export interface MultiInputRangeFieldClasses {
 export interface CreateMultiInputRangeFieldParameters<TManager extends PickerAnyRangeManager> {
   name: string;
   getUtilityClass: (slot: string) => string;
-  useManager: (
-    params: RangeFieldSeparatorProps & {
-      enableAccessibleFieldDOMStructure: PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
-    },
-  ) => TManager;
+  useManager: (params: RangeFieldSeparatorProps) => TManager;
   allowTriggerShifting?: boolean;
 }
 

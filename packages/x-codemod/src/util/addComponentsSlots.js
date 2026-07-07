@@ -9,13 +9,47 @@ export const addItemToObject = (path, value, object, j) => {
 
   // Final case where we have to add the property to the object.
   if (splittedPath.length === 1) {
-    const propertyToAdd = j.objectProperty(j.identifier(path), value);
     if (object === null) {
+      const propertyToAdd = j.objectProperty(j.identifier(path), value);
       return j.objectExpression([propertyToAdd]);
     }
 
+    // When both the existing and new values are ObjectExpressions, merge their properties
+    // (new properties win on key conflicts) instead of replacing the entire object.
+    const existingProperty = (object.properties ?? []).find(
+      (property) => property.key?.name === path || property.key?.value === path,
+    );
+    if (
+      existingProperty &&
+      existingProperty.value.type === 'ObjectExpression' &&
+      value.type === 'ObjectExpression'
+    ) {
+      // Spread elements (e.g. `{ ...rest }`) have no `key`, so guard against `undefined`
+      // sneaking into the dedup set — otherwise existing spreads would be filtered out.
+      const newKeys = new Set(
+        value.properties.map((p) => p.key?.name ?? p.key?.value).filter((key) => key !== undefined),
+      );
+      const mergedValue = j.objectExpression([
+        ...existingProperty.value.properties.filter((p) => {
+          const key = p.key?.name ?? p.key?.value;
+          return key === undefined || !newKeys.has(key);
+        }),
+        ...value.properties,
+      ]);
+      const mergedProperty = j.objectProperty(j.identifier(path), mergedValue);
+      return j.objectExpression([
+        ...(object.properties ?? []).filter(
+          (property) => (property.key?.name ?? property.key?.value) !== path,
+        ),
+        mergedProperty,
+      ]);
+    }
+
+    const propertyToAdd = j.objectProperty(j.identifier(path), value);
     return j.objectExpression([
-      ...(object.properties ?? []).filter((property) => property.key.name !== path),
+      ...(object.properties ?? []).filter(
+        (property) => (property.key?.name ?? property.key?.value) !== path,
+      ),
       propertyToAdd,
     ]);
   }
@@ -33,8 +67,9 @@ export const addItemToObject = (path, value, object, j) => {
   }
 
   // Look if the object we got already contains the property we have to use.
+  // `property.key` is missing on spread / rest elements, so guard the access.
   const correspondingObject = (object.properties ?? []).find(
-    (property) => property.key.name === targetKey,
+    (property) => (property.key?.name ?? property.key?.value) === targetKey,
   );
 
   const propertyToAdd = j.objectProperty(
@@ -44,7 +79,9 @@ export const addItemToObject = (path, value, object, j) => {
   );
 
   return j.objectExpression([
-    ...(object.properties ?? []).filter((property) => property.key.name !== targetKey),
+    ...(object.properties ?? []).filter(
+      (property) => (property.key?.name ?? property.key?.value) !== targetKey,
+    ),
     propertyToAdd,
   ]);
 };

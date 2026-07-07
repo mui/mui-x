@@ -1,15 +1,16 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { PickersTextField, PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
+import type { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   PickerFieldUIContext,
   useNullablePickerContext,
   mergeSlotProps,
 } from '@mui/x-date-pickers/internals';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import { MultiInputRangeFieldSlotProps } from './createMultiInputRangeField.types';
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type { MultiInputRangeFieldSlotProps } from './createMultiInputRangeField.types';
 import { useNullablePickerRangePositionContext } from '../../hooks/useNullablePickerRangePositionContext';
 
 export function useTextFieldProps({
@@ -42,21 +43,23 @@ export function useTextFieldProps({
     ownerState: { ...ownerState, position },
   });
 
-  if (!textFieldProps.InputProps) {
-    textFieldProps.InputProps = {};
+  if (!textFieldProps.slotProps) {
+    textFieldProps.slotProps = {};
   }
+  const inputSlotProps: Record<string, any> = { ...textFieldProps.slotProps.input };
 
   if (pickerContext) {
     if (!allowTriggerShifting) {
       if (position === 'start') {
-        textFieldProps.InputProps.ref = pickerContext.triggerRef;
+        inputSlotProps.ref = pickerContext.triggerRef;
       }
     } else if (rangePositionContext?.rangePosition === position) {
-      textFieldProps.InputProps.ref = pickerContext.triggerRef;
+      inputSlotProps.ref = pickerContext.triggerRef;
     }
   }
 
-  textFieldProps.InputProps['data-multi-input'] = position;
+  inputSlotProps['data-multi-input'] = position;
+  textFieldProps.slotProps.input = inputSlotProps;
 
   return textFieldProps;
 }

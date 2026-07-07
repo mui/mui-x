@@ -11,6 +11,6 @@ describe('<MonthCalendar /> - Describe Conformance', () => {
     render,
     muiName: 'MuiMonthCalendar',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'themeVariants'],
   }));
 });

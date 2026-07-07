@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { TreeViewValidItem } from '@mui/x-tree-view/models';
-import { UseTreeViewStoreParameters } from '@mui/x-tree-view/internals';
-import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
-import { RichTreeViewProProps } from './RichTreeViewPro.types';
+import type { TreeViewValidItem } from '@mui/x-tree-view/models';
+import type { UseTreeViewStoreParameters } from '@mui/x-tree-view/internals';
+import type { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
+import type { RichTreeViewProProps } from './RichTreeViewPro.types';
 
 export function useExtractRichTreeViewProParameters<
   R extends TreeViewValidItem<R>,
@@ -49,6 +49,7 @@ export function useExtractRichTreeViewProParameters<
     // RichTreeViewProStore parameters
     dataSource,
     dataSourceCache,
+    onItemsLazyLoaded,
     itemsReordering,
     isItemReorderable,
     canMoveItemToNewPosition,
@@ -96,6 +97,7 @@ export function useExtractRichTreeViewProParameters<
       // RichTreeViewProStore parameters
       dataSource,
       dataSourceCache,
+      onItemsLazyLoaded,
       itemsReordering,
       isItemReorderable,
       canMoveItemToNewPosition,
@@ -138,6 +140,7 @@ export function useExtractRichTreeViewProParameters<
       // RichTreeViewProStore parameters
       dataSource,
       dataSourceCache,
+      onItemsLazyLoaded,
       itemsReordering,
       isItemReorderable,
       canMoveItemToNewPosition,

@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventCalendar, EventCalendarPremium
 ---
 
 # Event Calendar - Navigation
 
-<p class="description">Navigate in time to find the events you are looking for.</p>
+<p class="description">Control the visible date and navigate programmatically with the imperative API.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Default visible date
 
@@ -38,7 +39,7 @@ return (
 
 ## Imperative API
 
-To use the `apiRef` object, you need to initialize it using the `useEventCalendarApiRef()` or `useEventCalendarPremiumApiRef()` hook as follows:
+To use the `apiRef` object, initialize it with the `useEventCalendarApiRef()` or `useEventCalendarPremiumApiRef()` hook:
 
 ```tsx
 // Community package
@@ -61,7 +62,7 @@ Use the `setVisibleDate()` API method to navigate to a given date:
 
 ```ts
 apiRef.current.setVisibleDate({
-  // The DOM event that triggered the change (we be passed to onVisibleDateChange if provided).
+  // The DOM event that triggered the change (will be passed to onVisibleDateChange if provided).
   event,
   // The date to navigate to.
   visibleDate,

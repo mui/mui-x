@@ -2,10 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useStore } from '@mui/x-internals/store';
-import { TreeItemProviderProps } from './TreeItemProvider.types';
+import type { TreeItemProviderProps } from './TreeItemProvider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { idSelectors } from '../internals/plugins/id';
-import { TreeViewAnyStore } from '../internals/models';
+import type { TreeViewAnyStore } from '../internals/models';
 
 function TreeItemProvider(props: TreeItemProviderProps) {
   const { children, itemId, id } = props;
@@ -15,7 +15,7 @@ function TreeItemProvider(props: TreeItemProviderProps) {
   return <React.Fragment>{wrapItem({ children, itemId, store, idAttribute })}</React.Fragment>;
 }
 
-TreeItemProvider.propTypes = {
+TreeItemProvider.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

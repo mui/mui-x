@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
@@ -92,7 +93,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Операторы',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
-  filterPanelColumns: 'Столбцы',
+  filterPanelColumn: 'Столбцы',
   filterPanelInputLabel: 'Значение',
   filterPanelInputPlaceholder: 'Значение фильтра',
 

@@ -6,7 +6,8 @@ import {
   describeValue,
 } from 'test/utils/pickers';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { formatMeridiem, PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { formatMeridiem } from '@mui/x-date-pickers/internals';
 
 describe('<MultiSectionDigitalClock /> - Describe Value', () => {
   const { render } = createPickerRenderer();
@@ -37,9 +38,9 @@ describe('<MultiSectionDigitalClock /> - Describe Value', () => {
         }
       }
     },
-    setNewValue: (value) => {
+    setNewValue: async (value, { user }) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
-      multiSectionDigitalClockHandler.setViewValue(adapterToUse, newValue);
+      await multiSectionDigitalClockHandler.setViewValue(user, adapterToUse, newValue);
 
       return newValue;
     },

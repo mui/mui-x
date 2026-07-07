@@ -1,0 +1,20 @@
+[
+  { "name": "EventCalendarPremium", "kind": "Variable" },
+  { "name": "EventCalendarPremiumApiRef", "kind": "TypeAlias" },
+  { "name": "EventCalendarPremiumProps", "kind": "Interface" },
+  { "name": "EventTimelinePremium", "kind": "Variable" },
+  { "name": "EventTimelinePremiumApiRef", "kind": "TypeAlias" },
+  { "name": "eventTimelinePremiumClasses", "kind": "Variable" },
+  { "name": "EventTimelinePremiumClasses", "kind": "Interface" },
+  { "name": "EventTimelinePremiumClassKey", "kind": "TypeAlias" },
+  { "name": "EventTimelinePremiumProps", "kind": "Interface" },
+  { "name": "getEventTimelinePremiumUtilityClass", "kind": "Function" },
+  { "name": "StandaloneAgendaViewPremium", "kind": "Variable" },
+  { "name": "StandaloneAgendaViewPremiumProps", "kind": "Interface" },
+  { "name": "StandaloneDayViewPremium", "kind": "Variable" },
+  { "name": "StandaloneDayViewPremiumProps", "kind": "Interface" },
+  { "name": "StandaloneMonthViewPremium", "kind": "Variable" },
+  { "name": "StandaloneMonthViewPremiumProps", "kind": "Interface" },
+  { "name": "StandaloneWeekViewPremium", "kind": "Variable" },
+  { "name": "StandaloneWeekViewPremiumProps", "kind": "Interface" }
+]

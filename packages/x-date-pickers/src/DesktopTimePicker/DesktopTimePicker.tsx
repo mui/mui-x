@@ -5,8 +5,9 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
-import { DesktopTimePickerProps } from './DesktopTimePicker.types';
-import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import type { DesktopTimePickerProps } from './DesktopTimePicker.types';
+import type { TimePickerViewRenderers } from '../TimePicker/shared';
+import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateTime } from '../validation';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
@@ -14,14 +15,13 @@ import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
-import { TimeView, PickerOwnerState } from '../models';
+import type { TimeView, PickerOwnerState } from '../models';
 
-type DesktopTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopTimePickerComponent = ((
+  props: DesktopTimePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -34,10 +34,8 @@ type DesktopTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends b
  *
  * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
-const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopTimePicker = React.forwardRef(function DesktopTimePicker(
+  inProps: DesktopTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
@@ -45,7 +43,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
     TimeViewWithMeridiem,
-    DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>
+    DesktopTimePickerProps
   >(inProps, 'MuiDesktopTimePicker');
 
   const {
@@ -102,11 +100,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     },
   };
 
-  const { renderPicker } = useDesktopPicker<
-    TimeViewWithMeridiem,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopPicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -118,7 +112,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   return renderPicker();
 }) as DesktopTimePickerComponent;
 
-DesktopTimePicker.propTypes = {
+DesktopTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -178,10 +172,6 @@ DesktopTimePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.

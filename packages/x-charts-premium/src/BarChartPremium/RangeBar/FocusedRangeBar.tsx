@@ -19,6 +19,10 @@ export function FocusedRangeBar(props: React.SVGAttributes<SVGRectElement>) {
 
   const series = rangeBarSeries.series[focusedItem.seriesId];
 
+  if (!series || series.hidden) {
+    return null;
+  }
+
   if (series.data[focusedItem.dataIndex] == null) {
     // Handle missing data
     return null;

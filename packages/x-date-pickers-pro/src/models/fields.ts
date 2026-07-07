@@ -1,6 +1,10 @@
-import * as React from 'react';
-import { PickerRangeValue, PickerValidValue, PickerValue } from '@mui/x-date-pickers/internals';
-import { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
+import type * as React from 'react';
+import type {
+  PickerRangeValue,
+  PickerValidValue,
+  PickerValue,
+} from '@mui/x-date-pickers/internals';
+import type { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
 import type { UseMultiInputRangeFieldTextFieldProps } from '../hooks/useMultiInputRangeField';
 
 export type { FieldRangeSection } from '@mui/x-date-pickers/internals';
@@ -10,12 +14,10 @@ export type FieldType = 'single-input' | 'multi-input';
 /**
  * Props the `textField` slot of the multi input field can receive when used inside a picker.
  */
-export type MultiInputFieldSlotTextFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> = UseMultiInputRangeFieldTextFieldProps<
-  TEnableAccessibleFieldDOMStructure,
-  { label?: React.ReactNode; focused?: boolean }
->;
+export type MultiInputFieldSlotTextFieldProps = UseMultiInputRangeFieldTextFieldProps<{
+  label?: React.ReactNode;
+  focused?: boolean;
+}>;
 
 /**
  * Props the `root` slot of the multi input field can receive when used inside a picker.
@@ -46,6 +48,5 @@ export interface RangeFieldSeparatorProps {
 /**
  * Props the `slotProps.field` of a range picker component can receive.
  */
-export type PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> &
-    RangeFieldSeparatorProps;
+export type PickerRangeFieldSlotProps = PickerFieldSlotProps<PickerRangeValue> &
+  RangeFieldSeparatorProps;

@@ -3,23 +3,22 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventTimelinePremium
 ---
 
 # Event Timeline - Localization
 
-<p class="description">The Event Timeline's localization features provide the appropriate translations for users around the world.</p>
+<p class="description">Translate UI labels and date formats to support a global audience.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 The default locale of MUI X is English (United States).
-To use other locales, follow the instructions below.
 
 ## Translation keys
 
-You can use the `localeText` prop to pass in your own text and translations.
-You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
-in the GitHub repository.
-In the following example, the resource column header and loading text are customized.
+Use the `localeText` prop to pass in your own text and translations.
+You can find all supported translation keys in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts) on GitHub.
+The demo below customizes the resource column header and loading text.
 
 {{"demo": "CustomLocaleTextTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -30,7 +29,7 @@ When provided, `resourceColumnLabel` takes priority over `localeText.timelineRes
 
 ## Locale text
 
-You can use the theme to configure the locale text and replace the default locale:
+Use the theme to configure the locale text:
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -52,8 +51,8 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-Note that `createTheme()` accepts any number of arguments.
-If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text), you can add `frFR` as a new argument.
+The `createTheme()` function accepts any number of arguments.
+If you're already using the [translations of the core components](/material-ui/guides/localization/#locale-text), you can add `frFR` as a new argument.
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -78,7 +77,7 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-If you want to pass language translations directly to the Event Timeline without using `createTheme()` and `ThemeProvider`, you can directly load the language translations from `@mui/x-scheduler/locales`.
+To pass language translations directly to the Event Timeline without using `createTheme()` and `ThemeProvider`, load them from `@mui/x-scheduler/locales`.
 
 ```jsx
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -132,12 +131,9 @@ import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-pr
 
 ### Supported locales
 
-You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-scheduler/src/locales) in the GitHub repository.
+You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-scheduler/src/locales) on GitHub.
 
-| Locale                  | BCP 47 language tag | Import name |
-| :---------------------- | :------------------ | :---------- |
-| English (United States) | en-US               | `enUS`      |
-| French                  | fr-FR               | `frFR`      |
+{{"demo": "SchedulerLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
-To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
-Note that these translations of the Scheduler component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
+To create your own translation or customize the English text, copy this file to your project, make any needed changes, and import the locale from there.
+These translations follow the [Localization strategy](/material-ui/guides/localization/) of the whole library.

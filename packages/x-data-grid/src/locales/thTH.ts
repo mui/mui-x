@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('th-TH');
 
@@ -73,7 +70,7 @@ const thTHGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'ตัวดำเนินการ',
   filterPanelOperatorAnd: 'และ',
   filterPanelOperatorOr: 'หรือ',
-  filterPanelColumns: 'คอลัมน์',
+  filterPanelColumn: 'คอลัมน์',
   filterPanelInputLabel: 'ค่า',
   filterPanelInputPlaceholder: 'ค่าตัวกรอง',
 

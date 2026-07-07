@@ -1,25 +1,23 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
-import {
+import type {
   BaseDatePickerProps,
   BaseDatePickerSlots,
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
-import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
+import type { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDatePickerSlots
   extends BaseDatePickerSlots, MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
-export interface DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends
-    BaseDatePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+export interface DesktopDatePickerSlotProps
+  extends BaseDatePickerSlotProps, ExportedUseDesktopPickerSlotProps {}
 
-export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+export interface DesktopDatePickerProps
   extends BaseDatePickerProps, DesktopOnlyPickerProps, ExportedYearCalendarProps {
   /**
    * Overridable component slots.
@@ -30,7 +28,7 @@ export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure exten
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDatePickerSlotProps;
   /**
    * Years rendered per row.
    * @default 4

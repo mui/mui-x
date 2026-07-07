@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const fiFIGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operaattorit',
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',
-  filterPanelColumns: 'Sarakkeet',
+  filterPanelColumn: 'Sarakkeet',
   filterPanelInputLabel: 'Arvo',
   filterPanelInputPlaceholder: 'Suodattimen arvo',
 

@@ -1,11 +1,12 @@
 import useSlotProps from '@mui/utils/useSlotProps';
 import { PickerPopper } from '../../components/PickerPopper/PickerPopper';
-import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
+import type { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
+import { extractRootForwardedProps } from '../../utils/utils';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -15,18 +16,12 @@ import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePi
  */
 export const useDesktopPicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseDesktopPickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseDesktopPickerProps<TView, any, TExternalProps>,
 >({
   props,
   steps,
   ...pickerParams
-}: UseDesktopPickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseDesktopPickerParams<TView, TExternalProps>) => {
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 
   const getStepNavigation = createNonRangePickerStepNavigation({ steps });
@@ -52,6 +47,7 @@ export const useDesktopPicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
+    externalForwardedProps: extractRootForwardedProps(props),
     additionalProps: {
       // Forwarded props
       ...(isToolbarHidden && { id: labelId }),

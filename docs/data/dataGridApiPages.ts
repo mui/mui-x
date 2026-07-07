@@ -1,4 +1,4 @@
-import type { MuiPage } from '@mui/docs/MuiPage';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const dataGridApiPages: MuiPage[] = [
   {
@@ -63,6 +63,10 @@ const dataGridApiPages: MuiPage[] = [
   {
     pathname: '/x/api/data-grid/grid-filter-panel',
     title: 'GridFilterPanel',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-filter-panel-base',
+    title: 'GridFilterPanelBase',
   },
   {
     pathname: '/x/api/data-grid/grid-toolbar-quick-filter',

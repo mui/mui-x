@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const nlNLGrid: Partial<GridLocaleText> = {
   // Root
@@ -68,7 +69,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operatoren',
   filterPanelOperatorAnd: 'En',
   filterPanelOperatorOr: 'Of',
-  filterPanelColumns: 'Kolommen',
+  filterPanelColumn: 'Kolommen',
   filterPanelInputLabel: 'Waarde',
   filterPanelInputPlaceholder: 'Filter waarde',
 

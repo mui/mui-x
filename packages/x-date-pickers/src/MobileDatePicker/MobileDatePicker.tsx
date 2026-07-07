@@ -4,19 +4,19 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { MobileDatePickerProps } from './MobileDatePicker.types';
-import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import type { MobileDatePickerProps } from './MobileDatePicker.types';
+import type { DatePickerViewRenderers } from '../DatePicker/shared';
+import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateDate } from '../validation';
-import { DateView, PickerOwnerState } from '../models';
+import type { DateView, PickerOwnerState } from '../models';
 import { DateField } from '../DateField';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-type MobileDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileDatePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MobileDatePickerComponent = ((
+  props: MobileDatePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,18 +29,17 @@ type MobileDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends bo
  *
  * - [MobileDatePicker API](https://mui.com/x/api/date-pickers/mobile-date-picker/)
  */
-const MobileDatePicker = React.forwardRef(function MobileDatePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: MobileDatePickerProps<TEnableAccessibleFieldDOMStructure>,
+const MobileDatePicker = React.forwardRef(function MobileDatePicker(
+  inProps: MobileDatePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePickerDefaultizedProps<
-    MobileDatePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileDatePicker');
+  const defaultizedProps = useDatePickerDefaultizedProps<MobileDatePickerProps>(
+    inProps,
+    'MuiMobileDatePicker',
+  );
 
   const viewRenderers: DatePickerViewRenderers<DateView> = {
     day: renderDateViewCalendar,
@@ -71,11 +70,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     },
   };
 
-  const { renderPicker } = useMobilePicker<
-    DateView,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useMobilePicker<DateView, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -87,7 +82,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
   return renderPicker();
 }) as MobileDatePickerComponent;
 
-MobileDatePicker.propTypes = {
+MobileDatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -129,7 +124,7 @@ MobileDatePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -148,10 +143,6 @@ MobileDatePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -310,7 +301,7 @@ MobileDatePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

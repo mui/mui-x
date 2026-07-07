@@ -1,28 +1,32 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import Paper, { PaperProps } from '@mui/material/Paper';
-import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import type { PaperProps } from '@mui/material/Paper';
+import Paper from '@mui/material/Paper';
+import type { DialogProps } from '@mui/material/Dialog';
+import Dialog, { dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useDraggableDialog } from '@mui/x-scheduler-headless/use-draggable-dialog';
-import {
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
+import type {
   EventDialogProps,
   EventDialogProviderProps,
   EventDialogTriggerProps,
 } from './EventDialog.types';
 import { createModal } from '../create-modal';
 import { FormContent } from './FormContent';
-import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
+import type { EventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
+import { EventDialogOptionalRenderersContext } from './EventDialogOptionalRenderersContext';
 
 const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
@@ -125,7 +129,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
-  const { classes } = useEventDialogStyledContext();
+  const { schedulerId, classes } = useEventDialogStyledContext();
 
   // Selector hooks
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
@@ -139,7 +143,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       open={open}
       onClose={onClose}
       PaperComponent={PaperComponent}
-      aria-labelledby="event-dialog-title"
+      aria-labelledby={`${schedulerId}-event-dialog-title`}
       aria-modal="false"
       className={classes.eventDialog}
       slotProps={{
@@ -161,33 +165,44 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 });
 
 export function EventDialogProvider(props: EventDialogProviderProps) {
-  const { children, ...other } = props;
+  const { children, optionalRenderers, ...other } = props;
   const store = useSchedulerStoreContext();
-  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+  const isRecurringScopeDialogOpen = useStore(
+    store,
+    schedulerOtherSelectors.isRecurringScopeDialogOpen,
+  );
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
+  const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
+
   return (
-    <EventDialog.Provider
-      render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
-        <EventDialogContent
-          open={isOpen}
-          anchorRef={anchorRef}
-          occurrence={occurrence}
-          onClose={onClose}
-          {...other}
-        />
-      )}
-      onOpen={(occurrence) => {
-        store.setEditedEventId(occurrence.id);
-      }}
-      onClose={() => {
-        store.setEditedEventId(null);
-        store.setOccurrencePlaceholder(null);
-      }}
+    <EventDialogOptionalRenderersContext.Provider
+      value={optionalRenderers ?? (EMPTY_OBJECT as EventDialogOptionalRenderers)}
     >
-      {children}
-      {showRecurrence && isScopeDialogOpen && <RecurringScopeDialog />}
-    </EventDialog.Provider>
+      <EventDialog.Provider
+        render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
+          <EventDialogContent
+            open={isOpen}
+            anchorRef={anchorRef}
+            occurrence={occurrence}
+            onClose={onClose}
+            {...other}
+          />
+        )}
+        onOpen={(occurrence) => {
+          store.setEditedOccurrenceKey(occurrence.key);
+        }}
+        onClose={() => {
+          store.setEditedOccurrenceKey(null);
+          store.setOccurrencePlaceholder(null);
+        }}
+      >
+        {children}
+        {showRecurrence && isRecurringScopeDialogOpen && RecurringScopeDialogRenderer && (
+          <RecurringScopeDialogRenderer />
+        )}
+      </EventDialog.Provider>
+    </EventDialogOptionalRenderersContext.Provider>
   );
 }
 

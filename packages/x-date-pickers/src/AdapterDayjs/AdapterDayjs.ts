@@ -1,5 +1,6 @@
 /* v8 ignore start */
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 // dayjs has no exports field defined
 // See https://github.com/iamkun/dayjs/issues/2562
 /* eslint-disable import/extensions */
@@ -11,7 +12,7 @@ import advancedFormatPlugin from 'dayjs/plugin/advancedFormat.js';
 /* v8 ignore stop */
 /* eslint-enable import/extensions */
 import { warnOnce } from '@mui/x-internals/warning';
-import {
+import type {
   FieldFormatTokenMap,
   MuiPickersAdapter,
   AdapterFormats,
@@ -201,21 +202,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   private createSystemDate = (value: string | undefined): Dayjs => {
-    let date: Dayjs;
-    if (this.hasUTCPlugin() && this.hasTimezonePlugin()) {
-      const timezone = dayjs.tz.guess();
-
-      if (timezone === 'UTC') {
-        date = dayjs(value);
-      } /* v8 ignore next 3 */ else {
-        // We can't change the system timezone in the tests
-        date = dayjs.tz(value, timezone);
-      }
-    } else {
-      date = dayjs(value);
-    }
-
-    return this.setLocaleToValue(date);
+    return this.setLocaleToValue(dayjs(value));
   };
 
   private createUTCDate = (value: string | undefined): Dayjs => {

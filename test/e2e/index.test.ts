@@ -281,11 +281,10 @@ async function initializeEnvironment(
         await page.mouse.up();
 
         expect(
-          await page.evaluate(
-            () =>
-              document
-                .querySelector('.MuiDataGrid-columnHeader--sorted')!
-                .getAttribute('data-field')!,
+          await page.evaluate(() =>
+            document
+              .querySelector('.MuiDataGrid-columnHeader--sorted')!
+              .getAttribute('data-field')!,
           ),
         ).to.equal('brand');
       });
@@ -356,22 +355,11 @@ async function initializeEnvironment(
           const dateTimeInput = page.locator(
             '[role="gridcell"][data-field="lastConnection"] input',
           );
-          if (browserType.name() === 'firefox') {
-            // firefox seems to break the section jumping if the section is edited without firstly clearing it
-            dateTimeInput.press('Backspace');
-            await dateTimeInput.type('01/31/2025');
-            // only reliable way on firefox to move to time section is via arrow key
-            await dateTimeInput.press('ArrowRight');
-            await dateTimeInput.type('4:5');
-            await dateTimeInput.press('ArrowRight');
-            await dateTimeInput.type('p');
-          } else {
-            await dateTimeInput.type('01/31/2025,4:5:p');
-          }
+          await dateTimeInput.fill('2025-01-31T16:05');
 
           await page.keyboard.press('Enter');
 
-          expect(page.getByText('1/31/2025, 4:05:00 PM')).not.to.equal(null);
+          await page.getByText('1/31/2025, 4:05:00 PM').waitFor();
         },
       );
 
@@ -405,14 +393,13 @@ async function initializeEnvironment(
       // https://github.com/mui/mui-x/issues/3795#issuecomment-1025628771
       it('should allow horizontal scroll when there are more columns and no rows', async () => {
         await renderFixture('DataGrid/EmptyGrid');
+        await page.locator('.MuiDataGrid-virtualScroller').waitFor();
         await page.mouse.move(150, 150);
         await page.mouse.wheel(50, 0);
-        await sleep(50);
 
-        const scrollLeft = await page.evaluate(() => {
-          return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollLeft;
-        });
-        expect(scrollLeft).not.to.equal(0);
+        await page.waitForFunction(
+          () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollLeft > 0,
+        );
       });
 
       // https://github.com/mui/mui-x/issues/4190
@@ -589,14 +576,13 @@ async function initializeEnvironment(
       // https://github.com/mui/mui-x/issues/3524#issuecomment-2313533915
       it('should allow vertical scroll when inside of a flex parent with maxHeight', async () => {
         await renderFixture('DataGrid/MaxHeight');
+        await page.locator('.MuiDataGrid-virtualScroller').waitFor();
         await page.mouse.move(150, 150);
         await page.mouse.wheel(0, 50);
-        await sleep(50);
 
-        const scrollTop = await page.evaluate(() => {
-          return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop;
-        });
-        expect(scrollTop).not.to.equal(0);
+        await page.waitForFunction(
+          () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop > 0,
+        );
       });
 
       // https://github.com/mui/mui-x/issues/14726
@@ -662,7 +648,6 @@ async function initializeEnvironment(
           await page.getByRole('button', { name: 'Choose date' }).click();
           await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
           await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
@@ -676,7 +661,6 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
           await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
@@ -697,7 +681,14 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          // The hidden `<input>` is the surface under test here, so we focus
+          // it directly. With the current focus-delegation design, the focus
+          // moves through to the first section on the first focus; the
+          // subsequent `fill()` then sees `focused === true` in React state
+          // and skips the re-entrant section-selection that would otherwise
+          // race with the value setter. Tracked for refactor in
+          // https://github.com/mui/mui-x/issues/22592.
+          await input.focus();
           await input.fill('02/12/2020');
 
           expect(
@@ -725,7 +716,6 @@ async function initializeEnvironment(
           const daySection = page.getByRole(`spinbutton`, { name: 'Day' });
           const yearSection = page.getByRole(`spinbutton`, { name: 'Year' });
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await monthSection.fill('04');
           await daySection.fill('11');
           await yearSection.fill('2022');
@@ -759,54 +749,6 @@ async function initializeEnvironment(
 
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
-
-        // this test sometimes fails on webkit for some reason
-        it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
-          'should focus the first field section after clearing a value with the non-accessible DOM structure',
-          async () => {
-            await renderFixture('DatePicker/BasicDesktopDatePickerNonAccessibleDOMStructure');
-
-            const textbox = page.getByRole('textbox');
-            // locator.fill('2') does not work reliably for this case in all browsers
-            await textbox.focus();
-            await textbox.press('2');
-            await page.getByRole('button', { name: 'Clear' }).click();
-
-            const result = await page.waitForFunction(
-              () => document.getSelection()?.toString() === 'MM',
-            );
-            expect(await result.jsonValue()).to.equal(true);
-          },
-        );
-
-        it('should submit a form when clicking "Enter" key', async () => {
-          await renderFixture('DatePicker/DesktopDatePickerFormNonAccessibleDOMStructure');
-
-          const textbox = page.getByRole('textbox');
-          await textbox.focus();
-          await textbox.press('Enter');
-
-          expect(await page.getByRole('textbox').inputValue()).to.equal('04/17/2022');
-          const status = page.getByRole('status');
-          expect(await status.isVisible()).to.equal(true);
-          expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
-        });
-
-        // TODO: enable when v7 fields form submitting is fixed
-        // it('should submit a form when clicking "Enter" key with v7 field', async () => {
-        //   await renderFixture('DatePicker/DesktopDatePickerFormV7');
-
-        //   const monthSpinbutton = page.getByRole(`spinbutton`, { name: 'Month' });
-        //   await monthSpinbutton.focus();
-        //   await monthSpinbutton.press('Enter');
-
-        //   expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
-        //     '04/17/2022',
-        //   );
-        //   const status = page.getByRole('status');
-        //   expect(await status.isVisible()).to.equal(true);
-        //   expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
-        // });
 
         it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {
           await renderFixture('DatePicker/MomentJalaliDateCalendar');
@@ -846,21 +788,6 @@ async function initializeEnvironment(
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
             '04/11/2022',
           );
-        });
-
-        it('should have consistent `placeholder` and `value` behavior in the non-accessible DOM structure', async () => {
-          await renderFixture(
-            'DatePicker/MobileDatePickerWithClearActionNonAccessibleDOMStructure',
-          );
-
-          const input = page.getByRole('textbox');
-
-          await page.getByRole('button').click();
-          await page.getByRole('button', { name: 'Clear' }).click();
-
-          await input.blur();
-          expect(await input.getAttribute('placeholder')).to.equal('MM/DD/YYYY');
-          expect(await input.inputValue()).to.equal('');
         });
       });
     });
@@ -952,32 +879,6 @@ async function initializeEnvironment(
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
         });
       });
-
-      it('should correctly select hours section when there are no time renderers on v6', async () => {
-        // The test is flaky on webkit
-        if (browserType.name() === 'webkit') {
-          return;
-        }
-        await renderFixture(
-          'DatePicker/DesktopDateTimePickerNoTimeRenderers?enableAccessibleFieldDOMStructure=false',
-        );
-
-        await page.getByRole('button').click();
-        await page.getByRole('gridcell', { name: '11' }).click();
-
-        // assert that the hours section has been selected using two APIs
-        // firefox does not support document.getSelection().toString() on input elements
-        if (browserType.name() === 'firefox') {
-          await page.waitForFunction(() => {
-            const activeElement = document.activeElement;
-            return activeElement instanceof HTMLInputElement && activeElement.selectionStart === 11;
-          });
-        } else {
-          await waitFor(async () => {
-            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
-          });
-        }
-      });
     });
 
     describe('<DateRangePicker />', () => {
@@ -1050,29 +951,6 @@ async function initializeEnvironment(
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
           '04/11/2022 – 04/13/2022',
         );
-      });
-
-      it('should have the same selection process as a non-range picker when using a single input field with a non-accessible DOM structure', async () => {
-        // firefox in CI is not happy with this test
-        if (browserType.name() === 'firefox') {
-          return;
-        }
-
-        await renderFixture(
-          'DatePicker/ReadonlyDesktopDateRangePickerSingleNonAccessibleDOMStructure',
-        );
-        await page.getByRole('button').click();
-
-        // assert that the tooltip has been opened
-        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
-
-        await page.getByRole('gridcell', { name: '11' }).first().click();
-        await page.getByRole('gridcell', { name: '13' }).first().click();
-
-        // assert that the tooltip closes after selection is complete
-        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
-
-        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
       });
 
       it('should not change timezone when changing the start date from non DST to DST', async () => {

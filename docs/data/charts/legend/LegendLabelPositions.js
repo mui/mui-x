@@ -47,15 +47,17 @@ export default function LegendLabelPositions() {
         },
       ]}
     >
-      <Stack direction="column" width="100%" height="100%" gap={4} spacing={2}>
-        <Stack direction="column" width="100%" height="100%" gap={2}>
+      <Stack
+        direction="column"
+        spacing={2}
+        sx={{ width: '100%', height: '100%', gap: 4 }}
+      >
+        <Stack direction="column" sx={{ width: '100%', height: '100%', gap: 2 }}>
           <Typography variant="h4">Continuous</Typography>
           <Typography variant="h5">Horizontal</Typography>
           <Stack
             direction="row"
-            flexWrap="wrap"
-            gap={2}
-            sx={{ '&>div': { flex: 1 } }}
+            sx={{ flexWrap: 'wrap', gap: 2, '&>div': { flex: 1 } }}
           >
             <div>
               <Typography>start</Typography>
@@ -86,10 +88,10 @@ export default function LegendLabelPositions() {
           <Typography variant="h5">Vertical</Typography>
           <Stack
             direction="row"
-            flexWrap="wrap"
-            height={150}
-            gap={2}
             sx={{
+              flexWrap: 'wrap',
+              height: 150,
+              gap: 2,
               '&>div': {
                 flex: 1,
                 height: '100%',
@@ -125,14 +127,12 @@ export default function LegendLabelPositions() {
             </div>
           </Stack>
         </Stack>
-        <Stack direction="column" width="100%" height="100%" gap={2}>
+        <Stack direction="column" sx={{ width: '100%', height: '100%', gap: 2 }}>
           <Typography variant="h4">Piecewise</Typography>
           <Typography variant="h5">Horizontal</Typography>
           <Stack
             direction="row"
-            flexWrap="wrap"
-            gap={2}
-            sx={{ '&>div': { flex: 1 } }}
+            sx={{ flexWrap: 'wrap', gap: 2, '&>div': { flex: 1 } }}
           >
             <div>
               <Typography>start</Typography>
@@ -182,9 +182,9 @@ export default function LegendLabelPositions() {
           <Typography variant="h5">Vertical</Typography>
           <Stack
             direction="row"
-            flexWrap="wrap"
-            gap={2}
             sx={{
+              flexWrap: 'wrap',
+              gap: 2,
               '&>div': {
                 flex: 1,
                 height: '100%',

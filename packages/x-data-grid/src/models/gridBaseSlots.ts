@@ -70,6 +70,44 @@ export type AutocompleteProps<
    * @param {string} value The new value of the input.
    */
   onInputChange?: (event: React.SyntheticEvent, value: string) => void;
+  /** Control the popup open state. */
+  open?: boolean;
+  /**
+   * Callback fired when the popup requests to be opened.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   */
+  onOpen?: (event: React.SyntheticEvent) => void;
+  /**
+   * Callback fired when the popup requests to be closed.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {string} reason The reason for closing.
+   */
+  onClose?: (event: React.SyntheticEvent, reason: string) => void;
+  /** If true, the popup won't close when a value is selected. */
+  disableCloseOnSelect?: boolean;
+  /** If true, the popup opens when the input is focused. */
+  openOnFocus?: boolean;
+  /**
+   * Render the option, use `getOptionLabel` by default.
+   * @param {React.HTMLAttributes<HTMLLIElement> & { key: any }} props The props to apply on the li element.
+   * @param {Value} option The option to render.
+   * @param {object} state The state of each option.
+   * @param {string} state.inputValue The input value.
+   * @param {number} state.index The index of the option in the list.
+   * @param {boolean} state.selected Whether the option is selected.
+   * @returns {React.ReactNode} react node to render
+   */
+  renderOption?: (
+    props: React.HTMLAttributes<HTMLLIElement> & {
+      key: any;
+    },
+    option: Value,
+    state: {
+      inputValue: string;
+      index: number;
+      selected: boolean;
+    },
+  ) => React.ReactNode;
 
   /* New props */
 
@@ -78,6 +116,7 @@ export type AutocompleteProps<
 
   slotProps?: {
     textField: TextFieldProps;
+    chip?: ChipProps | ((value: Value, index: number) => ChipProps);
   };
 };
 
@@ -119,7 +158,7 @@ export type CheckboxProps = CommonProps & {
   size?: 'small' | 'medium';
   density?: 'standard' | 'compact';
   slotProps?: {
-    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
   };
   style?: React.CSSProperties;
   tabIndex?: number;
@@ -142,7 +181,7 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   edge?: 'start' | 'end' | false;
 };
 
-export type ToggleButtonProps = CommonProps & {
+export type ToggleButtonProps = Omit<CommonProps, 'onChange'> & {
   selected?: boolean;
   value: string;
 };
@@ -187,11 +226,7 @@ type AutoPlacement = 'auto' | 'auto-start' | 'auto-end';
 type Placement = AutoPlacement | BasePlacement | VariationPlacement;
 
 type ClickAwayMouseEventHandler =
-  | 'onClick'
-  | 'onMouseDown'
-  | 'onMouseUp'
-  | 'onPointerDown'
-  | 'onPointerUp';
+  'onClick' | 'onMouseDown' | 'onMouseUp' | 'onPointerDown' | 'onPointerUp';
 type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
 
 export type PaginationProps = CommonProps & {
@@ -223,6 +258,16 @@ export type PopperProps = CommonProps & {
   transition?: boolean;
   /** @default 'bottom' */
   placement?: Placement;
+};
+
+export type ModalProps = CommonProps & {
+  open: boolean;
+  children: React.ReactElement<unknown>;
+  onClose?: (event: object, reason: 'backdropClick' | 'escapeKeyDown') => void;
+  keepMounted?: boolean;
+  disableAutoFocus?: boolean;
+  disableEnforceFocus?: boolean;
+  disableRestoreFocus?: boolean;
 };
 
 export type CircularProgressProps = CommonProps & {
@@ -272,12 +317,14 @@ export type SelectProps = CommonProps & {
   open?: boolean;
   error?: boolean;
   disabled?: boolean;
+  multiple?: boolean;
   onChange?: React.ChangeEventHandler;
   onOpen?: (event: React.SyntheticEvent) => void;
   onClose?: (
     event: React.KeyboardEvent,
     reason: 'backdropClick' | 'escapeKeyDown' | 'tabKeyDown',
   ) => void;
+  renderValue?: (value: any) => React.ReactNode;
   label?: React.ReactNode;
   labelId?: string;
   native?: boolean;

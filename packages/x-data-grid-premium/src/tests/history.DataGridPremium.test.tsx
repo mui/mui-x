@@ -1,21 +1,14 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridApi,
-  useGridApiRef,
-  DataGridPremium,
-  type DataGridPremiumProps,
-  type GridHistoryEventHandler,
-  type GridEvents,
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGridPremium } from '@mui/x-data-grid-premium';
+import type {
+  GridApi,
+  DataGridPremiumProps,
+  GridHistoryEventHandler,
+  GridEvents,
 } from '@mui/x-data-grid-premium';
-import {
-  createRenderer,
-  waitFor,
-  act,
-  fireEvent,
-  type MuiRenderResult,
-  screen,
-} from '@mui/internal-test-utils';
+import { createRenderer, waitFor, act, fireEvent, screen } from '@mui/internal-test-utils';
+import type { MuiRenderResult } from '@mui/internal-test-utils';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { getBasicGridData } from '@mui/x-data-grid-generator';

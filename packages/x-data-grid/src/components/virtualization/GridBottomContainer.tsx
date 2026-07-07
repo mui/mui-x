@@ -20,6 +20,9 @@ const Element = styled('div', {
   position: 'sticky',
   zIndex: 40,
   bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+  [`.${gridClasses['virtualizer--layoutControlled']} &`]: {
+    position: 'absolute',
+  },
 });
 
 export function GridBottomContainer(props: GridBottomContainerProps) {
@@ -29,7 +32,7 @@ export function GridBottomContainer(props: GridBottomContainerProps) {
     <Element
       {...props}
       className={clsx(classes.root, gridClasses['container--bottom'])}
-      role="presentation"
+      role="none"
     />
   );
 }
