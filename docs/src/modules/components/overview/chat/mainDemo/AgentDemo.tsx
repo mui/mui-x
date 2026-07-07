@@ -37,8 +37,8 @@ import {
   randomId,
   splitText,
   syncConversationPreview,
-} from '../../../../../../data/chat/material/examples/shared/demoUtils';
-import { demoUsers } from '../../../../../../data/chat/material/examples/shared/demoData';
+} from '../../../../../../data/chat/core/examples/shared/demoUtils';
+import { demoUsers } from '../../../../../../data/chat/core/examples/shared/demoData';
 
 // --- Types ------------------------------------------------------------------
 

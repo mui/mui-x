@@ -1,10 +1,10 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import {
+import type {
   RecurringEventPresetKey,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerProcessedDate,
 } from '../models';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 
 const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugin;
 

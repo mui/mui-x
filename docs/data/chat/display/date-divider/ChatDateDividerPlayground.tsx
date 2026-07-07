@@ -175,7 +175,7 @@ export default function ChatDateDividerPlayground() {
               index={1}
               items={items}
               formatDate={FORMATTERS[format]}
-              sx={dividerSx as any}
+              sx={dividerSx}
             />
             <ChatMessage messageId="date-target" />
           </Box>

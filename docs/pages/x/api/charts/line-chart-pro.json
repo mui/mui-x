@@ -130,6 +130,13 @@
         "describedArgs": ["zoomData"]
       }
     },
+    "sampling": {
+      "type": {
+        "name": "enum",
+        "description": "'lttb'<br>&#124;&nbsp;'m4'<br>&#124;&nbsp;'minmax'<br>&#124;&nbsp;'none'"
+      },
+      "default": "'none'"
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

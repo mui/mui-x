@@ -1,5 +1,8 @@
-import { TreeViewParametersToStateMapper } from '../MinimalTreeViewStore';
-import { InnerSimpleTreeViewParameters, SimpleTreeViewState } from './SimpleTreeViewStore.types';
+import type { TreeViewParametersToStateMapper } from '../MinimalTreeViewStore';
+import type {
+  InnerSimpleTreeViewParameters,
+  SimpleTreeViewState,
+} from './SimpleTreeViewStore.types';
 
 export const parametersToStateMapper: TreeViewParametersToStateMapper<
   any,

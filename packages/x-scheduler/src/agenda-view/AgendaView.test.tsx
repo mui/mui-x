@@ -8,7 +8,7 @@ import {
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
