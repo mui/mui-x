@@ -11,7 +11,27 @@ describe('<BarChartPro /> - Sampling', () => {
 
   const range = (length: number) => Array.from({ length }, (_, i) => i);
 
-  // Sampling only applies to zoomable axes, so every case enables zoom.
+  // Regression: https://github.com/mui/mui-x/issues/23031 — sampling used to require zoom.
+  it('samples a static (non-zoomable) axis at full range', () => {
+    const dataLength = 256;
+    const { container } = render(
+      <BarChartPro
+        series={[{ data: range(dataLength) }]}
+        xAxis={[{ data: range(dataLength).map(String) }]}
+        yAxis={[{ position: 'none' }]}
+        width={200}
+        height={200}
+        margin={0}
+        sampling="minmax"
+        skipAnimation
+      />,
+    );
+
+    const rendered = countBars(container);
+    expect(rendered).to.be.greaterThan(0);
+    expect(rendered).to.be.lessThan(dataLength / 2);
+  });
+
   it('renders one bar per data point when bars are wide enough', () => {
     const { container } = render(
       <BarChartPro

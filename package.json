@@ -75,7 +75,7 @@
     "@base-ui/utils": "catalog:",
     "@emotion/cache": "catalog:",
     "@eslint/compat": "2.1.0",
-    "@inquirer/prompts": "8.5.1",
+    "@inquirer/prompts": "8.5.2",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.20",
     "@mui/internal-babel-plugin-minify-errors": "2.0.8-canary.27",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.83",
