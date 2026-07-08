@@ -11,13 +11,13 @@ export type TreemapItemId = string | number;
  */
 export interface TreemapSeriesData {
   /**
-   * Unique identifier for the node. Defaulted from the node path when omitted.
+   * Unique identifier for the node. Derived from the parent id and the `label` when omitted.
    */
   id?: TreemapItemId;
   /**
-   * The label displayed on the tile and in the tooltip. Defaults to the node id.
+   * The label displayed on the tile and in the tooltip.
    */
-  label?: string;
+  label: string;
   /**
    * The size of a leaf node. Ignored on nodes that have children.
    */

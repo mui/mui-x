@@ -5,13 +5,13 @@ import { Treemap } from '@mui/x-charts-premium/Treemap';
 import type { TreemapItemIdentifierWithData } from '@mui/x-charts-premium/Treemap';
 
 const data = {
-  id: 'root',
+  label: 'root',
   children: [
-    { id: 'Marketing', value: 40 },
-    { id: 'Engineering', value: 55 },
-    { id: 'Sales', value: 32 },
-    { id: 'Support', value: 18 },
-    { id: 'Design', value: 15 },
+    { label: 'Marketing', value: 40 },
+    { label: 'Engineering', value: 55 },
+    { label: 'Sales', value: 32 },
+    { label: 'Support', value: 18 },
+    { label: 'Design', value: 15 },
   ],
 };
 

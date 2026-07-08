@@ -8,9 +8,10 @@ describe('<Treemap />', () => {
   const twoLeaves = {
     data: {
       id: 'root',
+      label: 'root',
       children: [
-        { id: 'A', value: 10 },
-        { id: 'B', value: 30 },
+        { id: 'A', label: 'A', value: 10 },
+        { id: 'B', label: 'B', value: 30 },
       ],
     },
   } as const;
@@ -72,7 +73,11 @@ describe('<Treemap />', () => {
           height={200}
           margin={0}
           series={{
-            data: { id: 'root', children: [{ id: 'A', value: 10, color: 'rebeccapurple' }] },
+            data: {
+              id: 'root',
+              label: 'root',
+              children: [{ id: 'A', label: 'A', value: 10, color: 'rebeccapurple' }],
+            },
           }}
         />,
       ),
@@ -88,12 +93,14 @@ describe('<Treemap />', () => {
         series={{
           data: {
             id: 'root',
+            label: 'root',
             children: [
               {
                 id: 'group',
+                label: 'group',
                 children: [
-                  { id: 'leaf1', value: 5 },
-                  { id: 'leaf2', value: 5 },
+                  { id: 'leaf1', label: 'leaf1', value: 5 },
+                  { id: 'leaf2', label: 'leaf2', value: 5 },
                 ],
               },
             ],

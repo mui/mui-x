@@ -1,5 +1,6 @@
 import { hierarchy } from '@mui/x-charts-vendor/d3-hierarchy';
 import type { HierarchyNode } from '@mui/x-charts-vendor/d3-hierarchy';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
 import type { TreemapItemId, TreemapLayoutNode, TreemapSeriesData } from '../treemap.types';
 import { TREEMAP_ROOT_ID } from '../utils';
@@ -16,16 +17,11 @@ interface NormalizedTreemapNode {
   children?: NormalizedTreemapNode[];
 }
 
-function normalize(
-  node: TreemapSeriesData,
-  parentId: TreemapItemId | null,
-  indexInParent: number,
-): NormalizedTreemapNode {
-  const id = node.id ?? (parentId == null ? TREEMAP_ROOT_ID : `${parentId}/${indexInParent}`);
-  const label = node.label ?? `${id}`;
-  const children = node.children?.map((child, index) => normalize(child, id, index));
+function normalize(node: TreemapSeriesData, parentId: TreemapItemId | null): NormalizedTreemapNode {
+  const id = node.id ?? (parentId == null ? TREEMAP_ROOT_ID : `${parentId}/${node.label}`);
+  const children = node.children?.map((child) => normalize(child, id));
 
-  return { ...node, id, label, children };
+  return { ...node, id, label: node.label, children };
 }
 
 export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> = (
@@ -35,14 +31,29 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
 ) => {
   const rawData = seriesData.data;
   const rootData: TreemapSeriesData = Array.isArray(rawData)
-    ? { id: TREEMAP_ROOT_ID, children: rawData }
+    ? { id: TREEMAP_ROOT_ID, label: '', children: rawData }
     : (rawData as TreemapSeriesData);
 
-  const normalizedRoot = normalize(rootData, null, 0);
+  const normalizedRoot = normalize(rootData, null);
 
-  const root = hierarchy<NormalizedTreemapNode>(normalizedRoot, (d) => d.children)
-    .sum((d) => (d.children && d.children.length ? 0 : (d.value ?? 0)))
-    .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
+  const root = hierarchy<NormalizedTreemapNode>(normalizedRoot, (d) => d.children);
+
+  // A node's value is its explicit `value` when set, otherwise the sum of its children.
+  // d3 marks `value` readonly, but it is the field the layout and sort read.
+  root.eachAfter((node) => {
+    const childrenSum = node.children?.reduce((acc, child) => acc + (child.value ?? 0), 0) ?? 0;
+    const explicit = node.data.value;
+    if (process.env.NODE_ENV !== 'production' && explicit != null && childrenSum > explicit) {
+      warnOnce(
+        `MUI X Charts: The treemap node "${node.data.id}" has a value (${explicit}) smaller than the sum of its children (${childrenSum}).\n` +
+          `A treemap cannot draw children larger than their parent.\n` +
+          `Increase the node value, or omit it to derive it from the children.`,
+      );
+    }
+    (node as { value?: number }).value = explicit ?? childrenSum;
+  });
+
+  root.sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
   // Each top-level (depth 1) branch takes a palette color; descendants inherit their
   // parent's resolved color, so an explicit `color` on any node cascades to its subtree.

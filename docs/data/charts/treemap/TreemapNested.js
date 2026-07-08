@@ -2,29 +2,29 @@ import * as React from 'react';
 import { Treemap } from '@mui/x-charts-premium/Treemap';
 
 const data = {
-  id: 'tech',
+  label: 'tech',
   children: [
     {
-      id: 'Frontend',
+      label: 'Frontend',
       children: [
-        { id: 'React', value: 40 },
-        { id: 'Vue', value: 18 },
-        { id: 'Angular', value: 17 },
+        { label: 'React', value: 40 },
+        { label: 'Vue', value: 18 },
+        { label: 'Angular', value: 17 },
       ],
     },
     {
-      id: 'Backend',
+      label: 'Backend',
       children: [
-        { id: 'Node', value: 40 },
-        { id: 'Django', value: 15 },
-        { id: 'Rails', value: 8 },
+        { label: 'Node', value: 40 },
+        { label: 'Django', value: 15 },
+        { label: 'Rails', value: 8 },
       ],
     },
     {
-      id: 'Mobile',
+      label: 'Mobile',
       children: [
-        { id: 'Flutter', value: 22 },
-        { id: 'React Native', value: 20 },
+        { label: 'Flutter', value: 22 },
+        { label: 'React Native', value: 20 },
       ],
     },
   ],

@@ -7,28 +7,28 @@ import { Treemap } from '@mui/x-charts-premium/Treemap';
 const methods = ['squarify', 'binary', 'slice', 'dice', 'sliceDice'];
 
 const data = {
-  id: 'root',
+  label: 'root',
   children: [
     {
-      id: 'A',
+      label: 'A',
       children: [
-        { id: 'A1', value: 40 },
-        { id: 'A2', value: 25 },
-        { id: 'A3', value: 15 },
+        { label: 'A1', value: 40 },
+        { label: 'A2', value: 25 },
+        { label: 'A3', value: 15 },
       ],
     },
     {
-      id: 'B',
+      label: 'B',
       children: [
-        { id: 'B1', value: 30 },
-        { id: 'B2', value: 20 },
+        { label: 'B1', value: 30 },
+        { label: 'B2', value: 20 },
       ],
     },
     {
-      id: 'C',
+      label: 'C',
       children: [
-        { id: 'C1', value: 18 },
-        { id: 'C2', value: 12 },
+        { label: 'C1', value: 18 },
+        { label: 'C2', value: 12 },
       ],
     },
   ],

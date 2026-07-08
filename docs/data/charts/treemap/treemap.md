@@ -24,11 +24,11 @@ Each tile's area is proportional to the node's value, which makes it easy to com
 The `series.data` prop accepts a single root node, or an array of root nodes that are wrapped in a synthetic root.
 Each node can define:
 
-- `id`: a unique identifier. When omitted, it's derived from the node's position in the tree.
-- `label`: the text shown in the tooltip. Defaults to the `id`.
-- `value`: the size of a leaf node. Parent nodes derive their value from the sum of their descendants.
+- `label`: the text shown on the tile and in the tooltip. Required.
+- `id`: a unique identifier. When omitted, it's derived from the parent id and the `label`.
+- `value`: the size of a leaf node. Parent nodes use their own `value` when set, otherwise the sum of their descendants.
 - `children`: the nested nodes.
-- `color`: an explicit color override.
+- `color`: an explicit color override that cascades to descendants.
 
 ### Nested hierarchy
 
