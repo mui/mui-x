@@ -67,7 +67,7 @@ interface SchedulerProcessedEventBase {
   /**
    * The id of the resource this event is associated with.
    */
-  resource?: SchedulerResourceId | null;
+  resource?: SchedulerResourceId | SchedulerResourceId[] | null;
 
   /**
    * A custom class name to apply to the event element.
@@ -209,7 +209,7 @@ export interface SchedulerEvent {
    * The id of the resource this event is associated with.
    * @default null
    */
-  resource?: SchedulerResourceId | null;
+  resource?: SchedulerResourceId | SchedulerResourceId[] | null;
   /**
    * The recurrence rule for the event.
    * It can be provided either as a string (RFC5545 RRULE format)
