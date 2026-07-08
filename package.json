@@ -88,7 +88,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
-    "@next/eslint-plugin-next": "16.2.9",
+    "@next/eslint-plugin-next": "16.2.10",
     "@octokit/plugin-retry": "8.1.0",
     "@octokit/rest": "22.0.1",
     "@playwright/test": "catalog:",
@@ -127,7 +127,7 @@
     "picomatch": "4.0.5",
     "pkg-pr-new": "0.0.75",
     "playwright": "catalog:",
-    "prettier": "3.9.3",
+    "prettier": "3.9.4",
     "pretty-quick": "4.2.2",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -149,9 +149,9 @@
   "config": {
     "valeVersion": "3.15.1"
   },
-  "packageManager": "pnpm@11.5.0",
+  "packageManager": "pnpm@11.9.0",
   "engines": {
-    "pnpm": "11.5.0",
+    "pnpm": "11.9.0",
     "node": ">=22.23.1"
   }
 }
