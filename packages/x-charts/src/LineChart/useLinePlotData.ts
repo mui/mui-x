@@ -8,6 +8,7 @@ import type { ComputedAxisConfig } from '../internals/plugins/featurePlugins/use
 import {
   selectorChartSamplingState,
   selectorChartSamplingPyramids,
+  getFullRangeZoom,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
 import type { SampledBucket } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.types';
 import type { ZoomMap } from '../internals/plugins/featurePlugins/useChartCartesianAxis/zoom.types';
@@ -140,7 +141,7 @@ export function useLinePlotData(
 
         // Only the plain (non-step) path is sampled; step expansion falls back to the full render.
         const built = sampledSeries[seriesId];
-        const zoom = zoomMap?.get(xAxisId);
+        const zoom = zoomMap?.get(xAxisId) ?? (built ? getFullRangeZoom(xAxisId) : undefined);
         let sampledBuckets: SampledBucket[] | null = null;
         if (samplingEnabled && built && zoom && !shouldExpand && xData) {
           // Pro owns the sampling math; community flattens the buckets into a polyline.

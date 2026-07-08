@@ -113,8 +113,9 @@ See [Bar charts—WebGL renderer](/x/react-charts/bars/#webgl-renderer), [Scatte
 
 ## Sampling [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-When a zoomable chart has more data than the drawing area can show without making elements
+When a chart has more data than the drawing area can show without making elements
 too small, the data can be reduced to an appropriate level of detail before rendering.
+This applies to both zoomable and static charts.
 
 `BarChartPro` and `LineChartPro` accept a `sampling` prop that selects the method:
 
@@ -123,7 +124,7 @@ too small, the data can be reduced to an appropriate level of detail before rend
 - `'m4'`: pixel-accurate—keep the first, min, max, and last point of each bucket (line series).
 - `'lttb'`: [Largest-Triangle-Three-Buckets](https://skemman.is/handle/1946/15343), keeps one representative point per bucket to preserve the shape (line series).
 
-Zoom in to progressively reveal more detail; sampling turns off once the view can resolve every element.
+On a zoomable chart, zoom in to progressively reveal more detail; sampling turns off once the view can resolve every element. A static chart (no `zoom`) is sampled at its full range, so a large dataset still renders at an appropriate level of detail.
 
 Sampling also keeps a hard ceiling on the number of rendered elements (2,000). Once the view fits under it, the chart renders every visible element untouched; while a zoomed-in view still holds more than that, it stays sampled even when each element would be wide enough to draw on its own—so a very dense dataset never floods the renderer at any zoom level.
 
