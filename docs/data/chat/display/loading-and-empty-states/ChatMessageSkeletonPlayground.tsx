@@ -49,7 +49,7 @@ export default function ChatMessageSkeletonPlayground() {
       }
       preview={
         <Box sx={{ width: '100%' }}>
-          <ChatMessageSkeleton lines={lines} sx={skeletonSx as any} />
+          <ChatMessageSkeleton lines={lines} sx={skeletonSx} />
         </Box>
       }
     />
