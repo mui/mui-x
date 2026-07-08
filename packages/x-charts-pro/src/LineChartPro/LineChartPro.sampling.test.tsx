@@ -14,7 +14,6 @@ describe('<LineChartPro /> - Sampling', () => {
   const { render } = createRenderer();
   const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 
-  // Regression: https://github.com/mui/mui-x/issues/23031 — sampling used to require zoom.
   it('samples a static (non-zoomable) axis at full range', () => {
     const dataLength = 1024;
     const { container } = render(
