@@ -476,6 +476,8 @@
   { "name": "MapShapeProps", "kind": "TypeAlias" },
   { "name": "MapShapeSeriesType", "kind": "Interface" },
   { "name": "MapShapeValueType", "kind": "Interface" },
+  { "name": "MapZoomOptions", "kind": "Interface" },
+  { "name": "MapZoomView", "kind": "Interface" },
   { "name": "MarkElement", "kind": "Function" },
   { "name": "MarkElementOwnerState", "kind": "Interface" },
   { "name": "MarkElementProps", "kind": "TypeAlias" },
