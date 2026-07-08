@@ -1,5 +1,139 @@
 # Changelog
 
+## 9.9.0
+
+<!-- generated comparing v9.8.0..master -->
+
+_Jul 8, 2026_
+
+We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 [Data sampling](https://mui.com/x/react-charts/performance/#sampling) for better performance with large bar and line charts
+- 🗺️ [Maps zoom support](https://mui.com/x/react-charts/map/#zoom)
+- ☑️ Support [applying filters on demand](https://mui.com/x/react-data-grid/filtering/customization/#apply-filters-on-demand) in the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@mustafajw07, @sebastianfrey
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @brijeshb42, @hasdfa, @Janpot, @JCQuintas, @LukasTy, @rita-codes, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.9.0`
+
+- [DataGrid] Add `dataSourceKeepPreviousData` prop (#22554) @LukasTy
+- [DataGrid] Add controlled filter panel for applying filters on demand (#23023) @sebastianfrey
+
+#### `@mui/x-data-grid-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.9.0`.
+
+#### `@mui/x-data-grid-premium@9.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.9.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.9.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.9.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.9.0`
+
+- [charts] Optimize and de-duplicate sampled axis-highlight band lookup (#23052) @JCQuintas
+- [charts] Unify tooltip item position getter and selector into a single selector API (#23041) @alexfauquette
+
+#### `@mui/x-charts-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.9.0`, plus:
+
+- [charts-pro] Add data sampling for large bar and line charts (#22830) @JCQuintas
+- [charts-pro] Allow sampling on non-zoomable charts (#23051) @JCQuintas
+
+#### `@mui/x-charts-premium@9.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.9.0`, plus:
+
+- [charts-premium] Maps zoom support (#22709) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@9.9.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.9.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.5`
+
+- [scheduler] Introduce event resource helper utilities (#23022) @mustafajw07
+- [scheduler] Replace docs "Preview" label with "New" (#23054) @rita-codes
+- [scheduler] Revert docs stable-release prep (#23093) @rita-codes
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.5`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.9.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix broken social preview image on shared docs links (#23055) @sai6855
+- [docs] Update Scheduler feedback banner for stable release (#23050) @rita-codes
+- [docs] Review and clean up react-chat docs demos & gallery; fix actions-bar layout (#22993) @hasdfa
+
+### Core
+
+- [mcp] Add `@mui/mcp` server and `@mui/x-agent-tools` (#22947) @aemartos
+- [code-infra] Avoid OOM in the Netlify docs build and CircleCI lint step (#23086) @LukasTy
+- [code-infra] Group `@atlaskit/pragmatic-drag-and-drop` renovate updates (#23105) @LukasTy
+- [code-infra] Validate npm publishing through dry run (#23038) @brijeshb42
+- [docs-infra] Enable `webpackBuildWorker` to bound docs build memory (#23100) @Janpot
+
+### Miscellaneous
+
+- [test] Fix flaky "should render only the pageSize" Data Grid virtualization test (#23090) @LukasTy
+- [test] Track `@mui/x-chat` bundle size via native expand (#23049) @Janpot
+- Bump @inquirer/prompts to 8.5.2 (#23063) @code-infra-renovate[bot]
+- Bump @mui/internal-docs-infra to ^0.12.1-canary.11 (#23106) @code-infra-renovate[bot]
+- Bump @react-spring/web to ^10.1.2 (#23064) @code-infra-renovate[bot]
+- Bump @types/luxon to ^3.7.2 (#23065) @code-infra-renovate[bot]
+- Bump GitHub Actions (#23067) @code-infra-renovate[bot]
+- Bump MUI public packages (#23047) @code-infra-renovate[bot]
+- Bump Tanstack query to ^5.101.2 (#23083) @code-infra-renovate[bot]
+- Bump Vite & Vitest (#23072) @code-infra-renovate[bot]
+- Bump code-infra:patchUpdates (#23066) @code-infra-renovate[bot]
+- Bump date-fns to ^4.4.0 (#23074) @code-infra-renovate[bot]
+- Bump motion to ^12.42.2 (#23076) @code-infra-renovate[bot]
+- Bump nextjs monorepo to 16.2.10 (#23068) @code-infra-renovate[bot]
+- Bump node (#23077) @code-infra-renovate[bot]
+- Bump picomatch to 4.0.5 (#23069) @code-infra-renovate[bot]
+- Bump playwright monorepo (#23078) @code-infra-renovate[bot]
+- Bump pnpm to 11.9.0 (#23079) @code-infra-renovate[bot]
+- Bump prettier to 3.9.4 (#23070) @code-infra-renovate[bot]
+- Bump react monorepo (#23071) @code-infra-renovate[bot]
+- Bump react-hook-form to ^7.80.0 (#23080) @code-infra-renovate[bot]
+- Bump react-router to ^7.18.1 (#23081) @code-infra-renovate[bot]
+- Bump stylelint to 17.14.0 (#23082) @code-infra-renovate[bot]
+- Bump vale-cli/vale to 3.15.1 (#23084) @code-infra-renovate[bot]
+
 ## 9.8.0
 
 _Jul 2, 2026_
