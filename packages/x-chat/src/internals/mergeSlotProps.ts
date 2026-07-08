@@ -143,7 +143,11 @@ function mergeResolvedSlotProps(base: AnySlotProps, consumer: AnySlotProps): Any
  */
 export function mergeSlotProps<OwnerState>(
   base: AnySlotProps,
-  consumer: SlotComponentProps<any, Record<string, unknown>, OwnerState> | undefined,
+  // `{}` (rather than `Record<string, unknown>`) as the overrides type keeps the
+  // parameter permissive: `@mui/utils@>=9.2` wraps slot props in
+  // `WithDataAttributes`, and a `Record<string, unknown>` override would require
+  // consumer slot props to carry a string index signature, which they don't.
+  consumer: SlotComponentProps<any, {}, OwnerState> | undefined,
 ): AnySlotProps | ((ownerState: OwnerState) => AnySlotProps) {
   if (typeof consumer === 'function') {
     return (ownerState: OwnerState) =>
