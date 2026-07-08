@@ -1,32 +1,41 @@
-import type { TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { createSelectorMemoized } from '@mui/x-internals/store';
+import { selectorChartsTooltipItem, selectorChartSeriesLayout } from '@mui/x-charts/internals';
+import type { TooltipItemPositionSelector } from '@mui/x-charts/internals';
 
-const tooltipItemPositionGetter: TooltipItemPositionGetter<'treemap'> = (params) => {
-  const { seriesLayout, identifier, placement } = params;
+export const selectorTooltipItemPosition: TooltipItemPositionSelector<'treemap'> =
+  createSelectorMemoized(
+    selectorChartsTooltipItem,
+    selectorChartSeriesLayout,
+    function selectorTreemapTooltipItemPosition(
+      identifier,
+      seriesLayout,
+      placement: 'top' | 'bottom' | 'left' | 'right' | undefined,
+    ) {
+      if (!identifier || identifier.type !== 'treemap') {
+        return null;
+      }
 
-  if (!identifier) {
-    return null;
-  }
+      const node = seriesLayout.treemap?.[identifier.seriesId]?.treemapLayout.byId.get(
+        identifier.nodeId,
+      );
+      if (!node) {
+        return null;
+      }
 
-  const node = seriesLayout.treemap?.[identifier.seriesId]?.treemapLayout.byId.get(
-    identifier.nodeId,
+      const { x0, y0, x1, y1 } = node;
+
+      switch (placement) {
+        case 'bottom':
+          return { x: (x0 + x1) / 2, y: y1 };
+        case 'left':
+          return { x: x0, y: (y0 + y1) / 2 };
+        case 'right':
+          return { x: x1, y: (y0 + y1) / 2 };
+        case 'top':
+        default:
+          return { x: (x0 + x1) / 2, y: y0 };
+      }
+    },
   );
-  if (!node) {
-    return null;
-  }
 
-  const { x0, y0, x1, y1 } = node;
-
-  switch (placement) {
-    case 'bottom':
-      return { x: (x0 + x1) / 2, y: y1 };
-    case 'left':
-      return { x: x0, y: (y0 + y1) / 2 };
-    case 'right':
-      return { x: x1, y: (y0 + y1) / 2 };
-    case 'top':
-    default:
-      return { x: (x0 + x1) / 2, y: y0 };
-  }
-};
-
-export default tooltipItemPositionGetter;
+export default selectorTooltipItemPosition;

@@ -2,7 +2,7 @@ import type { SeriesLayoutGetter, ChartSeriesTypeConfig } from '@mui/x-charts/in
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import { tooltipGetter } from './tooltipGetter';
 import { calculateTreemapLayout } from '../calculateTreemapLayout';
-import tooltipItemPositionGetter from './tooltipPosition';
+import { selectorTooltipItemPosition } from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import identifierSerializer from './identifierSerializer';
 import identifierCleaner from './identifierCleaner';
@@ -33,7 +33,7 @@ export const treemapSeriesConfig: ChartSeriesTypeConfig<'treemap'> = {
   colorProcessor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   getSeriesWithDefaultValues,
   getItemAtPosition,
   keyboardFocusHandler,
