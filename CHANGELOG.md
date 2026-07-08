@@ -133,6 +133,7 @@ Internal changes.
 - Bump react-router to ^7.18.1 (#23081) @code-infra-renovate[bot]
 - Bump stylelint to 17.14.0 (#23082) @code-infra-renovate[bot]
 - Bump vale-cli/vale to 3.15.1 (#23084) @code-infra-renovate[bot]
+- Bump MUI infra packages (#23107) @code-infra-renovate[bot]
 
 ## 9.8.0
 
