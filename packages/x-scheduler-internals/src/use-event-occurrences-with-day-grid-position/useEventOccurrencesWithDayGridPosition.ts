@@ -45,9 +45,9 @@ export function useEventOccurrencesWithDayGridPosition(
         }
       }
 
-      // 2. Sort: multi-day events first (so they claim top rows), then by start date.
-      // The active-first, then-by-span secondary sort only matters in overflow mode, so it
-      // is skipped when there is no maxEvents limit.
+      // 2. Sort by start date (then end date descending). In overflow mode (maxEvents set),
+      // apply a secondary sort so already-active (continuing) events come first, then longer
+      // spans, so multi-day events claim top rows and stay on the same row across days.
       const baseSorted = sortEventOccurrences(needsPosition);
       const sortedNeedsPosition =
         maxEvents == null

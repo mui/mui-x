@@ -100,25 +100,6 @@ export function useCalendarGridPlaceholderInDay(
       };
     }
 
-    let positionIndex = 1;
-    const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
-    if (targetDay) {
-      const usedIndexes = new Set(
-        targetDay.withPosition
-          .filter((occ) => occ.key !== rawPlaceholder.occurrenceKey)
-          .map((occ) => occ.position.index),
-      );
-      while (usedIndexes.has(positionIndex)) {
-        positionIndex += 1;
-      }
-    }
-
-    // If the position exceeds the available event rows, clamp it so the
-    // placeholder renders on top of an existing event instead of overflowing.
-    if (maxEvents != null && positionIndex > maxEvents) {
-      positionIndex = maxEvents;
-    }
-
     return {
       ...sharedProperties,
       start: processDate(rawPlaceholder.start, adapter),
@@ -129,15 +110,5 @@ export function useCalendarGridPlaceholderInDay(
         daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
       },
     };
-  }, [
-    adapter,
-    day,
-    maxEvents,
-    originalEvent,
-    originalEventId,
-    rawPlaceholder,
-    row.days,
-    rowEnd,
-    findAvailableIndex,
-  ]);
+  }, [adapter, day, originalEvent, originalEventId, rawPlaceholder, rowEnd, findAvailableIndex]);
 }
