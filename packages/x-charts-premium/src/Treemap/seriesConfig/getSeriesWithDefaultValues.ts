@@ -68,7 +68,9 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
       return node.data.color;
     }
     if (node.depth === 1) {
-      return colors.length === 0 ? '' : (colors[(branchIndex.get(node) ?? 0) % colors.length] ?? '');
+      return colors.length === 0
+        ? ''
+        : (colors[(branchIndex.get(node) ?? 0) % colors.length] ?? '');
     }
     // Inherit the parent's already-resolved color (nodes are visited parent-first).
     const parentId = node.parent?.data.id;
