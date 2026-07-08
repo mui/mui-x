@@ -37,6 +37,16 @@ Parent tiles are drawn behind their children, and leaf tiles are drawn on top.
 
 {{"demo": "TreemapNested.js"}}
 
+## Values
+
+The `value` sets the area of a tile.
+Leaf tiles are sized in proportion to their value, and a parent tile derives its value from the sum of its children.
+
+A parent can override that sum by setting its own `value`.
+When the value is larger than the children's total, the children fill the matching fraction of the parent and the rest is left empty—handy to show a total against its breakdown, such as a budget against what was spent.
+
+{{"demo": "TreemapValue.js"}}
+
 ## Tiling
 
 The `tiling` option controls how a node is subdivided into its children.
@@ -47,7 +57,7 @@ Use `paddingInner`, `paddingOuter`, and `paddingTop` to control the spacing betw
 
 ## Labels
 
-Every tile is labeled with its `label`, which defaults to the node `id`.
+Every tile is labeled with its `label`.
 
 {{"demo": "TreemapLabels.js"}}
 
