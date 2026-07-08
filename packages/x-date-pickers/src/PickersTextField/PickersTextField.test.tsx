@@ -116,6 +116,67 @@ describe('<PickersTextField /> - slot forwarding', () => {
   });
 });
 
+describe('<PickersTextField /> - accessibility', () => {
+  const { render } = createPickerRenderer();
+
+  // The labeled group must not be a live region, otherwise NVDA re-announces the
+  // field label on every section navigation / state change.
+  // https://github.com/mui/mui-x/issues/23101
+  it('should not set `aria-live` on the labeled group root', () => {
+    render(
+      <PickersTextField {...STUB_PROPS} variant="standard" label="My label" helperText="Helper" />,
+    );
+
+    const group = screen.getByRole('group');
+    expect(group).not.to.have.attribute('aria-live');
+    // The static relationships stay in place so the label and helper text are still
+    // announced once when focus enters the field.
+    expect(group).to.have.attribute('aria-labelledby');
+    expect(group).to.have.attribute('aria-describedby');
+  });
+
+  it('should announce the helper text through a name-less status live region', () => {
+    render(
+      <PickersTextField {...STUB_PROPS} variant="standard" label="My label" helperText="Helper" />,
+    );
+
+    const status = screen.getByRole('status');
+    // A live region with its own accessible name would drag that name into every
+    // announcement, so the region must stay name-less...
+    expect(status).not.to.have.attribute('aria-labelledby');
+    expect(status).not.to.have.attribute('aria-label');
+    // ...and it must actually carry the helper text, otherwise nothing is announced.
+    expect(status).to.have.text('Helper');
+  });
+
+  it('should wrap the helper text rather than duplicate it into the DOM', () => {
+    render(
+      <PickersTextField {...STUB_PROPS} variant="standard" label="My label" helperText="Helper" />,
+    );
+
+    // Rendering `helperText` twice would duplicate ids, focusable content and effects
+    // (`helperText` is a `ReactNode`). The live region must wrap the single helper text node.
+    expect(screen.getAllByText('Helper')).to.have.length(1);
+    expect(screen.getByRole('status')).to.contain(screen.getByText('Helper'));
+  });
+
+  it('should keep the status live region mounted even without helper text so a later error is announced', () => {
+    const { setProps } = render(
+      <PickersTextField {...STUB_PROPS} variant="standard" label="My label" />,
+    );
+
+    const statusBefore = screen.getByRole('status');
+    // The region pre-exists empty so a later content change is announced.
+    expect(statusBefore).to.have.text('');
+
+    setProps({ helperText: 'Your date is not valid' });
+
+    // Same stable node across the empty -> error transition, now carrying the error text.
+    expect(screen.getByRole('status')).to.equal(statusBefore);
+    expect(statusBefore).to.have.text('Your date is not valid');
+  });
+});
+
 describe('<PickersTextField /> - outlined notch', () => {
   const { render } = createPickerRenderer();
 

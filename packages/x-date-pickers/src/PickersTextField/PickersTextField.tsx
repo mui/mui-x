@@ -243,7 +243,6 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           role="group"
           aria-labelledby={inputLabelId}
           aria-describedby={helperTextId}
-          aria-live={helperTextId ? 'polite' : undefined}
           data-active-range-position={dataActiveRangePosition}
           {...inputAdditionalProps}
           {...inputSlotProps}
@@ -256,11 +255,14 @@ const PickersTextField = React.forwardRef(function PickersTextField(
             ...(slotProps?.htmlInput !== undefined && { htmlInput: slotProps.htmlInput }),
           }}
         />
-        {helperText && (
-          <FormHelperTextComponent id={helperTextId} {...slotProps?.formHelperText}>
-            {helperText}
-          </FormHelperTextComponent>
-        )}
+        {/* Always-mounted name-less live region wrapping the helper text so helperText/error changes are announced without re-announcing the field label. https://github.com/mui/mui-x/issues/23101 */}
+        <div role="status">
+          {helperText && (
+            <FormHelperTextComponent id={helperTextId} {...slotProps?.formHelperText}>
+              {helperText}
+            </FormHelperTextComponent>
+          )}
+        </div>
       </RootComponent>
     </PickerTextFieldOwnerStateContext.Provider>
   );
