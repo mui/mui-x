@@ -25,7 +25,7 @@ function normalize(
   const label = node.label ?? `${id}`;
   const children = node.children?.map((child, index) => normalize(child, id, index));
 
-  return { id, label, value: node.value, color: node.color, data: node.data, children };
+  return { ...node, id, label, children };
 }
 
 export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> = (
@@ -40,35 +40,30 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'treemap'> =
 
   const normalizedRoot = normalize(rootData, null, 0);
 
-  let root = hierarchy<NormalizedTreemapNode>(normalizedRoot, (d) => d.children).sum((d) =>
-    d.children && d.children.length ? 0 : (d.value ?? 0),
-  );
+  const root = hierarchy<NormalizedTreemapNode>(normalizedRoot, (d) => d.children)
+    .sum((d) => (d.children && d.children.length ? 0 : (d.value ?? 0)))
+    .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
-  root = root.sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
-
-  // A node takes the palette color of its top-level (depth 1) ancestor, so a subtree
-  // shares one color. An explicit `color` on the data node wins.
+  // Each top-level (depth 1) branch takes a palette color; descendants inherit their
+  // parent's resolved color, so an explicit `color` on any node cascades to its subtree.
   const branchIndex = new Map<HierarchyNode<NormalizedTreemapNode>, number>();
   root.children?.forEach((child, index) => branchIndex.set(child, index));
+
+  const nodes: TreemapLayoutNode<false>[] = [];
+  const byId = new Map<TreemapItemId, TreemapLayoutNode<false>>();
 
   const resolveColor = (node: HierarchyNode<NormalizedTreemapNode>): string => {
     if (node.data.color) {
       return node.data.color;
     }
-    let branch: HierarchyNode<NormalizedTreemapNode> | undefined;
     if (node.depth === 1) {
-      branch = node;
-    } else if (node.depth > 1) {
-      branch = node.ancestors().find((ancestor) => ancestor.depth === 1);
+      return colors.length === 0 ? '' : (colors[(branchIndex.get(node) ?? 0) % colors.length] ?? '');
     }
-    if (!branch || colors.length === 0) {
-      return colors[0] ?? '';
-    }
-    return colors[(branchIndex.get(branch) ?? 0) % colors.length] ?? '';
+    // Inherit the parent's already-resolved color (nodes are visited parent-first).
+    const parentId = node.parent?.data.id;
+    return (parentId != null ? byId.get(parentId)?.color : undefined) ?? colors[0] ?? '';
   };
 
-  const nodes: TreemapLayoutNode<false>[] = [];
-  const byId = new Map<TreemapItemId, TreemapLayoutNode<false>>();
   root.eachBefore((node) => {
     const flat: TreemapLayoutNode<false> = {
       id: node.data.id,
