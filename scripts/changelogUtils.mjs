@@ -115,7 +115,7 @@ function parseTags(commitMessage) {
 function resolvePackagesByLabels(labels = []) {
   const resolvedPackages = [];
   for (const label of labels) {
-    switch (label.name) {
+    switch (label) {
       case 'scope: data grid':
         resolvedPackages.push('DataGrid');
         break;
@@ -217,17 +217,14 @@ async function generateChangelog({
       lastRelease,
       release,
     })
-  )
-    .filter((commit) => commit.author?.login !== 'renovate[bot]')
-    .map((commit) => ({
-      ...commit,
-      commit: {
-        message: commit.message,
-      },
-    }));
+  ).map((commit) => ({
+    ...commit,
+    commit: {
+      message: commit.message,
+    },
+  }));
 
   const changeLogMessages = {};
-  const prsLabelsMap = {};
   const community = getContributors(commitsItems);
 
   // Dispatch commits in different sections
@@ -249,7 +246,7 @@ async function generateChangelog({
   const codemodCommits = [];
 
   commitsItems
-    .filter((item) => !prsLabelsMap[item.sha]?.some((label) => excludeLabels.includes(label.name)))
+    .filter((item) => !item.labels?.some((label) => excludeLabels.includes(label)))
     .filter((item) => !excludeTitleTags.some((tag) => item.commit.message.includes(tag)))
     .forEach((commitItem) => {
       const tag = parseTags(commitItem.commit.message);
@@ -317,8 +314,7 @@ async function generateChangelog({
           break;
         case 'l10n':
         case '118n': {
-          const prLabels = prsLabelsMap[commitItem.sha];
-          const resolvedPackages = resolvePackagesByLabels(prLabels);
+          const resolvedPackages = resolvePackagesByLabels(commitItem.labels);
           if (resolvedPackages.length > 0) {
             resolvedPackages.forEach((resolvedPackage) => {
               switch (resolvedPackage) {
