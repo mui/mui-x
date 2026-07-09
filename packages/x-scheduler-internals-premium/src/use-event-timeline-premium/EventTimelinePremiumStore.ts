@@ -9,7 +9,13 @@ import {
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@mui/x-scheduler-internals/base-ui-copy';
-import type { EventTimelinePremiumPreferences, EventTimelinePremiumPreset } from '../models';
+import type {
+  EventTimelinePremiumPreferences,
+  EventTimelinePremiumPreset,
+  SchedulerAddDependencyResult,
+  SchedulerDependencyCreationProperties,
+  SchedulerDependencyId,
+} from '../models';
 import type {
   EventTimelinePremiumState,
   EventTimelinePremiumParameters,
@@ -17,6 +23,7 @@ import type {
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
 import { schedulerRecurringEventsPlugin } from '../internals/plugins/schedulerRecurringEventsPlugin';
+import { SchedulerSchedulingPlugin } from '../internals/plugins/SchedulerSchedulingPlugin';
 import {
   EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
   getPresetPxPerDay,
@@ -135,6 +142,12 @@ export class EventTimelinePremiumStore<
 > {
   public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
 
+  public scheduling: SchedulerSchedulingPlugin<
+    TEvent,
+    EventTimelinePremiumState,
+    EventTimelinePremiumStoreParameters<TEvent, TResource>
+  >;
+
   public constructor(
     parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
     adapter: Adapter,
@@ -152,6 +165,8 @@ export class EventTimelinePremiumStore<
       );
     }
 
+    this.scheduling = this.disposables.use(new SchedulerSchedulingPlugin(this));
+    this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
   }
 
@@ -219,4 +234,17 @@ export class EventTimelinePremiumStore<
       }
     }
   };
+
+  /**
+   * Adds a dependency between two events.
+   */
+  public addDependency = (
+    properties: SchedulerDependencyCreationProperties,
+  ): SchedulerAddDependencyResult => this.scheduling.addDependency(properties);
+
+  /**
+   * Deletes a dependency.
+   */
+  public deleteDependency = (dependencyId: SchedulerDependencyId) =>
+    this.scheduling.deleteDependency(dependencyId);
 }

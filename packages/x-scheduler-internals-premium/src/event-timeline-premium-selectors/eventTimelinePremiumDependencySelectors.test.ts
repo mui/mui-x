@@ -33,12 +33,22 @@ const DEP_3: SchedulerDependency = {
   type: 'FinishToStart',
 };
 
-const getState = () =>
-  getEventTimelinePremiumStateFromParameters({
-    resources: TEST_RESOURCES,
-    events: [eventA, eventB, eventR],
-    dependencies: [DEP_1, DEP_2, DEP_3],
-  });
+// `DEP_2` and `DEP_3` reference a recurring/unknown event on purpose (to exercise the
+// selector's filtering below), which the scheduling plugin flags with a dev warning.
+const getState = () => {
+  let state!: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+  expect(() => {
+    state = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, eventB, eventR],
+      dependencies: [DEP_1, DEP_2, DEP_3],
+    });
+  }).toWarnDev([
+    'MUI X Scheduler: The dependency "dep-2" references the recurring event "event-r".',
+    'MUI X Scheduler: The dependency "dep-3" references the unknown event "unknown-x".',
+  ]);
+  return state;
+};
 
 describe('eventTimelinePremiumDependencySelectors', () => {
   it('should return the dependency by id', () => {
