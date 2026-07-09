@@ -105,6 +105,15 @@ const TEST_RULES: RouteRule[] = [
     // `rowSkeleton`), so wait for a real, non-skeleton row before screenshotting.
     waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
   },
+  {
+    test: '/docs-data-grid-server-side-data/ServerSideDataGridKeepPreviousData',
+    // The demo intentionally sets a 500-1500ms mock-server delay so the
+    // keep-previous-data behavior is visible when paginating. An explicit delay
+    // bypasses the regression build's delay-zeroing (`__DISABLE_CHANCE_RANDOM__`),
+    // and the `aria-busy` font gate doesn't track async data, so the initial
+    // skeleton overlay would otherwise be captured. Wait for a real row instead.
+    waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
+  },
 ];
 
 function getRouteConfig(routeUrl: string): RouteConfig | undefined {

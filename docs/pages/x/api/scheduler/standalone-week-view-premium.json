@@ -91,6 +91,12 @@
         "description": "'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'"
       }
     },
+    "viewConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ week?: { endTime?: number, startTime?: number } }"
+      }
+    },
     "views": {
       "type": {
         "name": "arrayOf",

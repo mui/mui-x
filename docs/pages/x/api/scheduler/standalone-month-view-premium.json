@@ -91,6 +91,7 @@
         "description": "'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'"
       }
     },
+    "viewConfig": { "type": { "name": "object" } },
     "views": {
       "type": {
         "name": "arrayOf",

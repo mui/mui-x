@@ -285,8 +285,7 @@ export class BatchRowUpdater {
     private apiRef: RefObject<GridPrivateApiPro>,
     private processRowUpdate: DataGridProProcessedProps['processRowUpdate'] | undefined,
     private onProcessRowUpdateError:
-      | DataGridProProcessedProps['onProcessRowUpdateError']
-      | undefined,
+      DataGridProProcessedProps['onProcessRowUpdateError'] | undefined,
   ) {}
 
   queueUpdate(

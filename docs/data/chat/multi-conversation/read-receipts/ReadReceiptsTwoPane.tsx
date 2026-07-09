@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {
@@ -20,13 +21,11 @@ import type {
   ChatConversation as ChatConversationModel,
   ChatMessage,
 } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   inboxConversations,
   inboxThreads,
-} from 'docs/data/chat/material/examples/shared/demoData';
-
-const SEND_ICON_PATH = 'M2.01 21L23 12 2.01 3 2 10l15 2-15 2z';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 // The conversation that ships unread in the shared demo data.
 const UNREAD_CONVERSATION_ID = inboxConversations.find(
@@ -111,19 +110,6 @@ const adapter: ChatAdapter = {
     // In a real app this would notify the backend.
   },
 };
-
-function SendIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-      style={{ width: '1em', height: '1em' }}
-    >
-      <path d={SEND_ICON_PATH} />
-    </svg>
-  );
-}
 
 export default function ReadReceiptsTwoPane() {
   // Open a fully-read conversation first so the unread one keeps its badge until

@@ -195,11 +195,16 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
 
+  const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
+  const overflowOccurrences = day.withPosition.filter((o) => o.position.index > maxEvents);
+
   const visibleOccurrences =
-    day.withPosition.length > maxEvents
-      ? day.withPosition.slice(0, maxEvents - 1)
-      : day.withPosition;
-  const hiddenCount = day.withPosition.length - visibleOccurrences.length;
+    overflowOccurrences.length > 0
+      ? inBoundOccurrences.slice(0, maxEvents - 1)
+      : inBoundOccurrences;
+
+  const hiddenCount =
+    overflowOccurrences.length + (inBoundOccurrences.length - visibleOccurrences.length);
 
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
@@ -255,6 +260,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               );
             }
 
+            const startsBeforeThisDay =
+              !adapter.isSameDay(occurrence.displayTimezone.start.value, day.value) &&
+              adapter.isBefore(occurrence.displayTimezone.start.value, day.value);
+
             return (
               <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
@@ -262,6 +271,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                   variant={
                     isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
                   }
+                  {...(startsBeforeThisDay ? { 'data-starting-before-edge': '' } : {})}
                 />
               </EventDialogTrigger>
             );
