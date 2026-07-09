@@ -20,6 +20,7 @@ import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
+import { ARROW_DEPTH, LEFT_ARROW_CLIP, RIGHT_ARROW_CLIP, BOTH_ARROWS_CLIP } from '../arrowClips';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -51,6 +52,21 @@ const EventItemCard = styled('div', {
       '&:hover': {
         backgroundColor: 'var(--event-surface-selected-hover)',
       },
+    },
+    '&[data-starting-before-edge]': {
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      clipPath: LEFT_ARROW_CLIP,
+      paddingLeft: ARROW_DEPTH,
+    },
+    '&[data-ending-after-edge]': {
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+      clipPath: RIGHT_ARROW_CLIP,
+      paddingRight: ARROW_DEPTH,
+    },
+    '&[data-starting-before-edge][data-ending-after-edge]': {
+      clipPath: BOTH_ARROWS_CLIP,
     },
   },
   '&[data-variant="regular"]': {
@@ -168,6 +184,7 @@ export const EventItem = React.forwardRef(function EventItem(
 ) {
   const {
     occurrence,
+    date,
     ariaLabelledBy,
     id: idProp,
     variant = 'regular',
@@ -194,6 +211,14 @@ export const EventItem = React.forwardRef(function EventItem(
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();
+
+  const adapter = useAdapterContext();
+  const startsBeforeDay =
+    !adapter.isSameDay(occurrence.displayTimezone.start.value, date.value) &&
+    adapter.isBefore(occurrence.displayTimezone.start.value, date.value);
+  const endsAfterDay =
+    !adapter.isSameDay(occurrence.displayTimezone.end.value, date.value) &&
+    adapter.isAfter(occurrence.displayTimezone.end.value, date.value);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -303,6 +328,8 @@ export const EventItem = React.forwardRef(function EventItem(
           data-palette={color}
           data-editing={isEditing || undefined}
           aria-labelledby={`${ariaLabelledBy} ${id}`}
+          {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
+          {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
           {...other}
           className={clsx(className, classes.eventItemCard, occurrence.className)}
         />
