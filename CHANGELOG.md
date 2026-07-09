@@ -2,9 +2,7 @@
 
 ## 9.9.0
 
-<!-- generated comparing v9.8.0..master -->
-
-_Jul 8, 2026_
+_Jul 9, 2026_
 
 We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
 
@@ -82,8 +80,7 @@ Same changes as in `@mui/x-tree-view@9.9.0`.
 #### `@mui/x-scheduler@9.0.0-beta.5`
 
 - [scheduler] Introduce event resource helper utilities (#23022) @mustafajw07
-- [scheduler] Replace docs "Preview" label with "New" (#23054) @rita-codes
-- [scheduler] Revert docs stable-release prep (#23093) @rita-codes
+- [scheduler] Preserve multi-day event continuity across overflow (#22797) @mustafajw07
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
