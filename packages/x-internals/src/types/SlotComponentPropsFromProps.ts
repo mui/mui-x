@@ -16,6 +16,17 @@ type ResolveSlotProps<T> = T extends React.ElementType ? React.ComponentPropsWit
  * assignable without needing the custom type to declare a `data-*` index
  * signature.
  *
+ * To type `data-*` attributes on slots, augment the shared
+ * `DataAttributesOverrides` interface once. See the Material UI TypeScript guide:
+ * https://mui.com/material-ui/guides/typescript/#allowing-data-attributes-on-slotprops
+ *
+ * @example
+ * declare module '@mui/material/utils' {
+ *   interface DataAttributesOverrides {
+ *     [key: `data-${string}`]: string | number | boolean | undefined;
+ *   }
+ * }
+ *
  * @template T - A props type, or a React element type whose props to use.
  * @template TOverrides - Additional props to layer on top.
  * @template TOwnerState - Owner state passed to the function form.
