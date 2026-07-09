@@ -101,7 +101,7 @@ Internal changes.
 
 ### Core
 
-- [mcp] Add `@mui/mcp` server and `@mui/x-agent-tools` (#22947) @aemartos
+- [mcp] Add `@mui/mcp` server and `@mui/x-agent-tools`. See the [README](https://github.com/mui/mui-x/blob/master/packages/mcp/README.md) for setup (#22947) @aemartos
 - [code-infra] Avoid OOM in the Netlify docs build and CircleCI lint step (#23086) @LukasTy
 - [code-infra] Group `@atlaskit/pragmatic-drag-and-drop` renovate updates (#23105) @LukasTy
 - [code-infra] Validate npm publishing through dry run (#23038) @brijeshb42
