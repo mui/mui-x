@@ -1,6 +1,8 @@
 export * from './translations';
 export type {
   EventCalendarPreferences,
+  EventCalendarViewConfig,
+  EventCalendarTimeGridViewConfig,
   SchedulerEvent,
   SchedulerResource,
   SchedulerEventColor,
@@ -9,4 +11,4 @@ export type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
   SchedulerOccurrencePlaceholderExternalDragData,
-} from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/models';

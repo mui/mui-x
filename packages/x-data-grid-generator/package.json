@@ -1,9 +1,9 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "9.0.4",
+  "version": "9.8.0",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -34,7 +34,7 @@
     "@mui/x-internals": "workspace:^",
     "chance": "catalog:",
     "clsx": "catalog:",
-    "lru-cache": "^11.3.5"
+    "lru-cache": "^11.5.1"
   },
   "devDependencies": {
     "@mui/icons-material": "catalog:",

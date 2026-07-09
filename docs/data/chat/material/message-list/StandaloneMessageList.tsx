@@ -2,42 +2,20 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import {
-  ChatMessageList,
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageInlineMeta,
-  ChatConversation,
-} from '@mui/x-chat';
-import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { ChatMessageList, ChatConversation } from '@mui/x-chat';
+import { ChatProvider } from '@mui/x-chat/headless';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
 function CustomLayout() {
-  const messageIds = useMessageIds();
-
-  const renderItem = React.useCallback(
-    (params: { id: string }) => (
-      <ChatMessageGroup key={params.id} messageId={params.id}>
-        <ChatMessage messageId={params.id}>
-          <ChatMessageAvatar />
-          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
-        </ChatMessage>
-      </ChatMessageGroup>
-    ),
-    [],
-  );
-
   return (
     <ChatConversation>
-      <ChatMessageList renderItem={renderItem} items={messageIds} />
+      <ChatMessageList />
       <Box sx={{ p: 1, borderTop: '1px solid', borderColor: 'divider' }}>
         <Button variant="outlined" size="small" disabled>
           Custom composer placeholder

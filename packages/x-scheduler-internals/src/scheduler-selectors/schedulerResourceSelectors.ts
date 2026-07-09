@@ -1,0 +1,232 @@
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerResource, SchedulerResourceId } from '../models';
+
+const resourceParentIdLookupSelector = createSelectorMemoized(
+  (state: State) => state.resourceChildrenIdLookup,
+  (resourceChildrenIdLookup) => {
+    const result: Map<SchedulerResourceId, SchedulerResourceId | null> = new Map();
+
+    for (const [resourceId, childrenIds] of resourceChildrenIdLookup) {
+      for (const childId of childrenIds) {
+        result.set(childId, resourceId);
+      }
+    }
+
+    return result;
+  },
+);
+
+/**
+ * Walks the resource hierarchy (child → parent → …) and returns the first
+ * defined value found by `getValue`, or `fallback` if none is found.
+ */
+export function resolveResourceProperty<T>(
+  state: State,
+  resourceId: string | null | undefined,
+  getValue: (resource: SchedulerResource) => T | undefined,
+  fallback: T,
+): T {
+  const parentLookup = resourceParentIdLookupSelector(state);
+  let currentId = resourceId ?? null;
+  while (currentId != null) {
+    const resource = state.processedResourceLookup.get(currentId);
+    if (resource != null) {
+      const value = getValue(resource);
+      if (value !== undefined) {
+        return value;
+      }
+    }
+    currentId = parentLookup.get(currentId) ?? null;
+  }
+  return fallback;
+}
+
+const resourceDepthLookupSelector = createSelectorMemoized(
+  resourceParentIdLookupSelector,
+  (state: State) => state.processedResourceLookup,
+  (parentLookup, processedResourceLookup) => {
+    const result: Map<SchedulerResourceId, number> = new Map();
+    const cache = new Map<string, number>();
+
+    const getDepth = (resourceId: string): number => {
+      const cached = cache.get(resourceId);
+      if (cached !== undefined) {
+        return cached;
+      }
+
+      const parentId = parentLookup.get(resourceId);
+      const depth = parentId ? getDepth(parentId) + 1 : 0;
+      cache.set(resourceId, depth);
+      return depth;
+    };
+
+    for (const resourceId of processedResourceLookup.keys()) {
+      result.set(resourceId, getDepth(resourceId));
+    }
+
+    return result;
+  },
+);
+
+// Memoized so the O(children) scan runs only when the structure or visibility
+// changes, not on every store notification. Read per resource in O(1) below.
+const resourceHasVisibleChildrenLookupSelector = createSelectorMemoized(
+  (state: State) => state.resourceChildrenIdLookup,
+  (state: State) => state.visibleResources,
+  (childrenIdLookup, visibleResources) => {
+    const result = new Map<SchedulerResourceId, boolean>();
+    for (const [resourceId, childrenIds] of childrenIdLookup) {
+      result.set(
+        resourceId,
+        childrenIds.some((childId) => visibleResources[childId] !== false),
+      );
+    }
+    return result;
+  },
+);
+
+export const schedulerResourceSelectors = {
+  processedResource: createSelector(
+    (state: State) => state.processedResourceLookup,
+    (processedResourceLookup, resourceId: string | null | undefined) =>
+      resourceId == null ? null : (processedResourceLookup.get(resourceId) ?? null),
+  ),
+  processedResourceList: createSelectorMemoized(
+    (state: State) => state.resourceIdList,
+    (state: State) => state.processedResourceLookup,
+    (resourceIds, processedResourceLookup) =>
+      resourceIds.map((id) => processedResourceLookup.get(id)!),
+  ),
+  processedResourceFlatList: createSelectorMemoized(
+    (state: State) => state.resourceIdList,
+    (state: State) => state.processedResourceLookup,
+    (state: State) => state.resourceChildrenIdLookup,
+    (resourceIds, processedResourceLookup, resourceChildrenIdLookup) => {
+      const flatList: SchedulerResource[] = [];
+
+      const addResourceAndChildren = (resourceId: string) => {
+        const resource = processedResourceLookup.get(resourceId);
+        if (!resource) {
+          return;
+        }
+
+        flatList.push(resource);
+
+        const childrenIds = resourceChildrenIdLookup.get(resourceId);
+        if (childrenIds?.length) {
+          for (const childId of childrenIds) {
+            addResourceAndChildren(childId);
+          }
+        }
+      };
+
+      for (const resourceId of resourceIds) {
+        addResourceAndChildren(resourceId);
+      }
+      return flatList;
+    },
+  ),
+  processedResourceChildrenLookup: createSelectorMemoized(
+    (state: State) => state.processedResourceLookup,
+    (state: State) => state.resourceChildrenIdLookup,
+    (processedResourceLookup, resourceChildrenIdLookup) => {
+      const result: Map<SchedulerResourceId, SchedulerResource[]> = new Map();
+
+      for (const [resourceId, childrenIds] of resourceChildrenIdLookup) {
+        const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
+        result.set(resourceId, children);
+      }
+
+      return result;
+    },
+  ),
+  childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
+  // Single-function createSelector is unmemoized; keep the body returning a
+  // stable ref (a Map value or EMPTY_ARRAY), never a freshly-built array.
+  resourceChildrenIds: createSelector(
+    (state: State, resourceId: SchedulerResourceId) =>
+      state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
+  ),
+  // O(1) read from the memoized lookup; a resource with no entry (a leaf) has no
+  // visible children.
+  resourceHasVisibleChildren: createSelector(
+    resourceHasVisibleChildrenLookupSelector,
+    (lookup, resourceId: SchedulerResourceId) => lookup.get(resourceId) ?? false,
+  ),
+  hasNestedResources: createSelector(
+    resourceParentIdLookupSelector,
+    (parentLookup) => parentLookup.size > 0,
+  ),
+  // Unmemoized (returns a primitive); don't change the body to build an object.
+  isResourceCollapsed: createSelector(
+    (state: State, resourceId: SchedulerResourceId) =>
+      state.collapsedResources[resourceId] === true,
+  ),
+  collapsedResources: (state: State) => state.collapsedResources,
+  resourceParentIdLookup: resourceParentIdLookupSelector,
+  resourceDepthLookup: resourceDepthLookupSelector,
+  resourceDepth: createSelector(
+    resourceDepthLookupSelector,
+    (resourceDepthLookup, resourceId: SchedulerResourceId) =>
+      resourceDepthLookup.get(resourceId) ?? 0,
+  ),
+  idList: createSelector((state: State) => state.resourceIdList),
+  visibleMap: createSelectorMemoized(
+    (state: State) => state.visibleResources,
+    resourceParentIdLookupSelector,
+    (state: State) => state.processedResourceLookup,
+    (visibleResources, parentLookup, processedResourceLookup) => {
+      // Fast path: no parent-child relationships means no ancestor visibility to check
+      if (parentLookup.size === 0) {
+        return visibleResources;
+      }
+
+      const cache = new Map<string, boolean>();
+
+      const checkVisibility = (resourceId: string): boolean => {
+        const cached = cache.get(resourceId);
+        if (cached !== undefined) {
+          return cached;
+        }
+
+        const isDirectlyVisible = visibleResources[resourceId] !== false;
+        let result: boolean;
+
+        if (!isDirectlyVisible) {
+          result = false;
+        } else {
+          const parentId = parentLookup.get(resourceId);
+          result = parentId ? checkVisibility(parentId) : true;
+        }
+
+        cache.set(resourceId, result);
+        return result;
+      };
+
+      const curatedMap: Record<string, boolean> = {};
+      for (const resourceId of processedResourceLookup.keys()) {
+        if (!checkVisibility(resourceId)) {
+          curatedMap[resourceId] = false;
+        }
+      }
+
+      return curatedMap;
+    },
+  ),
+  /**
+   * Gets the default event color used when no color is specified on the event.
+   * Walks the resource hierarchy (child → parent → …) until a color is found,
+   * falling back to the component-level default.
+   */
+  defaultEventColor: createSelector(
+    (state: State, resourceId: SchedulerResourceId | null | undefined) => {
+      if (resourceId == null) {
+        return state.eventColor;
+      }
+
+      return resolveResourceProperty(state, resourceId, (r) => r.eventColor, state.eventColor);
+    },
+  ),
+};

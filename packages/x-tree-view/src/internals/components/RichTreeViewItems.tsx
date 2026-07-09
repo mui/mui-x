@@ -3,15 +3,16 @@ import * as React from 'react';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { TreeItem, TreeItemProps } from '../../TreeItem';
-import { TreeViewItemId } from '../../models';
+import type { TreeItemProps } from '../../TreeItem';
+import { TreeItem } from '../../TreeItem';
+import type { TreeViewItemId } from '../../models';
 import { itemsSelectors } from '../plugins/items';
 import { useTreeViewContext, useTreeViewStyleContext } from '../TreeViewProvider';
 import { expansionSelectors } from '../plugins/expansion';
-import { RichTreeViewStore } from '../RichTreeViewStore';
-import { MinimalTreeViewState } from '../MinimalTreeViewStore';
+import type { RichTreeViewStore } from '../RichTreeViewStore';
+import type { MinimalTreeViewState } from '../MinimalTreeViewStore';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
 
 const RichTreeViewItemsContext = React.createContext<
@@ -152,7 +153,6 @@ export interface RichTreeViewItemsProps<TProps extends object> {
 interface RichTreeViewItemProps extends Pick<TreeItemProps, 'id' | 'itemId' | 'children'> {
   itemSlot: React.JSXElementConstructor<TreeItemProps> | undefined;
   itemSlotProps:
-    | SlotComponentPropsFromProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState>
-    | undefined;
+    SlotComponentPropsFromProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState> | undefined;
   skipChildren: boolean;
 }

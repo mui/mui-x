@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { ChatBox, ChatConversationHeader } from '@mui/x-chat';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const GradientHeaderElement = styled('header')(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
@@ -29,7 +29,9 @@ export default function GradientHeader() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      slots={{ conversationHeader: CustomHeader }}
+      slots={{
+        conversationHeader: CustomHeader,
+      }}
       sx={{
         height: 500,
         border: '1px solid',

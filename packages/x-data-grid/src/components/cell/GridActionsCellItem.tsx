@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps, GridBaseIconProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -48,7 +49,7 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
         {...rootProps.slotProps?.baseIconButton}
         ref={ref as React.RefObject<HTMLButtonElement>}
       >
-        {React.cloneElement(icon!, { fontSize: 'small' })}
+        {React.cloneElement(icon!, { fontSize: 'inherit' })}
       </rootProps.slots.baseIconButton>
     );
   }
@@ -73,5 +74,22 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
     </rootProps.slots.baseMenuItem>
   );
 });
+
+GridActionsCellItem.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+  /**
+   * from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component
+   */
+  component: PropTypes.elementType,
+  disabled: PropTypes.bool,
+  icon: PropTypes /* @typescript-to-proptypes-ignore */.element,
+  label: PropTypes.node,
+  showInMenu: PropTypes.bool,
+  style: PropTypes.object,
+} as any;
 
 export { GridActionsCellItem };

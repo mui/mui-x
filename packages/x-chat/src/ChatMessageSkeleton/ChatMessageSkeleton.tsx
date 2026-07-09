@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { keyframes } from '@mui/system';
+import { keyframes, SxProps, Theme } from '@mui/system';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -44,6 +44,9 @@ const ChatMessageSkeletonLineStyled = styled('div', {
   )`,
   backgroundSize: '400% 100%',
   animation: `${shimmerKeyframes} 1.4s ease infinite`,
+  '@media (prefers-reduced-motion: reduce)': {
+    animation: 'none',
+  },
   '&:last-child': {
     width: '60%',
   },
@@ -68,6 +71,7 @@ export interface ChatMessageSkeletonProps {
    */
   lines?: number;
   className?: string;
+  sx?: SxProps<Theme>;
   classes?: Partial<ChatMessageSkeletonClasses>;
   slots?: ChatMessageSkeletonSlots;
   slotProps?: ChatMessageSkeletonSlotProps;
@@ -82,7 +86,7 @@ const ChatMessageSkeleton = React.forwardRef(function ChatMessageSkeleton(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiChatMessageSkeleton' });
-  const { lines = 3, className, classes: classesProp, slots, slotProps, ...other } = props;
+  const { lines = 3, className, classes: classesProp, slots, slotProps, sx, ...other } = props;
   const classes = useChatMessageSkeletonUtilityClasses(classesProp);
 
   const Root = slots?.root ?? ChatMessageSkeletonRootStyled;
@@ -96,6 +100,7 @@ const ChatMessageSkeleton = React.forwardRef(function ChatMessageSkeleton(
     additionalProps: {
       ref,
       className: clsx(classes.root, className),
+      sx,
     },
   });
 
@@ -110,7 +115,7 @@ const ChatMessageSkeleton = React.forwardRef(function ChatMessageSkeleton(
   );
 }) as ChatMessageSkeletonComponent;
 
-ChatMessageSkeleton.propTypes = {
+ChatMessageSkeleton.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -124,6 +129,11 @@ ChatMessageSkeleton.propTypes = {
   lines: PropTypes.number,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatMessageSkeleton };

@@ -41,7 +41,7 @@ export const ComposerTextArea = React.forwardRef(function ComposerTextArea(
   props: ComposerTextAreaProps,
   ref: React.Ref<HTMLTextAreaElement>,
 ) {
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, onKeyDown, onCompositionStart, onCompositionEnd, ...other } = props;
   const { activeConversationId } = useChat();
   const composer = useComposerContext();
   const localeText = useChatLocaleText();
@@ -60,15 +60,29 @@ export const ComposerTextArea = React.forwardRef(function ComposerTextArea(
     externalSlotProps: slotProps?.input,
     externalForwardedProps: other,
     ownerState,
-    additionalProps: {
+    getSlotProps: (externalEventHandlers) => ({
+      // Spread the consumer's event handlers first so the ones we do not
+      // explicitly compose below (onFocus, onBlur, onPaste, onSelect, onInput…)
+      // still reach the textarea. `mergeSlotProps`'s getSlotProps branch strips
+      // every external handler and only re-adds what this getter returns.
+      ...externalEventHandlers,
       ref: handleRef,
-      value: composer.value,
       onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        externalEventHandlers.onChange?.(event);
+
         if (!event.defaultPrevented) {
           composer.setValue(event.target.value);
         }
       },
       onKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        onKeyDown?.(event);
+
+        if (event.defaultPrevented) {
+          return;
+        }
+
+        externalEventHandlers.onKeyDown?.(event);
+
         if (
           !event.defaultPrevented &&
           event.key === 'Enter' &&
@@ -80,13 +94,33 @@ export const ComposerTextArea = React.forwardRef(function ComposerTextArea(
           void composer.submit();
         }
       },
-      onCompositionStart: () => {
-        composer.setComposerIsComposing(true);
+      onCompositionStart: (event: React.CompositionEvent<HTMLTextAreaElement>) => {
+        onCompositionStart?.(event);
+
+        if (event.defaultPrevented) {
+          return;
+        }
+
+        externalEventHandlers.onCompositionStart?.(event);
+
+        if (!event.defaultPrevented) {
+          composer.setComposerIsComposing(true);
+        }
       },
-      onCompositionEnd: () => {
-        composer.setComposerIsComposing(false);
+      onCompositionEnd: (event: React.CompositionEvent<HTMLTextAreaElement>) => {
+        onCompositionEnd?.(event);
+
+        if (event.defaultPrevented) {
+          return;
+        }
+
+        externalEventHandlers.onCompositionEnd?.(event);
+
+        if (!event.defaultPrevented) {
+          composer.setComposerIsComposing(false);
+        }
       },
-    },
+    }),
   }) as React.TextareaHTMLAttributes<HTMLTextAreaElement> &
     React.RefAttributes<HTMLTextAreaElement>;
   const previousActiveConversationIdRef = React.useRef(activeConversationId);
@@ -128,6 +162,7 @@ export const ComposerTextArea = React.forwardRef(function ComposerTextArea(
       }
       disabled={Boolean(rootProps.disabled) || composer.disabled}
       placeholder={rootProps.placeholder ?? localeText.composerInputPlaceholder}
+      value={composer.value}
     />
   );
 }) as ComposerTextAreaComponent;

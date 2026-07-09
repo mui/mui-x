@@ -17,11 +17,17 @@
       "description": "Whether events can be dragged from inside of the calendar and dropped outside of it. If true, when the mouse leaves the calendar, the event won&#39;t be rendered inside the calendar anymore. If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "collapsedResources": {
+      "description": "The collapsed resources. A resource is expanded unless included here with a <code>true</code> value."
+    },
     "dataSource": {
       "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."
     },
     "dateLocale": {
       "description": "The locale object from <code>date-fns</code> used to format dates. This affects day names, month names, week start day, and other locale-dependent formatting. Import a locale from <code>date-fns/locale</code> and pass it to this prop."
+    },
+    "defaultCollapsedResources": {
+      "description": "The resources initially collapsed. To render a controlled scheduler, use the <code>collapsedResources</code> prop."
     },
     "defaultPreferences": {
       "description": "The default preferences for the timeline. To use controlled preferences, use the <code>preferences</code> prop."
@@ -41,6 +47,9 @@
     "eventColor": {
       "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
     },
+    "eventCreation": {
+      "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
+    },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
@@ -48,8 +57,10 @@
     "localeText": {
       "description": "Set the locale text of the Event Timeline. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts\">the source</a> in the GitHub repository."
     },
+    "onCollapsedResourcesChange": {
+      "description": "Event handler called when the collapsed resources change."
+    },
     "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
-    "onPreferencesChange": { "description": "Event handler called when the preferences change." },
     "onPresetChange": { "description": "Event handler called when the preset changes." },
     "onVisibleDateChange": { "description": "Event handler called when the visible date changes." },
     "onVisibleResourcesChange": {
@@ -68,6 +79,9 @@
       "description": "The structure of the resource model. It defines how to read and write the properties of the resource model. If not provided, the resource model is assumed to match the <code>CalendarResource</code> interface."
     },
     "resources": { "description": "The resources the events can be assigned to." },
+    "shouldEventRequireResource": {
+      "description": "Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one."
+    },
     "showCurrentTimeIndicator": {
       "description": "Whether the component should display the current time indicator."
     },
@@ -94,33 +108,17 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the current time indicator circle element"
     },
-    "daysHeader": {
+    "errorAlert": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the days header root element"
+      "nodeName": "the error alert element"
     },
-    "daysHeaderCell": {
+    "errorContainer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header cell elements"
+      "nodeName": "the error container element"
     },
-    "daysHeaderDayNumber": {
+    "errorMessage": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header day number elements"
-    },
-    "daysHeaderMonthStart": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header month start elements"
-    },
-    "daysHeaderMonthStartLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header month start label elements"
-    },
-    "daysHeaderTime": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header time elements"
-    },
-    "daysHeaderWeekDay": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header week day elements"
+      "nodeName": "the error message element"
     },
     "event": { "description": "Styles applied to {{nodeName}}.", "nodeName": "event elements" },
     "eventDialog": {
@@ -259,9 +257,13 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog resource menu color dot element"
     },
-    "eventDialogResourceMenuColorRadioButton": {
+    "eventDialogResourceMenuColorToggle": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the event dialog resource menu color radio button element"
+      "nodeName": "the event dialog resource menu color toggle element"
+    },
+    "eventDialogResourceMenuColorToggleGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource menu color toggle group element"
     },
     "eventDialogResourceMenuItem": {
       "description": "Styles applied to {{nodeName}}.",
@@ -278,6 +280,10 @@
     "eventDialogSaveButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog save button element"
+    },
+    "eventDialogSectionFieldset": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog section fieldset element"
     },
     "eventDialogSectionHeaderTitle": {
       "description": "Styles applied to {{nodeName}}.",
@@ -327,6 +333,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event resize handler elements"
     },
+    "eventsCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the events cell element in a body row"
+    },
     "eventsHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the events header cell element"
@@ -335,63 +345,39 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the events header cell content element"
     },
-    "eventsSubGrid": {
+    "eventSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid element"
-    },
-    "eventsSubGridRow": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid row element"
-    },
-    "eventsSubGridWrapper": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid wrapper element"
+      "nodeName": "the event skeleton element"
     },
     "grid": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the grid element" },
+    "header": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the generic header (wraps all level rows)"
+    },
+    "headerCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each cell inside a header level row"
+    },
+    "headerCellLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the label element inside a header cell"
+    },
+    "headerLevelRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each level row inside the generic header"
+    },
     "headerRow": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the header row element"
-    },
-    "monthsHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the months header root element"
-    },
-    "monthsHeaderMonthLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "months header month label elements"
-    },
-    "monthsHeaderYearLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "months header year label elements"
+      "nodeName": "the top row of the grid (contains the title and events headers)"
     },
     "root": { "description": "Styles applied to the root element." },
-    "timeHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the time header root element"
-    },
-    "timeHeaderCell": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "time header cell elements"
-    },
-    "timeHeaderCellsRow": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the time header cells row element"
-    },
-    "timeHeaderDayLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the time header day label element"
-    },
-    "timeHeaderTimeCell": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "time header time cell elements"
-    },
-    "timeHeaderTimeLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "time header time label elements"
-    },
     "titleCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title cell element"
+    },
+    "titleCellContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the title cell content wrapper element"
     },
     "titleCellLegendColor": {
       "description": "Styles applied to {{nodeName}}.",
@@ -404,38 +390,6 @@
     "titleHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title header cell element"
-    },
-    "titleSubGrid": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the title sub-grid element"
-    },
-    "weeksHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the weeks header root element"
-    },
-    "weeksHeaderCell": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "weeks header cell elements"
-    },
-    "weeksHeaderDayCell": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "weeks header day cell elements"
-    },
-    "weeksHeaderDayLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "weeks header day label elements"
-    },
-    "weeksHeaderDaysRow": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the weeks header days row element"
-    },
-    "yearsHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the years header root element"
-    },
-    "yearsHeaderYearLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "years header year label elements"
     }
   }
 }

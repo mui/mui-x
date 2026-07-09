@@ -7,17 +7,26 @@ import IconButton from '@mui/material/IconButton';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { ChatBox } from '@mui/x-chat';
 import { useChatComposer } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
-function CustomComposerContent() {
+const CustomComposerContent = React.forwardRef(function CustomComposerContent(
+  props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: unknown },
+  ref: React.Ref<HTMLDivElement>,
+) {
+  // `composerRoot` is a wrapper-only slot: ChatBox injects a `ref` and form props
+  // into it. Forward the ref and spread the injected props so the slot contract is
+  // satisfied (no ref warning, form/data props preserved). Drop the internal
+  // `ownerState` and the default `children` — this composition renders its own
+  // composer UI from the headless hook instead.
+  const { ownerState, children, ...rootProps } = props;
   const { value, setValue, submit, isSubmitting, addAttachment } = useChatComposer();
 
   return (
-    <Stack direction="row" spacing={1} sx={{ p: 1 }}>
+    <Stack ref={ref} direction="row" spacing={1} {...rootProps} sx={{ p: 1 }}>
       <TextField
         fullWidth
         size="small"
@@ -29,7 +38,7 @@ function CustomComposerContent() {
             submit();
           }
         }}
-        placeholder="Type a message..."
+        placeholder="Type a message…"
       />
       <IconButton component="label">
         <AttachFileIcon />
@@ -49,7 +58,7 @@ function CustomComposerContent() {
       </Button>
     </Stack>
   );
-}
+});
 
 const adapter = createEchoAdapter();
 
@@ -60,7 +69,9 @@ export default function CustomComposer() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      slots={{ composerRoot: CustomComposerContent }}
+      slots={{
+        composerRoot: CustomComposerContent,
+      }}
       sx={{
         height: 500,
         border: '1px solid',

@@ -1,57 +1,79 @@
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import {
   isBandScale,
   isOrdinalScale,
-  type TooltipItemPositionGetter,
+  selectorChartsTooltipItem,
+  selectorChartSeriesProcessed,
+  selectorChartXAxis,
+  selectorChartYAxis,
 } from '@mui/x-charts/internals';
+import type {
+  ChartSeriesType,
+  ProcessedSeries,
+  TooltipItemPositionSelector,
+} from '@mui/x-charts/internals';
+import type { SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
-const tooltipItemPositionGetter: TooltipItemPositionGetter<'ohlc'> = (params) => {
-  const { series, identifier, axesConfig, placement } = params;
+export const selectorTooltipItemPosition: TooltipItemPositionSelector<'ohlc'> =
+  createSelectorMemoized(
+    selectorChartsTooltipItem,
+    selectorChartSeriesProcessed,
+    selectorChartXAxis,
+    selectorChartYAxis,
+    function selectorTooltipItemPosition(
+      identifier: SeriesItemIdentifierWithType<ChartSeriesType> | null,
+      series: ProcessedSeries,
+      xAxes,
+      yAxes,
+      placement: 'top' | 'bottom' | 'left' | 'right' | undefined,
+    ) {
+      if (!identifier || identifier.type !== 'ohlc' || identifier.dataIndex === undefined) {
+        return null;
+      }
 
-  if (!identifier || identifier.dataIndex === undefined) {
-    return null;
-  }
+      const itemSeries = series.ohlc?.series[identifier.seriesId];
 
-  const itemSeries = series.ohlc?.series[identifier.seriesId];
+      if (itemSeries == null) {
+        return null;
+      }
 
-  if (itemSeries == null) {
-    return null;
-  }
+      const xAxis = xAxes.axis[itemSeries.xAxisId ?? xAxes.axisIds[0]];
+      const yAxis = yAxes.axis[itemSeries.yAxisId ?? yAxes.axisIds[0]];
 
-  if (axesConfig.x === undefined || axesConfig.y === undefined) {
-    return null;
-  }
+      if (xAxis === undefined || yAxis === undefined) {
+        return null;
+      }
 
-  const datum = itemSeries.data[identifier.dataIndex];
+      const datum = itemSeries.data[identifier.dataIndex];
 
-  if (!datum) {
-    return null;
-  }
+      if (!datum) {
+        return null;
+      }
 
-  const xScale = axesConfig.x.scale;
-  const yScale = axesConfig.y.scale;
+      const xScale = xAxis.scale;
+      const yScale = yAxis.scale;
 
-  if (!isBandScale(xScale) || isOrdinalScale(yScale)) {
-    return null;
-  }
+      if (!isBandScale(xScale) || isOrdinalScale(yScale)) {
+        return null;
+      }
 
-  const [, high, low] = datum;
+      const [, high, low] = datum;
 
-  const x = xScale(xScale.domain()[identifier.dataIndex])!;
-  const width = xScale.bandwidth();
-  const y = yScale(high);
-  const height = yScale(low) - yScale(high);
+      const x = xScale(xScale.domain()[identifier.dataIndex])!;
+      const width = xScale.bandwidth();
+      const y = yScale(high);
+      const height = yScale(low) - yScale(high);
 
-  switch (placement) {
-    case 'right':
-      return { x: x + width, y: y + height / 2 };
-    case 'bottom':
-      return { x: x + width / 2, y: y + height };
-    case 'left':
-      return { x, y: y + height / 2 };
-    case 'top':
-    default:
-      return { x: x + width / 2, y };
-  }
-};
-
-export default tooltipItemPositionGetter;
+      switch (placement) {
+        case 'right':
+          return { x: x + width, y: y + height / 2 };
+        case 'bottom':
+          return { x: x + width / 2, y: y + height };
+        case 'left':
+          return { x, y: y + height / 2 };
+        case 'top':
+        default:
+          return { x: x + width / 2, y };
+      }
+    },
+  );

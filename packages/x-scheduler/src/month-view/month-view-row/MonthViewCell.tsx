@@ -4,19 +4,19 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   eventCalendarOccurrencePlaceholderSelectors,
   eventCalendarViewSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
@@ -168,7 +168,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { day, row, maxEvents } = props;
+  const { day, row, maxEvents, colIndex, ariaLabelledBy } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -225,6 +225,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       ref={handleRef}
       key={day.key}
       value={day.value}
+      aria-colindex={colIndex}
+      aria-labelledby={ariaLabelledBy}
       data-current={isToday || undefined}
       data-other-month={!isCurrentMonth || undefined}
       data-weekend={isWeekend(adapter, day.value) || undefined}
@@ -289,4 +291,6 @@ interface MonthViewCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   row: useEventOccurrencesWithDayGridPosition.ReturnValue;
   maxEvents: number;
+  colIndex: number;
+  ariaLabelledBy?: string;
 }

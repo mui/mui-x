@@ -1,5 +1,5 @@
 import type { WithDataAttributes } from '@mui/x-internals/types';
-import {
+import type {
   BasePickerProps,
   UsePickerParameters,
   ExportedBaseToolbarProps,
@@ -7,12 +7,12 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import {
+import type {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { UseRangePositionProps } from '../useRangePosition';
-import { PickerRangeStep } from '../../utils/createRangePickerStepNavigation';
+import type { UseRangePositionProps } from '../useRangePosition';
+import type { PickerRangeStep } from '../../utils/createRangePickerStepNavigation';
 
 export interface UseStaticRangePickerSlots extends ExportedPickersLayoutSlots<PickerRangeValue> {}
 

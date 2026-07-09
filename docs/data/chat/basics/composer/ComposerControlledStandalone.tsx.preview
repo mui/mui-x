@@ -1,0 +1,10 @@
+<ComposerDemoShell
+  beforeComposer={
+    <Typography variant="body2" color="text.secondary">
+      Composer value: {value ? `"${value}"` : '(empty)'}
+    </Typography>
+  }
+  composerValue={value}
+  onComposerValueChange={setValue}
+  helperText="The current draft value is controlled outside the composer."
+/>

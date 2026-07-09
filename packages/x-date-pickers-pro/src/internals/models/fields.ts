@@ -1,7 +1,7 @@
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import type {
   MultiInputFieldRefs,
   MultiInputFieldSlotRootProps,

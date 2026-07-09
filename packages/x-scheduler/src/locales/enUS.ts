@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const enUSDialog: EventDialogLocaleText = {
   // EventDialog
@@ -39,7 +37,7 @@ const enUSDialog: EventDialogLocaleText = {
   recurrenceTabLabel: 'Recurrence',
   recurrenceMainSelectCustomLabel: 'Recurrence',
   recurrenceWeeklyFrequencyLabel: 'weeks',
-  recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Repeats weekly on ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'months',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Day ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} of the last week of the month`,
@@ -51,13 +49,15 @@ const enUSDialog: EventDialogLocaleText = {
   recurrenceYearlyFrequencyLabel: 'years',
   recurrenceYearlyPresetLabel: (date) => `Repeats annually on ${date}`,
   noResourceAriaLabel: 'No specific resource',
+  selectColorAriaLabel: (color) => `Select ${color} as event color`,
   resourceLabel: 'Resource',
+  requiredResourceError: 'A resource is required.',
   saveChanges: 'Save',
   startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   startDateLabel: 'Start date',
   startTimeLabel: 'Start time',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'All events',
   cancel: 'Cancel',
   confirm: 'Confirm',
@@ -68,11 +68,8 @@ const enUSDialog: EventDialogLocaleText = {
 };
 
 const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Hide events for ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Resources',
-  resourcesLegendSectionLabel: 'Resource legend',
-  showEventsLabel: (resourceName) => `Show events for ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agenda',
@@ -100,11 +97,14 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   showWeekNumber: 'Show week number',
   timeFormat: 'Time format',
   viewSpecificOptions: (view) => `${view} view options`,
+  startWeekOn: 'Start week on',
+  weekdaySunday: 'Sunday',
+  weekdayMonday: 'Monday',
+  weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'All day',
 
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
   nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Previous ${timeSpan}`,
@@ -119,6 +119,9 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   miniCalendarLabel: 'Calendar',
   miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   miniCalendarGoToNextMonth: 'Show next month in calendar',
+
+  // Main calendar region
+  calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',

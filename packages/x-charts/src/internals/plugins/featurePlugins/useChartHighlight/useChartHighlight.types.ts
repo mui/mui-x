@@ -1,13 +1,13 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 import type {
   HighlightItemIdentifierWithType,
   HighlightItemIdentifier,
   SeriesItemIdentifier,
   SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type ChartPluginSignature } from '../../models';
-import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import type { ChartPluginSignature } from '../../models';
+import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
 export type HighlightUpdateSource = 'pointer' | 'keyboard';
 
@@ -35,9 +35,7 @@ export interface UseChartHighlightParameters<SeriesType extends ChartSeriesType>
    * Used when the highlight is controlled.
    */
   highlightedItem?:
-    | HighlightItemIdentifier<SeriesType>
-    | HighlightItemIdentifierWithType<SeriesType>
-    | null;
+    HighlightItemIdentifier<SeriesType> | HighlightItemIdentifierWithType<SeriesType> | null;
   /**
    * The callback fired when the highlighted item changes.
    *

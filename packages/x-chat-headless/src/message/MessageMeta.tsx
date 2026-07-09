@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { useIsHydrated } from '@mui/x-internals/useIsHydrated';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
-import { useIsHydrated } from '../chat/internals/useIsHydrated';
 import { ProgressIndicator, ProgressRoot, ProgressTrack } from '../internals/ProgressSlots';
 import { useMessageContext } from './internals/MessageContext';
 import { type MessageMetaOwnerState } from './message.types';

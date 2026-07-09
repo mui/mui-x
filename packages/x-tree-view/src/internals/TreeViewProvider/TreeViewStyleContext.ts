@@ -1,5 +1,5 @@
 'use client';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import * as React from 'react';
 
 export interface TreeViewClasses {

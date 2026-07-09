@@ -5,20 +5,22 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import EventDialogHeader from './EventDialogHeader';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { getPaletteVariants, PaletteName } from '../../utils/tokens';
+import type { PaletteName } from '../../utils/tokens';
+import { getPaletteVariants } from '../../utils/tokens';
 
 const ReadonlyContentDragContainer = styled('section', {
   name: 'MuiEventDialog',
@@ -133,7 +135,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    occurrence.resource,
+    getPrimaryResourceId(occurrence.resource),
   );
   const defaultRecurrenceKey = useStore(
     store,
@@ -157,7 +159,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
       <EventDialogHeader onClose={onClose}>
         <EventDialogTitle
           variant="h6"
-          id={`${schedulerId}-draggable-dialog-title`}
+          id={`${schedulerId}-event-dialog-title`}
           className={classes.eventDialogTitle}
         >
           {occurrence.title}

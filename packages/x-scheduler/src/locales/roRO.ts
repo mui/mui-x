@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const roRODialog: Partial<EventDialogLocaleText> = {
   // EventDialog
@@ -39,7 +37,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Recurență',
   recurrenceMainSelectCustomLabel: 'Recurență',
   recurrenceWeeklyFrequencyLabel: 'săptămâni',
-  recurrenceWeeklyPresetLabel: (weekday) => `Se repetă săptămânal în ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repetă săptămânal în ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'luni',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Ziua ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} din ultima săptămână a lunii`,
@@ -51,13 +49,15 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'ani',
   recurrenceYearlyPresetLabel: (date) => `Se repetă anual pe ${date}`,
   noResourceAriaLabel: 'Fără resursă',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Resursă',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvează',
   startDateAfterEndDateError: 'Data/ora de început trebuie să fie înainte de data/ora de sfârșit.',
   startDateLabel: 'Data de început',
   startTimeLabel: 'Ora de început',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Toate evenimentele',
   cancel: 'Anulează',
   confirm: 'Confirmă',
@@ -68,11 +68,8 @@ const roRODialog: Partial<EventDialogLocaleText> = {
 };
 
 const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ascunde evenimentele pentru ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Resurse',
-  resourcesLegendSectionLabel: 'Legendă resurse',
-  showEventsLabel: (resourceName) => `Afișează evenimentele pentru ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agendă',
@@ -100,11 +97,13 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Afișează numărul săptămânii',
   timeFormat: 'Formatul orei',
   viewSpecificOptions: (view) => `Opțiuni pentru vizualizarea ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Toată ziua',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `Încă ${hiddenEventsCount}..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} următoare`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterioară`,
@@ -119,6 +118,9 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendar',
   miniCalendarGoToPreviousMonth: 'Afișează luna anterioară în calendar',
   miniCalendarGoToNextMonth: 'Afișează luna următoare în calendar',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titlul resursei',

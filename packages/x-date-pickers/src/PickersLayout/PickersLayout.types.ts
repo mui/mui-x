@@ -1,17 +1,17 @@
-import * as React from 'react';
-import { SxProps, Theme } from '@mui/material/styles';
-import { SlotComponentPropsFromProps, WithDataAttributes } from '@mui/x-internals/types';
-import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
-import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import { ExportedBaseTabsProps } from '../internals/models/props/tabs';
-import { PickersLayoutClasses } from './pickersLayoutClasses';
-import { PickersShortcutsProps } from '../PickersShortcuts';
-import {
+import type * as React from 'react';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { SlotComponentPropsFromProps, WithDataAttributes } from '@mui/x-internals/types';
+import type { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
+import type { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
+import type { ExportedBaseTabsProps } from '../internals/models/props/tabs';
+import type { PickersLayoutClasses } from './pickersLayoutClasses';
+import type { PickersShortcutsProps } from '../PickersShortcuts';
+import type {
   ExportedPickersShortcutProps,
   PickersShortcuts,
 } from '../PickersShortcuts/PickersShortcuts';
-import { PickerOwnerState } from '../models';
-import { PickerValidValue } from '../internals/models';
+import type { PickerOwnerState } from '../models';
+import type { PickerValidValue } from '../internals/models';
 
 export interface ExportedPickersLayoutSlots<TValue extends PickerValidValue> {
   /**

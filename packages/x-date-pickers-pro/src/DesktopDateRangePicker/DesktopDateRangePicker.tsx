@@ -3,12 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
-import { PickerViewRendererLookup, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { PickerViewRendererLookup, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
-import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
+import type { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
@@ -84,7 +84,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker(
   return renderPicker();
 }) as DesktopDateRangePickerComponent;
 
-DesktopDateRangePicker.propTypes = {
+DesktopDateRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -313,7 +313,7 @@ DesktopDateRangePicker.propTypes = {
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
+   * @default () => "…"
    */
   renderLoading: PropTypes.func,
   /**

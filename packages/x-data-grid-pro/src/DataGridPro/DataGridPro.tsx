@@ -2,17 +2,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import { GridRoot, GridContextProvider, type GridValidRowModel } from '@mui/x-data-grid';
+import { GridRoot, GridContextProvider } from '@mui/x-data-grid';
+import type { GridValidRowModel } from '@mui/x-data-grid';
 import {
-  type GridConfiguration,
   validateProps,
   useGridApiInitialization,
   useGridParamsOverridableMethods,
   useIsCellEditable,
 } from '@mui/x-data-grid/internals';
+import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { GridMultiSelectMeasurer } from '../components/cell/GridMultiSelectMeasurer';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import type { DataGridProProcessedProps, DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -72,6 +74,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
         ref={ref}
       >
         {watermark}
+        <GridMultiSelectMeasurer />
       </GridRoot>
     </GridContextProvider>
   );
@@ -93,7 +96,7 @@ interface DataGridProComponent {
  */
 export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
-DataGridProRaw.propTypes = {
+DataGridProRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -274,6 +277,13 @@ DataGridProRaw.propTypes = {
     get: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  /**
+   * If `true`, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, or filtering changes.
+   * The loading overlay is rendered on top of the previous rows.
+   * Only applies to flat data; tree data and row grouping always reset the rows on refetch to keep the order consistent with the new response.
+   * @default false
+   */
+  dataSourceKeepPreviousData: PropTypes.bool,
   /**
    * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
    * If the refetched rows are different from the current rows, the grid will update the rows.

@@ -14,7 +14,7 @@ import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
-import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -44,14 +44,7 @@ const series = [
 ];
 
 type ChartType =
-  | 'scatter'
-  | 'line'
-  | 'bar'
-  | 'pie'
-  | 'heatmap'
-  | 'funnel'
-  | 'radar'
-  | 'sankey';
+  'scatter' | 'line' | 'bar' | 'pie' | 'heatmap' | 'funnel' | 'radar' | 'sankey';
 
 export default function PrintChart() {
   const [chartType, setChartType] = React.useState<ChartType>('scatter');
@@ -198,7 +191,7 @@ function Chart<T extends ChartType = ChartType>({
       );
     case 'sankey':
       return (
-        <Unstable_SankeyChart
+        <SankeyChart
           apiRef={apiRef as React.RefObject<ChartProApi<'sankey'> | undefined>}
           height={300}
           series={sankeySeries}

@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { Store, useStore } from '@base-ui/utils/store';
-import { RenderDragPreviewParameters } from '@mui/x-scheduler-headless/models';
-import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { getPaletteVariants, PaletteName } from '../../utils/tokens';
+import type { Store } from '@base-ui/utils/store';
+import { useStore } from '@base-ui/utils/store';
+import type { RenderDragPreviewParameters } from '@mui/x-scheduler-internals/models';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import type { PaletteName } from '../../utils/tokens';
+import { getPaletteVariants } from '../../utils/tokens';
 import { EventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 
 const EventDragPreviewRoot = styled('div', {

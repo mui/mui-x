@@ -63,6 +63,10 @@ export const ConversationListItem = React.forwardRef(function ConversationListIt
     ownerState,
     additionalProps: {
       ref,
+      // Expose the conversation id as a stable hook for tests, automation,
+      // and consumer styling without forcing them to bind a ref (Playwright
+      // Bug D).
+      'data-conversation-id': conversation.id,
       ...getDataAttributes({
         selected: ownerState.selected,
         unread: ownerState.unread,

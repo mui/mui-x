@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
-import {
+import type * as React from 'react';
+import type { Theme } from '@mui/material/styles';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { SimpleTreeViewClasses } from './simpleTreeViewClasses';
+import type {
   TreeViewSlotProps,
   TreeViewSlots,
 } from '../internals/TreeViewProvider/TreeViewStyleContext';
-import { SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
-import { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
-import { TreeViewPublicAPI } from '../internals/models';
+import type { SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
+import type { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
+import type { TreeViewPublicAPI } from '../internals/models';
 
 export interface SimpleTreeViewSlots extends TreeViewSlots {
   /**

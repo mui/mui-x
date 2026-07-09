@@ -5,27 +5,27 @@ import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import type { WithDataAttributes } from '@mui/x-internals/types';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import { type LineItemIdentifier } from '../models/seriesType/line';
+import type { LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
-import { MarkElement, type MarkElementProps } from './MarkElement';
+import { MarkElement } from './MarkElement';
+import type { MarkElementProps } from './MarkElement';
 import { useItemHighlightStateGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
-import {
-  selectorChartsHighlightXAxisIndex,
-  type UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type AxisId } from '../models/axis';
+import { selectorChartsHighlightXAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useChartsContext } from '../context/ChartsProvider';
 import { useMarkPlotData } from './useMarkPlotData';
 import { useUtilityClasses } from './lineClasses';
+import type { MarkPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface MarkPlotSlots {
-  mark?: React.JSXElementConstructor<MarkElementProps>;
+  mark?: React.JSXElementConstructor<MarkElementProps & MarkPropsOverrides>;
 }
 
 export interface MarkPlotSlotProps {
-  mark?: WithDataAttributes<Partial<MarkElementProps>>;
+  mark?: WithDataAttributes<Partial<MarkElementProps> & MarkPropsOverrides>;
 }
 
 export interface MarkPlotProps
@@ -143,7 +143,7 @@ function MarkPlot(props: MarkPlotProps) {
   );
 }
 
-MarkPlot.propTypes = {
+MarkPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -156,6 +156,7 @@ MarkPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
+   * @default false
    */
   skipAnimation: PropTypes.bool,
   /**

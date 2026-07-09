@@ -85,25 +85,31 @@ export default schedulerApiPages;
       'x-scheduler/src/day-view/DayView.tsx',
       'x-scheduler/src/month-view/MonthView.tsx',
       'x-scheduler/src/week-view/WeekView.tsx',
+      // Compact views (and their Standalone variants) are internal for now: exported only for
+      // experiments, no public API page yet
+      'x-scheduler/src/compact-day-view/CompactDayView.tsx',
+      'x-scheduler/src/compact-three-day-view/CompactThreeDayView.tsx',
+      'x-scheduler/src/compact-week-view/CompactWeekView.tsx',
+      'x-scheduler/src/compact-day-view/StandaloneCompactDayView.tsx',
+      'x-scheduler/src/compact-three-day-view/StandaloneCompactThreeDayView.tsx',
+      'x-scheduler/src/compact-week-view/StandaloneCompactWeekView.tsx',
       // Internal sub-components of EventCalendar
       'x-scheduler/src/event-calendar/EventCalendarRoot.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/HeaderToolbar.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/preferences-menu/PreferencesMenu.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/view-switcher/ViewSwitcher.tsx',
       'x-scheduler/src/event-calendar/mini-calendar/MiniCalendar.tsx',
-      'x-scheduler/src/event-calendar/resources-legend/ResourcesLegend.tsx',
+      'x-scheduler/src/event-calendar/resources-tree/ResourcesTree.tsx',
       // Internal sub-components of MonthView
       'x-scheduler/src/month-view/month-view-row/MonthViewCell.tsx',
       'x-scheduler/src/month-view/month-view-row/MonthViewWeekRow.tsx',
       // Internal sub-components of EventTimelinePremium
       'x-scheduler-premium/src/event-timeline-premium/content/EventTimelinePremiumContent.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/event-skeleton/EventTimelinePremiumSkeleton.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-event/EventTimelinePremiumEvent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-title-cell/EventTimelinePremiumTitleCell.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/DaysHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/MonthsHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/TimeHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/WeeksHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/YearsHeader.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/EventTimelinePremiumHeader.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/error-container/EventTimelinePremiumErrorContainer.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

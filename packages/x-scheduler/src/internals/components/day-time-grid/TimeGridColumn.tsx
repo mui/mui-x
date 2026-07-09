@@ -2,20 +2,20 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
-import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
-import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { EventSkeleton } from '../event-skeleton';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
+import { useDayTimeGridInternalRenderers } from './DayTimeGridInternalRenderersContext';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -29,9 +29,6 @@ const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   position: 'relative',
   '&[data-weekend]': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
-  },
-  ':last-of-type': {
-    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
   '&:focus-visible': {
     outline: 'none',
@@ -78,14 +75,38 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
 }));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, showCurrentTimeIndicator, index } = props;
+  const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
   const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
-  const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
-  const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
+  // `setHours(startOfDay, 0)` is equivalent to `startOfDay`, so no special-casing is needed here.
+  const start = React.useMemo(
+    () => adapter.setHours(adapter.startOfDay(day.value), startTime),
+    [adapter, day, startTime],
+  );
+  const end = React.useMemo(
+    () =>
+      endTime === 24
+        ? adapter.endOfDay(day.value)
+        : adapter.setHours(adapter.startOfDay(day.value), endTime),
+    [adapter, day, endTime],
+  );
+
+  // Only place occurrences that overlap the visible `[start, end)` window. Occurrences entirely
+  // before `startTime` or after `endTime` would otherwise be clamped to a zero-height sliver pinned
+  // to an edge (showing a misleading time) and still count toward the column's lane count.
+  const visibleOccurrences = React.useMemo(() => {
+    const startTimestamp = adapter.getTime(start);
+    const endTimestamp = adapter.getTime(end);
+    return day.withoutPosition.filter(
+      (occurrence) =>
+        occurrence.displayTimezone.end.timestamp > startTimestamp &&
+        occurrence.displayTimezone.start.timestamp < endTimestamp,
+    );
+  }, [adapter, day.withoutPosition, start, end]);
+
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
-    occurrences: day.withoutPosition,
+    occurrences: visibleOccurrences,
     maxSpan: Infinity,
   });
 
@@ -94,7 +115,10 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       className={classes.dayTimeGridColumn}
       start={start}
       end={end}
+      dayStartMinute={startTime * 60}
+      dayEndMinute={endTime * 60}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+      aria-colindex={colIndex}
       data-weekend={isWeekend(adapter, day.value) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
@@ -129,6 +153,7 @@ function ColumnInteractiveLayer({
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const { classes } = useEventCalendarStyledContext();
+  const { timeGridEvent: TimeGridEvent } = useDayTimeGridInternalRenderers();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
@@ -182,6 +207,15 @@ function ColumnInteractiveLayer({
 interface TimeGridColumnProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   index: number;
+  colIndex: number;
+  /**
+   * The first hour displayed in the column (whole hour between 0 and 24).
+   */
+  startTime: number;
+  /**
+   * The last hour displayed in the column (whole hour between 0 and 24).
+   */
+  endTime: number;
   showCurrentTimeIndicator: boolean;
 }
 

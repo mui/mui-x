@@ -1,12 +1,32 @@
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { Theme } from '@mui/material/styles';
-import { EventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
-import { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/DayTimeGrid.types';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import type {
+  EventCalendarParameters,
+  EventCalendarSchedulerParametersOverrides,
+  CollapsibleResourcesParameterKeys,
+} from '@mui/x-scheduler-internals/use-event-calendar';
+import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import type { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/DayTimeGrid.types';
 
 export interface DayViewProps extends ExportedDayTimeGridProps {}
 
 export interface StandaloneDayViewProps<TEvent extends object, TResource extends object>
-  extends DayViewProps, EventCalendarParameters<TEvent, TResource> {
+  extends
+    DayViewProps,
+    Omit<
+      EventCalendarParameters<TEvent, TResource>,
+      | 'viewConfig'
+      | keyof EventCalendarSchedulerParametersOverrides
+      | CollapsibleResourcesParameterKeys
+    >,
+    EventCalendarSchedulerParametersOverrides {
+  /**
+   * Configuration applied to the view, keyed by the view name.
+   * For the `day` view, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { day: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig?: Pick<EventCalendarViewConfig, 'day'>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

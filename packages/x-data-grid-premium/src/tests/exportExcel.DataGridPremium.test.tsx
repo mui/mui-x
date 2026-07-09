@@ -1,14 +1,9 @@
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridColDef,
-  useGridApiRef,
-  DataGridPremium,
-  type GridApi,
-  type DataGridPremiumProps,
-  GridActionsCellItem,
-} from '@mui/x-data-grid-premium';
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGridPremium, GridActionsCellItem } from '@mui/x-data-grid-premium';
+import type { GridColDef, GridApi, DataGridPremiumProps } from '@mui/x-data-grid-premium';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
-import { spy, type SinonSpy } from 'sinon';
+import { spy } from 'sinon';
+import type { SinonSpy } from 'sinon';
 import Excel from '@mui/x-internal-exceljs-fork';
 import { spyApi } from 'test/utils/helperFn';
 
@@ -149,6 +144,60 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(worksheet.getCell('A2').dataValidation.formulae).to.deep.equal(['Options!$A$2:$A$3']);
     });
 
+    it(`should escape singleSelect formula values when escapeFormulas is enabled`, async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={[
+                {
+                  field: 'option',
+                  type: 'singleSelect',
+                  valueOptions: [{ value: 'a', label: '=HYPERLINK("http://evil","x")' }],
+                },
+              ]}
+              rows={[{ id: 1, option: 'a' }]}
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+
+      const workbook = await apiRef.current?.getDataAsExcel();
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('A2').value).to.equal(`'=HYPERLINK("http://evil","x")`);
+    });
+
+    it(`should not escape singleSelect formula values when escapeFormulas is disabled`, async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={[
+                {
+                  field: 'option',
+                  type: 'singleSelect',
+                  valueOptions: [{ value: 'a', label: '=HYPERLINK("http://evil","x")' }],
+                },
+              ]}
+              rows={[{ id: 1, option: 'a' }]}
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('A2').value).to.equal('=HYPERLINK("http://evil","x")');
+    });
+
     it(`should not export actions columns`, async () => {
       function Icon() {
         return <span>i</span>;
@@ -164,7 +213,12 @@ describe('<DataGridPremium /> - Export Excel', () => {
                   field: 'actions',
                   type: 'actions',
                   getActions: () => [
-                    <GridActionsCellItem icon={<Icon />} onClick={undefined} label="Delete" />,
+                    <GridActionsCellItem
+                      key={1}
+                      icon={<Icon />}
+                      onClick={undefined}
+                      label="Delete"
+                    />,
                   ],
                 },
               ]}

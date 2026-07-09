@@ -8,13 +8,13 @@ components: EventTimelinePremium
 
 # Event Timeline - Resources
 
-<p class="description">Define the properties of your events.</p>
+<p class="description">Define resources to group events, with support for nested hierarchies, custom colors, and visibility controls.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Define resources
 
-Use the `resources` prop to define the list of resources the events can be associated to and the `resource` property on the event model to link an event to its resource:
+Use the `resources` prop to define available resources, and the `resource` property on the event model to link an event to its resource:
 
 ```tsx
 const event = [
@@ -30,9 +30,7 @@ const resources = [
 <EventTimelinePremium events={events} resources={resources} />;
 ```
 
-:::success
 On the Event Timeline, events without resource are not rendered at all.
-:::
 
 ## Nested resources
 
@@ -59,14 +57,42 @@ const resources = [
 
 {{"demo": "NestedResources.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Default collapsed resources
+
+Parent resources can be collapsed to hide their descendants.
+Use the `defaultCollapsedResources` prop to initialize the collapsed resources.
+A resource is expanded unless it is present in the object with a `true` value.
+
+{{"demo": "DefaultCollapsedResources.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Controlled collapsed resources
+
+You can also control the collapsed resources using `collapsedResources` and `onCollapsedResourcesChange` props:
+
+```tsx
+const [collapsedResources, setCollapsedResources] = React.useState<
+  Record<string, boolean>
+>({});
+
+return (
+  <EventTimelinePremium
+    collapsedResources={collapsedResources}
+    onCollapsedResourcesChange={setCollapsedResources}
+  />
+);
+```
+
 ## Visible resources
 
+### Default visible resources
+
 Use the `defaultVisibleResources` prop to initialize the visible resources.
-A resource is visible if not in the object or if set to `true`.
+A resource is visible if it's absent from the object or set to `true`.
 
 {{"demo": "DefaultVisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
+### Controlled visible resources
+
 You can also control the visible resources using `visibleResources` and `onVisibleResourcesChange` props:
 
 ```tsx
@@ -82,19 +108,29 @@ return (
 );
 ```
 
-:::
+## Require a resource
+
+Use the `shouldEventRequireResource` prop to control whether events must have a resource assigned.
+When `true`, the resource of an event cannot be cleared from the edit dialog and the form cannot be submitted with an empty resource.
+
+On the Event Timeline, `shouldEventRequireResource` defaults to `true` so that an event cannot be edited into a state where it would no longer be rendered.
+Set it to `false` to allow clearing the resource:
+
+```tsx
+<EventTimelinePremium shouldEventRequireResource={false} />
+```
 
 ## Resource properties
 
 ### Color
 
 Use the `eventColor` property to define a resource's color.
-Here is the list of all the available color palettes:
+The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
-Event colors can also be defined on the event or at the component levels.
+:::info
+Event colors can also be defined on the event or at the component level.
 The effective color resolves in the following order:
 
 1. The `color` property assigned to the event
@@ -123,7 +159,7 @@ The effective color resolves in the following order:
 
 ### Drag interactions
 
-Use the `areEventsDraggable` property to prevent dragging a resource's events to another point in time:
+Use the `areEventsDraggable` property to prevent dragging a resource's events to a different time slot:
 
 ```ts
 const resource = {
@@ -143,9 +179,7 @@ const resource = {
 };
 ```
 
-:::success
-Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-timeline/drag-interactions/).
-:::
+See [Drag interactions](/x/react-scheduler/event-timeline/drag-interactions/) for details.
 
 ### Read-only
 
@@ -158,9 +192,7 @@ const resource = {
 };
 ```
 
-:::success
-Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/#read-only).
-:::
+See [Editing—Read-only](/x/react-scheduler/event-timeline/editing/#read-only) for details.
 
 ## Resource column label
 
@@ -168,13 +200,11 @@ Use the `resourceColumnLabel` prop to customize the header of the resource colum
 
 {{"demo": "ResourceColumnLabel.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
 When both are provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
-:::
 
 ## Store data in custom properties
 
-Use the `resourceModelStructure` prop to define how to read properties of the resource model when they don't match the model expected by the components:
+Use the `resourceModelStructure` prop to define how to read resource properties when your data doesn't match the expected model:
 
 ```tsx
 const resourceModelStructure = {

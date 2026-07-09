@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { TransitionProps } from '@mui/material/transitions';
-import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
-import { TreeItemClasses } from './treeItemClasses';
-import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
-import { TreeViewCancellableEventHandler } from '../models';
+import type * as React from 'react';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { TransitionProps } from '@mui/material/transitions';
+import type { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
+import type { TreeItemClasses } from './treeItemClasses';
+import type { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
+import type { TreeViewCancellableEventHandler } from '../models';
 
 export interface TreeItemSlots extends TreeItemIconSlots {
   /**

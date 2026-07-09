@@ -1,11 +1,12 @@
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { Theme } from '@mui/material/styles';
-import {
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import type {
   EventCalendarPremiumParameters,
   EventCalendarPremiumStore,
-} from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
-import type { SchedulerPublicAPI } from '@mui/x-scheduler-headless/internals';
-import { EventCalendarLocaleText } from '@mui/x-scheduler/models';
+} from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
+import type { EventCalendarSchedulerParametersOverrides } from '@mui/x-scheduler-internals/use-event-calendar';
+import type { EventCalendarLocaleText } from '@mui/x-scheduler/models';
 import type { EventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 
 export type EventCalendarPremiumApiRef<
@@ -16,7 +17,13 @@ export type EventCalendarPremiumApiRef<
 >;
 
 export interface EventCalendarPremiumProps<TEvent extends object, TResource extends object>
-  extends React.HTMLAttributes<HTMLDivElement>, EventCalendarPremiumParameters<TEvent, TResource> {
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
+    Omit<
+      EventCalendarPremiumParameters<TEvent, TResource>,
+      keyof EventCalendarSchedulerParametersOverrides
+    >,
+    EventCalendarSchedulerParametersOverrides {
   /**
    * Override or extend the styles applied to the component.
    */

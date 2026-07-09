@@ -1,12 +1,17 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { useChatStore } from '../hooks/useChatStore';
 import { useMessage, useMessageIds } from '../hooks/useMessage';
+import { useMessageAuthor } from '../hooks/useMessageAuthor';
+import { getMessageWithResolvedAuthor } from '../internals/messageAuthor';
 import type { ChatMessage } from '../types/chat-entities';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
 import { useChatDensity } from '../chat/internals/ChatDensityContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
+import { chatSelectors } from '../selectors';
 import { MessageAvatar } from '../message/MessageAvatar';
 import { MessageContent } from '../message/MessageContent';
 import { MessageMeta } from '../message/MessageMeta';
@@ -50,14 +55,6 @@ function resolveMessageIndex(messageId: string, index: number | undefined, items
   }
 
   return items.indexOf(messageId);
-}
-
-function getAuthorLabel(message: ChatMessage | null) {
-  if (!message) {
-    return null;
-  }
-
-  return message.author?.displayName ?? message.author?.id ?? message.role;
 }
 
 export interface MessageGroupSlots {
@@ -113,34 +110,67 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   } = props;
   const defaultItems = useMessageIds();
   const items = itemsProp ?? defaultItems;
+  const store = useChatStore();
+  const activeConversation = useStore(store, chatSelectors.activeConversation);
   const messageIndex = resolveMessageIndex(messageId, index, items);
   const previousMessageId = messageIndex > 0 ? items[messageIndex - 1] : undefined;
   const nextMessageId =
     messageIndex >= 0 && messageIndex < items.length - 1 ? items[messageIndex + 1] : undefined;
   const message = useMessage(messageId);
+  const resolvedAuthor = useMessageAuthor(messageId);
   const previousMessage = useMessage(previousMessageId ?? '');
   const nextMessage = useMessage(nextMessageId ?? '');
   const variant = useChatVariant();
   const density = useChatDensity();
-  const prevKey = previousMessage ? groupKey(previousMessage) : null;
-  const currentKey = message ? groupKey(message) : null;
-  const nextKey = nextMessage ? groupKey(nextMessage) : null;
+  const resolveGroupKey = React.useCallback(
+    (candidate: ChatMessage | null) => {
+      if (!candidate) {
+        return null;
+      }
+
+      const resolvedMessage = getMessageWithResolvedAuthor(candidate, {
+        currentUser: store.parameters.currentUser,
+        members: store.parameters.members,
+        activeConversation: activeConversation ?? undefined,
+        getMessageAuthorId: store.parameters.getMessageAuthorId,
+        getMessageAuthorDisplayName: store.parameters.getMessageAuthorDisplayName,
+        getMessageAuthorAvatarUrl: store.parameters.getMessageAuthorAvatarUrl,
+      });
+
+      return groupKey(resolvedMessage ?? candidate);
+    },
+    [activeConversation, groupKey, store.parameters],
+  );
+  const prevKey = resolveGroupKey(previousMessage);
+  const currentKey = resolveGroupKey(message);
+  const nextKey = resolveGroupKey(nextMessage);
 
   const isFirst = prevKey === null || prevKey !== currentKey;
   const isFirstInList = messageIndex === 0;
   const isLast = nextKey === null || nextKey !== currentKey;
 
+  const isOwnMessage = resolvedAuthor?.isOwnMessage ?? message?.role === 'user';
   const ownerState = React.useMemo<MessageGroupOwnerState>(
     () => ({
       isFirst,
       isFirstInList,
       isLast,
       authorRole: message?.role,
-      authorId: message?.author?.id,
+      authorId: resolvedAuthor?.id,
+      isOwnMessage,
       variant,
       density,
     }),
-    [density, isFirst, isFirstInList, isLast, message?.author?.id, message?.role, variant],
+    [
+      density,
+      isFirst,
+      isFirstInList,
+      isLast,
+      isOwnMessage,
+      message?.role,
+      resolvedAuthor?.id,
+      variant,
+    ],
   );
   const Group = slots?.group ?? 'div';
   const AuthorName = slots?.authorName ?? 'div';
@@ -163,7 +193,7 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
     externalSlotProps: slotProps?.authorName,
     ownerState,
   });
-  const authorLabel = getAuthorLabel(message);
+  const authorLabel = resolvedAuthor?.displayName ?? null;
   const showGroupAuthorName = isFirst && Boolean(authorLabel);
 
   const authorNameElement = showGroupAuthorName ? (
@@ -178,31 +208,28 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   return (
     <Group {...groupProps}>
       {defaultAuthorName}
-      {children ? (
+      {children !== undefined ? (
         // When custom children are provided (e.g. from DefaultMessageItem),
         // pass `isGrouped` via cloneElement so the inner MessageRoot/ChatMessage
         // receives the correct grouping state for its context.
-        // In compact mode, also inject the author name element into the
-        // children so it appears inside the CSS grid (sharing a row with the avatar).
-        // We wrap in a Fragment to avoid duplicate-key warnings.
         React.Children.map(children, (child) => {
-          if (!React.isValidElement(child) || typeof child.type === 'string') {
+          if (
+            !React.isValidElement(child) ||
+            typeof child.type === 'string' ||
+            child.type === React.Fragment ||
+            !('messageId' in (child.props as Record<string, unknown>))
+          ) {
             return child;
           }
           const clone = child as React.ReactElement<Record<string, unknown>>;
-          if (compactAuthorName) {
-            const existingChildren = (clone.props as { children?: React.ReactNode }).children;
-            return React.cloneElement(clone, {
-              isGrouped: !isFirst,
-              children: (
-                <React.Fragment>
-                  {compactAuthorName}
-                  {existingChildren}
-                </React.Fragment>
-              ),
-            });
-          }
-          return React.cloneElement(clone, { isGrouped: !isFirst });
+          // In compact mode the author label shares the message's CSS grid. Pass
+          // it as a dedicated `groupAuthorName` prop rather than merging it into
+          // the child's `children`, so a consumer's own custom `children` stay
+          // intact (and render children-only) even in compact mode.
+          return React.cloneElement(clone, {
+            isGrouped: !isFirst,
+            ...(compactAuthorName ? { groupAuthorName: compactAuthorName } : {}),
+          });
         })
       ) : (
         <MessageRoot isGrouped={!isFirst} messageId={messageId}>

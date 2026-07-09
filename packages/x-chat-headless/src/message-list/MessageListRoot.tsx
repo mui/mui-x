@@ -1,10 +1,14 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useChat } from '../hooks/useChat';
+import { useChatStore } from '../hooks/useChatStore';
 import { useMessageIds } from '../hooks/useMessage';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import { useRovingFocus } from '../internals/useRovingFocus';
 import { useMessageListBehavior } from './useMessageListBehavior';
 import {
   ScrollRoot,
@@ -15,6 +19,10 @@ import {
   thumbStyle,
 } from '../internals/ScrollAreaSlots';
 import { MessageListContextProvider } from './internals/MessageListContext';
+import {
+  MessageRovingProvider,
+  useMessageRovingController,
+} from './internals/MessageRovingContext';
 import { type MessageListRootOwnerState } from './messageList.types';
 
 const DEFAULT_ESTIMATED_ITEM_SIZE = 84;
@@ -22,6 +30,11 @@ const DEFAULT_AUTO_SCROLL_BUFFER = 150;
 
 export interface MessageListRootHandle {
   scrollToBottom(options?: { behavior?: ScrollBehavior }): void;
+  /**
+   * Move the roving focus to the given message (defaults to the newest one)
+   * and focus its article element.
+   */
+  focusMessage(id?: string): void;
 }
 
 export interface MessageListRootSlots {
@@ -31,6 +44,12 @@ export interface MessageListRootSlots {
   messageListOverlay: React.ElementType;
   messageListScrollbar: React.ElementType;
   messageListScrollbarThumb: React.ElementType;
+  /**
+   * The visually-hidden `role="status"` element announcing streaming
+   * transitions ("Assistant is responding" / "Response complete") to screen
+   * readers. Pass `null`-rendering component to silence the announcements.
+   */
+  messageListStatus: React.ElementType;
 }
 
 export interface MessageListRootSlotProps {
@@ -40,6 +59,7 @@ export interface MessageListRootSlotProps {
   messageListOverlay?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
   messageListScrollbar?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
   messageListScrollbarThumb?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
+  messageListStatus?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
 
 export interface MessageListRootAutoScrollConfig {
@@ -56,11 +76,35 @@ export interface MessageListRootProps extends Omit<
   'children'
 > {
   items?: string[];
+  /**
+   * Floating layer rendered above the message list, anchored to its bottom edge; pointer-transparent.
+   * @default null
+   */
   overlay?: React.ReactNode;
   renderItem(params: { id: string; index: number }): React.ReactNode;
   getItemKey?: (id: string, index: number) => React.Key;
   estimatedItemSize?: number;
+  /**
+   * Callback fired when the viewport enters the top zone of the list — within
+   * `estimatedItemSize` pixels (84 by default) of the top edge. Fires once per
+   * entry: it does not fire again until the user scrolls away from the top,
+   * past the threshold, and back. It is coupled to history loading: it only
+   * fires when more history is available and no history page load is in
+   * flight, right before the next page is requested.
+   */
   onReachTop?: () => void;
+  /**
+   * Callback fired when the viewport enters the bottom zone of the list — within
+   * `autoScroll.buffer` pixels (150 by default; `estimatedItemSize` when `autoScroll`
+   * is disabled) of the bottom edge. Fires once per entry: it does not fire again until
+   * the user scrolls away from the bottom and back. Entries caused by programmatic
+   * scrolls (`scrollToBottom()`, the scroll-to-bottom affordance, the forced scroll
+   * after the user sends a message) count. It does not fire on mount, while the list
+   * stays pinned to the bottom during streaming, when new messages arrive while already
+   * at the bottom, or when the conversation (item set) is switched. Growing the buffer
+   * so that it newly encloses the current position counts as entering the zone.
+   */
+  onReachBottom?: () => void;
   /**
    * Controls automatic scrolling to the bottom when new messages arrive or
    * streaming content grows, as long as the user is within `buffer` pixels of
@@ -74,6 +118,16 @@ export interface MessageListRootProps extends Omit<
    * @default true
    */
   autoScroll?: boolean | MessageListRootAutoScrollConfig;
+  /**
+   * Whether the message list manages a roving tabindex over its messages:
+   * the list is a single Tab stop, ArrowUp/ArrowDown (plus Home/End) move
+   * focus between messages, Enter drills into a message's interior controls
+   * and Escape returns to the message.
+   *
+   * Disable when rendering fully custom rows that manage focus themselves.
+   * @default true
+   */
+  enableRovingFocus?: boolean;
   slots?: Partial<MessageListRootSlots>;
   slotProps?: MessageListRootSlotProps;
 }
@@ -87,6 +141,7 @@ interface MessageListViewProps {
   overlay: React.ReactNode;
   renderItem: MessageListRootProps['renderItem'];
   getItemKey: NonNullable<MessageListRootProps['getItemKey']>;
+  statusAnnouncement: string;
   slots: Partial<MessageListRootSlots> | undefined;
   slotProps: MessageListRootSlotProps | undefined;
   other: Omit<
@@ -94,6 +149,7 @@ interface MessageListViewProps {
     | 'estimatedItemSize'
     | 'getItemKey'
     | 'items'
+    | 'onReachBottom'
     | 'onReachTop'
     | 'renderItem'
     | 'slotProps'
@@ -114,7 +170,7 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
   const { id, index, renderItem, registerRowElement, onRowResize } = props;
   const rowRef = React.useRef<HTMLDivElement | null>(null);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     registerRowElement(id, rowRef.current);
 
     return () => {
@@ -122,14 +178,22 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
     };
   }, [id, registerRowElement]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (!rowRef.current || typeof globalThis.ResizeObserver === 'undefined') {
       return undefined;
     }
 
     let frameId = 0;
     const observer = new globalThis.ResizeObserver(() => {
-      cancelAnimationFrame(frameId);
+      if (typeof cancelAnimationFrame === 'function') {
+        cancelAnimationFrame(frameId);
+      }
+
+      if (typeof requestAnimationFrame !== 'function') {
+        onRowResize();
+        return;
+      }
+
       frameId = requestAnimationFrame(() => {
         onRowResize();
       });
@@ -138,7 +202,9 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
     observer.observe(rowRef.current);
 
     return () => {
-      cancelAnimationFrame(frameId);
+      if (typeof cancelAnimationFrame === 'function') {
+        cancelAnimationFrame(frameId);
+      }
       observer.disconnect();
     };
   }, [onRowResize]);
@@ -178,6 +244,20 @@ const overlayStyle: React.CSSProperties = {
   pointerEvents: 'none',
 };
 
+// Standard visually-hidden recipe: present in the accessibility tree (the
+// status live region must stay rendered) but invisible and out of layout.
+const visuallyHiddenStyle: React.CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+};
+
 // Fallback styles used when the outer `messageList` slot is overridden
 // (which removes the ScrollArea context).
 const fallbackRootStyle: React.CSSProperties = {
@@ -191,7 +271,17 @@ const fallbackScrollerStyle: React.CSSProperties = {
 };
 
 function StaticMessageListView(props: MessageListViewProps) {
-  const { itemIds, overlay, renderItem, getItemKey, slots, slotProps, other, behavior } = props;
+  const {
+    itemIds,
+    overlay,
+    renderItem,
+    getItemKey,
+    statusAnnouncement,
+    slots,
+    slotProps,
+    other,
+    behavior,
+  } = props;
   const localeText = useChatLocaleText();
   // When the outer messageList slot is overridden, the ScrollArea context is
   // absent, so the scroller / scrollbar must fall back to plain elements.
@@ -205,6 +295,7 @@ function StaticMessageListView(props: MessageListViewProps) {
     slots?.messageListScrollbar ?? (hasScrollArea ? ScrollScrollbar : 'div');
   const MessageListScrollbarThumb =
     slots?.messageListScrollbarThumb ?? (hasScrollArea ? ScrollThumb : 'div');
+  const MessageListStatus = slots?.messageListStatus ?? 'div';
   const messageListProps = useSlotProps({
     elementType: MessageList,
     externalSlotProps: slotProps?.messageList,
@@ -257,6 +348,18 @@ function StaticMessageListView(props: MessageListViewProps) {
       style: thumbStyle,
     },
   });
+  const statusProps = useSlotProps({
+    elementType: MessageListStatus,
+    externalSlotProps: slotProps?.messageListStatus,
+    ownerState: behavior.ownerState,
+    additionalProps: {
+      // `role="status"` is an implicit polite, atomic live region. It only
+      // ever carries the short streaming-transition announcements (never the
+      // streamed content itself), so it cannot spam screen readers per token.
+      role: 'status',
+      style: visuallyHiddenStyle,
+    },
+  });
 
   return (
     <MessageListContextProvider value={behavior.contextValue}>
@@ -283,6 +386,7 @@ function StaticMessageListView(props: MessageListViewProps) {
         {overlay != null ? (
           <MessageListOverlay {...messageListOverlayProps}>{overlay}</MessageListOverlay>
         ) : null}
+        <MessageListStatus {...statusProps}>{statusAnnouncement}</MessageListStatus>
       </MessageList>
     </MessageListContextProvider>
   );
@@ -299,14 +403,36 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     getItemKey = (id) => id,
     estimatedItemSize = DEFAULT_ESTIMATED_ITEM_SIZE,
     onReachTop,
+    onReachBottom,
     autoScroll = true,
+    enableRovingFocus = true,
     slots,
     slotProps,
     ...other
   } = props;
   const defaultItems = useMessageIds();
   const { hasMoreHistory, loadMoreHistory, messages, isStreaming: isAdapterStreaming } = useChat();
+  const store = useChatStore();
   const itemIds = itemsProp ?? defaultItems;
+
+  // One tab stop for the whole list: a roving tabindex over the message
+  // articles. No `onActivate` (Enter is drill-in, not selection), no
+  // type-ahead (messages have no short stable label), and no Page keys
+  // (PageUp/PageDown keep their native scrolling — the only keyboard way to
+  // read a message taller than the viewport). `fallback: 'last'` keeps the
+  // tab stop on the newest message until the user interacts.
+  const roving = useRovingFocus({
+    itemIds,
+    restoreKey: store,
+    scope: 'message-list',
+    fallback: 'last',
+    enablePageKeys: false,
+    restoreFocusOnMount: false,
+  });
+  const rovingContextValue = useMessageRovingController({
+    enabled: enableRovingFocus,
+    roving,
+  });
 
   // Combine adapter-level streaming (active stream via processStream) with
   // message-level streaming (any message with status 'streaming').  This
@@ -315,6 +441,26 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
   // through the adapter stream flow.
   const isAnyMessageStreaming = messages.some((m) => m.status === 'streaming');
   const isStreaming = isAdapterStreaming || isAnyMessageStreaming;
+
+  // Announce streaming transitions (start / complete) through the
+  // visually-hidden status live region. Only transitions are announced —
+  // never the streamed content — so screen readers hear exactly two short
+  // messages per response instead of every token. The streaming article
+  // itself additionally carries `aria-busy` (see MessageRoot).
+  const localeText = useChatLocaleText();
+  const [statusAnnouncement, setStatusAnnouncement] = React.useState('');
+  const prevIsStreamingRef = React.useRef(isStreaming);
+  React.useEffect(() => {
+    if (prevIsStreamingRef.current === isStreaming) {
+      return;
+    }
+    prevIsStreamingRef.current = isStreaming;
+    setStatusAnnouncement(
+      isStreaming
+        ? localeText.responseStreamingStartedAnnouncement
+        : localeText.responseStreamingCompletedAnnouncement,
+    );
+  }, [isStreaming, localeText]);
 
   const autoScrollEnabled = autoScroll !== false;
   let autoScrollBuffer: number;
@@ -331,6 +477,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     itemIds,
     estimatedItemSize,
     onReachTop,
+    onReachBottom,
     messages,
     hasMoreHistory,
     loadMoreHistory,
@@ -339,24 +486,36 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     isStreaming,
   });
 
+  const { setFocusedId, focusItem } = roving;
   React.useImperativeHandle(
     ref,
     () => ({
       scrollToBottom: behavior.scrollToBottom,
+      focusMessage: (id?: string) => {
+        const targetId = id ?? itemIds[itemIds.length - 1];
+        if (targetId == null) {
+          return;
+        }
+        setFocusedId(targetId);
+        focusItem(targetId);
+      },
     }),
-    [behavior.scrollToBottom],
+    [behavior.scrollToBottom, focusItem, itemIds, setFocusedId],
   );
 
   return (
-    <StaticMessageListView
-      behavior={behavior}
-      getItemKey={getItemKey}
-      itemIds={itemIds}
-      overlay={overlay}
-      other={other}
-      renderItem={renderItem}
-      slotProps={slotProps}
-      slots={slots}
-    />
+    <MessageRovingProvider value={rovingContextValue}>
+      <StaticMessageListView
+        behavior={behavior}
+        getItemKey={getItemKey}
+        itemIds={itemIds}
+        overlay={overlay}
+        other={other}
+        renderItem={renderItem}
+        slotProps={slotProps}
+        slots={slots}
+        statusAnnouncement={statusAnnouncement}
+      />
+    </MessageRovingProvider>
   );
 }) as MessageListRootComponent;

@@ -4,11 +4,10 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
-import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { type ChartPlugin } from '../../models';
-import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import type { ChartPlugin } from '../../models';
+import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
-import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
@@ -17,7 +16,7 @@ import { getChartPoint } from '../../../getChartPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
-import { type ChartsAxisData, type SeriesId } from '../../../../models';
+import type { ChartsAxisData, SeriesId } from '../../../../models';
 
 const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
 type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;
@@ -46,7 +45,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
   }
 
-  const drawingArea = store.use(selectorChartDrawingArea);
   const processedSeries = store.use(selectorChartSeriesProcessed);
 
   const isInteractionEnabled = store.use(selectorChartsInteractionIsInitialized);
@@ -95,7 +93,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       x: defaultizeXAxis(xAxis, dataset, axesGap),
       y: defaultizeYAxis(yAxis, dataset, axesGap),
     });
-  }, [drawingArea, xAxis, yAxis, dataset, axesGap, store]);
+  }, [xAxis, yAxis, dataset, axesGap, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];

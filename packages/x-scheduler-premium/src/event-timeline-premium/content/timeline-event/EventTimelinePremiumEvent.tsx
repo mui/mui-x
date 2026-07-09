@@ -4,11 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
-import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
-import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
+import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
-import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
+import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
 
@@ -27,6 +27,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
   padding: theme.spacing(0.5, 1),
   position: 'relative',
   width: 'var(--width)',
+  height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)})`,
   marginLeft: 'var(--x-position)',
   gridRow: 'var(--row-index, 1)',
   gridColumn: 1,

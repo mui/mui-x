@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { Theme } from '@mui/material/styles';
-import { PickerOwnerState, PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
-import {
+import type * as React from 'react';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+import type { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { PickerOwnerState, PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
+import type {
   PickersCalendarHeader,
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
-import { PickerDayOwnerState } from '@mui/x-date-pickers/PickerDay';
-import {
+import type { PickerDayOwnerState } from '@mui/x-date-pickers/PickerDay';
+import type {
   BaseDateValidationProps,
   ExportedDayCalendarProps,
   DayCalendarSlots,
@@ -20,12 +20,12 @@ import {
   PickerRangeValue,
   FormProps,
 } from '@mui/x-date-pickers/internals';
-import { RangePosition } from '../models';
-import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
-import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
-import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
-import { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
-import { ExportedValidateDateRangeProps } from '../validation/validateDateRange';
+import type { RangePosition } from '../models';
+import type { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
+import type { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
+import type { UseRangePositionProps } from '../internals/hooks/useRangePosition';
+import type { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
+import type { ExportedValidateDateRangeProps } from '../validation/validateDateRange';
 
 export interface DateRangeCalendarSlots
   extends PickersArrowSwitcherSlots, Omit<DayCalendarSlots, 'day'>, PickersCalendarHeaderSlots {

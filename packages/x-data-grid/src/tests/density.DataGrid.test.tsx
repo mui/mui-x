@@ -1,7 +1,8 @@
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { grid } from 'test/utils/helperFn';
-import { DataGrid, type DataGridProps, gridClasses, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, GridToolbar } from '@mui/x-data-grid';
+import type { DataGridProps } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   COMFORTABLE_DENSITY_FACTOR,

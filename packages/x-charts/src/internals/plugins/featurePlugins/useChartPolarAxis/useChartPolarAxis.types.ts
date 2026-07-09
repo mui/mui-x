@@ -1,16 +1,16 @@
-import { type ChartPluginSignature } from '../../models';
-import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
-import {
-  type ScaleName,
-  type AxisConfig,
-  type ChartsRotationAxisProps,
-  type ChartsRadiusAxisProps,
-  type RadiusAxis,
-  type RotationAxis,
-  type ChartsAxisData,
+import type { ChartPluginSignature } from '../../models';
+import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
+import type {
+  ScaleName,
+  PolarAxisConfig,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  RadiusAxis,
+  RotationAxis,
+  ChartsAxisData,
 } from '../../../../models/axis';
-import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { type UseChartInteractionSignature } from '../useChartInteraction';
+import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { UseChartInteractionSignature } from '../useChartInteraction';
 
 export interface UseChartPolarAxisInstance {
   /**
@@ -72,8 +72,8 @@ export type UseChartPolarAxisDefaultizedParameters = UseChartPolarAxisParameters
 
 export interface UseChartPolarAxisState {
   polarAxis: {
-    rotation: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
-    radius: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+    rotation: PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+    radius: PolarAxisConfig<ScaleName, any, ChartsRadiusAxisProps>[];
   };
 }
 

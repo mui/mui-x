@@ -1,46 +1,48 @@
-import * as React from 'react';
-import { DefaultizedProps, WithDataAttributes } from '@mui/x-internals/types';
+import type * as React from 'react';
+import type { DefaultizedProps, WithDataAttributes } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
-import { LocalizedComponent } from '@mui/x-date-pickers/locales';
-import {
+import type { LocalizedComponent } from '@mui/x-date-pickers/locales';
+import type {
   BasePickerInputProps,
   PickerViewRendererLookup,
   BaseClockProps,
   DigitalTimePickerProps,
-  applyDefaultViewProps,
   TimeViewWithMeridiem,
-  resolveTimeViewsResponse,
   UseViewsOptions,
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
+import {
+  applyDefaultViewProps,
+  resolveTimeViewsResponse,
   useApplyDefaultValuesToDateTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
-import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
-import {
+import type { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
+import type { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
+import type {
   MultiSectionDigitalClockSlots,
   MultiSectionDigitalClockSlotProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { DateTimeRangeValidationError } from '../models';
-import { DateTimeRangePickerView, DateTimeRangePickerViewExternal } from '../internals/models';
-import {
+import type { DateTimeRangeValidationError } from '../models';
+import type { DateTimeRangePickerView, DateTimeRangePickerViewExternal } from '../internals/models';
+import type {
   DateRangeCalendarSlots,
   DateRangeCalendarSlotProps,
   ExportedDateRangeCalendarProps,
 } from '../DateRangeCalendar';
-import {
-  DateTimeRangePickerToolbar,
+import type {
   DateTimeRangePickerToolbarProps,
   ExportedDateTimeRangePickerToolbarProps,
 } from './DateTimeRangePickerToolbar';
-import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
-import {
-  DateTimeRangePickerTabs,
+import { DateTimeRangePickerToolbar } from './DateTimeRangePickerToolbar';
+import type { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
+import type {
   DateTimeRangePickerTabsProps,
   ExportedDateTimeRangePickerTabsProps,
 } from './DateTimeRangePickerTabs';
-import {
+import { DateTimeRangePickerTabs } from './DateTimeRangePickerTabs';
+import type {
   ExportedValidateDateTimeRangeProps,
   ValidateDateTimeRangePropsToDefault,
 } from '../validation/validateDateTimeRange';

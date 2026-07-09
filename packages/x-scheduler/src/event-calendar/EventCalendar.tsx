@@ -5,12 +5,13 @@ import { useThemeProps } from '@mui/material/styles';
 import {
   useEventCalendar,
   useExtractEventCalendarParameters,
-} from '@mui/x-scheduler-headless/use-event-calendar';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
+} from '@mui/x-scheduler-internals/use-event-calendar';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
-import { EventCalendarProps } from './EventCalendar.types';
+import type { EventCalendarProps } from './EventCalendar.types';
 import { EventDialogProvider } from '../internals/components/event-dialog';
+import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
 import { EventCalendarStyledContext } from './EventCalendarStyledContext';
 import { EventDialogStyledContext } from '../internals/components/event-dialog/EventDialogStyledContext';
@@ -53,20 +54,24 @@ const EventCalendar = React.forwardRef(function EventCalendar<
     [schedulerId, classes, mergedLocaleText],
   );
 
+  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
+
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventDialogProvider>
-            <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-          </EventDialogProvider>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <EventDialogProvider>
+              <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+            </EventDialogProvider>
+          </SharedComponentsStyledContext.Provider>
         </EventDialogStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarComponent;
 
-EventCalendar.propTypes = {
+EventCalendar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -111,12 +116,16 @@ EventCalendar.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   */
+  collapsedResources: PropTypes.object,
+  /**
    * Data source for fetching events asynchronously.
    * When provided, events are fetched through the data source instead of the `events` prop.
    */
   dataSource: PropTypes.shape({
     getEvents: PropTypes.func.isRequired,
-    updateEvents: PropTypes.func.isRequired,
+    persistEvents: PropTypes.func.isRequired,
   }),
   /**
    * The locale object from `date-fns` used to format dates.
@@ -125,6 +134,12 @@ EventCalendar.propTypes = {
    * @default enUS (English)
    */
   dateLocale: PropTypes.object,
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources: PropTypes.object,
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
@@ -136,6 +151,7 @@ EventCalendar.propTypes = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The view initially displayed in the calendar.
@@ -188,6 +204,12 @@ EventCalendar.propTypes = {
     'red',
     'teal',
   ]),
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
       duration: PropTypes.number,
@@ -212,6 +234,10 @@ EventCalendar.propTypes = {
    * in the GitHub repository.
    */
   localeText: PropTypes.object,
+  /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange: PropTypes.func,
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -241,12 +267,13 @@ EventCalendar.propTypes = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig: PropTypes.oneOfType([
     PropTypes.oneOf([false]),
@@ -255,6 +282,7 @@ EventCalendar.propTypes = {
       toggleEmptyDaysInAgenda: PropTypes.bool,
       toggleWeekendVisibility: PropTypes.bool,
       toggleWeekNumberVisibility: PropTypes.bool,
+      toggleWeekStartsOn: PropTypes.bool,
     }),
   ]),
   /**
@@ -273,6 +301,11 @@ EventCalendar.propTypes = {
    */
   resources: PropTypes.arrayOf(PropTypes.object),
   /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default false
+   */
+  shouldEventRequireResource: PropTypes.bool,
+  /**
    * Whether the component should display the current time indicator.
    * @default true
    */
@@ -289,6 +322,22 @@ EventCalendar.propTypes = {
    * The view currently displayed in the calendar.
    */
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
+  /**
+   * Configuration applied to each view, keyed by the view name.
+   * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { week: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig: PropTypes.shape({
+    day: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+    week: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

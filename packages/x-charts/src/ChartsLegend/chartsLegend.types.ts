@@ -1,8 +1,9 @@
 import type { WithDataAttributes } from '@mui/x-internals/types';
 import type { ChartsLegendProps } from './ChartsLegend';
-import { type ContinuousColorLegendProps } from './ContinuousColorLegend';
-import { type ChartsLegendPosition } from './legend.types';
-import { type PiecewiseColorLegendProps } from './PiecewiseColorLegend';
+import type { ContinuousColorLegendProps } from './ContinuousColorLegend';
+import type { ChartsLegendPosition } from './legend.types';
+import type { PiecewiseColorLegendProps } from './PiecewiseColorLegend';
+import type { LegendPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface ChartsLegendSlots {
   /**
@@ -10,16 +11,17 @@ export interface ChartsLegendSlots {
    * @default ChartsLegend
    */
   legend?:
-    | React.JSXElementConstructor<ChartsLegendProps>
-    | React.JSXElementConstructor<ContinuousColorLegendProps>
-    | React.JSXElementConstructor<PiecewiseColorLegendProps>;
+    | React.JSXElementConstructor<ChartsLegendProps & LegendPropsOverrides>
+    | React.JSXElementConstructor<ContinuousColorLegendProps & LegendPropsOverrides>
+    | React.JSXElementConstructor<PiecewiseColorLegendProps & LegendPropsOverrides>;
 }
 
 export interface ChartsLegendSlotProps {
   legend?: WithDataAttributes<
     Partial<ChartsLegendProps | ContinuousColorLegendProps | PiecewiseColorLegendProps> &
       // We allow position only on slots.
-      ChartsLegendPosition
+      ChartsLegendPosition &
+      LegendPropsOverrides
   >;
 }
 

@@ -4,12 +4,10 @@ import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
   gridClasses,
-  type GridColDef,
   GridMenu,
-  type GridSlotProps,
-  type GridSortDirection,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridSlotProps, GridSortDirection } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { GridColumnSortButton, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';

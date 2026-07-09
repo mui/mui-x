@@ -1,31 +1,35 @@
-import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import {
+import type * as React from 'react';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+import type { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '../PickersCalendarHeader';
-import { DayCalendarSlots, DayCalendarSlotProps, ExportedDayCalendarProps } from './DayCalendar';
-import { DateCalendarClasses } from './dateCalendarClasses';
-import { BaseDateValidationProps } from '../internals/models/validation';
-import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView, PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
-import {
+import type {
+  DayCalendarSlots,
+  DayCalendarSlotProps,
+  ExportedDayCalendarProps,
+} from './DayCalendar';
+import type { DateCalendarClasses } from './dateCalendarClasses';
+import type { BaseDateValidationProps } from '../internals/models/validation';
+import type { ExportedUseViewsOptions } from '../internals/hooks/useViews';
+import type { DateView, PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
+import type {
   ExportedYearCalendarProps,
   YearCalendarSlots,
   YearCalendarSlotProps,
 } from '../YearCalendar/YearCalendar.types';
-import {
+import type {
   ExportedMonthCalendarProps,
   MonthCalendarSlots,
   MonthCalendarSlotProps,
 } from '../MonthCalendar/MonthCalendar.types';
-import { ExportedValidateDateProps } from '../validation/validateDate';
-import { FormProps } from '../internals/models/formProps';
-import { PickerValue } from '../internals/models';
+import type { ExportedValidateDateProps } from '../validation/validateDate';
+import type { FormProps } from '../internals/models/formProps';
+import type { PickerValue } from '../internals/models';
 
 export interface DateCalendarSlots
   extends PickersCalendarHeaderSlots, DayCalendarSlots, MonthCalendarSlots, YearCalendarSlots {
@@ -62,7 +66,7 @@ export interface ExportedDateCalendarProps
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading?: () => React.ReactNode;
   /**

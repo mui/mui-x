@@ -1,22 +1,24 @@
 import { spy } from 'sinon';
-import { type RefObject, type GridChartsConfigurationOptions } from '@mui/x-internals/types';
+import type { RefObject, GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   DataGridPremium,
-  type DataGridPremiumProps,
   useGridApiRef,
   useGridChartsIntegrationContext,
   GridChartsPanel,
-  type GridInitialState,
-  type GridApiPremium,
-  type GridValidRowModel,
   GridChartsIcon,
   GridSidebarValue,
 } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridInitialState,
+  GridApiPremium,
+  GridValidRowModel,
+} from '@mui/x-data-grid-premium';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../constants/columnGroups';
-import { type GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
+import type { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 
 const rows: GridValidRowModel[] = [
   { id: 0, category1: 'CatA', category2: 'Cat1', nonChartable: '-', amount: 100 },
@@ -235,6 +237,35 @@ describe('<DataGridPremium /> - Charts Integration', () => {
                 charts: {
                   test: {
                     dimensions: ['nonChartable'],
+                    values: ['amount'],
+                  },
+                },
+              },
+            }}
+          />,
+        );
+
+        expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
+      });
+
+      it('should not add multiSelect columns to the context', () => {
+        render(
+          <Test
+            columns={[
+              { field: 'id', type: 'number' },
+              { field: 'category1' },
+              { field: 'amount', type: 'number' },
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B'],
+              },
+            ]}
+            initialState={{
+              chartsIntegration: {
+                charts: {
+                  test: {
+                    dimensions: ['tags'],
                     values: ['amount'],
                   },
                 },

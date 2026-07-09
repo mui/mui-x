@@ -6,7 +6,8 @@ import { styled, useTheme } from '@mui/material/styles';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { type PieArcOwnerState, useUtilityClasses as usePieUtilityClasses } from './pieClasses';
+import { useUtilityClasses as usePieUtilityClasses } from './pieClasses';
+import type { PieArcOwnerState } from './pieClasses';
 
 const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
@@ -108,7 +109,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
   );
 });
 
-PieArc.propTypes = {
+PieArc.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

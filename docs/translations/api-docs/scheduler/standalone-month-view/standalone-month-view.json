@@ -37,6 +37,9 @@
     "eventColor": {
       "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
     },
+    "eventCreation": {
+      "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
+    },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
@@ -57,6 +60,9 @@
       "description": "The structure of the resource model. It defines how to read and write the properties of the resource model. If not provided, the resource model is assumed to match the <code>CalendarResource</code> interface."
     },
     "resources": { "description": "The resources the events can be assigned to." },
+    "shouldEventRequireResource": {
+      "description": "Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one."
+    },
     "showCurrentTimeIndicator": {
       "description": "Whether the component should display the current time indicator."
     },
@@ -64,6 +70,9 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "view": { "description": "The view currently displayed in the calendar." },
+    "viewConfig": {
+      "description": "Configuration applied to the view, keyed by the view name. The <code>month</code> view does not support any configuration keys yet."
+    },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
       "description": "The date currently used to determine the visible date range."

@@ -11,7 +11,9 @@ import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/ch
 import type { ChatRole } from '../../types/chat-entities';
 import { useChat } from '../../hooks/useChat';
 import { useChatLocaleText } from '../../chat/internals/ChatLocaleContext';
+import { useMessageContentTabIndex } from '../../message-list/internals/MessageRovingContext';
 import { formatStructuredValue } from './partUtils';
+import { type ChatToolExpand, ToolDisclosureContext } from './toolDisclosure';
 
 type ToolPart = ChatToolMessagePart | ChatDynamicToolMessagePart;
 
@@ -21,10 +23,20 @@ export interface ToolPartOwnerState {
   role: ChatRole;
   state: ChatToolInvocationState;
   toolName: string;
+  /**
+   * Whether the parent message is still streaming (`message.status === 'streaming'`).
+   * Useful for `defaultExpanded` policies that keep a tool open for as long as the
+   * whole message streams. For approval-specific behavior read `state` instead.
+   */
+  isMessageStreaming: boolean;
 }
 
 export interface ToolPartSectionOwnerState extends ToolPartOwnerState {
   section: 'input' | 'output';
+  /** The localized label for the section ("Tool called", "Tool result"). */
+  summaryLabel: string;
+  /** A short, single-line preview of the section content (truncated to ~60 chars). */
+  previewValue: string;
 }
 
 export interface ToolPartSlots {
@@ -34,6 +46,7 @@ export interface ToolPartSlots {
   state: React.ElementType;
   icon?: React.ElementType;
   section: React.ElementType;
+  sectionSummary: React.ElementType;
   sectionContent: React.ElementType;
   error: React.ElementType;
   actions: React.ElementType;
@@ -48,6 +61,7 @@ export interface ToolPartSlotProps {
   state?: SlotComponentPropsFromProps<'span', {}, ToolPartOwnerState>;
   icon?: SlotComponentPropsFromProps<'span', {}, ToolPartOwnerState>;
   section?: SlotComponentPropsFromProps<'div', {}, ToolPartSectionOwnerState>;
+  sectionSummary?: SlotComponentPropsFromProps<'strong', {}, ToolPartSectionOwnerState>;
   sectionContent?: SlotComponentPropsFromProps<'pre', {}, ToolPartSectionOwnerState>;
   error?: SlotComponentPropsFromProps<'div', {}, ToolPartOwnerState>;
   actions?: SlotComponentPropsFromProps<'div', {}, ToolPartOwnerState>;
@@ -71,6 +85,29 @@ export interface ToolPartProps extends ChatPartRendererProps<ToolPart> {
    * Keyed by `toolInvocation.toolName`.
    */
   toolSlotProps?: Record<string, ToolPartSlotProps>;
+  /**
+   * Default expanded state of each tool card (and its `input`/`output` sections),
+   * keyed by `toolInvocation.toolName` with a `'*'` fallback. Each value is either a
+   * static `boolean` (applied to the card and its sections) or a resolver
+   * `(ownerState) => boolean | undefined`.
+   *
+   * A resolver returning a `boolean` drives the disclosure on every state
+   * transition (return `false` to collapse a card when its tool ends); returning
+   * `undefined` — or omitting the tool — keeps the built-in default. The resolver
+   * controls *expansion* only; section *visibility* stays gated by the tool state
+   * (e.g. the output section appears only once output is available).
+   * @example
+   * defaultExpanded={{
+   *   // expand `write` while it runs, collapse it when it ends; sections at default
+   *   write: (ownerState) =>
+   *     ownerState.section
+   *       ? undefined
+   *       : ownerState.state === 'input-streaming' || ownerState.state === 'input-available',
+   *   search: true, // always expanded
+   *   '*': undefined, // built-in default
+   * }}
+   */
+  defaultExpanded?: Record<string, ChatToolExpand | undefined>;
 }
 
 export type ToolPartExternalProps = Omit<
@@ -82,6 +119,15 @@ type ToolPartComponent = ((
   props: ToolPartProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+function buildPreviewValue(formatted: string): string {
+  const firstLine = formatted.split('\n').find((line) => line.trim().length > 0) ?? '';
+  const trimmed = firstLine.trim();
+  if (trimmed.length <= 60) {
+    return trimmed;
+  }
+  return `${trimmed.slice(0, 60)}…`;
+}
+
 function ToolPayloadSection(props: {
   label: string;
   ownerState: ToolPartOwnerState;
@@ -92,19 +138,34 @@ function ToolPayloadSection(props: {
 }) {
   const { label, ownerState, section, slotProps, slots, value } = props;
   const formatted = React.useMemo(() => formatStructuredValue(value), [value]);
+  const previewValue = React.useMemo(() => buildPreviewValue(formatted), [formatted]);
+  // Inside a roving message list the section disclosure leaves the tab order
+  // until the user drills into the message (Enter); it stays mouse-clickable.
+  const contentTabIndex = useMessageContentTabIndex();
   const sectionOwnerState = React.useMemo<ToolPartSectionOwnerState>(
     () => ({
       ...ownerState,
       section,
+      summaryLabel: label,
+      previewValue,
     }),
-    [ownerState, section],
+    [ownerState, section, label, previewValue],
   );
   const Section = slots?.section ?? 'div';
+  const SectionSummary = slots?.sectionSummary ?? 'strong';
   const SectionContent = slots?.sectionContent ?? 'pre';
   const sectionProps = useSlotProps({
     elementType: Section,
     externalSlotProps: slotProps?.section,
     ownerState: sectionOwnerState,
+  });
+  const sectionSummaryProps = useSlotProps({
+    elementType: SectionSummary,
+    externalSlotProps: slotProps?.sectionSummary,
+    ownerState: sectionOwnerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const sectionContentProps = useSlotProps({
     elementType: SectionContent,
@@ -114,7 +175,7 @@ function ToolPayloadSection(props: {
 
   return (
     <Section {...sectionProps}>
-      <strong>{label}</strong>
+      <SectionSummary {...sectionSummaryProps}>{label}</SectionSummary>
       <SectionContent {...sectionContentProps}>{formatted}</SectionContent>
     </Section>
   );
@@ -135,6 +196,7 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
     slotProps,
     toolSlots,
     toolSlotProps,
+    defaultExpanded,
     ...other
   } = props;
   void index;
@@ -152,6 +214,7 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
 
     [slotProps, toolSlotProps, toolName],
   );
+  const isMessageStreaming = message.status === 'streaming';
   const ownerState = React.useMemo<ToolPartOwnerState>(
     () => ({
       messageId: message.id,
@@ -159,6 +222,7 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
       role: message.role,
       state: part.toolInvocation.state,
       toolName: part.toolInvocation.toolName,
+      isMessageStreaming,
     }),
     [
       message.id,
@@ -166,8 +230,20 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
       part.toolInvocation.state,
       part.toolInvocation.toolName,
       pendingApproval,
+      isMessageStreaming,
     ],
   );
+  // Resolve the per-tool-name expansion policy to a single resolver bound to this
+  // tool, shared by the card root and its sections via context. A `boolean` policy
+  // becomes a constant resolver; a missing/`undefined` policy yields no resolver so
+  // the disclosures fall back to their built-in default.
+  const boundExpansion = React.useMemo(() => {
+    const policy = defaultExpanded?.[toolName] ?? defaultExpanded?.['*'];
+    if (policy === undefined) {
+      return undefined;
+    }
+    return typeof policy === 'function' ? policy : () => policy;
+  }, [defaultExpanded, toolName]);
   const Root = resolvedSlots?.root ?? 'div';
   const Header = resolvedSlots?.header ?? 'div';
   const Title = resolvedSlots?.title ?? 'div';
@@ -187,10 +263,17 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
       className,
     },
   });
+  // Inside a roving message list the tool's interactive elements (disclosure
+  // header, approve/deny buttons) leave the tab order until the user drills
+  // into the message (Enter); they stay mouse-clickable.
+  const contentTabIndex = useMessageContentTabIndex();
   const headerProps = useSlotProps({
     elementType: Header,
     externalSlotProps: resolvedSlotProps?.header,
     ownerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const titleProps = useSlotProps({
     elementType: Title,
@@ -222,11 +305,17 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
     elementType: ApproveButton,
     externalSlotProps: resolvedSlotProps?.approveButton,
     ownerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const denyButtonProps = useSlotProps({
     elementType: DenyButton,
     externalSlotProps: resolvedSlotProps?.denyButton,
     ownerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const { toolInvocation } = part;
   const toolTitle = toolInvocation.title ?? toolInvocation.toolName;
@@ -237,7 +326,7 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
       setPendingApproval(true);
       try {
         await addToolApprovalResponse({
-          id: toolInvocation.toolCallId,
+          id: toolInvocation.approvalId ?? toolInvocation.toolCallId,
           approved,
         });
       } catch {
@@ -246,93 +335,97 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
         setPendingApproval(false);
       }
     },
-    [addToolApprovalResponse, toolInvocation.toolCallId],
+    [addToolApprovalResponse, toolInvocation.approvalId, toolInvocation.toolCallId],
   );
 
   const showInput =
     (toolInvocation.state === 'input-streaming' ||
       toolInvocation.state === 'input-available' ||
       toolInvocation.state === 'approval-requested' ||
-      toolInvocation.state === 'approval-responded') &&
+      toolInvocation.state === 'approval-responded' ||
+      toolInvocation.state === 'output-available' ||
+      toolInvocation.state === 'output-error') &&
     toolInvocation.input !== undefined;
 
   const showOutput =
     toolInvocation.state === 'output-available' && toolInvocation.output !== undefined;
 
   return (
-    <Root {...rootProps}>
-      <Header {...headerProps}>
-        {Icon != null ? <Icon {...iconProps} /> : null}
-        <Title {...titleProps}>{toolTitle}</Title>
-        {stateLabel ? <State {...stateProps}>{stateLabel}</State> : null}
-      </Header>
-      {showInput ? (
-        <ToolPayloadSection
-          label={localeText.messageToolInputLabel}
-          ownerState={ownerState}
-          section="input"
-          slotProps={resolvedSlotProps}
-          slots={resolvedSlots}
-          value={toolInvocation.input}
-        />
-      ) : null}
-      {showOutput ? (
-        <ToolPayloadSection
-          label={localeText.messageToolOutputLabel}
-          ownerState={ownerState}
-          section="output"
-          slotProps={resolvedSlotProps}
-          slots={resolvedSlots}
-          value={toolInvocation.output}
-        />
-      ) : null}
-      {toolInvocation.state === 'output-error' && toolInvocation.errorText ? (
-        <Error {...errorProps}>{toolInvocation.errorText}</Error>
-      ) : null}
-      {toolInvocation.state === 'output-denied' ? (
-        <Error {...errorProps}>
-          {toolInvocation.approval?.reason ?? localeText.toolStateLabel('output-denied')}
-        </Error>
-      ) : null}
-      {toolInvocation.state === 'approval-requested' ? (
-        <Actions {...actionsProps}>
-          <ApproveButton
-            {...approveButtonProps}
-            disabled={pendingApproval}
-            onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
-              (
-                approveButtonProps as {
-                  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    <ToolDisclosureContext.Provider value={boundExpansion}>
+      <Root {...rootProps}>
+        <Header {...headerProps}>
+          {Icon != null ? <Icon {...iconProps} /> : null}
+          <Title {...titleProps}>{toolTitle}</Title>
+          {stateLabel ? <State {...stateProps}>{stateLabel}</State> : null}
+        </Header>
+        {showInput ? (
+          <ToolPayloadSection
+            label={localeText.messageToolInputLabel}
+            ownerState={ownerState}
+            section="input"
+            slotProps={resolvedSlotProps}
+            slots={resolvedSlots}
+            value={toolInvocation.input}
+          />
+        ) : null}
+        {showOutput ? (
+          <ToolPayloadSection
+            label={localeText.messageToolOutputLabel}
+            ownerState={ownerState}
+            section="output"
+            slotProps={resolvedSlotProps}
+            slots={resolvedSlots}
+            value={toolInvocation.output}
+          />
+        ) : null}
+        {toolInvocation.state === 'output-error' && toolInvocation.errorText ? (
+          <Error {...errorProps}>{toolInvocation.errorText}</Error>
+        ) : null}
+        {toolInvocation.state === 'output-denied' ? (
+          <Error {...errorProps}>
+            {toolInvocation.approval?.reason ?? localeText.toolStateLabel('output-denied')}
+          </Error>
+        ) : null}
+        {toolInvocation.state === 'approval-requested' ? (
+          <Actions {...actionsProps}>
+            <ApproveButton
+              {...approveButtonProps}
+              disabled={pendingApproval}
+              onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
+                (
+                  approveButtonProps as {
+                    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+                  }
+                ).onClick?.(event);
+                if (!event.defaultPrevented) {
+                  await handleApproval(true);
                 }
-              ).onClick?.(event);
-              if (!event.defaultPrevented) {
-                await handleApproval(true);
-              }
-            }}
-            type="button"
-          >
-            {localeText.messageToolApproveButtonLabel}
-          </ApproveButton>
-          <DenyButton
-            {...denyButtonProps}
-            disabled={pendingApproval}
-            onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
-              (
-                denyButtonProps as {
-                  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+              }}
+              type="button"
+            >
+              {localeText.messageToolApproveButtonLabel}
+            </ApproveButton>
+            <DenyButton
+              {...denyButtonProps}
+              disabled={pendingApproval}
+              onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
+                (
+                  denyButtonProps as {
+                    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+                  }
+                ).onClick?.(event);
+                if (!event.defaultPrevented) {
+                  await handleApproval(false);
                 }
-              ).onClick?.(event);
-              if (!event.defaultPrevented) {
-                await handleApproval(false);
-              }
-            }}
-            type="button"
-          >
-            {localeText.messageToolDenyButtonLabel}
-          </DenyButton>
-        </Actions>
-      ) : null}
-    </Root>
+              }}
+              type="button"
+            >
+              {localeText.messageToolDenyButtonLabel}
+            </DenyButton>
+          </Actions>
+        ) : null}
+      </Root>
+    </ToolDisclosureContext.Provider>
   );
 }) as ToolPartComponent;
 

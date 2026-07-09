@@ -17,11 +17,17 @@
       "description": "Whether events can be dragged from inside of the calendar and dropped outside of it. If true, when the mouse leaves the calendar, the event won&#39;t be rendered inside the calendar anymore. If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "collapsedResources": {
+      "description": "The collapsed resources. A resource is expanded unless included here with a <code>true</code> value."
+    },
     "dataSource": {
       "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."
     },
     "dateLocale": {
       "description": "The locale object from <code>date-fns</code> used to format dates. This affects day names, month names, week start day, and other locale-dependent formatting. Import a locale from <code>date-fns/locale</code> and pass it to this prop."
+    },
+    "defaultCollapsedResources": {
+      "description": "The resources initially collapsed. To render a controlled scheduler, use the <code>collapsedResources</code> prop."
     },
     "defaultPreferences": {
       "description": "The default preferences for the calendar. To use controlled preferences, use the <code>preferences</code> prop."
@@ -41,12 +47,18 @@
     "eventColor": {
       "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
     },
+    "eventCreation": {
+      "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
+    },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
     "events": { "description": "The events currently available in the calendar." },
     "localeText": {
       "description": "Set the locale text of the Event Calendar. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts\">the source</a> in the GitHub repository."
+    },
+    "onCollapsedResourcesChange": {
+      "description": "Event handler called when the collapsed resources change."
     },
     "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
     "onPreferencesChange": { "description": "Event handler called when the preferences change." },
@@ -64,6 +76,9 @@
       "description": "The structure of the resource model. It defines how to read and write the properties of the resource model. If not provided, the resource model is assumed to match the <code>CalendarResource</code> interface."
     },
     "resources": { "description": "The resources the events can be assigned to." },
+    "shouldEventRequireResource": {
+      "description": "Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one."
+    },
     "showCurrentTimeIndicator": {
       "description": "Whether the component should display the current time indicator."
     },
@@ -71,6 +86,9 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "view": { "description": "The view currently displayed in the calendar." },
+    "viewConfig": {
+      "description": "Configuration applied to each view, keyed by the view name. For the <code>day</code> and <code>week</code> views, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid."
+    },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
       "description": "The date currently used to determine the visible date range."
@@ -111,6 +129,14 @@
     "agendaViewWeekDayNameLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "agenda view week day name label elements"
+    },
+    "agendaViewWeekNumberLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view week number label elements"
+    },
+    "agendaViewWeekNumberRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view week number row elements"
     },
     "agendaViewYearAndMonthLabel": {
       "description": "Styles applied to {{nodeName}}.",
@@ -412,9 +438,13 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog resource menu color dot element"
     },
-    "eventDialogResourceMenuColorRadioButton": {
+    "eventDialogResourceMenuColorToggle": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the event dialog resource menu color radio button element"
+      "nodeName": "the event dialog resource menu color toggle element"
+    },
+    "eventDialogResourceMenuColorToggleGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource menu color toggle group element"
     },
     "eventDialogResourceMenuItem": {
       "description": "Styles applied to {{nodeName}}.",
@@ -431,6 +461,10 @@
     "eventDialogSaveButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog save button element"
+    },
+    "eventDialogSectionFieldset": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog section fieldset element"
     },
     "eventDialogSectionHeaderTitle": {
       "description": "Styles applied to {{nodeName}}.",
@@ -498,7 +532,7 @@
     },
     "eventSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "event skeleton elements"
+      "nodeName": "the event skeleton element"
     },
     "headerToolbar": {
       "description": "Styles applied to {{nodeName}}.",
@@ -535,6 +569,10 @@
     "headerToolbarTodayButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar today button element"
+    },
+    "headerToolbarWeekNumber": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar week number element"
     },
     "mainPanel": {
       "description": "Styles applied to {{nodeName}}.",
@@ -696,25 +734,25 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event item resource legend color elements"
     },
-    "resourcesLegend": {
+    "resourcesTree": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the resources legend root element"
+      "nodeName": "the resources tree root element"
     },
-    "resourcesLegendItem": {
+    "resourcesTreeItem": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resources legend item elements"
+      "nodeName": "resources tree item elements"
     },
-    "resourcesLegendItemCheckbox": {
+    "resourcesTreeItemCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resources legend item checkbox elements"
+      "nodeName": "resources tree item checkbox elements"
     },
-    "resourcesLegendItemName": {
+    "resourcesTreeItemLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resources legend item name elements"
+      "nodeName": "resources tree item label elements"
     },
-    "resourcesLegendLabel": {
+    "resourcesTreeLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the resources legend label element"
+      "nodeName": "the resources tree section label element"
     },
     "root": { "description": "Styles applied to the root element." },
     "sidePanel": {

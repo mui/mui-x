@@ -1,6 +1,6 @@
 import type * as React from 'react';
-import { type RadarClasses } from '../radarClasses';
-import { type RadarItemIdentifier } from '../../models/seriesType/radar';
+import type { RadarClasses } from '../radarClasses';
+import type { RadarItemIdentifier } from '../../models/seriesType/radar';
 
 interface CommonRadarSeriesPlotProps {
   /**

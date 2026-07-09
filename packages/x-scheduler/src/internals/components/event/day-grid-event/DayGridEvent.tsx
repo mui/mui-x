@@ -4,23 +4,25 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { createSelector, useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import {
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import type {
   SchedulerEventSide,
   SchedulerRenderableEventOccurrence,
-} from '@mui/x-scheduler-headless/models';
-import type { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
+} from '@mui/x-scheduler-internals/models';
+import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { DayGridEventProps } from './DayGridEvent.types';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
+import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import type { PaletteName } from '../../../utils/tokens';
+import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 
@@ -135,7 +137,7 @@ const DayGridEventTitle = styled('p', {
 })(({ theme }) => ({
   margin: 0,
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)',
   lineHeight: 1.43,
   flexGrow: 1,
   '[data-variant="filled"] &': {
@@ -314,7 +316,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    occurrence.resource,
+    getPrimaryResourceId(occurrence.resource),
   );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 

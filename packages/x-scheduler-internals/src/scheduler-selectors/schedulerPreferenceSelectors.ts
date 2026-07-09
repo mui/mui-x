@@ -1,0 +1,20 @@
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import { DEFAULT_SCHEDULER_PREFERENCES } from '../internals/utils/SchedulerStore';
+
+const allSchedulerPreferencesSelector = createSelectorMemoized(
+  (state: State) => state.preferences,
+  (preferences) => ({
+    ...DEFAULT_SCHEDULER_PREFERENCES,
+    ...preferences,
+  }),
+);
+
+export const schedulerPreferenceSelectors = {
+  all: allSchedulerPreferencesSelector,
+  ampm: createSelector(allSchedulerPreferencesSelector, (preferences) => preferences.ampm),
+  weekStartsOn: createSelector(
+    allSchedulerPreferencesSelector,
+    (preferences) => preferences.weekStartsOn,
+  ),
+};

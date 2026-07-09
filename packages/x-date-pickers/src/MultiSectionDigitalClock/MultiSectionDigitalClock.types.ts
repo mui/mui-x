@@ -1,14 +1,14 @@
-import * as React from 'react';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import MenuItem from '@mui/material/MenuItem';
-import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
-import {
+import type * as React from 'react';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type MenuItem from '@mui/material/MenuItem';
+import type { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
+import type {
   BaseClockProps,
   ExportedBaseClockProps,
   MultiSectionDigitalClockOnlyProps,
 } from '../internals/models/props/time';
-import { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 export interface MultiSectionDigitalClockOption<TSectionValue extends number | string> {
   isDisabled?: (value: TSectionValue) => boolean;

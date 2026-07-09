@@ -1,15 +1,16 @@
 import type { WithDataAttributes } from '@mui/x-internals/types';
-import {
-  type ChartsTooltipContainerProps,
-  type ChartsTooltipClasses,
+import type {
+  ChartsTooltipContainerProps,
+  ChartsTooltipClasses,
 } from '@mui/x-charts/ChartsTooltip';
+import type { TooltipPropsOverrides } from '@mui/x-charts/models';
 
 export interface HeatmapTooltipSlots {
   /**
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
    */
-  tooltip?: React.ElementType<HeatmapTooltipProps>;
+  tooltip?: React.ElementType<HeatmapTooltipProps & TooltipPropsOverrides>;
 }
 
 export interface HeatmapTooltipSlotProps {
@@ -17,7 +18,7 @@ export interface HeatmapTooltipSlotProps {
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
    */
-  tooltip?: WithDataAttributes<Partial<HeatmapTooltipProps>>;
+  tooltip?: WithDataAttributes<Partial<HeatmapTooltipProps> & TooltipPropsOverrides>;
 }
 
 export interface HeatmapTooltipClasses extends ChartsTooltipClasses {}

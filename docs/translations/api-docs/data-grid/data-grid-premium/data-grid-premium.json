@@ -75,6 +75,9 @@
     },
     "dataSource": { "description": "Data source object." },
     "dataSourceCache": { "description": "Data source cache object." },
+    "dataSourceKeepPreviousData": {
+      "description": "If <code>true</code>, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, or filtering changes. The loading overlay is rendered on top of the previous rows. Only applies to flat data; tree data and row grouping always reset the rows on refetch to keep the order consistent with the new response."
+    },
     "dataSourceRevalidateMs": {
       "description": "If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired. If the refetched rows are different from the current rows, the grid will update the rows. Set to <code>0</code> to disable polling."
     },
@@ -1471,6 +1474,26 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the edit long text cell value element"
     },
+    "editMultiSelectCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell root element"
+    },
+    "editMultiSelectCellChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each chip in the edit multi-select cell"
+    },
+    "editMultiSelectCellOverflow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overflow &quot;+N&quot; chip in the edit multi-select cell"
+    },
+    "editMultiSelectCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell popper content"
+    },
+    "editMultiSelectCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell popup"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1576,6 +1599,26 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the menu icon element",
       "conditions": "the menu is open"
+    },
+    "multiSelectCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell root element"
+    },
+    "multiSelectCellChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each chip in the multi-select cell"
+    },
+    "multiSelectCellOverflow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overflow &quot;+N&quot; chip in the multi-select cell"
+    },
+    "multiSelectCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell popper content"
+    },
+    "multiSelectCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the multi-select cell expand popup"
     },
     "overlay": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1962,6 +2005,7 @@
     "baseLinearProgress": "The custom LinearProgress component used in the grid.",
     "baseMenuItem": "The custom MenuItem component used in the grid.",
     "baseMenuList": "The custom MenuList component used in the grid.",
+    "baseModal": "The custom Modal component used in the grid.",
     "basePagination": "The custom Pagination component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",

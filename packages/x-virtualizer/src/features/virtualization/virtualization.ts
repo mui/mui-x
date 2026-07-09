@@ -6,7 +6,7 @@ import useTimeout from '@mui/utils/useTimeout';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { integer } from '@mui/x-internals/types';
-import * as platform from '@mui/x-internals/platform';
+import { platform } from '@base-ui/utils/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
 import useRefCallback from '../../utils/useRefCallback';
@@ -155,9 +155,9 @@ function initializeState(params: ParamsWithDefaults) {
 
   const state: Virtualization.State<typeof params.layout> = {
     virtualization: {
-      enabled: !platform.isJSDOM,
-      enabledForRows: !platform.isJSDOM,
-      enabledForColumns: !platform.isJSDOM,
+      enabled: !platform.env.jsdom,
+      enabledForRows: !platform.env.jsdom,
+      enabledForColumns: !platform.env.jsdom,
       renderContext,
       props: (params.layout.constructor as typeof Layout).elements.reduce(
         (acc, key) => (acc[key as string], acc),
@@ -226,6 +226,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
+  const layoutMode = useStore(store, selectors.layoutMode);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
@@ -252,7 +253,14 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const scrollTimeout = useTimeout();
   const frozenContext = React.useRef<RenderContext | undefined>(undefined);
   const scrollCache = useLazyRef(() =>
-    createScrollCache(isRtl, rowBufferPx, columnBufferPx, rowHeight * 15, MINIMUM_COLUMN_WIDTH * 6),
+    createScrollCache(
+      isRtl,
+      rowBufferPx,
+      columnBufferPx,
+      rowHeight * 15,
+      MINIMUM_COLUMN_WIDTH * 6,
+      layoutMode,
+    ),
   ).current;
 
   const updateRenderContext = React.useCallback(
@@ -358,9 +366,17 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       columnBufferPx,
       rowHeight * 15,
       MINIMUM_COLUMN_WIDTH * 6,
+      layoutMode,
     );
 
-    const inputs = inputsSelector(store, params, api, enabledForRows, enabledForColumns);
+    const inputs = inputsSelector(
+      store,
+      params,
+      api,
+      enabledForRows,
+      enabledForColumns,
+      layoutMode,
+    );
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
     if (!areRenderContextsEqual(nextRenderContext, renderContext)) {
@@ -369,7 +385,9 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         updateRenderContext(nextRenderContext);
       });
 
-      scrollTimeout.start(1000, triggerUpdateRenderContext);
+      if (layoutMode === 'uncontrolled') {
+        scrollTimeout.start(1000, triggerUpdateRenderContext);
+      }
     } else {
       store.set('virtualization', {
         ...store.state.virtualization,
@@ -388,7 +406,14 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     ) {
       return;
     }
-    const inputs = inputsSelector(store, params, api, enabledForRows, enabledForColumns);
+    const inputs = inputsSelector(
+      store,
+      params,
+      api,
+      enabledForRows,
+      enabledForColumns,
+      layoutMode,
+    );
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
     frozenContext.current = undefined;
@@ -577,7 +602,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         columnPositions,
         currentRenderContext,
         pinnedColumns.left.length,
-        store.state.virtualization.layoutMode,
+        layoutMode,
       );
       const showBottomBorder = isLastVisibleInSection && rowParams.position === 'top';
 
@@ -769,6 +794,7 @@ function inputsSelector(
   api: RequiredAPI,
   enabledForRows: boolean,
   enabledForColumns: boolean,
+  layoutMode: VirtualizationState['layoutMode'],
 ) {
   const dimensions = Dimensions.selectors.dimensions(store.state);
   const rows = params.rows;
@@ -787,6 +813,7 @@ function inputsSelector(
     rowBufferPx: params.virtualization.rowBufferPx,
     columnBufferPx: params.virtualization.columnBufferPx,
     leftPinnedWidth: dimensions.leftPinnedWidth,
+    rightPinnedWidth: dimensions.rightPinnedWidth,
     columnsTotalWidth: dimensions.columnsTotalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
     viewportInnerHeight: dimensions.viewportInnerSize.height,
@@ -800,6 +827,7 @@ function inputsSelector(
     columns,
     hiddenCellsOriginMap,
     virtualizeColumnsWithAutoRowHeight: params.virtualizeColumnsWithAutoRowHeight,
+    layoutMode,
   };
 }
 
@@ -882,7 +910,11 @@ function computeRenderContext(
         atStart: true,
         lastPosition: inputs.columnsTotalWidth,
       });
-      lastColumnIndex = binarySearch(realLeft + inputs.viewportInnerWidth, inputs.columnPositions);
+      const rightBound =
+        inputs.layoutMode === 'controlled'
+          ? realLeft + inputs.viewportInnerWidth - inputs.rightPinnedWidth
+          : realLeft + inputs.viewportInnerWidth;
+      lastColumnIndex = binarySearch(rightBound, inputs.columnPositions);
     }
 
     renderContext.firstColumnIndex = firstColumnIndex;
@@ -1073,7 +1105,7 @@ function getIndexesToRender({
     lastPosition: positions[positions.length - 1] + lastSize,
   });
 
-  const lastIndexPadded = binarySearch(lastPosition, positions);
+  const lastIndexPadded = binarySearch(lastPosition, positions) + 1;
 
   return [
     clamp(firstIndexPadded, minFirstIndex, maxLastIndex),
@@ -1108,6 +1140,13 @@ export function computeOffsetLeft(
   return Math.abs(offset);
 }
 
+const EMPTY_BUFFER = {
+  rowAfter: 0,
+  rowBefore: 0,
+  columnAfter: 0,
+  columnBefore: 0,
+};
+
 function bufferForDirection(
   isRtl: boolean,
   direction: ScrollDirection,
@@ -1115,7 +1154,12 @@ function bufferForDirection(
   columnBufferPx: number,
   verticalBuffer: number,
   horizontalBuffer: number,
+  layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
+  if (layoutMode === 'controlled') {
+    return EMPTY_BUFFER;
+  }
+
   if (isRtl) {
     switch (direction) {
       case ScrollDirection.LEFT:
@@ -1176,6 +1220,7 @@ function createScrollCache(
   columnBufferPx: number,
   verticalBuffer: number,
   horizontalBuffer: number,
+  layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
   return {
     direction: ScrollDirection.NONE,
@@ -1186,6 +1231,7 @@ function createScrollCache(
       columnBufferPx,
       verticalBuffer,
       horizontalBuffer,
+      layoutMode,
     ),
   };
 }

@@ -1,5 +1,5 @@
-import { ExtendableRichTreeViewStore } from '../../RichTreeViewStore/RichTreeViewStore';
-import { TreeViewItemId } from '../../../models';
+import type { ExtendableRichTreeViewStore } from '../../RichTreeViewStore/RichTreeViewStore';
+import type { TreeViewItemId } from '../../../models';
 import { labelSelectors } from './selectors';
 import { useLabelEditingItemPlugin } from './itemPlugin';
 

@@ -1,15 +1,10 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  useGridEvent as addEventHandler,
-  useGridApiMethod,
-  type GridEventLookup,
-} from '@mui/x-data-grid';
-import {
-  type GridStateInitializer,
-  useGridRegisterStrategyProcessor,
-} from '@mui/x-data-grid/internals';
+import { useGridEvent as addEventHandler, useGridApiMethod } from '@mui/x-data-grid';
+import type { GridEventLookup } from '@mui/x-data-grid';
+import { useGridRegisterStrategyProcessor } from '@mui/x-data-grid/internals';
+import type { GridStateInitializer } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { INITIAL_STATE, useGridDataSourceBasePro } from './useGridDataSourceBasePro';
@@ -46,6 +41,7 @@ export const useGridDataSourcePro = (
     api,
     flatTreeStrategyProcessor,
     groupedDataStrategyProcessor,
+    nestedDataStrategyProcessor,
     events,
     setStrategyAvailability,
   } = useGridDataSourceBasePro(apiRef, props, options);
@@ -64,6 +60,12 @@ export const useGridDataSourcePro = (
     groupedDataStrategyProcessor.strategyName,
     groupedDataStrategyProcessor.group,
     groupedDataStrategyProcessor.processor,
+  );
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    nestedDataStrategyProcessor.strategyName,
+    nestedDataStrategyProcessor.group,
+    nestedDataStrategyProcessor.processor,
   );
 
   Object.entries(events).forEach(([event, handler]) => {

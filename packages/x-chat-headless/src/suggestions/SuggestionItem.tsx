@@ -51,8 +51,17 @@ export const SuggestionItem = React.forwardRef(function SuggestionItem(
   );
 
   const handleClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
+    (
+      event: React.MouseEvent<HTMLButtonElement>,
+      externalOnClick?: React.MouseEventHandler<HTMLButtonElement>,
+    ) => {
       onClick?.(event);
+
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      externalOnClick?.(event);
 
       if (!event.defaultPrevented) {
         context?.onSelect(value);
@@ -70,12 +79,21 @@ export const SuggestionItem = React.forwardRef(function SuggestionItem(
     additionalProps: {
       ref,
       type: 'button' as const,
-      onClick: handleClick,
       ...getDataAttributes({
         index,
       }),
     },
-  });
+  }) as React.ButtonHTMLAttributes<HTMLButtonElement> & React.RefAttributes<HTMLButtonElement>;
+  const externalOnClick = rootProps.onClick;
 
-  return <Root {...rootProps}>{children ?? displayLabel}</Root>;
+  return (
+    <Root
+      {...rootProps}
+      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+        handleClick(event, externalOnClick);
+      }}
+    >
+      {children ?? displayLabel}
+    </Root>
+  );
 }) as SuggestionItemComponent;

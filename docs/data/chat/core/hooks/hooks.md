@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Core hooks
 
-<p class="description">Read chat state and trigger runtime actions through hooks scoped to exactly the data your component needs.</p>
+<p class="description">Read chat state and trigger runtime actions through hooks scoped to exactly the data each component needs.</p>
 
 The core package exposes nine public hooks.
 Each one subscribes to a specific slice of the normalized chat store, so your components only re-render when their own data changes.
@@ -28,7 +28,7 @@ import {
 
 All hooks must be called inside a `<ChatProvider>`.
 
-The following demo shows hooks in action inside a minimal custom chat:
+The demo below shows hooks in action inside a minimal custom chat:
 
 {{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
@@ -39,26 +39,31 @@ It returns both the public state fields and every runtime action in a single obj
 
 ### State
 
-| Field                  | Type                  | Description                             |
-| :--------------------- | :-------------------- | :-------------------------------------- |
-| `messages`             | `ChatMessage[]`       | All messages in the active conversation |
-| `conversations`        | `ChatConversation[]`  | All conversations                       |
-| `activeConversationId` | `string \| undefined` | Currently active conversation           |
-| `isStreaming`          | `boolean`             | Whether a response is being streamed    |
-| `hasMoreHistory`       | `boolean`             | Whether older messages can be loaded    |
-| `error`                | `ChatError \| null`   | Current error state                     |
+| Field                  | Type                  | Description                                                           |
+| :--------------------- | :-------------------- | :-------------------------------------------------------------------- |
+| `messages`             | `ChatMessage[]`       | All messages in the active conversation                               |
+| `conversations`        | `ChatConversation[]`  | All conversations                                                     |
+| `activeConversationId` | `string \| undefined` | Currently active conversation                                         |
+| `isStreaming`          | `boolean`             | Whether a response is being streamed                                  |
+| `hasMoreHistory`       | `boolean`             | Whether older messages can be loaded                                  |
+| `isLoadingHistory`     | `boolean`             | Whether a history fetch is in flight (initial page or older messages) |
+| `error`                | `ChatError \| null`   | Current error state                                                   |
 
 ### Actions
 
-| Method                    | Signature                                                   | Description                 |
-| :------------------------ | :---------------------------------------------------------- | :-------------------------- |
-| `sendMessage`             | `(input: UseChatSendMessageInput) => Promise<void>`         | Send a user message         |
-| `stopStreaming`           | `() => void`                                                | Abort the active stream     |
-| `loadMoreHistory`         | `() => Promise<void>`                                       | Load older messages         |
-| `setActiveConversation`   | `(id: string \| undefined) => Promise<void>`                | Switch conversations        |
-| `retry`                   | `(messageId: string) => Promise<void>`                      | Retry a failed message      |
-| `setError`                | `(error: ChatError \| null) => void`                        | Update the error state      |
-| `addToolApprovalResponse` | `(input: ChatAddToolApproveResponseInput) => Promise<void>` | Approve or deny a tool call |
+| Method                    | Signature                                                   | Description                           |
+| :------------------------ | :---------------------------------------------------------- | :------------------------------------ |
+| `sendMessage`             | `(input: UseChatSendMessageInput) => Promise<void>`         | Send a user message                   |
+| `stopStreaming`           | `() => void`                                                | Abort the active stream               |
+| `loadMoreHistory`         | `() => Promise<void>`                                       | Load older messages                   |
+| `setActiveConversation`   | `(id: string \| undefined) => Promise<void>`                | Switch conversations                  |
+| `retry`                   | `(messageId: string) => Promise<void>`                      | Retry a failed message                |
+| `regenerate`              | `(messageId: string) => Promise<void>`                      | Re-run an assistant response in place |
+| `setError`                | `(error: ChatError \| null) => void`                        | Update the error state                |
+| `addToolApprovalResponse` | `(input: ChatAddToolApproveResponseInput) => Promise<void>` | Approve or deny a tool call           |
+| `reloadConversations`     | `() => Promise<void>`                                       | Planned API stub, not yet implemented |
+| `reloadMessages`          | `(conversationId?: string) => Promise<void>`                | Planned API stub, not yet implemented |
+| `reconnectRealtime`       | `() => Promise<void>`                                       | Planned API stub, not yet implemented |
 
 ### `UseChatSendMessageInput`
 
@@ -162,12 +167,13 @@ function DraftArea() {
 
 A lightweight hook for status indicators, loading spinners, and error banners.
 
-| Field            | Type                | Description                                              |
-| :--------------- | :------------------ | :------------------------------------------------------- |
-| `isStreaming`    | `boolean`           | Whether a response is being streamed                     |
-| `hasMoreHistory` | `boolean`           | Whether older messages can be loaded                     |
-| `error`          | `ChatError \| null` | Current error state                                      |
-| `typingUserIds`  | `string[]`          | IDs of users currently typing in the active conversation |
+| Field              | Type                | Description                                                           |
+| :----------------- | :------------------ | :-------------------------------------------------------------------- |
+| `isStreaming`      | `boolean`           | Whether a response is being streamed                                  |
+| `hasMoreHistory`   | `boolean`           | Whether older messages can be loaded                                  |
+| `isLoadingHistory` | `boolean`           | Whether a history fetch is in flight (initial page or older messages) |
+| `error`            | `ChatError \| null` | Current error state                                                   |
+| `typingUserIds`    | `string[]`          | IDs of users currently typing in the active conversation              |
 
 Use this hook when you need to show a status chip, typing indicator, or error banner without subscribing to the full message list.
 
@@ -177,24 +183,24 @@ function StatusBar() {
 
   return (
     <div>
-      {isStreaming && <span>Assistant is responding...</span>}
-      {typingUserIds.length > 0 && <span>{typingUserIds.length} typing...</span>}
+      {isStreaming && <span>Assistant is responding…</span>}
+      {typingUserIds.length > 0 && <span>{typingUserIds.length} typing…</span>}
       {error && <span>{error.message}</span>}
     </div>
   );
 }
 ```
 
-## `useMessageIds()` and `useMessage(id)`
+## `useMessageIds()` and `useMessage()`
 
 Row-level subscriptions for efficient thread rendering.
 
-- `useMessageIds()` returns `string[]` — the ordered list of message IDs.
-- `useMessage(id)` returns `ChatMessage | null` — a single message by ID.
+- `useMessageIds()` returns `string[]`—the ordered list of message IDs.
+- `useMessage(id)` returns `ChatMessage | null`—a single message by ID.
 
-The pattern works like this: the parent component calls `useMessageIds()` and renders a list of row components.
+The parent component calls `useMessageIds()` and renders a list of row components.
 Each row calls `useMessage(id)` to subscribe to its own message.
-When a single message updates during streaming, only that row re-renders — the parent and sibling rows stay untouched.
+When a single message updates during streaming, only that row re-renders—the parent and sibling rows stay untouched.
 
 ```tsx
 function Thread() {
@@ -221,12 +227,12 @@ function MessageRow({ id }: { id: string }) {
 
 This is the recommended pattern for threads with more than a handful of messages.
 
-## `useConversations()` and `useConversation(id)`
+## `useConversations()` and `useConversation()`
 
 Conversation-level subscriptions following the same pattern as messages.
 
-- `useConversations()` returns `ChatConversation[]` — all conversations.
-- `useConversation(id)` returns `ChatConversation | null` — a single conversation by ID.
+- `useConversations()` returns `ChatConversation[]`—all conversations.
+- `useConversation(id)` returns `ChatConversation | null`—a single conversation by ID.
 
 ```tsx
 function Sidebar() {
@@ -246,7 +252,7 @@ function Sidebar() {
 
 Returns the underlying `ChatStore<Cursor>` instance.
 
-This is the escape hatch for advanced use cases that need direct store access — custom selectors, store subscriptions outside React render, or integration with external state management.
+This is the escape hatch for advanced use cases that need direct store access—custom selectors, store subscriptions outside React render, or integration with external state management.
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
@@ -261,10 +267,12 @@ function MessageCounter() {
 ```
 
 :::warning
-`useChatStore()` gives you access to all selectors and the full store mutation API. Use it sparingly — the dedicated hooks above are simpler, better typed, and remain stable across minor versions. Direct store access is considered advanced API and is more likely to require changes during upgrades.
+`useChatStore()` gives you access to all selectors and the full store mutation API.
+Use it sparingly—the dedicated hooks above are simpler, better typed, and remain stable across minor versions.
+Direct store access is considered advanced API and is more likely to require changes during upgrades.
 :::
 
-## `useChatPartRenderer(partType)`
+## `useChatPartRenderer()`
 
 Looks up a registered renderer for a specific message part type.
 
@@ -311,4 +319,4 @@ function CustomPart({ part, message, index }) {
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)
