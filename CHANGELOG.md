@@ -43,7 +43,9 @@ Internal changes.
 
 #### `@mui/x-date-pickers-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@9.9.0`.
+Same changes as in `@mui/x-date-pickers@9.9.0`, plus:
+
+- [DateRangeCalendar] Avoid unnecessary month switch when the value is already visible (#22996) @LukasTy
 
 ### Charts
 
@@ -98,6 +100,7 @@ Internal changes.
 - [docs] Fix broken social preview image on shared docs links (#23055) @sai6855
 - [docs] Update Scheduler feedback banner for stable release (#23050) @rita-codes
 - [docs] Review and clean up react-chat docs demos & gallery; fix actions-bar layout (#22993) @hasdfa
+- [docs] Update the Pickers recommended date library bundle sizes (#23087) @LukasTy
 
 ### Core
 
