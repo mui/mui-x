@@ -30,6 +30,7 @@ import type {
   SchedulerInstanceName,
 } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
 import type {
   SchedulerEvents,
   SchedulerEventListener,
@@ -88,6 +89,11 @@ export class SchedulerStore<
   protected timeoutManager = this.disposables.use(new TimeoutManager());
 
   private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
+
+  /**
+   * Plugin that provides event-scheduling support (dependencies). `null` when not attached.
+   */
+  protected schedulingPlugin: SchedulerSchedulingPluginInterface | null = null;
 
   public constructor(
     parameters: Parameters,
@@ -432,6 +438,8 @@ export class SchedulerStore<
       createdEvents.push(response.model);
       createdIds.push(response.id);
     }
+
+    this.schedulingPlugin?.handleEventsUpdate(parameters);
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
 
