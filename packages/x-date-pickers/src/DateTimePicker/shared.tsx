@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import type { DefaultizedProps, WithDataAttributes } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { DateOrTimeView, DateTimeValidationError } from '../models';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import type {

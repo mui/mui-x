@@ -3,7 +3,7 @@ import type { FormControlProps } from '@mui/material/FormControl';
 import type { FormHelperTextProps } from '@mui/material/FormHelperText';
 import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { TextFieldVariants } from '@mui/material/TextField';
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type {
   PickersInputBaseProps,
   PickersInputPropsUsedByField,

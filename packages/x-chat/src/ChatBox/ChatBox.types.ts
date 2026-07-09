@@ -2,7 +2,8 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils/types';
-import type { SlotComponentPropsFromProps, WithDataAttributes } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import {
   type ChatRootProps,
   type ChatFeatures,

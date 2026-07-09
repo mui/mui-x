@@ -2,7 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import type { MakeOptional, WithDataAttributes } from '@mui/x-internals/types';
+import type { MakeOptional } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import type { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import type { ChartsAxisSlots, ChartsAxisSlotProps, XAxis, YAxis } from '@mui/x-charts/internals';

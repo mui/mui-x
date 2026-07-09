@@ -1,5 +1,6 @@
 import type * as React from 'react';
-import type { DefaultizedProps, WithDataAttributes } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { useThemeProps } from '@mui/material/styles';
 import type { LocalizedComponent } from '@mui/x-date-pickers/locales';
 import type {

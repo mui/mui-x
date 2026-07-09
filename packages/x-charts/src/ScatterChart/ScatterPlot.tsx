@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { Scatter } from './Scatter';
 import type { ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';

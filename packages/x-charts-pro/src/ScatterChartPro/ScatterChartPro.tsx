@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { FocusedScatterMark, ScatterPlot } from '@mui/x-charts/ScatterChart';
 import type {

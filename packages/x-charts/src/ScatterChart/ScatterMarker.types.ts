@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { ScatterMarkerProps } from './ScatterMarker';
 import type { MarkerPropsOverrides } from '../models/chartsSlotsComponentsProps';
 

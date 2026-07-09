@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { WithDataAttributes } from './DataAttributes';
+import type { WithDataAttributes } from '@mui/utils/types';
 
 type ResolveSlotProps<T> = T extends React.ElementType ? React.ComponentPropsWithRef<T> : T;
 

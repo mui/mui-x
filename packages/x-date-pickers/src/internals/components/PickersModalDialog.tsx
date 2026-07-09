@@ -6,7 +6,7 @@ import MuiDialog, { dialogClasses } from '@mui/material/Dialog';
 import type { PaperProps as MuiPaperProps } from '@mui/material/Paper';
 import type { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { styled } from '@mui/material/styles';
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { usePickerContext } from '../../hooks';
 import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';

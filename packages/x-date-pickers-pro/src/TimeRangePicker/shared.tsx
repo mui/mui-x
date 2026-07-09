@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import type { DefaultizedProps, WithDataAttributes } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import type { TimeStepOptions, TimeView } from '@mui/x-date-pickers/models';
 import type {

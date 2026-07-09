@@ -1,4 +1,4 @@
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { ChartsLegendProps } from './ChartsLegend';
 import type { ContinuousColorLegendProps } from './ContinuousColorLegend';
 import type { ChartsLegendPosition } from './legend.types';

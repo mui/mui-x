@@ -10,7 +10,7 @@ import Popper from '@mui/material/Popper';
 import type { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useIsFineMainPointer } from './utils';
 import type { TriggerOptions } from './utils';

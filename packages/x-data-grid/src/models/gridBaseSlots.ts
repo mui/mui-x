@@ -1,4 +1,4 @@
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 
 type Ref<T = HTMLElement> = React.RefCallback<T | null> | React.RefObject<T | null> | null;
 

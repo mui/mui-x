@@ -1,4 +1,4 @@
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { ChartsTooltipProps } from './ChartsTooltip';
 import type { TriggerOptions } from './utils';
 import type { TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';

@@ -19,11 +19,8 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import type { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import type {
-  MuiEvent,
-  SlotComponentPropsFromProps,
-  WithDataAttributes,
-} from '@mui/x-internals/types';
+import type { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { isElementInteractive } from '../../utils/isElementInteractive';
 import type { PickerPopperClasses } from './pickerPopperClasses';
 import { getPickerPopperUtilityClass } from './pickerPopperClasses';

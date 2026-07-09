@@ -13,12 +13,8 @@ import type {
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import type { SxProps } from '@mui/system/styleFunctionSx';
-import type {
-  HasProperty,
-  MakeOptional,
-  MakeRequired,
-  WithDataAttributes,
-} from '@mui/x-internals/types';
+import type { HasProperty, MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import type { ChartsAxisClasses } from '../ChartsAxis/axisClasses';

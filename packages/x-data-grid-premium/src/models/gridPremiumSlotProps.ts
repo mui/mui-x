@@ -1,4 +1,4 @@
-import type { WithDataAttributes } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { GridProSlotProps } from '@mui/x-data-grid-pro/internals';
 import type { GridChartsPanelProps } from '../components/chartsPanel/GridChartsPanel';
 
