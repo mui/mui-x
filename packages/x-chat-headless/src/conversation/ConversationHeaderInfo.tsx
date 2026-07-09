@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useConversationContext } from './internals/ConversationContext';
 import { type ConversationHeaderInfoOwnerState } from './conversation.types';
 
@@ -10,7 +10,7 @@ export interface ConversationHeaderInfoSlots {
 }
 
 export interface ConversationHeaderInfoSlotProps {
-  headerInfo?: SlotComponentPropsFromProps<'div', {}, ConversationHeaderInfoOwnerState>;
+  headerInfo?: SlotComponentProps<'div', {}, ConversationHeaderInfoOwnerState>;
 }
 
 export interface ConversationHeaderInfoProps extends Omit<

@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import type IconButton from '@mui/material/IconButton';
 import type SvgIcon from '@mui/material/SvgIcon';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -29,13 +29,13 @@ export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
 export interface PickersCalendarHeaderSlotPropsOverrides {}
 
 export interface PickersCalendarHeaderSlotProps extends PickersArrowSwitcherSlotProps {
-  switchViewButton?: SlotComponentPropsFromProps<
+  switchViewButton?: SlotComponentProps<
     typeof IconButton,
     PickersCalendarHeaderSlotPropsOverrides,
     PickerOwnerState
   >;
 
-  switchViewIcon?: SlotComponentPropsFromProps<
+  switchViewIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersCalendarHeaderSlotPropsOverrides,
     PickerOwnerState

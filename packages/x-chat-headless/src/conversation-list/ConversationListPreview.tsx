@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import type { ChatConversation } from '../types/chat-entities';
 import { type ConversationListPreviewOwnerState } from './conversationList.types';
 
@@ -10,7 +10,7 @@ export interface ConversationListPreviewSlots {
 }
 
 export interface ConversationListPreviewSlotProps {
-  root?: SlotComponentPropsFromProps<'div', {}, ConversationListPreviewOwnerState>;
+  root?: SlotComponentProps<'div', {}, ConversationListPreviewOwnerState>;
 }
 
 export interface ConversationListPreviewProps extends React.HTMLAttributes<HTMLDivElement> {

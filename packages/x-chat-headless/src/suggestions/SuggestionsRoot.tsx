@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useMessageIds } from '../hooks/useMessage';
 import { useChatComposer } from '../hooks/useChatComposer';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
@@ -20,8 +20,8 @@ export interface SuggestionsRootSlots {
 }
 
 export interface SuggestionsRootSlotProps {
-  root?: SlotComponentPropsFromProps<'div', {}, SuggestionsRootOwnerState>;
-  item?: SlotComponentPropsFromProps<'button', {}, {}>;
+  root?: SlotComponentProps<'div', {}, SuggestionsRootOwnerState>;
+  item?: SlotComponentProps<'button', {}, {}>;
 }
 
 export interface SuggestionsRootProps extends Omit<

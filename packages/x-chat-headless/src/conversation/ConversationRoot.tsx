@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useConversations } from '../hooks/useConversation';
 import type { ChatConversation } from '../types/chat-entities';
@@ -15,7 +15,7 @@ export interface ConversationRootSlots {
 }
 
 export interface ConversationRootSlotProps {
-  root?: SlotComponentPropsFromProps<'div', {}, ConversationRootOwnerState>;
+  root?: SlotComponentProps<'div', {}, ConversationRootOwnerState>;
 }
 
 export interface ConversationRootProps extends Omit<

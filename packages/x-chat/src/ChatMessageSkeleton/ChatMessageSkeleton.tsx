@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { keyframes, SxProps, Theme } from '@mui/system';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatMessageSkeletonUtilityClasses,
@@ -60,8 +60,8 @@ export interface ChatMessageSkeletonSlots {
 }
 
 export interface ChatMessageSkeletonSlotProps {
-  root?: SlotComponentPropsFromProps<'div', {}, {}>;
-  line?: SlotComponentPropsFromProps<'div', {}, {}>;
+  root?: SlotComponentProps<'div', {}, {}>;
+  line?: SlotComponentProps<'div', {}, {}>;
 }
 
 export interface ChatMessageSkeletonProps {

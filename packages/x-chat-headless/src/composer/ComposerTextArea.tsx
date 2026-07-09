@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useComposerContext } from './internals/ComposerContext';
@@ -13,7 +13,7 @@ export interface ComposerTextAreaSlots {
 }
 
 export interface ComposerTextAreaSlotProps {
-  input?: SlotComponentPropsFromProps<'textarea', {}, ComposerTextAreaOwnerState>;
+  input?: SlotComponentProps<'textarea', {}, ComposerTextAreaOwnerState>;
 }
 
 export interface ComposerTextAreaProps extends Omit<

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/utils/types';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import type { WithDataAttributes } from '@mui/utils/types';
+import type { SlotComponentProps, WithDataAttributes } from '@mui/utils/types';
 import {
   type ChatRootProps,
   type ChatFeatures,
@@ -75,10 +73,10 @@ interface ChatBoxLayoutSlots {
 }
 
 interface ChatBoxLayoutSlotProps {
-  root?: SlotComponentPropsFromProps<'div', { sx?: SxProps<Theme> }, {}>;
-  layout?: SlotComponentPropsFromProps<'div', { sx?: SxProps<Theme> }, {}>;
-  conversationsPane?: SlotComponentPropsFromProps<'div', { sx?: SxProps<Theme> }, {}>;
-  threadPane?: SlotComponentPropsFromProps<'div', { sx?: SxProps<Theme> }, {}>;
+  root?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
+  layout?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
+  conversationsPane?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
+  threadPane?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
 }
 
 /**

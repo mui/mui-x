@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useMessageContext } from './internals/MessageContext';
 import { type MessageAvatarOwnerState } from './message.types';
 
@@ -11,8 +11,8 @@ export interface MessageAvatarSlots {
 }
 
 export interface MessageAvatarSlotProps {
-  avatar?: SlotComponentPropsFromProps<'div', {}, MessageAvatarOwnerState>;
-  image?: SlotComponentPropsFromProps<'img', {}, MessageAvatarOwnerState>;
+  avatar?: SlotComponentProps<'div', {}, MessageAvatarOwnerState>;
+  image?: SlotComponentProps<'img', {}, MessageAvatarOwnerState>;
 }
 
 export interface MessageAvatarProps extends React.HTMLAttributes<HTMLDivElement> {

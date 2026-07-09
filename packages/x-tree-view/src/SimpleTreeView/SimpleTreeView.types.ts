@@ -1,6 +1,6 @@
 import type * as React from 'react';
 import type { Theme } from '@mui/material/styles';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import type { SxProps } from '@mui/system/styleFunctionSx';
 import type { SimpleTreeViewClasses } from './simpleTreeViewClasses';
 import type {
@@ -20,7 +20,7 @@ export interface SimpleTreeViewSlots extends TreeViewSlots {
 }
 
 export interface SimpleTreeViewSlotProps extends TreeViewSlotProps {
-  root?: SlotComponentPropsFromProps<'ul', {}, {}>;
+  root?: SlotComponentProps<'ul', {}, {}>;
 }
 
 export type SimpleTreeViewApiRef<Multiple extends boolean | undefined = any> = React.RefObject<

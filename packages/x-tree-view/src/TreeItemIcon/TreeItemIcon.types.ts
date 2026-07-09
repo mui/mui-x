@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import type { UseTreeItemStatus } from '../useTreeItem';
 
 export interface TreeItemIconSlots {
@@ -22,10 +22,10 @@ export interface TreeItemIconSlots {
 }
 
 export interface TreeItemIconSlotProps {
-  collapseIcon?: SlotComponentPropsFromProps<'svg', {}, {}>;
-  expandIcon?: SlotComponentPropsFromProps<'svg', {}, {}>;
-  endIcon?: SlotComponentPropsFromProps<'svg', {}, {}>;
-  icon?: SlotComponentPropsFromProps<'svg', {}, {}>;
+  collapseIcon?: SlotComponentProps<'svg', {}, {}>;
+  expandIcon?: SlotComponentProps<'svg', {}, {}>;
+  endIcon?: SlotComponentProps<'svg', {}, {}>;
+  icon?: SlotComponentProps<'svg', {}, {}>;
 }
 
 export interface TreeItemIconProps {

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useMessageIds } from '../hooks/useMessage';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
@@ -22,8 +22,8 @@ export interface UnreadMarkerSlots {
 }
 
 export interface UnreadMarkerSlotProps {
-  root?: SlotComponentPropsFromProps<'div', {}, UnreadMarkerOwnerState>;
-  label?: SlotComponentPropsFromProps<'div', {}, UnreadMarkerOwnerState>;
+  root?: SlotComponentProps<'div', {}, UnreadMarkerOwnerState>;
+  label?: SlotComponentProps<'div', {}, UnreadMarkerOwnerState>;
 }
 
 export interface UnreadMarkerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {

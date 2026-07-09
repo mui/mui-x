@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useChatStore } from '../hooks/useChatStore';
 import { useMessage, useMessageIds } from '../hooks/useMessage';
 import { useMessageAuthor } from '../hooks/useMessageAuthor';
@@ -69,9 +69,9 @@ export interface MessageGroupSlots {
 }
 
 export interface MessageGroupSlotProps {
-  group?: SlotComponentPropsFromProps<'div', {}, MessageGroupOwnerState>;
-  authorName?: SlotComponentPropsFromProps<'div', {}, MessageGroupOwnerState>;
-  groupTimestamp?: SlotComponentPropsFromProps<'span', {}, MessageGroupOwnerState>;
+  group?: SlotComponentProps<'div', {}, MessageGroupOwnerState>;
+  authorName?: SlotComponentProps<'div', {}, MessageGroupOwnerState>;
+  groupTimestamp?: SlotComponentProps<'span', {}, MessageGroupOwnerState>;
 }
 
 export interface MessageGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {

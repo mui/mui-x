@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import type { ChatConversation } from '../types/chat-entities';
 import { type ConversationListItemAvatarOwnerState } from './conversationList.types';
 
@@ -11,8 +11,8 @@ export interface ConversationListItemAvatarSlots {
 }
 
 export interface ConversationListItemAvatarSlotProps {
-  root?: SlotComponentPropsFromProps<'div', {}, ConversationListItemAvatarOwnerState>;
-  image?: SlotComponentPropsFromProps<'img', {}, ConversationListItemAvatarOwnerState>;
+  root?: SlotComponentProps<'div', {}, ConversationListItemAvatarOwnerState>;
+  image?: SlotComponentProps<'img', {}, ConversationListItemAvatarOwnerState>;
 }
 
 export interface ConversationListItemAvatarProps extends React.HTMLAttributes<HTMLDivElement> {

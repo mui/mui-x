@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useChatStore } from '../hooks/useChatStore';
 import { chatSelectors } from '../selectors';
 import { useComposerContext } from './internals/ComposerContext';
@@ -13,7 +13,7 @@ export interface ComposerAttachmentListSlots {
 }
 
 export interface ComposerAttachmentListSlotProps {
-  attachmentList?: SlotComponentPropsFromProps<'div', {}, ComposerAttachmentListOwnerState>;
+  attachmentList?: SlotComponentProps<'div', {}, ComposerAttachmentListOwnerState>;
 }
 
 export interface ComposerAttachmentListProps extends React.HTMLAttributes<HTMLDivElement> {

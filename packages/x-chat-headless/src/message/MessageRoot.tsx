@@ -3,7 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage } from '../hooks/useMessage';
 import { useMessageAuthor } from '../hooks/useMessageAuthor';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
@@ -24,7 +24,7 @@ export interface MessageRootSlots {
 }
 
 export interface MessageRootSlotProps {
-  root?: SlotComponentPropsFromProps<'div', {}, MessageRootOwnerState>;
+  root?: SlotComponentProps<'div', {}, MessageRootOwnerState>;
 }
 
 export interface MessageRootProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'> {

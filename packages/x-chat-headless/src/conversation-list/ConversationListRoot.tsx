@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useChatStore } from '../hooks/useChatStore';
 import { useConversations } from '../hooks/useConversation';
@@ -66,47 +66,35 @@ export interface ConversationListRootSlots {
 }
 
 export interface ConversationListRootSlotProps {
-  root?: SlotComponentPropsFromProps<'div', {}, ConversationListRootOwnerState>;
-  scroller?: SlotComponentPropsFromProps<'div', {}, ConversationListRootOwnerState>;
-  viewport?: SlotComponentPropsFromProps<'div', {}, ConversationListRootOwnerState>;
-  scrollbar?: SlotComponentPropsFromProps<'div', {}, ConversationListRootOwnerState>;
-  scrollbarThumb?: SlotComponentPropsFromProps<'div', {}, ConversationListRootOwnerState>;
-  item?: SlotComponentPropsFromProps<
-    typeof ConversationListItem,
-    {},
-    ConversationListItemOwnerState
-  >;
-  itemAvatar?: SlotComponentPropsFromProps<
+  root?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  scroller?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  viewport?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  scrollbar?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  scrollbarThumb?: SlotComponentProps<'div', {}, ConversationListRootOwnerState>;
+  item?: SlotComponentProps<typeof ConversationListItem, {}, ConversationListItemOwnerState>;
+  itemAvatar?: SlotComponentProps<
     typeof ConversationListItemAvatar,
     {},
     ConversationListItemOwnerState
   >;
-  itemContent?: SlotComponentPropsFromProps<
+  itemContent?: SlotComponentProps<
     typeof ConversationListItemContent,
     {},
     ConversationListItemOwnerState
   >;
-  title?: SlotComponentPropsFromProps<
-    typeof ConversationListTitle,
-    {},
-    ConversationListItemOwnerState
-  >;
-  preview?: SlotComponentPropsFromProps<
-    typeof ConversationListPreview,
-    {},
-    ConversationListItemOwnerState
-  >;
-  timestamp?: SlotComponentPropsFromProps<
+  title?: SlotComponentProps<typeof ConversationListTitle, {}, ConversationListItemOwnerState>;
+  preview?: SlotComponentProps<typeof ConversationListPreview, {}, ConversationListItemOwnerState>;
+  timestamp?: SlotComponentProps<
     typeof ConversationListTimestamp,
     {},
     ConversationListItemOwnerState
   >;
-  unreadBadge?: SlotComponentPropsFromProps<
+  unreadBadge?: SlotComponentProps<
     typeof ConversationListUnreadBadge,
     {},
     ConversationListItemOwnerState
   >;
-  itemActions?: SlotComponentPropsFromProps<
+  itemActions?: SlotComponentProps<
     typeof ConversationListItemActions,
     {},
     ConversationListItemOwnerState

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import type {
   ChatDynamicToolMessagePart,
   ChatToolInvocationState,
@@ -55,18 +55,18 @@ export interface ToolPartSlots {
 }
 
 export interface ToolPartSlotProps {
-  root?: SlotComponentPropsFromProps<'div', {}, ToolPartOwnerState>;
-  header?: SlotComponentPropsFromProps<'div', {}, ToolPartOwnerState>;
-  title?: SlotComponentPropsFromProps<'div', {}, ToolPartOwnerState>;
-  state?: SlotComponentPropsFromProps<'span', {}, ToolPartOwnerState>;
-  icon?: SlotComponentPropsFromProps<'span', {}, ToolPartOwnerState>;
-  section?: SlotComponentPropsFromProps<'div', {}, ToolPartSectionOwnerState>;
-  sectionSummary?: SlotComponentPropsFromProps<'strong', {}, ToolPartSectionOwnerState>;
-  sectionContent?: SlotComponentPropsFromProps<'pre', {}, ToolPartSectionOwnerState>;
-  error?: SlotComponentPropsFromProps<'div', {}, ToolPartOwnerState>;
-  actions?: SlotComponentPropsFromProps<'div', {}, ToolPartOwnerState>;
-  approveButton?: SlotComponentPropsFromProps<'button', {}, ToolPartOwnerState>;
-  denyButton?: SlotComponentPropsFromProps<'button', {}, ToolPartOwnerState>;
+  root?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
+  header?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
+  title?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
+  state?: SlotComponentProps<'span', {}, ToolPartOwnerState>;
+  icon?: SlotComponentProps<'span', {}, ToolPartOwnerState>;
+  section?: SlotComponentProps<'div', {}, ToolPartSectionOwnerState>;
+  sectionSummary?: SlotComponentProps<'strong', {}, ToolPartSectionOwnerState>;
+  sectionContent?: SlotComponentProps<'pre', {}, ToolPartSectionOwnerState>;
+  error?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
+  actions?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
+  approveButton?: SlotComponentProps<'button', {}, ToolPartOwnerState>;
+  denyButton?: SlotComponentProps<'button', {}, ToolPartOwnerState>;
 }
 
 export interface ToolPartProps extends ChatPartRendererProps<ToolPart> {

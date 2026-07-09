@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useIsHydrated } from '@mui/x-internals/useIsHydrated';
 import { useMessage, useMessageIds } from '../hooks/useMessage';
 import { type MessageListDateDividerOwnerState } from './messageList.types';
@@ -48,9 +48,9 @@ export interface MessageListDateDividerSlots {
 }
 
 export interface MessageListDateDividerSlotProps {
-  divider?: SlotComponentPropsFromProps<'div', {}, MessageListDateDividerOwnerState>;
-  line?: SlotComponentPropsFromProps<'div', {}, MessageListDateDividerOwnerState>;
-  label?: SlotComponentPropsFromProps<'div', {}, MessageListDateDividerOwnerState>;
+  divider?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
+  line?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
+  label?: SlotComponentProps<'div', {}, MessageListDateDividerOwnerState>;
 }
 
 export interface MessageListDateDividerProps extends Omit<

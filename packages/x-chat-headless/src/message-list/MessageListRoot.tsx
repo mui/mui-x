@@ -3,7 +3,6 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { SlotComponentProps } from '@mui/utils/types';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useChat } from '../hooks/useChat';
 import { useChatStore } from '../hooks/useChatStore';
 import { useMessageIds } from '../hooks/useMessage';
@@ -53,12 +52,12 @@ export interface MessageListRootSlots {
 }
 
 export interface MessageListRootSlotProps {
-  messageList?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
-  messageListScroller?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
-  messageListContent?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
-  messageListOverlay?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
-  messageListScrollbar?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
-  messageListScrollbarThumb?: SlotComponentPropsFromProps<'div', {}, MessageListRootOwnerState>;
+  messageList?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListScroller?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListContent?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListOverlay?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListScrollbar?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListScrollbarThumb?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
   messageListStatus?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
 

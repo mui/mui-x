@@ -1,5 +1,5 @@
 'use client';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import * as React from 'react';
 
 export interface TreeViewClasses {
@@ -44,9 +44,9 @@ export interface TreeViewSlots {
 }
 
 export interface TreeViewSlotProps {
-  collapseIcon?: SlotComponentPropsFromProps<'svg', {}, {}>;
-  expandIcon?: SlotComponentPropsFromProps<'svg', {}, {}>;
-  endIcon?: SlotComponentPropsFromProps<'svg', {}, {}>;
+  collapseIcon?: SlotComponentProps<'svg', {}, {}>;
+  expandIcon?: SlotComponentProps<'svg', {}, {}>;
+  endIcon?: SlotComponentProps<'svg', {}, {}>;
 }
 
 export interface TreeViewStyleContextValue {

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerHelperTextOwnerState } from './composer.types';
 
@@ -10,7 +10,7 @@ export interface ComposerHelperTextSlots {
 }
 
 export interface ComposerHelperTextSlotProps {
-  helperText?: SlotComponentPropsFromProps<'div', {}, ComposerHelperTextOwnerState>;
+  helperText?: SlotComponentProps<'div', {}, ComposerHelperTextOwnerState>;
 }
 
 export interface ComposerHelperTextProps extends React.HTMLAttributes<HTMLDivElement> {

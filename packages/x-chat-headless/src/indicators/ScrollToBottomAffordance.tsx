@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentProps } from '@mui/utils/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { mergeReactProps } from '../internals/mergeReactProps';
@@ -15,9 +15,9 @@ export interface ScrollToBottomAffordanceSlots {
 }
 
 export interface ScrollToBottomAffordanceSlotProps {
-  root?: SlotComponentPropsFromProps<'button', {}, ScrollToBottomAffordanceOwnerState>;
-  badge?: SlotComponentPropsFromProps<'span', {}, ScrollToBottomAffordanceOwnerState>;
-  icon?: SlotComponentPropsFromProps<'svg', {}, ScrollToBottomAffordanceOwnerState>;
+  root?: SlotComponentProps<'button', {}, ScrollToBottomAffordanceOwnerState>;
+  badge?: SlotComponentProps<'span', {}, ScrollToBottomAffordanceOwnerState>;
+  icon?: SlotComponentProps<'svg', {}, ScrollToBottomAffordanceOwnerState>;
 }
 
 export interface ScrollToBottomAffordanceProps extends Omit<
