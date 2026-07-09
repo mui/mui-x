@@ -61,6 +61,13 @@ Same changes as in `@mui/x-charts@9.9.0`, plus:
 
 #### `@mui/x-charts-premium@9.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
+#### Breaking changes
+
+The API of the `Unstable_ChartsGeoDataProviderPremium` got modified.
+Props `scale`, `rotation`, and `translation` are replaced by props `view` and `initialView`.
+Same behavior can be obtained with `view.zoomLevel`, `view.center`, and `view.translation`.
+See the [zoom view section](https://mui.com/x/react-charts/map/#control) for detailed information
+
 Same changes as in `@mui/x-charts-pro@9.9.0`, plus:
 
 - [charts-premium] Maps zoom support (#22709) @alexfauquette
@@ -95,7 +102,6 @@ Internal changes.
 ### Docs
 
 - [docs] Fix broken social preview image on shared docs links (#23055) @sai6855
-- [docs] Update Scheduler feedback banner for stable release (#23050) @rita-codes
 - [docs] Review and clean up react-chat docs demos & gallery; fix actions-bar layout (#22993) @hasdfa
 - [docs] Update the Pickers recommended date library bundle sizes (#23087) @LukasTy
 
