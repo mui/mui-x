@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { useSuggestionsContext } from './internals/SuggestionsContext';
 import { type SuggestionItemOwnerState } from './suggestions.types';

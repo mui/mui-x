@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useChat } from '../hooks/useChat';
 import { useMessageIds } from '../hooks/useMessage';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
