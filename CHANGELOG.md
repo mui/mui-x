@@ -51,6 +51,7 @@ Same changes as in `@mui/x-date-pickers@9.9.0`, plus:
 
 - [charts] Optimize and de-duplicate sampled axis-highlight band lookup (#23052) @JCQuintas
 - [charts] Unify tooltip item position getter and selector into a single selector API (#23041) @alexfauquette
+- [charts] Fix impossible condition in axis text angle warning (#23102) @sai6855
 
 #### `@mui/x-charts-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
