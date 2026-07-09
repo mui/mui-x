@@ -111,29 +111,6 @@ Internal changes.
 
 - [test] Fix flaky "should render only the pageSize" Data Grid virtualization test (#23090) @LukasTy
 - [test] Track `@mui/x-chat` bundle size via native expand (#23049) @Janpot
-- Bump @inquirer/prompts to 8.5.2 (#23063) @code-infra-renovate[bot]
-- Bump @mui/internal-docs-infra to ^0.12.1-canary.11 (#23106) @code-infra-renovate[bot]
-- Bump @react-spring/web to ^10.1.2 (#23064) @code-infra-renovate[bot]
-- Bump @types/luxon to ^3.7.2 (#23065) @code-infra-renovate[bot]
-- Bump GitHub Actions (#23067) @code-infra-renovate[bot]
-- Bump MUI public packages (#23047) @code-infra-renovate[bot]
-- Bump Tanstack query to ^5.101.2 (#23083) @code-infra-renovate[bot]
-- Bump Vite & Vitest (#23072) @code-infra-renovate[bot]
-- Bump code-infra:patchUpdates (#23066) @code-infra-renovate[bot]
-- Bump date-fns to ^4.4.0 (#23074) @code-infra-renovate[bot]
-- Bump motion to ^12.42.2 (#23076) @code-infra-renovate[bot]
-- Bump nextjs monorepo to 16.2.10 (#23068) @code-infra-renovate[bot]
-- Bump node (#23077) @code-infra-renovate[bot]
-- Bump picomatch to 4.0.5 (#23069) @code-infra-renovate[bot]
-- Bump playwright monorepo (#23078) @code-infra-renovate[bot]
-- Bump pnpm to 11.9.0 (#23079) @code-infra-renovate[bot]
-- Bump prettier to 3.9.4 (#23070) @code-infra-renovate[bot]
-- Bump react monorepo (#23071) @code-infra-renovate[bot]
-- Bump react-hook-form to ^7.80.0 (#23080) @code-infra-renovate[bot]
-- Bump react-router to ^7.18.1 (#23081) @code-infra-renovate[bot]
-- Bump stylelint to 17.14.0 (#23082) @code-infra-renovate[bot]
-- Bump vale-cli/vale to 3.15.1 (#23084) @code-infra-renovate[bot]
-- Bump MUI infra packages (#23107) @code-infra-renovate[bot]
 
 ## 9.8.0
 
