@@ -2,8 +2,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { styled, Theme } from '@mui/material/styles';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';

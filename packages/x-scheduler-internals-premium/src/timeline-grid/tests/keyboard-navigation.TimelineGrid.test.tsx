@@ -8,6 +8,7 @@ import type {
   TimelineGridColumnType,
   TimelineGridCellCoordinates,
 } from '@mui/x-scheduler-internals-premium/models';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
@@ -15,7 +16,6 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   ResourceBuilder,
   SchedulerStoreRunner,
-  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 import { useTimelineGridRootContext } from '../root/TimelineGridRootContext';
 

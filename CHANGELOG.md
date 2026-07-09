@@ -1,5 +1,135 @@
 # Changelog
 
+## 9.8.0
+
+_Jul 2, 2026_
+
+We'd like to extend a big thank you to the 18 contributors who made this release possible. Here are some highlights ✨:
+
+- 🗺️ New [`MapImagePlot`](https://mui.com/x/react-charts/map/) for rendering raster base maps, with `onItemClick` support on map shapes (Premium)
+- 📊 New [`usePolarGeometry`](https://mui.com/x/react-charts/hooks/use-polar-geometry/) hook to build custom radial overlays
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @aromanio, @greymoth-jp, @mustafajw07, @timbuckley, @voidmatcha
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @joserodolfofreitas, @LukasTy, @mapache-salvaje, @michelengelen, @rita-codes, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.8.0`
+
+- [DataGrid] Prevent cell editing from resurrecting a deleted row (#22958) @Anexus5919
+- [DataGrid] Avoid reading `type` of `undefined` in `gridRowUtils` (#21808) @timbuckley
+- [DataGrid] Improved get started tutorial (#22911) @joserodolfofreitas
+- [l10n] Improve Japanese (ja-JP) locale (#23001) @greymoth-jp
+
+#### `@mui/x-data-grid-pro@9.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.8.0`.
+
+#### `@mui/x-data-grid-premium@9.8.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.8.0`, plus:
+
+- [DataGridPremium] Escape `singleSelect` values in Excel export with `escapeFormulas` enabled (#22851) @Anexus5919
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.8.0`
+
+- [pickers] Fix localized digit crash (#22995) @alexfauquette
+- [pickers] Flag the first and last visible day cell across year boundaries (#22981) @Anexus5919
+- [pickers] Use calendar day tokens in `AdapterMomentHijri` and `AdapterMomentJalaali` formats (#22974) @Anexus5919
+- [pickers] Use the Hijri day token in `AdapterMomentHijri` `normalDateWithWeekday` (#22972) @Anexus5919
+- [l10n] Improve Romanian (ro-RO) locale (#22969) @aromanio
+
+#### `@mui/x-date-pickers-pro@9.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.8.0`, plus:
+
+- [DateRangeCalendar] Fix auto month-switch across the year boundary (#22987) @Anexus5919
+
+### Charts
+
+#### `@mui/x-charts@9.8.0`
+
+- [charts] Decouple `d3-geo` from the universal tooltip (#23011) @sai6855
+- [charts] Deduplicate `getGroupingConfig` (#22889) @sai6855
+- [charts] Expose `usePolarGeometry` hook for radial overlays (#22892) @mustafajw07
+
+#### `@mui/x-charts-pro@9.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.8.0`.
+
+#### `@mui/x-charts-premium@9.8.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.8.0`, plus:
+
+- [charts-premium] Add `onItemClick` support for the Map shapes (#22876) @sai6855
+- [charts-premium] Replace `dataIndex` with `name` in map identifier (#22891) @sai6855
+- [charts-premium] Share helper function (#23030) @alexfauquette
+- [charts-premium] Extract shared WebGL utilities across bar/scatter/heatmap renderers (#22466) @sai6855
+- [charts-premium] Add `MapImagePlot` for raster base maps (#22977) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@9.8.0`
+
+- [TreeView] Fix extra selection event when clicking a collapsed parent item (#22249) @michelengelen
+- [TreeView] Enforce top-level type imports (#23034) @Janpot
+
+#### `@mui/x-tree-view-pro@9.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.8.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.4`
+
+- [scheduler] Enforce top-level type imports (#22931) @Janpot
+- [scheduler] Keep the occurrence date when editing only one recurring event (#23007) @Anexus5919
+- [scheduler] Track bundle size of scheduler packages (#22682) @flaviendelangle
+- [scheduler] Add `viewConfig` prop to limit displayed hours in the day and week views (#22929) @flaviendelangle
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.4`, plus:
+
+- [scheduler] Collapsible resources in the timeline (#22920) @rita-codes
+
+### Codemod
+
+#### `@mui/x-codemod@9.8.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add recipe for conditional master-detail panels (#22971) @michelengelen
+- [docs] Add recipe for describing active filters in the toolbar (#22970) @michelengelen
+- [docs] Add recipe for triggering clipboard copy from a button (#22967) @michelengelen
+- [docs] Clarify that `fieldRef.current.focusField()` is the canonical way to focus a field (#22937) @michelengelen
+- [docs][scheduler] Another copyediting pass across the Scheduler docs (#22619) @mapache-salvaje
+- [docs][charts] Add map example for arbitrary GeoJSON shapes (#22976) @JCQuintas
+- [docs][charts] Double point count in `ScatterAsyncRenderer` demo (#22906) @JCQuintas
+
+### Core
+
+- [code-infra] Fix tracking branch bug in release script (#22956) @michelengelen
+- [code-infra] Remove mark-duplicate workflow (#22994) @cherniavskii
+- [code-infra] Revert `nanoid@3.3.15` `minimumReleaseAge` exemption (#22953) @LukasTy
+
+### Miscellaneous
+
+- [internals] Fix `ERR_UNSUPPORTED_DIR_IMPORT` for `core-js-pure` in Node ESM (#22985) @michelengelen
+- [internals] Harden `useDisposable` React internals read with safeReact (#22986) @rita-codes
+- [internals] Replace core-js `DisposableStack` ponyfill with a minimal fallback (#23002) @sai6855
+- [test] Assert the edited `dateTime` cell value in the e2e edit test (#22982) @voidmatcha
+- [virtualizer] Remeasure scrollbars when layout changes (#22914) @arminmeh
+
 ## 9.7.0
 
 _Jun 25, 2026_
@@ -177,7 +307,6 @@ Same changes as in `@mui/x-charts-pro@9.6.0`, plus:
 - [charts-premium] Regenerate `ScatterPlotPremium` `propTypes` (#22829) @rita-codes
 - [charts-premium] Support maps tooltip positioned on items (#22648) @alexfauquette
 - [docs] Show how to export maps (#22837) @alexfauquette
-
 
 ### Tree View
 

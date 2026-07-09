@@ -2,7 +2,7 @@ import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { processDate } from '../process-date';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
-import { SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
+import type { SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
 
 describe('innerGetEventOccurrencesGroupedByDay', () => {
   const day0Str = '2024-01-10T00:00:00Z';

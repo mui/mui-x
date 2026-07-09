@@ -1,4 +1,6 @@
 import * as React from 'react';
+import AttachIcon from '@mui/icons-material/AttachFile';
+import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
 import {
   ChatComposer,
@@ -24,34 +26,6 @@ import {
   TextControl,
 } from 'docs/src/modules/components/chat-playground/controls';
 import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
-
-function SendIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="1em"
-      height="1em"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M2 21l21-9L2 3v7l15 2-15 2z" />
-    </svg>
-  );
-}
-
-function AttachIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="1em"
-      height="1em"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M16.5 6v11.5a4 4 0 1 1-8 0V5a2.5 2.5 0 0 1 5 0v10.5a1 1 0 0 1-2 0V6H10v9.5a2.5 2.5 0 1 0 5 0V5a4 4 0 0 0-8 0v12.5a5.5 5.5 0 1 0 11 0V6h-1.5z" />
-    </svg>
-  );
-}
 
 const DEFAULTS = {
   variant: 'default',
