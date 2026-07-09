@@ -218,7 +218,9 @@ async function generateChangelog({
       release,
     })
   )
-    .filter((commit) => commit.author?.login !== 'renovate[bot]')
+    .filter((commit) =>
+      ['renovate[bot]', 'code-infra-renovate[bot]'].includes(commit.author?.login),
+    )
     .map((commit) => ({
       ...commit,
       commit: {
