@@ -3,10 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
-import type {
-  DateOrTimeViewWithMeridiem,
-  PickerRangeValue,
-} from '@mui/x-date-pickers/internals';
+import type { DateOrTimeViewWithMeridiem, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   usePicker,
   PickersModalDialog,
