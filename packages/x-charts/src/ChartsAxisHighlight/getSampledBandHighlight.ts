@@ -11,7 +11,7 @@ function findDataIndex(data: readonly unknown[], value: unknown): number {
 interface SampledBandHighlightParams {
   scale: D3OrdinalScale;
   /** The highlighted value. */
-  value: number | Date;
+  value: string | number | Date;
   /** The data index of the highlighted value, when known (O(1) lookup). */
   dataIndex: number | undefined;
   /** The axis data. */
