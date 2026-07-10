@@ -1,5 +1,12 @@
 import type { D3OrdinalScale } from '../models/axis';
-import { findDataIndex } from './findDataIndex';
+
+function findDataIndex(data: readonly unknown[], value: unknown): number {
+  if (value instanceof Date) {
+    const time = value.getTime();
+    return data.findIndex((item) => item instanceof Date && item.getTime() === time);
+  }
+  return data.indexOf(value);
+}
 
 interface SampledBandHighlightParams {
   scale: D3OrdinalScale;
