@@ -33,19 +33,28 @@ const DEP_3: SchedulerDependency = {
   type: 'FinishToStart',
 };
 
+const DEP_4: SchedulerDependency = {
+  id: 'dep-4',
+  source: 'unknown-y',
+  target: 'event-b',
+  type: 'FinishToStart',
+};
+
 // `DEP_2` and `DEP_3` reference a recurring/unknown event on purpose (to exercise the
 // selector's filtering below), which the scheduling plugin flags with a dev warning.
+// `DEP_4` does the same but on the `source` side, unlike `DEP_2`/`DEP_3`.
 const getState = () => {
   let state!: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
   expect(() => {
     state = getEventTimelinePremiumStateFromParameters({
       resources: TEST_RESOURCES,
       events: [eventA, eventB, eventR],
-      dependencies: [DEP_1, DEP_2, DEP_3],
+      dependencies: [DEP_1, DEP_2, DEP_3, DEP_4],
     });
   }).toWarnDev([
     'MUI X Scheduler: The dependency "dep-2" references the recurring event "event-r".',
     'MUI X Scheduler: The dependency "dep-3" references the unknown event "unknown-x".',
+    'MUI X Scheduler: The dependency "dep-4" references the unknown event "unknown-y".',
   ]);
   return state;
 };
@@ -89,5 +98,33 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     const second = eventTimelinePremiumDependencySelectors.activeModelListBySource(state);
 
     expect(first).to.equal(second);
+  });
+
+  it('should keep only the last dependency when two of them share the same id', () => {
+    const firstDependency: SchedulerDependency = {
+      id: 'dup-1',
+      source: 'event-a',
+      target: 'event-b',
+      type: 'FinishToStart',
+    };
+    const lastDependency: SchedulerDependency = {
+      id: 'dup-1',
+      source: 'event-a',
+      target: 'event-b',
+      type: 'StartToStart',
+    };
+
+    let state!: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    expect(() => {
+      state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [firstDependency, lastDependency],
+      });
+    }).toWarnDev(['MUI X Scheduler: Two or more dependencies share the same id "dup-1".']);
+
+    expect(eventTimelinePremiumDependencySelectors.activeModelList(state)).to.deep.equal([
+      lastDependency,
+    ]);
   });
 });

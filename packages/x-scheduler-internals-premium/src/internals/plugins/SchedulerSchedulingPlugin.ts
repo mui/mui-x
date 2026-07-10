@@ -57,6 +57,10 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Removes the dependencies referencing deleted events, in the same update.
+   *
+   * With a `dataSource`, event deletions are persisted asynchronously after this hook has
+   * already emitted `onDependenciesChange`. If that persistence fails, the event survives but
+   * its dependencies were already removed — a known v1 limitation, there is no rollback.
    */
   public handleEventsUpdate = (parameters: UpdateEventsParameters) => {
     const { deleted } = parameters;
@@ -92,7 +96,7 @@ export class SchedulerSchedulingPlugin<
       }
     }
 
-    const dependency: SchedulerDependency = { id: generateId('dependency'), ...properties };
+    const dependency: SchedulerDependency = { ...properties, id: generateId('dependency') };
     this.updateDependencies([...this.store.state.dependencyModelList, dependency]);
     return { status: 'added', id: dependency.id };
   };

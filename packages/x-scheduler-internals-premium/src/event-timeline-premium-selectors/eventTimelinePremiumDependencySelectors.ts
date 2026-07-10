@@ -27,10 +27,12 @@ function groupByEventId(
 }
 
 const activeModelListSelector = createSelectorMemoized(
-  (state: State) => state.dependencyModelList,
+  (state: State) => state.dependencyModelLookup,
   (state: State) => state.processedEventLookup,
-  (dependencies, processedEventLookup) =>
-    dependencies.filter((dependency) =>
+  (dependencyModelLookup, processedEventLookup) =>
+    // `dependencyModelLookup` already deduped duplicate ids (last wins) while
+    // preserving insertion order, so no separate dedup pass is needed here.
+    Array.from(dependencyModelLookup.values()).filter((dependency) =>
       [dependency.source, dependency.target].every((eventId) => {
         const processedEvent = processedEventLookup.get(eventId);
         return processedEvent != null && processedEvent.dataTimezone.rrule == null;

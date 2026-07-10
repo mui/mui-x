@@ -26,7 +26,7 @@ export function buildDependenciesState(
           if (seen.has(dependency.id)) {
             warnOnce([
               `MUI X Scheduler: Two or more dependencies share the same id "${String(dependency.id)}".`,
-              'Only the last one is reachable by id, the other ones are ignored.',
+              'Dependency ids must be unique. Only the last dependency with a given id is used, the others are ignored.',
             ]);
           }
           seen.add(dependency.id);
