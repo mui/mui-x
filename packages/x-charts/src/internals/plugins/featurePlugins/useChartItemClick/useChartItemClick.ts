@@ -5,7 +5,7 @@ import type { UseChartItemClickSignature } from './useChartItemClick.types';
 import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import { getChartPoint } from '../../../getChartPoint';
 
-export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
+export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = ({
   params,
   store,
   instance,
