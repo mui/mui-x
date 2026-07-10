@@ -21,7 +21,7 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.2.0
-  '@mui/internal-test-utils': 2.0.18-canary.25
+  '@mui/internal-test-utils': 2.0.18-canary.30
   '@mui/internal-core-docs': 9.1.2-canary.2
   '@mui/material': 9.2.0
   '@mui/stylis-plugin-rtl': 9.1.1
@@ -29,7 +29,7 @@ catalog:
   '@mui/types': 9.1.1
   '@mui/utils': ^9.2.0
   '@mui/x-internal-exceljs-fork': 5.0.0
-  '@playwright/test': 1.60.0
+  '@playwright/test': 1.61.1
   '@react-spring/web': ^10.1.2
   '@types/chance': ^1.1.8
   '@types/luxon': ^3.7.2
@@ -67,7 +67,7 @@ catalog:
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.2
   motion: ^12.42.2
-  playwright: 1.60.0
+  playwright: 1.61.1
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
   react: 19.2.7
