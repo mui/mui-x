@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/bdd286eb27de9a0b2494f66b1b5b4712b28e2b1b/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/5a12855e473909291f8782c324f2c48983054337/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -205,7 +205,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
-    resource_class: large.gen2
+    resource_class: xlarge.gen2
     steps:
       - checkout
       - install-deps
@@ -218,8 +218,6 @@ jobs:
       - run:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
-          environment:
-            NODE_OPTIONS: --max-old-space-size=5120
   test_e2e:
     <<: *default-job
     executor:
