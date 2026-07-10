@@ -138,7 +138,7 @@ const tkTMGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Artýan tertip',
   columnMenuSortDesc: 'Kemelýän tertip',
   // columnMenuManagePivot: 'Manage pivot',
-  // columnMenuManageCharts: 'Grafikleri sazla',
+  columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} aktiw filtr`,
@@ -195,17 +195,15 @@ const tkTMGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Sahypadaky setir sany:',
-  paginationDisplayedRows: ({
-    from,
-    to,
-    count,
-    estimated
-  }) => {
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
     const unknownRowCount = count == null || count === -1;
     if (!estimated) {
       return `${formatNumber(from)}–${formatNumber(to)} / ${!unknownRowCount ? formatNumber(count) : `jemi > ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `${formatNumber(estimated)} töwerek` : `jemi > ${formatNumber(to)}`;
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `${formatNumber(estimated)} töwerek`
+        : `jemi > ${formatNumber(to)}`;
     return `${formatNumber(from)}–${formatNumber(to)} / ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
