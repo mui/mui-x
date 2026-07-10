@@ -25,8 +25,8 @@
     "unstyled"
   ],
   "scripts": {
-    "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "typescript": "tsgo -p tsconfig.json",
+    "build": "code-infra build --tsgo",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {

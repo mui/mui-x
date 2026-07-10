@@ -205,7 +205,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
-    resource_class: large.gen2
+    resource_class: xlarge.gen2
     steps:
       - checkout
       - install-deps
@@ -218,8 +218,6 @@ jobs:
       - run:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
-          environment:
-            NODE_OPTIONS: --max-old-space-size=5120
   test_e2e:
     <<: *default-job
     executor:
