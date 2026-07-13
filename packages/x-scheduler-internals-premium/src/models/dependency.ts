@@ -26,7 +26,6 @@ export interface SchedulerDependency {
   target: SchedulerEventId;
   /**
    * The type of the dependency.
-   * No type is enforced yet; the auto-scheduling engine will implement `"FinishToStart"` first.
    */
   type: SchedulerDependencyType;
 }
