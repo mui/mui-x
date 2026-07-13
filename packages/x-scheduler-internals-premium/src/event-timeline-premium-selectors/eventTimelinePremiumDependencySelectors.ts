@@ -6,6 +6,7 @@ import type {
   SchedulerDependencyId,
   SchedulerDependenciesState,
 } from '../models';
+import { classifyDependencyEvent } from '../internals/utils/dependency-utils';
 
 type State = SchedulerState & SchedulerDependenciesState;
 
@@ -33,10 +34,9 @@ const activeModelListSelector = createSelectorMemoized(
     // `dependencyModelLookup` already deduped duplicate ids (last wins) while
     // preserving insertion order, so no separate dedup pass is needed here.
     Array.from(dependencyModelLookup.values()).filter((dependency) =>
-      [dependency.source, dependency.target].every((eventId) => {
-        const processedEvent = processedEventLookup.get(eventId);
-        return processedEvent != null && processedEvent.dataTimezone.rrule == null;
-      }),
+      [dependency.source, dependency.target].every(
+        (eventId) => classifyDependencyEvent(processedEventLookup, eventId) === 'ok',
+      ),
     ),
 );
 

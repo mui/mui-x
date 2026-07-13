@@ -1,7 +1,7 @@
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
+import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependency, SchedulerDependenciesState } from '../../models';
-
-const EMPTY_DEPENDENCY_LIST: readonly SchedulerDependency[] = [];
 
 // `updateStateFromParameters` runs on every render, so an unchanged `dependencies`
 // parameter must map to the same state slice instance.
@@ -11,7 +11,7 @@ const dependenciesStateCache = new WeakMap<
 >();
 
 export function buildDependenciesState(
-  dependencies: readonly SchedulerDependency[] = EMPTY_DEPENDENCY_LIST,
+  dependencies: readonly SchedulerDependency[] = EMPTY_ARRAY,
 ): SchedulerDependenciesState {
   let state = dependenciesStateCache.get(dependencies);
   if (state == null) {
@@ -38,4 +38,22 @@ export function buildDependenciesState(
     dependenciesStateCache.set(dependencies, state);
   }
   return state;
+}
+
+/**
+ * Classifies an event id for use as a dependency endpoint: known and non-recurring
+ * (`'ok'`), missing from the lookup (`'unknownEvent'`), or recurring (`'recurringEvent'`).
+ */
+export function classifyDependencyEvent(
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
+  eventId: SchedulerEventId,
+): 'ok' | 'unknownEvent' | 'recurringEvent' {
+  const processedEvent = processedEventLookup.get(eventId);
+  if (processedEvent == null) {
+    return 'unknownEvent';
+  }
+  if (processedEvent.dataTimezone.rrule != null) {
+    return 'recurringEvent';
+  }
+  return 'ok';
 }

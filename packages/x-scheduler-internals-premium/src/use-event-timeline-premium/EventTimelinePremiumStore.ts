@@ -237,6 +237,8 @@ export class EventTimelinePremiumStore<
 
   /**
    * Adds a dependency between two events.
+   * Rejects dependencies referencing an unknown or recurring event — see the returned
+   * `SchedulerAddDependencyResult`.
    */
   public addDependency = (
     properties: SchedulerDependencyCreationProperties,

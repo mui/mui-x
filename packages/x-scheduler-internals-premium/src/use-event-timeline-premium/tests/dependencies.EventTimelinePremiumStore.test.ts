@@ -1,6 +1,8 @@
 import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const TEST_RESOURCES = [ResourceBuilder.new().id('r1').title('Resource 1').build()];
@@ -18,6 +20,13 @@ const DEP_AB: SchedulerDependency = {
 const DEFAULT_PARAMS = { events: [eventA, eventB], resources: TEST_RESOURCES };
 
 const noopPersistEvents = async () => ({ success: true });
+
+const flushEffect = async () => {
+  await Promise.resolve();
+  await Promise.resolve();
+};
+
+const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 
 describe('Dependencies - EventTimelinePremiumStore', () => {
   describe('prop: dependencies', () => {
@@ -43,6 +52,17 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] }, adapter);
 
       expect(store.state.dependencyModelList).to.deep.equal([DEP_AB]);
+    });
+
+    it('should reset the dependencies state to an empty collection when the parameter is removed', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
+
+      expect(store.state.dependencyModelList).to.deep.equal([]);
+      expect(store.state.dependencyModelLookup.size).to.equal(0);
     });
 
     it('should keep the same lookup instance when the parameter reference is unchanged', () => {
@@ -89,9 +109,43 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         target: 'event-a',
         type: 'FinishToStart',
       });
-      expect(newDependencies[1].id).to.equal(result.status === 'added' ? result.id : undefined);
       // controlled prop: state is not written directly
       expect(store.state.dependencyModelList).to.deep.equal([DEP_AB]);
+    });
+
+    it('should generate a distinct id for each added dependency and echo it back to the caller', () => {
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      const firstResult = store.addDependency({
+        source: 'event-b',
+        target: 'event-a',
+        type: 'FinishToStart',
+      });
+      const secondResult = store.addDependency({
+        source: 'event-a',
+        target: 'event-b',
+        type: 'FinishToStart',
+      });
+
+      if (firstResult.status !== 'added' || secondResult.status !== 'added') {
+        throw new Error('Expected both dependencies to be added.');
+      }
+
+      expect(firstResult.id).not.to.equal(undefined);
+      expect(secondResult.id).not.to.equal(undefined);
+      expect(firstResult.id).not.to.equal(secondResult.id);
+
+      // controlled prop: each call re-reads the same original `[DEP_AB]` list, so both
+      // emissions append the new dependency at index 1.
+      const firstEmitted = onDependenciesChange.firstCall.firstArg;
+      expect(firstEmitted[1].id).to.equal(firstResult.id);
+
+      const secondEmitted = onDependenciesChange.secondCall.firstArg;
+      expect(secondEmitted[1].id).to.equal(secondResult.id);
     });
 
     it('should reject a dependency referencing a recurring event', () => {
@@ -125,6 +179,29 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
 
       expect(result).to.deep.equal({ status: 'rejected', reason: 'unknownEvent', eventId: 'nope' });
+    });
+
+    it('should reject a dependency referencing an event not yet loaded, even with a dataSource', () => {
+      const dataSource = {
+        getEvents: spy(async () => []),
+        persistEvents: noopPersistEvents,
+      };
+      const store = new EventTimelinePremiumStore(
+        { events: [], resources: TEST_RESOURCES, dataSource },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-a',
+        target: 'event-b',
+        type: 'FinishToStart',
+      });
+
+      expect(result).to.deep.equal({
+        status: 'rejected',
+        reason: 'unknownEvent',
+        eventId: 'event-a',
+      });
     });
   });
 
@@ -204,6 +281,19 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       expect(onDependenciesChange.called).to.equal(false);
     });
+
+    it('should remove a dependency when the deleted event is only referenced as its target', () => {
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      store.deleteEvent('event-b');
+
+      expect(onDependenciesChange.calledOnce).to.equal(true);
+      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([]);
+    });
   });
 
   describe('dev warnings', () => {
@@ -243,6 +333,63 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
           adapter,
         );
       }).not.toWarnDev();
+    });
+
+    it('should still warn about recurring events once loaded, even when a dataSource is provided', async () => {
+      // With a `dataSource`, `events` is never read directly (only the fetch result
+      // populates `processedEventLookup`), so the recurring event must actually be
+      // loaded before its dependency can be classified as `recurringEvent` rather
+      // than the suppressed `unknownEvent`.
+      vi.useFakeTimers();
+      try {
+        const dataSource = {
+          getEvents: spy(async () => [eventA, recurringEvent]),
+          persistEvents: noopPersistEvents,
+        };
+        const params = { events: [], resources: TEST_RESOURCES, dataSource };
+        const store = new EventTimelinePremiumStore(params, adapter);
+        store.updateStateFromParameters(params, adapter);
+
+        await flushEffect();
+        await flushDebounce();
+
+        expect(() => {
+          store.updateStateFromParameters(
+            {
+              ...params,
+              dependencies: [
+                { id: 'dep-r', source: 'event-a', target: 'event-r', type: 'FinishToStart' },
+              ],
+            },
+            adapter,
+          );
+        }).toWarnDev([
+          'MUI X Scheduler: The dependency "dep-r" references the recurring event "event-r".',
+        ]);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('should re-validate the dependencies when the parameter changes after mount', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+
+      expect(() => {
+        store.updateStateFromParameters(
+          {
+            ...DEFAULT_PARAMS,
+            dependencies: [
+              { id: 'dep-x', source: 'event-a', target: 'nope', type: 'FinishToStart' },
+            ],
+          },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-x" references the unknown event "nope".',
+      ]);
     });
 
     it('should warn when a dependency from props references a recurring event', () => {

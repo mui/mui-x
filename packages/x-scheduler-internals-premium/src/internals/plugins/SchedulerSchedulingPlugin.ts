@@ -17,10 +17,11 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
 } from '../../models';
+import { classifyDependencyEvent } from '../utils/dependency-utils';
 
 /**
  * Plugin that provides event-scheduling support (dependencies).
- * Composed by the premium stores and injected into `SchedulerStore` through
+ * Composed by the timeline premium store and injected into `SchedulerStore` through
  * `SchedulerSchedulingPluginInterface`.
  */
 export class SchedulerSchedulingPlugin<
@@ -87,12 +88,9 @@ export class SchedulerSchedulingPlugin<
   ): SchedulerAddDependencyResult => {
     const { processedEventLookup } = this.store.state;
     for (const eventId of [properties.source, properties.target]) {
-      const processedEvent = processedEventLookup.get(eventId);
-      if (processedEvent == null) {
-        return { status: 'rejected', reason: 'unknownEvent', eventId };
-      }
-      if (processedEvent.dataTimezone.rrule != null) {
-        return { status: 'rejected', reason: 'recurringEvent', eventId };
+      const status = classifyDependencyEvent(processedEventLookup, eventId);
+      if (status !== 'ok') {
+        return { status: 'rejected', reason: status, eventId };
       }
     }
 
@@ -119,15 +117,15 @@ export class SchedulerSchedulingPlugin<
 
     for (const dependency of dependencyModelList) {
       for (const eventId of [dependency.source, dependency.target]) {
-        const processedEvent = processedEventLookup.get(eventId);
-        if (processedEvent == null) {
+        const status = classifyDependencyEvent(processedEventLookup, eventId);
+        if (status === 'unknownEvent') {
           if (!hasDataSource) {
             warnOnce([
               `MUI X Scheduler: The dependency "${String(dependency.id)}" references the unknown event "${String(eventId)}".`,
               'It is kept in the data but ignored by the timeline.',
             ]);
           }
-        } else if (processedEvent.dataTimezone.rrule != null) {
+        } else if (status === 'recurringEvent') {
           warnOnce([
             `MUI X Scheduler: The dependency "${String(dependency.id)}" references the recurring event "${String(eventId)}".`,
             'Dependencies on recurring events are not supported, so it is ignored by the timeline.',
