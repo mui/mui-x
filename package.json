@@ -94,7 +94,7 @@
     "@playwright/test": "catalog:",
     "@types/babel__core": "7.20.5",
     "@types/babel__traverse": "7.28.0",
-    "@types/node": "22.20.0",
+    "@types/node": "22.20.1",
     "@types/picomatch": "4.0.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
