@@ -1,4 +1,3 @@
-
 type Ref<T = HTMLElement> = React.RefCallback<T | null> | React.RefObject<T | null> | null;
 
 type CommonProps<T = HTMLElement> = React.DOMAttributes<T> & {
@@ -159,9 +158,7 @@ export type CheckboxProps = CommonProps & {
   size?: 'small' | 'medium';
   density?: 'standard' | 'compact';
   slotProps?: {
-    htmlInput?: 
-      React.InputHTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> }
-    ;
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
   };
   style?: React.CSSProperties;
   tabIndex?: number;
