@@ -2,7 +2,7 @@ import * as React from 'react';
 import { benchmark } from '@mui/internal-benchmark';
 import { HeatmapPremium } from '@mui/x-charts-premium/HeatmapPremium';
 import { HeatmapValueType } from '@mui/x-charts-pro';
-import { benchWebGLInteraction } from '../utils';
+import { createBenchWebGLInteraction } from '../utils';
 
 const dataLength = 100;
 const xData = Array.from({ length: dataLength }).map((_, i) => `${i + 1}`);
@@ -24,5 +24,5 @@ benchmark(
       renderer="webgl"
     />
   ),
-  benchWebGLInteraction,
+  createBenchWebGLInteraction(),
 );

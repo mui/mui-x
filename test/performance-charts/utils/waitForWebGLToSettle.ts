@@ -14,6 +14,12 @@
  * lands and others don't, counts diverge. So we wait a deterministic minimum
  * window on every iteration (long enough for those effects to flush) and only
  * poll past that for the slow-draw case.
+ *
+ * Polling reads pixels back, and `readPixels` forces SwiftShader to
+ * synchronously rasterize everything drawn so far — hundreds of ms to seconds
+ * per call on big scenes. Callers that don't need the canvas-content check
+ * (iterations after the first draw is verified) pass `pollForContent: false`
+ * to get just the fixed minimum window without any pixel reads.
  */
 const MIN_WAIT_MS = 300;
 const MAX_WAIT_MS = 2000;
@@ -48,13 +54,13 @@ function canvasHasContent(): boolean {
   return false;
 }
 
-export const waitForWebGLToSettle = async () => {
+export const waitForWebGLToSettle = async ({ pollForContent = true } = {}) => {
   const start = performance.now();
   const minDeadline = start + MIN_WAIT_MS;
-  const maxDeadline = start + MAX_WAIT_MS;
+  const maxDeadline = start + (pollForContent ? MAX_WAIT_MS : MIN_WAIT_MS);
   while (performance.now() < maxDeadline) {
     const now = performance.now();
-    if (now >= minDeadline && canvasHasContent()) {
+    if (pollForContent && now >= minDeadline && canvasHasContent()) {
       return;
     }
     // eslint-disable-next-line no-await-in-loop -- polling is inherently sequential
