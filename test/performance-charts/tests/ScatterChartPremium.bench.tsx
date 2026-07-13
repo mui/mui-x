@@ -1,22 +1,19 @@
 import * as React from 'react';
 import { benchmark } from '@mui/internal-benchmark';
 import { ScatterChartPremium } from '@mui/x-charts-premium/ScatterChartPremium';
-import { createBenchWebGLInteraction } from '../utils';
+import { benchWebGLInteraction } from '../utils';
 
-const dataLength = 50_000;
+// Big enough to exercise the WebGL renderer's large-dataset path, small enough
+// to stay clear of the harness's 120s test timeout: point processing through
+// SwiftShader (software WebGL) dominates each iteration's wall-clock, and at
+// 50k points these two tests took ~113s each on CI.
+const dataLength = 10_000;
 const data = Array.from({ length: dataLength }).map((_, i) => ({
   x: i,
   y: 50 + Math.sin(i / 5) * 25 + Math.cos(i / 37) * 10,
 }));
 
 const xData = data.map((d) => d.x);
-
-// Rasterizing 50k points through SwiftShader (software WebGL) costs seconds of
-// wall-clock per iteration on CI regardless of what the harness measures — at
-// the default 10 warmup + 20 measured iterations these tests run ~113s each,
-// flaking against the harness's 120s test timeout. Fewer iterations keep the
-// pair of tests well clear of it.
-const runOptions = { warmupRuns: 3, runs: 10 };
 
 benchmark(
   'ScatterChartPremium with big data amount (webgl renderer)',
@@ -38,8 +35,7 @@ benchmark(
       skipAnimation
     />
   ),
-  createBenchWebGLInteraction(),
-  runOptions,
+  benchWebGLInteraction,
 );
 
 benchmark(
@@ -66,6 +62,5 @@ benchmark(
       skipAnimation
     />
   ),
-  createBenchWebGLInteraction(),
-  runOptions,
+  benchWebGLInteraction,
 );

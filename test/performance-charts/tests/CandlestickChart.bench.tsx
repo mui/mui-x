@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { benchmark } from '@mui/internal-benchmark';
 import { Unstable_CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
-import { createBenchWebGLInteraction } from '../utils';
+import { benchWebGLInteraction } from '../utils';
 
 const dataLength = 2_000;
 const xData = Array.from({ length: dataLength }).map((_, i) => `${i + 1}`);
@@ -20,5 +20,5 @@ const data = Array.from({ length: dataLength }).map((_, i) => {
 benchmark(
   'CandlestickChart with big data amount (webgl renderer)',
   () => <CandlestickChart xAxis={[{ data: xData }]} series={[{ data }]} width={500} height={300} />,
-  createBenchWebGLInteraction(),
+  benchWebGLInteraction,
 );
