@@ -417,28 +417,37 @@ export class LayoutListSticky extends Layout<ListElements> {
  *   must use absolute positioning with JS offsets: sticky constraints ignore the
  *   positioner's transform.
  *
+ * Scrolling relies on virtual scrollbars, like the DataGrid: the scroller hides its
+ * native scrollbars and standalone scrollbar widgets are kept in sync with it (see
+ * `useScrollbarRefCallback`). The content reserves the scrollbar lanes so the last
+ * row/column can scroll out from under the overlaid widgets.
+ *
  * Expected DOM structure:
  * ```tsx
- * <div {...containerProps}>              // scroller
- *   <div {...contentProps}>              // in-flow, sticky containing block
- *     <div {...topContainerProps}>       // sticky top: headers + pinned top rows
- *       <div {...positionerProps}>       // horizontal translate
- *     </div>
- *     <div {...spacerTopProps} />        // height: rowPositions[firstRowIndex]
- *     <div {...windowProps}>             // sticky rendered window
- *       <div {...positionerProps}>       // horizontal translate
- *         {rows}
+ * <div {...containerProps}>                // outer wrapper (position: relative)
+ *   <div {...scrollerProps}>               // scroller, native scrollbars hidden
+ *     <div {...contentProps}>              // in-flow, sticky containing block
+ *       <div {...topContainerProps}>       // sticky top: headers + pinned top rows
+ *         <div {...positionerProps}>       // horizontal translate
+ *       </div>
+ *       <div {...spacerTopProps} />        // height: rowPositions[firstRowIndex]
+ *       <div {...windowProps}>             // sticky rendered window
+ *         <div {...positionerProps}>       // horizontal translate
+ *           {rows}
+ *         </div>
+ *       </div>
+ *       <div {...spacerBottomProps} />     // height: remaining content height
+ *       <div {...bottomContainerProps}>    // sticky bottom: pinned bottom rows
+ *         <div {...positionerProps}>       // horizontal translate
  *       </div>
  *     </div>
- *     <div {...spacerBottomProps} />     // height: remaining content height
- *     <div {...bottomContainerProps}>    // sticky bottom: pinned bottom rows
- *       <div {...positionerProps}>       // horizontal translate
- *     </div>
  *   </div>
+ *   <div {...scrollbarVerticalProps} />    // virtual scrollbars, overlaid
+ *   <div {...scrollbarHorizontalProps} />
  * </div>
  * ```
  */
-export class LayoutGridSticky extends Layout<ListElements> {
+export class LayoutGridSticky extends Layout<DataGridElements> {
   static elements = [
     'scroller',
     'container',
@@ -448,32 +457,60 @@ export class LayoutGridSticky extends Layout<ListElements> {
     'window',
     'spacerBottom',
     'bottomContainer',
+    'scrollbarVertical',
+    'scrollbarHorizontal',
   ] as const;
 
   use(
     store: Store<BaseState>,
     _params: ParamsWithDefaults,
-    _api: RequiredAPI,
+    api: RequiredAPI,
     layoutParams: VirtualizationLayoutParams,
   ) {
     const { scrollerRef, containerRef } = layoutParams;
 
-    const mergedRef = useForkRef(scrollerRef, containerRef);
+    const scrollbarVerticalRef = useScrollbarRefCallback(
+      this.refs.scroller,
+      this.refSetter('scrollbarVertical'),
+      'scrollTop',
+      api.updateDimensions,
+    );
+    const scrollbarHorizontalRef = useScrollbarRefCallback(
+      this.refs.scroller,
+      this.refSetter('scrollbarHorizontal'),
+      'scrollLeft',
+      api.updateDimensions,
+    );
 
     store.state.virtualization.context = {
-      mergedRef,
+      scrollerRef,
+      containerRef,
+      scrollbarVerticalRef,
+      scrollbarHorizontalRef,
     };
   }
 
   static selectors = {
-    containerProps: createSelectorMemoized(
+    containerProps: createSelectorMemoized(Virtualization.selectors.context, (context) => ({
+      ref: context.containerRef,
+      style: {
+        position: 'relative',
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
+
+    scrollerProps: createSelectorMemoized(
       Virtualization.selectors.context,
       Dimensions.selectors.autoHeight,
       (context, autoHeight) => ({
-        ref: context.mergedRef,
+        ref: context.scrollerRef,
         style: {
-          overflowY: autoHeight ? 'hidden' : undefined,
+          width: '100%',
+          height: '100%',
+          overflow: autoHeight ? 'hidden' : 'auto',
           position: 'relative',
+          // Native scrollbars are hidden, the virtual scrollbar widgets replace them.
+          scrollbarWidth: 'none',
           // The spacer heights change on each render context update; native scroll
           // anchoring would fight those updates by adjusting the scroll position.
           overflowAnchor: 'none',
@@ -485,13 +522,17 @@ export class LayoutGridSticky extends Layout<ListElements> {
       }),
     ),
 
-    contentProps: createSelectorMemoized(() => ({
+    contentProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
       style: {
         // `max-content` makes the content span the full columns width so that the
         // sticky elements' containing blocks cover the whole scrollable area.
         width: 'max-content',
         minWidth: '100%',
         position: 'relative',
+        // Reserve the virtual scrollbar lanes in the scrollable area, so the last
+        // row/column can scroll out from under the overlaid scrollbar widgets.
+        paddingBottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
+        paddingRight: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
       } as React.CSSProperties,
       role: 'presentation',
     })),
@@ -505,14 +546,75 @@ export class LayoutGridSticky extends Layout<ListElements> {
       role: 'presentation',
     })),
 
-    bottomContainerProps: createSelectorMemoized(() => ({
+    bottomContainerProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
       style: {
         position: 'sticky',
-        bottom: 0,
+        // Lifted above the horizontal scrollbar lane.
+        bottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
         zIndex: 2,
       } as React.CSSProperties,
       role: 'presentation',
     })),
+
+    scrollbarVerticalProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      Dimensions.selectors.dimensions,
+      (context, dimensions) => {
+        // On platforms with overlay scrollbars the measured size is 0: the lanes
+        // collapse but the floating widget still needs a hit area.
+        const size = Math.max(dimensions.scrollbarSize, 14);
+        return {
+          ref: context.scrollbarVerticalRef,
+          style: {
+            position: 'absolute',
+            top: dimensions.topContainerHeight,
+            right: 0,
+            bottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
+            // Collapsed rather than `display: none` when unused: the scrollbar size
+            // measurement probes inside this element, which requires it rendered.
+            width: dimensions.hasScrollY ? size : 0,
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            zIndex: 3,
+          } as React.CSSProperties,
+          // Sized so that the scrollbar's scroll range matches the scroller's exactly,
+          // allowing 1:1 position mirroring.
+          contentStyle: {
+            width: 1,
+            height: dimensions.hasScrollY
+              ? dimensions.contentSize.height + dimensions.bottomContainerHeight
+              : 0,
+          } as React.CSSProperties,
+          'aria-hidden': true,
+        };
+      },
+    ),
+
+    scrollbarHorizontalProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      Dimensions.selectors.dimensions,
+      (context, dimensions) => {
+        const size = Math.max(dimensions.scrollbarSize, 14);
+        return {
+          ref: context.scrollbarHorizontalRef,
+          style: {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
+            height: dimensions.hasScrollX ? size : 0,
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            zIndex: 3,
+          } as React.CSSProperties,
+          contentStyle: {
+            height: 1,
+            width: dimensions.hasScrollX ? dimensions.columnsTotalWidth : 0,
+          } as React.CSSProperties,
+          'aria-hidden': true,
+        };
+      },
+    ),
 
     positionerProps: createSelectorMemoized(
       Virtualization.selectors.scrollPosition,
@@ -558,11 +660,14 @@ export class LayoutGridSticky extends Layout<ListElements> {
         const renderedHeight = lastPosition - firstPosition;
 
         const { viewportInnerSize, topContainerHeight, bottomContainerHeight } = dimensions;
+        const horizontalScrollbarLane = dimensions.hasScrollX ? dimensions.scrollbarSize : 0;
         // Asymmetric offsets: scrolling down, the window's bottom edge clamps at the
         // top of the bottom container; scrolling up, its top edge clamps below the
-        // top container. Derivation: with P the scrollport height,
-        // `viewportInnerSize.height = P - topContainerHeight - bottomContainerHeight`,
-        // so `-(renderedHeight - (P - bottomContainerHeight))` simplifies to the
+        // top container. Derivation: native scrollbars are hidden so the scrollport
+        // height is `P = viewportInnerSize.height + topContainerHeight +
+        // bottomContainerHeight + horizontalScrollbarLane`, and the offsets are
+        // `-(renderedHeight - (P - horizontalScrollbarLane - bottomContainerHeight))`
+        // and `-(renderedHeight - (P - topContainerHeight))`, which simplify to the
         // expressions below.
         const stickyTop = Math.min(
           0,
@@ -570,7 +675,10 @@ export class LayoutGridSticky extends Layout<ListElements> {
         );
         const stickyBottom = Math.min(
           0,
-          -(renderedHeight - (viewportInnerSize.height + bottomContainerHeight)),
+          -(
+            renderedHeight -
+            (viewportInnerSize.height + bottomContainerHeight + horizontalScrollbarLane)
+          ),
         );
 
         return {

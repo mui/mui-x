@@ -174,10 +174,21 @@ function HeaderRow() {
   );
 }
 
+function Scrollbar(props: { contentStyle?: React.CSSProperties; [key: string]: any }) {
+  const { contentStyle, ...other } = props;
+  return (
+    <div {...other}>
+      <div style={contentStyle} />
+    </div>
+  );
+}
+
 function Grid() {
   const refs = {
     container: React.useRef<HTMLDivElement>(null),
     scroller: React.useRef<HTMLDivElement>(null),
+    scrollbarVertical: React.useRef<HTMLDivElement>(null),
+    scrollbarHorizontal: React.useRef<HTMLDivElement>(null),
   };
   const layout = useLazyRef(() => new LayoutGridSticky(refs)).current;
   const virtualizer = useVirtualizer({
@@ -213,6 +224,13 @@ function Grid() {
   useJank(refs.scroller);
 
   const containerProps = virtualizer.store.use(LayoutGridSticky.selectors.containerProps);
+  const scrollerProps = virtualizer.store.use(LayoutGridSticky.selectors.scrollerProps);
+  const scrollbarVerticalProps = virtualizer.store.use(
+    LayoutGridSticky.selectors.scrollbarVerticalProps,
+  );
+  const scrollbarHorizontalProps = virtualizer.store.use(
+    LayoutGridSticky.selectors.scrollbarHorizontalProps,
+  );
   const contentProps = virtualizer.store.use(LayoutGridSticky.selectors.contentProps);
   const topContainerProps = virtualizer.store.use(LayoutGridSticky.selectors.topContainerProps);
   const spacerTopProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerTopProps);
@@ -245,7 +263,6 @@ function Grid() {
           {...containerProps}
           sx={{
             height: 480,
-            overflow: 'auto',
             border: `1px solid ${borderColor}`,
             borderRadius: 1,
             background: '#fff',
@@ -254,24 +271,32 @@ function Grid() {
             fontSize: 13,
           }}
         >
-          <div className="Grid--content" {...contentProps}>
-            <div className="Grid--topContainer" {...topContainerProps}>
-              <div {...positionerProps}>
-                <HeaderRow />
-                {getRows({ position: 'top', rows: pinnedRows.top })}
+          <Box
+            className="Grid--scroller"
+            {...scrollerProps}
+            sx={{ '&::-webkit-scrollbar': { display: 'none' } }}
+          >
+            <div className="Grid--content" {...contentProps}>
+              <div className="Grid--topContainer" {...topContainerProps}>
+                <div {...positionerProps}>
+                  <HeaderRow />
+                  {getRows({ position: 'top', rows: pinnedRows.top })}
+                </div>
+              </div>
+              <div className="Grid--spacerTop" {...spacerTopProps} />
+              <div className="Grid--window" {...windowProps}>
+                <div {...positionerProps}>{getRows()}</div>
+              </div>
+              <div className="Grid--spacerBottom" {...spacerBottomProps} />
+              <div className="Grid--bottomContainer" {...bottomContainerProps}>
+                <div {...positionerProps}>
+                  {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
+                </div>
               </div>
             </div>
-            <div className="Grid--spacerTop" {...spacerTopProps} />
-            <div className="Grid--window" {...windowProps}>
-              <div {...positionerProps}>{getRows()}</div>
-            </div>
-            <div className="Grid--spacerBottom" {...spacerBottomProps} />
-            <div className="Grid--bottomContainer" {...bottomContainerProps}>
-              <div {...positionerProps}>
-                {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
-              </div>
-            </div>
-          </div>
+          </Box>
+          <Scrollbar className="Grid--scrollbarVertical" {...scrollbarVerticalProps} />
+          <Scrollbar className="Grid--scrollbarHorizontal" {...scrollbarHorizontalProps} />
         </Box>
       </PinnedOffsetsContext.Provider>
     </VirtualizerContext.Provider>
