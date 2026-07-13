@@ -244,6 +244,38 @@ The module augmentation feature isn't implemented yet for the other sets of comp
 
   :::
 
+### Passing `data-*` attributes to slots
+
+By default, slot prop types don't accept arbitrary `data-*` attributes (such as test locators like `data-testid`).
+To allow them, augment the `DataAttributesOverrides` interface once, anywhere in your project.
+
+Augment `@mui/material/utils` to cover both Material UI and MUI X slots with a single declaration:
+
+```ts
+declare module '@mui/material/utils' {
+  interface DataAttributesOverrides {
+    // Accept any data-* key. Or list keys explicitly for autocomplete and typo-checking.
+    [key: `data-${string}`]: string | number | boolean | undefined;
+  }
+}
+```
+
+`data-*` attributes then type-check on the slots of every supported package:
+
+- **Charts** — `<BarChart slotProps={{ tooltip: { 'data-testid': 'chart-tooltip' } }} />`
+- **Date and Time Pickers** — `<DateCalendar slotProps={{ day: { 'data-testid': 'day' } }} />`
+- **Tree View** — `<RichTreeView slotProps={{ item: { 'data-testid': 'item' } }} />`
+- **Chat** — `<ChatBox slotProps={{ messageRoot: { 'data-testid': 'message' } }} />`
+
+:::warning
+The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, where the interface is re-exported.
+On earlier Material UI versions — or for packages that don't depend on Material UI, such as Chat Headless — augment `@mui/utils/types` instead. That augmentation reaches MUI X slots only, not Material UI slots.
+:::
+
+The augmentation shares the same interface as Material UI. See the [Material UI TypeScript guide](https://mui.com/material-ui/guides/typescript/#allowing-data-attributes-on-slotprops) for the full explanation and the strict (explicit-key) variant.
+
+Data Grid isn't covered by this augmentation yet; use its per-slot [`*PropsOverrides`](/x/react-data-grid/components/#custom-slot-props-with-typescript) instead.
+
 ## Slots of the X components
 
 You can find the list of slots in the API documentation of each component (for example [DataGrid](/x/api/data-grid/data-grid/#slots), [DatePicker](/x/api/date-pickers/date-picker/#slots), [BarChart](/x/api/charts/bar-chart/#slots) or [RichTreeView](/x/api/tree-view/rich-tree-view/#slots)).
