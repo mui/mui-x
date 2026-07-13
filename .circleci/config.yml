@@ -230,7 +230,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build --concurrency 4
+          command: pnpm release:build --concurrency 2
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -257,7 +257,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build
+          command: pnpm release:build --concurrency 2
       - code-infra/upload-size-snapshot
   test_regressions:
     <<: *default-job
