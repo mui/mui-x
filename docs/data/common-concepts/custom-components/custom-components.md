@@ -272,7 +272,7 @@ The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, whe
 On earlier Material UI versions — or for packages that don't depend on Material UI, such as Chat Headless — augment `@mui/utils/types` instead. That augmentation reaches MUI X slots only, not Material UI slots.
 :::
 
-The augmentation shares the same interface as Material UI. See the [Material UI TypeScript guide](https://mui.com/material-ui/guides/typescript/#allowing-data-attributes-on-slotprops) for the full explanation and the strict (explicit-key) variant.
+The augmentation shares the same interface as Material UI. See the [Material UI TypeScript guide](/material-ui/guides/typescript/#allowing-data-attributes-on-slotprops) for the full explanation and the strict (explicit-key) variant.
 
 Data Grid isn't covered by this augmentation yet; use its per-slot [`*PropsOverrides`](/x/react-data-grid/components/#custom-slot-props-with-typescript) instead.
 
