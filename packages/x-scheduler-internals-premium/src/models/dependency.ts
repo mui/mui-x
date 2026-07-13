@@ -3,10 +3,10 @@ import type { SchedulerChangeEventDetails } from '@mui/x-scheduler-internals/int
 
 export type SchedulerDependencyId = string | number;
 
-export type SchedulerDependencyType =
-  'FinishToStart' | 'StartToStart' | 'FinishToFinish' | 'StartToFinish';
-
-export type SchedulerDependencyLagUnit = 'minute' | 'hour' | 'day';
+/**
+ * The other PDM types (`StartToStart`, `FinishToFinish`, `StartToFinish`) will widen this union when implemented.
+ */
+export type SchedulerDependencyType = 'FinishToStart';
 
 /**
  * A dependency between two events, referencing them by id.
@@ -29,16 +29,6 @@ export interface SchedulerDependency {
    * No type is enforced yet; the auto-scheduling engine will implement `"FinishToStart"` first.
    */
   type: SchedulerDependencyType;
-  /**
-   * The offset applied to the relationship, expressed in `lagUnit` units of elapsed (calendar) time.
-   * Reserved for future use, not implemented yet.
-   */
-  lag?: number;
-  /**
-   * The unit of the `lag` offset.
-   * Reserved for future use, not implemented yet.
-   */
-  lagUnit?: SchedulerDependencyLagUnit;
 }
 
 /**

@@ -109,9 +109,9 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     };
     const lastDependency: SchedulerDependency = {
       id: 'dup-1',
-      source: 'event-a',
-      target: 'event-b',
-      type: 'StartToStart',
+      source: 'event-b',
+      target: 'event-a',
+      type: 'FinishToStart',
     };
 
     let state!: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
