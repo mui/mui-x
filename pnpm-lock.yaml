@@ -816,7 +816,7 @@ importers:
         specifier: 'catalog:'
         version: 4.1.9(@types/node@22.20.0)(@vitest/browser-playwright@4.1.9)(@vitest/coverage-v8@4.1.9)(jsdom@29.1.1)(vite@8.1.4(@types/node@22.20.0)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.5)(yaml@2.9.0))
       zod:
-        specifier: ^3.25.65
+        specifier: 3.25.76
         version: 3.25.76
     publishDirectory: build
 
