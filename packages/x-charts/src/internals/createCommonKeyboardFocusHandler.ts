@@ -2,6 +2,8 @@ import type { ChartSeriesType } from '../models/seriesType/config';
 import {
   createGetNextIndexFocusedItem,
   createGetPreviousIndexFocusedItem,
+  createGetFirstIndexFocusedItem,
+  createGetLastIndexFocusedItem,
   createGetNextSeriesFocusedItem,
   createGetPreviousSeriesFocusedItem,
 } from './commonNextFocusItem';
@@ -31,6 +33,16 @@ export function createCommonKeyboardFocusHandler<
         return createGetPreviousSeriesFocusedItem<TInputSeriesType, SeriesType>(outSeriesTypes);
       case 'ArrowUp':
         return createGetNextSeriesFocusedItem<TInputSeriesType, SeriesType>(outSeriesTypes);
+      case 'Home':
+        return createGetFirstIndexFocusedItem<TInputSeriesType, SeriesType>(
+          outSeriesTypes,
+          useCurrentSeriesMaxLength,
+        );
+      case 'End':
+        return createGetLastIndexFocusedItem<TInputSeriesType, SeriesType>(
+          outSeriesTypes,
+          useCurrentSeriesMaxLength,
+        );
       default:
         return null;
     }

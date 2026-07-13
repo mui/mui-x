@@ -197,6 +197,140 @@ export function createGetPreviousIndexFocusedItem<
   };
 }
 
+export function createGetFirstIndexFocusedItem<
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+  /**
+   * If true, series max index is defined by the current series length and not all series.
+   */
+  useCurrentSeriesMaxLength: boolean = false,
+) {
+  return function getFirstIndexFocusedItem(
+    currentItem: WorkingItem | null,
+    state: StateParameters<InSeriesType>,
+  ): ReturnedItem<OutSeriesType> {
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
+    let seriesId = currentItem?.seriesId;
+    let type = currentItem?.type;
+    if (
+      !type ||
+      seriesId == null ||
+      !seriesHasData(processedSeries, type, seriesId) ||
+      isSeriesHidden(processedSeries, type, seriesId)
+    ) {
+      const nextSeries = getNextNonEmptySeries<OutSeriesType>(
+        processedSeries,
+        compatibleSeriesTypes,
+        type,
+        seriesId,
+      );
+      if (nextSeries === null) {
+        return null;
+      }
+      type = nextSeries.type;
+      seriesId = nextSeries.seriesId;
+    }
+
+    const maxLength = useCurrentSeriesMaxLength
+      ? (processedSeries[type]?.series[seriesId]?.data.length ?? 0)
+      : getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex: 0,
+      dataLength: maxLength,
+      direction: 1,
+      allowCycles: false,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type: type as OutSeriesType,
+      seriesId,
+      dataIndex: visibleDataIndex,
+    };
+  };
+}
+
+export function createGetLastIndexFocusedItem<
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+  /**
+   * If true, series max index is defined by the current series length and not all series.
+   */
+  useCurrentSeriesMaxLength: boolean = false,
+) {
+  return function getLastIndexFocusedItem(
+    currentItem: WorkingItem | null,
+    state: StateParameters<InSeriesType>,
+  ): ReturnedItem<OutSeriesType> {
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
+    let seriesId = currentItem?.seriesId;
+    let type = currentItem?.type;
+    if (
+      !type ||
+      seriesId == null ||
+      !seriesHasData(processedSeries, type, seriesId) ||
+      isSeriesHidden(processedSeries, type, seriesId)
+    ) {
+      const previousSeries = getPreviousNonEmptySeries<OutSeriesType>(
+        processedSeries,
+        compatibleSeriesTypes,
+        type,
+        seriesId,
+      );
+      if (previousSeries === null) {
+        return null;
+      }
+      type = previousSeries.type;
+      seriesId = previousSeries.seriesId;
+    }
+
+    const maxLength = useCurrentSeriesMaxLength
+      ? (processedSeries[type]?.series[seriesId]?.data.length ?? 0)
+      : getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex: maxLength - 1,
+      dataLength: maxLength,
+      direction: -1,
+      allowCycles: false,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type: type as OutSeriesType,
+      seriesId,
+      dataIndex: visibleDataIndex,
+    };
+  };
+}
+
 export function createGetNextSeriesFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
