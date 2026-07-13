@@ -1,5 +1,4 @@
 import type * as React from 'react';
-import type { WithDataAttributes } from '@mui/utils/types';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -179,5 +178,5 @@ export interface GridRowCheckboxProps extends CheckboxProps, RowCheckboxPropsOve
  * Overridable components props dynamically passed to the component at rendering.
  */
 export type GridSlotsComponentsProps = Partial<{
-  [K in keyof GridSlotProps]: WithDataAttributes<Partial<GridSlotProps[K]>>;
+  [K in keyof GridSlotProps]: Partial<GridSlotProps[K]>;
 }>;

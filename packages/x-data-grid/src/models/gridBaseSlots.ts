@@ -1,4 +1,3 @@
-import type { WithDataAttributes } from '@mui/utils/types';
 
 type Ref<T = HTMLElement> = React.RefCallback<T | null> | React.RefObject<T | null> | null;
 
@@ -160,9 +159,9 @@ export type CheckboxProps = CommonProps & {
   size?: 'small' | 'medium';
   density?: 'standard' | 'compact';
   slotProps?: {
-    htmlInput?: WithDataAttributes<
+    htmlInput?: 
       React.InputHTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> }
-    >;
+    ;
   };
   style?: React.CSSProperties;
   tabIndex?: number;
@@ -297,7 +296,7 @@ export type InputProps = CommonProps & {
   endAdornment?: React.ReactNode;
   startAdornment?: React.ReactNode;
   slotProps?: {
-    htmlInput?: WithDataAttributes<React.InputHTMLAttributes<HTMLInputElement>>;
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
 };
 
@@ -335,7 +334,7 @@ export type SelectProps = CommonProps & {
   fullWidth?: boolean;
   size?: 'small' | 'medium';
   slotProps?: {
-    htmlInput?: WithDataAttributes<{ ref?: Ref } & React.InputHTMLAttributes<HTMLInputElement>>;
+    htmlInput?: { ref?: Ref } & React.InputHTMLAttributes<HTMLInputElement>;
   };
   children?: React.ReactNode;
 };
@@ -386,9 +385,9 @@ export type TextFieldProps = CommonProps & {
   placeholder?: string;
   size?: 'small' | 'medium';
   slotProps?: {
-    input?: WithDataAttributes<Omit<Partial<InputProps>, 'slotProps'>>;
-    inputLabel?: WithDataAttributes<{}>;
-    htmlInput?: WithDataAttributes<React.InputHTMLAttributes<HTMLInputElement>>;
+    input?: Omit<Partial<InputProps>, 'slotProps'>;
+    inputLabel?: {};
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement>;
   };
   tabIndex?: number;
   type?: React.HTMLInputTypeAttribute;
