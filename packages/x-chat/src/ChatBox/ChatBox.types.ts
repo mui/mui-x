@@ -105,7 +105,7 @@ interface ChatBoxConversationSlots {
 }
 
 interface ChatBoxConversationSlotProps {
-  conversationRoot?: Partial<ChatConversationProps>;
+  conversationRoot?: WithDataAttributes<Partial<ChatConversationProps>>;
   conversationList?: WithDataAttributes<Partial<ChatConversationListProps>>;
   conversationHeader?: WithDataAttributes<Partial<ChatConversationHeaderProps>>;
   conversationHeaderInfo?: WithDataAttributes<Partial<ChatConversationHeaderInfoProps>>;
@@ -152,7 +152,7 @@ interface ChatBoxMessageListSlotProps {
   messageGroup?: WithDataAttributes<Partial<ChatMessageGroupProps>>;
   dateDivider?: WithDataAttributes<Partial<ChatDateDividerProps>>;
   unreadMarker?: WithDataAttributes<Partial<ChatUnreadMarkerProps>>;
-  streamingIndicator?: Partial<ChatStreamingIndicatorProps>;
+  streamingIndicator?: WithDataAttributes<Partial<ChatStreamingIndicatorProps>>;
 }
 
 /**
@@ -200,8 +200,8 @@ interface ChatBoxMessageSlotProps {
   messageAvatar?: WithDataAttributes<Partial<ChatMessageAvatarProps>>;
   messageContent?: WithDataAttributes<Partial<ChatMessageContentProps>>;
   messageMeta?: WithDataAttributes<Partial<ChatMessageMetaProps>>;
-  messageInlineMeta?: Partial<ChatMessageInlineMetaProps>;
-  messageError?: Partial<ChatMessageErrorProps>;
+  messageInlineMeta?: WithDataAttributes<Partial<ChatMessageInlineMetaProps>>;
+  messageError?: WithDataAttributes<Partial<ChatMessageErrorProps>>;
   /**
    * Props for the message actions row. Pass a function of the message context
    * to vary props per message — most commonly returning `extraActions`
