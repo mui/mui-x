@@ -25,6 +25,7 @@ import {
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
 import type { ControlledValue } from '../event-dialog/utils';
@@ -163,7 +164,7 @@ export function FormContent(props: FormContentProps) {
       endDate: fmtDate(occurrence.displayTimezone.end),
       startTime: fmtTime(occurrence.displayTimezone.start),
       endTime: fmtTime(occurrence.displayTimezone.end),
-      resourceId: occurrence.resource ?? null,
+      resourceId: getPrimaryResourceId(occurrence.resource),
       allDay: !!occurrence.allDay,
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,

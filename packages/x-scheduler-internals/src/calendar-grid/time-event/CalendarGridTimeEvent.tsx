@@ -55,6 +55,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const {
     start: columnStart,
     end: columnEnd,
+    dayStartMinute,
+    dayEndMinute,
     index: columnIndex,
     hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
@@ -129,6 +131,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     end,
     collectionStart: columnStart,
     collectionEnd: columnEnd,
+    dayStartMinute,
+    dayEndMinute,
   });
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);

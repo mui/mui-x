@@ -4,8 +4,8 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type {
