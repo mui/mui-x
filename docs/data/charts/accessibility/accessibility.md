@@ -71,10 +71,11 @@ This feature is currently supported by the following charts: line, bar, pie, sca
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
 When focused, the chart highlights a value item that can be modified with arrow navigation.
 
-|                                                                  Keys | Description                   |
-| --------------------------------------------------------------------: | :---------------------------- |
-| <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
-|    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
+|                                                                  Keys | Description                                      |
+| --------------------------------------------------------------------: | :----------------------------------------------- |
+| <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series                    |
+|    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series                        |
+|               <kbd class="key">Home</kbd>, <kbd class="key">End</kbd> | Moves focus to the first/last item of the series |
 
 ## Screen reader compatibility
 
