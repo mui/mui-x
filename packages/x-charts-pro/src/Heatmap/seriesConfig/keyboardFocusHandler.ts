@@ -77,6 +77,29 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
         }
         return updateCoordinates(currentItem.xIndex, currentItem.yIndex - 1, currentItem);
       };
+    case 'Home':
+      return (currentItem, state) => {
+        if (!currentItem) {
+          return getFirstCell(state);
+        }
+        if (currentItem.xIndex === 0) {
+          return currentItem;
+        }
+
+        return updateCoordinates(0, currentItem.yIndex, currentItem);
+      };
+    case 'End':
+      return (currentItem, state) => {
+        if (!currentItem) {
+          return getFirstCell(state);
+        }
+        const maxLength = state.cartesianAxis?.x[0].data?.length ?? 0;
+        if (maxLength === 0 || currentItem.xIndex === maxLength - 1) {
+          return currentItem;
+        }
+
+        return updateCoordinates(maxLength - 1, currentItem.yIndex, currentItem);
+      };
     default:
       return null;
   }

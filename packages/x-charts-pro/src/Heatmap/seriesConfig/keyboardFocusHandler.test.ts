@@ -70,7 +70,7 @@ const cell_11 = {
 } as const;
 
 function test(
-  direction: 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown',
+  direction: 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown' | 'Home' | 'End',
   initialFocus: FocusedItemIdentifier<'heatmap'> | null,
 ) {
   return {
@@ -84,6 +84,22 @@ describe('<Heatmap /> - keyboard navigation', () => {
     expect(test('ArrowLeft', null)).to.deep.equal(cell_00);
     expect(test('ArrowUp', null)).to.deep.equal(cell_00);
     expect(test('ArrowDown', null)).to.deep.equal(cell_00);
+    expect(test('Home', null)).to.deep.equal(cell_00);
+    expect(test('End', null)).to.deep.equal(cell_00);
+  });
+
+  describe('move to the first/last cell of the current row', () => {
+    expect(test('Home', cell_01)).to.deep.equal(cell_00);
+    expect(test('Home', cell_11)).to.deep.equal(cell_10);
+    expect(test('End', cell_00)).to.deep.equal(cell_01);
+    expect(test('End', cell_10)).to.deep.equal(cell_11);
+  });
+
+  describe('stay in place when already at the first/last cell of the row', () => {
+    expect(test('Home', cell_00)).to.deep.equal(cell_00);
+    expect(test('Home', cell_10)).to.deep.equal(cell_10);
+    expect(test('End', cell_01)).to.deep.equal(cell_01);
+    expect(test('End', cell_11)).to.deep.equal(cell_11);
   });
 
   it('should move to different cell', () => {
