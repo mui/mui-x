@@ -20,6 +20,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     clearButton,
     tabIndex,
     slotProps,
+    disableDebounce,
     ...other
   } = props;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
@@ -123,6 +124,11 @@ GridFilterInputBoolean.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   clearButton: PropTypes.node,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default false
+   */
+  disableDebounce: PropTypes.bool,
   focusElementRef: refType,
   headerFilterMenu: PropTypes.node,
   inputRef: PropTypes.oneOfType([

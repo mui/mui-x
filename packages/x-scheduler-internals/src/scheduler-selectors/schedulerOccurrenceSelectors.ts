@@ -9,7 +9,7 @@ import type {
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
-import { getOccurrencesFromEvents } from '../internals/utils/event-utils';
+import { getOccurrencesFromEvents, getEventResourceIds } from '../internals/utils/event-utils';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
@@ -47,14 +47,14 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     });
 
     for (const occurrence of occurrences) {
-      const resourceId = occurrence.resource;
+      const resourceIds = getEventResourceIds(occurrence.resource);
 
-      if (resourceId) {
-        if (!occurrencesGroupedByResource.has(resourceId)) {
-          occurrencesGroupedByResource.set(resourceId, []);
+      resourceIds.forEach((id) => {
+        if (!occurrencesGroupedByResource.has(id)) {
+          occurrencesGroupedByResource.set(id, []);
         }
-        occurrencesGroupedByResource.get(resourceId)!.push(occurrence);
-      }
+        occurrencesGroupedByResource.get(id)!.push(occurrence);
+      });
     }
 
     const processResources = (innerResources: readonly SchedulerResource[]) => {
