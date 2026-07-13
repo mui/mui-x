@@ -324,16 +324,55 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
     }
   }, [segments, text, refresh]);
 
+  // Live mirror of the editing session (engaged flag + caret offset), kept in
+  // the formula cache and written on every user interaction. When
+  // virtualization remounts the editing cell (the edited row left the render
+  // window), the fresh instance resumes from the mirror instead of restarting
+  // the entry sequence. It must be a continuously-written mirror rather than an
+  // unmount-time capture: the replacement instance can mount BEFORE the old one
+  // unmounts, and StrictMode runs synthetic cleanups with nothing unmounted.
+  // Only the focused editor writes (row edit mode mounts one editor per cell).
+  // `cellEditStop` clears it.
+  const updateEditorSession = React.useCallback(
+    (caretOverride?: number | null) => {
+      const root = editableRef.current;
+      if (!root || root.ownerDocument.activeElement !== root) {
+        return;
+      }
+      apiRef.current.caches.formula.editorSession = {
+        id,
+        field,
+        engaged: engagedRef.current,
+        caret: caretOverride !== undefined ? caretOverride : getCaretOffset(root),
+      };
+    },
+    [apiRef, field, id],
+  );
+
   // Focus on entry and place the caret at the end (the rebuild effect handles the
-  // caret on a later source seed). Runs on mount (the editor mounts when the surface
-  // popper opens) and on focus acquisition.
+  // caret on a later source seed). Runs on mount (edit start, but also whenever
+  // virtualization remounts the editing cell) and on focus acquisition.
   useEnhancedEffect(() => {
     const root = editableRef.current;
     if (!root || !hasFocus) {
       return;
     }
     if (root.ownerDocument.activeElement !== root) {
-      root.focus();
+      // preventScroll: when the edited row leaves the render window mid-scroll,
+      // the grid remounts it (as the zero-size virtual-focus row) and this
+      // effect re-focuses the editable — the browser's default scroll-into-view
+      // on focus() would then yank the viewport back to the edited cell on
+      // every scroll tick. Same defense as GridEditLongTextCell.
+      root.focus({ preventScroll: true });
+    }
+    const session = apiRef.current.caches.formula.editorSession;
+    if (session !== null && session.id === id && session.field === field) {
+      // The editing cell remounted mid-edit: resume the live session — restore
+      // the engaged flag and put the caret back where it was, not at the end.
+      // The mirror stays in place for any further remount.
+      engagedRef.current = session.engaged;
+      setCaretOffset(root, session.caret ?? (root.textContent ?? '').length);
+      return;
     }
     // On entry (before the first edit), collapse any stray selection to the end —
     // a fresh edit starts with the caret at the end of the seeded formula, not a
@@ -341,7 +380,7 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
     if (!engagedRef.current) {
       setCaretOffset(root, (root.textContent ?? '').length);
     }
-  }, [hasFocus]);
+  }, [apiRef, field, hasFocus, id]);
 
   // Keep the highlighted option scrolled into view.
   useEnhancedEffect(() => {
@@ -371,8 +410,9 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
       pendingCaretRef.current = getCaretOffset(root);
       commit(parsedValue, event);
       refresh(pendingCaretRef.current);
+      updateEditorSession(pendingCaretRef.current);
     },
-    [apiRef, commit, field, id, refresh],
+    [apiRef, commit, field, id, refresh, updateEditorSession],
   );
 
   const handleInput = React.useCallback(
@@ -442,8 +482,9 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
       pendingCaretRef.current = current.replaceStart + insertText.length;
       refreshAfterRebuildRef.current = true;
       commit(nextValue, event);
+      updateEditorSession(pendingCaretRef.current);
     },
-    [commit, suggestion],
+    [commit, suggestion, updateEditorSession],
   );
 
   const handleKeyDown = React.useCallback(
@@ -509,6 +550,8 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
 
   const handleKeyUp = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
+      // Any key may have moved the caret.
+      updateEditorSession();
       // A caret move without a value change can still change the suggestion
       // context.
       if (
@@ -520,8 +563,11 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
         refresh();
       }
     },
-    [refresh],
+    [refresh, updateEditorSession],
   );
+
+  // A click (or a drag-selection ending inside the editable) places the caret.
+  const handleMouseUp = React.useCallback(() => updateEditorSession(), [updateEditorSession]);
 
   const handleBlur = React.useCallback(() => setOpen(false), []);
 
@@ -549,6 +595,7 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
         onInput={handleInput}
         onKeyDown={handleKeyDown}
         onKeyUp={handleKeyUp}
+        onMouseUp={handleMouseUp}
         onPaste={handlePaste}
         onCompositionStart={handleCompositionStart}
         onCompositionEnd={handleCompositionEnd}

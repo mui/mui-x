@@ -2272,6 +2272,230 @@ describe('<DataGridPremium /> - Formulas', () => {
     );
   });
 
+  describe('editor virtualization and scrolling', () => {
+    const manyRows = Array.from({ length: 60 }, (_, index) => ({
+      id: index,
+      item: `Item ${index}`,
+      price: index + 1,
+      quantity: 2,
+      total: index === 0 ? '=price * quantity' : index + 1,
+    }));
+
+    function getEditableByField(id: number | string, field: string) {
+      return document.querySelector<HTMLElement>(
+        `[data-id="${id}"] [data-field="${field}"] [contenteditable]`,
+      );
+    }
+
+    it('focuses the editor without scrolling the grid into view', async () => {
+      // Shadow `focus` on HTMLDivElement (the editable is a div) with a
+      // recording wrapper. A plain sinon spy cannot wrap it here: the test
+      // environment turns `HTMLElement.prototype.focus` into an accessor.
+      const focusCalls: { element: Element; options?: FocusOptions }[] = [];
+      const divProto = HTMLDivElement.prototype;
+      Object.defineProperty(divProto, 'focus', {
+        configurable: true,
+        writable: true,
+        value(this: HTMLElement, options?: FocusOptions) {
+          focusCalls.push({ element: this, options });
+          return Object.getPrototypeOf(divProto).focus.call(this, options);
+        },
+      });
+      onTestFinished(() => {
+        delete (divProto as Partial<HTMLDivElement>).focus;
+      });
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      const editable = getCellEditable(0, 3);
+      // The browser scrolls a focused element into view by default — during a
+      // virtualization remount of the editing cell that would yank the viewport
+      // back on every scroll tick. Every editor focus must opt out.
+      const editorCalls = focusCalls.filter((call) => call.element === editable);
+      expect(editorCalls.length).to.be.greaterThan(0);
+      editorCalls.forEach((call) => {
+        expect(call.options?.preventScroll).to.equal(true);
+      });
+    });
+
+    it.skipIf(isJSDOM)(
+      'keeps the scroll position when scrolling away from the edited cell',
+      async () => {
+        const { user } = await render(
+          <Test rows={manyRows} autoHeight={false} disableVirtualization={false} />,
+        );
+        await user.dblClick(getCell(0, 3));
+        await waitFor(() => {
+          expect(getCellEditable(0, 3)).not.to.equal(null);
+        });
+        const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+        // Push the edited row far past the render window (viewport + buffer).
+        scroller.scrollTop = 1500;
+        // Let the render context update and any focus restoration settle. The
+        // remount+refocus race is timing-dependent (headless chromium usually
+        // keeps the editor mounted), so this guards the invariant whenever the
+        // environment does exercise it; the preventScroll argument itself is
+        // pinned deterministically by the focus-spy test above.
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 300);
+          });
+        });
+        expect(scroller.scrollTop).to.equal(1500);
+        // The editing session survives the excursion.
+        expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
+      },
+    );
+
+    it.skipIf(isJSDOM)('keeps accepting input while the edited cell is out of view', async () => {
+      const { user } = await render(
+        <Test rows={manyRows} autoHeight={false} disableVirtualization={false} />,
+      );
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+      scroller.scrollTop = 1500;
+      await act(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 300);
+        });
+      });
+      // The editor keeps DOM focus while out of view, so typing still lands in
+      // the formula (the browser may scroll back to reveal the caret — that is
+      // the native, Excel-like behavior and not asserted here).
+      await user.keyboard('9');
+      await waitFor(() => {
+        expect(getEditableByField(0, 'total')!.textContent).to.equal('=price * quantity9');
+      });
+    });
+
+    it('resumes the caret when the editing cell remounts mid-edit', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      const before = getEditableByField(0, 'total')!;
+      // Engage the session: typing mirrors the caret through the input path.
+      await user.keyboard('9');
+      // A click placing the caret mirrors through the mouseup path (jsdom fires
+      // no selectionchange to observe, so the caret is set directly).
+      act(() => {
+        setCaretOffset(before, 4);
+      });
+      fireEvent.mouseUp(before);
+      expect(formulaApi().caches.formula.editorSession?.caret).to.equal(4);
+      // An arrow-key caret move mirrors through the keyup path.
+      act(() => {
+        setCaretOffset(before, 6);
+      });
+      fireEvent.keyUp(before, { key: 'ArrowLeft' });
+      expect(formulaApi().caches.formula.editorSession?.caret).to.equal(6);
+      // Remount the editing cell for real — pinning moves it into the pinned
+      // section, exactly like virtualization moves it into the virtual-focus
+      // slot when the edited row leaves the render window.
+      await act(async () => {
+        apiRef.current!.setPinnedColumns({ left: ['total'] });
+      });
+      await waitFor(() => {
+        const after = getEditableByField(0, 'total');
+        expect(after).not.to.equal(null);
+        expect(after).not.to.equal(before);
+      });
+      const after = getEditableByField(0, 'total')!;
+      // The session survived the remount: caret restored, not snapped to the end.
+      expect(getCaretOffset(after)).to.equal(6);
+      // The suggestion popup does not reopen on its own after the remount.
+      expect(document.querySelector('[role="listbox"]')).to.equal(null);
+      // Typing continues at the restored caret ("=price| * quantity9").
+      await user.keyboard('X');
+      await waitFor(() => {
+        expect(getEditableByField(0, 'total')!.textContent).to.equal('=priceX * quantity9');
+      });
+    });
+
+    it('clears the captured session when editing stops', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      // Plant a session as a mid-edit interaction would; committing the edit
+      // must clear it so it cannot resume into a later edit.
+      formulaApi().caches.formula.editorSession = {
+        id: 0,
+        field: 'total',
+        engaged: true,
+        caret: 2,
+      };
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
+      await microtasks();
+      expect(formulaApi().caches.formula.editorSession).to.equal(null);
+    });
+
+    it('clears the session when the commit keyup lands after an async processRowUpdate commit', async () => {
+      // With an async processRowUpdate the editor stays mounted and focused
+      // after `cellEditStop` (which clears the mirror on the Enter keydown), so
+      // the Enter keyup re-writes it — the modes-model prune must clear it once
+      // the cell finally leaves edit mode.
+      const { user } = await render(
+        <Test
+          processRowUpdate={async (row) => {
+            await new Promise((resolve) => {
+              setTimeout(resolve, 10);
+            });
+            return row;
+          }}
+        />,
+      );
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      await user.keyboard('9');
+      const editable = getEditableByField(0, 'total')!;
+      fireEvent.keyDown(editable, { key: 'Enter' });
+      fireEvent.keyUp(editable, { key: 'Enter' });
+      await waitFor(() => {
+        expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+      });
+      expect(formulaApi().caches.formula.editorSession).to.equal(null);
+    });
+
+    it('clears the session when a row edit stops (no cellEditStop in row edit mode)', async () => {
+      const { user } = await render(<Test editMode="row" />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      await user.keyboard('9');
+      expect(formulaApi().caches.formula.editorSession).not.to.equal(null);
+      fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
+      await waitFor(() => {
+        expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+      });
+      expect(formulaApi().caches.formula.editorSession).to.equal(null);
+    });
+
+    it('clears the session on a programmatic stopCellEditMode', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      await user.keyboard('9');
+      expect(formulaApi().caches.formula.editorSession).not.to.equal(null);
+      await act(async () => {
+        apiRef.current!.stopCellEditMode({ id: 0, field: 'total' });
+      });
+      expect(formulaApi().caches.formula.editorSession).to.equal(null);
+    });
+  });
+
   describe('A1 notation', () => {
     const LETTER_CLASS = '.MuiDataGrid-formulaColumnHeaderLetter';
     const ROW_NUMBER_FIELD = '__formula_row_number__';

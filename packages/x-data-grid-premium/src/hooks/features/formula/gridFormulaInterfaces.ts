@@ -227,6 +227,14 @@ export interface GridFormulaInternalCache {
    * `clipboardPasteStart`, consumed lazily by the first pasted cell.
    */
   pasteOrigin: { rowPosition: number | undefined; columnPosition: number | undefined } | null;
+  /**
+   * Live mirror of the formula-editor session (engaged flag + caret offset),
+   * written by the focused editor on every user interaction. When
+   * virtualization remounts the editing cell (the edited row left the render
+   * window), the fresh editor instance resumes from it instead of snapping the
+   * caret to the end. Cleared on `cellEditStop`.
+   */
+  editorSession: { id: GridRowId; field: string; engaged: boolean; caret: number | null } | null;
 }
 
 export interface GridFormulaPrivateApi {

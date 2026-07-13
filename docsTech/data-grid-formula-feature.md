@@ -506,6 +506,31 @@ Safari** (which ignores `::selection`), removing the dual-layer's iOS-selection 
 **Prerequisite:** the I2 editing routing now respects a user `renderEditCell` even for
 `=` values (built-in-renderer detection by identity, custom-editor-wins routing, canonical source
 seeding for custom editors) — independently valuable and the gate the highlighting relies on.
+_Scroll-safety addendum (PR review, comment `r3545780044`):_ wheel-scrolling away from the editing
+cell used to snap the viewport back to it in a jitter loop. Root cause (verified with an instrumented
+headed-Chrome reproduction): the grid keeps the focused/edited row mounted as a zero-size
+"virtual focus row", but the selector deciding that (`gridFocusedVirtualCellSelector`) reads the
+render context from grid state, which is synced from the virtualizer's own store one commit late
+(`useStoreEffect` in `useGridVirtualizer.tsx`) — so on the scroll tick where the edited row leaves the
+render window it unmounts for a commit and then remounts, and the editor's focus-restore effect
+called `focus()` whose default scroll-into-view yanked the viewport back. Fix in the editor:
+(1) `root.focus({ preventScroll: true })` (the `GridEditLongTextCell` defense — typing while scrolled
+away still recalls the viewport via the browser's native caret reveal, matching Excel/Sheets);
+(2) a **live session mirror** (`caches.formula.editorSession`: engaged flag + caret offset) written by
+the focused editor on every interaction (input/keyup/mouseup/accept) and consumed on mount, so a
+remounted editor resumes mid-edit instead of snapping the caret to the end — it must be a
+continuously-written mirror, not an unmount-time capture, because the replacement instance can mount
+before the old one unmounts and StrictMode runs synthetic cleanups. Clearing: `cellEditStop` clears it
+immediately on the common cell-mode path, and a `cellModesModelChange`/`rowModesModelChange` prune
+(drop the mirror when its cell is no longer in edit mode) is the authoritative clear — adversarial
+review found `cellEditStop` alone insufficient (row edit mode and programmatic/controlled stops never
+publish it, and with an async `processRowUpdate` the commit key's `keyup` re-writes the mirror after
+the `cellEditStop` clear while the editor is still mounted and focused).
+Residual gaps until the core tear is fixed (filed separately — the stock inline editors
+`GridEditInputCell`/date/boolean/singleSelect have the same unguarded `focus()` and reproduce the
+same jitter): keystrokes landing in the one-frame focus gap of a tear remount go to `<body>`, an IME
+composition in flight aborts, and the `showFormulaInput` mount decision re-evaluates (a plain-cell
+edit whose typed `=` was deleted can swap editors after a remount — cosmetic, self-heals).
 
 **Invariant (all iterations): formula source lives only in row data; every cache and state slice is
 derived.** This is what keeps undo/redo, `processRowUpdate`, and controlled-rows scenarios working

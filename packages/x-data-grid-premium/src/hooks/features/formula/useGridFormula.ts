@@ -4,6 +4,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   GridCellEditStartReasons,
+  GridCellModes,
   gridColumnLookupSelector,
   gridRowIdSelector,
   gridRowsLookupSelector,
@@ -409,10 +410,34 @@ export const useGridFormula = (
     // A1 seed is consumed by the commit parser; clear it so it cannot affect a
     // later edit of the same cell.
     cache.lastA1Seed = null;
+    // The editor-session mirror must not resume into a later edit. This is the
+    // immediate clear for the common cell-mode path; `pruneEditorSession` below
+    // covers every path that never publishes `cellEditStop`.
+    cache.editorSession = null;
+    // The editor-session mirror must not resume into a later edit.
+    cache.editorSession = null;
     // Turn off reference highlighting (the editor set it on mount; this is the
     // only thing that clears it — the editor unmounting from virtualization
     // must not).
     apiRef.current.setFormulaActiveEdit(null);
+  }, [apiRef]);
+
+  // Drop the editor-session mirror once its cell is no longer being edited.
+  // `cellEditStop` alone cannot be trusted with this: row edit mode and
+  // programmatic/controlled stops never publish it, and with an async
+  // `processRowUpdate` the commit key's `keyup` re-writes the mirror after the
+  // `cellEditStop` clear (the editor stays mounted and focused until the
+  // promise settles). Every one of those paths does update a modes model when
+  // the cell finally leaves edit mode, so this is the authoritative clear.
+  const pruneEditorSession = React.useCallback(() => {
+    const cache = apiRef.current.caches.formula;
+    const session = cache.editorSession;
+    if (
+      session !== null &&
+      apiRef.current.getCellMode(session.id, session.field) !== GridCellModes.Edit
+    ) {
+      cache.editorSession = null;
+    }
   }, [apiRef]);
 
   // Arm the A1 paste origin: the first cell of the batch sets it, the rest
@@ -428,6 +453,8 @@ export const useGridFormula = (
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'cellEditStart', handleCellEditStart);
   useGridEvent(apiRef, 'cellEditStop', handleCellEditStop);
+  useGridEvent(apiRef, 'cellModesModelChange', pruneEditorSession);
+  useGridEvent(apiRef, 'rowModesModelChange', pruneEditorSession);
   useGridEvent(apiRef, 'clipboardPasteStart', handleClipboardPasteStart);
 
   /**
