@@ -230,6 +230,25 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       expect(onDependenciesChange.called).to.equal(false);
     });
+
+    it('should emit onDependenciesChange with only the other dependency when one of two is deleted', () => {
+      const onDependenciesChange = spy();
+      const DEP_BA: SchedulerDependency = {
+        id: 'dep-2',
+        source: 'event-b',
+        target: 'event-a',
+        type: 'FinishToStart',
+      };
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB, DEP_BA], onDependenciesChange },
+        adapter,
+      );
+
+      store.deleteDependency('dep-1');
+
+      expect(onDependenciesChange.calledOnce).to.equal(true);
+      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([DEP_BA]);
+    });
   });
 
   describe('referential integrity', () => {
@@ -407,6 +426,24 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         );
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-r" references the recurring event "event-r".',
+      ]);
+    });
+
+    it('should re-validate the dependencies when the events parameter changes after mount', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+
+      const recurringEventB = EventBuilder.new().id('event-b').recurrent('DAILY').build();
+
+      expect(() => {
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, events: [eventA, recurringEventB], dependencies: [DEP_AB] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-b".',
       ]);
     });
   });

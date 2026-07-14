@@ -40,26 +40,51 @@ const DEP_4: SchedulerDependency = {
   type: 'FinishToStart',
 };
 
+const DEP_5: SchedulerDependency = {
+  id: 'dep-5',
+  source: 'event-r',
+  target: 'event-b',
+  type: 'FinishToStart',
+};
+
 // `DEP_2` and `DEP_3` reference a recurring/unknown event on purpose (to exercise the
 // selector's filtering below), which the scheduling plugin flags with a dev warning.
 // `DEP_4` does the same but on the `source` side, unlike `DEP_2`/`DEP_3`.
+// `DEP_5` also references the recurring event on the `source` side, unlike `DEP_2`.
 const getState = () => {
   let state!: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
   expect(() => {
     state = getEventTimelinePremiumStateFromParameters({
       resources: TEST_RESOURCES,
       events: [eventA, eventB, eventR],
-      dependencies: [DEP_1, DEP_2, DEP_3, DEP_4],
+      dependencies: [DEP_1, DEP_2, DEP_3, DEP_4, DEP_5],
     });
   }).toWarnDev([
     'MUI X Scheduler: The dependency "dep-2" references the recurring event "event-r".',
     'MUI X Scheduler: The dependency "dep-3" references the unknown event "unknown-x".',
     'MUI X Scheduler: The dependency "dep-4" references the unknown event "unknown-y".',
+    'MUI X Scheduler: The dependency "dep-5" references the recurring event "event-r".',
   ]);
   return state;
 };
 
 describe('eventTimelinePremiumDependencySelectors', () => {
+  it('should return the dependencyModelList from the state', () => {
+    const state = getState();
+
+    expect(eventTimelinePremiumDependencySelectors.modelList(state)).to.equal(
+      state.dependencyModelList,
+    );
+  });
+
+  it('should return the dependencyModelLookup from the state', () => {
+    const state = getState();
+
+    expect(eventTimelinePremiumDependencySelectors.modelLookup(state)).to.equal(
+      state.dependencyModelLookup,
+    );
+  });
+
   it('should return the dependency by id', () => {
     const state = getState();
 

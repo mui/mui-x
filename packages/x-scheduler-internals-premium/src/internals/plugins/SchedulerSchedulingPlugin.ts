@@ -44,6 +44,12 @@ export class SchedulerSchedulingPlugin<
           () => this.warnOnInvalidDependencies(),
         ),
       );
+      this.disposables.defer(
+        store.registerStoreEffect(
+          (state) => state.processedEventLookup,
+          () => this.warnOnInvalidDependencies(),
+        ),
+      );
     }
   }
 
@@ -82,6 +88,7 @@ export class SchedulerSchedulingPlugin<
   /**
    * Adds a dependency between two events.
    * Rejects dependencies referencing an unknown or recurring event.
+   * Implementation of the store's `addDependency()` — call it through the store.
    */
   public addDependency = (
     properties: SchedulerDependencyCreationProperties,
@@ -101,6 +108,7 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Deletes a dependency.
+   * Implementation of the store's `deleteDependency()` — call it through the store.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId) => {
     const current = this.store.state.dependencyModelList;

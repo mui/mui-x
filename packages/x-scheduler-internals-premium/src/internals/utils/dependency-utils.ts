@@ -1,7 +1,11 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
-import type { SchedulerDependency, SchedulerDependenciesState } from '../../models';
+import type {
+  SchedulerDependency,
+  SchedulerDependenciesState,
+  SchedulerDependencyId,
+} from '../../models';
 
 // `updateStateFromParameters` runs on every render, so an unchanged `dependencies`
 // parameter must map to the same state slice instance.
@@ -21,7 +25,7 @@ export function buildDependenciesState(
 
     if (process.env.NODE_ENV !== 'production') {
       if (dependencyModelLookup.size !== dependencies.length) {
-        const seen = new Set<SchedulerDependency['id']>();
+        const seen = new Set<SchedulerDependencyId>();
         for (const dependency of dependencies) {
           if (seen.has(dependency.id)) {
             warnOnce([
