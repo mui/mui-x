@@ -6,6 +6,10 @@ import {
   createGetLastIndexFocusedItem,
   createGetNextSeriesFocusedItem,
   createGetPreviousSeriesFocusedItem,
+  createGetFirstSeriesFirstIndexFocusedItem,
+  createGetLastSeriesLastIndexFocusedItem,
+  createGetFirstSeriesFocusedItem,
+  createGetLastSeriesFocusedItem,
 } from './commonNextFocusItem';
 
 /**
@@ -34,15 +38,33 @@ export function createCommonKeyboardFocusHandler<
       case 'ArrowUp':
         return createGetNextSeriesFocusedItem<TInputSeriesType, SeriesType>(outSeriesTypes);
       case 'Home':
+        // Ctrl+Home (⌘+Home on macOS) jumps to the first item of the first series.
+        if (event.ctrlKey || event.metaKey) {
+          return createGetFirstSeriesFirstIndexFocusedItem<TInputSeriesType, SeriesType>(
+            outSeriesTypes,
+            useCurrentSeriesMaxLength,
+          );
+        }
         return createGetFirstIndexFocusedItem<TInputSeriesType, SeriesType>(
           outSeriesTypes,
           useCurrentSeriesMaxLength,
         );
       case 'End':
+        // Ctrl+End (⌘+End on macOS) jumps to the last item of the last series.
+        if (event.ctrlKey || event.metaKey) {
+          return createGetLastSeriesLastIndexFocusedItem<TInputSeriesType, SeriesType>(
+            outSeriesTypes,
+            useCurrentSeriesMaxLength,
+          );
+        }
         return createGetLastIndexFocusedItem<TInputSeriesType, SeriesType>(
           outSeriesTypes,
           useCurrentSeriesMaxLength,
         );
+      case 'PageUp':
+        return createGetFirstSeriesFocusedItem<TInputSeriesType, SeriesType>(outSeriesTypes);
+      case 'PageDown':
+        return createGetLastSeriesFocusedItem<TInputSeriesType, SeriesType>(outSeriesTypes);
       default:
         return null;
     }

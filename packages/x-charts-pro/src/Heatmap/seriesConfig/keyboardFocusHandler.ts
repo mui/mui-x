@@ -82,6 +82,13 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
         if (!currentItem) {
           return getFirstCell(state);
         }
+        // Ctrl+Home (⌘+Home on macOS) jumps to the first cell of the grid.
+        if (event.ctrlKey || event.metaKey) {
+          if (currentItem.xIndex === 0 && currentItem.yIndex === 0) {
+            return currentItem;
+          }
+          return updateCoordinates(0, 0, currentItem);
+        }
         if (currentItem.xIndex === 0) {
           return currentItem;
         }
@@ -94,11 +101,48 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
           return getFirstCell(state);
         }
         const maxLength = state.cartesianAxis?.x[0].data?.length ?? 0;
-        if (maxLength === 0 || currentItem.xIndex === maxLength - 1) {
+        if (maxLength === 0) {
+          return currentItem;
+        }
+        // Ctrl+End (⌘+End on macOS) jumps to the last cell of the grid.
+        if (event.ctrlKey || event.metaKey) {
+          const maxYLength = state.cartesianAxis?.y[0].data?.length ?? 0;
+          if (maxYLength === 0) {
+            return currentItem;
+          }
+          if (currentItem.xIndex === maxLength - 1 && currentItem.yIndex === maxYLength - 1) {
+            return currentItem;
+          }
+          return updateCoordinates(maxLength - 1, maxYLength - 1, currentItem);
+        }
+        if (currentItem.xIndex === maxLength - 1) {
           return currentItem;
         }
 
         return updateCoordinates(maxLength - 1, currentItem.yIndex, currentItem);
+      };
+    case 'PageUp':
+      return (currentItem, state) => {
+        if (!currentItem) {
+          return getFirstCell(state);
+        }
+        if (currentItem.yIndex === 0) {
+          return currentItem;
+        }
+
+        return updateCoordinates(currentItem.xIndex, 0, currentItem);
+      };
+    case 'PageDown':
+      return (currentItem, state) => {
+        if (!currentItem) {
+          return getFirstCell(state);
+        }
+        const maxLength = state.cartesianAxis?.y[0].data?.length ?? 0;
+        if (maxLength === 0 || currentItem.yIndex === maxLength - 1) {
+          return currentItem;
+        }
+
+        return updateCoordinates(currentItem.xIndex, maxLength - 1, currentItem);
       };
     default:
       return null;

@@ -1,4 +1,5 @@
 import { getPreviousNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getPreviousNonEmptySeries';
+import { getNonEmptySeriesArray } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNonEmptySeriesArray';
 import { getMaxSeriesLength } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getMaxSeriesLength';
 import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
 import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNextNonEmptySeries';
@@ -440,6 +441,208 @@ export function createGetPreviousSeriesFocusedItem<
 
     return {
       type: type as OutSeriesType,
+      seriesId,
+      dataIndex: visibleDataIndex,
+    };
+  };
+}
+
+export function createGetFirstSeriesFirstIndexFocusedItem<
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+  /**
+   * If true, series max index is defined by the current series length and not all series.
+   */
+  useCurrentSeriesMaxLength: boolean = false,
+) {
+  return function getFirstSeriesFirstIndexFocusedItem(
+    _currentItem: WorkingItem | null,
+    state: StateParameters<InSeriesType>,
+  ): ReturnedItem<OutSeriesType> {
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
+    const firstSeries = getNonEmptySeriesArray(processedSeries, compatibleSeriesTypes)[0];
+    if (firstSeries === undefined) {
+      return null;
+    }
+    const { type, seriesId } = firstSeries;
+
+    const maxLength = useCurrentSeriesMaxLength
+      ? (processedSeries[type]?.series[seriesId]?.data.length ?? 0)
+      : getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex: 0,
+      dataLength: maxLength,
+      direction: 1,
+      allowCycles: false,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type,
+      seriesId,
+      dataIndex: visibleDataIndex,
+    };
+  };
+}
+
+export function createGetLastSeriesLastIndexFocusedItem<
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+  /**
+   * If true, series max index is defined by the current series length and not all series.
+   */
+  useCurrentSeriesMaxLength: boolean = false,
+) {
+  return function getLastSeriesLastIndexFocusedItem(
+    _currentItem: WorkingItem | null,
+    state: StateParameters<InSeriesType>,
+  ): ReturnedItem<OutSeriesType> {
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
+    const nonEmptySeries = getNonEmptySeriesArray(processedSeries, compatibleSeriesTypes);
+    const lastSeries = nonEmptySeries[nonEmptySeries.length - 1];
+    if (lastSeries === undefined) {
+      return null;
+    }
+    const { type, seriesId } = lastSeries;
+
+    const maxLength = useCurrentSeriesMaxLength
+      ? (processedSeries[type]?.series[seriesId]?.data.length ?? 0)
+      : getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex: maxLength - 1,
+      dataLength: maxLength,
+      direction: -1,
+      allowCycles: false,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type,
+      seriesId,
+      dataIndex: visibleDataIndex,
+    };
+  };
+}
+
+export function createGetFirstSeriesFocusedItem<
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+) {
+  return function getFirstSeriesFocusedItem(
+    currentItem: WorkingItem | null,
+    state: StateParameters<InSeriesType>,
+  ): ReturnedItem<OutSeriesType> {
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
+    const firstSeries = getNonEmptySeriesArray(processedSeries, compatibleSeriesTypes)[0];
+    if (firstSeries === undefined) {
+      return null;
+    }
+    const { type, seriesId } = firstSeries;
+
+    const data = processedSeries[type]!.series[seriesId].data;
+    const startIndex =
+      currentItem?.dataIndex == null ? 0 : Math.min(currentItem.dataIndex, data.length - 1);
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex,
+      dataLength: data.length,
+      direction: 1,
+      allowCycles: true,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type,
+      seriesId,
+      dataIndex: visibleDataIndex,
+    };
+  };
+}
+
+export function createGetLastSeriesFocusedItem<
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+) {
+  return function getLastSeriesFocusedItem(
+    currentItem: WorkingItem | null,
+    state: StateParameters<InSeriesType>,
+  ): ReturnedItem<OutSeriesType> {
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
+    const nonEmptySeries = getNonEmptySeriesArray(processedSeries, compatibleSeriesTypes);
+    const lastSeries = nonEmptySeries[nonEmptySeries.length - 1];
+    if (lastSeries === undefined) {
+      return null;
+    }
+    const { type, seriesId } = lastSeries;
+
+    const data = processedSeries[type]!.series[seriesId].data;
+    const startIndex =
+      currentItem?.dataIndex == null
+        ? data.length - 1
+        : Math.min(currentItem.dataIndex, data.length - 1);
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex,
+      dataLength: data.length,
+      direction: -1,
+      allowCycles: true,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type,
       seriesId,
       dataIndex: visibleDataIndex,
     };

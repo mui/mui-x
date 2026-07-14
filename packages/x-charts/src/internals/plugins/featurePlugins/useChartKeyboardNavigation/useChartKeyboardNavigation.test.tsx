@@ -335,6 +335,101 @@ describe('useChartKeyboardNavigation', () => {
   });
 
   it.skipIf(isJSDOM)(
+    'should move focus to the first item of the first series with Ctrl+Home and to the last item of the last series with Ctrl+End',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={200}
+          width={400}
+          skipAnimation
+          margin={0}
+          series={[
+            { id: 'A', data: [10, 20, 30], highlightScope: { highlight: 'item' } },
+            { id: 'B', data: [40, 50, 60], highlightScope: { highlight: 'item' } },
+          ]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      // Focus the second item of series "A".
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+
+      await user.keyboard('{Control>}[End]{/Control}');
+
+      // The focus must jump to the last item of the last series ("B").
+      expect(
+        container
+          .querySelector(`[data-series="B"] .${barClasses.element}:nth-child(3)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="A"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+
+      await user.keyboard('{Control>}[Home]{/Control}');
+
+      // The focus must jump to the first item of the first series ("A").
+      expect(
+        container
+          .querySelector(`[data-series="A"] .${barClasses.element}:nth-child(1)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="B"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'should move focus to the first/last series keeping the item index with PageUp and PageDown',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={200}
+          width={400}
+          skipAnimation
+          margin={0}
+          series={[
+            { id: 'A', data: [10, 20, 30], highlightScope: { highlight: 'item' } },
+            { id: 'B', data: [40, 50, 60], highlightScope: { highlight: 'item' } },
+            { id: 'C', data: [70, 80, 90], highlightScope: { highlight: 'item' } },
+          ]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      // Focus the second item of series "A".
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+
+      await user.keyboard('[PageDown]');
+
+      // The focus must move to the last series ("C") and keep the item index.
+      expect(
+        container
+          .querySelector(`[data-series="C"] .${barClasses.element}:nth-child(2)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="A"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+
+      await user.keyboard('[PageUp]');
+
+      // The focus must move to the first series ("A") and keep the item index.
+      expect(
+        container
+          .querySelector(`[data-series="A"] .${barClasses.element}:nth-child(2)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="C"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+    },
+  );
+
+  it.skipIf(isJSDOM)(
     'should restore focus indicator on the last focused item when refocusing',
     async () => {
       const { container, user } = render(
