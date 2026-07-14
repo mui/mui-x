@@ -204,13 +204,18 @@ interface ChatBoxMessageSlotProps {
   messageError?: WithDataAttributes<Partial<ChatMessageErrorProps>>;
   /**
    * Props for the message actions row. Pass a function of the message context
-   * to vary props per message — most commonly returning `extraActions`
+   * to vary props per message -- most commonly returning `extraActions`
    * (declarative action buttons) only for assistant rows.
+   *
+   * Each branch is widened independently so the callback return is checked the
+   * same way as the object form; wrapping the whole union would leave the
+   * callback return unwidened.
    */
-  messageActions?: WithDataAttributes<
-    | Partial<ChatMessageActionsProps>
-    | ((context: ChatMessageActionsResolveContext) => Partial<ChatMessageActionsProps>)
-  >;
+  messageActions?:
+    | WithDataAttributes<Partial<ChatMessageActionsProps>>
+    | ((
+        context: ChatMessageActionsResolveContext,
+      ) => WithDataAttributes<Partial<ChatMessageActionsProps>>);
   messageAuthorName?: MessageGroupSlotProps['authorName'];
 }
 

@@ -31,3 +31,22 @@ type AssertChatMessageSource = Assert<
 type AssertChatMessageSources = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<ChatMessageSourcesSlotProps, 'ChatMessageSources'>>
 >;
+
+// `messageActions` is the only callback-form ChatBox slot. Assert the callback
+// RETURN accepts `data-*` on its own: the whole `AssertChatBox` check would still
+// pass if only the object branch were widened, so this guards against wrapping the
+// whole object-or-callback union (which leaves the callback return unwidened).
+type MessageActionsCallbackReturn =
+  Extract<NonNullable<ChatBoxSlotProps['messageActions']>, (...args: any[]) => any> extends (
+    ...args: any[]
+  ) => infer R
+    ? R
+    : never;
+type AssertMessageActionsCallback = Assert<
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      { return: MessageActionsCallbackReturn },
+      'ChatBox.messageActions callback'
+    >
+  >
+>;
