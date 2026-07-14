@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "9.8.0",
+  "version": "9.9.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Tree View components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -27,8 +27,8 @@
     "treeview"
   ],
   "scripts": {
-    "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat",
+    "typescript": "tsgo -p tsconfig.json",
+    "build": "code-infra build --tsgo",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {

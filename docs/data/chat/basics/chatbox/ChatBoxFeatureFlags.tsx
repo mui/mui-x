@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const CONVERSATION_ID = 'feature-flags-conv';
 
@@ -82,7 +82,7 @@ export default function ChatBoxFeatureFlags() {
       initialActiveConversationId={CONVERSATION_ID}
       initialMessages={messages}
       sx={{
-        height: 480,
+        height: 500,
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: 1,

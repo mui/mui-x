@@ -5,7 +5,7 @@ import legendGetter from './bar/legend';
 import getColor from './bar/getColor';
 import keyboardFocusHandler from './bar/keyboardFocusHandler';
 import tooltipGetter, { axisTooltipGetter } from './bar/tooltip';
-import tooltipItemPositionGetter from './bar/tooltipPosition';
+import { selectorTooltipItemPosition } from './bar/tooltipPosition';
 import { getSeriesWithDefaultValues } from './bar/getSeriesWithDefaultValues';
 import { selectorBarItemAtPosition } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
@@ -21,7 +21,7 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   colorProcessor: getColor,
   legendGetter,
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   axisTooltipGetter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,

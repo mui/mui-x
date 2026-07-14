@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/system';
 import type { SystemStyleObject } from '@mui/system/styleFunctionSx';
 import type { PlaygroundClassCustomization } from './PlaygroundCard';
 import { parseSx } from './parseSx';

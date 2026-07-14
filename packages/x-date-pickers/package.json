@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "9.8.0",
+  "version": "9.9.0",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Date and Time Picker components.",
   "license": "MIT",
@@ -29,8 +29,8 @@
     "datetimepicker"
   ],
   "scripts": {
-    "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat",
+    "typescript": "tsgo -p tsconfig.json",
+    "build": "code-infra build --tsgo",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
