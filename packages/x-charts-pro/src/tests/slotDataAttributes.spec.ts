@@ -53,7 +53,7 @@ type AssertScatterChartPro = Assert<
     AssertAllSlotsAcceptDataAttributes<
       ScatterChartProSlotProps,
       'ScatterChartPro',
-      'xAxis' | 'yAxis'
+      'xAxis' | 'yAxis' | 'scatter'
     >
   >
 >;

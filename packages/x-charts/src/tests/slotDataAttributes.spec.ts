@@ -84,7 +84,11 @@ type AssertRadarChart = Assert<
 >;
 type AssertScatterChart = Assert<
   AllTrue<
-    AssertAllSlotsAcceptDataAttributes<ScatterChartSlotProps, 'ScatterChart', 'xAxis' | 'yAxis'>
+    AssertAllSlotsAcceptDataAttributes<
+      ScatterChartSlotProps,
+      'ScatterChart',
+      'xAxis' | 'yAxis' | 'scatter'
+    >
   >
 >;
 type AssertSparkLineChart = Assert<

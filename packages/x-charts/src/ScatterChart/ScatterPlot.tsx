@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import type { WithDataAttributes } from '@mui/utils/types';
 import { Scatter } from './Scatter';
 import type { ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
@@ -28,7 +27,10 @@ export interface ScatterPlotSlots extends ScatterSlots {
 }
 
 export interface ScatterPlotSlotProps extends ScatterSlotProps {
-  scatter?: WithDataAttributes<Partial<ScatterProps> & ScatterPropsOverrides>;
+  // Not widened with `data-*`: none of the default renderers (svg-single
+  // `Scatter`, svg-batch `BatchScatter`, progressive `ScatterAsync`) spread
+  // unknown props onto an element, so `data-*` here never reaches the DOM.
+  scatter?: Partial<ScatterProps> & ScatterPropsOverrides;
 }
 
 export type RendererType = 'svg-single' | 'svg-batch';
