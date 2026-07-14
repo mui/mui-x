@@ -26,7 +26,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/node": "22.20.0",
+    "@types/node": "22.20.1",
     "rimraf": "catalog:",
     "vitest": "catalog:"
   },
