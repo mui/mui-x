@@ -430,16 +430,16 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
 
     it('should re-validate the dependencies when the events parameter changes after mount', () => {
-      const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
-        adapter,
-      );
+      // The same array instance is passed to both calls so the dependencies slice keeps its
+      // reference and only the `processedEventLookup` effect can trigger the re-validation.
+      const dependencies = [DEP_AB];
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dependencies }, adapter);
 
       const recurringEventB = EventBuilder.new().id('event-b').recurrent('DAILY').build();
 
       expect(() => {
         store.updateStateFromParameters(
-          { ...DEFAULT_PARAMS, events: [eventA, recurringEventB], dependencies: [DEP_AB] },
+          { ...DEFAULT_PARAMS, events: [eventA, recurringEventB], dependencies },
           adapter,
         );
       }).toWarnDev([
