@@ -14,8 +14,8 @@ catalog:
   '@babel/preset-typescript': ^7.29.7
   '@babel/runtime': ^7.29.7
   '@babel/traverse': ^7.29.7
-  '@base-ui/react': ^1.5.0
-  '@base-ui/utils': ^0.3.0
+  '@base-ui/react': ^1.6.0
+  '@base-ui/utils': ^0.3.1
   '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
@@ -57,7 +57,7 @@ catalog:
   date-fns: ^4.4.0
   date-fns-jalali: ^4.1.0-0
   dayjs: ^1.11.21
-  es-toolkit: ^1.46.1
+  es-toolkit: ^1.49.0
   execa: 9.6.1
   jscodeshift: 17.3.0
   jsdom: 29.1.1
@@ -119,4 +119,4 @@ overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
-  caniuse-lite: ^1.0.30001800
+  caniuse-lite: ^1.0.30001803
