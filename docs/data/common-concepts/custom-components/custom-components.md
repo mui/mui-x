@@ -270,6 +270,8 @@ declare module '@mui/material/utils' {
 :::warning
 The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, where the interface is re-exported.
 On earlier Material UI versions — or for packages that don't depend on Material UI, such as Chat Headless — augment `@mui/utils/types` instead. That augmentation reaches MUI X slots only, not Material UI slots.
+
+Because older Material UI versions ship their own `@mui/utils`, this fallback only works when your augmentation and MUI X resolve to the _same_ `@mui/utils` instance. Add `@mui/utils` (**v9.2.0 or later**) as a direct dependency of your app so the two dedupe to a single copy; otherwise the declaration augments a different `@mui/utils` and `data-*` stays a type error.
 :::
 
 The augmentation shares the same interface as Material UI. See the [Material UI TypeScript guide](/material-ui/guides/typescript/#allowing-data-attributes-on-slotprops) for the full explanation and the strict (explicit-key) variant.
