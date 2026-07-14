@@ -7,10 +7,10 @@
 // `'data-x'` is used as the marker key: it matches the
 // ` [k: `data-${string}`]: ... ` template-literal index signature exposed by
 // `DataAttributes`, and is present only when the variant has been widened via
-// `DataAttributes`. `aria-*` is not checked here — every real slot inner type in
-// MUI X inherits `React.AriaAttributes` through its element or component base type,
-// so aria coverage is a structural property of the inner type, not something this
-// widener needs to re-verify.
+// `DataAttributes`. `aria-*` is not checked here because this widener only adds
+// `data-*` keys (`DataAttributesOverrides` carries no aria keys); aria support,
+// where a slot's element or component base provides it, is unaffected and out of
+// scope for this check.
 type AcceptsDataAttributes<V> = V extends any ? ('data-x' extends keyof V ? true : false) : never;
 
 type CheckVariant<V> = V extends (...args: any[]) => infer R
