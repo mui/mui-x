@@ -422,8 +422,20 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     const middle = row.querySelector('[data-col="10"]')!.getBoundingClientRect();
     expect(middle.left - scrollerRect.left).to.be.closeTo(10 * COLUMN_WIDTH - scrollLeft, 1);
 
-    // The header is virtualized with the same context.
-    expect(document.querySelector('[data-testid="header"] [data-col="10"]')).not.to.equal(null);
+    // The top/bottom container content scrolls at the same rate as the rows: the
+    // header and pinned-row cells stay column-aligned with the window cells.
+    const headerMiddle = document
+      .querySelector('[data-testid="header"] [data-col="10"]')!
+      .getBoundingClientRect();
+    expect(headerMiddle.left).to.be.closeTo(middle.left, 1);
+    const pinnedTopMiddle = document
+      .querySelector('[data-id="pinned-top"] [data-col="10"]')!
+      .getBoundingClientRect();
+    expect(pinnedTopMiddle.left).to.be.closeTo(middle.left, 1);
+    const pinnedBottomMiddle = document
+      .querySelector('[data-id="pinned-bottom"] [data-col="10"]')!
+      .getBoundingClientRect();
+    expect(pinnedBottomMiddle.left).to.be.closeTo(middle.left, 1);
   });
 
   it('keeps the viewport covered when scrolling right past the rendered columns', async () => {

@@ -524,23 +524,33 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
 
     contentProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
       style: {
-        // `max-content` makes the content span the full columns width so that the
-        // sticky elements' containing blocks cover the whole scrollable area.
-        width: 'max-content',
+        // The scrollable width is fully synthetic: every horizontally-pinned section
+        // is viewport-sized, so none of the in-flow children spans the columns width.
+        width: dimensions.columnsTotalWidth,
         minWidth: '100%',
         position: 'relative',
         // Reserve the virtual scrollbar lanes in the scrollable area, so the last
-        // row/column can scroll out from under the overlaid scrollbar widgets.
-        paddingBottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
-        paddingRight: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
+        // row/column can scroll out from under the overlaid scrollbar widgets. Only
+        // when the axis scrolls, otherwise the lane itself would create overflow.
+        // `content-box` so the lanes add to the columns width.
+        boxSizing: 'content-box',
+        paddingBottom:
+          dimensions.hasScrollY && dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
+        paddingRight: dimensions.hasScrollX && dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
       } as React.CSSProperties,
       role: 'presentation',
     })),
 
-    topContainerProps: createSelectorMemoized(() => ({
+    topContainerProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
       style: {
         position: 'sticky',
         top: 0,
+        // Horizontally pinned to the scrollport, like the window: otherwise the
+        // container would move with the horizontal scroll in addition to its
+        // positioner's translation, making its content scroll at twice the rate.
+        left: 0,
+        width: dimensions.viewportInnerSize.width,
+        overflow: 'hidden',
         zIndex: 2,
       } as React.CSSProperties,
       role: 'presentation',
@@ -551,6 +561,10 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
         position: 'sticky',
         // Lifted above the horizontal scrollbar lane.
         bottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
+        // Horizontally pinned, same as the top container.
+        left: 0,
+        width: dimensions.viewportInnerSize.width,
+        overflow: 'hidden',
         zIndex: 2,
       } as React.CSSProperties,
       role: 'presentation',
