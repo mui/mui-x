@@ -30,10 +30,10 @@ declare module '@mui/utils/types' {
 // must accept `data-*` attributes once `DataAttributesOverrides` is augmented (below).
 
 type AssertBarChart = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<BarChartSlotProps, 'BarChart'>>
+  AllTrue<AssertAllSlotsAcceptDataAttributes<BarChartSlotProps, 'BarChart', 'xAxis' | 'yAxis'>>
 >;
 type AssertChartsAxis = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<ChartsAxisSlotProps, 'ChartsAxis'>>
+  AllTrue<AssertAllSlotsAcceptDataAttributes<ChartsAxisSlotProps, 'ChartsAxis', 'xAxis' | 'yAxis'>>
 >;
 type AssertChartsContainer = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<ChartsContainerSlotProps, 'ChartsContainer'>>
@@ -64,13 +64,17 @@ type AssertChartsTooltipContainer = Assert<
   >
 >;
 type AssertChartsXAxis = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<ChartsXAxisSlotProps, 'ChartsXAxis'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<ChartsXAxisSlotProps, 'ChartsXAxis', 'xAxis' | 'yAxis'>
+  >
 >;
 type AssertChartsYAxis = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<ChartsYAxisSlotProps, 'ChartsYAxis'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<ChartsYAxisSlotProps, 'ChartsYAxis', 'xAxis' | 'yAxis'>
+  >
 >;
 type AssertLineChart = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<LineChartSlotProps, 'LineChart'>>
+  AllTrue<AssertAllSlotsAcceptDataAttributes<LineChartSlotProps, 'LineChart', 'xAxis' | 'yAxis'>>
 >;
 type AssertPieChart = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<PieChartSlotProps, 'PieChart'>>
@@ -79,7 +83,9 @@ type AssertRadarChart = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<RadarChartSlotProps, 'RadarChart'>>
 >;
 type AssertScatterChart = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<ScatterChartSlotProps, 'ScatterChart'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<ScatterChartSlotProps, 'ScatterChart', 'xAxis' | 'yAxis'>
+  >
 >;
 type AssertSparkLineChart = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<SparkLineChartSlotProps, 'SparkLineChart'>>

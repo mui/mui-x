@@ -28,9 +28,18 @@ type SlotAcceptsDataAttributes<T> = true extends CheckVariant<NonNullable<T>> ? 
  * `data-*` keys). The check distributes across union variants and unwraps
  * function variants to their return type; any variant providing the signature
  * — typically via an intersection with `DataAttributes` — passes.
+ *
+ * `TExcluded` lists slots intentionally left un-widened because their default
+ * component does not forward arbitrary props to the DOM (e.g. a controller
+ * component that renders no element). Those slots are skipped so the assertion
+ * reflects the deliberate exclusion rather than flagging it as a regression.
  */
-export type AssertAllSlotsAcceptDataAttributes<T, Name extends string = 'Component'> = {
-  [K in keyof T]-?: SlotAcceptsDataAttributes<T[K]> extends true
+export type AssertAllSlotsAcceptDataAttributes<
+  T,
+  Name extends string = 'Component',
+  TExcluded extends string = never,
+> = {
+  [K in keyof Omit<T, TExcluded>]-?: SlotAcceptsDataAttributes<Omit<T, TExcluded>[K]> extends true
     ? true
     : `FAIL [${Name}.${Extract<K, string>}]: slot must accept data-* attributes. Use SlotComponentPropsFromProps.`;
 };

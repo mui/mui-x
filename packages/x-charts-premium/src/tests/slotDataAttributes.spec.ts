@@ -19,10 +19,22 @@ declare module '@mui/utils/types' {
 // must accept `data-*` attributes once `DataAttributesOverrides` is augmented (below).
 
 type AssertBarChartPremium = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<BarChartPremiumSlotProps, 'BarChartPremium'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      BarChartPremiumSlotProps,
+      'BarChartPremium',
+      'xAxis' | 'yAxis'
+    >
+  >
 >;
 type AssertCandlestickChart = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<CandlestickChartSlotProps, 'CandlestickChart'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      CandlestickChartSlotProps,
+      'CandlestickChart',
+      'xAxis' | 'yAxis'
+    >
+  >
 >;
 type AssertChartsContainerPremium = Assert<
   AllTrue<
@@ -38,5 +50,7 @@ type AssertChartsDataProviderPremium = Assert<
   >
 >;
 type AssertHeatmapPremium = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<HeatmapPremiumSlotProps, 'HeatmapPremium'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<HeatmapPremiumSlotProps, 'HeatmapPremium', 'xAxis' | 'yAxis'>
+  >
 >;

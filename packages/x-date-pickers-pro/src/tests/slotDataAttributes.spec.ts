@@ -33,27 +33,48 @@ type AssertDateRangeCalendar = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<DateRangeCalendarSlotProps, 'DateRangeCalendar'>>
 >;
 type AssertDateRangePicker = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<DateRangePickerSlotProps, 'DateRangePicker'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      DateRangePickerSlotProps,
+      'DateRangePicker',
+      'desktopTrapFocus'
+    >
+  >
 >;
 type AssertDateTimeRangePicker = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<DateTimeRangePickerSlotProps, 'DateTimeRangePicker'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      DateTimeRangePickerSlotProps,
+      'DateTimeRangePicker',
+      'desktopTrapFocus'
+    >
+  >
 >;
 type AssertDesktopDateRangePicker = Assert<
   AllTrue<
-    AssertAllSlotsAcceptDataAttributes<DesktopDateRangePickerSlotProps, 'DesktopDateRangePicker'>
+    AssertAllSlotsAcceptDataAttributes<
+      DesktopDateRangePickerSlotProps,
+      'DesktopDateRangePicker',
+      'desktopTrapFocus'
+    >
   >
 >;
 type AssertDesktopDateTimeRangePicker = Assert<
   AllTrue<
     AssertAllSlotsAcceptDataAttributes<
       DesktopDateTimeRangePickerSlotProps,
-      'DesktopDateTimeRangePicker'
+      'DesktopDateTimeRangePicker',
+      'desktopTrapFocus'
     >
   >
 >;
 type AssertDesktopTimeRangePicker = Assert<
   AllTrue<
-    AssertAllSlotsAcceptDataAttributes<DesktopTimeRangePickerSlotProps, 'DesktopTimeRangePicker'>
+    AssertAllSlotsAcceptDataAttributes<
+      DesktopTimeRangePickerSlotProps,
+      'DesktopTimeRangePicker',
+      'desktopTrapFocus'
+    >
   >
 >;
 type AssertMobileDateRangePicker = Assert<
@@ -112,5 +133,11 @@ type AssertStaticDateRangePicker = Assert<
   >
 >;
 type AssertTimeRangePicker = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<TimeRangePickerSlotProps, 'TimeRangePicker'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      TimeRangePickerSlotProps,
+      'TimeRangePicker',
+      'desktopTrapFocus'
+    >
+  >
 >;

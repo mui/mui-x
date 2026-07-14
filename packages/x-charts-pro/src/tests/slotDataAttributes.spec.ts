@@ -22,16 +22,22 @@ declare module '@mui/utils/types' {
 // must accept `data-*` attributes. The test compiles if and only if the assertion holds.
 
 type AssertBarChartPro = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<BarChartProSlotProps, 'BarChartPro'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<BarChartProSlotProps, 'BarChartPro', 'xAxis' | 'yAxis'>
+  >
 >;
 type AssertFunnelChart = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<FunnelChartSlotProps, 'FunnelChart'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<FunnelChartSlotProps, 'FunnelChart', 'xAxis' | 'yAxis'>
+  >
 >;
 type AssertHeatmap = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<HeatmapSlotProps, 'Heatmap'>>
+  AllTrue<AssertAllSlotsAcceptDataAttributes<HeatmapSlotProps, 'Heatmap', 'xAxis' | 'yAxis'>>
 >;
 type AssertLineChartPro = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<LineChartProSlotProps, 'LineChartPro'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<LineChartProSlotProps, 'LineChartPro', 'xAxis' | 'yAxis'>
+  >
 >;
 type AssertPieChartPro = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<PieChartProSlotProps, 'PieChartPro'>>
@@ -43,5 +49,11 @@ type AssertSankeyChart = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<SankeyChartSlotProps, 'SankeyChart'>>
 >;
 type AssertScatterChartPro = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<ScatterChartProSlotProps, 'ScatterChartPro'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      ScatterChartProSlotProps,
+      'ScatterChartPro',
+      'xAxis' | 'yAxis'
+    >
+  >
 >;

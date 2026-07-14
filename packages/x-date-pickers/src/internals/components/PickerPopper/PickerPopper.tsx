@@ -68,7 +68,10 @@ export interface PickerPopperSlotProps {
   /**
    * Props passed down to the [FocusTrap](https://mui.com/base-ui/react-focus-trap/) component on desktop.
    */
-  desktopTrapFocus?: WithDataAttributes<Partial<MuiTrapFocusProps>>;
+  // Not widened with `data-*`: FocusTrap renders no DOM element and its
+  // `exactProp` guard rejects unknown props (a stray `data-*` throws in dev),
+  // so the attribute could never reach the DOM.
+  desktopTrapFocus?: Partial<MuiTrapFocusProps>;
   /**
    * Props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */

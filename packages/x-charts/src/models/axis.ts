@@ -108,8 +108,11 @@ export interface ChartsAxisSlotProps {
   >;
   axisTickLabel?: WithDataAttributes<Partial<ChartsTextProps> & AxisTickLabelPropsOverrides>;
   axisLabel?: WithDataAttributes<Partial<ChartsTextProps> & AxisLabelPropsOverrides>;
-  xAxis?: WithDataAttributes<Partial<ChartsXAxisProps> & XAxisPropsOverrides>;
-  yAxis?: WithDataAttributes<Partial<ChartsYAxisProps> & YAxisPropsOverrides>;
+  // `xAxis`/`yAxis` are whole-axis-component replacement slots whose props are
+  // never spread onto a DOM element (ChartsAxis passes them nowhere), so they
+  // are intentionally not widened with `data-*` -- forwarding is a follow-up.
+  xAxis?: Partial<ChartsXAxisProps> & XAxisPropsOverrides;
+  yAxis?: Partial<ChartsYAxisProps> & YAxisPropsOverrides;
 }
 
 export interface ChartsAxisProps extends TickParams {

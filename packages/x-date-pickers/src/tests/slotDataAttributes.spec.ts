@@ -50,24 +50,46 @@ type AssertDateField = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<DateFieldSlotProps, 'DateField'>>
 >;
 type AssertDatePicker = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<DatePickerSlotProps, 'DatePicker'>>
+  AllTrue<AssertAllSlotsAcceptDataAttributes<DatePickerSlotProps, 'DatePicker', 'desktopTrapFocus'>>
 >;
 type AssertDateTimeField = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<DateTimeFieldSlotProps, 'DateTimeField'>>
 >;
 type AssertDateTimePicker = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<DateTimePickerSlotProps, 'DateTimePicker'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      DateTimePickerSlotProps,
+      'DateTimePicker',
+      'desktopTrapFocus'
+    >
+  >
 >;
 type AssertDesktopDatePicker = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<DesktopDatePickerSlotProps, 'DesktopDatePicker'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      DesktopDatePickerSlotProps,
+      'DesktopDatePicker',
+      'desktopTrapFocus'
+    >
+  >
 >;
 type AssertDesktopDateTimePicker = Assert<
   AllTrue<
-    AssertAllSlotsAcceptDataAttributes<DesktopDateTimePickerSlotProps, 'DesktopDateTimePicker'>
+    AssertAllSlotsAcceptDataAttributes<
+      DesktopDateTimePickerSlotProps,
+      'DesktopDateTimePicker',
+      'desktopTrapFocus'
+    >
   >
 >;
 type AssertDesktopTimePicker = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<DesktopTimePickerSlotProps, 'DesktopTimePicker'>>
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      DesktopTimePickerSlotProps,
+      'DesktopTimePicker',
+      'desktopTrapFocus'
+    >
+  >
 >;
 type AssertDigitalClock = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<DigitalClockSlotProps, 'DigitalClock'>>
@@ -129,7 +151,7 @@ type AssertTimeField = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<TimeFieldSlotProps, 'TimeField'>>
 >;
 type AssertTimePicker = Assert<
-  AllTrue<AssertAllSlotsAcceptDataAttributes<TimePickerSlotProps, 'TimePicker'>>
+  AllTrue<AssertAllSlotsAcceptDataAttributes<TimePickerSlotProps, 'TimePicker', 'desktopTrapFocus'>>
 >;
 type AssertYearCalendar = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<YearCalendarSlotProps, 'YearCalendar'>>
