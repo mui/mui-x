@@ -10,6 +10,7 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useAreaPlotData } from './useAreaPlotData';
+import { useLineItemClickHandler } from './useLineItemClickHandler';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { lineClasses, useUtilityClasses } from './lineClasses';
 
@@ -75,6 +76,7 @@ function AreaPlot(props: AreaPlotProps) {
 
   const completedData = useAggregatedData();
   const classes = useUtilityClasses();
+  const onAreaItemClick = useLineItemClickHandler(onItemClick);
 
   return (
     <AreaPlotRoot className={clsx(classes.areaPlot, className)} {...other}>
@@ -89,7 +91,7 @@ function AreaPlot(props: AreaPlotProps) {
               gradientId={gradientId}
               slots={slots}
               slotProps={slotProps}
-              onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
+              onClick={onAreaItemClick && ((event) => onAreaItemClick(event, seriesId))}
               skipAnimation={skipAnimation}
             />
           ),

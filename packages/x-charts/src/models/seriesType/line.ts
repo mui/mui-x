@@ -130,7 +130,8 @@ export type LineItemIdentifier = {
   type: 'line';
   seriesId: SeriesId;
   /**
-   * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
+   * The index of the data point closest to the pointer along the x-axis.
+   * `dataIndex` can be `undefined` if the pointer position cannot be associated with a data point.
    */
   dataIndex?: number;
 };

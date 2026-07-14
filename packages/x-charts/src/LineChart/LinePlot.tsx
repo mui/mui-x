@@ -10,6 +10,7 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useLinePlotData } from './useLinePlotData';
+import { useLineItemClickHandler } from './useLineItemClickHandler';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { lineClasses, useUtilityClasses } from './lineClasses';
 
@@ -74,6 +75,7 @@ function LinePlot(props: LinePlotProps) {
 
   const completedData = useAggregatedData();
   const classes = useUtilityClasses();
+  const onLineItemClick = useLineItemClickHandler(onItemClick);
 
   return (
     <LinePlotRoot className={clsx(classes.linePlot, className)} {...other}>
@@ -89,7 +91,7 @@ function LinePlot(props: LinePlotProps) {
             skipAnimation={skipAnimation || isSampled}
             slots={slots}
             slotProps={slotProps}
-            onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
+            onClick={onLineItemClick && ((event) => onLineItemClick(event, seriesId))}
           />
         );
       })}
