@@ -3,7 +3,7 @@ import type * as React from 'react';
 import type { CSSObject, Theme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { eventCalendarContentMobileQuery } from '../../../constants';
+import { eventCalendarContentCompactQuery } from '../../../constants';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 
@@ -47,7 +47,7 @@ export const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
     outlineOffset: 2,
   },
   variants: getPaletteVariants(theme),
-  [eventCalendarContentMobileQuery]: {
+  [eventCalendarContentCompactQuery]: {
     '--time-grid-event-column-gap': '0px',
   },
 });
@@ -79,7 +79,7 @@ export const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder
     content: '""',
     position: 'absolute',
   },
-  [eventCalendarContentMobileQuery]: {
+  [eventCalendarContentCompactQuery]: {
     '--time-grid-event-column-gap': '0px',
   },
 }));

@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import {
   eventCalendarPreferenceSelectors,
   eventCalendarViewSelectors,
@@ -15,8 +16,9 @@ import {
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   EVENT_CALENDAR_ROOT_CONTAINER_NAME,
-  eventCalendarRootDesktopQuery,
-  eventCalendarRootMobileQuery,
+  RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
+  eventCalendarRootExpandedQuery,
+  eventCalendarRootCompactQuery,
   responsiveTypographyContainerQueries,
 } from '../internals/constants/responsiveTypography';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
@@ -62,15 +64,16 @@ const EventCalendarRootStyled = styled('div', {
   containerType: 'inline-size',
   containerName: EVENT_CALENDAR_ROOT_CONTAINER_NAME,
 
-  // Desktop/mobile toggle via the root container query (both layouts always
-  // rendered, SSR-safe): hide `data-desktop-only` on mobile, `data-mobile-only` on desktop.
-  [eventCalendarRootMobileQuery]: {
-    '& [data-desktop-only]': {
+  // Compact/expanded toggle via the root container query (both layouts always
+  // rendered, SSR-safe): hide `data-expanded-only` in the compact layout,
+  // `data-compact-only` in the expanded layout.
+  [eventCalendarRootCompactQuery]: {
+    '& [data-expanded-only]': {
       display: 'none',
     },
   },
-  [eventCalendarRootDesktopQuery]: {
-    '& [data-mobile-only]': {
+  [eventCalendarRootExpandedQuery]: {
+    '& [data-compact-only]': {
       display: 'none',
     },
   },
@@ -96,9 +99,9 @@ const EventCalendarSidePanelCollapse = styled(Collapse, {
   name: 'MuiEventCalendar',
   slot: 'SidePanelCollapse',
 })({
-  // The inline side panel is desktop-only; on small screens the drawer overlay
+  // The inline side panel is expanded-only; in the compact layout the drawer overlay
   // takes its place.
-  [eventCalendarRootMobileQuery]: {
+  [eventCalendarRootCompactQuery]: {
     display: 'none',
   },
 });
@@ -152,9 +155,9 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     const view = useStore(store, eventCalendarViewSelectors.view);
     const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
-    // The mobile drawer keeps its own state (default closed) rather than reusing
+    // The compact drawer keeps its own state (default closed) rather than reusing
     // `isSidePanelOpen` (default open), so it never covers the calendar on load.
-    const [isMobileDrawerOpen, setIsMobileDrawerOpen] = React.useState(false);
+    const [isCompactDrawerOpen, setIsCompactDrawerOpen] = React.useState(false);
 
     let content: React.ReactNode;
 
@@ -178,13 +181,28 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
     const rootRef = React.useRef<HTMLElement | null>(null);
     const handleRootRef = useMergedRefs(forwardedRef, rootRef);
 
+    // The container query only hides the drawer in the expanded layout; the modal
+    // underneath would stay open (aria-hiding the calendar, trapping focus). Close it
+    // when the root grows past the breakpoint so the drawer fully unmounts instead of
+    // just disappearing. Only active while the drawer is open.
+    useResizeObserver(
+      rootRef,
+      (entries) => {
+        const width = entries[0].contentRect.width;
+        if (width >= RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM) {
+          setIsCompactDrawerOpen(false);
+        }
+      },
+      isCompactDrawerOpen,
+    );
+
     return (
       <EventCalendarRootStyled
         className={clsx(classes.root, className)}
         {...other}
         ref={handleRootRef}
       >
-        <HeaderToolbar onMobileMenuClick={() => setIsMobileDrawerOpen(true)} />
+        <HeaderToolbar onCompactMenuClick={() => setIsCompactDrawerOpen(true)} />
 
         <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
           <EventCalendarSidePanelCollapse
@@ -211,8 +229,8 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
           </ResponsiveTypographyContainer>
         </EventCalendarMainPanel>
         <SidePanelDrawer
-          open={isMobileDrawerOpen}
-          onClose={() => setIsMobileDrawerOpen(false)}
+          open={isCompactDrawerOpen}
+          onClose={() => setIsCompactDrawerOpen(false)}
           container={rootRef}
         />
         <ErrorContainer />

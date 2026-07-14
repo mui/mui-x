@@ -271,11 +271,11 @@ export interface EventCalendarClasses
   miniCalendarNextButton: string;
   /** Styles applied to the more events popover element. */
   moreEventsPopover: string;
-  /** Styles applied to the header toolbar mobile menu button element (small screens). */
-  headerToolbarMobileMenuButton: string;
-  /** Styles applied to the header toolbar mobile today button element (small screens). */
-  headerToolbarMobileTodayButton: string;
-  /** Styles applied to the side panel drawer paper (popup) element (small screens). */
+  /** Styles applied to the header toolbar compact menu button element (compact layout). */
+  headerToolbarCompactMenuButton: string;
+  /** Styles applied to the header toolbar compact today button element (compact layout). */
+  headerToolbarCompactTodayButton: string;
+  /** Styles applied to the side panel drawer paper (popup) element (compact layout). */
   sidePanelDrawer: string;
   /** Styles applied to the side panel drawer backdrop element. */
   sidePanelDrawerBackdrop: string;
@@ -434,8 +434,8 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'miniCalendarPreviousButton',
     'miniCalendarNextButton',
     'moreEventsPopover',
-    'headerToolbarMobileMenuButton',
-    'headerToolbarMobileTodayButton',
+    'headerToolbarCompactMenuButton',
+    'headerToolbarCompactTodayButton',
     'sidePanelDrawer',
     'sidePanelDrawerBackdrop',
     'sidePanelDrawerViewport',
@@ -580,8 +580,8 @@ const slots = {
   miniCalendarPreviousButton: ['miniCalendarPreviousButton'],
   miniCalendarNextButton: ['miniCalendarNextButton'],
   moreEventsPopover: ['moreEventsPopover'],
-  headerToolbarMobileMenuButton: ['headerToolbarMobileMenuButton'],
-  headerToolbarMobileTodayButton: ['headerToolbarMobileTodayButton'],
+  headerToolbarCompactMenuButton: ['headerToolbarCompactMenuButton'],
+  headerToolbarCompactTodayButton: ['headerToolbarCompactTodayButton'],
   sidePanelDrawer: ['sidePanelDrawer'],
   sidePanelDrawerBackdrop: ['sidePanelDrawerBackdrop'],
   sidePanelDrawerViewport: ['sidePanelDrawerViewport'],

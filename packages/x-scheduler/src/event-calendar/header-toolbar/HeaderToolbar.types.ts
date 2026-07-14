@@ -1,7 +1,7 @@
 export interface HeaderToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
-   * Called when the mobile menu button is pressed (small screens only).
+   * Called when the compact menu button is pressed (compact layout only).
    * Opens the side panel drawer.
    */
-  onMobileMenuClick?: () => void;
+  onCompactMenuClick?: () => void;
 }

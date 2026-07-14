@@ -104,7 +104,7 @@ const VIEW_ICONS = {
 };
 
 /**
- * Mobile-only side panel (MUI temporary `Drawer`) with view switching, resources, and
+ * Compact-layout side panel (MUI temporary `Drawer`) with view switching, resources, and
  * preferences (inline `Collapse`). Portaled into the calendar root to stay container-scoped.
  */
 export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
@@ -147,9 +147,10 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
       open={open}
       onClose={onClose}
       className={classes.sidePanelDrawerViewport}
-      // Hide the drawer on the desktop layout via the root container query, so an
-      // open mobile drawer can never linger over the desktop calendar after a resize.
-      data-mobile-only=""
+      // Hide the drawer in the expanded layout via the root container query, so an
+      // open compact drawer can never linger over the expanded calendar after a resize.
+      // `EventCalendarRoot` also resets the open state so the modal fully unmounts.
+      data-compact-only=""
       slotProps={{
         root: { container: portalContainer, disableScrollLock: true },
         backdrop: { className: classes.sidePanelDrawerBackdrop },

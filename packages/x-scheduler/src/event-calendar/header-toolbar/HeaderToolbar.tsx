@@ -24,7 +24,7 @@ import { PreferencesMenu } from './preferences-menu';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 
 // Both toolbar layouts render for SSR safety; the root container query toggles them
-// via `data-desktop-only` / `data-mobile-only` (see `EventCalendarRootStyled`).
+// via `data-expanded-only` / `data-compact-only` (see `EventCalendarRootStyled`).
 const HeaderToolbarRoot = styled('header', {
   name: 'MuiEventCalendar',
   slot: 'HeaderToolbar',
@@ -109,7 +109,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
-  const { onMobileMenuClick, className, ...other } = props;
+  const { onCompactMenuClick, className, ...other } = props;
 
   const weekNumber = getWeekNumber(adapter, visibleDate, weekStartsOn);
   const showViewSwitcher = views.length > 1;
@@ -123,18 +123,18 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       className={clsx(className, classes.headerToolbar)}
     >
       <HeaderToolbarLeftElement className={classes.headerToolbarLeftElement}>
-        {/* Mobile: opens the side panel drawer. */}
+        {/* Compact: opens the side panel drawer. */}
         <IconButton
-          data-mobile-only
-          className={classes.headerToolbarMobileMenuButton}
+          data-compact-only
+          className={classes.headerToolbarCompactMenuButton}
           aria-label={localeText.openMenu}
-          onClick={onMobileMenuClick}
+          onClick={onCompactMenuClick}
         >
           <Menu />
         </IconButton>
-        {/* Desktop: toggles the inline side panel. */}
+        {/* Expanded: toggles the inline side panel. */}
         <IconButton
-          data-desktop-only
+          data-expanded-only
           className={classes.headerToolbarSidePanelToggle}
           aria-label={isSidePanelOpen ? localeText.closeSidePanel : localeText.openSidePanel}
           onClick={(event) =>
@@ -143,7 +143,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         >
           {isSidePanelOpen ? <MenuOpen /> : <Menu />}
         </IconButton>
-        <HeaderToolbarLabel data-desktop-only aria-live="polite">
+        <HeaderToolbarLabel data-expanded-only aria-live="polite">
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
           {showWeekLabel && (
@@ -173,26 +173,26 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             <ChevronRight />
           </IconButton>
         </HeaderToolbarDateNavigator>
-        {/* Mobile: today as an icon button replacing the desktop text button. */}
+        {/* Compact: today as an icon button replacing the expanded text button. */}
         <IconButton
-          data-mobile-only
-          className={classes.headerToolbarMobileTodayButton}
+          data-compact-only
+          className={classes.headerToolbarCompactTodayButton}
           onClick={store.goToToday}
           aria-label={localeText.today}
         >
           <Today />
         </IconButton>
         <Button
-          data-desktop-only
+          data-expanded-only
           className={classes.headerToolbarTodayButton}
           onClick={store.goToToday}
         >
           {localeText.today}
         </Button>
         {showViewSwitcher && (
-          <ViewSwitcher data-desktop-only views={views} view={view} onViewChange={store.setView} />
+          <ViewSwitcher data-expanded-only views={views} view={view} onViewChange={store.setView} />
         )}
-        <PreferencesMenu data-desktop-only />
+        <PreferencesMenu data-expanded-only />
       </HeaderToolbarActions>
     </HeaderToolbarRoot>
   );

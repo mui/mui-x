@@ -20,20 +20,20 @@ const containerWidthFrom = (containerName: string, widthPx: number) =>
 const containerWidthBetween = (containerName: string, minWidthPx: number, maxWidthPx: number) =>
   `@container ${containerName} (${minWidthPx}px <= width < ${maxWidthPx}px)`;
 
-// Root-container queries: switch desktop/mobile layout on the overall width. Tag
-// descendants `data-desktop-only` / `data-mobile-only`; toggle rules live on the root.
-export const eventCalendarRootMobileQuery = containerWidthBelow(
+// Root-container queries: switch compact/expanded layout on the overall width. Tag
+// descendants `data-expanded-only` / `data-compact-only`; toggle rules live on the root.
+export const eventCalendarRootCompactQuery = containerWidthBelow(
   EVENT_CALENDAR_ROOT_CONTAINER_NAME,
   RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
 );
-export const eventCalendarRootDesktopQuery = containerWidthFrom(
+export const eventCalendarRootExpandedQuery = containerWidthFrom(
   EVENT_CALENDAR_ROOT_CONTAINER_NAME,
   RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
 );
 
 // Content-container query: reacts to content width (shrinks with the side panel) at
 // the same breakpoint, for slots that scale with the views' available room.
-export const eventCalendarContentMobileQuery = containerWidthBelow(
+export const eventCalendarContentCompactQuery = containerWidthBelow(
   EVENT_CALENDAR_CONTAINER_NAME,
   RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
 );
@@ -86,7 +86,7 @@ export const responsiveTokens: CSSObject = {
 // Inert unless an ancestor sets container-type + name; `ResponsiveTypographyContainer`
 // is that ancestor, so these queries fire for both the calendar and standalone views.
 export const responsiveTypographyContainerQueries: CSSObject = {
-  [eventCalendarContentMobileQuery]: {
+  [eventCalendarContentCompactQuery]: {
     // fixed cell width
     '--EventCalendar-size-fixedCellWidth': '54px',
     // Typography

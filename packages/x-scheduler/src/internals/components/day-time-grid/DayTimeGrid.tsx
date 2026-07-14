@@ -25,7 +25,7 @@ import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
-import { eventCalendarContentMobileQuery } from '../../constants/responsiveTypography';
+import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
 
 const HOUR_HEIGHT = 46;
 const HOURS_IN_DAY = 24;
@@ -247,7 +247,7 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   '[data-current] button:hover &': {
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
-  [eventCalendarContentMobileQuery]: {
+  [eventCalendarContentCompactQuery]: {
     width: 32,
     height: 32,
   },

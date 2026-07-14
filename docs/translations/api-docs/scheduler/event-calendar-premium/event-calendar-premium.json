@@ -530,6 +530,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar actions element"
     },
+    "headerToolbarCompactMenuButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar compact menu button element (compact layout)"
+    },
+    "headerToolbarCompactTodayButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar compact today button element (compact layout)"
+    },
     "headerToolbarDateNavigator": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar date navigator buttons container element"
@@ -541,14 +549,6 @@
     "headerToolbarLeftElement": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar left side element"
-    },
-    "headerToolbarMobileMenuButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the header toolbar mobile menu button element (small screens)"
-    },
-    "headerToolbarMobileTodayButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the header toolbar mobile today button element (small screens)"
     },
     "headerToolbarNextButton": {
       "description": "Styles applied to {{nodeName}}.",
@@ -765,7 +765,7 @@
     },
     "sidePanelDrawer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the side panel drawer paper (popup) element (small screens)"
+      "nodeName": "the side panel drawer paper (popup) element (compact layout)"
     },
     "sidePanelDrawerBackdrop": {
       "description": "Styles applied to {{nodeName}}.",

@@ -42,7 +42,7 @@ const PreferencesMenuListSubheader = styled(ListSubheader, {
 
 /**
  * Computes which preference options are visible from the menu config and current view.
- * Shared by the desktop `PreferencesMenu` and the mobile `SidePanelDrawer`.
+ * Shared by the expanded-layout `PreferencesMenu` and the compact-layout `SidePanelDrawer`.
  */
 export function usePreferencesMenuModel() {
   const store = useEventCalendarStoreContext();
@@ -123,7 +123,7 @@ export function usePreferencesMenuModel() {
 
 /**
  * Builds the preference options as a flat array of elements, so they spread into a
- * `Menu` (desktop) or `MenuList` (drawer). `hasAnyOption` is `false` when none show.
+ * `Menu` (expanded layout) or `MenuList` (drawer). `hasAnyOption` is `false` when none show.
  */
 export function usePreferencesMenuItems(): {
   hasAnyOption: boolean;

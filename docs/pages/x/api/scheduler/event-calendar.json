@@ -779,6 +779,18 @@
       "isGlobal": false
     },
     {
+      "key": "headerToolbarCompactMenuButton",
+      "className": "MuiEventCalendar-headerToolbarCompactMenuButton",
+      "description": "Styles applied to the header toolbar compact menu button element (compact layout).",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarCompactTodayButton",
+      "className": "MuiEventCalendar-headerToolbarCompactTodayButton",
+      "description": "Styles applied to the header toolbar compact today button element (compact layout).",
+      "isGlobal": false
+    },
+    {
       "key": "headerToolbarDateNavigator",
       "className": "MuiEventCalendar-headerToolbarDateNavigator",
       "description": "Styles applied to the header toolbar date navigator buttons container element.",
@@ -794,18 +806,6 @@
       "key": "headerToolbarLeftElement",
       "className": "MuiEventCalendar-headerToolbarLeftElement",
       "description": "Styles applied to the header toolbar left side element.",
-      "isGlobal": false
-    },
-    {
-      "key": "headerToolbarMobileMenuButton",
-      "className": "MuiEventCalendar-headerToolbarMobileMenuButton",
-      "description": "Styles applied to the header toolbar mobile menu button element (small screens).",
-      "isGlobal": false
-    },
-    {
-      "key": "headerToolbarMobileTodayButton",
-      "className": "MuiEventCalendar-headerToolbarMobileTodayButton",
-      "description": "Styles applied to the header toolbar mobile today button element (small screens).",
       "isGlobal": false
     },
     {
@@ -1135,7 +1135,7 @@
     {
       "key": "sidePanelDrawer",
       "className": "MuiEventCalendar-sidePanelDrawer",
-      "description": "Styles applied to the side panel drawer paper (popup) element (small screens).",
+      "description": "Styles applied to the side panel drawer paper (popup) element (compact layout).",
       "isGlobal": false
     },
     {
