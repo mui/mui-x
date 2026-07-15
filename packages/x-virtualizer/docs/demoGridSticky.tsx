@@ -7,7 +7,6 @@ import {
   useVirtualizer,
   Virtualizer,
   Virtualization,
-  Dimensions,
   LayoutGridSticky,
   computeOffsetLeft,
 } from '@mui/x-virtualizer';
@@ -50,8 +49,10 @@ const cellStyle: React.CSSProperties = {
   whiteSpace: 'nowrap',
 };
 
-/* The horizontal axis is controlled: pinned cells are absolutely positioned with
- * JS offsets, since sticky positioning ignores the positioner's transform. */
+/* The horizontal axis is controlled: pinned cells are absolutely positioned,
+ * since sticky positioning ignores the positioner's transform. Their offsets
+ * arrive through the `--pinned-left`/`--pinned-right` variables set on the
+ * positioner, so per-pixel scrolling is a style update to avoid row re-renders. */
 const pinnedCellStyle: React.CSSProperties = {
   ...cellStyle,
   position: 'absolute',
@@ -59,6 +60,15 @@ const pinnedCellStyle: React.CSSProperties = {
   height: '100%',
   zIndex: 1,
   background: '#f5f5f5',
+};
+
+const pinnedCellLeftStyle: React.CSSProperties = {
+  ...pinnedCellStyle,
+  left: 'var(--pinned-left)',
+};
+const pinnedCellRightStyle: React.CSSProperties = {
+  ...pinnedCellStyle,
+  right: 'var(--pinned-right)',
 };
 
 const rowStyle: React.CSSProperties = {
@@ -71,9 +81,35 @@ const rowStyle: React.CSSProperties = {
   background: '#fff',
 };
 
-const VirtualizerContext = React.createContext(null as unknown as Virtualizer);
+const headerRowStyle: React.CSSProperties = {
+  ...rowStyle,
+  height: HEADER_HEIGHT,
+  background: '#e8e8e8',
+};
+const headerCellStyle: React.CSSProperties = { ...cellStyle, fontWeight: 600 };
+const headerPinnedLeftStyle: React.CSSProperties = {
+  ...pinnedCellLeftStyle,
+  fontWeight: 600,
+  background: '#e8e8e8',
+};
+const headerPinnedRightStyle: React.CSSProperties = {
+  ...pinnedCellRightStyle,
+  fontWeight: 600,
+  background: '#e8e8e8',
+};
 
-const PinnedOffsetsContext = React.createContext({ left: 0, right: 0 });
+const containerSx = {
+  height: 480,
+  border: `1px solid ${borderColor}`,
+  borderRadius: 1,
+  background: '#fff',
+  color: '#000',
+  fontFamily: 'monospace',
+  fontSize: 13,
+};
+const scrollerSx = { '&::-webkit-scrollbar': { display: 'none' } };
+
+const VirtualizerContext = React.createContext(null as unknown as Virtualizer);
 
 const JankContext = React.createContext({ current: false });
 
@@ -99,7 +135,7 @@ function useJank(scroller: React.RefObject<HTMLDivElement | null>) {
   }, [scroller, jank]);
 }
 
-function Row(props: {
+const Row = React.memo(function Row(props: {
   id: any;
   offsetLeft: number;
   firstColumnIndex: number;
@@ -107,7 +143,6 @@ function Row(props: {
   background?: string;
 }) {
   const { id, offsetLeft, firstColumnIndex, lastColumnIndex, background } = props;
-  const offsets = React.useContext(PinnedOffsetsContext);
 
   const cells = [];
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
@@ -121,22 +156,51 @@ function Row(props: {
     );
   }
 
-  const pinnedStyle = background ? { ...pinnedCellStyle, background } : pinnedCellStyle;
-
   return (
     <div style={background ? { ...rowStyle, background } : rowStyle}>
-      <div style={{ ...pinnedStyle, left: offsets.left }}>{id} × 0</div>
+      <div style={background ? { ...pinnedCellLeftStyle, background } : pinnedCellLeftStyle}>
+        {id} × 0
+      </div>
       {cells}
-      <div style={{ ...pinnedStyle, right: offsets.right }}>
+      <div style={background ? { ...pinnedCellRightStyle, background } : pinnedCellRightStyle}>
         {id} × {COLUMN_COUNT - 1}
       </div>
     </div>
   );
-}
+});
 
-function HeaderRow() {
+const HeaderCells = React.memo(function HeaderCells(props: {
+  offsetLeft: number;
+  firstColumnIndex: number;
+  lastColumnIndex: number;
+}) {
+  const { offsetLeft, firstColumnIndex, lastColumnIndex } = props;
+
+  const cells = [];
+  for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
+    cells.push(
+      <div
+        key={i}
+        style={
+          i === firstColumnIndex ? { ...headerCellStyle, marginLeft: offsetLeft } : headerCellStyle
+        }
+      >
+        {columns[i].field}
+      </div>,
+    );
+  }
+
+  return (
+    <div style={headerRowStyle}>
+      <div style={headerPinnedLeftStyle}>{columns[0].field}</div>
+      {cells}
+      <div style={headerPinnedRightStyle}>{columns[COLUMN_COUNT - 1].field}</div>
+    </div>
+  );
+});
+
+const HeaderRow = React.memo(function HeaderRow() {
   const virtualizer = React.useContext(VirtualizerContext);
-  const offsets = React.useContext(PinnedOffsetsContext);
   const renderContext = virtualizer.store.use(Virtualization.selectors.renderContext);
   const offsetLeft = computeOffsetLeft(
     columnPositions,
@@ -145,43 +209,26 @@ function HeaderRow() {
     'sticky',
   );
 
-  const cells = [];
-  for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
-    cells.push(
-      <div
-        key={i}
-        style={
-          i === renderContext.firstColumnIndex
-            ? { ...cellStyle, marginLeft: offsetLeft, fontWeight: 600 }
-            : { ...cellStyle, fontWeight: 600 }
-        }
-      >
-        {columns[i].field}
-      </div>,
-    );
-  }
-
-  const headerCellStyle = { ...pinnedCellStyle, fontWeight: 600, background: '#e8e8e8' };
-
   return (
-    <div style={{ ...rowStyle, height: HEADER_HEIGHT, background: '#e8e8e8' }}>
-      <div style={{ ...headerCellStyle, left: offsets.left }}>{columns[0].field}</div>
-      {cells}
-      <div style={{ ...headerCellStyle, right: offsets.right }}>
-        {columns[COLUMN_COUNT - 1].field}
-      </div>
-    </div>
+    <HeaderCells
+      offsetLeft={offsetLeft}
+      firstColumnIndex={renderContext.firstColumnIndex}
+      lastColumnIndex={renderContext.lastColumnIndex}
+    />
   );
-}
+});
 
-function Scrollbar(props: { contentStyle?: React.CSSProperties; [key: string]: any }) {
+const Scrollbar = React.memo(function Scrollbar(props: {
+  contentStyle?: React.CSSProperties;
+  [key: string]: any;
+}) {
   const { contentStyle, ...other } = props;
   return (
     <div {...other}>
       <div style={contentStyle} />
     </div>
   );
-}
+});
 
 function Grid() {
   const refs = {
@@ -241,64 +288,51 @@ function Grid() {
   );
   const positionerProps = virtualizer.store.use(LayoutGridSticky.selectors.positionerProps);
 
-  const scrollPosition = virtualizer.store.use(Virtualization.selectors.scrollPosition);
-  const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
-  const pinnedOffsets = React.useMemo(
-    () => ({
-      left: scrollPosition.current.left,
-      right: Math.max(
-        0,
-        columnsTotalWidth - dimensions.viewportInnerSize.width - scrollPosition.current.left,
-      ),
-    }),
-    [scrollPosition, dimensions],
+  const pinnedLeftOffset = virtualizer.store.use(Virtualization.selectors.pinnedLeftOffsetSelector);
+  const pinnedRightOffset = virtualizer.store.use(
+    Virtualization.selectors.pinnedRightOffsetSelector,
+  );
+
+  const positionerStyle = React.useMemo(
+    () =>
+      ({
+        ...positionerProps.style,
+        '--pinned-left': `${pinnedLeftOffset}px`,
+        '--pinned-right': `${pinnedRightOffset}px`,
+      }) as React.CSSProperties,
+    [positionerProps, pinnedLeftOffset, pinnedRightOffset],
   );
 
   const { getRows } = virtualizer.api.getters;
 
   return (
     <VirtualizerContext.Provider value={virtualizer}>
-      <PinnedOffsetsContext.Provider value={pinnedOffsets}>
-        <Box
-          {...containerProps}
-          sx={{
-            height: 480,
-            border: `1px solid ${borderColor}`,
-            borderRadius: 1,
-            background: '#fff',
-            color: '#000',
-            fontFamily: 'monospace',
-            fontSize: 13,
-          }}
-        >
-          <Box
-            className="Grid--scroller"
-            {...scrollerProps}
-            sx={{ '&::-webkit-scrollbar': { display: 'none' } }}
-          >
-            <div className="Grid--content" {...contentProps}>
-              <div className="Grid--topContainer" {...topContainerProps}>
-                <div {...positionerProps}>
-                  <HeaderRow />
-                  {getRows({ position: 'top', rows: pinnedRows.top })}
-                </div>
-              </div>
-              <div className="Grid--spacerTop" {...spacerTopProps} />
-              <div className="Grid--window" {...windowProps}>
-                <div {...positionerProps}>{getRows()}</div>
-              </div>
-              <div className="Grid--spacerBottom" {...spacerBottomProps} />
-              <div className="Grid--bottomContainer" {...bottomContainerProps}>
-                <div {...positionerProps}>
-                  {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
-                </div>
+      <Box {...containerProps} sx={containerSx}>
+        <Box className="Grid--scroller" {...scrollerProps} sx={scrollerSx}>
+          <div className="Grid--content" {...contentProps}>
+            <div className="Grid--topContainer" {...topContainerProps}>
+              <div {...positionerProps} style={positionerStyle}>
+                <HeaderRow />
+                {getRows({ position: 'top', rows: pinnedRows.top })}
               </div>
             </div>
-          </Box>
-          <Scrollbar className="Grid--scrollbarVertical" {...scrollbarVerticalProps} />
-          <Scrollbar className="Grid--scrollbarHorizontal" {...scrollbarHorizontalProps} />
+            <div className="Grid--spacerTop" {...spacerTopProps} />
+            <div className="Grid--window" {...windowProps}>
+              <div {...positionerProps} style={positionerStyle}>
+                {getRows()}
+              </div>
+            </div>
+            <div className="Grid--spacerBottom" {...spacerBottomProps} />
+            <div className="Grid--bottomContainer" {...bottomContainerProps}>
+              <div {...positionerProps} style={positionerStyle}>
+                {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
+              </div>
+            </div>
+          </div>
         </Box>
-      </PinnedOffsetsContext.Provider>
+        <Scrollbar className="Grid--scrollbarVertical" {...scrollbarVerticalProps} />
+        <Scrollbar className="Grid--scrollbarHorizontal" {...scrollbarHorizontalProps} />
+      </Box>
     </VirtualizerContext.Provider>
   );
 }
