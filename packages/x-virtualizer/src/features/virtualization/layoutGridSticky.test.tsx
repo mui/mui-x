@@ -101,14 +101,17 @@ function Row(props: {
   );
 }
 
-function Scrollbar(props: { contentStyle?: React.CSSProperties; [key: string]: any }) {
+const Scrollbar = React.forwardRef<
+  HTMLDivElement,
+  { contentStyle?: React.CSSProperties; [key: string]: any }
+>(function Scrollbar(props, ref) {
   const { contentStyle, ...other } = props;
   return (
-    <div {...other}>
+    <div {...other} ref={ref}>
       <div style={contentStyle} />
     </div>
   );
-}
+});
 
 function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
   const refs = {
@@ -413,47 +416,51 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     expectInnerViewportCovered();
   });
 
-  it('keeps the latest scroller position when the virtual scrollbar echo is delayed', async () => {
+  it('keeps the latest position when synchronized scroll events are delayed', async () => {
     await renderGrid();
     const scroller = screen.getByTestId('scroller');
     const scrollbar = screen.getByTestId('scrollbar-vertical');
     const firstScrollTop = 250 * ROW_HEIGHT;
     const secondScrollTop = 500 * ROW_HEIGHT;
-
-    act(() => {
-      scroller.scrollTop = firstScrollTop;
-      scroller.dispatchEvent(new Event('scroll'));
-      expect(scrollbar.scrollTop).to.equal(firstScrollTop);
-
-      // Process another scroller event before delivering the scrollbar event queued
-      // by the first synchronization.
-      scroller.scrollTop = secondScrollTop;
-      scroller.dispatchEvent(new Event('scroll'));
-      expect(scrollbar.scrollTop).to.equal(secondScrollTop);
-
-      scrollbar.dispatchEvent(new Event('scroll'));
-    });
-
-    expect(scroller.scrollTop).to.equal(secondScrollTop);
-    expect(scrollbar.scrollTop).to.equal(secondScrollTop);
-
     const thirdScrollTop = 750 * ROW_HEIGHT;
     const fourthScrollTop = 900 * ROW_HEIGHT;
 
-    act(() => {
-      scroller.scrollTop = thirdScrollTop;
-      scroller.dispatchEvent(new Event('scroll'));
-      expect(scrollbar.scrollTop).to.equal(thirdScrollTop);
+    const verifyDelayedEcho = (source: HTMLElement, target: HTMLElement) => {
+      act(() => {
+        source.scrollTop = firstScrollTop;
+        source.dispatchEvent(new Event('scroll'));
+        expect(target.scrollTop).to.equal(firstScrollTop);
 
-      // The latest scroller position can be applied before its scroll event. The old
-      // scrollbar echo must not restore the previous position in that window either.
-      scroller.scrollTop = fourthScrollTop;
-      scrollbar.dispatchEvent(new Event('scroll'));
-      expect(scroller.scrollTop).to.equal(fourthScrollTop);
+        // Process another source event before delivering the target event queued by
+        // the first synchronization.
+        source.scrollTop = secondScrollTop;
+        source.dispatchEvent(new Event('scroll'));
+        expect(target.scrollTop).to.equal(secondScrollTop);
 
-      scroller.dispatchEvent(new Event('scroll'));
-      expect(scrollbar.scrollTop).to.equal(fourthScrollTop);
-    });
+        target.dispatchEvent(new Event('scroll'));
+      });
+
+      expect(source.scrollTop).to.equal(secondScrollTop);
+      expect(target.scrollTop).to.equal(secondScrollTop);
+
+      act(() => {
+        source.scrollTop = thirdScrollTop;
+        source.dispatchEvent(new Event('scroll'));
+        expect(target.scrollTop).to.equal(thirdScrollTop);
+
+        // The latest source position can be applied before its scroll event. The old
+        // target echo must not restore the previous position in that window either.
+        source.scrollTop = fourthScrollTop;
+        target.dispatchEvent(new Event('scroll'));
+        expect(source.scrollTop).to.equal(fourthScrollTop);
+
+        source.dispatchEvent(new Event('scroll'));
+        expect(target.scrollTop).to.equal(fourthScrollTop);
+      });
+    };
+
+    verifyDelayedEcho(scroller, scrollbar);
+    verifyDelayedEcho(scrollbar, scroller);
   });
 
   it('keeps pinned columns in place across horizontal scrolling', async () => {
