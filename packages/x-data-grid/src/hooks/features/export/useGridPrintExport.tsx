@@ -170,12 +170,10 @@ export const useGridPrintExport = (
       virtualScrollerContent.style.flexBasis = 'auto';
 
       gridClone.querySelector<HTMLElement>(`.${gridClasses['scrollbar--vertical']}`)?.remove();
-      if (
-        !(
-          virtualScrollerContent.nextSibling instanceof HTMLElement &&
-          virtualScrollerContent.nextSibling.classList.contains(gridClasses.filler)
-        )
-      ) {
+      if (!(
+        virtualScrollerContent.nextSibling instanceof HTMLElement &&
+        virtualScrollerContent.nextSibling.classList.contains(gridClasses.filler)
+      )) {
         const filler = document.createElement('div');
         filler.style.height = scrollbarSizeCssExpression;
         virtualScrollerContent.insertAdjacentElement('afterend', filler);

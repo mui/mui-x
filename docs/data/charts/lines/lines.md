@@ -269,6 +269,10 @@ The highlighted point always shows a mark, whether its index is even or odd.
 
 {{"demo": "MarkOptimization.js"}}
 
+For large datasets, set the `sampling` prop on `LineChartPro` to reduce the line when zoomed out,
+with a choice of algorithms (`'m4'`, `'minmax'`, `'lttb'`). See [Charts—Performance](/x/react-charts/performance/#sampling)
+for details and a live demo.
+
 ### CSS
 
 You can customize the line chart elements using CSS selectors.

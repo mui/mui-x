@@ -79,8 +79,7 @@ export namespace useEventOccurrencesWithTimelinePosition {
   }
 
   export type EventRenderableOccurrenceWithPosition =
-    | EventOccurrenceWithPosition
-    | EventOccurrencePlaceholderWithPosition;
+    EventOccurrenceWithPosition | EventOccurrencePlaceholderWithPosition;
 
   export interface ReturnValue {
     /**

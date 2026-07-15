@@ -603,9 +603,15 @@ describe('<DataGridPro /> - Rows', () => {
         // scroll to the bottom
         await act(async () => virtualScroller.scrollTo({ top: 2000 }));
 
+        // `scrollTo` updates `scrollTop` synchronously but the browser dispatches the native
+        // `scroll` event asynchronously, and the render context only updates from that event.
+        // Poll until the bottom window is rendered to avoid a flaky race.
+        await waitFor(() => {
+          const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
+          expect(lastCell).to.have.text('31');
+        });
+
         const dimensions = apiRef.current!.state.dimensions;
-        const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
-        expect(lastCell).to.have.text('31');
         expect(virtualScroller.scrollHeight).to.equal(
           dimensions.headerHeight + nbRows * rowHeight + dimensions.scrollbarSize,
         );

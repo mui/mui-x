@@ -23,9 +23,7 @@ import type {
 
 type RangePickerValueManager<
   TError extends
-    | DateRangeValidationError
-    | TimeRangeValidationError
-    | DateTimeRangeValidationError = any,
+    DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError = any,
 > = PickerValueManager<PickerRangeValue, TError>;
 
 export const rangeValueManager: RangePickerValueManager = {

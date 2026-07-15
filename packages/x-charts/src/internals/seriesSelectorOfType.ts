@@ -64,7 +64,5 @@ export const useSeriesOfType = <T extends keyof ChartsSeriesConfig>(
 ) => {
   const store = useStore();
   return store.use(selectorSeriesOfType, seriesType, seriesId) as
-    | ChartSeriesDefaultized<T>
-    | ChartSeriesDefaultized<T>[]
-    | undefined;
+    ChartSeriesDefaultized<T> | ChartSeriesDefaultized<T>[] | undefined;
 };

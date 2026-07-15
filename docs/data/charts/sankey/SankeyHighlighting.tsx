@@ -65,11 +65,7 @@ export default function SankeyHighlighting() {
             onChange={(event) =>
               setNodeHighlight(
                 event.target.value as
-                  | 'nodes'
-                  | 'links'
-                  | 'incoming'
-                  | 'outgoing'
-                  | 'none',
+                  'nodes' | 'links' | 'incoming' | 'outgoing' | 'none',
               )
             }
             fullWidth
@@ -101,11 +97,7 @@ export default function SankeyHighlighting() {
             onChange={(event) =>
               setLinkHighlight(
                 event.target.value as
-                  | 'links'
-                  | 'nodes'
-                  | 'source'
-                  | 'target'
-                  | 'none',
+                  'links' | 'nodes' | 'source' | 'target' | 'none',
               )
             }
             fullWidth
