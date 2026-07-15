@@ -397,6 +397,17 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       expect(renderedRowIds()).to.include(500);
     });
 
+    // The synthetic dispatch ran the handlers ahead of native event delivery:
+    // the scroller's own scroll event and the scrollbar mirror's echo are still
+    // pending, with the mirror's sync-lock held. Let two rendering updates
+    // deliver them before scrolling again — a scroll processed mid-handshake
+    // consumes the lock, and the stale echo then restores the old position.
+    await act(async () => {
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      });
+    });
+
     const scrollTop = 250 * ROW_HEIGHT;
     act(() => {
       scroller.scrollTop = scrollTop;
