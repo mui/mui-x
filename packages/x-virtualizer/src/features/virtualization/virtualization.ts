@@ -356,7 +356,13 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
           frozenContext.current = undefined;
           break;
         default:
-          frozenContext.current = renderContext;
+          // The frozen context pins carried-over rows to their pre-scroll (wider)
+          // column range so they don't re-render when the buffers narrow for the
+          // scroll duration. In sticky mode the column window is always
+          // viewport-exact, so there is nothing to pin, and pinning would detach
+          // those rows from `scrollLeft` updates during vertically-dominant
+          // diagonal scrolling, tearing the horizontal axis.
+          frozenContext.current = layoutMode === 'sticky' ? undefined : renderContext;
           break;
       }
     }
