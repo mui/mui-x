@@ -34,7 +34,7 @@ export default function TimelineDemo() {
   };
 
   return (
-    <Stack sx={{ px: { xs: 1, md: 0 } }}>
+    <Stack sx={{ px: { xs: 2, md: 0 } }}>
       <SchedulerDemoThemeProvider selectedTheme={selectedTheme}>
         <Stack spacing={1} sx={{ height: 600, width: '100%', mb: 6 }}>
           <Stack
