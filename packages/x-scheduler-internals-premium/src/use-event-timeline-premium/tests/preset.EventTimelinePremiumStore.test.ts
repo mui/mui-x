@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+import type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const DEFAULT_PARAMS = {
