@@ -13,8 +13,9 @@ import {
   useChatVariant,
   useMessage,
 } from '@mui/x-chat-headless';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 import { ChatMessageError, type ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
 import { ChatMessageAvatar, type ChatMessageAvatarProps } from './ChatMessageAvatar';
@@ -318,7 +319,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
         status: message?.status,
         streaming: message?.status === 'streaming',
       };
-      const resolvedActionsProps = resolveSlotProps(
+      const resolvedActionsProps = resolveComponentProps(
         slotProps?.actions ?? {},
         actionsContext,
       ) as Partial<ChatMessageActionsProps>;
@@ -335,7 +336,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
               (StreamingIndicatorSlot ?? ChatStreamingIndicator) as React.ElementType,
               {
                 message,
-                ...resolveSlotProps(slotProps?.streamingIndicator ?? {}, actionsContext),
+                ...resolveComponentProps(slotProps?.streamingIndicator ?? {}, actionsContext),
               },
             )
           : undefined;
