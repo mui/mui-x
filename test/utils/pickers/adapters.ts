@@ -3,6 +3,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { AdapterTemporal } from '@mui/x-date-pickers/AdapterTemporal';
 
 // Regional adapters (moment-hijri, moment-jalaali, date-fns-jalali, dayjs-buddhist)
 // drag in large date libraries and are needed only by a handful of tests. They are
@@ -16,7 +17,8 @@ export type AdapterName =
   | 'moment'
   | 'moment-hijri'
   | 'moment-jalaali'
-  | 'date-fns-jalali';
+  | 'date-fns-jalali'
+  | 'temporal';
 
 type AdapterConstructor = new (...args: any) => MuiPickersAdapter;
 
@@ -25,6 +27,7 @@ export const availableAdapters: Partial<Record<AdapterName, AdapterConstructor>>
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
   moment: AdapterMoment,
+  temporal: AdapterTemporal,
 };
 
 let AdapterClassToExtend: AdapterConstructor = AdapterDateFns;

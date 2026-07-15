@@ -456,6 +456,9 @@ importers:
       stylelint:
         specifier: 17.14.0
         version: 17.14.0(typescript@6.0.3)
+      temporal-polyfill:
+        specifier: 'catalog:'
+        version: 1.0.1
       tsx:
         specifier: 'catalog:'
         version: 4.23.0
