@@ -526,8 +526,8 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
       style: {
         // The scrollable width is fully synthetic: every horizontally-pinned section
         // is viewport-sized, so none of the in-flow children spans the columns width.
-        width: dimensions.columnsTotalWidth,
-        minWidth: '100%',
+        // Floored at the inner viewport width
+        width: Math.max(dimensions.columnsTotalWidth, dimensions.viewportInnerSize.width),
         position: 'relative',
         // Reserve the virtual scrollbar lanes in the scrollable area, so the last
         // row/column can scroll out from under the overlaid scrollbar widgets. Only

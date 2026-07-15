@@ -110,7 +110,7 @@ function Scrollbar(props: { contentStyle?: React.CSSProperties; [key: string]: a
   );
 }
 
-function StickyGrid() {
+function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
   const refs = {
     container: React.useRef<HTMLDivElement>(null),
     scroller: React.useRef<HTMLDivElement>(null),
@@ -126,6 +126,7 @@ function StickyGrid() {
       topPinnedHeight: HEADER_HEIGHT,
       leftPinnedWidth: COLUMN_WIDTH,
       rightPinnedWidth: COLUMN_WIDTH,
+      scrollbarSize: props.scrollbarSize,
     },
     virtualization: { layoutMode: 'sticky' },
 
@@ -210,7 +211,11 @@ function StickyGrid() {
     <PinnedOffsetsContext.Provider value={pinnedOffsets}>
       <div
         {...containerProps}
-        style={{ ...containerProps.style, width: VIEWPORT_WIDTH, height: VIEWPORT_HEIGHT }}
+        style={{
+          ...containerProps.style,
+          width: props.width ?? VIEWPORT_WIDTH,
+          height: VIEWPORT_HEIGHT,
+        }}
       >
         <div {...scrollerProps} data-testid="scroller">
           <div {...contentProps}>
@@ -313,8 +318,8 @@ function renderedRowIds() {
 describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
   const { render } = createRenderer();
 
-  async function renderGrid() {
-    const view = render(<StickyGrid />);
+  async function renderGrid(props?: { width?: number; scrollbarSize?: number }) {
+    const view = render(<StickyGrid {...props} />);
     await waitFor(() => {
       expect(renderedRowIds().length).to.be.greaterThan(0);
     });
@@ -507,5 +512,22 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     // ...and a large buffer below it (15 rows in the scroll direction).
     const viewportBottom = scrollTop + scroller.clientHeight;
     expect((last + 1) * ROW_HEIGHT).to.be.at.least(viewportBottom + 10 * ROW_HEIGHT);
+  });
+
+  it('keeps the scroller and virtual scrollbar horizontal scroll ranges in sync near the overflow threshold', async () => {
+    // Container slightly wider than the columns, classic scrollbars forced (so the
+    // geometry is exercised on overlay-scrollbar platforms too): the vertical
+    // scrollbar lane makes the columns overflow the inner viewport by less than
+    // the lane width. The scroller's scroll range must match the virtual
+    // scrollbar's exactly, otherwise the extra range is a dead zone where the
+    // widget and the render position no longer follow the scroller.
+    await renderGrid({ width: columnsTotalWidth + 10, scrollbarSize: 15 });
+    const scroller = screen.getByTestId('scroller');
+    const scrollbar = screen.getByTestId('scrollbar-horizontal');
+
+    const scrollerRange = scroller.scrollWidth - scroller.clientWidth;
+    // Guard that the threshold band was actually hit: the axis overflows.
+    expect(scrollerRange).to.be.greaterThan(0);
+    expect(scrollerRange).to.equal(scrollbar.scrollWidth - scrollbar.clientWidth);
   });
 });
