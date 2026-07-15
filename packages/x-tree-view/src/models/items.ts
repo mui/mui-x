@@ -10,10 +10,7 @@ export type TreeViewDefaultItemModelProperties = {
 export type TreeViewValidItem<R extends {}> = { children?: R[] };
 
 export type TreeViewItemsReorderingAction =
-  | 'reorder-above'
-  | 'reorder-below'
-  | 'make-child'
-  | 'move-to-parent';
+  'reorder-above' | 'reorder-below' | 'make-child' | 'move-to-parent';
 
 export interface TreeViewSelectionPropagation {
   descendants?: boolean;

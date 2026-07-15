@@ -1,6 +1,13 @@
 {
   "props": {
     "fill": { "type": { "name": "string" } },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, mapShapeItemIdentifier: MapShapeItemIdentifier) => void",
+        "describedArgs": ["event", "mapShapeItemIdentifier"]
+      }
+    },
     "stroke": { "type": { "name": "string" }, "default": "'none'" },
     "strokeWidth": { "type": { "name": "number" }, "default": "1" }
   },

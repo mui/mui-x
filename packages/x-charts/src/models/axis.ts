@@ -59,8 +59,7 @@ export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleLinear<Range, Output>;
 
 export type D3OrdinalScale<Domain extends { toString(): string } = { toString(): string }> =
-  | ScaleBand<Domain>
-  | ScalePoint<Domain>;
+  ScaleBand<Domain> | ScalePoint<Domain>;
 
 export interface ChartsAxisSlots {
   /**
@@ -465,13 +464,11 @@ export interface AxisScaleComputedConfig {
   };
   time: {
     colorScale?:
-      | ScaleSequential<string, string | null>
-      | ScaleThreshold<number | Date, string | null>;
+      ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   utc: {
     colorScale?:
-      | ScaleSequential<string, string | null>
-      | ScaleThreshold<number | Date, string | null>;
+      ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   linear: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;

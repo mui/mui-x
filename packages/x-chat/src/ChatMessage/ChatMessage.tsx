@@ -13,8 +13,9 @@ import {
   useChatVariant,
   useMessage,
 } from '@mui/x-chat-headless';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 import { ChatMessageError, type ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
 import { ChatMessageAvatar, type ChatMessageAvatarProps } from './ChatMessageAvatar';
@@ -171,21 +172,22 @@ const ChatMessageStyled = styled('div', {
       ...(isGrouped
         ? {
             gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
-            gridTemplateRows: 'auto auto',
-            gridTemplateAreas: '". content meta" ". error ."',
+            gridTemplateRows: 'auto auto auto',
+            gridTemplateAreas: '". content meta" ". error ." ". actions ."',
           }
         : {
             gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
-            gridTemplateRows: 'auto auto auto',
-            gridTemplateAreas: '"avatar authorName meta" "avatar content ." ". error ."',
+            gridTemplateRows: 'auto auto auto auto',
+            gridTemplateAreas:
+              '"avatar authorName meta" "avatar content ." ". error ." ". actions ."',
           }),
       // Avatar-less layout: collapse the reserved avatar grid track so the bubble
       // and meta lane reclaim the row. Applies to both grouped and first-in-group.
       '&.MuiChatMessage-noAvatar': {
         gridTemplateColumns: '1fr auto',
         gridTemplateAreas: isGrouped
-          ? '"content meta" "error ."'
-          : '"authorName meta" "content ." "error ."',
+          ? '"content meta" "error ." "actions ."'
+          : '"authorName meta" "content ." "error ." "actions ."',
       },
     };
   }
@@ -317,7 +319,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
         status: message?.status,
         streaming: message?.status === 'streaming',
       };
-      const resolvedActionsProps = resolveSlotProps(
+      const resolvedActionsProps = resolveComponentProps(
         slotProps?.actions ?? {},
         actionsContext,
       ) as Partial<ChatMessageActionsProps>;
@@ -334,7 +336,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
               (StreamingIndicatorSlot ?? ChatStreamingIndicator) as React.ElementType,
               {
                 message,
-                ...resolveSlotProps(slotProps?.streamingIndicator ?? {}, actionsContext),
+                ...resolveComponentProps(slotProps?.streamingIndicator ?? {}, actionsContext),
               },
             )
           : undefined;

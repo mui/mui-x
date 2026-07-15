@@ -1,7 +1,7 @@
 import { createSelector } from '@mui/x-internals/store';
-import { TreeViewItemId } from '../../../models';
+import type { TreeViewItemId } from '../../../models';
 import { TREE_VIEW_ROOT_PARENT_ID } from '../items';
-import { RichTreeViewState } from '../../RichTreeViewStore';
+import type { RichTreeViewState } from '../../RichTreeViewStore';
 
 export const lazyLoadingSelectors = {
   /**
