@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  useGridSelector,
-  gridColumnLookupSelector,
-  type GridColumnMenuItemProps,
-} from '@mui/x-data-grid-pro';
+import { useGridSelector, gridColumnLookupSelector } from '@mui/x-data-grid-pro';
+import type { GridColumnMenuItemProps } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';
 import {

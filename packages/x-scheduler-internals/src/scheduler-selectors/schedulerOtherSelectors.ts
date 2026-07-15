@@ -1,15 +1,15 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { SchedulerEventId } from '../models';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
   /**
-   * Returns `true` if the event with the given ID is the currently active event.
+   * Returns `true` if the occurrence with the given key is the currently active occurrence.
    */
-  isEditedEvent: createSelector(
-    (state: State) => state.editedEventId,
-    (editedEventId, eventId: SchedulerEventId | undefined) => editedEventId === eventId,
+  isEditedOccurrence: createSelector(
+    (state: State) => state.editedOccurrenceKey,
+    (editedOccurrenceKey, occurrenceKey: string | undefined) =>
+      editedOccurrenceKey === occurrenceKey,
   ),
   visibleDate: createSelectorMemoized(
     (state: State) => state.adapter,

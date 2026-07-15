@@ -1,4 +1,4 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, act, reactMajor, waitFor } from '@mui/internal-test-utils';
 import {
   getColumnHeaderCell,
@@ -9,14 +9,16 @@ import {
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  type GridApi,
-  type GridRowsProp,
   useGridApiRef,
-  type GridGroupingColDefOverrideParams,
-  type GridGroupNode,
+} from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridRowsProp,
+  GridGroupingColDefOverrideParams,
+  GridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';

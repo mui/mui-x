@@ -8,7 +8,7 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
-import {
+import type {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
@@ -19,7 +19,7 @@ import {
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
 } from '../../../models';
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   UpdateRecurringEventParameters,
@@ -29,13 +29,13 @@ import {
   UpdateEventsParameters,
   SchedulerInstanceName,
 } from './SchedulerStore.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import {
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type {
   SchedulerEvents,
   SchedulerEventListener,
   SchedulerEventParameters,
 } from '../../models/events';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
 import {
   buildEventsState,
@@ -113,12 +113,14 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      editedEventId: null,
+      editedOccurrenceKey: null,
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingRecurringEventOperation: null,
       visibleResources:
         parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
+      collapsedResources:
+        parameters.collapsedResources ?? parameters.defaultCollapsedResources ?? EMPTY_OBJECT,
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
@@ -247,6 +249,7 @@ export class SchedulerStore<
 
     updateModel(newSchedulerState, 'visibleDate', 'defaultVisibleDate');
     updateModel(newSchedulerState, 'visibleResources', 'defaultVisibleResources');
+    updateModel(newSchedulerState, 'collapsedResources', 'defaultCollapsedResources');
 
     const newState = this.mapper.updateStateFromParameters(
       newSchedulerState,
@@ -745,6 +748,39 @@ export class SchedulerStore<
   };
 
   /**
+   * Updates the collapsed resources.
+   */
+  public setCollapsedResources = (
+    collapsedResources: Record<SchedulerResourceId, boolean>,
+    event: Event | undefined,
+  ) => {
+    const { collapsedResources: collapsedResourcesProp, onCollapsedResourcesChange } =
+      this.parameters;
+    const hasChange = this.state.collapsedResources !== collapsedResources;
+    if (hasChange) {
+      const eventDetails = createChangeEventDetails('none', event);
+      onCollapsedResourcesChange?.(collapsedResources, eventDetails);
+      if (!eventDetails.isCanceled && collapsedResourcesProp === undefined) {
+        this.set('collapsedResources', collapsedResources);
+      }
+    }
+  };
+
+  /**
+   * Toggles the collapsed state of a single resource.
+   */
+  public toggleResourceCollapse = (resourceId: SchedulerResourceId, event: Event | undefined) => {
+    const isCollapsed = this.state.collapsedResources[resourceId] === true;
+    const nextCollapsedResources = { ...this.state.collapsedResources };
+    if (isCollapsed) {
+      delete nextCollapsedResources[resourceId];
+    } else {
+      nextCollapsedResources[resourceId] = true;
+    }
+    this.setCollapsedResources(nextCollapsedResources, event);
+  };
+
+  /**
    * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
   public setOccurrencePlaceholder = (newPlaceholder: SchedulerOccurrencePlaceholder | null) => {
@@ -755,11 +791,11 @@ export class SchedulerStore<
   };
 
   /**
-   * Sets the ID of the currently active event (e.g. open in the event dialog).
-   * Pass `null` to clear the active event.
+   * Sets the key of the currently active occurrence (e.g. open in the event dialog).
+   * Pass `null` to clear the active occurrence.
    */
-  public setEditedEventId = (eventId: SchedulerEventId | null) => {
-    this.set('editedEventId', eventId);
+  public setEditedOccurrenceKey = (occurrenceKey: string | null) => {
+    this.set('editedOccurrenceKey', occurrenceKey);
   };
 
   /**

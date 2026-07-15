@@ -3,9 +3,8 @@ import 'docs/src/bootstrap';
 import * as React from 'react';
 import {
   DocsApp,
-  createGetInitialProps,
   printConsoleBanner,
-  reportWebVitals,
+  reportWebVitals as _reportWebVitals,
 } from '@mui/internal-core-docs/DocsApp';
 import { ThemeProvider } from '@mui/internal-core-docs/ThemeContext';
 import findActivePage from '@mui/internal-core-docs/findActivePage';
@@ -20,8 +19,25 @@ import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { DEFAULT_DOCS_CONFIG, DocsConfig } from '@mui/internal-core-docs/DocsProvider';
+import { fontClasses as _fontClasses } from '@mui/internal-core-docs/nextFonts';
 
-export { fontClasses } from '@mui/internal-core-docs/nextFonts';
+import translationsJson from '../translations/translations.json';
+import translationsZhJson from '../translations/translations-zh.json';
+
+// Workaround: turbopack's pages-router Custom App detection misfires when
+// `_app.tsx` re-exports an imported binding (`export ... from`, or
+// `import { x }; export { x }`), which makes turbopack reject the file as the
+// Custom App. Re-export as fresh local bindings instead.
+// Related issue - https://github.com/vercel/next.js/issues/93162
+export const fontClasses = _fontClasses;
+
+// require.context is webpack-only and unsupported by turbopack, so build the
+// translations map statically. Mirrors `mapTranslations` (filename → language).
+const translations: Translations = {
+  en: translationsJson,
+  zh: translationsZhJson,
+};
+const allVersions: VersionEntry[] = [];
 
 // Enable telemetry for internal purposes
 muiXTelemetrySettings.enableTelemetry();
@@ -239,6 +255,8 @@ const CSB_CONFIG = {
 
 const DOCS_CONFIG: DocsConfig = {
   ...DEFAULT_DOCS_CONFIG,
+  // Absolute origin for canonical and social-preview URLs (og:url, og:image).
+  hostUrl: 'https://mui.com',
 };
 
 function useThemeWrapper() {
@@ -251,7 +269,22 @@ function useThemeWrapper() {
 export default function MyApp(
   props: AppProps<{ userLanguage: string; translations: Translations; versions: VersionEntry[] }>,
 ) {
-  const { Component, pageProps } = props;
+  const { Component } = props;
+  const pageProps = React.useMemo(() => {
+    const {
+      userLanguage = 'en',
+      translations: pageTranslations = translations,
+      versions = allVersions,
+      ...otherPageProps
+    } = props.pageProps;
+
+    return {
+      ...otherPageProps,
+      userLanguage,
+      translations: pageTranslations,
+      versions,
+    };
+  }, [props.pageProps]);
   const { activePage, activePageParents, productIdentifier, productId, productCategoryId } =
     usePageData();
   const ThemeWrapper = useThemeWrapper();
@@ -276,9 +309,6 @@ export default function MyApp(
   );
 }
 
-MyApp.getInitialProps = createGetInitialProps({
-  translationsContext: require.context('../translations', false, /\.\/translations.*\.json$/),
-  versions: [],
-});
-
-export { reportWebVitals };
+// See note above about turbopack re-export detection — wrap rather than
+// `export { reportWebVitals }` so _app.tsx stays the Custom App.
+export const reportWebVitals: typeof _reportWebVitals = (...args) => _reportWebVitals(...args);

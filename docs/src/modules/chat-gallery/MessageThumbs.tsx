@@ -1,10 +1,8 @@
 import * as React from 'react';
 import {
-  BigAvatar,
   Card,
   CenteredBubble,
   CenteredMessageRow,
-  ErrorMessage,
   MessageGroup,
   Messages,
   ThumbCanvas,
@@ -32,16 +30,6 @@ export function ChatMessageThumb() {
   );
 }
 
-export function ChatMessageAvatarThumb() {
-  return (
-    <ThumbCanvas>
-      <Card>
-        <BigAvatar variant="accent" online />
-      </Card>
-    </ThumbCanvas>
-  );
-}
-
 export function ChatMessageContentThumb() {
   return (
     <ThumbCanvas>
@@ -62,41 +50,11 @@ export function ChatMessageMetaThumb() {
   );
 }
 
-export function ChatMessageInlineMetaThumb() {
-  return (
-    <ThumbCanvas>
-      <Card>
-        <CenteredMessageRow side="left" focus="inline-meta" showInlineMeta />
-      </Card>
-    </ThumbCanvas>
-  );
-}
-
 export function ChatMessageActionsThumb() {
   return (
     <ThumbCanvas>
       <Card>
         <CenteredMessageRow side="left" focus="actions" showActions />
-      </Card>
-    </ThumbCanvas>
-  );
-}
-
-export function ChatMessageAuthorLabelThumb() {
-  return (
-    <ThumbCanvas>
-      <Card>
-        <CenteredMessageRow side="left" focus="author" showAuthor />
-      </Card>
-    </ThumbCanvas>
-  );
-}
-
-export function ChatMessageErrorThumb() {
-  return (
-    <ThumbCanvas>
-      <Card>
-        <ErrorMessage />
       </Card>
     </ThumbCanvas>
   );

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useStore } from '@base-ui/utils/store/useStore';
-import { TemporalSupportedObject } from '../../models';
+import { useStore } from '@base-ui/utils/store';
+import type { TemporalSupportedObject } from '../../models';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
-import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
+import type { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 import { useAdapterContext } from '../../use-adapter-context';

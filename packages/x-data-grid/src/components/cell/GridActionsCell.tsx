@@ -7,12 +7,14 @@ import { warnOnce } from '@mui/x-internals/warning';
 import type { GridRowParams } from '../../models/params/gridRowParams';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
-import { GridMenu, type GridMenuProps } from '../menu/GridMenu';
+import { GridMenu } from '../menu/GridMenu';
+import type { GridMenuProps } from '../menu/GridMenu';
 import type { GridActionsColDef } from '../../models/colDef/gridColDef';
 import type { GridValidRowModel, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridActionsCellItem, type GridActionsCellItemProps } from './GridActionsCellItem';
+import { GridActionsCellItem } from './GridActionsCellItem';
+import type { GridActionsCellItemProps } from './GridActionsCellItem';
 
 const hasActions = (colDef: any): colDef is GridActionsColDef =>
   typeof colDef.getActions === 'function';
@@ -57,11 +59,7 @@ interface GridActionsCellProps<
   onMenuClose?: (
     params: GridRowParams<R>,
     event:
-      | React.MouseEvent<HTMLElement>
-      | React.KeyboardEvent
-      | MouseEvent
-      | TouchEvent
-      | undefined,
+      React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined,
   ) => boolean;
 }
 

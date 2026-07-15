@@ -4,14 +4,12 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import {
   AreaPlot,
-  type LineChartProps,
-  type LineChartSlots,
-  type LineChartSlotProps,
   LineHighlightPlot,
   LinePlot,
   MarkPlot,
   FocusedLineMark,
 } from '@mui/x-charts/LineChart';
+import type { LineChartProps, LineChartSlots, LineChartSlotProps } from '@mui/x-charts/LineChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -21,19 +19,21 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps } from '@mui/x-charts/internals';
+import type { SamplingMethod } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
-import { LINE_CHART_PRO_PLUGINS, type LineChartProPluginSignatures } from './LineChartPro.plugins';
+import { LINE_CHART_PRO_PLUGINS } from './LineChartPro.plugins';
+import type { LineChartProPluginSignatures } from './LineChartPro.plugins';
 
 export interface LineChartProSlots
   extends Omit<LineChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
@@ -48,8 +48,17 @@ export interface LineChartProProps
     Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartsContainerProProps<'line', LineChartProPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'sampling'
     > {
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every point (no sampling).
+   * - `'minmax'`: keep the min and max per bucket.
+   * - `'m4'`: pixel-accurate—keep the first, min, max, and last per bucket.
+   * - `'lttb'`: Largest-Triangle-Three-Buckets, preserves the visual shape.
+   * @default 'none'
+   */
+  sampling?: SamplingMethod;
   /**
    * Overridable component slots.
    * @default {}
@@ -77,7 +86,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, sampling, ...other } = props;
   const {
     chartsWrapperProps,
     chartsContainerProps,
@@ -97,14 +106,17 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'line',
     LineChartProPluginSignatures
-  >({
-    ...chartsContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: LINE_CHART_PRO_PLUGINS,
-  });
+  >(
+    {
+      ...chartsContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: LINE_CHART_PRO_PLUGINS,
+    },
+    { seriesType: 'line', method: sampling },
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -446,6 +458,15 @@ LineChartPro.propTypes /* remove-proptypes */ = {
    */
   onZoomChange: PropTypes.func,
   /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every point (no sampling).
+   * - `'minmax'`: keep the min and max per bucket.
+   * - `'m4'`: pixel-accurate—keep the first, min, max, and last per bucket.
+   * - `'lttb'`: Largest-Triangle-Three-Buckets, preserves the visual shape.
+   * @default 'none'
+   */
+  sampling: PropTypes.oneOf(['lttb', 'm4', 'minmax', 'none']),
+  /**
    * The series to display in the line chart.
    * An array of [[LineSeries]] objects.
    */
@@ -536,6 +557,7 @@ LineChartPro.propTypes /* remove-proptypes */ = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -543,6 +565,7 @@ LineChartPro.propTypes /* remove-proptypes */ = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

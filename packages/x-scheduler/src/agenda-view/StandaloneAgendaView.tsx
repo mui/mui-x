@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { StandaloneAgendaViewProps } from './AgendaView.types';
+import type { StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
@@ -253,6 +253,11 @@ StandaloneAgendaView.propTypes /* remove-proptypes */ = {
    * The view currently displayed in the calendar.
    */
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
+  /**
+   * Configuration applied to the view, keyed by the view name.
+   * The `agenda` view does not support any configuration keys yet.
+   */
+  viewConfig: PropTypes.object,
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

@@ -1,69 +1,44 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type ChartState, selectorChartDrawingArea } from '@mui/x-charts/internals';
-import {
-  geoAlbers,
-  geoAlbersUsa,
-  geoAzimuthalEqualArea,
-  geoAzimuthalEquidistant,
-  geoConicConformal,
-  geoConicEqualArea,
-  geoConicEquidistant,
-  geoEqualEarth,
-  geoEquirectangular,
-  geoGnomonic,
-  geoMercator,
-  geoNaturalEarth1,
-  geoOrthographic,
-  geoStereographic,
-  geoTransverseMercator,
-  geoPath,
-  type ExtendedFeatureCollection,
-  type GeoProjection,
-  type GeoPath,
-  type GeoConicProjection,
-} from '@mui/x-charts-vendor/d3-geo';
+import { geoPath } from '@mui/x-charts-vendor/d3-geo';
 import type {
-  D3NamedProjection,
+  ExtendedFeatureCollection,
+  GeoProjection,
+  GeoPath,
+} from '@mui/x-charts-vendor/d3-geo';
+import { selectorChartDrawingArea } from '@mui/x-charts/internals';
+import type { ChartState } from '@mui/x-charts/internals';
+import type {
   GeoProjectionInput,
+  GeoTooltipPosition,
   UseGeoProjectionSignature,
   UseGeoProjectionState,
 } from './useGeoProjection.types';
+import type {
+  UseGeoProjectionZoomSignature,
+  UseGeoProjectionZoomState,
+} from '../useGeoProjectionZoom/useGeoProjectionZoom.types';
+import { getParallels, resolveProjectionInstance } from './projection.utils';
 
-const PROJECTION_FACTORIES: Record<D3NamedProjection, (() => GeoProjection) | undefined> = {
-  // Azimuthal projections (https://d3js.org/d3-geo/azimuthal)
-  azimuthalEqualArea: geoAzimuthalEqualArea,
-  azimuthalEquidistant: geoAzimuthalEquidistant,
-  gnomonic: geoGnomonic,
-  orthographic: geoOrthographic,
-  stereographic: geoStereographic,
+const ZERO_COORDINATES: [number, number] = [0, 0];
 
-  // Conic projections (https://d3js.org/d3-geo/conic)
-  conicConformal: geoConicConformal,
-  conicEqualArea: geoConicEqualArea,
-  conicEquidistant: geoConicEquidistant,
-  albers: geoAlbers,
-  albersUsa: geoAlbersUsa, // Special composition for the USA with an edge case for Alaska and Hawaii.
-
-  // Cylindrical projections (https://d3js.org/d3-geo/cylindrical)
-  equirectangular: geoEquirectangular,
-  mercator: geoMercator,
-  transverseMercator: geoTransverseMercator,
-  equalEarth: geoEqualEarth,
-  naturalEarth1: geoNaturalEarth1,
-};
-
-const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
-  return 'parallels' in projection && typeof projection.parallels === 'function';
-};
 export const selectorChartGeoProjectionState = (
   state: ChartState<[], [UseGeoProjectionSignature]>,
 ): UseGeoProjectionState['geoProjection'] | undefined => state.geoProjection;
 
-export const selectorChartRawGeoData: (
+const selectorChartGeoProjectionZoomState = (
+  state: ChartState<[], [UseGeoProjectionZoomSignature]>,
+): UseGeoProjectionZoomState['geoProjectionZoom'] | undefined => state.geoProjectionZoom;
+
+export const selectorChartGeoData: (
   state: ChartState<[], [UseGeoProjectionSignature]>,
 ) => ExtendedFeatureCollection | null = createSelector(
   selectorChartGeoProjectionState,
   (geoProjection) => geoProjection?.geoData ?? null,
+);
+
+export const selectorChartGeoFeatureKey = createSelector(
+  selectorChartGeoProjectionState,
+  (geoProjection) => geoProjection?.geoFeatureKey ?? 'name',
 );
 
 export const selectorChartRawProjection = createSelector(
@@ -71,27 +46,46 @@ export const selectorChartRawProjection = createSelector(
   (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
 );
 
-export const selectorChartRawScale = createSelector(
-  selectorChartGeoProjectionState,
-  (geoProjection): number | null => geoProjection?.scale ?? null,
+export const selectorChartZoomLevel = createSelector(
+  selectorChartGeoProjectionZoomState,
+  function selectorChartZoomLevel(geoProjectionZoom): number {
+    return geoProjectionZoom?.zoomLevel ?? 1;
+  },
+);
+const selectorChartCenter = createSelectorMemoized(
+  selectorChartGeoProjectionZoomState,
+  function selectorChartCenter(geoProjectionZoom): [number, number] {
+    return geoProjectionZoom?.center ?? ZERO_COORDINATES;
+  },
+);
+const selectorChartTranslation = createSelectorMemoized(
+  selectorChartGeoProjectionZoomState,
+  function selectorChartTranslation(geoProjectionZoom): [number, number] | null {
+    return geoProjectionZoom?.translation ?? null;
+  },
 );
 
-const selectorChartRotate = createSelectorMemoized(
-  selectorChartGeoProjectionState,
-  (geoProjection): [number, number] | null => geoProjection?.rotate ?? null,
+const selectorChartRoll = createSelector(
+  selectorChartGeoProjectionZoomState,
+  function selectorChartRoll(geoProjectionZoom): number {
+    return geoProjectionZoom?.roll ?? 0;
+  },
 );
 
-const selectorChartTranslate = createSelectorMemoized(
-  selectorChartGeoProjectionState,
-  (geoProjection): [number, number] | null => geoProjection?.translate ?? null,
+const selectorChartInitialCenter = createSelectorMemoized(
+  selectorChartGeoProjectionZoomState,
+  function selectorChartInitialCenter(geoProjectionZoom): [number, number] | null {
+    return geoProjectionZoom?.initialCenter ?? ZERO_COORDINATES;
+  },
 );
 
 const selectorChartParallels = createSelectorMemoized(
   selectorChartGeoProjectionState,
-  selectorChartRotate,
-  (geoProjection, rotate): [number, number] =>
-    geoProjection?.parallels ?? (rotate ? [rotate[1] - 15, rotate[1] + 15] : [30, 30]),
+  function selectorChartParallels(geoProjection): [number, number] {
+    return getParallels(geoProjection?.parallels);
+  },
 );
+
 /**
  * Map a feature's `properties.name` to its index in `geoData.features`,
  * for fast lookup by name when joining series rows to features.
@@ -100,14 +94,18 @@ const selectorChartParallels = createSelectorMemoized(
  * the first occurrence wins.
  */
 export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
-  selectorChartRawGeoData,
-  (geoData): ReadonlyMap<string, number[]> => {
+  selectorChartGeoData,
+  selectorChartGeoFeatureKey,
+  (geoData, geoFeatureKey): ReadonlyMap<string, number[]> => {
     const map = new Map<string, number[]>();
     if (!geoData) {
       return map;
     }
     geoData.features.forEach((feature, index) => {
-      const name = feature.properties?.name;
+      const name =
+        typeof geoFeatureKey === 'function'
+          ? geoFeatureKey(feature)
+          : feature.properties?.[geoFeatureKey];
       if (typeof name !== 'string') {
         return;
       }
@@ -121,103 +119,94 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   },
 );
 
+export const selectorFitScale = createSelector(
+  selectorChartRawProjection,
+  selectorChartParallels,
+  selectorChartInitialCenter,
+  selectorChartGeoData,
+  selectorChartDrawingArea,
+
+  function selectorFitScale(
+    projectionInput,
+    parallels,
+    initialCenter,
+    geoData,
+    drawingArea,
+  ): number | null {
+    if (!geoData || projectionInput === null || initialCenter === null) {
+      return null;
+    }
+
+    const projection = resolveProjectionInstance(projectionInput, parallels);
+    if (projection === null) {
+      return null;
+    }
+    projection.rotate?.([-initialCenter[0], -initialCenter[1]]);
+
+    const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
+    const currentScale = projection.scale();
+
+    return Math.min(
+      currentScale * (drawingArea.width / (x1 - x0)),
+      currentScale * (drawingArea.height / (y1 - y0)),
+    );
+  },
+);
+
 /**
- * Resolves the raw `projection` input into a ready-to-use `GeoProjection` instance
- * fitted to the chart's drawing area.
+ * Resolves the raw `projection` input into a ready-to-use `GeoProjection` instance,
+ * fitted to the chart's drawing area then zoomed/panned according to the current view.
  *
  * - String inputs (e.g. `'mercator'`) are mapped to the matching d3-geo factory.
  * - `GeoProjection` instances are used as-is, then fitted.
+ * - The projection is first fitted to the data (the `zoomLevel === 1` baseline), then its
+ *   scale is multiplied by `zoomLevel` and its translation is offset so `center` lands at the
+ *   center of the drawing area. Keeping the view as `{ zoomLevel, center }` means the absolute
+ *   scale/translation are derived here, never stored — so they stay correct across resizes.
  * - Returns `null` when no projection is registered or the name is unknown.
  */
 export const selectorChartProjection = createSelectorMemoized(
   selectorChartRawProjection,
-  selectorChartRawGeoData,
   selectorChartParallels,
-  selectorChartRotate,
-  selectorChartTranslate,
-  selectorChartRawScale,
+  selectorChartGeoData,
+  selectorChartCenter,
+  selectorChartTranslation,
+  selectorChartRoll,
+  selectorChartZoomLevel,
   selectorChartDrawingArea,
+  selectorFitScale,
   (
     projectionInput,
-    geoData,
     parallels,
-    rotate,
-    translate,
-    scale,
+    geoData,
+    center,
+    translation,
+    roll,
+    zoomLevel,
     drawingArea,
+    fitScale,
   ): GeoProjection | null => {
-    if (!projectionInput) {
+    const projection = resolveProjectionInstance(projectionInput, parallels);
+    if (!projection) {
       return null;
     }
-    let projection: GeoProjection;
-    if (typeof projectionInput === 'string') {
-      const factory = PROJECTION_FACTORIES[projectionInput];
-      if (!factory) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(
-            `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-              `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
-          );
-        }
-        return null;
-      }
-      projection = factory();
-      if (isConicProjection(projection)) {
-        projection.parallels(parallels);
-      }
-    } else {
-      projection = projectionInput;
+
+    if (!geoData || fitScale == null) {
+      return projection;
     }
-    if (geoData) {
-      if (isConicProjection(projection)) {
-        if (rotate) {
-          projection.rotate?.(rotate);
-        }
 
-        if (!scale) {
-          const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
+    projection.rotate?.([-center[0], -center[1], roll]);
+    // Edge case with conic conformal and albers:
+    // rotate impacts the center of the projection, so we need to reset it.
+    projection.center?.([0, 0]);
 
-          const currentScale = projection.scale();
-
-          const fitScale = Math.min(
-            currentScale * (drawingArea.width / (x1 - x0)),
-            currentScale * (drawingArea.height / (y1 - y0)),
-          );
-          projection.scale(fitScale);
-        } else {
-          projection.scale(scale);
-        }
-
-        return projection;
-      }
-
-      if (rotate) {
-        projection.rotate?.(rotate);
-      }
-
-      if (scale) {
-        projection.scale(scale);
-        projection.clipExtent?.([
-          [drawingArea.left, drawingArea.top],
-          [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
-        ]);
-      } else {
-        projection.fitExtent?.(
-          [
-            [drawingArea.left, drawingArea.top],
-            [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
-          ],
-          geoData,
-        );
-      }
-
-      projection.translate(
-        translate ?? [
-          drawingArea.left + drawingArea.width / 2,
-          drawingArea.top + drawingArea.height / 2,
-        ],
-      );
-    }
+    // `fitScale` is the `zoomLevel === 1` reference scale, computed independently in
+    // `selectorFitScale` so it stays stable across pan/zoom transforms.
+    projection.scale(zoomLevel != null && zoomLevel !== 1 ? fitScale * zoomLevel : fitScale);
+    projection.translate([
+      drawingArea.left + drawingArea.width / 2 + (translation?.[0] ?? 0) * drawingArea.width,
+      drawingArea.top + drawingArea.height / 2 + (translation?.[1] ?? 0) * drawingArea.height,
+    ]);
     return projection;
   },
 );
@@ -233,5 +222,22 @@ export const selectorChartGeoPath = createSelectorMemoized(
       return null;
     }
     return geoPath(projection);
+  },
+);
+
+export const selectorGeoTooltipPosition = createSelectorMemoized(
+  selectorChartGeoData,
+  selectorChartProjection,
+  selectorChartGeoFeatureIndexesByName,
+  function selectorGeoTooltipPosition(
+    geoData,
+    projection,
+    featureIndexesByName,
+  ): GeoTooltipPosition {
+    return {
+      geoData,
+      projection,
+      featureIndexesByName,
+    };
   },
 );

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
@@ -8,17 +9,16 @@ import {
   SchedulerStoreRunner,
   StateWatcher,
   StoreSpy,
-  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
-import {
+import type {
   SchedulerResource,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import {
   EventCalendarProvider,
@@ -2290,59 +2290,59 @@ describe('<EventDialogContent open />', () => {
     });
   });
 
-  describe('editedEventId state', () => {
-    it('should set editedEventId on the store when the dialog opens', () => {
-      const handleActiveEventIdChange = spy();
+  describe('editedOccurrenceKey state', () => {
+    it('should set editedOccurrenceKey on the store when the dialog opens', () => {
+      const handleEditedOccurrenceKeyChange = spy();
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <StateWatcher
             Context={SchedulerStoreContext}
-            selector={(s) => s.editedEventId}
-            onValueChange={handleActiveEventIdChange}
+            selector={(s) => s.editedOccurrenceKey}
+            onValueChange={handleEditedOccurrenceKeyChange}
           />
           <TestEventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
 
-      // The EventDialogProvider's onOpen sets editedEventId.
+      // The EventDialogProvider's onOpen sets editedOccurrenceKey.
       // Here we render EventDialogContent directly (without the trigger flow),
       // so we verify the initial state is null.
-      expect(handleActiveEventIdChange.lastCall?.firstArg).to.equal(null);
+      expect(handleEditedOccurrenceKeyChange.lastCall?.firstArg).to.equal(null);
     });
 
-    it('should clear editedEventId on the store when the dialog closes', async () => {
-      const handleActiveEventIdChange = spy();
+    it('should expose the active occurrence key on the store', async () => {
+      const handleEditedOccurrenceKeyChange = spy();
+      const occurrenceKey = String(DEFAULT_EVENT.id);
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
-            onMount={(store) => store.setEditedEventId(DEFAULT_EVENT.id)}
+            onMount={(store) => store.setEditedOccurrenceKey(occurrenceKey)}
           />
           <StateWatcher
             Context={SchedulerStoreContext}
-            selector={(s) => s.editedEventId}
-            onValueChange={handleActiveEventIdChange}
+            selector={(s) => s.editedOccurrenceKey}
+            onValueChange={handleEditedOccurrenceKeyChange}
           />
           <TestEventDialogContent open {...defaultProps} onClose={() => {}} />
         </EventCalendarProvider>,
       );
 
-      // After SchedulerStoreRunner sets the editedEventId, it should be the event ID
-      expect(handleActiveEventIdChange.lastCall?.firstArg).to.equal(DEFAULT_EVENT.id);
+      expect(handleEditedOccurrenceKeyChange.lastCall?.firstArg).to.equal(occurrenceKey);
     });
 
-    it('should call setEditedEventId via EventDialogProvider onOpen callback', () => {
-      let setEditedEventIdSpy;
+    it('should call setEditedOccurrenceKey via EventDialogProvider onOpen callback', () => {
+      let setEditedOccurrenceKeySpy;
 
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <StoreSpy
             Context={SchedulerStoreContext}
-            method="setEditedEventId"
+            method="setEditedOccurrenceKey"
             onSpyReady={(sp) => {
-              setEditedEventIdSpy = sp;
+              setEditedOccurrenceKeySpy = sp;
             }}
           />
           <TestEventDialogContent open {...defaultProps} />
@@ -2350,7 +2350,7 @@ describe('<EventDialogContent open />', () => {
       );
 
       // Verify the method exists on the store (basic sanity check)
-      expect(setEditedEventIdSpy).not.to.equal(undefined);
+      expect(setEditedOccurrenceKeySpy).not.to.equal(undefined);
     });
   });
 });

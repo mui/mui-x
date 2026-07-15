@@ -1,24 +1,21 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ChartsProvider,
-  ChartsSlotsProvider,
-  type ChartsProviderProps,
-  type ChartAnyPluginSignature,
-  type PolarChartSeriesType,
-  type ChartSeriesConfig,
+import { ChartsProvider, ChartsSlotsProvider } from '@mui/x-charts/internals';
+import type {
+  ChartsProviderProps,
+  ChartAnyPluginSignature,
+  PolarChartSeriesType,
+  ChartSeriesConfig,
 } from '@mui/x-charts/internals';
-import { type ChartsRadialDataProviderProps } from '@mui/x-charts/ChartsRadialDataProvider';
+import type { ChartsRadialDataProviderProps } from '@mui/x-charts/ChartsRadialDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { ChartsWatermark, defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
 import { useLicenseVerifier } from '@mui/x-license/internals';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '@mui/x-charts-pro/internals';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '@mui/x-charts-pro/internals';
 import { useChartsRadialDataProviderPremiumProps } from './useChartsRadialDataProviderPremiumProps';
-import {
-  RADIAL_PREMIUM_PLUGINS,
-  type RadialPremiumPluginSignatures,
-} from './ChartsRadialDataProviderPremium.plugins';
+import { RADIAL_PREMIUM_PLUGINS } from './ChartsRadialDataProviderPremium.plugins';
+import type { RadialPremiumPluginSignatures } from './ChartsRadialDataProviderPremium.plugins';
 import { radialLineSeriesConfig } from '../RadialLineChart/seriesConfig';
 
 const packageInfo = {

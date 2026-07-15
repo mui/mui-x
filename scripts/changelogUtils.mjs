@@ -21,6 +21,12 @@ import { $ } from 'execa';
 const REPO = 'mui-x';
 
 /**
+ * @type {Set<string>}
+ * Bot logins whose commits are excluded from the changelog and contributor attribution
+ */
+const IGNORED_BOT_LOGINS = new Set(['renovate[bot]', 'code-infra-renovate[bot]']);
+
+/**
  * @type {string[]}
  * Labels to exclude from the changelog
  */
@@ -147,7 +153,7 @@ function getContributors(commits = []) {
   const warnUsers = new Map();
   for (const commitItem of commits) {
     const { author, commit } = commitItem;
-    if (!author || author.login === 'renovate[bot]') {
+    if (!author || IGNORED_BOT_LOGINS.has(author.login)) {
       continue;
     }
     if (author.login === 'github-actions[bot]') {
@@ -218,7 +224,7 @@ async function generateChangelog({
       release,
     })
   )
-    .filter((commit) => commit.author?.login !== 'renovate[bot]')
+    .filter((commit) => !IGNORED_BOT_LOGINS.has(commit.author?.login))
     .map((commit) => ({
       ...commit,
       commit: {

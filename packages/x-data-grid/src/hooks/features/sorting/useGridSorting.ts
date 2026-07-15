@@ -21,16 +21,17 @@ import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
-  type GridStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
 } from '../../core/strategyProcessing';
+import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import {
   buildAggregatedSortingApplier,
   mergeStateWithSortModel,
   getNextGridSortDirection,
   sanitizeSortModel,
 } from './gridSortingUtils';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
 

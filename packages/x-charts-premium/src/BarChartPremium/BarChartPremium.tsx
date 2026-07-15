@@ -2,10 +2,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  type BarChartProProps,
-  type BarChartProSlotProps,
-  type BarChartProSlots,
+import type {
+  BarChartProProps,
+  BarChartProSlotProps,
+  BarChartProSlots,
 } from '@mui/x-charts-pro/BarChartPro';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
@@ -14,7 +14,8 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
+import { FocusedBar } from '@mui/x-charts/BarChart';
+import type { BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -25,14 +26,11 @@ import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
-import { BarPlotPremium, type BarPlotPremiumProps } from './BarPlotPremium';
+import { BarPlotPremium } from './BarPlotPremium';
+import type { BarPlotPremiumProps } from './BarPlotPremium';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
-import {
-  type BarItemIdentifier,
-  type RangeBarItemIdentifier,
-  type RangeBarSeriesType,
-} from '../models';
+import type { BarItemIdentifier, RangeBarItemIdentifier, RangeBarSeriesType } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
 
@@ -53,7 +51,7 @@ export interface BarChartPremiumProps
     >,
     Omit<
       ChartsContainerPremiumProps<'bar', BarChartPremiumPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'sampling'
     >,
     Pick<BarPlotPremiumProps, 'renderer'> {
   /**
@@ -96,7 +94,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPremium' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, sampling, ...other } = props;
 
   const {
     chartsWrapperProps,
@@ -116,14 +114,17 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'bar' | 'rangeBar',
     BarChartPremiumPluginSignatures
-  >({
-    ...chartsContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: BAR_CHART_PREMIUM_PLUGINS,
-  });
+  >(
+    {
+      ...chartsContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: BAR_CHART_PREMIUM_PLUGINS,
+    },
+    { seriesType: 'bar', method: sampling },
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -485,6 +486,13 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
    */
   renderer: PropTypes.oneOf(['svg-batch', 'svg-single', 'webgl']),
   /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every bar (no sampling).
+   * - `'minmax'`: keep the min and max per bucket and draw one merged bar.
+   * @default 'none'
+   */
+  sampling: PropTypes.oneOf(['minmax', 'none']),
+  /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
    */
@@ -575,6 +583,7 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -582,6 +591,7 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

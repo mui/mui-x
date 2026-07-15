@@ -1,16 +1,14 @@
-import {
-  type ConvertSignaturesIntoPlugins,
-  type UseChartHighlightSignature,
-  type UseChartTooltipSignature,
-  type UseChartInteractionSignature,
-  PIE_CHART_PLUGINS,
-  type UseChartKeyboardNavigationSignature,
-  type UseChartVisibilityManagerSignature,
+import { PIE_CHART_PLUGINS } from '@mui/x-charts/internals';
+import type {
+  ConvertSignaturesIntoPlugins,
+  UseChartHighlightSignature,
+  UseChartTooltipSignature,
+  UseChartInteractionSignature,
+  UseChartKeyboardNavigationSignature,
+  UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  type UseChartProExportSignature,
-} from '../internals/plugins/useChartProExport';
+import { useChartProExport } from '../internals/plugins/useChartProExport';
+import type { UseChartProExportSignature } from '../internals/plugins/useChartProExport';
 
 export type PieChartProPluginSignatures = [
   UseChartTooltipSignature<'pie'>,

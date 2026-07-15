@@ -27,12 +27,13 @@ import {
   type ConversationListItemOwnerState,
   type ConversationListVariant,
 } from '@mui/x-chat-headless';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConversationListUtilityClasses,
   type ChatConversationListClasses,
 } from './chatConversationListClasses';
-import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationList');
 
@@ -747,19 +748,23 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
       root: rootSlotProps,
       scroller: mergeSlotProps({ className: classes.scroller }, slotProps?.scroller) as any,
       item: (ownerState: ConversationListItemOwnerState) => {
-        return resolveSlotProps(
-          mergeSlotProps(
-            {
-              className: clsx(
-                classes.item,
-                ownerState.selected && classes.itemSelected,
-                ownerState.unread && classes.itemUnread,
-                ownerState.focused && classes.itemFocused,
-              ),
-            },
-            slotProps?.item,
-          ),
-          ownerState,
+        // `resolveComponentProps` types its return as `T | undefined`, but `mergeSlotProps`
+        // never returns `undefined` here, so `?? {}` only satisfies the type.
+        return (
+          resolveComponentProps(
+            mergeSlotProps(
+              {
+                className: clsx(
+                  classes.item,
+                  ownerState.selected && classes.itemSelected,
+                  ownerState.unread && classes.itemUnread,
+                  ownerState.focused && classes.itemFocused,
+                ),
+              },
+              slotProps?.item,
+            ),
+            ownerState,
+          ) ?? {}
         );
       },
       itemAvatar: mergeSlotProps({ className: classes.itemAvatar }, slotProps?.itemAvatar) as any,
@@ -820,6 +825,7 @@ ChatConversationList.propTypes /* remove-proptypes */ = {
 // primitive, not this wrapper). Without it, a split layout with the list visible and
 // no active conversation — a single unmarked child — falls back to the thread pane,
 // skipping the `conversationsPane` slot/styles.
-markChatLayoutPane(ChatConversationList, 'conversations');
+// `markChatLayoutPane` mutates the component in place and returns it; the return is discarded here.
+void markChatLayoutPane(ChatConversationList, 'conversations');
 
 export { ChatConversationList };

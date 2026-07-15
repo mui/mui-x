@@ -12,11 +12,11 @@ import type {
   ScaleSymLog,
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
-import { type SxProps } from '@mui/system/styleFunctionSx';
-import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
-import { type DatasetElementType } from './seriesType/config';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { HasProperty, MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
+import type { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import type {
   AxisLinePropsOverrides,
@@ -33,8 +33,8 @@ import type {
   PiecewiseColorConfig,
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
-import { type ChartsTypeFeatureFlags } from './featureFlags';
-import { type ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
+import type { ChartsTypeFeatureFlags } from './featureFlags';
+import type { ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
 export type AxisId = string | number;
 
@@ -59,8 +59,7 @@ export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleLinear<Range, Output>;
 
 export type D3OrdinalScale<Domain extends { toString(): string } = { toString(): string }> =
-  | ScaleBand<Domain>
-  | ScalePoint<Domain>;
+  ScaleBand<Domain> | ScalePoint<Domain>;
 
 export interface ChartsAxisSlots {
   /**
@@ -465,13 +464,11 @@ export interface AxisScaleComputedConfig {
   };
   time: {
     colorScale?:
-      | ScaleSequential<string, string | null>
-      | ScaleThreshold<number | Date, string | null>;
+      ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   utc: {
     colorScale?:
-      | ScaleSequential<string, string | null>
-      | ScaleThreshold<number | Date, string | null>;
+      ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   linear: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;

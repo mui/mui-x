@@ -379,9 +379,7 @@ const theme = createTheme({
   components: {
     MuiDateCalendar: {
       styleOverrides: {
-        root: ({ ownerState }) => ({
-          /** Style based on the ownerState */
-        }),
+        root: ({ ownerState }) => ({/** Style based on the ownerState */}),
       },
     },
   },
@@ -393,9 +391,7 @@ const theme = createTheme({
 ```tsx
 <DatePicker
   slotProps={{
-    actionBar: (ownerState) => ({
-      /** Props based on the ownerState */
-    }),
+    actionBar: (ownerState) => ({/** Props based on the ownerState */}),
   }}
 />
 ```

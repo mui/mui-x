@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { StandaloneCompactWeekViewProps } from './CompactWeekView.types';
+import type { StandaloneCompactWeekViewProps } from './CompactWeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';

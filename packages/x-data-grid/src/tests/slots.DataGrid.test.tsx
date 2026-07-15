@@ -6,7 +6,8 @@ import {
   screen,
 } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { DataGrid, type DataGridProps, GridOverlay } from '@mui/x-data-grid';
+import { DataGrid, GridOverlay } from '@mui/x-data-grid';
+import type { DataGridProps } from '@mui/x-data-grid';
 import { getCell, getRow, openLongTextViewPopup } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Slots', () => {

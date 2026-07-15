@@ -3,17 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
+import type { DialogActionsProps } from '@mui/material/DialogActions';
+import DialogActions from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { usePickerContext } from '../hooks';
 
 export type PickersActionBarAction =
-  | 'clear'
-  | 'cancel'
-  | 'accept'
-  | 'today'
-  | 'next'
-  | 'nextOrAccept';
+  'clear' | 'cancel' | 'accept' | 'today' | 'next' | 'nextOrAccept';
 
 export interface PickersActionBarProps extends DialogActionsProps {
   /**
