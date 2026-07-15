@@ -631,10 +631,10 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
     ),
 
     positionerProps: createSelectorMemoized(
-      Virtualization.selectors.scrollPosition,
-      (scrollPosition) => ({
+      Virtualization.selectors.pinnedLeftOffsetSelector,
+      (scrollLeft) => ({
         style: {
-          transform: `translate3d(${-scrollPosition.current.left}px, 0, 0)`,
+          transform: `translate3d(${-scrollLeft}px, 0, 0)`,
         } as React.CSSProperties,
         role: 'presentation',
       }),
