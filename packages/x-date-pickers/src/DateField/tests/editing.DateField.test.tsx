@@ -1,6 +1,6 @@
-import { spy } from 'sinon';
-import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { spy } from 'sinon';
 import { expectFieldValue, getCleanedSelectedContent } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
@@ -222,7 +222,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    // Luxon doesn't have any day format with a letter suffix
+    // Luxon/Temporal don't provide any day format with letter suffix
     it.skipIf(adapter.lib === 'luxon' || adapter.lib === 'temporal')(
       'should support day with letter suffix',
       async () => {
