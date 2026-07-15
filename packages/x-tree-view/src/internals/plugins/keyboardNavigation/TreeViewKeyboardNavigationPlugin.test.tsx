@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { TreeViewAnyStore } from '../../models';
+import type { TreeViewAnyStore } from '../../models';
 
 describeTreeView<TreeViewAnyStore>(
   'TreeViewKeyboardNavigationPlugin',
