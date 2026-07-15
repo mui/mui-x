@@ -1,13 +1,13 @@
-import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
-import {
+import type {
   SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   getDateKey,
   getOccurrenceEnd,

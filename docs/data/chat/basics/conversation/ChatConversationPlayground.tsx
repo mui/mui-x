@@ -39,12 +39,7 @@ const DEFAULTS = {
 };
 
 type ClassKey =
-  | 'root'
-  | 'header'
-  | 'headerInfo'
-  | 'headerActions'
-  | 'title'
-  | 'subtitle';
+  'root' | 'header' | 'headerInfo' | 'headerActions' | 'title' | 'subtitle';
 
 const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   { name: 'root', description: 'The outermost element of ChatConversation.' },
@@ -147,7 +142,7 @@ export default function ChatConversationPlayground() {
                 display: 'flex',
               }}
             >
-              <ChatConversation sx={conversationSx as any}>
+              <ChatConversation sx={conversationSx}>
                 {showHeader ? (
                   <ChatConversationHeader>
                     <ChatConversationHeaderInfo>

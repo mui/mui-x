@@ -7,7 +7,7 @@ import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/us
 import { AgendaView } from '@mui/x-scheduler/agenda-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
-import { StandaloneAgendaViewPremiumProps } from './AgendaViewPremium.types';
+import type { StandaloneAgendaViewPremiumProps } from './AgendaViewPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -262,6 +262,11 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
    * The view currently displayed in the calendar.
    */
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
+  /**
+   * Configuration applied to the view, keyed by the view name.
+   * The `agenda` view does not support any configuration keys yet.
+   */
+  viewConfig: PropTypes.object,
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

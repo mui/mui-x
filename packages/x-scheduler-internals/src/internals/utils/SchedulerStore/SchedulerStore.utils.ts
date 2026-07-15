@@ -1,8 +1,8 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { generateId } from '@base-ui/utils/generateId';
 import { warnOnce } from '@mui/x-internals/warning';
-import { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
-import {
+import type { TemporalTimezone, TemporalSupportedObject } from '../../../base-ui-copy/types';
+import type {
   SchedulerProcessedEvent,
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
@@ -15,9 +15,9 @@ import {
   SchedulerEventUpdatedProperties,
 } from '../../../models';
 import { processEvent } from '../../../process-event';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
-import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { Adapter } from '../../../use-adapter/useAdapter.types';
+import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import { dateToEventString } from '../date-utils';
 
 /**

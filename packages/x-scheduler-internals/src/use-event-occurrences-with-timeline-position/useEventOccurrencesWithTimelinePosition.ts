@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { sortEventOccurrences } from '../sort-event-occurrences';
-import { SchedulerEventOccurrence, SchedulerEventOccurrencePlaceholder } from '../models';
-import { Adapter } from '../use-adapter';
+import type { SchedulerEventOccurrence, SchedulerEventOccurrencePlaceholder } from '../models';
+import type { Adapter } from '../use-adapter';
 import { useAdapterContext } from '../use-adapter-context';
 
 /**
@@ -79,8 +79,7 @@ export namespace useEventOccurrencesWithTimelinePosition {
   }
 
   export type EventRenderableOccurrenceWithPosition =
-    | EventOccurrenceWithPosition
-    | EventOccurrencePlaceholderWithPosition;
+    EventOccurrenceWithPosition | EventOccurrencePlaceholderWithPosition;
 
   export interface ReturnValue {
     /**

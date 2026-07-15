@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { StandaloneWeekViewProps } from './WeekView.types';
+import type { StandaloneWeekViewProps } from './WeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
@@ -253,6 +253,18 @@ StandaloneWeekView.propTypes /* remove-proptypes */ = {
    * The view currently displayed in the calendar.
    */
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
+  /**
+   * Configuration applied to the view, keyed by the view name.
+   * For the `week` view, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { week: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig: PropTypes.shape({
+    week: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

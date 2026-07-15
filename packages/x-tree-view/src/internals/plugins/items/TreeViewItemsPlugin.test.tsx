@@ -2,7 +2,7 @@ import { spy } from 'sinon';
 import { act, fireEvent, reactMajor, waitFor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
-import { TreeViewAnyStore } from '../../models';
+import type { TreeViewAnyStore } from '../../models';
 
 describeTreeView<TreeViewAnyStore>(
   'TreeViewItemsPlugin',

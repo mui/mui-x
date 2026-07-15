@@ -10,11 +10,11 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import { RecurringEventScope } from '@mui/x-scheduler-internals/models';
+import type { RecurringEventScope } from '@mui/x-scheduler-internals/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventDialogStyledContext } from '@mui/x-scheduler/internals';
-import { RecurringScopeDialogProps } from './RecurringScopeDialog.types';
+import type { RecurringScopeDialogProps } from './RecurringScopeDialog.types';
 
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringScopeDialogProps>(
   function RecurringScopeDialog(props, ref) {

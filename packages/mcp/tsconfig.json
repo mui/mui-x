@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    // Node-targeted server: uses process, node:fs/os/path, etc. @types/node is a devDependency so
+    // the isolated CI environment (which only sees declared deps) can resolve these.
+    "types": ["node"],
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"]
+}

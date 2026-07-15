@@ -1,6 +1,6 @@
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
-import { TreeViewAnyStore } from '../../models';
+import type { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
+import type { TreeViewAnyStore } from '../../models';
 import { itemsSelectors } from '../items';
 import { selectionSelectors } from './selectors';
 import { useSelectionItemPlugin } from './itemPlugin';
@@ -12,7 +12,7 @@ import {
   getNonDisabledItemsInRange,
 } from '../../utils/tree';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';
-import { TreeViewSelectionValue } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
+import type { TreeViewSelectionValue } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
   private store: MinimalTreeViewStore<any, Multiple>;

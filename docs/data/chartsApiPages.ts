@@ -349,6 +349,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'LinePlot',
   },
   {
+    pathname: '/x/api/charts/map-image-plot',
+    title: 'MapImagePlot',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/map-shape',
     title: 'MapShape',
     plan: 'premium',
