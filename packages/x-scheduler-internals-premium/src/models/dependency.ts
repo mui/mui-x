@@ -37,11 +37,18 @@ export interface SchedulerDependency {
  */
 export type SchedulerDependencyCreationProperties = Omit<SchedulerDependency, 'id'>;
 
-export type SchedulerDependencyRejectionReason = 'recurringEvent' | 'unknownEvent';
+export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknownEvent';
+
+export type SchedulerDependencyRejectionReason =
+  SchedulerDependencyEventRejectionReason | 'duplicateDependency';
 
 export type SchedulerAddDependencyResult =
   | { status: 'added'; id: SchedulerDependencyId }
-  | { status: 'rejected'; reason: SchedulerDependencyRejectionReason; eventId: SchedulerEventId }
+  | {
+      status: 'rejected';
+      reason: SchedulerDependencyEventRejectionReason;
+      eventId: SchedulerEventId;
+    }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId };
 
 /**

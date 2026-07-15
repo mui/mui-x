@@ -114,7 +114,7 @@ export class SchedulerSchedulingPlugin<
     }
 
     // Only `source`/`target` define identity while the type union has a single member;
-    // revisit when more dependency types are implemented.
+    // TODO(#22853): include `type` in the identity when the type union widens.
     const duplicate = this.store.state.dependencyModelList.find(
       (dependency) =>
         dependency.source === properties.source && dependency.target === properties.target,

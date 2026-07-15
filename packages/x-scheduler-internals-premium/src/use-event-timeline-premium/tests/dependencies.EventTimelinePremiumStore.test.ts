@@ -250,6 +250,31 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(result.status).to.equal('added');
       expect(onDependenciesChange.calledOnce).to.equal(true);
     });
+
+    it('should not detect a duplicate added earlier in the same update cycle', () => {
+      // The guard reads the controlled `dependencyModelList`, which only updates when the
+      // consumer round-trips the prop — same known limitation as consecutive adds.
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, onDependenciesChange },
+        adapter,
+      );
+
+      const firstResult = store.addDependency({
+        source: 'event-a',
+        target: 'event-b',
+        type: 'FinishToStart',
+      });
+      const secondResult = store.addDependency({
+        source: 'event-a',
+        target: 'event-b',
+        type: 'FinishToStart',
+      });
+
+      expect(firstResult.status).to.equal('added');
+      expect(secondResult.status).to.equal('added');
+      expect(onDependenciesChange.calledTwice).to.equal(true);
+    });
   });
 
   describe('method: deleteDependency', () => {
@@ -295,6 +320,34 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       expect(onDependenciesChange.calledOnce).to.equal(true);
       expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([DEP_BA]);
+    });
+
+    it('should remove every dependency sharing the deleted id', () => {
+      // Duplicate ids are a consumer data error (dev-warned at ingestion); the id is the
+      // identity, so deleting it removes all of its entries.
+      const onDependenciesChange = spy();
+      const createStore = () =>
+        new EventTimelinePremiumStore(
+          {
+            ...DEFAULT_PARAMS,
+            dependencies: [
+              { id: 'dup', source: 'event-a', target: 'event-b', type: 'FinishToStart' },
+              { id: 'dup', source: 'event-b', target: 'event-a', type: 'FinishToStart' },
+            ],
+            onDependenciesChange,
+          },
+          adapter,
+        );
+
+      let store: ReturnType<typeof createStore>;
+      expect(() => {
+        store = createStore();
+      }).toWarnDev(['MUI X Scheduler: Two or more dependencies share the same id "dup".']);
+
+      store!.deleteDependency('dup');
+
+      expect(onDependenciesChange.calledOnce).to.equal(true);
+      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([]);
     });
   });
 

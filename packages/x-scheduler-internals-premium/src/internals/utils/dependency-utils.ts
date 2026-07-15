@@ -5,7 +5,7 @@ import type {
   SchedulerDependency,
   SchedulerDependenciesState,
   SchedulerDependencyId,
-  SchedulerDependencyRejectionReason,
+  SchedulerDependencyEventRejectionReason,
 } from '../../models';
 
 // `updateStateFromParameters` runs on every render, so an unchanged `dependencies`
@@ -52,7 +52,7 @@ export function buildDependenciesState(
 export function classifyDependencyEvent(
   processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
   eventId: SchedulerEventId,
-): SchedulerDependencyRejectionReason | 'ok' {
+): SchedulerDependencyEventRejectionReason | 'ok' {
   const processedEvent = processedEventLookup.get(eventId);
   if (processedEvent == null) {
     return 'unknownEvent';
