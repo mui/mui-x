@@ -266,9 +266,24 @@ function rect(testId: string) {
   return screen.getByTestId(testId).getBoundingClientRect();
 }
 
-// The virtual scrollbar widgets are sized to the measured scrollbar size.
+/**
+ * The lanes reserved by the layout are sized to the measured scrollbar size, which is 0 on platforms with overlay scrollbars.
+ * The scrollbar widgets keep a minimum 14px hit area even then, so their rendered size can't be used in lane expectations.
+ * Instead, probe the platform size, like `measureScrollbarSize` does.
+ */
+let measuredScrollbarSize: number | undefined;
 function scrollbarSize() {
-  return screen.getByTestId('scrollbar-vertical').offsetWidth;
+  if (measuredScrollbarSize === undefined) {
+    const probe = document.createElement('div');
+    probe.style.width = '99px';
+    probe.style.height = '99px';
+    probe.style.position = 'absolute';
+    probe.style.overflow = 'scroll';
+    document.body.appendChild(probe);
+    measuredScrollbarSize = probe.offsetWidth - probe.clientWidth;
+    document.body.removeChild(probe);
+  }
+  return measuredScrollbarSize;
 }
 
 function expectInnerViewportCovered() {
@@ -410,13 +425,13 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     const row = document.querySelector('[data-id="0"]')!;
 
     // Pinned cells stay at the viewport edges: pinned-left at the scrollport edge,
-    // pinned-right against the vertical scrollbar.
+    // pinned-right at the inner viewport edge (before the vertical scrollbar lane).
     const pinnedLeft = row.querySelector('[data-col="0"]')!.getBoundingClientRect();
     expect(pinnedLeft.left).to.be.closeTo(scrollerRect.left, 1);
     const pinnedRight = row
       .querySelector(`[data-col="${COLUMN_COUNT - 1}"]`)!
       .getBoundingClientRect();
-    expect(pinnedRight.right).to.be.closeTo(rect('scrollbar-vertical').left, 1);
+    expect(pinnedRight.right).to.be.closeTo(scrollerRect.right - scrollbarSize(), 1);
 
     // Middle cells are at their scrolled position.
     const middle = row.querySelector('[data-col="10"]')!.getBoundingClientRect();
