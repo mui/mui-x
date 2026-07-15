@@ -65,7 +65,7 @@ interface SchedulerProcessedEventBase {
   allDay?: boolean;
 
   /**
-   * The id of the resource this event is associated with.
+   * The id(s) of the resource(s) this event is associated with.
    */
   resource?: SchedulerResourceId | SchedulerResourceId[] | null;
 
@@ -206,7 +206,7 @@ export interface SchedulerEvent {
    */
   timezone?: TemporalTimezone;
   /**
-   * The id of the resource this event is associated with.
+   * The id(s) of the resource(s) this event is associated with.
    * @default null
    */
   resource?: SchedulerResourceId | SchedulerResourceId[] | null;

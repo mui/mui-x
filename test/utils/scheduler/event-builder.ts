@@ -88,9 +88,9 @@ export class EventBuilder {
     return this;
   }
 
-  /** Associate multiple resources (type-widened processed-event field). */
+  /** Associate multiple resources. */
   resources(resourceList: SchedulerResource[]) {
-    (this.event as { resource?: unknown }).resource = resourceList.map((r) => r.id);
+    this.event.resource = resourceList.map((r) => r.id);
     return this;
   }
 

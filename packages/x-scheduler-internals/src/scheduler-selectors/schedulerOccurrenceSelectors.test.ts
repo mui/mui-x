@@ -332,50 +332,10 @@ describe('schedulerOccurrenceSelectors', () => {
         expect(group1.occurrences[0].id).to.equal(event.id);
       });
 
-      it('should be filtered out when all assigned resources are hidden', () => {
-        const r1 = ResourceBuilder.new().title('A').build();
-        const r2 = ResourceBuilder.new().title('B').build();
-
-        const event = EventBuilder.new()
-          .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-          .resources([r1, r2])
-          .build();
-
-        const state = getEventTimelinePremiumStateFromParameters({
-          events: [event],
-          resources: [r1, r2],
-        });
-        state.visibleResources = { [r1.id]: false, [r2.id]: false };
-        const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
-
-        expect(response).to.have.length(0);
-      });
-
-      it('should not be filtered out by the visibility check when resource is null', () => {
-        const resource = ResourceBuilder.new().build();
-
-        const eventWithNoResource = EventBuilder.new()
-          .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-          .build();
-        const eventWithResource = EventBuilder.new()
-          .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-          .resource(resource)
-          .build();
-
-        const state = getEventTimelinePremiumStateFromParameters({
-          events: [eventWithNoResource, eventWithResource],
-          resources: [resource],
-        });
-        // Hide the one explicit resource — the no-resource event must survive
-        state.visibleResources = { [resource.id]: false };
-        const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
-
-        // The resource group is hidden, so response is empty — but the no-resource
-        // event must have passed the visibility filter (confirmed via getOccurrencesFromEvents).
-        // We verify indirectly: only the resource-assigned event is filtered; the other isn't.
-        const allOccurrenceIds = response.flatMap((g) => g.occurrences.map((o) => o.id));
-        expect(allOccurrenceIds).not.to.include(eventWithResource.id);
-      });
+      // The "all assigned resources hidden" and "no resource" cases are pinned directly
+      // against `getOccurrencesFromEvents` in event-utils.test.ts instead of here: this
+      // selector hides resources as whole rows, so an event's own visibility filtering
+      // can't be observed independently from row visibility at this level.
     });
   });
 
