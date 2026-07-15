@@ -268,10 +268,11 @@ declare module '@mui/material/utils' {
 - **Chat** — `<ChatBox slotProps={{ messageRoot: { 'data-testid': 'message' } }} />`
 
 :::warning
-The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, where the interface is re-exported.
-On earlier Material UI versions — or for packages that don't depend on Material UI, such as Chat Headless — augment `@mui/utils/types` instead. That augmentation reaches MUI X slots only, not Material UI slots.
+The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, where the interface is re-exported. On 9.2+, Material UI and MUI X resolve to one shared `@mui/utils`, so the augmentation always applies -- this is the dependable setup.
 
-Because older Material UI versions ship their own `@mui/utils`, this fallback only works when your augmentation and MUI X resolve to the _same_ `@mui/utils` instance. Add `@mui/utils` (`^9.2.0`) as a direct dependency and check that your lockfile resolves it to a single copy -- run your package manager's dedupe if two copies remain. If they don't collapse to one, the declaration augments a different `@mui/utils` and `data-*` stays a type error.
+Packages with no Material UI dependency (such as Chat Headless) can augment `@mui/utils/types` directly: there is a single `@mui/utils`, so it applies cleanly to the MUI X slots.
+
+An older Material UI (notably v7, which depends on `@mui/utils@^7`) leaves two `@mui/utils` copies that cannot dedupe -- Material UI's v7 and MUI X's v9.2 -- so TypeScript may augment the v7 copy and `data-*` stays a type error. Adding `@mui/utils` (`^9.2.0`) as a direct dependency can make your own augmentation resolve to the same v9.2 copy MUI X uses (the two v9.2 ranges dedupe; the v7 copy stays separate). This still depends on your package manager collapsing the v9.2 copies, so treat it as best-effort -- the reliable fix is to upgrade Material UI to 9.2 or later.
 :::
 
 The augmentation shares the same interface as Material UI. See the [Material UI TypeScript guide](/material-ui/guides/typescript/#allowing-data-attributes-on-slotprops) for the full explanation and the strict (explicit-key) variant.
