@@ -32,7 +32,7 @@ import {
   type ChatUser,
 } from '@mui/x-chat/headless';
 import { ChatVariantProvider } from '@mui/x-chat/headless';
-import { randomId } from '../../../../../../data/chat/material/examples/shared/demoUtils';
+import { randomId } from '../../../../../../data/chat/core/examples/shared/demoUtils';
 
 // --- Avatar helper -----------------------------------------------------------
 

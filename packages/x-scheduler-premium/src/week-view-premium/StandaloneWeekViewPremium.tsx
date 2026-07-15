@@ -7,7 +7,7 @@ import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/us
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
-import { StandaloneWeekViewPremiumProps } from './WeekViewPremium.types';
+import type { StandaloneWeekViewPremiumProps } from './WeekViewPremium.types';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -262,6 +262,18 @@ StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
    * The view currently displayed in the calendar.
    */
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
+  /**
+   * Configuration applied to the view, keyed by the view name.
+   * For the `week` view, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { week: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig: PropTypes.shape({
+    week: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

@@ -139,6 +139,10 @@
       "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
       "default": "'svg-single'"
     },
+    "sampling": {
+      "type": { "name": "enum", "description": "'minmax'<br>&#124;&nbsp;'none'" },
+      "default": "'none'"
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { createSelector, useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import {
+import type {
   SchedulerEventSide,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
@@ -16,18 +16,16 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { DayGridEventProps } from './DayGridEvent.types';
+import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
+import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import type { PaletteName } from '../../../utils/tokens';
+import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
-
-const ARROW_DEPTH = 8; // px - depth of the chevron point
-const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
-const RIGHT_ARROW_CLIP = `polygon(0 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, 0 100%)`;
-const BOTH_ARROWS_CLIP = `polygon(${ARROW_DEPTH}px 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
+import { ARROW_DEPTH, LEFT_ARROW_CLIP, RIGHT_ARROW_CLIP, BOTH_ARROWS_CLIP } from '../arrowClips';
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
@@ -314,7 +312,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    occurrence.resource,
+    getPrimaryResourceId(occurrence.resource),
   );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 

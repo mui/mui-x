@@ -59,11 +59,7 @@ interface GridActionsCellProps<
   onMenuClose?: (
     params: GridRowParams<R>,
     event:
-      | React.MouseEvent<HTMLElement>
-      | React.KeyboardEvent
-      | MouseEvent
-      | TouchEvent
-      | undefined,
+      React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined,
   ) => boolean;
 }
 

@@ -172,6 +172,22 @@ In a real-world scenario you would replace this with your own server-side data-f
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
+### Keep previous data while fetching
+
+By default, the Data Grid clears the visible rows and shows a loading overlay while it fetches new data after pagination, sorting, or filtering changes.
+Pass the `dataSourceKeepPreviousData` prop to keep the previously displayed rows visible until the next response arrives.
+The loading overlay is rendered on top of the previous rows, which prevents the grid height from collapsing between pages.
+
+{{"demo": "ServerSideDataGridKeepPreviousData.js", "bg": "inline"}}
+
+If the request fails, the previous rows are reset, because they no longer match the pagination, sorting, and filtering controls, which already reflect the failed request.
+Handle the error through the [`onDataSourceError`](/x/react-data-grid/server-side-data/#error-handling) callback.
+
+:::warning
+`dataSourceKeepPreviousData` only applies to flat data.
+For [tree data](/x/react-data-grid/server-side-data/tree-data/) and [row grouping](/x/react-data-grid/server-side-data/row-grouping/), the Data Grid always resets the rows on refetch—otherwise the existing tree would be merged on top of the new response and rows could render in stale order ([#21619](https://github.com/mui/mui-x/pull/21619)).
+:::
+
 ## Data caching
 
 The Data Source caches fetched data by default.

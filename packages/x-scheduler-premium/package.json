@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-premium",
-  "version": "9.0.0-beta.3",
+  "version": "9.0.0-beta.5",
   "author": "MUI Team",
   "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
@@ -44,8 +44,8 @@
     "big-calendar"
   ],
   "scripts": {
-    "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "typescript": "tsgo -p tsconfig.json",
+    "build": "code-infra build --tsgo --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {

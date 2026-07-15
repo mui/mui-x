@@ -1,6 +1,6 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
-import { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import { getOccurrencesFromEvents } from '@mui/x-scheduler-internals/internals';
 import { useEventOccurrencesWithTimelinePosition } from './useEventOccurrencesWithTimelinePosition';
 
