@@ -5,7 +5,7 @@ import { useXAxes } from '../hooks/useAxis';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { getChartPoint } from '../internals/getChartPoint';
 import { getAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
-import type { LineItemIdentifier } from '../models/seriesType/line';
+import type { LineItemIdentifierWithData } from '../models/seriesType/line';
 import type { SeriesId } from '../models/seriesType/common';
 
 /**
@@ -13,12 +13,13 @@ import type { SeriesId } from '../models/seriesType/common';
  * identifier with the `dataIndex` of the closest data point along the x-axis.
  *
  * The index is derived from the click position, using the same logic as the
- * axis interaction (tooltip, highlight, `onAxisClick`).
+ * axis interaction (tooltip, highlight, `onAxisClick`). The callback is not
+ * fired when the click position cannot be associated with a data point.
  */
 export function useLineItemClickHandler(
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    lineItemIdentifier: LineItemIdentifier,
+    lineItemIdentifier: LineItemIdentifierWithData,
   ) => void,
 ): ((event: React.MouseEvent<SVGElement, MouseEvent>, seriesId: SeriesId) => void) | undefined {
   const chartsLayerContainerRef = useChartsLayerContainerRef();
@@ -36,11 +37,14 @@ export function useLineItemClickHandler(
       const xAxisId = seriesData?.series[seriesId]?.xAxisId ?? defaultXAxisId;
       const xAxis = xAxisId === undefined ? undefined : xAxes[xAxisId];
 
-      let dataIndex: number | undefined;
-      if (element !== null && xAxis !== undefined) {
-        const point = getChartPoint(element, event);
-        const index = getAxisIndex(xAxis, point.x);
-        dataIndex = index === -1 ? undefined : index;
+      if (element === null || xAxis === undefined) {
+        return;
+      }
+
+      const point = getChartPoint(element, event);
+      const dataIndex = getAxisIndex(xAxis, point.x);
+      if (dataIndex === -1) {
+        return;
       }
 
       onItemClick(event, { type: 'line', seriesId, dataIndex });

@@ -136,6 +136,19 @@ export type LineItemIdentifier = {
   dataIndex?: number;
 };
 
+/**
+ * An object that identifies a single line together with the data point the interaction targets.
+ * Used for item interactions that always resolve a data point, like `onItemClick`.
+ */
+export type LineItemIdentifierWithData = {
+  type: 'line';
+  seriesId: SeriesId;
+  /**
+   * The index of the data point closest to the pointer along the x-axis.
+   */
+  dataIndex: number;
+};
+
 export interface DefaultizedLineSeriesType extends DefaultizedProps<
   LineSeriesType,
   CommonDefaultizedProps | 'color'
