@@ -724,8 +724,10 @@ function useScrollbarRefCallback(
   scrollProperty: ScrollProperty,
   updateDimensions: () => void,
 ) {
-  const isLocked = React.useRef(false);
-  const lastPosition = React.useRef(0);
+  // Scroll events are asynchronous and only expose the element's current position.
+  // Track programmatic writes by position so their echoes don't suppress newer input.
+  const programmaticScrollerPosition = React.useRef<number | null>(null);
+  const programmaticScrollbarPosition = React.useRef<number | null>(null);
 
   const handleScrollerScroll = useEventCallback((scrollbar: HTMLElement) => {
     const scroller = scrollerRef.current;
@@ -734,18 +736,15 @@ function useScrollbarRefCallback(
     }
 
     const scrollerPosition = scroller[scrollProperty];
-    if (scrollerPosition === lastPosition.current) {
+    if (programmaticScrollerPosition.current === scrollerPosition) {
       return;
     }
-    lastPosition.current = scrollerPosition;
+    programmaticScrollerPosition.current = null;
 
-    if (isLocked.current) {
-      isLocked.current = false;
-      return;
+    if (scrollbar[scrollProperty] !== scrollerPosition) {
+      programmaticScrollbarPosition.current = scrollerPosition;
+      scrollbar[scrollProperty] = scrollerPosition;
     }
-    isLocked.current = true;
-
-    scrollbar[scrollProperty] = scrollerPosition;
   });
 
   const handleScrollbarScroll = useEventCallback((scrollbar: HTMLElement) => {
@@ -754,16 +753,21 @@ function useScrollbarRefCallback(
       return;
     }
 
-    if (isLocked.current) {
-      isLocked.current = false;
+    const scrollbarPosition = scrollbar[scrollProperty];
+    if (programmaticScrollbarPosition.current === scrollbarPosition) {
       return;
     }
-    isLocked.current = true;
+    programmaticScrollbarPosition.current = null;
 
-    scroller[scrollProperty] = scrollbar[scrollProperty];
+    if (scroller[scrollProperty] !== scrollbarPosition) {
+      programmaticScrollerPosition.current = scrollbarPosition;
+      scroller[scrollProperty] = scrollbarPosition;
+    }
   });
 
   return useRefCallback((scrollbar) => {
+    programmaticScrollerPosition.current = null;
+    programmaticScrollbarPosition.current = null;
     refSetter(scrollbar);
     updateDimensions();
 

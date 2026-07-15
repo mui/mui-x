@@ -397,17 +397,6 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       expect(renderedRowIds()).to.include(500);
     });
 
-    // The synthetic dispatch ran the handlers ahead of native event delivery:
-    // the scroller's own scroll event and the scrollbar mirror's echo are still
-    // pending, with the mirror's sync-lock held. Let two rendering updates
-    // deliver them before scrolling again — a scroll processed mid-handshake
-    // consumes the lock, and the stale echo then restores the old position.
-    await act(async () => {
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-      });
-    });
-
     const scrollTop = 250 * ROW_HEIGHT;
     act(() => {
       scroller.scrollTop = scrollTop;
@@ -422,6 +411,49 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       expect(renderedRowIds()).to.include(250);
     });
     expectInnerViewportCovered();
+  });
+
+  it('keeps the latest scroller position when the virtual scrollbar echo is delayed', async () => {
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+    const scrollbar = screen.getByTestId('scrollbar-vertical');
+    const firstScrollTop = 250 * ROW_HEIGHT;
+    const secondScrollTop = 500 * ROW_HEIGHT;
+
+    act(() => {
+      scroller.scrollTop = firstScrollTop;
+      scroller.dispatchEvent(new Event('scroll'));
+      expect(scrollbar.scrollTop).to.equal(firstScrollTop);
+
+      // Process another scroller event before delivering the scrollbar event queued
+      // by the first synchronization.
+      scroller.scrollTop = secondScrollTop;
+      scroller.dispatchEvent(new Event('scroll'));
+      expect(scrollbar.scrollTop).to.equal(secondScrollTop);
+
+      scrollbar.dispatchEvent(new Event('scroll'));
+    });
+
+    expect(scroller.scrollTop).to.equal(secondScrollTop);
+    expect(scrollbar.scrollTop).to.equal(secondScrollTop);
+
+    const thirdScrollTop = 750 * ROW_HEIGHT;
+    const fourthScrollTop = 900 * ROW_HEIGHT;
+
+    act(() => {
+      scroller.scrollTop = thirdScrollTop;
+      scroller.dispatchEvent(new Event('scroll'));
+      expect(scrollbar.scrollTop).to.equal(thirdScrollTop);
+
+      // The latest scroller position can be applied before its scroll event. The old
+      // scrollbar echo must not restore the previous position in that window either.
+      scroller.scrollTop = fourthScrollTop;
+      scrollbar.dispatchEvent(new Event('scroll'));
+      expect(scroller.scrollTop).to.equal(fourthScrollTop);
+
+      scroller.dispatchEvent(new Event('scroll'));
+      expect(scrollbar.scrollTop).to.equal(fourthScrollTop);
+    });
   });
 
   it('keeps pinned columns in place across horizontal scrolling', async () => {
