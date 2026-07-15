@@ -3,12 +3,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
   minimalConversation,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 

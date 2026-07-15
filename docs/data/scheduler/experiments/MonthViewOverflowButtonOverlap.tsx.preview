@@ -1,0 +1,5 @@
+<StandaloneMonthView
+  events={events}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+/>

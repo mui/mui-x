@@ -447,11 +447,11 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const rowDragPlaceholder = targetRow?.lastElementChild;
 
       // Verify drop indicator is NOT rendered (element should not have placeholder styling)
-      if (rowDragPlaceholder) {
-        const computedStyle = window.getComputedStyle(rowDragPlaceholder);
-        // If placeholder exists, it should not have the absolute positioning that indicates a valid drop
-        expect(computedStyle.position).not.to.equal('absolute');
-      }
+      // If placeholder exists, it should not have the absolute positioning that indicates a valid drop
+      const placeholderPosition = rowDragPlaceholder
+        ? window.getComputedStyle(rowDragPlaceholder).position
+        : null;
+      expect(placeholderPosition).not.to.equal('absolute');
 
       // Complete the drag operation
       const dragEndEvent = createDragEndEvent(sourceCell);

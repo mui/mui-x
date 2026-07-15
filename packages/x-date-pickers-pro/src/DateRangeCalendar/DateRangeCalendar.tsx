@@ -437,15 +437,22 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     }
 
     const displayingMonthRange = calendars - currentMonthCalendarPosition;
-    // Use absolute months (year * 12 + month) so the comparison stays correct across year boundaries.
-    const currentMonthNumber =
+
+    // Compare absolute month indices (year * 12 + month). This is time-insensitive (unlike a
+    // date range check) and stays correct across year boundaries. The visible window spans the
+    // `currentMonthCalendarPosition - 1` calendars rendered before the current month and the
+    // `calendars - currentMonthCalendarPosition` rendered after it.
+    // See https://github.com/mui/mui-x/issues/22980
+    const currentMonthIndex =
       adapter.getYear(calendarState.currentMonth) * 12 +
       adapter.getMonth(calendarState.currentMonth);
-    const requestedMonthNumber = adapter.getYear(date) * 12 + adapter.getMonth(date);
+    const requestedMonthIndex = adapter.getYear(date) * 12 + adapter.getMonth(date);
+    const firstVisibleMonthIndex = currentMonthIndex - (currentMonthCalendarPosition - 1);
+    const lastVisibleMonthIndex = currentMonthIndex + displayingMonthRange;
 
     if (
-      requestedMonthNumber < currentMonthNumber ||
-      requestedMonthNumber > currentMonthNumber + displayingMonthRange
+      requestedMonthIndex < firstVisibleMonthIndex ||
+      requestedMonthIndex > lastVisibleMonthIndex
     ) {
       const newMonth =
         rangePosition === 'start'
