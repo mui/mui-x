@@ -424,8 +424,13 @@ export class SchedulerStore<
     const createdIds: SchedulerEventId[] = [];
     const createdEvents: TEvent[] = [];
     for (const createdEvent of created) {
+      // Events created from an existing one (split, duplicate, paste) inherit its custom fields.
+      const source =
+        createdEvent.extractedFromId == null
+          ? undefined
+          : originalEventModelLookup.get(createdEvent.extractedFromId);
       const response = createEventModel(
-        createdEvent,
+        source ? { ...getCustomEventProperties(source), ...createdEvent } : createdEvent,
         this.state.eventModelStructure,
         this.state.adapter,
       );
@@ -607,17 +612,6 @@ export class SchedulerStore<
         occurrenceStartInDataTimezone,
         changesInDataTimezone,
         scope,
-      );
-    }
-
-    // Events split from the original are built from the built-in shape, so carry over custom fields.
-    const originalModel = schedulerEventSelectors.modelLookup(this.state).get(eventId);
-    if (originalModel && updatedEvents.created) {
-      const customData = getCustomEventProperties(originalModel);
-      updatedEvents.created = updatedEvents.created.map((createdEvent) =>
-        createdEvent.extractedFromId === eventId
-          ? { ...customData, ...createdEvent }
-          : createdEvent,
       );
     }
 
