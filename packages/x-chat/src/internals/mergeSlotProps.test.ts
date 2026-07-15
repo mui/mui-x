@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { mergeSlotProps, resolveSlotProps } from './mergeSlotProps';
+import { mergeSlotProps } from './mergeSlotProps';
 
 function makeEvent() {
   return {
@@ -132,12 +132,5 @@ describe('mergeSlotProps', () => {
     } as any) as any;
     // Base wins on conflicts (`density`), consumer-only keys are kept (`extra`).
     expect(result.ownerState).to.deep.equal({ density: 'compact', internal: true, extra: 1 });
-  });
-
-  it('resolveSlotProps returns object props as-is and resolves the callback form', () => {
-    expect(resolveSlotProps({ a: 1 }, {})).to.deep.equal({ a: 1 });
-    expect(resolveSlotProps((os: { n: number }) => ({ a: os.n }), { n: 2 })).to.deep.equal({
-      a: 2,
-    });
   });
 });

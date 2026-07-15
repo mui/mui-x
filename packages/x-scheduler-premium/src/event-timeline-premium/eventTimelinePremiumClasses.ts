@@ -1,11 +1,13 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import {
+import type {
   EventDialogClasses,
-  eventDialogClassKeys,
   ErrorContainerClasses,
-  errorContainerClassKeys,
   EventSkeletonClasses,
+} from '@mui/x-scheduler/internals';
+import {
+  eventDialogClassKeys,
+  errorContainerClassKeys,
   eventSkeletonClassKeys,
 } from '@mui/x-scheduler/internals';
 

@@ -3,7 +3,11 @@ import { benchmark } from '@mui/internal-benchmark';
 import { ScatterChartPremium } from '@mui/x-charts-premium/ScatterChartPremium';
 import { benchWebGLInteraction } from '../utils';
 
-const dataLength = 50_000;
+// Big enough to exercise the WebGL renderer's large-dataset path, small enough
+// to stay clear of the harness's 120s test timeout: point processing through
+// SwiftShader (software WebGL) dominates each iteration's wall-clock, and at
+// 50k points these two tests took ~113s each on CI.
+const dataLength = 10_000;
 const data = Array.from({ length: dataLength }).map((_, i) => ({
   x: i,
   y: 50 + Math.sin(i / 5) * 25 + Math.cos(i / 37) * 10,

@@ -49,6 +49,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     clearButton,
     tabIndex,
     disabled,
+    disableDebounce = false,
     ...other
   } = props;
   const rootSlotProps = slotProps?.root.slotProps;
@@ -59,6 +60,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
+  const debounceMs = disableDebounce ? 0 : rootProps.filterDebounceMs;
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -66,14 +68,21 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       const value = event.target.value;
       setFilterValueState(value);
 
+      const date = new Date(value);
+      const newItem = { ...item, value: Number.isNaN(date.getTime()) ? undefined : date };
+
+      if (debounceMs === 0) {
+        applyValue(newItem);
+        return;
+      }
+
       setIsApplying(true);
-      filterTimeout.start(rootProps.filterDebounceMs, () => {
-        const date = new Date(value);
-        applyValue({ ...item, value: Number.isNaN(date.getTime()) ? undefined : date });
+      filterTimeout.start(debounceMs, () => {
+        applyValue(newItem);
         setIsApplying(false);
       });
     },
-    [applyValue, item, rootProps.filterDebounceMs, filterTimeout],
+    [applyValue, item, debounceMs, filterTimeout],
   );
 
   React.useEffect(() => {
@@ -96,9 +105,10 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         slotProps={{
           ...rootSlotProps,
           input: {
-            endAdornment: applying ? (
-              <rootProps.slots.loadIcon fontSize="small" color="action" />
-            ) : null,
+            endAdornment:
+              applying && debounceMs > 0 ? (
+                <rootProps.slots.loadIcon fontSize="small" color="action" />
+              ) : null,
             ...rootSlotProps?.input,
           },
           htmlInput: {
@@ -129,6 +139,11 @@ GridFilterInputDate.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   clearButton: PropTypes.node,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default false
+   */
+  disableDebounce: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,

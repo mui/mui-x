@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { StandaloneCompactThreeDayViewProps } from './CompactThreeDayView.types';
+import type { StandaloneCompactThreeDayViewProps } from './CompactThreeDayView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
