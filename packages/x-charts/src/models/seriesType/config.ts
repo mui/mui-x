@@ -9,7 +9,7 @@ import type {
   LineSeriesType,
   DefaultizedLineSeriesType,
   LineItemIdentifier,
-  LineItemIdentifierWithData,
+  LineItemClickIdentifier,
 } from './line';
 import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import type {
@@ -87,7 +87,7 @@ export interface ChartsSeriesConfig {
     seriesLayout: {};
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
-    itemIdentifierWithData: LineItemIdentifierWithData;
+    itemIdentifierWithData: LineItemClickIdentifier;
     valueType: number | null;
     canBeStacked: true;
     axisType: 'cartesian';

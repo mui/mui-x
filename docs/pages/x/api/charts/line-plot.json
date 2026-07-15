@@ -3,7 +3,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, lineItemIdentifier: LineItemIdentifierWithData) => void",
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, lineItemIdentifier: LineItemClickIdentifier) => void",
         "describedArgs": ["event", "lineItemIdentifier"]
       }
     },

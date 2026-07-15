@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { AreaElement } from './AreaElement';
 import type { AreaElementProps, AreaElementSlotProps, AreaElementSlots } from './AreaElement';
-import type { LineItemIdentifierWithData } from '../models/seriesType/line';
+import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
@@ -25,11 +25,11 @@ export interface AreaPlotProps
   /**
    * Callback fired when a line area item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifierWithData} lineItemIdentifier The line item identifier.
+   * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    lineItemIdentifier: LineItemIdentifierWithData,
+    lineItemIdentifier: LineItemClickIdentifier,
   ) => void;
 }
 
@@ -108,7 +108,7 @@ AreaPlot.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when a line area item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifierWithData} lineItemIdentifier The line item identifier.
+   * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick: PropTypes.func,
   /**

@@ -140,7 +140,7 @@ export type LineItemIdentifier = {
  * An object that identifies a single line together with the data point the interaction targets.
  * Used for item interactions that always resolve a data point, like `onItemClick`.
  */
-export type LineItemIdentifierWithData = {
+export type LineItemClickIdentifier = {
   type: 'line';
   seriesId: SeriesId;
   /**

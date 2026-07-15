@@ -5,7 +5,7 @@ import { useXAxes } from '../hooks/useAxis';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { getChartPoint } from '../internals/getChartPoint';
 import { getAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
-import type { LineItemIdentifierWithData } from '../models/seriesType/line';
+import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import type { SeriesId } from '../models/seriesType/common';
 
 /**
@@ -19,7 +19,7 @@ import type { SeriesId } from '../models/seriesType/common';
 export function useLineItemClickHandler(
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    lineItemIdentifier: LineItemIdentifierWithData,
+    lineItemIdentifier: LineItemClickIdentifier,
   ) => void,
 ): ((event: React.MouseEvent<SVGElement, MouseEvent>, seriesId: SeriesId) => void) | undefined {
   const chartsLayerContainerRef = useChartsLayerContainerRef();
