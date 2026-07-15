@@ -1,5 +1,124 @@
 # Changelog
 
+## 9.9.0
+
+_Jul 9, 2026_
+
+We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 [Data sampling](https://mui.com/x/react-charts/performance/#sampling) for better performance with large bar and line charts
+- 🗺️ [Maps zoom support](https://mui.com/x/react-charts/map/#zoom)
+- ☑️ Support [applying filters on demand](https://mui.com/x/react-data-grid/filtering/customization/#apply-filters-on-demand) in the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@mustafajw07, @sebastianfrey
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @brijeshb42, @hasdfa, @Janpot, @JCQuintas, @LukasTy, @rita-codes, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.9.0`
+
+- [DataGrid] Add `dataSourceKeepPreviousData` prop (#22554) @LukasTy
+- [DataGrid] Add controlled filter panel for applying filters on demand (#23023) @sebastianfrey
+
+#### `@mui/x-data-grid-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.9.0`.
+
+#### `@mui/x-data-grid-premium@9.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.9.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.9.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.9.0`, plus:
+
+- [DateRangeCalendar] Avoid unnecessary month switch when the value is already visible (#22996) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@9.9.0`
+
+- [charts] Optimize and de-duplicate sampled axis-highlight band lookup (#23052) @JCQuintas
+- [charts] Unify tooltip item position getter and selector into a single selector API (#23041) @alexfauquette
+- [charts] Fix impossible condition in axis text angle warning (#23102) @sai6855
+
+#### `@mui/x-charts-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.9.0`, plus:
+
+- [charts-pro] Add data sampling for large bar and line charts (#22830) @JCQuintas
+- [charts-pro] Allow sampling on non-zoomable charts (#23051) @JCQuintas
+
+#### `@mui/x-charts-premium@9.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+#### Breaking changes
+
+The API of the `Unstable_ChartsGeoDataProviderPremium` got modified.
+Props `scale`, `rotation`, and `translation` are replaced by props `view` and `initialView`.
+Same behavior can be obtained with `view.zoomLevel`, `view.center`, and `view.translation`.
+See the [zoom view section](https://mui.com/x/react-charts/map/#control) for detailed information
+
+Same changes as in `@mui/x-charts-pro@9.9.0`, plus:
+
+- [charts-premium] Maps zoom support (#22709) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@9.9.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.9.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.5`
+
+- [scheduler] Introduce event resource helper utilities (#23022) @mustafajw07
+- [scheduler] Preserve multi-day event continuity across overflow (#22797) @mustafajw07
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.5`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.9.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix broken social preview image on shared docs links (#23055) @sai6855
+- [docs] Review and clean up react-chat docs demos & gallery; fix actions-bar layout (#22993) @hasdfa
+- [docs] Update the Pickers recommended date library bundle sizes (#23087) @LukasTy
+
+### Core
+
+- [mcp] Add `@mui/mcp` server and `@mui/x-agent-tools`. See the [README](https://github.com/mui/mui-x/blob/master/packages/mcp/README.md) for setup (#22947) @aemartos
+- [code-infra] Avoid OOM in the Netlify docs build and CircleCI lint step (#23086) @LukasTy
+- [code-infra] Group `@atlaskit/pragmatic-drag-and-drop` renovate updates (#23105) @LukasTy
+- [code-infra] Validate npm publishing through dry run (#23038) @brijeshb42
+- [docs-infra] Enable `webpackBuildWorker` to bound docs build memory (#23100) @Janpot
+
+### Miscellaneous
+
+- [test] Fix flaky "should render only the pageSize" Data Grid virtualization test (#23090) @LukasTy
+- [test] Track `@mui/x-chat` bundle size via native expand (#23049) @Janpot
+
 ## 9.8.0
 
 _Jul 2, 2026_
