@@ -47,9 +47,7 @@ benchmark('BarChart - 100 bars', () => (
   <BarChart
     series={[
       {
-        data: [
-          /* ... */
-        ],
+        data: [/* ... */],
       },
     ]}
     width={500}

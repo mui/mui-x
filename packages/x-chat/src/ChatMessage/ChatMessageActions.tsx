@@ -56,6 +56,10 @@ const ChatMessageActionsStyled = styled('div', {
 })<{ ownerState?: { role?: string; isOwnMessage?: boolean } }>(({ theme, ownerState }) => ({
   gridArea: 'actions',
   display: 'inline-flex',
+  // Grid items default to `justify-self: stretch`, which would blockify the
+  // chip into a full-width bar; `start` keeps it hugging its buttons so it
+  // reads as the small elevated chip anchored under the bubble.
+  justifySelf: 'start',
   alignItems: 'center',
   gap: theme.spacing(0.25),
   // `visibility: hidden` (not just opacity) removes the action buttons from

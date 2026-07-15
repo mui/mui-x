@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
 import { ChatDateDivider } from '../ChatMessage/ChatDateDivider';
 import { ChatUnreadMarker } from '../ChatIndicators/ChatUnreadMarker';
 import { ChatStreamingIndicatorRow } from '../ChatIndicators/ChatStreamingIndicatorRow';
 import { useChatSlots } from '../internals/ChatSlotsContext';
-import { resolveSlotProps } from '../internals/mergeSlotProps';
 import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
 
 function warnIfHostElementRowSlot(
@@ -186,7 +186,7 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
     <React.Fragment>
       {showDateDivider && (
         <DateDividerComponent
-          {...resolveSlotProps(slotProps.dateDivider ?? {}, { messageId: id, index, items })}
+          {...resolveComponentProps(slotProps.dateDivider ?? {}, { messageId: id, index, items })}
           messageId={id}
           index={index}
           items={items}
@@ -194,7 +194,7 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
       )}
       {showUnreadMarker && (
         <UnreadMarkerComponent
-          {...resolveSlotProps(slotProps.unreadMarker ?? {}, { messageId: id, index, items })}
+          {...resolveComponentProps(slotProps.unreadMarker ?? {}, { messageId: id, index, items })}
           messageId={id}
           index={index}
           items={items}
@@ -232,7 +232,7 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
             messageId: id,
             index,
             items,
-            ...resolveSlotProps(slotProps.streamingIndicator ?? {}, {
+            ...resolveComponentProps(slotProps.streamingIndicator ?? {}, {
               messageId: id,
               index,
               items,

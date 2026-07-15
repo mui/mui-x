@@ -88,9 +88,8 @@ export type ChatToolInputStartChunk<TToolName extends string = string> = [
   ChatRegisteredToolName,
 ] extends [never]
   ? ChatFallbackToolInputStartChunk<TToolName>
-  :
-      | ChatAnyRegisteredToolInputStartChunk
-      | ChatDynamicToolInputStartChunk<Exclude<TToolName, ChatRegisteredToolName>>;
+  : | ChatAnyRegisteredToolInputStartChunk
+    | ChatDynamicToolInputStartChunk<Exclude<TToolName, ChatRegisteredToolName>>;
 
 export interface ChatToolInputDeltaChunk {
   type: 'tool-input-delta';
@@ -130,9 +129,8 @@ export type ChatToolInputAvailableChunk<TToolName extends string = string> = [
   ChatRegisteredToolName,
 ] extends [never]
   ? ChatFallbackToolInputAvailableChunk<TToolName>
-  :
-      | ChatAnyRegisteredToolInputAvailableChunk
-      | ChatDynamicToolInputAvailableChunk<Exclude<TToolName, ChatRegisteredToolName>>;
+  : | ChatAnyRegisteredToolInputAvailableChunk
+    | ChatDynamicToolInputAvailableChunk<Exclude<TToolName, ChatRegisteredToolName>>;
 
 export interface ChatToolInputErrorChunk {
   type: 'tool-input-error';
@@ -175,9 +173,8 @@ export type ChatToolApprovalRequestChunk<TToolName extends string = string> = [
   ChatRegisteredToolName,
 ] extends [never]
   ? ChatFallbackToolApprovalRequestChunk<TToolName>
-  :
-      | ChatAnyRegisteredToolApprovalRequestChunk
-      | ChatDynamicToolApprovalRequestChunk<Exclude<TToolName, ChatRegisteredToolName>>;
+  : | ChatAnyRegisteredToolApprovalRequestChunk
+    | ChatDynamicToolApprovalRequestChunk<Exclude<TToolName, ChatRegisteredToolName>>;
 
 export interface ChatToolOutputAvailableChunk<TToolName extends string = string> {
   type: 'tool-output-available';

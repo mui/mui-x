@@ -1116,8 +1116,7 @@ describe('ChatBox', () => {
       const layout = chatBox.firstElementChild as HTMLElement;
       const layoutChildren = Array.from(layout.children) as HTMLElement[];
       const threadPane = layoutChildren.find((element) => element.style.width === '100%') as
-        | HTMLElement
-        | undefined;
+        HTMLElement | undefined;
 
       expect(threadPane).not.toBe(undefined);
       expect(threadPane!.style.width).toBe('100%');

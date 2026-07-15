@@ -3,6 +3,9 @@ import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
 
+/** Minimum on-screen gap (px) kept between merged (sampled) bars so they stay distinguishable. */
+const MIN_SAMPLED_BAR_GAP_PX = 2;
+
 function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number, reverse: boolean) {
   const isVerticalAndPositive = verticalLayout && baseValue > 0;
   const isHorizontalAndNegative = !verticalLayout && baseValue < 0;
@@ -66,6 +69,63 @@ export function createGetBarDimensions(params: {
     return {
       x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
       y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
+      height: verticalLayout ? barSize : barWidth,
+      width: verticalLayout ? barWidth : barSize,
+    };
+  };
+}
+
+/** Like {@link createGetBarDimensions}, but for a sampled bucket spanning several categories. */
+export function createGetBucketBarDimensions(params: {
+  verticalLayout: boolean;
+  xAxisConfig: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
+  yAxisConfig: ComputedAxis<ScaleName, any, ChartsYAxisProps>;
+  series: ChartSeriesDefaultized<'bar'>;
+  numberOfGroups: number;
+}) {
+  const { verticalLayout, xAxisConfig, yAxisConfig, series, numberOfGroups } = params;
+
+  const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
+  const baseScale = baseScaleConfig.scale;
+  const bandwidth = baseScale.bandwidth();
+  const step = baseScale.step();
+  const valueScale = verticalLayout ? yAxisConfig.scale : xAxisConfig.scale;
+
+  return function getBucketBarDimensions(
+    startIndex: number,
+    endIndex: number,
+    min: number,
+    max: number,
+    groupIndex: number,
+  ) {
+    const spanStart = baseScale(baseScaleConfig.data![startIndex])!;
+    const bucketCount = endIndex - startIndex + 1;
+    const bucketStride = bucketCount * step;
+
+    // Keep the gap between buckets proportional to the bucket (same ratio as an unsampled chart),
+    // but never thinner than MIN_SAMPLED_BAR_GAP_PX so it stays visible at every level and zoom.
+    const gap = Math.min(
+      bucketStride / 2,
+      Math.max(bucketCount * (step - bandwidth), MIN_SAMPLED_BAR_GAP_PX),
+    );
+    const { barWidth, offset } = getBandSize(
+      bucketStride - gap,
+      numberOfGroups,
+      baseScaleConfig.barGapRatio,
+    );
+    const barOffset = groupIndex * (barWidth + offset);
+
+    const valueCoordinates = [valueScale(min)!, valueScale(max)!];
+    const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
+
+    let barSize = maxValueCoord - minValueCoord;
+    if (!series.hidden && barSize > 0) {
+      barSize = Math.max(series.minBarSize, barSize);
+    }
+
+    return {
+      x: verticalLayout ? spanStart + barOffset : minValueCoord,
+      y: verticalLayout ? minValueCoord : spanStart + barOffset,
       height: verticalLayout ? barSize : barWidth,
       width: verticalLayout ? barWidth : barSize,
     };
