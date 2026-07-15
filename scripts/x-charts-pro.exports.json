@@ -412,6 +412,7 @@
   { "name": "LineHighlightPlotSlots", "kind": "Interface" },
   { "name": "LineHighlightPropsOverrides", "kind": "Interface" },
   { "name": "LineItemIdentifier", "kind": "TypeAlias" },
+  { "name": "LineItemIdentifierWithData", "kind": "TypeAlias" },
   { "name": "LinePlot", "kind": "Function" },
   { "name": "LinePlotProps", "kind": "Interface" },
   { "name": "LinePlotSlotProps", "kind": "Interface" },
