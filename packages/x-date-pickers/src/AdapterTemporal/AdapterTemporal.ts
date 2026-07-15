@@ -292,7 +292,10 @@ See https://mui.com/x/react-date-pickers/date-localization/ for more details.`,
     const { zone, logical } = this.resolveTimezone(timezone);
 
     if (typeof value === 'undefined') {
-      return this.createDate(Temporal.Now.zonedDateTimeISO(zone), logical) as unknown as R;
+      // Derive the current instant from `Date.now()` rather than `Temporal.Now` so the current time
+      // stays mockable (for example with `vi.setSystemTime`), matching the other adapters.
+      const now = Temporal.Instant.fromEpochMilliseconds(Date.now()).toZonedDateTimeISO(zone);
+      return this.createDate(now, logical) as unknown as R;
     }
 
     try {
