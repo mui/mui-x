@@ -7,7 +7,7 @@ import type {
   ChatConversation as ChatConversationType,
   ChatMessage,
 } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const adapter = createEchoAdapter();
 
@@ -53,7 +53,7 @@ export default function ChatFilePartsDemo() {
       initialConversations={[conversation]}
       initialMessages={messages}
     >
-      <Box sx={{ height: 320, overflow: 'hidden' }}>
+      <Box sx={{ height: 360, overflow: 'hidden' }}>
         <ChatConversation>
           <ChatMessageList />
         </ChatConversation>

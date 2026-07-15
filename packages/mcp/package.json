@@ -1,0 +1,44 @@
+{
+  "name": "@mui/mcp",
+  "version": "0.1.1",
+  "author": "MUI Team",
+  "description": "MUI MCP Server",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://github.com/mui/mui-x/tree/master/packages/mcp#readme",
+  "bin": "./src/stdio.ts",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/mcp"
+  },
+  "dependencies": {
+    "@babel/runtime": "catalog:",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@mui/x-agent-tools": "workspace:^",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "rimraf": "catalog:",
+    "vitest": "catalog:"
+  },
+  "scripts": {
+    "typescript": "tsgo -p tsconfig.json",
+    "build": "code-infra build --tsgo --bundle cjs --buildTypes false",
+    "build:local": "pnpm --filter \"@mui/mcp...\" build",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "mcp-inspector": "pnpm build:local && npx -y @modelcontextprotocol/inspector node build/stdio.js",
+    "test": "vitest run --config vitest.config.node.mts"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

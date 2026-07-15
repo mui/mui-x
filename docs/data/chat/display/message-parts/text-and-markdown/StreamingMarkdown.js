@@ -6,7 +6,7 @@ import {
   createChunkStream,
   createTextResponseChunks,
   randomId,
-} from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 // A markdown-rich answer whose bold span and fenced code block are deliberately
 // long enough that mid-stream chunks split inside `**…**` and inside the fence —

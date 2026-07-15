@@ -1,6 +1,9 @@
 import { spy } from 'sinon';
 import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
-import { SchedulerEvent, SchedulerEventModelStructure } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEvent,
+  SchedulerEventModelStructure,
+} from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 

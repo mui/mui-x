@@ -8,7 +8,7 @@ import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
-import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
+import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
 

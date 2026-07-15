@@ -1,17 +1,28 @@
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { Theme } from '@mui/material/styles';
-import { EventCalendarPremiumParameters } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
-import { EventCalendarSchedulerParametersOverrides } from '@mui/x-scheduler-internals/use-event-calendar';
-import { AgendaViewProps } from '@mui/x-scheduler/agenda-view';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import type { EventCalendarPremiumParameters } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import type {
+  EventCalendarSchedulerParametersOverrides,
+  CollapsibleResourcesParameterKeys,
+} from '@mui/x-scheduler-internals/use-event-calendar';
+import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import type { AgendaViewProps } from '@mui/x-scheduler/agenda-view';
 
 export interface StandaloneAgendaViewPremiumProps<TEvent extends object, TResource extends object>
   extends
     AgendaViewProps,
     Omit<
       EventCalendarPremiumParameters<TEvent, TResource>,
-      keyof EventCalendarSchedulerParametersOverrides
+      | 'viewConfig'
+      | keyof EventCalendarSchedulerParametersOverrides
+      | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
+  /**
+   * Configuration applied to the view, keyed by the view name.
+   * The `agenda` view does not support any configuration keys yet.
+   */
+  viewConfig?: Omit<EventCalendarViewConfig, 'day' | 'week'>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

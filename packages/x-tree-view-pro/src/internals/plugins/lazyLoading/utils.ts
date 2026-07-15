@@ -1,5 +1,5 @@
-import { TreeViewItemId, TreeViewValidItem } from '@mui/x-tree-view/models';
-import { TreeViewLazyLoadingPlugin } from './TreeViewLazyLoadingPlugin';
+import type { TreeViewItemId, TreeViewValidItem } from '@mui/x-tree-view/models';
+import type { TreeViewLazyLoadingPlugin } from './TreeViewLazyLoadingPlugin';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
@@ -15,19 +15,19 @@ export enum RequestStatus {
  * Determines the status of a request based on the enum `RequestStatus`
  * Uses `ParentId` to uniquely identify a request
  */
-export class NestedDataManager {
+export class NestedDataManager<R extends TreeViewValidItem<R>> {
   private pendingRequests: Set<TreeViewItemId> = new Set();
 
   private queuedRequests: Set<TreeViewItemId> = new Set();
 
   private settledRequests: Set<TreeViewItemId> = new Set();
 
-  private lazyLoadingPlugin: TreeViewLazyLoadingPlugin<TreeViewValidItem<any>>;
+  private lazyLoadingPlugin: TreeViewLazyLoadingPlugin<R>;
 
   private maxConcurrentRequests: number;
 
   constructor(
-    lazyLoadingPlugin: TreeViewLazyLoadingPlugin<TreeViewValidItem<any>>,
+    lazyLoadingPlugin: TreeViewLazyLoadingPlugin<R>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
     this.lazyLoadingPlugin = lazyLoadingPlugin;

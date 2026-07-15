@@ -1,0 +1,7 @@
+<StandaloneWeekView
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  viewConfig={{ week: { startTime: 8, endTime: 20 } }}
+/>

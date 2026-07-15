@@ -1,5 +1,5 @@
-import { TreeViewItemId } from '../../../models';
-import { TreeViewItemMeta } from '../../models';
+import type { TreeViewItemId } from '../../../models';
+import type { TreeViewItemMeta } from '../../models';
 import type { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
 import { buildSiblingIndexes, itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../items';
 import { selectionSelectors } from '../selection/selectors';
@@ -129,7 +129,13 @@ Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
 
     // If a parent was selected while its children were unmounted (collapsed with unmountOnExit),
     // re-run selection propagation now that the children are registered.
-    if (parentId !== null && selectionSelectors.isItemSelected(this.store.state, parentId)) {
+    // The multiSelect guard matches the documented contract: selectionPropagation only works with multiSelect.
+    if (
+      parentId !== null &&
+      selectionSelectors.isMultiSelectEnabled(this.store.state) &&
+      selectionSelectors.propagationRules(this.store.state).descendants &&
+      selectionSelectors.isItemSelected(this.store.state, parentId)
+    ) {
       this.store.selection.setItemSelection({
         itemId: parentId,
         shouldBeSelected: true,
