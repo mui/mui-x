@@ -63,6 +63,19 @@ export class SchedulerSchedulingPlugin<
   }
 
   /**
+   * Emits `onDependenciesChange` with `remaining` only if it actually dropped entries from
+   * `current`, so unaffected updates don't trigger a no-op emission.
+   */
+  private updateDependenciesIfChanged(
+    current: readonly SchedulerDependency[],
+    remaining: SchedulerDependency[],
+  ) {
+    if (remaining.length !== current.length) {
+      this.updateDependencies(remaining);
+    }
+  }
+
+  /**
    * Removes the dependencies referencing deleted events, in the same update.
    *
    * With a `dataSource`, event deletions are persisted asynchronously after this hook has
@@ -80,14 +93,13 @@ export class SchedulerSchedulingPlugin<
     const remaining = current.filter(
       (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
     );
-    if (remaining.length !== current.length) {
-      this.updateDependencies(remaining);
-    }
+    this.updateDependenciesIfChanged(current, remaining);
   };
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown or recurring event.
+   * Rejects dependencies referencing an unknown or recurring event, or duplicating an
+   * existing dependency.
    * Implementation of the store's `addDependency()` — call it through the store.
    */
   public addDependency = (
@@ -99,6 +111,16 @@ export class SchedulerSchedulingPlugin<
       if (status !== 'ok') {
         return { status: 'rejected', reason: status, eventId };
       }
+    }
+
+    // Only `source`/`target` define identity while the type union has a single member;
+    // revisit when more dependency types are implemented.
+    const duplicate = this.store.state.dependencyModelList.find(
+      (dependency) =>
+        dependency.source === properties.source && dependency.target === properties.target,
+    );
+    if (duplicate) {
+      return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
     }
 
     const dependency: SchedulerDependency = { ...properties, id: generateId('dependency') };
@@ -113,9 +135,7 @@ export class SchedulerSchedulingPlugin<
   public deleteDependency = (dependencyId: SchedulerDependencyId) => {
     const current = this.store.state.dependencyModelList;
     const remaining = current.filter((dependency) => dependency.id !== dependencyId);
-    if (remaining.length !== current.length) {
-      this.updateDependencies(remaining);
-    }
+    this.updateDependenciesIfChanged(current, remaining);
   };
 
   private warnOnInvalidDependencies() {

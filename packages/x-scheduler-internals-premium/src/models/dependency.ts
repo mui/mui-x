@@ -10,6 +10,7 @@ export type SchedulerDependencyType = 'FinishToStart';
 
 /**
  * A dependency between two events, referencing them by id.
+ * For `"FinishToStart"`, `source` is the predecessor and `target` the successor.
  */
 export interface SchedulerDependency {
   /**
@@ -17,11 +18,11 @@ export interface SchedulerDependency {
    */
   id: SchedulerDependencyId;
   /**
-   * The id of the predecessor event.
+   * The id of the event at the source end of the dependency.
    */
   source: SchedulerEventId;
   /**
-   * The id of the successor event.
+   * The id of the event at the target end of the dependency.
    */
   target: SchedulerEventId;
   /**
@@ -40,7 +41,8 @@ export type SchedulerDependencyRejectionReason = 'recurringEvent' | 'unknownEven
 
 export type SchedulerAddDependencyResult =
   | { status: 'added'; id: SchedulerDependencyId }
-  | { status: 'rejected'; reason: SchedulerDependencyRejectionReason; eventId: SchedulerEventId };
+  | { status: 'rejected'; reason: SchedulerDependencyRejectionReason; eventId: SchedulerEventId }
+  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId };
 
 /**
  * State slice holding the dependencies collection.

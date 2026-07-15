@@ -3,6 +3,7 @@ import { vi } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
+import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const TEST_RESOURCES = [ResourceBuilder.new().id('r1').title('Resource 1').build()];
@@ -115,11 +116,18 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
     it('should generate a distinct id for each added dependency and echo it back to the caller', () => {
       const onDependenciesChange = spy();
+      const eventC = EventBuilder.new().id('event-c').build();
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        {
+          events: [eventA, eventB, eventC],
+          resources: TEST_RESOURCES,
+          dependencies: [DEP_AB],
+          onDependenciesChange,
+        },
         adapter,
       );
 
+      // Two distinct new dependencies, neither duplicating `DEP_AB` (a→b) nor each other.
       const firstResult = store.addDependency({
         source: 'event-b',
         target: 'event-a',
@@ -127,7 +135,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       });
       const secondResult = store.addDependency({
         source: 'event-a',
-        target: 'event-b',
+        target: 'event-c',
         type: 'FinishToStart',
       });
 
@@ -202,6 +210,45 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         reason: 'unknownEvent',
         eventId: 'event-a',
       });
+    });
+
+    it('should reject a dependency that duplicates an existing one', () => {
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-a',
+        target: 'event-b',
+        type: 'FinishToStart',
+      });
+
+      expect(result).to.deep.equal({
+        status: 'rejected',
+        reason: 'duplicateDependency',
+        dependencyId: 'dep-1',
+      });
+      expect(onDependenciesChange.called).to.equal(false);
+    });
+
+    it('should accept a self-referencing dependency until the cycle guard lands', () => {
+      // A self-loop is the degenerate cycle; rejection belongs to the cycle guard (#22858).
+      const onDependenciesChange = spy();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, onDependenciesChange },
+        adapter,
+      );
+
+      const result = store.addDependency({
+        source: 'event-a',
+        target: 'event-a',
+        type: 'FinishToStart',
+      });
+
+      expect(result.status).to.equal('added');
+      expect(onDependenciesChange.calledOnce).to.equal(true);
     });
   });
 
@@ -281,6 +328,39 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(onEventsChange.calledOnce).to.equal(true);
       // both callbacks fired synchronously in the same mutation
       expect(onDependenciesChange.calledBefore(onEventsChange)).to.equal(true);
+    });
+
+    it('should drop every dependency touching the deleted event in a single emission', () => {
+      const onDependenciesChange = spy();
+      const eventC = EventBuilder.new().id('event-c').build();
+      const DEP_AC: SchedulerDependency = {
+        id: 'dep-2',
+        source: 'event-a',
+        target: 'event-c',
+        type: 'FinishToStart',
+      };
+      const DEP_BC: SchedulerDependency = {
+        id: 'dep-3',
+        source: 'event-b',
+        target: 'event-c',
+        type: 'FinishToStart',
+      };
+      const store = new EventTimelinePremiumStore(
+        {
+          events: [eventA, eventB, eventC],
+          resources: TEST_RESOURCES,
+          dependencies: [DEP_AB, DEP_AC, DEP_BC],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      store.deleteEvent('event-a');
+
+      // dep-1 (a→b) and dep-2 (a→c) both touch event-a and are dropped in the same pass;
+      // dep-3 (b→c) survives.
+      expect(onDependenciesChange.calledOnce).to.equal(true);
+      expect(onDependenciesChange.lastCall.firstArg).to.deep.equal([DEP_BC]);
     });
 
     it('should not emit onDependenciesChange when the deleted event has no dependencies', () => {
@@ -445,6 +525,38 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-b".',
       ]);
+    });
+  });
+
+  describe('selector: activeModelListByTarget', () => {
+    it('should keep the same reference across unrelated updates and recompute when dependencies actually change', () => {
+      const events = [eventA, eventB];
+      const dependencies = [DEP_AB];
+      const params = { events, resources: TEST_RESOURCES, dependencies };
+      const store = new EventTimelinePremiumStore(params, adapter);
+
+      const first = eventTimelinePremiumDependencySelectors.activeModelListByTarget(store.state);
+
+      // `events`, `resources` and `dependencies` keep the same references; only an
+      // unrelated parameter changes.
+      store.updateStateFromParameters({ ...params, readOnly: true }, adapter);
+      const second = eventTimelinePremiumDependencySelectors.activeModelListByTarget(store.state);
+
+      expect(second).to.equal(first);
+
+      const DEP_BA: SchedulerDependency = {
+        id: 'dep-2',
+        source: 'event-b',
+        target: 'event-a',
+        type: 'FinishToStart',
+      };
+      store.updateStateFromParameters(
+        { ...params, dependencies: [...dependencies, DEP_BA] },
+        adapter,
+      );
+      const third = eventTimelinePremiumDependencySelectors.activeModelListByTarget(store.state);
+
+      expect(third).not.to.equal(second);
     });
   });
 });
