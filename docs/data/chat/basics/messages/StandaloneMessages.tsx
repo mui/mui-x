@@ -3,11 +3,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatConversation, ChatMessageList } from '@mui/x-chat';
 import { ChatProvider } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 

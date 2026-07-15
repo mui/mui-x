@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 

@@ -7,11 +7,11 @@ import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
-} from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];
 

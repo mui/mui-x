@@ -131,7 +131,7 @@ export default function ConversationListFullCustomRow() {
     >
       <Box
         sx={{
-          height: 320,
+          height: 360,
           overflow: 'hidden',
           border: '1px solid',
           borderColor: 'divider',

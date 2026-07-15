@@ -5,10 +5,10 @@ import type { CompactThreeDayViewProps } from './CompactThreeDayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import type { DayTimeGridInternalRenderers } from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
 import { DayTimeGridInternalRenderersContext } from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
-import { createDayTimeGridViewConfig } from '../internals/utils/day-time-grid-view-config';
+import { createDayTimeGridViewDefinition } from '../internals/utils/day-time-grid-view-definition';
 import { TimeGridEventTouch } from '../internals/components/event/time-grid-event/TimeGridEventTouch';
 
-const COMPACT_THREE_DAY_VIEW_CONFIG = createDayTimeGridViewConfig(3);
+const COMPACT_THREE_DAY_VIEW_DEFINITION = createDayTimeGridViewDefinition(3);
 
 const COMPACT_THREE_DAY_VIEW_RENDERERS: DayTimeGridInternalRenderers = {
   timeGridEvent: TimeGridEventTouch,
@@ -23,7 +23,7 @@ export const CompactThreeDayView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     // Feature hooks
-    const { days } = useEventCalendarView(COMPACT_THREE_DAY_VIEW_CONFIG);
+    const { days } = useEventCalendarView(COMPACT_THREE_DAY_VIEW_DEFINITION);
 
     return (
       <DayTimeGridInternalRenderersContext.Provider value={COMPACT_THREE_DAY_VIEW_RENDERERS}>

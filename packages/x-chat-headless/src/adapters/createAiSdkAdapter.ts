@@ -108,8 +108,7 @@ export interface CreateAiSdkAdapterChatOptions {
 }
 
 export type CreateAiSdkAdapterOptions =
-  | CreateAiSdkAdapterStreamOptions
-  | CreateAiSdkAdapterChatOptions;
+  CreateAiSdkAdapterStreamOptions | CreateAiSdkAdapterChatOptions;
 
 function streamError(message: string): ChatError {
   return {
