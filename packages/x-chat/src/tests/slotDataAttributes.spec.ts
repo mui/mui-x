@@ -5,10 +5,18 @@ import type {
 } from 'test/utils/slotDataAttributes';
 import type {
   ChatBoxSlotProps,
+  ChatMessageProps,
+  ChatMessageGroupProps,
+  ChatMessageListProps,
   ChatMessageSkeletonSlotProps,
   ChatMessageSourceSlotProps,
   ChatMessageSourcesSlotProps,
 } from '@mui/x-chat';
+
+// Standalone components expose their slot props only through their `*Props` type.
+type ChatMessageSlotProps = NonNullable<ChatMessageProps['slotProps']>;
+type ChatMessageGroupSlotProps = NonNullable<ChatMessageGroupProps['slotProps']>;
+type ChatMessageListSlotProps = NonNullable<ChatMessageListProps['slotProps']>;
 
 declare module '@mui/utils/types' {
   interface DataAttributesOverrides {
@@ -16,13 +24,22 @@ declare module '@mui/utils/types' {
   }
 }
 
-// Compile-time assertion: every slot of every exported top-level component and provider
-// `*SlotProps` in `x-chat` must accept `data-*` once `DataAttributesOverrides` is augmented,
-// so a regression names the offending slot. Slots of nested components (plot elements,
-// `use*` hooks) are exercised through their parent's `*SlotProps`.
+// Compile-time assertion: every slot a consumer can pass `slotProps` to on an exported
+// component must accept `data-*` once `DataAttributesOverrides` is augmented. This includes
+// standalone components (`ChatMessage`, `ChatMessageList`, `ChatMessageGroup`) that declare
+// their own slot props rather than reusing `ChatBoxSlotProps`.
 
 type AssertChatBox = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<ChatBoxSlotProps, 'ChatBox'>>
+>;
+type AssertChatMessage = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<ChatMessageSlotProps, 'ChatMessage'>>
+>;
+type AssertChatMessageList = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<ChatMessageListSlotProps, 'ChatMessageList'>>
+>;
+type AssertChatMessageGroup = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<ChatMessageGroupSlotProps, 'ChatMessageGroup'>>
 >;
 type AssertChatMessageSkeleton = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<ChatMessageSkeletonSlotProps, 'ChatMessageSkeleton'>>
@@ -49,6 +66,22 @@ type AssertMessageActionsCallback = Assert<
     AssertAllSlotsAcceptDataAttributes<
       { return: MessageActionsCallbackReturn },
       'ChatBox.messageActions callback'
+    >
+  >
+>;
+
+// Same guard for the standalone `ChatMessage.actions` callback branch.
+type ChatMessageActionsCallbackReturn =
+  Extract<NonNullable<ChatMessageSlotProps['actions']>, (...args: any[]) => any> extends (
+    ...args: any[]
+  ) => infer R
+    ? R
+    : never;
+type AssertChatMessageActionsCallback = Assert<
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<
+      { return: ChatMessageActionsCallbackReturn },
+      'ChatMessage.actions callback'
     >
   >
 >;
