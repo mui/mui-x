@@ -252,6 +252,10 @@ To allow them, augment the `DataAttributesOverrides` interface once, anywhere in
 Augment `@mui/material/utils` to cover both Material UI and MUI X slots with a single declaration:
 
 ```ts
+// In a standalone declaration file (for example `mui.d.ts`), this import is required
+// so TypeScript treats the block as module augmentation rather than an ambient module.
+import type {} from '@mui/material/utils';
+
 declare module '@mui/material/utils' {
   interface DataAttributesOverrides {
     // Accept any data-* key. Or list keys explicitly for autocomplete and typo-checking.
@@ -268,11 +272,11 @@ declare module '@mui/material/utils' {
 - **Chat** — `<ChatBox slotProps={{ messageRoot: { 'data-testid': 'message' } }} />`
 
 :::warning
-The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, where the interface is re-exported. On 9.2+, Material UI and MUI X resolve to one shared `@mui/utils`, so the augmentation always applies -- this is the dependable setup.
+The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, where the interface is re-exported. On 9.2+, Material UI and MUI X resolve to one shared `@mui/utils`, so the augmentation normally applies -- if you pin `@mui/utils` with an override or resolution, confirm the lockfile still resolves a single copy. This is the dependable setup.
 
-Packages with no Material UI dependency (such as Chat Headless) can augment `@mui/utils/types` directly: there is a single `@mui/utils`, so it applies cleanly to the MUI X slots.
+Packages with no Material UI dependency (such as Chat Headless) can augment `@mui/utils/types` directly (in a standalone declaration file, add `import type {} from '@mui/utils/types'` too): there is a single `@mui/utils`, so it applies cleanly to the MUI X slots.
 
-An older Material UI (notably v7, which depends on `@mui/utils@^7`) leaves two `@mui/utils` copies -- Material UI's v7 and MUI X's v9.2 -- that never dedupe, so by default your augmentation targets the v7 copy and `data-*` stays a type error. Add `@mui/utils` (`^9.2.0`) as a direct dependency: your augmentation then resolves to the same v9.2 copy MUI X uses, while Material UI's v7 copy stays separate and unused. Verify your lockfile keeps a single v9.2 copy (run your package manager's dedupe if not). Upgrading Material UI to 9.2 or later avoids the split entirely and is the simplest fix.
+An older Material UI (notably v7, which depends on `@mui/utils@^7`) leaves two `@mui/utils` copies -- Material UI's v7 and MUI X's v9.2 -- that never dedupe, so by default your augmentation targets the v7 copy and `data-*` stays a type error. Add `@mui/utils` (`^9.2.0`) as a direct dependency: your augmentation then resolves to the same v9.2 copy MUI X uses, while Material UI keeps using its own v7 copy internally. This workaround only enables `data-*` on MUI X slots, not on Material UI v7 slots. Verify your lockfile keeps a single v9.2 copy (run your package manager's dedupe if not). Upgrading Material UI to 9.2 or later avoids the split entirely and is the simplest fix.
 :::
 
 The augmentation shares the same interface as Material UI. See the [Material UI TypeScript guide](/material-ui/guides/typescript/#allowing-data-attributes-on-slotprops) for the full explanation and the strict (explicit-key) variant.
