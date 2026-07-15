@@ -3,8 +3,8 @@ import { selectionSelectors } from '../selection/selectors';
 import { itemsSelectors } from '../items/selectors';
 import { isItemDisabled } from '../items/utils';
 import { expansionSelectors } from '../expansion/selectors';
-import { MinimalTreeViewState } from '../../MinimalTreeViewStore';
-import { TreeViewItemId } from '../../../models';
+import type { MinimalTreeViewState } from '../../MinimalTreeViewStore';
+import type { TreeViewItemId } from '../../../models';
 
 const defaultFocusableItemIdSelector = createSelectorMemoized(
   selectionSelectors.selectedItems,

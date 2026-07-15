@@ -34,6 +34,10 @@ import {
   cleanFilterItem,
   passFilterLogic,
   shouldQuickFilterExcludeHiddenColumns,
+  upsertFilterItemInModel,
+  upsertFilterItemsInModel,
+  deleteFilterItemFromModel,
+  setFilterLogicOperatorInModel,
 } from './gridFilterUtils';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
@@ -149,14 +153,7 @@ export const useGridFilter = (
   const upsertFilterItem = React.useCallback<GridFilterApi['upsertFilterItem']>(
     (item) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      const items = [...filterModel.items];
-      const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
-      if (itemIndex === -1) {
-        items.push(item);
-      } else {
-        items[itemIndex] = item;
-      }
-      apiRef.current.setFilterModel({ ...filterModel, items }, 'upsertFilterItem');
+      apiRef.current.setFilterModel(upsertFilterItemInModel(filterModel, item), 'upsertFilterItem');
     },
     [apiRef],
   );
@@ -164,16 +161,10 @@ export const useGridFilter = (
   const upsertFilterItems = React.useCallback<GridFilterApi['upsertFilterItems']>(
     (items) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      const existingItems = [...filterModel.items];
-      items.forEach((item) => {
-        const itemIndex = existingItems.findIndex((filterItem) => filterItem.id === item.id);
-        if (itemIndex === -1) {
-          existingItems.push(item);
-        } else {
-          existingItems[itemIndex] = item;
-        }
-      });
-      apiRef.current.setFilterModel({ ...filterModel, items: existingItems }, 'upsertFilterItems');
+      apiRef.current.setFilterModel(
+        upsertFilterItemsInModel(filterModel, items),
+        'upsertFilterItems',
+      );
     },
     [apiRef],
   );
@@ -181,13 +172,10 @@ export const useGridFilter = (
   const deleteFilterItem = React.useCallback<GridFilterApi['deleteFilterItem']>(
     (itemToDelete) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      const items = filterModel.items.filter((item) => item.id !== itemToDelete.id);
-
-      if (items.length === filterModel.items.length) {
-        return;
-      }
-
-      apiRef.current.setFilterModel({ ...filterModel, items }, 'deleteFilterItem');
+      apiRef.current.setFilterModel(
+        deleteFilterItemFromModel(filterModel, itemToDelete),
+        'deleteFilterItem',
+      );
     },
     [apiRef],
   );
@@ -269,14 +257,8 @@ export const useGridFilter = (
   const setFilterLogicOperator = React.useCallback<GridFilterApi['setFilterLogicOperator']>(
     (logicOperator) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      if (filterModel.logicOperator === logicOperator) {
-        return;
-      }
       apiRef.current.setFilterModel(
-        {
-          ...filterModel,
-          logicOperator,
-        },
+        setFilterLogicOperatorInModel(filterModel, logicOperator),
         'changeLogicOperator',
       );
     },

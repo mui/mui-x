@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { TimeGridEventComponent } from '../event/time-grid-event/TimeGridEvent.types';
+import type { TimeGridEventComponent } from '../event/time-grid-event/TimeGridEvent.types';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 
 /**

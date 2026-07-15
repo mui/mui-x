@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
@@ -28,6 +28,8 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     // Internal props
     start,
     end,
+    dayStartMinute = 0,
+    dayEndMinute = 24 * 60,
     addPropertiesToDroppedEvent,
     // Props forwarded to the DOM element
     ...elementProps
@@ -72,10 +74,12 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => {
     const noon = adapter.setHours(adapter.setMinutes(start, 0), 12);
+    // Keep the default creation anchor inside the visible window when the view limits its hour range.
+    const anchor = adapter.isBefore(noon, start) || !adapter.isBefore(noon, end) ? start : noon;
     return {
       surfaceType: 'time-grid' as const,
-      start: noon,
-      end: adapter.addMinutes(noon, creationConfig.duration),
+      start: anchor,
+      end: adapter.addMinutes(anchor, creationConfig.duration),
       resourceId: null,
     };
   });
@@ -122,11 +126,13 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     () => ({
       start,
       end,
+      dayStartMinute,
+      dayEndMinute,
       index,
       hasFocus,
       getCursorPositionInElementMs,
     }),
-    [start, end, index, hasFocus, getCursorPositionInElementMs],
+    [start, end, dayStartMinute, dayEndMinute, index, hasFocus, getCursorPositionInElementMs],
   );
 
   const keyboardProps = {
@@ -161,5 +167,20 @@ export namespace CalendarGridTimeColumn {
     current: boolean;
   }
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useTimeDropTarget.Parameters {}
+  export interface Props extends BaseUIComponentProps<'div', State>, useTimeDropTarget.Parameters {
+    /**
+     * First displayed minute of the day, as an offset from midnight.
+     * Derived from the view's whole-hour window so it stays aligned with the
+     * grid rows even on DST-transition days.
+     * @default 0
+     */
+    dayStartMinute?: number;
+    /**
+     * Last displayed minute of the day, as an offset from midnight.
+     * Derived from the view's whole-hour window so it stays aligned with the
+     * grid rows even on DST-transition days.
+     * @default 1440
+     */
+    dayEndMinute?: number;
+  }
 }

@@ -3,8 +3,8 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { PaletteName } from '../../../utils/tokens';
-import { TimeGridEventProps } from './TimeGridEvent.types';
+import type { PaletteName } from '../../../utils/tokens';
+import type { TimeGridEventProps } from './TimeGridEvent.types';
 
 export interface UseTimeGridEventReturnValue {
   isRecurring: boolean;
@@ -61,8 +61,7 @@ export function useTimeGridEvent(
   const rootDataAttributes = React.useMemo(
     () => ({
       'data-under-hour': (isLessThan30Minutes || isBetween30and60Minutes || undefined) as
-        | true
-        | undefined,
+        true | undefined,
       'data-under-fifteen-minutes': (isLessThan15Minutes || undefined) as true | undefined,
       'data-recurrent': (isRecurring || undefined) as true | undefined,
       'data-palette': palette,
