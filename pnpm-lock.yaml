@@ -213,6 +213,9 @@ catalogs:
     serve:
       specifier: ^14.2.6
       version: 14.2.6
+    temporal-polyfill:
+      specifier: ^1.0.1
+      version: 1.0.1
     tsx:
       specifier: ^4.23.0
       version: 4.23.0
@@ -281,7 +284,7 @@ importers:
         version: 1.0.9-canary.85(@types/node@22.20.1)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.1.4)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
       '@mui/internal-code-infra':
         specifier: 0.0.4-canary.90
-        version: 0.0.4-canary.90(@next/eslint-plugin-next@16.2.10)(@types/node@22.20.1)(@typescript-eslint/eslint-plugin@8.63.0(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript/native-preview@7.0.0-dev.20260615.1)(@vitest/expect@4.1.10)(eslint@10.7.0(jiti@2.7.0))(postcss@8.5.16)(prettier@3.9.5)(stylelint@17.14.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.10)
+        version: 0.0.4-canary.90(@next/eslint-plugin-next@16.2.10)(@types/node@22.20.1)(@typescript-eslint/eslint-plugin@8.63.0(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript/native-preview@7.0.0-dev.20260615.1)(@vitest/expect@4.1.10)(eslint-import-resolver-node@0.3.9)(eslint@10.7.0(jiti@2.7.0))(postcss@8.5.16)(prettier@3.9.5)(stylelint@17.14.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.10)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
         version: 9.1.2-canary.2(3acfc4fa36c0835afdb0d6be8e48446a)
@@ -1567,6 +1570,9 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
+      temporal-polyfill:
+        specifier: 'catalog:'
+        version: 1.0.1
     publishDirectory: build
 
   packages/x-date-pickers-pro:
@@ -11048,6 +11054,15 @@ packages:
     resolution: {integrity: sha512-ChjMH33/KetonMTAtpYdgUFr0tbz69Fp2v7zWxQfYZX4g5ZN2nOBXm1R2xyA+lMIKrLKIoKAwFj93jE/avX9cQ==}
     engines: {node: '>=18'}
 
+  temporal-polyfill@1.0.1:
+    resolution: {integrity: sha512-N2SoI9olnW7BUsU8RosDphZQl9s+WJ8O7PoJMFCr/e5/1rFkVI4GNOWaSeySG+UoP04foPYsnLWbJmbXOiShZg==}
+
+  temporal-spec@1.0.0:
+    resolution: {integrity: sha512-00Ahj1e1ifaERTMOIIGpOCdOo9IEk2m6GGSMedsn9a2SIsGLdOTbmME1Htv6IM82b6VHrzSUTIVc7YHy6hdhFQ==}
+
+  temporal-utils@1.0.1:
+    resolution: {integrity: sha512-HAixuesxFQIUaQk3ptX2jhfO/FsOkgVkDDMawvp6n/fkB1q6BKfs3lURw9I+pK/2e2e/q/vrLrxmeqauBoyGMQ==}
+
   terser-webpack-plugin@5.6.1:
     resolution: {integrity: sha512-201R5j+sJpK8nFWwKVyNfZot8FaJbLZDq5evriVzbV1wDtSXDjRUDRfJzHpAaxFDMEhsZL1QkeqM61wgsS3KaQ==}
     engines: {node: '>= 10.13.0'}
@@ -13947,7 +13962,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.4-canary.90(@next/eslint-plugin-next@16.2.10)(@types/node@22.20.1)(@typescript-eslint/eslint-plugin@8.63.0(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript/native-preview@7.0.0-dev.20260615.1)(@vitest/expect@4.1.10)(eslint@10.7.0(jiti@2.7.0))(postcss@8.5.16)(prettier@3.9.5)(stylelint@17.14.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.10)':
+  '@mui/internal-code-infra@0.0.4-canary.90(@next/eslint-plugin-next@16.2.10)(@types/node@22.20.1)(@typescript-eslint/eslint-plugin@8.63.0(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript/native-preview@7.0.0-dev.20260615.1)(@vitest/expect@4.1.10)(eslint-import-resolver-node@0.3.9)(eslint@10.7.0(jiti@2.7.0))(postcss@8.5.16)(prettier@3.9.5)(stylelint@17.14.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.10)':
     dependencies:
       '@argos-ci/core': 6.5.0(@types/node@22.20.1)
       '@babel/cli': 7.29.7(@babel/core@7.29.7)
@@ -21725,6 +21740,15 @@ snapshots:
       minipass: 7.1.3
       minizlib: 3.1.0
       yallist: 5.0.0
+
+  temporal-polyfill@1.0.1:
+    dependencies:
+      temporal-spec: 1.0.0
+      temporal-utils: 1.0.1
+
+  temporal-spec@1.0.0: {}
+
+  temporal-utils@1.0.1: {}
 
   terser-webpack-plugin@5.6.1(esbuild@0.28.0)(postcss@8.5.16)(webpack@5.107.2(esbuild@0.28.0)(postcss@8.5.16)):
     dependencies:
