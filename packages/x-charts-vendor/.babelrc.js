@@ -24,7 +24,7 @@ if (!babelRuntimeVersion) {
 }
 
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['stable', 'rollup']);
+  api.cache(true);
 
   return {
     only: [/node_modules\/(d3-.*|internmap|flatqueue)\/.*\.js/],
@@ -81,9 +81,8 @@ module.exports = function getBabelConfig(api) {
       [
         '@babel/plugin-transform-runtime',
         {
-          useESModules,
-          // any package needs to declare 7.25.0 as a runtime dependency. default is ^7.0.0
-          version: babelRuntimeVersion || '^7.25.0',
+          // Let the plugin use all the helpers available in the installed runtime version.
+          version: babelRuntimeVersion,
         },
       ],
     ],
