@@ -271,17 +271,17 @@ importers:
         specifier: 1.0.4-canary.2
         version: 1.0.4-canary.2
       '@mui/internal-babel-plugin-display-name':
-        specifier: 1.0.4-canary.22
-        version: 1.0.4-canary.22(@babel/core@7.29.7)(@babel/preset-react@7.29.7(@babel/core@7.29.7))
+        specifier: 1.0.4-canary.23
+        version: 1.0.4-canary.23(@babel/core@7.29.7)(@babel/preset-react@7.29.7(@babel/core@7.29.7))
       '@mui/internal-babel-plugin-minify-errors':
-        specifier: 2.0.8-canary.29
-        version: 2.0.8-canary.29(@babel/core@7.29.7)
+        specifier: 2.0.8-canary.30
+        version: 2.0.8-canary.30(@babel/core@7.29.7)
       '@mui/internal-bundle-size-checker':
         specifier: 1.0.9-canary.85
         version: 1.0.9-canary.85(@types/node@22.20.1)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.1.4)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
       '@mui/internal-code-infra':
-        specifier: 0.0.4-canary.90
-        version: 0.0.4-canary.90(@next/eslint-plugin-next@16.2.10)(@types/node@22.20.1)(@typescript-eslint/eslint-plugin@8.63.0(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/expect@4.1.10)(eslint@10.7.0(jiti@2.7.0))(postcss@8.5.16)(prettier@3.9.5)(stylelint@17.14.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.10)
+        specifier: 0.0.4-canary.93
+        version: 0.0.4-canary.93(@next/eslint-plugin-next@16.2.10)(@types/node@22.20.1)(@typescript-eslint/eslint-plugin@8.63.0(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/expect@4.1.10)(eslint@10.7.0(jiti@2.7.0))(postcss@8.5.16)(prettier@3.9.5)(stylelint@17.14.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.10)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
         version: 9.1.2-canary.2(3acfc4fa36c0835afdb0d6be8e48446a)
@@ -4514,22 +4514,22 @@ packages:
     resolution: {integrity: sha512-2SAZTZwvCFoWbNpIkHaKiktVdUs+/LooEG33ke8s31rOXJdCbyjs1jODvRoVzqrkWdWGu4ncLZr62O1OHFCYwQ==}
     engines: {node: '>=22'}
 
-  '@mui/internal-babel-plugin-display-name@1.0.4-canary.22':
-    resolution: {integrity: sha512-yLn0gsAB1AU285QDjvBc6sRamsPETm4QS6puKa8tUosWG8SvgPMNXJruBqLXUQKBQOxumNuEpjB/VRZ7Itgu9g==}
+  '@mui/internal-babel-plugin-display-name@1.0.4-canary.23':
+    resolution: {integrity: sha512-nrZ6O/PZ2yZyncrytawG8g1QY1lwz+NLvBfvn42/sJOrWMcEajbBC70zX7J43+VN2+CovAo3Xd3o690wZYiC8g==}
     peerDependencies:
-      '@babel/core': '7'
-      '@babel/preset-react': '7'
+      '@babel/core': ^7.0.0 || ^8.0.0
+      '@babel/preset-react': ^7.0.0 || ^8.0.0
 
-  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.29':
-    resolution: {integrity: sha512-R7MPUBa5psCcuLztadUyMnIo2JQVSmsqz7NWJ4nNohOBbPek4hWP5IRBDEOOeJ6E9im+aWCFjtzD5I3bEY4hYA==}
+  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.30':
+    resolution: {integrity: sha512-Czh0O1P037IJlwGnAc2fzESO7Zwwan0XM28KdBzAV6r7A1XmlFrRS2Nu+lD3y9t0NJ2iITw10RPczCafPcBIcw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      '@babel/core': '7'
+      '@babel/core': ^7.0.0 || ^8.0.0
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.39':
-    resolution: {integrity: sha512-n3aeANmqORqunHr1vIgpyhkAFERbrOEX1SAc6G957Y3isbHFrdAj20I9Orfc9uCOrvYhTqjagnWbG+8dPOESNg==}
+  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.40':
+    resolution: {integrity: sha512-Xdd2tHDr9AX5Moy0oQoz8ujq88V6PBvoglj3woNk1mFSvA6B1hi5E5G52qWn/z0w5sMoCuVMCqLY57y2oskEQA==}
     peerDependencies:
-      '@babel/core': '7'
+      '@babel/core': ^7.0.0 || ^8.0.0
 
   '@mui/internal-benchmark@0.0.3-canary.15':
     resolution: {integrity: sha512-NimlS4eaeryY9JYpGhk0xVBao+TYYA2B62MS9urOgBz5+XUy/W9/80wL9+W35o+O71qAJ0qAxxiVU/tpeQHR+g==}
@@ -4543,8 +4543,8 @@ packages:
     resolution: {integrity: sha512-HhVMlG/cW34RJNv6ZAAxSLnMqBK8eBdjpyR/qLEGdlR7NiUWcBpYa/Oj52DxWfDXxdOUe5jh5dYefWPyeWZ5ag==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.4-canary.90':
-    resolution: {integrity: sha512-dM2+1aomZvvENcbgPosTJ7QfmhjUG7AvYCpYAlD4Avkgd7CaNmdsKFRFB9ANLXUMahaV8wFOQfB1GOAgLRr0UA==}
+  '@mui/internal-code-infra@0.0.4-canary.93':
+    resolution: {integrity: sha512-nBY88vyPu5ej4Xblxh/cN6/BKilbAZS/86lgt1Ky37Arvph4PpPnXXyaMEMiwhCdHAr6a76CJ35PWymOogJrfA==}
     hasBin: true
     peerDependencies:
       '@next/eslint-plugin-next': '*'
@@ -13880,7 +13880,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-display-name@1.0.4-canary.22(@babel/core@7.29.7)(@babel/preset-react@7.29.7(@babel/core@7.29.7))':
+  '@mui/internal-babel-plugin-display-name@1.0.4-canary.23(@babel/core@7.29.7)(@babel/preset-react@7.29.7(@babel/core@7.29.7))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-module-imports': 7.29.7
@@ -13889,7 +13889,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.29(@babel/core@7.29.7)':
+  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.30(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-module-imports': 7.29.7
@@ -13897,7 +13897,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.39(@babel/core@7.29.7)':
+  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.40(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       resolve: 1.22.12
@@ -13947,7 +13947,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.4-canary.90(@next/eslint-plugin-next@16.2.10)(@types/node@22.20.1)(@typescript-eslint/eslint-plugin@8.63.0(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/expect@4.1.10)(eslint@10.7.0(jiti@2.7.0))(postcss@8.5.16)(prettier@3.9.5)(stylelint@17.14.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.10)':
+  '@mui/internal-code-infra@0.0.4-canary.93(@next/eslint-plugin-next@16.2.10)(@types/node@22.20.1)(@typescript-eslint/eslint-plugin@8.63.0(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript-eslint/parser@8.63.0(eslint@10.7.0(jiti@2.7.0))(typescript@6.0.3))(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/expect@4.1.10)(eslint@10.7.0(jiti@2.7.0))(postcss@8.5.16)(prettier@3.9.5)(stylelint@17.14.0(typescript@6.0.3))(typescript@6.0.3)(vitest@4.1.10)':
     dependencies:
       '@argos-ci/core': 6.5.0(@types/node@22.20.1)
       '@babel/cli': 7.29.7(@babel/core@7.29.7)
@@ -13963,9 +13963,9 @@ snapshots:
       '@eslint/json': 2.0.1
       '@inquirer/confirm': 6.1.1(@types/node@22.20.1)
       '@inquirer/select': 5.2.1(@types/node@22.20.1)
-      '@mui/internal-babel-plugin-display-name': 1.0.4-canary.22(@babel/core@7.29.7)(@babel/preset-react@7.29.7(@babel/core@7.29.7))
-      '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.29(@babel/core@7.29.7)
-      '@mui/internal-babel-plugin-resolve-imports': 2.0.7-canary.39(@babel/core@7.29.7)
+      '@mui/internal-babel-plugin-display-name': 1.0.4-canary.23(@babel/core@7.29.7)(@babel/preset-react@7.29.7(@babel/core@7.29.7))
+      '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.30(@babel/core@7.29.7)
+      '@mui/internal-babel-plugin-resolve-imports': 2.0.7-canary.40(@babel/core@7.29.7)
       '@napi-rs/keyring': 1.3.0
       '@next/eslint-plugin-next': 16.2.10
       '@octokit/auth-action': 6.0.2
