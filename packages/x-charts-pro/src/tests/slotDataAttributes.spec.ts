@@ -18,8 +18,10 @@ declare module '@mui/utils/types' {
   }
 }
 
-// Compile-time assertion: every slot in every exported SlotProps type of `x-charts-pro`
-// must accept `data-*` attributes. The test compiles if and only if the assertion holds.
+// Compile-time assertion: every slot of every exported top-level component and provider
+// `*SlotProps` in `x-charts-pro` must accept `data-*` once `DataAttributesOverrides` is augmented,
+// so a regression names the offending slot. Slots of nested components (plot elements,
+// `use*` hooks) are exercised through their parent's `*SlotProps`.
 
 type AssertBarChartPro = Assert<
   AllTrue<

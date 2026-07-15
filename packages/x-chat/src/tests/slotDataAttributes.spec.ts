@@ -16,8 +16,10 @@ declare module '@mui/utils/types' {
   }
 }
 
-// Compile-time assertion: every slot in every exported SlotProps type of `x-chat`
-// must accept `data-*` attributes once `DataAttributesOverrides` is augmented (below).
+// Compile-time assertion: every slot of every exported top-level component and provider
+// `*SlotProps` in `x-chat` must accept `data-*` once `DataAttributesOverrides` is augmented,
+// so a regression names the offending slot. Slots of nested components (plot elements,
+// `use*` hooks) are exercised through their parent's `*SlotProps`.
 
 type AssertChatBox = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<ChatBoxSlotProps, 'ChatBox'>>
