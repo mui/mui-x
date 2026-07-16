@@ -9,9 +9,11 @@ import { useChatRuntimeContext } from './internals/useChatRuntimeContext';
 import { useChatStore } from './hooks';
 import type { ChatPartRendererMap } from './renderers';
 import { chatSelectors } from './selectors';
-import { ChatStore, type ChatStoreParameters } from './store';
+import { ChatStore } from './store';
+import type { ChatStoreParameters } from './store';
 import type { ChatConversation, ChatMessage } from './types/chat-entities';
-import { ChatProvider, type ChatProviderProps } from './ChatProvider';
+import { ChatProvider } from './ChatProvider';
+import type { ChatProviderProps } from './ChatProvider';
 import { useChatStoreContext } from './internals/useChatStoreContext';
 
 const message1: ChatMessage = {

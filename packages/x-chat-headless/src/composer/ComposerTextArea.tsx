@@ -2,11 +2,11 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useComposerContext } from './internals/ComposerContext';
-import { type ComposerTextAreaOwnerState } from './composer.types';
+import type { ComposerTextAreaOwnerState } from './composer.types';
 
 export interface ComposerTextAreaSlots {
   input: React.ElementType;

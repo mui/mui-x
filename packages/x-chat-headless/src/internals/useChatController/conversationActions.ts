@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { ChatAdapter, ChatListMessagesResult } from '../../adapters';
 import type { ChatStore } from '../../store';
 import type { ChatError } from '../../types/chat-error';

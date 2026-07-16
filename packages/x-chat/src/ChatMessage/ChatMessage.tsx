@@ -2,31 +2,34 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import {
-  MessageRoot,
-  type ChatMessageStatus,
-  type ChatRole,
-  type ChatMessage as ChatMessageEntity,
-  type MessageRootProps,
-  type MessageGroupSlotProps,
-  useChatVariant,
-  useMessage,
+import type { SxProps, Theme } from '@mui/system';
+import { MessageRoot, useChatVariant, useMessage } from '@mui/x-chat-headless';
+import type {
+  ChatMessageStatus,
+  ChatRole,
+  ChatMessage as ChatMessageEntity,
+  MessageRootProps,
+  MessageGroupSlotProps,
 } from '@mui/x-chat-headless';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
-import { ChatMessageError, type ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
-import { ChatMessageAvatar, type ChatMessageAvatarProps } from './ChatMessageAvatar';
-import { ChatMessageContent, type ChatMessageContentProps } from './ChatMessageContent';
-import { ChatMessageMeta, type ChatMessageMetaProps } from './ChatMessageMeta';
-import { ChatMessageInlineMeta, type ChatMessageInlineMetaProps } from './ChatMessageInlineMeta';
-import { ChatMessageActions, type ChatMessageActionsProps } from './ChatMessageActions';
-import {
-  ChatStreamingIndicator,
-  type ChatStreamingIndicatorProps,
-} from '../ChatIndicators/ChatStreamingIndicator';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import type { ChatMessageClasses } from './chatMessageClasses';
+import { ChatMessageError } from '../ChatMessageError/ChatMessageError';
+import type { ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
+import { ChatMessageAvatar } from './ChatMessageAvatar';
+import type { ChatMessageAvatarProps } from './ChatMessageAvatar';
+import { ChatMessageContent } from './ChatMessageContent';
+import type { ChatMessageContentProps } from './ChatMessageContent';
+import { ChatMessageMeta } from './ChatMessageMeta';
+import type { ChatMessageMetaProps } from './ChatMessageMeta';
+import { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
+import type { ChatMessageInlineMetaProps } from './ChatMessageInlineMeta';
+import { ChatMessageActions } from './ChatMessageActions';
+import type { ChatMessageActionsProps } from './ChatMessageActions';
+import { ChatStreamingIndicator } from '../ChatIndicators/ChatStreamingIndicator';
+import type { ChatStreamingIndicatorProps } from '../ChatIndicators/ChatStreamingIndicator';
 
 const useThemeProps = createUseThemeProps('MuiChatMessage');
 

@@ -4,11 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import { ChatRoot } from '../chat/ChatRoot';
-import {
-  MessageListRoot,
-  type MessageListRootHandle,
-  type MessageListRootProps,
-} from './MessageListRoot';
+import { MessageListRoot } from './MessageListRoot';
+import type { MessageListRootHandle, MessageListRootProps } from './MessageListRoot';
 import { useMessageListContext } from './internals/MessageListContext';
 
 const { render } = createRenderer();

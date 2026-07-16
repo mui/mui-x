@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/utils/types';
-import {
-  type ChatRootProps,
-  type ChatFeatures,
-  type MessageListRootAutoScrollConfig,
-  type ChatSuggestion,
-  type ChatVariant,
-  type ChatDensity,
-  type ChatAttachmentsConfig,
-  type MessageGroupSlotProps,
+import type * as React from 'react';
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+import type { SlotComponentProps } from '@mui/utils/types';
+import type {
+  ChatRootProps,
+  ChatFeatures,
+  MessageListRootAutoScrollConfig,
+  ChatSuggestion,
+  ChatVariant,
+  ChatDensity,
+  ChatAttachmentsConfig,
+  MessageGroupSlotProps,
 } from '@mui/x-chat-headless';
 import type { ChatConversationProps } from '../ChatConversation/ChatConversation';
 import type { ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
@@ -44,7 +44,7 @@ import type { ChatTypingIndicatorProps } from '../ChatIndicators/ChatTypingIndic
 import type { ChatUnreadMarkerProps } from '../ChatIndicators/ChatUnreadMarker';
 import type { ChatScrollToBottomAffordanceProps } from '../ChatIndicators/ChatScrollToBottomAffordance';
 import type { ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
-import { type ChatBoxClasses } from './chatBoxClasses';
+import type { ChatBoxClasses } from './chatBoxClasses';
 
 // ---------------------------------------------------------------------------
 // ChatBox slots use a FLAT, prefixed vocabulary (like `GridSlotsComponent`).

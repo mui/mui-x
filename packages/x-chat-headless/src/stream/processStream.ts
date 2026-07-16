@@ -1,4 +1,5 @@
-import { asCursorAgnosticChatStore, type ChatStore } from '../store/ChatStore';
+import { asCursorAgnosticChatStore } from '../store/ChatStore';
+import type { ChatStore } from '../store/ChatStore';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type {

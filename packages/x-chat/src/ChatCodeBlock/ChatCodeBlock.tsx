@@ -2,11 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
-import { useChatCodeBlockUtilityClasses, type ChatCodeBlockClasses } from './chatCodeBlockClasses';
+import { useChatCodeBlockUtilityClasses } from './chatCodeBlockClasses';
+import type { ChatCodeBlockClasses } from './chatCodeBlockClasses';
 
 export interface ChatCodeBlockProps {
   /**

@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useIsHydrated } from '@mui/x-internals/useIsHydrated';
 import { useMessage, useMessageIds } from '../hooks/useMessage';
-import { type MessageListDateDividerOwnerState } from './messageList.types';
+import type { MessageListDateDividerOwnerState } from './messageList.types';
 import type { ChatMessage } from '../types/chat-entities';
 
 function resolveMessageIndex(messageId: string, index: number | undefined, items: string[]) {

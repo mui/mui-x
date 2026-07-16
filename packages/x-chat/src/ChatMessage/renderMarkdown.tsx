@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import Markdown, { RuleType, type MarkdownToJSX } from 'markdown-to-jsx';
+import Markdown, { RuleType } from 'markdown-to-jsx';
+import type { MarkdownToJSX } from 'markdown-to-jsx';
 import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { normalizeMarkdownForRender } from '@mui/x-chat-headless/internals';
 import { ChatCodeBlock } from '../ChatCodeBlock';
