@@ -62,7 +62,7 @@ type AssertDateTimePicker = Assert<
     AssertAllSlotsAcceptDataAttributes<
       DateTimePickerSlotProps,
       'DateTimePicker',
-      'desktopTrapFocus' | 'tabs'
+      'desktopTrapFocus'
     >
   >
 >;
@@ -80,7 +80,7 @@ type AssertDesktopDateTimePicker = Assert<
     AssertAllSlotsAcceptDataAttributes<
       DesktopDateTimePickerSlotProps,
       'DesktopDateTimePicker',
-      'desktopTrapFocus' | 'tabs'
+      'desktopTrapFocus'
     >
   >
 >;
@@ -100,13 +100,7 @@ type AssertMobileDatePicker = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<MobileDatePickerSlotProps, 'MobileDatePicker'>>
 >;
 type AssertMobileDateTimePicker = Assert<
-  AllTrue<
-    AssertAllSlotsAcceptDataAttributes<
-      MobileDateTimePickerSlotProps,
-      'MobileDateTimePicker',
-      'tabs'
-    >
-  >
+  AllTrue<AssertAllSlotsAcceptDataAttributes<MobileDateTimePickerSlotProps, 'MobileDateTimePicker'>>
 >;
 type AssertMobileTimePicker = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<MobileTimePickerSlotProps, 'MobileTimePicker'>>
@@ -129,11 +123,7 @@ type AssertPickersCalendarHeader = Assert<
 >;
 type AssertPickersLayout = Assert<
   AllTrue<
-    AssertAllSlotsAcceptDataAttributes<
-      PickersLayoutSlotProps<PickerValidValue>,
-      'PickersLayout',
-      'tabs'
-    >
+    AssertAllSlotsAcceptDataAttributes<PickersLayoutSlotProps<PickerValidValue>, 'PickersLayout'>
   >
 >;
 type AssertPickersSectionList = Assert<
@@ -151,13 +141,7 @@ type AssertStaticDatePicker = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<StaticDatePickerSlotProps, 'StaticDatePicker'>>
 >;
 type AssertStaticDateTimePicker = Assert<
-  AllTrue<
-    AssertAllSlotsAcceptDataAttributes<
-      StaticDateTimePickerSlotProps,
-      'StaticDateTimePicker',
-      'tabs'
-    >
-  >
+  AllTrue<AssertAllSlotsAcceptDataAttributes<StaticDateTimePickerSlotProps, 'StaticDateTimePicker'>>
 >;
 type AssertStaticTimePicker = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<StaticTimePickerSlotProps, 'StaticTimePicker'>>
