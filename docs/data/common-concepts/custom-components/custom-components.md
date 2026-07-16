@@ -272,7 +272,7 @@ declare module '@mui/material/utils' {
 - **Chat** — `<ChatBox slotProps={{ messageRoot: { 'data-testid': 'message' } }} />`
 
 :::warning
-The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, where the interface is re-exported. On 9.2+, Material UI and MUI X resolve to one shared `@mui/utils`, so the augmentation normally applies -- if you pin `@mui/utils` with an override or resolution, confirm the lockfile still resolves a single copy. This is the dependable setup.
+The `@mui/material/utils` path requires `@mui/material` **v9.2.0 or later**, where the interface is re-exported. On 9.2+, Material UI and MUI X resolve to one shared `@mui/utils`, so the augmentation normally applies — if you pin `@mui/utils` with an override or resolution, confirm the lockfile still resolves a single copy. This is the dependable setup.
 
 Packages with no Material UI dependency (such as Chat Headless) can augment `@mui/utils/types` directly (in a standalone declaration file, add `import type {} from '@mui/utils/types'` too): there is a single `@mui/utils`, so it applies cleanly to the MUI X slots.
 
