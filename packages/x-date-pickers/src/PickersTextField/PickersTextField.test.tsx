@@ -149,31 +149,48 @@ describe('<PickersTextField /> - accessibility', () => {
     expect(status).to.have.text('Helper');
   });
 
-  it('should wrap the helper text rather than duplicate it into the DOM', () => {
+  it('should render the helper text only once (the helper text is the live region)', () => {
     render(
       <PickersTextField {...STUB_PROPS} variant="standard" label="My label" helperText="Helper" />,
     );
 
     // Rendering `helperText` twice would duplicate ids, focusable content and effects
-    // (`helperText` is a `ReactNode`). The live region must wrap the single helper text node.
+    // (`helperText` is a `ReactNode`). The helper text element is itself the live region.
     expect(screen.getAllByText('Helper')).to.have.length(1);
-    expect(screen.getByRole('status')).to.contain(screen.getByText('Helper'));
+    expect(screen.getByRole('status')).to.have.text('Helper');
   });
 
-  it('should keep the status live region mounted even without helper text so a later error is announced', () => {
+  it('should keep the live region mounted across the whole validation cycle so every error is announced', () => {
     const { setProps } = render(
       <PickersTextField {...STUB_PROPS} variant="standard" label="My label" />,
     );
 
-    const statusBefore = screen.getByRole('status');
+    const status = screen.getByRole('status');
     // The region pre-exists empty so a later content change is announced.
-    expect(statusBefore).to.have.text('');
+    expect(status).to.have.text('');
 
+    // empty -> error: same node, now carrying the error text.
     setProps({ helperText: 'Your date is not valid' });
+    expect(screen.getByRole('status')).to.equal(status);
+    expect(status).to.have.text('Your date is not valid');
 
-    // Same stable node across the empty -> error transition, now carrying the error text.
-    expect(screen.getByRole('status')).to.equal(statusBefore);
-    expect(statusBefore).to.have.text('Your date is not valid');
+    // error -> empty: the node must stay mounted (not unmount), otherwise a subsequent
+    // error would not be announced.
+    setProps({ helperText: undefined });
+    expect(screen.getByRole('status')).to.equal(status);
+    expect(status).to.have.text('');
+  });
+
+  it('should apply the same live region wiring to the `outlined` variant', () => {
+    render(
+      <PickersTextField {...STUB_PROPS} variant="outlined" label="My label" helperText="Helper" />,
+    );
+
+    expect(screen.getByRole('group')).not.to.have.attribute('aria-live');
+    const status = screen.getByRole('status');
+    expect(status).not.to.have.attribute('aria-labelledby');
+    expect(status).not.to.have.attribute('aria-label');
+    expect(status).to.have.text('Helper');
   });
 });
 

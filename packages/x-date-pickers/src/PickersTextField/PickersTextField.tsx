@@ -9,7 +9,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import InputLabel from '@mui/material/InputLabel';
-import FormHelperText from '@mui/material/FormHelperText';
+import FormHelperText, { formHelperTextClasses } from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import type { PickersTextFieldClasses } from './pickersTextFieldClasses';
 import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
@@ -32,6 +32,11 @@ const PickersTextFieldRoot = styled(FormControl, {
   slot: 'Root',
 })<{ ownerState: PickerTextFieldOwnerState }>({
   maxWidth: '100%',
+  // The helper text is always rendered so it can act as a live region; collapse its top
+  // margin while empty so it reserves no space. https://github.com/mui/mui-x/issues/23101
+  [`& .${formHelperTextClasses.root}:empty`]: {
+    marginTop: 0,
+  },
 });
 
 const useUtilityClasses = (
@@ -255,14 +260,10 @@ const PickersTextField = React.forwardRef(function PickersTextField(
             ...(slotProps?.htmlInput !== undefined && { htmlInput: slotProps.htmlInput }),
           }}
         />
-        {/* Always-mounted name-less live region wrapping the helper text so helperText/error changes are announced without re-announcing the field label. https://github.com/mui/mui-x/issues/23101 */}
-        <div role="status">
-          {helperText && (
-            <FormHelperTextComponent id={helperTextId} {...slotProps?.formHelperText}>
-              {helperText}
-            </FormHelperTextComponent>
-          )}
-        </div>
+        {/* Always rendered as a name-less live region so helperText/error changes are announced without re-announcing the field label. https://github.com/mui/mui-x/issues/23101 */}
+        <FormHelperTextComponent id={helperTextId} role="status" {...slotProps?.formHelperText}>
+          {helperText}
+        </FormHelperTextComponent>
       </RootComponent>
     </PickerTextFieldOwnerStateContext.Provider>
   );
