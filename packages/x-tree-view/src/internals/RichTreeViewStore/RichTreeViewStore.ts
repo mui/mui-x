@@ -25,6 +25,8 @@ export class ExtendableRichTreeViewStore<
     return {
       ...super.buildPublicAPI(),
       ...this.labelEditing.buildPublicAPI(),
+      // Not exposed in MinimalTreeViewStore because the Simple Tree View derives its items from the JSX.
+      addItems: this.items.addItems,
     };
   }
 }

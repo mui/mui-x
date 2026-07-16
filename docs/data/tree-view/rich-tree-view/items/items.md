@@ -325,3 +325,29 @@ publicAPI.setIsItemDisabled({
 ```
 
 {{"demo": "DisableTreeItemPublicAPI.js", "defaultCodeOpen": false}}
+
+### Imperatively add items
+
+Use the `addItems()` API method to add items to the tree.
+
+```ts
+apiRef.current.addItems({
+  // The items to add
+  items: [{ id: 'new-item', label: 'New item' }],
+  // The id of the parent item, or `null` to add the items at the root level
+  parentId,
+  // The position in the parent's children at which the items are inserted
+  // If not defined, the items are appended after the existing children
+  index,
+});
+```
+
+You can combine it with the [`setEditedItem()`](/x/react-tree-view/rich-tree-view/editing/#imperative-api) API method to let users name the new item right away, similar to creating files and folders in a file explorer:
+
+{{"demo": "ApiMethodAddItems.js", "defaultCodeOpen": false}}
+
+:::info
+Items added with `addItems()` are only stored in the internal state of the component.
+They are discarded when the `items` prop changes.
+You can use the `getItemTree()` API method to retrieve the current item tree and sync it with your data source.
+:::
