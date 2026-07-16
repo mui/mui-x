@@ -34,6 +34,7 @@ import type {
   MessageAuthorLabelSlotProps,
   MessageAvatarSlotProps,
   MessageContentSlotProps,
+  MessageErrorSlotProps,
   MessageGroupSlotProps,
   MessageListDateDividerSlotProps,
   MessageListRootSlotProps,
@@ -43,6 +44,7 @@ import type {
   ScrollToBottomAffordanceSlotProps,
   SourceDocumentPartSlotProps,
   SourceUrlPartSlotProps,
+  StreamingIndicatorSlotProps,
   SuggestionItemSlotProps,
   SuggestionsRootSlotProps,
   ToolPartSlotProps,
@@ -189,6 +191,9 @@ type AssertMessageAvatar = Assert<
 type AssertMessageContent = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<MessageContentSlotProps, 'MessageContent'>>
 >;
+type AssertMessageError = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<MessageErrorSlotProps, 'MessageError'>>
+>;
 type AssertMessageGroup = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<MessageGroupSlotProps, 'MessageGroup'>>
 >;
@@ -222,6 +227,9 @@ type AssertSourceDocumentPart = Assert<
 >;
 type AssertSourceUrlPart = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<SourceUrlPartSlotProps, 'SourceUrlPart'>>
+>;
+type AssertStreamingIndicator = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<StreamingIndicatorSlotProps, 'StreamingIndicator'>>
 >;
 type AssertSuggestionItem = Assert<
   AllTrue<AssertAllSlotsAcceptDataAttributes<SuggestionItemSlotProps, 'SuggestionItem'>>

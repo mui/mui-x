@@ -4,12 +4,19 @@ import type {
   AssertAllSlotsAcceptDataAttributes,
 } from 'test/utils/slotDataAttributes';
 import type { BarChartProSlotProps } from '@mui/x-charts-pro/BarChartPro';
-import type { FunnelChartSlotProps } from '@mui/x-charts-pro/FunnelChart';
-import type { HeatmapSlotProps } from '@mui/x-charts-pro/Heatmap';
+import type { ChartsContainerProSlotProps } from '@mui/x-charts-pro/ChartsContainerPro';
+import type { ChartsDataProviderProSlotProps } from '@mui/x-charts-pro/ChartsDataProviderPro';
+import type { ChartsToolbarProSlotProps } from '@mui/x-charts-pro/ChartsToolbarPro';
+import type { FunnelChartSlotProps, FunnelPlotSlotProps } from '@mui/x-charts-pro/FunnelChart';
+import type {
+  HeatmapSlotProps,
+  HeatmapPlotSlotProps,
+  HeatmapTooltipSlotProps,
+} from '@mui/x-charts-pro/Heatmap';
 import type { LineChartProSlotProps } from '@mui/x-charts-pro/LineChartPro';
 import type { PieChartProSlotProps } from '@mui/x-charts-pro/PieChartPro';
 import type { RadarChartProSlotProps } from '@mui/x-charts-pro/RadarChartPro';
-import type { SankeyChartSlotProps } from '@mui/x-charts-pro/SankeyChart';
+import type { SankeyChartSlotProps, SankeyTooltipSlotProps } from '@mui/x-charts-pro/SankeyChart';
 import type { ScatterChartProSlotProps } from '@mui/x-charts-pro/ScatterChartPro';
 
 declare module '@mui/utils/types' {
@@ -18,10 +25,10 @@ declare module '@mui/utils/types' {
   }
 }
 
-// Compile-time assertion: every slot of every exported top-level component and provider
-// `*SlotProps` in `x-charts-pro` must accept `data-*` once `DataAttributesOverrides` is augmented,
-// so a regression names the offending slot. Slots of nested components (plot elements,
-// `use*` hooks) are exercised through their parent's `*SlotProps`.
+// Compile-time assertion: every slot of every exported component and provider `*SlotProps` a
+// consumer can pass `slotProps` to -- including the nested/plot-level components asserted below
+// -- must accept `data-*` once `DataAttributesOverrides` is augmented, so a regression names the
+// offending slot.
 
 type AssertBarChartPro = Assert<
   AllTrue<
@@ -58,4 +65,27 @@ type AssertScatterChartPro = Assert<
       'xAxis' | 'yAxis' | 'scatter'
     >
   >
+>;
+type AssertChartsContainerPro = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<ChartsContainerProSlotProps, 'ChartsContainerPro'>>
+>;
+type AssertChartsDataProviderPro = Assert<
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<ChartsDataProviderProSlotProps, 'ChartsDataProviderPro'>
+  >
+>;
+type AssertChartsToolbarPro = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<ChartsToolbarProSlotProps, 'ChartsToolbarPro'>>
+>;
+type AssertFunnelPlot = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<FunnelPlotSlotProps, 'FunnelPlot'>>
+>;
+type AssertHeatmapPlot = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<HeatmapPlotSlotProps, 'HeatmapPlot'>>
+>;
+type AssertHeatmapTooltip = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<HeatmapTooltipSlotProps, 'HeatmapTooltip'>>
+>;
+type AssertSankeyTooltip = Assert<
+  AllTrue<AssertAllSlotsAcceptDataAttributes<SankeyTooltipSlotProps, 'SankeyTooltip'>>
 >;

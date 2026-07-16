@@ -12,6 +12,7 @@ import type { DesktopTimeRangePickerSlotProps } from '@mui/x-date-pickers-pro/De
 import type { MobileDateRangePickerSlotProps } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import type { MobileDateTimeRangePickerSlotProps } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 import type { MobileTimeRangePickerSlotProps } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
+import type { MultiInputDateRangeFieldSlotProps } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import type { PickersRangeCalendarHeaderSlotProps } from '@mui/x-date-pickers-pro/PickersRangeCalendarHeader';
 import type { SingleInputDateRangeFieldSlotProps } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import type { SingleInputDateTimeRangeFieldSlotProps } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
@@ -95,6 +96,11 @@ type AssertMobileDateTimeRangePicker = Assert<
 type AssertMobileTimeRangePicker = Assert<
   AllTrue<
     AssertAllSlotsAcceptDataAttributes<MobileTimeRangePickerSlotProps, 'MobileTimeRangePicker'>
+  >
+>;
+type AssertMultiInputRangeField = Assert<
+  AllTrue<
+    AssertAllSlotsAcceptDataAttributes<MultiInputDateRangeFieldSlotProps, 'MultiInputRangeField'>
   >
 >;
 type AssertPickersRangeCalendarHeader = Assert<
