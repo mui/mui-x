@@ -4,7 +4,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import type { LineItemIdentifier } from '../models/seriesType/line';
+import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
 import { MarkElement } from './MarkElement';
 import type { MarkElementProps } from './MarkElement';
@@ -42,11 +42,11 @@ export interface MarkPlotProps
   /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
+   * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    lineItemIdentifier: LineItemIdentifier,
+    lineItemIdentifier: LineItemClickIdentifier,
   ) => void;
 }
 
@@ -150,7 +150,7 @@ MarkPlot.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
+   * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick: PropTypes.func,
   /**

@@ -286,6 +286,57 @@ describe('schedulerOccurrenceSelectors', () => {
 
       expect(response[0].occurrences).to.have.length(0);
     });
+
+    describe('multi-resource events', () => {
+      it('should appear in each assigned resource row', () => {
+        const r1 = ResourceBuilder.new().title('A').build();
+        const r2 = ResourceBuilder.new().title('B').build();
+
+        const event = EventBuilder.new()
+          .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+          .resources([r1, r2])
+          .build();
+
+        const state = getEventTimelinePremiumStateFromParameters({
+          events: [event],
+          resources: [r1, r2],
+        });
+        const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+
+        const group1 = response.find((g) => g.resource.id === r1.id)!;
+        const group2 = response.find((g) => g.resource.id === r2.id)!;
+        expect(group1.occurrences).to.have.length(1);
+        expect(group1.occurrences[0].id).to.equal(event.id);
+        expect(group2.occurrences).to.have.length(1);
+        expect(group2.occurrences[0].id).to.equal(event.id);
+      });
+
+      it('should be visible and shown in the visible resource row when one resource is hidden', () => {
+        const r1 = ResourceBuilder.new().title('A').build();
+        const r2 = ResourceBuilder.new().title('B').build();
+
+        const event = EventBuilder.new()
+          .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+          .resources([r1, r2])
+          .build();
+
+        const state = getEventTimelinePremiumStateFromParameters({
+          events: [event],
+          resources: [r1, r2],
+        });
+        state.visibleResources = { [r2.id]: false };
+        const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
+
+        const group1 = response.find((g) => g.resource.id === r1.id)!;
+        expect(group1.occurrences).to.have.length(1);
+        expect(group1.occurrences[0].id).to.equal(event.id);
+      });
+
+      // The "all assigned resources hidden" and "no resource" cases are pinned directly
+      // against `getOccurrencesFromEvents` in event-utils.test.ts instead of here: this
+      // selector hides resources as whole rows, so an event's own visibility filtering
+      // can't be observed independently from row visibility at this level.
+    });
   });
 
   describe('groupedByResourceList — collapse', () => {
