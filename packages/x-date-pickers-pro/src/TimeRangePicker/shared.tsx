@@ -59,7 +59,9 @@ export interface BaseTimeRangePickerSlotProps
   /**
    * Props passed down to the tabs component.
    */
-  tabs?: WithDataAttributes<ExportedTimeRangePickerTabsProps>;
+  // Not widened with `data-*`: the default tab components destructure a fixed prop
+  // list with no `...other`, so `data-*` never reaches the DOM.
+  tabs?: ExportedTimeRangePickerTabsProps;
   /**
    * Props passed down to the toolbar component.
    */

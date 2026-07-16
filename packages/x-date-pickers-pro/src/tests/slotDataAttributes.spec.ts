@@ -49,7 +49,7 @@ type AssertDateTimeRangePicker = Assert<
     AssertAllSlotsAcceptDataAttributes<
       DateTimeRangePickerSlotProps,
       'DateTimeRangePicker',
-      'desktopTrapFocus'
+      'desktopTrapFocus' | 'tabs'
     >
   >
 >;
@@ -67,7 +67,7 @@ type AssertDesktopDateTimeRangePicker = Assert<
     AssertAllSlotsAcceptDataAttributes<
       DesktopDateTimeRangePickerSlotProps,
       'DesktopDateTimeRangePicker',
-      'desktopTrapFocus'
+      'desktopTrapFocus' | 'tabs'
     >
   >
 >;
@@ -76,7 +76,7 @@ type AssertDesktopTimeRangePicker = Assert<
     AssertAllSlotsAcceptDataAttributes<
       DesktopTimeRangePickerSlotProps,
       'DesktopTimeRangePicker',
-      'desktopTrapFocus'
+      'desktopTrapFocus' | 'tabs'
     >
   >
 >;
@@ -89,13 +89,18 @@ type AssertMobileDateTimeRangePicker = Assert<
   AllTrue<
     AssertAllSlotsAcceptDataAttributes<
       MobileDateTimeRangePickerSlotProps,
-      'MobileDateTimeRangePicker'
+      'MobileDateTimeRangePicker',
+      'tabs'
     >
   >
 >;
 type AssertMobileTimeRangePicker = Assert<
   AllTrue<
-    AssertAllSlotsAcceptDataAttributes<MobileTimeRangePickerSlotProps, 'MobileTimeRangePicker'>
+    AssertAllSlotsAcceptDataAttributes<
+      MobileTimeRangePickerSlotProps,
+      'MobileTimeRangePicker',
+      'tabs'
+    >
   >
 >;
 type AssertMultiInputRangeField = Assert<
@@ -145,7 +150,7 @@ type AssertTimeRangePicker = Assert<
     AssertAllSlotsAcceptDataAttributes<
       TimeRangePickerSlotProps,
       'TimeRangePicker',
-      'desktopTrapFocus'
+      'desktopTrapFocus' | 'tabs'
     >
   >
 >;
