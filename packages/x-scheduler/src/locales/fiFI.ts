@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const fiFIDialog: Partial<EventDialogLocaleText> = {
+const fiFIDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // dateTimeSectionLabel: 'Date & time',
@@ -72,7 +72,7 @@ const fiFIDialog: Partial<EventDialogLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const fiFICalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const fiFICalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -123,7 +123,7 @@ const fiFICalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const fiFITimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const fiFITimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

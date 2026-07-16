@@ -12,7 +12,7 @@ export interface StandaloneCompactWeekViewPremiumProps<
     CompactWeekViewProps,
     Omit<
       EventCalendarPremiumParameters<TEvent, TResource>,
-      keyof EventCalendarSchedulerParametersOverrides
+      'viewConfig' | keyof EventCalendarSchedulerParametersOverrides
     >,
     EventCalendarSchedulerParametersOverrides {
   /**

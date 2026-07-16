@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const roRODialog: Partial<EventDialogLocaleText> = {
+const roRODialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Culoarea evenimentului',
   dateTimeSectionLabel: 'Dată și oră',
@@ -71,7 +71,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   title: 'Aplică această modificare la:',
 };
 
-const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Resurse',
 
@@ -130,7 +130,7 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Titlul resursei',
 };
 
-const roROTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const roROTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titlul resursei',
 };

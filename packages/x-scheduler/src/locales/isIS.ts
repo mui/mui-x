@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const isISDialog: Partial<EventDialogLocaleText> = {
+const isISDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // dateTimeSectionLabel: 'Date & time',
@@ -72,7 +72,7 @@ const isISDialog: Partial<EventDialogLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const isISCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const isISCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -123,7 +123,7 @@ const isISCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const isISTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const isISTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

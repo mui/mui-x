@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const caESDialog: Partial<EventDialogLocaleText> = {
+const caESDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // dateTimeSectionLabel: 'Date & time',
@@ -72,7 +72,7 @@ const caESDialog: Partial<EventDialogLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const caESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const caESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -123,7 +123,7 @@ const caESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const caESTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const caESTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const ruRUDialog: Partial<EventDialogLocaleText> = {
+const ruRUDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // dateTimeSectionLabel: 'Date & time',
@@ -72,7 +72,7 @@ const ruRUDialog: Partial<EventDialogLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -123,7 +123,7 @@ const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const ruRUTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const ruRUTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

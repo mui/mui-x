@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import type { EventDialogClasses } from '../event-dialog/eventDialogClasses';
-import type { EventDialogLocaleText } from '../../../models/translations';
+import type { EventEditingLocaleText } from '../../../models/translations';
 
 export interface EventEditingStyledContextValue {
   schedulerId: string | undefined;
   classes: EventDialogClasses;
-  localeText: EventDialogLocaleText;
+  localeText: EventEditingLocaleText;
 }
 
 export const EventEditingStyledContext = React.createContext<EventEditingStyledContextValue | null>(

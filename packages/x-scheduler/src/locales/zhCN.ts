@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const zhCNDialog: Partial<EventDialogLocaleText> = {
+const zhCNDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // dateTimeSectionLabel: 'Date & time',
@@ -72,7 +72,7 @@ const zhCNDialog: Partial<EventDialogLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const zhCNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const zhCNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -123,7 +123,7 @@ const zhCNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const zhCNTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const zhCNTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

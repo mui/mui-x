@@ -401,11 +401,129 @@ const TimeGridEventPlaceholderRoot = styled(CalendarGrid.TimeEvent, {
   },
 }));
 
-export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
-  props: TimeGridEventProps,
+type EventCalendarClasses = ReturnType<typeof useEventCalendarStyledContext>['classes'];
+
+type TimeGridEventVariantProps = Omit<TimeGridEventProps, 'variant'>;
+
+/**
+ * Title / time / recurring-icon body, shared by the regular and placeholder variants. Kept as its own
+ * memoized component so a store-driven re-render of a variant (arming, gesture start/end) skips
+ * re-rendering the content when its inputs are unchanged.
+ */
+const TimeGridEventContent = React.memo(function TimeGridEventContent(props: {
+  occurrence: TimeGridEventProps['occurrence'];
+  // Tall events stack the title over the full time range; shorter ones show the start time inline.
+  // Width-driven degradation (dropping the time, wrapping the title) is handled in CSS.
+  isStacked: boolean;
+  isRecurring: boolean;
+  classes: EventCalendarClasses;
+}) {
+  const { occurrence, isStacked, isRecurring, classes } = props;
+  const formatTime = useFormatTime();
+
+  return (
+    <React.Fragment>
+      {isStacked ? (
+        <React.Fragment>
+          <TimeGridEventTitle className={classes.timeGridEventTitle} data-stacked>
+            {occurrence.title}
+          </TimeGridEventTitle>
+          <TimeGridEventTime className={classes.timeGridEventTime} data-variant="block">
+            {formatTime(occurrence.displayTimezone.start.value)} -{' '}
+            {formatTime(occurrence.displayTimezone.end.value)}
+          </TimeGridEventTime>
+        </React.Fragment>
+      ) : (
+        <TimeGridEventTitle className={classes.timeGridEventTitle}>
+          {occurrence.title}{' '}
+          <TimeGridEventTime className={classes.timeGridEventTime} data-variant="inline">
+            {formatTime(occurrence.displayTimezone.start.value)}
+          </TimeGridEventTime>
+        </TimeGridEventTitle>
+      )}
+
+      {isRecurring && (
+        <TimeGridEventRecurringIcon
+          className={classes.timeGridEventRecurringIcon}
+          aria-hidden="true"
+        />
+      )}
+    </React.Fragment>
+  );
+});
+
+/**
+ * The resize/creation preview. Split out from the regular event so its two *global* subscriptions
+ * (`editingMode`, placeholder `type`) — which flip at every gesture and arm/disarm — live only here,
+ * instead of forcing every on-screen event to re-render at each gesture boundary.
+ */
+const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlaceholder(
+  props: TimeGridEventVariantProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, variant, className, ...other } = props;
+  const { occurrence, className, ...other } = props;
+
+  const { classes } = useEventCalendarStyledContext();
+  const store = useEventCalendarStoreContext();
+  const {
+    isRecurring,
+    isLessThan30Minutes,
+    isBetween30and60Minutes,
+    rootDataAttributes,
+    rootPositionProps,
+  } = useTimeGridEvent(occurrence);
+
+  // Creation / internal-resize placeholders host sizing handles; move placeholders don't. Suppressed
+  // in `edit` mode where the form owns the times — matching the regular event (see `useTimeGridEvent`).
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
+  const placeholderType = useStore(store, schedulerOccurrencePlaceholderSelectors.type);
+  const placeholderHasResizeHandles =
+    (placeholderType === 'creation' || placeholderType === 'internal-resize') &&
+    editingMode !== 'edit';
+
+  const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
+
+  return (
+    <TimeGridEventPlaceholderRoot
+      isDraggable={false}
+      eventId={occurrence.id}
+      occurrenceKey={occurrence.key}
+      renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+      data-armed={placeholderHasResizeHandles || undefined}
+      // Inert preview — hide its button role/empty name from assistive tech (handles are
+      // pointer-only, so this doesn't trap focus).
+      aria-hidden="true"
+      {...rootDataAttributes}
+      {...rootPositionProps}
+      ref={forwardedRef}
+      {...other}
+      className={clsx(classes.timeGridEventPlaceholder, className, occurrence.className)}
+    >
+      {placeholderHasResizeHandles && (
+        <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="start" />
+      )}
+      <TimeGridEventContent
+        occurrence={occurrence}
+        isStacked={isStacked}
+        isRecurring={isRecurring}
+        classes={classes}
+      />
+      {placeholderHasResizeHandles && (
+        <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="end" />
+      )}
+    </TimeGridEventPlaceholderRoot>
+  );
+});
+
+/**
+ * A regular, rendered event. Subscribes only to its keyed (stable-`false` for inactive events)
+ * arm/edit selectors, so arming or resizing another event doesn't re-render it.
+ */
+const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
+  props: TimeGridEventVariantProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { occurrence, className, ...other } = props;
 
   const { classes } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
@@ -420,97 +538,12 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     rootPositionProps,
   } = useTimeGridEvent(occurrence);
 
-  const formatTime = useFormatTime();
-
   // Armed = this occurrence shows its action toolbar (touch). Touch styles reveal the resize dots +
   // outline; inert on a mouse. Editing = the surface is open for it (either mode), for the selected look.
   const isArmed = useStore(store, schedulerOtherSelectors.isEditedOccurrenceArmed, occurrence.key);
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
-  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
 
-  // Creation / internal-resize placeholders host sizing handles; move placeholders don't. Suppressed
-  // in `edit` mode where the form owns the times — matching the regular event (see `useTimeGridEvent`).
-  const placeholderType = useStore(store, schedulerOccurrencePlaceholderSelectors.type);
-  const placeholderHasResizeHandles =
-    (placeholderType === 'creation' || placeholderType === 'internal-resize') &&
-    editingMode !== 'edit';
-
-  // Tall events stack the title over the full time range; shorter ones show the start time inline.
-  // Width-driven degradation (dropping the time, wrapping the title) is handled in CSS.
   const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
-
-  const content = React.useMemo(() => {
-    return (
-      <React.Fragment>
-        {isStacked ? (
-          <React.Fragment>
-            <TimeGridEventTitle className={classes.timeGridEventTitle} data-stacked>
-              {occurrence.title}
-            </TimeGridEventTitle>
-            <TimeGridEventTime className={classes.timeGridEventTime} data-variant="block">
-              {formatTime(occurrence.displayTimezone.start.value)} -{' '}
-              {formatTime(occurrence.displayTimezone.end.value)}
-            </TimeGridEventTime>
-          </React.Fragment>
-        ) : (
-          <TimeGridEventTitle className={classes.timeGridEventTitle}>
-            {occurrence.title}{' '}
-            <TimeGridEventTime className={classes.timeGridEventTime} data-variant="inline">
-              {formatTime(occurrence.displayTimezone.start.value)}
-            </TimeGridEventTime>
-          </TimeGridEventTitle>
-        )}
-
-        {isRecurring && (
-          <TimeGridEventRecurringIcon
-            className={classes.timeGridEventRecurringIcon}
-            aria-hidden="true"
-          />
-        )}
-      </React.Fragment>
-    );
-  }, [
-    isStacked,
-    occurrence.title,
-    occurrence.displayTimezone.start.value,
-    occurrence.displayTimezone.end.value,
-    formatTime,
-    isRecurring,
-    classes,
-  ]);
-
-  const sharedProps = {
-    ...rootPositionProps,
-    ref: forwardedRef,
-    ...other,
-    className: clsx(className, occurrence.className),
-  };
-
-  if (variant === 'placeholder') {
-    return (
-      <TimeGridEventPlaceholderRoot
-        isDraggable={false}
-        eventId={occurrence.id}
-        occurrenceKey={occurrence.key}
-        renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
-        data-armed={placeholderHasResizeHandles || undefined}
-        // Inert preview — hide its button role/empty name from assistive tech (handles are
-        // pointer-only, so this doesn't trap focus).
-        aria-hidden="true"
-        {...rootDataAttributes}
-        {...sharedProps}
-        className={clsx(classes.timeGridEventPlaceholder, sharedProps.className)}
-      >
-        {placeholderHasResizeHandles && (
-          <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="start" />
-        )}
-        {content}
-        {placeholderHasResizeHandles && (
-          <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="end" />
-        )}
-      </TimeGridEventPlaceholderRoot>
-    );
-  }
 
   return (
     <TimeGridEventRoot
@@ -521,16 +554,36 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       data-armed={isArmed || undefined}
       data-editing={isEditing || undefined}
       {...rootDataAttributes}
-      {...sharedProps}
-      className={clsx(classes.timeGridEvent, sharedProps.className)}
+      {...rootPositionProps}
+      ref={forwardedRef}
+      {...other}
+      className={clsx(classes.timeGridEvent, className, occurrence.className)}
     >
       {isStartResizable && (
         <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="start" />
       )}
-      {content}
+      <TimeGridEventContent
+        occurrence={occurrence}
+        isStacked={isStacked}
+        isRecurring={isRecurring}
+        classes={classes}
+      />
       {isEndResizable && (
         <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="end" />
       )}
     </TimeGridEventRoot>
   );
+});
+
+export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
+  props: TimeGridEventProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { variant, ...other } = props;
+
+  if (variant === 'placeholder') {
+    return <TimeGridEventPlaceholder {...other} ref={forwardedRef} />;
+  }
+
+  return <TimeGridEventRegular {...other} ref={forwardedRef} />;
 });

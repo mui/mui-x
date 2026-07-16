@@ -7,7 +7,8 @@ import { buildIsValidDropTarget } from '../build-is-valid-drop-target/buildIsVal
 const OVERFLOW_PX = 160;
 
 // Only event drags should autoscroll the grid; other element drags (e.g. the dialog) carry no `source`.
-const canAutoScrollForDrag = buildIsValidDropTarget([
+// Exported for unit testing (the effect itself is a no-op under `NODE_ENV === 'test'`).
+export const canAutoScrollForDrag = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
   'CalendarGridTimeEventResizeHandler',
   'StandaloneEvent',

@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const nbNODialog: Partial<EventDialogLocaleText> = {
+const nbNODialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Hendelsesfarge',
   dateTimeSectionLabel: 'Dato og tid',
@@ -71,7 +71,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   title: 'Bruk denne endringen på:',
 };
 
-const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ressurser',
 
@@ -130,7 +130,7 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Ressurstittel',
 };
 
-const nbNOTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const nbNOTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressurstittel',
 };

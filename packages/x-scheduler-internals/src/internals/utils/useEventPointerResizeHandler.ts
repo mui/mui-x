@@ -39,17 +39,39 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
   const store = useSchedulerStoreContext();
   const adapter = useAdapterContext();
 
+  // Gesture state lives in refs, not effect-local variables, so a mid-gesture effect re-run (a
+  // dependency flipping while the finger is down) re-attaches the listeners without dropping the
+  // active pointer or silently discarding the resize. Pointer capture stays on the DOM element across
+  // the listener churn, so the gesture continues seamlessly.
+  const activePointerIdRef = React.useRef<number | null>(null);
+  const sessionRef = React.useRef<useEventPointerResizeHandler.ResizeSession | null>(null);
+
   React.useEffect(() => {
     const handle = ref.current;
-    if (!handle || !enabled) {
+    if (!handle) {
       return undefined;
     }
 
-    let activePointerId: number | null = null;
-    let session: useEventPointerResizeHandler.ResizeSession | null = null;
+    if (!enabled) {
+      // Disabled mid-gesture: release capture and revert any in-progress resize preview.
+      const pointerId = activePointerIdRef.current;
+      if (pointerId !== null) {
+        if (handle.hasPointerCapture(pointerId)) {
+          handle.releasePointerCapture(pointerId);
+        }
+        const abortedSession = sessionRef.current;
+        activePointerIdRef.current = null;
+        sessionRef.current = null;
+        if (abortedSession && abortedSession.kind !== 'creation') {
+          store.setOccurrencePlaceholder(null);
+        }
+      }
+      return undefined;
+    }
 
     const onPointerMove = (event: PointerEvent) => {
-      if (event.pointerId !== activePointerId || session === null) {
+      const session = sessionRef.current;
+      if (event.pointerId !== activePointerIdRef.current || session === null) {
         return;
       }
       event.preventDefault();
@@ -94,20 +116,21 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
 
     // Release capture, clear the gesture, return the in-progress session (or `null`) to the caller.
     const finishGesture = (event: PointerEvent) => {
-      if (event.pointerId !== activePointerId) {
+      const activePointerId = activePointerIdRef.current;
+      if (activePointerId === null || event.pointerId !== activePointerId) {
         return undefined;
       }
       if (handle.hasPointerCapture(activePointerId)) {
         handle.releasePointerCapture(activePointerId);
       }
-      activePointerId = null;
-      const endedSession = session;
-      session = null;
+      activePointerIdRef.current = null;
+      const endedSession = sessionRef.current;
+      sessionRef.current = null;
       return endedSession;
     };
 
     const onPointerUp = (event: PointerEvent) => {
-      if (event.pointerId !== activePointerId) {
+      if (event.pointerId !== activePointerIdRef.current) {
         return;
       }
       const endedSession = finishGesture(event);
@@ -131,7 +154,7 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
 
     // Gesture aborted by the system (e.g. scroll took over): discard the resize preview so it never edits the event.
     const onPointerCancel = (event: PointerEvent) => {
-      if (event.pointerId !== activePointerId) {
+      if (event.pointerId !== activePointerIdRef.current) {
         return;
       }
       const endedSession = finishGesture(event);
@@ -148,18 +171,19 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
         return;
       }
       // Ignore secondary mouse buttons; touch and pen always report button 0.
-      if (event.button !== 0 || activePointerId !== null) {
+      if (event.button !== 0 || activePointerIdRef.current !== null) {
         return;
       }
       // Stop the event reaching the root, where long-press detection would drag the whole event instead.
       event.stopPropagation();
       event.preventDefault();
 
-      session = getResizeSession({ clientX: event.clientX, clientY: event.clientY });
+      const session = getResizeSession({ clientX: event.clientX, clientY: event.clientY });
       if (session === null) {
         return;
       }
-      activePointerId = event.pointerId;
+      sessionRef.current = session;
+      activePointerIdRef.current = event.pointerId;
       handle.setPointerCapture(event.pointerId);
     };
 
@@ -173,9 +197,9 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
       handle.removeEventListener('pointermove', onPointerMove);
       handle.removeEventListener('pointerup', onPointerUp);
       handle.removeEventListener('pointercancel', onPointerCancel);
-      if (activePointerId !== null && handle.hasPointerCapture(activePointerId)) {
-        handle.releasePointerCapture(activePointerId);
-      }
+      // Intentionally leave `activePointerIdRef`/`sessionRef` and the pointer capture untouched: if this
+      // cleanup runs mid-gesture because a dependency changed, the re-run re-attaches the listeners and
+      // the gesture continues. A true unmount detaches the element, which releases the capture anyway.
     };
   }, [
     ref,

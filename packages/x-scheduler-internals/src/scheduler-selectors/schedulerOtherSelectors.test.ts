@@ -27,12 +27,18 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should distinguish occurrences of the same recurring event', () => {
-        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
-        store.startEditing(occurrence('event-1'));
-        expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(true);
+        // Two occurrences of the same series share the event id but carry distinct occurrence keys.
+        const armedOccurrence = { id: 'standup', key: 'standup::2025-07-07' } as any;
+        const siblingKey = 'standup::2025-07-08';
 
-        store.stopEditing();
-        expect(schedulerOtherSelectors.isEditedOccurrence(store.state, 'event-1')).to.equal(false);
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+        store.startEditing(armedOccurrence);
+
+        expect(
+          schedulerOtherSelectors.isEditedOccurrence(store.state, armedOccurrence.key),
+        ).to.equal(true);
+        // The sibling occurrence of the same series must not match — editing is occurrence-precise.
+        expect(schedulerOtherSelectors.isEditedOccurrence(store.state, siblingKey)).to.equal(false);
       });
     });
 
