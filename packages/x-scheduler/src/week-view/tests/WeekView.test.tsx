@@ -4,6 +4,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  ResourceBuilder,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
@@ -174,6 +175,51 @@ describe('<WeekView />', () => {
 
       // Should span 4 columns (4 days)
       expect(gridColumnSpan).to.equal('4');
+    });
+  });
+
+  describe('multi-resource events', () => {
+    const resourceA = ResourceBuilder.new().title('Room A').build();
+    const resourceB = ResourceBuilder.new().title('Room B').build();
+
+    it('renders an event assigned to multiple resources when at least one is visible', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="week"
+        />,
+      );
+
+      expect(screen.getAllByText('Team Sync').length).to.be.greaterThan(0);
+    });
+
+    it('does not render an event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceA.id]: false, [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="week"
+        />,
+      );
+
+      expect(screen.queryByText('Team Sync')).to.equal(null);
     });
   });
 

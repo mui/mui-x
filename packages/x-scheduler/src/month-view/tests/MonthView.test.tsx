@@ -4,6 +4,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  ResourceBuilder,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { screen, within, waitFor } from '@mui/internal-test-utils';
@@ -367,6 +368,55 @@ describe('<MonthView />', () => {
       );
 
       expect(visibleInstances).toHaveLength(2);
+    });
+  });
+
+  describe('multi-resource events', () => {
+    const resourceA = ResourceBuilder.new().title('Room A').build();
+    const resourceB = ResourceBuilder.new().title('Room B').build();
+
+    it('renders an event assigned to multiple resources when at least one is visible', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .singleDay('2025-05-01T09:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendarProvider
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceB.id]: false }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.getAllByText('Team Sync').length).to.be.greaterThan(0);
+    });
+
+    it('does not render an event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .singleDay('2025-05-01T09:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendarProvider
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceA.id]: false, [resourceB.id]: false }}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.queryByText('Team Sync')).to.equal(null);
     });
   });
 

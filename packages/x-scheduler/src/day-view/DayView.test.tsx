@@ -5,9 +5,11 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  ResourceBuilder,
 } from 'test/utils/scheduler';
 import { DayView } from '@mui/x-scheduler/day-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import type { SchedulerResource } from '@mui/x-scheduler/models';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 
@@ -17,11 +19,16 @@ describe('<DayView />', () => {
   function renderWithProviders(
     ui: React.ReactElement,
     events: any[] = [],
+    options: {
+      resources?: SchedulerResource[];
+      defaultVisibleResources?: Record<string, boolean>;
+    } = {},
   ): ReturnType<typeof render> {
     return render(
       <EventCalendarProvider
         events={events}
-        resources={[]}
+        resources={options.resources ?? []}
+        defaultVisibleResources={options.defaultVisibleResources}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
       >
         <EventDialogProvider>{ui}</EventDialogProvider>
@@ -82,6 +89,41 @@ describe('<DayView />', () => {
       const root = getEventRoot();
       expect(root).not.to.have.attribute('data-under-fifteen-minutes');
       expect(root).not.to.have.attribute('data-under-hour');
+    });
+  });
+
+  describe('multi-resource events', () => {
+    const resourceA = ResourceBuilder.new().title('Room A').build();
+    const resourceB = ResourceBuilder.new().title('Room B').build();
+
+    it('renders an event assigned to multiple resources when at least one is visible', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      renderWithProviders(<DayView />, [event], {
+        resources: [resourceA, resourceB],
+        defaultVisibleResources: { [resourceB.id]: false },
+      });
+
+      expect(screen.getAllByText('Team Sync').length).to.be.greaterThan(0);
+    });
+
+    it('does not render an event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      renderWithProviders(<DayView />, [event], {
+        resources: [resourceA, resourceB],
+        defaultVisibleResources: { [resourceA.id]: false, [resourceB.id]: false },
+      });
+
+      expect(screen.queryByText('Team Sync')).to.equal(null);
     });
   });
 

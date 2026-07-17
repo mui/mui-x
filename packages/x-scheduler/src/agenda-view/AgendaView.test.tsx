@@ -5,6 +5,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  ResourceBuilder,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
@@ -49,6 +50,43 @@ describe('<AgendaView />', () => {
     expect(tokens.length).to.be.greaterThan(0);
     tokens.forEach((token) => {
       expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(null);
+    });
+  });
+
+  describe('multi-resource events', () => {
+    const resourceA = ResourceBuilder.new().title('Room A').build();
+    const resourceB = ResourceBuilder.new().title('Room B').build();
+
+    it('renders an event assigned to multiple resources when at least one is visible', () => {
+      const event = EventBuilder.new().title('Team Sync').resources([resourceA, resourceB]).build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+        />,
+      );
+
+      expect(screen.getAllByText('Team Sync').length).to.be.greaterThan(0);
+    });
+
+    it('does not render an event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new().title('Team Sync').resources([resourceA, resourceB]).build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceA.id]: false, [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+        />,
+      );
+
+      expect(screen.queryByText('Team Sync')).to.equal(null);
     });
   });
 
