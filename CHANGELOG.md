@@ -76,7 +76,6 @@ Same changes as in `@mui/x-tree-view@9.10.0`, plus:
 #### `@mui/x-scheduler@9.0.0-beta.6`
 
 - [scheduler] Carry custom event data through the edit dialog submit (#22874) @Anexus5919
-- [scheduler] Fix overview page bugs (#23147) @noraleonte
 - [scheduler] Support array values for `CalendarEvent.resource` (#23109) @mustafajw07
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
@@ -98,6 +97,10 @@ Internal changes.
 #### `@mui/x-codemod@9.10.0`
 
 Internal changes.
+
+### Docs
+
+- [docs] Fix bugs on Scheduler overview page (#23147) @noraleonte
 
 ### Core
 
