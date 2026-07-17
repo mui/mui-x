@@ -27,6 +27,8 @@ function groupByEventId(
   return groups;
 }
 
+const EMPTY_TITLES: readonly string[] = [];
+
 const activeModelListSelector = createSelectorMemoized(
   (state: State) => state.dependencyModelLookup,
   (state: State) => state.processedEventLookup,
@@ -38,6 +40,25 @@ const activeModelListSelector = createSelectorMemoized(
         (eventId) => classifyDependencyEvent(processedEventLookup, eventId) === 'ok',
       ),
     ),
+);
+
+const activeSourceTitlesByTargetSelector = createSelectorMemoized(
+  activeModelListSelector,
+  (state: State) => state.processedEventLookup,
+  (dependencies, processedEventLookup) => {
+    const titlesByTarget = new Map<SchedulerEventId, string[]>();
+    for (const dependency of dependencies) {
+      // Active dependencies always resolve: their events exist in the lookup.
+      const title = processedEventLookup.get(dependency.source)!.title;
+      const titles = titlesByTarget.get(dependency.target);
+      if (titles) {
+        titles.push(title);
+      } else {
+        titlesByTarget.set(dependency.target, [title]);
+      }
+    }
+    return titlesByTarget;
+  },
 );
 
 export const eventTimelinePremiumDependencySelectors = {
@@ -58,5 +79,14 @@ export const eventTimelinePremiumDependencySelectors = {
   ),
   activeModelListByTarget: createSelectorMemoized(activeModelListSelector, (dependencies) =>
     groupByEventId(dependencies, 'target'),
+  ),
+  /**
+   * Titles of the source events of the active dependencies, grouped by target event id.
+   * Used to describe an event with the events it depends on.
+   */
+  activeSourceTitlesByTarget: activeSourceTitlesByTargetSelector,
+  activeSourceTitlesForTarget: createSelector(
+    activeSourceTitlesByTargetSelector,
+    (titlesByTarget, eventId: SchedulerEventId) => titlesByTarget.get(eventId) ?? EMPTY_TITLES,
   ),
 };
