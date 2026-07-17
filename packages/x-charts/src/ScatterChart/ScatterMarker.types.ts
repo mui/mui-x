@@ -1,4 +1,5 @@
 import type * as React from 'react';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { ScatterMarkerProps } from './ScatterMarker';
 import type { MarkerPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
@@ -11,7 +12,7 @@ export interface ScatterMarkerSlots {
 }
 
 export interface ScatterMarkerSlotProps {
-  marker?: Partial<ScatterMarkerProps> & MarkerPropsOverrides;
+  marker?: WithDataAttributes<Partial<ScatterMarkerProps> & MarkerPropsOverrides>;
 }
 
 export interface ScatterMarkerSlotExtension {
