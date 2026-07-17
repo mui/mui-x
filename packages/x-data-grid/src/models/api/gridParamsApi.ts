@@ -20,21 +20,21 @@ export interface GridParamsApi {
    * Use it instead of `getCellValue` for better performance if you have `row` and `colDef`.
    * @template V
    * @param {GridRowModel} row The row model.
-   * @param {GridColDef} colDef The column definition.
+   * @param {GridColDef | undefined} colDef The column definition.
    * @returns {v} The cell value.
    * @ignore - do not document
    */
-  getRowValue: <V = any>(row: GridRowModel, colDef: GridColDef) => V;
+  getRowValue: <V = any>(row: GridRowModel, colDef: GridColDef | undefined) => V;
   /**
    * Gets the cell formatted value
    * Use it instead of `getCellParams` for better performance if you only need the formatted value.
    * @template V
    * @param {GridRowModel} row The row model.
-   * @param {GridColDef} colDef The column definition.
+   * @param {GridColDef | undefined} colDef The column definition.
    * @returns {v} The cell value.
    * @ignore - do not document
    */
-  getRowFormattedValue: <V = any>(row: GridRowModel, colDef: GridColDef) => V;
+  getRowFormattedValue: <V = any>(row: GridRowModel, colDef: GridColDef | undefined) => V;
   /**
    * Gets the [[GridCellParams]] object that is passed as argument in events.
    * @param {GridRowId} id The id of the row.
@@ -88,7 +88,7 @@ export interface GridParamsPrivateApi {
   /**
    * @typedef {Object} CellParamsOverrides
    * @property {GridCellMode} cellMode - The mode of the cell.
-   * @property {GridStateColDef} colDef - The column definition.
+   * @property {GridStateColDef | undefined} colDef - The column definition, or `undefined` if the field is not in the current column set.
    * @property {boolean} hasFocus - Indicates if the cell is in focus.
    * @property {GridTreeNode} rowNode - The node of the row that the current cell belongs to.
    * @property {0|-1} tabIndex - The tabIndex value.
@@ -121,7 +121,7 @@ export interface GridParamsPrivateApi {
       formattedValue,
     }: {
       cellMode: GridCellMode;
-      colDef: GridStateColDef;
+      colDef: GridStateColDef | undefined;
       hasFocus: boolean;
       rowNode: N;
       tabIndex: 0 | -1;

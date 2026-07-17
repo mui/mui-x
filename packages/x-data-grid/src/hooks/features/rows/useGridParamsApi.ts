@@ -3,6 +3,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridParamsApi, GridParamsPrivateApi } from '../../../models/api/gridParamsApi';
 import type { GridCellParams } from '../../../models/params/gridCellParams';
+import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 import type { GridRowParams } from '../../../models/params/gridRowParams';
 import {
   getGridCellElement,
@@ -34,7 +35,9 @@ export function useGridParamsApi(
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
     (field) => ({
       field,
-      colDef: apiRef.current.getColumn(field),
+      // `colDef` can be `undefined` at runtime during a column set transition,
+      // the public params type stays non-nullable for compatibility.
+      colDef: apiRef.current.getColumn(field) as GridStateColDef,
     }),
     [apiRef],
   );
@@ -84,7 +87,9 @@ export function useGridParamsApi(
         field,
         row,
         rowNode,
-        colDef,
+        // `colDef` can be `undefined` at runtime during a column set transition,
+        // the public params type stays non-nullable for compatibility.
+        colDef: colDef as GridStateColDef,
         cellMode,
         hasFocus,
         tabIndex,

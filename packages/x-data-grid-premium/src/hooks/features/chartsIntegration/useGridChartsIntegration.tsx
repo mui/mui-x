@@ -351,11 +351,13 @@ export const useGridChartsIntegration = (
             : column.field;
           const columnDefinition = apiRef.current.getColumn(groupedFieldName);
 
-          return {
-            ...columnDefinition,
-            dataFieldName: column.field,
-            depth: rowGroupingModel.indexOf(column.field),
-          };
+          if (columnDefinition) {
+            return {
+              ...columnDefinition,
+              dataFieldName: column.field,
+              depth: rowGroupingModel.indexOf(column.field),
+            };
+          }
         }
 
         return {

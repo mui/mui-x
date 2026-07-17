@@ -71,7 +71,7 @@ export const getAvailableAggregationFunctions = ({
 }: {
   aggregationFunctions:
     Record<string, GridAggregationFunction> | Record<string, GridAggregationFunctionDataSource>;
-  colDef: GridColDef;
+  colDef: GridColDef | undefined;
   isDataSource: boolean;
 }) =>
   Object.keys(aggregationFunctions).filter((aggregationFunctionName) =>
