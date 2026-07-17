@@ -28,6 +28,8 @@ The feature ships in 6 independently mergeable iterations:
   with its relative references shifted for each target cell, Excel-style (D21).
 - **I8** — Excel formula export: with `escapeFormulas: false`, live formula cells export as real
   Excel formulas with references re-anchored to the exported sheet's coordinates (D22).
+- **I9** — grow-with-content floating editor: the formula editor floats over the cell in a
+  statically-positioned row-portaled surface and grows inline-end with the formula (D24).
 
 ## Locked design decisions
 
@@ -464,14 +466,15 @@ propagating so the grid still commits; the autocomplete popup markup moved into 
 (no separate plain-`<input>` fallback). The editor writes `textContent` back with no debounce
 (`setEditCellValue({ unstable_skipValueParser: true })`), so the commit/`valueParser`/`valueSetter`
 A1→canonical path is unchanged. In-editor undo is out of scope (single-line; row-level undo via the
-commit path is unaffected). The editor renders **inline** in the cell (it replaces `GridEditInputCell`),
-matching the edit-input metrics. The editable is `text-align: start`, so a formula in a right-aligned
+commit path is unaffected). The editor replaces `GridEditInputCell`; since D24 it renders as an
+in-cell anchor plus a floating surface that overlays the cell and grows with the formula (it was
+inline in the cell before that). The editable is `text-align: start`, so a formula in a right-aligned
 (`type: 'number'`) column reads from the start edge (left/RTL-right) like a string rather than being
 flung to the far edge from the caret. The rebuild skips entirely on a no-op recolor (identical segments)
 and preserves the full selection (both edges) across a recolor that does change the spans, snapping the
 caret to the end only on the initial source seeding (and the focus effect collapses a stray select-all to
-the end on entry). _A floating popper that grows the editor with the formula (so a long formula is not
-cramped into one cell) was prototyped and reverted; it will be redone separately._ _Known minor caret
+the end on entry). _The floating grow-with-content surface shipped as D24 (after two popper-based
+prototypes were discarded — see D24 for the post-mortem)._ _Known minor caret
 follow-up: a backward (anchor-after-focus) selection is re-applied forward after a recolor._
 **Half B** (`GridFormulaReferenceOverlay`) is a `pointer-events:none`
 overlay component mounted as a `GridRoot` child in `DataGridPremium.tsx` (sibling of
@@ -531,6 +534,96 @@ Residual gaps until the core tear is fixed (filed separately — the stock inlin
 same jitter): keystrokes landing in the one-frame focus gap of a tear remount go to `<body>`, an IME
 composition in flight aborts, and the `showFormulaInput` mount decision re-evaluates (a plain-cell
 edit whose typed `=` was deleted can swap editors after a remount — cosmetic, self-heals).
+
+**D24. Grow-with-content floating editor (I9) — longText-style surface with static geometry.**
+The reviewer ask (#22807 review 4503329712): edit formulas in a popup that grows with the value, like
+the `longText` column type. **Post-mortem first:** two popper-based attempts were discarded after live
+testing — MUI Popper positions a row-portaled popup with an asynchronous post-paint `translate3d`, so
+on every (re)mount the surface painted at the row's origin (visually, "the cells before the target")
+until the transform landed; virtualization remounts re-flashed it, and the prototype's max-width
+re-measure on `scrollPositionChange` resized the box mid-scroll. The lesson is structural: **no
+positioning engine may own the surface's geometry.** The shipped design: `GridFormulaEditor` splits
+into an in-cell **anchor** (live ellipsized draft, `aria-controls`/`aria-expanded`, row-edit
+`tabIndex`) and a **surface** — a plain `div` portaled with `createPortal` into the row element. The
+row is `position: relative` and spans the full content width, so the surface's geometry is pure grid
+state applied as first-paint CSS: `insetInlineStart` from `gridColumnPositionsSelector` (the same
+coordinate the row lays its cells out with, so the overlay is exact by construction, and column
+resize mid-edit self-corrects through the selector), block position from
+`gridRowsMetaSelector.positions` + `topContainerHeight` (the reference overlay's own coordinate
+recipe, reactive to sort/row-height changes), and an opaque `background.base` so covered cells and
+reference rectangles cannot bleed through. Nothing repositions asynchronously, ever: native scrolling
+moves the surface with the rows, and a remounted surface paints at the correct position on its first
+frame. **Portal target is the virtual SCROLLER, not the row** (Bilal's collision find): the render
+zone carries an inline `translate3d` and is therefore a stacking context, so a row-portaled
+surface's z-index can never beat the reference-highlight overlay — a later scroller child with
+`z: auto` that paints above the whole render zone in DOM order, drawing dashed rectangles across the
+editor. At scroller level the surface uses **`z-index: 30`** — above the render zone and the overlay
+(both `z: auto`), below the sticky top/bottom containers (z 40: headers and pinned rows must keep
+covering content scrolled beneath them; this also preserves the pre-existing surface-under-header
+behavior). The scroller is a positioned scroll container, so a child absolutely positioned in
+content coordinates scrolls natively with the rows — the static-geometry invariant is unchanged.
+Pinned ROWS keep the row portal (their sticky containers sit at z 40 above the overlay already, and
+they have no content-space position); pinned-COLUMN anchors measure their inline start into the
+portal target's coordinate space (content space incl. `scrollLeft` in scroller mode). Pinned by a
+browser regression test (`elementFromPoint` over a highlight rectangle the surface grew over →
+resolves to the surface). **Width is a grow-only ratchet snapped to column gridlines** (locked decision):
+minimum = column width + 1px (borders on the gridlines, interior and 10px text padding flush with the
+cell — no jump on entry); when the single line overflows (`scrollWidth > clientWidth`, checked in the
+rebuild layout effect that every text change flows through), the inline-end border steps to the next
+column boundary (`computeSnappedWidth`) so growth reads as "the editor now covers the next cell" and
+the border never moves per keystroke; it **never shrinks mid-edit** (deletions leave the box); the
+ratchet rides in the `editorSession` mirror (`surfaceWidth`) so a virtualization remount reproduces
+the identical box. The growth bound is measured once at open (`ensureClamp`: scroller rect minus the
+surface's start edge, `rightPinnedWidth`, and the vertical scrollbar, RTL-mirrored) and re-measured
+only on `gridDimensionsSelector` changes — **never on scroll**. At the clamp the line scrolls
+internally with the browser keeping the caret visible (locked: A1; wrap-and-grow-down is the
+fast-follow). **Open/close** = `hasFocus && anchor` (longText's row-edit gate: one open surface at a
+time; unfocused formula cells show their live draft in the anchor; Tab-away/back remounts the
+editable with the caret at the end). **Hidden state:** when the edited row leaves the render window,
+the grid renders it as the zero-size virtual-focus row with `opacity: 0` — the surface inherits the
+invisibility with focus preserved, for free; the editor additionally mirrors the virtualizer's
+out-of-range predicate (row index vs `gridRenderContextSelector`) to set `pointer-events: none`, so
+the invisible box cannot swallow clicks aimed at real cells. **Focus containment:** the portal keeps
+the React tree, so keydown/mousedown inside the surface bubble to the cell (Enter/Tab/Escape and the
+`cellMouseDown`/`lastClickedCell` outside-click protection are unchanged); the one DOM-level gap —
+`useGridFocus.handleDocumentClick` compares the document-mouseup target against the _cell element_,
+which no longer contains the editor — is closed with a formula-feature **`canUpdateFocus` pipe
+processor** that vetoes focus updates for events landing inside
+`.MuiDataGrid-formulaEditorSurface` (without it, a mouseup with no recorded cell mousedown — for
+example a drag released over the editor — cleared the focus and stopped the edit mid-typing; pinned
+by a jsdom regression test). Clicking the surface chrome outside the editable `preventDefault`s the mousedown so
+the caret survives. **Accepted edge (locked decision):** a pinned formula column edited during a
+horizontal scroll lets the surface glide away from the stuck cell until scrolled back (self-healing —
+pinned cells are sticky/viewport-coupled while the surface is content-space; an event-driven position
+sync remains a possible later polish). a11y: the surface is `role="dialog"` labeled with the column
+header; the editable carries the same `aria-label`. No public API change; the only type change is the
+private `editorSession.surfaceWidth`/`surfaceClamp`.
+_Adversarial-review hardening (72-agent workflow, 2026-07-16/17):_ (1) entry/session-resume is
+strictly **once per mount** (`enteredRef`) — the effect's callbacks re-key on `computedWidth`, and
+without the guard a mid-edit column resize re-ran the resume on a live editor (selection collapse,
+caret snap, IME abort); (2) the **clamp is measured once per edit session** and persisted in the
+session mirror (`surfaceClamp`) — every later re-measure (grid-resize effect, remount restore) was
+scroll-skewed and could shrink the box, so those paths were removed and the width restores verbatim;
+(3) `showPopup` is gated on the hidden-state predicate (the body-portaled popup inherits neither the
+row's `opacity: 0` nor the surface's `pointer-events: none`); (4) the `canUpdateFocus` veto is scoped
+to this grid's own root element (multi-grid pages); (5) a **pinned** formula column's surface takes
+its inline start from the sticky cell's measured rect (pre-paint, once) — content-space
+`columnPositions` diverges from a stuck cell's visual position; (6) programmatic caret placement gets
+an explicit reveal (`scrollCaretIntoView` — range-rect delta, direction-agnostic) after entry/resume,
+since only native typing auto-reveals the caret; without it, entering a formula longer than the box
+left the caret invisible past the internal scroll (Bilal's live find). _Accepted/known:_ the
+row-child `role="dialog"` + attribute-carrying role-less anchor mirrors `GridEditLongTextCell`'s
+shipped structure (longText parity, pinned by core a11y tests) — not diverged from premium-side; the
+`rowIndex === lastRowIndex` one-row band where the virtualizer renders neither the real row nor the
+zero-size keep-alive unmounts ANY editor (pre-existing core gap, same bucket as the render-context
+tear; the session mirror recovers the formula editor on remount). _A2 (wrap-and-grow-down at the
+clamp) analysis:_ under this static architecture the upgrade is almost pure CSS — flip the editable
+to `pre-wrap`/`overflow-wrap: anywhere` and the surface to `top: -1px; min-height: calc(100% + 1px);
+height: auto` when the ratchet hits the clamp (top/start edges stay pinned; the bottom edge steps by
+line-height, the vertical analog of column snapping; z/opaque painting already correct). Real costs:
+a visible-bottom height cap measured once (then inner vertical scroll — growing up would move the
+pinned top edge) and a popup-reposition nudge (ResizeObserver → popper `update()`; popup-only, the
+editor stays static). String-based caret offsets are wrap-agnostic. Nothing in A1 is throwaway.
 
 **Invariant (all iterations): formula source lives only in row data; every cache and state slice is
 derived.** This is what keeps undo/redo, `processRowUpdate`, and controlled-rows scenarios working

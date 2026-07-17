@@ -151,6 +151,40 @@ export function normalizeSingleLine(text: string): string {
 }
 
 /**
+ * Scrolls the editable horizontally so the current caret is visible. The browser
+ * reveals the caret on its own only for native typing — a caret placed
+ * programmatically (edit entry, a session resume after a remount, an accepted
+ * suggestion) can land outside the visible box of a long, internally-scrolling
+ * formula, leaving the view stuck at the start. Delta-based on client rects, so
+ * it is direction-agnostic (works in RTL). A zero rect (no layout — jsdom — or an
+ * empty editable) is left alone.
+ */
+export function scrollCaretIntoView(root: HTMLElement): void {
+  const selection = root.ownerDocument.getSelection();
+  if (!selection || selection.rangeCount === 0) {
+    return;
+  }
+  const range = selection.getRangeAt(0);
+  // jsdom implements Range without getBoundingClientRect — and without layout the
+  // reveal is meaningless anyway.
+  if (!root.contains(range.startContainer) || typeof range.getBoundingClientRect !== 'function') {
+    return;
+  }
+  const rect = range.getBoundingClientRect();
+  if (rect.width === 0 && rect.height === 0 && rect.left === 0 && rect.top === 0) {
+    return;
+  }
+  const rootRect = root.getBoundingClientRect();
+  // A small margin keeps the caret off the very edge (readable next to the border).
+  const margin = 8;
+  if (rect.right > rootRect.right - margin) {
+    root.scrollLeft += rect.right - (rootRect.right - margin);
+  } else if (rect.left < rootRect.left + margin) {
+    root.scrollLeft -= rootRect.left + margin - rect.left;
+  }
+}
+
+/**
  * Imperatively rebuilds the editable's children from `segments`: a flat run of
  * text nodes (plain gaps) and colored `<span>`s (reference tokens), no block
  * elements. The editable has no React-controlled children, so this never fights

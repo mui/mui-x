@@ -228,13 +228,28 @@ export interface GridFormulaInternalCache {
    */
   pasteOrigin: { rowPosition: number | undefined; columnPosition: number | undefined } | null;
   /**
-   * Live mirror of the formula-editor session (engaged flag + caret offset),
-   * written by the focused editor on every user interaction. When
-   * virtualization remounts the editing cell (the edited row left the render
-   * window), the fresh editor instance resumes from it instead of snapping the
-   * caret to the end. Cleared on `cellEditStop`.
+   * Live mirror of the formula-editor session (engaged flag + caret offset +
+   * the grown floating-surface width), written by the focused editor on every
+   * user interaction. When virtualization remounts the editing cell (the
+   * edited row left the render window), the fresh editor instance resumes from
+   * it instead of snapping the caret to the end — reproducing the identical
+   * surface box, since the width ratchet never shrinks mid-edit. Cleared on
+   * `cellEditStop`.
    */
-  editorSession: { id: GridRowId; field: string; engaged: boolean; caret: number | null } | null;
+  editorSession: {
+    id: GridRowId;
+    field: string;
+    engaged: boolean;
+    caret: number | null;
+    surfaceWidth: number | null;
+    /**
+     * The growth bound captured when the surface first grew. Carried across
+     * remounts so a remounted editor never re-measures it at the current scroll
+     * position — a scroll-skewed re-measure could shrink the restored box, the
+     * exact wobble the grow-only ratchet forbids.
+     */
+    surfaceClamp: number | null;
+  } | null;
 }
 
 export interface GridFormulaPrivateApi {

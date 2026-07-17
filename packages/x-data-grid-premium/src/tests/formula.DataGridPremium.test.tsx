@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -107,8 +108,14 @@ describe('<DataGridPremium /> - Formulas', () => {
     return getCell(rowIndex, colIndex).querySelector('input')!;
   }
 
-  function getCellEditable(rowIndex: number, colIndex: number) {
-    return getCell(rowIndex, colIndex).querySelector<HTMLElement>('[contenteditable]')!;
+  // The editable lives in the floating surface portaled into the virtual SCROLLER
+  // (it overlays the cell but is not a DOM child of it — nor of the row). Only the
+  // focused cell's surface is open at a time, so a document-scoped query is
+  // unambiguous; the row/col args are kept for call-site readability.
+  function getCellEditable(_rowIndex: number, _colIndex: number) {
+    return document.querySelector<HTMLElement>(
+      '.MuiDataGrid-formulaEditorSurface [contenteditable]',
+    )!;
   }
 
   // The formula editor is a `contenteditable`, not an `<input>`: it has no
@@ -2281,9 +2288,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       total: index === 0 ? '=price * quantity' : index + 1,
     }));
 
-    function getEditableByField(id: number | string, field: string) {
+    function getEditableByRow(_id: number | string) {
+      // The editable lives in the scroller-portaled floating surface, not inside
+      // the row; only the focused cell's surface is open at a time.
       return document.querySelector<HTMLElement>(
-        `[data-id="${id}"] [data-field="${field}"] [contenteditable]`,
+        '.MuiDataGrid-formulaEditorSurface [contenteditable]',
       );
     }
 
@@ -2369,7 +2378,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       // the native, Excel-like behavior and not asserted here).
       await user.keyboard('9');
       await waitFor(() => {
-        expect(getEditableByField(0, 'total')!.textContent).to.equal('=price * quantity9');
+        expect(getEditableByRow(0)!.textContent).to.equal('=price * quantity9');
       });
     });
 
@@ -2379,7 +2388,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       await waitFor(() => {
         expect(getCellEditable(0, 3)).not.to.equal(null);
       });
-      const before = getEditableByField(0, 'total')!;
+      const before = getEditableByRow(0)!;
       // Engage the session: typing mirrors the caret through the input path.
       await user.keyboard('9');
       // A click placing the caret mirrors through the mouseup path (jsdom fires
@@ -2402,11 +2411,11 @@ describe('<DataGridPremium /> - Formulas', () => {
         apiRef.current!.setPinnedColumns({ left: ['total'] });
       });
       await waitFor(() => {
-        const after = getEditableByField(0, 'total');
+        const after = getEditableByRow(0);
         expect(after).not.to.equal(null);
         expect(after).not.to.equal(before);
       });
-      const after = getEditableByField(0, 'total')!;
+      const after = getEditableByRow(0)!;
       // The session survived the remount: caret restored, not snapped to the end.
       expect(getCaretOffset(after)).to.equal(6);
       // The suggestion popup does not reopen on its own after the remount.
@@ -2414,7 +2423,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       // Typing continues at the restored caret ("=price| * quantity9").
       await user.keyboard('X');
       await waitFor(() => {
-        expect(getEditableByField(0, 'total')!.textContent).to.equal('=priceX * quantity9');
+        expect(getEditableByRow(0)!.textContent).to.equal('=priceX * quantity9');
       });
     });
 
@@ -2431,6 +2440,8 @@ describe('<DataGridPremium /> - Formulas', () => {
         field: 'total',
         engaged: true,
         caret: 2,
+        surfaceWidth: null,
+        surfaceClamp: null,
       };
       fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
@@ -2457,7 +2468,7 @@ describe('<DataGridPremium /> - Formulas', () => {
         expect(getCellEditable(0, 3)).not.to.equal(null);
       });
       await user.keyboard('9');
-      const editable = getEditableByField(0, 'total')!;
+      const editable = getEditableByRow(0)!;
       fireEvent.keyDown(editable, { key: 'Enter' });
       fireEvent.keyUp(editable, { key: 'Enter' });
       await waitFor(() => {
@@ -2493,6 +2504,527 @@ describe('<DataGridPremium /> - Formulas', () => {
         apiRef.current!.stopCellEditMode({ id: 0, field: 'total' });
       });
       expect(formulaApi().caches.formula.editorSession).to.equal(null);
+    });
+  });
+
+  describe('floating editor surface', () => {
+    const SURFACE_SELECTOR = '.MuiDataGrid-formulaEditorSurface';
+
+    function getSurface() {
+      return document.querySelector<HTMLElement>(SURFACE_SELECTOR);
+    }
+
+    // The formula column is NOT last here, so the surface's growth has column
+    // gridlines to snap to (the price and quantity column edges).
+    const growColumns: GridColDef[] = [
+      { field: 'item' },
+      { field: 'total', type: 'number', allowFormulas: true, editable: true },
+      { field: 'price', type: 'number' },
+      { field: 'quantity', type: 'number' },
+    ];
+    const growRows = [{ id: 0, item: 'Apple', total: '=1', price: 2, quantity: 3 }];
+
+    it('opens a dialog surface portaled into the virtual scroller', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getSurface()).not.to.equal(null);
+      });
+      const surface = getSurface()!;
+      expect(surface.getAttribute('role')).to.equal('dialog');
+      expect(surface.getAttribute('aria-label')).to.equal('total');
+      // Portaled into the scroller, NOT the row: the render zone (which contains
+      // the rows) is a stacking context (`translate3d`), so a row-portaled surface
+      // could never paint above the reference-highlight overlay — a later scroller
+      // child. At scroller level the surface's z-index wins.
+      expect(surface.parentElement).to.equal(
+        document.querySelector('.MuiDataGrid-virtualScroller'),
+      );
+      expect(surface.closest('[role="row"]')).to.equal(null);
+      expect(getCell(0, 3).contains(surface)).to.equal(false);
+      // The in-cell anchor advertises the surface.
+      const anchor = getCell(0, 3).querySelector('.MuiDataGrid-formulaEditor')!;
+      expect(anchor.getAttribute('aria-expanded')).to.equal('true');
+      expect(anchor.getAttribute('aria-controls')).to.equal(surface.id);
+    });
+
+    it('derives its geometry from grid state as first-paint CSS', async () => {
+      // `=1` fits the cell, so the initial content-fit pass leaves the width alone.
+      const { user } = await render(
+        <Test rows={[{ id: 0, item: 'Apple', price: 2, quantity: 3, total: '=1' }]} />,
+      );
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getSurface()).not.to.equal(null);
+      });
+      // Position and width are inline styles computed from the column positions in
+      // grid state — there is no positioning engine that could move the surface
+      // after paint (the popper-based prototype flashed at the row origin until
+      // its async transform landed).
+      const surface = getSurface()!;
+      const columns = apiRef.current!.getVisibleColumns();
+      const cellStart =
+        columns[0].computedWidth + columns[1].computedWidth + columns[2].computedWidth;
+      expect(surface.style.insetInlineStart).to.equal(`${cellStart - 1}px`);
+      expect(surface.style.width).to.equal(`${columns[3].computedWidth + 1}px`);
+      // Block geometry: content-space row position below the sticky top container
+      // (the reference overlay's own coordinate recipe).
+      const { dimensions, rowsMeta } = apiRef.current!.state;
+      expect(surface.style.top).to.equal(
+        `${dimensions.topContainerHeight + rowsMeta.positions[0] - 1}px`,
+      );
+      // Single-row fixture: the last row's height comes from the page total.
+      expect(surface.style.height).to.equal(
+        `${rowsMeta.currentPageTotalHeight - rowsMeta.positions[0] + 1}px`,
+      );
+    });
+
+    it('mirrors the live draft in the in-cell anchor', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      setEditableValue(0, 3, '=1 + 2');
+      await waitFor(() => {
+        expect(getCell(0, 3).querySelector('.MuiDataGrid-formulaEditor')!.textContent).to.equal(
+          '=1 + 2',
+        );
+      });
+    });
+
+    it('keeps editing when a mouseup lands inside the surface without a cell mousedown', async () => {
+      // The surface is row-portaled, so the grid's document-mouseup focus logic
+      // does not recognize it as part of the editing cell — the formula feature's
+      // `canUpdateFocus` pipe processor must keep such a mouseup (e.g. a drag
+      // released over the editor) from clearing the focus and stopping the edit.
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      await user.keyboard('9');
+      fireEvent.mouseUp(getCellEditable(0, 3));
+      await microtasks();
+      expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
+      expect(formulaApi().caches.formula.editorSession).not.to.equal(null);
+    });
+
+    it('opens only the focused cell surface in row edit mode and hands it over on Tab', async () => {
+      const columns: GridColDef[] = [
+        { field: 'item' },
+        { field: 'total', type: 'number', allowFormulas: true, editable: true },
+        { field: 'price', type: 'number', allowFormulas: true, editable: true },
+        { field: 'quantity', type: 'number' },
+      ];
+      // Both cells hold formulas so both render the formula editor.
+      const rows = [{ id: 0, item: 'Apple', total: '=1 + 1', price: '=2', quantity: 3 }];
+      const { user } = await render(<Test editMode="row" rows={rows} columns={columns} />);
+      await user.dblClick(getCell(0, 1));
+      await waitFor(() => {
+        expect(document.querySelectorAll(SURFACE_SELECTOR)).to.have.length(1);
+      });
+      expect(getSurface()!.getAttribute('aria-label')).to.equal('total');
+      // Tab (handled by the grid's row editing) moves the focus — and with it the
+      // single open surface — to the next editable cell.
+      fireEvent.keyDown(getCellEditable(0, 1), { key: 'Tab' });
+      await waitFor(() => {
+        expect(getSurface()!.getAttribute('aria-label')).to.equal('price');
+      });
+      expect(document.querySelectorAll(SURFACE_SELECTOR)).to.have.length(1);
+      // The unfocused formula cell keeps showing its live draft in the anchor.
+      expect(getCell(0, 1).querySelector('.MuiDataGrid-formulaEditor')!.textContent).to.equal(
+        '=1 + 1',
+      );
+      // Tab back, dispatched on the currently open editable (the `price` cell's):
+      // the `total` editable remounts with the caret at the end.
+      fireEvent.keyDown(getSurface()!.querySelector<HTMLElement>('[contenteditable]')!, {
+        key: 'Tab',
+        shiftKey: true,
+      });
+      await waitFor(() => {
+        expect(getSurface()!.getAttribute('aria-label')).to.equal('total');
+      });
+      expect(getCaretOffset(getCellEditable(0, 1))).to.equal('=1 + 1'.length);
+    });
+
+    it.skipIf(isJSDOM)('overlays the edited cell exactly on entry', async () => {
+      // `=1` fits the cell: the surface must be exactly cell-sized at open (a
+      // longer seeded formula legitimately opens pre-grown to show it in full).
+      const { user } = await render(
+        <Test rows={[{ id: 0, item: 'Apple', price: 2, quantity: 3, total: '=1' }]} />,
+      );
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getSurface()).not.to.equal(null);
+      });
+      // The surface's interior is flush with the cell: its 1px border paints on
+      // the gridlines around the cell, so entering the edit shows no jump.
+      const cell = getCell(0, 3).getBoundingClientRect();
+      const surface = getSurface()!.getBoundingClientRect();
+      expect(Math.abs(surface.left - (cell.left - 1))).to.be.lessThan(1.5);
+      expect(Math.abs(surface.top - (cell.top - 1))).to.be.lessThan(1.5);
+      expect(Math.abs(surface.right - cell.right)).to.be.lessThan(1.5);
+      expect(Math.abs(surface.bottom - cell.bottom)).to.be.lessThan(1.5);
+    });
+
+    it.skipIf(isJSDOM)('grows to the next column gridline and never shrinks', async () => {
+      const { user } = await render(<Test rows={growRows} columns={growColumns} />);
+      await user.dblClick(getCell(0, 1));
+      await waitFor(() => {
+        expect(getCellEditable(0, 1)).not.to.equal(null);
+      });
+      // `=1` fits: the surface is exactly cell-sized at open.
+      const cell = getCell(0, 1).getBoundingClientRect();
+      expect(Math.abs(getSurface()!.getBoundingClientRect().right - cell.right)).to.be.lessThan(
+        1.5,
+      );
+      // Overflow the cell: the inline-end border steps to the NEXT column
+      // gridline (the surface now covers the whole neighboring cell).
+      setEditableValue(0, 1, '=111111111111');
+      await waitFor(() => {
+        const surface = getSurface()!.getBoundingClientRect();
+        expect(
+          Math.abs(surface.right - getCell(0, 2).getBoundingClientRect().right),
+        ).to.be.lessThan(1.5);
+      });
+      // The surface paints opaquely over the covered neighbor.
+      const covered = getCell(0, 2).getBoundingClientRect();
+      const onTop = document.elementFromPoint(covered.left + 5, covered.top + covered.height / 2);
+      expect(getSurface()!.contains(onTop)).to.equal(true);
+      // Growing further lands on the following gridline.
+      setEditableValue(0, 1, '=111111111111111111111111111');
+      await waitFor(() => {
+        const surface = getSurface()!.getBoundingClientRect();
+        expect(
+          Math.abs(surface.right - getCell(0, 3).getBoundingClientRect().right),
+        ).to.be.lessThan(1.5);
+      });
+      // Deleting never shrinks the box mid-edit — its edges must not wobble.
+      setEditableValue(0, 1, '=1');
+      await microtasks();
+      const surface = getSurface()!.getBoundingClientRect();
+      expect(Math.abs(surface.right - getCell(0, 3).getBoundingClientRect().right)).to.be.lessThan(
+        1.5,
+      );
+    });
+
+    it.skipIf(isJSDOM)(
+      'clamps the growth at the viewport edge and scrolls internally',
+      async () => {
+        const { user } = await render(<Test />);
+        await user.dblClick(getCell(0, 3));
+        await waitFor(() => {
+          expect(getCellEditable(0, 3)).not.to.equal(null);
+        });
+        setEditableValue(0, 3, `=${'1'.repeat(60)}`);
+        // The single line scrolls inside the clamped surface, keeping the caret
+        // visible without scrolling the grid.
+        await waitFor(() => {
+          const editable = getCellEditable(0, 3);
+          expect(editable.scrollWidth).to.be.greaterThan(editable.clientWidth);
+        });
+        const scroller = document
+          .querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!
+          .getBoundingClientRect();
+        const surface = getSurface()!.getBoundingClientRect();
+        expect(surface.right).to.be.lessThan(scroller.right + 1);
+        // It still grew as far as the viewport allows.
+        expect(surface.right).to.be.greaterThan(getCell(0, 3).getBoundingClientRect().right + 50);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'paints above the reference-highlight rectangles it grows over',
+      async () => {
+        // The formula references `price`, whose highlight rectangle sits on the
+        // cell the surface grows over — the surface must cover the rectangle, not
+        // the other way around (regression: the row-portaled surface was trapped
+        // in the render zone's stacking context and the overlay painted through
+        // the editor).
+        const rows = [
+          { id: 0, item: 'Apple', total: '=price + 111111111111', price: 2, quantity: 3 },
+        ];
+        const { user } = await render(<Test rows={rows} columns={growColumns} />);
+        await user.dblClick(getCell(0, 1));
+        await waitFor(() => {
+          expect(getCellEditable(0, 1)).not.to.equal(null);
+        });
+        // The rectangle over the referenced price cell exists...
+        await waitFor(() => {
+          expect(
+            document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight'),
+          ).to.have.length(1);
+        });
+        // ...and the surface grew over that cell...
+        await waitFor(() => {
+          const surface = getSurface()!.getBoundingClientRect();
+          expect(surface.right).to.be.greaterThan(getCell(0, 2).getBoundingClientRect().left + 20);
+        });
+        // ...so the topmost element there is the surface, not the overlay rect.
+        const covered = getCell(0, 2).getBoundingClientRect();
+        const onTop = document.elementFromPoint(
+          covered.left + 10,
+          covered.top + covered.height / 2,
+        );
+        expect(getSurface()!.contains(onTop)).to.equal(true);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'reveals the caret at the end of a formula longer than the maximum width on entry',
+      async () => {
+        // Longer than the whole grid viewport: the surface opens at its clamp and
+        // the line scrolls internally. The entry caret goes to the END — and must
+        // be scrolled into view (programmatic caret placement gets no native
+        // reveal from the browser).
+        const longFormula = `=${'1'.repeat(160)}`;
+        const { user } = await render(
+          <Test rows={[{ id: 0, item: 'Apple', price: 2, quantity: 3, total: longFormula }]} />,
+        );
+        await user.dblClick(getCell(0, 3));
+        await waitFor(() => {
+          expect(getCellEditable(0, 3).textContent).to.equal(longFormula);
+        });
+        const editable = getCellEditable(0, 3);
+        expect(editable.scrollWidth).to.be.greaterThan(editable.clientWidth);
+        expect(getCaretOffset(editable)).to.equal(longFormula.length);
+        // The view shows the end of the formula, not the start.
+        await waitFor(() => {
+          expect(editable.scrollLeft).to.be.greaterThan(
+            editable.scrollWidth - editable.clientWidth - 10,
+          );
+        });
+      },
+    );
+
+    it.skipIf(isJSDOM)('moves with the row during native scroll (no repositioning)', async () => {
+      const manyRows = Array.from({ length: 60 }, (_, index) => ({
+        id: index,
+        item: `Item ${index}`,
+        price: index + 1,
+        quantity: 2,
+        total: index === 0 ? '=price * quantity' : index + 1,
+      }));
+      const { user } = await render(
+        <Test rows={manyRows} autoHeight={false} disableVirtualization={false} />,
+      );
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+      const topBefore = getCell(0, 3).getBoundingClientRect().top;
+      // Scroll synchronously: the surface is a row child in content space, so it
+      // moves with the cell in the same frame. A JS-repositioned popup lags here.
+      scroller.scrollTop = 30;
+      expect(scroller.scrollTop).to.equal(30);
+      const cell = getCell(0, 3).getBoundingClientRect();
+      // The scroll took effect — the cell really moved (guards a vacuous pass).
+      expect(cell.top).to.be.lessThan(topBefore);
+      const surface = getSurface()!.getBoundingClientRect();
+      expect(Math.abs(surface.top - (cell.top - 1))).to.be.lessThan(1.5);
+      expect(Math.abs(surface.left - (cell.left - 1))).to.be.lessThan(1.5);
+    });
+
+    it.skipIf(isJSDOM)(
+      'hides and disables pointer events while the edited row is out of the render window',
+      async () => {
+        const manyRows = Array.from({ length: 60 }, (_, index) => ({
+          id: index,
+          item: `Item ${index}`,
+          price: index + 1,
+          quantity: 2,
+          total: index === 0 ? '=price * quantity' : index + 1,
+        }));
+        const { user } = await render(
+          <Test rows={manyRows} autoHeight={false} disableVirtualization={false} />,
+        );
+        await user.dblClick(getCell(0, 3));
+        await waitFor(() => {
+          expect(getCellEditable(0, 3)).not.to.equal(null);
+        });
+        // Open the suggestion popup: unlike the surface, it is body-portaled and
+        // inherits neither the row's opacity nor the surface's pointer-events, so
+        // it must close explicitly while the row is hidden. The caret must sit at
+        // the end of the typed prefix for the suggestion context to see it.
+        const editable = getCellEditable(0, 3);
+        editable.textContent = '=SU';
+        setCaretOffset(editable, 3);
+        fireEvent.input(editable);
+        await waitFor(() => {
+          expect(document.querySelector('[role="listbox"]')).not.to.equal(null);
+        });
+        const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+        scroller.scrollTop = 1500;
+        // The edited row renders as the zero-size virtual-focus row: `opacity: 0`
+        // hides the surface with it (focus preserved); the surface additionally
+        // drops pointer events so the invisible box cannot swallow clicks, and
+        // the suggestion popup closes.
+        await waitFor(() => {
+          const surface = getSurface();
+          expect(surface).not.to.equal(null);
+          expect(getComputedStyle(surface!).pointerEvents).to.equal('none');
+        });
+        const row = document.querySelector<HTMLElement>('[data-id="0"]')!;
+        expect(getComputedStyle(row).opacity).to.equal('0');
+        expect(document.querySelector('[role="listbox"]')).to.equal(null);
+        // Scrolling back restores visibility and interactivity.
+        scroller.scrollTop = 0;
+        await waitFor(() => {
+          expect(getComputedStyle(getSurface()!).pointerEvents).not.to.equal('none');
+        });
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'reopens at the exact cell position with the grown width when the editing cell remounts',
+      async () => {
+        const { user } = await render(<Test />);
+        await user.dblClick(getCell(0, 3));
+        await waitFor(() => {
+          expect(getCellEditable(0, 3)).not.to.equal(null);
+        });
+        // Grow the box, then delete: the box must keep its grown width — across
+        // the remount too, via the session mirror (a content-fit remount would
+        // shrink it back to the cell width).
+        setEditableValue(0, 3, `=${'1'.repeat(40)}`);
+        await waitFor(() => {
+          expect(getSurface()!.offsetWidth).to.be.greaterThan(
+            getCell(0, 3).getBoundingClientRect().width + 50,
+          );
+        });
+        setEditableValue(0, 3, '=19');
+        await microtasks();
+        const widthBefore = getSurface()!.offsetWidth;
+        // Pinning the column mid-edit remounts the editing cell — the same class of
+        // remount virtualization causes. The remounted surface must paint at the
+        // (now pinned) cell's exact position on its first frame, draft and grown
+        // width intact.
+        await act(async () => {
+          apiRef.current!.setPinnedColumns({ left: ['total'] });
+        });
+        await waitFor(() => {
+          // Pinned left: `total` is now the first column.
+          const cell = getCell(0, 0).getBoundingClientRect();
+          const surface = getSurface();
+          expect(surface).not.to.equal(null);
+          const surfaceRect = surface!.getBoundingClientRect();
+          expect(Math.abs(surfaceRect.left - (cell.left - 1))).to.be.lessThan(1.5);
+          expect(Math.abs(surfaceRect.top - (cell.top - 1))).to.be.lessThan(1.5);
+        });
+        expect(getCellEditable(0, 0).textContent).to.equal('=19');
+        expect(Math.abs(getSurface()!.offsetWidth - widthBefore)).to.be.lessThan(2);
+      },
+    );
+
+    it.skipIf(isJSDOM)('anchors to the inline start and grows leftward in RTL', async () => {
+      const rtlTheme = createTheme({ direction: 'rtl' });
+      const { user } = await render(
+        <ThemeProvider theme={rtlTheme}>
+          <div dir="rtl">
+            <Test rows={growRows} columns={growColumns} />
+          </div>
+        </ThemeProvider>,
+      );
+      await user.dblClick(getCell(0, 1));
+      await waitFor(() => {
+        expect(getCellEditable(0, 1)).not.to.equal(null);
+      });
+      // The inline start in RTL is the RIGHT edge: the surface pins there and
+      // never moves it.
+      const cell = getCell(0, 1).getBoundingClientRect();
+      expect(
+        Math.abs(getSurface()!.getBoundingClientRect().right - (cell.right + 1)),
+      ).to.be.lessThan(1.5);
+      // Growth extends toward the inline end (leftward), landing on the next
+      // column gridline.
+      setEditableValue(0, 1, '=111111111111');
+      await waitFor(() => {
+        const surface = getSurface()!.getBoundingClientRect();
+        expect(Math.abs(surface.left - getCell(0, 2).getBoundingClientRect().left)).to.be.lessThan(
+          1.5,
+        );
+      });
+      // The RTL clamp: growth stops at the viewport's LEFT edge and the line
+      // scrolls internally beyond it.
+      setEditableValue(0, 1, `=${'1'.repeat(60)}`);
+      await waitFor(() => {
+        const editable = getCellEditable(0, 1);
+        expect(editable.scrollWidth).to.be.greaterThan(editable.clientWidth);
+      });
+      const scroller = document
+        .querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!
+        .getBoundingClientRect();
+      expect(getSurface()!.getBoundingClientRect().left).to.be.greaterThan(scroller.left - 1);
+    });
+
+    it.skipIf(isJSDOM)('overlays a right-pinned formula cell at its stuck position', async () => {
+      // Content is wider than the viewport, so the right-pinned cell's sticky
+      // (visual) position diverges from its content-space layout slot — the
+      // surface must be measured onto the stuck cell, not the layout slot.
+      const wideColumns: GridColDef[] = [
+        { field: 'item' },
+        { field: 'price', type: 'number' },
+        { field: 'quantity', type: 'number' },
+        { field: 'extra1' },
+        { field: 'extra2' },
+        { field: 'total', type: 'number', allowFormulas: true, editable: true },
+      ];
+      const rows = [
+        { id: 0, item: 'Apple', price: 2, quantity: 3, extra1: 'a', extra2: 'b', total: '=1' },
+      ];
+      const { user } = await render(
+        <Test
+          rows={rows}
+          columns={wideColumns}
+          initialState={{ pinnedColumns: { right: ['total'] } }}
+        />,
+      );
+      await user.dblClick(getCell(0, 5));
+      await waitFor(() => {
+        expect(getSurface()).not.to.equal(null);
+      });
+      const cell = getCell(0, 5).getBoundingClientRect();
+      const surface = getSurface()!.getBoundingClientRect();
+      expect(Math.abs(surface.left - (cell.left - 1))).to.be.lessThan(1.5);
+      expect(Math.abs(surface.top - (cell.top - 1))).to.be.lessThan(1.5);
+    });
+
+    it.skipIf(isJSDOM)('follows a custom row height', async () => {
+      const { user } = await render(<Test rowHeight={70} />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getSurface()).not.to.equal(null);
+      });
+      const cell = getCell(0, 3).getBoundingClientRect();
+      const surface = getSurface()!.getBoundingClientRect();
+      expect(Math.abs(surface.height - (cell.height + 1))).to.be.lessThan(1.5);
+    });
+
+    it.skipIf(isJSDOM)('stops growing at the right-pinned column seam', async () => {
+      const { user } = await render(
+        <Test
+          rows={growRows}
+          columns={growColumns}
+          initialState={{ pinnedColumns: { right: ['quantity'] } }}
+        />,
+      );
+      await user.dblClick(getCell(0, 1));
+      await waitFor(() => {
+        expect(getCellEditable(0, 1)).not.to.equal(null);
+      });
+      setEditableValue(0, 1, `=${'1'.repeat(60)}`);
+      // The clamp subtracts the pinned section: the surface stops at the seam
+      // instead of covering the frozen column.
+      await waitFor(() => {
+        const editable = getCellEditable(0, 1);
+        expect(editable.scrollWidth).to.be.greaterThan(editable.clientWidth);
+      });
+      const pinned = getCell(0, 3).getBoundingClientRect();
+      const surface = getSurface()!.getBoundingClientRect();
+      expect(surface.right).to.be.lessThan(pinned.left + 2);
+      expect(surface.right).to.be.greaterThan(getCell(0, 1).getBoundingClientRect().right);
     });
   });
 

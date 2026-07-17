@@ -230,6 +230,10 @@ Double-clicking a plain cell opens the column type's default editor, and a colum
 - To remove a formula, commit a plain value in its place, or clear the cell content.
 - The editor is single-line—line breaks in typed or pasted content are removed.
 
+The formula editor floats over the cell and grows with the formula: when the content no longer fits the column, the editor extends over the neighboring cells—up to the visible edge of the grid—so the formula stays readable while you type.
+Deleting content never shrinks the editor mid-edit, and a formula longer than the available width scrolls horizontally inside it.
+In row edit mode, only the focused cell shows the floating editor; the row's other formula cells display their current draft in place.
+
 `processRowUpdate` and undo/redo operate on the formula source, so persisting and restoring rows keeps formulas working for free:
 
 ```tsx

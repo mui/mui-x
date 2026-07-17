@@ -16,8 +16,9 @@ import {
   gridPivotActiveSelector,
   GridStrategyGroup,
   RowGroupingStrategy,
+  useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
+import type { GridPipeProcessor, GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { GridStatePremium } from '../../../models/gridStatePremium';
@@ -48,6 +49,7 @@ import {
   gridFormulaLookupSelector,
 } from './gridFormulaSelectors';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
+import { GRID_FORMULA_EDITOR_SURFACE_CLASS } from '../../../components/GridFormulaEditor';
 import {
   areColumnsSignaturesEqual,
   areFormulaFieldsEqual,
@@ -445,6 +447,32 @@ export const useGridFormula = (
   const handleClipboardPasteStart = React.useCallback(() => {
     apiRef.current.caches.formula.pasteOrigin = null;
   }, [apiRef]);
+
+  // The formula editor floats in a surface portaled into the ROW, so the grid's
+  // DOM-containment checks (`handleDocumentClick` compares the mouseup target
+  // against the editing CELL element) do not recognize it as part of the editing
+  // cell. Without this guard, a document mouseup landing inside the surface whose
+  // mousedown did not record a cell (e.g. a drag-selection that started outside
+  // the grid and was released over the editor) clears the cell focus, which stops
+  // the edit mid-typing.
+  const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
+    (initialValue, { event }) => {
+      const target = event.target as Element | null;
+      if (target === null || typeof target.closest !== 'function') {
+        return initialValue;
+      }
+      const surface = target.closest(`.${GRID_FORMULA_EDITOR_SURFACE_CLASS}`);
+      // Scoped to THIS grid's own surface: with multiple grids on the page, a
+      // click inside another grid's formula editor is an ordinary outside click
+      // for this grid and must still clear/move its focus.
+      if (surface !== null && apiRef.current.rootElementRef?.current?.contains(surface) === true) {
+        return false;
+      }
+      return initialValue;
+    },
+    [apiRef],
+  );
+  useGridRegisterPipeProcessor(apiRef, 'canUpdateFocus', canUpdateFocus);
 
   useGridEvent(apiRef, 'rowsSet', handleRowsSet);
   useGridEvent(apiRef, 'sortedRowsSet', handleSortedRowsSet);

@@ -1,8 +1,20 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { gridEditCellStateSelector, useGridSelector } from '@mui/x-data-grid-pro';
+import {
+  gridColumnPositionsSelector,
+  gridColumnsTotalWidthSelector,
+  gridDimensionsSelector,
+  gridEditCellStateSelector,
+  gridPinnedColumnsSelector,
+  gridRenderContextSelector,
+  gridRowsMetaSelector,
+  gridVisibleColumnFieldsSelector,
+  useGridSelector,
+} from '@mui/x-data-grid-pro';
 import type { GridRenderEditCellParams, GridSlotProps } from '@mui/x-data-grid-pro';
 import { NotRendered, vars } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -20,28 +32,69 @@ import {
   getSelectionOffsets,
   normalizeSingleLine,
   renderSegments,
+  scrollCaretIntoView,
   setCaretOffset,
   setSelectionOffsets,
 } from './formulaEditorCaret';
 import type { FormulaTextSegment } from '../hooks/features/formula/gridFormulaReferenceHighlights';
 
-// The editor root. Replaces `GridEditInputCell` for formula cells: it matches the
-// edit-input metrics (`font: body`, `padding: 1px 0`, inner `padding: 0 16px`) so
-// the cell looks identical, vertically centers the single editable line, and hosts
-// the palette CSS vars the colored tokens resolve against (light/dark).
+// The in-cell anchor. It replaces `GridEditInputCell` in the cell itself, but the
+// real editor lives in the floating surface portaled into the row: the anchor only
+// shows the live (ellipsized) draft — visible when the surface is closed, e.g. the
+// unfocused cells of a row in row edit mode — and carries the aria relationship to
+// the surface.
 const GridFormulaEditorRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FormulaEditor',
-})(({ theme }) => ({
+})({
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
   width: '100%',
   height: '100%',
-  padding: '1px 0',
   boxSizing: 'border-box',
   font: vars.typography.font.body,
+});
+
+const GridFormulaEditorAnchorValue = styled('div')({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  width: '100%',
+  paddingInline: 10,
+  textAlign: 'start',
+});
+
+// The floating editing surface. It overlays the cell and grows inline-end with the
+// formula. Its geometry is deliberately STATIC — derived from grid state and
+// applied as first-paint CSS, with no positioning engine (no Popper): nothing
+// repositions asynchronously, which is what makes it impossible for the surface to
+// flash or drift. It is normally portaled into the virtual SCROLLER and positioned
+// in content-space coordinates (the reference overlay's own coordinate space), so
+// native scrolling moves it in lockstep with the rows; a pinned row's surface is
+// portaled into the row element instead (block edges welded to the row box).
+// z-index: 30 — at scroller level this paints above the render zone and the
+// reference-highlight overlay (both `z: auto`; the render zone's `translate3d`
+// makes it a stacking context, which is why a row-portaled surface could NOT
+// out-z the overlay) while staying below the sticky header and pinned-row
+// containers (z 40), which must keep covering content scrolled beneath them.
+const GridFormulaEditorSurface = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'FormulaEditorSurface',
+})(({ theme }) => ({
+  position: 'absolute',
+  display: 'flex',
+  alignItems: 'center',
+  boxSizing: 'border-box',
+  zIndex: 30,
+  font: vars.typography.font.body,
   color: (theme.vars || theme).palette.text.primary,
+  // Opaque: the surface grows over neighboring cells and the in-grid reference
+  // rectangles, which must not bleed through.
+  background: vars.colors.background.base,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
+  boxShadow: (theme.vars || theme).shadows[4],
+  overflow: 'hidden',
   ...getFormulaReferencePaletteStyles(theme),
 }));
 
@@ -130,6 +183,15 @@ const GridFormulaEditorOptionDetail = styled('span')(({ theme }) => ({
   textOverflow: 'ellipsis',
 }));
 
+/**
+ * Class of the floating editing surface. Also consumed by the formula feature's
+ * `canUpdateFocus` pipe processor: the surface is row-portaled, so the grid's
+ * DOM-containment checks do not recognize it as part of the editing cell — the
+ * processor uses this class to keep pointer events inside it from clearing the
+ * cell focus (which would stop the edit).
+ */
+export const GRID_FORMULA_EDITOR_SURFACE_CLASS = 'MuiDataGrid-formulaEditorSurface';
+
 export interface GridFormulaEditorProps extends GridRenderEditCellParams {
   /**
    * Whether references are shown in A1 notation (column letters / 1-based rows)
@@ -174,20 +236,119 @@ function segmentsEqual(a: FormulaTextSegment[], b: FormulaTextSegment[]): boolea
 }
 
 /**
- * Single-layer formula editor: a `contenteditable` whose children are the colored
- * reference token `<span>`s themselves, so the caret, the native selection, and the
- * colors share one element (nothing to keep aligned). It renders inline in the cell,
- * derives its DOM from the edit-state value, syncs typed text back with no debounce,
- * and layers the autocomplete popup (suggestions from `useGridFormulaAutocomplete`,
- * the highlight colors from `useGridFormulaReferenceModel`). Caret save/restore
- * around each rebuild, IME-composition guarding and explicit paste/newline handling
- * are the cost of `contenteditable`; each is handled below.
+ * The smallest surface width that fits `needed` pixels, preferring widths whose
+ * inline-end border lands on a column gridline (so a grown surface reads as
+ * "covering whole cells" and the border moves rarely, never per keystroke).
+ * `snapWidths` is ascending; `clamp` is the hard bound at the viewport's visible
+ * inline-end edge.
+ */
+function computeSnappedWidth(needed: number, snapWidths: number[], clamp: number): number {
+  if (needed >= clamp) {
+    return clamp;
+  }
+  for (let index = 0; index < snapWidths.length; index += 1) {
+    if (snapWidths[index] >= needed) {
+      return Math.min(snapWidths[index], clamp);
+    }
+  }
+  // Past the last gridline (the grid's content is narrower than the clamp):
+  // exact fit — there is no boundary left to snap to.
+  return needed;
+}
+
+/**
+ * Formula edit component: an in-cell anchor plus a floating surface that overlays
+ * the cell and grows inline-end with the formula (the long-text editing pattern,
+ * with content-driven growth). The anchor mirrors the live draft for the unfocused
+ * cells of row edit mode; only the focused cell opens its surface.
  */
 function GridFormulaEditor(props: GridFormulaEditorProps) {
-  const { id, field, hasFocus, a1Notation, suggestionsEnabled } = props;
+  const { id, field, hasFocus, cellMode, rowNode } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
+  const [rootEl, setRootEl] = React.useState<HTMLDivElement | null>(null);
 
+  const editState = useGridSelector(apiRef, gridEditCellStateSelector, { rowId: id, field });
+  const text = valueToText(editState?.value);
+
+  const surfaceId = `${id}-${field}-formula-editor-surface`;
+  // Only the focused cell opens the surface — row edit mode puts every cell of the
+  // row in edit mode at once, and only one floating editor may show (the same gate
+  // as GridEditLongTextCell).
+  const surfaceOpen = hasFocus && rootEl !== null;
+  const rowElement =
+    rootEl !== null ? (rootEl.closest('[role="row"]') as HTMLElement | null) : null;
+  // Portal target. Normal rows: the virtual SCROLLER — the render zone (which
+  // contains the rows) carries a `translate3d` and is therefore a stacking
+  // context, so a surface inside a row can never paint above the reference
+  // overlay (a later scroller child); at scroller level the surface's own
+  // z-index wins. The scroller is a positioned scroll container, so a child
+  // absolutely positioned in content coordinates scrolls natively with the
+  // rows — the static-geometry invariant is unchanged. Pinned rows live in the
+  // sticky top/bottom containers (z 40, above the overlay already) and have no
+  // content-space position, so they keep the row portal.
+  const isPinnedRow = rowNode.type === 'pinnedRow';
+  const scrollerElement = apiRef.current.virtualScrollerRef?.current ?? null;
+  const inScroller = !isPinnedRow && scrollerElement !== null;
+  const portalTarget = inScroller ? scrollerElement : rowElement;
+
+  return (
+    <GridFormulaEditorRoot
+      ref={setRootEl}
+      className="MuiDataGrid-formulaEditor"
+      tabIndex={cellMode === 'edit' && rootProps.editMode === 'row' ? 0 : undefined}
+      aria-controls={surfaceOpen ? surfaceId : undefined}
+      aria-expanded={surfaceOpen}
+    >
+      <GridFormulaEditorAnchorValue>{text}</GridFormulaEditorAnchorValue>
+      {surfaceOpen && portalTarget !== null
+        ? // The portal keeps the React tree, so events raised inside the surface
+          // still bubble through the cell (outside-click commit protection,
+          // Enter/Tab/Escape handling) exactly as from an inline editor.
+          ReactDOM.createPortal(
+            <GridFormulaEditorFloating {...props} surfaceId={surfaceId} inScroller={inScroller} />,
+            portalTarget,
+          )
+        : null}
+    </GridFormulaEditorRoot>
+  );
+}
+
+interface GridFormulaEditorFloatingProps extends GridFormulaEditorProps {
+  surfaceId: string;
+  /**
+   * Whether the surface is portaled into the virtual scroller (content-space
+   * coordinates) rather than the row element (pinned rows).
+   */
+  inScroller: boolean;
+}
+
+/**
+ * The floating editing surface and the single-layer formula editor inside it: a
+ * `contenteditable` whose children are the colored reference token `<span>`s
+ * themselves, so the caret, the native selection, and the colors share one element
+ * (nothing to keep aligned). It derives its DOM from the edit-state value, syncs
+ * typed text back with no debounce, and layers the autocomplete popup (suggestions
+ * from `useGridFormulaAutocomplete`, the highlight colors from
+ * `useGridFormulaReferenceModel`). Caret save/restore around each rebuild,
+ * IME-composition guarding and explicit paste/newline handling are the cost of
+ * `contenteditable`; each is handled below.
+ *
+ * The surface's width is a grow-only ratchet: it starts at the cell's width (or
+ * the seeded formula's width), steps to the next column gridline whenever the
+ * content overflows, and never shrinks during the edit — deletions leave the box
+ * in place, so its edges never wobble. Growth is clamped at the viewport's visible
+ * inline-end edge (measured once at open); past the clamp the single line scrolls
+ * internally, with the browser keeping the caret in view.
+ */
+function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
+  const { id, field, hasFocus, colDef, a1Notation, suggestionsEnabled, surfaceId, inScroller } =
+    props;
+  const apiRef = useGridPrivateApiContext();
+  const rootProps = useGridRootProps();
+  const isRtl = useRtl();
+
+  const surfaceRef = React.useRef<HTMLDivElement | null>(null);
   const editableRef = React.useRef<HTMLDivElement | null>(null);
   // The caret to restore on the next rebuild (set by typing/accepting); `null`
   // means "no explicit caret — place at the end on entry, otherwise preserve".
@@ -206,6 +367,10 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
   // text change) apart from a pure recolor (text unchanged) for caret placement.
   const renderedSegmentsRef = React.useRef<FormulaTextSegment[]>([]);
   const renderedTextRef = React.useRef('');
+  // The ratcheted surface width (grow-only for the life of the edit) and the
+  // measured growth bound. `null` until first measured/grown.
+  const ratchetRef = React.useRef<number | null>(null);
+  const clampRef = React.useRef<number | null>(null);
 
   const editState = useGridSelector(apiRef, gridEditCellStateSelector, { rowId: id, field });
   const text = valueToText(editState?.value);
@@ -222,6 +387,21 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [suggestion, setSuggestion] = React.useState<GridFormulaSuggestionState | null>(null);
 
+  // Whether the edited row is currently rendered as the zero-size virtual-focus
+  // row (it left the vertical render window). The grid hides that row with
+  // `opacity: 0`, taking the surface with it; the surface additionally drops
+  // pointer-events so the invisible box cannot intercept clicks, and the
+  // (body-portaled) suggestion popup — which inherits neither — closes. This
+  // mirrors the virtualizer's own out-of-range condition for the focused row.
+  const surfaceHidden = useGridSelector(apiRef, () => {
+    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id) as number | undefined;
+    if (rowIndex === undefined) {
+      return false;
+    }
+    const renderContext = gridRenderContextSelector(apiRef);
+    return rowIndex < renderContext.firstRowIndex || rowIndex > renderContext.lastRowIndex;
+  });
+
   const options = React.useMemo(() => suggestion?.options ?? [], [suggestion]);
   const signatureHelp = suggestion?.signatureHelp ?? null;
   // The list only opens for a non-empty partial token (the user is actively typing
@@ -229,12 +409,136 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
   // shows at most signature help and never traps Enter/Tab, so a completed formula
   // commits on Enter instead of accepting a stray suggestion.
   const hasList = (suggestion?.token ?? '') !== '' && options.length > 0;
-  const showPopup = suggestionsEnabled && hasFocus && open && (hasList || signatureHelp !== null);
+  const showPopup =
+    suggestionsEnabled && hasFocus && open && !surfaceHidden && (hasList || signatureHelp !== null);
   const popupId = `${id}-${field}-formula-autocomplete`;
   const activeDescendant =
     showPopup && hasList
       ? `${popupId}-option-${Math.min(activeIndex, options.length - 1)}`
       : undefined;
+
+  // ----- Static geometry (grid state, applied as CSS in the render) -----
+
+  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
+  const visibleFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
+  const isPinnedColumn =
+    (pinnedColumns.left ?? []).includes(field) || (pinnedColumns.right ?? []).includes(field);
+
+  const columnIndex = visibleFields.indexOf(field);
+  // The column's content-space inline offset — the exact coordinate the row lays
+  // its cells out with, so the surface lands on the cell by construction.
+  const cellStart = columnPositions[columnIndex] ?? 0;
+  // +1: the surface's inline borders sit ON the gridlines (start border on the
+  // line before the cell, end border on the line after), keeping the interior —
+  // and the text origin, via the matching 10px padding — flush with the cell's.
+  const minWidth = colDef.computedWidth + 1;
+
+  // The row's content-space block position — `rowsMeta.positions` below the sticky
+  // top container, the same recipe the reference overlay uses (both live in the
+  // scroller's content space, so they can never disagree). Reactive: sorting or a
+  // row-height change mid-edit re-derives it in the same commit. In row-portal
+  // mode (pinned rows) the block edges weld to the row box instead.
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  let surfaceBlockStyles: React.CSSProperties = { top: -1, bottom: 0 };
+  if (inScroller) {
+    const rowIndexInPage = apiRef.current.getRowIndexRelativeToVisibleRows(id) as
+      | number
+      | undefined;
+    const rowPosition = rowsMeta.positions[rowIndexInPage ?? 0] ?? 0;
+    const nextRowPosition = rowsMeta.positions[(rowIndexInPage ?? 0) + 1];
+    const rowHeight =
+      (nextRowPosition !== undefined ? nextRowPosition : rowsMeta.currentPageTotalHeight) -
+      rowPosition;
+    surfaceBlockStyles = {
+      top: (dimensions.topContainerHeight ?? 0) + rowPosition - 1,
+      height: rowHeight + 1,
+    };
+  }
+
+  // Candidate widths whose inline-end border lands on a column gridline, ascending,
+  // ending at the grid's content edge.
+  const snapWidths = React.useMemo(() => {
+    const widths: number[] = [];
+    if (columnIndex === -1) {
+      return widths;
+    }
+    for (let index = columnIndex + 1; index < columnPositions.length; index += 1) {
+      widths.push(columnPositions[index] - cellStart + 1);
+    }
+    widths.push(columnsTotalWidth - cellStart + 1);
+    return widths;
+  }, [columnPositions, columnIndex, cellStart, columnsTotalWidth]);
+
+  const appliedWidth = React.useCallback(
+    () => Math.max(ratchetRef.current ?? 0, minWidth),
+    [minWidth],
+  );
+
+  // The growth bound: from the surface's start edge to the visible inline-end edge
+  // of the viewport, stopping at the right-pinned seam and the vertical scrollbar.
+  // Measured ONCE per edit session, when growth first needs it, and never again —
+  // not on scroll and not on grid resize: the surface lives in content space, so
+  // any later measurement is skewed by the scroll position and could shrink the
+  // box (the wobble the ratchet forbids). The value rides in the session mirror,
+  // so a remounted editor resumes the session's bound instead of re-measuring.
+  // (A grid resized smaller mid-edit keeps the grown box; it simply extends out of
+  // view like any wide content while the editable keeps scrolling internally.)
+  const ensureClamp = React.useCallback(() => {
+    if (clampRef.current !== null) {
+      return clampRef.current;
+    }
+    const session = apiRef.current.caches.formula.editorSession;
+    if (
+      session !== null &&
+      session.id === id &&
+      session.field === field &&
+      session.surfaceClamp !== null
+    ) {
+      clampRef.current = session.surfaceClamp;
+      return clampRef.current;
+    }
+    const surface = surfaceRef.current;
+    const scroller = apiRef.current.virtualScrollerRef?.current;
+    let available = 0;
+    if (surface && scroller) {
+      const dim = gridDimensionsSelector(apiRef);
+      const scrollerRect = scroller.getBoundingClientRect();
+      const surfaceRect = surface.getBoundingClientRect();
+      const scrollbar = dim.hasScrollY ? dim.scrollbarSize : 0;
+      available = isRtl
+        ? surfaceRect.right - scrollerRect.left - dim.rightPinnedWidth - scrollbar
+        : scrollerRect.right - surfaceRect.left - dim.rightPinnedWidth - scrollbar;
+    }
+    clampRef.current = Math.max(minWidth, Math.floor(available));
+    return clampRef.current;
+  }, [apiRef, field, id, isRtl, minWidth]);
+
+  // Grow-only: widen the surface when the single-line content overflows the
+  // editable, snapping the inline-end border to the next column gridline. Never
+  // shrinks — deletions leave the box as is, so its edges never move backwards.
+  const growToFit = React.useCallback(() => {
+    const surface = surfaceRef.current;
+    const editable = editableRef.current;
+    if (!surface || !editable) {
+      return;
+    }
+    // +2: a small gutter so the caret at the end of the line is not glued to the
+    // border when the growth lands past the last gridline (exact-fit tail).
+    const overflow = editable.scrollWidth - editable.clientWidth + 2;
+    if (overflow <= 2) {
+      return;
+    }
+    const clamp = ensureClamp();
+    const needed = surface.offsetWidth + overflow;
+    const next = computeSnappedWidth(needed, snapWidths, clamp);
+    if (next > appliedWidth()) {
+      ratchetRef.current = next;
+      surface.style.width = `${next}px`;
+    }
+  }, [appliedWidth, ensureClamp, snapWidths]);
 
   const commit = React.useCallback(
     (nextValue: unknown, event?: React.SyntheticEvent) => {
@@ -274,6 +578,45 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
     [getSuggestions, suggestionsEnabled],
   );
 
+  // A pinned column's cell is `position: sticky` — its visual position is
+  // viewport-anchored and diverges from its content-space layout slot once the
+  // grid is scrolled, so for a pinned anchor the surface takes its inline start
+  // from the cell's real position instead of `columnPositions`. Measured once
+  // pre-paint per relevant change (still no async repositioning); afterwards the
+  // accepted pinned trade-off applies — a mid-edit horizontal scroll lets the
+  // surface glide away from the stuck cell until scrolled back. The measurement is
+  // converted to the portal target's coordinate space: content space (viewport
+  // offset + scroll) in scroller mode, the row box in row mode.
+  useEnhancedEffect(() => {
+    if (!isPinnedColumn) {
+      return;
+    }
+    const surface = surfaceRef.current;
+    const cell = apiRef.current.getCellElement(id, field);
+    const scroller = apiRef.current.virtualScrollerRef?.current;
+    if (!surface || !cell) {
+      return;
+    }
+    const cellRect = cell.getBoundingClientRect();
+    let inlineStart: number;
+    if (inScroller && scroller) {
+      const scrollerRect = scroller.getBoundingClientRect();
+      // RTL: `scrollLeft` runs 0 → negative, so subtracting it adds the scrolled
+      // distance in both directions.
+      inlineStart = isRtl
+        ? scrollerRect.right - cellRect.right - scroller.scrollLeft
+        : cellRect.left - scrollerRect.left + scroller.scrollLeft;
+    } else {
+      const row = surface.closest('[role="row"]') as HTMLElement | null;
+      if (!row) {
+        return;
+      }
+      const rowRect = row.getBoundingClientRect();
+      inlineStart = isRtl ? rowRect.right - cellRect.right : cellRect.left - rowRect.left;
+    }
+    surface.style.insetInlineStart = `${inlineStart - 1}px`;
+  }, [apiRef, isPinnedColumn, inScroller, field, id, isRtl, cellStart]);
+
   // The core: rebuild the colored children and restore the caret/selection on every
   // value or model change, inside a layout effect (before paint, no flicker).
   // Skipped while an IME composition is active.
@@ -299,6 +642,11 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
     renderedSegmentsRef.current = segments;
     renderedTextRef.current = text;
 
+    // The content changed — widen the surface if the single line no longer fits
+    // (typing, paste, an accepted suggestion, and the source seeding all pass
+    // through here). Pre-paint, so the growth and the new text land together.
+    growToFit();
+
     if (!isActive) {
       pendingCaretRef.current = null;
       return;
@@ -317,22 +665,27 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
     } else {
       setCaretOffset(root, (root.textContent ?? '').length);
     }
+    // The browser reveals the caret only for native typing; a programmatically
+    // placed caret (entry seed, accepted suggestion) on a formula longer than the
+    // box would otherwise sit out of view past the internal scroll.
+    scrollCaretIntoView(root);
 
     if (refreshAfterRebuildRef.current) {
       refreshAfterRebuildRef.current = false;
       refresh(getCaretOffset(root));
     }
-  }, [segments, text, refresh]);
+  }, [segments, text, refresh, growToFit]);
 
-  // Live mirror of the editing session (engaged flag + caret offset), kept in
-  // the formula cache and written on every user interaction. When
-  // virtualization remounts the editing cell (the edited row left the render
-  // window), the fresh instance resumes from the mirror instead of restarting
-  // the entry sequence. It must be a continuously-written mirror rather than an
-  // unmount-time capture: the replacement instance can mount BEFORE the old one
-  // unmounts, and StrictMode runs synthetic cleanups with nothing unmounted.
-  // Only the focused editor writes (row edit mode mounts one editor per cell).
-  // `cellEditStop` clears it.
+  // Live mirror of the editing session (engaged flag + caret offset + the grown
+  // surface width), kept in the formula cache and written on every user
+  // interaction. When virtualization remounts the editing cell (the edited row
+  // left the render window), the fresh instance resumes from the mirror instead of
+  // restarting the entry sequence — including reproducing the exact same surface
+  // box, so a remount never changes what the user sees. It must be a
+  // continuously-written mirror rather than an unmount-time capture: the
+  // replacement instance can mount BEFORE the old one unmounts, and StrictMode
+  // runs synthetic cleanups with nothing unmounted. Only the focused editor writes
+  // (row edit mode mounts one editor per cell). `cellEditStop` clears it.
   const updateEditorSession = React.useCallback(
     (caretOverride?: number | null) => {
       const root = editableRef.current;
@@ -344,19 +697,31 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
         field,
         engaged: engagedRef.current,
         caret: caretOverride !== undefined ? caretOverride : getCaretOffset(root),
+        surfaceWidth: ratchetRef.current,
+        surfaceClamp: clampRef.current,
       };
     },
     [apiRef, field, id],
   );
 
+  // True after the entry sequence below has run. The floating editor mounts
+  // focused and unmounts when it loses focus, so entry is a strictly
+  // once-per-mount affair — the guard keeps dependency churn (a column resize
+  // changes `minWidth` and with it the callback identities below) from re-running
+  // the session resume on a LIVE editor, which would collapse the user's
+  // selection, snap the caret to the last-mirrored offset, and abort an in-flight
+  // IME composition.
+  const enteredRef = React.useRef(false);
+
   // Focus on entry and place the caret at the end (the rebuild effect handles the
-  // caret on a later source seed). Runs on mount (edit start, but also whenever
-  // virtualization remounts the editing cell) and on focus acquisition.
+  // caret on a later source seed). Runs once per mount — at edit start, but also
+  // whenever virtualization remounts the editing cell.
   useEnhancedEffect(() => {
     const root = editableRef.current;
-    if (!root || !hasFocus) {
+    if (!root || !hasFocus || enteredRef.current) {
       return;
     }
+    enteredRef.current = true;
     if (root.ownerDocument.activeElement !== root) {
       // preventScroll: when the edited row leaves the render window mid-scroll,
       // the grid remounts it (as the zero-size virtual-focus row) and this
@@ -368,10 +733,19 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
     const session = apiRef.current.caches.formula.editorSession;
     if (session !== null && session.id === id && session.field === field) {
       // The editing cell remounted mid-edit: resume the live session — restore
-      // the engaged flag and put the caret back where it was, not at the end.
-      // The mirror stays in place for any further remount.
+      // the engaged flag, the grown surface box, and put the caret back where
+      // it was, not at the end. The mirror stays in place for any further
+      // remount. The width is restored verbatim (it was already bounded by the
+      // session's own clamp, which `ensureClamp` also resumes): re-clamping with
+      // a freshly measured, scroll-skewed bound could shrink the box mid-edit.
       engagedRef.current = session.engaged;
+      const surface = surfaceRef.current;
+      if (surface && session.surfaceWidth !== null && session.surfaceWidth > appliedWidth()) {
+        ratchetRef.current = session.surfaceWidth;
+        surface.style.width = `${session.surfaceWidth}px`;
+      }
       setCaretOffset(root, session.caret ?? (root.textContent ?? '').length);
+      scrollCaretIntoView(root);
       return;
     }
     // On entry (before the first edit), collapse any stray selection to the end —
@@ -379,8 +753,9 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
     // select-all left over from the double-click/open gesture.
     if (!engagedRef.current) {
       setCaretOffset(root, (root.textContent ?? '').length);
+      scrollCaretIntoView(root);
     }
-  }, [apiRef, field, hasFocus, id]);
+  }, [apiRef, appliedWidth, field, hasFocus, id]);
 
   // Keep the highlighted option scrolled into view.
   useEnhancedEffect(() => {
@@ -571,18 +946,48 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
 
   const handleBlur = React.useCallback(() => setOpen(false), []);
 
+  // Clicking the surface's own chrome (border/padding, not the editable) must not
+  // move DOM focus out of the editable — the caret would be lost mid-edit.
+  const handleSurfaceMouseDown = React.useCallback((event: React.MouseEvent) => {
+    if (editableRef.current && !editableRef.current.contains(event.target as Node)) {
+      event.preventDefault();
+    }
+  }, []);
+
   const handleEditableRef = React.useCallback((node: HTMLDivElement | null) => {
     editableRef.current = node;
     setAnchorEl(node);
   }, []);
 
   return (
-    <GridFormulaEditorRoot className="MuiDataGrid-formulaEditor">
+    <GridFormulaEditorSurface
+      ref={surfaceRef}
+      id={surfaceId}
+      role="dialog"
+      aria-label={colDef.headerName || field}
+      className={GRID_FORMULA_EDITOR_SURFACE_CLASS}
+      onMouseDown={handleSurfaceMouseDown}
+      style={{
+        // Pinned anchors get their inline start measured from the sticky cell in
+        // the effect above (pre-paint); everything else is pure grid state.
+        insetInlineStart: isPinnedColumn ? undefined : cellStart - 1,
+        ...surfaceBlockStyles,
+        width: appliedWidth(),
+        // The scroller-portaled surface no longer inherits the zero-size
+        // virtual-focus row's `opacity: 0`, so it hides itself while the edited
+        // row is out of the render window (opacity, not visibility, to preserve
+        // focus — the GridEditLongTextCell precedent) and drops pointer events so
+        // the invisible box cannot swallow clicks.
+        opacity: surfaceHidden ? 0 : undefined,
+        pointerEvents: surfaceHidden ? 'none' : undefined,
+      }}
+    >
       <GridFormulaEditorEditable
         ref={handleEditableRef}
         contentEditable
         suppressContentEditableWarning
         role={suggestionsEnabled ? 'combobox' : 'textbox'}
+        aria-label={colDef.headerName || field}
         aria-multiline={false}
         aria-autocomplete={suggestionsEnabled ? 'list' : undefined}
         aria-haspopup={suggestionsEnabled ? 'listbox' : undefined}
@@ -643,7 +1048,7 @@ function GridFormulaEditor(props: GridFormulaEditorProps) {
           </GridFormulaEditorPanel>
         </GridFormulaEditorPopper>
       )}
-    </GridFormulaEditorRoot>
+    </GridFormulaEditorSurface>
   );
 }
 

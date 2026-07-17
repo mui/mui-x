@@ -44,8 +44,14 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
     );
   }
 
-  function getCellEditable(rowIndex: number, colIndex: number) {
-    return getCell(rowIndex, colIndex).querySelector<HTMLElement>('[contenteditable]')!;
+  // The editable lives in the floating surface portaled into the virtual SCROLLER
+  // (it overlays the cell but is not a DOM child of it — nor of the row). Only the
+  // focused cell's surface is open at a time, so a document-scoped query is
+  // unambiguous; the row/col args are kept for call-site readability.
+  function getCellEditable(_rowIndex: number, _colIndex: number) {
+    return document.querySelector<HTMLElement>(
+      '.MuiDataGrid-formulaEditorSurface [contenteditable]',
+    )!;
   }
 
   function getListbox() {
