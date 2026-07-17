@@ -267,7 +267,9 @@ function resolveSectionElementWidth(
   index: number,
   dateRangePosition: 'start' | 'end',
 ) {
-  if (sectionElement.content.id) {
+  // Only measure sections that belong to a range date. This used to check `content.id`, but
+  // that was removed in https://github.com/mui/mui-x/pull/19523, which silently zeroed the bar.
+  if (sectionElement.content['data-range-position']) {
     const activeSectionElements = rootRef.current?.querySelectorAll<HTMLSpanElement>(
       `[data-sectionindex="${index}"] [data-range-position="${dateRangePosition}"]`,
     );
