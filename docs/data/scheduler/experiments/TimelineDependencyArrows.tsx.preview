@@ -1,0 +1,14 @@
+<style>
+  {
+    '.experiment-dependency-arrows-host, .experiment-dependency-arrows-host * { box-sizing: border-box; }'
+  }
+</style>
+<SchedulerStoreContext.Provider value={store as any}>
+  <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+    <EventDialogStyledContext.Provider value={styledContextValue}>
+      <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
+        <EventTimelinePremiumContent />
+      </SharedComponentsStyledContext.Provider>
+    </EventDialogStyledContext.Provider>
+  </EventTimelinePremiumStyledContext.Provider>
+</SchedulerStoreContext.Provider>
