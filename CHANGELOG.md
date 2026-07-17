@@ -2,13 +2,12 @@
 
 ## 9.10.0
 
-<!-- generated comparing v9.9.0..master -->
-
-_Jul 16, 2026_
+_Jul 17, 2026_
 
 We'd like to extend a big thank you to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 Provide `dataIndex` in `LinePlot` and `AreaPlot` onItemClick for Charts
+- 📊 Provide `dataIndex` in `LinePlot` and `AreaPlot` `onItemClick` for Charts
+- ⚙️ Allow opt-in `data-*` attributes on `slotProps`. [Read more](https://mui.com/x/common-concepts/custom-components/#passing-data-attributes-to-slots)
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -46,7 +45,7 @@ Same changes as in `@mui/x-date-pickers@9.10.0`.
 
 #### `@mui/x-charts@9.10.0`
 
-- [charts] Provide `dataIndex` in `LinePlot` and `AreaPlot` onItemClick (#23144) @JCQuintas
+- [charts] Provide `dataIndex` in `LinePlot` and `AreaPlot` `onItemClick` (#23144) @JCQuintas
 
   `LinePlot` and `AreaPlot` `onItemClick` (and `LineChart`'s `onLineClick`/`onAreaClick`) now provide the `dataIndex` of the closest data point to the click.
 
@@ -78,7 +77,7 @@ Same changes as in `@mui/x-tree-view@9.10.0`, plus:
 
 - [scheduler] Carry custom event data through the edit dialog submit (#22874) @Anexus5919
 - [scheduler] Fix overview page bugs (#23147) @noraleonte
-- [scheduler] Support array values for CalendarEvent.resource (#23109) @mustafajw07
+- [scheduler] Support array values for `CalendarEvent.resource` (#23109) @mustafajw07
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -88,11 +87,11 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.6`.
 
 #### `@mui/x-chat@9.0.0-alpha.14`
 
-- [chat] Reuse @mui/utils resolveComponentProps in x-chat (#23095) @LukasTy
+- [chat] Reuse `resolveComponentProps` from `@mui/utils` (#23095) @LukasTy
 
 #### `@mui/x-chat-headless@9.0.0-alpha.14`
 
-- Internal changes.
+Internal changes.
 
 ### Codemod
 
@@ -103,13 +102,14 @@ Internal changes.
 ### Core
 
 - [code-infra] Fix changelog dependency exclusion and l10n routing (#23112) @LukasTy
-- [code-infra] Port codebase to use tsgo (#22826) @brijeshb42
-- [code-infra] Reduce release:build concurrency to mitigate tsgo OOM kills (#23139) @LukasTy
+- [code-infra] Port codebase to use `tsgo` (#22826) @brijeshb42
+- [code-infra] Reduce `release:build` concurrency to mitigate `tsgo` OOM kills (#23139) @LukasTy
+- [core] Allow opt-in `data-*` attributes on `slotProps` (#22128) @LukasTy
 
 ### Miscellaneous
 
-- [core] Ignore code-infra-renovate[bot] commits in changelog (#23153) @Janpot
-- [website] Fix broken ChatBox API link (#23149) @brijeshb42
+- [core] Ignore `code-infra-renovate[bot]` commits in changelog (#23153) @Janpot
+- [website] Fix broken `ChatBox` API link (#23149) @brijeshb42
 - [test] Fix WebGL benchmark timeout on CI (#23142) @JCQuintas
 
 ## 9.9.0
