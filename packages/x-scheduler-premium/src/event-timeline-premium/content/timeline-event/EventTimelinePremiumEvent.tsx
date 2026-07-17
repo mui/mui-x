@@ -1,11 +1,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
 import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
@@ -146,6 +148,11 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
+  const dependsOnTitles = useStore(
+    store,
+    eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget,
+    occurrence.id,
+  );
 
   // Feature hooks
   const id = useId(idProp);
@@ -194,6 +201,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
+      aria-describedby={dependsOnTitles.length > 0 ? `${id}-dependencies` : undefined}
       className={clsx(sharedProps.className, classes.event)}
     >
       {isStartResizable && (
@@ -205,6 +213,13 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
         {occurrence.title}
       </EventTimelinePremiumEventLinesClamp>
+      {dependsOnTitles.length > 0 && (
+        <span id={`${id}-dependencies`} style={visuallyHidden}>
+          {/* TODO(dependencies public flip): move to localeText. Hardcoded while the
+              feature has no public API. */}
+          Depends on {dependsOnTitles.join(', ')}
+        </span>
+      )}
       {isRecurring && (
         <EventTimelinePremiumEventRecurringIcon
           className={classes.eventRecurringIcon}
