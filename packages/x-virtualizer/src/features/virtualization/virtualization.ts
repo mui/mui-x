@@ -45,9 +45,8 @@ export type VirtualizationParams = {
    * Controls how the container and render zones are positioned:
    * - 'uncontrolled': uses CSS sticky positioning (default)
    * - 'controlled': uses CSS absolute positioning with JS-computed offsets
-   * - 'sticky': inverse-sticky vertical positioning (native scrolling within the
-   *   directional row buffers, clamping instead of blanking beyond them) with
-   *   controlled horizontal positioning (exact column window, no buffers)
+   * - 'sticky': inverse-sticky positioning on both axes (native scrolling within the
+   *   directional buffers, clamping to stale content instead of blanking beyond them)
    * @default 'uncontrolled'
    */
   layoutMode?: 'controlled' | 'uncontrolled' | 'sticky';
@@ -358,10 +357,9 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         default:
           // The frozen context pins carried-over rows to their pre-scroll (wider)
           // column range so they don't re-render when the buffers narrow for the
-          // scroll duration. In sticky mode the column window is always
-          // viewport-exact, so there is nothing to pin, and pinning would detach
-          // those rows from `scrollLeft` updates during vertically-dominant
-          // diagonal scrolling, tearing the horizontal axis.
+          // scroll duration. In sticky mode all rows share the window's single column
+          // offset (the flex spacer), so a row carrying an independent column range
+          // would be misaligned from the window; freezing is disabled.
           frozenContext.current = layoutMode === 'sticky' ? undefined : renderContext;
           break;
       }
@@ -919,12 +917,12 @@ function computeRenderContext(
         atStart: true,
         lastPosition: inputs.columnsTotalWidth,
       });
-      // In controlled & sticky modes, the horizontal window is clipped to the viewport
-      // and the pinned-right section overlays it, so it can be excluded from the bounds.
+      // In controlled mode, the horizontal window is clipped to the viewport and
+      // the pinned-right section overlays it, so it can be excluded from the bounds.
       const rightBound =
-        inputs.layoutMode === 'uncontrolled'
-          ? realLeft + inputs.viewportInnerWidth
-          : realLeft + inputs.viewportInnerWidth - inputs.rightPinnedWidth;
+        inputs.layoutMode === 'controlled'
+          ? realLeft + inputs.viewportInnerWidth - inputs.rightPinnedWidth
+          : realLeft + inputs.viewportInnerWidth;
       lastColumnIndex = binarySearch(rightBound, inputs.columnPositions);
     }
 
@@ -1143,9 +1141,9 @@ export function computeOffsetLeft(
   layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
   let offset = columnPositions[renderContext.firstColumnIndex] ?? 0;
-  /* CSS sticky leaves elements in the normal flow of the DOM, so we
-   * don't need to add the offset of the pinned columns. */
-  if (layoutMode === 'uncontrolled') {
+  /* In uncontrolled & sticky modes, pinned cells are sticky elements in the normal
+   * flow of the row, so their width is deduced from the offset. */
+  if (layoutMode !== 'controlled') {
     offset -= columnPositions[pinnedLeftLength] ?? 0;
   }
   return Math.abs(offset);
@@ -1169,13 +1167,6 @@ function bufferForDirection(
 ) {
   if (layoutMode === 'controlled') {
     return EMPTY_BUFFER;
-  }
-  if (layoutMode === 'sticky') {
-    // The horizontal axis is controlled: the column window is clipped to the viewport,
-    // so column buffers would only render invisible cells. The row buffers are the
-    // native-scroll headroom of the sticky window and are kept.
-    columnBufferPx = 0;
-    horizontalBuffer = 0;
   }
 
   if (isRtl) {

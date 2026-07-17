@@ -3,13 +3,7 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import {
-  useVirtualizer,
-  Virtualizer,
-  Virtualization,
-  LayoutGridSticky,
-  computeOffsetLeft,
-} from '@mui/x-virtualizer';
+import { useVirtualizer, Virtualizer, Virtualization, LayoutGridSticky } from '@mui/x-virtualizer';
 
 const ROW_COUNT = 100_000;
 const COLUMN_COUNT = 40;
@@ -21,7 +15,6 @@ const columns = Array.from({ length: COLUMN_COUNT }, (_, index) => ({
   field: `col-${index}`,
   computedWidth: COLUMN_WIDTH,
 }));
-const columnPositions = columns.map((_, index) => index * COLUMN_WIDTH);
 const columnsTotalWidth = COLUMN_COUNT * COLUMN_WIDTH;
 const pinnedColumns = { left: [columns[0]], right: [columns[COLUMN_COUNT - 1]] };
 
@@ -49,32 +42,19 @@ const cellStyle: React.CSSProperties = {
   whiteSpace: 'nowrap',
 };
 
-/* The horizontal axis is controlled: pinned cells are absolutely positioned,
- * since sticky positioning ignores the positioner's transform. Their offsets
- * arrive through the `--pinned-left`/`--pinned-right` variables set on the
- * positioner, so per-pixel scrolling is a style update to avoid row re-renders. */
+/* Pinned cells are sticky elements in the flow of the row: their constraints resolve
+ * against the scrollport, so they compose with the horizontally-sticky window. */
 const pinnedCellStyle: React.CSSProperties = {
   ...cellStyle,
-  position: 'absolute',
-  top: 0,
-  height: '100%',
+  position: 'sticky',
   zIndex: 1,
   background: '#f5f5f5',
-};
-
-const pinnedCellLeftStyle: React.CSSProperties = {
-  ...pinnedCellStyle,
-  left: 'var(--pinned-left)',
-};
-const pinnedCellRightStyle: React.CSSProperties = {
-  ...pinnedCellStyle,
-  right: 'var(--pinned-right)',
 };
 
 const rowStyle: React.CSSProperties = {
   position: 'relative',
   display: 'flex',
-  width: columnsTotalWidth,
+  width: '100%',
   height: ROW_HEIGHT,
   boxSizing: 'border-box',
   borderBottom: `1px solid ${borderColor}`,
@@ -87,13 +67,8 @@ const headerRowStyle: React.CSSProperties = {
   background: '#e8e8e8',
 };
 const headerCellStyle: React.CSSProperties = { ...cellStyle, fontWeight: 600 };
-const headerPinnedLeftStyle: React.CSSProperties = {
-  ...pinnedCellLeftStyle,
-  fontWeight: 600,
-  background: '#e8e8e8',
-};
-const headerPinnedRightStyle: React.CSSProperties = {
-  ...pinnedCellRightStyle,
+const headerPinnedStyle: React.CSSProperties = {
+  ...pinnedCellStyle,
   fontWeight: 600,
   background: '#e8e8e8',
 };
@@ -137,32 +112,28 @@ function useJank(scroller: React.RefObject<HTMLDivElement | null>) {
 
 const Row = React.memo(function Row(props: {
   id: any;
-  offsetLeft: number;
   firstColumnIndex: number;
   lastColumnIndex: number;
   background?: string;
 }) {
-  const { id, offsetLeft, firstColumnIndex, lastColumnIndex, background } = props;
+  const { id, firstColumnIndex, lastColumnIndex, background } = props;
 
   const cells = [];
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     cells.push(
-      <div
-        key={i}
-        style={i === firstColumnIndex ? { ...cellStyle, marginLeft: offsetLeft } : cellStyle}
-      >
+      <div key={i} style={cellStyle}>
         {id} × {i}
       </div>,
     );
   }
 
+  const pinnedStyle = background ? { ...pinnedCellStyle, background } : pinnedCellStyle;
+
   return (
     <div style={background ? { ...rowStyle, background } : rowStyle}>
-      <div style={background ? { ...pinnedCellLeftStyle, background } : pinnedCellLeftStyle}>
-        {id} × 0
-      </div>
+      <div style={{ ...pinnedStyle, left: 0 }}>{id} × 0</div>
       {cells}
-      <div style={background ? { ...pinnedCellRightStyle, background } : pinnedCellRightStyle}>
+      <div style={{ ...pinnedStyle, right: 'var(--pinned-right)' }}>
         {id} × {COLUMN_COUNT - 1}
       </div>
     </div>
@@ -170,21 +141,15 @@ const Row = React.memo(function Row(props: {
 });
 
 const HeaderCells = React.memo(function HeaderCells(props: {
-  offsetLeft: number;
   firstColumnIndex: number;
   lastColumnIndex: number;
 }) {
-  const { offsetLeft, firstColumnIndex, lastColumnIndex } = props;
+  const { firstColumnIndex, lastColumnIndex } = props;
 
   const cells = [];
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     cells.push(
-      <div
-        key={i}
-        style={
-          i === firstColumnIndex ? { ...headerCellStyle, marginLeft: offsetLeft } : headerCellStyle
-        }
-      >
+      <div key={i} style={headerCellStyle}>
         {columns[i].field}
       </div>,
     );
@@ -192,9 +157,11 @@ const HeaderCells = React.memo(function HeaderCells(props: {
 
   return (
     <div style={headerRowStyle}>
-      <div style={headerPinnedLeftStyle}>{columns[0].field}</div>
+      <div style={{ ...headerPinnedStyle, left: 0 }}>{columns[0].field}</div>
       {cells}
-      <div style={headerPinnedRightStyle}>{columns[COLUMN_COUNT - 1].field}</div>
+      <div style={{ ...headerPinnedStyle, right: 'var(--pinned-right)' }}>
+        {columns[COLUMN_COUNT - 1].field}
+      </div>
     </div>
   );
 });
@@ -202,16 +169,9 @@ const HeaderCells = React.memo(function HeaderCells(props: {
 const HeaderRow = React.memo(function HeaderRow() {
   const virtualizer = React.useContext(VirtualizerContext);
   const renderContext = virtualizer.store.use(Virtualization.selectors.renderContext);
-  const offsetLeft = computeOffsetLeft(
-    columnPositions,
-    renderContext,
-    pinnedColumns.left.length,
-    'sticky',
-  );
 
   return (
     <HeaderCells
-      offsetLeft={offsetLeft}
       firstColumnIndex={renderContext.firstColumnIndex}
       lastColumnIndex={renderContext.lastColumnIndex}
     />
@@ -260,7 +220,6 @@ function Grid() {
       <Row
         key={params.id}
         id={params.id}
-        offsetLeft={params.offsetLeft}
         firstColumnIndex={params.firstColumnIndex}
         lastColumnIndex={params.lastColumnIndex}
         background={typeof params.id === 'string' ? '#fff8e0' : undefined}
@@ -281,26 +240,22 @@ function Grid() {
   const contentProps = virtualizer.store.use(LayoutGridSticky.selectors.contentProps);
   const topContainerProps = virtualizer.store.use(LayoutGridSticky.selectors.topContainerProps);
   const spacerTopProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerTopProps);
+  const spacerLeftProps = virtualizer.store.use(
+    LayoutGridSticky.selectors.spacerLeftProps,
+    columns,
+  );
+  const innerContainerProps = virtualizer.store.use(
+    LayoutGridSticky.selectors.innerContainerProps,
+    columns,
+  );
   const windowProps = virtualizer.store.use(LayoutGridSticky.selectors.windowProps);
+  const innerWindowProps = virtualizer.store.use(
+    LayoutGridSticky.selectors.innerWindowProps,
+    columns,
+  );
   const spacerBottomProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerBottomProps);
   const bottomContainerProps = virtualizer.store.use(
     LayoutGridSticky.selectors.bottomContainerProps,
-  );
-  const positionerProps = virtualizer.store.use(LayoutGridSticky.selectors.positionerProps);
-
-  const pinnedLeftOffset = virtualizer.store.use(Virtualization.selectors.pinnedLeftOffsetSelector);
-  const pinnedRightOffset = virtualizer.store.use(
-    Virtualization.selectors.pinnedRightOffsetSelector,
-  );
-
-  const positionerStyle = React.useMemo(
-    () =>
-      ({
-        ...positionerProps.style,
-        '--pinned-left': `${pinnedLeftOffset}px`,
-        '--pinned-right': `${pinnedRightOffset}px`,
-      }) as React.CSSProperties,
-    [positionerProps, pinnedLeftOffset, pinnedRightOffset],
   );
 
   const { getRows } = virtualizer.api.getters;
@@ -311,20 +266,23 @@ function Grid() {
         <Box className="Grid--scroller" {...scrollerProps} sx={scrollerSx}>
           <div className="Grid--content" {...contentProps}>
             <div className="Grid--topContainer" {...topContainerProps}>
-              <div {...positionerProps} style={positionerStyle}>
+              <div {...spacerLeftProps} />
+              <div className="Grid--innerContainer" {...innerContainerProps}>
                 <HeaderRow />
                 {getRows({ position: 'top', rows: pinnedRows.top })}
               </div>
             </div>
             <div className="Grid--spacerTop" {...spacerTopProps} />
             <div className="Grid--window" {...windowProps}>
-              <div {...positionerProps} style={positionerStyle}>
+              <div {...spacerLeftProps} />
+              <div className="Grid--innerWindow" {...innerWindowProps}>
                 {getRows()}
               </div>
             </div>
             <div className="Grid--spacerBottom" {...spacerBottomProps} />
             <div className="Grid--bottomContainer" {...bottomContainerProps}>
-              <div {...positionerProps} style={positionerStyle}>
+              <div {...spacerLeftProps} />
+              <div className="Grid--innerContainer" {...innerContainerProps}>
                 {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
               </div>
             </div>

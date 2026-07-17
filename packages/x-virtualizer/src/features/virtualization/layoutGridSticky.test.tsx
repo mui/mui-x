@@ -1,13 +1,7 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import {
-  useVirtualizer,
-  Virtualization,
-  Dimensions,
-  LayoutGridSticky,
-  computeOffsetLeft,
-} from '@mui/x-virtualizer';
+import { useVirtualizer, Virtualization, LayoutGridSticky } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const ROW_COUNT = 1000;
@@ -22,7 +16,6 @@ const columns = Array.from({ length: COLUMN_COUNT }, (_, index) => ({
   field: `col-${index}`,
   computedWidth: COLUMN_WIDTH,
 }));
-const columnPositions = columns.map((_, index) => index * COLUMN_WIDTH);
 const columnsTotalWidth = COLUMN_COUNT * COLUMN_WIDTH;
 const pinnedColumns = { left: [columns[0]], right: [columns[COLUMN_COUNT - 1]] };
 
@@ -42,37 +35,27 @@ const cellStyle: React.CSSProperties = {
   boxSizing: 'border-box',
 };
 
-/* The horizontal axis is controlled: pinned cells are absolutely positioned with
- * JS offsets, since sticky positioning ignores the positioner's transform. */
+/* Pinned cells are sticky elements in the flow of the row: their constraints resolve
+ * against the scrollport, so they compose with the horizontally-sticky window. */
 const pinnedCellStyle: React.CSSProperties = {
   ...cellStyle,
-  position: 'absolute',
-  top: 0,
-  height: '100%',
+  position: 'sticky',
   zIndex: 1,
   background: '#eee',
 };
 
-const PinnedOffsetsContext = React.createContext({ left: 0, right: 0 });
-
 function Row(props: {
   id: any;
   height: number;
-  offsetLeft: number;
   firstColumnIndex: number;
   lastColumnIndex: number;
 }) {
-  const { id, height, offsetLeft, firstColumnIndex, lastColumnIndex } = props;
-  const offsets = React.useContext(PinnedOffsetsContext);
+  const { id, height, firstColumnIndex, lastColumnIndex } = props;
 
   const cells = [];
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     cells.push(
-      <div
-        key={i}
-        data-col={i}
-        style={i === firstColumnIndex ? { ...cellStyle, marginLeft: offsetLeft } : cellStyle}
-      >
+      <div key={i} data-col={i} style={cellStyle}>
         {id}:{i}
       </div>,
     );
@@ -85,16 +68,16 @@ function Row(props: {
       style={{
         position: 'relative',
         display: 'flex',
-        width: columnsTotalWidth,
+        width: '100%',
         height,
         background: '#fff',
       }}
     >
-      <div data-col={0} style={{ ...pinnedCellStyle, left: offsets.left }}>
+      <div data-col={0} style={{ ...pinnedCellStyle, left: 0 }}>
         {id}:0
       </div>
       {cells}
-      <div data-col={COLUMN_COUNT - 1} style={{ ...pinnedCellStyle, right: offsets.right }}>
+      <div data-col={COLUMN_COUNT - 1} style={{ ...pinnedCellStyle, right: 'var(--pinned-right)' }}>
         {id}:{COLUMN_COUNT - 1}
       </div>
     </div>
@@ -145,7 +128,6 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
         key={params.id}
         id={params.id}
         height={params.baseRowHeight as number}
-        offsetLeft={params.offsetLeft}
         firstColumnIndex={params.firstColumnIndex}
         lastColumnIndex={params.lastColumnIndex}
       />
@@ -153,12 +135,6 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
   });
 
   const renderContext = virtualizer.store.use(Virtualization.selectors.renderContext);
-  const headerOffsetLeft = computeOffsetLeft(
-    columnPositions,
-    renderContext,
-    pinnedColumns.left.length,
-    'sticky',
-  );
 
   const containerProps = virtualizer.store.use(LayoutGridSticky.selectors.containerProps);
   const scrollerProps = virtualizer.store.use(LayoutGridSticky.selectors.scrollerProps);
@@ -171,24 +147,22 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
   const contentProps = virtualizer.store.use(LayoutGridSticky.selectors.contentProps);
   const topContainerProps = virtualizer.store.use(LayoutGridSticky.selectors.topContainerProps);
   const spacerTopProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerTopProps);
+  const spacerLeftProps = virtualizer.store.use(
+    LayoutGridSticky.selectors.spacerLeftProps,
+    columns,
+  );
+  const innerContainerProps = virtualizer.store.use(
+    LayoutGridSticky.selectors.innerContainerProps,
+    columns,
+  );
   const windowProps = virtualizer.store.use(LayoutGridSticky.selectors.windowProps);
+  const innerWindowProps = virtualizer.store.use(
+    LayoutGridSticky.selectors.innerWindowProps,
+    columns,
+  );
   const spacerBottomProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerBottomProps);
   const bottomContainerProps = virtualizer.store.use(
     LayoutGridSticky.selectors.bottomContainerProps,
-  );
-  const positionerProps = virtualizer.store.use(LayoutGridSticky.selectors.positionerProps);
-
-  const scrollPosition = virtualizer.store.use(Virtualization.selectors.scrollPosition);
-  const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
-  const pinnedOffsets = React.useMemo(
-    () => ({
-      left: scrollPosition.current.left,
-      right: Math.max(
-        0,
-        columnsTotalWidth - dimensions.viewportInnerSize.width - scrollPosition.current.left,
-      ),
-    }),
-    [scrollPosition, dimensions],
   );
 
   const { getRows } = virtualizer.api.getters;
@@ -196,77 +170,69 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
   const headerCells = [];
   for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
     headerCells.push(
-      <div
-        key={i}
-        data-col={i}
-        style={
-          i === renderContext.firstColumnIndex
-            ? { ...cellStyle, marginLeft: headerOffsetLeft }
-            : cellStyle
-        }
-      >
+      <div key={i} data-col={i} style={cellStyle}>
         {columns[i].field}
       </div>,
     );
   }
 
   return (
-    <PinnedOffsetsContext.Provider value={pinnedOffsets}>
-      <div
-        {...containerProps}
-        style={{
-          ...containerProps.style,
-          width: props.width ?? VIEWPORT_WIDTH,
-          height: VIEWPORT_HEIGHT,
-        }}
-      >
-        <div {...scrollerProps} data-testid="scroller">
-          <div {...contentProps}>
-            <div {...topContainerProps} data-testid="top-container">
-              <div {...positionerProps}>
-                <div
-                  data-testid="header"
-                  style={{
-                    position: 'relative',
-                    display: 'flex',
-                    width: columnsTotalWidth,
-                    height: HEADER_HEIGHT,
-                    background: '#ddd',
-                  }}
-                >
-                  <div
-                    data-col={0}
-                    style={{ ...pinnedCellStyle, left: pinnedOffsets.left, background: '#ddd' }}
-                  >
-                    {columns[0].field}
-                  </div>
-                  {headerCells}
-                  <div
-                    data-col={COLUMN_COUNT - 1}
-                    style={{ ...pinnedCellStyle, right: pinnedOffsets.right, background: '#ddd' }}
-                  >
-                    {columns[COLUMN_COUNT - 1].field}
-                  </div>
+    <div
+      {...containerProps}
+      style={{
+        ...containerProps.style,
+        width: props.width ?? VIEWPORT_WIDTH,
+        height: VIEWPORT_HEIGHT,
+      }}
+    >
+      <div {...scrollerProps} data-testid="scroller">
+        <div {...contentProps}>
+          <div {...topContainerProps} data-testid="top-container">
+            <div {...spacerLeftProps} />
+            <div {...innerContainerProps}>
+              <div
+                data-testid="header"
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  width: '100%',
+                  height: HEADER_HEIGHT,
+                  background: '#ddd',
+                }}
+              >
+                <div data-col={0} style={{ ...pinnedCellStyle, left: 0, background: '#ddd' }}>
+                  {columns[0].field}
                 </div>
-                {getRows({ position: 'top', rows: pinnedRows.top })}
+                {headerCells}
+                <div
+                  data-col={COLUMN_COUNT - 1}
+                  style={{ ...pinnedCellStyle, right: 'var(--pinned-right)', background: '#ddd' }}
+                >
+                  {columns[COLUMN_COUNT - 1].field}
+                </div>
               </div>
+              {getRows({ position: 'top', rows: pinnedRows.top })}
             </div>
-            <div {...spacerTopProps} />
-            <div {...windowProps} data-testid="window">
-              <div {...positionerProps}>{getRows()}</div>
+          </div>
+          <div {...spacerTopProps} />
+          <div {...windowProps} data-testid="outer-window">
+            <div {...spacerLeftProps} />
+            <div {...innerWindowProps} data-testid="window">
+              {getRows()}
             </div>
-            <div {...spacerBottomProps} />
-            <div {...bottomContainerProps} data-testid="bottom-container">
-              <div {...positionerProps}>
-                {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
-              </div>
+          </div>
+          <div {...spacerBottomProps} />
+          <div {...bottomContainerProps} data-testid="bottom-container">
+            <div {...spacerLeftProps} />
+            <div {...innerContainerProps}>
+              {getRows({ position: 'bottom', rows: pinnedRows.bottom })}
             </div>
           </div>
         </div>
-        <Scrollbar data-testid="scrollbar-vertical" {...scrollbarVerticalProps} />
-        <Scrollbar data-testid="scrollbar-horizontal" {...scrollbarHorizontalProps} />
       </div>
-    </PinnedOffsetsContext.Provider>
+      <Scrollbar data-testid="scrollbar-vertical" {...scrollbarVerticalProps} />
+      <Scrollbar data-testid="scrollbar-horizontal" {...scrollbarHorizontalProps} />
+    </div>
   );
 }
 
@@ -305,9 +271,25 @@ function expectInnerViewportCovered() {
   expect(topContainer.top).to.be.closeTo(scroller.top, 1);
   expect(bottomContainer.bottom).to.be.closeTo(scroller.bottom - scrollbarSize(), 1);
 
-  // The window covers the region between them.
+  // The window covers the region between them, and horizontally to the vertical lane.
   expect(windowRect.top).to.be.at.most(topContainer.bottom + 0.5);
   expect(windowRect.bottom).to.be.at.least(bottomContainer.top - 0.5);
+  expect(windowRect.left).to.be.at.most(scroller.left + 0.5);
+  expect(windowRect.right).to.be.at.least(scroller.right - scrollbarSize() - 0.5);
+}
+
+function expectPinnedCellsAtEdges(rowId: string | number) {
+  const scroller = rect('scroller');
+  const row = document.querySelector(`[data-id="${rowId}"]`)!;
+
+  // Pinned cells stay at the viewport edges: pinned-left at the scrollport edge,
+  // pinned-right at the inner viewport edge (before the vertical scrollbar lane).
+  const pinnedLeft = row.querySelector('[data-col="0"]')!.getBoundingClientRect();
+  expect(pinnedLeft.left).to.be.closeTo(scroller.left, 1);
+  const pinnedRight = row
+    .querySelector(`[data-col="${COLUMN_COUNT - 1}"]`)!
+    .getBoundingClientRect();
+  expect(pinnedRight.right).to.be.closeTo(scroller.right - scrollbarSize(), 1);
 }
 
 function renderedRowIds() {
@@ -316,6 +298,12 @@ function renderedRowIds() {
   ).map((node) =>
     Number.isNaN(Number(node.dataset.id)) ? node.dataset.id : Number(node.dataset.id),
   );
+}
+
+function middleColumnsOf(rowId: string | number) {
+  return Array.from(document.querySelectorAll<HTMLElement>(`[data-id="${rowId}"] [data-col]`))
+    .map((cell) => Number(cell.dataset.col))
+    .filter((col) => col !== 0 && col !== COLUMN_COUNT - 1);
 }
 
 describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
@@ -339,21 +327,17 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     expectInnerViewportCovered();
   });
 
-  it('renders the exact column window, without column buffers', async () => {
+  it('renders the column window with directional buffers', async () => {
     await renderGrid();
     const scroller = screen.getByTestId('scroller');
 
-    // At scrollLeft = 0, the visible middle columns end at the viewport edge (the
-    // vertical scrollbar lane excluded); only one extra column may be rendered past it
-    // (the search boundary), none beyond.
+    // At scrollLeft = 0, the middle columns extend from the first to the viewport edge
+    // (vertical lane excluded) plus the column buffer (150px = 1-2 columns) and the
+    // binary-search boundaries.
     const lastVisibleColumn = Math.floor((scroller.clientWidth - scrollbarSize()) / COLUMN_WIDTH);
-    const middleColumns = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-id="0"] [data-col]'),
-    )
-      .map((cell) => Number(cell.dataset.col))
-      .filter((col) => col !== 0 && col !== COLUMN_COUNT - 1);
+    const middleColumns = middleColumnsOf(0);
 
-    expect(Math.max(...middleColumns)).to.be.at.most(lastVisibleColumn + 1);
+    expect(Math.max(...middleColumns)).to.be.at.most(lastVisibleColumn + 4);
     expect(Math.min(...middleColumns)).to.equal(1);
   });
 
@@ -477,23 +461,14 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
 
     const scrollerRect = rect('scroller');
-    const row = document.querySelector('[data-id="0"]')!;
-
-    // Pinned cells stay at the viewport edges: pinned-left at the scrollport edge,
-    // pinned-right at the inner viewport edge (before the vertical scrollbar lane).
-    const pinnedLeft = row.querySelector('[data-col="0"]')!.getBoundingClientRect();
-    expect(pinnedLeft.left).to.be.closeTo(scrollerRect.left, 1);
-    const pinnedRight = row
-      .querySelector(`[data-col="${COLUMN_COUNT - 1}"]`)!
-      .getBoundingClientRect();
-    expect(pinnedRight.right).to.be.closeTo(scrollerRect.right - scrollbarSize(), 1);
+    expectPinnedCellsAtEdges(0);
 
     // Middle cells are at their scrolled position.
+    const row = document.querySelector('[data-id="0"]')!;
     const middle = row.querySelector('[data-col="10"]')!.getBoundingClientRect();
     expect(middle.left - scrollerRect.left).to.be.closeTo(10 * COLUMN_WIDTH - scrollLeft, 1);
 
-    // The top/bottom container content scrolls at the same rate as the rows: the
-    // header and pinned-row cells stay column-aligned with the window cells.
+    // The header and pinned-row cells stay column-aligned with the window cells.
     const headerMiddle = document
       .querySelector('[data-testid="header"] [data-col="10"]')!
       .getBoundingClientRect();
@@ -511,22 +486,16 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
   it('keeps the viewport covered when scrolling right past the rendered columns', async () => {
     await renderGrid();
     const scroller = screen.getByTestId('scroller');
-
-    const before = document.querySelector('[data-id="0"] [data-col="3"]')!.getBoundingClientRect();
+    const scrollLeft = 8 * COLUMN_WIDTH;
 
     act(() => {
-      scroller.scrollLeft = 8 * COLUMN_WIDTH;
+      scroller.scrollLeft = scrollLeft;
     });
-    // Horizontal axis is controlled: until the virtualizer receives the scroll event,
-    // nothing moves — the previously rendered columns still cover the viewport
-    // (stale content, no gap).
-    const after = document.querySelector('[data-id="0"] [data-col="3"]')!.getBoundingClientRect();
-    expect(after.left).to.be.closeTo(before.left, 1);
-
-    const windowRect = rect('window');
-    const scrollerRect = rect('scroller');
-    expect(windowRect.left).to.be.closeTo(scrollerRect.left, 1);
-    expect(windowRect.width).to.be.closeTo(scroller.clientWidth - scrollbarSize(), 1);
+    // The virtualizer hasn't received the scroll event yet: the stale columns and the
+    // pinned cells must already cover the viewport through sticky clamping alone.
+    expect(document.querySelector('[data-id="0"] [data-col="10"]')).to.equal(null);
+    expectInnerViewportCovered();
+    expectPinnedCellsAtEdges(0);
 
     // Once the virtualizer catches up, the correct columns are rendered in place.
     await act(async () => {
@@ -535,8 +504,42 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     await waitFor(() => {
       expect(document.querySelector('[data-id="0"] [data-col="10"]')).not.to.equal(null);
     });
+    const scrollerRect = rect('scroller');
     const middle = document.querySelector('[data-id="0"] [data-col="10"]')!.getBoundingClientRect();
-    expect(middle.left - scrollerRect.left).to.be.closeTo(10 * COLUMN_WIDTH - 8 * COLUMN_WIDTH, 1);
+    expect(middle.left - scrollerRect.left).to.be.closeTo(10 * COLUMN_WIDTH - scrollLeft, 1);
+    expectInnerViewportCovered();
+  });
+
+  it('keeps the viewport covered when scrolling left past the rendered columns', async () => {
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+
+    await act(async () => {
+      scroller.scrollLeft = 10 * COLUMN_WIDTH;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(document.querySelector('[data-id="0"] [data-col="12"]')).not.to.equal(null);
+    });
+
+    act(() => {
+      scroller.scrollLeft = 2 * COLUMN_WIDTH;
+    });
+    // Leftward clamp: the stale columns still cover the viewport before catch-up.
+    expect(document.querySelector('[data-id="0"] [data-col="4"]')).to.equal(null);
+    expectInnerViewportCovered();
+    expectPinnedCellsAtEdges(0);
+
+    await act(async () => {
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(document.querySelector('[data-id="0"] [data-col="4"]')).not.to.equal(null);
+    });
+    const scrollerRect = rect('scroller');
+    const middle = document.querySelector('[data-id="0"] [data-col="4"]')!.getBoundingClientRect();
+    expect(middle.left - scrollerRect.left).to.be.closeTo(4 * COLUMN_WIDTH - 2 * COLUMN_WIDTH, 1);
+    expectInnerViewportCovered();
   });
 
   it('extends the rendered window in the scroll direction (dynamic buffers)', async () => {
@@ -544,24 +547,54 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     const scroller = screen.getByTestId('scroller');
     const scrollTop = 500 * ROW_HEIGHT;
 
-    // No manual dispatch: let the natural scroll event drive the update so the
-    // scroll direction is detected as DOWN.
+    // The dispatched scroll commits the render synchronously (flushSync), so the
+    // directional buffer is read here — before the settle timer collapses it back to
+    // a symmetric buffer. The direction (DOWN) is the position delta.
     act(() => {
       scroller.scrollTop = scrollTop;
-    });
-    await waitFor(() => {
-      expect(renderedRowIds()).to.include(500);
+      scroller.dispatchEvent(new Event('scroll'));
     });
 
     const ids = renderedRowIds().filter((id): id is number => typeof id === 'number');
+    expect(ids).to.include(500);
     const first = Math.min(...ids);
     const last = Math.max(...ids);
 
-    // Scrolling down: almost no buffer above the viewport...
-    expect(first).to.be.at.least(500 - 2);
-    // ...and a large buffer below it (15 rows in the scroll direction).
-    const viewportBottom = scrollTop + scroller.clientHeight;
-    expect((last + 1) * ROW_HEIGHT).to.be.at.least(viewportBottom + 10 * ROW_HEIGHT);
+    // The buffer is skewed toward the scroll direction (DOWN): a large buffer below
+    // the viewport, a small one above.
+    const viewportBottomRow = Math.floor((scrollTop + scroller.clientHeight) / ROW_HEIGHT);
+    const rowsAbove = 500 - first;
+    const rowsBelow = last - viewportBottomRow;
+    expect(rowsBelow).to.be.greaterThan(rowsAbove);
+    expect(rowsBelow).to.be.at.least(10);
+  });
+
+  it('extends the rendered columns in the scroll direction (dynamic buffers)', async () => {
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+    const scrollLeft = 8 * COLUMN_WIDTH;
+
+    // Read synchronously after the dispatched scroll (flushSync), before the settle
+    // timer collapses the directional buffer. The direction (RIGHT) is the delta.
+    act(() => {
+      scroller.scrollLeft = scrollLeft;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+
+    const middleColumns = middleColumnsOf(0);
+    expect(middleColumns).to.include(10);
+    const first = Math.min(...middleColumns);
+    const last = Math.max(...middleColumns);
+
+    // The buffer is skewed toward the scroll direction (RIGHT): a buffer after the
+    // viewport (300px = 3 columns), a small one before.
+    const viewportRightCol = Math.floor(
+      (scrollLeft + scroller.clientWidth - scrollbarSize()) / COLUMN_WIDTH,
+    );
+    const colsBefore = 8 - first;
+    const colsAfter = last - viewportRightCol;
+    expect(colsAfter).to.be.greaterThan(colsBefore);
+    expect(colsAfter).to.be.at.least(2);
   });
 
   it('keeps the scroller and virtual scrollbar horizontal scroll ranges in sync near the overflow threshold', async () => {

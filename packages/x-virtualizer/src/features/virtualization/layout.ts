@@ -4,6 +4,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { platform } from '@base-ui/utils/platform';
 import { Store, createSelectorMemoized } from '@mui/x-internals/store';
+import type { ColumnWithWidth } from '../../models';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
@@ -402,43 +403,56 @@ export class LayoutListSticky extends Layout<ListElements> {
 }
 
 /**
- * Grid layout based on the "inverse sticky" technique. Same principle as
- * `LayoutListSticky`, extended with pinned sections. The two axes use different
- * strategies:
- * - Vertical: inverse sticky. The window's sticky offsets are asymmetric so it clamps
- *   against the inner viewport edges (below the top container, above the bottom
- *   container) rather than the scrollport edges. The top/bottom containers (headers,
- *   pinned rows) are classic sticky elements.
- * - Horizontal: controlled. The window is pinned to the scrollport (`left: 0`, sized to
- *   the viewport, `overflow: hidden`) and an inner positioner translates the rows by
- *   `-scrollLeft`. Stale columns can never leave the viewport, so horizontal render gaps
- *   are impossible; the trade-off is that horizontal movement is applied per scroll
- *   event instead of natively. As in the `controlled` layout mode, pinned column cells
- *   must use absolute positioning with JS offsets: sticky constraints ignore the
- *   positioner's transform.
+ * Grid layout based on the "inverse sticky" technique, applied to both axes and
+ * extended with pinned sections. Each axis places the rendered window in the flow at
+ * the rendered cells' offset and gives it `position: sticky` with negative insets, so
+ * the browser moves it natively within the directional buffer and clamps it to stale
+ * content (never blank) beyond.
+ *
+ * The window needs `content` as its containing block on both axes (for the full clamp
+ * range), so the axes are nested rather than combined on one element:
+ * - the `window` is a block child of `content`, `position: sticky` (vertical insets),
+ *   and a `display: flex` row spanning the full content width;
+ * - a `spacerLeft` (`flex: 0 0 offsetLeft`) offsets an `innerWindow`
+ *   (`flex: 0 0 renderedWidth`, `position: sticky` horizontal insets) whose containing
+ *   block is that full-width flex row.
+ * The top/bottom containers mirror this with a `spacerLeft` + horizontally-sticky
+ * `innerContainer`, so headers/pinned rows clamp in lockstep with the window and stay
+ * column-aligned. Pinned column cells are `position: sticky` in the normal flow of
+ * their row; the pinned-right inset includes the vertical scrollbar lane.
  *
  * Scrolling relies on virtual scrollbars, like the DataGrid: the scroller hides its
  * native scrollbars and standalone scrollbar widgets are kept in sync with it (see
  * `useScrollbarRefCallback`). The content reserves the scrollbar lanes so the last
  * row/column can scroll out from under the overlaid widgets.
  *
+ * The horizontal-geometry selectors take the columns array as a selector argument:
+ * `store.use(LayoutGridSticky.selectors.innerWindowProps, columns)`.
+ *
  * Expected DOM structure:
  * ```tsx
  * <div {...containerProps}>                // outer wrapper (position: relative)
  *   <div {...scrollerProps}>               // scroller, native scrollbars hidden
  *     <div {...contentProps}>              // in-flow, sticky containing block
- *       <div {...topContainerProps}>       // sticky top: headers + pinned top rows
- *         <div {...positionerProps}>       // horizontal translate
+ *       <div {...topContainerProps}>       // sticky top + flex: headers, pinned rows
+ *         <div {...spacerLeftProps} />     // flex: 0 0 offsetLeft
+ *         <div {...innerContainerProps}>   // flex item, horizontally-sticky
+ *           {header, pinned top rows}
+ *         </div>
  *       </div>
  *       <div {...spacerTopProps} />        // height: rowPositions[firstRowIndex]
- *       <div {...windowProps}>             // sticky rendered window
- *         <div {...positionerProps}>       // horizontal translate
+ *       <div {...windowProps}>             // sticky (vertical) + flex row
+ *         <div {...spacerLeftProps} />     // flex: 0 0 offsetLeft
+ *         <div {...innerWindowProps}>      // flex item, horizontally-sticky
  *           {rows}
  *         </div>
  *       </div>
  *       <div {...spacerBottomProps} />     // height: remaining content height
- *       <div {...bottomContainerProps}>    // sticky bottom: pinned bottom rows
- *         <div {...positionerProps}>       // horizontal translate
+ *       <div {...bottomContainerProps}>    // sticky bottom + flex: pinned bottom rows
+ *         <div {...spacerLeftProps} />
+ *         <div {...innerContainerProps}>
+ *           {pinned bottom rows}
+ *         </div>
  *       </div>
  *     </div>
  *   </div>
@@ -447,14 +461,50 @@ export class LayoutListSticky extends Layout<ListElements> {
  * </div>
  * ```
  */
+/**
+ * Horizontal offset (the `spacerLeft` basis), rendered width and inverse-sticky insets
+ * of the window. Mirror of the vertical derivation in `windowProps`: `left` clamps the
+ * window's right edge at the inner viewport's right edge (left of the vertical
+ * scrollbar lane), `right` clamps its left edge at the scrollport's left edge.
+ */
+const horizontalGeometry = createSelectorMemoized(
+  Virtualization.selectors.renderContext,
+  Dimensions.selectors.dimensions,
+  Dimensions.selectors.columnPositions,
+  (renderContext, dimensions, columnPositions, _columns: ColumnWithWidth[]) => {
+    const { leftPinnedWidth, rightPinnedWidth, columnsTotalWidth, viewportInnerSize } = dimensions;
+    const firstPosition = columnPositions[renderContext.firstColumnIndex] ?? 0;
+    // `lastColumnIndex` is exclusive: past the last column, the window extends to the
+    // pinned-right section (or the content end when there is none).
+    const lastPosition =
+      columnPositions[renderContext.lastColumnIndex] ?? columnsTotalWidth - rightPinnedWidth;
+    // Pinned cells are in the row flow, so they count toward the rendered width and
+    // the offset starts at the pinned-left cells.
+    const renderedWidth = leftPinnedWidth + (lastPosition - firstPosition) + rightPinnedWidth;
+    const offsetLeft = firstPosition - leftPinnedWidth;
+    const verticalScrollbarLane = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+    // Clamped to 0: if the rendered window is smaller than the viewport (few
+    // columns), sticky positioning must stay inert.
+    const stickyLeft = Math.min(0, -(renderedWidth - viewportInnerSize.width));
+    const stickyRight = Math.min(
+      0,
+      -(renderedWidth - (viewportInnerSize.width + verticalScrollbarLane)),
+    );
+    return { offsetLeft, renderedWidth, stickyLeft, stickyRight };
+  },
+);
+
 export class LayoutGridSticky extends Layout<DataGridElements> {
   static elements = [
     'scroller',
     'container',
     'content',
     'topContainer',
+    'spacerLeft',
+    'innerContainer',
     'spacerTop',
     'window',
+    'innerWindow',
     'spacerBottom',
     'bottomContainer',
     'scrollbarVertical',
@@ -524,9 +574,9 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
 
     contentProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
       style: {
-        // The scrollable width is fully synthetic: every horizontally-pinned section
-        // is viewport-sized, so none of the in-flow children spans the columns width.
-        // Floored at the inner viewport width
+        // The full columns width: the flex children (spacers + inner boxes) don't
+        // stretch their containing blocks, so the content sets the scrollable width.
+        // Floored at the inner viewport width.
         width: Math.max(dimensions.columnsTotalWidth, dimensions.viewportInnerSize.width),
         position: 'relative',
         // Reserve the virtual scrollbar lanes in the scrollable area, so the last
@@ -537,20 +587,22 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
         paddingBottom:
           dimensions.hasScrollY && dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
         paddingRight: dimensions.hasScrollX && dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
+        // Inset for sticky pinned-right cells: they stick against the scrollport, which
+        // spans under the overlaid vertical scrollbar (native scrollbars hidden), so
+        // this lifts them to the visible inner edge. Consumed as `right: var(--pinned-right)`.
+        '--pinned-right': `${dimensions.hasScrollY ? dimensions.scrollbarSize : 0}px`,
       } as React.CSSProperties,
       role: 'presentation',
     })),
 
-    topContainerProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
+    topContainerProps: createSelectorMemoized(() => ({
       style: {
         position: 'sticky',
         top: 0,
-        // Horizontally pinned to the scrollport, like the window: otherwise the
-        // container would move with the horizontal scroll in addition to its
-        // positioner's translation, making its content scroll at twice the rate.
-        left: 0,
-        width: dimensions.viewportInnerSize.width,
-        overflow: 'hidden',
+        // Full-width flex row (nowrap): its content box is the innerContainer's sticky
+        // containing block, so the innerContainer clamps across the full scroll range.
+        display: 'flex',
+        flexWrap: 'nowrap',
         zIndex: 2,
       } as React.CSSProperties,
       role: 'presentation',
@@ -561,10 +613,8 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
         position: 'sticky',
         // Lifted above the horizontal scrollbar lane.
         bottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
-        // Horizontally pinned, same as the top container.
-        left: 0,
-        width: dimensions.viewportInnerSize.width,
-        overflow: 'hidden',
+        display: 'flex',
+        flexWrap: 'nowrap',
         zIndex: 2,
       } as React.CSSProperties,
       role: 'presentation',
@@ -630,11 +680,28 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
       },
     ),
 
-    positionerProps: createSelectorMemoized(
-      Virtualization.selectors.pinnedLeftOffsetSelector,
-      (scrollLeft) => ({
+    // Horizontal offset spacer: gives the sticky sibling leftward slack to clamp into
+    // (the horizontal analog of `spacerTop`).
+    spacerLeftProps: createSelectorMemoized(
+      horizontalGeometry,
+      (geometry, _columns: ColumnWithWidth[]) => ({
         style: {
-          transform: `translate3d(${-scrollLeft}px, 0, 0)`,
+          flex: `0 0 ${geometry.offsetLeft}px`,
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
+    ),
+
+    // Horizontally-sticky inner box of the top/bottom containers, holding the header
+    // and pinned rows (the container's analog of `innerWindow`).
+    innerContainerProps: createSelectorMemoized(
+      horizontalGeometry,
+      (geometry, _columns: ColumnWithWidth[]) => ({
+        style: {
+          flex: `0 0 ${geometry.renderedWidth}px`,
+          position: 'sticky',
+          left: geometry.stickyLeft,
+          right: geometry.stickyRight,
         } as React.CSSProperties,
         role: 'presentation',
       }),
@@ -697,17 +764,40 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
 
         return {
           style: {
+            // Vertical axis: sticky against `content` (full-height containing block).
             position: 'sticky',
             top: stickyTop,
             bottom: stickyBottom,
-            // Horizontal axis is controlled: the window is pinned to the scrollport and
-            // sized to the viewport, the positioner inside translates by `-scrollLeft`.
-            left: 0,
-            width: viewportInnerSize.width,
-            overflow: 'hidden',
-            // Explicit height: keeps the sticky clamping math immune to flow height
+            // Horizontal axis: a flex row (nowrap) holding the spacerLeft + innerWindow.
+            // Its content box is the innerWindow's sticky containing block, so the
+            // innerWindow clamps across the full scroll range.
+            display: 'flex',
+            flexWrap: 'nowrap',
+            // Explicit height: keeps the vertical clamping math immune to flow height
             // discrepancies from out-of-flow children (detail panels, focus rows).
             height: renderedHeight,
+          } as React.CSSProperties,
+          role: 'presentation',
+        };
+      },
+    ),
+
+    innerWindowProps: createSelectorMemoized(
+      horizontalGeometry,
+      Dimensions.selectors.rowPositions,
+      Virtualization.selectors.renderContext,
+      Dimensions.selectors.contentHeight,
+      (geometry, rowPositions, renderContext, contentHeight, _columns: ColumnWithWidth[]) => {
+        const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
+        const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
+        return {
+          style: {
+            flex: `0 0 ${geometry.renderedWidth}px`,
+            position: 'sticky',
+            left: geometry.stickyLeft,
+            right: geometry.stickyRight,
+            // Matches the window height so the rows fill it (rows use `width: 100%`).
+            height: lastPosition - firstPosition,
           } as React.CSSProperties,
           role: 'presentation',
         };
