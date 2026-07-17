@@ -447,6 +447,16 @@ export class SchedulerStore<
 
     this.schedulingPlugin?.handleEventsUpdate(parameters);
 
+    if (process.env.NODE_ENV !== 'production') {
+      if (!this.parameters.onEventsChange && !this.parameters.dataSource) {
+        warnOnce([
+          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+          'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+          'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+        ]);
+      }
+    }
+
     this.parameters.onEventsChange?.(newEvents, eventDetails);
 
     // Publish event for premium plugins (e.g., lazy loading) to sync caches

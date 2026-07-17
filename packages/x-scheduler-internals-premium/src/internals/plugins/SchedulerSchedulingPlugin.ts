@@ -58,6 +58,16 @@ export class SchedulerSchedulingPlugin<
   }
 
   private updateDependencies(newDependencies: SchedulerDependency[]) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!this.store.parameters.onDependenciesChange) {
+        warnOnce([
+          'MUI X Scheduler: A dependency update was ignored because no `onDependenciesChange` handler is provided.',
+          'The `dependencies` prop is fully controlled, so without it the changes are lost and the UI does not update.',
+          'Pass an `onDependenciesChange` handler that updates the `dependencies` prop.',
+        ]);
+      }
+    }
+
     const eventDetails = createChangeEventDetails('none');
     this.store.parameters.onDependenciesChange?.(newDependencies, eventDetails);
   }

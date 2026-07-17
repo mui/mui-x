@@ -404,6 +404,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
           resources: TEST_RESOURCES,
           dependencies: [DEP_AB, DEP_AC, DEP_BC],
           onDependenciesChange,
+          onEventsChange: () => {},
         },
         adapter,
       );
@@ -425,6 +426,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
           resources: TEST_RESOURCES,
           dependencies: [DEP_AB],
           onDependenciesChange,
+          onEventsChange: () => {},
         },
         adapter,
       );
@@ -437,7 +439,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should remove a dependency when the deleted event is only referenced as its target', () => {
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        {
+          ...DEFAULT_PARAMS,
+          dependencies: [DEP_AB],
+          onDependenciesChange,
+          onEventsChange: () => {},
+        },
         adapter,
       );
 
@@ -559,6 +566,19 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         );
       }).toWarnDev([
         'MUI X Scheduler: The dependency "dep-r" references the recurring event "event-r".',
+      ]);
+    });
+
+    it('should warn in dev when dependencies are updated without onDependenciesChange', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+
+      expect(() => {
+        store.addDependency({ source: 'event-b', target: 'event-a', type: 'FinishToStart' });
+      }).toWarnDev([
+        'MUI X Scheduler: A dependency update was ignored because no `onDependenciesChange` handler is provided.',
       ]);
     });
 
