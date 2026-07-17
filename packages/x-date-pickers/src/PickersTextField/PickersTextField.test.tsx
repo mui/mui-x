@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
+import { styled } from '@mui/material/styles';
+import FormControl from '@mui/material/FormControl';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { createPickerRenderer } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const STUB_PROPS = {
   areAllSectionsEmpty: true,
@@ -192,6 +195,29 @@ describe('<PickersTextField /> - accessibility', () => {
     expect(status).not.to.have.attribute('aria-label');
     expect(status).to.have.text('Helper');
   });
+
+  // The empty-margin collapse must live with the helper text, not the root, so replacing
+  // `slots.root` does not reintroduce vertical spacing for an empty helper text.
+  it.skipIf(isJSDOM)(
+    'should collapse the empty helper text even when `slots.root` is replaced',
+    () => {
+      const CustomRoot = styled(FormControl)({});
+      const { setProps } = render(
+        <PickersTextField
+          {...STUB_PROPS}
+          variant="standard"
+          label="My label"
+          slots={{ root: CustomRoot }}
+        />,
+      );
+
+      const status = screen.getByRole('status');
+      expect(window.getComputedStyle(status).marginTop).to.equal('0px');
+
+      setProps({ helperText: 'Helper' });
+      expect(window.getComputedStyle(status).marginTop).not.to.equal('0px');
+    },
+  );
 });
 
 describe('<PickersTextField /> - outlined notch', () => {

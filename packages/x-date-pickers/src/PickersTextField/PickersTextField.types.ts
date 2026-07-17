@@ -35,6 +35,9 @@ export interface PickersTextFieldSlots {
   htmlInput?: React.ElementType;
   /**
    * The component used for the form helper text slot.
+   * It acts as an ARIA live region for helper/error announcements, so a custom component
+   * must forward the received props (e.g. `role`) and render its root element even when it
+   * has no children, otherwise error text may not be announced.
    * @default FormHelperText
    */
   formHelperText?: React.ElementType;

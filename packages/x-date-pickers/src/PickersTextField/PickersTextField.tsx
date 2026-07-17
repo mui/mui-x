@@ -9,7 +9,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import InputLabel from '@mui/material/InputLabel';
-import FormHelperText, { formHelperTextClasses } from '@mui/material/FormHelperText';
+import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import type { PickersTextFieldClasses } from './pickersTextFieldClasses';
 import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
@@ -32,9 +32,13 @@ const PickersTextFieldRoot = styled(FormControl, {
   slot: 'Root',
 })<{ ownerState: PickerTextFieldOwnerState }>({
   maxWidth: '100%',
-  // The helper text is always rendered so it can act as a live region; collapse its top
-  // margin while empty so it reserves no space. https://github.com/mui/mui-x/issues/23101
-  [`& .${formHelperTextClasses.root}:empty`]: {
+});
+
+// The helper text is always rendered so it can act as a live region. Collapse the empty
+// state here (not on the root) so it reserves no space even when `slots.root` is replaced.
+// https://github.com/mui/mui-x/issues/23101
+const PickersTextFieldHelperText = styled(FormHelperText)({
+  '&:empty': {
     marginTop: 0,
   },
 });
@@ -184,7 +188,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
   const PickersInputComponent = slots?.input ?? VARIANT_COMPONENT[variant];
   const RootComponent = slots?.root ?? PickersTextFieldRoot;
   const InputLabelComponent = slots?.inputLabel ?? InputLabel;
-  const FormHelperTextComponent = slots?.formHelperText ?? FormHelperText;
+  const FormHelperTextComponent = slots?.formHelperText ?? PickersTextFieldHelperText;
 
   const inputAdditionalProps: Record<string, any> = {};
   if (variant === 'outlined') {
