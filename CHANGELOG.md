@@ -47,10 +47,6 @@ Same changes as in `@mui/x-date-pickers@9.10.0`.
 
 - [charts] Provide `dataIndex` in `LinePlot` and `AreaPlot` `onItemClick` (#23144) @JCQuintas
 
-  `LinePlot` and `AreaPlot` `onItemClick` (and `LineChart`'s `onLineClick`/`onAreaClick`) now provide the `dataIndex` of the closest data point to the click.
-
-  The identifier passed to `LinePlot`, `AreaPlot`, and `MarkPlot` `onItemClick` is now typed as the new `LineItemClickIdentifier`, where `dataIndex` is required. The callback is no longer fired in the pathological case where no data point can be resolved from the click position.
-
 #### `@mui/x-charts-pro@9.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@9.10.0`.
