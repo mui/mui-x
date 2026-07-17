@@ -14,6 +14,7 @@ import {
   useMessage,
 } from '@mui/x-chat-headless';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
@@ -91,16 +92,18 @@ export interface ChatMessageActionsResolveContext {
 
 export interface ChatMessageSlotProps {
   root?: any;
-  avatar?: Partial<ChatMessageAvatarProps>;
-  content?: Partial<ChatMessageContentProps>;
-  meta?: Partial<ChatMessageMetaProps>;
-  inlineMeta?: Partial<ChatMessageInlineMetaProps>;
-  error?: Partial<ChatMessageErrorProps>;
+  avatar?: WithDataAttributes<Partial<ChatMessageAvatarProps>>;
+  content?: WithDataAttributes<Partial<ChatMessageContentProps>>;
+  meta?: WithDataAttributes<Partial<ChatMessageMetaProps>>;
+  inlineMeta?: WithDataAttributes<Partial<ChatMessageInlineMetaProps>>;
+  error?: WithDataAttributes<Partial<ChatMessageErrorProps>>;
   actions?:
-    | Partial<ChatMessageActionsProps>
-    | ((context: ChatMessageActionsResolveContext) => Partial<ChatMessageActionsProps>);
+    | WithDataAttributes<Partial<ChatMessageActionsProps>>
+    | ((
+        context: ChatMessageActionsResolveContext,
+      ) => WithDataAttributes<Partial<ChatMessageActionsProps>>);
   authorName?: MessageGroupSlotProps['authorName'];
-  streamingIndicator?: Partial<ChatStreamingIndicatorProps>;
+  streamingIndicator?: WithDataAttributes<Partial<ChatStreamingIndicatorProps>>;
 }
 
 export interface ChatMessageProps extends Omit<MessageRootProps, 'slots' | 'slotProps'> {
