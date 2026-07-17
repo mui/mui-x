@@ -412,7 +412,10 @@ storeClasses.forEach((storeClass) => {
 
           let store: any;
           expect(() => {
-            store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+            store = new storeClass.Value(
+              { resources: TEST_RESOURCES, events: [event], onEventsChange: () => {} },
+              adapter,
+            );
           }).toWarnDev([
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
           ]);
@@ -425,7 +428,10 @@ storeClasses.forEach((storeClass) => {
 
       it('should warn in dev when the same id is in both `deleted` and `updated`', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange: () => {} },
+          adapter,
+        );
 
         expect(() => {
           (store as any).updateEvents({
@@ -845,6 +851,35 @@ storeClasses.forEach((storeClass) => {
         expect(secondPastedId).not.to.equal(null);
         expect(firstPastedId).not.to.equal(secondPastedId);
         expect(onEventsChange.calledTwice).to.equal(true);
+      });
+    });
+
+    describe('dev warnings', () => {
+      it('should warn in dev when events are updated without onEventsChange nor dataSource', () => {
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+
+        expect(() => {
+          store.updateEvent({ id: event.id, title: 'updated' });
+        }).toWarnDev([
+          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+        ]);
+      });
+
+      it('should not warn about a missing onEventsChange when a dataSource is provided', () => {
+        const event = EventBuilder.new().build();
+        const dataSource = {
+          getEvents: async () => [event],
+          persistEvents: async () => ({ success: true }),
+        };
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [], dataSource },
+          adapter,
+        );
+
+        expect(() => {
+          store.createEvent(EventBuilder.new().toCreationProperties());
+        }).not.toWarnDev();
       });
     });
   });
