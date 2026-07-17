@@ -69,7 +69,7 @@
   "slots": [
     {
       "name": "formHelperText",
-      "description": "The component used for the form helper text slot.\nIt acts as an ARIA live region for helper/error announcements, so a custom component\nmust forward the received props (e.g. `role`) and render its root element even when it\nhas no children, otherwise error text may not be announced.",
+      "description": "The component used for the form helper text slot.\nIt acts as an ARIA live region so helper text changes (such as a validation error) are\nannounced. A custom component must forward the received props (e.g. `role`) and render its\nroot element even when it has no children, otherwise a later change may not be announced.",
       "default": "FormHelperText",
       "class": null
     },

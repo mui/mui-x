@@ -264,7 +264,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
             ...(slotProps?.htmlInput !== undefined && { htmlInput: slotProps.htmlInput }),
           }}
         />
-        {/* Always rendered as a name-less live region so helperText/error changes are announced without re-announcing the field label. https://github.com/mui/mui-x/issues/23101 */}
+        {/* Always rendered as a name-less live region so helperText changes are announced without re-announcing the field label. https://github.com/mui/mui-x/issues/23101 */}
         <FormHelperTextComponent id={helperTextId} role="status" {...slotProps?.formHelperText}>
           {helperText}
         </FormHelperTextComponent>
