@@ -1,6 +1,6 @@
 import type { DateRangePickerProps } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { screen, waitFor } from '@mui/internal-test-utils';
+import { screen, waitFor, within } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import {
   adapterToUse,
@@ -124,8 +124,11 @@ describe('<DateRangePicker />', () => {
   });
 
   // The active range position underline (`activeBar`) is measured from the rendered
-  // section widths (`offsetWidth`), which is always `0` in jsdom, so this runs in the browser.
+  // section widths (`offsetWidth`), which is always `0` in jsdom, so these run in the browser.
   describe('active range position underline (single input)', () => {
+    const getPickerDay = (name: string, picker = 'January 2018') =>
+      within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
+
     it.skipIf(isJSDOM)(
       'should render the active bar with a non-zero width for the focused range position',
       async () => {
@@ -153,33 +156,37 @@ describe('<DateRangePicker />', () => {
     );
 
     it.skipIf(isJSDOM)(
-      'should move the active bar to the end range position when editing the end date',
+      'should move the active bar to the end range position after selecting the start date',
       async () => {
         stubMatchMedia(true);
-        const view = renderWithProps({
-          rangePosition: 'start',
-          defaultValue: [adapterToUse.date('2022-04-17'), adapterToUse.date('2022-04-21')],
+        const { user } = renderWithProps({
+          defaultValue: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-06')],
         });
-        await openPicker(view.user, {
+        await openPicker(user, {
           type: 'date-range',
           initialFocus: 'start',
           fieldType: 'single-input',
         });
 
-        const activeBar = document.querySelector<HTMLElement>(
-          `.${pickersInputBaseClasses.activeBar}`,
-        )!;
+        const activeBarSelector = `.${pickersInputBaseClasses.activeBar}`;
         let startLeft = 0;
         await waitFor(() => {
+          const activeBar = document.querySelector<HTMLElement>(activeBarSelector)!;
           expect(activeBar.offsetWidth).to.be.greaterThan(0);
           startLeft = activeBar.offsetLeft;
         });
 
-        view.setProps({ rangePosition: 'end' });
+        // Selecting the start date advances the picker to the end range position.
+        await user.click(getPickerDay('3'));
 
         await waitFor(() => {
+          expect(document.querySelector('[data-active-range-position]')).to.have.attribute(
+            'data-active-range-position',
+            'end',
+          );
           // The bar now sits under the end date sections, well to the right of the start
           // sections (observed gap is ~100px; 40px keeps the assertion comfortably robust).
+          const activeBar = document.querySelector<HTMLElement>(activeBarSelector)!;
           expect(activeBar.offsetLeft).to.be.greaterThan(startLeft + 40);
         });
       },
