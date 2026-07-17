@@ -151,5 +151,38 @@ describe('<DateRangePicker />', () => {
         });
       },
     );
+
+    it.skipIf(isJSDOM)(
+      'should move the active bar to the end range position when editing the end date',
+      async () => {
+        stubMatchMedia(true);
+        const view = renderWithProps({
+          rangePosition: 'start',
+          defaultValue: [adapterToUse.date('2022-04-17'), adapterToUse.date('2022-04-21')],
+        });
+        await openPicker(view.user, {
+          type: 'date-range',
+          initialFocus: 'start',
+          fieldType: 'single-input',
+        });
+
+        const activeBar = document.querySelector<HTMLElement>(
+          `.${pickersInputBaseClasses.activeBar}`,
+        )!;
+        let startLeft = 0;
+        await waitFor(() => {
+          expect(activeBar.offsetWidth).to.be.greaterThan(0);
+          startLeft = activeBar.offsetLeft;
+        });
+
+        view.setProps({ rangePosition: 'end' });
+
+        await waitFor(() => {
+          // The bar now sits under the end date sections, well to the right of the start
+          // sections (observed gap is ~100px; 40px keeps the assertion comfortably robust).
+          expect(activeBar.offsetLeft).to.be.greaterThan(startLeft + 40);
+        });
+      },
+    );
   });
 });
