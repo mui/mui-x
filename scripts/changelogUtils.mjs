@@ -21,6 +21,12 @@ import { $ } from 'execa';
 const REPO = 'mui-x';
 
 /**
+ * @type {Set<string>}
+ * Bot logins whose commits are excluded from the changelog and contributor attribution
+ */
+const IGNORED_BOT_LOGINS = new Set(['renovate[bot]', 'code-infra-renovate[bot]']);
+
+/**
  * @type {string[]}
  * Labels to exclude from the changelog
  */
@@ -115,7 +121,7 @@ function parseTags(commitMessage) {
 function resolvePackagesByLabels(labels = []) {
   const resolvedPackages = [];
   for (const label of labels) {
-    switch (label.name) {
+    switch (label) {
       case 'scope: data grid':
         resolvedPackages.push('DataGrid');
         break;
@@ -147,7 +153,7 @@ function getContributors(commits = []) {
   const warnUsers = new Map();
   for (const commitItem of commits) {
     const { author, commit } = commitItem;
-    if (!author || ['renovate[bot]', 'code-infra-renovate[bot]'].includes(author.login)) {
+    if (!author || IGNORED_BOT_LOGINS.has(author.login)) {
       continue;
     }
     if (author.login === 'github-actions[bot]') {
@@ -217,17 +223,14 @@ async function generateChangelog({
       lastRelease,
       release,
     })
-  )
-    .filter((commit) => commit.author?.login !== 'renovate[bot]')
-    .map((commit) => ({
-      ...commit,
-      commit: {
-        message: commit.message,
-      },
-    }));
+  ).map((commit) => ({
+    ...commit,
+    commit: {
+      message: commit.message,
+    },
+  }));
 
   const changeLogMessages = {};
-  const prsLabelsMap = {};
   const community = getContributors(commitsItems);
 
   // Dispatch commits in different sections
@@ -249,7 +252,7 @@ async function generateChangelog({
   const codemodCommits = [];
 
   commitsItems
-    .filter((item) => !prsLabelsMap[item.sha]?.some((label) => excludeLabels.includes(label.name)))
+    .filter((item) => !item.labels?.some((label) => excludeLabels.includes(label)))
     .filter((item) => !excludeTitleTags.some((tag) => item.commit.message.includes(tag)))
     .forEach((commitItem) => {
       const tag = parseTags(commitItem.commit.message);
@@ -317,8 +320,7 @@ async function generateChangelog({
           break;
         case 'l10n':
         case '118n': {
-          const prLabels = prsLabelsMap[commitItem.sha];
-          const resolvedPackages = resolvePackagesByLabels(prLabels);
+          const resolvedPackages = resolvePackagesByLabels(commitItem.labels);
           if (resolvedPackages.length > 0) {
             resolvedPackages.forEach((resolvedPackage) => {
               switch (resolvedPackage) {
