@@ -292,7 +292,7 @@ function expectPinnedCellsAtEdges(rowId: string | number) {
   expect(pinnedRight.right).to.be.closeTo(scroller.right - scrollbarSize(), 1);
 }
 
-function renderedRowIds() {
+function getWindowRowIds() {
   return Array.from(
     document.querySelectorAll<HTMLElement>('[data-testid="window"] [data-testid="row"]'),
   ).map((node) =>
@@ -312,14 +312,14 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
   async function renderGrid(props?: { width?: number; scrollbarSize?: number }) {
     const view = render(<StickyGrid {...props} />);
     await waitFor(() => {
-      expect(renderedRowIds().length).to.be.greaterThan(0);
+      expect(getWindowRowIds().length).to.be.greaterThan(0);
     });
     return view;
   }
 
   it('renders only a window of rows and columns', async () => {
     await renderGrid();
-    expect(renderedRowIds().length).to.be.lessThan(ROW_COUNT / 10);
+    expect(getWindowRowIds().length).to.be.lessThan(ROW_COUNT / 10);
 
     const firstRow = document.querySelector('[data-testid="window"] [data-testid="row"]')!;
     expect(firstRow.children.length).to.be.lessThan(COLUMN_COUNT);
@@ -351,14 +351,14 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     // The virtualizer hasn't received the scroll event yet: the stale window and the
     // pinned containers must already be in place through sticky clamping alone.
-    expect(renderedRowIds()).not.to.include(500);
+    expect(getWindowRowIds()).not.to.include(500);
     expectInnerViewportCovered();
 
     await act(async () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
     await waitFor(() => {
-      expect(renderedRowIds()).to.include(500);
+      expect(getWindowRowIds()).to.include(500);
     });
     expectInnerViewportCovered();
 
@@ -381,21 +381,21 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
     await waitFor(() => {
-      expect(renderedRowIds()).to.include(500);
+      expect(getWindowRowIds()).to.include(500);
     });
 
     const scrollTop = 250 * ROW_HEIGHT;
     act(() => {
       scroller.scrollTop = scrollTop;
     });
-    expect(renderedRowIds()).not.to.include(250);
+    expect(getWindowRowIds()).not.to.include(250);
     expectInnerViewportCovered();
 
     await act(async () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
     await waitFor(() => {
-      expect(renderedRowIds()).to.include(250);
+      expect(getWindowRowIds()).to.include(250);
     });
     expectInnerViewportCovered();
   });
@@ -493,7 +493,9 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     // The virtualizer hasn't received the scroll event yet: the stale columns and the
     // pinned cells must already cover the viewport through sticky clamping alone.
-    expect(document.querySelector('[data-id="0"] [data-col="10"]')).to.equal(null);
+    // Column 13 is beyond the resting coverage (viewport + trailing buffer + the
+    // spilled-over leading buffer) but inside the post-scroll one.
+    expect(document.querySelector('[data-id="0"] [data-col="13"]')).to.equal(null);
     expectInnerViewportCovered();
     expectPinnedCellsAtEdges(0);
 
@@ -502,11 +504,11 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
     await waitFor(() => {
-      expect(document.querySelector('[data-id="0"] [data-col="10"]')).not.to.equal(null);
+      expect(document.querySelector('[data-id="0"] [data-col="13"]')).not.to.equal(null);
     });
     const scrollerRect = rect('scroller');
-    const middle = document.querySelector('[data-id="0"] [data-col="10"]')!.getBoundingClientRect();
-    expect(middle.left - scrollerRect.left).to.be.closeTo(10 * COLUMN_WIDTH - scrollLeft, 1);
+    const middle = document.querySelector('[data-id="0"] [data-col="13"]')!.getBoundingClientRect();
+    expect(middle.left - scrollerRect.left).to.be.closeTo(13 * COLUMN_WIDTH - scrollLeft, 1);
     expectInnerViewportCovered();
   });
 
@@ -555,7 +557,7 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
 
-    const ids = renderedRowIds().filter((id): id is number => typeof id === 'number');
+    const ids = getWindowRowIds().filter((id): id is number => typeof id === 'number');
     expect(ids).to.include(500);
     const first = Math.min(...ids);
     const last = Math.max(...ids);
@@ -595,6 +597,77 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     const colsAfter = last - viewportRightCol;
     expect(colsAfter).to.be.greaterThan(colsBefore);
     expect(colsAfter).to.be.at.least(2);
+  });
+
+  it('keeps the rendered window size constant across scroll direction changes', async () => {
+    // Resizing the window layer discards its rasterization wholesale, which the
+    // compositor can expose as blank regions at scroll start. The per-axis buffer
+    // total is therefore constant: direction changes redistribute it, never resize.
+    // The rendered height must stay stable no matter the direction — including at
+    // rest at the very top, where the void backward buffer spills forward; each
+    // boundary is row-quantized, allowing one row of play per boundary between
+    // measurements.
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+    const heightAtRest = rect('outer-window').height;
+
+    act(() => {
+      scroller.scrollTop = 50 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    const heightScrollingDown = rect('outer-window').height;
+    expectInnerViewportCovered();
+
+    act(() => {
+      scroller.scrollTop = 49 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    const heightScrollingUp = rect('outer-window').height;
+    expectInnerViewportCovered();
+
+    // A zero-delta event settles the direction back to NONE: the buffer rebalances
+    // to symmetric without resizing the window.
+    act(() => {
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    const heightSettled = rect('outer-window').height;
+    expectInnerViewportCovered();
+
+    expect(Math.abs(heightScrollingDown - heightAtRest)).to.be.at.most(2 * ROW_HEIGHT);
+    expect(Math.abs(heightScrollingUp - heightScrollingDown)).to.be.at.most(2 * ROW_HEIGHT);
+    expect(Math.abs(heightSettled - heightScrollingDown)).to.be.at.most(2 * ROW_HEIGHT);
+  });
+
+  it('defers render context updates until the leading buffer runs low', async () => {
+    // A context update restarts the window layer's rasterization, so it must not
+    // run on every crossed row: after an update, further scrolling within half of
+    // the leading buffer (15 rows while moving vertically) keeps the same context.
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+
+    // Establish the DOWN direction: this first event updates the context (direction
+    // change) and allocates the whole vertical buffer below the viewport.
+    act(() => {
+      scroller.scrollTop = ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    const idsAfterDirectionChange = getWindowRowIds();
+
+    // 5 more rows: far above the old one-row threshold, but well within half of the
+    // 15-row leading buffer — the context must not change.
+    act(() => {
+      scroller.scrollTop = 6 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getWindowRowIds()).to.deep.equal(idsAfterDirectionChange);
+
+    // Past the rendered buffer: the context must advance.
+    act(() => {
+      scroller.scrollTop = 30 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getWindowRowIds()).to.include(30);
+    expect(getWindowRowIds()).not.to.deep.equal(idsAfterDirectionChange);
   });
 
   it('keeps the scroller and virtual scrollbar horizontal scroll ranges in sync near the overflow threshold', async () => {

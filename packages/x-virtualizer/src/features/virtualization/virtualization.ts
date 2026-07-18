@@ -324,18 +324,32 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
     const direction = isScrolling ? ScrollDirection.forDelta(dx, dy) : ScrollDirection.NONE;
 
-    // Since previous render, we have scrolled...
-    const rowScroll = Math.abs(
-      scrollPosition.current.top - previousContextScrollPosition.current.top,
-    );
-    const columnScroll = Math.abs(
-      scrollPosition.current.left - previousContextScrollPosition.current.left,
-    );
-
-    // PERF: use the computed minimum column width instead of a static one
-    const didCrossThreshold = rowScroll >= rowHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
     const didChangeDirection = scrollCache.direction !== direction;
-    const shouldUpdate = didCrossThreshold || didChangeDirection;
+
+    let shouldUpdate: boolean;
+    if (layoutMode === 'sticky') {
+      // In sticky mode, a render context update shifts the rows inside the window layer,
+      // which restarts the layer's rasterization from scratch. Updating on every
+      // crossed row keeps the buffer's raster perpetually invalidated, and fast
+      // scrolling then exposes not-yet-rasterized regions (blank flashes at the
+      // viewport edge). Defer updates until half of a buffer is consumed instead; the
+      // inverse-sticky clamp covers any overshoot with stale content in the meantime.
+      shouldUpdate =
+        didChangeDirection ||
+        isLowOnRenderedBuffer(store, params, scrollPosition.current, scrollCache);
+    } else {
+      // Since previous render, we have scrolled...
+      const rowScroll = Math.abs(
+        scrollPosition.current.top - previousContextScrollPosition.current.top,
+      );
+      const columnScroll = Math.abs(
+        scrollPosition.current.left - previousContextScrollPosition.current.left,
+      );
+
+      // PERF: use the computed minimum column width instead of a static one
+      const didCrossThreshold = rowScroll >= rowHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
+      shouldUpdate = didCrossThreshold || didChangeDirection;
+    }
 
     if (!shouldUpdate) {
       store.set('virtualization', {
@@ -903,6 +917,7 @@ function computeRenderContext(
       bufferAfter: scrollCache.buffer.rowAfter,
       positions: inputs.rowsMeta.positions,
       lastSize: inputs.lastRowHeight,
+      spillOverflow: inputs.layoutMode === 'sticky',
     });
 
     if (!inputs.virtualizeColumnsWithAutoRowHeight) {
@@ -993,6 +1008,7 @@ function deriveRenderContext(
     bufferAfter: scrollCache.buffer.rowAfter,
     positions: inputs.rowsMeta.positions,
     lastSize: inputs.lastRowHeight,
+    spillOverflow: inputs.layoutMode === 'sticky',
   });
 
   const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
@@ -1004,6 +1020,7 @@ function deriveRenderContext(
     bufferAfter: scrollCache.buffer.columnAfter,
     positions: inputs.columnPositions,
     lastSize: inputs.lastColumnWidth,
+    spillOverflow: inputs.layoutMode === 'sticky',
   });
 
   const firstColumnToRender = getFirstNonSpannedColumnToRender({
@@ -1096,6 +1113,7 @@ function getIndexesToRender({
   maxLastIndex,
   positions,
   lastSize,
+  spillOverflow,
 }: {
   firstIndex: number;
   lastIndex: number;
@@ -1105,9 +1123,30 @@ function getIndexesToRender({
   maxLastIndex: number;
   positions: number[];
   lastSize: number;
+  spillOverflow?: boolean;
 }) {
-  const firstPosition = positions[firstIndex] - bufferBefore;
-  const lastPosition = positions[lastIndex] + bufferAfter;
+  let firstPosition = positions[firstIndex] - bufferBefore;
+  let lastPosition = positions[lastIndex] + bufferAfter;
+
+  if (spillOverflow) {
+    // Sticky mode keeps the rendered window size constant (see `bufferForDirection`).
+    // Near the content edges part of a buffer has nothing left to extend into, which
+    // would shrink the window and resize its layer. Spill that part to the other
+    // side instead, so e.g. a fling that starts at the very top (where the backward
+    // buffer is void) doesn't grow the window when the buffers turn direction.
+    const startBound = positions[minFirstIndex] ?? 0;
+    const endBound = positions[maxLastIndex] ?? (positions[positions.length - 1] ?? 0) + lastSize;
+    const startOverflow = startBound - firstPosition;
+    const endOverflow = lastPosition - endBound;
+    if (startOverflow > 0) {
+      firstPosition = startBound;
+      lastPosition += startOverflow;
+    }
+    if (endOverflow > 0) {
+      lastPosition = endBound;
+      firstPosition -= endOverflow;
+    }
+  }
 
   const firstIndexPadded = binarySearch(firstPosition, positions, {
     atStart: true,
@@ -1181,6 +1220,56 @@ function bufferForDirection(
     }
   }
 
+  if (layoutMode === 'sticky') {
+    // In sticky mode, the window is rasterized as a single layer, and resizing it
+    // discards that raster wholesale at scroll start, exactly when the compositor
+    // needs it. Keep the per-axis buffer total constant across direction changes
+    // (symmetric at rest, fully moved to the leading edge while scrolling), so a
+    // direction change only moves the window, never resizes it. The cross axis keeps
+    // its resting allocation for the same reason.
+    const rowBuffer = Math.max(2 * rowBufferPx, verticalBuffer);
+    const columnBuffer = Math.max(2 * columnBufferPx, horizontalBuffer);
+    switch (direction) {
+      case ScrollDirection.NONE:
+        return {
+          rowAfter: rowBuffer / 2,
+          rowBefore: rowBuffer / 2,
+          columnAfter: columnBuffer / 2,
+          columnBefore: columnBuffer / 2,
+        };
+      case ScrollDirection.LEFT:
+        return {
+          rowAfter: rowBuffer / 2,
+          rowBefore: rowBuffer / 2,
+          columnAfter: 0,
+          columnBefore: columnBuffer,
+        };
+      case ScrollDirection.RIGHT:
+        return {
+          rowAfter: rowBuffer / 2,
+          rowBefore: rowBuffer / 2,
+          columnAfter: columnBuffer,
+          columnBefore: 0,
+        };
+      case ScrollDirection.UP:
+        return {
+          rowAfter: 0,
+          rowBefore: rowBuffer,
+          columnAfter: columnBuffer / 2,
+          columnBefore: columnBuffer / 2,
+        };
+      case ScrollDirection.DOWN:
+        return {
+          rowAfter: rowBuffer,
+          rowBefore: 0,
+          columnAfter: columnBuffer / 2,
+          columnBefore: columnBuffer / 2,
+        };
+      default:
+        throw /* minify-error-disabled */ new Error('unreachable');
+    }
+  }
+
   switch (direction) {
     case ScrollDirection.NONE:
       return {
@@ -1221,6 +1310,66 @@ function bufferForDirection(
       // eslint unable to figure out enum exhaustiveness
       throw /* minify-error-disabled */ new Error('unreachable');
   }
+}
+
+/**
+ * Whether the viewport has consumed more than half of the rendered buffer on a side
+ * that can still be extended.
+ * Triggers the sticky-mode rendering logic for computing a new render context.
+ * Consecutive updates are thereby spaced half a buffer apart instead of one
+ * row apart, leaving the raster pipeline idle time to fill the buffers between them.
+ * The visible bounds mirror the ones `computeRenderContext` searches with.
+ */
+function isLowOnRenderedBuffer(
+  store: Store<BaseState>,
+  params: ParamsWithDefaults,
+  scrollPosition: ScrollPosition,
+  scrollCache: ScrollCache,
+) {
+  const context = store.state.virtualization.renderContext;
+  const { buffer } = scrollCache;
+  const dimensions = Dimensions.selectors.dimensions(store.state);
+  const rowPositions = Dimensions.selectors.rowPositions(store.state);
+  const contentHeight = Dimensions.selectors.contentHeight(store.state);
+
+  const visibleTop = scrollPosition.top;
+  const visibleBottom = visibleTop + dimensions.viewportInnerSize.height;
+  const renderedTop = rowPositions[context.firstRowIndex] ?? 0;
+  const renderedBottom = rowPositions[context.lastRowIndex] ?? contentHeight;
+
+  if (context.firstRowIndex > 0 && visibleTop - renderedTop < buffer.rowBefore / 2) {
+    return true;
+  }
+  if (
+    context.lastRowIndex < params.rows.length &&
+    renderedBottom - visibleBottom < buffer.rowAfter / 2
+  ) {
+    return true;
+  }
+
+  const columnPositions = Dimensions.selectors.columnPositions(store.state, params.columns);
+  const pinnedLeftCount = params.pinnedColumns?.left.length ?? 0;
+  const pinnedRightCount = params.pinnedColumns?.right.length ?? 0;
+
+  const visibleLeft = Math.abs(scrollPosition.left) + dimensions.leftPinnedWidth;
+  const visibleRight = visibleLeft + dimensions.viewportInnerSize.width;
+  const renderedLeft = columnPositions[context.firstColumnIndex] ?? 0;
+  const renderedRight = columnPositions[context.lastColumnIndex] ?? dimensions.columnsTotalWidth;
+
+  if (
+    context.firstColumnIndex > pinnedLeftCount &&
+    visibleLeft - renderedLeft < buffer.columnBefore / 2
+  ) {
+    return true;
+  }
+  if (
+    context.lastColumnIndex < params.columns.length - pinnedRightCount &&
+    renderedRight - visibleRight < buffer.columnAfter / 2
+  ) {
+    return true;
+  }
+
+  return false;
 }
 
 function createScrollCache(
