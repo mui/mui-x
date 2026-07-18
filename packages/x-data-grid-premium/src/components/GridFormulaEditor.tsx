@@ -442,7 +442,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   // mode (pinned rows) the block edges weld to the row box instead.
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  let surfaceBlockStyles: React.CSSProperties = { top: -1, bottom: 0 };
+  let surfaceBlockStyles: React.CSSProperties = { top: 0, bottom: 0 };
   if (inScroller) {
     const rowIndexInPage = apiRef.current.getRowIndexRelativeToVisibleRows(id) as
       | number
@@ -453,7 +453,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
       (nextRowPosition !== undefined ? nextRowPosition : rowsMeta.currentPageTotalHeight) -
       rowPosition;
     surfaceBlockStyles = {
-      top: (dimensions.topContainerHeight ?? 0) + rowPosition - 1,
+      top: (dimensions.topContainerHeight ?? 0) + rowPosition,
       height: rowHeight + 1,
     };
   }
@@ -970,7 +970,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
       style={{
         // Pinned anchors get their inline start measured from the sticky cell in
         // the effect above (pre-paint); everything else is pure grid state.
-        insetInlineStart: isPinnedColumn ? undefined : cellStart - 1,
+        insetInlineStart: isPinnedColumn ? undefined : cellStart,
         ...surfaceBlockStyles,
         width: appliedWidth(),
         // The scroller-portaled surface no longer inherits the zero-size
