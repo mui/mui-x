@@ -463,9 +463,9 @@ export class LayoutListSticky extends Layout<ListElements> {
  */
 /**
  * Horizontal offset (the `spacerLeft` basis), rendered width and inverse-sticky insets
- * of the window. Mirror of the vertical derivation in `windowProps`: `left` clamps the
- * window's right edge at the inner viewport's right edge (left of the vertical
- * scrollbar lane), `right` clamps its left edge at the scrollport's left edge.
+ * of the window. Mirror of `verticalGeometry`: `left` clamps the window's right edge at
+ * the inner viewport's right edge (left of the vertical scrollbar lane), `right` clamps
+ * its left edge at the scrollport's left edge.
  */
 const horizontalGeometry = createSelectorMemoized(
   Virtualization.selectors.renderContext,
@@ -491,6 +491,47 @@ const horizontalGeometry = createSelectorMemoized(
       -(renderedWidth - (viewportInnerSize.width + verticalScrollbarLane)),
     );
     return { offsetLeft, renderedWidth, stickyLeft, stickyRight };
+  },
+);
+
+/**
+ * Vertical offset (the `spacerTop` basis), rendered height and inverse-sticky insets of
+ * the window. Vertical mirror of `horizontalGeometry`. Asymmetric insets: scrolling
+ * down, the window's bottom edge clamps at the top of the bottom container; scrolling
+ * up, its top edge clamps below the top container. Derivation: native scrollbars are
+ * hidden so the scrollport height is `P = viewportInnerSize.height + topContainerHeight +
+ * bottomContainerHeight + horizontalScrollbarLane`, and the insets
+ * `-(renderedHeight - (P - horizontalScrollbarLane - bottomContainerHeight))` and
+ * `-(renderedHeight - (P - topContainerHeight))` simplify to the expressions below.
+ */
+const verticalGeometry = createSelectorMemoized(
+  Virtualization.selectors.renderContext,
+  Dimensions.selectors.rowPositions,
+  Dimensions.selectors.contentHeight,
+  Dimensions.selectors.dimensions,
+  (renderContext, rowPositions, contentHeight, dimensions) => {
+    const { viewportInnerSize, topContainerHeight, bottomContainerHeight } = dimensions;
+    const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
+    // `lastRowIndex` is exclusive: when it points past the last row, the window extends
+    // to the end of the content.
+    const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
+    const renderedHeight = lastPosition - firstPosition;
+    const offsetTop = firstPosition;
+    const horizontalScrollbarLane = dimensions.hasScrollX ? dimensions.scrollbarSize : 0;
+    // Clamped to 0: if the rendered window is smaller than the viewport (few rows),
+    // sticky positioning must stay inert.
+    const stickyTop = Math.min(
+      0,
+      -(renderedHeight - (viewportInnerSize.height + topContainerHeight)),
+    );
+    const stickyBottom = Math.min(
+      0,
+      -(
+        renderedHeight -
+        (viewportInnerSize.height + bottomContainerHeight + horizontalScrollbarLane)
+      ),
+    );
+    return { offsetTop, renderedHeight, stickyTop, stickyBottom };
   },
 );
 
@@ -707,101 +748,56 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
       }),
     ),
 
-    spacerTopProps: createSelectorMemoized(
-      Virtualization.selectors.renderContext,
-      Dimensions.selectors.rowPositions,
-      (renderContext, rowPositions) => ({
-        style: {
-          height: rowPositions[renderContext.firstRowIndex] ?? 0,
-        } as React.CSSProperties,
-        role: 'presentation',
-      }),
-    ),
+    spacerTopProps: createSelectorMemoized(verticalGeometry, (geometry) => ({
+      style: {
+        height: geometry.offsetTop,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
 
     spacerBottomProps: createSelectorMemoized(
-      Virtualization.selectors.renderContext,
-      Dimensions.selectors.rowPositions,
+      verticalGeometry,
       Dimensions.selectors.contentHeight,
-      (renderContext, rowPositions, contentHeight) => ({
+      (geometry, contentHeight) => ({
         style: {
-          height: contentHeight - (rowPositions[renderContext.lastRowIndex] ?? contentHeight),
+          height: contentHeight - (geometry.offsetTop + geometry.renderedHeight),
         } as React.CSSProperties,
         role: 'presentation',
       }),
     ),
 
-    windowProps: createSelectorMemoized(
-      Virtualization.selectors.renderContext,
-      Dimensions.selectors.rowPositions,
-      Dimensions.selectors.contentHeight,
-      Dimensions.selectors.dimensions,
-      (renderContext, rowPositions, contentHeight, dimensions) => {
-        const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
-        const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
-        const renderedHeight = lastPosition - firstPosition;
-
-        const { viewportInnerSize, topContainerHeight, bottomContainerHeight } = dimensions;
-        const horizontalScrollbarLane = dimensions.hasScrollX ? dimensions.scrollbarSize : 0;
-        // Asymmetric offsets: scrolling down, the window's bottom edge clamps at the
-        // top of the bottom container; scrolling up, its top edge clamps below the
-        // top container. Derivation: native scrollbars are hidden so the scrollport
-        // height is `P = viewportInnerSize.height + topContainerHeight +
-        // bottomContainerHeight + horizontalScrollbarLane`, and the offsets are
-        // `-(renderedHeight - (P - horizontalScrollbarLane - bottomContainerHeight))`
-        // and `-(renderedHeight - (P - topContainerHeight))`, which simplify to the
-        // expressions below.
-        const stickyTop = Math.min(
-          0,
-          -(renderedHeight - (viewportInnerSize.height + topContainerHeight)),
-        );
-        const stickyBottom = Math.min(
-          0,
-          -(
-            renderedHeight -
-            (viewportInnerSize.height + bottomContainerHeight + horizontalScrollbarLane)
-          ),
-        );
-
-        return {
-          style: {
-            // Vertical axis: sticky against `content` (full-height containing block).
-            position: 'sticky',
-            top: stickyTop,
-            bottom: stickyBottom,
-            // Horizontal axis: a flex row (nowrap) holding the spacerLeft + innerWindow.
-            // Its content box is the innerWindow's sticky containing block, so the
-            // innerWindow clamps across the full scroll range.
-            display: 'flex',
-            flexWrap: 'nowrap',
-            // Explicit height: keeps the vertical clamping math immune to flow height
-            // discrepancies from out-of-flow children (detail panels, focus rows).
-            height: renderedHeight,
-          } as React.CSSProperties,
-          role: 'presentation',
-        };
-      },
-    ),
+    windowProps: createSelectorMemoized(verticalGeometry, (geometry) => ({
+      style: {
+        // Vertical axis: sticky against `content` (full-height containing block).
+        position: 'sticky',
+        top: geometry.stickyTop,
+        bottom: geometry.stickyBottom,
+        // Horizontal axis: a flex row (nowrap) holding the spacerLeft + innerWindow.
+        // Its content box is the innerWindow's sticky containing block, so the
+        // innerWindow clamps across the full scroll range.
+        display: 'flex',
+        flexWrap: 'nowrap',
+        // Explicit height: keeps the vertical clamping math immune to flow height
+        // discrepancies from out-of-flow children (detail panels, focus rows).
+        height: geometry.renderedHeight,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
 
     innerWindowProps: createSelectorMemoized(
       horizontalGeometry,
-      Dimensions.selectors.rowPositions,
-      Virtualization.selectors.renderContext,
-      Dimensions.selectors.contentHeight,
-      (geometry, rowPositions, renderContext, contentHeight, _columns: ColumnWithWidth[]) => {
-        const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
-        const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
-        return {
-          style: {
-            flex: `0 0 ${geometry.renderedWidth}px`,
-            position: 'sticky',
-            left: geometry.stickyLeft,
-            right: geometry.stickyRight,
-            // Matches the window height so the rows fill it (rows use `width: 100%`).
-            height: lastPosition - firstPosition,
-          } as React.CSSProperties,
-          role: 'presentation',
-        };
-      },
+      verticalGeometry,
+      (horizontal, vertical, _columns: ColumnWithWidth[]) => ({
+        style: {
+          flex: `0 0 ${horizontal.renderedWidth}px`,
+          position: 'sticky',
+          left: horizontal.stickyLeft,
+          right: horizontal.stickyRight,
+          // Matches the window height so the rows fill it (rows use `width: 100%`).
+          height: vertical.renderedHeight,
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
     ),
   };
 }
