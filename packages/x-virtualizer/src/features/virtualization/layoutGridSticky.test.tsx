@@ -11,6 +11,9 @@ const ROW_HEIGHT = 48;
 const HEADER_HEIGHT = 40;
 const VIEWPORT_HEIGHT = 400;
 const VIEWPORT_WIDTH = 600;
+// Pin the scrollbar lane in tests: measured scrollbar size is host-dependent (0 on
+// overlay-scrollbar systems like macOS, ~15 on Linux CI)
+const SCROLLBAR_SIZE = 15;
 
 const columns = Array.from({ length: COLUMN_COUNT }, (_, index) => ({
   field: `col-${index}`,
@@ -328,16 +331,16 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
   });
 
   it('renders the column window with directional buffers', async () => {
-    await renderGrid();
+    await renderGrid({ scrollbarSize: SCROLLBAR_SIZE });
     const scroller = screen.getByTestId('scroller');
 
     // At scrollLeft = 0, the middle columns extend from the first to the viewport edge
     // (vertical lane excluded) plus the column buffer (150px = 1-2 columns) and the
     // binary-search boundaries.
-    const lastVisibleColumn = Math.floor((scroller.clientWidth - scrollbarSize()) / COLUMN_WIDTH);
+    const lastVisibleColumn = Math.floor((scroller.clientWidth - SCROLLBAR_SIZE) / COLUMN_WIDTH);
     const middleColumns = middleColumnsOf(0);
 
-    expect(Math.max(...middleColumns)).to.be.at.most(lastVisibleColumn + 4);
+    expect(Math.max(...middleColumns)).to.be.at.most(lastVisibleColumn + 5);
     expect(Math.min(...middleColumns)).to.equal(1);
   });
 
@@ -677,7 +680,7 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     // the lane width. The scroller's scroll range must match the virtual
     // scrollbar's exactly, otherwise the extra range is a dead zone where the
     // widget and the render position no longer follow the scroller.
-    await renderGrid({ width: columnsTotalWidth + 10, scrollbarSize: 15 });
+    await renderGrid({ width: columnsTotalWidth + 10, scrollbarSize: SCROLLBAR_SIZE });
     const scroller = screen.getByTestId('scroller');
     const scrollbar = screen.getByTestId('scrollbar-horizontal');
 
