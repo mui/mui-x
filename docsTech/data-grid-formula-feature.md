@@ -30,6 +30,7 @@ The feature ships in 6 independently mergeable iterations:
   Excel formulas with references re-anchored to the exported sheet's coordinates (D22).
 - **I9** — grow-with-content floating editor: the formula editor floats over the cell in a
   statically-positioned row-portaled surface and grows inline-end with the formula (D24).
+- **I10** — live column-resize sync: the reference rectangles and the floating surface track a column's drag-resize per `columnResize` event, and the edit survives the gesture (D25).
 
 ## Locked design decisions
 
@@ -624,6 +625,55 @@ line-height, the vertical analog of column snapping; z/opaque painting already c
 a visible-bottom height cap measured once (then inner vertical scroll — growing up would move the
 pinned top edge) and a popup-reposition nudge (ResizeObserver → popper `update()`; popup-only, the
 editor stays static). String-based caret offsets are wrap-agnostic. Nothing in A1 is throwaway.
+
+**D25. Live column drag-resize sync (overlay rects + editor surface) and edit survival.** During a
+column drag-resize the grid bypasses React per mousemove — `useGridColumnResize.updateWidth` mutates
+cell `--width` vars, pinned offsets, `--DataGrid-rowWidth`, and the colDef object **in place**; state
+commits only at pointer-up (`setColumnWidth`). So `gridColumnPositionsSelector` (both formula
+surfaces' geometry source) is stale for the whole gesture and the reference rectangles and the
+floating surface froze while cells moved. Fix mirrors the one
+in-repo precedent for separate DOM tracking a live drag, `GridSkeletonLoadingOverlay`:
+per-`columnResize`-event **imperative style writes derived from the event's `{colDef, width}` as a
+delta against committed state** — never from the in-place-mutated colDefs (no repo precedent reads
+those; an equivalent "re-sum mutated `computedWidth`" option was rejected for that reason). Mechanics
+(`gridFormulaLiveGeometry.ts`): capture `{field, columnIndex, startWidth}` at `columnResizeStart`
+(fires before the first mutation, so `computedWidth` is still committed); per `columnResize` event
+`delta = width − startWidth`; clear at `columnResizeStop`. The overlay re-runs its existing
+`computeOverlayRects` with delta-shifted positions (`applyResizeDeltaToPositions`) plus a one-field
+width override and writes transform/width/height onto the rect nodes via a keyed ref map. The surface
+shifts `insetInlineStart` by the delta when a column before the anchor is resized, re-runs the
+pinned-cell measurement (live rect) for pinned anchors, and tracks
+`max(ratchet, width + 1)` when the editing column itself is resized; the suggestion popup closes on
+`columnResizeStart` (column-menu precedent — the body-portaled popper can't track an imperatively
+moved anchor). Convergence needs no `columnResizeStop` bookkeeping: the last event's geometry equals
+the committed geometry, and the pointer-up state commit re-renders canonical styles (flex
+re-hydration included). **Edit survival:** the resize-ending document mouseup used to land outside
+any cell → stock focus clear → the draft force-committed mid-formula. The separator's own mousedown
+`preventDefault()`s (DOM focus never leaves the editable), so a second `canUpdateFocus` veto branch
+is all it takes for the edit to continue seamlessly (Sheets/Excel behavior). The veto keys on
+`gridResizingColumnFieldSelector` — NOT on the mouseup target: the drag has no pointer capture, so
+the release often lands off the ~10px separator strip (vertical drift below the header, overshoot
+past the min/max-width clamp, release outside the grid); the field is set at `columnResizeStart` and
+cleared only in the post-mouseup `columnResizeStop` timeout, so it reliably covers every release
+point (adversarial-review High). A separator-target fallback covers a no-drag separator click,
+scoped by nearest-grid-root so a nested (detail-panel) grid's separator stays an outside click. The
+gate checks the active-edit cell's actual `getCellMode === 'edit'`, not just `formula.activeEdit` —
+that flag is only cleared by `cellEditStop`, which row edit mode and programmatic stops never
+publish (review Medium). Plain (non-formula) edits keep stock semantics (changing those is a core
+decision). The overlay's render-time rect derivation is also resize-session-aware (latest event
+width kept in a ref): a mid-drag React re-render (e.g. a dynamic-row-height remeasure changing
+`rowsMeta`) would otherwise rewrite the rects' single `transform` string from stale committed
+positions over the imperative live styles; the session clears on the matching `columnWidthChange`
+(published synchronously at commit, before the committed re-render) so the commit render derives
+from pure committed state with no double-shift. _Accepted/known:_ an edit OPENED mid-drag (keyboard
+edit start while holding the separator) captures no session and renders committed geometry until
+pointer-up (self-healing, exotic gesture); `placePinnedSurface` still writes the pre-`2dfe6b050a`
+`inlineStart − 1` while the non-pinned scheme dropped its −1 — flagged to Bilal (his pixel
+experiment), not changed here. Non-issues verified: autosize, column reorder, pinning, and grid
+resize all commit through state and re-render correctly; touch resize emits the same `columnResize`
+stream. Tests: mid-drag geometry is browser-only (3 chromium tests, proven non-vacuous by stashing
+the handlers); the focus veto is jsdom-pinned three ways (formula edit survives an on-separator
+release AND an off-separator release; plain edit still stops).
 
 **Invariant (all iterations): formula source lives only in row data; every cache and state slice is
 derived.** This is what keeps undo/redo, `processRowUpdate`, and controlled-rows scenarios working

@@ -13,9 +13,14 @@ import {
   gridRenderContextSelector,
   gridRowsMetaSelector,
   gridVisibleColumnFieldsSelector,
+  useGridEvent,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridRenderEditCellParams, GridSlotProps } from '@mui/x-data-grid-pro';
+import type {
+  GridEventListener,
+  GridRenderEditCellParams,
+  GridSlotProps,
+} from '@mui/x-data-grid-pro';
 import { NotRendered, vars } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -27,6 +32,8 @@ import {
   getFormulaReferencePaletteStyles,
   useGridFormulaReferenceModel,
 } from '../hooks/features/formula/gridFormulaReferenceHighlights';
+import { captureFormulaLiveResizeSession } from '../hooks/features/formula/gridFormulaLiveGeometry';
+import type { GridFormulaLiveResizeSession } from '../hooks/features/formula/gridFormulaLiveGeometry';
 import {
   getCaretOffset,
   getSelectionOffsets,
@@ -586,11 +593,9 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   // accepted pinned trade-off applies — a mid-edit horizontal scroll lets the
   // surface glide away from the stuck cell until scrolled back. The measurement is
   // converted to the portal target's coordinate space: content space (viewport
-  // offset + scroll) in scroller mode, the row box in row mode.
-  useEnhancedEffect(() => {
-    if (!isPinnedColumn) {
-      return;
-    }
+  // offset + scroll) in scroller mode, the row box in row mode. Also re-run per
+  // `columnResize` event below — the cell rect is live mid-drag.
+  const placePinnedSurface = React.useCallback(() => {
     const surface = surfaceRef.current;
     const cell = apiRef.current.getCellElement(id, field);
     const scroller = apiRef.current.virtualScrollerRef?.current;
@@ -615,7 +620,58 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
       inlineStart = isRtl ? rowRect.right - cellRect.right : cellRect.left - rowRect.left;
     }
     surface.style.insetInlineStart = `${inlineStart - 1}px`;
-  }, [apiRef, isPinnedColumn, inScroller, field, id, isRtl, cellStart]);
+  }, [apiRef, inScroller, field, id, isRtl]);
+
+  useEnhancedEffect(() => {
+    if (isPinnedColumn) {
+      placePinnedSurface();
+    }
+  }, [isPinnedColumn, placePinnedSurface, cellStart]);
+
+  // ----- Live drag-resize sync -----
+  // During a column drag-resize the grid mutates cell widths imperatively and
+  // commits state only on pointer-up, so the static geometry above (columns
+  // positions, `colDef.computedWidth`) is stale for the whole gesture and the
+  // surface would detach from its moving cell. Mirror the mutation per
+  // `columnResize` event (the skeleton loading overlay's approach): shift the
+  // inline start by the drag delta when a column before the anchor is resized,
+  // track the live width when the anchor column itself is resized. The pointer-up
+  // state commit re-renders the canonical styles. No re-render happens mid-drag,
+  // so the committed values captured by these closures stay valid all gesture.
+  const resizeSessionRef = React.useRef<GridFormulaLiveResizeSession | null>(null);
+
+  const handleColumnResizeStart: GridEventListener<'columnResizeStart'> = (params) => {
+    resizeSessionRef.current = captureFormulaLiveResizeSession(apiRef, params.field);
+    // The body-portaled suggestion popup cannot track an anchor moved by the
+    // imperative drag mutation — close it (the column menu does the same).
+    setOpen(false);
+  };
+
+  const handleColumnResizeStop: GridEventListener<'columnResizeStop'> = () => {
+    resizeSessionRef.current = null;
+  };
+
+  const handleColumnResize: GridEventListener<'columnResize'> = (params) => {
+    const session = resizeSessionRef.current;
+    const surface = surfaceRef.current;
+    if (session === null || session.field !== params.colDef.field || surface === null) {
+      return;
+    }
+    if (isPinnedColumn) {
+      placePinnedSurface();
+    } else if (columnIndex !== -1 && session.columnIndex < columnIndex) {
+      surface.style.insetInlineStart = `${cellStart + (params.width - session.startWidth)}px`;
+    }
+    if (session.field === field) {
+      // Mirrors `appliedWidth` with the live width: a grown surface never
+      // shrinks, an ungrown one tracks the cell in both directions.
+      surface.style.width = `${Math.max(ratchetRef.current ?? 0, params.width + 1)}px`;
+    }
+  };
+
+  useGridEvent(apiRef, 'columnResizeStart', handleColumnResizeStart);
+  useGridEvent(apiRef, 'columnResize', handleColumnResize);
+  useGridEvent(apiRef, 'columnResizeStop', handleColumnResizeStop);
 
   // The core: rebuild the colored children and restore the caret/selection on every
   // value or model change, inside a layout effect (before paint, no flicker).

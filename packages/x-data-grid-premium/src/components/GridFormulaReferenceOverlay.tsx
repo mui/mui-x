@@ -7,9 +7,10 @@ import {
   gridDimensionsSelector,
   gridPinnedColumnsSelector,
   gridRowsMetaSelector,
+  useGridEvent,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridRowId } from '@mui/x-data-grid-pro';
+import type { GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -24,6 +25,11 @@ import type {
   FormulaReference,
   FormulaReferenceTarget,
 } from '../hooks/features/formula/gridFormulaReferenceHighlights';
+import {
+  applyResizeDeltaToPositions,
+  captureFormulaLiveResizeSession,
+} from '../hooks/features/formula/gridFormulaLiveGeometry';
+import type { GridFormulaLiveResizeSession } from '../hooks/features/formula/gridFormulaLiveGeometry';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 
 // Lives INSIDE the virtual scroller (portaled into it) and positions its
@@ -84,6 +90,7 @@ function computeOverlayRects(
   rowsMeta: { positions: number[]; currentPageTotalHeight: number },
   topOffset: number,
   pinnedFields: Set<string>,
+  widthOverride: { field: string; width: number } | null,
 ): OverlayRect[] {
   const columnSpan = (field: string): ColumnSpan | null => {
     if (pinnedFields.has(field)) {
@@ -97,7 +104,13 @@ function computeOverlayRects(
     if (left === undefined) {
       return null;
     }
-    return { left, width: apiRef.current.getColumn(field)?.computedWidth ?? 0 };
+    // The override carries the live width of a column mid drag-resize, when the
+    // committed `computedWidth` is stale (state commits only on pointer-up).
+    const width =
+      widthOverride !== null && widthOverride.field === field
+        ? widthOverride.width
+        : (apiRef.current.getColumn(field)?.computedWidth ?? 0);
+    return { left, width };
   };
 
   const rowSpan = (rowId: GridRowId): RowSpan | null => {
@@ -213,7 +226,23 @@ function GridFormulaReferenceOverlay() {
   // backdrop still works). See virtualizerLayoutMode.
   const isControlledLayout = rootProps.experimentalFeatures?.virtualizerLayoutMode === 'controlled';
 
-  const rects = React.useMemo(() => {
+  // ----- Live drag-resize sync -----
+  // During a column drag-resize the grid mutates cell widths imperatively and
+  // commits state only on pointer-up, so the selectors above are stale for the
+  // whole gesture. Mirror the mutation onto the rects per `columnResize` event
+  // (the skeleton loading overlay's approach): re-run the same rect derivation
+  // with the committed positions shifted by the drag delta and the resized
+  // column's width taken from the event, then write the styles imperatively.
+  // The pointer-up state commit re-renders the canonical styles.
+  const rectElementsRef = React.useRef(new Map<string, HTMLDivElement>());
+  const resizeSessionRef = React.useRef<GridFormulaLiveResizeSession | null>(null);
+  // The latest `columnResize` width, so a mid-drag React render (e.g. a dynamic
+  // row-height remeasure changing `rowsMeta`) derives the same live geometry the
+  // event handler writes — otherwise it would paint the stale committed
+  // positions over the imperative styles until the next mousemove.
+  const liveResizeWidthRef = React.useRef<number | null>(null);
+
+  const computeRects = React.useCallback(() => {
     if (activeEdit === null || isControlledLayout) {
       return [];
     }
@@ -221,13 +250,23 @@ function GridFormulaReferenceOverlay() {
       ...(pinnedColumns.left ?? []),
       ...(pinnedColumns.right ?? []),
     ]);
+    const session = resizeSessionRef.current;
+    const liveWidth = liveResizeWidthRef.current;
+    const liveResize = session !== null && liveWidth !== null;
     return computeOverlayRects(
       apiRef,
       model.references,
-      columnPositions,
+      liveResize
+        ? applyResizeDeltaToPositions(
+            columnPositions,
+            session.columnIndex,
+            liveWidth - session.startWidth,
+          )
+        : columnPositions,
       rowsMeta,
       dimensions.topContainerHeight ?? 0,
       pinnedFields,
+      liveResize ? { field: session.field, width: liveWidth } : null,
     );
   }, [
     apiRef,
@@ -240,6 +279,57 @@ function GridFormulaReferenceOverlay() {
     pinnedColumns,
   ]);
 
+  const rects = React.useMemo(() => computeRects(), [computeRects]);
+
+  const handleColumnResizeStart: GridEventListener<'columnResizeStart'> = ({ field }) => {
+    resizeSessionRef.current = captureFormulaLiveResizeSession(apiRef, field);
+    liveResizeWidthRef.current = null;
+  };
+
+  const handleColumnResizeStop: GridEventListener<'columnResizeStop'> = () => {
+    resizeSessionRef.current = null;
+    liveResizeWidthRef.current = null;
+  };
+
+  // The pointer-up commit publishes `columnWidthChange` synchronously before the
+  // committed re-render: drop the session then, so that render derives from pure
+  // committed state (the captured start width is stale once the committed
+  // positions include the new width — keeping it would double-shift).
+  const handleColumnWidthChange: GridEventListener<'columnWidthChange'> = (params) => {
+    if (
+      resizeSessionRef.current !== null &&
+      resizeSessionRef.current.field === params.colDef.field
+    ) {
+      resizeSessionRef.current = null;
+      liveResizeWidthRef.current = null;
+    }
+  };
+
+  const handleColumnResize: GridEventListener<'columnResize'> = (params) => {
+    const session = resizeSessionRef.current;
+    if (session === null || session.field !== params.colDef.field) {
+      return;
+    }
+    liveResizeWidthRef.current = params.width;
+    if (rectElementsRef.current.size === 0) {
+      return;
+    }
+    for (const rect of computeRects()) {
+      const element = rectElementsRef.current.get(rect.key);
+      if (element === undefined) {
+        continue;
+      }
+      element.style.transform = `translate3d(${rect.left}px, ${rect.top}px, 0)`;
+      element.style.width = `${rect.width}px`;
+      element.style.height = `${rect.height}px`;
+    }
+  };
+
+  useGridEvent(apiRef, 'columnResizeStart', handleColumnResizeStart);
+  useGridEvent(apiRef, 'columnResize', handleColumnResize);
+  useGridEvent(apiRef, 'columnResizeStop', handleColumnResizeStop);
+  useGridEvent(apiRef, 'columnWidthChange', handleColumnWidthChange);
+
   if (activeEdit === null || rects.length === 0 || scroller === null) {
     return null;
   }
@@ -249,6 +339,13 @@ function GridFormulaReferenceOverlay() {
       {rects.map((rect) => (
         <GridFormulaReferenceOverlayRect
           key={rect.key}
+          ref={(node) => {
+            if (node === null) {
+              rectElementsRef.current.delete(rect.key);
+            } else {
+              rectElementsRef.current.set(rect.key, node);
+            }
+          }}
           className="MuiDataGrid-formulaReferenceHighlight"
           style={{
             transform: `translate3d(${rect.left}px, ${rect.top}px, 0)`,

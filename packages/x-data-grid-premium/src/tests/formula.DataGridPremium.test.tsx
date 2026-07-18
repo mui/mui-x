@@ -2279,6 +2279,156 @@ describe('<DataGridPremium /> - Formulas', () => {
     );
   });
 
+  describe('column resize', () => {
+    const RECT_CLASS = '.MuiDataGrid-formulaReferenceHighlight';
+    const SEPARATOR_CLASS = '.MuiDataGrid-columnSeparator--resizable';
+
+    const rects = () => Array.from(document.querySelectorAll<HTMLElement>(RECT_CLASS));
+    const getSurface = () =>
+      document.querySelector<HTMLElement>('.MuiDataGrid-formulaEditorSurface')!;
+    // The separator inside header cell `colIndex` resizes that column.
+    const separatorFor = (colIndex: number) =>
+      getColumnHeaderCell(colIndex).querySelector(SEPARATOR_CLASS)!;
+
+    const expectAligned = (rect: DOMRect, cell: DOMRect) => {
+      expect(Math.abs(rect.left - cell.left)).to.be.lessThan(2);
+      expect(Math.abs(rect.top - cell.top)).to.be.lessThan(2);
+      expect(Math.abs(rect.width - cell.width)).to.be.lessThan(2);
+      expect(Math.abs(rect.height - cell.height)).to.be.lessThan(2);
+    };
+
+    it('keeps the formula edit active through a resize gesture', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      // The resize-ending mouseup lands on the separator — outside any cell —
+      // which by stock focus semantics would clear the focus and commit the
+      // draft. The formula `canUpdateFocus` veto keeps the edit alive instead.
+      const separator = separatorFor(1);
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+      fireEvent.mouseUp(separator, { clientX: 150 });
+      await microtasks();
+      expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
+      expect(getCellEditable(0, 3)).not.to.equal(null);
+      // Nothing was committed by the gesture.
+      expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+    });
+
+    it('keeps the formula edit active when the resize mouseup lands off the separator', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      // The drag has no pointer capture: past the min/max-width clamp (or with
+      // vertical drift below the header) the pointer overshoots the ~10px
+      // separator strip and the mouseup lands on a cell. The veto must key on
+      // the in-flight resize session, not on the mouseup target.
+      const separator = separatorFor(1);
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+      fireEvent.mouseUp(getCell(1, 1), { clientX: 150 });
+      await microtasks();
+      expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
+      expect(getCellEditable(0, 3)).not.to.equal(null);
+    });
+
+    it('still ends a plain (non-formula) edit on a resize gesture', async () => {
+      const { user } = await render(<Test />);
+      // Row 2 `total` holds a plain number → the stock number editor renders, no
+      // formula edit is active, and the stock focus semantics are preserved.
+      await user.dblClick(getCell(2, 3));
+      await waitFor(() => {
+        expect(apiRef.current!.getCellMode(2, 'total')).to.equal('edit');
+      });
+      const separator = separatorFor(1);
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+      fireEvent.mouseUp(separator, { clientX: 150 });
+      await waitFor(() => {
+        expect(apiRef.current!.getCellMode(2, 'total')).to.equal('view');
+      });
+    });
+
+    it.skipIf(isJSDOM)(
+      'keeps the reference outlines on their cells during a live resize',
+      async () => {
+        const { user } = await render(<Test />);
+        await user.dblClick(getCell(0, 3));
+        await waitFor(() => {
+          expect(rects()).to.have.length(2);
+        });
+        // Drag the `price` separator +50: `price` widens in place, `quantity`
+        // shifts right. State stays stale until pointer-up, so only the live
+        // per-event sync can keep the outlines on the moved cells.
+        const separator = separatorFor(1);
+        fireEvent.mouseDown(separator, { clientX: 100 });
+        fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+        expectAligned(rects()[0].getBoundingClientRect(), getCell(0, 1).getBoundingClientRect());
+        expectAligned(rects()[1].getBoundingClientRect(), getCell(0, 2).getBoundingClientRect());
+        fireEvent.mouseUp(separator, { clientX: 150 });
+        // The pointer-up state commit re-renders the canonical styles — still
+        // aligned (and, with the focus veto, the edit is still alive to show them).
+        await waitFor(() => {
+          expectAligned(rects()[0].getBoundingClientRect(), getCell(0, 1).getBoundingClientRect());
+          expectAligned(rects()[1].getBoundingClientRect(), getCell(0, 2).getBoundingClientRect());
+        });
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'keeps the floating surface on its cell when a column before it is resized',
+      async () => {
+        const { user } = await render(<Test />);
+        await user.dblClick(getCell(0, 3));
+        await waitFor(() => {
+          expect(getCellEditable(0, 3)).not.to.equal(null);
+        });
+        const surfaceBefore = getSurface().getBoundingClientRect();
+        const cellBefore = getCell(0, 3).getBoundingClientRect();
+        const separator = separatorFor(1);
+        fireEvent.mouseDown(separator, { clientX: 100 });
+        fireEvent.mouseMove(separator, { clientX: 160, buttons: 1 });
+        const surfaceDuring = getSurface().getBoundingClientRect();
+        const cellDuring = getCell(0, 3).getBoundingClientRect();
+        // Sanity: the drag really moved the editing cell.
+        expect(cellDuring.left - cellBefore.left).to.be.greaterThan(50);
+        // The surface moved by exactly the same delta, and its width is untouched.
+        expect(
+          Math.abs(surfaceDuring.left - surfaceBefore.left - (cellDuring.left - cellBefore.left)),
+        ).to.be.lessThan(2);
+        expect(Math.abs(surfaceDuring.width - surfaceBefore.width)).to.be.lessThan(2);
+        fireEvent.mouseUp(separator, { clientX: 160 });
+      },
+    );
+
+    it.skipIf(isJSDOM)("tracks the editing column's own width during a live resize", async () => {
+      // Short formula: no content growth, so the surface width is the cell's
+      // width (+1 for the gridline borders) and must track the drag live.
+      const { user } = await render(
+        <Test rows={[{ id: 0, item: 'Apple', price: 2, quantity: 3, total: '=1' }]} />,
+      );
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      const before = getSurface().getBoundingClientRect();
+      const separator = separatorFor(3);
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 140, buttons: 1 });
+      const during = getSurface().getBoundingClientRect();
+      const cell = getCell(0, 3).getBoundingClientRect();
+      expect(during.width - before.width).to.be.greaterThan(30);
+      expect(Math.abs(during.width - (cell.width + 1))).to.be.lessThan(2);
+      // The start edge stays pinned — only the inline-end follows the drag.
+      expect(Math.abs(during.left - before.left)).to.be.lessThan(2);
+      fireEvent.mouseUp(separator, { clientX: 140 });
+    });
+  });
+
   describe('editor virtualization and scrolling', () => {
     const manyRows = Array.from({ length: 60 }, (_, index) => ({
       id: index,
@@ -2565,13 +2715,13 @@ describe('<DataGridPremium /> - Formulas', () => {
       const columns = apiRef.current!.getVisibleColumns();
       const cellStart =
         columns[0].computedWidth + columns[1].computedWidth + columns[2].computedWidth;
-      expect(surface.style.insetInlineStart).to.equal(`${cellStart - 1}px`);
+      expect(surface.style.insetInlineStart).to.equal(`${cellStart}px`);
       expect(surface.style.width).to.equal(`${columns[3].computedWidth + 1}px`);
       // Block geometry: content-space row position below the sticky top container
       // (the reference overlay's own coordinate recipe).
       const { dimensions, rowsMeta } = apiRef.current!.state;
       expect(surface.style.top).to.equal(
-        `${dimensions.topContainerHeight + rowsMeta.positions[0] - 1}px`,
+        `${dimensions.topContainerHeight + rowsMeta.positions[0]}px`,
       );
       // Single-row fixture: the last row's height comes from the page total.
       expect(surface.style.height).to.equal(

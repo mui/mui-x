@@ -5,7 +5,9 @@ import { warnOnce } from '@mui/x-internals/warning';
 import {
   GridCellEditStartReasons,
   GridCellModes,
+  gridClasses,
   gridColumnLookupSelector,
+  gridResizingColumnFieldSelector,
   gridRowIdSelector,
   gridRowsLookupSelector,
   useGridApiMethod,
@@ -467,6 +469,42 @@ export const useGridFormula = (
       // for this grid and must still clear/move its focus.
       if (surface !== null && apiRef.current.rootElementRef?.current?.contains(surface) === true) {
         return false;
+      }
+      // A column drag-resize (or a stray separator click) must not end an active
+      // formula edit: the resize-ending mouseup lands outside any cell, which
+      // would clear the cell focus and commit a possibly half-typed formula. The
+      // separator's own mousedown `preventDefault()`s, so the editor never loses
+      // DOM focus; vetoing the focus clear is all it takes for the edit to
+      // continue seamlessly (Sheets/Excel behavior). The gate checks the edited
+      // cell's actual mode, not just `formula.activeEdit` — that flag is cleared
+      // by `cellEditStop`, which row edit mode and programmatic stops never
+      // publish, so alone it can go stale and arm the veto with no live edit.
+      // Plain (non-formula) edits keep the stock grid semantics.
+      const activeEdit = gridFormulaActiveEditSelector(apiRef);
+      if (
+        activeEdit !== null &&
+        apiRef.current.getCellMode(activeEdit.id, activeEdit.field) === GridCellModes.Edit
+      ) {
+        // A drag-resize of this grid is in flight or just ended (the field is set
+        // at `columnResizeStart` and cleared only in the post-mouseup
+        // `columnResizeStop` timeout). This covers every release point — the drag
+        // has no pointer capture, so the mouseup often lands off the ~10px
+        // separator strip (vertical drift below the header, overshoot past the
+        // min/max-width clamp, release outside the grid).
+        if (gridResizingColumnFieldSelector(apiRef)) {
+          return false;
+        }
+        // A separator click that never started a resize session. Scoped to this
+        // grid's own separators: the NEAREST grid root must be ours, so a nested
+        // grid's separator (e.g. in a detail panel) stays an ordinary outside
+        // click for this grid.
+        const separator = target.closest(`.${gridClasses.columnSeparator}`);
+        if (
+          separator !== null &&
+          separator.closest(`.${gridClasses.root}`) === apiRef.current.rootElementRef?.current
+        ) {
+          return false;
+        }
       }
       return initialValue;
     },
