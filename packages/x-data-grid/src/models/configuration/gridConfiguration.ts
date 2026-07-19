@@ -18,9 +18,7 @@ export interface GridAriaAttributesInternalHook {
 export interface GridColumnHeaderAdornmentInternalHook {
   /**
    * Returns an optional adornment rendered inside a column header's title
-   * content, at the start, before the title label. The Premium formula feature
-   * uses it to display A1-notation column letters without wrapping
-   * `colDef.renderHeader` (reserved by aggregation). Placing it inside the
+   * content, at the start, before the title label. Placing it inside the
    * (non-reversed) title content keeps it on the same side of the title for
    * both left- and right-aligned headers. Called once per rendered header
    * cell, so the implementation may use hooks.

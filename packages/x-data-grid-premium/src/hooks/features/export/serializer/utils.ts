@@ -17,6 +17,8 @@ export interface SerializedRow {
    * Cells to write as real Excel formulas (overlaying the plain value in `row`).
    * Present only when at least one cell in the row is a live formula and formula
    * export is enabled, so value-only exports keep their previous serialized shape.
+   * Kept separate from `row` (like `dataValidation`) so `row` stays a flat map of
+   * primitive cell values and the evaluated value remains the per-cell fallback.
    */
   formulas?: Record<string, ExcelFormulaCell>;
 }

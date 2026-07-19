@@ -808,7 +808,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
       'fetchRows',
       'filteredRowsSet',
       'filterModelChange',
-      'formulaEvaluationEnd',
+      'formulaEvaluated',
       'headerFilterBlur',
       'headerFilterClick',
       'headerFilterKeyDown',

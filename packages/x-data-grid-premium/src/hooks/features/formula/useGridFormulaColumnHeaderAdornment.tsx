@@ -4,7 +4,10 @@ import { GridFormulaColumnHeaderLetter } from '../../../components/GridFormulaCo
 
 /**
  * Premium implementation of the `useColumnHeaderAdornment` configuration hook:
- * the A1 column-letter shown next to each data column's header title.
+ * the A1 column-letter shown next to each data column's header title. The
+ * adornment hook is used instead of wrapping `colDef.renderHeader` because
+ * aggregation already reserves the `renderHeader` wrapping for its own header
+ * decoration.
  *
  * Returns `null` (and so renders nothing, and crucially does not subscribe to
  * the position context) whenever A1 notation is inactive, so the common

@@ -48,6 +48,6 @@
 
   <!-- Feedback loop: editing writes back to row data -->
   <path d="M 824 230 L 824 278 L 118 278 L 118 214" fill="none" stroke="#99A7BB" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
-  <rect x="256" y="264" width="430" height="28" rx="14" fill="#FFFFFF" stroke="#DAE2ED"/>
+  <rect x="231" y="264" width="480" height="28" rx="14" fill="#FFFFFF" stroke="#DAE2ED"/>
   <text x="471" y="282" text-anchor="middle" font-size="12" fill="#4B5565">Editing and row updates write the formula source — never the evaluated value</text>
 </svg>

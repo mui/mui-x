@@ -164,9 +164,12 @@ export interface GridRowProPrivateApi {
 export interface GridRowSpanningPrivateApi {
   /**
    * Recomputes the row spanning state from scratch.
-   * For features whose value overlays change row spanning comparisons outside
-   * the events row spanning resets on by itself. No-op when the `rowSpanning`
-   * prop is not enabled.
+   * Row spanning recomputes on its own after row, sort, filter, pagination,
+   * and column updates. Features that change the values cells resolve to
+   * without emitting any of those events (for example a formula evaluation
+   * pass, whose value overlay changes evaluated results in place) call this
+   * method to keep the spans in sync. No-op when the `rowSpanning` prop is
+   * not enabled.
    */
   resetRowSpanningState: () => void;
 }

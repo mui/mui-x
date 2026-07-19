@@ -150,7 +150,7 @@ export const useGridFormula = (
           ...state,
           formula: { ...state.formula, lookup: {} },
         }));
-        apiRef.current.publishEvent('formulaEvaluationEnd', { changedCells });
+        apiRef.current.publishEvent('formulaEvaluated', { changedCells });
         return changedCells;
       }
 
@@ -178,7 +178,7 @@ export const useGridFormula = (
         ...state,
         formula: { ...state.formula, lookup: result.lookup },
       }));
-      apiRef.current.publishEvent('formulaEvaluationEnd', { changedCells: result.changedCells });
+      apiRef.current.publishEvent('formulaEvaluated', { changedCells: result.changedCells });
       return result.changedCells;
     },
     [apiRef, computeEffectiveFormulaFields, props.disableFormulas, props.dataSource],

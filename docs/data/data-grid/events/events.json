@@ -269,8 +269,8 @@
   },
   {
     "projects": ["x-data-grid-premium"],
-    "name": "formulaEvaluationEnd",
-    "description": "Fired when a formula evaluation pass ends.",
+    "name": "formulaEvaluated",
+    "description": "Fired when a formula evaluation pass completes.",
     "params": "{ changedCells: GridCellCoordinates[] }",
     "event": "MuiEvent<{}>"
   },

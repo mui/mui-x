@@ -187,7 +187,7 @@ that row — this is what lets a `#REF!` to a missing row recover when the row a
 new lookup vs snapshot → changed/added/removed ids; per changed row, rescan formula-enabled fields
 for source changes and compare tracked dependency cells; dirty + transitive closure via
 `dependents`/`rangeDependentsByField`; Kahn recompute; update snapshots; **one `setState`**
-(copy-on-write) + publish `formulaEvaluationEnd: { changedCells }`. The same pipeline covers editing
+(copy-on-write) + publish `formulaEvaluated: { changedCells }`. The same pipeline covers editing
 commits, `updateRows`, paste, undo/redo. Other triggers: `columnsChange` — guarded by **two**
 equality checks (the `allowFormulas` field set, and a `field → valueGetter` signature of the whole
 columns lookup, because `#REF!` for unknown fields and raw reads through `valueGetter` make results
@@ -258,7 +258,7 @@ skipped while pivot is active, dev warning).
 `GridFormulaApi` interface was merged into it and removed from `GridApiPremium` and the barrel;
 tests reach the methods through `unwrapPrivateAPI`._ Methods: `setCellFormula`, `getCellFormula`,
 `getCellFormulaResult`, `validateCellFormula`, `reevaluateFormulas`, plus
-`applyFormulaEvaluation`. Event `formulaEvaluationEnd: { changedCells: GridCellCoordinates[] }` in
+`applyFormulaEvaluation`. Event `formulaEvaluated: { changedCells: GridCellCoordinates[] }` in
 `GridEventLookupPremium` (no model → no `registerControlState`). Types: `GridFormulaResult` union,
 branded `GridFormulaCellKey` with the format `` `${id} ${field}` `` — **NUL separator**
 (amended during I1 from the originally drafted space separator: `FIELD("unit price")` legalizes
@@ -661,7 +661,7 @@ gate checks the active-edit cell's actual `getCellMode === 'edit'`, not just `fo
 that flag is only cleared by `cellEditStop`, which row edit mode and programmatic stops never
 publish (review Medium). Plain (non-formula) edits keep stock semantics (changing those is a core
 decision). The overlay's render-time rect derivation is also resize-session-aware (latest event
-width kept in a ref): a mid-drag React re-render (e.g. a dynamic-row-height remeasure changing
+width kept in a ref): a mid-drag React re-render (for example a dynamic-row-height remeasure changing
 `rowsMeta`) would otherwise rewrite the rects' single `transform` string from stale committed
 positions over the imperative live styles; the session clears on the matching `columnWidthChange`
 (published synchronously at commit, before the committed re-render) so the commit render derives

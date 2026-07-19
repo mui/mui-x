@@ -218,7 +218,7 @@ When a cell changes—through editing, `updateRows()`, or a paste—the engine r
   <img src="/static/x/data-grid/formulas/formula-edit-cycle-dark.svg" width="920" height="210" alt="Edit cycle: the editor opens on the formula source, the commit writes the source to the row, the engine re-evaluates the cell and its dependents, and only changed cells re-render." loading="lazy" style="display: block; width: 100%;">
 </div>
 
-After each evaluation pass the grid emits the `formulaEvaluationEnd` event with the list of changed cells.
+After each evaluation pass the grid emits the `formulaEvaluated` event with the list of changed cells.
 
 ## Editing
 

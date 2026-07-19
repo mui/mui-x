@@ -109,9 +109,9 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    */
   redo: { params: { eventName: keyof GridEventLookup; data: any } };
   /**
-   * Fired when a formula evaluation pass ends.
+   * Fired when a formula evaluation pass completes.
    */
-  formulaEvaluationEnd: { params: { changedCells: GridCellCoordinates[] } };
+  formulaEvaluated: { params: { changedCells: GridCellCoordinates[] } };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {

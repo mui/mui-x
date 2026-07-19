@@ -386,10 +386,10 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(1)).to.deep.equal(['#REF!']);
     });
 
-    it('should publish formulaEvaluationEnd with the changed cells', async () => {
+    it('should publish formulaEvaluated with the changed cells', async () => {
       await render(<Test />);
       const listener = spy();
-      apiRef.current!.subscribeEvent('formulaEvaluationEnd', listener);
+      apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, price: 10 }]));
 
@@ -400,7 +400,7 @@ describe('<DataGridPremium /> - Formulas', () => {
     it('should not re-evaluate when an unrelated cell changes', async () => {
       await render(<Test />);
       const listener = spy();
-      apiRef.current!.subscribeEvent('formulaEvaluationEnd', listener);
+      apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, item: 'Apricot' }]));
 
@@ -476,7 +476,7 @@ describe('<DataGridPremium /> - Formulas', () => {
         />,
       );
       const listener = spy();
-      apiRef.current!.subscribeEvent('formulaEvaluationEnd', listener);
+      apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       await act(async () => apiRef.current!.updateRows([{ id: 1, price: 10 }]));
 
@@ -571,7 +571,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(2)).to.deep.equal(['10', '', '']);
 
       const listener = spy();
-      apiRef.current!.subscribeEvent('formulaEvaluationEnd', listener);
+      apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       // A change inside the rectangle recomputes the consumer.
       await act(async () => apiRef.current!.updateRows([{ id: 1, p2: 14 }]));
@@ -972,7 +972,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(1)).to.deep.equal(['', '2', '8']);
 
       const listener = spy();
-      apiRef.current!.subscribeEvent('formulaEvaluationEnd', listener);
+      apiRef.current!.subscribeEvent('formulaEvaluated', listener);
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, _action: 'delete' }]));
 
