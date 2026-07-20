@@ -31,6 +31,12 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
   }
 
   const funnelSeries = allFunnelSeries[focusedItem.seriesId];
+  // Focus can point to a removed series or section (e.g. data shrank while focused).
+  const sectionPoints = funnelSeries?.dataPoints[focusedItem.dataIndex];
+
+  if (!sectionPoints) {
+    return null;
+  }
 
   const xAxisId = funnelSeries.xAxisId ?? xAxisIds[0];
   const yAxisId = funnelSeries.yAxisId ?? yAxisIds[0];
@@ -60,7 +66,7 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
   });
 
   const bandPoints = curve({} as any).processPoints(
-    funnelSeries.dataPoints[focusedItem.dataIndex].map((v) => ({
+    sectionPoints.map((v) => ({
       x: xPosition(v.x, focusedItem.dataIndex, v.stackOffset, v.useBandWidth),
       y: yPosition(v.y, focusedItem.dataIndex, v.stackOffset, v.useBandWidth),
     })),
