@@ -4,7 +4,6 @@ import { composableCartesianSeriesTypes } from '../../models/seriesType/composit
 import type { ComposableCartesianChartSeriesType } from '../../models/seriesType/composition';
 
 const allowCycles = false;
-// Scatter items are per-series points: cap navigation at the focused series length.
 const useCurrentSeriesMaxLength = true;
 
 const keyboardFocusHandler: KeyboardFocusHandler<'scatter', ComposableCartesianChartSeriesType> =

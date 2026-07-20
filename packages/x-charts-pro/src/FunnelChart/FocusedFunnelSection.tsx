@@ -31,7 +31,7 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
   }
 
   const funnelSeries = allFunnelSeries[focusedItem.seriesId];
-  // Focus can point to a removed series or section (e.g. data shrank while focused).
+  // Focus may reference a removed series or section.
   const sectionPoints = funnelSeries?.dataPoints[focusedItem.dataIndex];
 
   if (!sectionPoints) {

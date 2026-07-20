@@ -3,8 +3,7 @@ import { findVisibleDataIndex } from './findVisibleDataIndex';
 
 describe('findVisibleDataIndex', () => {
   it('returns an index beyond the focused series length when `dataLength` allows it', () => {
-    // Shared-axis types (line, bar) navigate over the longest compatible series,
-    // so an index with no value in the focused series is valid.
+    // Shared-axis types (line, bar) navigate over the longest compatible series.
     const processedSeries = {
       line: {
         seriesOrder: ['short', 'long'],

@@ -6,11 +6,9 @@ import type { ProcessedSeries } from '../../../corePlugins/useChartSeries/useCha
  * Walk forward (or backward) from `startIndex` and return the first dataIndex
  * whose data point is visible. Returns `null` if every traversed index is hidden.
  *
- * `dataLength` is the navigation range, which can exceed the focused series length:
- * shared-axis types (line, bar) allow focusing an index with no value to keep
- * navigation consistent across series of different lengths. Item-based types
- * (scatter, pie, funnel, map) must pass their own series length instead
- * (see `useCurrentSeriesMaxLength` in `createCommonKeyboardFocusHandler`).
+ * `dataLength` can exceed the focused series length: shared-axis types (line, bar)
+ * allow focusing an index with no value. Item-based types (scatter, pie, funnel, map)
+ * cap it to their own length via `useCurrentSeriesMaxLength`.
  *
  * Series-level hidden flags are filtered upstream (see `getNonEmptySeriesArray`),
  * so only per-data-point hidden flags are relevant here. Today only Pie sets a

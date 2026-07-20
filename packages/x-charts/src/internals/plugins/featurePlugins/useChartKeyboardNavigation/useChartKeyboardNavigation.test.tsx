@@ -292,8 +292,7 @@ describe('useChartKeyboardNavigation', () => {
 
       expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
 
-      // Focusing an index with no value is valid on shared-axis series.
-      // The indicator is hidden, but the index keeps advancing.
+      // Shared-axis series allow focusing an index with no value: indicator hides, index advances.
       await user.keyboard('[ArrowRight]');
       expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
 

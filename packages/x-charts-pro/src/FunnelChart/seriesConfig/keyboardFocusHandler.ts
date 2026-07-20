@@ -4,7 +4,6 @@ import type { KeyboardFocusHandler } from '@mui/x-charts/internals';
 const outSeriesTypes: Set<'funnel'> = new Set(['funnel']);
 
 const allowCycles = false;
-// Funnel sections are per-series items: cap navigation at the focused series length.
 const useCurrentSeriesMaxLength = true;
 
 const keyboardFocusHandler: KeyboardFocusHandler<'funnel', 'funnel'> =
