@@ -91,11 +91,11 @@
       }
     },
     "onItemClick": {
-      "description": "Callback fired when clicking on a scatter item.",
+      "description": "Callback fired when a scatter item is activated.",
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element if using hit area interaction. Or the Mouse event from the scatter element, when <code>disableHitArea=true</code>."
+          "description": "The event that activated the item. This is a mouse event for pointer interaction and a keyboard event for Enter or Space activation."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",

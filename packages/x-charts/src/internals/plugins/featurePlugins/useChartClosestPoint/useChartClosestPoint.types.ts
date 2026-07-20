@@ -41,12 +41,15 @@ export interface UseChartVoronoiParameters {
    */
   hitAreaRadius?: 'item' | number | undefined;
   /**
-   * Callback fired when clicking close to an item.
+   * Callback fired when clicking close to an item, or it is activated via keyboard Enter or Space.
    * This is only available for scatter plot for now.
-   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {MouseEvent | KeyboardEvent} event The pointer or keyboard event that activated the item.
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
-  onItemClick?: (event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void;
+  onItemClick?: (
+    event: MouseEvent | KeyboardEvent,
+    scatterItemIdentifier: ScatterItemIdentifier,
+  ) => void;
 }
 
 export type UseChartVoronoiDefaultizedParameters = Pick<

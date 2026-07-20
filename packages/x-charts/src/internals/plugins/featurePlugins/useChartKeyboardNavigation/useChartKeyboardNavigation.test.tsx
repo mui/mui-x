@@ -1,3 +1,4 @@
+import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer, act } from '@mui/internal-test-utils/createRenderer';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
@@ -310,6 +311,52 @@ describe('useChartKeyboardNavigation', () => {
       expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
       expect(secondBar!.getAttribute('data-highlighted')).to.equal('true');
       expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'should call onItemClick when pressing Enter or Space on a focused item',
+    async () => {
+      const onItemClick = spy();
+      const { user } = render(
+        <ScatterChart
+          height={200}
+          width={200}
+          skipAnimation
+          margin={0}
+          onItemClick={onItemClick}
+          series={[
+            {
+              id: 'A',
+              data: [
+                { id: 'a1', x: 1, y: 1 },
+                { id: 'a2', x: 2, y: 2 },
+              ],
+              highlightScope: { highlight: 'item' },
+            },
+          ]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[Enter]');
+
+      expect(onItemClick.callCount).to.equal(1);
+      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+        type: 'scatter',
+        seriesId: 'A',
+        dataIndex: 0,
+      });
+
+      await user.keyboard('[Space]');
+
+      expect(onItemClick.callCount).to.equal(2);
+      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+        type: 'scatter',
+        seriesId: 'A',
+        dataIndex: 0,
+      });
     },
   );
 });

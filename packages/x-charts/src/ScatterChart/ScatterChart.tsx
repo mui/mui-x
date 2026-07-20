@@ -128,8 +128,8 @@ export interface ScatterChartProps
    */
   slotProps?: ScatterChartSlotProps;
   /**
-   * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using hit area interaction. Or the Mouse event from the scatter element, when `disableHitArea=true`.
+   * Callback fired when a scatter item is activated.
+   * @param {MouseEvent | KeyboardEvent} event The event that activated the item. This is a mouse event for pointer interaction and a keyboard event for Enter or Space activation.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?:
@@ -423,8 +423,8 @@ ScatterChart.propTypes /* remove-proptypes */ = {
    */
   onHighlightChange: PropTypes.func,
   /**
-   * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using hit area interaction. Or the Mouse event from the scatter element, when `disableHitArea=true`.
+   * Callback fired when a scatter item is activated.
+   * @param {MouseEvent | KeyboardEvent} event The event that activated the item. This is a mouse event for pointer interaction and a keyboard event for Enter or Space activation.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,

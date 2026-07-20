@@ -689,9 +689,9 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
    */
   onHighlightedAxisChange: PropTypes.func,
   /**
-   * Callback fired when clicking close to an item.
+   * Callback fired when an item is activated.
    * This is only available for scatter plot for now.
-   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {MouseEvent | KeyboardEvent} event The pointer or keyboard event that activated the item.
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,

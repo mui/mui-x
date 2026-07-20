@@ -188,4 +188,49 @@ describe('ScatterChart - click event', () => {
       expect(onItemClick.mock.calls.length).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
   });
+
+  describe('onItemClick - keyboard activation', () => {
+    it('should provide the focused item when pressing Enter or Space', async () => {
+      const onItemClick = vi.fn();
+      const { user } = render(
+        <ScatterChart
+          {...config}
+          series={[{ id: 's1', data: config.dataset }]}
+          onItemClick={onItemClick}
+        />,
+      );
+
+      await user.keyboard('{Tab}{ArrowRight}{Enter}');
+      await user.keyboard(' ');
+
+      expect(onItemClick.mock.calls).to.have.length(2);
+      expect(onItemClick.mock.calls[0][0]).to.have.property('key', 'Enter');
+      expect(onItemClick.mock.calls[1][0]).to.have.property('key', ' ');
+      expect(onItemClick.mock.calls[1][1]).to.deep.equal({
+        type: 'scatter',
+        dataIndex: 0,
+        seriesId: 's1',
+      });
+    });
+
+    it('should activate the focused item when hit area interaction is disabled', async () => {
+      const onItemClick = vi.fn();
+      const { user } = render(
+        <ScatterChart
+          {...config}
+          series={[{ id: 's1', data: config.dataset }]}
+          onItemClick={onItemClick}
+          disableHitArea
+        />,
+      );
+
+      await user.keyboard('{Tab}{ArrowRight}{Enter}');
+
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
+        type: 'scatter',
+        dataIndex: 0,
+        seriesId: 's1',
+      });
+    });
+  });
 });

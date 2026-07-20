@@ -6,7 +6,7 @@ import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfi
 import type { ChartPlugin } from '../../models';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
-import type { FocusedItemUpdater } from './keyboardFocusHandler.types';
+import type { FocusedItemUpdater, KeyboardActivation } from './keyboardFocusHandler.types';
 
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
   params,
@@ -14,11 +14,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
+  const { disableKeyboardNavigation, onItemClick } = params;
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
 
-    if (!element || params.disableKeyboardNavigation) {
+    if (!element || disableKeyboardNavigation) {
       return undefined;
     }
 
@@ -71,14 +72,22 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         }
       }
 
-      const calculateFocusedItem = seriesConfig[seriesType]?.keyboardFocusHandler?.(event) as
-        FocusedItemUpdater<typeof seriesType> | undefined;
+      const keyboardHandlerResult = seriesConfig[seriesType]?.keyboardFocusHandler?.(event) as
+        FocusedItemUpdater<typeof seriesType> | KeyboardActivation | undefined;
 
-      if (!calculateFocusedItem) {
+      if (!keyboardHandlerResult) {
         return;
       }
 
-      newFocusedItem = calculateFocusedItem(newFocusedItem, store.state);
+      if (keyboardHandlerResult === 'activate') {
+        if (store.state.keyboardNavigation.isFocused && newFocusedItem?.type === 'scatter') {
+          event.preventDefault();
+          onItemClick?.(event, newFocusedItem);
+        }
+        return;
+      }
+
+      newFocusedItem = keyboardHandlerResult(newFocusedItem, store.state);
 
       if (newFocusedItem !== store.state.keyboardNavigation.item) {
         event.preventDefault();
@@ -106,14 +115,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
     };
-  }, [chartsLayerContainerRef, params.disableKeyboardNavigation, store]);
+  }, [chartsLayerContainerRef, disableKeyboardNavigation, onItemClick, store]);
 
   useEnhancedEffect(() => {
     store.set('keyboardNavigation', {
       ...store.state.keyboardNavigation,
-      enabled: !params.disableKeyboardNavigation,
+      enabled: !disableKeyboardNavigation,
     });
-  }, [store, params.disableKeyboardNavigation]);
+  }, [store, disableKeyboardNavigation]);
 
   return {};
 };

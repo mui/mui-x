@@ -66,6 +66,8 @@ When `hitAreaRadius` is `"item"`, the user must click directly on the point, and
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
 
+When a point is focused with keyboard navigation, <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd> also calls `onItemClick` with a `KeyboardEvent`.
+
 {{"demo": "ScatterClick.js"}}
 
 ## Bubble chart
