@@ -13,7 +13,7 @@ export function useGridApiMethod<
   PublicApi extends GetPublicApiType<PrivateApi>,
   PrivateOnlyApi extends Omit<PrivateApi, keyof PublicApi>,
   V extends 'public' | 'private',
-  T extends V extends 'public' ? Partial<PublicApi> : Partial<PrivateOnlyApi>,
+  T extends (V extends 'public' ? Partial<PublicApi> : Partial<PrivateOnlyApi>),
 >(privateApiRef: RefObject<PrivateApi>, apiMethods: T, visibility: V) {
   const isFirstRender = React.useRef(true);
 

@@ -24,8 +24,7 @@ export class SchedulerLazyLoadingPlugin<
   private isFetchScheduled = false;
   private pendingIsInstantLoad = false;
   private pendingComputeRange:
-    | (() => { start: TemporalSupportedObject; end: TemporalSupportedObject })
-    | null = null;
+    (() => { start: TemporalSupportedObject; end: TemporalSupportedObject }) | null = null;
 
   /**
    * Range key of the most recently requested fetch. Used to skip stale fetches:

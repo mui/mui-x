@@ -65,9 +65,9 @@ interface SchedulerProcessedEventBase {
   allDay?: boolean;
 
   /**
-   * The id of the resource this event is associated with.
+   * The id(s) of the resource(s) this event is associated with.
    */
-  resource?: SchedulerResourceId | null;
+  resource?: SchedulerResourceId | SchedulerResourceId[] | null;
 
   /**
    * A custom class name to apply to the event element.
@@ -206,10 +206,10 @@ export interface SchedulerEvent {
    */
   timezone?: TemporalTimezone;
   /**
-   * The id of the resource this event is associated with.
+   * The id(s) of the resource(s) this event is associated with.
    * @default null
    */
-  resource?: SchedulerResourceId | null;
+  resource?: SchedulerResourceId | SchedulerResourceId[] | null;
   /**
    * The recurrence rule for the event.
    * It can be provided either as a string (RFC5545 RRULE format)
@@ -290,8 +290,7 @@ export interface SchedulerEventOccurrencePlaceholder extends SchedulerProcessedE
  * Includes both real event occurrences and temporary placeholder occurrences.
  */
 export type SchedulerRenderableEventOccurrence =
-  | SchedulerEventOccurrence
-  | SchedulerEventOccurrencePlaceholder;
+  SchedulerEventOccurrence | SchedulerEventOccurrencePlaceholder;
 
 export type SchedulerEventId = string | number;
 

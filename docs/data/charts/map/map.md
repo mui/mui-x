@@ -1,7 +1,7 @@
 ---
 title: React Map chart
 productId: x-charts
-components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape, Graticule, FocusedMapShape
+components: ChartsGeoDataProviderPremium, GeoDataPlot, MapImagePlot, MapShapePlot, MapShape, Graticule, FocusedMapShape
 ---
 
 # Charts - Map [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
@@ -18,9 +18,7 @@ The map provider `ChartsGeoDataProviderPremium` uses three main props:
 
 - `geoData`: an array of geographical objects defining the map (countries, cities, road, ...)
 - `projection`: a string that defines how the objects should be projected on the SVG.
-- `series`: the data associated to the geographical objects.
-
-The series can be of type `'mapShape'`, `'mapPoint'`, or `'mapLink'`.
+- `series`: the data associated to the geographical objects of type `'mapShape'`.
 
 {{"demo": "BasicGeoDataPlot.js"}}
 
@@ -67,16 +65,49 @@ so use them to style the background layer.
 
 {{"demo": "GeoDataPlotDemo.js"}}
 
+## Adding a base map raster with `MapImagePlot`
+
+`MapImagePlot` draws a raster base map—such as a satellite mosaic—under the series.
+The image is reprojected to match the chart's `projection`, so it follows the geography
+instead of staying a flat rectangle, even when the projection curves the map.
+
+Pass the image URL through the `href` prop. The source is assumed to be equirectangular and
+to cover the whole globe; use `imageBounds` (`[[west, south], [east, north]]`) when it covers
+a smaller extent.
+
+```tsx
+<ChartsSurface>
+  <MapImagePlot href="/static/mars-viking.jpg" />
+  <MapShapePlot />
+</ChartsSurface>
+```
+
+The provider is not tied to Earth—`geoData` accepts any GeoJSON `FeatureCollection`.
+The demo below maps the 30 USGS Mars Chart quadrangles colored by mean elevation over a
+Viking surface mosaic, with notable landmarks and mission sites, and a projection toggle.
+
+{{"demo": "MarsMap.js"}}
+
+:::warning
+Reprojection reads the image pixels on a canvas, so the source must be same-origin or served
+with CORS headers.
+:::
+
 ## Modifying the projection
 
 The `projection` prop accepts either a d3-geo projection name or a `GeoProjection` instance.
-You can modify it with props
-
-- `translate: [tx, ty]` Translate the projected map in the SVG
-- `rotate: [lambda, phi, gamma]` Rotate the coordinate before applying the projection. To center the map on a coordinate (long, lat), use `rotate={[-long, -lat]}`.
-- `scale: number` Set zoom scale. If not provided, the scale is chosen to fit the `geoData` in the drawing area. Notice that some projection can lead to infinite coordinates and then degenerated render.
 
 {{"demo": "ProjectionMapShape.js"}}
+
+### Conic projections
+
+Conic projections take two standard `parallels` as part of their definition.
+The map distortion is minimal along those parallels.
+So it's recommended to keep those parallels close to the area you want to display.
+
+Here you can try different countries and play with projection and parallels to see its impact.
+
+{{"demo": "CountryProjectionShape.js"}}
 
 ## Plotting series with `MapShapePlot`
 
@@ -231,6 +262,64 @@ the `fade` option decides which items are dimmed
 (`'series'` for the rest of the same series, `'global'` for every shape in every series).
 
 {{"demo": "HighlightedMapShape.js"}}
+
+## Zoom
+
+### Interaction
+
+Set prop `zoom` to `true` to enable zoom interactions.
+This props also accept a configuration objects.
+
+The zoom interaction modifies the projection center such that the user pointer stay on top of the same geographical coordinate during the gesture.
+If modifying the center does not succeed, it modifies the translation.
+
+The zoom object has two properties to limit this behavior:
+
+- `rotationAllowed`: `'both' | 'both+roll' | 'longitude' | 'none'` Limit how the center can be modified
+- `translationAllowed`: `'both' | 'x' | 'y' | 'none'` Limit how the translation can be modified
+
+:::info
+The **rotation** is a applied on the 3D sphere before projecting it to the 2D plan.
+
+The **translation** is applied after the projection, it allows drag it but does not impact the projection.
+
+The rotation allows infinite dragging because a rotation of 360deg bring user back to the initial point.
+But for some projection rotating the sphere along latitude or roll angles can have two impacts:
+
+- Cylindrical projections usually represent latitude/longitude as horizontal/vertical lines. Rotating along latitude or using the roll will transform those straight lines into curves.
+- Cylindrical and conic projections will apply different distortion to shapes according to the latitude/roll angle. So shapes will vary while dragging the map.
+
+:::
+
+By default, both are derived from the chosen projection so each map behaves as expected without extra configuration:
+
+- azimuthal (globe-like) projections: `{ rotationAllowed: 'both', translationAllowed: 'none' }`
+- cylindrical: `{ rotationAllowed: 'long', translationAllowed: 'y' }`
+- conic: `{ rotationAllowed: 'none', translationAllowed: 'both' }`
+
+:::info
+With azimuthal projections, you can replace `rotationAllowed: 'both'` by `'both+roll'` to get a smoother dragging interaction.
+But the north/south axis will move more easily.
+:::
+
+You can also modify the zoom result with:
+
+- `minZoomLevel`/`maxZoomLevel`: Clamp the `zoomLevel` between those two values.
+- `maxEmptySpace`: The maximal space left empty while dragging the map. It's a ratio of the drawing area size. For example `maxEmptySpace=0.2` means you can not leave more than 20% of the drawing area empty when dragging the map.
+
+{{"demo": "MapZoomOptions.js"}}
+
+### Control
+
+The maps have a `view` and `onViewChange` props that allow to controll the zoom.
+
+The view is made of three properties:
+
+- `zoomLevel`: `number` A scaling ratio such that `1` correspond to the scale where all objects fit in the drawing area.
+- `center`: `[number, number]` The long/lat coordinates in degree of the point at the center of the projection.
+- `translation`: `[number, number]` The translation of the map as a ratio of the drawing area.
+
+{{"demo": "MapZoomControl.js"}}
 
 ## Managing visibility from the legend
 

@@ -12,7 +12,7 @@ import { ChatBox } from '@mui/x-chat';
 import {
   createChunkStream,
   randomId,
-} from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 // --- ToolCard: the complete implementation referenced from the docs ----------
 
