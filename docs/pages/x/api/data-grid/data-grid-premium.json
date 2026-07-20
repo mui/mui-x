@@ -2361,6 +2361,12 @@
       "isGlobal": false
     },
     {
+      "key": "formulaBar",
+      "className": "MuiDataGridPremium-formulaBar",
+      "description": "Styles applied to the formula bar root element (Premium formulas).",
+      "isGlobal": false
+    },
+    {
       "key": "formulaColumnHeaderLetter",
       "className": "MuiDataGridPremium-formulaColumnHeaderLetter",
       "description": "Styles applied to the A1-notation column-letter adornment in the column header (Premium formulas).",

@@ -76,6 +76,8 @@
   { "name": "FilterPanelTriggerProps", "kind": "TypeAlias" },
   { "name": "FooterPropsOverrides", "kind": "Interface" },
   { "name": "FooterRowCountOverrides", "kind": "Interface" },
+  { "name": "FormulaBar", "kind": "Variable" },
+  { "name": "FormulaBarProps", "kind": "Interface" },
   { "name": "getAggregationFooterRowIdFromGroupId", "kind": "Variable" },
   { "name": "GetApplyFilterFn", "kind": "TypeAlias" },
   { "name": "GetApplyQuickFilterFn", "kind": "TypeAlias" },

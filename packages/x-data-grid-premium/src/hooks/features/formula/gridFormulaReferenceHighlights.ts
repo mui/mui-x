@@ -21,6 +21,7 @@ import type {
   FormulaSourceSpan,
 } from './engine';
 import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionContext';
+import { gridFormulaActiveEditSelector } from './gridFormulaSelectors';
 
 /**
  * A resolved highlight target. Identity-keyed: two references resolving to the
@@ -292,25 +293,50 @@ export function buildFormulaReferenceModel(
 const NO_CELL = { rowId: '__formula_no_cell__', field: '__formula_no_cell__' };
 
 /**
- * Subscribes to the live edit value of `ownerCell` and rebuilds the shared
- * reference model on every change. Reads the value from grid *state*, not the
- * editor component, so the grid overlay keeps working when the editing cell is
- * virtualized out. Returns the empty model when no cell is given.
+ * Rebuilds the shared reference model on every change of the highlighted text.
+ * The text is resolved in order:
+ *
+ * 1. `valueOverride`, when provided — a controlled editor (the shared
+ *    `GridFormulaEditable`) always colors exactly the text it displays.
+ * 2. The active edit's `draft`, when `ownerCell` is the active-edit cell — text
+ *    edited outside the cell edit state, e.g. typed into the formula bar while
+ *    the cell stays in view mode.
+ * 3. The cell's live edit-state value.
+ *
+ * The fallbacks read from grid *state*, not the editor component, so the grid
+ * overlay keeps working when the editing cell is virtualized out. Returns the
+ * empty model when no cell is given.
  */
 export function useGridFormulaReferenceModel(
   apiRef: RefObject<GridPrivateApiPremium>,
   ownerCell: { id: GridRowId; field: string } | null,
   a1Notation: boolean,
+  valueOverride?: unknown,
 ): FormulaReferenceModel {
   const editCellState = useGridSelector(
     apiRef,
     gridEditCellStateSelector,
     ownerCell ? { rowId: ownerCell.id, field: ownerCell.field } : NO_CELL,
   );
+  const activeEdit = useGridSelector(apiRef, gridFormulaActiveEditSelector);
   const positionContext = useGridSelector(apiRef, gridFormulaA1PositionContextSelector);
-  const value = editCellState?.value;
   const ownerId = ownerCell?.id;
   const ownerField = ownerCell?.field;
+  const draft =
+    activeEdit !== null &&
+    activeEdit.draft !== undefined &&
+    activeEdit.id === ownerId &&
+    activeEdit.field === ownerField
+      ? activeEdit.draft
+      : undefined;
+  let value: unknown;
+  if (valueOverride !== undefined) {
+    value = valueOverride;
+  } else if (draft !== undefined) {
+    value = draft;
+  } else {
+    value = editCellState?.value;
+  }
 
   return React.useMemo(() => {
     if (ownerId === undefined || ownerField === undefined) {

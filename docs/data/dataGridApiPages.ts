@@ -47,6 +47,11 @@ const dataGridApiPages: MuiPage[] = [
     title: 'FilterPanelTrigger',
   },
   {
+    pathname: '/x/api/data-grid/formula-bar',
+    title: 'FormulaBar',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/data-grid/grid-charts-panel',
     title: 'GridChartsPanel',
     plan: 'premium',

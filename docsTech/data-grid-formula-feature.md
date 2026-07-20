@@ -304,8 +304,10 @@ real Excel formulas (I8/D22). `escapeFormulas: true` default retained. Undo/redo
 replay). Row grouping:
 keys from evaluated values. Tree data: works on data rows. `dataSource`: warn + disable. Errors
 render as code strings; error results sort/filter as code strings. Only error codes are
-user-visible strings (locale-neutral) — no `GridLocaleText` additions in v1. Formula bar: out of
-scope; `getCellFormula` + `cellFocusIn` make it userland-buildable. _Amended during I3 (resolves the two I2 deferrals):_ **row grouping** groups by evaluated values:
+user-visible strings (locale-neutral) — no `GridLocaleText` additions in v1. Formula bar:
+originally out of scope (planned as a userland recipe on `getCellFormula` + `cellFocusIn`) —
+superseded by the built-in `FormulaBar` component (D26), which also amended the no-`GridLocaleText`
+stance with three bar label keys. _Amended during I3 (resolves the two I2 deferrals):_ **row grouping** groups by evaluated values:
 `getCellGroupingCriteria` consults the formula lookup first (null-guarded — the initial tree build
 runs before the formula state initializes); value results feed `groupingValueGetter` as its value
 argument, error results group by their code string bypassing it (consistent with the
@@ -674,6 +676,62 @@ resize all commit through state and re-render correctly; touch resize emits the 
 stream. Tests: mid-drag geometry is browser-only (3 chromium tests, proven non-vacuous by stashing
 the handlers); the focus veto is jsdom-pinned three ways (formula edit survives an on-separator
 release AND an off-separator release; plain edit still stops).
+
+**D26. Built-in formula bar (`FormulaBar`) and docs restructure (2026-07-19).** The formula bar was
+originally planned as a userland docs recipe (D18), but a faithful Excel/Sheets bar would have
+required ~5 public API additions (promoting the formula api, a canonical→A1 option, a draft
+evaluation API, exporting the editor core, overlay plumbing) just to reassemble what the product
+can do internally — so it shipped built-in (Bilal's decision, along with keeping the formula api
+private). Architecture: **the bar is a permanently open formula editor for the focused cell**, not
+an auto-started cell edit. Active cell tracked via `cellFocusIn` (fires on click and keyboard nav)
+and retained across `cellFocusOut`. Three modes: display (canonical source, A1 display via
+`convertCanonicalToA1Display` when `formulaA1Notation`, plain values otherwise, read-only for
+non-editable cells); **view-mode draft** — local text, reference coloring via the shared editable,
+in-grid outlines via a new optional `draft` on `formula.activeEdit` (the reference-model hook
+resolves `valueOverride ?? activeEdit.draft ?? editCellState.value`; `setFormulaActiveEdit`'s
+equality guard now compares `draft`), a ~150 ms-debounced result preview via
+`previewFormulaResult`, and **nothing committed while typing**; **edit-mode mirror** — two-way sync
+with the live edit session via `setEditCellValue` (safe: the A1 seed comparison is by string value,
+and the cell editor's rebuild preserves the caret on external writes), read-only in row edit mode.
+Enter commits + moves focus below, Tab right, blur/cell-change commits the dirty draft (Excel
+Enter-mode), Escape is the only discard; the bar moves DOM focus itself (`focusElement` on the
+target cell — `setCellFocus` never moves DOM focus to a different cell, and `GridCell`'s steal is
+vetoed while the bar holds focus). **Commit path:** a programmatic one-cell paste — publish
+`clipboardPasteStart` (re-arms the A1 paste origin → zero offset), `CellValueUpdater.updateCell` +
+`applyUpdates` (wrapped `pastedValueParser` freezes A1, `valueSetter`, editability checks,
+`processRowUpdate`, and via `clipboardPasteEnd` a single undo step). Accepted: bar commits are
+observable as paste events, and the pre-existing paste/fill history race (a validation event firing
+between the history push and the 50 ms-batched row flush drops the undo item) applies to the bar
+too. **Preview evaluation** (`gridFormulaPreview.ts`): read-only resolver — formula deps from the
+committed lookup, raw deps via `getRowValue`, live UI position context; self-reference detection
+goes through dependency binding so `SUM(COLUMN_VALUES(ownField))`/interval coverage of the own cell
+report `#CYCLE!` like the committed pass would (the evaluator alone would read the committed value
+and preview a plausible-but-wrong number); uses `parseFormula`, deliberately NOT the interning
+parser (a transient draft per keystroke would grow the intern map); writes nothing (pinned by
+test). **Focus survival:** an instance-scoped registry of bar root elements on `caches.formula`
+(`gridFormulaBarElements.ts`) — a bar may be portaled anywhere (`createPortal`), so root
+containment cannot scope it; the `canUpdateFocus` processor vetoes for registered bars, community
+`GridCell.tsx`'s view-mode focus-steal effect now consults the pipe with a pseudo-event
+`{ target: activeElement }` (the one community behavioral change), and the floating editor's entry
+effect skips focus/caret when a registered bar owns the focus (visual session restore still runs).
+**Editable core extraction:** `GridFormulaEditable.tsx` (internal, controlled: `value`,
+`onValueChange`, `onCommitKey`/`onCancelKey`, `onAfterRebuild`, `onInteraction`, imperative handle
+with caret/engaged/closeSuggestions) now owns the contenteditable + rebuild/caret + IME/paste +
+suggestion popup; `GridFormulaEditorFloating` keeps geometry/session and adapts edit state.
+Extraction gotcha: a CHILD's layout effect runs before the PARENT's host refs attach, so the
+first (seed) rebuild found `surfaceRef` null and the entry growth was lost — fixed with a
+mount-time `growToFit` in the floating editor (grow-only, idempotent). **Wiring:**
+`slotProps.toolbar.formulaBar` renders the bar below the default toolbar row (a sibling strip —
+the v8 toolbar is a single-row flex); `FormulaBar` exported from the premium barrel;
+`gridClasses.formulaBar`; `formulaBarLabel`/`formulaBarInputLabel`/`formulaBarAddressLabel` locale
+keys; `formulaBar?: boolean` declared directly on community `GridToolbarProps` (the
+`showHistoryControls` precedent — premium module augmentation of the internals-imported interface
+does not resolve); `focusElement` exported from community internals; component API page registered
+in `scripts/buildApiDocs/gridSettings`. **Docs restructure:** `formulas.md` split into Overview
+(`/formulas`, all demos + the new Formula bar section), Syntax reference (`/formula-syntax`:
+operators/refs/ranges/functions/errors + A1), and Formula engine (`/formula-engine`: How it works +
+custom functions + selectors) under a `formulas-group` nav (pivoting-group pattern), plus a
+`components/formula-bar` page. A planned Recipes page is deferred until a real recipe exists.
 
 **Invariant (all iterations): formula source lives only in row data; every cache and state slice is
 derived.** This is what keeps undo/redo, `processRowUpdate`, and controlled-rows scenarios working

@@ -95,6 +95,10 @@ export interface GridClasses {
    */
   formulaRowNumberCell: string;
   /**
+   * Styles applied to the formula bar root element (Premium formulas).
+   */
+  formulaBar: string;
+  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -1219,6 +1223,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationRowOverlayWrapper',
   'formulaColumnHeaderLetter',
   'formulaRowNumberCell',
+  'formulaBar',
   'mainContent',
   'withSidePanel',
   'collapsible',

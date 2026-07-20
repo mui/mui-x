@@ -52,6 +52,7 @@ import {
 } from './gridFormulaSelectors';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 import { GRID_FORMULA_EDITOR_SURFACE_CLASS } from '../../../components/GridFormulaEditor';
+import { isFormulaFocusSafeTarget } from './gridFormulaBarElements';
 import {
   areColumnsSignaturesEqual,
   areFormulaFieldsEqual,
@@ -302,9 +303,14 @@ export const useGridFormula = (
       const unchanged =
         cell === null
           ? current === null
-          : current !== null && current.id === cell.id && current.field === cell.field;
+          : current !== null &&
+            current.id === cell.id &&
+            current.field === cell.field &&
+            current.draft === cell.draft;
       // The editor effect re-asserts the same cell on every (re)mount — skip the
       // redundant state write so virtualization remounts do not churn renders.
+      // The formula bar updates `draft` per keystroke, so a draft change is
+      // never "unchanged".
       if (unchanged) {
         return;
       }
@@ -468,6 +474,18 @@ export const useGridFormula = (
       // click inside another grid's formula editor is an ordinary outside click
       // for this grid and must still clear/move its focus.
       if (surface !== null && apiRef.current.rootElementRef?.current?.contains(surface) === true) {
+        return false;
+      }
+      // The formula bar holds DOM focus while the grid keeps the focused cell
+      // "active" (Excel semantics), and a click released over the suggestion
+      // popup (body-portaled) must not end the edit it belongs to: interactions
+      // inside a registered focus-safe element must not clear the cell focus —
+      // which would also stop an in-progress cell edit. Scoped per instance
+      // through the registry (both can live outside the grid root, so root
+      // containment cannot be the scope). Whenever the bar wants the focus to
+      // move — Enter-commit to the cell below, Escape back to the cell — it
+      // moves DOM focus itself.
+      if (isFormulaFocusSafeTarget(apiRef, target)) {
         return false;
       }
       // A column drag-resize (or a stray separator click) must not end an active

@@ -1539,6 +1539,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer container element"
     },
+    "formulaBar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formula bar root element (Premium formulas)"
+    },
     "formulaColumnHeaderLetter": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the A1-notation column-letter adornment in the column header (Premium formulas)"

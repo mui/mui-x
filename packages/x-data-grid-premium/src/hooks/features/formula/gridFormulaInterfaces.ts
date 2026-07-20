@@ -62,6 +62,12 @@ export type GridFormulaLookup = {
 export interface GridFormulaActiveEdit {
   id: GridRowId;
   field: string;
+  /**
+   * A draft formula source being edited OUTSIDE the cell's edit state — typed
+   * into the formula bar while the cell stays in view mode. When set, reference
+   * highlighting derives from this text instead of the cell's edit state.
+   */
+  draft?: string;
 }
 
 export interface GridFormulaState {
@@ -227,6 +233,15 @@ export interface GridFormulaInternalCache {
    * `clipboardPasteStart`, consumed lazily by the first pasted cell.
    */
   pasteOrigin: { rowPosition: number | undefined; columnPosition: number | undefined } | null;
+  /**
+   * "Focus-safe" formula elements of THIS grid instance: formula-bar roots and
+   * suggestion-popup panels. Both can live outside the grid root (a portaled
+   * bar, the body-portaled popup), so DOM containment cannot scope them — the
+   * `canUpdateFocus` veto and the editor's focus handling recognize them
+   * through this registry instead. Registered through callback refs, so
+   * registration follows the element lifecycle.
+   */
+  focusSafeElements: Set<Element>;
   /**
    * Live mirror of the formula-editor session (engaged flag + caret offset +
    * the grown floating-surface width), written by the focused editor on every
