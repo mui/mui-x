@@ -54,9 +54,10 @@ export function createGetNextIndexFocusedItem<
    */
   allowCycles: boolean = false,
   /**
-   * If true, series max index is defined by the current series length and not all series.
+   * If true (default), series max index is defined by the current series length and not all series.
+   * Shared-axis types (line, bar) opt out to navigate over the longest compatible series.
    */
-  useCurrentSeriesMaxLength: boolean = false,
+  useCurrentSeriesMaxLength: boolean = true,
 ) {
   return function getNextIndexFocusedItem(
     currentItem: WorkingItem | null,
@@ -132,9 +133,10 @@ export function createGetPreviousIndexFocusedItem<
    */
   allowCycles: boolean = false,
   /**
-   * If true, series max index is defined by the current series length and not all series.
+   * If true (default), series max index is defined by the current series length and not all series.
+   * Shared-axis types (line, bar) opt out to navigate over the longest compatible series.
    */
-  useCurrentSeriesMaxLength: boolean = false,
+  useCurrentSeriesMaxLength: boolean = true,
 ) {
   return function getPreviousIndexFocusedItem(
     currentItem: WorkingItem | null,

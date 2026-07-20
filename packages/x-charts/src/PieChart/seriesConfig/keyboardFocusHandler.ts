@@ -3,13 +3,7 @@ import type { KeyboardFocusHandler } from '../../internals/plugins/featurePlugin
 
 const outSeriesTypes: Set<'pie'> = new Set(['pie']);
 
-const allowCycles = false;
-const useCurrentSeriesMaxLength = true;
-
-const keyboardFocusHandler: KeyboardFocusHandler<'pie', 'pie'> = createCommonKeyboardFocusHandler(
-  outSeriesTypes,
-  allowCycles,
-  useCurrentSeriesMaxLength,
-);
+const keyboardFocusHandler: KeyboardFocusHandler<'pie', 'pie'> =
+  createCommonKeyboardFocusHandler(outSeriesTypes);
 
 export default keyboardFocusHandler;

@@ -3,7 +3,15 @@ import type { KeyboardFocusHandler } from '../../internals/plugins/featurePlugin
 import { composableCartesianSeriesTypes } from '../../models/seriesType/composition';
 import type { ComposableCartesianChartSeriesType } from '../../models/seriesType/composition';
 
+const allowCycles = false;
+// Shared-axis navigation: allow focusing valueless indexes up to the longest compatible series.
+const useCurrentSeriesMaxLength = false;
+
 const keyboardFocusHandler: KeyboardFocusHandler<'line', ComposableCartesianChartSeriesType> =
-  createCommonKeyboardFocusHandler(composableCartesianSeriesTypes);
+  createCommonKeyboardFocusHandler(
+    composableCartesianSeriesTypes,
+    allowCycles,
+    useCurrentSeriesMaxLength,
+  );
 
 export default keyboardFocusHandler;
