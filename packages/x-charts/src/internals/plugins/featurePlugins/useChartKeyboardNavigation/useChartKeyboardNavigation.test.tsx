@@ -3,6 +3,7 @@ import { createRenderer, act } from '@mui/internal-test-utils/createRenderer';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 describe('useChartKeyboardNavigation', () => {
   const { render } = createRenderer();
@@ -266,6 +267,80 @@ describe('useChartKeyboardNavigation', () => {
       container.querySelectorAll(`[data-series="short"] [data-highlighted="true"]`),
     ).to.have.length(1);
     expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
+  });
+
+  it.skipIf(isJSDOM)(
+    'should navigate past the end of a shorter line series sharing the x-axis',
+    async () => {
+      const { container, user } = render(
+        <LineChart
+          height={200}
+          width={200}
+          skipAnimation
+          margin={0}
+          xAxis={[{ data: [1, 2, 3] }]}
+          series={[
+            { id: 'short', data: [1, 2], showMark: true, highlightScope: { highlight: 'item' } },
+            { id: 'long', data: [3, 4, 5], showMark: true, highlightScope: { highlight: 'item' } },
+          ]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
+
+      // Focusing an index with no value is valid on shared-axis series.
+      // The indicator is hidden, but the index keeps advancing.
+      await user.keyboard('[ArrowRight]');
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
+
+      // Moving to the longer series keeps the focused index.
+      await user.keyboard('[ArrowUp]');
+      expect(
+        container.querySelector(`[data-series="long"][data-index="2"][data-highlighted="true"]`),
+      ).not.to.equal(null);
+    },
+  );
+
+  it.skipIf(isJSDOM)('should keep focus on the last arc of a shorter pie series', async () => {
+    const { container, user } = render(
+      <PieChart
+        height={200}
+        width={200}
+        hideLegend
+        series={[
+          {
+            id: 'short',
+            outerRadius: 40,
+            data: [
+              { id: 0, value: 10 },
+              { id: 1, value: 20 },
+            ],
+          },
+          {
+            id: 'long',
+            innerRadius: 50,
+            data: [
+              { id: 0, value: 10 },
+              { id: 1, value: 20 },
+              { id: 2, value: 30 },
+            ],
+          },
+        ]}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[ArrowRight]');
+
+    expect(container.querySelector(`.${pieClasses.focusIndicator}[data-index="1"]`)).not.to.equal(
+      null,
+    );
   });
 
   it.skipIf(isJSDOM)(
