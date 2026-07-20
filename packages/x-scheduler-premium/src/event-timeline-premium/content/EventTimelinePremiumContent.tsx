@@ -53,6 +53,7 @@ import {
 import { useTitleScrollSync } from './useTitleScrollSync';
 import { useEventTabNavigation } from './useEventTabNavigation';
 import { getRowHeightForLaneCount } from './rowGeometry';
+import { getVisibleFractionRange } from './getVisibleFractionRange';
 import { EventTimelinePremiumDependencyArrows } from './timeline-dependency-arrows';
 
 const EventTimelinePremiumContentRoot = styled('section', {
@@ -510,9 +511,10 @@ function EventList({
   );
 
   // Convert virtualizer column range to fraction range
-  const { tickCount } = presetConfig;
-  const visibleStart = Math.max(0, renderContext.firstColumnIndex - 1) / tickCount;
-  const visibleEnd = Math.max(0, renderContext.lastColumnIndex - 1) / tickCount;
+  const { start: visibleStart, end: visibleEnd } = getVisibleFractionRange(
+    renderContext,
+    presetConfig.tickCount,
+  );
 
   return (
     <React.Fragment>

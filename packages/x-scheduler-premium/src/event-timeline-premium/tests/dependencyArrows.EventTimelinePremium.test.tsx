@@ -153,6 +153,10 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     return Array.from(document.querySelectorAll<SVGPathElement>('[data-dependency-id]'));
   }
 
+  function getEventElement(title: string) {
+    return screen.getByText(title).closest('[data-occurrence-key]')!;
+  }
+
   it('should render one arrow per active dependency', () => {
     renderTimeline({
       events: [eventA, eventB, eventC],
@@ -313,10 +317,6 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
   });
 
   describe('successor accessible description', () => {
-    function getEventElement(title: string) {
-      return screen.getByText(title).closest('[data-occurrence-key]')!;
-    }
-
     it('should describe the successor event with its predecessor titles', () => {
       renderTimeline({
         events: [eventA, eventB, eventC],
@@ -342,6 +342,30 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       });
 
       expect(getEventElement('Event A').getAttribute('aria-describedby')).to.equal(null);
+    });
+  });
+
+  // Anchors are computed from `getEventsCellLaneMetrics`, which mirrors the EventsCell
+  // CSS in JS: this pins the mirror against the layout the browser actually produces.
+  describe.skipIf(isJSDOM)('anchor alignment', () => {
+    it('should anchor the straight arrow on the vertical center of the source event', async () => {
+      renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      await waitFor(() => {
+        expect(getArrowPaths()).to.have.length(1);
+      });
+
+      const svg = document.querySelector<SVGSVGElement>('[data-dependency-arrows]')!;
+      const d = getArrowPaths()[0].getAttribute('d')!;
+      const pathY = parseFloat(d.match(/^M [\d.]+ ([\d.]+) /)![1]);
+      // The path is in absolute row-space; the viewBox y offset maps it to the overlay.
+      const arrowScreenY = svg.getBoundingClientRect().top + (pathY - svg.viewBox.baseVal.y);
+
+      const sourceRect = getEventElement('Event A').getBoundingClientRect();
+      expect(arrowScreenY).to.be.closeTo(sourceRect.top + sourceRect.height / 2, 1);
     });
   });
 

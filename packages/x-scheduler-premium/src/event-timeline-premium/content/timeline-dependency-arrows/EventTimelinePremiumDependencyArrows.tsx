@@ -14,6 +14,7 @@ import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/mod
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { getEventsCellLaneMetrics } from '../rowGeometry';
+import { getVisibleFractionRange } from '../getVisibleFractionRange';
 import { computeDependencyArrows, DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowGeometry';
 
 const DEPENDENCY_ARROW_STROKE_WIDTH = 1;
@@ -105,10 +106,10 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
   // Only render the arrows intersecting the visible range. Row-range overlap (rather
   // than endpoint visibility) keeps an arrow whose vertical segment crosses the
   // viewport even when both of its endpoints are scrolled out.
-  const visibleStartFraction =
-    Math.max(0, renderContext.firstColumnIndex - 1) / presetConfig.tickCount;
-  const visibleEndFraction =
-    Math.max(0, renderContext.lastColumnIndex - 1) / presetConfig.tickCount;
+  const { start: visibleStartFraction, end: visibleEndFraction } = getVisibleFractionRange(
+    renderContext,
+    presetConfig.tickCount,
+  );
   const visibleArrows = arrows.filter(
     (arrow) =>
       arrow.maxXFraction > visibleStartFraction &&
