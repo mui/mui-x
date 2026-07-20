@@ -33,6 +33,7 @@ import type {
 } from './SchedulerStore.types';
 import { processDate } from '../../../process-date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
 import type {
   SchedulerEvents,
   SchedulerEventListener,
@@ -93,6 +94,11 @@ export class SchedulerStore<
   protected timeoutManager = this.disposables.use(new TimeoutManager());
 
   private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
+
+  /**
+   * Plugin that provides event-scheduling support (dependencies). `null` when not attached.
+   */
+  protected schedulingPlugin: SchedulerSchedulingPluginInterface | null = null;
 
   public constructor(
     parameters: Parameters,
@@ -441,6 +447,18 @@ export class SchedulerStore<
       newEvents.push(response.model);
       createdEvents.push(response.model);
       createdIds.push(response.id);
+    }
+
+    this.schedulingPlugin?.handleEventsUpdate(parameters);
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (!this.parameters.onEventsChange && !this.parameters.dataSource) {
+        warnOnce([
+          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+          'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+          'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+        ]);
+      }
     }
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);

@@ -96,7 +96,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   it('should warn and strip the rrule when createEvent is called with one', () => {
     expect(() => {
       render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          onEventsChange={() => {}}
+        >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) => {
@@ -118,7 +122,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   it('should warn and strip the rrule when updateEvent is called with one', () => {
     expect(() => {
       render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          onEventsChange={() => {}}
+        >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) => {
