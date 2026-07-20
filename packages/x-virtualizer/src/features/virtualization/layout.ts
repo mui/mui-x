@@ -619,15 +619,27 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
         // stretch their containing blocks, so the content sets the scrollable width.
         // Floored at the inner viewport width.
         width: Math.max(dimensions.columnsTotalWidth, dimensions.viewportInnerSize.width),
+        // Before the viewport is measured `viewportInnerSize` is empty, so the floor in
+        // `width` above is zero and it collapses to `columnsTotalWidth`. When the columns
+        // are narrower than the scroller that leaves white space beside the rows on the
+        // first paint. Floor the content at the scroller width until measured; once
+        // `isReady`, `width` already floors at `viewportInnerSize.width`, and a lingering
+        // `minWidth` on top of that would re-create a horizontal scroll dead zone.
+        ...(dimensions.isReady ? null : { minWidth: '100%' }),
         position: 'relative',
         // Reserve the virtual scrollbar lanes in the scrollable area, so the last
-        // row/column can scroll out from under the overlaid scrollbar widgets. Only
-        // when the axis scrolls, otherwise the lane itself would create overflow.
+        // row/column can scroll out from under the overlaid scrollbar widgets. Each lane
+        // is reserved whenever its own axis scrolls — the bottom lane (horizontal
+        // scrollbar) off `hasScrollX`, the right lane (vertical scrollbar) off `hasScrollY`
+        // — otherwise the lane itself would create overflow. Gating both on
+        // `hasScrollX && hasScrollY` is wrong: `hasScrollY` already folds in the horizontal
+        // lane (`content.height + scrollbarSize > container.height` whenever `hasScrollX`),
+        // so for a content-sized scroller the two states feed each other with no stable
+        // fixpoint and the layout oscillates under classic scrollbars.
         // `content-box` so the lanes add to the columns width.
         boxSizing: 'content-box',
-        paddingBottom:
-          dimensions.hasScrollY && dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
-        paddingRight: dimensions.hasScrollX && dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
+        paddingBottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
+        paddingRight: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
         // Inset for sticky pinned-right cells: they stick against the scrollport, which
         // spans under the overlaid vertical scrollbar (native scrollbars hidden), so
         // this lifts them to the visible inner edge. Consumed as `right: var(--pinned-right)`.
