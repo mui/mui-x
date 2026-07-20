@@ -228,49 +228,45 @@ describe('useChartKeyboardNavigation', () => {
     },
   );
 
-  it.skipIf(isJSDOM)(
-    'should keep focus on the last item of a shorter scatter series',
-    async () => {
-      const { container, user } = render(
-        <ScatterChart
-          height={200}
-          width={200}
-          skipAnimation
-          margin={0}
-          series={[
-            {
-              id: 'short',
-              data: [
-                { id: 'short-0', x: 1, y: 1 },
-                { id: 'short-1', x: 2, y: 2 },
-              ],
-              highlightScope: { highlight: 'item' },
-            },
-            {
-              id: 'long',
-              data: [
-                { id: 'long-0', x: 1, y: 1 },
-                { id: 'long-1', x: 2, y: 2 },
-                { id: 'long-2', x: 3, y: 3 },
-              ],
-              highlightScope: { highlight: 'item' },
-            },
-          ]}
-        />,
-      );
+  it.skipIf(isJSDOM)('should keep focus on the last item of a shorter scatter series', async () => {
+    const { container, user } = render(
+      <ScatterChart
+        height={200}
+        width={200}
+        skipAnimation
+        margin={0}
+        series={[
+          {
+            id: 'short',
+            data: [
+              { id: 'short-0', x: 1, y: 1 },
+              { id: 'short-1', x: 2, y: 2 },
+            ],
+            highlightScope: { highlight: 'item' },
+          },
+          {
+            id: 'long',
+            data: [
+              { id: 'long-0', x: 1, y: 1 },
+              { id: 'long-1', x: 2, y: 2 },
+              { id: 'long-2', x: 3, y: 3 },
+            ],
+            highlightScope: { highlight: 'item' },
+          },
+        ]}
+      />,
+    );
 
-      await user.keyboard('{Tab}');
-      await user.keyboard('[ArrowRight]');
-      await user.keyboard('[ArrowRight]');
-      await user.keyboard('[ArrowRight]');
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[ArrowRight]');
 
-      expect(
-        container.querySelectorAll(`[data-series="short"] [data-highlighted="true"]`),
-      ).to.have.length(1);
-      expect(
-        container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
-    },
-  );
+    expect(
+      container.querySelectorAll(`[data-series="short"] [data-highlighted="true"]`),
+    ).to.have.length(1);
+    expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
+  });
 
   it.skipIf(isJSDOM)(
     'should restore focus indicator on the last focused item when refocusing',

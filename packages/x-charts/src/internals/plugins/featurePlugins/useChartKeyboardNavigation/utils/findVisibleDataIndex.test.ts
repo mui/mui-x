@@ -7,8 +7,19 @@ describe('findVisibleDataIndex', () => {
       scatter: {
         seriesOrder: ['short', 'long'],
         series: {
-          short: { data: [{ x: 1, y: 1 }, { x: 2, y: 2 }] },
-          long: { data: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }] },
+          short: {
+            data: [
+              { x: 1, y: 1 },
+              { x: 2, y: 2 },
+            ],
+          },
+          long: {
+            data: [
+              { x: 1, y: 1 },
+              { x: 2, y: 2 },
+              { x: 3, y: 3 },
+            ],
+          },
         },
       },
     } as unknown as ProcessedSeries<'scatter'>;
