@@ -4,7 +4,6 @@ import { composableCartesianSeriesTypes } from '../../../models/seriesType/compo
 import type { ComposableCartesianChartSeriesType } from '../../../models/seriesType/composition';
 
 const allowCycles = false;
-// Shared-axis navigation: allow focusing valueless indexes up to the longest compatible series.
 const useCurrentSeriesMaxLength = false;
 
 const keyboardFocusHandler: KeyboardFocusHandler<'bar', ComposableCartesianChartSeriesType> =

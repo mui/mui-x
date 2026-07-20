@@ -4,7 +4,6 @@ import type { KeyboardFocusHandler } from '../../internals/plugins/featurePlugin
 const outSeriesTypes: Set<'radar'> = new Set(['radar']);
 
 const allowCycles = true;
-// Radar series share the metrics axis: navigate over the longest compatible series.
 const useCurrentSeriesMaxLength = false;
 
 const keyboardFocusHandler: KeyboardFocusHandler<'radar', 'radar'> =

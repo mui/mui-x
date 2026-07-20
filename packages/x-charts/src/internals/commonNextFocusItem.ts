@@ -55,7 +55,6 @@ export function createGetNextIndexFocusedItem<
   allowCycles: boolean = false,
   /**
    * If true (default), series max index is defined by the current series length and not all series.
-   * Shared-axis types (line, bar) opt out to navigate over the longest compatible series.
    */
   useCurrentSeriesMaxLength: boolean = true,
 ) {
@@ -134,7 +133,6 @@ export function createGetPreviousIndexFocusedItem<
   allowCycles: boolean = false,
   /**
    * If true (default), series max index is defined by the current series length and not all series.
-   * Shared-axis types (line, bar) opt out to navigate over the longest compatible series.
    */
   useCurrentSeriesMaxLength: boolean = true,
 ) {
