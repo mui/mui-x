@@ -115,8 +115,7 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
    */
   aggregationFunctions:
-    | Record<string, GridAggregationFunction>
-    | Record<string, GridAggregationFunctionDataSource>;
+    Record<string, GridAggregationFunction> | Record<string, GridAggregationFunctionDataSource>;
   /**
    * Rows used to generate the aggregated value.
    * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.

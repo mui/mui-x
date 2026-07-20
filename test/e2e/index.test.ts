@@ -281,11 +281,10 @@ async function initializeEnvironment(
         await page.mouse.up();
 
         expect(
-          await page.evaluate(
-            () =>
-              document
-                .querySelector('.MuiDataGrid-columnHeader--sorted')!
-                .getAttribute('data-field')!,
+          await page.evaluate(() =>
+            document
+              .querySelector('.MuiDataGrid-columnHeader--sorted')!
+              .getAttribute('data-field')!,
           ),
         ).to.equal('brand');
       });
@@ -356,22 +355,11 @@ async function initializeEnvironment(
           const dateTimeInput = page.locator(
             '[role="gridcell"][data-field="lastConnection"] input',
           );
-          if (browserType.name() === 'firefox') {
-            // firefox seems to break the section jumping if the section is edited without firstly clearing it
-            dateTimeInput.press('Backspace');
-            await dateTimeInput.type('01/31/2025');
-            // only reliable way on firefox to move to time section is via arrow key
-            await dateTimeInput.press('ArrowRight');
-            await dateTimeInput.type('4:5');
-            await dateTimeInput.press('ArrowRight');
-            await dateTimeInput.type('p');
-          } else {
-            await dateTimeInput.type('01/31/2025,4:5:p');
-          }
+          await dateTimeInput.fill('2025-01-31T16:05');
 
           await page.keyboard.press('Enter');
 
-          expect(page.getByText('1/31/2025, 4:05:00 PM')).not.to.equal(null);
+          await page.getByText('1/31/2025, 4:05:00 PM').waitFor();
         },
       );
 

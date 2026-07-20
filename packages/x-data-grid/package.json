@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "9.6.0",
+  "version": "9.10.0",
   "author": "MUI Team",
   "description": "The Community plan edition of the MUI X Data Grid components.",
   "license": "MIT",
@@ -33,8 +33,8 @@
     "data-grid"
   ],
   "scripts": {
-    "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "typescript": "tsgo -p tsconfig.json",
+    "build": "code-infra build --tsgo --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {

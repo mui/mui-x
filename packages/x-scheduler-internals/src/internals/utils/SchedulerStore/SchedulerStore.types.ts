@@ -1,6 +1,6 @@
-import { BaseUIChangeEventDetails } from '@base-ui/react';
-import { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
-import {
+import type { BaseUIChangeEventDetails } from '@base-ui/react';
+import type { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
+import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
@@ -16,8 +16,8 @@ import {
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
-import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 export interface StoredError {
   /**
@@ -86,6 +86,12 @@ export interface SchedulerState<TEvent extends object = any> {
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
    */
   visibleResources: Record<SchedulerResourceId, boolean>;
+  /**
+   * Collapse status for each resource.
+   * A resource is expanded unless it is registered here with a `true` value.
+   * Collapsing a resource hides its descendants.
+   */
+  collapsedResources: Record<SchedulerResourceId, boolean>;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
@@ -253,6 +259,23 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
     eventDetails: SchedulerChangeEventDetails,
   ) => void;
   /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   */
+  collapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange?: (
+    collapsedResources: Record<SchedulerResourceId, boolean>,
+    eventDetails: SchedulerChangeEventDetails,
+  ) => void;
+  /**
    * The date currently used to determine the visible date range.
    */
   visibleDate?: TemporalSupportedObject;
@@ -361,7 +384,6 @@ export type UpdateRecurringEventParameters = {
   occurrenceStart: TemporalSupportedObject;
   /**
    * The changes to apply.
-   * Requires `start` and `end`, all other properties are optional.
    */
   changes: SchedulerEventUpdatedProperties;
   /**
@@ -445,6 +467,4 @@ export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
  * Used by context hooks to assert the store type at runtime.
  */
 export type SchedulerInstanceName =
-  | 'EventCalendarStore'
-  | 'EventCalendarPremiumStore'
-  | 'EventTimelinePremiumStore';
+  'EventCalendarStore' | 'EventCalendarPremiumStore' | 'EventTimelinePremiumStore';

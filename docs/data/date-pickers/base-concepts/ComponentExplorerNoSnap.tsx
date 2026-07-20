@@ -27,12 +27,7 @@ type ExportedElements = keyof typeof exportedElements;
 
 interface State {
   valueType:
-    | 'date'
-    | 'time'
-    | 'dateTime'
-    | 'dateRange'
-    | 'timeRange'
-    | 'dateTimeRange';
+    'date' | 'time' | 'dateTime' | 'dateRange' | 'timeRange' | 'dateTimeRange';
   family: 'field' | 'view' | 'picker';
 }
 

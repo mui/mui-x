@@ -1,13 +1,12 @@
-import * as React from 'react';
-import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-internals/base-ui-copy';
-import { WeekStartsOn } from '@mui/x-scheduler-internals/models';
+import type * as React from 'react';
+import type {
+  TemporalAdapter,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-internals/base-ui-copy';
+import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 
 export type EventTimelinePremiumPreset =
-  | 'dayAndHour'
-  | 'dayAndMonth'
-  | 'dayAndWeek'
-  | 'monthAndYear'
-  | 'year';
+  'dayAndHour' | 'dayAndMonth' | 'dayAndWeek' | 'monthAndYear' | 'year';
 
 /**
  * Time unit a header row (or the tick grid) operates on.

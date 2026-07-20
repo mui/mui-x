@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import {
+import type {
   SchedulerResourceId,
   SchedulerResourceModelStructure,
 } from '@mui/x-scheduler-internals/models';
@@ -237,6 +237,248 @@ storeClasses.forEach((storeClass) => {
 
         expect(store.state.visibleResources).to.equal(visibleResources);
         expect(onVisibleResourcesChange.called).to.equal(false);
+      });
+    });
+
+    describe('prop: collapsedResources', () => {
+      it('should default to no collapsed resources', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        expect(store.state.collapsedResources).to.deep.equal({});
+      });
+
+      it('should initialize from defaultCollapsedResources', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultCollapsedResources: { a: true } },
+          adapter,
+        );
+        expect(store.state.collapsedResources).to.deep.equal({ a: true });
+      });
+
+      it('should read the controlled collapsedResources over the default', () => {
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            collapsedResources: { a: true },
+            defaultCollapsedResources: { b: true },
+          },
+          adapter,
+        );
+        expect(store.state.collapsedResources).to.deep.equal({ a: true });
+      });
+
+      it('should update collapsedResources when the controlled prop changes', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, collapsedResources: { a: true } },
+          adapter,
+        );
+        expect(store.state.collapsedResources).to.deep.equal({ a: true });
+
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, collapsedResources: { b: true } },
+          adapter,
+        );
+        expect(store.state.collapsedResources).to.deep.equal({ b: true });
+      });
+
+      it('should warn when switching from uncontrolled to controlled collapsedResources', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultCollapsedResources: { a: true } },
+          adapter,
+        );
+
+        expect(() => {
+          store.updateStateFromParameters(
+            { ...DEFAULT_PARAMS, collapsedResources: { b: true } },
+            adapter,
+          );
+        }).toWarnDev(
+          'MUI X Scheduler: A component is changing the uncontrolled collapsedResources state',
+        );
+
+        expect(store.state.collapsedResources).to.deep.equal({ b: true });
+      });
+
+      it('should warn when switching from controlled to uncontrolled collapsedResources', () => {
+        const collapsedResources: Record<SchedulerResourceId, boolean> = { a: true };
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, collapsedResources }, adapter);
+
+        expect(() => {
+          store.updateStateFromParameters(
+            { ...DEFAULT_PARAMS, collapsedResources: undefined },
+            adapter,
+          );
+        }).toWarnDev(
+          'MUI X Scheduler: A component is changing the controlled collapsedResources state',
+        );
+
+        expect(store.state.collapsedResources).to.equal(collapsedResources);
+      });
+
+      it('should warn when defaultCollapsedResources changes after initialization', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultCollapsedResources: { a: true } },
+          adapter,
+        );
+
+        expect(() => {
+          store.updateStateFromParameters(
+            { ...DEFAULT_PARAMS, defaultCollapsedResources: { b: true } },
+            adapter,
+          );
+        }).toWarnDev(
+          'MUI X Scheduler: A component is changing the default collapsedResources state',
+        );
+      });
+    });
+
+    describe('Method: setCollapsedResources', () => {
+      it('should update collapsedResources and call onCollapsedResourcesChange when is uncontrolled', () => {
+        const onCollapsedResourcesChange = spy();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+
+        const newCollapsedResources: Record<SchedulerResourceId, boolean> = { r1: true };
+        store.setCollapsedResources(newCollapsedResources, new Event('click'));
+
+        expect(store.state.collapsedResources).to.equal(newCollapsedResources);
+        expect(onCollapsedResourcesChange.calledOnce).to.equal(true);
+        expect(onCollapsedResourcesChange.lastCall.firstArg).to.equal(newCollapsedResources);
+      });
+
+      it('should not change the state but call onCollapsedResourcesChange when is controlled', () => {
+        const onCollapsedResourcesChange = spy();
+        const controlledCollapsedResources: Record<SchedulerResourceId, boolean> = { r1: true };
+
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            collapsedResources: controlledCollapsedResources,
+            onCollapsedResourcesChange,
+          },
+          adapter,
+        );
+
+        const newCollapsedResources: Record<SchedulerResourceId, boolean> = { r2: true };
+        store.setCollapsedResources(newCollapsedResources, new Event('click'));
+
+        expect(store.state.collapsedResources).to.equal(controlledCollapsedResources);
+        expect(onCollapsedResourcesChange.calledOnce).to.equal(true);
+        expect(onCollapsedResourcesChange.lastCall.firstArg).to.equal(newCollapsedResources);
+      });
+
+      it('should do nothing if collapsedResources is the same reference (no state change, no callback)', () => {
+        const onCollapsedResourcesChange = spy();
+        const collapsedResources: Record<SchedulerResourceId, boolean> = { r1: true };
+
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            defaultCollapsedResources: collapsedResources,
+            onCollapsedResourcesChange,
+          },
+          adapter,
+        );
+
+        store.setCollapsedResources(collapsedResources, new Event('click'));
+
+        expect(store.state.collapsedResources).to.equal(collapsedResources);
+        expect(onCollapsedResourcesChange.called).to.equal(false);
+      });
+
+      it('should forward the triggering event through the change event details', () => {
+        const onCollapsedResourcesChange = spy();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+
+        const event = new Event('click');
+        store.setCollapsedResources({ r1: true }, event);
+
+        const eventDetails = onCollapsedResourcesChange.lastCall.args[1];
+        expect(eventDetails.event).to.equal(event);
+        expect(eventDetails.reason).to.equal('none');
+      });
+
+      it('should not update the state when the change event details are canceled', () => {
+        const onCollapsedResourcesChange = spy(
+          (
+            _collapsedResources: Record<SchedulerResourceId, boolean>,
+            eventDetails: {
+              cancel: () => void;
+            },
+          ) => {
+            eventDetails.cancel();
+          },
+        );
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+
+        store.setCollapsedResources({ r1: true }, new Event('click'));
+
+        expect(onCollapsedResourcesChange.calledOnce).to.equal(true);
+        expect(store.state.collapsedResources).to.deep.equal({});
+      });
+    });
+
+    describe('Method: toggleResourceCollapse', () => {
+      it('should toggle a resource collapse state', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const id = DEFAULT_PARAMS.resources[0].id;
+
+        store.toggleResourceCollapse(id, undefined);
+        expect(store.state.collapsedResources).to.deep.equal({ [id]: true });
+
+        // Expanding removes the key rather than writing `false`.
+        store.toggleResourceCollapse(id, undefined);
+        expect(store.state.collapsedResources).to.deep.equal({});
+      });
+
+      it('should call onCollapsedResourcesChange when uncontrolled', () => {
+        const onCollapsedResourcesChange = spy();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+        const id = DEFAULT_PARAMS.resources[0].id;
+
+        store.toggleResourceCollapse(id, undefined);
+
+        expect(store.state.collapsedResources).to.deep.equal({ [id]: true });
+        expect(onCollapsedResourcesChange.callCount).to.equal(1);
+        expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ [id]: true });
+      });
+
+      it('should expand a resource collapsed through defaultCollapsedResources', () => {
+        const id = DEFAULT_PARAMS.resources[0].id;
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultCollapsedResources: { [id]: true } },
+          adapter,
+        );
+
+        store.toggleResourceCollapse(id, undefined);
+
+        expect(store.state.collapsedResources).to.deep.equal({});
+      });
+
+      it('should call onCollapsedResourcesChange and not mutate state when controlled', () => {
+        const onCollapsedResourcesChange = spy();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, collapsedResources: {}, onCollapsedResourcesChange },
+          adapter,
+        );
+        const id = DEFAULT_PARAMS.resources[0].id;
+
+        store.toggleResourceCollapse(id, undefined);
+
+        expect(onCollapsedResourcesChange.callCount).to.equal(1);
+        expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ [id]: true });
+        // Controlled: state is not updated internally.
+        expect(store.state.collapsedResources).to.deep.equal({});
       });
     });
   });

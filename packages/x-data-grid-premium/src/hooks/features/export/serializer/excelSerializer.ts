@@ -161,9 +161,9 @@ export const serializeRowUnsafe = (
           }
         }
         if (isObject<{ label: any }>(formattedValue)) {
-          serializedRow[castColumn.field] = formattedValue?.label;
+          cellValue = formattedValue?.label;
         } else {
-          serializedRow[castColumn.field] = formattedValue as any;
+          cellValue = formattedValue as any;
         }
         break;
       }

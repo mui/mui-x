@@ -10,7 +10,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import TextField from '@mui/material/TextField';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import {
+import type {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
   RecurringEventFrequency,
@@ -25,9 +25,11 @@ import {
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { useEventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
-import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
+import type { ControlledValue } from './utils';
+import { computeRange, hasProp, validateRange } from './utils';
 import EventDialogHeader from './EventDialogHeader';
 import { GeneralTab } from './GeneralTab';
 
@@ -149,7 +151,7 @@ export function FormContent(props: FormContentProps) {
       endDate: fmtDate(occurrence.displayTimezone.end),
       startTime: fmtTime(occurrence.displayTimezone.start),
       endTime: fmtTime(occurrence.displayTimezone.end),
-      resourceId: occurrence.resource ?? null,
+      resourceId: getPrimaryResourceId(occurrence.resource),
       allDay: !!occurrence.allDay,
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,

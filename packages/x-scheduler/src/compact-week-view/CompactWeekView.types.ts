@@ -1,10 +1,11 @@
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { Theme } from '@mui/material/styles';
-import {
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import type {
   EventCalendarParameters,
   EventCalendarSchedulerParametersOverrides,
+  CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
-import { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/DayTimeGrid.types';
+import type { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/DayTimeGrid.types';
 
 export interface CompactWeekViewProps extends ExportedDayTimeGridProps {}
 
@@ -13,7 +14,9 @@ export interface StandaloneCompactWeekViewProps<TEvent extends object, TResource
     CompactWeekViewProps,
     Omit<
       EventCalendarParameters<TEvent, TResource>,
-      keyof EventCalendarSchedulerParametersOverrides
+      | 'viewConfig'
+      | keyof EventCalendarSchedulerParametersOverrides
+      | CollapsibleResourcesParameterKeys
     >,
     EventCalendarSchedulerParametersOverrides {
   /**

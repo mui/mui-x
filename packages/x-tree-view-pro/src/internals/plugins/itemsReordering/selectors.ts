@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
-import { TreeViewItemId } from '@mui/x-tree-view/models';
-import { RichTreeViewProState } from '../../RichTreeViewProStore';
+import type { TreeViewItemId } from '@mui/x-tree-view/models';
+import type { RichTreeViewProState } from '../../RichTreeViewProStore';
 
 export const itemsReorderingSelectors = {
   /**

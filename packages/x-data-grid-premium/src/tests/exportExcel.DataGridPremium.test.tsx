@@ -144,6 +144,60 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(worksheet.getCell('A2').dataValidation.formulae).to.deep.equal(['Options!$A$2:$A$3']);
     });
 
+    it(`should escape singleSelect formula values when escapeFormulas is enabled`, async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={[
+                {
+                  field: 'option',
+                  type: 'singleSelect',
+                  valueOptions: [{ value: 'a', label: '=HYPERLINK("http://evil","x")' }],
+                },
+              ]}
+              rows={[{ id: 1, option: 'a' }]}
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+
+      const workbook = await apiRef.current?.getDataAsExcel();
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('A2').value).to.equal(`'=HYPERLINK("http://evil","x")`);
+    });
+
+    it(`should not escape singleSelect formula values when escapeFormulas is disabled`, async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={[
+                {
+                  field: 'option',
+                  type: 'singleSelect',
+                  valueOptions: [{ value: 'a', label: '=HYPERLINK("http://evil","x")' }],
+                },
+              ]}
+              rows={[{ id: 1, option: 'a' }]}
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+
+      const workbook = await apiRef.current?.getDataAsExcel({ escapeFormulas: false });
+      const worksheet = workbook!.worksheets[0];
+
+      expect(worksheet.getCell('A2').value).to.equal('=HYPERLINK("http://evil","x")');
+    });
+
     it(`should not export actions columns`, async () => {
       function Icon() {
         return <span>i</span>;
