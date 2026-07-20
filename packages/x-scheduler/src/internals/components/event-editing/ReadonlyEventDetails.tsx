@@ -14,6 +14,7 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { getRecurrenceLabel, hasProp } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
@@ -111,7 +112,7 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    occurrence.resource,
+    getPrimaryResourceId(occurrence.resource),
   );
   const defaultRecurrenceKey = useStore(
     store,

@@ -25,6 +25,7 @@ import {
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import type { StandaloneEvent } from '../../standalone-event';
 import { useAdapterContext } from '../../use-adapter-context';
+import { getPrimaryResourceId } from './event-utils';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
@@ -61,7 +62,9 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         occurrenceKey: data.occurrenceKey,
         originalOccurrence: data.originalOccurrence,
         resourceId:
-          resourceId === undefined ? (data.originalOccurrence.resource ?? null) : resourceId,
+          resourceId === undefined
+            ? (getPrimaryResourceId(data.originalOccurrence.resource) ?? null)
+            : resourceId,
       };
     };
 
@@ -79,7 +82,10 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         end: adapter.addMinutes(start, data.eventData.duration ?? eventCreationConfig.duration),
         eventData: data.eventData,
         onEventDrop: data.onEventDrop,
-        resourceId: resourceId === undefined ? (data.eventData.resource ?? null) : resourceId,
+        resourceId:
+          resourceId === undefined
+            ? (getPrimaryResourceId(data.eventData.resource) ?? null)
+            : resourceId,
       };
     };
 

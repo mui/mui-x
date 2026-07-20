@@ -6,6 +6,7 @@ import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
 import { useEventPointerResizeHandler } from '../../internals/utils/useEventPointerResizeHandler';
 import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
+import { getPrimaryResourceId } from '../../internals/utils/event-utils';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
@@ -70,7 +71,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
         originalOccurrence: data.originalOccurrence,
-        resourceId: data.originalOccurrence.resource ?? null,
+        resourceId: getPrimaryResourceId(data.originalOccurrence.resource) ?? null,
       };
     });
 
