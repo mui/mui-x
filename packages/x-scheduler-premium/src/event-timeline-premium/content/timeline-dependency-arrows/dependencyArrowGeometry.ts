@@ -282,8 +282,8 @@ export function computeDependencyArrows(
     const targetAnchors = anchorsLookup.get(dependency.target);
 
     // An endpoint without an anchor is not rendered in the timeline: its event has no
-    // resource or is outside the collection range. The dependency stays in the data,
-    // it just has no arrow.
+    // resource, is outside the collection range, or its row is hidden. The dependency
+    // stays in the data, it just has no arrow.
     if (sourceAnchors == null || targetAnchors == null) {
       continue;
     }
