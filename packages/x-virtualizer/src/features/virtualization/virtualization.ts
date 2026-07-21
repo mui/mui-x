@@ -263,11 +263,31 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       isRtl,
       rowBufferPx,
       columnBufferPx,
-      rowHeight * 15,
+      averageRowHeight(store, rowHeight) * 15,
       MINIMUM_COLUMN_WIDTH * 6,
       layoutMode,
     ),
   ).current;
+
+  /**
+   * Re-derives the buffers for `direction`. The buffers depend on the measured row
+   * height, so they are refreshed whenever the render context is recomputed, not
+   * only on a direction change: rows are usually measured after the first buffer is
+   * created, and in sticky mode a buffer that changes size once scrolling has started
+   * resizes the window layer at the worst possible moment.
+   */
+  const updateScrollCacheBuffer = (direction: ScrollDirection) => {
+    scrollCache.direction = direction;
+    scrollCache.buffer = bufferForDirection(
+      isRtl,
+      direction,
+      rowBufferPx,
+      columnBufferPx,
+      averageRowHeight(store, rowHeight) * 15,
+      MINIMUM_COLUMN_WIDTH * 6,
+      layoutMode,
+    );
+  };
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: RenderContext, nextAnchor?: number) => {
@@ -370,7 +390,8 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       );
 
       // PERF: use the computed minimum column width instead of a static one
-      const didCrossThreshold = rowScroll >= rowHeight || columnScroll >= MINIMUM_COLUMN_WIDTH;
+      const didCrossThreshold =
+        rowScroll >= averageRowHeight(store, rowHeight) || columnScroll >= MINIMUM_COLUMN_WIDTH;
       shouldUpdate = didCrossThreshold || didChangeDirection;
     }
 
@@ -403,16 +424,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       }
     }
 
-    scrollCache.direction = direction;
-    scrollCache.buffer = bufferForDirection(
-      isRtl,
-      direction,
-      rowBufferPx,
-      columnBufferPx,
-      rowHeight * 15,
-      MINIMUM_COLUMN_WIDTH * 6,
-      layoutMode,
-    );
+    updateScrollCacheBuffer(direction);
 
     const inputs = inputsSelector(
       store,
@@ -454,6 +466,8 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     ) {
       return;
     }
+    // Rows may have been measured or replaced since the buffers were last derived.
+    updateScrollCacheBuffer(scrollCache.direction);
     const inputs = inputsSelector(
       store,
       params,
@@ -1231,6 +1245,26 @@ function anchorTopFor(
   }
   const rowPositions = Dimensions.selectors.rowPositions(store.state);
   return nextAnchorTop(anchorTop, rowPositions[renderContext.firstRowIndex] ?? 0, isSettled);
+}
+
+/**
+ * Mean height of the rows that are actually laid out, falling back to the `rowHeight`
+ * dimension until the first measurement lands.
+ *
+ * Buffers and the update threshold are expressed in rows, but `rowHeight` is only the
+ * default height: `getRowHeight` may return anything, and the two are then off by the
+ * ratio between them. Sizing from the declared height would give the compositor
+ * proportionally less runway than intended whenever rows are taller than the default,
+ * and rasterize a proportionally larger window than intended whenever they are shorter.
+ */
+function averageRowHeight(store: Store<BaseState>, rowHeight: number) {
+  const rowsMeta = Dimensions.selectors.rowsMeta(store.state);
+  const rowCount = rowsMeta.positions.length;
+  if (rowCount === 0) {
+    return rowHeight;
+  }
+  const average = rowsMeta.currentPageTotalHeight / rowCount;
+  return average > 0 ? average : rowHeight;
 }
 
 const EMPTY_BUFFER = {
