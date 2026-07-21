@@ -12,7 +12,7 @@ import type {
   ChatToolMessagePart,
 } from '../types/chat-message-parts';
 import type { ChatPartRenderer } from '../renderers/chatPartRenderer';
-import { safeUri } from './parts/partUtils';
+import { safeFileUri, safeUri } from './parts/partUtils';
 
 function JsonBlock(props: { value: unknown }) {
   const { value } = props;
@@ -62,7 +62,7 @@ export const renderDefaultFilePart: ChatPartRenderer<ChatFileMessagePart> = ({ p
     return <img alt={part.filename ?? ''} src={part.url} />;
   }
 
-  return <a href={safeUri(part.url) || undefined}>{part.filename ?? part.url}</a>;
+  return <a href={safeFileUri(part.url) || undefined}>{part.filename ?? part.url}</a>;
 };
 
 export const renderDefaultSourceUrlPart: ChatPartRenderer<ChatSourceUrlMessagePart> = ({

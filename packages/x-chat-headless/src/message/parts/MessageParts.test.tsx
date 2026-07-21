@@ -229,6 +229,25 @@ describe('FilePart', () => {
     );
   });
 
+  it('preserves a same-origin blob URL as the link target', () => {
+    const blobUrl = `blob:${window.location.origin}/attachment`;
+
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'file',
+          mediaType: 'application/pdf',
+          url: blobUrl,
+          filename: 'doc.pdf',
+        },
+      ],
+    });
+
+    expect(screen.getByText('doc.pdf').closest('a')).to.have.attribute('href', blobUrl);
+  });
+
   it('falls back to URL when no filename', () => {
     renderWithMessage({
       id: 'm1',
@@ -371,6 +390,21 @@ describe('SourceDocumentPart', () => {
 });
 
 describe('defaultMessagePartRenderers', () => {
+  it('renderDefaultFilePart preserves a same-origin blob URL as the link target', () => {
+    const blobUrl = `blob:${window.location.origin}/attachment`;
+    const part = {
+      type: 'file' as const,
+      mediaType: 'application/pdf',
+      url: blobUrl,
+      filename: 'doc.pdf',
+    };
+    const message: ChatMessage = { id: 'm1', role: 'assistant', parts: [part] };
+
+    render(<React.Fragment>{renderDefaultFilePart({ part, message, index: 0 })}</React.Fragment>);
+
+    expect(screen.getByText('doc.pdf').closest('a')).to.have.attribute('href', blobUrl);
+  });
+
   it('renderDefaultFilePart does not expose an unsafe URL as the link target', () => {
     const part = {
       type: 'file' as const,
