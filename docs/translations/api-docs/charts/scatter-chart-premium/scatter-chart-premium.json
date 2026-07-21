@@ -98,7 +98,7 @@
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "The event that activated the item. This is a mouse event for pointer interaction and a keyboard event for Enter or Space activation."
+          "description": "The event that activated the item. It is a <code>KeyboardEvent</code> on Enter or Space activation. Import <code>@mui/x-charts/moduleAugmentation/keyboardItemActivation</code> for correct typing."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",

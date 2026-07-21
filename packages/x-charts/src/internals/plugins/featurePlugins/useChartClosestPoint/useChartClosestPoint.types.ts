@@ -1,3 +1,4 @@
+import type { ItemActivationEvent } from '../../../../models/featureFlags';
 import type { ScatterItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
@@ -41,15 +42,12 @@ export interface UseChartVoronoiParameters {
    */
   hitAreaRadius?: 'item' | number | undefined;
   /**
-   * Callback fired when clicking close to an item, or it is activated via keyboard Enter or Space.
+   * Callback fired when clicking close to an item, or when it is activated with the Enter or Space keys.
    * This is only available for scatter plot for now.
-   * @param {MouseEvent | KeyboardEvent} event The pointer or keyboard event that activated the item.
+   * @param {MouseEvent} event The event that activated the item. It is a `KeyboardEvent` on Enter or Space activation. Import `@mui/x-charts/moduleAugmentation/keyboardItemActivation` for correct typing.
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
-  onItemClick?: (
-    event: MouseEvent | KeyboardEvent,
-    scatterItemIdentifier: ScatterItemIdentifier,
-  ) => void;
+  onItemClick?: (event: ItemActivationEvent, scatterItemIdentifier: ScatterItemIdentifier) => void;
 }
 
 export type UseChartVoronoiDefaultizedParameters = Pick<

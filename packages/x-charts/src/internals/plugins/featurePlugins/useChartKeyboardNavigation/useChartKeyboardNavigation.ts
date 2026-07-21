@@ -7,6 +7,12 @@ import type { ChartPlugin } from '../../models';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { FocusedItemUpdater, KeyboardActivation } from './keyboardFocusHandler.types';
+import type { ScatterItemIdentifier } from '../../../../models/seriesType';
+
+type KeyboardActivationHandler = (
+  event: KeyboardEvent,
+  scatterItemIdentifier: ScatterItemIdentifier,
+) => void;
 
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
   params,
@@ -82,7 +88,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       if (keyboardHandlerResult === 'activate') {
         if (store.state.keyboardNavigation.isFocused && newFocusedItem?.type === 'scatter') {
           event.preventDefault();
-          onItemClick?.(event, newFocusedItem);
+          // `onItemClick` is typed with `MouseEvent` until the consumer opts into the
+          // `keyboardItemActivation` module augmentation.
+          (onItemClick as KeyboardActivationHandler | undefined)?.(event, newFocusedItem);
         }
         return;
       }

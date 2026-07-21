@@ -68,6 +68,16 @@ Otherwise, click behavior matches the [interaction section](#interaction), and t
 
 When a point is focused with keyboard navigation, <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd> also calls `onItemClick` with a `KeyboardEvent`.
 
+:::info
+The `event` parameter is typed as `MouseEvent` to avoid a breaking change.
+To also get `KeyboardEvent` in the type, add the following import:
+
+```ts
+import type {} from '@mui/x-charts/moduleAugmentation/keyboardItemActivation';
+```
+
+:::
+
 {{"demo": "ScatterClick.js"}}
 
 ## Bubble chart

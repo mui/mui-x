@@ -691,7 +691,7 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when an item is activated.
    * This is only available for scatter plot for now.
-   * @param {MouseEvent | KeyboardEvent} event The pointer or keyboard event that activated the item.
+   * @param {MouseEvent} event The event that activated the item. It is a `KeyboardEvent` on Enter or Space activation. Import `@mui/x-charts/moduleAugmentation/keyboardItemActivation` for correct typing.
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,

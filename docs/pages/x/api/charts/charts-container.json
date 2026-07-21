@@ -82,7 +82,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent | KeyboardEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },

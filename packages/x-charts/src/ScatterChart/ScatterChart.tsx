@@ -129,7 +129,7 @@ export interface ScatterChartProps
   slotProps?: ScatterChartSlotProps;
   /**
    * Callback fired when a scatter item is activated.
-   * @param {MouseEvent | KeyboardEvent} event The event that activated the item. This is a mouse event for pointer interaction and a keyboard event for Enter or Space activation.
+   * @param {MouseEvent} event The event that activated the item. It is a `KeyboardEvent` on Enter or Space activation. Import `@mui/x-charts/moduleAugmentation/keyboardItemActivation` for correct typing.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?:
@@ -424,7 +424,7 @@ ScatterChart.propTypes /* remove-proptypes */ = {
   onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a scatter item is activated.
-   * @param {MouseEvent | KeyboardEvent} event The event that activated the item. This is a mouse event for pointer interaction and a keyboard event for Enter or Space activation.
+   * @param {MouseEvent} event The event that activated the item. It is a `KeyboardEvent` on Enter or Space activation. Import `@mui/x-charts/moduleAugmentation/keyboardItemActivation` for correct typing.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
