@@ -1,6 +1,6 @@
 {
   "name": "@mui/mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "MUI Team",
   "description": "MUI MCP Server",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "@babel/runtime": "catalog:",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@mui/x-agent-tools": "workspace:^",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "22.20.1",
