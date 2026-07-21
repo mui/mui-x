@@ -59,7 +59,7 @@ catalog:
   dayjs: ^1.11.21
   es-toolkit: ^1.49.0
   execa: 9.6.1
-  jscodeshift: 17.3.0
+  jscodeshift: 17.4.0
   jsdom: 29.1.1
   luxon: ^3.7.2
   moment: ^2.30.1

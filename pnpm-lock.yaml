@@ -160,8 +160,8 @@ catalogs:
       specifier: 9.6.1
       version: 9.6.1
     jscodeshift:
-      specifier: 17.3.0
-      version: 17.3.0
+      specifier: 17.4.0
+      version: 17.4.0
     jsdom:
       specifier: 29.1.1
       version: 29.1.1
@@ -623,7 +623,7 @@ importers:
         version: 1.49.0
       jscodeshift:
         specifier: 'catalog:'
-        version: 17.3.0(@babel/preset-env@7.29.7(@babel/core@7.29.7))
+        version: 17.4.0(@babel/preset-env@7.29.7(@babel/core@7.29.7))
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -1216,7 +1216,7 @@ importers:
         version: link:../x-internals/build
       jscodeshift:
         specifier: 'catalog:'
-        version: 17.3.0(@babel/preset-env@7.29.7(@babel/core@7.29.7))
+        version: 17.4.0(@babel/preset-env@7.29.7(@babel/core@7.29.7))
       yargs:
         specifier: 'catalog:'
         version: 18.0.0
@@ -8737,8 +8737,8 @@ packages:
     resolution: {integrity: sha512-ePWsvanv0DWuDRsW8dnt+R4jQ31SCRCQ7hhNcPXZPsoBZiemuZNYGf7adZdqX2D86j6rvKp3RpCxVTSb8WQlOw==}
     hasBin: true
 
-  jscodeshift@17.3.0:
-    resolution: {integrity: sha512-LjFrGOIORqXBU+jwfC9nbkjmQfFldtMIoS6d9z2LG/lkmyNXsJAySPT+2SWXJEoE68/bCWcxKpXH37npftgmow==}
+  jscodeshift@17.4.0:
+    resolution: {integrity: sha512-i3ESKiiTsGynxzTg5BhsZViD0ai72/6SsI1efDZxG6/5KCoElsmquxtyhXK5lpEgoO7MTNpYkjFEdEL97SkBNg==}
     engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
@@ -18688,7 +18688,7 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jscodeshift@17.3.0(@babel/preset-env@7.29.7(@babel/core@7.29.7)):
+  jscodeshift@17.4.0(@babel/preset-env@7.29.7(@babel/core@7.29.7)):
     dependencies:
       '@babel/core': 7.29.7
       '@babel/parser': 7.29.7
@@ -18702,9 +18702,9 @@ snapshots:
       '@babel/register': 7.28.3(@babel/core@7.29.7)
       flow-parser: 0.278.0
       graceful-fs: 4.2.11
-      micromatch: 4.0.8
       neo-async: 2.6.2
       picocolors: 1.1.1
+      picomatch: 4.0.5
       recast: 0.23.11
       tmp: 0.2.7
       write-file-atomic: 5.0.1
