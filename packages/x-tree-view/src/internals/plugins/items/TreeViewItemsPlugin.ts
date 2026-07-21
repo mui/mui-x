@@ -1,12 +1,14 @@
 import type { TreeViewItemId, TreeViewValidItem } from '../../../models';
 import { idSelectors } from '../id';
 import { itemsSelectors } from './selectors';
-import { buildItemsLookups, buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './utils';
+import {
+  buildItemsLookups,
+  buildItemsLookupsRecursively,
+  buildSiblingIndexes,
+  TREE_VIEW_ROOT_PARENT_ID,
+} from './utils';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';
-import type {
-  MinimalTreeViewParameters,
-  MinimalTreeViewState,
-} from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
+import type { MinimalTreeViewParameters } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   private store: MinimalTreeViewStore<R, any>;
@@ -52,45 +54,13 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       | 'getItemChildren'
     >,
   ) => {
-    const itemMetaLookup: MinimalTreeViewState<R2, any>['itemMetaLookup'] = {};
-    const itemModelLookup: MinimalTreeViewState<R2, any>['itemModelLookup'] = {};
-    const itemOrderedChildrenIdsLookup: MinimalTreeViewState<
-      R2,
-      any
-    >['itemOrderedChildrenIdsLookup'] = {};
-    const itemChildrenIndexesLookup: MinimalTreeViewState<R2, any>['itemChildrenIndexesLookup'] =
-      {};
-
-    function processSiblings(items: readonly R2[], parentId: string | null, depth: number) {
-      const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-      const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes, itemsChildren } =
-        buildItemsLookups({
-          storeParameters: parameters,
-          items,
-          parentId,
-          depth,
-          isItemExpandable: (item, children) => !!children && children.length > 0,
-          otherItemsMetaLookup: itemMetaLookup,
-        });
-
-      Object.assign(itemMetaLookup, metaLookup);
-      Object.assign(itemModelLookup, modelLookup);
-      itemOrderedChildrenIdsLookup[parentIdWithDefault] = orderedChildrenIds;
-      itemChildrenIndexesLookup[parentIdWithDefault] = childrenIndexes;
-
-      for (const item of itemsChildren) {
-        processSiblings(item.children || [], item.id, depth + 1);
-      }
-    }
-
-    processSiblings(parameters.items, null, 0);
-
-    return {
-      itemMetaLookup,
-      itemModelLookup,
-      itemOrderedChildrenIdsLookup,
-      itemChildrenIndexesLookup,
-    };
+    return buildItemsLookupsRecursively({
+      storeParameters: parameters,
+      items: parameters.items,
+      parentId: null,
+      depth: 0,
+      isItemExpandable: (item, children) => !!children && children.length > 0,
+    });
   };
 
   /**
@@ -185,50 +155,34 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       );
     }
 
-    const metaLookup: MinimalTreeViewState<R, any>['itemMetaLookup'] = {};
-    const modelLookup: MinimalTreeViewState<R, any>['itemModelLookup'] = {};
-    const orderedChildrenIdsLookup: MinimalTreeViewState<R, any>['itemOrderedChildrenIdsLookup'] =
-      {};
-    const childrenIndexesLookup: MinimalTreeViewState<R, any>['itemChildrenIndexesLookup'] = {};
-
-    const processSiblings = (
-      siblings: readonly R[],
-      siblingsParentId: TreeViewItemId | null,
-      depth: number,
-    ) => {
-      const lookups = buildItemsLookups({
-        storeParameters: this.store.parameters,
-        items: siblings,
-        parentId: siblingsParentId,
-        depth,
-        isItemExpandable: (item, children) => !!children && children.length > 0,
-        otherItemsMetaLookup: { ...this.store.state.itemMetaLookup, ...metaLookup },
-      });
-
-      for (const id of lookups.orderedChildrenIds) {
-        if (this.store.state.itemMetaLookup[id] != null) {
-          throw new Error(
-            `MUI X Tree View: All items must have a unique \`id\` property. ` +
-              `The id "${id}" is used by multiple items. ` +
-              'Use the `getItemId` prop to specify a custom id for each item if needed.',
-          );
-        }
-      }
-
-      Object.assign(metaLookup, lookups.metaLookup);
-      Object.assign(modelLookup, lookups.modelLookup);
-      orderedChildrenIdsLookup[siblingsParentId ?? TREE_VIEW_ROOT_PARENT_ID] =
-        lookups.orderedChildrenIds;
-      childrenIndexesLookup[siblingsParentId ?? TREE_VIEW_ROOT_PARENT_ID] = lookups.childrenIndexes;
-
-      for (const item of lookups.itemsChildren) {
-        processSiblings(item.children || [], item.id, depth + 1);
-      }
-    };
-
     const parentDepth =
       parentId == null ? -1 : itemsSelectors.itemDepth(this.store.state, parentId);
-    processSiblings(items, parentId, parentDepth + 1);
+
+    const {
+      itemMetaLookup: metaLookup,
+      itemModelLookup: modelLookup,
+      itemOrderedChildrenIdsLookup: orderedChildrenIdsLookup,
+      itemChildrenIndexesLookup: childrenIndexesLookup,
+    } = buildItemsLookupsRecursively({
+      storeParameters: this.store.parameters,
+      items,
+      parentId,
+      depth: parentDepth + 1,
+      isItemExpandable: (item, children) => !!children && children.length > 0,
+      existingItemMetaLookup: this.store.state.itemMetaLookup,
+    });
+
+    // `buildItemsLookups` allows an id to be re-used by an item with the same parent,
+    // which is only valid when rebuilding the state from the `items` prop.
+    for (const id of Object.keys(metaLookup)) {
+      if (this.store.state.itemMetaLookup[id] != null) {
+        throw new Error(
+          `MUI X Tree View: All items must have a unique \`id\` property. ` +
+            `The id "${id}" is used by multiple items. ` +
+            'Use the `getItemId` prop to specify a custom id for each item if needed.',
+        );
+      }
+    }
 
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
     const existingChildrenIds = itemsSelectors.itemOrderedChildrenIds(this.store.state, parentId);
