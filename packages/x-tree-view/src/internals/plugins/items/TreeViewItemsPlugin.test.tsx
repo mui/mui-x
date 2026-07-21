@@ -641,6 +641,66 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
           );
         });
 
+        it('should select the new items when their parent is selected and the selection propagates to the descendants', () => {
+          const onSelectedItemsChange = spy();
+
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            multiSelect: true,
+            selectionPropagation: { descendants: true },
+            defaultSelectedItems: ['1', '1.1'],
+            onSelectedItemsChange,
+          });
+
+          act(() => {
+            view.apiRef.current.addItems({
+              items: [{ id: '1.2', children: [{ id: '1.2.1' }] }],
+              parentId: '1',
+            });
+          });
+
+          expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([
+            '1',
+            '1.1',
+            '1.2',
+            '1.2.1',
+          ]);
+        });
+
+        it('should not select the new items when their parent is not selected', () => {
+          const onSelectedItemsChange = spy();
+
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            multiSelect: true,
+            selectionPropagation: { descendants: true },
+            onSelectedItemsChange,
+          });
+
+          act(() => {
+            view.apiRef.current.addItems({ items: [{ id: '1.2' }], parentId: '1' });
+          });
+
+          expect(onSelectedItemsChange.callCount).to.equal(0);
+        });
+
+        it('should not select the new items when the selection does not propagate to the descendants', () => {
+          const onSelectedItemsChange = spy();
+
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            multiSelect: true,
+            defaultSelectedItems: ['1'],
+            onSelectedItemsChange,
+          });
+
+          act(() => {
+            view.apiRef.current.addItems({ items: [{ id: '1.2' }], parentId: '1' });
+          });
+
+          expect(onSelectedItemsChange.callCount).to.equal(0);
+        });
+
         it('should throw an error when the index is out of range', () => {
           const view = render({
             items: [{ id: '1' }],

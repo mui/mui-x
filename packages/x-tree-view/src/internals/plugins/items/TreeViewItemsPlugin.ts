@@ -228,6 +228,8 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
         ...childrenIndexesLookup,
       },
     });
+
+    this.store.selection.propagateSelectionToNewItems(parentId);
   };
 
   public buildPublicAPI = () => {
