@@ -34,7 +34,8 @@ export function getSampledBandHighlight({
     if (index >= 0) {
       const bucketStart = Math.floor(index / bucketSize) * bucketSize;
       const bucketEnd = Math.min(bucketStart + bucketSize - 1, data.length - 1);
-      bandStart = scale(data[bucketStart])! - halfPadding;
+      // Anchor at the left edge: on a reversed axis `data[bucketStart]` is the right-most slot.
+      bandStart = Math.min(scale(data[bucketStart])!, scale(data[bucketEnd])!) - halfPadding;
       bandSize = (bucketEnd - bucketStart + 1) * step;
     }
   }

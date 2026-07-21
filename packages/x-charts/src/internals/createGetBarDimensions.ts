@@ -98,9 +98,16 @@ export function createGetBucketBarDimensions(params: {
     max: number,
     groupIndex: number,
   ) {
-    const spanStart = baseScale(baseScaleConfig.data![startIndex])!;
+    // Reversed axes flip index→position, so the left edge is the smaller of the two endpoints.
+    const startPos = baseScale(baseScaleConfig.data![startIndex])!;
+    const endPos = baseScale(baseScaleConfig.data![endIndex])!;
+    const spanStart = Math.min(startPos, endPos);
     const bucketCount = endIndex - startIndex + 1;
     const bucketStride = bucketCount * step;
+
+    // Bucket band region left edge, matching the axis highlight (see `getSampledBandHighlight`).
+    const halfPadding = (step - bandwidth) / 2;
+    const regionStart = spanStart - halfPadding;
 
     // Keep the gap between buckets proportional to the bucket (same ratio as an unsampled chart),
     // but never thinner than MIN_SAMPLED_BAR_GAP_PX so it stays visible at every level and zoom.
@@ -113,7 +120,8 @@ export function createGetBucketBarDimensions(params: {
       numberOfGroups,
       baseScaleConfig.barGapRatio,
     );
-    const barOffset = groupIndex * (barWidth + offset);
+    // Center the bars in the region (split the gap to both sides) so they sit under the highlight.
+    const barOffset = gap / 2 + groupIndex * (barWidth + offset);
 
     const valueCoordinates = [valueScale(min)!, valueScale(max)!];
     const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
@@ -124,8 +132,8 @@ export function createGetBucketBarDimensions(params: {
     }
 
     return {
-      x: verticalLayout ? spanStart + barOffset : minValueCoord,
-      y: verticalLayout ? minValueCoord : spanStart + barOffset,
+      x: verticalLayout ? regionStart + barOffset : minValueCoord,
+      y: verticalLayout ? minValueCoord : regionStart + barOffset,
       height: verticalLayout ? barSize : barWidth,
       width: verticalLayout ? barWidth : barSize,
     };
