@@ -221,7 +221,7 @@ export function computeDependencyArrows(
       y: getY(targetAnchor),
     };
 
-    const routes = buildDependencyArrowRoutes(source, target, detourOffset);
+    const routes = buildDependencyArrowRoutes(source, target, detourOffset, eventsWidth);
 
     // With several candidates, keep the one crossing the fewest events (first wins on
     // a tie). Best-effort avoidance, not full pathfinding.
@@ -251,14 +251,6 @@ export function computeDependencyArrows(
       }
     }
 
-    // Keep the route inside the events area: x < 0 sits under the pinned title column
-    // and x > eventsWidth is past the last tick, so the elbow of an anchor sitting at
-    // the timeline edge would never be visible there.
-    points = points.map((point) => ({
-      x: Math.min(Math.max(point.x, 0), eventsWidth),
-      y: point.y,
-    }));
-
     let minX = Infinity;
     let maxX = -Infinity;
     for (const point of points) {
@@ -287,11 +279,14 @@ export function computeDependencyArrows(
  * `detourOffset` is how far from the source anchor the S route runs its horizontal
  * detour — it must clear the event's edge, otherwise the route overlaps the events and
  * reads as a knot instead of a detour.
+ * Routes stay inside `[0, eventsWidth]`: at a timeline edge the stubs ride over the
+ * event instead of leaving the visible area.
  */
 export function buildDependencyArrowRoutes(
   source: DependencyArrowPoint,
   target: DependencyArrowPoint,
   detourOffset: number,
+  eventsWidth: number,
 ): DependencyArrowPoint[][] {
   const forwardX = target.x - source.x;
 
@@ -304,7 +299,7 @@ export function buildDependencyArrowRoutes(
     // Adjacent events (two same-lane events never overlap in time, so a same-height
     // gap is always forward): a short straight arrow slightly overlapping the
     // predecessor's tail reads better than a detour around the junction.
-    return [[{ x: target.x - 2 * DEPENDENCY_ARROW_STUB, y: target.y }, target]];
+    return [[{ x: Math.max(0, target.x - 2 * DEPENDENCY_ARROW_STUB), y: target.y }, target]];
   }
 
   if (forwardX >= DEPENDENCY_ARROW_STUB + DEPENDENCY_ARROW_TARGET_CLEARANCE) {
@@ -326,17 +321,20 @@ export function buildDependencyArrowRoutes(
   // above when the target is higher) and comes back before entering the target. An
   // arbitrary height between the two anchors could land exactly on a row border and
   // read as part of the grid.
+  // The verticals clamp to the events area (x < 0 sits under the pinned title column)
+  // and the fixed-length stubs then ride over the event — the same overlap trade-off
+  // as the short arrow between two adjacent events.
   const detourY = target.y >= source.y ? source.y + detourOffset : source.y - detourOffset;
-  const exitX = source.x + DEPENDENCY_ARROW_STUB;
-  const entryX = target.x - DEPENDENCY_ARROW_TARGET_CLEARANCE;
+  const exitX = Math.min(eventsWidth, source.x + DEPENDENCY_ARROW_STUB);
+  const entryX = Math.max(0, target.x - DEPENDENCY_ARROW_TARGET_CLEARANCE);
   return [
     [
-      source,
+      { x: exitX - DEPENDENCY_ARROW_STUB, y: source.y },
       { x: exitX, y: source.y },
       { x: exitX, y: detourY },
       { x: entryX, y: detourY },
       { x: entryX, y: target.y },
-      target,
+      { x: entryX + DEPENDENCY_ARROW_TARGET_CLEARANCE, y: target.y },
     ],
   ];
 }

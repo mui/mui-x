@@ -94,7 +94,12 @@ describe('dependencyArrowGeometry', () => {
 
   describe('buildDependencyArrowRoutes', () => {
     it('should return a straight segment when the anchors share the same height and the target is forward', () => {
-      const [points] = buildDependencyArrowRoutes({ x: 10, y: 5 }, { x: 50, y: 5 }, DETOUR_OFFSET);
+      const [points] = buildDependencyArrowRoutes(
+        { x: 10, y: 5 },
+        { x: 50, y: 5 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
 
       expect(points).to.deep.equal([
         { x: 10, y: 5 },
@@ -103,7 +108,12 @@ describe('dependencyArrowGeometry', () => {
     });
 
     it('should return a two-corner elbow for a forward arrow between different heights', () => {
-      const [points] = buildDependencyArrowRoutes({ x: 10, y: 5 }, { x: 50, y: 40 }, DETOUR_OFFSET);
+      const [points] = buildDependencyArrowRoutes(
+        { x: 10, y: 5 },
+        { x: 50, y: 40 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
 
       expect(points).to.deep.equal([
         { x: 10, y: 5 },
@@ -114,47 +124,67 @@ describe('dependencyArrowGeometry', () => {
     });
 
     it('should route the S detour below the source when the target starts before the source ends', () => {
-      const [points] = buildDependencyArrowRoutes({ x: 50, y: 5 }, { x: 10, y: 40 }, DETOUR_OFFSET);
+      const [points] = buildDependencyArrowRoutes(
+        { x: 50, y: 5 },
+        { x: 20, y: 40 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
 
       expect(points).to.deep.equal([
         { x: 50, y: 5 },
         { x: 58, y: 5 },
         { x: 58, y: 5 + DETOUR_OFFSET },
-        { x: -2, y: 5 + DETOUR_OFFSET },
-        { x: -2, y: 40 },
-        { x: 10, y: 40 },
+        { x: 8, y: 5 + DETOUR_OFFSET },
+        { x: 8, y: 40 },
+        { x: 20, y: 40 },
       ]);
     });
 
     it('should route the S detour above the source when the target is higher', () => {
-      const [points] = buildDependencyArrowRoutes({ x: 50, y: 40 }, { x: 10, y: 5 }, DETOUR_OFFSET);
+      const [points] = buildDependencyArrowRoutes(
+        { x: 50, y: 40 },
+        { x: 20, y: 5 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
 
       expect(points).to.deep.equal([
         { x: 50, y: 40 },
         { x: 58, y: 40 },
         { x: 58, y: 40 - DETOUR_OFFSET },
-        { x: -2, y: 40 - DETOUR_OFFSET },
-        { x: -2, y: 5 },
-        { x: 10, y: 5 },
+        { x: 8, y: 40 - DETOUR_OFFSET },
+        { x: 8, y: 5 },
+        { x: 20, y: 5 },
       ]);
     });
 
     it('should route the S detour below the events when the anchors share the same height', () => {
-      const [points] = buildDependencyArrowRoutes({ x: 50, y: 5 }, { x: 10, y: 5 }, DETOUR_OFFSET);
+      const [points] = buildDependencyArrowRoutes(
+        { x: 50, y: 5 },
+        { x: 20, y: 5 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
 
       expect(points).to.deep.equal([
         { x: 50, y: 5 },
         { x: 58, y: 5 },
         { x: 58, y: 5 + DETOUR_OFFSET },
-        { x: -2, y: 5 + DETOUR_OFFSET },
-        { x: -2, y: 5 },
-        { x: 10, y: 5 },
+        { x: 8, y: 5 + DETOUR_OFFSET },
+        { x: 8, y: 5 },
+        { x: 20, y: 5 },
       ]);
     });
 
     it('should route the S detour when the target starts too close after the source ends', () => {
       // forwardX = 5: forward, but the stub and the entry clearance do not fit.
-      const [points] = buildDependencyArrowRoutes({ x: 50, y: 5 }, { x: 55, y: 40 }, DETOUR_OFFSET);
+      const [points] = buildDependencyArrowRoutes(
+        { x: 50, y: 5 },
+        { x: 55, y: 40 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
 
       expect(points).to.deep.equal([
         { x: 50, y: 5 },
@@ -167,7 +197,12 @@ describe('dependencyArrowGeometry', () => {
     });
 
     it('should render a short straight arrow overlapping the predecessor between two adjacent events', () => {
-      const [points] = buildDependencyArrowRoutes({ x: 50, y: 5 }, { x: 50, y: 5 }, DETOUR_OFFSET);
+      const [points] = buildDependencyArrowRoutes(
+        { x: 50, y: 5 },
+        { x: 50, y: 5 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
 
       expect(points).to.deep.equal([
         { x: 34, y: 5 },
@@ -176,7 +211,12 @@ describe('dependencyArrowGeometry', () => {
     });
 
     it('should return a second elbow candidate turning right before the target', () => {
-      const routes = buildDependencyArrowRoutes({ x: 10, y: 5 }, { x: 50, y: 40 }, DETOUR_OFFSET);
+      const routes = buildDependencyArrowRoutes(
+        { x: 10, y: 5 },
+        { x: 50, y: 40 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
 
       expect(routes).to.have.length(2);
       expect(routes[1]).to.deep.equal([
@@ -187,10 +227,67 @@ describe('dependencyArrowGeometry', () => {
       ]);
     });
 
+    it('should ride the entry onto the target when it starts too close to the timeline start', () => {
+      // The entry elbow would land at x = -7, under the pinned title column: the
+      // vertical clamps to x = 0 and the arrowhead rides over the target's start.
+      const [points] = buildDependencyArrowRoutes(
+        { x: 50, y: 5 },
+        { x: 5, y: 40 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
+
+      expect(points).to.deep.equal([
+        { x: 50, y: 5 },
+        { x: 58, y: 5 },
+        { x: 58, y: 5 + DETOUR_OFFSET },
+        { x: 0, y: 5 + DETOUR_OFFSET },
+        { x: 0, y: 40 },
+        { x: 12, y: 40 },
+      ]);
+    });
+
+    it('should ride the exit onto the source when it ends at the timeline end', () => {
+      const [points] = buildDependencyArrowRoutes(
+        { x: EVENTS_WIDTH, y: 5 },
+        { x: 30, y: 40 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
+
+      expect(points).to.deep.equal([
+        { x: 1432, y: 5 },
+        { x: 1440, y: 5 },
+        { x: 1440, y: 5 + DETOUR_OFFSET },
+        { x: 18, y: 5 + DETOUR_OFFSET },
+        { x: 18, y: 40 },
+        { x: 30, y: 40 },
+      ]);
+    });
+
+    it('should clamp the short adjacent arrow at the timeline start', () => {
+      const [points] = buildDependencyArrowRoutes(
+        { x: 10, y: 5 },
+        { x: 10, y: 5 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
+
+      expect(points).to.deep.equal([
+        { x: 0, y: 5 },
+        { x: 10, y: 5 },
+      ]);
+    });
+
     it('should return a single elbow candidate when both turns collapse to the same x', () => {
       // forwardX = 20: the early turn (source + stub) and the late turn (target −
       // clearance) land on the same vertical.
-      const routes = buildDependencyArrowRoutes({ x: 10, y: 5 }, { x: 30, y: 40 }, DETOUR_OFFSET);
+      const routes = buildDependencyArrowRoutes(
+        { x: 10, y: 5 },
+        { x: 30, y: 40 },
+        DETOUR_OFFSET,
+        EVENTS_WIDTH,
+      );
 
       expect(routes).to.have.length(1);
       expect(routes[0]).to.deep.equal([
@@ -388,7 +485,7 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].maxRowIndex).to.equal(0);
     });
 
-    it('should clamp the route to the events area when an anchor sits at a timeline edge', () => {
+    it('should keep the route inside the events area when an anchor sits at a timeline edge', () => {
       // Ends at 24:00 → end x = 1440, the exit stub would leave the events area.
       const lateEvent = EventBuilder.new()
         .id('event-late')
@@ -416,9 +513,10 @@ describe('dependencyArrowGeometry', () => {
       });
 
       expect(arrows).to.have.length(1);
-      // The exit stub collapses on the right edge and the entry elbow hugs x = 0.
+      // Both stubs ride over their event: the exit starts 8px before the source's end
+      // edge and the arrowhead lands 12px past the target's start edge.
       expect(arrows[0].d).to.equal(
-        'M 1440 31 L 1440 48 Q 1440 52 1436 52 L 4 52 Q 0 52 0 56 L 0 90.5 Q 0 93 2.5 93 L 5 93',
+        'M 1432 31 L 1436 31 Q 1440 31 1440 35 L 1440 48 Q 1440 52 1436 52 L 4 52 Q 0 52 0 56 L 0 89 Q 0 93 4 93 L 12 93',
       );
       expect(arrows[0].minXFraction).to.equal(0);
       expect(arrows[0].maxXFraction).to.equal(1);
