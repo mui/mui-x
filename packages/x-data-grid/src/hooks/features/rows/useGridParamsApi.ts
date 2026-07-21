@@ -1,10 +1,12 @@
-import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
+import * as React from 'react';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridParamsApi, GridParamsPrivateApi } from '../../../models/api/gridParamsApi';
-import type { GridCellParams } from '../../../models/params/gridCellParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
+import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
+import type { GridCellParams } from '../../../models/params/gridCellParams';
 import type { GridRowParams } from '../../../models/params/gridRowParams';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   getGridCellElement,
   getGridColumnHeaderElement,
@@ -12,10 +14,8 @@ import {
 } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { gridRowNodeSelector } from './gridRowsSelector';
-import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 class MissingRowIdError extends Error {}
 
@@ -35,8 +35,6 @@ export function useGridParamsApi(
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
     (field) => ({
       field,
-      // `colDef` can be `undefined` at runtime during a column set transition,
-      // the public params type stays non-nullable for compatibility.
       colDef: apiRef.current.getColumn(field) as GridStateColDef,
     }),
     [apiRef],
@@ -87,9 +85,7 @@ export function useGridParamsApi(
         field,
         row,
         rowNode,
-        // `colDef` can be `undefined` at runtime during a column set transition,
-        // the public params type stays non-nullable for compatibility.
-        colDef: colDef as GridStateColDef,
+        colDef,
         cellMode,
         hasFocus,
         tabIndex,
@@ -119,10 +115,10 @@ export function useGridParamsApi(
       const cellMode = apiRef.current.getCellMode(id, field);
 
       return apiRef.current.getCellParamsForRow<any, any, any, any>(id, field, row, {
-        colDef:
-          props.listView && props.listViewColumn?.field === field
-            ? gridListColumnSelector(apiRef)!
-            : apiRef.current.getColumn(field),
+        // Params keep a non-nullable `colDef`, but it can be `undefined` at runtime for an unknown field.
+        colDef: (props.listView && props.listViewColumn?.field === field
+          ? gridListColumnSelector(apiRef)!
+          : apiRef.current.getColumn(field)) as GridStateColDef,
         rowNode,
         hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
         tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
