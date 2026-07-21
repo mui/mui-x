@@ -100,6 +100,9 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Zamknij panel boczny',
   openSidePanel: 'Otwórz panel boczny',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12-godzinny (1:00PM)',
   hour24h: '24-godzinny (13:00)',
