@@ -22,8 +22,8 @@ const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 const DOCS_ROOT = path.resolve(__dirname, '..');
 
 const babelConfig = {
-  presets: ['@babel/preset-typescript'],
-  plugins: [],
+  presets: [['@babel/preset-typescript', { onlyRemoveTypeImports: false }]],
+  plugins: ['@babel/plugin-syntax-jsx'],
   generatorOpts: { retainLines: true },
   babelrc: false,
   configFile: false,

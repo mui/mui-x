@@ -25,13 +25,13 @@ interface StoredData {
 const STORAGE_KEY = 'mui-tree-data-store';
 
 export class DataStore {
-  private rowLookup: Record<GridRowId, RowData>;
+  declare private rowLookup: Record<GridRowId, RowData>;
 
-  private tree: Map<GridRowId, TreeNode>;
+  declare private tree: Map<GridRowId, TreeNode>;
 
-  private subscribers: Set<() => void>;
+  declare private subscribers: Set<() => void>;
 
-  private snapshot: {
+  declare private snapshot: {
     rows: RowWithPath[];
     loading: boolean;
   };

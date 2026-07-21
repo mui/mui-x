@@ -93,6 +93,7 @@
     "visionscarto-world-atlas": "^1.0.0"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "catalog:",
     "@babel/preset-typescript": "catalog:",
     "@mui/internal-docs-utils": "3.0.7-canary.2",
     "@types/chance": "catalog:",
