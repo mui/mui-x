@@ -93,10 +93,10 @@ describe('<DayView />', () => {
   });
 
   describe('multi-resource events', () => {
-    const resourceA = ResourceBuilder.new().title('Room A').build();
-    const resourceB = ResourceBuilder.new().title('Room B').build();
+    const resourceA = ResourceBuilder.new().title('Room A').eventColor('blue').build();
+    const resourceB = ResourceBuilder.new().title('Room B').eventColor('pink').build();
 
-    it('renders an event assigned to multiple resources when at least one is visible', () => {
+    it('should render the event once when at least one of its assigned resources is visible', () => {
       const event = EventBuilder.new()
         .title('Team Sync')
         .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
@@ -108,10 +108,12 @@ describe('<DayView />', () => {
         defaultVisibleResources: { [resourceB.id]: false },
       });
 
-      expect(screen.getAllByText('Team Sync').length).to.be.greaterThan(0);
+      // Pins the "renders once" criterion — a naive implementation that renders one
+      // occurrence per assigned resource would still pass a `greaterThan(0)` check.
+      expect(screen.getAllByText('Team Sync')).toHaveLength(1);
     });
 
-    it('does not render an event when all of its assigned resources are hidden', () => {
+    it('should not render the event when all of its assigned resources are hidden', () => {
       const event = EventBuilder.new()
         .title('Team Sync')
         .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
@@ -124,6 +126,33 @@ describe('<DayView />', () => {
       });
 
       expect(screen.queryByText('Team Sync')).to.equal(null);
+    });
+
+    it('should derive the event color from the first resource in its assignment', () => {
+      const eventAFirst = EventBuilder.new()
+        .title('A First')
+        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+      const eventBFirst = EventBuilder.new()
+        .title('B First')
+        .span('2025-07-03T13:00:00Z', '2025-07-03T14:00:00Z')
+        .resources([resourceB, resourceA])
+        .build();
+
+      renderWithProviders(<DayView />, [eventAFirst, eventBFirst], {
+        resources: [resourceA, resourceB],
+      });
+
+      const aFirstRoot = screen
+        .getByText('A First')
+        .closest(`.${eventCalendarClasses.timeGridEvent}`);
+      const bFirstRoot = screen
+        .getByText('B First')
+        .closest(`.${eventCalendarClasses.timeGridEvent}`);
+
+      expect(aFirstRoot).to.have.attribute('data-palette', 'blue');
+      expect(bFirstRoot).to.have.attribute('data-palette', 'pink');
     });
   });
 

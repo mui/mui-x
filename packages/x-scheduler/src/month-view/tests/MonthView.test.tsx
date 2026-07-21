@@ -375,7 +375,7 @@ describe('<MonthView />', () => {
     const resourceA = ResourceBuilder.new().title('Room A').build();
     const resourceB = ResourceBuilder.new().title('Room B').build();
 
-    it('renders an event assigned to multiple resources when at least one is visible', () => {
+    it('should render the event once when at least one of its assigned resources is visible', () => {
       const event = EventBuilder.new()
         .title('Team Sync')
         .singleDay('2025-05-01T09:00:00Z')
@@ -394,10 +394,12 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      expect(screen.getAllByText('Team Sync').length).to.be.greaterThan(0);
+      // Pins the "renders once" criterion — a naive implementation that renders one
+      // occurrence per assigned resource would still pass a `greaterThan(0)` check.
+      expect(screen.getAllByText('Team Sync')).toHaveLength(1);
     });
 
-    it('does not render an event when all of its assigned resources are hidden', () => {
+    it('should not render the event when all of its assigned resources are hidden', () => {
       const event = EventBuilder.new()
         .title('Team Sync')
         .singleDay('2025-05-01T09:00:00Z')
