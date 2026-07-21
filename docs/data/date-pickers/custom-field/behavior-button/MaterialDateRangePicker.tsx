@@ -8,7 +8,6 @@ import {
   DateRangePickerProps,
   DateRangePickerFieldProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { SingleInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { validateDateRange } from '@mui/x-date-pickers-pro/validation';
 import {
@@ -16,6 +15,7 @@ import {
   useParsedFormat,
   usePickerContext,
 } from '@mui/x-date-pickers/hooks';
+import { SingleInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 function ButtonDateRangeField(
   props: DateRangePickerFieldProps &
