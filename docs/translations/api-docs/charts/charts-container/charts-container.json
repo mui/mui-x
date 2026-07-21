@@ -87,7 +87,7 @@
       }
     },
     "onItemClick": {
-      "description": "Callback fired when an item is activated. This is only available for scatter plot for now.",
+      "description": "Callback fired when clicking close to an item, or when it is activated with the Enter or Space keys. This is only available for scatter plot for now.",
       "typeDescriptions": {
         "event": {
           "name": "event",

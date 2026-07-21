@@ -1,6 +1,19 @@
 import type { ChartPluginSignature } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
+interface CommonExperimentalFeatures {
+  /**
+   * Enables activating the focused item with the Enter and Space keys, which calls `onItemClick`
+   * with a `KeyboardEvent`.
+   *
+   * Import `@mui/x-charts/moduleAugmentation/keyboardItemActivation` to widen the `onItemClick`
+   * event type accordingly.
+   *
+   * This behavior will become the default in the next major version.
+   */
+  enableKeyboardClickEvents?: boolean;
+}
+
 interface LineExperimentalFeatures {
   /**
    * Enables pointer-based interaction detection for line and area series.
@@ -28,20 +41,11 @@ interface ScatterExperimentalFeatures {
    * This behavior will become the default in the next major version.
    */
   progressiveRendering?: boolean;
-  /**
-   * Enables activating the focused item with the Enter and Space keys, which calls `onItemClick`
-   * with a `KeyboardEvent`.
-   *
-   * Import `@mui/x-charts/moduleAugmentation/keyboardItemActivation` to widen the `onItemClick`
-   * event type accordingly.
-   *
-   * This behavior will become the default in the next major version.
-   */
-  enableKeyboardClickEvents?: boolean;
 }
 
 export type ChartExperimentalFeatures<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  ('line' extends SeriesType ? LineExperimentalFeatures : {}) &
+  CommonExperimentalFeatures &
+    ('line' extends SeriesType ? LineExperimentalFeatures : {}) &
     ('scatter' extends SeriesType ? ScatterExperimentalFeatures : {});
 
 export interface UseChartExperimentalFeaturesParameters<
