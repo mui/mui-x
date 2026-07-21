@@ -310,13 +310,13 @@ export class LayoutList extends Layout<ListElements> {
  * covers.
  *
  * The rows therefore render inside a dedicated `windowContent` box that keeps its own
- * anchored local space: `paddingTop` places the rows at `offsetTop - anchor`, where the
- * anchor moves only in `ANCHOR_BLOCK` steps, and a `translateY` of the same magnitude
- * cancels the pad visually. The rows already paint into the composited layer of the
- * sticky window, and the pad holds their offsets inside it fixed across updates, so only
- * entering rows rasterize. When the offset crosses into another anchor block the pad
- * wraps, costing one whole-window raster per `ANCHOR_BLOCK` of travel instead of one per
- * update.
+ * anchored local space: `paddingTop` places the rows at `offsetTop - anchorTop`, and a
+ * `translateY` of the same magnitude cancels the pad visually. The rows already paint
+ * into the composited layer of the sticky window, and the pad holds their offsets inside
+ * it fixed across updates, so only entering rows rasterize. The anchor itself is held
+ * for as long as it can be and moves on the pass that follows the scroll settling, so
+ * the whole-window raster costs lands with nothing moving to expose it (see
+ * `anchor.ts`).
  *
  * Promoting the box itself (`will-change: transform`) is deliberately avoided: measured
  * against the layer trees Chromium builds for this layout it changes no invalidation —
@@ -336,16 +336,15 @@ export class LayoutList extends Layout<ListElements> {
  * position. Column-direction updates keep repositioning the cells within the layer
  * (whole-window raster), like before.
  *
- * The block size bounds the `windowContent` box (up to `ANCHOR_BLOCK` + rendered
- * size): larger blocks mean rarer whole-window rasters but a larger layer box for the
- * compositor to track. Tiles only rasterize near the visible area, so the cost is tile
- * bookkeeping rather than raster memory proportional to the box — but it isn't free:
+ * `anchor.ts` bounds how far the pad may grow, and with it the `windowContent` box:
  * a box much taller than the rendered window measurably raises peak tile memory.
  */
-const ANCHOR_BLOCK = 40_000;
-
-function quantizeAnchor(offset: number) {
-  return Math.floor(offset / ANCHOR_BLOCK) * ANCHOR_BLOCK;
+function padTopFor(offsetTop: number, anchorTop: number) {
+  // Clamped, as the row positions can change without a render context update (a row height
+  // update, for one), and the pad is a padding — a negative one would be dropped while
+  // the counter-translation kept applying, displacing the rows. At zero the box is
+  // simply unanchored until the next update re-anchors it.
+  return Math.max(0, offsetTop - anchorTop);
 }
 
 /**
@@ -467,20 +466,24 @@ export class LayoutListSticky extends Layout<ListElements> {
       },
     ),
 
-    windowContentProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => {
-      const padTop = offsetTop - quantizeAnchor(offsetTop);
-      return {
-        style: {
-          // Anchored local space (see the paint-stable window content comment above):
-          // the pad places the rows at their offset from the anchor within this box and
-          // the translation cancels it visually, holding the rows at fixed offsets in
-          // the layer they paint into.
-          paddingTop: padTop,
-          transform: `translateY(${-padTop}px)`,
-        } as React.CSSProperties,
-        role: 'presentation',
-      };
-    }),
+    windowContentProps: createSelectorMemoized(
+      Virtualization.selectors.offsetTop,
+      Virtualization.selectors.anchorTop,
+      (offsetTop, anchorTop) => {
+        const padTop = padTopFor(offsetTop, anchorTop);
+        return {
+          style: {
+            // Anchored local space (see the paint-stable window content comment above):
+            // the pad places the rows at their offset from the anchor within this box and
+            // the translation cancels it visually, holding the rows at fixed offsets in
+            // the layer they paint into.
+            paddingTop: padTop,
+            transform: `translateY(${-padTop}px)`,
+          } as React.CSSProperties,
+          role: 'presentation',
+        };
+      },
+    ),
   };
 }
 
@@ -598,7 +601,8 @@ const verticalGeometry = createSelectorMemoized(
   Dimensions.selectors.rowPositions,
   Dimensions.selectors.contentHeight,
   Dimensions.selectors.dimensions,
-  (renderContext, rowPositions, contentHeight, dimensions) => {
+  Virtualization.selectors.anchorTop,
+  (renderContext, rowPositions, contentHeight, dimensions, anchorTop) => {
     const { viewportInnerSize, topContainerHeight, bottomContainerHeight } = dimensions;
     const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
     // `lastRowIndex` is exclusive: when it points past the last row, the window extends
@@ -606,7 +610,7 @@ const verticalGeometry = createSelectorMemoized(
     const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
     const renderedHeight = lastPosition - firstPosition;
     const offsetTop = firstPosition;
-    const padTop = offsetTop - quantizeAnchor(offsetTop);
+    const padTop = padTopFor(offsetTop, anchorTop);
     const horizontalScrollbarLane = dimensions.hasScrollX ? dimensions.scrollbarSize : 0;
     // Clamped to 0: if the rendered window is smaller than the viewport (few rows),
     // sticky positioning must stay inert.

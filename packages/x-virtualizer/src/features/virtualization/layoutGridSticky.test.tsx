@@ -22,11 +22,19 @@ const columns = Array.from({ length: COLUMN_COUNT }, (_, index) => ({
 const columnsTotalWidth = COLUMN_COUNT * COLUMN_WIDTH;
 const pinnedColumns = { left: [columns[0]], right: [columns[COLUMN_COUNT - 1]] };
 
-const rows = Array.from({ length: ROW_COUNT }, (_, index) => ({
-  id: index,
-  model: {},
-}));
+// Mirrors `anchor.ts`.
+const ANCHOR_BLOCK = 40_000;
+const MAX_ANCHOR_BLOCKS = 5;
+// Tall enough to exhaust the anchor pad cap (5 × 40,000px) in one uninterrupted scroll.
+const TALL_ROW_COUNT = 6_000;
+
+const makeRows = (count: number) =>
+  Array.from({ length: count }, (_, index) => ({ id: index, model: {} }));
+
+const rows = makeRows(ROW_COUNT);
+const tallRows = makeRows(TALL_ROW_COUNT);
 const range = { firstRowIndex: 0, lastRowIndex: rows.length };
+const tallRange = { firstRowIndex: 0, lastRowIndex: tallRows.length };
 const pinnedRows = {
   top: [{ id: 'pinned-top', model: {} }],
   bottom: [{ id: 'pinned-bottom', model: {} }],
@@ -99,7 +107,9 @@ const Scrollbar = React.forwardRef<
   );
 });
 
-function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
+function StickyGrid(props: { width?: number; scrollbarSize?: number; tall?: boolean }) {
+  const gridRows = props.tall ? tallRows : rows;
+  const gridRange = props.tall ? tallRange : range;
   const refs = {
     container: React.useRef<HTMLDivElement>(null),
     scroller: React.useRef<HTMLDivElement>(null),
@@ -119,9 +129,9 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
     },
     virtualization: { layoutMode: 'sticky' },
 
-    rows,
-    range,
-    rowCount: rows.length,
+    rows: gridRows,
+    range: gridRange,
+    rowCount: gridRows.length,
     columns,
     pinnedRows,
     pinnedColumns,
@@ -307,6 +317,10 @@ function getWindowRowIds() {
   );
 }
 
+function firstRenderedRow() {
+  return Math.min(...getWindowRowIds().filter((id): id is number => typeof id === 'number'));
+}
+
 function middleColumnsOf(rowId: string | number) {
   return Array.from(document.querySelectorAll<HTMLElement>(`[data-id="${rowId}"] [data-col]`))
     .map((cell) => Number(cell.dataset.col))
@@ -316,7 +330,7 @@ function middleColumnsOf(rowId: string | number) {
 describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
   const { render } = createRenderer();
 
-  async function renderGrid(props?: { width?: number; scrollbarSize?: number }) {
+  async function renderGrid(props?: { width?: number; scrollbarSize?: number; tall?: boolean }) {
     const view = render(<StickyGrid {...props} />);
     await waitFor(() => {
       expect(getWindowRowIds().length).to.be.greaterThan(0);
@@ -724,7 +738,7 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     }
   });
 
-  it('wraps the anchor pad when the offset leaves the anchor block', async () => {
+  it('holds the anchor past the block size while the scroll is moving', async () => {
     await renderGrid();
     const scroller = screen.getByTestId('scroller');
     const scrollTop = 900 * ROW_HEIGHT;
@@ -737,17 +751,13 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       expect(getWindowRowIds()).to.include(900);
     });
 
-    // 900 * 48 = 43200 is past the 40000px anchor block: the pad wraps to the offset
-    // within the new block instead of growing without bound. The expected pad is
-    // derived from the rendered context, as the settle timer may rebalance the
-    // buffers (and shift the first row) before this assertion runs.
-    const firstRenderedRow = Math.min(
-      ...getWindowRowIds().filter((id): id is number => typeof id === 'number'),
-    );
+    // 900 * 48 = 43200 is past the 40000px block, but moving the anchor re-rasterizes
+    // the whole window, so it stays where it was and the pad simply grows: the raster
+    // is deferred to the pass that follows the scroll settling.
     const windowContent = screen.getByTestId('window-content');
-    expect(parseFloat(getComputedStyle(windowContent).paddingTop)).to.equal(
-      firstRenderedRow * ROW_HEIGHT - 40000,
-    );
+    const padTop = parseFloat(getComputedStyle(windowContent).paddingTop);
+    expect(padTop).to.be.greaterThan(ANCHOR_BLOCK);
+    expect(padTop).to.equal(firstRenderedRow() * ROW_HEIGHT);
 
     // Rows are still at their exact content positions.
     const topContainerHeight = rect('top-container').height;
@@ -756,6 +766,74 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       topContainerHeight + 900 * ROW_HEIGHT - scrollTop,
       1,
     );
+    expectInnerViewportCovered();
+  });
+
+  it('re-quantizes the anchor once the scroll settles', async () => {
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+    const scrollTop = 900 * ROW_HEIGHT;
+    const padTop = () =>
+      parseFloat(getComputedStyle(screen.getByTestId('window-content')).paddingTop);
+
+    // The settle pass runs a second after the last context update. Fake timers skip the
+    // wait, and have to be installed before the scroll that arms it.
+    vi.useFakeTimers();
+    try {
+      await act(async () => {
+        scroller.scrollTop = scrollTop;
+        scroller.dispatchEvent(new Event('scroll'));
+      });
+      expect(getWindowRowIds()).to.include(900);
+      // Still held while the scroll is fresh.
+      expect(padTop()).to.be.greaterThan(ANCHOR_BLOCK);
+
+      // The settle pass moves the anchor to the block the offset now sits in, bringing
+      // the pad — and the box — back down.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1100);
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+
+    expect(padTop()).to.be.lessThan(ANCHOR_BLOCK);
+    // The buffers rebalance on the same pass, so the first row is read alongside the pad.
+    expect(padTop()).to.equal(firstRenderedRow() * ROW_HEIGHT - ANCHOR_BLOCK);
+
+    const topContainerHeight = rect('top-container').height;
+    const rowRect = document.querySelector('[data-id="900"]')!.getBoundingClientRect();
+    expect(rowRect.top - rect('scroller').top).to.be.closeTo(
+      topContainerHeight + 900 * ROW_HEIGHT - scrollTop,
+      1,
+    );
+    expectInnerViewportCovered();
+  });
+
+  it('caps the anchor pad when the scroll never settles', async () => {
+    await renderGrid({ tall: true });
+    const scroller = screen.getByTestId('scroller');
+    const windowContent = screen.getByTestId('window-content');
+    const padTop = () => parseFloat(getComputedStyle(windowContent).paddingTop);
+
+    // One uninterrupted scroll well past the cap: no pass in between sees a settled
+    // scroll, so only the cap can move the anchor.
+    let maxPad = 0;
+    for (let top = 20_000; top <= 260_000; top += 20_000) {
+      // eslint-disable-next-line no-await-in-loop
+      await act(async () => {
+        scroller.scrollTop = top;
+        scroller.dispatchEvent(new Event('scroll'));
+      });
+      maxPad = Math.max(maxPad, padTop());
+    }
+
+    // The pad did grow past a block (the anchor was held)...
+    expect(maxPad).to.be.greaterThan(ANCHOR_BLOCK);
+    // ...but never past the cap.
+    expect(maxPad).to.be.at.most(MAX_ANCHOR_BLOCKS * ANCHOR_BLOCK);
+    // ...which means the anchor moved: the pad no longer tracks the raw offset.
+    expect(padTop()).to.be.lessThan(firstRenderedRow() * ROW_HEIGHT);
     expectInnerViewportCovered();
   });
 

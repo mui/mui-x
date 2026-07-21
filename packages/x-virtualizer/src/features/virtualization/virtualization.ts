@@ -15,6 +15,7 @@ import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import type { Layout } from './layout';
+import { nextAnchorTop } from './anchor';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -61,6 +62,7 @@ export type VirtualizationState<K extends string = string> = {
   context: Record<string, any>;
   scrollPosition: { current: ScrollPosition };
   layoutMode: 'controlled' | 'uncontrolled' | 'sticky';
+  anchorTop: number;
 };
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
@@ -101,6 +103,7 @@ const selectors = (() => {
       },
     ),
     context: createSelector((state: BaseState) => state.virtualization.context),
+    anchorTop: createSelector((state: BaseState) => state.virtualization.anchorTop),
     layoutMode: layoutModeSelector,
     scrollPosition: scrollPositionSelector,
     pinnedLeftOffsetSelector: createSelector(
@@ -168,6 +171,7 @@ function initializeState(params: ParamsWithDefaults) {
       context: {},
       scrollPosition: { current: ScrollPosition.EMPTY },
       layoutMode: params.virtualization.layoutMode ?? 'uncontrolled',
+      anchorTop: 0,
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
@@ -266,11 +270,22 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   ).current;
 
   const updateRenderContext = React.useCallback(
-    (nextRenderContext: RenderContext) => {
-      if (!areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
+    (nextRenderContext: RenderContext, nextAnchor?: number) => {
+      const state = store.state.virtualization;
+      // Callers that don't pass an anchor (dimension and data changes) can run in the
+      // middle of a scroll, so they hold it: only the pass that observes a settled
+      // scroll re-quantizes, and `anchorTopFor` still re-anchors when it must.
+      const anchorTop =
+        nextAnchor ?? anchorTopFor(store, state.layoutMode, nextRenderContext, false);
+
+      if (
+        !areRenderContextsEqual(nextRenderContext, state.renderContext) ||
+        anchorTop !== state.anchorTop
+      ) {
         store.set('virtualization', {
-          ...store.state.virtualization,
+          ...state,
           renderContext: nextRenderContext,
+          anchorTop,
           scrollPosition: { current: { ...scrollPosition.current } },
         });
       }
@@ -293,7 +308,10 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     [store, onRenderContextChange],
   );
 
-  const triggerUpdateRenderContext = useEventCallback(() => {
+  // `isSettlePass` marks the run scheduled by the scroll timeout below. It is the only
+  // caller that knows the scroll stopped: a scroll event carrying no movement is not a
+  // reliable signal, since writing `scrollTop` also echoes one back.
+  const triggerUpdateRenderContext = useEventCallback((isSettlePass: boolean = false) => {
     const scroller = layout.refs.scroller.current;
     if (!scroller) {
       return undefined;
@@ -326,6 +344,12 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
     const didChangeDirection = scrollCache.direction !== direction;
 
+    // Moving the anchor of the paint-stable window content re-rasterizes the whole
+    // window, so it is held while the scroll is moving and re-quantized here, with
+    // nothing moving to expose the raster. The position is checked alongside the settle
+    // pass: the timeout may well have elapsed while a slow scroll is still going.
+    const isSettled = isSettlePass && direction === ScrollDirection.NONE;
+
     let shouldUpdate: boolean;
     if (layoutMode === 'sticky') {
       // In sticky mode, a render context update re-renders the window's row set and
@@ -353,6 +377,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     if (!shouldUpdate) {
       store.set('virtualization', {
         ...store.state.virtualization,
+        anchorTop: anchorTopFor(store, layoutMode, renderContext, isSettled),
         scrollPosition: { current: { ...scrollPosition.current } },
       });
       return renderContext;
@@ -399,18 +424,21 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     );
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
+    const nextAnchor = anchorTopFor(store, layoutMode, nextRenderContext, isSettled);
+
     if (!areRenderContextsEqual(nextRenderContext, renderContext)) {
       // Prevents batching render context changes
       ReactDOM.flushSync(() => {
-        updateRenderContext(nextRenderContext);
+        updateRenderContext(nextRenderContext, nextAnchor);
       });
 
       if (layoutMode !== 'controlled') {
-        scrollTimeout.start(1000, triggerUpdateRenderContext);
+        scrollTimeout.start(1000, () => triggerUpdateRenderContext(true));
       }
     } else {
       store.set('virtualization', {
         ...store.state.virtualization,
+        anchorTop: nextAnchor,
         scrollPosition: { current: { ...scrollPosition.current } },
       });
     }
@@ -1185,6 +1213,24 @@ export function computeOffsetLeft(
     offset -= columnPositions[pinnedLeftLength] ?? 0;
   }
   return Math.abs(offset);
+}
+
+/**
+ * Anchor to apply along with `renderContext`. Only the sticky layout renders the rows
+ * in an anchored box; the other layouts leave the anchor untouched.
+ */
+function anchorTopFor(
+  store: Store<BaseState>,
+  layoutMode: VirtualizationState<string>['layoutMode'],
+  renderContext: RenderContext,
+  isSettled: boolean,
+) {
+  const { anchorTop } = store.state.virtualization;
+  if (layoutMode !== 'sticky') {
+    return anchorTop;
+  }
+  const rowPositions = Dimensions.selectors.rowPositions(store.state);
+  return nextAnchorTop(anchorTop, rowPositions[renderContext.firstRowIndex] ?? 0, isSettled);
 }
 
 const EMPTY_BUFFER = {
