@@ -304,18 +304,6 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     expect(document.querySelector('[data-dependency-arrows]')).to.equal(null);
   });
 
-  it('should let the arrows paint outside the overlay near the timeline edges', () => {
-    renderTimeline({
-      events: [eventA, eventB],
-      dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
-    });
-
-    // The entry and exit stubs reach outside the viewBox at the timeline edges; the
-    // SVG root's default `overflow: hidden` would clip them.
-    const svg = document.querySelector('[data-dependency-arrows]')!;
-    expect(getComputedStyle(svg).overflow).to.equal('visible');
-  });
-
   it('should hide the arrows overlay from assistive technology', () => {
     renderTimeline({
       events: [eventA, eventB],

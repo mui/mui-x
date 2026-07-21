@@ -388,6 +388,42 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].maxRowIndex).to.equal(0);
     });
 
+    it('should clamp the route to the events area when an anchor sits at a timeline edge', () => {
+      // Ends at 24:00 → end x = 1440, the exit stub would leave the events area.
+      const lateEvent = EventBuilder.new()
+        .id('event-late')
+        .singleDay('2024-01-15T23:00:00Z', 60)
+        .toProcessed();
+      // Starts at 00:05 → start x = 5, the entry elbow would land at x = -7, under
+      // the pinned title column.
+      const earlyEvent = EventBuilder.new()
+        .id('event-early')
+        .singleDay('2024-01-15T00:05:00Z', 55)
+        .toProcessed();
+
+      const arrows = computeDependencyArrows({
+        adapter,
+        dependencies: [buildDependency('dep-1', 'event-late', 'event-early')],
+        resources: [
+          { resource: RESOURCE_1, occurrences: getOccurrences([lateEvent]) },
+          { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
+        ],
+        rowPositions: [0, 62],
+        collectionStart,
+        collectionEnd,
+        eventsWidth: EVENTS_WIDTH,
+        laneMetrics: LANE_METRICS,
+      });
+
+      expect(arrows).to.have.length(1);
+      // The exit stub collapses on the right edge and the entry elbow hugs x = 0.
+      expect(arrows[0].d).to.equal(
+        'M 1440 31 L 1440 48 Q 1440 52 1436 52 L 4 52 Q 0 52 0 56 L 0 90.5 Q 0 93 2.5 93 L 5 93',
+      );
+      expect(arrows[0].minXFraction).to.equal(0);
+      expect(arrows[0].maxXFraction).to.equal(1);
+    });
+
     it('should return no arrow when the events area has no width', () => {
       const arrows = computeDependencyArrows({
         adapter,

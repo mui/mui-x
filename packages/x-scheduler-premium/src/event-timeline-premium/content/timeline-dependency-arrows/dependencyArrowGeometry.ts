@@ -251,6 +251,14 @@ export function computeDependencyArrows(
       }
     }
 
+    // Keep the route inside the events area: x < 0 sits under the pinned title column
+    // and x > eventsWidth is past the last tick, so the elbow of an anchor sitting at
+    // the timeline edge would never be visible there.
+    points = points.map((point) => ({
+      x: Math.min(Math.max(point.x, 0), eventsWidth),
+      y: point.y,
+    }));
+
     let minX = Infinity;
     let maxX = -Infinity;
     for (const point of points) {
