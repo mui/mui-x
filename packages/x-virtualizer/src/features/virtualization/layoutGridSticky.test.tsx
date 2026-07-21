@@ -163,6 +163,7 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
     LayoutGridSticky.selectors.innerWindowProps,
     columns,
   );
+  const windowContentProps = virtualizer.store.use(LayoutGridSticky.selectors.windowContentProps);
   const spacerBottomProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerBottomProps);
   const bottomContainerProps = virtualizer.store.use(
     LayoutGridSticky.selectors.bottomContainerProps,
@@ -182,6 +183,7 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
   return (
     <div
       {...containerProps}
+      data-testid="container"
       style={{
         ...containerProps.style,
         width: props.width ?? VIEWPORT_WIDTH,
@@ -221,7 +223,9 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number }) {
           <div {...windowProps} data-testid="outer-window">
             <div {...spacerLeftProps} />
             <div {...innerWindowProps} data-testid="window">
-              {getRows()}
+              <div {...windowContentProps} data-testid="window-content">
+                {getRows()}
+              </div>
             </div>
           </div>
           <div {...spacerBottomProps} />
@@ -671,6 +675,122 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     expect(getWindowRowIds()).to.include(30);
     expect(getWindowRowIds()).not.to.deep.equal(idsAfterDirectionChange);
+  });
+
+  it('keeps retained rows at identical content-local offsets across context updates', async () => {
+    // The rows paint into the composited windowContent box, and any change of their
+    // offset within that box re-rasterizes them. A context update must therefore
+    // grow the box's anchor pad by exactly the dropped rows' height, leaving
+    // carried-over rows byte-identical in its local space.
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+
+    await act(async () => {
+      scroller.scrollTop = 40 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(getWindowRowIds()).to.include(40);
+    });
+
+    const localOffsets = () => {
+      const contentTop = rect('window-content').top;
+      return new Map(
+        Array.from(
+          document.querySelectorAll<HTMLElement>('[data-testid="window"] [data-testid="row"]'),
+        ).map((node) => [node.dataset.id, node.getBoundingClientRect().top - contentTop]),
+      );
+    };
+    const before = localOffsets();
+
+    // Consumes more than half of the leading buffer: triggers a context update while
+    // staying inside the same anchor block.
+    await act(async () => {
+      scroller.scrollTop = 50 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(getWindowRowIds()).to.include(50);
+    });
+    const after = localOffsets();
+
+    // The context did advance...
+    expect([...after.keys()]).to.not.deep.equal([...before.keys()]);
+    // ...and every carried-over row sits at the exact same offset inside the box.
+    const retained = [...after.keys()].filter((id) => before.has(id));
+    expect(retained.length).to.be.greaterThan(0);
+    for (const id of retained) {
+      expect(after.get(id)).to.equal(before.get(id));
+    }
+  });
+
+  it('wraps the anchor pad when the offset leaves the anchor block', async () => {
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+    const scrollTop = 900 * ROW_HEIGHT;
+
+    await act(async () => {
+      scroller.scrollTop = scrollTop;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(getWindowRowIds()).to.include(900);
+    });
+
+    // 900 * 48 = 43200 is past the 40000px anchor block: the pad wraps to the offset
+    // within the new block instead of growing without bound. The expected pad is
+    // derived from the rendered context, as the settle timer may rebalance the
+    // buffers (and shift the first row) before this assertion runs.
+    const firstRenderedRow = Math.min(
+      ...getWindowRowIds().filter((id): id is number => typeof id === 'number'),
+    );
+    const windowContent = screen.getByTestId('window-content');
+    expect(parseFloat(getComputedStyle(windowContent).paddingTop)).to.equal(
+      firstRenderedRow * ROW_HEIGHT - 40000,
+    );
+
+    // Rows are still at their exact content positions.
+    const topContainerHeight = rect('top-container').height;
+    const rowRect = document.querySelector('[data-id="900"]')!.getBoundingClientRect();
+    expect(rowRect.top - rect('scroller').top).to.be.closeTo(
+      topContainerHeight + 900 * ROW_HEIGHT - scrollTop,
+      1,
+    );
+    expectInnerViewportCovered();
+  });
+
+  it('keeps the reserved scrollbar lanes clear of content', async () => {
+    await renderGrid({ scrollbarSize: SCROLLBAR_SIZE });
+
+    const container = rect('container');
+    const scroller = screen.getByTestId('scroller');
+
+    // The rendered window reaches into the vertical lane: it is wider than the viewport
+    // by its column buffer, and the lane is reserved inside the scrollport.
+    expect(rect('window').right).to.be.greaterThan(container.right - SCROLLBAR_SIZE);
+
+    // The two regions no widget covers — the lane beside the top container, and the
+    // corner between the widgets — must not show anything from the scroller. Hit
+    // testing follows the clip, so a point in either lands outside it.
+    const inLane = document.elementFromPoint(
+      container.right - SCROLLBAR_SIZE / 2,
+      container.top + HEADER_HEIGHT / 2,
+    );
+    const inCorner = document.elementFromPoint(
+      container.right - SCROLLBAR_SIZE / 2,
+      container.bottom - SCROLLBAR_SIZE / 2,
+    );
+    expect(scroller.contains(inLane)).to.equal(false);
+    expect(scroller.contains(inCorner)).to.equal(false);
+  });
+
+  it('leaves the scroller unclipped when no scrollbar lane is reserved', async () => {
+    // Overlay scrollbars measure 0: no lane is reserved, the widgets float above the
+    // content, and the rows legitimately reach the container edge. Clipping anything
+    // here would cut off content that is meant to be visible.
+    await renderGrid({ scrollbarSize: 0 });
+
+    expect(getComputedStyle(screen.getByTestId('scroller')).clipPath).to.equal('none');
   });
 
   it('keeps the scroller and virtual scrollbar horizontal scroll ranges in sync near the overflow threshold', async () => {

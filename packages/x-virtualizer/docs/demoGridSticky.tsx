@@ -3,7 +3,13 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useVirtualizer, Virtualizer, Virtualization, LayoutGridSticky } from '@mui/x-virtualizer';
+import {
+  useVirtualizer,
+  Virtualizer,
+  Virtualization,
+  Dimensions,
+  LayoutGridSticky,
+} from '@mui/x-virtualizer';
 
 const ROW_COUNT = 100_000;
 const COLUMN_COUNT = 40;
@@ -73,6 +79,18 @@ const headerPinnedStyle: React.CSSProperties = {
   background: '#e8e8e8',
 };
 
+/* The container's own border closes the grid on the right and at the bottom. A reserved
+ * scrollbar lane keeps the content clear of it, but the lane collapses to 0 where the
+ * platform uses overlay scrollbars — the last column's and last row's trailing borders
+ * then land right on the container's and stack into one 2px line. Scale them with the
+ * lane so they disappear exactly when it does. */
+const lastColumnStyle: React.CSSProperties = {
+  borderRightWidth: 'min(1px, var(--lane-right, 0px))',
+};
+const lastRowStyle: React.CSSProperties = {
+  borderBottomWidth: 'min(1px, var(--lane-bottom, 0px))',
+};
+
 const containerSx = {
   height: 480,
   border: `1px solid ${borderColor}`,
@@ -115,8 +133,9 @@ const Row = React.memo(function Row(props: {
   firstColumnIndex: number;
   lastColumnIndex: number;
   background?: string;
+  isLastRow?: boolean;
 }) {
-  const { id, firstColumnIndex, lastColumnIndex, background } = props;
+  const { id, firstColumnIndex, lastColumnIndex, background, isLastRow } = props;
 
   const cells = [];
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
@@ -128,12 +147,13 @@ const Row = React.memo(function Row(props: {
   }
 
   const pinnedStyle = background ? { ...pinnedCellStyle, background } : pinnedCellStyle;
+  const base = isLastRow ? { ...rowStyle, ...lastRowStyle } : rowStyle;
 
   return (
-    <div style={background ? { ...rowStyle, background } : rowStyle}>
+    <div style={background ? { ...base, background } : base}>
       <div style={{ ...pinnedStyle, left: 0 }}>{id} × 0</div>
       {cells}
-      <div style={{ ...pinnedStyle, right: 'var(--pinned-right)' }}>
+      <div style={{ ...pinnedStyle, ...lastColumnStyle, right: 'var(--pinned-right)' }}>
         {id} × {COLUMN_COUNT - 1}
       </div>
     </div>
@@ -159,7 +179,7 @@ const HeaderCells = React.memo(function HeaderCells(props: {
     <div style={headerRowStyle}>
       <div style={{ ...headerPinnedStyle, left: 0 }}>{columns[0].field}</div>
       {cells}
-      <div style={{ ...headerPinnedStyle, right: 'var(--pinned-right)' }}>
+      <div style={{ ...headerPinnedStyle, ...lastColumnStyle, right: 'var(--pinned-right)' }}>
         {columns[COLUMN_COUNT - 1].field}
       </div>
     </div>
@@ -223,6 +243,7 @@ function Grid() {
         firstColumnIndex={params.firstColumnIndex}
         lastColumnIndex={params.lastColumnIndex}
         background={typeof params.id === 'string' ? '#fff8e0' : undefined}
+        isLastRow={params.id === 'pinned-bottom'}
       />
     ),
   });
@@ -230,6 +251,7 @@ function Grid() {
   useJank(refs.scroller);
 
   const containerProps = virtualizer.store.use(LayoutGridSticky.selectors.containerProps);
+  const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
   const scrollerProps = virtualizer.store.use(LayoutGridSticky.selectors.scrollerProps);
   const scrollbarVerticalProps = virtualizer.store.use(
     LayoutGridSticky.selectors.scrollbarVerticalProps,
@@ -253,6 +275,7 @@ function Grid() {
     LayoutGridSticky.selectors.innerWindowProps,
     columns,
   );
+  const windowContentProps = virtualizer.store.use(LayoutGridSticky.selectors.windowContentProps);
   const spacerBottomProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerBottomProps);
   const bottomContainerProps = virtualizer.store.use(
     LayoutGridSticky.selectors.bottomContainerProps,
@@ -260,9 +283,20 @@ function Grid() {
 
   const { getRows } = virtualizer.api.getters;
 
+  // The reserved lanes, published to the trailing borders (see `lastColumnStyle`).
+  const containerStyle = React.useMemo(
+    () =>
+      ({
+        ...containerProps.style,
+        '--lane-right': `${dimensions.hasScrollY ? dimensions.scrollbarSize : 0}px`,
+        '--lane-bottom': `${dimensions.hasScrollX ? dimensions.scrollbarSize : 0}px`,
+      }) as React.CSSProperties,
+    [containerProps.style, dimensions],
+  );
+
   return (
     <VirtualizerContext.Provider value={virtualizer}>
-      <Box {...containerProps} sx={containerSx}>
+      <Box {...containerProps} style={containerStyle} sx={containerSx}>
         <Box className="Grid--scroller" {...scrollerProps} sx={scrollerSx}>
           <div className="Grid--content" {...contentProps}>
             <div className="Grid--topContainer" {...topContainerProps}>
@@ -276,7 +310,9 @@ function Grid() {
             <div className="Grid--window" {...windowProps}>
               <div {...spacerLeftProps} />
               <div className="Grid--innerWindow" {...innerWindowProps}>
-                {getRows()}
+                <div className="Grid--windowContent" {...windowContentProps}>
+                  {getRows()}
+                </div>
               </div>
             </div>
             <div className="Grid--spacerBottom" {...spacerBottomProps} />

@@ -298,6 +298,57 @@ export class LayoutList extends Layout<ListElements> {
 }
 
 /**
+ * Paint-stable window content.
+ *
+ * The rendered rows paint into a composited layer, and the compositor re-rasterizes
+ * every region whose paint offset within its layer changed. Each render context update
+ * moves the window in the flow (the spacers track the new offset), so if the rows
+ * painted into the window's own layer, every retained row would shift inside it and the
+ * whole window would re-rasterize on every update. Fast scrolling exposes that as blank
+ * frames at the leading edge: a whole-window raster cannot complete within a frame
+ * interval, and the lower the display refresh rate, the more pixels each frame interval
+ * covers.
+ *
+ * The rows therefore render inside a dedicated `windowContent` box that keeps its own
+ * anchored local space: `paddingTop` places the rows at `offsetTop - anchor`, where the
+ * anchor moves only in `ANCHOR_BLOCK` steps, and a `translateY` of the same magnitude
+ * cancels the pad visually. The rows already paint into the composited layer of the
+ * sticky window, and the pad holds their offsets inside it fixed across updates, so only
+ * entering rows rasterize. When the offset crosses into another anchor block the pad
+ * wraps, costing one whole-window raster per `ANCHOR_BLOCK` of travel instead of one per
+ * update.
+ *
+ * Promoting the box itself (`will-change: transform`) is deliberately avoided: measured
+ * against the layer trees Chromium builds for this layout it changes no invalidation —
+ * the sticky window is composited either way — while it does disable subpixel text
+ * antialiasing on the platforms that use it, and raises peak tile memory. Painting a
+ * background on this box is worse still: the pad region becomes painted content, so
+ * every pad change invalidates the whole box and the optimization is lost entirely.
+ *
+ * The sticky window and the spacers keep tracking the exact offsets: the sticky clamp
+ * may only move an element within its containing block, so holding stale content
+ * during backward overshoot needs the slack of the element's real flow position — the
+ * anchoring must live entirely inside `windowContent`.
+ *
+ * Vertical only: the counter-translation sits on an ancestor of the sticky pinned
+ * cells, and sticky offsets are resolved in layout coordinates before transforms
+ * apply, so a horizontal translation would displace the pinned cells' clamped
+ * position. Column-direction updates keep repositioning the cells within the layer
+ * (whole-window raster), like before.
+ *
+ * The block size bounds the `windowContent` box (up to `ANCHOR_BLOCK` + rendered
+ * size): larger blocks mean rarer whole-window rasters but a larger layer box for the
+ * compositor to track. Tiles only rasterize near the visible area, so the cost is tile
+ * bookkeeping rather than raster memory proportional to the box — but it isn't free:
+ * a box much taller than the rendered window measurably raises peak tile memory.
+ */
+const ANCHOR_BLOCK = 40_000;
+
+function quantizeAnchor(offset: number) {
+  return Math.floor(offset / ANCHOR_BLOCK) * ANCHOR_BLOCK;
+}
+
+/**
  * List layout based on the "inverse sticky" technique
  * (https://pierre.computer/writing/on-rendering-diffs).
  *
@@ -307,6 +358,8 @@ export class LayoutList extends Layout<ListElements> {
  * natively with the scroll (no JS needed per frame). When the scroll position moves past
  * the rendered window before the render context updates, the window clamps to the viewport
  * edge instead of scrolling out of view, so stale content is shown instead of a blank area.
+ * The rows render inside a `windowContent` box that keeps them paint-stable across
+ * render context updates (see the paint-stable window content comment above).
  *
  * Expected DOM structure:
  * ```tsx
@@ -314,14 +367,23 @@ export class LayoutList extends Layout<ListElements> {
  *   <div {...contentProps}>         // in-flow, full content height, sticky containing block
  *     <div {...positionerProps} />  // spacer, height: offsetTop
  *     <div {...windowProps}>        // sticky rendered window
- *       {rows}
+ *       <div {...windowContentProps}>  // anchored local space for the rows
+ *         {rows}
+ *       </div>
  *     </div>
  *   </div>
  * </div>
  * ```
  */
 export class LayoutListSticky extends Layout<ListElements> {
-  static elements = ['scroller', 'container', 'content', 'positioner', 'window'] as const;
+  static elements = [
+    'scroller',
+    'container',
+    'content',
+    'positioner',
+    'window',
+    'windowContent',
+  ] as const;
 
   use(
     store: Store<BaseState>,
@@ -395,10 +457,30 @@ export class LayoutListSticky extends Layout<ListElements> {
             position: 'sticky',
             top: stickyOffset,
             bottom: stickyOffset,
+            // Explicit height: the windowContent child's box includes the anchor pad,
+            // so an auto height would balloon the sticky box and derail the clamping
+            // math above. The windowContent overflows this box; the pad region is
+            // empty and its translation cancels the visual difference.
+            height: renderedHeight,
           } as React.CSSProperties,
         };
       },
     ),
+
+    windowContentProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => {
+      const padTop = offsetTop - quantizeAnchor(offsetTop);
+      return {
+        style: {
+          // Anchored local space (see the paint-stable window content comment above):
+          // the pad places the rows at their offset from the anchor within this box and
+          // the translation cancels it visually, holding the rows at fixed offsets in
+          // the layer they paint into.
+          paddingTop: padTop,
+          transform: `translateY(${-padTop}px)`,
+        } as React.CSSProperties,
+        role: 'presentation',
+      };
+    }),
   };
 }
 
@@ -421,10 +503,14 @@ export class LayoutListSticky extends Layout<ListElements> {
  * column-aligned. Pinned column cells are `position: sticky` in the normal flow of
  * their row; the pinned-right inset includes the vertical scrollbar lane.
  *
+ * The rows render inside a `windowContent` box that keeps them paint-stable across
+ * render context updates (see the paint-stable window content comment above).
+ *
  * Scrolling relies on virtual scrollbars, like the DataGrid: the scroller hides its
  * native scrollbars and standalone scrollbar widgets are kept in sync with it (see
  * `useScrollbarRefCallback`). The content reserves the scrollbar lanes so the last
- * row/column can scroll out from under the overlaid widgets.
+ * row/column can scroll out from under the overlaid widgets, and the scroller clips
+ * them back out of the scrollport so nothing paints in them (see `scrollerProps`).
  *
  * The horizontal-geometry selectors take the columns array as a selector argument:
  * `store.use(LayoutGridSticky.selectors.innerWindowProps, columns)`.
@@ -444,7 +530,9 @@ export class LayoutListSticky extends Layout<ListElements> {
  *       <div {...windowProps}>             // sticky (vertical) + flex row
  *         <div {...spacerLeftProps} />     // flex: 0 0 offsetLeft
  *         <div {...innerWindowProps}>      // flex item, horizontally-sticky
- *           {rows}
+ *           <div {...windowContentProps}>  // anchored local space for the rows
+ *             {rows}
+ *           </div>
  *         </div>
  *       </div>
  *       <div {...spacerBottomProps} />     // height: remaining content height
@@ -495,12 +583,13 @@ const horizontalGeometry = createSelectorMemoized(
 );
 
 /**
- * Vertical offset (the `spacerTop` basis), rendered height and inverse-sticky insets of
- * the window. Vertical mirror of `horizontalGeometry`. Asymmetric insets: scrolling
- * down, the window's bottom edge clamps at the top of the bottom container; scrolling
- * up, its top edge clamps below the top container. Derivation: native scrollbars are
- * hidden so the scrollport height is `P = viewportInnerSize.height + topContainerHeight +
- * bottomContainerHeight + horizontalScrollbarLane`, and the insets
+ * Vertical offset (the `spacerTop` basis), rendered height, inverse-sticky insets of
+ * the window, and the `windowContent` anchor pad. Vertical mirror of
+ * `horizontalGeometry`. Asymmetric insets: scrolling down, the window's bottom edge
+ * clamps at the top of the bottom container; scrolling up, its top edge clamps below
+ * the top container. Derivation: native scrollbars are hidden so the scrollport height
+ * is `P = viewportInnerSize.height + topContainerHeight + bottomContainerHeight +
+ * horizontalScrollbarLane`, and the insets
  * `-(renderedHeight - (P - horizontalScrollbarLane - bottomContainerHeight))` and
  * `-(renderedHeight - (P - topContainerHeight))` simplify to the expressions below.
  */
@@ -517,6 +606,7 @@ const verticalGeometry = createSelectorMemoized(
     const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
     const renderedHeight = lastPosition - firstPosition;
     const offsetTop = firstPosition;
+    const padTop = offsetTop - quantizeAnchor(offsetTop);
     const horizontalScrollbarLane = dimensions.hasScrollX ? dimensions.scrollbarSize : 0;
     // Clamped to 0: if the rendered window is smaller than the viewport (few rows),
     // sticky positioning must stay inert.
@@ -531,7 +621,7 @@ const verticalGeometry = createSelectorMemoized(
         (viewportInnerSize.height + bottomContainerHeight + horizontalScrollbarLane)
       ),
     );
-    return { offsetTop, renderedHeight, stickyTop, stickyBottom };
+    return { offsetTop, padTop, renderedHeight, stickyTop, stickyBottom };
   },
 );
 
@@ -546,6 +636,7 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
     'spacerTop',
     'window',
     'innerWindow',
+    'windowContent',
     'spacerBottom',
     'bottomContainer',
     'scrollbarVertical',
@@ -593,24 +684,45 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
     scrollerProps: createSelectorMemoized(
       Virtualization.selectors.context,
       Dimensions.selectors.autoHeight,
-      (context, autoHeight) => ({
-        ref: context.scrollerRef,
-        style: {
-          width: '100%',
-          height: '100%',
-          overflow: autoHeight ? 'hidden' : 'auto',
-          position: 'relative',
-          // Native scrollbars are hidden, the virtual scrollbar widgets replace them.
-          scrollbarWidth: 'none',
-          // The spacer heights change on each render context update; native scroll
-          // anchoring would fight those updates by adjusting the scroll position.
-          overflowAnchor: 'none',
-        } as React.CSSProperties,
-        role: 'presentation',
-        // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
-        // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-        tabIndex: platform.engine.gecko ? -1 : undefined,
-      }),
+      Dimensions.selectors.dimensions,
+      (context, autoHeight, dimensions) => {
+        const verticalLane = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+        const horizontalLane = dimensions.hasScrollX ? dimensions.scrollbarSize : 0;
+        return {
+          ref: context.scrollerRef,
+          style: {
+            width: '100%',
+            height: '100%',
+            overflow: autoHeight ? 'hidden' : 'auto',
+            position: 'relative',
+            // Native scrollbars are hidden, the virtual scrollbar widgets replace them.
+            scrollbarWidth: 'none',
+            // The spacer heights change on each render context update; native scroll
+            // anchoring would fight those updates by adjusting the scroll position.
+            overflowAnchor: 'none',
+            // The scrollbar lanes are reserved inside the scrollable area (see
+            // `contentProps`), so the scrollport spans them and the rendered window —
+            // wider than the viewport by its column buffer — paints into them. The
+            // widgets hide most of that, but they stop short of the lane beside the top
+            // container and of the corner between them, where the rows would show
+            // through. Clipping the scrollport back to the visible area covers every
+            // such region at once and leaves the lanes showing the container, the way
+            // they looked when each sticky box clipped itself to the inner viewport.
+            // Trade-off: the clipped strips stop taking pointer events — the widget
+            // covers the vertical lane, and the corner is inert like a native one.
+            // Omitted when neither lane is reserved (overlay scrollbars measure 0), so
+            // the scroller doesn't become a stacking context for nothing.
+            clipPath:
+              verticalLane || horizontalLane
+                ? `inset(0 ${verticalLane}px ${horizontalLane}px 0)`
+                : undefined,
+          } as React.CSSProperties,
+          role: 'presentation',
+          // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
+          // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
+          tabIndex: platform.engine.gecko ? -1 : undefined,
+        };
+      },
     ),
 
     contentProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
@@ -811,6 +923,18 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
         role: 'presentation',
       }),
     ),
+
+    windowContentProps: createSelectorMemoized(verticalGeometry, (geometry) => ({
+      style: {
+        // Anchored local space (see the paint-stable window content comment above):
+        // the pad places the rows at their offset from the anchor within this box and
+        // the translation cancels it visually, holding the rows at fixed offsets in the
+        // layer they paint into.
+        paddingTop: geometry.padTop,
+        transform: `translateY(${-geometry.padTop}px)`,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
   };
 }
 

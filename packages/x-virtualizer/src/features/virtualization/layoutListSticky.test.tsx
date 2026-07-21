@@ -42,6 +42,7 @@ function StickyList(props: { rows?: RowEntry[] }) {
   const contentProps = virtualizer.store.use(LayoutListSticky.selectors.contentProps);
   const positionerProps = virtualizer.store.use(LayoutListSticky.selectors.positionerProps);
   const windowProps = virtualizer.store.use(LayoutListSticky.selectors.windowProps);
+  const windowContentProps = virtualizer.store.use(LayoutListSticky.selectors.windowContentProps);
 
   return (
     <div
@@ -52,7 +53,9 @@ function StickyList(props: { rows?: RowEntry[] }) {
       <div {...contentProps}>
         <div {...positionerProps} />
         <div {...windowProps} data-testid="window">
-          {virtualizer.api.getters.getRows()}
+          <div {...windowContentProps} data-testid="window-content">
+            {virtualizer.api.getters.getRows()}
+          </div>
         </div>
       </div>
     </div>
@@ -146,6 +149,52 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
     const scrollerRect = scroller.getBoundingClientRect();
     const rowRect = document.querySelector('[data-id="250"]')!.getBoundingClientRect();
     expect(rowRect.top - scrollerRect.top).to.be.closeTo(250 * ROW_HEIGHT - scrollTop, 1);
+  });
+
+  it('keeps retained rows at identical content-local offsets across context updates', async () => {
+    // The rows paint into the composited windowContent box, and any change of their
+    // offset within that box re-rasterizes them. A context update must therefore
+    // grow the box's anchor pad by exactly the dropped rows' height, leaving
+    // carried-over rows byte-identical in its local space.
+    await renderList();
+    const scroller = screen.getByTestId('scroller');
+
+    await act(async () => {
+      scroller.scrollTop = 40 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(renderedRowIds()).to.include(40);
+    });
+
+    const localOffsets = () => {
+      const contentTop = screen.getByTestId('window-content').getBoundingClientRect().top;
+      return new Map(
+        Array.from(document.querySelectorAll<HTMLElement>('[data-testid="row"]')).map((node) => [
+          node.dataset.id,
+          node.getBoundingClientRect().top - contentTop,
+        ]),
+      );
+    };
+    const before = localOffsets();
+
+    await act(async () => {
+      scroller.scrollTop = 55 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(renderedRowIds()).to.include(55);
+    });
+    const after = localOffsets();
+
+    // The context did advance...
+    expect([...after.keys()]).to.not.deep.equal([...before.keys()]);
+    // ...and every carried-over row sits at the exact same offset inside the box.
+    const retained = [...after.keys()].filter((id) => before.has(id));
+    expect(retained.length).to.be.greaterThan(0);
+    for (const id of retained) {
+      expect(after.get(id)).to.equal(before.get(id));
+    }
   });
 
   it('keeps sticky positioning inert when all rows fit in the viewport', async () => {

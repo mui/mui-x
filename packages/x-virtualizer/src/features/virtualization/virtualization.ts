@@ -328,12 +328,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
     let shouldUpdate: boolean;
     if (layoutMode === 'sticky') {
-      // In sticky mode, a render context update shifts the rows inside the window layer,
-      // which restarts the layer's rasterization from scratch. Updating on every
-      // crossed row keeps the buffer's raster perpetually invalidated, and fast
-      // scrolling then exposes not-yet-rasterized regions (blank flashes at the
-      // viewport edge). Defer updates until half of a buffer is consumed instead; the
-      // inverse-sticky clamp covers any overshoot with stale content in the meantime.
+      // In sticky mode, a render context update re-renders the window's row set and
+      // rasterizes the entering rows. Updating on every crossed
+      // row would spend a main-thread render + commit per row. Defer updates until
+      // half of a buffer is consumed instead. The inverse-sticky clamp covers any
+      // overshoot with stale content in the meantime.
       shouldUpdate =
         didChangeDirection ||
         isLowOnRenderedBuffer(store, params, scrollPosition.current, scrollCache);

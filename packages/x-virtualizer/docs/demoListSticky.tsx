@@ -66,6 +66,7 @@ function StickyList() {
   const contentProps = virtualizer.store.use(LayoutListSticky.selectors.contentProps);
   const positionerProps = virtualizer.store.use(LayoutListSticky.selectors.positionerProps);
   const windowProps = virtualizer.store.use(LayoutListSticky.selectors.windowProps);
+  const windowContentProps = virtualizer.store.use(LayoutListSticky.selectors.windowContentProps);
 
   return (
     <Box
@@ -82,9 +83,11 @@ function StickyList() {
       <div className="List--content" {...contentProps}>
         <div className="List--positioner" {...positionerProps} />
         <div className="List--window" {...windowProps}>
-          <VirtualizerContext.Provider value={virtualizer}>
-            <ListContent />
-          </VirtualizerContext.Provider>
+          <div className="List--windowContent" {...windowContentProps}>
+            <VirtualizerContext.Provider value={virtualizer}>
+              <ListContent />
+            </VirtualizerContext.Provider>
+          </div>
         </div>
       </div>
     </Box>
