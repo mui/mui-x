@@ -24,6 +24,13 @@ export function safeUri(uri: string | null | undefined): string {
   try {
     const trimmed = uri.trim();
 
+    // Protocol-relative `//host` resolves to an external origin — reject it
+    // (matches the markdown sanitizer in renderMarkdown.tsx). Fragments and
+    // single-slash absolute paths remain safe same-origin references.
+    if (trimmed.startsWith('//')) {
+      return '';
+    }
+
     if (trimmed.startsWith('#') || trimmed.startsWith('/')) {
       return trimmed;
     }

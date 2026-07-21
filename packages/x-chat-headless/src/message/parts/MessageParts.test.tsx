@@ -239,6 +239,47 @@ describe('FilePart', () => {
 
     expect(screen.getByText('https://example.com/doc.pdf')).not.to.equal(null);
   });
+
+  it('sanitizes a javascript: URL out of both href and src for images', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'file',
+          mediaType: 'image/png',
+          // eslint-disable-next-line no-script-url
+          url: 'javascript:alert(1)',
+          filename: 'img.png',
+        },
+      ],
+    });
+
+    const img = screen.getByAltText('img.png');
+
+    expect(img.getAttribute('src')).to.equal(null);
+    expect(img.closest('a')!.getAttribute('href')).to.equal(null);
+  });
+
+  it('preserves a safe https: URL for href', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'file',
+          mediaType: 'application/pdf',
+          url: 'https://example.com/file.pdf',
+          filename: 'file.pdf',
+        },
+      ],
+    });
+
+    expect(screen.getByText('file.pdf').closest('a')).to.have.attribute(
+      'href',
+      'https://example.com/file.pdf',
+    );
+  });
 });
 
 describe('SourceUrlPart', () => {
@@ -276,6 +317,46 @@ describe('SourceUrlPart', () => {
     });
 
     expect(screen.getByText('https://mui.com/x')).not.to.equal(null);
+  });
+
+  it('sanitizes a javascript: URL out of href', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'source-url',
+          sourceId: 's1',
+          // eslint-disable-next-line no-script-url
+          url: 'javascript:alert(1)',
+          title: 'Malicious link',
+        },
+      ],
+    });
+
+    const link = screen.getByText('Malicious link');
+
+    expect(link.closest('a')!.getAttribute('href')).to.equal(null);
+  });
+
+  it('preserves a safe https: URL for href', () => {
+    renderWithMessage({
+      id: 'm1',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'source-url',
+          sourceId: 's1',
+          url: 'https://example.com',
+          title: 'Example',
+        },
+      ],
+    });
+
+    expect(screen.getByText('Example').closest('a')).to.have.attribute(
+      'href',
+      'https://example.com',
+    );
   });
 });
 
