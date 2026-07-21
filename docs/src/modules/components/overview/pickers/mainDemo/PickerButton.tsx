@@ -4,17 +4,16 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
 import { DatePicker, DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
+import { DateFieldProps } from '@mui/x-date-pickers/DateField';
 import { useParsedFormat, usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
-function ButtonDateField(props: DatePickerFieldProps) {
+function ButtonDateField(
+  props: DatePickerFieldProps & Pick<DateFieldProps, 'slots' | 'slotProps' | 'inputRef'>,
+) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   // `slots`, `slotProps` and `inputRef` target the default text field, not a `<button>`.
-  const { slots, slotProps, inputRef, ...buttonProps } = forwardedProps as typeof forwardedProps & {
-    slots?: unknown;
-    slotProps?: unknown;
-    inputRef?: unknown;
-  };
+  const { slots, slotProps, inputRef, ...buttonProps } = forwardedProps;
 
   const pickerContext = usePickerContext();
 

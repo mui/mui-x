@@ -7,6 +7,7 @@ import {
   DatePickerProps,
   DatePickerFieldProps,
 } from '@mui/x-date-pickers/DatePicker';
+import { DateFieldProps } from '@mui/x-date-pickers/DateField';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
@@ -14,15 +15,13 @@ import {
   usePickerContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ButtonDateField(props: DatePickerFieldProps) {
+function ButtonDateField(
+  props: DatePickerFieldProps &
+    Pick<DateFieldProps, 'slots' | 'slotProps' | 'inputRef'>,
+) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   // `slots`, `slotProps` and `inputRef` target the default text field, not a `<button>`.
-  const { slots, slotProps, inputRef, ...buttonProps } =
-    forwardedProps as typeof forwardedProps & {
-      slots?: unknown;
-      slotProps?: unknown;
-      inputRef?: unknown;
-    };
+  const { slots, slotProps, inputRef, ...buttonProps } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
