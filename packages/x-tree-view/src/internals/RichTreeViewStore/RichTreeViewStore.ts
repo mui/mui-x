@@ -25,6 +25,8 @@ export class ExtendableRichTreeViewStore<
     return {
       ...super.buildPublicAPI(),
       ...this.labelEditing.buildPublicAPI(),
+      // `addItems` is not exposed on the Simple Tree View, where the items are defined with JSX.
+      addItems: this.items.addItems,
     };
   }
 }

@@ -220,7 +220,6 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
 
   public buildPublicAPI = () => {
     return {
-      addItems: this.addItems,
       getItem: this.getItem,
       getItemDOMElement: this.getItemDOMElement,
       getItemOrderedChildrenIds: this.getItemOrderedChildrenIds,
