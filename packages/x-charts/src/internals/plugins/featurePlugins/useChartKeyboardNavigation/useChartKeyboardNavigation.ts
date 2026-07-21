@@ -3,6 +3,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import { selectorChartExperimentalFeaturesState } from '../../corePlugins/useChartExperimentalFeature';
 import type { ChartPlugin } from '../../models';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
@@ -86,7 +87,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       }
 
       if (keyboardHandlerResult === 'activate') {
-        if (store.state.keyboardNavigation.isFocused && newFocusedItem?.type === 'scatter') {
+        if (
+          selectorChartExperimentalFeaturesState(store.state, 'enableKeyboardClickEvents') &&
+          store.state.keyboardNavigation.isFocused &&
+          newFocusedItem?.type === 'scatter'
+        ) {
           event.preventDefault();
           // `onItemClick` is typed with `MouseEvent` until the consumer opts into the
           // `keyboardItemActivation` module augmentation.

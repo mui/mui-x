@@ -325,6 +325,7 @@ describe('useChartKeyboardNavigation', () => {
           skipAnimation
           margin={0}
           onItemClick={onItemClick}
+          experimentalFeatures={{ enableKeyboardClickEvents: true }}
           series={[
             {
               id: 'A',

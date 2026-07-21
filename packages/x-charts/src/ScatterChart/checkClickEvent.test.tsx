@@ -197,6 +197,7 @@ describe('ScatterChart - click event', () => {
           {...config}
           series={[{ id: 's1', data: config.dataset }]}
           onItemClick={onItemClick}
+          experimentalFeatures={{ enableKeyboardClickEvents: true }}
         />,
       );
 
@@ -213,6 +214,22 @@ describe('ScatterChart - click event', () => {
       });
     });
 
+    it('should not call onItemClick without the experimental feature enabled', async () => {
+      const onItemClick = vi.fn();
+      const { user } = render(
+        <ScatterChart
+          {...config}
+          series={[{ id: 's1', data: config.dataset }]}
+          onItemClick={onItemClick}
+        />,
+      );
+
+      await user.keyboard('{Tab}{ArrowRight}{Enter}');
+      await user.keyboard(' ');
+
+      expect(onItemClick.mock.calls).to.have.length(0);
+    });
+
     it('should activate the focused item when hit area interaction is disabled', async () => {
       const onItemClick = vi.fn();
       const { user } = render(
@@ -221,6 +238,7 @@ describe('ScatterChart - click event', () => {
           series={[{ id: 's1', data: config.dataset }]}
           onItemClick={onItemClick}
           disableHitArea
+          experimentalFeatures={{ enableKeyboardClickEvents: true }}
         />,
       );
 
