@@ -88,6 +88,9 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Seitenpanel schließen',
   openSidePanel: 'Seitenpanel öffnen',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12-Stunden (1:00PM)',
   hour24h: '24-Stunden (13:00)',

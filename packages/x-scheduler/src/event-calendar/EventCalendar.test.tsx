@@ -171,7 +171,7 @@ describe('EventCalendar', () => {
 
       // Wait for component to fully render before opening preferences menu
       await waitFor(() =>
-        expect(screen.queryByRole('button', { name: /settings/i })).not.to.equal(null),
+        expect(screen.queryByRole('button', { name: /preferences/i })).not.to.equal(null),
       );
 
       // Hide the weekends
