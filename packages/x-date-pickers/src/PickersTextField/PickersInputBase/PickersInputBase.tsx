@@ -138,6 +138,18 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
             opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
           },
     },
+    {
+      // A start adornment always shrinks the label out of the notch, so the empty format
+      // stays visible and must be dimmed like a placeholder rather than full-strength text.
+      props: { hasStartAdornment: true, isFieldFocused: false, isFieldValueEmpty: true },
+      style: theme.vars
+        ? {
+            opacity: theme.vars.opacity.inputPlaceholder,
+          }
+        : {
+            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
+          },
+    },
   ],
 }));
 

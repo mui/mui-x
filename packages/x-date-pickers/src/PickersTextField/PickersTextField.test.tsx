@@ -143,3 +143,56 @@ describe('<PickersTextField /> - outlined notch', () => {
     expect(window.getComputedStyle(legend).maxWidth).to.equal(COLLAPSED_LEGEND_MAX_WIDTH);
   });
 });
+
+describe('<PickersTextField /> - format placeholder opacity', () => {
+  const { render } = createPickerRenderer();
+
+  const getSectionsOpacity = (root: ParentNode) =>
+    Array.from(root.querySelectorAll('.MuiPickersInputBase-sectionsContainer')).map(
+      (el) => window.getComputedStyle(el).opacity,
+    );
+
+  it('should dim the format placeholder of an empty field with a start adornment, matching a field without one', () => {
+    const { container } = render(
+      <div>
+        <PickersTextField {...STUB_PROPS} />
+        <PickersTextField
+          {...STUB_PROPS}
+          slotProps={{ input: { startAdornment: <span>@</span> } as any }}
+        />
+      </div>,
+    );
+
+    const [reference, adorned] = getSectionsOpacity(container);
+    // The plain empty field renders its format as a dimmed placeholder, neither hidden nor full text.
+    expect(reference).not.to.equal('0');
+    expect(reference).not.to.equal('1');
+    // A start adornment must not promote the placeholder to full-strength text.
+    expect(adorned).to.equal(reference);
+  });
+
+  it('should dim the format placeholder of an empty labelled field with a start adornment', () => {
+    const { container } = render(
+      <div>
+        <PickersTextField {...STUB_PROPS} />
+        <PickersTextField
+          {...STUB_PROPS}
+          label="My label"
+          slotProps={{ input: { startAdornment: <span>@</span> } as any }}
+        />
+      </div>,
+    );
+
+    const [reference, adorned] = getSectionsOpacity(container);
+    expect(reference).not.to.equal('0');
+    expect(reference).not.to.equal('1');
+    expect(adorned).to.equal(reference);
+  });
+
+  it('should keep hiding the format placeholder of an empty labelled field without a start adornment', () => {
+    const { container } = render(<PickersTextField {...STUB_PROPS} label="My label" />);
+
+    const [opacity] = getSectionsOpacity(container);
+    expect(opacity).to.equal('0');
+  });
+});
