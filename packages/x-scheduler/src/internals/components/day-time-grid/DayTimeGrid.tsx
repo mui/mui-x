@@ -26,10 +26,7 @@ import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
-import {
-  EVENT_CALENDAR_CONTAINER_NAME,
-  RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
-} from '../../constants/responsiveTypography';
+import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
 
 const HOUR_HEIGHT = 46;
 // Number of hours displayed in the grid. Defaults to a full day; overridden per render via the
@@ -253,11 +250,10 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   '[data-current] button:hover &': {
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px)`]:
-    {
-      width: 32,
-      height: 32,
-    },
+  [eventCalendarContentCompactQuery]: {
+    width: 32,
+    height: 32,
+  },
 }));
 
 const DayTimeGridBody = styled('div', {

@@ -54,10 +54,16 @@ export const selectorTooltipItemPosition: TooltipItemPositionSelector<'funnel'> 
       const xPosition = createPositionGetter(xAxis.scale, isHorizontal, gap, baseScaleConfig.data);
       const yPosition = createPositionGetter(yAxis.scale, !isHorizontal, gap, baseScaleConfig.data);
 
-      const allY = itemSeries.dataPoints[identifier.dataIndex].map((v) =>
+      const sectionPoints = itemSeries.dataPoints[identifier.dataIndex];
+
+      if (sectionPoints === undefined) {
+        return null;
+      }
+
+      const allY = sectionPoints.map((v) =>
         yPosition(v.y, identifier.dataIndex, v.stackOffset, v.useBandWidth),
       );
-      const allX = itemSeries.dataPoints[identifier.dataIndex].map((v) =>
+      const allX = sectionPoints.map((v) =>
         xPosition(v.x, identifier.dataIndex, v.stackOffset, v.useBandWidth),
       );
 
