@@ -1,6 +1,6 @@
-import { spy } from 'sinon';
-import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { spy } from 'sinon';
 import { expectFieldValue, getCleanedSelectedContent } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
@@ -222,21 +222,24 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    // Luxon doesn't have any day format with a letter suffix
-    it.skipIf(adapter.lib === 'luxon')('should support day with letter suffix', async () => {
-      await testFieldChange({
-        format: adapter.lib === 'date-fns' ? 'do' : 'Do',
-        keyStrokes: [
-          { value: '1', expected: '1st' },
-          { value: '2', expected: '12th' },
-          { value: '2', expected: '2nd' },
-        ],
-      });
-    });
+    // Luxon/Temporal don't provide any day format with letter suffix
+    it.skipIf(adapter.lib === 'luxon' || adapter.lib === 'temporal')(
+      'should support day with letter suffix',
+      async () => {
+        await testFieldChange({
+          format: adapter.lib === 'date-fns' ? 'do' : 'Do',
+          keyStrokes: [
+            { value: '1', expected: '1st' },
+            { value: '2', expected: '12th' },
+            { value: '2', expected: '2nd' },
+          ],
+        });
+      },
+    );
 
     it('should respect leading zeros when shouldRespectLeadingZeros = true', async () => {
       await testFieldChange({
-        format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
+        format: ['luxon', 'date-fns', 'temporal'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: true,
         keyStrokes: [
           { value: '1', expected: '1' },
@@ -248,7 +251,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should not respect leading zeros when shouldRespectLeadingZeros = false', async () => {
       await testFieldChange({
-        format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
+        format: ['luxon', 'date-fns', 'temporal'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: false,
         keyStrokes: [
           { value: '1', expected: '01' },
