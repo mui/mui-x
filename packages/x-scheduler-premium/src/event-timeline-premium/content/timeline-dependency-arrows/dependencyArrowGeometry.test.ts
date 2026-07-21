@@ -464,7 +464,7 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows.map((arrow) => arrow.id)).to.deep.equal(['dep-1']);
     });
 
-    it('should anchor an event rendered in several rows on its first row', () => {
+    it('should render an arrow to every row appearance of the target event', () => {
       const occurrencesB = getOccurrences([eventB]);
 
       const arrows = computeDependencyArrows({
@@ -481,8 +481,35 @@ describe('dependencyArrowGeometry', () => {
         laneMetrics: LANE_METRICS,
       });
 
-      expect(arrows).to.have.length(1);
-      expect(arrows[0].maxRowIndex).to.equal(0);
+      expect(arrows.map((arrow) => arrow.id)).to.deep.equal(['dep-1', 'dep-1']);
+      expect(arrows.map((arrow) => arrow.key)).to.deep.equal(['dep-1:0:0', 'dep-1:0:1']);
+      expect(arrows.map((arrow) => arrow.maxRowIndex)).to.deep.equal([0, 1]);
+    });
+
+    it('should render an arrow for every pair of appearances when both events span several rows', () => {
+      const occurrencesA = getOccurrences([eventA]);
+      const occurrencesB = getOccurrences([eventB]);
+
+      const arrows = computeDependencyArrows({
+        adapter,
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        resources: [
+          { resource: RESOURCE_1, occurrences: [...occurrencesA, ...occurrencesB] },
+          { resource: RESOURCE_2, occurrences: [...occurrencesA, ...occurrencesB] },
+        ],
+        rowPositions: [0, 62],
+        collectionStart,
+        collectionEnd,
+        eventsWidth: EVENTS_WIDTH,
+        laneMetrics: LANE_METRICS,
+      });
+
+      expect(arrows.map((arrow) => arrow.key)).to.deep.equal([
+        'dep-1:0:0',
+        'dep-1:0:1',
+        'dep-1:1:0',
+        'dep-1:1:1',
+      ]);
     });
 
     it('should keep the route inside the events area when an anchor sits at a timeline edge', () => {

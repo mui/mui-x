@@ -158,7 +158,7 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
       </defs>
       {visibleArrows.map((arrow) => (
         <path
-          key={String(arrow.id)}
+          key={arrow.key}
           data-dependency-id={String(arrow.id)}
           d={arrow.d}
           fill="none"

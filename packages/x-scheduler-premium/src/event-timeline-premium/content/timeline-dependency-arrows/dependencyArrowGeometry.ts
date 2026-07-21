@@ -44,6 +44,11 @@ export interface DependencyArrowPoint {
 }
 
 export interface DependencyArrow {
+  /**
+   * Unique key of the arrow: a dependency renders one arrow per pair of row
+   * appearances of its events.
+   */
+  key: string;
   id: SchedulerDependencyId;
   /**
    * The SVG path of the arrow, in absolute row-space pixels (y = 0 is the top of the
@@ -120,13 +125,18 @@ export function computeDependencyArrows(
     endpointIds.add(dependency.target);
   }
 
-  // An event assigned to several resources appears in several rows: anchor it on the
-  // first row in render order.
-  const anchorLookup = new Map<SchedulerEventId, DependencyArrowAnchor>();
+  // An event assigned to several resources appears once in each of its rows: collect
+  // every appearance so each one gets its own arrows.
+  const anchorsLookup = new Map<SchedulerEventId, DependencyArrowAnchor[]>();
   for (let rowIndex = 0; rowIndex < resources.length; rowIndex += 1) {
     for (const occurrence of resources[rowIndex].occurrences) {
-      if (endpointIds.has(occurrence.id) && !anchorLookup.has(occurrence.id)) {
-        anchorLookup.set(occurrence.id, { rowIndex, occurrence });
+      if (endpointIds.has(occurrence.id)) {
+        const anchors = anchorsLookup.get(occurrence.id);
+        if (anchors) {
+          anchors.push({ rowIndex, occurrence });
+        } else {
+          anchorsLookup.set(occurrence.id, [{ rowIndex, occurrence }]);
+        }
       }
     }
   }
@@ -192,21 +202,18 @@ export function computeDependencyArrows(
 
   const detourOffset = laneMetrics.laneMinHeight / 2 + DEPENDENCY_ARROW_DETOUR_CLEARANCE;
 
-  const arrows: DependencyArrow[] = [];
-  for (const dependency of dependencies) {
-    const sourceAnchor = anchorLookup.get(dependency.source);
-    const targetAnchor = anchorLookup.get(dependency.target);
-
-    // An endpoint without an anchor is not rendered in the timeline: its event has no
-    // resource, is outside the collection range, or its row is hidden. The dependency
-    // stays in the data, it just has no arrow.
+  const buildArrow = (
+    dependency: SchedulerDependency,
+    sourceAnchor: DependencyArrowAnchor,
+    targetAnchor: DependencyArrowAnchor,
+  ): DependencyArrow | null => {
+    // A row without a position is not laid out yet (see the transient resources /
+    // rowsMeta desync): skip the pair for this frame.
     if (
-      sourceAnchor == null ||
-      targetAnchor == null ||
       rowPositions[sourceAnchor.rowIndex] == null ||
       rowPositions[targetAnchor.rowIndex] == null
     ) {
-      continue;
+      return null;
     }
 
     const minRowIndex = Math.min(sourceAnchor.rowIndex, targetAnchor.rowIndex);
@@ -258,14 +265,39 @@ export function computeDependencyArrows(
       maxX = Math.max(maxX, point.x);
     }
 
-    arrows.push({
+    return {
+      key: `${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
       id: dependency.id,
       d: buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS),
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,
       minRowIndex,
       maxRowIndex,
-    });
+    };
+  };
+
+  const arrows: DependencyArrow[] = [];
+  for (const dependency of dependencies) {
+    const sourceAnchors = anchorsLookup.get(dependency.source);
+    const targetAnchors = anchorsLookup.get(dependency.target);
+
+    // An endpoint without an anchor is not rendered in the timeline: its event has no
+    // resource or is outside the collection range. The dependency stays in the data,
+    // it just has no arrow.
+    if (sourceAnchors == null || targetAnchors == null) {
+      continue;
+    }
+
+    // One arrow per pair of appearances: an event assigned to several resources shows
+    // the dependency in each of its rows.
+    for (const sourceAnchor of sourceAnchors) {
+      for (const targetAnchor of targetAnchors) {
+        const arrow = buildArrow(dependency, sourceAnchor, targetAnchor);
+        if (arrow != null) {
+          arrows.push(arrow);
+        }
+      }
+    }
   }
 
   return arrows;
