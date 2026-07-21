@@ -842,7 +842,7 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     expectInnerViewportCovered();
   });
 
-  it('keeps the reserved scrollbar lanes clear of content', async () => {
+  it('leaves the reserved scrollbar lanes unstyled but scrollable', async () => {
     await renderGrid({ scrollbarSize: SCROLLBAR_SIZE });
 
     const container = rect('container');
@@ -852,10 +852,17 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     // by its column buffer, and the lane is reserved inside the scrollport.
     expect(rect('window').right).to.be.greaterThan(container.right - SCROLLBAR_SIZE);
 
-    // The two regions no widget covers — the lane beside the top container, and the
-    // corner between the widgets — must not show anything from the scroller. Hit
-    // testing follows the clip, so a point in either lands outside it.
-    const inLane = document.elementFromPoint(
+    // The layout emits neither a clip nor a mask: what paints in the lanes is the
+    // consumer's to style. A clip in particular would remove the lanes from
+    // hit-testing and make them wheel-dead.
+    const style = getComputedStyle(scroller);
+    expect(style.clipPath).to.equal('none');
+    expect(style.maskImage).to.equal('none');
+
+    // The behavioral floor: the lanes stay inside the scroller's hit-test region,
+    // so wheel input over the strip beside the top container and over the corner
+    // scrolls the grid (scroll targeting follows the scrollport, which spans them).
+    const inStrip = document.elementFromPoint(
       container.right - SCROLLBAR_SIZE / 2,
       container.top + HEADER_HEIGHT / 2,
     );
@@ -863,17 +870,20 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       container.right - SCROLLBAR_SIZE / 2,
       container.bottom - SCROLLBAR_SIZE / 2,
     );
-    expect(scroller.contains(inLane)).to.equal(false);
-    expect(scroller.contains(inCorner)).to.equal(false);
+    expect(scroller.contains(inStrip)).to.equal(true);
+    expect(scroller.contains(inCorner)).to.equal(true);
   });
 
-  it('leaves the scroller unclipped when no scrollbar lane is reserved', async () => {
-    // Overlay scrollbars measure 0: no lane is reserved, the widgets float above the
-    // content, and the rows legitimately reach the container edge. Clipping anything
-    // here would cut off content that is meant to be visible.
-    await renderGrid({ scrollbarSize: 0 });
+  it('keeps the scroller and virtual scrollbar vertical scroll ranges in sync', async () => {
+    // 1:1 position mirroring requires the widget's scroll range to match the
+    // scroller's exactly, with the lanes reserved (classic scrollbars forced).
+    await renderGrid({ scrollbarSize: SCROLLBAR_SIZE });
+    const scroller = screen.getByTestId('scroller');
+    const scrollbar = screen.getByTestId('scrollbar-vertical');
 
-    expect(getComputedStyle(screen.getByTestId('scroller')).clipPath).to.equal('none');
+    const scrollerRange = scroller.scrollHeight - scroller.clientHeight;
+    expect(scrollerRange).to.be.greaterThan(0);
+    expect(scrollerRange).to.equal(scrollbar.scrollHeight - scrollbar.clientHeight);
   });
 
   it('keeps the scroller and virtual scrollbar horizontal scroll ranges in sync near the overflow threshold', async () => {

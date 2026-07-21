@@ -57,6 +57,18 @@ const pinnedCellStyle: React.CSSProperties = {
   background: '#f5f5f5',
 };
 
+/* Covers the scrollbar lane in the top band — the only region the lane mask keeps
+ * visible at full width (see `scrollerStyle`) — where unpinned cells passing
+ * beneath would otherwise show through the strip beyond the pinned-right column.
+ * Sticky like the pinned cells, so it holds the scrollport edge; collapses with
+ * the lane on overlay-scrollbar hosts. */
+const laneFillerStyle: React.CSSProperties = {
+  flex: '0 0 var(--lane-right, 0px)',
+  position: 'sticky',
+  right: 0,
+  zIndex: 1,
+};
+
 const rowStyle: React.CSSProperties = {
   position: 'relative',
   display: 'flex',
@@ -134,8 +146,9 @@ const Row = React.memo(function Row(props: {
   lastColumnIndex: number;
   background?: string;
   isLastRow?: boolean;
+  laneFiller?: boolean;
 }) {
-  const { id, firstColumnIndex, lastColumnIndex, background, isLastRow } = props;
+  const { id, firstColumnIndex, lastColumnIndex, background, isLastRow, laneFiller } = props;
 
   const cells = [];
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
@@ -156,6 +169,7 @@ const Row = React.memo(function Row(props: {
       <div style={{ ...pinnedStyle, ...lastColumnStyle, right: 'var(--pinned-right)' }}>
         {id} × {COLUMN_COUNT - 1}
       </div>
+      {laneFiller ? <div style={{ ...laneFillerStyle, background }} /> : null}
     </div>
   );
 });
@@ -182,6 +196,7 @@ const HeaderCells = React.memo(function HeaderCells(props: {
       <div style={{ ...headerPinnedStyle, ...lastColumnStyle, right: 'var(--pinned-right)' }}>
         {columns[COLUMN_COUNT - 1].field}
       </div>
+      <div style={{ ...laneFillerStyle, background: '#e8e8e8' }} />
     </div>
   );
 });
@@ -244,6 +259,7 @@ function Grid() {
         lastColumnIndex={params.lastColumnIndex}
         background={typeof params.id === 'string' ? '#fff8e0' : undefined}
         isLastRow={params.id === 'pinned-bottom'}
+        laneFiller={params.id === 'pinned-top'}
       />
     ),
   });
@@ -294,10 +310,26 @@ function Grid() {
     [containerProps.style, dimensions],
   );
 
+  const scrollerStyle = React.useMemo(() => {
+    const laneRight = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+    const laneBottom = dimensions.hasScrollX ? dimensions.scrollbarSize : 0;
+    if (laneRight === 0 && laneBottom === 0) {
+      return scrollerProps.style;
+    }
+    const top = dimensions.topContainerHeight;
+    return {
+      ...scrollerProps.style,
+      maskImage: 'linear-gradient(#000, #000), linear-gradient(#000, #000)',
+      maskSize: `100% ${top}px, calc(100% - ${laneRight}px) calc(100% - ${top + laneBottom}px)`,
+      maskPosition: `0 0, 0 ${top}px`,
+      maskRepeat: 'no-repeat, no-repeat',
+    } as React.CSSProperties;
+  }, [scrollerProps.style, dimensions]);
+
   return (
     <VirtualizerContext.Provider value={virtualizer}>
       <Box {...containerProps} style={containerStyle} sx={containerSx}>
-        <Box className="Grid--scroller" {...scrollerProps} sx={scrollerSx}>
+        <Box className="Grid--scroller" {...scrollerProps} style={scrollerStyle} sx={scrollerSx}>
           <div className="Grid--content" {...contentProps}>
             <div className="Grid--topContainer" {...topContainerProps}>
               <div {...spacerLeftProps} />

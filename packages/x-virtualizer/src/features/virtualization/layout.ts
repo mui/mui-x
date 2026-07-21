@@ -688,45 +688,32 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
     scrollerProps: createSelectorMemoized(
       Virtualization.selectors.context,
       Dimensions.selectors.autoHeight,
-      Dimensions.selectors.dimensions,
-      (context, autoHeight, dimensions) => {
-        const verticalLane = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
-        const horizontalLane = dimensions.hasScrollX ? dimensions.scrollbarSize : 0;
-        return {
-          ref: context.scrollerRef,
-          style: {
-            width: '100%',
-            height: '100%',
-            overflow: autoHeight ? 'hidden' : 'auto',
-            position: 'relative',
-            // Native scrollbars are hidden, the virtual scrollbar widgets replace them.
-            scrollbarWidth: 'none',
-            // The spacer heights change on each render context update; native scroll
-            // anchoring would fight those updates by adjusting the scroll position.
-            overflowAnchor: 'none',
-            // The scrollbar lanes are reserved inside the scrollable area (see
-            // `contentProps`), so the scrollport spans them and the rendered window —
-            // wider than the viewport by its column buffer — paints into them. The
-            // widgets hide most of that, but they stop short of the lane beside the top
-            // container and of the corner between them, where the rows would show
-            // through. Clipping the scrollport back to the visible area covers every
-            // such region at once and leaves the lanes showing the container, the way
-            // they looked when each sticky box clipped itself to the inner viewport.
-            // Trade-off: the clipped strips stop taking pointer events — the widget
-            // covers the vertical lane, and the corner is inert like a native one.
-            // Omitted when neither lane is reserved (overlay scrollbars measure 0), so
-            // the scroller doesn't become a stacking context for nothing.
-            clipPath:
-              verticalLane || horizontalLane
-                ? `inset(0 ${verticalLane}px ${horizontalLane}px 0)`
-                : undefined,
-          } as React.CSSProperties,
-          role: 'presentation',
-          // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
-          // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-          tabIndex: platform.engine.gecko ? -1 : undefined,
-        };
-      },
+      (context, autoHeight) => ({
+        ref: context.scrollerRef,
+        style: {
+          width: '100%',
+          height: '100%',
+          overflow: autoHeight ? 'hidden' : 'auto',
+          position: 'relative',
+          // Native scrollbars are hidden, the virtual scrollbar widgets replace them.
+          scrollbarWidth: 'none',
+          // The spacer heights change on each render context update; native scroll
+          // anchoring would fight those updates by adjusting the scroll position.
+          overflowAnchor: 'none',
+          // The scrollbar lanes reserved inside the scrollable area (see
+          // `contentProps`) are part of the scrollport, and the rendered window —
+          // wider than the viewport by its column buffer — paints into them beneath
+          // the widgets. Hiding that overhang is the consumer's concern (a mask, or
+          // filler elements over the lanes), with one constraint: never `clip-path`
+          // the scroller. A clipped-out lane is removed from hit-testing, so wheel
+          // input over it stops scrolling; a mask hides the paint but keeps the
+          // lane scrollable.
+        } as React.CSSProperties,
+        role: 'presentation',
+        // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
+        // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
+        tabIndex: platform.engine.gecko ? -1 : undefined,
+      }),
     ),
 
     contentProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
