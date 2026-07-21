@@ -21,7 +21,7 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.2.0
-  '@mui/internal-test-utils': 2.0.18-canary.30
+  '@mui/internal-test-utils': 2.0.18-canary.31
   '@mui/internal-core-docs': 9.1.2-canary.2
   '@mui/material': 9.2.0
   '@mui/stylis-plugin-rtl': 9.1.1
@@ -59,7 +59,7 @@ catalog:
   dayjs: ^1.11.21
   es-toolkit: ^1.49.0
   execa: 9.6.1
-  jscodeshift: 17.3.0
+  jscodeshift: 17.4.0
   jsdom: 29.1.1
   luxon: ^3.7.2
   moment: ^2.30.1
