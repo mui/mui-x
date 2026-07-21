@@ -89,7 +89,7 @@
     "stylis": "catalog:",
     "topojson-client": "^3.1.0",
     "us-atlas": "^3.0.1",
-    "webpack-bundle-analyzer": "^5.3.0",
+    "webpack-bundle-analyzer": "^5.3.1",
     "visionscarto-world-atlas": "^1.0.0"
   },
   "devDependencies": {
