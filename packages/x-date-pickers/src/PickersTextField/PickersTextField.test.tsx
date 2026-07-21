@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
-import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import { PickersTextField, pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { createPickerRenderer } from 'test/utils/pickers';
 
 const STUB_PROPS = {
@@ -144,11 +144,21 @@ describe('<PickersTextField /> - outlined notch', () => {
   });
 });
 
+describe('pickersInputBaseClasses', () => {
+  it('should expose the `sectionsContainer` and `readOnly` class keys declared in its interface', () => {
+    expect(pickersInputBaseClasses.sectionsContainer).to.equal(
+      'MuiPickersInputBase-sectionsContainer',
+    );
+    // `readOnly` is a global state class.
+    expect(pickersInputBaseClasses.readOnly).to.equal('Mui-readOnly');
+  });
+});
+
 describe('<PickersTextField /> - format placeholder opacity', () => {
   const { render } = createPickerRenderer();
 
   const getSectionsOpacity = (root: ParentNode) =>
-    Array.from(root.querySelectorAll('.MuiPickersInputBase-sectionsContainer')).map(
+    Array.from(root.querySelectorAll(`.${pickersInputBaseClasses.sectionsContainer}`)).map(
       (el) => window.getComputedStyle(el).opacity,
     );
 
