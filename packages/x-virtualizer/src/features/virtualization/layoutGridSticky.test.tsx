@@ -717,14 +717,19 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     };
     const before = localOffsets();
 
-    // Consumes more than half of the leading buffer: triggers a context update while
-    // staying inside the same anchor block.
+    // Consume 60% of the rendered window: always more than half the leading buffer, so
+    // it triggers a context update, and always short of the whole window, so rows carry
+    // over to compare. Derived from the window rather than a fixed row count, which
+    // would stop triggering an update the next time the buffer grows.
+    const renderedRows = [...before.keys()].map(Number);
+    const advanceBy = Math.ceil(renderedRows.length * 0.6);
+    const nextFirstRow = Math.min(...renderedRows) + advanceBy;
     await act(async () => {
-      scroller.scrollTop = 50 * ROW_HEIGHT;
+      scroller.scrollTop = nextFirstRow * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
     await waitFor(() => {
-      expect(getWindowRowIds()).to.include(50);
+      expect(getWindowRowIds()).to.include(nextFirstRow);
     });
     const after = localOffsets();
 
