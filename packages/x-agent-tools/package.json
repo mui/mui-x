@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-agent-tools",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "MUI Team",
   "description": "Shared tooling behind MUI's agent integrations (MCP server, CLI, ACP).",
   "license": "MIT",
@@ -27,7 +27,7 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "eventsource-parser": "^3.1.0",
-    "p-queue": "^8.1.1"
+    "p-queue": "^9.3.1"
   },
   "peerDependencies": {
     "zod": "^3.25.65 || ^4.0.0"

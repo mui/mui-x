@@ -88,6 +88,9 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Cerrar panel lateral',
   openSidePanel: 'Abrir panel lateral',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12 horas (1:00PM)',
   hour24h: '24 horas (13:00)',
