@@ -14,7 +14,7 @@ export default function Birthday() {
           label="Enter your birthday"
           clearable
           fullWidth
-          value={dayjs('2019-07-11T15:30')}
+          defaultValue={dayjs('2019-07-11T15:30')}
           variant="filled"
           slotProps={{
             textField: {

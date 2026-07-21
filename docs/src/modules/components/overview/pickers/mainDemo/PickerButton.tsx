@@ -9,6 +9,8 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
+  // `slots`, `slotProps` and `inputRef` target the default text field, not a `<button>`.
+  const { slots, slotProps, inputRef, ...buttonProps } = forwardedProps;
 
   const pickerContext = usePickerContext();
 
@@ -27,7 +29,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
 
   return (
     <Button
-      {...forwardedProps}
+      {...buttonProps}
       variant="outlined"
       size="small"
       startIcon={<CalendarTodayRoundedIcon fontSize="small" />}
