@@ -350,4 +350,9 @@ You can combine it with the [`setEditedItem()`](/x/react-tree-view/rich-tree-vie
 Items added with `addItems()` are only stored in the internal state of the component.
 They are discarded when the `items` prop changes.
 You can use the `getItemTree()` API method to retrieve the current item tree and sync it with your data source.
+
+The same applies to the other updates made from inside the component—for example, the labels updated with [label editing](/x/react-tree-view/rich-tree-view/editing/) are only stored in the internal state.
+Use the `onItemLabelChange()` callback to persist them alongside the items you added.
+
+When using [lazy loading](/x/react-tree-view/rich-tree-view/lazy-loading/), the added items must also be [written to the data source cache](/x/react-tree-view/rich-tree-view/lazy-loading/#lazy-loading-and-adding-items).
 :::

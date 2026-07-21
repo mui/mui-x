@@ -75,6 +75,16 @@ The demo below shows you how to update the cache once a label is changed so the 
 
 {{"demo": "LazyLoadingAndLabelEditing.js"}}
 
+## Lazy loading and adding items
+
+Items added with the [`addItems()`](/x/react-tree-view/rich-tree-view/items/#imperatively-add-items) API method are only stored in the internal state of the component and are not added to the `dataSourceCache`.
+Collapsing and expanding their parent again replaces them with the response of the server.
+
+The demo below shows you how to update the cache once an item is added so the changes are reflected in the tree.
+Items can only be added to a parent whose children are already loaded, because the fetch triggered when expanding a parent overrides the items added to it.
+
+{{"demo": "LazyLoadingAndAddingItems.js"}}
+
 ## Imperative API
 
 To use the `apiRef` object, you need to initialize it using the `useRichTreeViewProApiRef()` hook as follows:
