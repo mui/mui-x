@@ -158,6 +158,18 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
     const parentDepth =
       parentId == null ? -1 : itemsSelectors.itemDepth(this.store.state, parentId);
 
+    // When the items are lazy loaded, an item can be expandable even if its children are not loaded yet.
+    const dataSource = (
+      this.store.parameters as { dataSource?: { getChildrenCount: (item: R) => number } }
+    ).dataSource;
+    const isItemExpandable = (item: R, children: R[] | undefined) => {
+      if (children != null && children.length > 0) {
+        return true;
+      }
+
+      return dataSource == null ? false : dataSource.getChildrenCount(item) !== 0;
+    };
+
     const {
       itemMetaLookup: metaLookup,
       itemModelLookup: modelLookup,
@@ -168,7 +180,7 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       items,
       parentId,
       depth: parentDepth + 1,
-      isItemExpandable: (item, children) => !!children && children.length > 0,
+      isItemExpandable,
       existingItemMetaLookup: this.store.state.itemMetaLookup,
     });
 
