@@ -152,6 +152,20 @@ describe('dependencyArrowGeometry', () => {
       ]);
     });
 
+    it('should route the S detour when the target starts too close after the source ends', () => {
+      // forwardX = 5: forward, but the stub and the entry clearance do not fit.
+      const [points] = buildDependencyArrowRoutes({ x: 50, y: 5 }, { x: 55, y: 40 }, DETOUR_OFFSET);
+
+      expect(points).to.deep.equal([
+        { x: 50, y: 5 },
+        { x: 58, y: 5 },
+        { x: 58, y: 5 + DETOUR_OFFSET },
+        { x: 43, y: 5 + DETOUR_OFFSET },
+        { x: 43, y: 40 },
+        { x: 55, y: 40 },
+      ]);
+    });
+
     it('should render a short straight arrow overlapping the predecessor between two adjacent events', () => {
       const [points] = buildDependencyArrowRoutes({ x: 50, y: 5 }, { x: 50, y: 5 }, DETOUR_OFFSET);
 
@@ -170,6 +184,20 @@ describe('dependencyArrowGeometry', () => {
         { x: 38, y: 5 },
         { x: 38, y: 40 },
         { x: 50, y: 40 },
+      ]);
+    });
+
+    it('should return a single elbow candidate when both turns collapse to the same x', () => {
+      // forwardX = 20: the early turn (source + stub) and the late turn (target −
+      // clearance) land on the same vertical.
+      const routes = buildDependencyArrowRoutes({ x: 10, y: 5 }, { x: 30, y: 40 }, DETOUR_OFFSET);
+
+      expect(routes).to.have.length(1);
+      expect(routes[0]).to.deep.equal([
+        { x: 10, y: 5 },
+        { x: 18, y: 5 },
+        { x: 18, y: 40 },
+        { x: 30, y: 40 },
       ]);
     });
   });
@@ -358,6 +386,21 @@ describe('dependencyArrowGeometry', () => {
 
       expect(arrows).to.have.length(1);
       expect(arrows[0].maxRowIndex).to.equal(0);
+    });
+
+    it('should return no arrow when the events area has no width', () => {
+      const arrows = computeDependencyArrows({
+        adapter,
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+        rowPositions: [0],
+        collectionStart,
+        collectionEnd,
+        eventsWidth: 0,
+        laneMetrics: LANE_METRICS,
+      });
+
+      expect(arrows).to.deep.equal([]);
     });
 
     it('should return no arrow when there is no dependency', () => {

@@ -30,6 +30,10 @@ const DependencyArrowsSvg = styled('svg', {
   top: 0,
   left: 'var(--title-column-width)',
   pointerEvents: 'none',
+  // The entry and exit stubs reach a few px outside the viewBox when an anchor sits at
+  // the timeline edge; the SVG root clips them by default. The pinned title column and
+  // the header row paint above the overlay, so the spill never shows over them.
+  overflow: 'visible',
   // Same layer as the current time indicator: above the events cells, below the pinned
   // title column, which covers the arrows on horizontal scroll.
   zIndex: 2,

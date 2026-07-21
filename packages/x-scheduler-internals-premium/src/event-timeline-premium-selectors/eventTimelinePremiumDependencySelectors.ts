@@ -1,4 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -26,8 +27,6 @@ function groupByEventId(
   }
   return groups;
 }
-
-const EMPTY_TITLES: readonly string[] = [];
 
 const activeModelListSelector = createSelectorMemoized(
   (state: State) => state.dependencyModelLookup,
@@ -87,6 +86,7 @@ export const eventTimelinePremiumDependencySelectors = {
   activeSourceTitlesByTarget: activeSourceTitlesByTargetSelector,
   activeSourceTitlesForTarget: createSelector(
     activeSourceTitlesByTargetSelector,
-    (titlesByTarget, eventId: SchedulerEventId) => titlesByTarget.get(eventId) ?? EMPTY_TITLES,
+    (titlesByTarget, eventId: SchedulerEventId): readonly string[] =>
+      titlesByTarget.get(eventId) ?? EMPTY_ARRAY,
   ),
 };

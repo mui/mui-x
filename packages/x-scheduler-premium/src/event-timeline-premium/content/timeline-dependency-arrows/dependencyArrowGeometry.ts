@@ -17,11 +17,11 @@ import type { EventsCellLaneMetrics } from '../rowGeometry';
  * Minimum horizontal segment when leaving the predecessor's end edge and when
  * entering the successor's start edge.
  */
-export const DEPENDENCY_ARROW_STUB = 8;
+const DEPENDENCY_ARROW_STUB = 8;
 /**
  * Radius used to soften the corners of the orthogonal route.
  */
-export const DEPENDENCY_ARROW_CORNER_RADIUS = 4;
+const DEPENDENCY_ARROW_CORNER_RADIUS = 4;
 /**
  * Size of the arrowhead marker at the successor's start edge.
  */
@@ -36,7 +36,7 @@ const DEPENDENCY_ARROW_TARGET_CLEARANCE =
  * Vertical clearance between the edge of the source event and the S route detour that
  * hugs it.
  */
-export const DEPENDENCY_ARROW_DETOUR_CLEARANCE = 6;
+const DEPENDENCY_ARROW_DETOUR_CLEARANCE = 6;
 
 export interface DependencyArrowPoint {
   x: number;

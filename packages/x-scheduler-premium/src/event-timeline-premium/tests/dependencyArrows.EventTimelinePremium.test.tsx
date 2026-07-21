@@ -269,7 +269,8 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
     });
 
-    const initialD = getArrowPaths()[0].getAttribute('d')!;
+    const straightPath = /^M ([\d.]+) ([\d.]+) L ([\d.]+) ([\d.]+)$/;
+    const initialMatch = getArrowPaths()[0].getAttribute('d')!.match(straightPath)!;
 
     act(() => {
       store.updateEvent({
@@ -279,8 +280,12 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       });
     });
 
-    const updatedD = getArrowPaths()[0].getAttribute('d')!;
-    expect(updatedD).not.to.equal(initialD);
+    const updatedMatch = getArrowPaths()[0].getAttribute('d')!.match(straightPath)!;
+    // The arrow's start follows the predecessor's end edge, moved 30 minutes later;
+    // the successor did not move, so the entry point and the height stay put.
+    expect(parseFloat(updatedMatch[1])).to.be.greaterThan(parseFloat(initialMatch[1]));
+    expect(updatedMatch[3]).to.equal(initialMatch[3]);
+    expect(updatedMatch[2]).to.equal(initialMatch[2]);
   });
 
   it('should remove the arrow when the dependency is deleted', () => {
@@ -297,6 +302,18 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
 
     expect(getArrowPaths()).to.have.length(0);
     expect(document.querySelector('[data-dependency-arrows]')).to.equal(null);
+  });
+
+  it('should let the arrows paint outside the overlay near the timeline edges', () => {
+    renderTimeline({
+      events: [eventA, eventB],
+      dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+    });
+
+    // The entry and exit stubs reach outside the viewBox at the timeline edges; the
+    // SVG root's default `overflow: hidden` would clip them.
+    const svg = document.querySelector('[data-dependency-arrows]')!;
+    expect(getComputedStyle(svg).overflow).to.equal('visible');
   });
 
   it('should hide the arrows overlay from assistive technology', () => {
