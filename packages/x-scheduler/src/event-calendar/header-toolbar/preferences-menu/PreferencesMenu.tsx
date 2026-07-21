@@ -2,53 +2,17 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { useStore } from '@base-ui/utils/store';
-import CheckIcon from '@mui/icons-material/Check';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import ListSubheader from '@mui/material/ListSubheader';
-import type {
-  CalendarView,
-  EventCalendarPreferences,
-  EventCalendarPreferencesMenuConfig,
-} from '@mui/x-scheduler-internals/models';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import {
-  eventCalendarPreferenceSelectors,
-  eventCalendarViewSelectors,
-} from '@mui/x-scheduler-internals/event-calendar-selectors';
 import clsx from 'clsx';
 import { useEventCalendarStyledContext } from '../../EventCalendarStyledContext';
+import { usePreferencesMenuItems } from './PreferencesMenuItems';
 
 const PreferencesMenuRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'PreferencesMenu',
 })({});
-
-const PreferencesMenuListItemIcon = styled(ListItemIcon, {
-  name: 'MuiEventCalendar',
-  slot: 'PreferencesMenuListItemIcon',
-})({
-  justifyContent: 'flex-end',
-  '&[data-checked="false"]': {
-    visibility: 'hidden',
-  },
-});
-
-const PreferencesMenuListSubheader = styled(ListSubheader, {
-  name: 'MuiEventCalendar',
-  slot: 'PreferencesMenuListSubheader',
-})(({ theme }) => ({
-  ...theme.typography.button,
-  color: (theme.vars || theme).palette.text.disabled,
-  paddingBottom: theme.spacing(1),
-  backgroundColor: 'transparent',
-}));
 
 export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   props: React.HTMLAttributes<HTMLDivElement>,
@@ -56,33 +20,18 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
 ) {
   // Context hooks
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
-  const store = useEventCalendarStoreContext();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-  // Selector hooks
-  const currentView = useStore(store, eventCalendarViewSelectors.view);
-  const preferences = useStore(store, eventCalendarPreferenceSelectors.all);
-  const preferencesMenuConfig = useStore(store, eventCalendarPreferenceSelectors.menuConfig);
+  // Model hooks
+  const { hasAnyOption, items } = usePreferencesMenuItems();
 
-  // State hooks (must come before any early returns)
+  // State hooks
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
-
-  const handleToggle = (key: keyof EventCalendarPreferences, checked: boolean, event: Event) => {
-    store.setPreferences({ [key]: checked }, event);
-  };
-
-  const handleTimeFormatChange = (value: '12' | '24', event: Event) => {
-    store.setPreferences({ ampm: value === '12' }, event);
-  };
-
-  const handleWeekStartsOnChange = (value: 0 | 1 | 6, event: Event) => {
-    store.setPreferences({ weekStartsOn: value }, event);
-  };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -92,68 +41,8 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
     setAnchorEl(null);
   };
 
-  // Early return if config is false
-  if (preferencesMenuConfig === false) {
-    return null;
-  }
-
-  const preferenceOptions: {
-    configKey: keyof EventCalendarPreferencesMenuConfig;
-    preferenceKey: keyof EventCalendarPreferences;
-    label: string;
-  }[] = [
-    {
-      configKey: 'toggleWeekendVisibility',
-      preferenceKey: 'showWeekends',
-      label: localeText.showWeekends,
-    },
-    {
-      configKey: 'toggleWeekNumberVisibility',
-      preferenceKey: 'showWeekNumber',
-      label: localeText.showWeekNumber,
-    },
-  ];
-
-  const viewSpecificPreferenceOptions: {
-    configKey: keyof EventCalendarPreferencesMenuConfig;
-    preferenceKey: keyof EventCalendarPreferences;
-    view: CalendarView;
-    label: string;
-  }[] = [
-    {
-      configKey: 'toggleEmptyDaysInAgenda',
-      preferenceKey: 'showEmptyDaysInAgenda',
-      view: 'agenda',
-      label: localeText.showEmptyDaysInAgenda,
-    },
-  ];
-
-  const visibleOptions = preferenceOptions.filter(
-    (option) => preferencesMenuConfig?.[option.configKey] !== false,
-  );
-
-  const visibleViewSpecificOptions = viewSpecificPreferenceOptions.filter(
-    (option) => preferencesMenuConfig?.[option.configKey] !== false && option.view === currentView,
-  );
-
-  const showSpecificOptions = visibleViewSpecificOptions.length > 0;
-  const showTimeFormatSubmenu = preferencesMenuConfig?.toggleAmpm !== false;
-  const showWeekStartsOnSubmenu = preferencesMenuConfig?.toggleWeekStartsOn !== false;
-
-  const showDividerBeforeTimeFormat = showTimeFormatSubmenu && visibleOptions.length > 0;
-  const showDividerBeforeWeekStartsOn =
-    showWeekStartsOnSubmenu && (visibleOptions.length > 0 || showTimeFormatSubmenu);
-  const showDividerBeforeSpecificOptions =
-    showSpecificOptions &&
-    (visibleOptions.length > 0 || showTimeFormatSubmenu || showWeekStartsOnSubmenu);
-
-  // Early return if no menu items to show
-  if (
-    !showTimeFormatSubmenu &&
-    !showWeekStartsOnSubmenu &&
-    visibleOptions.length === 0 &&
-    !showSpecificOptions
-  ) {
+  // Early return if there is nothing to show
+  if (!hasAnyOption) {
     return null;
   }
 
@@ -187,141 +76,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
           paper: { sx: { minWidth: 220 } },
         }}
       >
-        {visibleOptions.map((option) => (
-          <MenuItem
-            className={classes.preferencesMenuItem}
-            key={option.configKey}
-            role="menuitemcheckbox"
-            aria-checked={!!preferences[option.preferenceKey]}
-            onClick={(event) => {
-              handleToggle(
-                option.preferenceKey,
-                !preferences[option.preferenceKey],
-                event.nativeEvent,
-              );
-            }}
-          >
-            <ListItemText className={classes.preferencesMenuListItemText}>
-              {option.label}
-            </ListItemText>
-            <PreferencesMenuListItemIcon
-              className={classes.preferencesMenuListItemIcon}
-              data-checked={!!preferences[option.preferenceKey]}
-            >
-              <CheckIcon fontSize="small" />
-            </PreferencesMenuListItemIcon>
-          </MenuItem>
-        ))}
-        {showDividerBeforeTimeFormat && <Divider className={classes.preferencesMenuDivider} />}
-        {showTimeFormatSubmenu && (
-          <PreferencesMenuListSubheader className={classes.preferencesMenuListSubheader}>
-            {localeText.timeFormat}
-          </PreferencesMenuListSubheader>
-        )}
-        {showTimeFormatSubmenu && (
-          <MenuItem
-            className={classes.preferencesMenuItem}
-            role="menuitemradio"
-            aria-checked={!!preferences.ampm}
-            onClick={(event) => {
-              handleTimeFormatChange('12', event.nativeEvent);
-            }}
-          >
-            <ListItemText className={classes.preferencesMenuListItemText}>
-              {localeText.amPm12h}
-            </ListItemText>
-            <PreferencesMenuListItemIcon
-              className={classes.preferencesMenuListItemIcon}
-              data-checked={!!preferences.ampm}
-            >
-              <CheckIcon fontSize="small" />
-            </PreferencesMenuListItemIcon>
-          </MenuItem>
-        )}
-        {showTimeFormatSubmenu && (
-          <MenuItem
-            className={classes.preferencesMenuItem}
-            role="menuitemradio"
-            aria-checked={!preferences.ampm}
-            onClick={(event) => {
-              handleTimeFormatChange('24', event.nativeEvent);
-            }}
-          >
-            <ListItemText className={classes.preferencesMenuListItemText}>
-              {localeText.hour24h}
-            </ListItemText>
-            <PreferencesMenuListItemIcon
-              className={classes.preferencesMenuListItemIcon}
-              data-checked={!preferences.ampm}
-            >
-              <CheckIcon fontSize="small" />
-            </PreferencesMenuListItemIcon>
-          </MenuItem>
-        )}
-        {showDividerBeforeWeekStartsOn && <Divider className={classes.preferencesMenuDivider} />}
-        {showWeekStartsOnSubmenu && (
-          <PreferencesMenuListSubheader className={classes.preferencesMenuListSubheader}>
-            {localeText.startWeekOn}
-          </PreferencesMenuListSubheader>
-        )}
-        {showWeekStartsOnSubmenu &&
-          (
-            [
-              { value: 0, label: localeText.weekdaySunday },
-              { value: 1, label: localeText.weekdayMonday },
-              { value: 6, label: localeText.weekdaySaturday },
-            ] as const
-          ).map(({ value, label }) => (
-            <MenuItem
-              className={classes.preferencesMenuItem}
-              key={value}
-              role="menuitemradio"
-              aria-checked={preferences.weekStartsOn === value}
-              onClick={(event) => {
-                handleWeekStartsOnChange(value, event.nativeEvent);
-              }}
-            >
-              <ListItemText className={classes.preferencesMenuListItemText}>{label}</ListItemText>
-              <PreferencesMenuListItemIcon
-                className={classes.preferencesMenuListItemIcon}
-                data-checked={preferences.weekStartsOn === value}
-              >
-                <CheckIcon fontSize="small" />
-              </PreferencesMenuListItemIcon>
-            </MenuItem>
-          ))}
-        {showDividerBeforeSpecificOptions && <Divider className={classes.preferencesMenuDivider} />}
-        {showSpecificOptions && (
-          <PreferencesMenuListSubheader className={classes.preferencesMenuListSubheader}>
-            {localeText.viewSpecificOptions(currentView)}
-          </PreferencesMenuListSubheader>
-        )}
-        {showSpecificOptions &&
-          visibleViewSpecificOptions.map((option) => (
-            <MenuItem
-              className={classes.preferencesMenuItem}
-              key={option.configKey}
-              role="menuitemcheckbox"
-              aria-checked={!!preferences[option.preferenceKey]}
-              onClick={(event) => {
-                handleToggle(
-                  option.preferenceKey,
-                  !preferences[option.preferenceKey],
-                  event.nativeEvent,
-                );
-              }}
-            >
-              <ListItemText className={classes.preferencesMenuListItemText}>
-                {option.label}
-              </ListItemText>
-              <PreferencesMenuListItemIcon
-                className={classes.preferencesMenuListItemIcon}
-                data-checked={!!preferences[option.preferenceKey]}
-              >
-                <CheckIcon fontSize="small" />
-              </PreferencesMenuListItemIcon>
-            </MenuItem>
-          ))}
+        {items}
       </Menu>
     </PreferencesMenuRoot>
   );
