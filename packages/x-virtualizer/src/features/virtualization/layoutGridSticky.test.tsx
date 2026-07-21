@@ -674,8 +674,8 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     const idsAfterDirectionChange = getWindowRowIds();
 
-    // 5 more rows: far above the old one-row threshold, but well within half of the
-    // 15-row leading buffer — the context must not change.
+    // 5 more rows: past the row-crossing threshold the non-sticky path updates on, but
+    // well within half of the 15-row leading buffer — the context must not change.
     act(() => {
       scroller.scrollTop = 6 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
@@ -837,7 +837,7 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     expect(maxPad).to.be.greaterThan(ANCHOR_BLOCK);
     // ...but never past the cap.
     expect(maxPad).to.be.at.most(MAX_ANCHOR_BLOCKS * ANCHOR_BLOCK);
-    // ...which means the anchor moved: the pad no longer tracks the raw offset.
+    // ...which means the anchor moved: the pad is short of the raw offset.
     expect(padTop()).to.be.lessThan(firstRenderedRow() * ROW_HEIGHT);
     expectInnerViewportCovered();
   });

@@ -7,7 +7,7 @@
  * entering rows rasterize — and every anchor move costs one whole-window raster.
  *
  * The anchor is therefore held while the scroll moves and re-quantized once it settles,
- * where that raster lands with nothing moving to expose it. Two cases still force a move
+ * where that raster lands with nothing moving to expose it. Two cases force a move
  * mid-scroll:
  * - the offset dropped below the anchor (scrolling up past it), as the pad cannot go
  *   negative;

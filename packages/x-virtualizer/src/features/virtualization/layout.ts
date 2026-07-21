@@ -333,8 +333,8 @@ export class LayoutList extends Layout<ListElements> {
  * Vertical only: the counter-translation sits on an ancestor of the sticky pinned
  * cells, and sticky offsets are resolved in layout coordinates before transforms
  * apply, so a horizontal translation would displace the pinned cells' clamped
- * position. Column-direction updates keep repositioning the cells within the layer
- * (whole-window raster), like before.
+ * position. Column-direction updates therefore reposition the cells within the layer
+ * and rasterize the whole window.
  *
  * `anchor.ts` bounds how far the pad may grow, and with it the `windowContent` box:
  * a box much taller than the rendered window measurably raises peak tile memory.
