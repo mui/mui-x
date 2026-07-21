@@ -24,8 +24,8 @@ const resources: SchedulerResource[] = [
   { id: 'docs', title: 'Docs' },
 ];
 
-// One event pair per arrow shape: same-row straight, cross-row elbow (with an event
-// blocking the default turn), adjacent events, and backward S routes.
+// The dataset covers every arrow shape: same-row straight, cross-row elbow (with an
+// event blocking the default turn), adjacent events, and backward S routes.
 // Early hours so every arrow is inside the initial viewport without scrolling.
 const initialEvents: SchedulerEvent[] = [
   {
@@ -133,6 +133,9 @@ export default function TimelineDependencyArrows() {
     areEventsResizable: true,
   };
   const store = useEventTimelinePremium(parameters);
+  // The context is typed on the base scheduler state and the store generic is
+  // invariant, so the premium store (extra state slices) needs the cast.
+  const storeContextValue = store as any;
 
   return (
     /* Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
@@ -152,7 +155,7 @@ export default function TimelineDependencyArrows() {
           '.experiment-dependency-arrows-host, .experiment-dependency-arrows-host * { box-sizing: border-box; }'
         }
       </style>
-      <SchedulerStoreContext.Provider value={store as any}>
+      <SchedulerStoreContext.Provider value={storeContextValue}>
         <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
           <EventDialogStyledContext.Provider value={styledContextValue}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>

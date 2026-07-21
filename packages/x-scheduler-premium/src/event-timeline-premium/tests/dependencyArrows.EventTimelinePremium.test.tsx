@@ -96,9 +96,12 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     React.useEffect(() => {
       onStoreReady(store);
     }, [onStoreReady, store]);
+    // The context is typed on the base scheduler state and the store generic is
+    // invariant, so the premium store (extra state slices) needs the cast.
+    const storeContextValue = store as any;
 
     return (
-      <SchedulerStoreContext.Provider value={store as any}>
+      <SchedulerStoreContext.Provider value={storeContextValue}>
         <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
           <EventDialogStyledContext.Provider value={styledContextValue}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>

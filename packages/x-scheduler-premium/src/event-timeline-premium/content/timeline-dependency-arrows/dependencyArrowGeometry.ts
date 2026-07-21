@@ -209,6 +209,8 @@ export function computeDependencyArrows(
       continue;
     }
 
+    const minRowIndex = Math.min(sourceAnchor.rowIndex, targetAnchor.rowIndex);
+    const maxRowIndex = Math.max(sourceAnchor.rowIndex, targetAnchor.rowIndex);
     const sourcePosition = getPosition(sourceAnchor.occurrence);
     const targetPosition = getPosition(targetAnchor.occurrence);
 
@@ -227,8 +229,6 @@ export function computeDependencyArrows(
     // a tie). Best-effort avoidance, not full pathfinding.
     let points = routes[0];
     if (routes.length > 1) {
-      const minRowIndex = Math.min(sourceAnchor.rowIndex, targetAnchor.rowIndex);
-      const maxRowIndex = Math.max(sourceAnchor.rowIndex, targetAnchor.rowIndex);
       const obstacles: DependencyArrowObstacle[] = [];
       for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex += 1) {
         for (const obstacle of getRowObstacles(rowIndex)) {
@@ -263,8 +263,8 @@ export function computeDependencyArrows(
       d: buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS),
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,
-      minRowIndex: Math.min(sourceAnchor.rowIndex, targetAnchor.rowIndex),
-      maxRowIndex: Math.max(sourceAnchor.rowIndex, targetAnchor.rowIndex),
+      minRowIndex,
+      maxRowIndex,
     });
   }
 

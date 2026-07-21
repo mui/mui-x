@@ -49,8 +49,8 @@ export function computeOccurrencesMaxIndex(
 
 /**
  * Pure helper that returns the 1-based lane (`firstIndex`) of each occurrence, keyed by
- * occurrence key. With `maxSpan: 1` this matches the `position.firstIndex` the hook returns,
- * so it can be used to locate occurrences in rows that are not mounted.
+ * occurrence key. Matches the `position.firstIndex` the hook returns, so it can be used
+ * to locate occurrences in rows that are not mounted.
  */
 export function computeOccurrencesFirstIndexLookup(
   adapter: Adapter,
