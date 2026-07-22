@@ -40,15 +40,23 @@ describe('useStoreEffect', () => {
     act(() => store.update({ a: 1, b: 100 }));
     expect(effect.lastCall.args).to.deep.equal([0, 1]);
 
-    // The selector closes over new props: it should select `b` from now on
+    // The selector closes over new props: it should select `b` from now on.
+    // The switch itself must not run the effect.
+    const callCount = effect.callCount;
     setProps({ field: 'b' });
-
-    act(() => store.update({ a: 2, b: 200 }));
-    expect(effect.lastCall.args).to.deep.equal([1, 200]);
+    expect(effect.callCount).to.equal(callCount);
 
     // Updates to the previously selected field should not run the effect
-    const callCount = effect.callCount;
-    act(() => store.update({ a: 3, b: 200 }));
+    act(() => store.update({ a: 2, b: 100 }));
     expect(effect.callCount).to.equal(callCount);
+
+    // Updates to the newly selected field run the effect with previous and
+    // next values produced by the same selector
+    act(() => store.update({ a: 2, b: 200 }));
+    expect(effect.lastCall.args).to.deep.equal([100, 200]);
+
+    const callCountAfterB = effect.callCount;
+    act(() => store.update({ a: 3, b: 200 }));
+    expect(effect.callCount).to.equal(callCountAfterB);
   });
 });
