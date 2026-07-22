@@ -82,6 +82,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
     className,
     sx,
     classes: classesProp,
+    ...other
   } = props;
 
   const translations = usePickerTranslations();
@@ -104,6 +105,7 @@ const TimeRangePickerTabs = function TimeRangePickerTabs(inProps: TimeRangePicke
 
   return (
     <TimeRangePickerTabsRoot
+      {...other}
       variant="fullWidth"
       value={rangePosition}
       onChange={handleChange}

@@ -1,3 +1,4 @@
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { ChartsTooltipProps } from './ChartsTooltip';
 import type { TriggerOptions } from './utils';
 import type { TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';
@@ -15,5 +16,5 @@ export interface ChartsTooltipSlotProps<T extends TriggerOptions = TriggerOption
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
    */
-  tooltip?: Partial<ChartsTooltipProps<T>> & TooltipPropsOverrides;
+  tooltip?: WithDataAttributes<Partial<ChartsTooltipProps<T>> & TooltipPropsOverrides>;
 }
