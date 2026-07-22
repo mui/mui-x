@@ -78,11 +78,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return;
       }
 
+      // The chart handles this key, so it should never also scroll the page, even when the focus
+      // does not move because it already is at a boundary.
+      event.preventDefault();
+
       newFocusedItem = calculateFocusedItem(newFocusedItem, store.state);
 
       if (newFocusedItem !== store.state.keyboardNavigation.item) {
-        event.preventDefault();
-
         store.update({
           ...(store.state.highlight && {
             highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
