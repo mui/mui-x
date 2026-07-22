@@ -7,18 +7,20 @@ import {
   useChartZAxis,
 } from '@mui/x-charts/internals';
 import type {
+  ChartSeriesType,
+  UseChartZAxisSignature,
   UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartKeyboardNavigationSignature,
   UseChartVisibilityManagerSignature,
-  UseChartZAxisSignature,
-  ChartSeriesType,
 } from '@mui/x-charts/internals';
 import { useChartProExport } from '@mui/x-charts-pro/plugins';
 import type { UseChartProExportSignature } from '@mui/x-charts-pro/plugins';
 import { useGeoProjection } from '../internals/plugins/useGeoProjection';
 import type { UseGeoProjectionSignature } from '../internals/plugins/useGeoProjection';
+import { useGeoProjectionZoom } from '../internals/plugins/useGeoProjectionZoom';
+import type { UseGeoProjectionZoomSignature } from '../internals/plugins/useGeoProjectionZoom';
 
 export const GEO_PREMIUM_PLUGINS = [
   useChartZAxis,
@@ -29,6 +31,7 @@ export const GEO_PREMIUM_PLUGINS = [
   useChartVisibilityManager,
   useChartProExport,
   useGeoProjection,
+  useGeoProjectionZoom,
 ] as const;
 
 export type GeoPremiumPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
@@ -40,4 +43,5 @@ export type GeoPremiumPluginSignatures<SeriesType extends ChartSeriesType = Char
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartProExportSignature,
   UseGeoProjectionSignature,
+  UseGeoProjectionZoomSignature,
 ];

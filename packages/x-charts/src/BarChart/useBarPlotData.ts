@@ -14,7 +14,10 @@ import {
 import type { ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartSamplingPyramids } from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
+import {
+  selectorChartSamplingPyramids,
+  getFullRangeZoom,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/sampling.selectors';
 import type {
   SampledSeriesLookup,
   SamplingStrategy,
@@ -215,7 +218,7 @@ export function processBarDataForPlot(
 
       const pyramid = samplingPyramids[seriesId];
       const baseAxisId = verticalLayout ? xAxisId : yAxisId;
-      const zoom = zoomMap?.get(baseAxisId);
+      const zoom = zoomMap?.get(baseAxisId) ?? (pyramid ? getFullRangeZoom(baseAxisId) : undefined);
       const availableSize = verticalLayout ? drawingArea.width : drawingArea.height;
       const minSpan = zoomOptions?.[baseAxisId]?.minSpan ?? 0;
       // The sampler (pro) owns the level-of-detail math; community renders one merged rect per

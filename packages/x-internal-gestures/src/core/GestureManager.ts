@@ -128,12 +128,10 @@ export class GestureManager<
     [K in keyof GestureNameToGestureMap]: GestureNameToGestureMap[K]['mutableOptionsType'];
   },
   GestureNameToStateMap = Simplify<
-    OmitNever<
-      {
-        // @ts-expect-error, this makes the types work.
-        [K in keyof GestureNameToGestureMap]: GestureNameToGestureMap[K]['mutableStateType'];
-      }
-    >
+    OmitNever<{
+      // @ts-expect-error, this makes the types work.
+      [K in keyof GestureNameToGestureMap]: GestureNameToGestureMap[K]['mutableStateType'];
+    }>
   >,
 > {
   /** Repository of gesture templates that can be cloned for specific elements */

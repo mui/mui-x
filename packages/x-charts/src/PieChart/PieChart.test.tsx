@@ -66,6 +66,37 @@ describe('<PieChart />', () => {
     expect(screen.queryByRole('tooltip')).to.equal(null);
   });
 
+  // https://github.com/mui/mui-x/issues/14167
+  it('should render an arc spanning almost the full circle as a full circle', () => {
+    // The tiny value makes the other arc span almost, but not exactly, the full circle.
+    // The start and end points of such an arc are so close that they round to the same
+    // coordinates in the path, and SVG omits arcs whose end point equals their start point,
+    // which made the whole pie invisible.
+    const { container } = render(
+      <PieChart
+        height={400}
+        width={400}
+        skipAnimation
+        series={[
+          {
+            outerRadius: 100,
+            data: [
+              { id: 'A', value: 2_000_000 },
+              { id: 'B', value: 1 },
+            ],
+          },
+        ]}
+        hideLegend
+      />,
+    );
+
+    const largeArc = container.querySelector(`.${pieClasses.arc}[data-index="0"]`)!;
+
+    expect(largeArc.getAttribute('d')).to.equal(
+      'M0,-100A100,100,0,1,1,0,100A100,100,0,1,1,0,-100Z',
+    );
+  });
+
   describe('classes', () => {
     it('should apply root class to the pie plot', () => {
       const { container } = render(

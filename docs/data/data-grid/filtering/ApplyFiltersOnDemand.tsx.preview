@@ -1,0 +1,16 @@
+<Typography variant="body2" sx={{ mb: 1 }}>
+  The filter model has been applied {appliedCount} time(s). Editing the panel
+  only updates the draft — nothing is applied until you click{' '}
+  <strong>Apply</strong>, and closing the panel discards unapplied changes.
+</Typography>
+<Box sx={{ height: 400, width: '100%' }}>
+  <DataGridPro
+    rows={rows}
+    columns={columns}
+    showToolbar
+    slots={{
+      filterPanel: DeferredFilterPanel,
+    }}
+    onFilterModelChange={() => setAppliedCount((count) => count + 1)}
+  />
+</Box>
