@@ -28,7 +28,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
       // Avoid removing focus if we know it is moving to another children in the chart.
       // This avoid extra computation ot remove/add focus at each keyboard pressed when navigating in the chart.
-      if (root && next instanceof Node && !root.contains(next)) {
+      // `next` is null when the focus does not move to another element, for example when the
+      // focused element is blurred or the browser UI takes the focus.
+      if (root && (next === null || (next instanceof Node && !root.contains(next)))) {
         if (store.state.keyboardNavigation.isFocused) {
           store.set('keyboardNavigation', {
             ...store.state.keyboardNavigation,

@@ -59,6 +59,32 @@ describe('useChartKeyboardNavigation', () => {
     expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
   });
 
+  it.skipIf(isJSDOM)(
+    'should remove focus indicator when blurring without another element to focus',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={100}
+          width={100}
+          skipAnimation
+          margin={0}
+          series={[{ id: 'A', data: [50, 100] }]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).not.to.equal(null);
+
+      act(() => {
+        container.querySelector<HTMLElement>('[tabindex="0"]')?.blur();
+      });
+
+      expect(container.querySelector(FOCUSED_BAR_SELECTOR)).to.equal(null);
+    },
+  );
+
   it.skipIf(isJSDOM)('should not focus a hidden series via keyboard navigation', async () => {
     const { container, user } = render(
       <BarChart
