@@ -84,13 +84,13 @@ function test(
 }
 
 describe('<Heatmap /> - keyboard navigation', () => {
-  it('should move to the first node if no current focus', async () => {
+  it('should move to the first or last node if no current focus', async () => {
     expect(test('ArrowRight', null)).to.deep.equal(cell_00);
     expect(test('ArrowLeft', null)).to.deep.equal(cell_00);
     expect(test('ArrowUp', null)).to.deep.equal(cell_00);
     expect(test('ArrowDown', null)).to.deep.equal(cell_00);
     expect(test('Home', null)).to.deep.equal(cell_00);
-    expect(test('End', null)).to.deep.equal(cell_00);
+    expect(test('End', null)).to.deep.equal(cell_11);
   });
 
   it('should move to the first/last cell of the current row', () => {
@@ -122,9 +122,9 @@ describe('<Heatmap /> - keyboard navigation', () => {
     // Stays in place when already at the boundary.
     expect(test('Home', cell_00, { ctrlKey: true })).to.deep.equal(cell_00);
     expect(test('End', cell_11, { ctrlKey: true })).to.deep.equal(cell_11);
-    // Moves to the first cell if no current focus.
+    // Moves to the first/last cell if no current focus.
     expect(test('Home', null, { ctrlKey: true })).to.deep.equal(cell_00);
-    expect(test('End', null, { ctrlKey: true })).to.deep.equal(cell_00);
+    expect(test('End', null, { ctrlKey: true })).to.deep.equal(cell_11);
   });
 
   it('should move to the first/last row keeping the column with PageUp and PageDown', () => {
@@ -135,9 +135,9 @@ describe('<Heatmap /> - keyboard navigation', () => {
     // Stays in place when already at the boundary.
     expect(test('PageUp', cell_00)).to.deep.equal(cell_00);
     expect(test('PageDown', cell_11)).to.deep.equal(cell_11);
-    // Moves to the first cell if no current focus.
+    // Moves to the first/last row if no current focus.
     expect(test('PageUp', null)).to.deep.equal(cell_00);
-    expect(test('PageDown', null)).to.deep.equal(cell_00);
+    expect(test('PageDown', null)).to.deep.equal(cell_11);
   });
 
   it('should try to go outside of the range', () => {

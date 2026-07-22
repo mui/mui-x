@@ -2,6 +2,7 @@ import type {
   ChartState,
   UseChartKeyboardNavigationSignature,
   KeyboardFocusHandler,
+  FocusedItemUpdater,
 } from '@mui/x-charts/internals';
 import type { FocusedItemIdentifier } from '@mui/x-charts/models';
 
@@ -16,6 +17,23 @@ function getFirstCell(
   }
 
   return { type: 'heatmap', seriesId, xIndex: 0, yIndex: 0 };
+}
+
+function getLastCell(
+  state: Parameters<FocusedItemUpdater<'heatmap'>>[1],
+): FocusedItemIdentifier<'heatmap'> | null {
+  const firstCell = getFirstCell(state);
+  if (!firstCell) {
+    return null;
+  }
+
+  const maxXLength = state.cartesianAxis?.x[0].data?.length ?? 0;
+  const maxYLength = state.cartesianAxis?.y[0].data?.length ?? 0;
+  if (maxXLength === 0 || maxYLength === 0) {
+    return firstCell;
+  }
+
+  return { ...firstCell, xIndex: maxXLength - 1, yIndex: maxYLength - 1 };
 }
 
 const updateCoordinates = (
@@ -98,7 +116,7 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
     case 'End':
       return (currentItem, state) => {
         if (!currentItem) {
-          return getFirstCell(state);
+          return getLastCell(state);
         }
         const maxLength = state.cartesianAxis?.x[0].data?.length ?? 0;
         if (maxLength === 0) {
@@ -135,7 +153,7 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
     case 'PageDown':
       return (currentItem, state) => {
         if (!currentItem) {
-          return getFirstCell(state);
+          return getLastCell(state);
         }
         const maxLength = state.cartesianAxis?.y[0].data?.length ?? 0;
         if (maxLength === 0 || currentItem.yIndex === maxLength - 1) {
