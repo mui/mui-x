@@ -394,8 +394,6 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      // Pins the "renders once" criterion — a naive implementation that renders one
-      // occurrence per assigned resource would still pass a `greaterThan(0)` check.
       expect(screen.getAllByText('Team Sync')).toHaveLength(1);
     });
 
