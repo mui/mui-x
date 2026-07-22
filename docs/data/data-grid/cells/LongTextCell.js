@@ -105,7 +105,9 @@ function ExpandableCell(params) {
               sx={{
                 p: 1,
                 boxSizing: 'border-box',
-                width: colDef.computedWidth * 1.25,
+                width: colDef?.computedWidth
+                  ? colDef.computedWidth * 1.25
+                  : undefined,
                 maxWidth: '100%',
                 minHeight: cellRef.current?.offsetHeight,
                 typography: 'body2',

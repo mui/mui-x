@@ -44,7 +44,7 @@ const dateColumnType = {
 function GridEditDateCell({ id, field, value, colDef, hasFocus }) {
   const apiRef = useGridApiContext();
   const inputRef = React.useRef(null);
-  const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
+  const Component = colDef?.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
