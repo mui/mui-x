@@ -1,5 +1,103 @@
 # Changelog
 
+## 9.10.1
+
+_Jul 23, 2026_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🦮 Improve accessibility of the Charts and Pickers components.
+
+Special thanks go out to these community members for their valuable contributions:
+@kevincorizi-sbt, @mustafajw07
+
+The following team members contributed to this release:
+@hasdfa, @JCQuintas, @LukasTy, @noraleonte, @rita-codes, @silviuaavram
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.10.1`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.10.1`.
+
+#### `@mui/x-data-grid-premium@9.10.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.10.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.10.1`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.10.1`, plus:
+
+- [DateRangePicker] Fix broken active range position underline in single input range fields (#23166) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@9.10.1`
+
+- [charts] Fix pie chart disappearing when an arc spans almost the full circle (#23145) @JCQuintas
+- [charts] Set aria-hidden on accessibility proxy divs at initialization (#23186) @kevincorizi-sbt
+- [charts] Fix keyboard navigation on series with different lengths (#23182) @JCQuintas
+- [charts] Fix out of bounds keyboard navigation (#23180) @silviuaavram
+
+#### `@mui/x-charts-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.10.1`, plus:
+
+- [charts-pro] Fix highlight shifting on sampled bar charts (#23190) @noraleonte
+
+#### `@mui/x-charts-premium@9.10.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.10.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.10.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.10.1`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.7`
+
+- [scheduler] Add the dependencies data model (#23117) @rita-codes
+- [scheduler] Polish EventCalendar rendering for multi-resource events (#23161) @mustafajw07
+- [scheduler] Responsive header (#22954) @noraleonte
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.7`, plus:
+
+- [scheduler-premium] Dependencies - Render the FS arrow (#23162) @rita-codes
+
+### Codemod
+
+#### `@mui/x-codemod@9.10.1`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix clearing, layout shift, and prop leak in Pickers demos (#23191) @LukasTy
+
+### Miscellaneous
+
+- [chat] Normalize message part link URLs (#23187) @hasdfa
+- [internals] Make disposable types self-contained without esnext.disposable lib (#23164) @JCQuintas
+
 ## 9.10.0
 
 _Jul 17, 2026_
