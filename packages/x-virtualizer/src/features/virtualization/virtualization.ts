@@ -33,6 +33,25 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
+// For fast scrolls with inverse sticky, delay the rendering by certain number of frames
+// to give time for the entering rows to rasterize. Below the lowest threshold, updates commit
+// immediately. Ordered by descending speed - the first match wins.
+const SCROLL_DELAY_LEVELS: ReadonlyArray<{ minVelocityPxPerMs: number; frames: number }> = [
+  { minVelocityPxPerMs: 24, frames: 6 },
+  { minVelocityPxPerMs: 20, frames: 4 },
+  { minVelocityPxPerMs: 16, frames: 2 },
+  { minVelocityPxPerMs: 8, frames: 1 },
+];
+
+function scrollDelayFrames(velocityPxPerMs: number): number {
+  for (const level of SCROLL_DELAY_LEVELS) {
+    if (velocityPxPerMs >= level.minVelocityPxPerMs) {
+      return level.frames;
+    }
+  }
+  return 0;
+}
+
 export type VirtualizationParams = {
   /** @default false */
   isRtl?: boolean;
@@ -258,6 +277,19 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
   const scrollTimeout = useTimeout();
   const frozenContext = React.useRef<RenderContext | undefined>(undefined);
+  // Frames deferral of sticky render-context advances during fast scroll
+  const deferredStickyFrame = React.useRef(0);
+  const deferredFramesRemaining = React.useRef(0);
+  const forceStickyCommit = React.useRef(false);
+  const lastScrollTimestamp = React.useRef(0);
+  React.useEffect(
+    () => () => {
+      if (deferredStickyFrame.current !== 0) {
+        cancelAnimationFrame(deferredStickyFrame.current);
+      }
+    },
+    [],
+  );
   const scrollCache = useLazyRef(() =>
     createScrollCache(
       isRtl,
@@ -356,6 +388,13 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const dx = newScroll.left - scrollPosition.current.left;
     const dy = newScroll.top - scrollPosition.current.top;
 
+    const now = performance.now();
+    const dtSinceLastScroll = now - lastScrollTimestamp.current;
+    lastScrollTimestamp.current = now;
+    // a long gap (new gesture) or the first event must not read as fast.
+    const rowVelocity =
+      dtSinceLastScroll > 0 && dtSinceLastScroll < 100 ? Math.abs(dy) / dtSinceLastScroll : 0;
+
     const isScrolling = dx !== 0 || dy !== 0;
 
     scrollPosition.current = newScroll;
@@ -402,6 +441,53 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         scrollPosition: { current: { ...scrollPosition.current } },
       });
       return renderContext;
+    }
+
+    // Fast sticky scroll: show the current (stale) window and defer the advance by a
+    // velocity-dependent number of animation frames, giving the entering rows that
+    // many frames to rasterize before the viewport reveals them. Direction changes
+    // (which reallocate the buffer) and the settle pass always commit immediately; a
+    // deferral in flight re-enters with `forceStickyCommit` set, so at most one commit
+    // runs per deferral window, always for the latest scroll position.
+    const isDeferralPending = deferredStickyFrame.current !== 0;
+    if (
+      layoutMode === 'sticky' &&
+      !forceStickyCommit.current &&
+      !didChangeDirection &&
+      !isSettlePass &&
+      (isDeferralPending || scrollDelayFrames(rowVelocity) > 0)
+    ) {
+      if (!isDeferralPending) {
+        deferredFramesRemaining.current = scrollDelayFrames(rowVelocity);
+        const advanceOneFrame = () => {
+          deferredFramesRemaining.current -= 1;
+          if (deferredFramesRemaining.current > 0) {
+            deferredStickyFrame.current = requestAnimationFrame(advanceOneFrame);
+            return;
+          }
+          deferredStickyFrame.current = 0;
+          forceStickyCommit.current = true;
+          try {
+            triggerUpdateRenderContext(false);
+          } finally {
+            forceStickyCommit.current = false;
+          }
+        };
+        deferredStickyFrame.current = requestAnimationFrame(advanceOneFrame);
+      }
+      store.set('virtualization', {
+        ...store.state.virtualization,
+        anchorTop: anchorTopFor(store, layoutMode, renderContext, isSettled),
+        scrollPosition: { current: { ...scrollPosition.current } },
+      });
+      return renderContext;
+    }
+
+    // Committing now (direction change, settle, or slow scroll): drop any deferral
+    // still counting down so it can't fire a redundant commit afterward.
+    if (deferredStickyFrame.current !== 0) {
+      cancelAnimationFrame(deferredStickyFrame.current);
+      deferredStickyFrame.current = 0;
     }
 
     // Render a new context
