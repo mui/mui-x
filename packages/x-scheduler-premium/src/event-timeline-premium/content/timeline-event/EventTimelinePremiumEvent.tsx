@@ -214,7 +214,10 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         {occurrence.title}
       </EventTimelinePremiumEventLinesClamp>
       {dependsOnTitles.length > 0 && (
-        <span id={`${id}-dependencies`} style={visuallyHidden}>
+        // `aria-hidden` keeps the description out of the name-from-content computed
+        // through the self-referential `aria-labelledby`; the `aria-describedby`
+        // reference still picks it up.
+        <span id={`${id}-dependencies`} style={visuallyHidden} aria-hidden>
           {/* TODO(dependencies public flip): move to localeText. Hardcoded while the
               feature has no public API. */}
           Depends on {dependsOnTitles.join(', ')}

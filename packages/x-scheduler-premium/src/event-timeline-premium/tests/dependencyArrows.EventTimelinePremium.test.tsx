@@ -339,12 +339,20 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       });
 
       const successor = getEventElement('Event B');
-      const descriptionId = successor.getAttribute('aria-describedby')!;
 
-      expect(descriptionId).not.to.equal(null);
-      expect(document.getElementById(descriptionId)!.textContent).to.equal(
-        'Depends on Event A, Event C',
-      );
+      expect(successor).toHaveAccessibleDescription('Depends on Event A, Event C');
+    });
+
+    it('should keep the predecessor titles out of the successor accessible name', () => {
+      renderTimeline({
+        events: [eventA, eventB, eventC],
+        dependencies: [
+          buildDependency('dep-1', 'event-a', 'event-b'),
+          buildDependency('dep-2', 'event-c', 'event-b'),
+        ],
+      });
+
+      expect(getEventElement('Event B')).toHaveAccessibleName('Resource 1 Event B');
     });
 
     it('should not describe an event without predecessors', () => {
