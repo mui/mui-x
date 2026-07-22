@@ -19,7 +19,7 @@ export function useStoreEffect<State, Value>(
 ): void {
   const instance = useLazyRef(initialize, { store, selector }).current;
   instance.effect = effect;
-  
+
   if (instance.selector !== selector) {
     instance.selector = selector;
     const selectedValue = selector(store.state);
