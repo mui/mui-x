@@ -177,18 +177,21 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
       );
     };
     const before = localOffsets();
+    const beforeKeys = [...before.keys()];
 
     await act(async () => {
       scroller.scrollTop = 55 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
+    // On a fast scroll the advance is deferred a few frames, so wait for the rendered
+    // set to actually change rather than for a row the leading buffer already holds.
     await waitFor(() => {
-      expect(renderedRowIds()).to.include(55);
+      expect([...localOffsets().keys()]).to.not.deep.equal(beforeKeys);
     });
     const after = localOffsets();
 
     // The context did advance...
-    expect([...after.keys()]).to.not.deep.equal([...before.keys()]);
+    expect([...after.keys()]).to.not.deep.equal(beforeKeys);
     // ...and every carried-over row sits at the exact same offset inside the box.
     const retained = [...after.keys()].filter((id) => before.has(id));
     expect(retained.length).to.be.greaterThan(0);

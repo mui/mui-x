@@ -682,12 +682,15 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     expect(getWindowRowIds()).to.deep.equal(idsAfterDirectionChange);
 
-    // Past the rendered buffer: the context must advance.
+    // Past the rendered buffer: the context must advance. On a fast scroll the advance
+    // is deferred a few frames, so wait for it to land.
     act(() => {
       scroller.scrollTop = 30 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
-    expect(getWindowRowIds()).to.include(30);
+    await waitFor(() => {
+      expect(getWindowRowIds()).to.include(30);
+    });
     expect(getWindowRowIds()).not.to.deep.equal(idsAfterDirectionChange);
   });
 
@@ -716,25 +719,28 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       );
     };
     const before = localOffsets();
+    const beforeKeys = [...before.keys()];
 
     // Consume 60% of the rendered window: always more than half the leading buffer, so
     // it triggers a context update, and always short of the whole window, so rows carry
     // over to compare. Derived from the window rather than a fixed row count, which
     // would stop triggering an update the next time the buffer grows.
-    const renderedRows = [...before.keys()].map(Number);
+    const renderedRows = beforeKeys.map(Number);
     const advanceBy = Math.ceil(renderedRows.length * 0.6);
     const nextFirstRow = Math.min(...renderedRows) + advanceBy;
     await act(async () => {
       scroller.scrollTop = nextFirstRow * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
+    // On a fast scroll the advance is deferred a few frames, so wait for the rendered
+    // set to actually change rather than for a row the leading buffer already holds.
     await waitFor(() => {
-      expect(getWindowRowIds()).to.include(nextFirstRow);
+      expect([...localOffsets().keys()]).to.not.deep.equal(beforeKeys);
     });
     const after = localOffsets();
 
     // The context did advance...
-    expect([...after.keys()]).to.not.deep.equal([...before.keys()]);
+    expect([...after.keys()]).to.not.deep.equal(beforeKeys);
     // ...and every carried-over row sits at the exact same offset inside the box.
     const retained = [...after.keys()].filter((id) => before.has(id));
     expect(retained.length).to.be.greaterThan(0);
@@ -829,6 +835,12 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       await act(async () => {
         scroller.scrollTop = top;
         scroller.dispatchEvent(new Event('scroll'));
+      });
+      // A fast scroll defers the advance a few frames; wait for it to land so the pad
+      // reflects the new context before measuring.
+      // eslint-disable-next-line no-await-in-loop
+      await waitFor(() => {
+        expect(getWindowRowIds()).to.include(Math.floor(top / ROW_HEIGHT));
       });
       maxPad = Math.max(maxPad, padTop());
     }
