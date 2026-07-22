@@ -18,8 +18,8 @@ export interface ToolExecutionContext<Event = never> {
 }
 
 export interface AgentTool<
-  Input extends z.AnyZodObject = z.AnyZodObject,
-  Output extends z.ZodTypeAny = z.ZodTypeAny,
+  Input extends z.ZodObject = z.ZodObject,
+  Output extends z.ZodType = z.ZodType,
   Event = never,
 > {
   /** Public tool name a host registers (e.g. `useMuiDocs`). Override via `ToolOverrides`. */
