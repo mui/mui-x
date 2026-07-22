@@ -267,7 +267,8 @@ function resolveSectionElementWidth(
   index: number,
   dateRangePosition: 'start' | 'end',
 ) {
-  if (sectionElement.content.id) {
+  // Only measure sections that belong to a range date.
+  if (sectionElement.content['data-range-position'] !== undefined) {
     const activeSectionElements = rootRef.current?.querySelectorAll<HTMLSpanElement>(
       `[data-sectionindex="${index}"] [data-range-position="${dateRangePosition}"]`,
     );
