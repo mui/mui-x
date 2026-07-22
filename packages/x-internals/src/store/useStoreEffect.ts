@@ -19,12 +19,13 @@ export function useStoreEffect<State, Value>(
 ): void {
   const instance = useLazyRef(initialize, { store, selector }).current;
   instance.effect = effect;
-
-  instance.selector = selector;
-
-  const selectedValue = selector(store.state);
-  if (!Object.is(instance.previousState, selectedValue)) {
-    instance.previousState = selectedValue;
+  
+  if (instance.selector !== selector) {
+    instance.selector = selector;
+    const selectedValue = selector(store.state);
+    if (!Object.is(instance.previousState, selectedValue)) {
+      instance.previousState = selectedValue;
+    }
   }
   useOnMount(instance.onMount);
 }
