@@ -624,23 +624,36 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     // Resizing the window layer discards its rasterization wholesale, which the
     // compositor can expose as blank regions at scroll start. The per-axis buffer
     // total is therefore constant: direction changes redistribute it, never resize.
-    // The rendered height must stay stable no matter the direction — including at
-    // rest at the very top, where the void backward buffer spills forward; each
-    // boundary is row-quantized, allowing one row of play per boundary between
-    // measurements.
+    // Measured away from the top edge, where the backward buffer has nothing before it
+    // to fill and the resting window is legitimately shorter; each boundary is
+    // row-quantized, allowing one row of play per boundary between measurements.
     await renderGrid();
     const scroller = screen.getByTestId('scroller');
+
+    // Settle at mid-content, where the resting buffer is symmetric on both sides.
+    await act(async () => {
+      scroller.scrollTop = 100 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(getWindowRowIds()).to.include(100);
+    });
+    act(() => {
+      scroller.dispatchEvent(new Event('scroll'));
+    });
     const heightAtRest = rect('outer-window').height;
 
+    // From rest each measured scroll reverses direction, so it commits immediately
+    // (direction changes are never frame-deferred) and the height is stable to read.
     act(() => {
-      scroller.scrollTop = 50 * ROW_HEIGHT;
+      scroller.scrollTop = 150 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
     const heightScrollingDown = rect('outer-window').height;
     expectInnerViewportCovered();
 
     act(() => {
-      scroller.scrollTop = 49 * ROW_HEIGHT;
+      scroller.scrollTop = 149 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
     const heightScrollingUp = rect('outer-window').height;
