@@ -230,7 +230,7 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
   const getOptionValue = (colDef as GridMultiSelectColDef).getOptionValue!;
   const getOptionLabel = (colDef as GridMultiSelectColDef).getOptionLabel!;
 
-  if (!isMultiSelectColDef(colDef)) {
+  if (!colDef || !isMultiSelectColDef(colDef)) {
     return null;
   }
 

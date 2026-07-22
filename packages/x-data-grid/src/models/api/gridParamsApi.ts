@@ -88,7 +88,7 @@ export interface GridParamsPrivateApi {
   /**
    * @typedef {Object} CellParamsOverrides
    * @property {GridCellMode} cellMode - The mode of the cell.
-   * @property {GridStateColDef} colDef - The column definition.
+   * @property {GridStateColDef | undefined} colDef - The column definition, `undefined` if the field is not in the current column set.
    * @property {boolean} hasFocus - Indicates if the cell is in focus.
    * @property {GridTreeNode} rowNode - The node of the row that the current cell belongs to.
    * @property {0|-1} tabIndex - The tabIndex value.
@@ -121,7 +121,7 @@ export interface GridParamsPrivateApi {
       formattedValue,
     }: {
       cellMode: GridCellMode;
-      colDef: GridStateColDef;
+      colDef: GridStateColDef | undefined;
       hasFocus: boolean;
       rowNode: N;
       tabIndex: 0 | -1;

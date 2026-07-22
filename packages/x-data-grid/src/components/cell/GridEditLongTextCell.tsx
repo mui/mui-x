@@ -181,7 +181,7 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
         ownerState={rootProps}
         id={popupId}
         role="dialog"
-        aria-label={colDef.headerName || field}
+        aria-label={colDef?.headerName || field}
         open={showPopup}
         target={anchorEl}
         placement="bottom-start"
@@ -202,7 +202,7 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
         <GridEditLongTextCellPopperContent
           {...slotProps?.popperContent}
           className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
-          style={{ '--_width': `${colDef.computedWidth}px` } as React.CSSProperties}
+          style={{ '--_width': `${colDef?.computedWidth}px` } as React.CSSProperties}
         >
           <GridEditLongTextarea {...props} valueState={valueState} setValueState={setValueState} />
         </GridEditLongTextCellPopperContent>
@@ -351,7 +351,7 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
       ref={textareaRef}
       as={rootProps.slots.baseTextarea}
       ownerState={rootProps}
-      aria-label={colDef.headerName || field}
+      aria-label={colDef?.headerName || field}
       value={valueState ?? ''}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

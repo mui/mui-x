@@ -49,7 +49,7 @@ export const useGridEditing = (
       if (!isCellEditableFn(params)) {
         return false;
       }
-      if (!params.colDef.editable) {
+      if (!params.colDef?.editable) {
         return false;
       }
       if (!params.colDef.renderEditCell) {

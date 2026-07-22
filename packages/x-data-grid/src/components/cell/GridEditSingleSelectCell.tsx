@@ -74,7 +74,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
   }, [hasFocus]);
 
-  if (!isSingleSelectColDef(colDef)) {
+  if (!colDef || !isSingleSelectColDef(colDef)) {
     return null;
   }
 

@@ -33,5 +33,5 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   },
   rowSpanValueGetter: (_, row, __, apiRef) => gridRowIdSelector(apiRef, row),
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
-  renderHeader: ({ colDef }) => <span style={visuallyHidden}>{colDef.headerName}</span>,
+  renderHeader: ({ colDef }) => <span style={visuallyHidden}>{colDef?.headerName}</span>,
 };

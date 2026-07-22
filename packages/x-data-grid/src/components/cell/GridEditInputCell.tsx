@@ -129,7 +129,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
       className={classes.root}
       ownerState={rootProps}
       fullWidth
-      type={colDef.type === 'number' ? colDef.type : 'text'}
+      type={colDef?.type === 'number' ? colDef.type : 'text'}
       value={valueState ?? ''}
       onChange={handleChange}
       endAdornment={

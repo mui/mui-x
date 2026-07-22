@@ -728,7 +728,7 @@ export const useGridColumnResize = (
   const handleColumnResizeMouseDown: GridEventListener<'columnSeparatorMouseDown'> =
     useEventCallback(({ colDef }, event) => {
       // Only handle left clicks
-      if (event.button !== 0) {
+      if (event.button !== 0 || !colDef) {
         return;
       }
 

@@ -2,7 +2,6 @@ import type { RefObject } from '@mui/x-internals/types';
 import * as React from 'react';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridParamsApi, GridParamsPrivateApi } from '../../../models/api/gridParamsApi';
-import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 import type { GridCellParams } from '../../../models/params/gridCellParams';
 import type { GridRowParams } from '../../../models/params/gridRowParams';
@@ -35,7 +34,7 @@ export function useGridParamsApi(
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
     (field) => ({
       field,
-      colDef: apiRef.current.getColumn(field) as GridStateColDef,
+      colDef: apiRef.current.getColumn(field),
     }),
     [apiRef],
   );
@@ -73,12 +72,17 @@ export function useGridParamsApi(
         formattedValue: forcedFormattedValue,
       },
     ) => {
-      const value =
-        forcedValue !== undefined ? forcedValue : apiRef.current.getRowValue(row, colDef);
-      const formattedValue =
-        forcedFormattedValue !== undefined
-          ? forcedFormattedValue
-          : apiRef.current.getRowFormattedValue(row, colDef);
+      let value = forcedValue;
+      let formattedValue = forcedFormattedValue;
+
+      if (colDef) {
+        if (value === undefined) {
+          value = apiRef.current.getRowValue(row, colDef);
+        }
+        if (formattedValue === undefined) {
+          formattedValue = apiRef.current.getRowFormattedValue(row, colDef);
+        }
+      }
 
       const params: GridCellParams<any, any, any, any> = {
         id,
@@ -115,10 +119,10 @@ export function useGridParamsApi(
       const cellMode = apiRef.current.getCellMode(id, field);
 
       return apiRef.current.getCellParamsForRow<any, any, any, any>(id, field, row, {
-        // Params keep a non-nullable `colDef`, but it can be `undefined` at runtime for an unknown field.
-        colDef: (props.listView && props.listViewColumn?.field === field
-          ? gridListColumnSelector(apiRef)!
-          : apiRef.current.getColumn(field)) as GridStateColDef,
+        colDef:
+          props.listView && props.listViewColumn?.field === field
+            ? gridListColumnSelector(apiRef)!
+            : apiRef.current.getColumn(field),
         rowNode,
         hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
         tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
