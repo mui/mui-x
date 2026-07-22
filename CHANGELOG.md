@@ -73,14 +73,14 @@ Same changes as in `@mui/x-tree-view@9.10.1`.
 
 #### `@mui/x-scheduler@9.0.0-beta.7`
 
-- [scheduler] Add the dependencies data model (#23117) @rita-codes
-- [scheduler] Polish EventCalendar rendering for multi-resource events (#23161) @mustafajw07
+- [scheduler] Polish `EventCalendar` rendering for multi-resource events (#23161) @mustafajw07
 - [scheduler] Responsive header (#22954) @noraleonte
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-scheduler@9.0.0-beta.7`, plus:
 
+- [scheduler-premium] Add the dependencies data model (#23117) @rita-codes
 - [scheduler-premium] Dependencies - Render the FS arrow (#23162) @rita-codes
 
 ### Codemod
