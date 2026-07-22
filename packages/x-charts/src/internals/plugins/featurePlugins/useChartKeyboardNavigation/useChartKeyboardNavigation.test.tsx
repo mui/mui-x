@@ -4,6 +4,7 @@ import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { getCenter } from 'test/utils/charts/getCenter';
 
 describe('useChartKeyboardNavigation', () => {
   const { render } = createRenderer();
@@ -386,4 +387,100 @@ describe('useChartKeyboardNavigation', () => {
       expect(firstBar!.getAttribute('data-highlighted')).to.equal(null);
     },
   );
+
+  it('should use a clicked item as the starting point for keyboard navigation', async () => {
+    const { container, user } = render(
+      <PieChart
+        height={200}
+        width={200}
+        hideLegend
+        series={[
+          {
+            id: 'pie',
+            data: [
+              { id: 0, value: 10 },
+              { id: 1, value: 20 },
+              { id: 2, value: 30 },
+            ],
+          },
+        ]}
+      />,
+    );
+
+    const arcs = container.querySelectorAll<SVGPathElement>(`.${pieClasses.arc}`);
+    await user.click(arcs[1]);
+
+    expect(container.querySelector(`.${pieClasses.focusIndicator}[data-index="1"]`)).not.to.equal(
+      null,
+    );
+
+    await user.keyboard('[ArrowRight]');
+
+    expect(container.querySelector(`.${pieClasses.focusIndicator}[data-index="2"]`)).not.to.equal(
+      null,
+    );
+  });
+
+  it.skipIf(isJSDOM)(
+    'should activate an item through position-based click hit-testing without an onItemClick callback',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={200}
+          width={200}
+          skipAnimation
+          margin={0}
+          series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
+        />,
+      );
+
+      const bars = container.querySelectorAll<SVGRectElement>(`.${barClasses.element}`);
+      await user.pointer({ keys: '[MouseLeft]', target: bars[0], coords: getCenter(bars[0]) });
+
+      expect(bars[0].getAttribute('data-highlighted')).to.equal('true');
+
+      await user.keyboard('[ArrowRight]');
+
+      expect(bars[1].getAttribute('data-highlighted')).to.equal('true');
+    },
+  );
+
+  it('should refocus the accessibility proxy when clicking the same item again', async () => {
+    const { container, user } = render(
+      <PieChart
+        height={200}
+        width={200}
+        hideLegend
+        series={[{ id: 'pie', data: [{ id: 0, value: 10 }] }]}
+      />,
+    );
+
+    const arc = container.querySelector<SVGPathElement>(`.${pieClasses.arc}`)!;
+    await user.click(arc);
+    const firstProxy = document.activeElement;
+
+    expect(firstProxy?.getAttribute('role')).to.equal('img');
+
+    await user.click(arc);
+
+    expect(document.activeElement?.getAttribute('role')).to.equal('img');
+    expect(document.activeElement).not.to.equal(firstProxy);
+  });
+
+  it('should not activate a clicked item when keyboard navigation is disabled', async () => {
+    const { container, user } = render(
+      <PieChart
+        height={200}
+        width={200}
+        hideLegend
+        disableKeyboardNavigation
+        series={[{ id: 'pie', data: [{ id: 0, value: 10 }] }]}
+      />,
+    );
+
+    await user.click(container.querySelector<SVGPathElement>(`.${pieClasses.arc}`)!);
+
+    expect(container.querySelector(`.${pieClasses.focusIndicator}`)).to.equal(null);
+    expect(container.querySelector('[role="img"]')).to.equal(null);
+  });
 });

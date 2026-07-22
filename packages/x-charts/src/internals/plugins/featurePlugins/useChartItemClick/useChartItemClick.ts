@@ -2,7 +2,7 @@
 import type { ChartPlugin } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartItemClickSignature } from './useChartItemClick.types';
-import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import { getChartPoint } from '../../../getChartPoint';
 
 export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = ({
@@ -23,7 +23,7 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = (
       return undefined;
     }
 
-    let item: SeriesItemIdentifierWithType<ChartSeriesType> | undefined = undefined;
+    let item: FocusedItemIdentifier<ChartSeriesType> | undefined = undefined;
 
     for (const seriesType of Object.keys(store.state.seriesConfig.config)) {
       // @ts-ignore The type inference for store.state does not support generic yet

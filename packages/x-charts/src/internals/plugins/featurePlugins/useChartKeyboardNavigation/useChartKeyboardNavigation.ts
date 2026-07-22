@@ -1,6 +1,9 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
+import type { FocusedItemIdentifier } from '../../../../models/seriesType';
+import { getChartPoint } from '../../../getChartPoint';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import type { ChartPlugin } from '../../models';
@@ -14,6 +17,69 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
+
+  const setKeyboardNavigationItem = useEventCallback(
+    (item: FocusedItemIdentifier<ChartSeriesType> | null) => {
+      if (params.disableKeyboardNavigation) {
+        return;
+      }
+
+      const cleanedItem =
+        item === null
+          ? null
+          : (instance.cleanIdentifier(
+              item,
+              'seriesItem',
+            ) as FocusedItemIdentifier<ChartSeriesType>);
+
+      store.update({
+        ...(store.state.highlight && {
+          highlight: {
+            ...store.state.highlight,
+            lastUpdate: 'keyboard',
+          },
+        }),
+        ...(store.state.interaction && {
+          interaction: {
+            ...store.state.interaction,
+            lastUpdate: 'keyboard',
+          },
+        }),
+        keyboardNavigation: {
+          ...store.state.keyboardNavigation,
+          item: cleanedItem,
+          focusRequestId: store.state.keyboardNavigation.focusRequestId + 1,
+        },
+      });
+    },
+  );
+
+  const handleKeyboardNavigationClick = useEventCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      if (params.disableKeyboardNavigation) {
+        return;
+      }
+
+      const point = getChartPoint(event.currentTarget, event);
+
+      if (!instance.isPointInside(point.x, point.y)) {
+        return;
+      }
+
+      for (const seriesType of Object.keys(store.state.seriesConfig.config)) {
+        // @ts-ignore The type inference for store.state does not support generic series configs yet.
+        const item = store.state.seriesConfig.config[seriesType].getItemAtPosition?.(store.state, {
+          x: point.x,
+          y: point.y,
+        });
+
+        if (item) {
+          setKeyboardNavigationItem(item);
+          return;
+        }
+      }
+    },
+  );
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
@@ -82,19 +148,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
       if (newFocusedItem !== store.state.keyboardNavigation.item) {
         event.preventDefault();
-
-        store.update({
-          ...(store.state.highlight && {
-            highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
-          }),
-          ...(store.state.interaction && {
-            interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
-          }),
-          keyboardNavigation: {
-            ...store.state.keyboardNavigation,
-            item: newFocusedItem,
-          },
-        });
+        setKeyboardNavigationItem(newFocusedItem);
       }
     }
 
@@ -106,7 +160,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
     };
-  }, [chartsLayerContainerRef, params.disableKeyboardNavigation, store]);
+  }, [chartsLayerContainerRef, params.disableKeyboardNavigation, setKeyboardNavigationItem, store]);
 
   useEnhancedEffect(() => {
     store.set('keyboardNavigation', {
@@ -115,7 +169,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     });
   }, [store, params.disableKeyboardNavigation]);
 
-  return {};
+  return {
+    instance: {
+      handleKeyboardNavigationClick,
+      setKeyboardNavigationItem,
+    },
+  };
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({
@@ -123,6 +182,7 @@ useChartKeyboardNavigation.getInitialState = (params) => ({
     item: null,
     isFocused: false,
     enabled: !params.disableKeyboardNavigation,
+    focusRequestId: 0,
   },
 });
 

@@ -18,7 +18,7 @@ import type {
   ChartsRadiusAxisProps,
   ChartsRotationAxisProps,
 } from '@mui/x-charts/internals';
-import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/models';
+import type { FocusedItemIdentifier, ScaleName } from '@mui/x-charts/models';
 
 /**
  * For a continuous rotation axis, find the two data indices that bracket the pointer's angle position.
@@ -176,7 +176,7 @@ const LINE_PROXIMITY_THRESHOLD = 15;
 export default function getItemAtPosition(
   state: ChartState<[UseChartPolarAxisSignature]>,
   point: { x: number; y: number },
-): SeriesItemIdentifierWithType<'radialLine'> | undefined {
+): FocusedItemIdentifier<'radialLine'> | undefined {
   const { axis: rotationAxes, axisIds: rotationAxisIds } = selectorChartRotationAxis(state);
   const { axis: radiusAxes, axisIds: radiusAxisIds } = selectorChartRadiusAxis(state);
   const center = selectorChartPolarCenter(state);
@@ -197,7 +197,7 @@ export default function getItemAtPosition(
 
   // Step 1: Find the closest line across all series (measured as radial distance).
   let closestDistance = Infinity;
-  let closestItem: SeriesItemIdentifierWithType<'radialLine'> | undefined;
+  let closestItem: FocusedItemIdentifier<'radialLine'> | undefined;
 
   for (const seriesId of series.seriesOrder) {
     const seriesItem = series.series[seriesId];

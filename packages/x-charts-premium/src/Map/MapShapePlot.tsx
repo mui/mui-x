@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useZAxes } from '@mui/x-charts/hooks';
+import { useActivateChartItem } from '@mui/x-charts/internals';
 import type { MapShapeItemIdentifier } from '../models/seriesType/mapShape';
 import { useGeoData } from '../hooks/useGeoData';
 import { useGeoPath } from '../hooks/useGeoPath';
@@ -48,6 +49,7 @@ function MapShapePlot(props: MapShapePlotProps) {
   const series = useMapShapeSeries();
   const featureIndexesByName = useGeoFeatureIndexesByName();
   const { zAxis, zAxisIds } = useZAxes();
+  const activateItem = useActivateChartItem();
 
   if (!geoData || !path || series.length === 0) {
     return null;
@@ -97,11 +99,15 @@ function MapShapePlot(props: MapShapePlotProps) {
                         color={color}
                         stroke={stroke}
                         strokeWidth={strokeWidth}
-                        onClick={
-                          onItemClick &&
-                          ((event) =>
-                            onItemClick(event, { type: 'mapShape', seriesId: id, name: item.name }))
-                        }
+                        onClick={(event) => {
+                          const identifier: MapShapeItemIdentifier = {
+                            type: 'mapShape',
+                            seriesId: id,
+                            name: item.name,
+                          };
+                          activateItem(identifier);
+                          onItemClick?.(event, identifier);
+                        }}
                       />
                     );
                   })}

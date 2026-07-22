@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { useChartId } from '../../../hooks/useChartId';
 import { useDescription } from './useDescription';
+import { useStore } from '../../store/useStore';
+import { selectorChartsFocusRequestId } from '../../plugins/featurePlugins/useChartKeyboardNavigation';
 
 /**
  * Make the proxy looks like a layer.
@@ -29,8 +31,9 @@ const fullSizeLayerStyle: React.CSSProperties = {
 export function ChartsAccessibilityProxy() {
   const message = useDescription();
   const chartId = useChartId();
+  const store = useStore();
+  const focusRequestId = store.use(selectorChartsFocusRequestId);
 
-  const currentFormatRef = React.useRef<string | null>(null);
   const currentIndexRef = React.useRef<number>(0);
   const containerRef = React.useRef(null);
 
@@ -67,9 +70,7 @@ export function ChartsAccessibilityProxy() {
       }
     }
 
-    if (message && message !== currentFormatRef.current) {
-      currentFormatRef.current = message;
-
+    if (message) {
       const inactiveIndex = currentIndexRef.current;
 
       currentIndexRef.current = (currentIndexRef.current + 1) % 2;
@@ -104,7 +105,7 @@ export function ChartsAccessibilityProxy() {
 
       activeDiv.focus();
     }
-  }, [message, chartId]);
+  }, [message, chartId, focusRequestId]);
 
   return (
     <div
