@@ -1,15 +1,9 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
-import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
-import type {
-  SchedulerDependency,
-  SchedulerDependencyId,
-  SchedulerDependenciesState,
-} from '../models';
+import type { SchedulerDependency, SchedulerDependencyId } from '../models';
+import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { classifyDependencyEvent } from '../internals/utils/dependency-utils';
-
-type State = SchedulerState & SchedulerDependenciesState;
 
 function groupByEventId(
   dependencies: readonly SchedulerDependency[],
@@ -60,6 +54,17 @@ const activeSourceTitlesByTargetSelector = createSelectorMemoized(
   },
 );
 
+const selectedIdSelector = createSelector(
+  (state: State) => state.selectedDependencyId,
+  (state: State) => state.dependencyModelLookup,
+  (selectedDependencyId, dependencyModelLookup) =>
+    selectedDependencyId !== null && dependencyModelLookup.has(selectedDependencyId)
+      ? selectedDependencyId
+      : null,
+);
+
+const creationSelector = createSelector((state: State) => state.dependencyCreation);
+
 export const eventTimelinePremiumDependencySelectors = {
   modelList: createSelector((state: State) => state.dependencyModelList),
   modelLookup: createSelector((state: State) => state.dependencyModelLookup),
@@ -88,5 +93,32 @@ export const eventTimelinePremiumDependencySelectors = {
     activeSourceTitlesByTargetSelector,
     (titlesByTarget, eventId: SchedulerEventId): readonly string[] =>
       titlesByTarget.get(eventId) ?? EMPTY_ARRAY,
+  ),
+  /**
+   * Whether the dependencies feature is enabled (internal parameters provided).
+   */
+  enabled: createSelector((state: State) => state.areDependenciesEnabled),
+  /**
+   * The pending create-dependency drag gesture, or `null`.
+   */
+  creation: creationSelector,
+  isCreationSource: createSelector(
+    creationSelector,
+    (creation, eventId: SchedulerEventId) => creation?.sourceEventId === eventId,
+  ),
+  isCreationTarget: createSelector(
+    creationSelector,
+    (creation, eventId: SchedulerEventId) =>
+      creation !== null && creation.targetEventId === eventId,
+  ),
+  /**
+   * The id of the selected dependency, or `null`.
+   * Ids that no longer exist in the collection resolve to `null`, so an external
+   * removal clears the selection without any reconciliation.
+   */
+  selectedId: selectedIdSelector,
+  isSelected: createSelector(
+    selectedIdSelector,
+    (selectedId, dependencyId: SchedulerDependencyId) => selectedId === dependencyId,
   ),
 };

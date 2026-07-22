@@ -17,11 +17,13 @@ describe('Core - EventTimelinePremiumStore', () => {
 
       const expectedState = {
         adapter,
+        areDependenciesEnabled: false,
         areEventsDraggable: true,
         areEventsResizable: true,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
+        dependencyCreation: null,
         dependencyModelList: [],
         dependencyModelLookup: new Map(),
         eventColor: 'teal',
@@ -52,6 +54,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         ]),
         readOnly: false,
         recurringEventsPlugin: schedulerRecurringEventsPlugin,
+        selectedDependencyId: null,
         shouldEventRequireResource: true,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [TEST_RESOURCE.id],

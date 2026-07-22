@@ -8,6 +8,8 @@ import type { EventTimelinePremiumPreferences } from '../models/preferences';
 import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
+  SchedulerDependencyCreation,
+  SchedulerDependencyId,
 } from '../models/dependency';
 
 export interface EventTimelinePremiumState extends SchedulerState, SchedulerDependenciesState {
@@ -23,6 +25,21 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
    * Preferences for the timeline.
    */
   preferences: Partial<EventTimelinePremiumPreferences>;
+  /**
+   * Whether the dependencies feature is enabled, i.e. the internal `dependencies` or
+   * `onDependenciesChange` parameter is provided.
+   */
+  areDependenciesEnabled: boolean;
+  /**
+   * The pending create-dependency drag gesture, or `null` when none is in progress.
+   */
+  dependencyCreation: SchedulerDependencyCreation | null;
+  /**
+   * The id of the selected dependency, or `null`.
+   * Read it through `eventTimelinePremiumDependencySelectors.selectedId`, which clears
+   * ids that no longer exist in the collection.
+   */
+  selectedDependencyId: SchedulerDependencyId | null;
   /**
    * `false` until the first parameters→state mapping has applied, then `true`.
    * Gates the lazy-loading plugin's first fetch so it doesn't run against the

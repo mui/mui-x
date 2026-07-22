@@ -22,6 +22,15 @@ export enum TimelineGridEventDataAttributes {
    */
   resizing = 'data-resizing',
   /**
+   * Present when the event is the origin of the pending create-dependency gesture.
+   */
+  dependencyDragSource = 'data-dependency-drag-source',
+  /**
+   * Present when the event is hovered as a valid target of the pending
+   * create-dependency gesture.
+   */
+  dependencyDropTarget = 'data-dependency-drop-target',
+  /**
    * Present when the event starts before the visible timeline range.
    */
   startingBeforeEdge = 'data-starting-before-edge',

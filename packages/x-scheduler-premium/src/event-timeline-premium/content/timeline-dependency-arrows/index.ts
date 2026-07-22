@@ -1,1 +1,4 @@
-export { EventTimelinePremiumDependencyArrows } from './EventTimelinePremiumDependencyArrows';
+export {
+  EventTimelinePremiumDependencyArrows,
+  EventTimelinePremiumDependencyInteractions,
+} from './EventTimelinePremiumDependencyArrows';
