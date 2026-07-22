@@ -47,7 +47,7 @@ Same changes as in `@mui/x-date-pickers@9.10.1`, plus:
 #### `@mui/x-charts@9.10.1`
 
 - [charts] Fix pie chart disappearing when an arc spans almost the full circle (#23145) @JCQuintas
-- [charts] Set aria-hidden on accessibility proxy divs at initialization (#23186) @kevincorizi-sbt
+- [charts] Set `aria-hidden` on accessibility proxy divs at initialization (#23186) @kevincorizi-sbt
 - [charts] Fix keyboard navigation on series with different lengths (#23182) @JCQuintas
 - [charts] Fix out of bounds keyboard navigation (#23180) @silviuaavram
 
