@@ -9,7 +9,7 @@ export interface GridColumnApi {
   /**
    * Returns the [[GridColDef]] for the given `field`.
    * @param {string} field The column field.
-   * @returns {{GridStateColDef | undefined}} The [[GridStateColDef]], or `undefined` if the field is not in the current column set.
+   * @returns {GridStateColDef | undefined} The [[GridStateColDef]], or `undefined` if the field is not in the current column set.
    */
   getColumn: (field: string) => GridStateColDef | undefined;
   /**
