@@ -32,7 +32,6 @@
     "@mui/x-tree-view-pro": "workspace:^",
     "@types/moment-jalaali": "catalog:",
     "@types/react": "catalog:",
-    "@types/react-router": "catalog:",
     "@types/semver": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "minimatch": "10.2.5",
