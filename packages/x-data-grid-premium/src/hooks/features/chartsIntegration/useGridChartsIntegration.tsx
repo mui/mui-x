@@ -342,13 +342,9 @@ export const useGridChartsIntegration = (
         const isColumnGrouped = rowGroupingModel.includes(column.field);
 
         if (isColumnGrouped) {
-          const groupedFieldName = isColumnGrouped
-            ? getRowGroupingFieldFromGroupingCriteria(
-                orderedFields.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD)
-                  ? null
-                  : column.field,
-              )
-            : column.field;
+          const groupedFieldName = getRowGroupingFieldFromGroupingCriteria(
+            orderedFields.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) ? null : column.field,
+          );
           const columnDefinition = apiRef.current.getColumn(groupedFieldName);
 
           if (columnDefinition) {
