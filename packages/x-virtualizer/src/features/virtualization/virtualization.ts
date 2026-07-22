@@ -37,7 +37,7 @@ const MINIMUM_COLUMN_WIDTH = 50;
 // to give time for the entering rows to rasterize. Below the lowest threshold, updates commit
 // immediately. Ordered by descending speed - the first match wins.
 const SCROLL_DELAY_LEVELS: ReadonlyArray<{ minVelocityPxPerMs: number; frames: number }> = [
-  { minVelocityPxPerMs: 24, frames: 6 },
+  { minVelocityPxPerMs: 28, frames: 6 },
   { minVelocityPxPerMs: 20, frames: 4 },
   { minVelocityPxPerMs: 16, frames: 2 },
   { minVelocityPxPerMs: 8, frames: 1 },
@@ -1044,7 +1044,6 @@ function computeRenderContext(
       bufferAfter: scrollCache.buffer.rowAfter,
       positions: inputs.rowsMeta.positions,
       lastSize: inputs.lastRowHeight,
-      spillOverflow: inputs.layoutMode === 'sticky',
     });
 
     if (!inputs.virtualizeColumnsWithAutoRowHeight) {
@@ -1135,7 +1134,6 @@ function deriveRenderContext(
     bufferAfter: scrollCache.buffer.rowAfter,
     positions: inputs.rowsMeta.positions,
     lastSize: inputs.lastRowHeight,
-    spillOverflow: inputs.layoutMode === 'sticky',
   });
 
   const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
@@ -1147,7 +1145,6 @@ function deriveRenderContext(
     bufferAfter: scrollCache.buffer.columnAfter,
     positions: inputs.columnPositions,
     lastSize: inputs.lastColumnWidth,
-    spillOverflow: inputs.layoutMode === 'sticky',
   });
 
   const firstColumnToRender = getFirstNonSpannedColumnToRender({
@@ -1240,7 +1237,6 @@ function getIndexesToRender({
   maxLastIndex,
   positions,
   lastSize,
-  spillOverflow,
 }: {
   firstIndex: number;
   lastIndex: number;
@@ -1250,30 +1246,9 @@ function getIndexesToRender({
   maxLastIndex: number;
   positions: number[];
   lastSize: number;
-  spillOverflow?: boolean;
 }) {
-  let firstPosition = positions[firstIndex] - bufferBefore;
-  let lastPosition = positions[lastIndex] + bufferAfter;
-
-  if (spillOverflow) {
-    // Sticky mode keeps the rendered window size constant (see `bufferForDirection`).
-    // Near the content edges part of a buffer has nothing left to extend into, which
-    // would shrink the window and resize its layer. Spill that part to the other
-    // side instead, so e.g. a fling that starts at the very top (where the backward
-    // buffer is void) doesn't grow the window when the buffers turn direction.
-    const startBound = positions[minFirstIndex] ?? 0;
-    const endBound = positions[maxLastIndex] ?? (positions[positions.length - 1] ?? 0) + lastSize;
-    const startOverflow = startBound - firstPosition;
-    const endOverflow = lastPosition - endBound;
-    if (startOverflow > 0) {
-      firstPosition = startBound;
-      lastPosition += startOverflow;
-    }
-    if (endOverflow > 0) {
-      lastPosition = endBound;
-      firstPosition -= endOverflow;
-    }
-  }
+  const firstPosition = positions[firstIndex] - bufferBefore;
+  const lastPosition = positions[lastIndex] + bufferAfter;
 
   const firstIndexPadded = binarySearch(firstPosition, positions, {
     atStart: true,
