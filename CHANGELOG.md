@@ -7,6 +7,8 @@ _Jul 23, 2026_
 We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 🦮 Improve accessibility of the Charts and Pickers components.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 Special thanks go out to these community members for their valuable contributions:
 @kevincorizi-sbt, @mustafajw07
