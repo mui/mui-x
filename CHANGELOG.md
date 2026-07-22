@@ -98,7 +98,7 @@ Internal changes.
 ### Miscellaneous
 
 - [chat] Normalize message part link URLs (#23187) @hasdfa
-- [internals] Make disposable types self-contained without esnext.disposable lib (#23164) @JCQuintas
+- [internals] Make disposable types self-contained without `esnext.disposable` lib (#23164) @JCQuintas
 
 ## 9.10.0
 
