@@ -92,9 +92,12 @@ export function EventEditingTrigger(props: EventEditingTriggerProps) {
   // repointed occurrence's trigger mounts and re-anchors as the old node unmounts. Relies on the grid
   // mounting every occurrence of a rendered day (no time virtualization); revisit if that changes.
   useIsoLayoutEffect(() => {
-    if (isEdited) {
-      setAnchor(ref.current);
+    if (!isEdited) {
+      return undefined;
     }
+    setAnchor(ref.current);
+    // Drop the anchor if this trigger unmounts while still edited, so the surface won't track a detached node.
+    return () => setAnchor(null);
   }, [isEdited, setAnchor]);
 
   return React.cloneElement(children as React.ReactElement<any>, {

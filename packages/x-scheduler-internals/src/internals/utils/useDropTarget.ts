@@ -220,9 +220,8 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
 
-  // If `undefined`, we want to set the event resource to `undefined` (no resource).
-  // If `null`, we want to keep the original event resource.
-  if (placeholder.resourceId !== null) {
+  // Drag-only: a resize would collapse a multi-resource event to the placeholder's single primary id.
+  if (placeholder.type === 'internal-drag' && placeholder.resourceId !== null) {
     changes.resource = placeholder.resourceId;
   }
 

@@ -11,22 +11,28 @@ export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) 
   // Re-run the effects below when the anchored node changes identity (e.g. a recurring scope swap).
   const anchor = anchorRef.current;
 
-  const updatePosition = React.useCallback(() => {
-    const popup = popupRef.current;
-    // Skip stale nodes: the anchor may have been detached.
-    if (anchor != null && !anchor.isConnected) {
-      return;
-    }
-    const position = calculatePosition(anchor, popup, side);
-    if (position && popup) {
-      // Safe DOM write, not a mutation of the hook's arguments.
-      /* eslint-disable react-compiler/react-compiler */
-      popup.style.top = `${position.top}px`;
-      popup.style.left = `${position.left}px`;
-      /* eslint-enable react-compiler/react-compiler */
-      onReposition?.();
-    }
-  }, [anchor, popupRef, side, onReposition]);
+  const updatePosition = React.useCallback(
+    // `resetDrag` gates `onReposition`: skip it for content-size repositions so a dragged dialog stays put.
+    (resetDrag = true) => {
+      const popup = popupRef.current;
+      // Skip stale nodes: the anchor may have been detached.
+      if (anchor != null && !anchor.isConnected) {
+        return;
+      }
+      const position = calculatePosition(anchor, popup, side);
+      if (position && popup) {
+        // Safe DOM write, not a mutation of the hook's arguments.
+        /* eslint-disable react-compiler/react-compiler */
+        popup.style.top = `${position.top}px`;
+        popup.style.left = `${position.left}px`;
+        /* eslint-enable react-compiler/react-compiler */
+        if (resetDrag) {
+          onReposition?.();
+        }
+      }
+    },
+    [anchor, popupRef, side, onReposition],
+  );
 
   // Position before paint to avoid a flash at the wrong spot.
   useIsoLayoutEffect(() => {
@@ -35,26 +41,31 @@ export function useAnchoredPosition(parameters: useAnchoredPosition.Parameters) 
 
   React.useEffect(() => {
     const popup = popupRef.current;
-    const reposition = () => updatePosition();
+    // Follow the anchor / popup as it moves or resizes, keeping any user drag offset intact.
+    const followKeepingDrag = () => updatePosition(false);
+    // A viewport resize recomputes the base position from scratch, so the drag offset is reset.
+    const repositionResettingDrag = () => updatePosition(true);
 
     const resizeObserver =
-      typeof ResizeObserver !== 'undefined' && popup ? new ResizeObserver(reposition) : null;
+      typeof ResizeObserver !== 'undefined' && popup ? new ResizeObserver(followKeepingDrag) : null;
     if (popup) {
       resizeObserver?.observe(popup);
     }
 
     const mutationObserver =
-      typeof MutationObserver !== 'undefined' && anchor ? new MutationObserver(reposition) : null;
+      typeof MutationObserver !== 'undefined' && anchor
+        ? new MutationObserver(followKeepingDrag)
+        : null;
     if (anchor) {
       mutationObserver?.observe(anchor, { attributes: true, attributeFilter: ['style'] });
     }
 
-    window.addEventListener('resize', reposition);
+    window.addEventListener('resize', repositionResettingDrag);
 
     return () => {
       resizeObserver?.disconnect();
       mutationObserver?.disconnect();
-      window.removeEventListener('resize', reposition);
+      window.removeEventListener('resize', repositionResettingDrag);
     };
   }, [anchor, popupRef, updatePosition]);
 }

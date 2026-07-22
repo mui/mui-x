@@ -213,6 +213,20 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
     getResizeSession,
     addPropertiesToResizedEvent,
   ]);
+
+  // Stable `store` dep, so this cleanup runs only on a true unmount: clear a preview stranded mid-gesture.
+  React.useEffect(() => {
+    return () => {
+      const session = sessionRef.current;
+      if (session == null || session.kind === 'creation') {
+        return;
+      }
+      const placeholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
+      if (placeholder?.type === 'internal-resize') {
+        store.setOccurrencePlaceholder(null);
+      }
+    };
+  }, [store]);
 }
 
 export namespace useEventPointerResizeHandler {
