@@ -7,7 +7,7 @@ import {
 import { selectorAllSeriesOfType } from '../../internals/seriesSelectorOfType';
 import type { ProcessedSeries } from '../../internals/plugins/corePlugins/useChartSeries';
 import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
-import type { SeriesItemIdentifierWithType } from '../../models/seriesType';
+import type { FocusedItemIdentifier } from '../../models/seriesType';
 import { isOrdinalScale } from '../../internals/scaleGuards';
 import { getAsNumber } from '../../internals/getAsNumber';
 import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
@@ -157,7 +157,7 @@ const LINE_PROXIMITY_THRESHOLD = 15;
 export default function getItemAtPosition(
   state: ChartState<[UseChartCartesianAxisSignature]>,
   point: { x: number; y: number },
-): SeriesItemIdentifierWithType<'line'> | undefined {
+): FocusedItemIdentifier<'line'> | undefined {
   if (!state.experimentalFeatures?.enablePositionBasedPointerInteraction) {
     return undefined;
   }
@@ -175,7 +175,7 @@ export default function getItemAtPosition(
 
   // Step 1: Find the closest line (curve) across all series.
   let closestDistance = Infinity;
-  let closestItem: SeriesItemIdentifierWithType<'line'> | undefined;
+  let closestItem: FocusedItemIdentifier<'line'> | undefined;
 
   for (const seriesId of series.seriesOrder) {
     const seriesItem = series.series[seriesId];

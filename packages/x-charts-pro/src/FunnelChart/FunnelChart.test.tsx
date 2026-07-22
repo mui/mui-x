@@ -183,6 +183,25 @@ describe('FunnelChart', () => {
     });
   });
 
+  it('should continue keyboard navigation from a clicked section', async () => {
+    const { container, user } = render(
+      <FunnelChart {...config} series={[{ id: 'A', data: [{ value: 200 }, { value: 100 }] }]} />,
+    );
+
+    const sections = container.querySelectorAll<SVGPathElement>(`.${funnelClasses.section}`);
+    await user.click(sections[0]);
+
+    expect(container.querySelector('path[fill="none"]')?.getAttribute('d')).to.equal(
+      sections[0].getAttribute('d'),
+    );
+
+    await user.keyboard('[ArrowRight]');
+
+    expect(container.querySelector('path[fill="none"]')?.getAttribute('d')).to.equal(
+      sections[1].getAttribute('d'),
+    );
+  });
+
   describe.skipIf(isJSDOM)('gap', () => {
     it('should properly distance sections based on gap', async () => {
       render(<FunnelChart {...config} gap={13} />);

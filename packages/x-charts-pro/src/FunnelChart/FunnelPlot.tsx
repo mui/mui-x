@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { cartesianSeriesTypes, useStore } from '@mui/x-charts/internals';
+import { cartesianSeriesTypes, useActivateChartItem, useStore } from '@mui/x-charts/internals';
 import type { FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
@@ -143,6 +143,7 @@ function FunnelPlot(props: FunnelPlotProps) {
 
   const data = useAggregatedData();
   const classes = useUtilityClasses();
+  const activateItem = useActivateChartItem();
 
   return (
     <g className={clsx(classes.root, className)}>
@@ -162,12 +163,11 @@ function FunnelPlot(props: FunnelPlotProps) {
                 dataIndex={dataIndex}
                 seriesId={seriesId}
                 variant={variant}
-                onClick={
-                  onItemClick &&
-                  ((event) => {
-                    onItemClick(event, { type: 'funnel', seriesId, dataIndex });
-                  })
-                }
+                onClick={(event) => {
+                  const item: FunnelItemIdentifier = { type: 'funnel', seriesId, dataIndex };
+                  activateItem(item);
+                  onItemClick?.(event, item);
+                }}
               />
             ))}
           </g>

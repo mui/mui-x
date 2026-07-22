@@ -73,4 +73,27 @@ describe('<SankeyPlot />', () => {
       expect(wasNotifiedAboutControlledNode).to.equal(false);
     },
   );
+
+  it('should focus a clicked node for keyboard navigation', async () => {
+    const { container, user } = render(
+      <SankeyChart
+        series={{
+          type: 'sankey',
+          data: {
+            nodes: [
+              { id: 'A', label: 'A' },
+              { id: 'B', label: 'B' },
+            ],
+            links: [{ source: 'A', target: 'B', value: 5 }],
+          },
+        }}
+        width={200}
+        height={200}
+      />,
+    );
+
+    await user.click(container.querySelector<SVGRectElement>('[data-node="A"]')!);
+
+    expect(container.querySelector('rect[fill="none"]')).not.to.equal(null);
+  });
 });

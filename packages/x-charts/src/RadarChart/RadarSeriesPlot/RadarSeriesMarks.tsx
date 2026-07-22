@@ -7,7 +7,9 @@ import type { RadarClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import type { SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
+import type { RadarItemIdentifier } from '../../models/seriesType/radar';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
+import { useActivateChartItem } from '../../hooks/useActivateChartItem';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -43,6 +45,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
+  const activateItem = useActivateChartItem();
 
   return (
     <React.Fragment>
@@ -65,9 +68,15 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   classes,
                 })}
                 pointerEvents={onItemClick ? undefined : 'none'}
-                onClick={(event) =>
-                  onItemClick?.(event, { type: 'radar', seriesId: id, dataIndex: index })
-                }
+                onClick={(event) => {
+                  const item: Required<RadarItemIdentifier> = {
+                    type: 'radar',
+                    seriesId: id,
+                    dataIndex: index,
+                  };
+                  activateItem(item);
+                  onItemClick?.(event, item);
+                }}
                 cursor={onItemClick ? 'pointer' : 'unset'}
                 {...other}
               />

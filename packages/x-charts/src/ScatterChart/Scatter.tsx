@@ -24,6 +24,7 @@ import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { useActivateChartItem } from '../hooks/useActivateChartItem';
 
 /**
  * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
@@ -107,6 +108,25 @@ function Scatter(props: ScatterProps) {
   const getHighlightState = useItemHighlightStateGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
+  const activateItem = useActivateChartItem();
+  const shouldAttachMarkerClick = !isVoronoiEnabled || onItemClick !== undefined;
+
+  const handleMarkerClick = (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    dataIndex: number,
+  ) => {
+    const item: ScatterItemIdentifier = {
+      type: 'scatter',
+      seriesId: series.id,
+      dataIndex,
+    };
+
+    if (!isVoronoiEnabled) {
+      activateItem(item);
+    }
+
+    onItemClick?.(event, item);
+  };
 
   const Marker = slots?.marker ?? ScatterMarker;
   const { ownerState, ...markerProps } = useSlotProps({
@@ -139,13 +159,9 @@ function Scatter(props: ScatterProps) {
             x={dataPoint.x}
             y={dataPoint.y}
             onClick={
-              onItemClick &&
-              ((event) =>
-                onItemClick(event, {
-                  type: 'scatter',
-                  seriesId: series.id,
-                  dataIndex: dataPoint.dataIndex,
-                }))
+              shouldAttachMarkerClick
+                ? (event) => handleMarkerClick(event, dataPoint.dataIndex)
+                : undefined
             }
             data-highlighted={isItemHighlighted || undefined}
             data-faded={isItemFaded || undefined}

@@ -19,6 +19,7 @@ import { useChartsContext } from '../context/ChartsProvider';
 import { useMarkPlotData } from './useMarkPlotData';
 import { useUtilityClasses } from './lineClasses';
 import type { MarkPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { useActivateChartItem } from '../hooks/useActivateChartItem';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps & MarkPropsOverrides>;
@@ -100,6 +101,7 @@ function MarkPlot(props: MarkPlotProps) {
 
   const completedData = useMarkPlotData(xAxis, yAxis);
   const classes = useUtilityClasses();
+  const activateItem = useActivateChartItem();
 
   return (
     <MarkPlotRoot className={clsx(classes.markPlot, className)} {...other}>
@@ -125,10 +127,15 @@ function MarkPlot(props: MarkPlotProps) {
                   x={x}
                   y={y}
                   skipAnimation={skipAnimation}
-                  onClick={
-                    onItemClick &&
-                    ((event) => onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
-                  }
+                  onClick={(event) => {
+                    const item: LineItemClickIdentifier = {
+                      type: 'line',
+                      seriesId,
+                      dataIndex: index,
+                    };
+                    activateItem(item);
+                    onItemClick?.(event, item);
+                  }}
                   isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
                   isFaded={isSeriesFaded}
                   hidden={hidden}

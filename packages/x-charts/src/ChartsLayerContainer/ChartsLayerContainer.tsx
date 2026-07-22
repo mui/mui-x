@@ -13,6 +13,7 @@ import {
   selectorChartPropsWidth,
 } from '../internals/plugins/corePlugins/useChartDimensions';
 import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
+import type { UseChartKeyboardNavigationSignature } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartsContext } from '../context/ChartsProvider';
@@ -63,7 +64,11 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
   function ChartsLayerContainer(inProps, ref) {
     const { store, instance } = useChartsContext<
       [],
-      [UseChartInteractionSignature, UseChartItemClickSignature]
+      [
+        UseChartInteractionSignature,
+        UseChartItemClickSignature,
+        UseChartKeyboardNavigationSignature,
+      ]
     >();
     const propsWidth = store.use(selectorChartPropsWidth);
     const propsHeight = store.use(selectorChartPropsHeight);
@@ -118,6 +123,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
         }}
         onClick={(event) => {
           other.onClick?.(event);
+          instance.handleKeyboardNavigationClick?.(event);
           instance.handleClick?.(event);
         }}
       >

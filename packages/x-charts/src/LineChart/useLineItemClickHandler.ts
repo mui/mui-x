@@ -7,6 +7,7 @@ import { getChartPoint } from '../internals/getChartPoint';
 import { getAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import type { SeriesId } from '../models/seriesType/common';
+import { useActivateChartItem } from '../hooks/useActivateChartItem';
 
 /**
  * Creates a click handler for line and area paths that enriches the item
@@ -23,15 +24,12 @@ export function useLineItemClickHandler(
   ) => void,
 ): ((event: React.MouseEvent<SVGElement, MouseEvent>, seriesId: SeriesId) => void) | undefined {
   const chartsLayerContainerRef = useChartsLayerContainerRef();
+  const activateItem = useActivateChartItem();
   const { xAxis: xAxes, xAxisIds } = useXAxes();
   const seriesData = useLineSeriesContext();
   const defaultXAxisId = xAxisIds[0];
 
   return React.useMemo(() => {
-    if (!onItemClick) {
-      return undefined;
-    }
-
     return (event: React.MouseEvent<SVGElement, MouseEvent>, seriesId: SeriesId) => {
       const element = chartsLayerContainerRef.current;
       const xAxisId = seriesData?.series[seriesId]?.xAxisId ?? defaultXAxisId;
@@ -47,7 +45,9 @@ export function useLineItemClickHandler(
         return;
       }
 
-      onItemClick(event, { type: 'line', seriesId, dataIndex });
+      const identifier: LineItemClickIdentifier = { type: 'line', seriesId, dataIndex };
+      activateItem(identifier);
+      onItemClick?.(event, identifier);
     };
-  }, [onItemClick, chartsLayerContainerRef, seriesData, defaultXAxisId, xAxes]);
+  }, [activateItem, onItemClick, chartsLayerContainerRef, seriesData, defaultXAxisId, xAxes]);
 }

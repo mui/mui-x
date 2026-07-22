@@ -5,6 +5,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import type { ChartPlugin } from '../../models';
 import type { SeriesId } from '../../../../models/seriesType/common';
+import type { ScatterItemIdentifier } from '../../../../models/seriesType/scatter';
 import type { UseChartClosestPointSignature } from './useChartClosestPoint.types';
 import { getChartPoint } from '../../../getChartPoint';
 import {
@@ -224,9 +225,11 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     const tapHandler = instance.addInteractionListener('tap', (event) => {
       const closestPoint = getClosestPoint(event.detail.srcEvent);
 
-      if (typeof closestPoint !== 'string' && onItemClick) {
+      if (typeof closestPoint !== 'string') {
         const { seriesId, dataIndex } = closestPoint;
-        onItemClick(event.detail.srcEvent, { type: 'scatter', seriesId, dataIndex });
+        const item: ScatterItemIdentifier = { type: 'scatter', seriesId, dataIndex };
+        instance.setKeyboardNavigationItem?.(item);
+        onItemClick?.(event.detail.srcEvent, item);
       }
     });
 

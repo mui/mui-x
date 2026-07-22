@@ -8,8 +8,10 @@ import type { RadarClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
+import type { RadarItemIdentifier } from '../../models/seriesType/radar';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
+import { useActivateChartItem } from '../../hooks/useActivateChartItem';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
@@ -43,6 +45,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const { seriesId, onItemClick, classes: inClasses, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(seriesId);
   const getRotationIndex = useRadarRotationIndex();
+  const activateItem = useActivateChartItem();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
@@ -67,13 +70,15 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               getHighlightState,
               classes,
             })}
-            onClick={(event) =>
-              onItemClick?.(event, {
+            onClick={(event) => {
+              const item: Required<RadarItemIdentifier> = {
                 type: 'radar',
                 seriesId: id,
                 dataIndex: getRotationIndex(event),
-              })
-            }
+              };
+              activateItem(item);
+              onItemClick?.(event, item);
+            }}
             cursor={onItemClick ? 'pointer' : 'unset'}
             {...interactionProps[seriesIndex]}
             {...other}

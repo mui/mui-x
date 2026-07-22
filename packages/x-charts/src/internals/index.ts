@@ -8,6 +8,7 @@ export * from '../BarChart/BarClipPath';
 // hooks
 export { useSeries } from '../hooks/useSeries';
 export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+export { useActivateChartItem } from '../hooks/useActivateChartItem';
 export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useScatterPlotData } from '../ScatterChart/useScatterPlotData';
