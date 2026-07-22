@@ -135,7 +135,7 @@ describe('<PickersTextField /> - outlined notch', () => {
         {...STUB_PROPS}
         areAllSectionsEmpty={false}
         label="My label"
-        slotProps={{ input: { notched: false } as any }}
+        slotProps={{ input: { notched: false } }}
       />,
     );
 
@@ -168,7 +168,7 @@ describe('<PickersTextField /> - format placeholder opacity', () => {
         <PickersTextField {...STUB_PROPS} />
         <PickersTextField
           {...STUB_PROPS}
-          slotProps={{ input: { startAdornment: <span>@</span> } as any }}
+          slotProps={{ input: { startAdornment: <span>@</span> } }}
         />
       </div>,
     );
@@ -188,7 +188,7 @@ describe('<PickersTextField /> - format placeholder opacity', () => {
         <PickersTextField
           {...STUB_PROPS}
           label="My label"
-          slotProps={{ input: { startAdornment: <span>@</span> } as any }}
+          slotProps={{ input: { startAdornment: <span>@</span> } }}
         />
       </div>,
     );
