@@ -141,9 +141,7 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
         x={x}
         y={y}
         onClick={
-          shouldAttachMarkerClick
-            ? (event) => handleMarkerClick(event, dataIndex)
-            : undefined
+          shouldAttachMarkerClick ? (event) => handleMarkerClick(event, dataIndex) : undefined
         }
         data-highlighted={isItemHighlighted || undefined}
         data-faded={isItemFaded || undefined}
