@@ -88,9 +88,6 @@ export default function DataGridDemo() {
 ```
 
 **Done!** Now, you can render any dependencies that rely on Material UI v5 without upgrading from v4, and they will both run seamlessly alongside.
-For example, the following interactive demo shows how these steps tie together with the Data Grid:
-
-{{"demo": "CoreV5WithCoreV4.js", "hideToolbar": true, "bg": true}}
 
 ## Migrating MUI X
 

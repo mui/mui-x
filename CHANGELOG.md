@@ -5,6 +5,307 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.29.2
+
+_Jul 2, 2026_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @timbuckley
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @brijeshb42, @cherniavskii, @LukasTy, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.29.2`
+
+- [DataGrid] Avoid reading `type` of `undefined` in `gridRowUtils` (#22963) @timbuckley
+- [DataGrid] Define `overflowAnchor` style at the right element (#22860) @arminmeh
+- [DataGrid] Fix panel placement jump on mount (#22946) @cherniavskii
+- [DataGrid] Fix scrollbars not showing up on scroll on iOS (#22884) @cherniavskii
+- [DataGrid] Wait for rows before reacting on `autosizeOnMount` (#22886) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@8.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.29.2`.
+
+#### `@mui/x-data-grid-premium@8.29.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.29.2`, plus:
+
+- [DataGridPremium] Escape `singleSelect` values in Excel export with `escapeFormulas` enabled (#22966) @Anexus5919
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.29.2`
+
+- [pickers] Fix localized digit crash (#23010) @alexfauquette
+- [pickers] Respect explicit `notched` prop on the outlined `PickersTextField` (#22875) (#22893) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.29.2`.
+
+### Charts
+
+#### `@mui/x-charts@8.29.2`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.29.2`.
+
+#### `@mui/x-charts-premium@8.29.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.29.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.29.2`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.29.2`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.29.2`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Pin mui-public actions to nearest git hash (#22824) @brijeshb42
+- [internal] Switch resolutions to workspace overrides (#22865) @cherniavskii
+
+### Miscellaneous
+
+- [virtualizer] Improve the dimensions' initial state (#22890) @arminmeh
+- [virtualizer] Remeasure scrollbars when layout changes (#23003) @arminmeh
+
+## 8.29.1
+
+_Jun 11, 2026_
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.29.1`
+
+- [DataGrid] Prevent React state update before mount (#22749) @arminmeh
+
+#### `@mui/x-data-grid-pro@8.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.29.1`.
+
+#### `@mui/x-data-grid-premium@8.29.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.29.1`.
+
+## 8.29.0
+
+_Jun 5, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Update exceljs fork (#22668)
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@brijeshb42, @cherniavskii
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.29.0`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.29.0`.
+
+#### `@mui/x-data-grid-premium@8.29.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+> This release includes a version bump of the `@mui/x-internal-exceljs-fork` package to address the vulnerable dependencies.
+> The following CVEs are fixed:
+>
+> - <https://github.com/advisories/GHSA-ph9p-34f9-6g65>
+> - <https://github.com/isaacs/minimatch/security/advisories/GHSA-23c5-xmqv-rm74>
+> - <https://github.com/advisories/GHSA-w5hq-g745-h8pq>
+>
+> To make this security update possible, we bumped the `node` version requirement from `>=14.0.0` to `>=14.17.0`.
+> [Node.js 14.17.0](https://nodejs.org/en/blog/release/v14.17.0) was released in May 2021, so we consider it safe to bump the requirement without causing issues for our users.
+
+Same changes as in `@mui/x-data-grid-pro@8.29.0`, plus:
+
+- [DataGridPremium] Update exceljs fork (#22668) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.29.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.29.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.29.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.29.0`.
+
+#### `@mui/x-charts-premium@8.29.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.29.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.29.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.29.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.29.0`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Backport flat build setup to v8.x (#22536) @brijeshb42
+
+## 8.28.7
+
+_May 20, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible:
+@arminmeh, @LukasTy
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.28.7`
+
+- [DataGrid] Fix scrollbar disappearing after multiple resizes (#22516) @LukasTy
+
+#### `@mui/x-data-grid-pro@8.28.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.28.7`.
+
+#### `@mui/x-data-grid-premium@8.28.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.28.7`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.28.7`
+
+- [pickers] Fix disabled state styling for `PickersTextField` standard and filled variants (#22534) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.28.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.28.7`.
+
+### Docs
+
+- [docs] Automatically update supported versions (#22527) @arminmeh
+
+## 8.28.6
+
+_May 13, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@LukasTy, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.28.6`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.28.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.28.6`, plus:
+
+- [DataGridPro] Preserve parent selection for non-selectable children (@MBilalShafi) (#22013)
+
+#### `@mui/x-data-grid-premium@8.28.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.28.6`.
+
+### Docs
+
+- [docs] Replace broken CodeSandbox iframes in migration guides (#22380) @LukasTy
+
+## 8.28.5
+
+_May 8, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@LukasTy, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.28.5`
+
+- [DataGrid] Fix active filter detection for array values (#22357) @MBilalShafi
+- [DataGrid] Fix crash when grouping/tree-data values match `Object.prototype` property names (#22343) @LukasTy
+
+#### `@mui/x-data-grid-pro@8.28.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.28.5`.
+
+#### `@mui/x-data-grid-premium@8.28.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.28.5`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.28.5`
+
+- [pickers] Fix duplicate hour label in `MultiSectionDigitalClock` on DST day (#22350) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.28.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.28.5`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.28.5`
+
+- [tree view] Fix stale Tree View `apiRef` after keyed remount (#22355) @MBilalShafi
+
+#### `@mui/x-tree-view-pro@8.28.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.28.5`.
+
+### Core
+
+- [code-infra] Fix broken `valelint` and docs build (#22362) @LukasTy
+
 ## 8.28.4
 
 _Apr 27, 2026_

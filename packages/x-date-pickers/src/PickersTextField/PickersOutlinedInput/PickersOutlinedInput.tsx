@@ -53,9 +53,6 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
       [`& .${pickersOutlinedInputClasses.notchedOutline}`]: {
         borderColor: (theme.vars || theme).palette.action.disabled,
       },
-      '*': {
-        color: (theme.vars || theme).palette.action.disabled,
-      },
     },
     variants: Object.keys((theme.vars ?? theme).palette)
       // @ts-ignore
@@ -130,23 +127,29 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
   return (
     <PickersInputBase
       slots={{ root: PickersOutlinedInputRoot, input: PickersOutlinedInputSectionsContainer }}
-      renderSuffix={(state) => (
-        <Outline
-          shrink={Boolean(notched || state.adornedStart || state.focused || state.filled)}
-          notched={Boolean(notched || state.adornedStart || state.focused || state.filled)}
-          className={classes.notchedOutline}
-          label={
-            label != null && label !== '' && muiFormControl?.required ? (
-              <React.Fragment>
-                {label}
-                &thinsp;{'*'}
-              </React.Fragment>
-            ) : (
-              label
-            )
-          }
-        />
-      )}
+      renderSuffix={(state) => {
+        const isNotched =
+          typeof notched !== 'undefined'
+            ? notched
+            : Boolean(state.adornedStart || state.focused || state.filled);
+        return (
+          <Outline
+            shrink={isNotched}
+            notched={isNotched}
+            className={classes.notchedOutline}
+            label={
+              label != null && label !== '' && muiFormControl?.required ? (
+                <React.Fragment>
+                  {label}
+                  &thinsp;{'*'}
+                </React.Fragment>
+              ) : (
+                label
+              )
+            }
+          />
+        );
+      }}
       {...other}
       label={label}
       classes={classes}

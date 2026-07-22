@@ -64,7 +64,7 @@ export const selectorLinkFadeConfig = createSelector(
  */
 export const selectorSankeyHighlightedItem = createSelector(
   selectorSankeyHighlight,
-  (highlight) => highlight.item,
+  (selectorHighlight) => selectorHighlight.item,
 );
 
 /**

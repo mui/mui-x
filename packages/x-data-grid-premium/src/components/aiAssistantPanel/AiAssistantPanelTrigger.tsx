@@ -56,8 +56,8 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
       panelState.open && panelState.openedPanelValue === GridPreferencePanelsValue.aiAssistant;
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
-    const { aiAssistantPanelTriggerRef } = useGridPanelContext();
-    const handleRef = useForkRef(ref, aiAssistantPanelTriggerRef);
+    const { triggers } = useGridPanelContext();
+    const handleRef = useForkRef(ref, triggers.aiAssistantPanel.setRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {

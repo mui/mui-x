@@ -33,6 +33,11 @@ export const alias = [
       })),
     ];
   }),
+  // x-charts-vendor uses a build directory structure
+  {
+    find: /^@mui\/x-charts-vendor\/(.+)$/,
+    replacement: resolve(WORKSPACE_ROOT, './packages/x-charts-vendor/build/$1'),
+  },
   {
     find: 'test/utils',
     replacement: fileURLToPath(new URL('./test/utils', import.meta.url)),

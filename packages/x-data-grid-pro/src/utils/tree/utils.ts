@@ -125,9 +125,9 @@ export const insertNodeInTree = (
     }
 
     if (groupingField == null) {
-      parentNode.childrenFromPath[groupingFieldName] = {
-        [groupingKeyName.toString()]: node.id,
-      };
+      const newGroupingField = Object.create(null);
+      newGroupingField[groupingKeyName.toString()] = node.id;
+      parentNode.childrenFromPath[groupingFieldName] = newGroupingField;
     } else {
       groupingField[groupingKeyName.toString()] = node.id;
     }
