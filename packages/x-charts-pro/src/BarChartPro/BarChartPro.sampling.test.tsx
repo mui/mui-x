@@ -73,26 +73,31 @@ describe('<BarChartPro /> - Sampling', () => {
   it('mirrors sampled bucket geometry on a reversed band axis', () => {
     const width = 200;
 
-    const geometry = (reverse: boolean) => {
-      const { container } = render(
-        <BarChartPro
-          series={[{ data: range(256) }]}
-          xAxis={[{ data: range(256).map(String), zoom: true, reverse }]}
-          yAxis={[{ position: 'none' }]}
-          width={width}
-          height={200}
-          margin={0}
-          sampling="minmax"
-          skipAnimation
-        />,
-      );
-      return Array.from(container.querySelectorAll(`.${barClasses.element}`))
-        .map((bar) => ({ x: Number(bar.getAttribute('x')), width: Number(bar.getAttribute('width')) }))
+    const geometryOf = (container: HTMLElement) =>
+      Array.from(container.querySelectorAll(`.${barClasses.element}`))
+        .map((bar) => ({
+          x: Number(bar.getAttribute('x')),
+          width: Number(bar.getAttribute('width')),
+        }))
         .sort((a, b) => a.x - b.x);
-    };
 
-    const normal = geometry(false);
-    const reversed = geometry(true);
+    const props = (reverse: boolean) =>
+      ({
+        series: [{ data: range(256) }],
+        xAxis: [{ data: range(256).map(String), zoom: true, reverse }],
+        yAxis: [{ position: 'none' }],
+        width,
+        height: 200,
+        margin: 0,
+        sampling: 'minmax',
+        skipAnimation: true,
+      }) as const;
+
+    const { container, setProps } = render(<BarChartPro {...props(false)} />);
+    const normal = geometryOf(container);
+
+    setProps(props(true));
+    const reversed = geometryOf(container);
 
     expect(normal.length).to.be.greaterThan(0); // sampling is active
     expect(reversed.length).to.equal(normal.length);

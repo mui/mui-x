@@ -2,6 +2,7 @@ import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
+import { getSampledBucketRegion } from './getSampledBucketRegion';
 
 /** Minimum on-screen gap (px) kept between merged (sampled) bars so they stay distinguishable. */
 const MIN_SAMPLED_BAR_GAP_PX = 2;
@@ -98,16 +99,14 @@ export function createGetBucketBarDimensions(params: {
     max: number,
     groupIndex: number,
   ) {
-    // Reversed axes flip index→position, so the left edge is the smaller of the two endpoints.
-    const startPos = baseScale(baseScaleConfig.data![startIndex])!;
-    const endPos = baseScale(baseScaleConfig.data![endIndex])!;
-    const spanStart = Math.min(startPos, endPos);
+    // Region matches the axis highlight (see `getSampledBandHighlight`) so bar and highlight stay in sync.
+    const { regionStart, regionSize: bucketStride } = getSampledBucketRegion(
+      baseScale,
+      baseScaleConfig.data!,
+      startIndex,
+      endIndex,
+    );
     const bucketCount = endIndex - startIndex + 1;
-    const bucketStride = bucketCount * step;
-
-    // Bucket band region left edge, matching the axis highlight (see `getSampledBandHighlight`).
-    const halfPadding = (step - bandwidth) / 2;
-    const regionStart = spanStart - halfPadding;
 
     // Keep the gap between buckets proportional to the bucket (same ratio as an unsampled chart),
     // but never thinner than MIN_SAMPLED_BAR_GAP_PX so it stays visible at every level and zoom.

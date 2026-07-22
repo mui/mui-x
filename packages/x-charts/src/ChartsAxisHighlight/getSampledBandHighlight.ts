@@ -1,4 +1,5 @@
 import type { D3OrdinalScale } from '../models/axis';
+import { getSampledBucketRegion } from '../internals/getSampledBucketRegion';
 
 interface SampledBandHighlightParams {
   scale: D3OrdinalScale;
@@ -34,9 +35,14 @@ export function getSampledBandHighlight({
     if (index >= 0) {
       const bucketStart = Math.floor(index / bucketSize) * bucketSize;
       const bucketEnd = Math.min(bucketStart + bucketSize - 1, data.length - 1);
-      // Anchor at the left edge: on a reversed axis `data[bucketStart]` is the right-most slot.
-      bandStart = Math.min(scale(data[bucketStart])!, scale(data[bucketEnd])!) - halfPadding;
-      bandSize = (bucketEnd - bucketStart + 1) * step;
+      const { regionStart, regionSize } = getSampledBucketRegion(
+        scale,
+        data,
+        bucketStart,
+        bucketEnd,
+      );
+      bandStart = regionStart;
+      bandSize = regionSize;
     }
   }
 
