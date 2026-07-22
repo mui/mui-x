@@ -191,8 +191,9 @@ GridEditDateCell.propTypes /* remove-proptypes */ = {
   changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
+   * `undefined` if the field is not in the current column set.
    */
-  colDef: PropTypes.object.isRequired,
+  colDef: PropTypes.object,
   /**
    * The column field of the cell that triggered the event.
    */
