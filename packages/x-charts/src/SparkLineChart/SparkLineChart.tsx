@@ -692,6 +692,7 @@ SparkLineChart.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when clicking close to an item, or when it is activated with the Enter or Space keys.
    * This is only available for scatter plot for now.
+   * Activation with the Enter and Space keys requires the `enableKeyboardClickEvents` experimental feature.
    * @param {MouseEvent} event The event that activated the item. It is a `KeyboardEvent` on Enter or Space activation. Import `@mui/x-charts/moduleAugmentation/keyboardItemActivation` for correct typing.
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */

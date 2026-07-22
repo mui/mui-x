@@ -94,7 +94,7 @@
       }
     },
     "onItemClick": {
-      "description": "Callback fired when a scatter item is activated.",
+      "description": "Callback fired when a scatter item is activated. Activation with the Enter and Space keys requires the <code>enableKeyboardClickEvents</code> experimental feature.",
       "typeDescriptions": {
         "event": {
           "name": "event",

@@ -97,7 +97,7 @@
       }
     },
     "onItemClick": {
-      "description": "Callback fired when clicking close to an item, or when it is activated with the Enter or Space keys. This is only available for scatter plot for now.",
+      "description": "Callback fired when clicking close to an item, or when it is activated with the Enter or Space keys. This is only available for scatter plot for now. Activation with the Enter and Space keys requires the <code>enableKeyboardClickEvents</code> experimental feature.",
       "typeDescriptions": {
         "event": {
           "name": "event",

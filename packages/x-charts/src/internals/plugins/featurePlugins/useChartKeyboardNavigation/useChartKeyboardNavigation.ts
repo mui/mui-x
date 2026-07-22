@@ -93,9 +93,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           newFocusedItem?.type === 'scatter'
         ) {
           event.preventDefault();
-          // `onItemClick` is typed with `MouseEvent` until the consumer opts into the
-          // `keyboardItemActivation` module augmentation.
-          (onItemClick as KeyboardActivationHandler | undefined)?.(event, newFocusedItem);
+
+          if (!event.repeat) {
+            // `onItemClick` is typed with `MouseEvent` until the consumer opts into the
+            // `keyboardItemActivation` module augmentation.
+            (onItemClick as KeyboardActivationHandler | undefined)?.(event, newFocusedItem);
+          }
         }
         return;
       }

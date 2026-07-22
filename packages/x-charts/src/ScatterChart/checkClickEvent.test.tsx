@@ -1,4 +1,4 @@
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -212,6 +212,30 @@ describe('ScatterChart - click event', () => {
         dataIndex: 0,
         seriesId: 's1',
       });
+    });
+
+    it('should fire onItemClick once while the key is held down', async () => {
+      const onItemClick = vi.fn();
+      const { user } = render(
+        <ScatterChart
+          {...config}
+          series={[{ id: 's1', data: config.dataset }]}
+          onItemClick={onItemClick}
+          experimentalFeatures={{ enableKeyboardClickEvents: true }}
+        />,
+      );
+
+      await user.keyboard('{Tab}{ArrowRight}');
+
+      const target = document.activeElement!;
+      const repeated = fireEvent.keyDown(target, { key: ' ', repeat: true });
+
+      expect(onItemClick.mock.calls).to.have.length(0);
+      expect(repeated).to.equal(false); // default prevented, so the page does not scroll
+
+      fireEvent.keyDown(target, { key: ' ' });
+
+      expect(onItemClick.mock.calls).to.have.length(1);
     });
 
     it('should not call onItemClick without the experimental feature enabled', async () => {
