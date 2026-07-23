@@ -7,10 +7,7 @@ import type { WithDataAttributes } from '@mui/utils/types';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import type { ChartsReactClickEvent } from '../models/events';
-import {
-  LINE_ACTIVATION_PRIORITY,
-  useRegisterLineItemActivation,
-} from './useLineItemClickHandler';
+import { LINE_ACTIVATION_PRIORITY, useRegisterLineItemActivation } from './useLineItemClickHandler';
 import { CircleMarkElement } from './CircleMarkElement';
 import { MarkElement } from './MarkElement';
 import type { MarkElementProps } from './MarkElement';
