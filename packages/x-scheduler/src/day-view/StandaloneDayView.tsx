@@ -172,6 +172,12 @@ StandaloneDayView.propTypes /* remove-proptypes */ = {
    */
   events: PropTypes.arrayOf(PropTypes.object),
   /**
+   * Set the locale text of the view.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
+   * in the GitHub repository.
+   */
+  localeText: PropTypes.object,
+  /**
    * Callback fired when some event of the calendar change.
    */
   onEventsChange: PropTypes.func,
