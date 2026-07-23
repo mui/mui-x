@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
-import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import { PickersTextField, pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { createPickerRenderer } from 'test/utils/pickers';
 
 const STUB_PROPS = {
@@ -135,11 +135,74 @@ describe('<PickersTextField /> - outlined notch', () => {
         {...STUB_PROPS}
         areAllSectionsEmpty={false}
         label="My label"
-        slotProps={{ input: { notched: false } as any }}
+        slotProps={{ input: { notched: false } }}
       />,
     );
 
     const legend = document.querySelector('legend')!;
     expect(window.getComputedStyle(legend).maxWidth).to.equal(COLLAPSED_LEGEND_MAX_WIDTH);
+  });
+});
+
+describe('pickersInputBaseClasses', () => {
+  it('should expose the `sectionsContainer` and `readOnly` class keys declared in its interface', () => {
+    expect(pickersInputBaseClasses.sectionsContainer).to.equal(
+      'MuiPickersInputBase-sectionsContainer',
+    );
+    // `readOnly` is a global state class.
+    expect(pickersInputBaseClasses.readOnly).to.equal('Mui-readOnly');
+  });
+});
+
+describe('<PickersTextField /> - format placeholder opacity', () => {
+  const { render } = createPickerRenderer();
+
+  const getSectionsOpacity = (root: ParentNode) =>
+    Array.from(root.querySelectorAll(`.${pickersInputBaseClasses.sectionsContainer}`)).map(
+      (el) => window.getComputedStyle(el).opacity,
+    );
+
+  it('should dim the format placeholder of an empty field with a start adornment, matching a field without one', () => {
+    const { container } = render(
+      <div>
+        <PickersTextField {...STUB_PROPS} />
+        <PickersTextField
+          {...STUB_PROPS}
+          slotProps={{ input: { startAdornment: <span>@</span> } }}
+        />
+      </div>,
+    );
+
+    const [reference, adorned] = getSectionsOpacity(container);
+    // The plain empty field renders its format as a dimmed placeholder, neither hidden nor full text.
+    expect(reference).not.to.equal('0');
+    expect(reference).not.to.equal('1');
+    // A start adornment must not promote the placeholder to full-strength text.
+    expect(adorned).to.equal(reference);
+  });
+
+  it('should dim the format placeholder of an empty labelled field with a start adornment', () => {
+    const { container } = render(
+      <div>
+        <PickersTextField {...STUB_PROPS} />
+        <PickersTextField
+          {...STUB_PROPS}
+          label="My label"
+          slotProps={{ input: { startAdornment: <span>@</span> } }}
+        />
+      </div>,
+    );
+
+    const [reference, adorned] = getSectionsOpacity(container);
+    expect(reference).not.to.equal('0');
+    expect(reference).not.to.equal('1');
+    expect(adorned).to.equal(reference);
+  });
+
+  it('should keep hiding the format placeholder of an empty labelled field without a start adornment', () => {
+    const { container } = render(<PickersTextField {...STUB_PROPS} label="My label" />);
+
+    const [opacity] = getSectionsOpacity(container);
+    expect(opacity).to.equal('0');
   });
 });
