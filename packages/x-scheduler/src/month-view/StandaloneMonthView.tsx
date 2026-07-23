@@ -24,11 +24,13 @@ const StandaloneMonthView = React.forwardRef(function StandaloneMonthView<
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
     <ResponsiveTypographyContainer>
-      <EventCalendarProvider {...parameters}>
+      <EventCalendarProvider {...parameters} localeText={localeText}>
         <EventDialogProvider>
-          <MonthView ref={forwardedRef} {...forwardedProps} />
+          <MonthView ref={forwardedRef} {...other} />
         </EventDialogProvider>
       </EventCalendarProvider>
     </ResponsiveTypographyContainer>

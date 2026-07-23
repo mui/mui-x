@@ -24,11 +24,13 @@ const StandaloneDayView = React.forwardRef(function StandaloneDayView<
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
     <ResponsiveTypographyContainer>
-      <EventCalendarProvider {...parameters}>
+      <EventCalendarProvider {...parameters} localeText={localeText}>
         <EventDialogProvider>
-          <DayView ref={forwardedRef} {...forwardedProps} />
+          <DayView ref={forwardedRef} {...other} />
         </EventDialogProvider>
       </EventCalendarProvider>
     </ResponsiveTypographyContainer>

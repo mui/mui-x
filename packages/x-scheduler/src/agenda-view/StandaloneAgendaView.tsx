@@ -24,11 +24,13 @@ const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView<
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
     <ResponsiveTypographyContainer>
-      <EventCalendarProvider {...parameters}>
+      <EventCalendarProvider {...parameters} localeText={localeText}>
         <EventDialogProvider>
-          <AgendaView ref={forwardedRef} {...forwardedProps} />
+          <AgendaView ref={forwardedRef} {...other} />
         </EventDialogProvider>
       </EventCalendarProvider>
     </ResponsiveTypographyContainer>
