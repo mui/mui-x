@@ -34,10 +34,16 @@ const StandaloneMonthViewPremium = React.forwardRef(function StandaloneMonthView
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
-    <EventCalendarProvider {...parameters} storeClass={EventCalendarPremiumStore}>
+    <EventCalendarProvider
+      {...parameters}
+      storeClass={EventCalendarPremiumStore}
+      localeText={localeText}
+    >
       <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-        <MonthView ref={forwardedRef} {...forwardedProps} />
+        <MonthView ref={forwardedRef} {...other} />
         {watermark}
       </EventDialogProvider>
     </EventCalendarProvider>

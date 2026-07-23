@@ -34,10 +34,16 @@ const StandaloneWeekViewPremium = React.forwardRef(function StandaloneWeekViewPr
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
-    <EventCalendarProvider {...parameters} storeClass={EventCalendarPremiumStore}>
+    <EventCalendarProvider
+      {...parameters}
+      storeClass={EventCalendarPremiumStore}
+      localeText={localeText}
+    >
       <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-        <WeekView ref={forwardedRef} {...forwardedProps} />
+        <WeekView ref={forwardedRef} {...other} />
         {watermark}
       </EventDialogProvider>
     </EventCalendarProvider>

@@ -34,10 +34,16 @@ const StandaloneAgendaViewPremium = React.forwardRef(function StandaloneAgendaVi
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
-    <EventCalendarProvider {...parameters} storeClass={EventCalendarPremiumStore}>
+    <EventCalendarProvider
+      {...parameters}
+      storeClass={EventCalendarPremiumStore}
+      localeText={localeText}
+    >
       <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-        <AgendaView ref={forwardedRef} {...forwardedProps} />
+        <AgendaView ref={forwardedRef} {...other} />
         {watermark}
       </EventDialogProvider>
     </EventCalendarProvider>

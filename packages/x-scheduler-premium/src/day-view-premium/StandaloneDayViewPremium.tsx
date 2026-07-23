@@ -34,10 +34,16 @@ const StandaloneDayViewPremium = React.forwardRef(function StandaloneDayViewPrem
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
-    <EventCalendarProvider {...parameters} storeClass={EventCalendarPremiumStore}>
+    <EventCalendarProvider
+      {...parameters}
+      storeClass={EventCalendarPremiumStore}
+      localeText={localeText}
+    >
       <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-        <DayView ref={forwardedRef} {...forwardedProps} />
+        <DayView ref={forwardedRef} {...other} />
         {watermark}
       </EventDialogProvider>
     </EventCalendarProvider>
