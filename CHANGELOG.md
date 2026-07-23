@@ -4,14 +4,14 @@
 
 _Jul 23, 2026_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🦮 Improve accessibility of the Charts and Pickers components.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 Special thanks go out to these community members for their valuable contributions:
-@kevincorizi-sbt, @mustafajw07
+@kevincorizi-sbt, @mustafajw07, @SamanPandey-in
 
 The following team members contributed to this release:
 @hasdfa, @JCQuintas, @LukasTy, @noraleonte, @rita-codes, @silviuaavram
@@ -56,6 +56,7 @@ Same changes as in `@mui/x-date-pickers@9.10.1`, plus:
 Same changes as in `@mui/x-charts@9.10.1`, plus:
 
 - [charts-pro] Fix highlight shifting on sampled bar charts (#23190) @noraleonte
+- [charts-pro] Sampled band highlight falls back to single-band width for Date/object values (#23024) @SamanPandey-in
 
 #### `@mui/x-charts-premium@9.10.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
