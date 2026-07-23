@@ -56,6 +56,7 @@ export default function BarClick() {
       <Box sx={{ flexGrow: 1 }}>
         <BarChart
           {...barChartsParams}
+          experimentalFeatures={{ keyboardActivation: true }}
           onItemClick={(event, d) => setItemData(d)}
           onAxisClick={(event, d) => setAxisData(d)}
         />

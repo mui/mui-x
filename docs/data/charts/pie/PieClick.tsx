@@ -24,6 +24,7 @@ export default function PieClick() {
           width={300}
           height={300}
           hideLegend
+          experimentalFeatures={{ keyboardActivation: true }}
           onItemClick={(event, d) => setItemData(d)}
         />{' '}
       </Box>
