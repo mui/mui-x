@@ -5,6 +5,12 @@ import type { RadarItemIdentifier } from '../../models/seriesType/radar';
 import type { ChartsReactClickEvent } from '../../models/events';
 
 /**
+ * Priorities matching the pointer hit-testing order: marks sit above areas.
+ * The topmost callback a pointer would reach is the one keyboard activation fires.
+ */
+export const RADAR_ACTIVATION_PRIORITY = { mark: 2, area: 1 };
+
+/**
  * Registers <kbd>Enter</kbd>/<kbd>Space</kbd> activation of the focused radar item.
  */
 export function useRegisterRadarItemActivation(
@@ -15,9 +21,10 @@ export function useRegisterRadarItemActivation(
         radarItemIdentifier: Required<RadarItemIdentifier>,
       ) => void)
     | undefined,
+  priority: number,
 ) {
   useRegisterItemActivation(
-    { type: 'radar', seriesId },
+    { type: 'radar', seriesId, priority },
     onItemClick &&
       ((event, item) =>
         onItemClick(event, {

@@ -21,6 +21,12 @@ export type ItemActivationHandler = (
 export interface ItemActivationScope {
   type?: ChartSeriesType;
   seriesId?: SeriesId;
+  /**
+   * Breaks ties between handlers covering the same items, highest first.
+   * Mirrors pointer hit-testing, where marks sit above lines, and lines above areas.
+   * @default 0
+   */
+  priority?: number;
 }
 
 export interface UseChartKeyboardNavigationInstance {

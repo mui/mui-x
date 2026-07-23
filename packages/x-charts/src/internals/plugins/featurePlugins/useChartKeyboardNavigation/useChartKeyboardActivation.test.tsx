@@ -89,6 +89,69 @@ describe('keyboard item activation', () => {
     });
   });
 
+  it('should fire onLineClick when the line chart only handles line clicks', async () => {
+    const onLineClick = vi.fn();
+    const onAxisClick = vi.fn();
+    const { user } = render(
+      <LineChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100] }]}
+        onLineClick={onLineClick}
+        onAxisClick={onAxisClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[Enter]');
+
+    expect(onLineClick.mock.calls.length).to.equal(1);
+    expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
+      type: 'line',
+      seriesId: 'A',
+      dataIndex: 0,
+    });
+    expect(onAxisClick.mock.calls.length).to.equal(1);
+  });
+
+  it('should fall back to onAreaClick when it is the only line callback', async () => {
+    const onAreaClick = vi.fn();
+    const { user } = render(
+      <LineChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100], area: true }]}
+        onAreaClick={onAreaClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[Enter]');
+
+    expect(onAreaClick.mock.calls.length).to.equal(1);
+  });
+
+  it('should fall back to onAreaClick when it is the only radar callback', async () => {
+    const onAreaClick = vi.fn();
+    const { user } = render(
+      <RadarChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100, 20] }]}
+        radar={{ metrics: ['M1', 'M2', 'M3'] }}
+        onAreaClick={onAreaClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[Enter]');
+
+    expect(onAreaClick.mock.calls.length).to.equal(1);
+  });
+
   it('should fire onMarkClick once for a line chart rendering area, line and marks', async () => {
     const onItemClick = vi.fn();
     const { user } = render(

@@ -10,6 +10,10 @@ import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
+import {
+  RADAR_ACTIVATION_PRIORITY,
+  useRegisterRadarItemActivation,
+} from './useRegisterRadarItemActivation';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
@@ -48,6 +52,8 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
 
   const classes = useUtilityClasses(inClasses);
+
+  useRegisterRadarItemActivation(seriesId, onItemClick, RADAR_ACTIVATION_PRIORITY.area);
 
   return (
     <React.Fragment>

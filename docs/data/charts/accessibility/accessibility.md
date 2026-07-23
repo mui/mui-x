@@ -95,7 +95,7 @@ Enable it with the `keyboardActivation` experimental feature:
 Pressing <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd> on the focused item then calls `onItemClick` and `onAxisClick` with the same payload a click provides.
 The `event` argument is the `KeyboardEvent` that triggered the activation, so click callbacks receive `MouseEvent | KeyboardEvent`.
 
-Because the focused element is a data point, charts with several item callbacks use their point-level one: line and radar charts call `onMarkClick`, and Sankey charts call `onNodeClick` or `onLinkClick` depending on the focused element.
+When a chart exposes several item callbacks, activation fires the one a pointer would reach first on the focused data point: line charts try `onMarkClick`, then `onLineClick`, then `onAreaClick`; radar charts try `onMarkClick`, then `onAreaClick`; and Sankey charts call `onNodeClick` or `onLinkClick` depending on the focused element. Only one of them fires.
 
 ## Screen reader compatibility
 

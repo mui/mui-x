@@ -15,17 +15,17 @@ import type { FocusedItemIdentifier } from '../models/seriesType';
  * <kbd>Space</kbd>. It is a no-op when the `keyboardActivation` experimental feature is off.
  *
  * Scope the registration as tightly as the caller knows: when several plots handle the same item,
- * the most specific scope wins and the handler runs once.
+ * the most specific scope wins, `priority` breaks ties, and the handler runs once.
  *
  * @param scope The items covered by the handler. Omit `seriesId` to cover a whole series type.
  * @param handler The handler to call on activation, or `undefined` to register nothing.
  */
 export function useRegisterItemActivation<SeriesType extends ChartSeriesType = ChartSeriesType>(
-  scope: { type?: SeriesType; seriesId?: SeriesId },
+  scope: { type?: SeriesType; seriesId?: SeriesId; priority?: number },
   handler: ((event: KeyboardEvent, item: FocusedItemIdentifier<SeriesType>) => void) | undefined,
 ) {
   const { instance } = useChartsContext<[], [UseChartKeyboardNavigationSignature]>();
-  const { type, seriesId } = scope;
+  const { type, seriesId, priority } = scope;
 
   const hasHandler = handler !== undefined;
   const stableHandler = useEventCallback<Parameters<ItemActivationHandler>, void>((event, item) =>
@@ -39,6 +39,6 @@ export function useRegisterItemActivation<SeriesType extends ChartSeriesType = C
       return undefined;
     }
 
-    return registerItemActivationHandler({ type, seriesId }, stableHandler);
-  }, [registerItemActivationHandler, hasHandler, type, seriesId, stableHandler]);
+    return registerItemActivationHandler({ type, seriesId, priority }, stableHandler);
+  }, [registerItemActivationHandler, hasHandler, type, seriesId, priority, stableHandler]);
 }

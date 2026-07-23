@@ -8,7 +8,10 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import type { SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
-import { useRegisterRadarItemActivation } from './useRegisterRadarItemActivation';
+import {
+  RADAR_ACTIVATION_PRIORITY,
+  useRegisterRadarItemActivation,
+} from './useRegisterRadarItemActivation';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -45,7 +48,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
 
-  useRegisterRadarItemActivation(seriesId, onItemClick);
+  useRegisterRadarItemActivation(seriesId, onItemClick, RADAR_ACTIVATION_PRIORITY.mark);
 
   return (
     <React.Fragment>

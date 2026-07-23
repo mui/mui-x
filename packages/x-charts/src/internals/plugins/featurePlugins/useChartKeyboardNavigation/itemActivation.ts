@@ -30,7 +30,8 @@ function getScopeSpecificity(
 }
 
 /**
- * Returns the handler with the most specific scope matching the item, or `null` when none matches.
+ * Returns the handler matching the item with the most specific scope, the highest priority
+ * breaking ties, or `null` when none matches.
  */
 export function findItemActivationHandler(
   registrations: Iterable<ItemActivationRegistration>,
@@ -38,13 +39,20 @@ export function findItemActivationHandler(
 ): ItemActivationHandler | null {
   let bestHandler: ItemActivationHandler | null = null;
   let bestSpecificity = -1;
+  let bestPriority = -1;
 
   for (const registration of registrations) {
     const specificity = getScopeSpecificity(registration.scope, item);
+    const priority = registration.scope.priority ?? 0;
 
-    if (specificity !== null && specificity > bestSpecificity) {
+    if (
+      specificity !== null &&
+      (specificity > bestSpecificity ||
+        (specificity === bestSpecificity && priority > bestPriority))
+    ) {
       bestHandler = registration.handler;
       bestSpecificity = specificity;
+      bestPriority = priority;
     }
   }
 
