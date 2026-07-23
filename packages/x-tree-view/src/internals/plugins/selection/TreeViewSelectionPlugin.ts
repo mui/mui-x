@@ -248,7 +248,7 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     let newSelectedItems = selectionSelectors.selectedItems(this.store.state).slice();
 
     if (Object.keys(this.lastSelectedRange).length === 0) {
-      if (!newSelectedItems.includes(nextItem)) {
+      if (!selectionSelectors.isItemSelected(this.store.state, nextItem)) {
         newSelectedItems.push(nextItem);
       }
       this.lastSelectedRange = { [currentItem]: true, [nextItem]: true };
@@ -261,7 +261,7 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
         newSelectedItems = newSelectedItems.filter((id) => id !== currentItem);
         delete this.lastSelectedRange[currentItem];
       } else {
-        if (!newSelectedItems.includes(nextItem)) {
+        if (!selectionSelectors.isItemSelected(this.store.state, nextItem)) {
           newSelectedItems.push(nextItem);
         }
         this.lastSelectedRange[nextItem] = true;
