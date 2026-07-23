@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
+import useEventCallback from '@mui/utils/useEventCallback';
 import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import type { ChartPlugin } from '../../models';
 import type { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
@@ -22,7 +23,7 @@ import {
 import { getRadiusAxisIndex, getRotationAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
-import { isPolarSeriesType } from '../../../isPolar';
+import { getPolarAxisClickPayload } from './getPolarAxisClickPayload';
 import {
   isItemActivationKey,
   selectorChartsFocusedItem,
@@ -222,30 +223,6 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       return () => {};
     }
 
-    const getAxisClickPayload = (dataIndex: number, isRotationAxis: boolean) => {
-      const usedAxisId = isRotationAxis ? usedRotationAxisId : usedRadiusAxisId;
-      const axisValue = (isRotationAxis ? rotationAxisWithScale : radiusAxisWithScale)[usedAxisId]
-        ?.data?.[dataIndex];
-
-      if (axisValue === undefined) {
-        return null;
-      }
-
-      const seriesValues: Record<string, number | null | undefined> = {};
-
-      Object.keys(processedSeries)
-        .filter(isPolarSeriesType)
-        .forEach((seriesType) => {
-          processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
-            const seriesItem = processedSeries[seriesType]!.series[seriesId];
-
-            seriesValues[seriesId] = seriesItem.data[dataIndex];
-          });
-        });
-
-      return { dataIndex, axisValue, seriesValues };
-    };
-
     const axisClickHandler = instance.addInteractionListener('tap', (event) => {
       const svgPoint = getChartPoint(element, event.detail.srcEvent);
 
@@ -264,7 +241,13 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
         return;
       }
 
-      const payload = getAxisClickPayload(dataIndex, isRotationAxis);
+      const payload = getPolarAxisClickPayload({
+        dataIndex,
+        isRotationAxis,
+        rotationAxes: { axis: rotationAxisWithScale, axisIds: [usedRotationAxisId] },
+        radiusAxes: { axis: radiusAxisWithScale, axisIds: [usedRadiusAxisId] },
+        processedSeries,
+      });
 
       if (payload === null) {
         return;
@@ -273,32 +256,8 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       onAxisClick(event.detail.srcEvent, payload);
     });
 
-    const keyboardActivationHandler = (event: KeyboardEvent) => {
-      if (!isItemActivationKey(event) || !selectorChartsIsKeyboardActivationEnabled(store.state)) {
-        return;
-      }
-
-      const focusedItem = selectorChartsFocusedItem(store.state);
-
-      if (focusedItem === null || !('dataIndex' in focusedItem)) {
-        return;
-      }
-
-      const payload = getAxisClickPayload(focusedItem.dataIndex, true);
-
-      if (payload === null) {
-        return;
-      }
-
-      event.preventDefault();
-      onAxisClick(event, payload);
-    };
-
-    element.addEventListener('keydown', keyboardActivationHandler);
-
     return () => {
       axisClickHandler.cleanup();
-      element.removeEventListener('keydown', keyboardActivationHandler);
     };
   }, [
     center,
@@ -312,6 +271,57 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     usedRadiusAxisId,
     usedRotationAxisId,
   ]);
+
+  /**
+   * Kept out of the pointer effect so the listener survives re-renders. See the cartesian axis
+   * plugin for why re-subscribing per render drops keystrokes.
+   */
+  const handleKeyboardActivation = useEventCallback((event: KeyboardEvent) => {
+    const onAxisClick = params.onAxisClick;
+
+    if (
+      !onAxisClick ||
+      !isItemActivationKey(event) ||
+      !selectorChartsIsKeyboardActivationEnabled(store.state)
+    ) {
+      return;
+    }
+
+    const focusedItem = selectorChartsFocusedItem(store.state);
+
+    if (focusedItem === null || !('dataIndex' in focusedItem)) {
+      return;
+    }
+
+    const payload = getPolarAxisClickPayload({
+      dataIndex: focusedItem.dataIndex,
+      isRotationAxis: true,
+      rotationAxes: selectorChartRotationAxis(store.state),
+      radiusAxes: selectorChartRadiusAxis(store.state),
+      processedSeries: selectorChartSeriesProcessed(store.state),
+    });
+
+    if (payload === null) {
+      return;
+    }
+
+    event.preventDefault();
+    onAxisClick(event, payload);
+  });
+
+  React.useEffect(() => {
+    const element = chartsLayerContainerRef.current;
+
+    if (element === null) {
+      return undefined;
+    }
+
+    element.addEventListener('keydown', handleKeyboardActivation);
+
+    return () => {
+      element.removeEventListener('keydown', handleKeyboardActivation);
+    };
+  }, [chartsLayerContainerRef, handleKeyboardActivation]);
 
   return {
     instance: {
