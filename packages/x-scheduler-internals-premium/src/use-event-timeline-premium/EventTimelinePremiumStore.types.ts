@@ -5,8 +5,12 @@ import type {
 } from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPreset } from '../models/preset';
 import type { EventTimelinePremiumPreferences } from '../models/preferences';
+import type {
+  SchedulerDependenciesParameters,
+  SchedulerDependenciesState,
+} from '../models/dependency';
 
-export interface EventTimelinePremiumState extends SchedulerState {
+export interface EventTimelinePremiumState extends SchedulerState, SchedulerDependenciesState {
   /**
    * The preset displayed in the timeline.
    */
@@ -68,3 +72,16 @@ export interface EventTimelinePremiumParameters<
    */
   preferences?: Partial<EventTimelinePremiumPreferences>;
 }
+
+/**
+ * Parameters accepted by the timeline store, including the dependencies parameters
+ * that are not publicly exposed yet.
+ * `dependencies` / `onDependenciesChange` move to `EventTimelinePremiumParameters`
+ * when the dependencies feature becomes public.
+ * @internal
+ */
+export interface EventTimelinePremiumStoreParameters<
+  TEvent extends object,
+  TResource extends object,
+>
+  extends EventTimelinePremiumParameters<TEvent, TResource>, SchedulerDependenciesParameters {}
