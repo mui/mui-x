@@ -31,7 +31,7 @@ describeTreeView<TreeViewAnyStore>(
     describe('onClick prop', () => {
       it.skipIf(treeViewComponentName === 'RichTreeViewPro')(
         'should call onClick when clicked, and when children are clicked for TreeItem (when using nested DOM structure)',
-        () => {
+        async () => {
           const onClick = spy();
 
           const view = render({
@@ -44,14 +44,14 @@ describeTreeView<TreeViewAnyStore>(
             },
           });
 
-          fireEvent.click(view.getItemContent('1.1'));
+          await view.user.click(view.getItemContent('1.1'));
           expect(onClick.callCount).to.equal(2);
           expect(onClick.firstCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
           expect(onClick.lastCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
         },
       );
 
-      it('should call onClick even when the element is disabled', () => {
+      it('should call onClick even when the element is disabled', async () => {
         const onClick = spy();
 
         const view = render({
@@ -63,7 +63,7 @@ describeTreeView<TreeViewAnyStore>(
           },
         });
 
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(onClick.callCount).to.equal(1);
       });
     });

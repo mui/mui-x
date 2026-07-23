@@ -1,10 +1,18 @@
 import type { D3OrdinalScale } from '../models/axis';
 import { getSampledBucketRegion } from '../internals/getSampledBucketRegion';
 
+function findDataIndex(data: readonly unknown[], value: unknown): number {
+  if (value instanceof Date) {
+    const time = value.getTime();
+    return data.findIndex((item) => item instanceof Date && item.getTime() === time);
+  }
+  return data.indexOf(value);
+}
+
 interface SampledBandHighlightParams {
   scale: D3OrdinalScale;
   /** The highlighted value. */
-  value: number | Date;
+  value: string | number | Date;
   /** The data index of the highlighted value, when known (O(1) lookup). */
   dataIndex: number | undefined;
   /** The axis data. */
@@ -31,7 +39,7 @@ export function getSampledBandHighlight({
   let bandSize = step;
 
   if (bucketSize > 1 && data) {
-    const index = dataIndex ?? data.indexOf(value);
+    const index = dataIndex ?? findDataIndex(data, value);
     if (index >= 0) {
       const bucketStart = Math.floor(index / bucketSize) * bucketSize;
       const bucketEnd = Math.min(bucketStart + bucketSize - 1, data.length - 1);
