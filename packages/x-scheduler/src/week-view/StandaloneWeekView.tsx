@@ -24,11 +24,13 @@ const StandaloneWeekView = React.forwardRef(function StandaloneWeekView<
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
     <ResponsiveTypographyContainer>
-      <EventCalendarProvider {...parameters}>
+      <EventCalendarProvider {...parameters} localeText={localeText}>
         <EventDialogProvider>
-          <WeekView ref={forwardedRef} {...forwardedProps} />
+          <WeekView ref={forwardedRef} {...other} />
         </EventDialogProvider>
       </EventCalendarProvider>
     </ResponsiveTypographyContainer>
