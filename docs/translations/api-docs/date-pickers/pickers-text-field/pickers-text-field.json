@@ -64,7 +64,7 @@
     }
   },
   "slotDescriptions": {
-    "formHelperText": "The component used for the form helper text slot.",
+    "formHelperText": "The component used for the form helper text slot. It acts as an ARIA live region so helper text changes (such as a validation error) are announced. A custom component must forward the received props (e.g. <code>role</code>) and render its root element even when it has no children, otherwise a later change may not be announced.",
     "htmlInput": "The component rendered as the underlying hidden <code>&lt;input&gt;</code> element.",
     "input": "The component used for the input slot. Defaults to one of <code>PickersInput</code>, <code>PickersFilledInput</code>, <code>PickersOutlinedInput</code> based on <code>variant</code>.",
     "inputLabel": "The component used for the input label slot.",

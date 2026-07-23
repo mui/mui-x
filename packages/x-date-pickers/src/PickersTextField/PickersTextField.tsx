@@ -34,6 +34,15 @@ const PickersTextFieldRoot = styled(FormControl, {
   maxWidth: '100%',
 });
 
+// The helper text is always rendered so it can act as a live region. Collapse the empty
+// state here (not on the root) so it reserves no space even when `slots.root` is replaced.
+// https://github.com/mui/mui-x/issues/23101
+const PickersTextFieldHelperText = styled(FormHelperText)({
+  '&:empty': {
+    marginTop: 0,
+  },
+});
+
 const useUtilityClasses = (
   classes: Partial<PickersTextFieldClasses> | undefined,
   ownerState: PickerTextFieldOwnerState,
@@ -179,7 +188,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
   const PickersInputComponent = slots?.input ?? VARIANT_COMPONENT[variant];
   const RootComponent = slots?.root ?? PickersTextFieldRoot;
   const InputLabelComponent = slots?.inputLabel ?? InputLabel;
-  const FormHelperTextComponent = slots?.formHelperText ?? FormHelperText;
+  const FormHelperTextComponent = slots?.formHelperText ?? PickersTextFieldHelperText;
 
   const inputAdditionalProps: Record<string, any> = {};
   if (variant === 'outlined') {
@@ -243,7 +252,6 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           role="group"
           aria-labelledby={inputLabelId}
           aria-describedby={helperTextId}
-          aria-live={helperTextId ? 'polite' : undefined}
           data-active-range-position={dataActiveRangePosition}
           {...inputAdditionalProps}
           {...inputSlotProps}
@@ -256,11 +264,10 @@ const PickersTextField = React.forwardRef(function PickersTextField(
             ...(slotProps?.htmlInput !== undefined && { htmlInput: slotProps.htmlInput }),
           }}
         />
-        {helperText && (
-          <FormHelperTextComponent id={helperTextId} {...slotProps?.formHelperText}>
-            {helperText}
-          </FormHelperTextComponent>
-        )}
+        {/* Always rendered as a name-less live region so helperText changes are announced without re-announcing the field label. https://github.com/mui/mui-x/issues/23101 */}
+        <FormHelperTextComponent id={helperTextId} role="status" {...slotProps?.formHelperText}>
+          {helperText}
+        </FormHelperTextComponent>
       </RootComponent>
     </PickerTextFieldOwnerStateContext.Provider>
   );
