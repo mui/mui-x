@@ -1,91 +1,101 @@
-import { scaleBand } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand, scaleLinear } from '@mui/x-charts-vendor/d3-scale';
 import { getSampledBandHighlight } from './getSampledBandHighlight';
+import { createGetBucketBarDimensions } from '../internals/createGetBarDimensions';
+import type { D3OrdinalScale } from '../models/axis';
+
+const data = [0, 1, 2, 3, 4, 5, 6, 7];
+const halfPaddingOf = (scale: D3OrdinalScale) => (scale.step() - scale.bandwidth()) / 2;
 
 describe('getSampledBandHighlight', () => {
-  describe('bucketSize = 1 (no sampling)', () => {
-    it('returns single-band width for a string axis', () => {
-      const data = ['A', 'B', 'C', 'D'];
-      const scale = scaleBand(data, [0, 100]).padding(0.1);
-      const step = scale.step();
+  it('covers a single band when the series is not sampled', () => {
+    const scale = scaleBand(data, [0, 800]) as unknown as D3OrdinalScale;
+    const { bandStart, bandSize } = getSampledBandHighlight({
+      scale,
+      value: 3,
+      dataIndex: 3,
+      data,
+      bucketSize: 1,
+    });
 
+    expect(bandSize).to.equal(scale.step());
+    expect(bandStart).to.equal(scale(3)! - halfPaddingOf(scale));
+  });
+
+  // Reversed axis: data[0] is on the right, so the bucket's left edge is data[3] (#22997).
+  [
+    { reverse: false, leftIndex: 0 },
+    { reverse: true, leftIndex: 3 },
+  ].forEach(({ reverse, leftIndex }) => {
+    it(`anchors a bucket at its left-most slot (reverse: ${reverse})`, () => {
+      const scale = scaleBand(data, reverse ? [800, 0] : [0, 800]) as unknown as D3OrdinalScale;
       const { bandStart, bandSize } = getSampledBandHighlight({
-        scale: scale as any,
-        value: 'B',
+        scale,
+        value: 1,
         dataIndex: 1,
         data,
-        bucketSize: 1,
+        bucketSize: 4,
       });
 
-      expect(bandSize).toBeCloseTo(step);
-      expect(bandStart).toBeCloseTo(scale('B')! - (step - scale.bandwidth()) / 2);
+      expect(bandStart).to.equal(scale(leftIndex)! - halfPaddingOf(scale));
+      expect(bandSize).to.equal(4 * scale.step());
     });
   });
 
-  describe('bucketSize > 1 (sampled)', () => {
-    it('widens the highlight to cover the full bucket', () => {
-      const data = ['A', 'B', 'C', 'D'];
-      const scale = scaleBand(data, [0, 100]).padding(0.1);
-      const step = scale.step();
+  // Date axes build a new Date on each pointer event, so reference-based `indexOf` returned -1 and
+  // collapsed the highlight to a single band (#23024).
+  it('resolves the bucket of a Date value held in a different reference', () => {
+    const dates = [
+      new Date('2024-01-01'),
+      new Date('2024-02-01'),
+      new Date('2024-03-01'),
+      new Date('2024-04-01'),
+    ];
+    const scale = scaleBand(dates, [0, 800]) as unknown as D3OrdinalScale;
 
-      // bucket 0 = [A, B], hovering B (index 1)
-      const { bandStart, bandSize } = getSampledBandHighlight({
-        scale: scale as any,
-        value: 'B',
-        dataIndex: 1,
-        data,
-        bucketSize: 2,
-      });
-
-      expect(bandStart).toBeCloseTo(scale('A')! - (step - scale.bandwidth()) / 2);
-      expect(bandSize).toBeCloseTo(2 * step);
+    const { bandStart, bandSize } = getSampledBandHighlight({
+      scale,
+      value: new Date('2024-02-01'),
+      dataIndex: undefined,
+      data: dates,
+      bucketSize: 2,
     });
 
-    it('clamps the last bucket to the end of data', () => {
-      const data = ['A', 'B', 'C'];
-      const scale = scaleBand(data, [0, 100]).padding(0.1);
-      const step = scale.step();
+    expect(bandStart).to.equal(scale(dates[0])! - halfPaddingOf(scale));
+    expect(bandSize).to.equal(2 * scale.step());
+  });
+});
 
-      // bucketSize 2: bucket 1 = [C] only (odd-length data)
-      const { bandStart, bandSize } = getSampledBandHighlight({
-        scale: scale as any,
-        value: 'C',
-        dataIndex: 2,
-        data,
-        bucketSize: 2,
+// The bar and its highlight come from two functions; they must stay centered on each other (#22997).
+describe('sampled bucket bar / highlight alignment', () => {
+  const bars = Array.from({ length: 64 }, (_, i) => i);
+
+  [false, true].forEach((reverse) => {
+    it(`centers the bar under the highlight (reverse: ${reverse})`, () => {
+      const bucketSize = 8;
+      const scale = scaleBand(bars, reverse ? [600, 0] : [0, 600])
+        .paddingInner(0.3)
+        .paddingOuter(0.15) as unknown as D3OrdinalScale;
+      const getBar = createGetBucketBarDimensions({
+        verticalLayout: true,
+        xAxisConfig: { scale, data: bars, barGapRatio: 0.1, reverse } as any,
+        yAxisConfig: { scale: scaleLinear([0, 100], [200, 0]) } as any,
+        series: { hidden: false, minBarSize: 0 } as any,
+        numberOfGroups: 1,
       });
 
-      expect(bandStart).toBeCloseTo(scale('C')! - (step - scale.bandwidth()) / 2);
-      expect(bandSize).toBeCloseTo(step);
-    });
-
-    // Regression: Date-keyed axes produced new Date() instances on each pointer event,
-    // so reference-equality indexOf always returned -1, collapsing the highlight to
-    // a single band instead of the full bucket width.
-    it('correctly resolves the bucket for a Date-keyed axis when value is a different reference', () => {
-      const dates = [
-        new Date('2024-01-01'),
-        new Date('2024-02-01'),
-        new Date('2024-03-01'),
-        new Date('2024-04-01'),
-      ];
-      const scale = scaleBand(dates, [0, 100]).padding(0.1);
-      const step = scale.step();
-
-      // Simulate a new Date instance with the same value (different reference)
-      const pointerValue = new Date('2024-02-01');
-      expect(dates[1] === pointerValue).toBe(false); // confirm different reference
-
+      // Bucket covering indices [16..23], highlight hovering index 20.
+      const bar = getBar(16, 23, 10, 40, 0);
       const { bandStart, bandSize } = getSampledBandHighlight({
-        scale: scale as any,
-        value: pointerValue,
-        dataIndex: undefined, // no pre-resolved index — forces the fallback path
-        data: dates,
-        bucketSize: 2,
+        scale,
+        value: 20,
+        dataIndex: 20,
+        data: bars,
+        bucketSize,
       });
 
-      // bucket 0 = [Jan, Feb]; highlight should span 2 bands
-      expect(bandSize).toBeCloseTo(2 * step);
-      expect(bandStart).toBeCloseTo(scale(dates[0])! - (step - scale.bandwidth()) / 2);
+      expect(bar.x + bar.width / 2).to.be.closeTo(bandStart + bandSize / 2, 0.5);
+      expect(bar.x).to.be.greaterThanOrEqual(bandStart - 0.5);
+      expect(bar.x + bar.width).to.be.lessThanOrEqual(bandStart + bandSize + 0.5);
     });
   });
 });

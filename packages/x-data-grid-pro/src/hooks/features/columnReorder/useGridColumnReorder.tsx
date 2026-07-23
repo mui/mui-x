@@ -116,14 +116,17 @@ export const useGridColumnReorder = (
         apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
         originColumnIndex.current = null;
       } else {
-        // Emit the columnOrderChange event only once when the reordering stops.
-        const columnOrderChangeParams: GridColumnOrderChangeParams = {
-          column: apiRef.current.getColumn(dragColField),
-          targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(dragColField),
-          oldIndex: originColumnIndex.current!,
-        };
+        const draggedColumn = apiRef.current.getColumn(dragColField);
+        if (draggedColumn) {
+          // Emit the columnOrderChange event only once when the reordering stops.
+          const columnOrderChangeParams: GridColumnOrderChangeParams = {
+            column: draggedColumn,
+            targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(dragColField),
+            oldIndex: originColumnIndex.current!,
+          };
 
-        apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
+          apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
+        }
       }
 
       apiRef.current.setState((state) => ({
@@ -275,6 +278,9 @@ export const useGridColumnReorder = (
         const targetColIndex = apiRef.current.getColumnIndex(params.field, false);
         const targetColVisibleIndex = apiRef.current.getColumnIndex(params.field, true);
         const targetCol = apiRef.current.getColumn(params.field);
+        if (!targetCol) {
+          return;
+        }
         const dragColIndex = apiRef.current.getColumnIndex(dragColField, false);
         const visibleColumns = apiRef.current.getVisibleColumns();
         const allColumns = apiRef.current.getAllColumns();
