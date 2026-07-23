@@ -20,7 +20,7 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.10.1`
 
-Internal changes.
+- [data grid] Fix `getColumn` return type not reflecting that it can return undefined (#23165) @JCQuintas
 
 #### `@mui/x-data-grid-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
