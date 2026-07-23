@@ -1,20 +1,14 @@
 'use client';
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import type { ControlledValue } from './utils';
+import type { EventDialogSectionProps } from './utils';
 import DateTimeSection from './DateTimeSection';
 import ResourceAndColorSection from './ResourceAndColorSection';
 import DescriptionSection from './DescriptionSection';
 import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
-interface GeneralTabProps {
-  occurrence: SchedulerRenderableEventOccurrence;
-  errors: Record<string, string | string[]>;
-  setErrors: (errors: Record<string, string | string[]>) => void;
-  controlled: ControlledValue;
-  setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
+interface GeneralTabProps extends EventDialogSectionProps {
   value: string;
 }
 
