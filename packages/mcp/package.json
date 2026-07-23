@@ -1,6 +1,6 @@
 {
   "name": "@mui/mcp",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "author": "MUI Team",
   "description": "MUI MCP Server",
   "license": "MIT",
@@ -23,16 +23,16 @@
     "@babel/runtime": "catalog:",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@mui/x-agent-tools": "workspace:^",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/node": "22.20.0",
+    "@types/node": "22.20.1",
     "rimraf": "catalog:",
     "vitest": "catalog:"
   },
   "scripts": {
-    "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat --bundle cjs --buildTypes false",
+    "typescript": "tsgo -p tsconfig.json",
+    "build": "code-infra build --tsgo --bundle cjs --buildTypes false",
     "build:local": "pnpm --filter \"@mui/mcp...\" build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
     "mcp-inspector": "pnpm build:local && npx -y @modelcontextprotocol/inspector node build/stdio.js",
