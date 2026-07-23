@@ -1,8 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-import {
-  getEventsCellLaneMinHeight,
-  getRowHeightForLaneCount,
-} from './EventTimelinePremiumContent';
+import { getEventsCellLaneMinHeight, getRowHeightForLaneCount } from './rowGeometry';
 
 // These helpers mirror the EventsCell CSS in JS so the virtualizer can reserve the
 // correct vertical space per row. The two paths must agree to the pixel — if either

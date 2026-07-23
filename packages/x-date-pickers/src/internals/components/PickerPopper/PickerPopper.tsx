@@ -20,6 +20,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import type { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import type { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { isElementInteractive } from '../../utils/isElementInteractive';
 import type { PickerPopperClasses } from './pickerPopperClasses';
 import { getPickerPopperUtilityClass } from './pickerPopperClasses';
@@ -63,10 +64,13 @@ export interface PickerPopperSlotProps {
   /**
    * Props passed down to the desktop [Transition](https://mui.com/material-ui/transitions/) component.
    */
-  desktopTransition?: Partial<MuiTransitionProps>;
+  desktopTransition?: WithDataAttributes<Partial<MuiTransitionProps>>;
   /**
    * Props passed down to the [FocusTrap](https://mui.com/base-ui/react-focus-trap/) component on desktop.
    */
+  // Not widened with `data-*`: FocusTrap renders no DOM element and its
+  // `exactProp` guard rejects unknown props (a stray `data-*` throws in dev),
+  // so the attribute could never reach the DOM.
   desktopTrapFocus?: Partial<MuiTrapFocusProps>;
   /**
    * Props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.

@@ -8,19 +8,65 @@
  * `class Foo { [disposeSymbol]() {} }` — rather than `Symbol.dispose`, so the
  * class works on runtimes without the proposal.
  */
-export const disposeSymbol: typeof Symbol.dispose =
-  typeof Symbol.dispose === 'symbol'
-    ? Symbol.dispose
-    : (Symbol.for('Symbol.dispose') as typeof Symbol.dispose);
+export const disposeSymbol: unique symbol = (
+  typeof Symbol.dispose === 'symbol' ? Symbol.dispose : Symbol.for('Symbol.dispose')
+) as never;
 
 /**
  * Well-known `Symbol.asyncDispose`. See {@link disposeSymbol} for the
  * native/fallback resolution rules.
  */
-export const asyncDisposeSymbol: typeof Symbol.asyncDispose =
-  typeof Symbol.asyncDispose === 'symbol'
-    ? Symbol.asyncDispose
-    : (Symbol.for('Symbol.asyncDispose') as typeof Symbol.asyncDispose);
+export const asyncDisposeSymbol: unique symbol = (
+  typeof Symbol.asyncDispose === 'symbol' ? Symbol.asyncDispose : Symbol.for('Symbol.asyncDispose')
+) as never;
+
+/** Object disposable via {@link disposeSymbol}. Mirrors `Disposable` from `esnext.disposable`. */
+export interface Disposable {
+  [disposeSymbol](): void;
+}
+
+/** Object disposable via {@link asyncDisposeSymbol}. Mirrors `AsyncDisposable` from `esnext.disposable`. */
+export interface AsyncDisposable {
+  [asyncDisposeSymbol](): PromiseLike<void>;
+}
+
+/**
+ * Mirrors the `DisposableStack` interface from `esnext.disposable`, declared
+ * locally so consumers don't need that lib in their TypeScript config.
+ */
+export interface DisposableStack {
+  readonly disposed: boolean;
+  dispose(): void;
+  use<T extends Disposable | null | undefined>(value: T): T;
+  adopt<T>(value: T, onDispose: (value: T) => void): T;
+  defer(onDispose: () => void): void;
+  move(): DisposableStack;
+  [disposeSymbol](): void;
+}
+
+export interface DisposableStackConstructor {
+  new (): DisposableStack;
+  readonly prototype: DisposableStack;
+}
+
+/**
+ * Mirrors the `AsyncDisposableStack` interface from `esnext.disposable`, declared
+ * locally so consumers don't need that lib in their TypeScript config.
+ */
+export interface AsyncDisposableStack {
+  readonly disposed: boolean;
+  disposeAsync(): Promise<void>;
+  use<T extends AsyncDisposable | Disposable | null | undefined>(value: T): T;
+  adopt<T>(value: T, onDisposeAsync: (value: T) => PromiseLike<void> | void): T;
+  defer(onDisposeAsync: () => PromiseLike<void> | void): void;
+  move(): AsyncDisposableStack;
+  [asyncDisposeSymbol](): Promise<void>;
+}
+
+export interface AsyncDisposableStackConstructor {
+  new (): AsyncDisposableStack;
+  readonly prototype: AsyncDisposableStack;
+}
 
 const NativeSuppressedError: (new (error: unknown, suppressed: unknown) => Error) | undefined =
   typeof SuppressedError === 'function' ? SuppressedError : undefined;
@@ -199,17 +245,19 @@ class FallbackAsyncDisposableStack {
  * Spec-compliant `DisposableStack`. Prefers the platform's native class when
  * present; falls back to a minimal built-in implementation otherwise.
  */
-export const DisposableStack: typeof globalThis.DisposableStack =
-  globalThis.DisposableStack ??
-  (FallbackDisposableStack as unknown as typeof globalThis.DisposableStack);
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const DisposableStack: DisposableStackConstructor =
+  (globalThis.DisposableStack as unknown as DisposableStackConstructor | undefined) ??
+  (FallbackDisposableStack as unknown as DisposableStackConstructor);
 
 /**
  * Spec-compliant `AsyncDisposableStack`. Prefers the platform's native class
  * when present; falls back to a minimal built-in implementation otherwise.
  */
-export const AsyncDisposableStack: typeof globalThis.AsyncDisposableStack =
-  globalThis.AsyncDisposableStack ??
-  (FallbackAsyncDisposableStack as unknown as typeof globalThis.AsyncDisposableStack);
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const AsyncDisposableStack: AsyncDisposableStackConstructor =
+  (globalThis.AsyncDisposableStack as unknown as AsyncDisposableStackConstructor | undefined) ??
+  (FallbackAsyncDisposableStack as unknown as AsyncDisposableStackConstructor);
 
 /**
  * Unwraps a `SuppressedError` chain (as produced by `DisposableStack.dispose()`

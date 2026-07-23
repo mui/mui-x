@@ -5,7 +5,12 @@ import type {
   ScatterItemIdentifier,
   ScatterValueType,
 } from './scatter';
-import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
+import type {
+  LineSeriesType,
+  DefaultizedLineSeriesType,
+  LineItemIdentifier,
+  LineItemClickIdentifier,
+} from './line';
 import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import type {
   PieSeriesType,
@@ -82,7 +87,7 @@ export interface ChartsSeriesConfig {
     seriesLayout: {};
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
-    itemIdentifierWithData: LineItemIdentifier;
+    itemIdentifierWithData: LineItemClickIdentifier;
     valueType: number | null;
     canBeStacked: true;
     axisType: 'cartesian';

@@ -6,6 +6,7 @@ import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/ch
 import type { ChatRole } from '../../types/chat-entities';
 import type { ChatSourceUrlMessagePart } from '../../types/chat-message-parts';
 import { useMessageContentTabIndex } from '../../message-list/internals/MessageRovingContext';
+import { safeUri } from './partUtils';
 
 export interface SourceUrlPartOwnerState {
   messageId: string;
@@ -104,7 +105,12 @@ export const SourceUrlPart = React.forwardRef(function SourceUrlPart(
       <Icon {...iconProps}>
         <ExternalLinkIcon />
       </Icon>
-      <LinkSlot href={part.url} rel="noreferrer noopener" target="_blank" {...linkProps}>
+      <LinkSlot
+        href={safeUri(part.url) || undefined}
+        rel="noreferrer noopener"
+        target="_blank"
+        {...linkProps}
+      >
         {part.title ?? part.url}
       </LinkSlot>
     </Root>
