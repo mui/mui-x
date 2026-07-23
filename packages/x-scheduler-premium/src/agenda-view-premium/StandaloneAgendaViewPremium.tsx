@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
@@ -23,10 +24,13 @@ const StandaloneAgendaViewPremium = React.forwardRef(function StandaloneAgendaVi
   TEvent extends object,
   TResource extends object,
 >(
-  props: StandaloneAgendaViewPremiumProps<TEvent, TResource>,
+  inProps: StandaloneAgendaViewPremiumProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   useLicenseVerifier(packageInfo);
+
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
 
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,

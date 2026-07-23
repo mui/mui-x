@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { StandaloneDayViewProps } from './DayView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
@@ -15,9 +16,12 @@ const StandaloneDayView = React.forwardRef(function StandaloneDayView<
   TEvent extends object,
   TResource extends object,
 >(
-  props: StandaloneDayViewProps<TEvent, TResource>,
+  inProps: StandaloneDayViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
+
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,
     TResource,
