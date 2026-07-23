@@ -271,6 +271,5 @@ describe('Charts Toolbar', () => {
       expect(document.body).toHaveFocus();
       expect(screen.getByRole('button', { name: 'Item 3' })).to.have.attribute('tabindex', '0');
     });
-
   });
 });
