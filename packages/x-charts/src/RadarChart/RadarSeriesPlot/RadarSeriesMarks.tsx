@@ -8,6 +8,7 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import type { SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
+import { useRegisterRadarItemActivation } from './useRegisterRadarItemActivation';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -43,6 +44,8 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
+
+  useRegisterRadarItemActivation(seriesId, onItemClick);
 
   return (
     <React.Fragment>
@@ -94,7 +97,7 @@ RadarSeriesMarks.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when a mark is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick: PropTypes.func,

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { cartesianSeriesTypes, useStore } from '@mui/x-charts/internals';
+import { cartesianSeriesTypes, useRegisterItemActivation, useStore } from '@mui/x-charts/internals';
+import type { ChartsReactClickEvent } from '@mui/x-charts/models';
 import type { FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
@@ -30,11 +31,11 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   className?: string;
   /**
    * Callback fired when a funnel item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsReactClickEvent<SVGElement>,
     funnelItemIdentifier: FunnelItemIdentifier,
   ) => void;
 }
@@ -144,6 +145,17 @@ function FunnelPlot(props: FunnelPlotProps) {
   const data = useAggregatedData();
   const classes = useUtilityClasses();
 
+  useRegisterItemActivation(
+    { type: 'funnel' },
+    onItemClick &&
+      ((event, item) =>
+        onItemClick(event, {
+          type: 'funnel',
+          seriesId: item.seriesId,
+          dataIndex: item.dataIndex,
+        })),
+  );
+
   return (
     <g className={clsx(classes.root, className)}>
       {data.map((series) => {
@@ -214,7 +226,7 @@ FunnelPlot.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when a funnel item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
    */
   onItemClick: PropTypes.func,

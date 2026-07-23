@@ -16,10 +16,13 @@ import { getChartPoint } from '../../../getChartPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
-import type { ChartsAxisData, SeriesId } from '../../../../models';
-
-const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
-type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;
+import { getAxisClickPayload } from './getAxisClickPayload';
+import {
+  isItemActivationKey,
+  selectorChartsIsKeyboardActivationEnabled,
+  selectorChartsKeyboardXAxisIndex,
+  selectorChartsKeyboardYAxisIndex,
+} from '../useChartKeyboardNavigation';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -207,60 +210,74 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     const axisClickHandler = instance.addInteractionListener('tap', (event) => {
-      let dataIndex: number | null = null;
-      let isXAxis: boolean = false;
-
       const svgPoint = getChartPoint(element, event.detail.srcEvent);
 
       const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
-      isXAxis = xIndex !== -1;
+      const isXAxis = xIndex !== -1;
 
-      dataIndex = isXAxis ? xIndex : getAxisIndex(yAxisWithScale[usedYAxis], svgPoint.y);
+      const dataIndex = isXAxis ? xIndex : getAxisIndex(yAxisWithScale[usedYAxis], svgPoint.y);
 
-      const USED_AXIS_ID = isXAxis ? xAxisIds[0] : yAxisIds[0];
-      if (dataIndex == null || dataIndex === -1) {
+      if (dataIndex === -1) {
         return;
       }
 
-      // The .data exist because otherwise the dataIndex would be null or -1.
-      const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
+      const payload = getAxisClickPayload({
+        axisId: isXAxis ? xAxisIds[0] : yAxisIds[0],
+        dataIndex,
+        isXAxis,
+        axes: isXAxis ? xAxisWithScale : yAxisWithScale,
+        processedSeries,
+      });
 
-      const seriesValues: ChartsAxisData['seriesValues'] = {};
+      if (payload === null) {
+        return;
+      }
 
-      Object.keys(processedSeries)
-        .filter((seriesType): seriesType is AxisClickSeriesType =>
-          AXIS_CLICK_SERIES_TYPES.has(seriesType as AxisClickSeriesType),
-        )
-        .forEach((seriesType) => {
-          // @ts-ignore
-          const seriesTypeConfig = processedSeries[seriesType];
-
-          seriesTypeConfig?.seriesOrder.forEach((seriesId: SeriesId) => {
-            const seriesItem = seriesTypeConfig!.series[seriesId];
-
-            const providedXAxisId = seriesItem.xAxisId;
-            const providedYAxisId = seriesItem.yAxisId;
-
-            const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
-            if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-              // @ts-ignore This is safe because users need to opt in to use range bar series.
-              // In that case, they should import the module augmentation from `x-charts-pro/moduleAugmentation/rangeBarOnClick`
-              // Which adds the proper type to the series data.
-              // TODO(v9): Remove this ts-ignore when we can make the breaking change to ChartsAxisData.
-              seriesValues[seriesId] = seriesItem.data[dataIndex];
-            }
-          });
-        });
-
-      onAxisClick(event.detail.srcEvent, { dataIndex, axisValue, seriesValues });
+      onAxisClick(event.detail.srcEvent, payload);
     });
+
+    const keyboardActivationHandler = (event: KeyboardEvent) => {
+      if (!isItemActivationKey(event) || !selectorChartsIsKeyboardActivationEnabled(store.state)) {
+        return;
+      }
+
+      const xAxisItem = selectorChartsKeyboardXAxisIndex(store.state);
+      const yAxisItem = selectorChartsKeyboardYAxisIndex(store.state);
+      const focusedAxisItem =
+        xAxisItem !== undefined && xAxisWithScale[xAxisItem.axisId]?.data !== undefined
+          ? { item: xAxisItem, isXAxis: true }
+          : yAxisItem !== undefined && { item: yAxisItem, isXAxis: false };
+
+      if (!focusedAxisItem || focusedAxisItem.item.dataIndex === undefined) {
+        return;
+      }
+
+      const payload = getAxisClickPayload({
+        axisId: focusedAxisItem.item.axisId,
+        dataIndex: focusedAxisItem.item.dataIndex,
+        isXAxis: focusedAxisItem.isXAxis,
+        axes: focusedAxisItem.isXAxis ? xAxisWithScale : yAxisWithScale,
+        processedSeries,
+      });
+
+      if (payload === null) {
+        return;
+      }
+
+      event.preventDefault();
+      onAxisClick(event, payload);
+    };
+
+    element.addEventListener('keydown', keyboardActivationHandler);
 
     return () => {
       axisClickHandler.cleanup();
+      element.removeEventListener('keydown', keyboardActivationHandler);
     };
   }, [
     params.onAxisClick,
     processedSeries,
+    store,
     chartsLayerContainerRef,
     xAxisWithScale,
     xAxisIds,

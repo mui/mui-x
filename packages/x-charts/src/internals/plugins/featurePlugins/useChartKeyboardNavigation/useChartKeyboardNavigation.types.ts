@@ -2,10 +2,41 @@ import type { ChartPluginSignature } from '../../models';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 import type { UseChartHighlightSignature } from '../useChartHighlight';
-import type { FocusedItemIdentifier } from '../../../../models/seriesType';
+import type { FocusedItemIdentifier, SeriesId } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
-export interface UseChartKeyboardNavigationInstance {}
+/**
+ * Called when the focused item is activated with the keyboard.
+ * @param {KeyboardEvent} event The keyboard event that triggered the activation.
+ * @param {FocusedItemIdentifier<ChartSeriesType>} item The activated item.
+ */
+export type ItemActivationHandler = (
+  event: KeyboardEvent,
+  item: FocusedItemIdentifier<ChartSeriesType>,
+) => void;
+
+/**
+ * The items a handler covers. An empty scope covers every item.
+ */
+export interface ItemActivationScope {
+  type?: ChartSeriesType;
+  seriesId?: SeriesId;
+}
+
+export interface UseChartKeyboardNavigationInstance {
+  /**
+   * Registers a handler triggered when the focused item is activated with the keyboard.
+   * Only the handler with the most specific matching scope runs, so plots sharing a series
+   * do not fire the callback twice.
+   * @param {ItemActivationScope} scope The items the handler covers.
+   * @param {ItemActivationHandler} handler The handler to call on activation.
+   * @returns {() => void} A cleanup function unregistering the handler.
+   */
+  registerItemActivationHandler: (
+    scope: ItemActivationScope,
+    handler: ItemActivationHandler,
+  ) => () => void;
+}
 
 export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {

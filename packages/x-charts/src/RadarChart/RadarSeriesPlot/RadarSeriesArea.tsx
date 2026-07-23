@@ -48,6 +48,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
 
   const classes = useUtilityClasses(inClasses);
+
   return (
     <React.Fragment>
       {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea, hidden }, seriesIndex) => {
@@ -99,7 +100,7 @@ RadarSeriesArea.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when an area is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick: PropTypes.func,

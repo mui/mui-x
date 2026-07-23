@@ -118,7 +118,7 @@ PiePlot.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when a pie item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsReactClickEvent<SVGPathElement>} event The event source of the callback.
    * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
    * @param {DefaultizedPieValueType} item The pie item.
    */

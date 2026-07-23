@@ -5,7 +5,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void",
+        "type": "function(event: ChartsClickEvent, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },

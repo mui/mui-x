@@ -23,6 +23,11 @@ import { getRadiusAxisIndex, getRotationAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 import { isPolarSeriesType } from '../../../isPolar';
+import {
+  isItemActivationKey,
+  selectorChartsFocusedItem,
+  selectorChartsIsKeyboardActivationEnabled,
+} from '../useChartKeyboardNavigation';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -217,31 +222,14 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       return () => {};
     }
 
-    const axisClickHandler = instance.addInteractionListener('tap', (event) => {
-      let dataIndex: number | null = null;
-      let isRotationAxis: boolean = false;
+    const getAxisClickPayload = (dataIndex: number, isRotationAxis: boolean) => {
+      const usedAxisId = isRotationAxis ? usedRotationAxisId : usedRadiusAxisId;
+      const axisValue = (isRotationAxis ? rotationAxisWithScale : radiusAxisWithScale)[usedAxisId]
+        ?.data?.[dataIndex];
 
-      const svgPoint = getChartPoint(element, event.detail.srcEvent);
-
-      const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
-      const rotationIndex = getRotationAxisIndex(
-        rotationAxisWithScale[usedRotationAxisId],
-        rotation,
-      );
-      const radius = generateSvg2radius(center)(svgPoint.x, svgPoint.y);
-      const radiusIndex = getRadiusAxisIndex(radiusAxisWithScale[usedRadiusAxisId], radius);
-      isRotationAxis = rotationIndex !== -1;
-
-      dataIndex = isRotationAxis ? rotationIndex : radiusIndex;
-
-      const USED_AXIS_ID = isRotationAxis ? usedRotationAxisId : usedRadiusAxisId;
-      if (dataIndex == null || dataIndex === -1) {
-        return;
+      if (axisValue === undefined) {
+        return null;
       }
-
-      // The .data exist because otherwise the dataIndex would be null or -1.
-      const axisValue = (isRotationAxis ? rotationAxisWithScale : radiusAxisWithScale)[USED_AXIS_ID]
-        .data![dataIndex];
 
       const seriesValues: Record<string, number | null | undefined> = {};
 
@@ -255,17 +243,69 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
           });
         });
 
-      onAxisClick(event.detail.srcEvent, { dataIndex, axisValue, seriesValues });
+      return { dataIndex, axisValue, seriesValues };
+    };
+
+    const axisClickHandler = instance.addInteractionListener('tap', (event) => {
+      const svgPoint = getChartPoint(element, event.detail.srcEvent);
+
+      const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
+      const rotationIndex = getRotationAxisIndex(
+        rotationAxisWithScale[usedRotationAxisId],
+        rotation,
+      );
+      const radius = generateSvg2radius(center)(svgPoint.x, svgPoint.y);
+      const radiusIndex = getRadiusAxisIndex(radiusAxisWithScale[usedRadiusAxisId], radius);
+      const isRotationAxis = rotationIndex !== -1;
+
+      const dataIndex = isRotationAxis ? rotationIndex : radiusIndex;
+
+      if (dataIndex === -1) {
+        return;
+      }
+
+      const payload = getAxisClickPayload(dataIndex, isRotationAxis);
+
+      if (payload === null) {
+        return;
+      }
+
+      onAxisClick(event.detail.srcEvent, payload);
     });
+
+    const keyboardActivationHandler = (event: KeyboardEvent) => {
+      if (!isItemActivationKey(event) || !selectorChartsIsKeyboardActivationEnabled(store.state)) {
+        return;
+      }
+
+      const focusedItem = selectorChartsFocusedItem(store.state);
+
+      if (focusedItem === null || !('dataIndex' in focusedItem)) {
+        return;
+      }
+
+      const payload = getAxisClickPayload(focusedItem.dataIndex, true);
+
+      if (payload === null) {
+        return;
+      }
+
+      event.preventDefault();
+      onAxisClick(event, payload);
+    };
+
+    element.addEventListener('keydown', keyboardActivationHandler);
 
     return () => {
       axisClickHandler.cleanup();
+      element.removeEventListener('keydown', keyboardActivationHandler);
     };
   }, [
     center,
     instance,
     params.onAxisClick,
     processedSeries,
+    store,
     radiusAxisWithScale,
     rotationAxisWithScale,
     chartsLayerContainerRef,

@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import type { ChartPlugin } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartItemClickSignature } from './useChartItemClick.types';
@@ -11,6 +12,20 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = (
   instance,
 }) => {
   const { onItemClick } = params;
+
+  React.useEffect(() => {
+    if (!onItemClick || !instance.registerItemActivationHandler) {
+      return undefined;
+    }
+
+    return instance.registerItemActivationHandler({}, (event, item) => {
+      const seriesTypeConfig = store.state.seriesConfig.config[item.type];
+      // @ts-ignore The type inference for store.state does not support generic yet
+      const itemWithData = seriesTypeConfig?.getItemWithData?.(store.state, item);
+
+      onItemClick(event, (itemWithData ?? item) as SeriesItemIdentifierWithType<ChartSeriesType>);
+    });
+  }, [instance, onItemClick, store]);
 
   if (!onItemClick) {
     return { instance: {} };

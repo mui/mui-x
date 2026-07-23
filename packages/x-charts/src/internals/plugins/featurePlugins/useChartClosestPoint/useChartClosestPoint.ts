@@ -259,6 +259,24 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     store,
   ]);
 
+  React.useEffect(() => {
+    if (!onItemClick || !instance.registerItemActivationHandler) {
+      return undefined;
+    }
+
+    return instance.registerItemActivationHandler({ type: 'scatter' }, (event, item) => {
+      if (item.type !== 'scatter') {
+        return;
+      }
+
+      onItemClick(event, {
+        type: 'scatter',
+        seriesId: item.seriesId,
+        dataIndex: item.dataIndex,
+      });
+    });
+  }, [instance, onItemClick]);
+
   // Instance implementation
   const enableVoronoiCallback = useEventCallback(() => {
     store.set('voronoi', { isVoronoiEnabled: true });

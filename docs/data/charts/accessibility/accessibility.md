@@ -76,6 +76,27 @@ When focused, the chart highlights a value item that can be modified with arrow 
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
 |    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
 
+### Activating the focused item
+
+Charts can trigger their click callbacks from the keyboard, so mouse-only interactions such as drill-down or filtering stay available to keyboard users ([WCAG 2.1 SC 2.1.1](https://www.w3.org/WAI/WCAG21/Understanding/keyboard.html)).
+
+The feature is experimental, and shared by every chart.
+Enable it with the `keyboardActivation` experimental feature:
+
+```jsx
+<BarChart
+  experimentalFeatures={{ keyboardActivation: true }}
+  onItemClick={(event, item) => {}}
+  onAxisClick={(event, data) => {}}
+  {...otherProps}
+/>
+```
+
+Pressing <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd> on the focused item then calls `onItemClick` and `onAxisClick` with the same payload a click provides.
+The `event` argument is the `KeyboardEvent` that triggered the activation, so click callbacks receive `MouseEvent | KeyboardEvent`.
+
+Because the focused element is a data point, charts with several item callbacks use their point-level one: line and radar charts call `onMarkClick`, and Sankey charts call `onNodeClick` or `onLinkClick` depending on the focused element.
+
 ## Screen reader compatibility
 
 Charts use a proxy strategy to support screen reader when user navigate with keyboard navigation.

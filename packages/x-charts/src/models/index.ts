@@ -2,6 +2,7 @@ export * from './seriesType';
 export * from './stacking';
 export * from './slots';
 export * from './featureFlags';
+export type { ChartsClickEvent, ChartsReactClickEvent } from './events';
 export * from './chartsSlotsComponentsProps';
 export type {
   AxisConfig,

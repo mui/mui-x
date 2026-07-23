@@ -250,6 +250,7 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
    * Options to enable features planned for the next major.
    */
   experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
     progressiveRendering: PropTypes.bool,
   }),
   /**
@@ -427,7 +428,7 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsClickEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,

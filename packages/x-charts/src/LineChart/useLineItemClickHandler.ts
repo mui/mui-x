@@ -7,6 +7,29 @@ import { getChartPoint } from '../internals/getChartPoint';
 import { getAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import type { SeriesId } from '../models/seriesType/common';
+import type { ChartsReactClickEvent } from '../models/events';
+import { useRegisterItemActivation } from '../internals/useRegisterItemActivation';
+
+/**
+ * Registers <kbd>Enter</kbd>/<kbd>Space</kbd> activation of the focused line item.
+ */
+export function useRegisterLineItemActivation(
+  onItemClick?: (
+    event: ChartsReactClickEvent<SVGElement>,
+    lineItemIdentifier: LineItemClickIdentifier,
+  ) => void,
+) {
+  useRegisterItemActivation(
+    { type: 'line' },
+    onItemClick &&
+      ((event, item) =>
+        onItemClick(event, {
+          type: 'line',
+          seriesId: item.seriesId,
+          dataIndex: item.dataIndex,
+        })),
+  );
+}
 
 /**
  * Creates a click handler for line and area paths that enriches the item
@@ -18,7 +41,7 @@ import type { SeriesId } from '../models/seriesType/common';
  */
 export function useLineItemClickHandler(
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsReactClickEvent<SVGElement>,
     lineItemIdentifier: LineItemClickIdentifier,
   ) => void,
 ): ((event: React.MouseEvent<SVGElement, MouseEvent>, seriesId: SeriesId) => void) | undefined {

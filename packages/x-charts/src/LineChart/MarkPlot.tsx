@@ -6,6 +6,8 @@ import clsx from 'clsx';
 import type { WithDataAttributes } from '@mui/utils/types';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import type { LineItemClickIdentifier } from '../models/seriesType/line';
+import type { ChartsReactClickEvent } from '../models/events';
+import { useRegisterLineItemActivation } from './useLineItemClickHandler';
 import { CircleMarkElement } from './CircleMarkElement';
 import { MarkElement } from './MarkElement';
 import type { MarkElementProps } from './MarkElement';
@@ -42,11 +44,11 @@ export interface MarkPlotProps
   slotProps?: MarkPlotSlotProps;
   /**
    * Callback fired when a line mark item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsReactClickEvent<SVGElement>,
     lineItemIdentifier: LineItemClickIdentifier,
   ) => void;
 }
@@ -77,6 +79,8 @@ function MarkPlot(props: MarkPlotProps) {
   } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
+
+  useRegisterLineItemActivation(onItemClick);
 
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
@@ -150,7 +154,7 @@ MarkPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line mark item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick: PropTypes.func,
