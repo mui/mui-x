@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
 import { PickersTextField, pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { createPickerRenderer } from 'test/utils/pickers';
 
@@ -35,7 +34,7 @@ describe('<PickersTextField /> - outlined notch', () => {
         {...STUB_PROPS}
         areAllSectionsEmpty={false}
         label="My label"
-        slotProps={{ input: { notched: false } }}
+        InputProps={{ notched: false } as any}
       />,
     );
 
@@ -66,10 +65,7 @@ describe('<PickersTextField /> - format placeholder opacity', () => {
     const { container } = render(
       <div>
         <PickersTextField {...STUB_PROPS} />
-        <PickersTextField
-          {...STUB_PROPS}
-          slotProps={{ input: { startAdornment: <span>@</span> } }}
-        />
+        <PickersTextField {...STUB_PROPS} InputProps={{ startAdornment: <span>@</span> }} />
       </div>,
     );
 
@@ -88,7 +84,7 @@ describe('<PickersTextField /> - format placeholder opacity', () => {
         <PickersTextField
           {...STUB_PROPS}
           label="My label"
-          slotProps={{ input: { startAdornment: <span>@</span> } }}
+          InputProps={{ startAdornment: <span>@</span> }}
         />
       </div>,
     );
