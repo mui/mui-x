@@ -20,10 +20,7 @@ import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 import { useTimeGridEvent } from './useTimeGridEvent';
-import {
-  EVENT_CALENDAR_CONTAINER_NAME,
-  RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM,
-} from '../../../constants';
+import { eventCalendarContentCompactQuery } from '../../../constants';
 
 // Visuals split via these media queries; resize follows the actual pointer (in the resize primitive).
 const HOVER_MEDIA = '@media (hover: hover)';
@@ -160,10 +157,9 @@ const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
     outlineOffset: 2,
   },
   variants: getPaletteVariants(theme),
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < ${RESPONSIVE_TYPOGRAPHY_BREAKPOINT_SM}px)`]:
-    {
-      '--time-grid-event-column-gap': '0px',
-    },
+  [eventCalendarContentCompactQuery]: {
+    '--time-grid-event-column-gap': '0px',
+  },
 });
 
 const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {

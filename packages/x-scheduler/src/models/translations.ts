@@ -96,6 +96,9 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText {
   closeSidePanel: string;
   openSidePanel: string;
 
+  // SidePanelDrawer (small screens)
+  openMenu: string;
+
   // PreferencesMenu
   amPm12h: string;
   hour24h: string;
