@@ -5,14 +5,42 @@ import { Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
 declare module '@mui/x-charts' {
   interface ChartsToolbarProps {
     items?: string[];
+    disabledItems?: string[];
+    ariaDisabledItems?: string[];
   }
 }
 
-function CustomToolbar({ items = ['Item 1', 'Item 2', 'Item 3'] }: { items?: string[] }) {
+type CustomToolbarProps = {
+  items?: string[];
+  disabledItems?: string[];
+  ariaDisabledItems?: string[];
+};
+
+function CustomToolbar({ items = ['Item 1', 'Item 2', 'Item 3'] }: CustomToolbarProps) {
   return (
     <Toolbar>
       {items.map((item) => (
         <ToolbarButton key={item}>{item}</ToolbarButton>
+      ))}
+    </Toolbar>
+  );
+}
+
+function DisableableToolbar({
+  items = ['Item 1', 'Item 2', 'Item 3'],
+  disabledItems = [],
+  ariaDisabledItems = [],
+}: CustomToolbarProps) {
+  return (
+    <Toolbar>
+      {items.map((item) => (
+        <ToolbarButton
+          key={item}
+          disabled={disabledItems.includes(item)}
+          aria-disabled={ariaDisabledItems.includes(item) || undefined}
+        >
+          {item}
+        </ToolbarButton>
       ))}
     </Toolbar>
   );
@@ -149,5 +177,100 @@ describe('Charts Toolbar', () => {
       await user.keyboard('{ArrowLeft}');
       expect(screen.getByRole('button', { name: 'Item 1' })).toHaveFocus();
     });
+  });
+
+  // https://github.com/mui/mui-x/issues/23035
+  describe('Focus management', () => {
+    it('should not move focus when an item becomes disabled and focus is outside the toolbar', async () => {
+      const { setProps } = render(
+        <LineChart {...baselineProps} slots={{ toolbar: DisableableToolbar }} showToolbar />,
+      );
+
+      expect(document.body).toHaveFocus();
+
+      await act(async () =>
+        setProps({
+          slotProps: {
+            toolbar: { disabledItems: ['Item 1'] },
+          },
+        }),
+      );
+
+      expect(document.body).toHaveFocus();
+      // The disabled item was the tab stop, so only the tab stop moves
+      expect(screen.getByRole('button', { name: 'Item 2' })).to.have.attribute('tabindex', '0');
+    });
+
+    it('should not move focus or the tab stop when a non-tab-stop item becomes disabled', async () => {
+      const { setProps } = render(
+        <LineChart {...baselineProps} slots={{ toolbar: DisableableToolbar }} showToolbar />,
+      );
+
+      await act(async () =>
+        setProps({
+          slotProps: {
+            toolbar: { disabledItems: ['Item 2'] },
+          },
+        }),
+      );
+
+      expect(document.body).toHaveFocus();
+      expect(screen.getByRole('button', { name: 'Item 1' })).to.have.attribute('tabindex', '0');
+    });
+
+    it('should move focus to the next enabled item when the focused item becomes disabled', async () => {
+      const { setProps } = render(
+        <LineChart {...baselineProps} slots={{ toolbar: DisableableToolbar }} showToolbar />,
+      );
+
+      await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());
+      await act(async () =>
+        setProps({
+          slotProps: {
+            toolbar: { disabledItems: ['Item 1'] },
+          },
+        }),
+      );
+
+      expect(screen.getByRole('button', { name: 'Item 2' })).toHaveFocus();
+    });
+
+    it('should keep focus on the focused item when it becomes aria-disabled', async () => {
+      const { setProps } = render(
+        <LineChart {...baselineProps} slots={{ toolbar: DisableableToolbar }} showToolbar />,
+      );
+
+      await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());
+      await act(async () =>
+        setProps({
+          slotProps: {
+            toolbar: { ariaDisabledItems: ['Item 1'] },
+          },
+        }),
+      );
+
+      expect(screen.getByRole('button', { name: 'Item 1' })).toHaveFocus();
+      expect(screen.getByRole('button', { name: 'Item 2' })).to.have.attribute('tabindex', '0');
+    });
+
+    it('should not move focus when an item is removed and focus is outside the toolbar', async () => {
+      const { setProps } = render(
+        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
+      );
+
+      expect(document.body).toHaveFocus();
+
+      await act(async () =>
+        setProps({
+          slotProps: {
+            toolbar: { items: ['Item 2', 'Item 3'] },
+          },
+        }),
+      );
+
+      expect(document.body).toHaveFocus();
+      expect(screen.getByRole('button', { name: 'Item 3' })).to.have.attribute('tabindex', '0');
+    });
+
   });
 });
