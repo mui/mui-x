@@ -4,7 +4,7 @@
 
 _Jul 23, 2026_
 
-We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🦮 Improve accessibility of the Charts and Pickers components.
 - 🐞 Bugfixes
@@ -14,7 +14,7 @@ Special thanks go out to these community members for their valuable contribution
 @kevincorizi-sbt, @mustafajw07, @SamanPandey-in
 
 The following team members contributed to this release:
-@hasdfa, @JCQuintas, @LukasTy, @noraleonte, @rita-codes, @silviuaavram
+@brijeshb42, @hasdfa, @JCQuintas, @LukasTy, @michelengelen, @noraleonte, @rita-codes, @silviuaavram
 
 ### Data Grid
 
@@ -96,9 +96,14 @@ Internal changes.
 
 - [docs] Fix clearing, layout shift, and prop leak in Pickers demos (#23191) @LukasTy
 
+### Core
+
+- [code-infra] Validate working of specific code-infra canary (#23207) @brijeshb42
+
 ### Miscellaneous
 
 - [chat] Normalize message part link URLs (#23187) @hasdfa
+- [x-chat] Fix object URL leaks for submitted attachments (#23198) @hasdfa
 - [internals] Make disposable types self-contained without `esnext.disposable` lib (#23164) @JCQuintas
 
 ## 9.10.0
