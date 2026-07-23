@@ -216,4 +216,51 @@ describe('keyboard item activation', () => {
       seriesValues: { A: 50 },
     });
   });
+
+  it('should fire both onItemClick and onAxisClick on a single activation', async () => {
+    const onItemClick = vi.fn();
+    const onAxisClick = vi.fn();
+    const { user } = render(
+      <BarChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100] }]}
+        xAxis={[{ data: ['P', 'Q'] }]}
+        onItemClick={onItemClick}
+        onAxisClick={onAxisClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[Enter]');
+
+    expect(onItemClick.mock.calls.length).to.equal(1);
+    expect(onAxisClick.mock.calls.length).to.equal(1);
+  });
+
+  it('should fire onAxisClick on the data axis of a horizontal bar chart', async () => {
+    const onAxisClick = vi.fn();
+    const { user } = render(
+      <BarChart
+        {...barConfig}
+        layout="horizontal"
+        series={[{ id: 'A', data: [50, 100] }]}
+        yAxis={[{ data: ['P', 'Q'] }]}
+        onAxisClick={onAxisClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[Enter]');
+
+    expect(onAxisClick.mock.calls.length).to.equal(1);
+    expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
+      dataIndex: 0,
+      axisValue: 'P',
+      seriesValues: { A: 50 },
+    });
+  });
 });

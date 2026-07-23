@@ -17,12 +17,29 @@ import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 import { getAxisClickPayload } from './getAxisClickPayload';
+import type { ComputeResult } from './computeAxisValue';
+import type { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import {
   isItemActivationKey,
   selectorChartsIsKeyboardActivationEnabled,
   selectorChartsKeyboardXAxisIndex,
   selectorChartsKeyboardYAxisIndex,
 } from '../useChartKeyboardNavigation';
+
+/**
+ * Narrows an axis item to one the axis actually has a value for.
+ * Axes unrelated to the focused series can exist with empty data, so the index must resolve.
+ */
+function hasAxisValueAt(
+  axes: ComputeResult<ChartsAxisProps>['axis'],
+  item: AxisItemIdentifier | undefined,
+): item is AxisItemIdentifier & { dataIndex: number } {
+  return (
+    item !== undefined &&
+    item.dataIndex !== undefined &&
+    axes[item.axisId]?.data?.[item.dataIndex] !== undefined
+  );
+}
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -243,12 +260,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
       const xAxisItem = selectorChartsKeyboardXAxisIndex(store.state);
       const yAxisItem = selectorChartsKeyboardYAxisIndex(store.state);
-      const focusedAxisItem =
-        xAxisItem !== undefined && xAxisWithScale[xAxisItem.axisId]?.data !== undefined
-          ? { item: xAxisItem, isXAxis: true }
-          : yAxisItem !== undefined && { item: yAxisItem, isXAxis: false };
+      const focusedAxisItem = hasAxisValueAt(xAxisWithScale, xAxisItem)
+        ? { item: xAxisItem, isXAxis: true }
+        : hasAxisValueAt(yAxisWithScale, yAxisItem) && { item: yAxisItem, isXAxis: false };
 
-      if (!focusedAxisItem || focusedAxisItem.item.dataIndex === undefined) {
+      if (!focusedAxisItem) {
         return;
       }
 
