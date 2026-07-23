@@ -88,6 +88,9 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Lukk sidepanel',
   openSidePanel: 'Åpne sidepanel',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12-timer (1:00PM)',
   hour24h: '24-timer (13:00)',
