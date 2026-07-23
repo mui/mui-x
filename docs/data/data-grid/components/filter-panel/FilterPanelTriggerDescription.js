@@ -23,11 +23,15 @@ function useActiveFiltersDescription() {
   return activeFilters
     .map((item) => {
       const column = apiRef.current.getColumn(item.field);
+      if (!column) {
+        return null;
+      }
       const operator = column.filterOperators?.find(
         (filterOperator) => filterOperator.value === item.operator,
       );
       return `${column.headerName ?? column.field} ${operator?.label ?? item.operator} ${item.value ?? ''}`.trim();
     })
+    .filter((description) => description !== null)
     .join(', ');
 }
 
