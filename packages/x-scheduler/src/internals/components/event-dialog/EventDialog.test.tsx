@@ -61,9 +61,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     // The description section has no legend, so check it renders after the other sections.
     const description = screen.getByRole('textbox', { name: 'Description' });
-    expect(
-      legends[1].compareDocumentPosition(description) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).not.to.equal(0);
+    expect(legends[1].compareDocumentPosition(description)).to.equal(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
   });
 
   it('should not render the recurrence tab when no slot is provided', () => {
