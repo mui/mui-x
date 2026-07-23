@@ -111,9 +111,7 @@ function ExpandableCell(params: GridRenderCellParams<any, string>) {
               sx={{
                 p: 1,
                 boxSizing: 'border-box',
-                width: colDef?.computedWidth
-                  ? colDef.computedWidth * 1.25
-                  : undefined,
+                width: colDef.computedWidth * 1.25,
                 maxWidth: '100%',
                 minHeight: cellRef.current?.offsetHeight,
                 typography: 'body2',

@@ -113,7 +113,7 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
   props: GridMultiSelectCellProps<V>,
 ) {
   const { id, value, colDef, hasFocus, row, slotProps } = props;
-  const popupId = `${id}-${colDef?.field}-multiselect-popup`;
+  const popupId = `${id}-${colDef.field}-multiselect-popup`;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const privateApiRef = useGridPrivateApiContext();
@@ -130,8 +130,7 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
 
   const getOptionValue = (colDef as GridMultiSelectColDef).getOptionValue!;
   const getOptionLabel = (colDef as GridMultiSelectColDef).getOptionLabel!;
-  const valueOptions =
-    colDef && isMultiSelectColDef(colDef) ? getValueOptions(colDef, { id, row }) : null;
+  const valueOptions = isMultiSelectColDef(colDef) ? getValueOptions(colDef, { id, row }) : null;
   const optionByValue = React.useMemo(() => {
     const map = new Map<any, ValueOptions>();
     if (valueOptions) {
@@ -150,7 +149,7 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
     }
     const activeFilter = filterModel.items.find(
       (item) =>
-        item.field === colDef?.field &&
+        item.field === colDef.field &&
         item.operator === 'contains' &&
         Array.isArray(item.value) &&
         item.value.length > 0,
@@ -167,7 +166,7 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
     const [match] = reordered.splice(index, 1);
     reordered.unshift(match);
     return reordered;
-  }, [value, filterModel.items, colDef?.field]);
+  }, [value, filterModel.items, colDef.field]);
 
   // Focus the overflow chip when the cell is focused, and close the popup on focus loss.
   // Centralized in a single effect to avoid registering a `cellFocusOut` listener per
@@ -215,7 +214,7 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
     setPopupOpen(false);
   };
 
-  if (arrayValue.length === 0 || !colDef) {
+  if (arrayValue.length === 0) {
     return null;
   }
 
@@ -336,9 +335,8 @@ GridMultiSelectCell.propTypes /* remove-proptypes */ = {
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
   /**
    * The column of the row that the current cell belongs to.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: PropTypes.object,
+  colDef: PropTypes.object.isRequired,
   /**
    * The column field of the cell that triggered the event.
    */

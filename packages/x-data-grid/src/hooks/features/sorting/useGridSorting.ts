@@ -311,7 +311,7 @@ export const useGridSorting = (
    */
   const handleColumnHeaderClick = React.useCallback<GridEventListener<'columnHeaderClick'>>(
     ({ field, colDef }, event) => {
-      if (!colDef?.sortable || props.disableColumnSorting) {
+      if (!colDef.sortable || props.disableColumnSorting) {
         return;
       }
       const allowMultipleSorting =
@@ -326,7 +326,7 @@ export const useGridSorting = (
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     ({ field, colDef }, event) => {
-      if (!colDef?.sortable || props.disableColumnSorting) {
+      if (!colDef.sortable || props.disableColumnSorting) {
         return;
       }
       // Ctrl + Enter opens the column menu

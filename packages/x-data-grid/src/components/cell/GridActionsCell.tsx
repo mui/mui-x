@@ -321,9 +321,8 @@ GridActionsCell.propTypes /* remove-proptypes */ = {
   children: PropTypes.node,
   /**
    * The column of the row that the current cell belongs to.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: PropTypes.object,
+  colDef: PropTypes.object.isRequired,
   /**
    * The column field of the cell that triggered the event.
    */
@@ -439,9 +438,8 @@ GridActionsCellWrapper.propTypes /* remove-proptypes */ = {
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
   /**
    * The column of the row that the current cell belongs to.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: PropTypes.object,
+  colDef: PropTypes.object.isRequired,
   /**
    * The column field of the cell that triggered the event.
    */

@@ -129,7 +129,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
       className={classes.root}
       ownerState={rootProps}
       fullWidth
-      type={colDef?.type === 'number' ? colDef.type : 'text'}
+      type={colDef.type === 'number' ? colDef.type : 'text'}
       value={valueState ?? ''}
       onChange={handleChange}
       endAdornment={
@@ -158,9 +158,8 @@ GridEditInputCell.propTypes /* remove-proptypes */ = {
   changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: PropTypes.object,
+  colDef: PropTypes.object.isRequired,
   debounceMs: PropTypes.number,
   /**
    * The column field of the cell that triggered the event.

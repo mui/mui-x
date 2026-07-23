@@ -9,7 +9,7 @@ export function renderSparkline(params: GridRenderCellParams) {
   return (
     <SparkLineChart
       data={params.value}
-      width={params.colDef?.computedWidth}
+      width={params.colDef.computedWidth}
       plotType="bar"
     />
   );

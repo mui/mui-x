@@ -15,7 +15,6 @@ export interface GridColumnHeaderParams<
   field: string;
   /**
    * The column of the current header component.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: GridStateColDef<R, V, F> | undefined;
+  colDef: GridStateColDef<R, V, F>;
 }

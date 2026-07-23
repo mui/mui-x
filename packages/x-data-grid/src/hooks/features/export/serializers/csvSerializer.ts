@@ -40,7 +40,7 @@ export const serializeCellValue = (
   const { csvOptions, ignoreValueFormatter } = options;
   let value: any;
   if (ignoreValueFormatter) {
-    const columnType = cellParams.colDef?.type;
+    const columnType = cellParams.colDef.type;
     if (columnType === 'number') {
       value = String(cellParams.value);
     } else if (columnType === 'date' || columnType === 'dateTime') {

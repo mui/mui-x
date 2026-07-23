@@ -145,7 +145,7 @@ export const useGridColumnReorder = (
 
   const handleDragStart = React.useCallback<GridEventListener<'columnHeaderDragStart'>>(
     (params, event) => {
-      if (props.disableColumnReorder || params.colDef?.disableReorder) {
+      if (props.disableColumnReorder || params.colDef.disableReorder) {
         return;
       }
 

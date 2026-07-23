@@ -211,9 +211,8 @@ GridHeaderCheckbox.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * The column of the current header component.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: PropTypes.object,
+  colDef: PropTypes.object.isRequired,
   /**
    * The column field of the column that triggered the event
    */

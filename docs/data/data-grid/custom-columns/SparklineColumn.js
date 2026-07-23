@@ -10,7 +10,7 @@ function GridSparklineCell(props) {
   return (
     <SparkLineChart
       data={props.value}
-      width={props.colDef?.computedWidth}
+      width={props.colDef.computedWidth}
       plotType={props.plotType}
     />
   );

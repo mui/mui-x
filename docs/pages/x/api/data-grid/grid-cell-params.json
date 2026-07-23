@@ -8,7 +8,7 @@
   "properties": {
     "api": { "type": { "description": "GridApiCommunity" }, "required": true },
     "cellMode": { "type": { "description": "GridCellMode" }, "required": true },
-    "colDef": { "type": { "description": "GridStateColDef | undefined" }, "required": true },
+    "colDef": { "type": { "description": "GridStateColDef" }, "required": true },
     "field": { "type": { "description": "string" }, "required": true },
     "hasFocus": { "type": { "description": "boolean" }, "required": true },
     "id": { "type": { "description": "GridRowId" }, "required": true },

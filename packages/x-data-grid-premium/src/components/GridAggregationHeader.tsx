@@ -12,7 +12,7 @@ import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumPro
 
 interface OwnerState extends DataGridPremiumProcessedProps {
   classes: DataGridPremiumProcessedProps['classes'];
-  colDef: GridColDef | undefined;
+  colDef: GridColDef;
 }
 
 const GridAggregationHeaderRoot = styled('div', {
@@ -22,7 +22,7 @@ const GridAggregationHeaderRoot = styled('div', {
     const { ownerState } = props;
     return [
       styles.aggregationColumnHeader,
-      ownerState.colDef?.headerAlign &&
+      ownerState.colDef.headerAlign &&
         styles[`aggregationColumnHeader--align${capitalize(ownerState.colDef.headerAlign)}`],
     ];
   },
@@ -57,7 +57,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'aggregationColumnHeader',
-      colDef?.headerAlign && `aggregationColumnHeader--align${capitalize(colDef.headerAlign)}`,
+      colDef.headerAlign && `aggregationColumnHeader--align${capitalize(colDef.headerAlign)}`,
     ],
     aggregationLabel: ['aggregationColumnHeaderLabel'],
   };
@@ -79,7 +79,7 @@ function GridAggregationHeader(
   const ownerState = { ...rootProps, classes: rootProps.classes, colDef };
   const classes = useUtilityClasses(ownerState);
 
-  if (!aggregation || !colDef) {
+  if (!aggregation) {
     return null;
   }
 

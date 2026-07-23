@@ -72,7 +72,7 @@ function EditTextarea(props: GridRenderEditCellParams<any, string>) {
         ref={handleRef}
         style={{
           height: 1,
-          width: colDef?.computedWidth,
+          width: colDef.computedWidth,
           display: 'block',
           position: 'absolute',
           top: 0,
@@ -80,7 +80,7 @@ function EditTextarea(props: GridRenderEditCellParams<any, string>) {
       />
       {anchorEl && (
         <Popper open anchorEl={anchorEl} placement="bottom-start">
-          <Paper elevation={1} sx={{ p: 1, minWidth: colDef?.computedWidth }}>
+          <Paper elevation={1} sx={{ p: 1, minWidth: colDef.computedWidth }}>
             <InputBase
               multiline
               rows={4}

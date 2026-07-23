@@ -46,9 +46,8 @@ export interface GridCellParams<
   rowNode: N;
   /**
    * The column of the row that the current cell belongs to.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: GridStateColDef | undefined;
+  colDef: GridStateColDef;
   /**
    * If true, the cell is editable.
    */

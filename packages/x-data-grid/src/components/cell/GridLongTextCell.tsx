@@ -158,7 +158,7 @@ export interface GridLongTextCellProps extends GridRenderCellParams<any, string 
 
 function GridLongTextCell(props: GridLongTextCellProps) {
   const { id, value = '', colDef, hasFocus, slotProps, renderContent } = props;
-  const popupId = `${id}-${colDef?.field}-longtext-popup`;
+  const popupId = `${id}-${colDef.field}-longtext-popup`;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
@@ -208,14 +208,8 @@ function GridLongTextCell(props: GridLongTextCellProps) {
   const handleCollapseClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     setPopupOpen(false);
-    if (colDef) {
-      apiRef.current.getCellElement(id, colDef.field)?.focus();
-    }
+    apiRef.current.getCellElement(id, colDef.field)?.focus();
   };
-
-  if (!colDef) {
-    return null;
-  }
 
   return (
     <GridLongTextCellRoot
@@ -320,9 +314,8 @@ GridLongTextCell.propTypes /* remove-proptypes */ = {
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
   /**
    * The column of the row that the current cell belongs to.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: PropTypes.object,
+  colDef: PropTypes.object.isRequired,
   /**
    * The column field of the cell that triggered the event.
    */

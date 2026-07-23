@@ -181,7 +181,7 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
         ownerState={rootProps}
         id={popupId}
         role="dialog"
-        aria-label={colDef?.headerName || field}
+        aria-label={colDef.headerName || field}
         open={showPopup}
         target={anchorEl}
         placement="bottom-start"
@@ -202,7 +202,7 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
         <GridEditLongTextCellPopperContent
           {...slotProps?.popperContent}
           className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
-          style={{ '--_width': `${colDef?.computedWidth}px` } as React.CSSProperties}
+          style={{ '--_width': `${colDef.computedWidth}px` } as React.CSSProperties}
         >
           <GridEditLongTextarea {...props} valueState={valueState} setValueState={setValueState} />
         </GridEditLongTextCellPopperContent>
@@ -227,9 +227,8 @@ GridEditLongTextCell.propTypes /* remove-proptypes */ = {
   changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: PropTypes.object,
+  colDef: PropTypes.object.isRequired,
   debounceMs: PropTypes.number,
   /**
    * The column field of the cell that triggered the event.
@@ -352,7 +351,7 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
       ref={textareaRef}
       as={rootProps.slots.baseTextarea}
       ownerState={rootProps}
-      aria-label={colDef?.headerName || field}
+      aria-label={colDef.headerName || field}
       value={valueState ?? ''}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
@@ -378,9 +377,8 @@ GridEditLongTextarea.propTypes /* remove-proptypes */ = {
   changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
-   * `undefined` if the field is not in the current column set.
    */
-  colDef: PropTypes.object,
+  colDef: PropTypes.object.isRequired,
   debounceMs: PropTypes.number,
   /**
    * The column field of the cell that triggered the event.
