@@ -190,6 +190,9 @@ export const useGridSorting = (
   const sortColumn = React.useCallback<GridSortApi['sortColumn']>(
     (field, direction, allowMultipleSorting) => {
       const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return;
+      }
       const sortItem = createSortItem(column, direction);
       let sortModel: GridSortModel;
       if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {

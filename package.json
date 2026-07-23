@@ -1,5 +1,5 @@
 {
-  "version": "9.9.0",
+  "version": "9.10.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -79,7 +79,7 @@
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.23",
     "@mui/internal-babel-plugin-minify-errors": "2.0.8-canary.30",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.85",
-    "@mui/internal-code-infra": "0.0.4-canary.93",
+    "@mui/internal-code-infra": "0.0.4-canary.95",
     "@mui/internal-api-docs-builder": "1.0.4-canary.2",
     "@mui/internal-markdown": "3.0.11-canary.2",
     "@mui/internal-netlify-cache": "0.0.3-canary.5",
@@ -117,16 +117,16 @@
     "es-toolkit": "catalog:",
     "eslint": "10.7.0",
     "eslint-plugin-consistent-default-export-name": "0.0.15",
-    "eslint-plugin-jsdoc": "63.0.13",
+    "eslint-plugin-jsdoc": "63.1.0",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "catalog:",
-    "globby": "16.2.1",
+    "globby": "16.2.2",
     "jsdom": "catalog:",
     "lerna": "9.0.7",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.5",
-    "pkg-pr-new": "0.0.75",
+    "pkg-pr-new": "0.0.78",
     "playwright": "catalog:",
     "prettier": "3.9.5",
     "pretty-quick": "4.2.2",
@@ -150,9 +150,9 @@
   "config": {
     "valeVersion": "3.15.1"
   },
-  "packageManager": "pnpm@11.11.0",
+  "packageManager": "pnpm@11.14.0",
   "engines": {
-    "pnpm": "11.11.0",
+    "pnpm": "11.14.0",
     "node": ">=22.23.1"
   }
 }
