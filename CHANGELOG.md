@@ -34,7 +34,7 @@ Same changes as in `@mui/x-data-grid-pro@9.10.1`.
 
 #### `@mui/x-date-pickers@9.10.1`
 
-Internal changes.
+- [pickers] Fix format placeholder brightness with a start adornment (#23189) @LukasTy
 
 #### `@mui/x-date-pickers-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
