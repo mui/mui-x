@@ -84,13 +84,9 @@ const GridToolbarExportContainer = forwardRef<
           className={gridClasses.menuList}
           aria-labelledby={exportButtonId}
           autoFocusItem={open}
+          onClick={handleMenuClose}
         >
-          {React.Children.map(children, (child) => {
-            if (!React.isValidElement(child)) {
-              return child;
-            }
-            return React.cloneElement<any>(child, { hideMenu: handleMenuClose });
-          })}
+          {children}
         </rootProps.slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
