@@ -60,7 +60,6 @@ export default function LineClick() {
       <Box sx={{ flexGrow: 1 }}>
         <LineChart
           {...lineChartsParams}
-          experimentalFeatures={{ keyboardActivation: true }}
           onAreaClick={(event, d) => setItemData(d)}
           onMarkClick={(event, d) => setItemData(d)}
           onLineClick={(event, d) => setItemData(d)}
