@@ -93,6 +93,33 @@ export function dateToTimelineAxisOffsetMs(
 }
 
 /**
+ * Filters out the occurrences that occupy no space on the axis.
+ * Rendering, lane counts, and dependency arrows must share this filter so their lane
+ * assignments stay consistent.
+ */
+export function filterOccurrencesVisibleOnTimelineAxis<
+  T extends {
+    displayTimezone: {
+      start: { value: TemporalSupportedObject };
+      end: { value: TemporalSupportedObject };
+    };
+  },
+>(adapter: TemporalAdapter, axis: TimelineAxis, occurrences: readonly T[]): T[] {
+  if (isFullDayWindow(axis)) {
+    return occurrences as T[];
+  }
+
+  return occurrences.filter((occurrence) =>
+    isRangeVisibleOnTimelineAxis(
+      adapter,
+      axis,
+      occurrence.displayTimezone.start.value,
+      occurrence.displayTimezone.end.value,
+    ),
+  );
+}
+
+/**
  * Whether a date range occupies any space on the axis. A range fully contained in the
  * hidden hours collapses to a zero-width sliver and should not be rendered.
  */

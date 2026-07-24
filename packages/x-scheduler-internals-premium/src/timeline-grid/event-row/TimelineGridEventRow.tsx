@@ -17,7 +17,7 @@ import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premiu
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
 import {
-  isRangeVisibleOnTimelineAxis,
+  filterOccurrencesVisibleOnTimelineAxis,
   timelineAxisOffsetToDate,
 } from '../../internals/utils/timeline-axis';
 
@@ -67,15 +67,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   // Occurrences fully inside the hidden hours would render as zero-width slivers and
   // inflate the lane count, so they are excluded before positioning.
   const occurrences = React.useMemo(
-    () =>
-      allOccurrences.filter((occurrence) =>
-        isRangeVisibleOnTimelineAxis(
-          adapter,
-          presetConfig,
-          occurrence.displayTimezone.start.value,
-          occurrence.displayTimezone.end.value,
-        ),
-      ),
+    () => filterOccurrencesVisibleOnTimelineAxis(adapter, presetConfig, allOccurrences),
     [allOccurrences, adapter, presetConfig],
   );
 

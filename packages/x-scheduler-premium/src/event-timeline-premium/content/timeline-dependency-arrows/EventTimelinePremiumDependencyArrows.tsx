@@ -11,7 +11,7 @@ import {
   eventTimelinePremiumPresetSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import { isRangeVisibleOnTimelineAxis } from '@mui/x-scheduler-internals-premium/internals';
+import { filterOccurrencesVisibleOnTimelineAxis } from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { getEventsCellLaneMetrics } from '../rowGeometry';
@@ -84,13 +84,10 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
     () =>
       resources.map((entry) => ({
         ...entry,
-        occurrences: entry.occurrences.filter((occurrence) =>
-          isRangeVisibleOnTimelineAxis(
-            adapter,
-            presetConfig,
-            occurrence.displayTimezone.start.value,
-            occurrence.displayTimezone.end.value,
-          ),
+        occurrences: filterOccurrencesVisibleOnTimelineAxis(
+          adapter,
+          presetConfig,
+          entry.occurrences,
         ),
       })),
     [resources, adapter, presetConfig],

@@ -92,8 +92,11 @@ export function computeElementPositionInCollection(
   const clampedStartMinutes = clampToTimeline(startIndexMinutes);
   const clampedEndMinutes = clampToTimeline(endIndexMinutes);
 
-  const startingBeforeEdge = startIndexMinutes < 0 || start.minutesInDay < dayStartMinute;
-  const endingAfterEdge = endIndexMinutes > totalMinutes || end.minutesInDay > dayEndMinute;
+  // A bound clamped in either direction means part of the element is hidden.
+  const isMinuteOutOfWindow = (minute: number) => minute < dayStartMinute || minute > dayEndMinute;
+
+  const startingBeforeEdge = startIndexMinutes < 0 || isMinuteOutOfWindow(start.minutesInDay);
+  const endingAfterEdge = endIndexMinutes > totalMinutes || isMinuteOutOfWindow(end.minutesInDay);
 
   return {
     position: clampedStartMinutes / totalMinutes,

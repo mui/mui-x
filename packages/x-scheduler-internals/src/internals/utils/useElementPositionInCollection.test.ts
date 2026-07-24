@@ -103,6 +103,34 @@ describe('computeElementPositionInCollection', () => {
       expect(result.endingAfterEdge).to.equal(false);
     });
 
+    it('should flag an event ending exactly at midnight as continuing past the day edge', () => {
+      const result = computeElementPositionInCollection(adapter, {
+        start: processed('2025-01-05T18:00:00.000Z'),
+        end: processed('2025-01-06T00:00:00.000Z'),
+        collectionStart,
+        collectionEnd,
+        ...window,
+      });
+
+      expect(result.position).to.equal(600 / 2880);
+      expect(result.duration).to.equal(120 / 2880);
+      expect(result.endingAfterEdge).to.equal(true);
+    });
+
+    it('should flag an event starting in the hidden evening hours as starting before the day edge', () => {
+      const result = computeElementPositionInCollection(adapter, {
+        start: processed('2025-01-05T22:00:00.000Z'),
+        end: processed('2025-01-06T10:00:00.000Z'),
+        collectionStart,
+        collectionEnd,
+        ...window,
+      });
+
+      expect(result.position).to.equal(720 / 2880);
+      expect(result.duration).to.equal(120 / 2880);
+      expect(result.startingBeforeEdge).to.equal(true);
+    });
+
     it('should return a zero duration for an event fully inside the hidden hours', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T21:00:00.000Z'),

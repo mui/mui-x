@@ -117,8 +117,9 @@ export interface PresetDefinition {
    * `unitCount` whenever the grid width must differ from the navigation step:
    * either because the count varies (e.g. `monthAndYear`, where days per
    * month differ) or because it has to stay stable against runtime drift
-   * (e.g. `dayAndHour` pins it to `4 × 24` so the grid width does not shrink
-   * on DST days).
+   * (e.g. `dayAndHour` pins it to `4 × visible hours` so the grid width does
+   * not shrink on DST days). `hourRange` carries the preset's displayed hour
+   * window, resolved from the user's `presetConfig`.
    */
   getCssUnitCount?: (
     adapter: TemporalAdapter,

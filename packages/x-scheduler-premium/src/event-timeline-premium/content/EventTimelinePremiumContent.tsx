@@ -9,7 +9,7 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
 import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
-import { isRangeVisibleOnTimelineAxis } from '@mui/x-scheduler-internals-premium/internals';
+import { filterOccurrencesVisibleOnTimelineAxis } from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumPresetSelectors,
@@ -733,13 +733,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
     for (const { resource, occurrences } of resources) {
-      const visibleOccurrences = occurrences.filter((occurrence) =>
-        isRangeVisibleOnTimelineAxis(
-          adapter,
-          presetConfig,
-          occurrence.displayTimezone.start.value,
-          occurrence.displayTimezone.end.value,
-        ),
+      const visibleOccurrences = filterOccurrencesVisibleOnTimelineAxis(
+        adapter,
+        presetConfig,
+        occurrences,
       );
       map.set(resource.id, computeOccurrencesMaxIndex(adapter, visibleOccurrences));
     }
