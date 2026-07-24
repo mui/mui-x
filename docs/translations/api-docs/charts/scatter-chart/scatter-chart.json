@@ -91,11 +91,11 @@
       }
     },
     "onItemClick": {
-      "description": "Callback fired when clicking on a scatter item.",
+      "description": "Callback fired when a scatter item is activated. Activation with the Enter and Space keys requires the <code>enableKeyboardClickEvents</code> experimental feature.",
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element if using hit area interaction. Or the Mouse event from the scatter element, when <code>disableHitArea=true</code>."
+          "description": "The event that activated the item. It is a <code>KeyboardEvent</code> on Enter or Space activation. Import <code>@mui/x-charts/moduleAugmentation/keyboardItemActivation</code> for correct typing."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",

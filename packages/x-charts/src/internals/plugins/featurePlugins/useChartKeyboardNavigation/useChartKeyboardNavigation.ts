@@ -3,10 +3,17 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import { selectorChartExperimentalFeaturesState } from '../../corePlugins/useChartExperimentalFeature';
 import type { ChartPlugin } from '../../models';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
-import type { FocusedItemUpdater } from './keyboardFocusHandler.types';
+import type { FocusedItemUpdater, KeyboardActivation } from './keyboardFocusHandler.types';
+import type { ScatterItemIdentifier } from '../../../../models/seriesType';
+
+type KeyboardActivationHandler = (
+  event: KeyboardEvent,
+  scatterItemIdentifier: ScatterItemIdentifier,
+) => void;
 
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
   params,
@@ -14,11 +21,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
+  const { disableKeyboardNavigation, onItemClick } = params;
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
 
-    if (!element || params.disableKeyboardNavigation) {
+    if (!element || disableKeyboardNavigation) {
       return undefined;
     }
 
@@ -71,14 +79,31 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         }
       }
 
-      const calculateFocusedItem = seriesConfig[seriesType]?.keyboardFocusHandler?.(event) as
-        FocusedItemUpdater<typeof seriesType> | undefined;
+      const keyboardHandlerResult = seriesConfig[seriesType]?.keyboardFocusHandler?.(event) as
+        FocusedItemUpdater<typeof seriesType> | KeyboardActivation | undefined;
 
-      if (!calculateFocusedItem) {
+      if (!keyboardHandlerResult) {
         return;
       }
 
-      newFocusedItem = calculateFocusedItem(newFocusedItem, store.state);
+      if (keyboardHandlerResult === 'activate') {
+        if (
+          selectorChartExperimentalFeaturesState(store.state, 'enableKeyboardClickEvents') &&
+          store.state.keyboardNavigation.isFocused &&
+          newFocusedItem?.type === 'scatter'
+        ) {
+          event.preventDefault();
+
+          if (!event.repeat) {
+            // `onItemClick` is typed with `MouseEvent` until the consumer opts into the
+            // `keyboardItemActivation` module augmentation.
+            (onItemClick as KeyboardActivationHandler | undefined)?.(event, newFocusedItem);
+          }
+        }
+        return;
+      }
+
+      newFocusedItem = keyboardHandlerResult(newFocusedItem, store.state);
 
       if (newFocusedItem !== store.state.keyboardNavigation.item) {
         event.preventDefault();
@@ -106,14 +131,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
     };
-  }, [chartsLayerContainerRef, params.disableKeyboardNavigation, store]);
+  }, [chartsLayerContainerRef, disableKeyboardNavigation, onItemClick, store]);
 
   useEnhancedEffect(() => {
     store.set('keyboardNavigation', {
       ...store.state.keyboardNavigation,
-      enabled: !params.disableKeyboardNavigation,
+      enabled: !disableKeyboardNavigation,
     });
-  }, [store, params.disableKeyboardNavigation]);
+  }, [store, disableKeyboardNavigation]);
 
   return {};
 };

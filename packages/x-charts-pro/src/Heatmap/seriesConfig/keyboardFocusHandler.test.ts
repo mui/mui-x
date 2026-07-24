@@ -73,9 +73,11 @@ function test(
   direction: 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown',
   initialFocus: FocusedItemIdentifier<'heatmap'> | null,
 ) {
-  return {
-    ...keyboardFocusHandler({ key: direction } as KeyboardEvent)?.(initialFocus, state),
-  };
+  const keyboardHandlerResult = keyboardFocusHandler({ key: direction } as KeyboardEvent);
+
+  return typeof keyboardHandlerResult === 'function'
+    ? { ...keyboardHandlerResult(initialFocus, state) }
+    : keyboardHandlerResult;
 }
 
 describe('<Heatmap /> - keyboard navigation', () => {
