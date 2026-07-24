@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
-import Typography from '@mui/material/Typography';
+import Skeleton from '@mui/material/Skeleton';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
@@ -18,6 +18,7 @@ import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext'
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
 import { itemsSelectors } from '../internals/plugins/items';
 import { useTreeViewStore } from '../internals/hooks/useTreeViewStore';
+import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
 import { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
@@ -39,6 +40,8 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
       itemCheckbox: ['itemCheckbox'],
       // itemDragAndDropOverlay: ['itemDragAndDropOverlay'], => feature not available on this component
       // itemErrorIcon: ['itemErrorIcon'], => feature not available on this component
+      skeletonItem: ['skeletonItem'],
+      skeletonContent: ['skeletonContent'],
     };
 
     return composeClasses(slots, getRichTreeViewUtilityClass, classes);
@@ -55,6 +58,29 @@ export const RichTreeViewRoot = styled('ul', {
   outline: 0,
   position: 'relative',
 });
+
+const RichTreeViewSkeletonItem = styled('li', {
+  name: 'MuiRichTreeView',
+  slot: 'SkeletonItem',
+})({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+});
+
+const RichTreeViewSkeletonContent = styled('div', {
+  name: 'MuiRichTreeView',
+  slot: 'SkeletonContent',
+})(({ theme }) => ({
+  padding: theme.spacing(0.5, 1),
+  width: '100%',
+  boxSizing: 'border-box',
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+}));
+
+const SKELETON_LABEL_WIDTHS = ['40%', '70%', '55%', '50%', '65%'];
 
 type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
@@ -91,6 +117,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     apiRef,
     parameters,
     forwardedProps,
+    loading,
+    loadingItemsCount,
   } = useExtractRichTreeViewParameters(props);
 
   // Context hooks
@@ -101,19 +129,55 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const handleRef = useMergedRefs(forwardedRef, ref);
 
   // Selector hooks
-  const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const lazyLoadingRootIsLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
   const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
   // Feature hooks
   const classes = useUtilityClasses(props);
   const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
+  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
 
-  if (isLoading) {
-    return <Typography>Loading…</Typography>;
-  }
+  const isLoading = loading || lazyLoadingRootIsLoading;
 
   if (error) {
     return <Alert severity="error">{error.message}</Alert>;
+  }
+
+  if (isLoading) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (
+        loadingItemsCount != null &&
+        (!Number.isFinite(loadingItemsCount) || loadingItemsCount < 0)
+      ) {
+        warnOnce([
+          `MUI X: The \`loadingItemsCount\` prop received an invalid value (${loadingItemsCount}).`,
+          'It must be a non-negative finite number.',
+        ]);
+      }
+    }
+    const rawCount = loadingItemsCount ?? 5;
+    const skeletonCount = Number.isFinite(rawCount)
+      ? Math.max(0, Math.min(100, Math.floor(rawCount)))
+      : 5;
+    const { className: forwardedClassName, ...rootProps } = getRootProps({});
+    const mergedClassName = [classes.root, forwardedClassName].filter(Boolean).join(' ');
+    return (
+      <RichTreeViewRoot {...rootProps} aria-busy="true" className={mergedClassName}>
+        {Array.from({ length: skeletonCount }, (_, index) => (
+          <RichTreeViewSkeletonItem
+            key={index}
+            role="treeitem"
+            aria-disabled
+            className={classes.skeletonItem}
+          >
+            <RichTreeViewSkeletonContent className={classes.skeletonContent}>
+              <div style={{ width: 16, flexShrink: 0 }} />
+              <Skeleton width={SKELETON_LABEL_WIDTHS[index % SKELETON_LABEL_WIDTHS.length]} />
+            </RichTreeViewSkeletonContent>
+          </RichTreeViewSkeletonItem>
+        ))}
+      </RichTreeViewRoot>
+    );
   }
 
   return (
@@ -278,6 +342,16 @@ RichTreeView.propTypes /* remove-proptypes */ = {
    */
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
+  /**
+   * If `true`, a skeleton loading UI is displayed instead of the tree items.
+   * @default false
+   */
+  loading: PropTypes.bool,
+  /**
+   * The number of skeleton items to display when `loading` is `true`.
+   * @default 5
+   */
+  loadingItemsCount: PropTypes.number,
   /**
    * Whether multiple items can be selected.
    * @default false
