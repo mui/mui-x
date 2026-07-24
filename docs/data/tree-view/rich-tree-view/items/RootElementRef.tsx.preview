@@ -1,0 +1,15 @@
+<Button
+  onClick={() => setBorderColor(rootRef.current ? 'red' : '')}
+  sx={{ alignSelf: 'flex-start' }}
+>
+  Highlight the root element
+</Button>
+<Box
+  sx={{ minWidth: 250, border: 1, borderColor: borderColor || 'transparent' }}
+>
+  <RichTreeView
+    ref={rootRef}
+    items={MUI_X_PRODUCTS}
+    defaultExpandedItems={['grid']}
+  />
+</Box>
