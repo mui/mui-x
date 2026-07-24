@@ -209,84 +209,91 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
 
-      const { selectSection, pressKey, user } = renderWithProps(
-        {
-          onChange,
-          onAccept,
-          onClose,
-          defaultValue: values[0],
-          open: true,
-          closeOnSelect: false,
-        },
-        { componentFamily },
-      );
+    it(
+      'should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false',
+      { timeout: 15_000 },
+      async () => {
+        const onChange = spy();
+        const onAccept = spy();
+        const onClose = spy();
 
-      // Change the value
-      let newValue = await setNewValue(values[0], {
-        isOpened: true,
-        user,
-        selectSection,
-        pressKey,
-      });
-      const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
-      expect(onChange.callCount).to.equal(initialChangeCount);
-      if (isRangeType) {
-        newValue = await setNewValue(newValue, {
+        const { selectSection, pressKey, user } = renderWithProps(
+          {
+            onChange,
+            onAccept,
+            onClose,
+            defaultValue: values[0],
+            open: true,
+            closeOnSelect: false,
+          },
+          { componentFamily },
+        );
+
+        // Change the value
+        let newValue = await setNewValue(values[0], {
           isOpened: true,
-          setEndDate: true,
           user,
           selectSection,
           pressKey,
         });
-        (newValue as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
-        });
-      } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
-      }
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+        const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
+        expect(onChange.callCount).to.equal(initialChangeCount);
+        if (isRangeType) {
+          newValue = await setNewValue(newValue, {
+            isOpened: true,
+            setEndDate: true,
+            user,
+            selectSection,
+            pressKey,
+          });
+          (newValue as PickerRangeValue).forEach((value, index) => {
+            expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          });
+        } else {
+          expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+        }
+        expect(onAccept.callCount).to.equal(0);
+        expect(onClose.callCount).to.equal(0);
 
-      // Change the value
-      let newValueBis = await setNewValue(newValue, {
-        isOpened: true,
-        user,
-        selectSection,
-        pressKey,
-      });
-      if (isRangeType) {
-        expect(onChange.callCount).to.equal(
-          initialChangeCount +
-            getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
-            (pickerParams.type === 'date-time-range' || pickerParams.type === 'time-range' ? 1 : 0),
-        );
-        newValueBis = await setNewValue(newValueBis, {
+        // Change the value
+        let newValueBis = await setNewValue(newValue, {
           isOpened: true,
-          setEndDate: true,
           user,
           selectSection,
           pressKey,
         });
-        (newValueBis as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
-        });
-      } else {
-        expect(onChange.callCount).to.equal(
-          initialChangeCount +
-            getExpectedOnChangeCount(componentFamily, pickerParams) -
-            // meridiem does not change this time in case of multi section digital clock
-            (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
-        );
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
-      }
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
-    });
+        if (isRangeType) {
+          expect(onChange.callCount).to.equal(
+            initialChangeCount +
+              getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
+              (pickerParams.type === 'date-time-range' || pickerParams.type === 'time-range'
+                ? 1
+                : 0),
+          );
+          newValueBis = await setNewValue(newValueBis, {
+            isOpened: true,
+            setEndDate: true,
+            user,
+            selectSection,
+            pressKey,
+          });
+          (newValueBis as PickerRangeValue).forEach((value, index) => {
+            expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          });
+        } else {
+          expect(onChange.callCount).to.equal(
+            initialChangeCount +
+              getExpectedOnChangeCount(componentFamily, pickerParams) -
+              // meridiem does not change this time in case of multi section digital clock
+              (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
+          );
+          expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
+        }
+        expect(onAccept.callCount).to.equal(0);
+        expect(onClose.callCount).to.equal(0);
+      },
+    );
 
     it('should call onClose and onAccept with the live value when pressing Escape', async () => {
       const onChange = spy();

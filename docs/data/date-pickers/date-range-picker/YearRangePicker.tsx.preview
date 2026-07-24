@@ -1,0 +1,16 @@
+<DatePicker
+  label="From"
+  views={['year']}
+  openTo="year"
+  value={startYear}
+  onChange={setStartYear}
+  maxDate={endYear ?? undefined}
+/>
+<DatePicker
+  label="To"
+  views={['year']}
+  openTo="year"
+  value={endYear}
+  onChange={setEndYear}
+  minDate={startYear ?? undefined}
+/>
