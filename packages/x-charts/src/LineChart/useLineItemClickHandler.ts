@@ -7,6 +7,38 @@ import { getChartPoint } from '../internals/getChartPoint';
 import { getAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import type { SeriesId } from '../models/seriesType/common';
+import type { ChartsActivationEvent } from '../models/events';
+import { useRegisterItemActivation } from '../internals/useRegisterItemActivation';
+
+/**
+ * Priorities matching the pointer hit-testing order: marks sit above lines, lines above areas.
+ * The topmost callback a pointer would reach is the one keyboard activation fires.
+ */
+export const LINE_ACTIVATION_PRIORITY = { mark: 2, line: 1, area: 0 };
+
+/**
+ * Registers <kbd>Enter</kbd>/<kbd>Space</kbd> activation of the focused line item.
+ */
+export function useRegisterLineItemActivation(
+  onItemClick:
+    | ((
+        event: ChartsActivationEvent<SVGElement>,
+        lineItemIdentifier: LineItemClickIdentifier,
+      ) => void)
+    | undefined,
+  priority: number,
+) {
+  useRegisterItemActivation(
+    { type: 'line', priority },
+    onItemClick &&
+      ((event, item) =>
+        onItemClick(event, {
+          type: 'line',
+          seriesId: item.seriesId,
+          dataIndex: item.dataIndex,
+        })),
+  );
+}
 
 /**
  * Creates a click handler for line and area paths that enriches the item
@@ -17,11 +49,16 @@ import type { SeriesId } from '../models/seriesType/common';
  * fired when the click position cannot be associated with a data point.
  */
 export function useLineItemClickHandler(
-  onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    lineItemIdentifier: LineItemClickIdentifier,
-  ) => void,
+  onItemClick:
+    | ((
+        event: ChartsActivationEvent<SVGElement>,
+        lineItemIdentifier: LineItemClickIdentifier,
+      ) => void)
+    | undefined,
+  priority: number,
 ): ((event: React.MouseEvent<SVGElement, MouseEvent>, seriesId: SeriesId) => void) | undefined {
+  useRegisterLineItemActivation(onItemClick, priority);
+
   const chartsLayerContainerRef = useChartsLayerContainerRef();
   const { xAxis: xAxes, xAxisIds } = useXAxes();
   const seriesData = useLineSeriesContext();

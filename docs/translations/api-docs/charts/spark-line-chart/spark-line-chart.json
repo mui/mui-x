@@ -64,7 +64,7 @@
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+          "description": "The event recorded on the <code>&lt;svg/&gt;</code> element."
         },
         "data": {
           "name": "data",
@@ -99,7 +99,7 @@
     "onItemClick": {
       "description": "Callback fired when clicking close to an item. This is only available for scatter plot for now.",
       "typeDescriptions": {
-        "event": { "name": "event", "description": "Mouse event caught at the svg level" },
+        "event": { "name": "event", "description": "Event caught at the svg level" },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",
           "description": "Identify which item got clicked"

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -16,10 +17,31 @@ import { getChartPoint } from '../../../getChartPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
-import type { ChartsAxisData, SeriesId } from '../../../../models';
+import { getAxisClickPayload } from './getAxisClickPayload';
+import type { ChartsActivationEvent } from '../../../../models/events';
+import type { ComputeResult } from './computeAxisValue';
+import type { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import {
+  isItemActivationKey,
+  selectorChartsIsKeyboardActivationEnabled,
+  selectorChartsKeyboardXAxisIndex,
+  selectorChartsKeyboardYAxisIndex,
+} from '../useChartKeyboardNavigation';
 
-const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
-type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;
+/**
+ * Narrows an axis item to one the axis actually has a value for.
+ * Axes unrelated to the focused series can exist with empty data, so the index must resolve.
+ */
+function hasAxisValueAt(
+  axes: ComputeResult<ChartsAxisProps>['axis'],
+  item: AxisItemIdentifier | undefined,
+): item is AxisItemIdentifier & { dataIndex: number } {
+  return (
+    item !== undefined &&
+    item.dataIndex !== undefined &&
+    axes[item.axisId]?.data?.[item.dataIndex] !== undefined
+  );
+}
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -207,52 +229,30 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     const axisClickHandler = instance.addInteractionListener('tap', (event) => {
-      let dataIndex: number | null = null;
-      let isXAxis: boolean = false;
-
       const svgPoint = getChartPoint(element, event.detail.srcEvent);
 
       const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
-      isXAxis = xIndex !== -1;
+      const isXAxis = xIndex !== -1;
 
-      dataIndex = isXAxis ? xIndex : getAxisIndex(yAxisWithScale[usedYAxis], svgPoint.y);
+      const dataIndex = isXAxis ? xIndex : getAxisIndex(yAxisWithScale[usedYAxis], svgPoint.y);
 
-      const USED_AXIS_ID = isXAxis ? xAxisIds[0] : yAxisIds[0];
-      if (dataIndex == null || dataIndex === -1) {
+      if (dataIndex === -1) {
         return;
       }
 
-      // The .data exist because otherwise the dataIndex would be null or -1.
-      const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
+      const payload = getAxisClickPayload({
+        axisId: isXAxis ? xAxisIds[0] : yAxisIds[0],
+        dataIndex,
+        isXAxis,
+        axes: isXAxis ? xAxisWithScale : yAxisWithScale,
+        processedSeries,
+      });
 
-      const seriesValues: ChartsAxisData['seriesValues'] = {};
+      if (payload === null) {
+        return;
+      }
 
-      Object.keys(processedSeries)
-        .filter((seriesType): seriesType is AxisClickSeriesType =>
-          AXIS_CLICK_SERIES_TYPES.has(seriesType as AxisClickSeriesType),
-        )
-        .forEach((seriesType) => {
-          // @ts-ignore
-          const seriesTypeConfig = processedSeries[seriesType];
-
-          seriesTypeConfig?.seriesOrder.forEach((seriesId: SeriesId) => {
-            const seriesItem = seriesTypeConfig!.series[seriesId];
-
-            const providedXAxisId = seriesItem.xAxisId;
-            const providedYAxisId = seriesItem.yAxisId;
-
-            const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
-            if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-              // @ts-ignore This is safe because users need to opt in to use range bar series.
-              // In that case, they should import the module augmentation from `x-charts-pro/moduleAugmentation/rangeBarOnClick`
-              // Which adds the proper type to the series data.
-              // TODO(v9): Remove this ts-ignore when we can make the breaking change to ChartsAxisData.
-              seriesValues[seriesId] = seriesItem.data[dataIndex];
-            }
-          });
-        });
-
-      onAxisClick(event.detail.srcEvent, { dataIndex, axisValue, seriesValues });
+      onAxisClick(event.detail.srcEvent, payload);
     });
 
     return () => {
@@ -261,6 +261,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   }, [
     params.onAxisClick,
     processedSeries,
+    store,
     chartsLayerContainerRef,
     xAxisWithScale,
     xAxisIds,
@@ -270,6 +271,65 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     usedYAxis,
     instance,
   ]);
+
+  /**
+   * Kept separate from the pointer effect: this listener must survive re-renders, so it reads the
+   * axes and the callback when the key is pressed rather than closing over them. Re-subscribing per
+   * render would drop keystrokes landing between a keyboard navigation update and its commit.
+   */
+  const handleKeyboardActivation = useEventCallback((event: KeyboardEvent) => {
+    const onAxisClick = params.onAxisClick;
+
+    if (
+      !onAxisClick ||
+      !isItemActivationKey(event) ||
+      !selectorChartsIsKeyboardActivationEnabled(store.state)
+    ) {
+      return;
+    }
+
+    const { axis: xAxes } = selectorChartXAxis(store.state);
+    const { axis: yAxes } = selectorChartYAxis(store.state);
+    const xAxisItem = selectorChartsKeyboardXAxisIndex(store.state);
+    const yAxisItem = selectorChartsKeyboardYAxisIndex(store.state);
+    const focusedAxisItem = hasAxisValueAt(xAxes, xAxisItem)
+      ? { item: xAxisItem, isXAxis: true }
+      : hasAxisValueAt(yAxes, yAxisItem) && { item: yAxisItem, isXAxis: false };
+
+    if (!focusedAxisItem) {
+      return;
+    }
+
+    const payload = getAxisClickPayload({
+      axisId: focusedAxisItem.item.axisId,
+      dataIndex: focusedAxisItem.item.dataIndex,
+      isXAxis: focusedAxisItem.isXAxis,
+      axes: focusedAxisItem.isXAxis ? xAxes : yAxes,
+      processedSeries: selectorChartSeriesProcessed(store.state),
+    });
+
+    if (payload === null) {
+      return;
+    }
+
+    event.preventDefault();
+    // The callback only describes the pointer event unless the user augments the types.
+    onAxisClick(event as unknown as ChartsActivationEvent, payload);
+  });
+
+  React.useEffect(() => {
+    const element = chartsLayerContainerRef.current;
+
+    if (element === null) {
+      return undefined;
+    }
+
+    element.addEventListener('keydown', handleKeyboardActivation);
+
+    return () => {
+      element.removeEventListener('keydown', handleKeyboardActivation);
+    };
+  }, [chartsLayerContainerRef, handleKeyboardActivation]);
 
   return {};
 };

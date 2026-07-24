@@ -6,11 +6,12 @@ import clsx from 'clsx';
 import { LineElement } from './LineElement';
 import type { LineElementProps, LineElementSlotProps, LineElementSlots } from './LineElement';
 import type { LineItemClickIdentifier } from '../models/seriesType/line';
+import type { ChartsActivationEvent } from '../models/events';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useLinePlotData } from './useLinePlotData';
-import { useLineItemClickHandler } from './useLineItemClickHandler';
+import { LINE_ACTIVATION_PRIORITY, useLineItemClickHandler } from './useLineItemClickHandler';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { lineClasses, useUtilityClasses } from './lineClasses';
 
@@ -24,11 +25,11 @@ export interface LinePlotProps
     Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
   /**
    * Callback fired when a line item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsActivationEvent<SVGElement>,
     lineItemIdentifier: LineItemClickIdentifier,
   ) => void;
 }
@@ -75,7 +76,7 @@ function LinePlot(props: LinePlotProps) {
 
   const completedData = useAggregatedData();
   const classes = useUtilityClasses();
-  const onLineItemClick = useLineItemClickHandler(onItemClick);
+  const onLineItemClick = useLineItemClickHandler(onItemClick, LINE_ACTIVATION_PRIORITY.line);
 
   return (
     <LinePlotRoot className={clsx(classes.linePlot, className)} {...other}>
@@ -106,7 +107,7 @@ LinePlot.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick: PropTypes.func,

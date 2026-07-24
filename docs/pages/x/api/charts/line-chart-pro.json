@@ -32,7 +32,10 @@
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ enablePositionBasedPointerInteraction?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ enablePositionBasedPointerInteraction?: bool, keyboardActivation?: bool }"
+      }
     },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
@@ -82,7 +85,7 @@
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
+        "type": "function(event: ChartsActivationEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
       }
     },

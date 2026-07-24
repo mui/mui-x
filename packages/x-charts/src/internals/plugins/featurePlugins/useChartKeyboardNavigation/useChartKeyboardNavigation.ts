@@ -4,9 +4,16 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import type { ChartPlugin } from '../../models';
-import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
+import type {
+  ItemActivationHandler,
+  ItemActivationScope,
+  UseChartKeyboardNavigationSignature,
+} from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { FocusedItemUpdater } from './keyboardFocusHandler.types';
+import { findItemActivationHandler, isItemActivationKey } from './itemActivation';
+import type { ItemActivationRegistration } from './itemActivation';
+import { selectorChartsIsKeyboardActivationEnabled } from './useChartKeyboardNavigation.selectors';
 
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
   params,
@@ -14,6 +21,24 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   instance,
 }) => {
   const { chartsLayerContainerRef } = instance;
+
+  const activationRegistrationsRef = React.useRef(new Map<number, ItemActivationRegistration>());
+  const nextRegistrationIdRef = React.useRef(0);
+
+  const registerItemActivationHandler = React.useCallback(
+    (scope: ItemActivationScope, handler: ItemActivationHandler) => {
+      const registrationId = nextRegistrationIdRef.current;
+      nextRegistrationIdRef.current += 1;
+
+      const registrations = activationRegistrationsRef.current;
+      registrations.set(registrationId, { scope, handler });
+
+      return () => {
+        registrations.delete(registrationId);
+      };
+    },
+    [],
+  );
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
@@ -53,6 +78,29 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           },
         });
       }
+    }
+
+    function activationHandler(event: KeyboardEvent) {
+      if (!isItemActivationKey(event) || !selectorChartsIsKeyboardActivationEnabled(store.state)) {
+        return;
+      }
+
+      const focusedItem = store.state.keyboardNavigation.item;
+      if (focusedItem === null || !store.state.keyboardNavigation.isFocused) {
+        return;
+      }
+
+      const handler = findItemActivationHandler(
+        activationRegistrationsRef.current.values(),
+        focusedItem,
+      );
+
+      if (handler === null) {
+        return;
+      }
+
+      event.preventDefault();
+      handler(event, focusedItem);
     }
 
     function keyboardHandler(event: KeyboardEvent) {
@@ -98,10 +146,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       }
     }
 
+    element.addEventListener('keydown', activationHandler);
     element.addEventListener('keydown', keyboardHandler);
     element.addEventListener('focusout', removeFocus);
     element.addEventListener('focusin', restoreFocus);
     return () => {
+      element.removeEventListener('keydown', activationHandler);
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
@@ -115,7 +165,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     });
   }, [store, params.disableKeyboardNavigation]);
 
-  return {};
+  return { instance: { registerItemActivationHandler } };
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({
