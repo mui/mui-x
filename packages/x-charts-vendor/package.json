@@ -39,7 +39,7 @@
     "d3-time": "^3.1.0",
     "d3-time-format": "^4.1.0",
     "d3-timer": "^3.0.1",
-    "flatqueue": "^3.0.0",
+    "flatqueue": "^3.1.0",
     "internmap": "^2.0.3"
   },
   "devDependencies": {
