@@ -81,7 +81,7 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
 });
 
-const getAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) =>
+const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) =>
   parameters.dependencies !== undefined || parameters.onDependenciesChange !== undefined;
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
@@ -111,7 +111,7 @@ const mapper: SchedulerParametersToStateMapper<
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
       ...buildDependenciesState(parameters.dependencies),
-      areDependenciesEnabled: getAreDependenciesEnabled(parameters),
+      areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
       dependencyCreation: null,
       selectedDependencyId: null,
       preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
@@ -128,7 +128,7 @@ const mapper: SchedulerParametersToStateMapper<
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
       ...buildDependenciesState(parameters.dependencies),
-      areDependenciesEnabled: getAreDependenciesEnabled(parameters),
+      areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
       shouldEventRequireResource,
       hasInitialized: true,
     };
