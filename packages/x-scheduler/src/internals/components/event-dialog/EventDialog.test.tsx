@@ -12,6 +12,7 @@ import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
+import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const personalResource = ResourceBuilder.new().title('Personal').eventColor('teal').build();
 
@@ -42,6 +43,28 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   };
 
   const { render } = createSchedulerRenderer();
+
+  it('should render the general tab sections in the default order', () => {
+    render(
+      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventDialogContent open {...defaultProps} />
+      </EventCalendarProvider>,
+    );
+
+    const legends = Array.from(
+      document.body.getElementsByClassName(eventCalendarClasses.eventDialogSectionHeaderTitle),
+    );
+    expect(legends.map((legend) => legend.textContent)).to.deep.equal([
+      'Date & time',
+      'Resource & color',
+    ]);
+
+    // The description section has no legend, so check it renders after the other sections.
+    const description = screen.getByRole('textbox', { name: 'Description' });
+    expect(legends[1].compareDocumentPosition(description)).to.equal(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
 
   it('should not render the recurrence tab when no slot is provided', () => {
     render(

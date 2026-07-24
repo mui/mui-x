@@ -1,8 +1,10 @@
+import type * as React from 'react';
 import type {
   SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
   SchedulerProcessedEventRecurrenceRule,
+  SchedulerRenderableEventOccurrence,
   TemporalSupportedObject,
   SchedulerProcessedDate,
   TemporalTimezone,
@@ -21,6 +23,18 @@ export interface ControlledValue {
   color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
   rruleDraft: SchedulerProcessedEventRecurrenceRule;
+}
+
+/**
+ * Props shared by the General tab section components.
+ * Temporary contract until the form context replaces the prop plumbing (#22868).
+ */
+export interface EventDialogSectionProps {
+  occurrence: SchedulerRenderableEventOccurrence;
+  controlled: ControlledValue;
+  setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
+  errors: Record<string, string | string[]>;
+  setErrors: (errors: Record<string, string | string[]>) => void;
 }
 
 const WEEKDAYS: SchedulerWeekday[] = [
