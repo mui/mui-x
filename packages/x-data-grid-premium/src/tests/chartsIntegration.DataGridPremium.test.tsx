@@ -782,6 +782,52 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       expect(integrationContext!.chartStateLookup.test.type).to.equal('type2');
     });
 
+    it('should not submit a surrounding form when clicking panel buttons', async () => {
+      const handleSubmit = spy((event: { preventDefault: () => void }) => {
+        event.preventDefault();
+      });
+
+      const { user } = render(
+        <form onSubmit={handleSubmit}>
+          <Test
+            initialState={{
+              sidebar: {
+                open: true,
+                value: GridSidebarValue.Charts,
+              },
+              chartsIntegration: {
+                charts: {
+                  test: { dimensions: ['category1'], values: ['amount'] },
+                  test2: { dimensions: ['category1'], values: ['amount'] },
+                },
+              },
+            }}
+          />
+        </form>,
+      );
+
+      // chart type button (type tab)
+      const chartTypeButtons = screen.getAllByRole('tabpanel')[0].querySelectorAll('button');
+      await user.click(chartTypeButtons[0]);
+
+      // collapsible trigger (fields tab)
+      await user.click(screen.getAllByRole('tab')[1]);
+      const collapsibleTrigger = document.querySelector<HTMLButtonElement>(
+        '.MuiDataGrid-collapsibleTrigger',
+      );
+      expect(collapsibleTrigger).not.to.equal(null);
+      await user.click(collapsibleTrigger!);
+
+      // chart selection trigger (panel header, rendered when >1 chart)
+      const selectionTrigger = document.querySelector<HTMLButtonElement>(
+        '[class*="MuiDataGrid-chartsPanelChartSelection"]',
+      );
+      expect(selectionTrigger).not.to.equal(null);
+      await user.click(selectionTrigger!);
+
+      expect(handleSubmit.callCount).to.equal(0);
+    });
+
     it('should allow dimensions and values selection', async () => {
       const { user } = render(
         <Test
