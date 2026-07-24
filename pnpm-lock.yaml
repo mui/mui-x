@@ -102,9 +102,6 @@ catalogs:
     '@types/react-dom':
       specifier: 19.2.3
       version: 19.2.3
-    '@types/react-router':
-      specifier: ^5.1.20
-      version: 5.1.20
     '@types/react-transition-group':
       specifier: ^4.4.12
       version: 4.4.12
@@ -660,9 +657,6 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.81.0(react@19.2.7)
-      react-router:
-        specifier: 'catalog:'
-        version: 8.2.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-runner:
         specifier: ^1.0.5
         version: 1.0.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -2236,9 +2230,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
-      '@types/react-router':
-        specifier: 'catalog:'
-        version: 5.1.20
       '@types/react-transition-group':
         specifier: 'catalog:'
         version: 4.4.12(@types/react@19.2.17)
@@ -2374,9 +2365,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
-      '@types/react-router':
-        specifier: 'catalog:'
-        version: 5.1.20
       '@types/semver':
         specifier: 'catalog:'
         version: 7.7.1
@@ -2503,9 +2491,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
-      '@types/react-router':
-        specifier: 'catalog:'
-        version: 5.1.20
       '@types/semver':
         specifier: 'catalog:'
         version: 7.7.1
@@ -5706,9 +5691,6 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
-  '@types/history@4.7.11':
-    resolution: {integrity: sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==}
-
   '@types/is-empty@1.2.3':
     resolution: {integrity: sha512-4J1l5d79hoIvsrKh5VUKVRA1aIdsOb10Hu5j3J2VfP/msDnfTdGPmNp2E1Wg+vs97Bktzo+MZePFFXSGoykYJw==}
 
@@ -5765,9 +5747,6 @@ packages:
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
     peerDependencies:
       '@types/react': ^19.2.0
-
-  '@types/react-router@5.1.20':
-    resolution: {integrity: sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==}
 
   '@types/react-transition-group@4.4.12':
     resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
@@ -15206,8 +15185,6 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/history@4.7.11': {}
-
   '@types/is-empty@1.2.3': {}
 
   '@types/jscodeshift@17.3.0':
@@ -15257,11 +15234,6 @@ snapshots:
 
   '@types/react-dom@19.2.3(@types/react@19.2.17)':
     dependencies:
-      '@types/react': 19.2.17
-
-  '@types/react-router@5.1.20':
-    dependencies:
-      '@types/history': 4.7.11
       '@types/react': 19.2.17
 
   '@types/react-transition-group@4.4.12(@types/react@19.2.17)':
