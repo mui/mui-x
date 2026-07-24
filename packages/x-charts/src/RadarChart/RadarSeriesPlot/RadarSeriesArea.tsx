@@ -106,7 +106,7 @@ RadarSeriesArea.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when an area is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick: PropTypes.func,
