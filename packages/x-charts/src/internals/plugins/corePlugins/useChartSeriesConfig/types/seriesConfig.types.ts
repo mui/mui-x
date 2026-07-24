@@ -18,6 +18,7 @@ import type { KeyboardFocusHandler } from '../../../featurePlugins/useChartKeybo
 import type { IdentifierSerializer } from './identifierSerializer.types';
 import type { IdentifierCleaner } from './identifierCleaner.types';
 import type { GetItemAtPosition } from './getItemAtPosition.types';
+import type { GetItemWithData } from './getItemWithData.types';
 import type { DescriptionGetter } from './descriptionGetter.types';
 import type { UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
 import type { UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
@@ -64,6 +65,11 @@ export type ChartSeriesTypeConfig<SeriesType extends ChartSeriesType> = {
    */
   identifierCleaner: IdentifierCleaner<SeriesType>;
   getItemAtPosition?: GetItemAtPosition<SeriesType>;
+  /**
+   * Completes a focused item identifier with the data a pointer click provides.
+   * Used by keyboard activation to emit the same payload as a click.
+   */
+  getItemWithData?: GetItemWithData<SeriesType>;
   /**
    * Optional sampling strategy used to render large datasets. When set and sampling is enabled,
    * the series is reduced to a zoom-appropriate level of detail before rendering.

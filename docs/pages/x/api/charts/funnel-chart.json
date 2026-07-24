@@ -28,7 +28,9 @@
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
     "gap": { "type": { "name": "number" }, "default": "0" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
@@ -83,7 +85,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, funnelItemIdentifier: FunnelItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent<SVGElement>, funnelItemIdentifier: FunnelItemIdentifier) => void",
         "describedArgs": ["event", "funnelItemIdentifier"]
       }
     },

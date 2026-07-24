@@ -44,7 +44,10 @@
       "deprecationInfo": "Use <code>disableHitArea</code> instead."
     },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ progressiveRendering?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ keyboardActivation?: bool, progressiveRendering?: bool }"
+      }
     },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
@@ -88,7 +91,7 @@
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
+        "type": "function(event: ChartsActivationEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
       }
     },
