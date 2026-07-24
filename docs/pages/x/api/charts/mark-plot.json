@@ -3,7 +3,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsReactClickEvent<SVGElement>, lineItemIdentifier: LineItemClickIdentifier) => void",
+        "type": "function(event: ChartsReactActivationEvent<SVGElement>, lineItemIdentifier: LineItemClickIdentifier) => void",
         "describedArgs": ["event", "lineItemIdentifier"]
       }
     },

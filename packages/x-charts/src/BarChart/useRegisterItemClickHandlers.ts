@@ -11,7 +11,7 @@ import { getChartPoint } from '../internals/getChartPoint';
 import { useStore } from '../internals/store/useStore';
 import { selectorBarItemAtPosition } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 import { useRegisterItemActivation } from '../internals/useRegisterItemActivation';
-import type { ChartsClickEvent } from '../models/events';
+import type { ChartsActivationEvent } from '../models/events';
 
 /**
  * Hook that registers pointer event handlers for chart item clicking.
@@ -19,7 +19,7 @@ import type { ChartsClickEvent } from '../models/events';
  */
 export function useRegisterItemClickHandlers(
   onItemClick:
-    ((event: ChartsClickEvent, barItemIdentifier: BarItemIdentifier) => void) | undefined,
+    ((event: ChartsActivationEvent, barItemIdentifier: BarItemIdentifier) => void) | undefined,
 ) {
   const { instance } =
     useChartsContext<

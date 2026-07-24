@@ -23,7 +23,7 @@ import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
-import type { ChartsClickEvent } from '@mui/x-charts/models';
+import type { ChartsActivationEvent } from '@mui/x-charts/models';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
@@ -71,7 +71,7 @@ export interface BarChartPremiumProps
    * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
    */
   onItemClick?(
-    event: ChartsClickEvent,
+    event: ChartsActivationEvent,
     itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier,
   ): void;
 
@@ -432,7 +432,7 @@ BarChartPremium.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {ChartsClickEvent} event The event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,

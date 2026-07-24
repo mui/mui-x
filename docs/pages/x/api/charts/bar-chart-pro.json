@@ -84,7 +84,7 @@
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsClickEvent, data: null | ChartsAxisData) => void",
+        "type": "function(event: ChartsActivationEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
       }
     },
@@ -112,7 +112,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsClickEvent, barItemIdentifier: BarItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },

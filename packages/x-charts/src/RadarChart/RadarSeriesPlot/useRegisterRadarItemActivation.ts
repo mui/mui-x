@@ -2,7 +2,7 @@
 import { useRegisterItemActivation } from '../../internals/useRegisterItemActivation';
 import type { SeriesId } from '../../models/seriesType/common';
 import type { RadarItemIdentifier } from '../../models/seriesType/radar';
-import type { ChartsReactClickEvent } from '../../models/events';
+import type { ChartsReactActivationEvent } from '../../models/events';
 
 /**
  * Priorities matching the pointer hit-testing order: marks sit above areas.
@@ -17,7 +17,7 @@ export function useRegisterRadarItemActivation(
   seriesId: SeriesId | undefined,
   onItemClick:
     | ((
-        event: ChartsReactClickEvent<SVGElement>,
+        event: ChartsReactActivationEvent<SVGElement>,
         radarItemIdentifier: Required<RadarItemIdentifier>,
       ) => void)
     | undefined,

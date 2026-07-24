@@ -4,7 +4,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsReactClickEvent<SVGElement>, funnelItemIdentifier: FunnelItemIdentifier) => void",
+        "type": "function(event: ChartsReactActivationEvent<SVGElement>, funnelItemIdentifier: FunnelItemIdentifier) => void",
         "describedArgs": ["event", "funnelItemIdentifier"]
       }
     },

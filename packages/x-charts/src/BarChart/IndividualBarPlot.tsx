@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
-import type { BarItemIdentifier, ChartsClickEvent } from '../models';
+import type { BarItemIdentifier, ChartsActivationEvent } from '../models';
 import { BarElement } from './BarElement';
 import type { MaskData, ProcessedBarSeriesData } from './types';
 import { useUtilityClasses } from './barClasses';
@@ -12,7 +12,7 @@ export interface IndividualBarPlotProps {
   masksData: MaskData[];
   borderRadius?: number;
   skipAnimation?: boolean;
-  onItemClick?: (event: ChartsClickEvent, barItemIdentifier: BarItemIdentifier) => void;
+  onItemClick?: (event: ChartsActivationEvent, barItemIdentifier: BarItemIdentifier) => void;
   slotProps?: BarPlotSlotProps;
   slots?: BarPlotSlots;
 }

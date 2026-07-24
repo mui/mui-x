@@ -409,7 +409,7 @@ FunnelChart.propTypes /* remove-proptypes */ = {
   onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a funnel item is clicked.
-   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
+   * @param {ChartsReactActivationEvent<SVGElement>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
    */
   onItemClick: PropTypes.func,

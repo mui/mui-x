@@ -8,7 +8,7 @@ import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { UseChartTooltipSignature } from '../useChartTooltip';
 import type { UseChartZAxisSignature } from '../useChartZAxis';
 import type { UseChartKeyboardNavigationSignature } from '../useChartKeyboardNavigation';
-import type { ChartsClickEvent } from '../../../../models/events';
+import type { ChartsActivationEvent } from '../../../../models/events';
 
 export interface UseChartVoronoiInstance {
   /**
@@ -45,10 +45,13 @@ export interface UseChartVoronoiParameters {
   /**
    * Callback fired when clicking close to an item.
    * This is only available for scatter plot for now.
-   * @param {ChartsClickEvent} event Event caught at the svg level
+   * @param {ChartsActivationEvent} event Event caught at the svg level
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
-  onItemClick?: (event: ChartsClickEvent, scatterItemIdentifier: ScatterItemIdentifier) => void;
+  onItemClick?: (
+    event: ChartsActivationEvent,
+    scatterItemIdentifier: ScatterItemIdentifier,
+  ) => void;
 }
 
 export type UseChartVoronoiDefaultizedParameters = Pick<

@@ -1,13 +1,13 @@
 import type * as React from 'react';
 
 /**
- * Native event triggering a click callback: a pointer click, or a keyboard activation
+ * Native event activating an item or an axis: a pointer click, or a key press
  * (<kbd>Enter</kbd>/<kbd>Space</kbd>) when the `keyboardActivation` experimental feature is on.
  */
-export type ChartsClickEvent = MouseEvent | KeyboardEvent;
+export type ChartsActivationEvent = MouseEvent | KeyboardEvent;
 
 /**
- * React event triggering a click callback. See {@link ChartsClickEvent}.
+ * React event activating an item or an axis. See {@link ChartsActivationEvent}.
  */
-export type ChartsReactClickEvent<Element = SVGElement> =
+export type ChartsReactActivationEvent<Element = SVGElement> =
   React.MouseEvent<Element, MouseEvent> | KeyboardEvent;

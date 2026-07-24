@@ -100,7 +100,7 @@ RadarSeriesMarks.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when a mark is clicked.
-   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
+   * @param {ChartsReactActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick: PropTypes.func,

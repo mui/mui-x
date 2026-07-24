@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { AreaElement } from './AreaElement';
 import type { AreaElementProps, AreaElementSlotProps, AreaElementSlots } from './AreaElement';
 import type { LineItemClickIdentifier } from '../models/seriesType/line';
-import type { ChartsReactClickEvent } from '../models/events';
+import type { ChartsReactActivationEvent } from '../models/events';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
@@ -25,11 +25,11 @@ export interface AreaPlotProps
     Pick<AreaElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
   /**
    * Callback fired when a line area item is clicked.
-   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
+   * @param {ChartsReactActivationEvent<SVGElement>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick?: (
-    event: ChartsReactClickEvent<SVGElement>,
+    event: ChartsReactActivationEvent<SVGElement>,
     lineItemIdentifier: LineItemClickIdentifier,
   ) => void;
 }
@@ -108,7 +108,7 @@ AreaPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line area item is clicked.
-   * @param {ChartsReactClickEvent<SVGElement>} event The event source of the callback.
+   * @param {ChartsReactActivationEvent<SVGElement>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick: PropTypes.func,

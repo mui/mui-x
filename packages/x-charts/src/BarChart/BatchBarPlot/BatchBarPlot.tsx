@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { BarItemIdentifier, ChartsClickEvent } from '../../models';
+import type { BarItemIdentifier, ChartsActivationEvent } from '../../models';
 import type { ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
 import type { IndividualBarPlotProps } from '../IndividualBarPlot';
@@ -17,7 +17,7 @@ import { createPath, useCreateBarPaths } from './useCreateBarPaths';
 import { BarGroup } from './BarGroup';
 
 interface BatchBarPlotProps extends Omit<IndividualBarPlotProps, 'onItemClick'> {
-  onItemClick?: (event: ChartsClickEvent, barItemIdentifier: BarItemIdentifier) => void;
+  onItemClick?: (event: ChartsActivationEvent, barItemIdentifier: BarItemIdentifier) => void;
 }
 
 export function BatchBarPlot({

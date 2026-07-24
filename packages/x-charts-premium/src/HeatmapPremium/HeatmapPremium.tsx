@@ -243,7 +243,7 @@ HeatmapPremium.propTypes /* remove-proptypes */ = {
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {ChartsReactClickEvent<HTMLDivElement>} event The click event.
+   * @param {ChartsReactActivationEvent<HTMLDivElement>} event The click event.
    * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick: PropTypes.func,

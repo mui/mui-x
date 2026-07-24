@@ -22,7 +22,7 @@ import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 import type { UseChartBrushSignature } from '../useChartBrush';
 import type { SamplingState } from './sampling.types';
-import type { ChartsClickEvent } from '../../../../models/events';
+import type { ChartsActivationEvent } from '../../../../models/events';
 
 /**
  * The axes' configuration after computing.
@@ -52,10 +52,10 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {ChartsClickEvent} event The event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
-  onAxisClick?: (event: ChartsClickEvent, data: null | ChartsAxisData) => void;
+  onAxisClick?: (event: ChartsActivationEvent, data: null | ChartsAxisData) => void;
   /**
    * The function called when the pointer position corresponds to a new axis data item.
    * This update can either be caused by a pointer movement, or an axis update.
