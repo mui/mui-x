@@ -7,6 +7,7 @@ import type {
   EventTimelinePremiumPreset,
   PresetHeaderUnit,
 } from '@mui/x-scheduler-internals-premium/models';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
 const VISIBLE_DATE = adapter.date('2025-07-03T00:00:00Z', 'default');
@@ -24,6 +25,10 @@ const PRESET_SHAPE: Record<
 };
 
 describe('eventTimelinePremiumPresetSelectors', () => {
+  beforeEach(() => {
+    clearWarningsCache();
+  });
+
   describe('preset', () => {
     it('should return the preset from state', () => {
       const state = getEventTimelinePremiumStateFromParameters({
@@ -150,6 +155,74 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       expect(config.tickCount).to.equal(30);
       expect(config.start).toEqualDateTime('2025-01-01T00:00:00Z');
       expect(config.end).toEqualDateTime('2054-12-31T23:59:59.999Z');
+    });
+
+    it('should expose the full-day hour window when no presetConfig is provided', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [],
+        preset: 'dayAndHour',
+        visibleDate: VISIBLE_DATE,
+      });
+
+      const config = eventTimelinePremiumPresetSelectors.config(state);
+
+      expect(config.dayStartMinute).to.equal(0);
+      expect(config.dayEndMinute).to.equal(24 * 60);
+    });
+
+    it('should trim the tickCount and expose the hour window when the dayAndHour preset has a startTime / endTime', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [],
+        preset: 'dayAndHour',
+        visibleDate: VISIBLE_DATE,
+        presetConfig: { dayAndHour: { startTime: 8, endTime: 20 } },
+      });
+
+      const config = eventTimelinePremiumPresetSelectors.config(state);
+
+      expect(config.tickCount).to.equal(4 * 12);
+      expect(config.dayStartMinute).to.equal(8 * 60);
+      expect(config.dayEndMinute).to.equal(20 * 60);
+      // The range itself stays midnight-based: only the rendered hours are trimmed.
+      expect(config.start).toEqualDateTime('2025-07-03T00:00:00Z');
+      expect(config.end).toEqualDateTime('2025-07-06T23:59:59.999Z');
+    });
+
+    it('should warn and fall back to the full day when the hour range is invalid', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [],
+        preset: 'dayAndHour',
+        visibleDate: VISIBLE_DATE,
+        presetConfig: { dayAndHour: { startTime: 20, endTime: 8 } },
+      });
+
+      let config: ReturnType<typeof eventTimelinePremiumPresetSelectors.config>;
+      expect(() => {
+        config = eventTimelinePremiumPresetSelectors.config(state);
+      }).toWarnDev(['MUI X Scheduler: Received an invalid hour range']);
+
+      expect(config!.tickCount).to.equal(4 * 24);
+      expect(config!.dayStartMinute).to.equal(0);
+      expect(config!.dayEndMinute).to.equal(24 * 60);
+    });
+
+    it('should ignore the hour range on presets whose timeResolution is not hour', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [],
+        preset: 'dayAndMonth',
+        visibleDate: VISIBLE_DATE,
+        presetConfig: { dayAndHour: { startTime: 8, endTime: 20 } },
+      });
+
+      const config = eventTimelinePremiumPresetSelectors.config(state);
+
+      expect(config.tickCount).to.equal(8 * 7);
+      expect(config.dayStartMinute).to.equal(0);
+      expect(config.dayEndMinute).to.equal(24 * 60);
     });
 
     it('should throw with the MUI X error message when the preset has no registered config', () => {

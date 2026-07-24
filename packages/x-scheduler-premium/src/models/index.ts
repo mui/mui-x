@@ -1,1 +1,5 @@
-export type { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
+export type {
+  EventTimelinePremiumPreset,
+  EventTimelinePremiumPresetConfig,
+  EventTimelinePremiumHourRangePresetConfig,
+} from '@mui/x-scheduler-internals-premium/models';

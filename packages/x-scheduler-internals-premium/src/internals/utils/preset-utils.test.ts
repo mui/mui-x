@@ -1,5 +1,33 @@
+import { adapter } from 'test/utils/scheduler';
 import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS, getPresetPxPerDay } from './preset-utils';
 import type { EventTimelinePremiumPreset } from '../../models';
+
+describe('EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS', () => {
+  describe('dayAndHour.getCssUnitCount', () => {
+    const start = adapter.date('2025-07-03T00:00:00Z', 'default');
+    const end = adapter.endOfDay(adapter.addDays(start, 3));
+
+    it('should pin the tick count to 4 days × 24 hours for the full-day window', () => {
+      const count = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS.dayAndHour.getCssUnitCount!(
+        adapter,
+        start,
+        end,
+        { startTime: 0, endTime: 24 },
+      );
+      expect(count).to.equal(4 * 24);
+    });
+
+    it('should pin the tick count to 4 days × visible hours for a trimmed window', () => {
+      const count = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS.dayAndHour.getCssUnitCount!(
+        adapter,
+        start,
+        end,
+        { startTime: 8, endTime: 20 },
+      );
+      expect(count).to.equal(4 * 12);
+    });
+  });
+});
 
 describe('getPresetPxPerDay', () => {
   // Concrete values prove the derivation formula `tickWidth × ticksPerDay[timeResolution]`

@@ -63,9 +63,16 @@ export function computeElementPositionInCollection(
     adapter.startOfDay(collectionStart),
   );
 
-  const startIndexMinutes = startDayIndex * dayMinutes + (start.minutesInDay - dayStartMinute);
+  // Clamp each bound into its own day's visible window so out-of-window minutes
+  // don't leak into the adjacent day's visible region.
+  const clampMinuteInWindow = (minute: number) =>
+    Math.min(Math.max(minute, dayStartMinute), dayEndMinute);
 
-  let endIndexMinutes = endDayIndex * dayMinutes + (end.minutesInDay - dayStartMinute);
+  const startIndexMinutes =
+    startDayIndex * dayMinutes + (clampMinuteInWindow(start.minutesInDay) - dayStartMinute);
+
+  let endIndexMinutes =
+    endDayIndex * dayMinutes + (clampMinuteInWindow(end.minutesInDay) - dayStartMinute);
 
   // If the event ends before it starts, it means it spans over midnight(s)
   if (endIndexMinutes < startIndexMinutes) {
@@ -85,8 +92,11 @@ export function computeElementPositionInCollection(
   const clampedStartMinutes = clampToTimeline(startIndexMinutes);
   const clampedEndMinutes = clampToTimeline(endIndexMinutes);
 
-  const startingBeforeEdge = startIndexMinutes < 0;
-  const endingAfterEdge = endIndexMinutes > totalMinutes;
+  // A bound clamped in either direction means part of the element is hidden.
+  const isMinuteOutOfWindow = (minute: number) => minute < dayStartMinute || minute > dayEndMinute;
+
+  const startingBeforeEdge = startIndexMinutes < 0 || isMinuteOutOfWindow(start.minutesInDay);
+  const endingAfterEdge = endIndexMinutes > totalMinutes || isMinuteOutOfWindow(end.minutesInDay);
 
   return {
     position: clampedStartMinutes / totalMinutes,

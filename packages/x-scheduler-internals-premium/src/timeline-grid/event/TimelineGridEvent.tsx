@@ -25,6 +25,7 @@ import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
+import { dateToTimelineAxisOffsetMs } from '../../internals/utils/timeline-axis';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
@@ -72,8 +73,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   // Feature hooks
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
+      // Measured on the axis so it stays consistent with the cursor offsets when a
+      // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        adapter.getTime(presetConfig.start) - start.timestamp,
+        -dateToTimelineAxisOffsetMs(adapter, presetConfig, start.value),
         0,
       );
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
@@ -132,6 +135,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       end,
       collectionStart: presetConfig.start,
       collectionEnd: presetConfig.end,
+      dayStartMinute: presetConfig.dayStartMinute,
+      dayEndMinute: presetConfig.dayEndMinute,
     });
 
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
@@ -184,6 +189,9 @@ export namespace TimelineGridEvent {
     originalOccurrence: SchedulerEventOccurrence;
     start: TemporalSupportedObject;
     end: TemporalSupportedObject;
+    /**
+     * Cursor offset from the event start, in axis milliseconds.
+     */
     initialCursorPositionInEventMs: number;
   }
 

@@ -1,5 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getDisplayedHourRange } from '@mui/x-scheduler-internals/internals';
+import type { EventTimelinePremiumPresetConfig } from '../models/preset';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../internals/utils/preset-utils';
 
@@ -10,8 +12,9 @@ export const eventTimelinePremiumPresetSelectors = {
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
     (state: State) => state.preset,
+    (state: State) => state.presetConfig,
     schedulerPreferenceSelectors.weekStartsOn,
-    (adapter, visibleDate, preset, weekStartsOn) => {
+    (adapter, visibleDate, preset, presetConfig, weekStartsOn) => {
       const config = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
       if (!config) {
         throw new Error(
@@ -32,13 +35,23 @@ export const eventTimelinePremiumPresetSelectors = {
       const start = getStartDate(adapter, visibleDate, weekStartsOn);
       const end = getEndDate(adapter, start, unitCount, weekStartsOn);
 
+      // Only hour-resolution presets can trim their visible hours. The range itself stays
+      // midnight-based: the hour window is applied through `dayStartMinute` / `dayEndMinute`.
+      const presetHourConfig = presetConfig[preset as keyof EventTimelinePremiumPresetConfig];
+      const hourRange =
+        timeResolution === 'hour'
+          ? getDisplayedHourRange(presetHourConfig?.startTime, presetHourConfig?.endTime)
+          : { startTime: 0, endTime: 24 };
+
       return {
-        tickCount: getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount,
+        tickCount: getCssUnitCount ? getCssUnitCount(adapter, start, end, hourRange) : unitCount,
         start,
         end,
         tickWidth,
         headers,
         timeResolution,
+        dayStartMinute: hourRange.startTime * 60,
+        dayEndMinute: hourRange.endTime * 60,
       };
     },
   ),

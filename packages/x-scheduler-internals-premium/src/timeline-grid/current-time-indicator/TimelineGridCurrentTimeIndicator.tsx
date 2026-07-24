@@ -43,10 +43,15 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       end: endForCalc,
       collectionStart: presetConfig.start,
       collectionEnd: presetConfig.end,
+      dayStartMinute: presetConfig.dayStartMinute,
+      dayEndMinute: presetConfig.dayEndMinute,
     });
 
     const isOutOfRange =
-      adapter.isBefore(now, presetConfig.start) || adapter.isAfter(now, presetConfig.end);
+      adapter.isBefore(now, presetConfig.start) ||
+      adapter.isAfter(now, presetConfig.end) ||
+      processedNow.minutesInDay < presetConfig.dayStartMinute ||
+      processedNow.minutesInDay > presetConfig.dayEndMinute;
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

@@ -45,6 +45,8 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
       end,
       collectionStart: presetConfig.start,
       collectionEnd: presetConfig.end,
+      dayStartMinute: presetConfig.dayStartMinute,
+      dayEndMinute: presetConfig.dayEndMinute,
     });
 
   const { state: eventState } = useEvent({ start, end });

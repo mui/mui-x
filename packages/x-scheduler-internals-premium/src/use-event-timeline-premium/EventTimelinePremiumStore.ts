@@ -77,6 +77,7 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   parameters: EventTimelinePremiumParameters<TEvent, TResource>,
 ) => ({
   presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
+  presetConfig: parameters.presetConfig ?? EMPTY_OBJECT,
 });
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;

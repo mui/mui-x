@@ -37,6 +37,63 @@ describe('iterate()', () => {
     });
   });
 
+  describe('hour range trimming', () => {
+    const start = adapter.date('2025-07-03T00:00:00Z', 'default');
+    const end = adapter.date('2025-07-06T23:59:59.999Z', 'default');
+
+    it('should emit only the visible hour cells per day for a trimmed hour range', () => {
+      const hourCells = iterate(adapter, 'hour', 'hour', start, end, undefined, {
+        startTime: 8,
+        endTime: 20,
+      });
+
+      expect(hourCells.length).to.equal(4 * 12);
+      expect(adapter.getHours(hourCells[0].date)).to.equal(8);
+      expect(adapter.getHours(hourCells[11].date)).to.equal(19);
+      expect(adapter.getHours(hourCells[12].date)).to.equal(8);
+      hourCells.forEach((cell) => expect(cell.spanInTicks).to.equal(1));
+    });
+
+    it('should index the emitted hour cells contiguously', () => {
+      const hourCells = iterate(adapter, 'hour', 'hour', start, end, undefined, {
+        startTime: 8,
+        endTime: 20,
+      });
+
+      hourCells.forEach((cell, i) => expect(cell.index).to.equal(i));
+    });
+
+    it('should span the day cells by the visible hours only', () => {
+      const dayCells = iterate(adapter, 'day', 'hour', start, end, undefined, {
+        startTime: 8,
+        endTime: 20,
+      });
+
+      expect(dayCells.length).to.equal(4);
+      dayCells.forEach((cell) => expect(cell.spanInTicks).to.equal(12));
+    });
+
+    it('should behave like the untrimmed iteration when the hour range covers the full day', () => {
+      const trimmed = iterate(adapter, 'hour', 'hour', start, end, undefined, {
+        startTime: 0,
+        endTime: 24,
+      });
+      const untrimmed = iterate(adapter, 'hour', 'hour', start, end);
+
+      expect(trimmed).to.deep.equal(untrimmed);
+    });
+
+    it('should ignore the hour range when the tick unit is not hour', () => {
+      const cells = iterate(adapter, 'week', 'day', start, end, undefined, {
+        startTime: 8,
+        endTime: 20,
+      });
+      const untrimmed = iterate(adapter, 'week', 'day', start, end);
+
+      expect(cells).to.deep.equal(untrimmed);
+    });
+  });
+
   describe('boundary clamping', () => {
     it('should shorten the first cell when the visible range starts mid-unit', () => {
       // monthAndYear shape: visibleDate 2025-07-15 → startOfMonth gives 2025-07-01.

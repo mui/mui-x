@@ -18,6 +18,14 @@ The `dayAndHour` preset displays a few days with hourly granularity—ideal for 
 
 {{"demo": "DayAndHourPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
+Use the `presetConfig` prop to limit the hours displayed for each day with `startTime` and `endTime`:
+
+{{"demo": "DayAndHourStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+`startTime` and `endTime` must be whole hours (integers between `0` and `24`). Minute-level precision isn't supported yet.
+:::
+
 ## Day and month preset
 
 The `dayAndMonth` preset displays several weeks with daily granularity grouped by month—ideal for bookings and short-term planning.

@@ -3,7 +3,10 @@ import type {
   SchedulerParameters,
   SchedulerChangeEventDetails,
 } from '@mui/x-scheduler-internals/internals';
-import type { EventTimelinePremiumPreset } from '../models/preset';
+import type {
+  EventTimelinePremiumPreset,
+  EventTimelinePremiumPresetConfig,
+} from '../models/preset';
 import type { EventTimelinePremiumPreferences } from '../models/preferences';
 import type {
   SchedulerDependenciesParameters,
@@ -23,6 +26,10 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
    * Preferences for the timeline.
    */
   preferences: Partial<EventTimelinePremiumPreferences>;
+  /**
+   * Configuration applied to each preset, keyed by the preset name.
+   */
+  presetConfig: EventTimelinePremiumPresetConfig;
   /**
    * `false` until the first parameters→state mapping has applied, then `true`.
    * Gates the lazy-loading plugin's first fetch so it doesn't run against the
@@ -71,6 +78,13 @@ export interface EventTimelinePremiumParameters<
    * Preferences currently displayed in the timeline.
    */
   preferences?: Partial<EventTimelinePremiumPreferences>;
+  /**
+   * Configuration applied to each preset, keyed by the preset name.
+   * For the `dayAndHour` preset, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the timeline.
+   * @example { dayAndHour: { startTime: 8, endTime: 20 } }
+   */
+  presetConfig?: EventTimelinePremiumPresetConfig;
 }
 
 /**

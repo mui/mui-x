@@ -9,6 +9,7 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
 import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
+import { filterOccurrencesVisibleOnTimelineAxis } from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumPresetSelectors,
@@ -499,6 +500,8 @@ function EventList({
           end: occurrence.displayTimezone.end,
           collectionStart: presetConfig.start,
           collectionEnd: presetConfig.end,
+          dayStartMinute: presetConfig.dayStartMinute,
+          dayEndMinute: presetConfig.dayEndMinute,
         });
 
         return {
@@ -507,7 +510,14 @@ function EventList({
           fractionEnd: position + duration,
         };
       }),
-    [adapter, occurrences, presetConfig.start, presetConfig.end],
+    [
+      adapter,
+      occurrences,
+      presetConfig.start,
+      presetConfig.end,
+      presetConfig.dayStartMinute,
+      presetConfig.dayEndMinute,
+    ],
   );
 
   // Convert virtualizer column range to fraction range
@@ -718,13 +728,20 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // Row heights mirror the CSS. The cell stretches to fit overlapping events
   // (`--lane-count` lanes), so we need the per-resource lane count.
   const theme = useTheme();
+  // Occurrences hidden by the preset's hour window are excluded from the lane count so
+  // the virtualized row heights match the rendered lanes.
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
     for (const { resource, occurrences } of resources) {
-      map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
+      const visibleOccurrences = filterOccurrencesVisibleOnTimelineAxis(
+        adapter,
+        presetConfig,
+        occurrences,
+      );
+      map.set(resource.id, computeOccurrencesMaxIndex(adapter, visibleOccurrences));
     }
     return map;
-  }, [resources, adapter]);
+  }, [resources, adapter, presetConfig]);
 
   const getRowHeight = React.useCallback(
     (row: { id: SchedulerResourceId }) =>

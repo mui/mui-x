@@ -6,7 +6,11 @@ import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { timelineOccurrencePlaceholderSelectors } from '../../event-timeline-premium-selectors';
+import {
+  eventTimelinePremiumPresetSelectors,
+  timelineOccurrencePlaceholderSelectors,
+} from '../../event-timeline-premium-selectors';
+import { isRangeVisibleOnTimelineAxis } from '../../internals/utils/timeline-axis';
 
 export function usePlaceholderInRow(
   parameters: usePlaceholderInRow.Parameters,
@@ -28,9 +32,18 @@ export function usePlaceholderInRow(
     ? rawPlaceholder.eventId
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
+      return null;
+    }
+
+    // A placeholder fully inside the hidden hours (e.g. while editing the dates in the
+    // event dialog) would render as a zero-width sliver pinned to the day seam.
+    if (
+      !isRangeVisibleOnTimelineAxis(adapter, presetConfig, rawPlaceholder.start, rawPlaceholder.end)
+    ) {
       return null;
     }
     const startProcessed = processDate(rawPlaceholder.start, adapter);
@@ -80,7 +93,15 @@ export function usePlaceholderInRow(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, adapter, originalEvent, originalEventId, occurrences, maxIndex]);
+  }, [
+    rawPlaceholder,
+    adapter,
+    presetConfig,
+    originalEvent,
+    originalEventId,
+    occurrences,
+    maxIndex,
+  ]);
 }
 
 export namespace usePlaceholderInRow {

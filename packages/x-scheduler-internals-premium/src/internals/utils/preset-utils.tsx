@@ -4,7 +4,7 @@ import { getEndOfWeek, getStartOfWeek } from '@mui/x-scheduler-internals/interna
 import type {
   TemporalSupportedObject,
   EventTimelinePremiumPreset,
-  PresetConfig,
+  PresetDefinition,
   PresetHeaderUnit,
 } from '../../models';
 
@@ -37,7 +37,7 @@ function formatHourLabel(adapter: TemporalAdapter, date: TemporalSupportedObject
 }
 
 export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
-  Record<EventTimelinePremiumPreset, PresetConfig>
+  Record<EventTimelinePremiumPreset, PresetDefinition>
 > = {
   dayAndHour: {
     timeResolution: 'hour',
@@ -57,9 +57,10 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
     getEndDate: (adapter, start, unitCount) =>
       adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
     // `unitCount` is in days (the navigation step), but the grid ticks in hours. Pin
-    // the CSS tick count to `4 × 24` so the grid width stays stable across DST and
-    // matches the 24 hour cells `iterate()` emits per day.
-    getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
+    // the CSS tick count to `days × visible hours` so the grid width stays stable
+    // across DST and matches the hour cells `iterate()` emits per day.
+    getCssUnitCount: (adapter, start, end, hourRange) =>
+      DAY_AND_HOUR_DAYS * (hourRange.endTime - hourRange.startTime),
     navigate: (adapter, date, amount) => adapter.addDays(date, amount),
   },
   dayAndMonth: {
