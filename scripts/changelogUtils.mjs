@@ -487,7 +487,7 @@ async function generateChangelog({
       lines.push(...changeLogMessages[sectionName]);
     }
 
-    lines.push(logCommitEntries(commits) || 'Internal changes.');
+    lines.push(logCommitEntries(commits));
 
     return lines.join('\n\n');
   };
@@ -497,7 +497,7 @@ async function generateChangelog({
     const authorsCount =
       community.contributors.size + community.firstTimers.size + community.team.size;
     const lines = [
-      `We'd like to extend a big thank you to the ${authorsCount} contributors who made this release possible. Here are some highlights ✨:`,
+      `A big thanks to the ${authorsCount} contributors who made this release possible. Here are some highlights ✨:`,
       'TODO INSERT HIGHLIGHTS',
     ];
 
@@ -505,6 +505,10 @@ async function generateChangelog({
       lines.push(...changeLogMessages.general);
     }
 
+    return lines.join('\n\n');
+  };
+
+  const logContributorsSection = () => {
     // TODO: separate first timers and regular contributors
     const contributors = [
       ...Array.from(community.contributors),
@@ -515,9 +519,11 @@ async function generateChangelog({
       a.toLowerCase().localeCompare(b.toLowerCase()),
     );
 
+    const lines = [];
+
     if (contributors.length > 1) {
       lines.push(
-        `Special thanks go out to these community members for their valuable contributions:\n${contributors.join(', ')}`,
+        `Special thanks go out to these community members for their valuable contributions: ${contributors.join(', ')}`,
       );
     } else if (contributors.length === 1) {
       lines.push(
@@ -527,7 +533,7 @@ async function generateChangelog({
 
     if (community.team.size > 0) {
       lines.push(
-        `The following team members contributed to this release:\n${teamMembers.join(', ')}`,
+        `The following team members contributed to this release: ${teamMembers.join(', ')}`,
       );
     }
 
@@ -596,7 +602,7 @@ ${logOtherSection({
 })}
 
 ${logOtherSection({
-  sectionName: 'Core',
+  sectionName: 'Internal',
   commits: internalCommits,
 })}
 
@@ -604,6 +610,8 @@ ${logOtherSection({
   sectionName: 'Miscellaneous',
   commits: otherCommits,
 })}
+
+${logContributorsSection()}
 `);
 
   try {

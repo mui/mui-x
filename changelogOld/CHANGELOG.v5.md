@@ -74,7 +74,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [docs] Add messages in v5 doc to inform people about v6 (#7838) @flaviendelangle
 - [docs] Fix 301 link @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Upgrade monorepo (#7849) @cherniavskii
 
@@ -216,7 +216,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 - [docs] Redirect translated pages (#7370) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Fix release date (#7314) @DanailH
 - [core] Fix the product license reference name (#7367) @oliviertassinari
@@ -348,7 +348,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [docs] Fix live edit @oliviertassinari
 - [docs] Upgrade to Next 13 (#6911) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Upgrade monorepo (#6906) @cherniavskii
 - [core] Upgrade node to v14.21 (#6939) @piwysocki
@@ -375,7 +375,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [docs] Clarify DataGrid Row Pinning docs (#6891) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Upgrade monorepo (#6864) @m4theushw
 - [license] Polish error messages (#6881) @oliviertassinari
@@ -405,7 +405,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [docs] Fix link to localization page (#6766) @alexfauquette
 
-### Core
+### Internal
 
 - [license] Add new license status 'Out of scope' (#6774) @oliviertassinari
 
@@ -467,7 +467,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [docs] Fix code edit for when v6 will be stable (#6600) @oliviertassinari
 - [docs] Fix typo in DataGrid demo page (#6632) (#6634) @LukasTy
 
-### Core
+### Internal
 
 - [core] Upgrade monorepo (#6570) @cherniavskii
 
@@ -572,7 +572,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 - [docs] Pass model change callbacks in controlled grid editing demos (#6306) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Reduce the amount of updated screenshots reported by Argos (#6310) @cherniavskii
 
@@ -606,7 +606,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [docs] Fix 301 link (#6239) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Use the official repository for `@mui/monorepo` instead of a fork (#6189) @oliviertassinari
 
@@ -639,7 +639,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - [docs] Improve main demo to show new functionalities (#5292) @joserodolfofreitas
 
-### Core
+### Internal
 
 - [core] Update to TypeScript 4.8.3 (#6136) @flaviendelangle
 - [core] Update RFC template (#6100) @bytasv
@@ -683,7 +683,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - [docs] Add Recipes section
 
-### Core
+### Internal
 
 - [core] Add `yarn release:tag` script (#5169) @DanailH
 - [core] Upgrade monorepo (#6072) @m4theushw
@@ -769,7 +769,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Update `GridCellParams`'s `value` description (#5849) @cherniavskii
 - [docs] Update `README.md` to match Introduction section of the docs (#5754) @samuelsycamore
 
-### Core
+### Internal
 
 - [core] Fix typo (#5990) @flaviendelangle
 - [core] Remove old babel resolve rule (#5939) @oliviertassinari
@@ -829,7 +829,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [docs] Fix typo in `migration from lab` (#5277) @chuckwired
 - [docs] Use `dayjs` instead of `date-fns` in doc examples (#5481) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Clarify the scope of the license key used for tests and documentation (#5824) @oliviertassinari
 - [core] Fix TypeScript error on field hooks (#5892) @flaviendelangle
@@ -871,7 +871,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Update packages README files (#5835) @cherniavskii
 - [docs] Use `InputBase` for pickers inputs (#5597) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Upgrade monorepo (#5771, #5797) @cherniavskii
 - [core] Various TypeScript improvements (#5556) @flaviendelangle
@@ -916,7 +916,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [docs] Improve the Events page (#5413) @flaviendelangle
 - [docs] Use new editing API in the introduction demos (#5728) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Remove duplicated `FUNDING.yml` file (#5656) @oliviertassinari
 - [core] Remove outdated Next.js options (#5727) @oliviertassinari
@@ -958,7 +958,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Update description of `maxDateTime` prop (#5639) @jurecuhalev
 - [docs] Add missing `date-fns` dependency when opening CodeSandbox demo (#5692) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Drop usage of `GRID_EXPERIMENTAL_ENABLED` env variable (#5669) @ar7casper
 - [core] Isolate asset loading under /x/ (#5594) @oliviertassinari
@@ -1017,7 +1017,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [docs] Correct slot CSS classes for Pro and Premium components (#5452) @alexfauquette
 - [docs] Fix internal link to `valueParser` (#5450) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Upgrade monorepo (#5560) @m4theushw
 
@@ -1058,7 +1058,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] New page presenting the `apiRef` (#5273) @flaviendelangle
 - [docs] Remove blank line @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add missing comments on zh-TW translation (#5559) @flaviendelangle
 - [core] Polish on the bug issue template (#5525) @oliviertassinari
@@ -1106,7 +1106,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [docs] Update pickers README files (#5456) @cherniavskii
 - [docs] Clarify the scope of support for MUI X (#5423) @joserodolfofreitas
 
-### Core
+### Internal
 
 - [core] Add technical support link to \_redirects (#5428) @joserodolfofreitas
 - [core] Improve GitHub bug reproduction template (#5067) @joserodolfofreitas
@@ -1207,7 +1207,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Disable ad on main demo page (#5301) @joserodolfofreitas
 - [docs] Fix typo in the `DateRangePicker` documentation (#5259) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Allow having multiple playgrounds (#5288) @alexfauquette
 - [core] Improve typing of `GridFilterInputMultipleSingleSelect` (#5206) @flaviendelangle
@@ -1252,7 +1252,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [docs] Use redirection in the code (#5114) @oliviertassinari
 - [docs] Add demo of how to use the Data Grid with date pickers (#5053) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Improve inline code rendering within the details tag (#5166) @Harmouch101
 - [core] Remove unused props from plugin typing (#5185) @flaviendelangle
@@ -1308,7 +1308,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Section for overwriting core components i18n keys (#4998) @DanailH
 - [docs] Small grammar and format fixes for Dynamic Row Height section (#5098) @samuelsycamore
 
-### Core
+### Internal
 
 - [core] Allows to run tests with different date adapters (#5055) @alexfauquette
 - [core] Prettify the l10n issue (#4928) @alexfauquette
@@ -1385,7 +1385,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [docs] Fix docs feedback widget not working (#4905) @cherniavskii
 - [docs] Replace custom notes and warning with callouts (#5008) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Avoid Order ID to refer to GitHub issues/PRs (#5005) @oliviertassinari
 - [core] Improve the workflow for incomplete issues (#5012) @mnajdova
@@ -1477,7 +1477,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [docs] Typo on OrderId @oliviertassinari
 - [docs] Update feature comparison table (#4918) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Add new script to generate tree data rows from file tree (#4902) @flaviendelangle
 - [core] Fix code style (#4874) @oliviertassinari
@@ -1618,7 +1618,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [docs] Update the feature table in the Getting Started page of the Data Grid (#4619) @flaviendelangle
 - [docs] Add demo for Premium (#4750) @m4theushw
 
-### Core
+### Internal
 
 - [core] Check if `process` is available (#4193) @m4theushw
 - [core] Fix naming collision (#4853) @alexfauquette
@@ -1666,7 +1666,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [docs] Include date-fns dependency when opening demos in CodeSandbox (#4508) @m4theushw
 - [docs] Split the 'Group & Pivot' page (#4441) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Fix the README of the X packages (#4590) @flaviendelangle
 - [test] Fix test to not depend on screen resolution (#4587) @m4theushw
@@ -1733,7 +1733,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Go live with the new URLs (#4313) @siriwatknp
 - [docs] Update the product names to be in sync @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add technical doc for pipe processing and family processing (#4322) @flaviendelangle
 - [core] Don't upgrade CircleCI node (#4457) @m4theushw
@@ -1814,7 +1814,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [docs] Update installation docs (#4259) @cherniavskii
 - [docs] New page for the migration of date and time pickers from the lab (#4327) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Fix typo in issue template @oliviertassinari
 - [core] Move last variables outside of the models folder (#4303) @flaviendelangle
@@ -1878,7 +1878,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [docs] Remove useless `apiRef` from demos (#4221) @flaviendelangle
 - [docs] Sync the headers with core (#4195) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add CLI to decode license key (#4126) @flaviendelangle
 - [core] Fix Lerna package change detection (#4202) @oliviertassinari
@@ -1924,7 +1924,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Neglect e2e tests related to search (#4118) @siriwatknp
 - [docs] Use regex instead of specific url in e2e-website-tests (#4121) @siriwatknp
 
-### Core
+### Internal
 
 - [core] Enforce `noImplicitAny` (#4084) @cherniavskii
 - [core] Improve the Pro support issue template (#4082) @oliviertassinari
@@ -2034,7 +2034,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [docs] Fix typo in client-side validation example (#4066) @krallj
 - [docs] Remove useless hide id column (#4021) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Allows to add custom export item (#3891) @alexfauquette
 - [core] Remove the `_modules_` folder (#3953) @flaviendelangle
@@ -2094,7 +2094,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 - [docs] Move row grouping to Premium plan (#3827) @alexfauquette
 - [docs] Reorganize export docs to prepare Excel export doc (#3822) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Add hook `useGridPagination` to call `onGridPage` and `onGridPageSize` (#3880) @flaviendelangle
 - [core] Fix docs deploy script (#3874) @oliviertassinari
@@ -2138,7 +2138,7 @@ A big thanks to the 10 contributors who made this release possible. Here are som
 - [docs] Mention row `id` requirement and document `getRowId` prop (#3765) @cherniavskii
 - [docs] Refresh the license key documentation (#3529) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Clean `filtering.DataGrid.test.tsx` (#3768) @flaviendelangle
 - [core] Improve GitHub label workflows (#3680) @DanailH
@@ -2205,7 +2205,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [docs] Prepare scripts and E2E tests for migration (#3515) @siriwatknp
 - [docs] Clarify what is the professional support (#3530) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add ESLint rule to force default export equals to filename in documentation (#3674) @alexfauquette
 - [core] Fix `l10n` script not updating `cs-CZ` locale (#3748) @cherniavskii
@@ -2345,7 +2345,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [docs] Replace `@mui/styles` in `x-data-grid-generator` (#3560) @m4theushw
 - [docs] Update usage of prop/property naming (#3649) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Log the output of the script (#3527) @oliviertassinari
 - [core] Add ESLint rule to prevent direct state access (#3521) @m4theushw
@@ -2403,7 +2403,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [docs] Generate imports dynamically from the packages export list (#3488) @flaviendelangle
 - [docs] Make demos compatible with `preProcessEditCellProps` (#3453) @m4theushw
 
-### Core
+### Internal
 
 - [test] Add test for row checkbox toggling using the Space key (#3262) @alexfauquette
 - [core] Increase CI efficiency (#3441) @oliviertassinari
@@ -2445,7 +2445,7 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [docs] Stop using TypeDoc to generate the API documentation (#3320) @flaviendelangle
 - [docs] Remove column pinning from "Upcoming features" (#3443) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Add sections to some of the feature hooks (#3391) @flaviendelangle
 - [core] Generate exports snapshot for both `x-data-grid` and `x-data-grid-pro` packages (#3427) @flaviendelangle
@@ -2519,7 +2519,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [docs] Fix duplicate "the" (#3365) @noam-honig
 - [docs] Update branch to deploy docs (#3321) @m4theushw
 
-### Core
+### Internal
 
 - [core] Add funding field (#3331) @oliviertassinari
 - [core] Fix missing LICENSE file (#3330) @oliviertassinari
@@ -2595,7 +2595,7 @@ A big thanks to the 11 contributors who made this release possible. Here are som
 - [DataGrid] Improve Korean (ko-KR) locale (#3232, #3273) @zzossig
 - [DataGrid] Improve Greek (el-GR) locale (#3169) @clytras
 
-### Core
+### Internal
 
 - [core] Add script to sync translation files (#3201) @m4theushw
 - [core] Create dedicated `InputComponent` for `singleSelect` and `date` columns #3227 @alexfauquette
@@ -2671,7 +2671,7 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 
 - [docs] Move sentence about disabling multi rows selection (#3167) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Drop `useGridContainerProps` (#3007) @flaviendelangle
 - [core] Move `getRowIdFromRowIndex` and `getRowIndex` to the sorting API (#3126) @flaviendelangle
@@ -2737,7 +2737,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] Remove unused rendering state and selectors (#3133) @flaviendelangle
 - [DataGrid] Rename `Checkbox` component and props slots to `BaseCheckbox` (#3142) @DanailH
 
-### Core
+### Internal
 
 - [core] Adapt changelog script to GitHub DOM modification (#3087) @alexfauquette
 - [core] Automatically close issues that are incomplete and inactive (#3029) @oliviertassinari
@@ -2810,7 +2810,7 @@ _Nov 4, 2021_
 - [DataGrid] Prevents bubbling in menu header (#3000) @alexfauquette
 - [DataGrid] Fix wrong params provided to `cellModeChange` when `setCellMode` is called (#3025) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Adapt `useDemoData` for Tree Data (#2978) @flaviendelangle
 - [core] Group update of MUI Core (#3055) @oliviertassinari
@@ -2927,7 +2927,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [docs] Improve `scrollEndThreshold` API docs (#3001) @ZeeshanTamboli
 - [docs] Fix CodeSandbox and feature request templates (#2986) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Add step for announcing the releases on Twitter (#2997) @DanailH
 - [core] Apply all filters to a row before moving to the next one (#2870) @flaviendelangle
@@ -3055,7 +3055,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [docs] Fix to not commit changes when clicking outside the cell (#2906) @ZeeshanTamboli
 - [docs] Update link to Quick Filter issue (#2909) @m4theushw
 
-### Core
+### Internal
 
 - [core] Small fixes on the Components page (#2877) @flaviendelangle
 - [core] Make each feature hook responsible for its column pre-processing (#2839) @flaviendelangle
@@ -3238,7 +3238,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [docs] Fix pagination in Ant Design demo (#2787) @ZeeshanTamboli
 - [docs] Update the `page` prop docs (#2812) @m4theushw
 
-### Core
+### Internal
 
 - [core] Update hooks to initialize their state synchronously (#2782) @flaviendelangle
 - [core] Fix rollup external warnings (#2736) @eps1lon
@@ -3302,7 +3302,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [docs] Fix demo throwing error (#2719) @m4theushw
 - [docs] Fix index and improve playground page (#2755) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add benchmark script (#2683) @m4theushw
 - [core] Clean error messages prefix (#2676) @flaviendelangle
@@ -3366,7 +3366,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [docs] Improve the search results relevance (#2656) @oliviertassinari
 - [docs] Update installation instructions (#2663) @m4theushw
 
-### Core
+### Internal
 
 - [core] Upgrade JSS plugins to 10.8.0 (#2667) @m4theushw
 
@@ -3386,7 +3386,7 @@ This is a hotfix to fix an important regression with `v5.0.0-beta.0`.
 - [docs] Fix formatting (#2626) @m4theushw
 - [docs] Include packages from next tag (#2628) @m4theushw
 
-### Core
+### Internal
 
 - [core] Copy bin folder when building the libraries (#2627) @flaviendelangle
 - [core] Remove prop-types during build (#2586) @m4theushw
