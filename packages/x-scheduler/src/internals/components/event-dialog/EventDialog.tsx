@@ -8,25 +8,24 @@ import type { DialogProps } from '@mui/material/Dialog';
 import Dialog, { dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
-import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
-import type {
-  EventDialogProps,
-  EventDialogProviderProps,
-  EventDialogTriggerProps,
-} from './EventDialog.types';
-import { createModal } from '../create-modal';
-import { FormContent } from './FormContent';
-import { calculatePosition } from '../../utils/dialog-utils';
+import type { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
+import type { EventEditingOptionalRenderers } from '../event-editing';
+import {
+  EventEditingProvider,
+  EventEditingOptionalRenderersContext,
+  useEventEditingContext,
+  useEventEditingStyledContext,
+  FormContent,
+} from '../event-editing';
+import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
+import { AnchoredEventToolbar } from '../event-toolbar';
 import ReadonlyContent from './ReadonlyContent';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import type { EventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
-import { EventDialogOptionalRenderersContext } from './EventDialogOptionalRenderersContext';
 
 const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
@@ -42,6 +41,8 @@ const EventDialogRoot = styled(Dialog, {
   },
   [`& .${dialogClasses.paper}`]: {
     margin: 0,
+    // Never let the anchored dialog grow past the viewport on narrow (mobile) screens.
+    maxWidth: '100%',
   },
 });
 
@@ -79,46 +80,10 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   const { anchorRef, dragHandlerRef, className, ...other } = props;
   const resetDrag = useDraggableDialog(nodeRef, dragHandlerRef, mutateStyle);
 
-  const updatePosition = React.useCallback(
-    (shouldResetDrag = false) => {
-      const position = calculatePosition(anchorRef.current, nodeRef.current, 'left');
-      if (position && nodeRef.current) {
-        nodeRef.current.style.top = `${position.top}px`;
-        nodeRef.current.style.left = `${position.left}px`;
-
-        if (shouldResetDrag) {
-          // Reset transform when position is recalculated
-          resetDrag();
-        }
-      }
-    },
-    [anchorRef, resetDrag, nodeRef],
-  );
-
-  React.useLayoutEffect(() => {
-    updatePosition(true);
-  }, [updatePosition]);
-
-  React.useEffect(() => {
-    const handleResize = () => {
-      updatePosition(false);
-      resetDrag();
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [updatePosition, resetDrag]);
+  useAnchoredPosition({ anchorRef, popupRef: nodeRef, onReposition: resetDrag });
 
   return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
 } as any as DialogProps['PaperComponent'];
-
-const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
-  contextName: 'EventDialogContext',
-});
-
-export const EventDialogContext = EventDialog.Context;
-export const useEventDialogContext = EventDialog.useContext;
 
 export const EventDialogContent = React.forwardRef(function EventDialogContent(
   inProps: EventDialogProps,
@@ -126,16 +91,32 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 ) {
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventDialog' });
-  const { style, anchorRef, occurrence, onClose, open, ...other } = props;
+  const { style, anchorRef, occurrence: occurrenceProp, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
-  const { schedulerId, classes } = useEventDialogStyledContext();
+  const { schedulerId, classes } = useEventEditingStyledContext();
 
   // Selector hooks
+  // Fall back to the prop while closing, when the editing occurrence has already been cleared.
+  const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
+  const occurrence = editingOccurrence ?? occurrenceProp;
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   // Ref hooks
   const dragHandlerRef = React.useRef<HTMLElement>(null);
+
+  // Read-only events have no editing form; editable events open the form fresh on each occurrence
+  // (keyed) so it initializes from the current times.
+  const content = isEventReadOnly ? (
+    <ReadonlyContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
+  ) : (
+    <FormContent
+      key={occurrence.key}
+      occurrence={occurrence}
+      onClose={onClose}
+      dragHandlerRef={dragHandlerRef}
+    />
+  );
 
   return (
     <EventDialogRoot
@@ -145,70 +126,86 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       PaperComponent={PaperComponent}
       aria-labelledby={`${schedulerId}-event-dialog-title`}
       aria-modal="false"
+      // Non-modal: keep the grid behind usable (focus + scroll) while the dialog is open.
+      disableEnforceFocus
       className={classes.eventDialog}
       slotProps={{
-        paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,
+        paper: {
+          className: classes.eventDialogPaper,
+          anchorRef,
+          dragHandlerRef,
+        } as PaperProps,
       }}
       {...other}
     >
-      {isEventReadOnly ? (
-        <ReadonlyContent
-          occurrence={occurrence}
-          onClose={onClose}
-          dragHandlerRef={dragHandlerRef}
-        />
-      ) : (
-        <FormContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
-      )}
+      {content}
     </EventDialogRoot>
   );
 });
 
-export function EventDialogProvider(props: EventDialogProviderProps) {
-  const { children, optionalRenderers, ...other } = props;
+/**
+ * Mounts the armed-event toolbar next to the event during the `'armed'` stage, as a top-level sibling
+ * of the dialog. Its Edit switches the store to `'edit'`, swapping in the dialog below.
+ */
+function AnchoredEventToolbarSurface() {
   const store = useSchedulerStoreContext();
-  const isRecurringScopeDialogOpen = useStore(
-    store,
-    schedulerOtherSelectors.isRecurringScopeDialogOpen,
-  );
-  const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+  const { anchorRef, anchor } = useEventEditingContext();
+  const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
 
-  const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
+  // Gate on the reactive `anchor` so a re-anchor (e.g. a recurring scope change) re-positions.
+  if (editingMode !== 'armed' || editingOccurrence == null || anchor == null) {
+    return null;
+  }
+
+  return <AnchoredEventToolbar anchorRef={anchorRef} occurrence={editingOccurrence} />;
+}
+
+/**
+ * Mounts the desktop dialog during the `'edit'` stage, anchored to the element editing started from.
+ * Open state comes from the store; the anchor comes from the editing context.
+ */
+function EventDialogSurface() {
+  const store = useSchedulerStoreContext();
+  const { anchorRef, stopEditing } = useEventEditingContext();
+  const editingOccurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
+  const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
+
+  // Resizing is disabled while editing, so the anchor can't be swapped here — the sync ref is enough.
+  if (editingMode !== 'edit' || editingOccurrence == null || anchorRef.current == null) {
+    return null;
+  }
 
   return (
-    <EventDialogOptionalRenderersContext.Provider
-      value={optionalRenderers ?? (EMPTY_OBJECT as EventDialogOptionalRenderers)}
-    >
-      <EventDialog.Provider
-        render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
-          <EventDialogContent
-            open={isOpen}
-            anchorRef={anchorRef}
-            occurrence={occurrence}
-            onClose={onClose}
-            {...other}
-          />
-        )}
-        onOpen={(occurrence) => {
-          store.setEditedOccurrenceKey(occurrence.key);
-        }}
-        onClose={() => {
-          store.setEditedOccurrenceKey(null);
-          store.setOccurrencePlaceholder(null);
-        }}
-      >
-        {children}
-        {showRecurrence && isRecurringScopeDialogOpen && RecurringScopeDialogRenderer && (
-          <RecurringScopeDialogRenderer />
-        )}
-      </EventDialog.Provider>
-    </EventDialogOptionalRenderersContext.Provider>
+    <EventDialogContent
+      open
+      anchorRef={anchorRef}
+      occurrence={editingOccurrence}
+      onClose={stopEditing}
+    />
   );
 }
 
-export function EventDialogTrigger(props: EventDialogTriggerProps) {
-  const { occurrence, ...other } = props;
-  const ref = React.useRef<HTMLElement | null>(null);
+/**
+ * Desktop editing surface: anchored, draggable dialog via `EventEditingProvider`, with the armed
+ * action toolbar and the recurring scope confirmation rendered as independent top-level siblings.
+ */
+export function EventDialogProvider(props: EventDialogProviderProps) {
+  const { children, optionalRenderers } = props;
 
-  return <EventDialog.Trigger ref={ref} data={occurrence} {...other} />;
+  // The recurring scope confirmation renders itself: it reads its own open state from the store.
+  const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
+
+  return (
+    <EventEditingOptionalRenderersContext.Provider
+      value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
+    >
+      <EventEditingProvider surface="dialog">
+        {children}
+        <AnchoredEventToolbarSurface />
+        <EventDialogSurface />
+        {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}
+      </EventEditingProvider>
+    </EventEditingOptionalRenderersContext.Provider>
+  );
 }

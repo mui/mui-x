@@ -10,6 +10,7 @@ import type {
   SchedulerOccurrencePlaceholder,
   SchedulerPreferences,
   SchedulerProcessedEvent,
+  SchedulerRenderableEventOccurrence,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
@@ -29,6 +30,24 @@ export interface StoredError {
    * argument to `store.dismissError(key)`.
    */
   key: string;
+}
+
+/**
+ * Which face the edited occurrence is in:
+ * - `'armed'`: no surface is shown; the event displays its resize handles and an action toolbar
+ *   (Edit / Delete). A resize commits immediately. Touch-only.
+ * - `'edit'`: the editing surface (dialog or drawer) is shown; the event is not resizable while open.
+ */
+export type SchedulerEditingMode = 'armed' | 'edit';
+
+export interface SchedulerEditingState {
+  /** The occurrence being edited — existing or a creation draft. */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * Whether the occurrence is armed (toolbar + resize handles, no surface) or being edited (surface open).
+   * Touch arms in `'armed'` (the toolbar's Edit switches to `'edit'`); non-touch opens directly in `'edit'`.
+   */
+  mode: SchedulerEditingMode;
 }
 
 export interface SchedulerState<TEvent extends object = any> {
@@ -168,10 +187,11 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The key of the occurrence currently active (e.g. open in the event dialog).
-   * `null` when no occurrence is active.
+   * The occurrence currently being edited (existing or a creation draft), or `null`.
+   * Single source of truth for *what* is edited, decoupled from *which* surface is open; surfaces
+   * and the highlight read from here.
    */
-  editedOccurrenceKey: string | null;
+  editingOccurrence: SchedulerEditingState | null;
   /**
    * The event that has been copied or cut, if any.
    */

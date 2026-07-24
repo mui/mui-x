@@ -4,10 +4,13 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
+import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
 import { useCalendarGridDayEventContext } from '../day-event/CalendarGridDayEventContext';
 import type { CalendarGridDayEvent } from '../day-event/CalendarGridDayEvent';
 import type { SchedulerEventSide } from '../../models';
 
+// Day-grid resize is native drag only; touch/pointer resize is a follow-up (add it like the time grid
+// via `useEventPointerResizeHandler` with a horizontal `getDateAtPointer`). Only `enabled` is shared.
 export const CalendarGridDayEventResizeHandler = React.forwardRef(
   function CalendarGridDayEventResizeHandler(
     componentProps: CalendarGridDayEventResizeHandler.Props,
@@ -37,10 +40,16 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
       side,
     }));
 
-    const { state, enabled } = useEventResizeHandler({
+    const enabled = isResizeHandlerEnabled({
+      side,
+      doesEventStartBeforeCollectionStart: contextValue.doesEventStartBeforeCollectionStart,
+      doesEventEndAfterCollectionEnd: contextValue.doesEventEndAfterCollectionEnd,
+    });
+
+    const { state } = useEventResizeHandler({
       ref,
       side,
-      contextValue,
+      enabled,
       getDragData,
     });
 

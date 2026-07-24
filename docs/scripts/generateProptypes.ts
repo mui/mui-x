@@ -18,6 +18,9 @@ const COMPONENTS_WITHOUT_PROPTYPES = [
   '/StandaloneCompactDayView.tsx',
   '/StandaloneCompactThreeDayView.tsx',
   '/StandaloneCompactWeekView.tsx',
+  '/StandaloneCompactDayViewPremium.tsx',
+  '/StandaloneCompactThreeDayViewPremium.tsx',
+  '/StandaloneCompactWeekViewPremium.tsx',
 ];
 
 /**

@@ -18,7 +18,7 @@ import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
+import { useEventEditingStyledContext } from '../event-editing';
 import type { ControlledValue } from './utils';
 import { computeRange, hasProp } from './utils';
 import ResourceAndColorSection from './ResourceAndColorSection';
@@ -96,7 +96,7 @@ export function GeneralTab(props: GeneralTabProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks

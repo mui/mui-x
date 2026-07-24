@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { StandaloneCompactDayViewProps } from './CompactDayView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
-import { EventDialogProvider } from '../internals/components/event-dialog';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { CompactDayView } from './CompactDayView';
 
@@ -27,9 +26,7 @@ const StandaloneCompactDayView = React.forwardRef(function StandaloneCompactDayV
   return (
     <ResponsiveTypographyContainer>
       <EventCalendarProvider {...parameters}>
-        <EventDialogProvider>
-          <CompactDayView ref={forwardedRef} {...forwardedProps} />
-        </EventDialogProvider>
+        <CompactDayView ref={forwardedRef} {...forwardedProps} />
       </EventCalendarProvider>
     </ResponsiveTypographyContainer>
   );

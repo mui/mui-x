@@ -71,7 +71,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   // Feature hooks
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
-      const offsetBeforeColumnStart = Math.max(adapter.getTime(columnStart) - start.timestamp, 0);
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
       const originalOccurrence = generateOccurrenceFromEvent({
@@ -82,14 +81,19 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         end,
       });
 
-      const offsetInsideColumn = getCursorPositionInElementMs({ input, elementRef: ref });
+      // No `input` (pointer-based resize) — skip the layout-reading cursor measurement.
+      const initialCursorPositionInEventMs = input
+        ? Math.max(adapter.getTime(columnStart) - start.timestamp, 0) +
+          getCursorPositionInElementMs({ input, elementRef: ref })
+        : 0;
+
       return {
         eventId,
         occurrenceKey,
         originalOccurrence,
         start: start.value,
         end: end.value,
-        initialCursorPositionInEventMs: offsetBeforeColumnStart + offsetInsideColumn,
+        initialCursorPositionInEventMs,
       };
     },
   );

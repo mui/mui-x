@@ -26,12 +26,12 @@ import {
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import { useEventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
-import type { ControlledValue } from './utils';
-import { computeRange, hasProp, validateRange } from './utils';
-import EventDialogHeader from './EventDialogHeader';
-import { GeneralTab } from './GeneralTab';
+import { useEventEditingStyledContext } from './EventEditingStyledContext';
+import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
+import type { ControlledValue } from '../event-dialog/utils';
+import { computeRange, hasProp, validateRange } from '../event-dialog/utils';
+import EventDialogHeader from '../event-dialog/EventDialogHeader';
+import { GeneralTab } from '../event-dialog/GeneralTab';
 
 const FormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -50,9 +50,12 @@ const DialogContent = styled(MuiDialogContent, {
   padding: 0,
   minWidth: 360,
   width: 450,
+  // Shrink to fit the paper (capped at the viewport) so the form doesn't overflow on mobile screens.
+  maxWidth: '100%',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
+  maxHeight: '100%',
 });
 
 const EventDialogTitleTextField = styled(TextField, {
@@ -95,14 +98,19 @@ interface FormContentProps {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
   dragHandlerRef: React.RefObject<HTMLElement | null>;
+  /**
+   * Whether the header acts as a drag handle. `false` for the non-draggable mobile drawer.
+   * @default true
+   */
+  isDraggable?: boolean;
 }
 
 export function FormContent(props: FormContentProps) {
-  const { occurrence, onClose, dragHandlerRef } = props;
+  const { occurrence, onClose, dragHandlerRef, isDraggable } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -121,7 +129,7 @@ export function FormContent(props: FormContentProps) {
   );
 
   // Optional renderer hooks
-  const { recurrenceTab: RecurrenceTabRenderer } = useEventDialogOptionalRenderers();
+  const { recurrenceTab: RecurrenceTabRenderer } = useEventEditingOptionalRenderers();
 
   const recurrencePresets = useStore(
     store,
@@ -135,7 +143,12 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.start,
   );
 
-  const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
+  // `preventScroll` so focusing the title doesn't scroll a still-off-screen drawer into view
+  // (the compact drawer slides up from the bottom, which would otherwise shove the grid).
+  const titleInputRef = React.useCallback(
+    (input: HTMLInputElement | null) => input?.focus({ preventScroll: true }),
+    [],
+  );
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
@@ -263,7 +276,11 @@ export function FormContent(props: FormContentProps) {
   return (
     <DialogContent className={classes.eventDialogContent}>
       <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
-        <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+        <EventDialogHeader
+          onClose={onClose}
+          dragHandlerRef={dragHandlerRef}
+          isDraggable={isDraggable}
+        >
           <span
             id={`${schedulerId}-event-dialog-title`}
             style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}

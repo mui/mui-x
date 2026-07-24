@@ -11,5 +11,3 @@ export interface TimeGridEventProps extends React.HTMLAttributes<HTMLDivElement>
    */
   variant: 'regular' | 'placeholder';
 }
-
-export type TimeGridEventComponent = React.ComponentType<TimeGridEventProps>;

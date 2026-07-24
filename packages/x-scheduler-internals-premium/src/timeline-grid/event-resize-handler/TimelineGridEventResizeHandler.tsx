@@ -3,7 +3,10 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
-import { useEventResizeHandler } from '@mui/x-scheduler-internals/internals';
+import {
+  useEventResizeHandler,
+  isResizeHandlerEnabled,
+} from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
 import { useTimelineGridEventContext } from '../event/TimelineGridEventContext';
 import type { TimelineGridEvent } from '../event/TimelineGridEvent';
@@ -37,10 +40,16 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
       side,
     }));
 
-    const { state, enabled } = useEventResizeHandler({
+    const enabled = isResizeHandlerEnabled({
+      side,
+      doesEventStartBeforeCollectionStart: contextValue.doesEventStartBeforeCollectionStart,
+      doesEventEndAfterCollectionEnd: contextValue.doesEventEndAfterCollectionEnd,
+    });
+
+    const { state } = useEventResizeHandler({
       ref,
       side,
-      contextValue,
+      enabled,
       getDragData,
     });
 

@@ -1,12 +1,12 @@
 import type {
-  EventDialogLocaleText,
+  EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-const plPLDialog: Partial<EventDialogLocaleText> = {
+const plPLDialog: Partial<EventEditingLocaleText> = {
   // EventDialog
   colorPickerLabel: 'Kolor wydarzenia',
   dateTimeSectionLabel: 'Data i godzina',
@@ -14,11 +14,15 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   allDayLabel: 'Cały dzień',
   closeButtonAriaLabel: 'Zamknij',
   closeButtonLabel: 'Zamknij',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Usuń wydarzenie',
   descriptionLabel: 'Opis',
   endDateLabel: 'Data zakończenia',
   endTimeLabel: 'Godzina zakończenia',
   eventTitleAriaLabel: 'Tytuł wydarzenia',
+  // eventTitlePlaceholder: 'Add title',
   generalTabLabel: 'Ogólne',
   labelNoResource: 'Brak zasobu',
   labelInvalidResource: 'Nieprawidłowy zasób',
@@ -79,7 +83,7 @@ const plPLDialog: Partial<EventDialogLocaleText> = {
   title: 'Zastosuj tę zmianę do:',
 };
 
-const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
+const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Zasoby',
 
@@ -141,7 +145,7 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };
 
-const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };

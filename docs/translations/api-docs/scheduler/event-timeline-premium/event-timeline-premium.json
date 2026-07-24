@@ -96,6 +96,38 @@
     }
   },
   "classDescriptions": {
+    "anchoredEventToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the anchored (desktop) armed-event toolbar wrapper element"
+    },
+    "compactDayTimeGrid": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact (touch) day time grid root element"
+    },
+    "compactDayTimeGridContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact (touch) day time grid content element"
+    },
+    "compactEventDrawer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer root element"
+    },
+    "compactEventDrawerContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer content element"
+    },
+    "compactEventDrawerReadonlyHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer read-only header element"
+    },
+    "compactEventDrawerReadonlyTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact editing drawer read-only title element"
+    },
+    "compactEventToolbarDock": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the compact (touch) armed-event toolbar dock element"
+    },
     "content": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the content section element"
@@ -192,6 +224,10 @@
     "eventDialogHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog header element"
+    },
+    "eventDialogHeaderActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog header actions container element"
     },
     "eventDialogInlineRow": {
       "description": "Styles applied to {{nodeName}}.",
@@ -348,6 +384,18 @@
     "eventSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event skeleton element"
+    },
+    "eventToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the armed-event toolbar root element"
+    },
+    "eventToolbarDeleteButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the armed-event toolbar delete button element"
+    },
+    "eventToolbarEditButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the armed-event toolbar edit button element"
     },
     "grid": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the grid element" },
     "header": {

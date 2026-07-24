@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { StandaloneCompactThreeDayViewProps } from './CompactThreeDayView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
-import { EventDialogProvider } from '../internals/components/event-dialog';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { CompactThreeDayView } from './CompactThreeDayView';
 
@@ -27,9 +26,7 @@ const StandaloneCompactThreeDayView = React.forwardRef(function StandaloneCompac
   return (
     <ResponsiveTypographyContainer>
       <EventCalendarProvider {...parameters}>
-        <EventDialogProvider>
-          <CompactThreeDayView ref={forwardedRef} {...forwardedProps} />
-        </EventDialogProvider>
+        <CompactThreeDayView ref={forwardedRef} {...forwardedProps} />
       </EventCalendarProvider>
     </ResponsiveTypographyContainer>
   );

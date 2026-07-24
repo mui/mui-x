@@ -13,8 +13,7 @@ const DAY_VIEW_DEFINITION = createDayTimeGridViewDefinition(1);
 /**
  * A Day View to use inside the Event Calendar.
  *
- * Renders the desktop event variant, which `DayTimeGrid` resolves from the default value of
- * `DayTimeGridInternalRenderersContext` — no provider is needed here.
+ * Events adapt to the device on their own (mouse vs. touch), so no view-level config is needed.
  */
 export const DayView = React.memo(
   React.forwardRef(function DayView(

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { StandaloneCompactWeekViewProps } from './CompactWeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
-import { EventDialogProvider } from '../internals/components/event-dialog';
 import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { CompactWeekView } from './CompactWeekView';
 
@@ -27,9 +26,7 @@ const StandaloneCompactWeekView = React.forwardRef(function StandaloneCompactWee
   return (
     <ResponsiveTypographyContainer>
       <EventCalendarProvider {...parameters}>
-        <EventDialogProvider>
-          <CompactWeekView ref={forwardedRef} {...forwardedProps} />
-        </EventDialogProvider>
+        <CompactWeekView ref={forwardedRef} {...forwardedProps} />
       </EventCalendarProvider>
     </ResponsiveTypographyContainer>
   );

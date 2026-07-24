@@ -32,6 +32,16 @@ export function useDraggableDialog(
       return undefined;
     }
 
+    // Skip draggable wiring on a coarse pointer: `draggable="true"` blocks typing into the dialog's
+    // form fields on touch, and native drag-and-drop never starts from touch anyway.
+    if (
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(pointer: coarse)').matches
+    ) {
+      return undefined;
+    }
+
     return draggable({
       element,
       dragHandle: handleRef.current || undefined,

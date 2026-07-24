@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StandaloneCompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
+import { StandaloneCompactThreeDayViewPremium } from '@mui/x-scheduler-premium/compact-three-day-view-premium';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -12,7 +12,7 @@ export default function CompactThreeDayView() {
 
   return (
     <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>
-      <StandaloneCompactThreeDayView
+      <StandaloneCompactThreeDayViewPremium
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}

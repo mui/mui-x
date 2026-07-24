@@ -12,10 +12,10 @@ import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-intern
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { EventSkeleton } from '../event-skeleton';
-import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
+import { EventEditingTrigger, useEventEditingContext } from '../event-editing';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
-import { useDayTimeGridInternalRenderers } from './DayTimeGridInternalRenderersContext';
+import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -151,9 +151,8 @@ function ColumnInteractiveLayer({
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventDialogContext();
+  const { startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
-  const { timeGridEvent: TimeGridEvent } = useDayTimeGridInternalRenderers();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
@@ -167,13 +166,20 @@ function ColumnInteractiveLayer({
   );
   const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
+  // The placeholder churns identity on unrelated updates; gate on the store to detect editing started.
+  const isEditingPlaceholder = useStore(
+    store,
+    schedulerOtherSelectors.isEditedOccurrence,
+    placeholder?.key ?? '',
+  );
 
   React.useEffect(() => {
-    if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
+    // Start editing once when creation begins; skip redundant re-fires that churn every subscriber.
+    if (!isCreatingAnEvent || !placeholder || !columnRef.current || isEditingPlaceholder) {
       return;
     }
     startEditing(columnRef, placeholder);
-  }, [isCreatingAnEvent, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing, isEditingPlaceholder]);
 
   return (
     <DayTimeGridColumnInteractiveLayer
@@ -183,9 +189,9 @@ function ColumnInteractiveLayer({
       {isLoading && <EventSkeleton data-variant="time-column" />}
       {!isLoading &&
         occurrences.map((occurrence) => (
-          <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+          <EventEditingTrigger key={occurrence.key} occurrence={occurrence}>
             <TimeGridEvent occurrence={occurrence} variant="regular" />
-          </EventDialogTrigger>
+          </EventEditingTrigger>
         ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
