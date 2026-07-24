@@ -1,6 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getDisplayedHourRange } from '@mui/x-scheduler-internals/internals';
+import type { EventTimelinePremiumPresetConfig } from '../models/preset';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../internals/utils/preset-utils';
 
@@ -36,9 +37,10 @@ export const eventTimelinePremiumPresetSelectors = {
 
       // Only hour-resolution presets can trim their visible hours. The range itself stays
       // midnight-based: the hour window is applied through `dayStartMinute` / `dayEndMinute`.
+      const presetHourConfig = presetConfig[preset as keyof EventTimelinePremiumPresetConfig];
       const hourRange =
         timeResolution === 'hour'
-          ? getDisplayedHourRange(presetConfig[preset]?.startTime, presetConfig[preset]?.endTime)
+          ? getDisplayedHourRange(presetHourConfig?.startTime, presetHourConfig?.endTime)
           : { startTime: 0, endTime: 24 };
 
       return {
