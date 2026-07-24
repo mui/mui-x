@@ -3,17 +3,16 @@ import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesTypeRequiredPlugins } from '../../corePlugins/useChartSeriesConfig';
 import type { UseChartKeyboardNavigationSignature } from '../useChartKeyboardNavigation';
-import type { ChartsActivationEvent } from '../../../../models/events';
 
 export interface UseChartItemClickParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
   /**
    * The callback fired when an item is clicked.
    *
-   * @param {ChartsActivationEvent<HTMLDivElement>} event The click event.
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
    * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
    */
   onItemClick?: (
-    event: ChartsActivationEvent<HTMLDivElement>,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     item: SeriesItemIdentifierWithType<SeriesType>,
   ) => void;
 }

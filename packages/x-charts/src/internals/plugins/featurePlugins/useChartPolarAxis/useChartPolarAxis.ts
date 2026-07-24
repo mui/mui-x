@@ -306,7 +306,8 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     }
 
     event.preventDefault();
-    onAxisClick(event, payload);
+    // `onAxisClick` still describes a pointer event; widening it is deferred to v10.
+    onAxisClick(event as unknown as MouseEvent, payload);
   });
 
   React.useEffect(() => {

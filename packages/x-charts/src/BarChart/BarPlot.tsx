@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import type { BarElementSlotProps, BarElementSlots } from './BarElement';
-import type { BarItemIdentifier, ChartsActivationEvent } from '../models';
+import type { BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import type { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
@@ -33,10 +33,10 @@ export interface BarPlotProps {
   skipAnimation?: boolean;
   /**
    * Callback fired when a bar item is clicked.
-   * @param {ChartsActivationEvent} event The event source of the callback.
+   * @param {MouseEvent} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
-  onItemClick?(event: ChartsActivationEvent, barItemIdentifier: BarItemIdentifier): void;
+  onItemClick?(event: MouseEvent, barItemIdentifier: BarItemIdentifier): void;
   /**
    * Defines the border radius of the bar element.
    */
@@ -144,7 +144,7 @@ BarPlot.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {ChartsActivationEvent | ChartsActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {MouseEvent | React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    *        It is a native MouseEvent for `svg-batch` renderer and a React MouseEvent for `svg-single` renderer.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */

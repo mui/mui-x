@@ -77,7 +77,6 @@
   { "name": "ChartBaseToggleButtonGroupProps", "kind": "TypeAlias" },
   { "name": "ChartBaseToggleButtonProps", "kind": "TypeAlias" },
   { "name": "ChartDrawingArea", "kind": "TypeAlias" },
-  { "name": "ChartsActivationEvent", "kind": "TypeAlias" },
   { "name": "ChartsAxis", "kind": "Function" },
   { "name": "ChartsAxisClasses", "kind": "Interface" },
   { "name": "ChartsAxisClassKey", "kind": "TypeAlias" },

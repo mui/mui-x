@@ -377,7 +377,7 @@ BarChart.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
+   * @param {MouseEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
@@ -402,7 +402,7 @@ BarChart.propTypes /* remove-proptypes */ = {
   onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {ChartsActivationEvent | ChartsActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {MouseEvent | React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    *        It is a native MouseEvent for `svg-batch` renderer and a React MouseEvent for `svg-single` renderer.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */

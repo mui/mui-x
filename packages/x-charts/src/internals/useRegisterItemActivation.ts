@@ -17,12 +17,15 @@ import type { FocusedItemIdentifier } from '../models/seriesType';
  * Scope the registration as tightly as the caller knows: when several plots handle the same item,
  * the most specific scope wins, `priority` breaks ties, and the handler runs once.
  *
+ * The handler receives the `KeyboardEvent`, typed as `any` because the click callbacks it forwards
+ * to still describe a pointer event. Widening them is deferred to v10 to avoid breaking user types.
+ *
  * @param scope The items covered by the handler. Omit `seriesId` to cover a whole series type.
  * @param handler The handler to call on activation, or `undefined` to register nothing.
  */
 export function useRegisterItemActivation<SeriesType extends ChartSeriesType = ChartSeriesType>(
   scope: { type?: SeriesType; seriesId?: SeriesId; priority?: number },
-  handler: ((event: KeyboardEvent, item: FocusedItemIdentifier<SeriesType>) => void) | undefined,
+  handler: ((event: any, item: FocusedItemIdentifier<SeriesType>) => void) | undefined,
 ) {
   const { instance } = useChartsContext<[], [UseChartKeyboardNavigationSignature]>();
   const { type, seriesId, priority } = scope;

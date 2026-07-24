@@ -78,7 +78,7 @@
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsActivationEvent, data: null | ChartsAxisData) => void",
+        "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
       }
     },
@@ -106,7 +106,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsActivationEvent | ChartsActivationEvent<SVGElement>, barItemIdentifier: BarItemIdentifier) => void",
+        "type": "function(event: MouseEvent | React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },

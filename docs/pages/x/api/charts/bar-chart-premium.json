@@ -84,7 +84,7 @@
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsActivationEvent, data: null | ChartsAxisData) => void",
+        "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
       }
     },

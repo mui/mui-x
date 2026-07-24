@@ -1,7 +1,6 @@
 import type * as React from 'react';
 import type { RadarClasses } from '../radarClasses';
 import type { RadarItemIdentifier } from '../../models/seriesType/radar';
-import type { ChartsActivationEvent } from '../../models/events';
 
 interface CommonRadarSeriesPlotProps {
   /**
@@ -40,11 +39,11 @@ export interface RadarSeriesMarksProps
   extends CommonRadarSeriesPlotProps, React.SVGAttributes<SVGCircleElement> {
   /**
    * Callback fired when a mark is clicked.
-   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick?: (
-    event: ChartsActivationEvent<SVGElement>,
+    event: React.MouseEvent<SVGElement, MouseEvent>,
     radarItemIdentifier: RadarClickIdentifier,
   ) => void;
 }
@@ -53,11 +52,11 @@ export interface RadarSeriesAreaProps
   extends CommonRadarSeriesPlotProps, React.SVGAttributes<SVGPathElement> {
   /**
    * Callback fired when an area is clicked.
-   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick?: (
-    event: ChartsActivationEvent<SVGElement>,
+    event: React.MouseEvent<SVGElement, MouseEvent>,
     radarItemIdentifier: RadarClickIdentifier,
   ) => void;
 }

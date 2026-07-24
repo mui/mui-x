@@ -4,7 +4,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsActivationEvent<SVGElement>, barItemIdentifier: RangeBarItemIdentifier) => void",
+        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: RangeBarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },

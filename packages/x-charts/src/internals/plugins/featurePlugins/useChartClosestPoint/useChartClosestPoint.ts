@@ -269,7 +269,8 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         return;
       }
 
-      onItemClick(event, {
+      // `onItemClick` still describes a pointer event; widening it is deferred to v10.
+      onItemClick(event as unknown as MouseEvent, {
         type: 'scatter',
         seriesId: item.seriesId,
         dataIndex: item.dataIndex,

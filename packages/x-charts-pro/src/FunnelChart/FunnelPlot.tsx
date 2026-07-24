@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { cartesianSeriesTypes, useRegisterItemActivation, useStore } from '@mui/x-charts/internals';
-import type { ChartsActivationEvent } from '@mui/x-charts/models';
 import type { FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
@@ -31,11 +30,11 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   className?: string;
   /**
    * Callback fired when a funnel item is clicked.
-   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
    */
   onItemClick?: (
-    event: ChartsActivationEvent<SVGElement>,
+    event: React.MouseEvent<SVGElement, MouseEvent>,
     funnelItemIdentifier: FunnelItemIdentifier,
   ) => void;
 }
@@ -226,7 +225,7 @@ FunnelPlot.propTypes /* remove-proptypes */ = {
   className: PropTypes.string,
   /**
    * Callback fired when a funnel item is clicked.
-   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
    */
   onItemClick: PropTypes.func,

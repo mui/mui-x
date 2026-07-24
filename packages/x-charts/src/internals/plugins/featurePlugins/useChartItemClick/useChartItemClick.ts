@@ -23,7 +23,11 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = (
       // @ts-ignore The type inference for store.state does not support generic yet
       const itemWithData = seriesTypeConfig?.getItemWithData?.(store.state, item);
 
-      onItemClick(event, (itemWithData ?? item) as SeriesItemIdentifierWithType<ChartSeriesType>);
+      // `onItemClick` still describes a pointer event; widening it is deferred to v10.
+      onItemClick(
+        event as unknown as React.MouseEvent<HTMLDivElement, MouseEvent>,
+        (itemWithData ?? item) as SeriesItemIdentifierWithType<ChartSeriesType>,
+      );
     });
   }, [instance, onItemClick, store]);
 

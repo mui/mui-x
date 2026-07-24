@@ -293,7 +293,7 @@ RadarChartPro.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
+   * @param {MouseEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
