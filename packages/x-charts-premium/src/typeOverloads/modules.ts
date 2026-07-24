@@ -26,6 +26,10 @@ import type {
   DefaultizedMapShapeSeriesType,
   MapShapeItemIdentifier,
   MapShapeValueType,
+  MapPointSeriesType,
+  DefaultizedMapPointSeriesType,
+  MapPointItemIdentifier,
+  MapPointValueType,
 } from '../models';
 import type {
   DefaultizedRangeBarSeriesType,
@@ -125,6 +129,26 @@ declare module '@mui/x-charts/internals' {
         series: DefaultizedMapShapeSeriesType;
       };
       highlightIdentifier: MapShapeItemIdentifier;
+    };
+    mapPoint: {
+      seriesInput: DefaultizedProps<MapPointSeriesType, 'id'> &
+        MakeRequired<SeriesColor<MapPointValueType>, 'color'>;
+      series: DefaultizedMapPointSeriesType;
+      seriesLayout: {};
+      seriesProp: MapPointSeriesType;
+      itemIdentifier: MapPointItemIdentifier;
+      itemIdentifierWithData: MapPointItemIdentifier;
+      valueType: MapPointValueType;
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: MapPointItemIdentifier;
+        series: DefaultizedMapPointSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'mapPoint';
+        seriesId: SeriesId;
+        dataIndex?: number;
+      };
     };
     radialBar: {
       seriesInput: DefaultizedProps<RadialBarSeriesType, 'id'> &

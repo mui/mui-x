@@ -8,6 +8,9 @@ export * from './MapImagePlot';
 export * from './MapShapePlot';
 export * from './MapShape';
 export * from './FocusedMapShape';
+export * from './MapPointPlot';
+export * from './MapPoint';
+export * from './FocusedMapPoint';
 export * from './Graticule';
 
 // Types useful to the public API of the Map charts

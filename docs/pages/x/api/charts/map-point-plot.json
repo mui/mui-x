@@ -1,0 +1,28 @@
+{
+  "props": {
+    "fill": { "type": { "name": "string" } },
+    "shape": {
+      "type": {
+        "name": "enum",
+        "description": "'circle'<br>&#124;&nbsp;'cross'<br>&#124;&nbsp;'diamond'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'star'<br>&#124;&nbsp;'triangle'<br>&#124;&nbsp;'wye'"
+      },
+      "default": "'circle'"
+    },
+    "showLabels": { "type": { "name": "bool" }, "default": "false" },
+    "size": { "type": { "name": "number" }, "default": "64" },
+    "stroke": { "type": { "name": "string" }, "default": "'none'" },
+    "strokeWidth": { "type": { "name": "number" }, "default": "1" }
+  },
+  "name": "MapPointPlot",
+  "imports": [
+    "import { MapPointPlot } from '@mui/x-charts-premium/Map';",
+    "import { MapPointPlot } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiMapPointPlot",
+  "filename": "/packages/x-charts-premium/src/Map/MapPointPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/map/\">Charts - Map <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>"
+}

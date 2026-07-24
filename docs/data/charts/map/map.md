@@ -1,7 +1,7 @@
 ---
 title: React Map chart
 productId: x-charts
-components: ChartsGeoDataProviderPremium, GeoDataPlot, MapImagePlot, MapShapePlot, MapShape, Graticule, FocusedMapShape
+components: ChartsGeoDataProviderPremium, GeoDataPlot, MapImagePlot, MapShapePlot, MapShape, MapPointPlot, MapPoint, FocusedMapPoint, Graticule, FocusedMapShape
 ---
 
 # Charts - Map [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
@@ -116,6 +116,14 @@ Here you can try different countries and play with projection and parallels to s
 Stacking it on top of a `GeoDataPlot` is convenient for highlighting a subset of features over the full geography.
 
 {{"demo": "MapShapePlotDemo.js"}}
+
+## Plotting points with `MapPointPlot`
+
+`MapPointPlot` renders a marker per item of every series with type `'mapPoint'`, positioned at the item's `coordinates` (`[longitude, latitude]`).
+
+Points hidden by the projection, such as those on the far side of an `orthographic` globe, are not rendered. Set `showLabels` to render each point's label next to its marker.
+
+{{"demo": "MapPointPlotDemo.js"}}
 
 ## Matching features with `geoFeatureKey`
 
