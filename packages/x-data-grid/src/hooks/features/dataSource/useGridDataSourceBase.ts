@@ -434,6 +434,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   React.useEffect(() => stopPolling, [stopPolling]);
 
+  const fetchedInitialDataSourceRows = React.useRef(false);
+  const lastApiRef = React.useRef(apiRef);
+  const lastStrategy = React.useRef(currentStrategy);
+  const lastDataSource = React.useRef(props.dataSource);
+
   React.useEffect(() => {
     // Return early if the proper strategy isn't set yet
     // Context: https://github.com/mui/mui-x/issues/19650
@@ -445,6 +450,22 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     ) {
       return undefined;
     }
+
+    // Do not re-fetch the data if none of the props have changed
+    if (
+      fetchedInitialDataSourceRows.current &&
+      lastApiRef.current === apiRef &&
+      lastStrategy.current === currentStrategy &&
+      lastDataSource.current === props.dataSource
+    ) {
+      return undefined;
+    }
+
+    fetchedInitialDataSourceRows.current = true;
+    lastApiRef.current = apiRef;
+    lastStrategy.current = currentStrategy;
+    lastDataSource.current = props.dataSource;
+
     if (props.dataSource) {
       stopPolling();
       // `dataSourceKeepPreviousData` only applies to the flat `Default` strategy (mirroring
