@@ -139,7 +139,7 @@
     "string-replace-loader": "3.3.0",
     "stylelint": "17.14.0",
     "tsx": "catalog:",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "unist-util-visit": "5.1.0",
     "util": "0.12.5",
     "vite": "catalog:",
