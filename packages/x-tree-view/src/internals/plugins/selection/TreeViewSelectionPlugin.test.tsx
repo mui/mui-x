@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { fireEvent, act } from '@mui/internal-test-utils';
+import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { TreeViewAnyStore } from '../../models';
@@ -62,7 +62,7 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.isItemSelected('1')).to.equal(true);
       });
 
-      it('should call the onSelectedItemsChange callback when the model is updated (single selection and add selected item)', () => {
+      it('should call the onSelectedItemsChange callback when the model is updated (single selection and add selected item)', async () => {
         const onSelectedItemsChange = spy();
 
         const view = render({
@@ -70,7 +70,7 @@ describeTreeView<TreeViewAnyStore>(
           onSelectedItemsChange,
         });
 
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
 
         expect(onSelectedItemsChange.callCount).to.equal(1);
         expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal('1');
@@ -79,7 +79,7 @@ describeTreeView<TreeViewAnyStore>(
       // TODO: Re-enable this test if we have a way to un-select an item in single selection.
       it.todo(
         'should call onSelectedItemsChange callback when the model is updated (single selection and remove selected item',
-        () => {
+        async () => {
           const onSelectedItemsChange = spy();
 
           const view = render({
@@ -88,14 +88,14 @@ describeTreeView<TreeViewAnyStore>(
             defaultSelectedItems: ['1'],
           });
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
 
           expect(onSelectedItemsChange.callCount).to.equal(1);
           expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
         },
       );
 
-      it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to empty list)', () => {
+      it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to empty list)', async () => {
         const onSelectedItemsChange = spy();
 
         const view = render({
@@ -104,7 +104,7 @@ describeTreeView<TreeViewAnyStore>(
           onSelectedItemsChange,
         });
 
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
 
         expect(onSelectedItemsChange.callCount).to.equal(1);
         expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
@@ -155,7 +155,7 @@ describeTreeView<TreeViewAnyStore>(
         expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
       });
 
-      it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to non-empty list)', () => {
+      it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to non-empty list)', async () => {
         const onSelectedItemsChange = spy();
 
         const view = render({
@@ -165,13 +165,15 @@ describeTreeView<TreeViewAnyStore>(
           defaultSelectedItems: ['1'],
         });
 
-        fireEvent.click(view.getItemContent('2'), { ctrlKey: true });
+        await view.user.keyboard('{Control>}');
+        await view.user.click(view.getItemContent('2'));
+        await view.user.keyboard('{/Control}');
 
         expect(onSelectedItemsChange.callCount).to.equal(1);
         expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
       });
 
-      it('should call the onSelectedItemsChange callback when the model is updated (multi selection and remove selected item)', () => {
+      it('should call the onSelectedItemsChange callback when the model is updated (multi selection and remove selected item)', async () => {
         const onSelectedItemsChange = spy();
 
         const view = render({
@@ -181,7 +183,9 @@ describeTreeView<TreeViewAnyStore>(
           defaultSelectedItems: ['1'],
         });
 
-        fireEvent.click(view.getItemContent('1'), { ctrlKey: true });
+        await view.user.keyboard('{Control>}');
+        await view.user.click(view.getItemContent('1'));
+        await view.user.keyboard('{/Control}');
 
         expect(onSelectedItemsChange.callCount).to.equal(1);
         expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
@@ -217,18 +221,18 @@ describeTreeView<TreeViewAnyStore>(
 
     describe('item click interaction', () => {
       describe('single selection', () => {
-        it('should select un-selected item when clicking on an item content', () => {
+        it('should select un-selected item when clicking on an item content', async () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(true);
         });
 
-        it('should not un-select selected item when clicking on an item content', () => {
+        it('should not un-select selected item when clicking on an item content', async () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: '1',
@@ -236,11 +240,11 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(true);
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(true);
         });
 
-        it('should not select an item when click and disableSelection', () => {
+        it('should not select an item when click and disableSelection', async () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             disableSelection: true,
@@ -248,23 +252,23 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(false);
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should not select an item when clicking on a disabled item content', () => {
+        it('should not select an item when clicking on a disabled item content', async () => {
           const view = render({
             items: [{ id: '1', disabled: true }, { id: '2' }],
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
       });
 
       describe('multi selection', () => {
-        it('should select un-selected item and remove other selected items when clicking on an item content', () => {
+        it('should select un-selected item and remove other selected items when clicking on an item content', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
@@ -273,11 +277,11 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
         });
 
-        it('should not un-select selected item when clicking on an item content', () => {
+        it('should not un-select selected item when clicking on an item content', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
@@ -286,11 +290,11 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(true);
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(true);
         });
 
-        it('should un-select selected item when clicking on its content while holding Ctrl', () => {
+        it('should un-select selected item when clicking on its content while holding Ctrl', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
@@ -298,11 +302,13 @@ describeTreeView<TreeViewAnyStore>(
           });
 
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2']);
-          fireEvent.click(view.getItemContent('1'), { ctrlKey: true });
+          await view.user.keyboard('{Control>}');
+          await view.user.click(view.getItemContent('1'));
+          await view.user.keyboard('{/Control}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
         });
 
-        it('should un-select selected item when clicking on its content while holding Meta', () => {
+        it('should un-select selected item when clicking on its content while holding Meta', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
@@ -311,11 +317,13 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2']);
 
-          fireEvent.click(view.getItemContent('1'), { metaKey: true });
+          await view.user.keyboard('{Meta>}');
+          await view.user.click(view.getItemContent('1'));
+          await view.user.keyboard('{/Meta}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
         });
 
-        it('should not select an item when click and disableSelection', () => {
+        it('should not select an item when click and disableSelection', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
@@ -324,22 +332,22 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(false);
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should not select an item when clicking on a disabled item content', () => {
+        it('should not select an item when clicking on a disabled item content', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1', disabled: true }, { id: '2' }],
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should select un-selected item when clicking on its content while holding Ctrl', () => {
+        it('should select un-selected item when clicking on its content while holding Ctrl', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }, { id: '3' }],
@@ -348,66 +356,80 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
 
-          fireEvent.click(view.getItemContent('3'), { ctrlKey: true });
+          await view.user.keyboard('{Control>}');
+          await view.user.click(view.getItemContent('3'));
+          await view.user.keyboard('{/Control}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
         });
 
-        it('should do nothing when clicking on an item content on a fresh tree whil holding Shift', () => {
+        it('should do nothing when clicking on an item content on a fresh tree whil holding Shift', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
           });
 
-          fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemContent('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
         });
 
-        it('should expand the selection range when clicking on an item content below the last selected item while holding Shift', () => {
+        it('should expand the selection range when clicking on an item content below the last selected item while holding Shift', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
           });
 
-          fireEvent.click(view.getItemContent('2'));
+          await view.user.click(view.getItemContent('2'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
 
-          fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemContent('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['2', '2.1', '3']);
         });
 
-        it('should expand the selection range when clicking on an item content above the last selected item while holding Shift', () => {
+        it('should expand the selection range when clicking on an item content above the last selected item while holding Shift', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
           });
 
-          fireEvent.click(view.getItemContent('3'));
+          await view.user.click(view.getItemContent('3'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['3']);
 
-          fireEvent.click(view.getItemContent('2'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemContent('2'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['2', '2.1', '3']);
         });
 
-        it('should expand the selection range when clicking on an item content while holding Shift after un-selecting another item', () => {
+        it('should expand the selection range when clicking on an item content while holding Shift after un-selecting another item', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
           });
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
 
-          fireEvent.click(view.getItemContent('2'), { ctrlKey: true });
+          await view.user.keyboard('{Control>}');
+          await view.user.click(view.getItemContent('2'));
+          await view.user.keyboard('{/Control}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2']);
 
-          fireEvent.click(view.getItemContent('2'), { ctrlKey: true });
+          await view.user.keyboard('{Control>}');
+          await view.user.click(view.getItemContent('2'));
+          await view.user.keyboard('{/Control}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
 
-          fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemContent('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2', '2.1', '3']);
         });
 
-        it('should not expand the selection range when clicking on a disabled item content then clicking on an item content while holding Shift', () => {
+        it('should not expand the selection range when clicking on a disabled item content then clicking on an item content while holding Shift', async () => {
           const view = render({
             multiSelect: true,
             items: [
@@ -419,14 +441,16 @@ describeTreeView<TreeViewAnyStore>(
             ],
           });
 
-          fireEvent.click(view.getItemContent('2'));
+          await view.user.click(view.getItemContent('2'));
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
 
-          fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemContent('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
         });
 
-        it('should not expand the selection range when clicking on an item content then clicking a disabled item content while holding Shift', () => {
+        it('should not expand the selection range when clicking on an item content then clicking a disabled item content while holding Shift', async () => {
           const view = render({
             multiSelect: true,
             items: [
@@ -438,27 +462,31 @@ describeTreeView<TreeViewAnyStore>(
             ],
           });
 
-          fireEvent.click(view.getItemContent('2'));
+          await view.user.click(view.getItemContent('2'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
 
-          fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemContent('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
         });
 
-        it('should not select disabled items that are part of the selected range', () => {
+        it('should not select disabled items that are part of the selected range', async () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
           });
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
 
-          fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemContent('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
         });
 
-        it('should not crash when selecting multiple items in a deeply nested tree', () => {
+        it('should not crash when selecting multiple items in a deeply nested tree', async () => {
           const view = render({
             multiSelect: true,
             items: [
@@ -468,8 +496,10 @@ describeTreeView<TreeViewAnyStore>(
             defaultExpandedItems: ['1', '1.1'],
           });
 
-          fireEvent.click(view.getItemContent('1.1.1'));
-          fireEvent.click(view.getItemContent('2'), { shiftKey: true });
+          await view.user.click(view.getItemContent('1.1.1'));
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemContent('2'));
+          await view.user.keyboard('{/Shift}');
 
           expect(view.getSelectedTreeItems()).to.deep.equal(['1.1.1', '2']);
         });
@@ -506,7 +536,7 @@ describeTreeView<TreeViewAnyStore>(
       });
 
       describe('single selection', () => {
-        it('should not change selection when clicking on an item content', () => {
+        it('should not change selection when clicking on an item content', async () => {
           const view = render({
             checkboxSelection: true,
             items: [{ id: '1' }],
@@ -514,11 +544,11 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(false);
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should select un-selected item when clicking on an item checkbox', () => {
+        it('should select un-selected item when clicking on an item checkbox', async () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             checkboxSelection: true,
@@ -526,11 +556,11 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(false);
 
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          await view.user.click(view.getItemCheckboxInput('1'));
           expect(view.isItemSelected('1')).to.equal(true);
         });
 
-        it('should un-select selected item when clicking on an item checkbox', () => {
+        it('should un-select selected item when clicking on an item checkbox', async () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: '1',
@@ -539,11 +569,11 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(true);
 
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          await view.user.click(view.getItemCheckboxInput('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should hide checkbox and not select when disableSelection is true on TreeView', () => {
+        it('should hide checkbox and not select when disableSelection is true on TreeView', async () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             disableSelection: true,
@@ -554,24 +584,25 @@ describeTreeView<TreeViewAnyStore>(
           // Checkbox should be hidden when selection is disabled
           expect(view.getItemContent('1').querySelector('input[type="checkbox"]')).to.equal(null);
           // Clicking content should not select
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should not select an item when clicking on a disabled item checkbox', () => {
+        it('should not select an item when clicking on a disabled item checkbox', async () => {
           const view = render({
             items: [{ id: '1', disabled: true }, { id: '2' }],
             checkboxSelection: true,
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
+          // fireEvent.click is used here because the disabled checkbox has pointer-events: none
           fireEvent.click(view.getItemCheckboxInput('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
       });
 
       describe('multi selection', () => {
-        it('should not change selection when clicking on an item content', () => {
+        it('should not change selection when clicking on an item content', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -580,11 +611,11 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(false);
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should select un-selected item and keep other items selected when clicking on an item checkbox', () => {
+        it('should select un-selected item and keep other items selected when clicking on an item checkbox', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -594,11 +625,11 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
 
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          await view.user.click(view.getItemCheckboxInput('1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2']);
         });
 
-        it('should un-select selected item when clicking on an item checkbox', () => {
+        it('should un-select selected item when clicking on an item checkbox', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -608,11 +639,11 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(true);
 
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          await view.user.click(view.getItemCheckboxInput('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should hide checkbox and not select when disableSelection is true on TreeView', () => {
+        it('should hide checkbox and not select when disableSelection is true on TreeView', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -624,11 +655,11 @@ describeTreeView<TreeViewAnyStore>(
           // Checkbox should be hidden when selection is disabled
           expect(view.getItemContent('1').querySelector('input[type="checkbox"]')).to.equal(null);
           // Clicking content should not select
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should not select an item when clicking on a disabled item content', () => {
+        it('should not select an item when clicking on a disabled item content', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -636,59 +667,66 @@ describeTreeView<TreeViewAnyStore>(
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
+          // fireEvent.click is used here because the disabled checkbox has pointer-events: none
           fireEvent.click(view.getItemCheckboxInput('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should expand the selection range when clicking on an item checkbox below the last selected item while holding Shift', () => {
+        it('should expand the selection range when clicking on an item checkbox below the last selected item while holding Shift', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
             items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
           });
 
-          fireEvent.click(view.getItemCheckboxInput('2'));
+          await view.user.click(view.getItemCheckboxInput('2'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
 
-          fireEvent.click(view.getItemCheckboxInput('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemCheckboxInput('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['2', '2.1', '3']);
         });
 
-        it('should expand the selection range when clicking on an item checkbox above the last selected item while holding Shift', () => {
+        it('should expand the selection range when clicking on an item checkbox above the last selected item while holding Shift', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
             items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
           });
 
-          fireEvent.click(view.getItemCheckboxInput('3'));
+          await view.user.click(view.getItemCheckboxInput('3'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['3']);
 
-          fireEvent.click(view.getItemCheckboxInput('2'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemCheckboxInput('2'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['2', '2.1', '3']);
         });
 
-        it('should expand the selection range when clicking on an item checkbox while holding Shift after un-selecting another item', () => {
+        it('should expand the selection range when clicking on an item checkbox while holding Shift after un-selecting another item', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
             items: [{ id: '1' }, { id: '2' }, { id: '2.1' }, { id: '3' }, { id: '4' }],
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          await view.user.click(view.getItemCheckboxInput('1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
 
-          fireEvent.click(view.getItemCheckboxInput('2'));
+          await view.user.click(view.getItemCheckboxInput('2'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2']);
 
-          fireEvent.click(view.getItemCheckboxInput('2'));
+          await view.user.click(view.getItemCheckboxInput('2'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
 
-          fireEvent.click(view.getItemCheckboxInput('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemCheckboxInput('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '2', '2.1', '3']);
         });
 
-        it('should not expand the selection range when clicking on a disabled item checkbox then clicking on an item checkbox while holding Shift', () => {
+        it('should not expand the selection range when clicking on a disabled item checkbox then clicking on an item checkbox while holding Shift', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -701,14 +739,17 @@ describeTreeView<TreeViewAnyStore>(
             ],
           });
 
+          // fireEvent.click is used here because the disabled checkbox has pointer-events: none
           fireEvent.click(view.getItemCheckboxInput('2'));
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
 
-          fireEvent.click(view.getItemCheckboxInput('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemCheckboxInput('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
         });
 
-        it('should not expand the selection range when clicking on an item checkbox then clicking a disabled item checkbox while holding Shift', () => {
+        it('should not expand the selection range when clicking on an item checkbox then clicking a disabled item checkbox while holding Shift', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -721,28 +762,31 @@ describeTreeView<TreeViewAnyStore>(
             ],
           });
 
-          fireEvent.click(view.getItemCheckboxInput('2'));
+          await view.user.click(view.getItemCheckboxInput('2'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
 
+          // fireEvent.click is used here because the disabled checkbox has pointer-events: none
           fireEvent.click(view.getItemCheckboxInput('3'), { shiftKey: true });
           expect(view.getSelectedTreeItems()).to.deep.equal(['2']);
         });
 
-        it('should not select disabled items that are part of the selected range', () => {
+        it('should not select disabled items that are part of the selected range', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
             items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          await view.user.click(view.getItemCheckboxInput('1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
 
-          fireEvent.click(view.getItemCheckboxInput('3'), { shiftKey: true });
+          await view.user.keyboard('{Shift>}');
+          await view.user.click(view.getItemCheckboxInput('3'));
+          await view.user.keyboard('{/Shift}');
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
         });
 
-        it('should not select the parent when selecting all the children', () => {
+        it('should not select the parent when selecting all the children', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -751,7 +795,7 @@ describeTreeView<TreeViewAnyStore>(
             defaultExpandedItems: ['1'],
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1.1'));
+          await view.user.click(view.getItemCheckboxInput('1.1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1.1', '1.2']);
         });
 
@@ -793,7 +837,7 @@ describeTreeView<TreeViewAnyStore>(
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
         });
 
-        it('should keep the parent checkbox indeterminate after collapsing it and expanding another node', () => {
+        it('should keep the parent checkbox indeterminate after collapsing it and expanding another node', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -807,13 +851,13 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
 
-          fireEvent.click(view.getItemContent('1'));
-          fireEvent.click(view.getItemContent('2'));
+          await view.user.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('2'));
 
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
         });
 
-        it('should keep parent indeterminate (3 levels) after collapsing the parent and expanding a sibling node', () => {
+        it('should keep parent indeterminate (3 levels) after collapsing the parent and expanding a sibling node', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -834,8 +878,8 @@ describeTreeView<TreeViewAnyStore>(
           expect(view.getItemCheckboxInput('1.1').dataset.indeterminate).to.equal('true');
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
 
-          fireEvent.click(view.getItemContent('1'));
-          fireEvent.click(view.getItemContent('2'));
+          await view.user.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('2'));
 
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
         });
@@ -851,7 +895,7 @@ describeTreeView<TreeViewAnyStore>(
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('false');
         });
 
-        it('should update the intermediate state of the parent when selecting a child', () => {
+        it('should update the intermediate state of the parent when selecting a child', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -861,16 +905,16 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.getItemCheckboxInput('2').dataset.indeterminate).to.equal('false');
 
-          fireEvent.click(view.getItemCheckboxInput('2.1'));
+          await view.user.click(view.getItemCheckboxInput('2.1'));
           expect(view.getItemCheckboxInput('2').dataset.indeterminate).to.equal('true');
 
-          fireEvent.click(view.getItemCheckboxInput('2.1'));
+          await view.user.click(view.getItemCheckboxInput('2.1'));
           expect(view.getItemCheckboxInput('2').dataset.indeterminate).to.equal('false');
         });
       });
 
       describe('multi selection with selectionPropagation.descendants = true', () => {
-        it('should select all the children when selecting a parent', () => {
+        it('should select all the children when selecting a parent', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -879,11 +923,11 @@ describeTreeView<TreeViewAnyStore>(
             selectionPropagation: { descendants: true },
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          await view.user.click(view.getItemCheckboxInput('1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1', '1.2']);
         });
 
-        it('should deselect all the children when deselecting a parent', () => {
+        it('should deselect all the children when deselecting a parent', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -893,11 +937,11 @@ describeTreeView<TreeViewAnyStore>(
             selectionPropagation: { descendants: true },
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          await view.user.click(view.getItemCheckboxInput('1'));
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
         });
 
-        it('should not select the parent when selecting all the children', () => {
+        it('should not select the parent when selecting all the children', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -907,11 +951,24 @@ describeTreeView<TreeViewAnyStore>(
             selectionPropagation: { descendants: true },
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1.1'));
+          await view.user.click(view.getItemCheckboxInput('1.1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1.1', '1.2']);
         });
 
-        it('should not unselect the parent when unselecting a children', () => {
+        it('should not select disabled children when selecting a parent', async () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2', disabled: true }] }],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { descendants: true },
+          });
+
+          await view.user.click(view.getItemCheckboxInput('1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1']);
+        });
+
+        it('should not unselect the parent when unselecting a children', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -921,11 +978,11 @@ describeTreeView<TreeViewAnyStore>(
             selectionPropagation: { descendants: true },
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1.1'));
+          await view.user.click(view.getItemCheckboxInput('1.1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.2']);
         });
 
-        it('should select all the children when selecting a collapsed parent and then expanding', () => {
+        it('should select all the children when selecting a collapsed parent and then expanding', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -933,14 +990,14 @@ describeTreeView<TreeViewAnyStore>(
             selectionPropagation: { descendants: true },
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1'));
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemCheckboxInput('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1', '1.2']);
         });
       });
 
       describe('multi selection with selectionPropagation.parents = true', () => {
-        it('should select all the parents when selecting a child', () => {
+        it('should select all the parents when selecting a child', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -949,11 +1006,11 @@ describeTreeView<TreeViewAnyStore>(
             selectionPropagation: { parents: true },
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1.1.1'));
+          await view.user.click(view.getItemCheckboxInput('1.1.1'));
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1', '1.1.1']);
         });
 
-        it('should deselect all the parents when deselecting a child', () => {
+        it('should deselect all the parents when deselecting a child', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -963,8 +1020,53 @@ describeTreeView<TreeViewAnyStore>(
             selectionPropagation: { parents: true },
           });
 
-          fireEvent.click(view.getItemCheckboxInput('1.1.1'));
+          await view.user.click(view.getItemCheckboxInput('1.1.1'));
           expect(view.getSelectedTreeItems()).to.deep.equal([]);
+        });
+
+        it('should select the parent when all non-disabled children are selected', async () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2', disabled: true }] }],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { parents: true },
+          });
+
+          await view.user.click(view.getItemCheckboxInput('1.1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1']);
+        });
+
+        it('should not select the parent when only some non-disabled children are selected', async () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              {
+                id: '1',
+                children: [{ id: '1.1' }, { id: '1.2' }, { id: '1.3', disabled: true }],
+              },
+            ],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { parents: true },
+          });
+
+          await view.user.click(view.getItemCheckboxInput('1.1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1.1']);
+        });
+
+        it('should show the parent checkbox as checked when all non-disabled children are selected', async () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2', disabled: true }] }],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { parents: true },
+          });
+
+          await view.user.click(view.getItemCheckboxInput('1.1'));
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('false');
+          expect(view.getItemCheckboxInput('1').checked).to.equal(true);
         });
       });
     });
@@ -1058,7 +1160,7 @@ describeTreeView<TreeViewAnyStore>(
     });
 
     describe('onItemSelectionToggle prop', () => {
-      it('should call the onItemSelectionToggle callback when selecting an item', () => {
+      it('should call the onItemSelectionToggle callback when selecting an item', async () => {
         const onItemSelectionToggle = spy();
 
         const view = render({
@@ -1067,13 +1169,13 @@ describeTreeView<TreeViewAnyStore>(
           onItemSelectionToggle,
         });
 
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(onItemSelectionToggle.callCount).to.equal(1);
         expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
         expect(onItemSelectionToggle.lastCall.args[2]).to.equal(true);
       });
 
-      it('should call the onItemSelectionToggle callback when un-selecting an item', () => {
+      it('should call the onItemSelectionToggle callback when un-selecting an item', async () => {
         const onItemSelectionToggle = spy();
 
         const view = render({
@@ -1083,7 +1185,9 @@ describeTreeView<TreeViewAnyStore>(
           onItemSelectionToggle,
         });
 
-        fireEvent.click(view.getItemContent('1'), { ctrlKey: true });
+        await view.user.keyboard('{Control>}');
+        await view.user.click(view.getItemContent('1'));
+        await view.user.keyboard('{/Control}');
         expect(onItemSelectionToggle.callCount).to.equal(1);
         expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
         expect(onItemSelectionToggle.lastCall.args[2]).to.equal(false);
@@ -1222,17 +1326,17 @@ describeTreeView<TreeViewAnyStore>(
     });
 
     describe('disableSelection item property', () => {
-      it('should not select an item when clicking if disableSelection is true', () => {
+      it('should not select an item when clicking if disableSelection is true', async () => {
         const view = render({
           items: [{ id: '1', disableSelection: true }, { id: '2' }],
         });
 
         expect(view.isItemSelected('1')).to.equal(false);
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(view.isItemSelected('1')).to.equal(false);
 
         expect(view.isItemSelected('2')).to.equal(false);
-        fireEvent.click(view.getItemContent('2'));
+        await view.user.click(view.getItemContent('2'));
         expect(view.isItemSelected('2')).to.equal(true);
       });
 
@@ -1255,16 +1359,18 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.getItemRoot('2')).to.have.attribute('aria-checked', 'false');
       });
 
-      it('should not include items with disableSelection when selecting a range (multi selection)', () => {
+      it('should not include items with disableSelection when selecting a range (multi selection)', async () => {
         const view = render({
           items: [{ id: '1' }, { id: '2', disableSelection: true }, { id: '3' }],
           multiSelect: true,
         });
 
-        fireEvent.click(view.getItemContent('1'));
+        await view.user.click(view.getItemContent('1'));
         expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
 
-        fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+        await view.user.keyboard('{Shift>}');
+        await view.user.click(view.getItemContent('3'));
+        await view.user.keyboard('{/Shift}');
         expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
       });
     });
@@ -1274,18 +1380,18 @@ describeTreeView<TreeViewAnyStore>(
       'isItemSelectionDisabled prop',
       () => {
         describe('isItemSelectionDisabled as a function', () => {
-          it('should not select an item when clicking if isItemSelectionDisabled returns true', () => {
+          it('should not select an item when clicking if isItemSelectionDisabled returns true', async () => {
             const view = render({
               items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
               isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
             });
 
             expect(view.isItemSelected('1')).to.equal(false);
-            fireEvent.click(view.getItemContent('1'));
+            await view.user.click(view.getItemContent('1'));
             expect(view.isItemSelected('1')).to.equal(false);
 
             expect(view.isItemSelected('1.1')).to.equal(false);
-            fireEvent.click(view.getItemContent('1.1'));
+            await view.user.click(view.getItemContent('1.1'));
             expect(view.isItemSelected('1.1')).to.equal(true);
           });
 
@@ -1318,18 +1424,61 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         describe('with multi selection', () => {
-          it('should not include non-selectable items when selecting a range', () => {
+          it('should not include non-selectable items when selecting a range', async () => {
             const view = render({
               items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }],
               multiSelect: true,
               isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
             });
 
-            fireEvent.click(view.getItemContent('1'));
+            await view.user.click(view.getItemContent('1'));
             expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
 
-            fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+            await view.user.keyboard('{Shift>}');
+            await view.user.click(view.getItemContent('3'));
+            await view.user.keyboard('{/Shift}');
             expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
+          });
+        });
+
+        describe('with selectionPropagation.parents = true', () => {
+          it('should select the parent when all selectable children are selected (non-selectable sibling ignored)', async () => {
+            const view = render({
+              multiSelect: true,
+              checkboxSelection: true,
+              items: [
+                {
+                  id: '1',
+                  children: [{ id: '1.1' }, { id: '1.2' }],
+                },
+              ],
+              defaultExpandedItems: ['1'],
+              selectionPropagation: { parents: true },
+              isItemSelectionDisabled: (item: any) => item.id === '1.2',
+            });
+
+            await view.user.click(view.getItemCheckboxInput('1.1'));
+            expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1']);
+          });
+
+          it('should not select a non-selectable parent even when all its selectable children are selected', async () => {
+            const view = render({
+              multiSelect: true,
+              checkboxSelection: true,
+              items: [
+                {
+                  id: '1',
+                  children: [{ id: '1.1' }, { id: '1.2', children: [{ id: '1.2.1' }] }],
+                },
+              ],
+              defaultExpandedItems: ['1', '1.2'],
+              selectionPropagation: { parents: true },
+              isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
+            });
+
+            await view.user.click(view.getItemCheckboxInput('1.1'));
+            await view.user.click(view.getItemCheckboxInput('1.2.1'));
+            expect(view.getSelectedTreeItems()).to.deep.equal(['1.1', '1.2.1']);
           });
         });
       },
