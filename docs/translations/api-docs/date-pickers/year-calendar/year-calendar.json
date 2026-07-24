@@ -2,6 +2,9 @@
   "componentDescription": "",
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "compact": {
+      "description": "If <code>true</code>, the picker uses compact dimensions following the Material Design spec."
+    },
     "defaultValue": {
       "description": "The default selected value. Used when the component is not controlled."
     },

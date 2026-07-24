@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
@@ -40,8 +41,9 @@ const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | unde
 const PickersCalendarHeaderRoot = styled('div', {
   name: 'MuiPickersCalendarHeader',
   slot: 'Root',
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
 })<{
-  ownerState: PickerOwnerState;
+  ownerState: PickerOwnerState & { compact: boolean };
 }>({
   display: 'flex',
   alignItems: 'center',
@@ -52,6 +54,23 @@ const PickersCalendarHeaderRoot = styled('div', {
   // prevent jumping in safari
   maxHeight: 40,
   minHeight: 40,
+  variants: [
+    {
+      props: { compact: true },
+      style: {
+        marginTop: 6,
+        marginBottom: 2,
+        paddingLeft: 12,
+        paddingRight: 6,
+        maxHeight: 32,
+        minHeight: 32,
+      },
+    },
+    {
+      props: { compact: true, isPickerStaticVariant: true },
+      style: { paddingRight: 0 },
+    },
+  ],
 });
 
 const PickersCalendarHeaderLabelContainer = styled('div', {
@@ -150,11 +169,13 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
     className,
     classes: classesProp,
     timezone,
+    compact = false,
     format = `${adapter.formats.month} ${adapter.formats.year}`,
     ...other
   } = props;
 
-  const { ownerState } = usePickerPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const ownerState = { ...pickerOwnerState, compact };
   const classes = useUtilityClasses(classesProp);
 
   const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
@@ -273,6 +294,11 @@ PickersCalendarHeader.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   currentMonth: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,
