@@ -7,7 +7,8 @@ export interface ToolbarContextValue {
   unregisterItem: (id: string) => void;
   onItemKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
   onItemFocus: (id: string) => void;
-  onItemDisabled: (id: string, disabled: boolean) => void;
+  onItemBlur: (id: string, event: React.FocusEvent<HTMLButtonElement>) => void;
+  onItemDisabled: (id: string) => void;
 }
 
 export const ToolbarContext = React.createContext<ToolbarContextValue | undefined>(undefined);
@@ -32,7 +33,14 @@ type Item = {
 export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
   const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
   const focusableItemIdRef = React.useRef<string | null>(focusableItemId);
+  // The item that currently has real DOM focus, `null` when focus is outside the toolbar.
+  const focusedItemIdRef = React.useRef<string | null>(null);
   const [items, setItems] = React.useState<Item[]>([]);
+
+  const updateFocusableItemId = React.useCallback((id: string | null) => {
+    focusableItemIdRef.current = id;
+    setFocusableItemId(id);
+  }, []);
 
   const getSortedItems = React.useCallback(() => items.sort(sortByDocumentPosition), [items]);
 
@@ -110,74 +118,104 @@ export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
         newIndex = findEnabledItem(sortedItems.length, -1, false);
       }
 
-      // TODO: Check why this is necessary
       if (newIndex >= 0 && newIndex < sortedItems.length) {
         const item = sortedItems[newIndex];
-        setFocusableItemId(item.id);
+        updateFocusableItemId(item.id);
         item.ref.current?.focus();
       }
     },
-    [getSortedItems, focusableItemId, findEnabledItem],
+    [getSortedItems, focusableItemId, findEnabledItem, updateFocusableItemId],
   );
 
   const onItemFocus = React.useCallback(
     (id: string) => {
+      focusedItemIdRef.current = id;
       if (focusableItemId !== id) {
-        setFocusableItemId(id);
+        updateFocusableItemId(id);
       }
     },
-    [focusableItemId, setFocusableItemId],
+    [focusableItemId, updateFocusableItemId],
   );
+
+  const onItemBlur = React.useCallback((id: string, event: React.FocusEvent<HTMLButtonElement>) => {
+    // When a focused item becomes disabled, the browser blurs it before the
+    // `onItemDisabled` effect runs. Keep tracking it as the focused item in that
+    // case so `onItemDisabled` can move focus to the next enabled item.
+    if (event.currentTarget.disabled) {
+      return;
+    }
+    if (focusedItemIdRef.current === id) {
+      focusedItemIdRef.current = null;
+    }
+  }, []);
 
   const onItemDisabled = React.useCallback(
     (id: string) => {
+      const itemHadFocus = focusedItemIdRef.current === id;
+      const itemWasTabStop = focusableItemIdRef.current === id;
+
+      // Disabling an item the user is not interacting with must not move focus,
+      // and only requires a new tab stop if the disabled item was the tab stop.
+      if (!itemHadFocus && !itemWasTabStop) {
+        return;
+      }
+
       const sortedItems = getSortedItems();
       const currentIndex = sortedItems.findIndex((item) => item.id === id);
+      if (currentIndex === -1) {
+        return;
+      }
+
+      // An `aria-disabled` item is still focusable, so real focus can stay where
+      // it is. Only a `disabled` item drops focus and needs it restored.
+      const focusLost = itemHadFocus && Boolean(sortedItems[currentIndex].ref.current?.disabled);
+
       const newIndex = findEnabledItem(currentIndex, 1);
       if (newIndex >= 0 && newIndex < sortedItems.length) {
         const item = sortedItems[newIndex];
-        setFocusableItemId(item.id);
-        item.ref.current?.focus();
+        updateFocusableItemId(item.id);
+        if (focusLost) {
+          focusedItemIdRef.current = item.id;
+          item.ref.current?.focus();
+        }
+      } else if (focusLost) {
+        // No enabled item to move focus to
+        focusedItemIdRef.current = null;
       }
     },
-    [getSortedItems, findEnabledItem],
+    [getSortedItems, findEnabledItem, updateFocusableItemId],
   );
-
-  React.useEffect(() => {
-    focusableItemIdRef.current = focusableItemId;
-  }, [focusableItemId]);
 
   React.useEffect(() => {
     const sortedItems = getSortedItems();
 
-    if (sortedItems.length > 0) {
-      // Set initial focusable item
-      if (!focusableItemIdRef.current) {
-        setFocusableItemId(sortedItems[0].id);
-        return;
-      }
+    if (sortedItems.length === 0) {
+      return;
+    }
 
-      const focusableItemIndex = sortedItems.findIndex(
-        (item) => item.id === focusableItemIdRef.current,
-      );
+    // Set initial focusable item
+    if (!focusableItemIdRef.current) {
+      updateFocusableItemId(sortedItems[0].id);
+      return;
+    }
 
-      if (!sortedItems[focusableItemIndex]) {
-        // Last item has been removed from the items array
-        const item = sortedItems[sortedItems.length - 1];
-        if (item) {
-          setFocusableItemId(item.id);
-          item.ref.current?.focus();
-        }
-      } else if (focusableItemIndex === -1) {
-        // Focused item has been removed from the items array
-        const item = sortedItems[focusableItemIndex];
-        if (item) {
-          setFocusableItemId(item.id);
-          item.ref.current?.focus();
-        }
+    const focusableItemExists = sortedItems.some((item) => item.id === focusableItemIdRef.current);
+
+    if (!focusableItemExists) {
+      // The tab stop has been removed from the items array, assign it to the last item
+      const fallbackItem = sortedItems[sortedItems.length - 1];
+      updateFocusableItemId(fallbackItem.id);
+
+      // Move real focus only if the removed item had focus
+      if (
+        focusedItemIdRef.current !== null &&
+        !sortedItems.some((item) => item.id === focusedItemIdRef.current)
+      ) {
+        focusedItemIdRef.current = fallbackItem.id;
+        fallbackItem.ref.current?.focus();
       }
     }
-  }, [getSortedItems, findEnabledItem]);
+  }, [getSortedItems, updateFocusableItemId]);
 
   const contextValue = React.useMemo(
     () => ({
@@ -186,9 +224,18 @@ export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
       unregisterItem,
       onItemKeyDown,
       onItemFocus,
+      onItemBlur,
       onItemDisabled,
     }),
-    [focusableItemId, registerItem, unregisterItem, onItemKeyDown, onItemFocus, onItemDisabled],
+    [
+      focusableItemId,
+      registerItem,
+      unregisterItem,
+      onItemKeyDown,
+      onItemFocus,
+      onItemBlur,
+      onItemDisabled,
+    ],
   );
 
   return <ToolbarContext.Provider value={contextValue}>{children}</ToolbarContext.Provider>;
