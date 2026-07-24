@@ -403,7 +403,7 @@ export const GridRootStyles = styled('div', {
       backgroundColor: headerBackground,
     },
     '@media (hover: hover)': {
-      [`& .${c.columnHeader}:hover`]: {
+      [`& .${c.columnHeader}:hover, & .${c.columnHeader}:focus-within`]: {
         [`& .${c.menuIcon}`]: {
           width: 'auto',
           visibility: 'visible',
@@ -414,6 +414,7 @@ export const GridRootStyles = styled('div', {
         },
       },
       [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton},
+        & .${c.columnHeader}:not(.${c['columnHeader--sorted']}):focus-within .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
         {
@@ -421,6 +422,7 @@ export const GridRootStyles = styled('div', {
         },
       // Add opacity only to the button content to avoid affecting the background color
       [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton} > *,
+        & .${c.columnHeader}:not(.${c['columnHeader--sorted']}):focus-within .${c.sortButton} > *,
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton} > *,
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible > *`]:
         {
