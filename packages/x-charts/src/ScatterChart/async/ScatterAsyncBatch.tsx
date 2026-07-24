@@ -2,7 +2,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { DefaultizedScatterSeriesType } from '../../models/seriesType/scatter';
+import type {
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
+} from '../../models/seriesType/scatter';
 import { getInteractionItemProps } from '../../hooks/useInteractionItemProps';
 import { useStore } from '../../internals/store/useStore';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
@@ -17,6 +20,7 @@ import type { UseChartInteractionSignature } from '../../internals/plugins/featu
 import type { UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import type { ScatterProps } from '../Scatter';
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
+import { useActivateChartItem } from '../../hooks/useActivateChartItem';
 
 export interface ScatterAsyncBatchProps extends Pick<
   ScatterProps,
@@ -74,6 +78,25 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
   const getHighlightState = useItemHighlightStateGetter();
 
   const renderData = store.use(selectorScatterSeriesRenderData, series.id);
+  const activateItem = useActivateChartItem();
+  const shouldAttachMarkerClick = !isVoronoiEnabled || onItemClick !== undefined;
+
+  const handleMarkerClick = (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    dataIndex: number,
+  ) => {
+    const item: ScatterItemIdentifier = {
+      type: 'scatter',
+      seriesId: series.id,
+      dataIndex,
+    };
+
+    if (!isVoronoiEnabled) {
+      activateItem(item);
+    }
+
+    onItemClick?.(event, item);
+  };
 
   const Marker = slots?.marker ?? ScatterMarker;
   const { ownerState, ...markerProps } = useSlotProps({
@@ -118,13 +141,7 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
         x={x}
         y={y}
         onClick={
-          onItemClick &&
-          ((event: React.MouseEvent<SVGElement, MouseEvent>) =>
-            onItemClick(event, {
-              type: 'scatter',
-              seriesId: series.id,
-              dataIndex,
-            }))
+          shouldAttachMarkerClick ? (event) => handleMarkerClick(event, dataIndex) : undefined
         }
         data-highlighted={isItemHighlighted || undefined}
         data-faded={isItemFaded || undefined}

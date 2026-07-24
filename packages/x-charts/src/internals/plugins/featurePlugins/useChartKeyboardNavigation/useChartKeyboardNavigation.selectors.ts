@@ -52,6 +52,11 @@ export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
   (keyboardNavigationState) => !!keyboardNavigationState?.enabled,
 );
 
+export const selectorChartsFocusRequestId = createSelector(
+  selectKeyboardNavigation,
+  (keyboardNavigationState) => keyboardNavigationState?.focusRequestId ?? 0,
+);
+
 /**
  * Selectors to override highlight behavior.
  */

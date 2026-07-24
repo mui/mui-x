@@ -5,7 +5,10 @@ import type { UseChartHighlightSignature } from '../useChartHighlight';
 import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
-export interface UseChartKeyboardNavigationInstance {}
+export interface UseChartKeyboardNavigationInstance {
+  handleKeyboardNavigationClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  setKeyboardNavigationItem: (item: FocusedItemIdentifier<ChartSeriesType> | null) => void;
+}
 
 export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {
@@ -21,6 +24,11 @@ export interface UseChartKeyboardNavigationState {
      * Indicates whether keyboard navigation is enabled or not.
      */
     enabled: boolean;
+    /**
+     * Incremented whenever an item should receive focus in the accessibility proxy.
+     * This lets the proxy react when two items have the same description or the same item is clicked again.
+     */
+    focusRequestId: number;
   };
 }
 

@@ -7,6 +7,7 @@ import { useItemHighlightState } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
 import { useUtilityClasses } from './funnelClasses';
 import type { FunnelClasses } from './funnelClasses';
+import type { FunnelItemIdentifier } from './funnel.types';
 
 export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref'> {
   seriesId: SeriesId;
@@ -48,8 +49,8 @@ const FunnelSection = consumeSlots<FunnelSectionProps, SVGPathElement>(
       ...other
     } = props;
 
-    const identifier = React.useMemo(
-      () => ({ type: 'funnel' as const, seriesId, dataIndex }),
+    const identifier = React.useMemo<FunnelItemIdentifier>(
+      () => ({ type: 'funnel', seriesId, dataIndex }),
       [seriesId, dataIndex],
     );
 

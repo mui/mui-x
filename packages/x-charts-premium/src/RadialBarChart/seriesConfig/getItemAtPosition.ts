@@ -12,12 +12,12 @@ import type {
   ProcessedSeries,
   UseChartPolarAxisSignature,
 } from '@mui/x-charts/internals';
-import type { SeriesItemIdentifierWithType } from '@mui/x-charts/models';
+import type { FocusedItemIdentifier } from '@mui/x-charts/models';
 
 export default function getItemAtPosition(
   state: ChartState<[UseChartPolarAxisSignature]>,
   point: { x: number; y: number },
-): SeriesItemIdentifierWithType<'radialBar'> | undefined {
+): FocusedItemIdentifier<'radialBar'> | undefined {
   const { axis: rotationAxes, axisIds: rotationAxisIds } = selectorChartRotationAxis(state);
   const { axis: radiusAxes, axisIds: radiusAxisIds } = selectorChartRadiusAxis(state);
   const center = selectorChartPolarCenter(state);

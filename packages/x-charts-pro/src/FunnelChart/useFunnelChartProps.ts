@@ -13,6 +13,7 @@ import { FUNNEL_CHART_PLUGINS } from './FunnelChart.plugins';
 import type { FunnelChartPluginSignatures } from './FunnelChart.plugins';
 import type { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
+import type { FunnelSeriesType } from './funnel.types';
 import type { ChartsContainerProProps } from '../ChartsContainerPro';
 
 function getCategoryAxisConfig(
@@ -151,8 +152,8 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
 
   const chartsContainerProps: ChartsContainerProProps<'funnel', FunnelChartPluginSignatures> = {
     ...other,
-    series: series.map((s) => ({
-      type: 'funnel' as const,
+    series: series.map((s): FunnelSeriesType => ({
+      type: 'funnel',
       layout: isHorizontal ? 'horizontal' : 'vertical',
       ...s,
     })),

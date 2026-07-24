@@ -13,6 +13,7 @@ import type {
 } from '../models/seriesType/pie';
 import { useTransformData } from './dataTransform/useTransformData';
 import type { PieArcPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { useActivateChartItem } from '../hooks/useActivateChartItem';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps & PieArcPropsOverrides>;
@@ -98,6 +99,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     faded,
     data,
   });
+  const activateItem = useActivateChartItem();
 
   if (data.length === 0) {
     return null;
@@ -123,12 +125,11 @@ function PieArcPlot(props: PieArcPlotProps) {
           isFaded={item.isFaded}
           isHighlighted={item.isHighlighted}
           isFocused={item.isFocused}
-          onClick={
-            onItemClick &&
-            ((event) => {
-              onItemClick(event, { type: 'pie', seriesId, dataIndex: index }, item);
-            })
-          }
+          onClick={(event) => {
+            const identifier: PieItemIdentifier = { type: 'pie', seriesId, dataIndex: index };
+            activateItem(identifier);
+            onItemClick?.(event, identifier, item);
+          }}
           {...slotProps?.pieArc}
         />
       ))}

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
-import { useInteractionItemProps } from '@mui/x-charts/internals';
+import { useActivateChartItem, useInteractionItemProps } from '@mui/x-charts/internals';
 import type { SankeyLayoutLink, SankeyLinkIdentifierWithData } from './sankey.types';
 import { useSankeyLinkHighlightState } from './sankeyHighlightHooks';
 import { useUtilityClasses } from './sankeyClasses';
@@ -55,8 +55,10 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     const interactionProps = useInteractionItemProps(identifier);
 
     const classes = useUtilityClasses();
+    const activateItem = useActivateChartItem();
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGPathElement>) => {
+      activateItem(identifier);
       onClick?.(event, identifier);
     });
 
@@ -82,7 +84,7 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
         data-link-target={link.target.id}
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
-        onClick={onClick ? handleClick : undefined}
+        onClick={handleClick}
         cursor={onClick ? 'pointer' : 'default'}
         {...interactionProps}
       />

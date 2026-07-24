@@ -103,4 +103,13 @@ describe('MapShapePlot - click event', () => {
       });
     });
   });
+
+  it('should focus a clicked shape for keyboard navigation without an onItemClick callback', async () => {
+    const { container, user } = render(renderMap({}));
+    const shape = container.querySelector<SVGPathElement>('path[data-name="B"]')!;
+
+    await user.click(shape);
+
+    expect(container.querySelector('g[aria-hidden="true"] path')).not.to.equal(null);
+  });
 });

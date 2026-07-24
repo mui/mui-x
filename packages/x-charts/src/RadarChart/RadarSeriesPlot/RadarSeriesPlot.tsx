@@ -8,11 +8,14 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
+import { useActivateChartItem } from '../../hooks/useActivateChartItem';
+import type { RadarItemIdentifier } from '../../models/seriesType/radar';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const { seriesId: inSeriesId, className, classes: inClasses, onAreaClick, onMarkClick } = props;
   const seriesCoordinates = useRadarSeriesData(inSeriesId);
   const getRotationIndex = useRadarRotationIndex();
+  const activateItem = useActivateChartItem();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const getHighlightState = useItemHighlightStateGetter();
@@ -40,13 +43,15 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                     getHighlightState,
                     classes,
                   })}
-                  onClick={(event) =>
-                    onAreaClick?.(event, {
+                  onClick={(event) => {
+                    const item: Required<RadarItemIdentifier> = {
                       type: 'radar',
                       seriesId,
                       dataIndex: getRotationIndex(event),
-                    })
-                  }
+                    };
+                    activateItem(item);
+                    onAreaClick?.(event, item);
+                  }}
                   cursor={onAreaClick ? 'pointer' : 'unset'}
                   {...interactionProps[seriesIndex]}
                 />
@@ -63,9 +68,15 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       getHighlightState,
                       classes,
                     })}
-                    onClick={(event) =>
-                      onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
-                    }
+                    onClick={(event) => {
+                      const item: Required<RadarItemIdentifier> = {
+                        type: 'radar',
+                        seriesId,
+                        dataIndex: index,
+                      };
+                      activateItem(item);
+                      onMarkClick?.(event, item);
+                    }}
                     cursor={onMarkClick ? 'pointer' : 'unset'}
                   />
                 ))}

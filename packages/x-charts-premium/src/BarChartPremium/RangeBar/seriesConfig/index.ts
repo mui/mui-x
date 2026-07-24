@@ -17,6 +17,7 @@ import { selectorTooltipItemPosition } from './tooltipPosition';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
 import { RangeBarPreviewPlot } from '../../../ChartsZoomSlider/internals/previews/RangeBarPreviewPlot';
+import getItemAtPosition from './getItemAtPosition';
 
 export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   seriesProcessor,
@@ -28,6 +29,7 @@ export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  getItemAtPosition,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
