@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useThemeProps } from '@mui/material/styles';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { StandaloneCompactWeekViewProps } from './CompactWeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
@@ -15,20 +16,25 @@ const StandaloneCompactWeekView = React.forwardRef(function StandaloneCompactWee
   TEvent extends object,
   TResource extends object,
 >(
-  props: StandaloneCompactWeekViewProps<TEvent, TResource>,
+  inProps: StandaloneCompactWeekViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
+
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,
     TResource,
     typeof props
   >(props);
 
+  const { localeText, ...other } = forwardedProps;
+
   return (
     <ResponsiveTypographyContainer>
-      <EventCalendarProvider {...parameters}>
+      <EventCalendarProvider {...parameters} localeText={localeText}>
         <EventDialogProvider>
-          <CompactWeekView ref={forwardedRef} {...forwardedProps} />
+          <CompactWeekView ref={forwardedRef} {...other} />
         </EventDialogProvider>
       </EventCalendarProvider>
     </ResponsiveTypographyContainer>
