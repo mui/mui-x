@@ -5,7 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import { ptBR } from '@mui/x-data-grid-pro/locales';
-import { grid } from 'test/utils/helperFn';
+import { getRow, grid, gridVar } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
@@ -151,6 +151,62 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
       </div>,
     );
     expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20 + 60);
+  });
+
+  it('should update the layout when toggling `headerFilters` prop', () => {
+    function TestCase(props: Pick<DataGridProProps, 'headerFilters'>) {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', width: 300 }}>
+          <DataGridPro
+            {...baselineProps}
+            columnHeaderHeight={20}
+            headerFilterHeight={60}
+            rowHeight={20}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestCase headerFilters />);
+
+    expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20 + 60);
+
+    setProps({ headerFilters: false });
+
+    expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20);
+
+    setProps({ headerFilters: true });
+
+    expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20 + 60);
+  });
+
+  it('should update the virtual scroller layout when toggling `headerFilters` prop', () => {
+    function TestCase(props: Pick<DataGridProProps, 'headerFilters'>) {
+      return (
+        <div style={{ width: 300, height: 160 }}>
+          <DataGridPro
+            {...baselineProps}
+            columnHeaderHeight={20}
+            headerFilterHeight={60}
+            rowHeight={20}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestCase headerFilters />);
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('80px');
+
+    setProps({ headerFilters: false });
+
+    expect(gridVar('--DataGrid-headersTotalHeight')).to.equal('20px');
+    expect(grid('headerFilterRow')).to.equal(null);
+    expect(getRow(0).getBoundingClientRect().top).to.equal(
+      grid('columnHeaders')!.getBoundingClientRect().bottom,
+    );
   });
 
   it('should support translations in the theme', () => {
