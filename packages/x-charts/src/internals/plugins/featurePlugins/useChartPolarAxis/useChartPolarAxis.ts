@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
+import useEventCallback from '@mui/utils/useEventCallback';
 import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import type { ChartPlugin } from '../../models';
 import type { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
@@ -23,6 +24,12 @@ import { getRadiusAxisIndex, getRotationAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 import { getPolarAxisClickPayload } from './getPolarAxisClickPayload';
+import type { ChartsActivationEvent } from '../../../../models/events';
+import {
+  isItemActivationKey,
+  selectorChartsFocusedItem,
+  selectorChartsIsKeyboardActivationEnabled,
+} from '../useChartKeyboardNavigation';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -258,12 +265,65 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     instance,
     params.onAxisClick,
     processedSeries,
+    store,
     radiusAxisWithScale,
     rotationAxisWithScale,
     chartsLayerContainerRef,
     usedRadiusAxisId,
     usedRotationAxisId,
   ]);
+
+  /**
+   * Kept out of the pointer effect so the listener survives re-renders. See the cartesian axis
+   * plugin for why re-subscribing per render drops keystrokes.
+   */
+  const handleKeyboardActivation = useEventCallback((event: KeyboardEvent) => {
+    const onAxisClick = params.onAxisClick;
+
+    if (
+      !onAxisClick ||
+      !isItemActivationKey(event) ||
+      !selectorChartsIsKeyboardActivationEnabled(store.state)
+    ) {
+      return;
+    }
+
+    const focusedItem = selectorChartsFocusedItem(store.state);
+
+    if (focusedItem === null || !('dataIndex' in focusedItem)) {
+      return;
+    }
+
+    const payload = getPolarAxisClickPayload({
+      dataIndex: focusedItem.dataIndex,
+      isRotationAxis: true,
+      rotationAxes: selectorChartRotationAxis(store.state),
+      radiusAxes: selectorChartRadiusAxis(store.state),
+      processedSeries: selectorChartSeriesProcessed(store.state),
+    });
+
+    if (payload === null) {
+      return;
+    }
+
+    event.preventDefault();
+    // The callback only describes the pointer event unless the user augments the types.
+    onAxisClick(event as unknown as ChartsActivationEvent, payload);
+  });
+
+  React.useEffect(() => {
+    const element = chartsLayerContainerRef.current;
+
+    if (element === null) {
+      return undefined;
+    }
+
+    element.addEventListener('keydown', handleKeyboardActivation);
+
+    return () => {
+      element.removeEventListener('keydown', handleKeyboardActivation);
+    };
+  }, [chartsLayerContainerRef, handleKeyboardActivation]);
 
   return {
     instance: {
