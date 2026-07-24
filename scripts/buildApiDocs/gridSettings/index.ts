@@ -48,6 +48,7 @@ const COMPONENT_API_PAGES = [
   'src/components/filterPanel/FilterPanelTrigger.tsx',
   'src/components/columnsPanel/ColumnsPanelTrigger.tsx',
   'src/components/pivotPanel/PivotPanelTrigger.tsx',
+  'src/components/formulaBar/FormulaBar.tsx',
   'src/components/chartsPanel/GridChartsPanel.tsx',
   'src/components/chartsPanel/ChartsPanelTrigger.tsx',
   'src/components/aiAssistantPanel/AiAssistantPanelTrigger.tsx',

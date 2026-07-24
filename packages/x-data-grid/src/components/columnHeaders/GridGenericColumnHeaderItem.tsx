@@ -37,6 +37,13 @@ interface GridGenericColumnHeaderItemProps extends Pick<
   columnMenuIconButton?: React.ReactNode;
   columnMenu?: React.ReactNode;
   columnTitleIconButtons?: React.ReactNode;
+  /**
+   * Optional adornment rendered at the start of the title content, before the
+   * title label (used by the Premium formula feature for A1 column letters).
+   * Placing it inside the (non-reversed) title content keeps it on the same
+   * side of the title for both left- and right-aligned headers.
+   */
+  adornment?: React.ReactNode;
   label: string;
   draggableContainerProps?: Partial<React.HTMLProps<HTMLDivElement>>;
   columnHeaderSeparatorProps?: Partial<GridColumnHeaderSeparatorProps>;
@@ -63,6 +70,7 @@ const GridGenericColumnHeaderItem = forwardRef<HTMLDivElement, GridGenericColumn
       columnMenuIconButton = null,
       columnMenu = null,
       columnTitleIconButtons = null,
+      adornment = null,
       headerClassName,
       label,
       resizable,
@@ -104,6 +112,7 @@ const GridGenericColumnHeaderItem = forwardRef<HTMLDivElement, GridGenericColumn
         >
           <div className={classes.titleContainer} role="none">
             <div className={classes.titleContainerContent}>
+              {adornment}
               {headerComponent !== undefined ? (
                 headerComponent
               ) : (

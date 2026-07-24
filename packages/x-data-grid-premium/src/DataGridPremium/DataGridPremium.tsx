@@ -2,7 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import { GridRoot, GridContextProvider, useGridSelector } from '@mui/x-data-grid-pro';
+import {
+  GridRoot,
+  GridContextProvider,
+  gridRowIdSelector,
+  useGridSelector,
+} from '@mui/x-data-grid-pro';
 import type { GridValidRowModel } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
@@ -22,9 +27,12 @@ import type {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { Sidebar } from '../components/sidebar';
+import { GridFormulaReferenceOverlay } from '../components/GridFormulaReferenceOverlay';
 import { useGridAriaAttributesPremium } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributesPremium } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
+import { gridCellFormulaResultSelector } from '../hooks/features/formula/gridFormulaSelectors';
+import { useGridFormulaColumnHeaderAdornment } from '../hooks/features/formula/useGridFormulaColumnHeaderAdornment';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
@@ -41,9 +49,21 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
     useGridRowAriaAttributes: useGridRowAriaAttributesPremium,
     useCellAggregationResult: (id, field) => {
       const apiRef = useGridApiContext();
+      // Subscribing to the formula result is what re-renders formula cells
+      // after an evaluation pass — the value itself flows through the params
+      // overlay in `useGridParamsOverridableMethods`.
+      useGridSelector(apiRef, gridCellFormulaResultSelector, { id, field });
       return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
     },
     useFilterValueGetter: (apiRef, props) => (row, column) => {
+      const formulaResult = gridCellFormulaResultSelector(apiRef, {
+        id: gridRowIdSelector(apiRef, row),
+        field: column.field,
+      });
+      if (formulaResult != null) {
+        return formulaResult.type === 'error' ? formulaResult.code : formulaResult.value;
+      }
+
       if (props.aggregationRowsScope === 'all') {
         return apiRef.current.getRowValue(row, column);
       }
@@ -53,6 +73,7 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
     useIsCellEditable,
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
+    useColumnHeaderAdornment: useGridFormulaColumnHeaderAdornment,
   },
 };
 const packageInfo = {
@@ -108,6 +129,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
       >
         {watermark}
         <GridMultiSelectMeasurer />
+        <GridFormulaReferenceOverlay />
       </GridRoot>
     </GridContextProvider>
   );
@@ -267,6 +289,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   checkboxColDef: PropTypes.shape({
     aggregable: PropTypes.bool,
     align: PropTypes.oneOf(['center', 'left', 'right']),
+    allowFormulas: PropTypes.bool,
     availableAggregationFunctions: PropTypes.arrayOf(PropTypes.string),
     cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     chartable: PropTypes.bool,
@@ -492,6 +515,17 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    */
   disableEval: PropTypes.bool,
   /**
+   * If `true`, the suggestion dropdown shown while editing a formula cell is disabled.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  disableFormulaAutocomplete: PropTypes.bool,
+  /**
+   * If `true`, the formula evaluation is disabled: `=` cell values render as raw strings.
+   * @default false
+   */
+  disableFormulas: PropTypes.bool,
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -579,6 +613,20 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * If `true`, formulas can be entered and are displayed using A1 notation
+   * (`=A1 + B2`) while still being stored in the canonical syntax.
+   * A leftmost row-number column and column-letter header adornments are shown.
+   * Has no effect when `disableFormulas` is `true` or a `dataSource` is set.
+   * @default false
+   */
+  formulaA1Notation: PropTypes.bool,
+  /**
+   * Functions available to formulas, keyed by name.
+   * The prop replaces the built-in set: spread `GRID_FORMULA_FUNCTIONS` to extend it.
+   * @default GRID_FORMULA_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
+   */
+  formulaFunctions: PropTypes.object,
   /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
@@ -767,6 +815,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
       'fetchRows',
       'filteredRowsSet',
       'filterModelChange',
+      'formulaEvaluated',
       'headerFilterBlur',
       'headerFilterClick',
       'headerFilterKeyDown',

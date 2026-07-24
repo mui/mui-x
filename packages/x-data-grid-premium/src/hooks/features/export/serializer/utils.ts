@@ -1,6 +1,7 @@
 import type * as Excel from '@mui/x-internal-exceljs-fork';
 import type { GridColumnGroupLookup } from '@mui/x-data-grid/internals';
 import type { GridExcelExportOptions } from '../gridExcelExportInterface';
+import type { ExcelFormulaCell } from '../../formula/gridFormulaExcelExport';
 
 export const getExcelJs = async () => {
   const excelJsModule = await import('@mui/x-internal-exceljs-fork');
@@ -12,6 +13,14 @@ export interface SerializedRow {
   dataValidation: Record<string, Excel.DataValidation>;
   outlineLevel: number;
   mergedCells: { leftIndex: number; rightIndex: number }[];
+  /**
+   * Cells to write as real Excel formulas (overlaying the plain value in `row`).
+   * Present only when at least one cell in the row is a live formula and formula
+   * export is enabled, so value-only exports keep their previous serialized shape.
+   * Kept separate from `row` (like `dataValidation`) so `row` stays a flat map of
+   * primitive cell values and the evaluated value remains the per-cell fallback.
+   */
+  formulas?: Record<string, ExcelFormulaCell>;
 }
 
 export const addColumnGroupingHeaders = (
@@ -82,7 +91,7 @@ export function addSerializedRowToWorksheet(
   serializedRow: SerializedRow,
   worksheet: Excel.Worksheet,
 ) {
-  const { row, dataValidation, outlineLevel, mergedCells } = serializedRow;
+  const { row, dataValidation, outlineLevel, mergedCells, formulas } = serializedRow;
 
   const newRow = worksheet.addRow(row);
 
@@ -91,6 +100,15 @@ export function addSerializedRowToWorksheet(
       ...dataValidation[field],
     };
   });
+
+  if (formulas) {
+    // Overwrite the plain value with a real Excel formula cell. The cached
+    // `result` inherits the column number format, so it still displays formatted
+    // until Excel recalculates.
+    Object.keys(formulas).forEach((field) => {
+      newRow.getCell(field).value = formulas[field] as Excel.CellValue;
+    });
+  }
 
   if (outlineLevel) {
     newRow.outlineLevel = outlineLevel;

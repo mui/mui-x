@@ -1,0 +1,10 @@
+<DataGridPremium
+  rows={rows}
+  columns={columns}
+  formulaA1Notation
+  showToolbar
+  slots={{ toolbar: CustomToolbar }}
+  rowSelection={false}
+  density="compact"
+  disablePivoting
+/>

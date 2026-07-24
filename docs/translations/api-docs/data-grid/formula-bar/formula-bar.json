@@ -1,0 +1,5 @@
+{
+  "componentDescription": "An Excel-like formula bar for the Data Grid Premium formulas feature. It is a\npermanently-open formula editor for the focused cell:\n\n- With the cell in view mode it edits a local draft — references are colored,\n  the referenced cells are outlined in the grid, and the draft's would-be\n  result is evaluated on the fly — and nothing is committed until Enter.\n- With the cell in edit mode it is a live two-way mirror of the edit session,\n  and interacting with the bar does not close the cell's editor.\n\nIt renders on the default toolbar with `slotProps.toolbar.formulaBar`, can be\ncomposed into a custom `<Toolbar />`, and — because it only needs the grid's\nReact context — can be portaled anywhere in the page with `createPortal`.\n\nIt renders nothing when formulas are disabled (`disableFormulas`, a data\nsource, or active pivoting).",
+  "propDescriptions": {},
+  "classDescriptions": {}
+}

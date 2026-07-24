@@ -1,0 +1,53 @@
+<svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#566371"/>
+    </marker>
+  </defs>
+
+  <!-- Row data -->
+  <rect x="20" y="90" width="196" height="120" rx="8" fill="#101418" stroke="#303740" stroke-width="1.5"/>
+  <text x="118" y="118" text-anchor="middle" font-size="15" font-weight="600" fill="#F3F6F9">Row data</text>
+  <text x="118" y="138" text-anchor="middle" font-size="12" fill="#8B98A9">The single source of truth</text>
+  <rect x="34" y="152" width="168" height="26" rx="5" fill="#132F4C"/>
+  <text x="118" y="169" text-anchor="middle" font-size="11" font-family="Menlo, Consolas, monospace" fill="#66B2FF">'=quantity * unitPrice'</text>
+  <text x="118" y="197" text-anchor="middle" font-size="11" fill="#8B98A9">formulas are plain strings</text>
+
+  <!-- Arrow 1 -->
+  <line x1="216" y1="150" x2="252" y2="150" stroke="#566371" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Formula engine -->
+  <rect x="256" y="90" width="216" height="120" rx="8" fill="#101418" stroke="#303740" stroke-width="1.5"/>
+  <text x="364" y="118" text-anchor="middle" font-size="15" font-weight="600" fill="#F3F6F9">Formula engine</text>
+  <text x="364" y="143" text-anchor="middle" font-size="12" fill="#B0B8C4">1. Parses each source once</text>
+  <text x="364" y="163" text-anchor="middle" font-size="12" fill="#B0B8C4">2. Tracks cell dependencies</text>
+  <text x="364" y="183" text-anchor="middle" font-size="12" fill="#B0B8C4">3. Evaluates in dependency order</text>
+
+  <!-- Arrow 2 -->
+  <line x1="472" y1="150" x2="508" y2="150" stroke="#566371" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Evaluated values -->
+  <rect x="512" y="90" width="196" height="120" rx="8" fill="#101418" stroke="#303740" stroke-width="1.5"/>
+  <text x="610" y="118" text-anchor="middle" font-size="15" font-weight="600" fill="#F3F6F9">Evaluated values</text>
+  <text x="610" y="138" text-anchor="middle" font-size="12" fill="#8B98A9">Derived grid state</text>
+  <rect x="526" y="152" width="168" height="26" rx="5" fill="#132F4C"/>
+  <text x="610" y="169" text-anchor="middle" font-size="11" font-family="Menlo, Consolas, monospace" fill="#66B2FF">total → 6,600</text>
+  <text x="610" y="197" text-anchor="middle" font-size="11" fill="#8B98A9">or an error code such as #REF!</text>
+
+  <!-- Arrow 3 -->
+  <line x1="708" y1="150" x2="744" y2="150" stroke="#566371" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Grid features -->
+  <rect x="748" y="70" width="152" height="160" rx="8" fill="#132F4C" stroke="#66B2FF" stroke-width="1.5"/>
+  <text x="824" y="98" text-anchor="middle" font-size="15" font-weight="600" fill="#F3F6F9">Grid features</text>
+  <text x="824" y="123" text-anchor="middle" font-size="12" fill="#B0B8C4">Rendering</text>
+  <text x="824" y="143" text-anchor="middle" font-size="12" fill="#B0B8C4">Sorting · Filtering</text>
+  <text x="824" y="163" text-anchor="middle" font-size="12" fill="#B0B8C4">Aggregation</text>
+  <text x="824" y="183" text-anchor="middle" font-size="12" fill="#B0B8C4">Grouping</text>
+  <text x="824" y="203" text-anchor="middle" font-size="12" fill="#B0B8C4">Copy · Export</text>
+
+  <!-- Feedback loop: editing writes back to row data -->
+  <path d="M 824 230 L 824 278 L 118 278 L 118 214" fill="none" stroke="#566371" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+  <rect x="231" y="264" width="480" height="28" rx="14" fill="#101418" stroke="#303740"/>
+  <text x="471" y="282" text-anchor="middle" font-size="12" fill="#B0B8C4">Editing and row updates write the formula source — never the evaluated value</text>
+</svg>

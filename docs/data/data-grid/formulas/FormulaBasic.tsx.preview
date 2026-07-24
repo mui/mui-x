@@ -1,0 +1,10 @@
+<DataGridPremium
+  rows={rows}
+  columns={columns}
+  formulaA1Notation
+  rowSelection={false}
+  density="compact"
+  showCellVerticalBorder
+  showColumnVerticalBorder
+  disablePivoting
+/>

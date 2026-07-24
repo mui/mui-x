@@ -1,4 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
+import { gridRowIdSelector } from '@mui/x-data-grid-pro';
 import type {
   GridRowTreeConfig,
   GridFilterState,
@@ -231,9 +232,23 @@ export const getCellGroupingCriteria = ({
   groupingRule: GridGroupingRule;
   apiRef: RefObject<GridPrivateApiPremium>;
 }) => {
+  // Formula cells group by their evaluated value — error cells by their error
+  // code, bypassing `groupingValueGetter` like they bypass `valueFormatter`.
+  // The optional chain matters: the initial tree build runs before the
+  // formula state initializes, and the formula hook re-triggers the build
+  // once evaluated values exist.
+  const formulaResult = (apiRef.current.state as Partial<GridStatePremium>).formula?.lookup[
+    gridRowIdSelector(apiRef, row)
+  ]?.[groupingRule.field];
+
   let key: GridKeyValue | null | undefined;
-  if (groupingRule.groupingValueGetter) {
-    key = groupingRule.groupingValueGetter(row[groupingRule.field] as never, row, colDef, apiRef);
+  if (formulaResult !== undefined && formulaResult.type === 'error') {
+    key = formulaResult.code;
+  } else if (groupingRule.groupingValueGetter) {
+    const value = formulaResult === undefined ? row[groupingRule.field] : formulaResult.value;
+    key = groupingRule.groupingValueGetter(value as never, row, colDef, apiRef);
+  } else if (formulaResult !== undefined) {
+    key = formulaResult.value as GridKeyValue | null | undefined;
   } else {
     key = getRowValue(row, colDef, apiRef) as GridKeyValue | null | undefined;
   }

@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "FormulaBar",
+  "imports": [
+    "import { FormulaBar } from '@mui/x-data-grid-premium/components';",
+    "import { FormulaBar } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiFormulaBar",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid-premium/src/components/formulaBar/FormulaBar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/formula-bar\">Data Grid - Formula Bar component <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>"
+}

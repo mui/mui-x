@@ -197,6 +197,7 @@ export { gridGetRowsParamsSelector } from '../hooks/features/dataSource/gridData
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
+export * from '../utils/focusElement';
 export * from '../utils/rtlFlipSide';
 export { NotRendered } from '../utils/assert';
 export {

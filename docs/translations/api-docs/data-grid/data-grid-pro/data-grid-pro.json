@@ -1330,6 +1330,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer container element"
     },
+    "formulaBar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formula bar root element (Premium formulas)"
+    },
+    "formulaColumnHeaderLetter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the A1-notation column-letter adornment in the column header (Premium formulas)"
+    },
+    "formulaRowNumberCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the cells of the A1-notation row-number column (Premium formulas)"
+    },
     "groupingCriteriaCell": {
       "description": "Styles applied to the root element of the grouping criteria cell"
     },
