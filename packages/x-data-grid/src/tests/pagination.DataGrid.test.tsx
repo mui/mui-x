@@ -603,6 +603,37 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['3']);
       expect(screen.getByText('4–4 of 4')).not.to.equal(null);
     });
+
+    it('should update the row count when rows change after `paginationMode` switches from server to client', async () => {
+      function TestCase(props: Partial<DataGridProps>) {
+        return (
+          <div style={{ height: 300, width: 300 }}>
+            <DataGrid
+              columns={[{ field: 'id' }]}
+              rows={[]}
+              pageSizeOptions={[5]}
+              initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
+              {...props}
+            />
+          </div>
+        );
+      }
+      const { setProps } = render(<TestCase paginationMode="server" rowCount={100} />);
+      expect(screen.getByText('1–5 of 100')).not.to.equal(null);
+
+      setProps({ paginationMode: 'client', rowCount: undefined });
+      expect(screen.getByText('0–0 of 0')).not.to.equal(null);
+
+      // Rows arriving after the mode switch should still update the row count
+      setProps({
+        paginationMode: 'client',
+        rowCount: undefined,
+        rows: [{ id: 0 }, { id: 1 }, { id: 2 }],
+      });
+      await waitFor(() => {
+        expect(screen.getByText('1–3 of 3')).not.to.equal(null);
+      });
+    });
   });
 
   it.skipIf(isJSDOM)(
