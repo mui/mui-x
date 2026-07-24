@@ -24,7 +24,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsReactActivationEvent<SVGPathElement>, pieItemIdentifier: PieItemIdentifier, item: DefaultizedPieValueType) => void",
+        "type": "function(event: ChartsActivationEvent<SVGPathElement>, pieItemIdentifier: PieItemIdentifier, item: DefaultizedPieValueType) => void",
         "describedArgs": ["event", "pieItemIdentifier", "item"]
       }
     },

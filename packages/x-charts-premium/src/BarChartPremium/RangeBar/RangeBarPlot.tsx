@@ -12,7 +12,7 @@ import type {
 } from '@mui/x-charts/BarChart';
 import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useIsZoomInteracting } from '@mui/x-charts-pro/hooks';
-import type { ChartsReactActivationEvent } from '@mui/x-charts/models';
+import type { ChartsActivationEvent } from '@mui/x-charts/models';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
 import { AnimatedRangeBarElement } from './AnimatedRangeBarElement';
@@ -33,11 +33,11 @@ export interface RangeBarPlotProps {
   skipAnimation?: boolean;
   /**
    * Callback fired when a bar item is clicked.
-   * @param {ChartsReactActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
    */
   onItemClick?: (
-    event: ChartsReactActivationEvent<SVGElement>,
+    event: ChartsActivationEvent<SVGElement>,
     barItemIdentifier: RangeBarItemIdentifier,
   ) => void;
   /**
@@ -169,7 +169,7 @@ RangeBarSvgPlot.propTypes /* remove-proptypes */ = {
   borderRadius: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {ChartsReactActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
    */
   onItemClick: PropTypes.func,
@@ -201,7 +201,7 @@ RangeBarPlot.propTypes /* remove-proptypes */ = {
   borderRadius: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {ChartsReactActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
    */
   onItemClick: PropTypes.func,

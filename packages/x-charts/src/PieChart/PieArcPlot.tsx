@@ -13,7 +13,7 @@ import type {
 } from '../models/seriesType/pie';
 import { useTransformData } from './dataTransform/useTransformData';
 import { useRegisterItemActivation } from '../internals/useRegisterItemActivation';
-import type { ChartsReactActivationEvent } from '../models/events';
+import type { ChartsActivationEvent } from '../models/events';
 import type { PieArcPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface PieArcPlotSlots {
@@ -52,12 +52,12 @@ export interface PieArcPlotProps
   slotProps?: PieArcPlotSlotProps;
   /**
    * Callback fired when a pie item is clicked.
-   * @param {ChartsReactActivationEvent<SVGPathElement>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGPathElement>} event The event source of the callback.
    * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
    * @param {DefaultizedPieValueType} item The pie item.
    */
   onItemClick?: (
-    event: ChartsReactActivationEvent<SVGPathElement>,
+    event: ChartsActivationEvent<SVGPathElement>,
     pieItemIdentifier: PieItemIdentifier,
     item: DefaultizedPieValueType,
   ) => void;
@@ -217,7 +217,7 @@ PieArcPlot.propTypes /* remove-proptypes */ = {
   innerRadius: PropTypes.number,
   /**
    * Callback fired when a pie item is clicked.
-   * @param {ChartsReactActivationEvent<SVGPathElement>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGPathElement>} event The event source of the callback.
    * @param {PieItemIdentifier} pieItemIdentifier The pie item identifier.
    * @param {DefaultizedPieValueType} item The pie item.
    */

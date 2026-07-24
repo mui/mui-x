@@ -5,7 +5,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsReactActivationEvent<SVGElement>, radarItemIdentifier: RadarItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent<SVGElement>, radarItemIdentifier: RadarItemIdentifier) => void",
         "describedArgs": ["event", "radarItemIdentifier"]
       }
     },

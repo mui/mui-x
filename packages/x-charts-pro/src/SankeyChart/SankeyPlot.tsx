@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useRegisterItemActivation } from '@mui/x-charts/internals';
-import type { ChartsReactActivationEvent } from '@mui/x-charts/models';
+import type { ChartsActivationEvent } from '@mui/x-charts/models';
 import type { SankeyLinkIdentifierWithData, SankeyNodeIdentifierWithData } from './sankey.types';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
 import { useUtilityClasses } from './sankeyClasses';
@@ -29,7 +29,7 @@ export interface SankeyPlotProps {
    * @param {SankeyNodeIdentifierWithData} node The sankey node identifier.
    */
   onNodeClick?: (
-    event: ChartsReactActivationEvent<SVGElement>,
+    event: ChartsActivationEvent<SVGElement>,
     node: SankeyNodeIdentifierWithData,
   ) => void;
   /**
@@ -38,7 +38,7 @@ export interface SankeyPlotProps {
    * @param {SankeyLinkIdentifierWithData} link The sankey link identifier.
    */
   onLinkClick?: (
-    event: ChartsReactActivationEvent<SVGElement>,
+    event: ChartsActivationEvent<SVGElement>,
     link: SankeyLinkIdentifierWithData,
   ) => void;
 }

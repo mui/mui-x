@@ -209,7 +209,6 @@
   { "name": "ChartsRadialGridProps", "kind": "Interface" },
   { "name": "ChartsRadiusAxis", "kind": "Function" },
   { "name": "ChartsRadiusAxisProps", "kind": "Interface" },
-  { "name": "ChartsReactActivationEvent", "kind": "TypeAlias" },
   { "name": "ChartsReferenceLine", "kind": "Function" },
   { "name": "ChartsReferenceLineClasses", "kind": "Interface" },
   { "name": "ChartsReferenceLineClassKey", "kind": "TypeAlias" },

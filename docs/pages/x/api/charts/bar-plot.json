@@ -5,7 +5,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: ChartsActivationEvent | ChartsReactActivationEvent<SVGElement>, barItemIdentifier: BarItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent | ChartsActivationEvent<SVGElement>, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },

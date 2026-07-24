@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useZAxes } from '@mui/x-charts/hooks';
 import { useRegisterItemActivation } from '@mui/x-charts/internals';
-import type { ChartsReactActivationEvent } from '@mui/x-charts/models';
+import type { ChartsActivationEvent } from '@mui/x-charts/models';
 import type { MapShapeItemIdentifier } from '../models/seriesType/mapShape';
 import { useGeoData } from '../hooks/useGeoData';
 import { useGeoPath } from '../hooks/useGeoPath';
@@ -16,11 +16,11 @@ import { mapShapeSeriesConfig } from './seriesConfig';
 export interface MapShapePlotProps {
   /**
    * Callback fired when clicking on a map shape.
-   * @param {ChartsReactActivationEvent<SVGPathElement>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGPathElement>} event The event source of the callback.
    * @param {MapShapeItemIdentifier} mapShapeItemIdentifier The identifier of the clicked map shape.
    */
   onItemClick?: (
-    event: ChartsReactActivationEvent<SVGPathElement>,
+    event: ChartsActivationEvent<SVGPathElement>,
     mapShapeItemIdentifier: MapShapeItemIdentifier,
   ) => void;
   className?: string;
@@ -137,7 +137,7 @@ MapShapePlot.propTypes /* remove-proptypes */ = {
   fill: PropTypes.string,
   /**
    * Callback fired when clicking on a map shape.
-   * @param {ChartsReactActivationEvent<SVGPathElement>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGPathElement>} event The event source of the callback.
    * @param {MapShapeItemIdentifier} mapShapeItemIdentifier The identifier of the clicked map shape.
    */
   onItemClick: PropTypes.func,

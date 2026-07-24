@@ -402,7 +402,7 @@ BarChart.propTypes /* remove-proptypes */ = {
   onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {ChartsActivationEvent | ChartsReactActivationEvent<SVGElement>} event The event source of the callback.
+   * @param {ChartsActivationEvent | ChartsActivationEvent<SVGElement>} event The event source of the callback.
    *        It is a native MouseEvent for `svg-batch` renderer and a React MouseEvent for `svg-single` renderer.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
