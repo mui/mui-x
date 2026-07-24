@@ -43,7 +43,7 @@ export interface MarkPlotProps
   slotProps?: MarkPlotSlotProps;
   /**
    * Callback fired when a line mark item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick?: (
@@ -153,7 +153,7 @@ MarkPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line mark item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick: PropTypes.func,

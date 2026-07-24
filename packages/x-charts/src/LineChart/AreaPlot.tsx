@@ -24,7 +24,7 @@ export interface AreaPlotProps
     Pick<AreaElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
   /**
    * Callback fired when a line area item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick?: (
@@ -107,7 +107,7 @@ AreaPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line area item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick: PropTypes.func,

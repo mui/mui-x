@@ -24,7 +24,7 @@ export interface LinePlotProps
     Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
   /**
    * Callback fired when a line item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick?: (
@@ -106,7 +106,7 @@ LinePlot.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick: PropTypes.func,
