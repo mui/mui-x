@@ -24,25 +24,23 @@ There are numerous solutions available for building a data table, each with dist
 The MUI X Data Grid is built specifically for React, offering a batteries-included solution with a fully styled, accessible user interface out of the box.
 Unlike headless table libraries, you can start building immediately without implementing UI components yourself, while still maintaining full customization capabilities through theming and component composition.
 
-### Comparisons
-
-#### AG Grid
+### Comparison with AG Grid
 
 AG Grid is a framework-agnostic solution that supports React, Vue, and Angular.
 Here's how the MUI X Data Grid differs:
 
-- **React-first design**: Built exclusively for React with hooks, TypeScript, and React patterns at its core, providing a more idiomatic React experience
-- **Material UI integration**: Seamless integration with Material UI's design system and theming, allowing you to maintain visual consistency across your application
-- **Component composition**: Highly composable architecture that lets you customize individual parts while maintaining the full-featured grid experience
+- **React-first design**: MUI X Data Grid is built exclusively for React with hooks, TypeScript, and React patterns at its core, providing a more idiomatic React experience
+- **Material UI integration**: MUI X Data Grid integrates seamlessly with Material UI's design system and theming, allowing you to maintain visual consistency across your application
+- **Component composition**: MUI X Data Grid's highly composable architecture lets you customize individual parts while maintaining the full-featured grid experience
 
-#### TanStack Table
+### Comparison with TanStack Table
 
 TanStack Table (formerly React Table) is a headless table library that provides table logic without any UI.
 Here's how the MUI X Data Grid differs:
 
-- **Complete UI included**: Fully styled, accessible components ready to use immediately—no need to build your own table UI, filters, or pagination controls
-- **Built-in features**: Advanced features like editing, filtering, sorting, and virtualization come pre-implemented with polished user interfaces
-- **Less boilerplate**: Get a production-ready data grid with minimal setup, rather than wiring together multiple libraries and building custom components
+- **Complete UI included**: MUI X Data Grid provides fully styled, accessible components ready to use immediately—no need to build your own table UI, filters, or pagination controls
+- **Built-in features**: MUI X Data Grid comes with advanced features like editing, filtering, sorting, and virtualization pre-implemented with polished user interfaces
+- **Less boilerplate**: MUI X Data Grid gives you a production-ready data grid with minimal setup, rather than wiring together multiple libraries and building custom components
 
 ## Data Grid packages
 
