@@ -80,8 +80,7 @@ When focused, the chart highlights a value item that can be modified with arrow 
 
 Charts can trigger their click callbacks from the keyboard, so mouse-only interactions such as drill-down or filtering stay available to keyboard users ([WCAG 2.1 SC 2.1.1](https://www.w3.org/WAI/WCAG21/Understanding/keyboard.html)).
 
-The feature is experimental, and shared by every chart.
-Enable it with the `keyboardActivation` experimental feature:
+It is opt-in on every chart, so existing callbacks keep receiving pointer events only:
 
 ```jsx
 <BarChart
