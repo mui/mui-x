@@ -190,6 +190,12 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
   // }) {
   //   return [sourceLabel && targetLabel ? `${sourceLabel} to ${targetLabel}` : sourceLabel ?? targetLabel, formattedValue].filter(Boolean).join(this.a11yConnector);
   // },
+  // treemapItemDescription: function treemapItemDescription({
+  //   formattedValue,
+  //   label
+  // }) {
+  //   return [label, formattedValue].filter(Boolean).join(this.a11yConnector);
+  // },
   // rangeBarDescription: function rangeBarDescription({
   //   value,
   //   formattedValue,

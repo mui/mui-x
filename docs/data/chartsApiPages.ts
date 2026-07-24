@@ -545,5 +545,20 @@ const chartsApiPages: MuiPage[] = [
     pathname: '/x/api/charts/toolbar-button',
     title: 'ToolbarButton',
   },
+  {
+    pathname: '/x/api/charts/treemap',
+    title: 'Treemap',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/treemap-data-provider',
+    title: 'TreemapDataProvider',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/treemap-plot',
+    title: 'TreemapPlot',
+    plan: 'premium',
+  },
 ];
 export default chartsApiPages;

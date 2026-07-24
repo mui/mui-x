@@ -1,0 +1,142 @@
+{
+  "props": {
+    "series": { "type": { "name": "object" }, "required": true },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "desc": { "type": { "name": "string" } },
+    "disableKeyboardNavigation": { "type": { "name": "bool" } },
+    "experimentalFeatures": { "type": { "name": "object" } },
+    "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "union",
+        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, type: 'treemap' }"
+      }
+    },
+    "id": { "type": { "name": "string" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
+    "localeText": { "type": { "name": "object" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemIdentifierWithType<SeriesType> | null) => void",
+        "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLDivElement, MouseEvent>, item: TreemapItemIdentifierWithData) => void",
+        "describedArgs": ["event", "item"]
+      }
+    },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<SeriesType> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
+    "seriesConfig": { "type": { "name": "object" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "title": { "type": { "name": "string" } },
+    "tooltipItem": {
+      "type": {
+        "name": "union",
+        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, type: 'treemap' }"
+      }
+    },
+    "width": { "type": { "name": "number" } }
+  },
+  "name": "Treemap",
+  "imports": [
+    "import { Treemap } from '@mui/x-charts-premium/Treemap';",
+    "import { Treemap } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    {
+      "name": "baseToggleButton",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
+      "class": null
+    },
+    { "name": "baseToggleButtonGroup", "description": "", "class": null },
+    {
+      "name": "loadingOverlay",
+      "description": "Overlay component rendered when the chart is in a loading state.",
+      "default": "ChartsLoadingOverlay",
+      "class": null
+    },
+    {
+      "name": "noDataOverlay",
+      "description": "Overlay component rendered when the chart has no data to display.",
+      "default": "ChartsNoDataOverlay",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
+      "class": null
+    },
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "cell",
+      "className": "MuiTreemap-cell",
+      "description": "Styles applied to an individual cell (tile) element.",
+      "isGlobal": false
+    },
+    {
+      "key": "cells",
+      "className": "MuiTreemap-cells",
+      "description": "Styles applied to the cells container.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiTreemap-label",
+      "description": "Styles applied to an individual cell label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labels",
+      "className": "MuiTreemap-labels",
+      "description": "Styles applied to the labels container.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiTreemap-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiTreemap",
+  "filename": "/packages/x-charts-premium/src/Treemap/Treemap.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/treemap/\">Charts - Treemap <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>"
+}

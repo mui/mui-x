@@ -22,7 +22,7 @@ type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
  * reuse these helpers by translating to a `dataIndex` at their boundary.
  */
 type WorkingItem = {
-  type: Exclude<ChartSeriesType, 'sankey' | 'heatmap'>;
+  type: Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'>;
   seriesId: SeriesId;
   dataIndex?: number;
 };
@@ -42,8 +42,8 @@ function isSeriesHidden(
 }
 
 export function createGetNextIndexFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -120,8 +120,8 @@ export function createGetNextIndexFocusedItem<
 }
 
 export function createGetPreviousIndexFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -198,8 +198,8 @@ export function createGetPreviousIndexFocusedItem<
 }
 
 export function createGetNextSeriesFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -255,8 +255,8 @@ export function createGetNextSeriesFocusedItem<
 }
 
 export function createGetPreviousSeriesFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
