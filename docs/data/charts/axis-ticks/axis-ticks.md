@@ -79,8 +79,11 @@ For example, `tickLabelInterval: (value, index) => index % 2 === 0` will show th
 The `value` and `index` arguments are those of the ticks, not the axis data.
 :::
 
-By default, ticks are filtered so that their labels don't overlap.
+By default on the x-axis, ticks are filtered so that their labels don't overlap.
 You can override this behavior with `tickLabelInterval: () => true` which forces the tick label to be shown for each tick.
+
+On the y-axis, this overlap filtering is opt-in: all labels are displayed by default.
+Set `tickLabelInterval: 'auto'` to hide labels that would overlap with each other.
 
 In the example below, the top axis is a reference for the default behavior: tick labels don't overflow.
 At the bottom, you can see one tick for the beginning and the middle of the day, but the tick label is only displayed for the beginning of the day.
