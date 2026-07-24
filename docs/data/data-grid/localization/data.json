@@ -288,6 +288,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/thTH.ts"
   },
   {
+    "languageTag": "tk-TM",
+    "importName": "tkTM",
+    "localeName": "Turkmen",
+    "missingKeysCount": 82,
+    "totalKeysCount": 223,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/tkTM.ts"
+  },
+  {
     "languageTag": "tr-TR",
     "importName": "trTR",
     "localeName": "Turkish",
