@@ -167,6 +167,81 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(first).to.equal(second);
   });
 
+  it('should report the feature as enabled only when a dependencies parameter is provided', () => {
+    const stateWithDependencies = getState();
+    const stateWithoutDependencies = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, eventB],
+    });
+
+    expect(eventTimelinePremiumDependencySelectors.enabled(stateWithDependencies)).to.equal(true);
+    expect(eventTimelinePremiumDependencySelectors.enabled(stateWithoutDependencies)).to.equal(
+      false,
+    );
+  });
+
+  it('should return the creation gesture source and target flags', () => {
+    const state = {
+      ...getState(),
+      dependencyCreation: {
+        sourceEventId: 'event-a',
+        sourceOccurrenceKey: 'event-a-0',
+        targetEventId: 'event-b',
+        targetOccurrenceKey: 'event-b-0',
+        cursor: { clientX: 10, clientY: 20 },
+      },
+    };
+
+    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a')).to.equal(
+      true,
+    );
+    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-b')).to.equal(
+      false,
+    );
+    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b')).to.equal(
+      true,
+    );
+    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-a')).to.equal(
+      false,
+    );
+  });
+
+  it('should not flag any event when no creation gesture is in progress', () => {
+    const state = getState();
+
+    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a')).to.equal(
+      false,
+    );
+    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b')).to.equal(
+      false,
+    );
+  });
+
+  it('should resolve the selected id to null when the dependency no longer exists', () => {
+    const state = getState();
+
+    expect(
+      eventTimelinePremiumDependencySelectors.selectedId({
+        ...state,
+        selectedDependencyId: 'dep-1',
+      }),
+    ).to.equal('dep-1');
+    expect(
+      eventTimelinePremiumDependencySelectors.selectedId({
+        ...state,
+        selectedDependencyId: 'removed-dep',
+      }),
+    ).to.equal(null);
+    expect(eventTimelinePremiumDependencySelectors.selectedId(state)).to.equal(null);
+  });
+
+  it('should report whether a dependency is selected', () => {
+    const state = { ...getState(), selectedDependencyId: 'dep-1' };
+
+    expect(eventTimelinePremiumDependencySelectors.isSelected(state, 'dep-1')).to.equal(true);
+    expect(eventTimelinePremiumDependencySelectors.isSelected(state, 'dep-2')).to.equal(false);
+  });
+
   it('should keep only the last dependency when two of them share the same id', () => {
     const firstDependency: SchedulerDependency = {
       id: 'dup-1',

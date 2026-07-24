@@ -37,6 +37,34 @@ export interface SchedulerDependency {
  */
 export type SchedulerDependencyCreationProperties = Omit<SchedulerDependency, 'id'>;
 
+/**
+ * State of the pending create-dependency drag gesture, from a terminal to a target event.
+ */
+export interface SchedulerDependencyCreation {
+  /**
+   * The id of the event the gesture started from (the predecessor).
+   */
+  sourceEventId: SchedulerEventId;
+  /**
+   * The key of the occurrence the gesture started from.
+   * Anchors the provisional arrow on the row appearance the user grabbed.
+   */
+  sourceOccurrenceKey: string;
+  /**
+   * The id of the event currently hovered as a valid drop target, if any.
+   */
+  targetEventId: SchedulerEventId | null;
+  /**
+   * The key of the hovered occurrence, so the provisional arrow snaps to the row
+   * appearance under the pointer.
+   */
+  targetOccurrenceKey: string | null;
+  /**
+   * The pointer position, in client coordinates.
+   */
+  cursor: { clientX: number; clientY: number };
+}
+
 export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknownEvent';
 
 export type SchedulerDependencyRejectionReason =

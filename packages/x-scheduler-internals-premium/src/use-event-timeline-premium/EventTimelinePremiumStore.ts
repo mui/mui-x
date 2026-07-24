@@ -13,6 +13,8 @@ import type {
   EventTimelinePremiumPreferences,
   EventTimelinePremiumPreset,
   SchedulerAddDependencyResult,
+  SchedulerDependenciesParameters,
+  SchedulerDependencyCreation,
   SchedulerDependencyCreationProperties,
   SchedulerDependencyId,
 } from '../models';
@@ -79,6 +81,9 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
 });
 
+const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) =>
+  parameters.dependencies !== undefined || parameters.onDependenciesChange !== undefined;
+
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
 function warnIfShouldEventRequireResourceMisconfigured(
@@ -106,6 +111,9 @@ const mapper: SchedulerParametersToStateMapper<
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
       ...buildDependenciesState(parameters.dependencies),
+      areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
+      dependencyCreation: null,
+      selectedDependencyId: null,
       preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
       preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
       shouldEventRequireResource,
@@ -120,6 +128,7 @@ const mapper: SchedulerParametersToStateMapper<
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
       ...buildDependenciesState(parameters.dependencies),
+      areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
       shouldEventRequireResource,
       hasInitialized: true,
     };
@@ -249,4 +258,35 @@ export class EventTimelinePremiumStore<
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId) =>
     this.scheduling.deleteDependency(dependencyId);
+
+  /**
+   * Sets the pending create-dependency drag gesture.
+   * Called on every drag move, so it bails out when nothing changed.
+   */
+  public setDependencyCreation = (creation: SchedulerDependencyCreation | null) => {
+    const previous = this.state.dependencyCreation;
+    if (
+      previous === creation ||
+      (previous !== null &&
+        creation !== null &&
+        previous.sourceEventId === creation.sourceEventId &&
+        previous.sourceOccurrenceKey === creation.sourceOccurrenceKey &&
+        previous.targetEventId === creation.targetEventId &&
+        previous.targetOccurrenceKey === creation.targetOccurrenceKey &&
+        previous.cursor.clientX === creation.cursor.clientX &&
+        previous.cursor.clientY === creation.cursor.clientY)
+    ) {
+      return;
+    }
+    this.set('dependencyCreation', creation);
+  };
+
+  /**
+   * Selects a dependency, or clears the selection when called with `null`.
+   */
+  public setSelectedDependency = (dependencyId: SchedulerDependencyId | null) => {
+    if (this.state.selectedDependencyId !== dependencyId) {
+      this.set('selectedDependencyId', dependencyId);
+    }
+  };
 }

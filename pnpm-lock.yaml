@@ -1846,6 +1846,9 @@ importers:
 
   packages/x-scheduler-internals-premium:
     dependencies:
+      '@atlaskit/pragmatic-drag-and-drop':
+        specifier: 'catalog:'
+        version: 1.8.1
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
