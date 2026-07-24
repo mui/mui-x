@@ -63,7 +63,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<HTMLDivElement, MouseEvent>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
+        "type": "function(event: ChartsActivationEvent<HTMLDivElement>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
         "describedArgs": ["event", "item"]
       }
     },

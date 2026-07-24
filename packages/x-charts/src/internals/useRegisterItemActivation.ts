@@ -18,7 +18,7 @@ import type { FocusedItemIdentifier } from '../models/seriesType';
  * the most specific scope wins, `priority` breaks ties, and the handler runs once.
  *
  * The handler receives the `KeyboardEvent`, typed as `any` because the click callbacks it forwards
- * to still describe a pointer event. Widening them is deferred to v10 to avoid breaking user types.
+ * to only describe the pointer event unless the user augments `keyboardActivationOverride`.
  *
  * @param scope The items covered by the handler. Omit `seriesId` to cover a whole series type.
  * @param handler The handler to call on activation, or `undefined` to register nothing.

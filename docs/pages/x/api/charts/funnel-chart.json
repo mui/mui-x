@@ -85,7 +85,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, funnelItemIdentifier: FunnelItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent<SVGElement>, funnelItemIdentifier: FunnelItemIdentifier) => void",
         "describedArgs": ["event", "funnelItemIdentifier"]
       }
     },

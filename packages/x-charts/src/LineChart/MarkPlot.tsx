@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import type { WithDataAttributes } from '@mui/utils/types';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import type { LineItemClickIdentifier } from '../models/seriesType/line';
+import type { ChartsActivationEvent } from '../models/events';
 import { LINE_ACTIVATION_PRIORITY, useRegisterLineItemActivation } from './useLineItemClickHandler';
 import { CircleMarkElement } from './CircleMarkElement';
 import { MarkElement } from './MarkElement';
@@ -43,11 +44,11 @@ export interface MarkPlotProps
   slotProps?: MarkPlotSlotProps;
   /**
    * Callback fired when a line mark item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsActivationEvent<SVGElement>,
     lineItemIdentifier: LineItemClickIdentifier,
   ) => void;
 }
@@ -153,7 +154,7 @@ MarkPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line mark item is clicked.
-   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick: PropTypes.func,

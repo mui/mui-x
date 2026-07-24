@@ -17,6 +17,7 @@ import {
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { findClosestPoints } from './findClosestPoints';
+import type { ChartsActivationEvent } from '../../../../models/events';
 
 type ClosestPoint = { dataIndex: number; seriesId: SeriesId; edgeDistance: number; radius: number };
 
@@ -269,8 +270,8 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         return;
       }
 
-      // `onItemClick` still describes a pointer event; widening it is deferred to v10.
-      onItemClick(event as unknown as MouseEvent, {
+      // The callback only describes the pointer event unless the user augments the types.
+      onItemClick(event as unknown as ChartsActivationEvent, {
         type: 'scatter',
         seriesId: item.seriesId,
         dataIndex: item.dataIndex,

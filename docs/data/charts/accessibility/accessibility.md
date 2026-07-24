@@ -93,11 +93,15 @@ It is opt-in on every chart, so existing callbacks keep receiving pointer events
 
 Pressing <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd> on the focused item then calls `onItemClick` and `onAxisClick` with the same payload a click provides.
 
-:::warning
-The `event` argument is the `KeyboardEvent` that triggered the activation, while the callback types still describe a pointer event.
-Narrow with `event instanceof KeyboardEvent` before reading pointer-only properties such as `clientX`.
-The types will be widened in v10, when the behavior becomes the default.
-:::
+The `event` argument is the `KeyboardEvent` that triggered the activation.
+The callback types keep describing the pointer event to avoid a breaking change, so opt into the wider type with a module augmentation:
+
+```ts
+import type {} from '@mui/x-charts/moduleAugmentation/keyboardActivation';
+```
+
+The click callbacks then receive `MouseEvent | KeyboardEvent`, and you can narrow with `event instanceof KeyboardEvent` before reading pointer-only properties such as `clientX`.
+Both become the default in v10.
 
 {{"demo": "KeyboardActivation.js"}}
 

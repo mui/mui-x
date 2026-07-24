@@ -7,6 +7,7 @@ import { getChartPoint } from '../internals/getChartPoint';
 import { getAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import type { SeriesId } from '../models/seriesType/common';
+import type { ChartsActivationEvent } from '../models/events';
 import { useRegisterItemActivation } from '../internals/useRegisterItemActivation';
 
 /**
@@ -21,7 +22,7 @@ export const LINE_ACTIVATION_PRIORITY = { mark: 2, line: 1, area: 0 };
 export function useRegisterLineItemActivation(
   onItemClick:
     | ((
-        event: React.MouseEvent<SVGElement, MouseEvent>,
+        event: ChartsActivationEvent<SVGElement>,
         lineItemIdentifier: LineItemClickIdentifier,
       ) => void)
     | undefined,
@@ -50,7 +51,7 @@ export function useRegisterLineItemActivation(
 export function useLineItemClickHandler(
   onItemClick:
     | ((
-        event: React.MouseEvent<SVGElement, MouseEvent>,
+        event: ChartsActivationEvent<SVGElement>,
         lineItemIdentifier: LineItemClickIdentifier,
       ) => void)
     | undefined,

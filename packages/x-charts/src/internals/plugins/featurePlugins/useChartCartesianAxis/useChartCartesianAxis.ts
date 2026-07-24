@@ -18,6 +18,7 @@ import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 import { getAxisClickPayload } from './getAxisClickPayload';
+import type { ChartsActivationEvent } from '../../../../models/events';
 import type { ComputeResult } from './computeAxisValue';
 import type { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import {
@@ -312,8 +313,8 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     event.preventDefault();
-    // `onAxisClick` still describes a pointer event; widening it is deferred to v10.
-    onAxisClick(event as unknown as MouseEvent, payload);
+    // The callback only describes the pointer event unless the user augments the types.
+    onAxisClick(event as unknown as ChartsActivationEvent, payload);
   });
 
   React.useEffect(() => {

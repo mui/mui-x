@@ -20,6 +20,7 @@ import type { ScatterSizeGetter } from './seriesConfig/getMarkerSize';
 import { useUtilityClasses } from './scatterClasses';
 import type { ScatterClasses } from './scatterClasses';
 import { useRegisterItemActivation } from '../internals/useRegisterItemActivation';
+import type { ChartsActivationEvent } from '../models/events';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
@@ -46,11 +47,11 @@ export interface ScatterProps {
   sizeGetter: ScatterSizeGetter;
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent<SVGElement>} event Event recorded on the `<svg/>` element.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: ChartsActivationEvent<SVGElement>,
     scatterItemIdentifier: ScatterItemIdentifier,
   ) => void;
   classes?: Partial<ScatterClasses>;
@@ -187,7 +188,7 @@ Scatter.propTypes /* remove-proptypes */ = {
   colorGetter: PropTypes.func.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent<SVGElement>} event Event recorded on the `<svg/>` element.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,

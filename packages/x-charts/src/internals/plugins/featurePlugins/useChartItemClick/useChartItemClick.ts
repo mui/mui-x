@@ -5,6 +5,7 @@ import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartItemClickSignature } from './useChartItemClick.types';
 import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import { getChartPoint } from '../../../getChartPoint';
+import type { ChartsActivationEvent } from '../../../../models/events';
 
 export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = ({
   params,
@@ -23,9 +24,9 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = (
       // @ts-ignore The type inference for store.state does not support generic yet
       const itemWithData = seriesTypeConfig?.getItemWithData?.(store.state, item);
 
-      // `onItemClick` still describes a pointer event; widening it is deferred to v10.
+      // The callback only describes the pointer event unless the user augments the types.
       onItemClick(
-        event as unknown as React.MouseEvent<HTMLDivElement, MouseEvent>,
+        event as unknown as ChartsActivationEvent<HTMLDivElement>,
         (itemWithData ?? item) as SeriesItemIdentifierWithType<ChartSeriesType>,
       );
     });

@@ -24,6 +24,7 @@ import { getRadiusAxisIndex, getRotationAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 import { getPolarAxisClickPayload } from './getPolarAxisClickPayload';
+import type { ChartsActivationEvent } from '../../../../models/events';
 import {
   isItemActivationKey,
   selectorChartsFocusedItem,
@@ -306,8 +307,8 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     }
 
     event.preventDefault();
-    // `onAxisClick` still describes a pointer event; widening it is deferred to v10.
-    onAxisClick(event as unknown as MouseEvent, payload);
+    // The callback only describes the pointer event unless the user augments the types.
+    onAxisClick(event as unknown as ChartsActivationEvent, payload);
   });
 
   React.useEffect(() => {
