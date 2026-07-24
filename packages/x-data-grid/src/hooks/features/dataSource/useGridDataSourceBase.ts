@@ -85,6 +85,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const onDataSourceErrorProp = props.onDataSourceError;
   const revalidateMs = props.dataSourceRevalidateMs;
+  const clearDataSourceState = options.clearDataSourceState;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
     if (!props.pagination) {
@@ -123,7 +124,21 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
 
-      options.clearDataSourceState?.();
+      // For most strategies a root fetch is an invalidating event, so the in-flight
+      // child requests must be aborted along with the rest of the data source state.
+      // The nested lazy loading strategy is the exception: its root fetches are
+      // incremental viewport loads that legitimately run concurrently with child
+      // fetches — clearing here would abort those child requests and leave their
+      // groups stuck as skeleton rows (https://github.com/mui/mui-x/issues/22715).
+      // For that strategy the state is cleared explicitly at the points that
+      // invalidate the whole tree instead (sort/filter model change, `dataSource`
+      // prop change, grouping/aggregation/pivot model change).
+      if (
+        apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) !==
+        DataSourceRowsUpdateStrategy.LazyLoadedGroupedData
+      ) {
+        clearDataSourceState?.();
+      }
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
@@ -204,6 +219,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       props.dataSource?.getRows,
       onDataSourceErrorProp,
       options,
+      clearDataSourceState,
       props.signature,
     ],
   );
@@ -459,6 +475,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         apiRef.current.setRows([]);
       }
       apiRef.current.dataSource.cache.clear();
+      // A new data source invalidates everything in flight. `fetchRows()` clears the
+      // data source state itself for most strategies but intentionally skips it for
+      // nested lazy loading, so the clear is done explicitly here.
+      clearDataSourceState?.();
       apiRef.current.dataSource.fetchRows();
     }
 
@@ -466,7 +486,14 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       // ignore the current request on unmount
       lastRequestId.current += 1;
     };
-  }, [apiRef, props.dataSource, props.dataSourceKeepPreviousData, currentStrategy, stopPolling]);
+  }, [
+    apiRef,
+    props.dataSource,
+    props.dataSourceKeepPreviousData,
+    currentStrategy,
+    stopPolling,
+    clearDataSourceState,
+  ]);
 
   React.useEffect(() => {
     // `dataSourceKeepPreviousData` is a no-op for tree data and row grouping: those

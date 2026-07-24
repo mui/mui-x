@@ -246,8 +246,20 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
       apiRef.current.setLoading(true);
     }
     stopPolling();
+    // Root fetches don't clear the data source state under the nested lazy loading
+    // strategy — abort the in-flight child requests explicitly since the grouping
+    // model change invalidates the whole tree.
+    apiRef.current.clearDataSourceState();
     debouncedFetchRows();
   }, [apiRef, debouncedFetchRows, stopPolling]);
+
+  const handleFetchParamsModelChange = React.useCallback(() => {
+    // Root fetches don't clear the data source state under the nested lazy loading
+    // strategy — abort the in-flight child requests explicitly since their responses
+    // were computed for the previous aggregation/pivot model.
+    apiRef.current.clearDataSourceState();
+    debouncedFetchRows();
+  }, [apiRef, debouncedFetchRows]);
 
   const privateApi: GridDataSourcePremiumPrivateApi = {
     ...api.private,
@@ -287,21 +299,9 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
     'rowGroupingModelChange',
     runIf(!pivotActive && !!props.dataSource, handleRowGroupingModelChange),
   );
-  useGridEvent(
-    apiRef,
-    'aggregationModelChange',
-    runIf(!pivotActive, () => debouncedFetchRows()),
-  );
-  useGridEvent(
-    apiRef,
-    'pivotModeChange',
-    runIf(!pivotActive, () => debouncedFetchRows()),
-  );
-  useGridEvent(
-    apiRef,
-    'pivotModelChange',
-    runIf(pivotActive, () => debouncedFetchRows()),
-  );
+  useGridEvent(apiRef, 'aggregationModelChange', runIf(!pivotActive, handleFetchParamsModelChange));
+  useGridEvent(apiRef, 'pivotModeChange', runIf(!pivotActive, handleFetchParamsModelChange));
+  useGridEvent(apiRef, 'pivotModelChange', runIf(pivotActive, handleFetchParamsModelChange));
 
   React.useEffect(() => {
     setStrategyAvailability();

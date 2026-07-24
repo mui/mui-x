@@ -354,6 +354,88 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       expect(technologyRequest?.groupFields).to.deep.equal(['sector', 'industry']);
     });
 
+    it('should apply the children responses that are in flight when an incremental root fetch happens', async () => {
+      // Root fetches under the nested lazy loading strategy are incremental loads and must
+      // not abort the in-flight children requests (https://github.com/mui/mui-x/issues/22715)
+      type DeferredRequest = { params: GridGetRowsParams; resolve: () => void };
+      const deferredChildrenRequests: DeferredRequest[] = [];
+
+      function TestConcurrentRequests() {
+        apiRef = useGridApiRef();
+
+        const dataSource: GridDataSource = React.useMemo(
+          () => ({
+            getRows: async (params: GridGetRowsParams) => {
+              const groupKeys = params.groupKeys ?? [];
+              const rows = rowsByGroupKeys[JSON.stringify(groupKeys)] ?? [];
+              const start = typeof params.start === 'number' ? params.start : 0;
+              const end = typeof params.end === 'number' ? params.end : rows.length - 1;
+              const response = {
+                rows: rows.slice(start, end + 1),
+                rowCount: rows.length,
+              };
+
+              if (groupKeys.length > 0) {
+                await new Promise<void>((resolve) => {
+                  deferredChildrenRequests.push({ params, resolve });
+                });
+              }
+
+              return response;
+            },
+            getGroupKey: (row) => row.group,
+            getChildrenCount: (row) => row.childrenCount,
+          }),
+          [],
+        );
+
+        return (
+          <div style={{ width: 400, height: 10 * rowHeight + columnHeaderHeight + 2 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              columns={[
+                { field: 'sector', width: 120 },
+                { field: 'industry', width: 120 },
+                { field: 'company', width: 120 },
+                { field: 'value', width: 80 },
+              ]}
+              dataSource={dataSource}
+              dataSourceCache={null}
+              lazyLoading
+              rowGroupingModel={['sector', 'industry']}
+              defaultGroupingExpansionDepth={1}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+              rowHeight={rowHeight}
+              columnHeaderHeight={columnHeaderHeight}
+            />
+          </div>
+        );
+      }
+
+      render(<TestConcurrentRequests />);
+
+      // The children requests of both default-expanded groups are in flight
+      await waitFor(() => {
+        const pendingGroupKeys = deferredChildrenRequests.map((request) =>
+          JSON.stringify(request.params.groupKeys),
+        );
+        expect(pendingGroupKeys).to.include('["Technology"]');
+        expect(pendingGroupKeys).to.include('["Finance"]');
+      });
+
+      // An incremental root fetch must not abort the in-flight children requests
+      await act(async () => apiRef.current?.dataSource.fetchRows());
+
+      await waitFor(() => {
+        deferredChildrenRequests.splice(0).forEach((request) => request.resolve());
+        expect(apiRef.current!.getRow('industry-software')).not.to.equal(null);
+        expect(apiRef.current!.getRow('industry-hardware')).not.to.equal(null);
+        expect(apiRef.current!.getRow('industry-banking')).not.to.equal(null);
+      });
+    });
+
     it('should lazy load children for default-expanded row grouping groups', async () => {
       const getRowsSpy = spy();
       render(
