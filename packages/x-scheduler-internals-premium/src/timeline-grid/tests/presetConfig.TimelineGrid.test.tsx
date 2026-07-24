@@ -41,19 +41,28 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
         <TimelineGrid.Root>
           <TimelineGrid.BodyRow index={0}>
             <TimelineGrid.EventRow resourceId={resource.id} data-testid="events-row">
-              {({ occurrences }) =>
-                occurrences.map((occurrence) => (
-                  <TimelineGrid.Event
-                    key={occurrence.key}
-                    eventId={occurrence.id}
-                    occurrenceKey={occurrence.key}
-                    start={occurrence.displayTimezone.start}
-                    end={occurrence.displayTimezone.end}
-                    renderDragPreview={() => null}
-                    data-testid={`event-${occurrence.id}`}
-                  />
-                ))
-              }
+              {({ occurrences, placeholder }) => (
+                <React.Fragment>
+                  {occurrences.map((occurrence) => (
+                    <TimelineGrid.Event
+                      key={occurrence.key}
+                      eventId={occurrence.id}
+                      occurrenceKey={occurrence.key}
+                      start={occurrence.displayTimezone.start}
+                      end={occurrence.displayTimezone.end}
+                      renderDragPreview={() => null}
+                      data-testid={`event-${occurrence.id}`}
+                    />
+                  ))}
+                  {placeholder != null && (
+                    <TimelineGrid.EventPlaceholder
+                      start={placeholder.displayTimezone.start}
+                      end={placeholder.displayTimezone.end}
+                      data-testid="placeholder"
+                    />
+                  )}
+                </React.Fragment>
+              )}
             </TimelineGrid.EventRow>
           </TimelineGrid.BodyRow>
         </TimelineGrid.Root>
@@ -137,6 +146,38 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       render(<Grid events={[nightly]} />);
 
       expect(screen.getByTestId('event-nightly')).not.to.equal(null);
+    });
+
+    it('should not render the placeholder while its range is fully inside the hidden hours', () => {
+      let store: AnyEventCalendarStore | null = null;
+      render(
+        <Grid
+          events={[]}
+          presetConfig={PRESET_CONFIG}
+          onStoreMount={(s) => {
+            store = s;
+          }}
+        />,
+      );
+
+      const setPlaceholder = (startHour: number, endHour: number) => {
+        act(() => {
+          store!.set('occurrencePlaceholder', {
+            type: 'creation',
+            surfaceType: 'timeline',
+            start: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, startHour),
+            end: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, endHour),
+            resourceId: resource.id,
+            lockSurfaceType: true,
+          });
+        });
+      };
+
+      setPlaceholder(21, 23);
+      expect(screen.queryByTestId('placeholder')).to.equal(null);
+
+      setPlaceholder(10, 12);
+      expect(screen.getByTestId('placeholder')).not.to.equal(null);
     });
 
     it('should start the keyboard event creation at the first visible hour', async () => {
