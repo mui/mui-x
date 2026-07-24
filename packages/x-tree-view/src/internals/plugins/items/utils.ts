@@ -122,6 +122,74 @@ export function buildItemsLookups<R extends TreeViewValidItem<R>>(
   };
 }
 
+/**
+ * Builds the items lookups for a tree of items, recursing into the children of each item.
+ * The returned lookups only contain the items passed to this method.
+ */
+export function buildItemsLookupsRecursively<R extends TreeViewValidItem<R>>(
+  parameters: BuildItemsLookupsRecursivelyParameters<R>,
+) {
+  const { storeParameters, items, parentId, depth, isItemExpandable, existingItemMetaLookup } =
+    parameters;
+
+  const itemMetaLookup: MinimalTreeViewState<R, any>['itemMetaLookup'] = {};
+  const itemModelLookup: MinimalTreeViewState<R, any>['itemModelLookup'] = {};
+  const itemOrderedChildrenIdsLookup: MinimalTreeViewState<R, any>['itemOrderedChildrenIdsLookup'] =
+    {};
+  const itemChildrenIndexesLookup: MinimalTreeViewState<R, any>['itemChildrenIndexesLookup'] = {};
+
+  // Both the existing items and the ones processed here, to detect duplicated ids.
+  const otherItemsMetaLookup: { [itemId: string]: TreeViewItemMeta } = {
+    ...existingItemMetaLookup,
+  };
+
+  const processSiblings = (
+    siblings: readonly R[],
+    siblingsParentId: TreeViewItemId | null,
+    siblingsDepth: number,
+  ) => {
+    const lookups = buildItemsLookups({
+      storeParameters,
+      items: siblings,
+      parentId: siblingsParentId,
+      depth: siblingsDepth,
+      isItemExpandable,
+      otherItemsMetaLookup,
+    });
+
+    Object.assign(itemMetaLookup, lookups.metaLookup);
+    Object.assign(otherItemsMetaLookup, lookups.metaLookup);
+    Object.assign(itemModelLookup, lookups.modelLookup);
+    itemOrderedChildrenIdsLookup[siblingsParentId ?? TREE_VIEW_ROOT_PARENT_ID] =
+      lookups.orderedChildrenIds;
+    itemChildrenIndexesLookup[siblingsParentId ?? TREE_VIEW_ROOT_PARENT_ID] =
+      lookups.childrenIndexes;
+
+    for (const item of lookups.itemsChildren) {
+      processSiblings(item.children, item.id, siblingsDepth + 1);
+    }
+  };
+
+  processSiblings(items, parentId, depth);
+
+  return {
+    itemMetaLookup,
+    itemModelLookup,
+    itemOrderedChildrenIdsLookup,
+    itemChildrenIndexesLookup,
+  };
+}
+
+interface BuildItemsLookupsRecursivelyParameters<R extends TreeViewValidItem<R>> extends Omit<
+  BuildItemsLookupsParameters<R>,
+  'otherItemsMetaLookup'
+> {
+  /**
+   * The meta of the items already present in the tree, used to detect duplicated ids.
+   */
+  existingItemMetaLookup?: { [itemId: string]: TreeViewItemMeta };
+}
+
 interface BuildItemsLookupsParameters<R extends TreeViewValidItem<R>> {
   items: readonly R[];
   storeParameters: Pick<

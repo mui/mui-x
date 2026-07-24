@@ -1,12 +1,14 @@
 import type { TreeViewItemId, TreeViewValidItem } from '../../../models';
 import { idSelectors } from '../id';
 import { itemsSelectors } from './selectors';
-import { buildItemsLookups, TREE_VIEW_ROOT_PARENT_ID } from './utils';
+import {
+  buildItemsLookups,
+  buildItemsLookupsRecursively,
+  buildSiblingIndexes,
+  TREE_VIEW_ROOT_PARENT_ID,
+} from './utils';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';
-import type {
-  MinimalTreeViewParameters,
-  MinimalTreeViewState,
-} from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
+import type { MinimalTreeViewParameters } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   private store: MinimalTreeViewStore<R, any>;
@@ -52,45 +54,13 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       | 'getItemChildren'
     >,
   ) => {
-    const itemMetaLookup: MinimalTreeViewState<R2, any>['itemMetaLookup'] = {};
-    const itemModelLookup: MinimalTreeViewState<R2, any>['itemModelLookup'] = {};
-    const itemOrderedChildrenIdsLookup: MinimalTreeViewState<
-      R2,
-      any
-    >['itemOrderedChildrenIdsLookup'] = {};
-    const itemChildrenIndexesLookup: MinimalTreeViewState<R2, any>['itemChildrenIndexesLookup'] =
-      {};
-
-    function processSiblings(items: readonly R2[], parentId: string | null, depth: number) {
-      const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-      const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes, itemsChildren } =
-        buildItemsLookups({
-          storeParameters: parameters,
-          items,
-          parentId,
-          depth,
-          isItemExpandable: (item, children) => !!children && children.length > 0,
-          otherItemsMetaLookup: itemMetaLookup,
-        });
-
-      Object.assign(itemMetaLookup, metaLookup);
-      Object.assign(itemModelLookup, modelLookup);
-      itemOrderedChildrenIdsLookup[parentIdWithDefault] = orderedChildrenIds;
-      itemChildrenIndexesLookup[parentIdWithDefault] = childrenIndexes;
-
-      for (const item of itemsChildren) {
-        processSiblings(item.children || [], item.id, depth + 1);
-      }
-    }
-
-    processSiblings(parameters.items, null, 0);
-
-    return {
-      itemMetaLookup,
-      itemModelLookup,
-      itemOrderedChildrenIdsLookup,
-      itemChildrenIndexesLookup,
-    };
+    return buildItemsLookupsRecursively({
+      storeParameters: parameters,
+      items: parameters.items,
+      parentId: null,
+      depth: 0,
+      isItemExpandable: (item, children) => !!children && children.length > 0,
+    });
   };
 
   /**
@@ -166,6 +136,100 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
     };
 
     this.store.set('itemMetaLookup', itemMetaLookup);
+  };
+
+  /**
+   * Add items to the tree.
+   * The items are added as children of the item with the given `parentId`, or at the root level if `parentId` is `null` or not defined.
+   * @param {AddItemsParameters<R>} parameters The items to add and their position in the tree.
+   */
+  public addItems = ({ items, parentId = null, index }: AddItemsParameters<R>) => {
+    if (items.length === 0) {
+      return;
+    }
+
+    if (parentId != null && itemsSelectors.itemMeta(this.store.state, parentId) == null) {
+      throw new Error(
+        `MUI X Tree View: Unable to add items to the parent with id "${parentId}" because it is not present in the tree. ` +
+          'Pass the id of an existing item, or `null` to add the items at the root level.',
+      );
+    }
+
+    const parentDepth =
+      parentId == null ? -1 : itemsSelectors.itemDepth(this.store.state, parentId);
+
+    // When the items are lazy loaded, an item can be expandable even if its children are not loaded yet.
+    const dataSource = (
+      this.store.parameters as { dataSource?: { getChildrenCount: (item: R) => number } }
+    ).dataSource;
+    const isItemExpandable = (item: R, children: R[] | undefined) => {
+      if (children != null && children.length > 0) {
+        return true;
+      }
+
+      return dataSource == null ? false : dataSource.getChildrenCount(item) !== 0;
+    };
+
+    const {
+      itemMetaLookup: metaLookup,
+      itemModelLookup: modelLookup,
+      itemOrderedChildrenIdsLookup: orderedChildrenIdsLookup,
+      itemChildrenIndexesLookup: childrenIndexesLookup,
+    } = buildItemsLookupsRecursively({
+      storeParameters: this.store.parameters,
+      items,
+      parentId,
+      depth: parentDepth + 1,
+      isItemExpandable,
+      existingItemMetaLookup: this.store.state.itemMetaLookup,
+    });
+
+    // `buildItemsLookups` allows an id to be re-used by an item with the same parent,
+    // which is only valid when rebuilding the state from the `items` prop.
+    for (const id of Object.keys(metaLookup)) {
+      if (this.store.state.itemMetaLookup[id] != null) {
+        throw new Error(
+          `MUI X Tree View: All items must have a unique \`id\` property. ` +
+            `The id "${id}" is used by multiple items. ` +
+            'Use the `getItemId` prop to specify a custom id for each item if needed.',
+        );
+      }
+    }
+
+    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+    const existingChildrenIds = itemsSelectors.itemOrderedChildrenIds(this.store.state, parentId);
+    const insertionIndex = index ?? existingChildrenIds.length;
+    if (insertionIndex < 0 || insertionIndex > existingChildrenIds.length) {
+      throw new Error(
+        `MUI X Tree View: Unable to add items at index "${insertionIndex}" because it is out of range. ` +
+          `The index must be between 0 and the amount of children of the parent item (${existingChildrenIds.length}).`,
+      );
+    }
+
+    const mergedChildrenIds = [...existingChildrenIds];
+    mergedChildrenIds.splice(insertionIndex, 0, ...orderedChildrenIdsLookup[parentIdWithDefault]);
+    orderedChildrenIdsLookup[parentIdWithDefault] = mergedChildrenIds;
+    childrenIndexesLookup[parentIdWithDefault] = buildSiblingIndexes(mergedChildrenIds);
+
+    const newMetaLookup = { ...this.store.state.itemMetaLookup, ...metaLookup };
+    if (parentId != null && !newMetaLookup[parentId].expandable) {
+      newMetaLookup[parentId] = { ...newMetaLookup[parentId], expandable: true };
+    }
+
+    this.store.update({
+      itemMetaLookup: newMetaLookup,
+      itemModelLookup: { ...this.store.state.itemModelLookup, ...modelLookup },
+      itemOrderedChildrenIdsLookup: {
+        ...this.store.state.itemOrderedChildrenIdsLookup,
+        ...orderedChildrenIdsLookup,
+      },
+      itemChildrenIndexesLookup: {
+        ...this.store.state.itemChildrenIndexesLookup,
+        ...childrenIndexesLookup,
+      },
+    });
+
+    this.store.selection.propagateSelectionToNewItems(parentId);
   };
 
   public buildPublicAPI = () => {
@@ -273,4 +337,22 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   public handleItemClick = (event: React.MouseEvent, itemId: TreeViewItemId) => {
     this.store.parameters.onItemClick?.(event, itemId);
   };
+}
+
+export interface AddItemsParameters<R extends TreeViewValidItem<R>> {
+  /**
+   * The items to add to the tree.
+   */
+  items: readonly R[];
+  /**
+   * The id of the item to add the items to.
+   * If `null` or not defined, the items are added at the root level.
+   * @default null
+   */
+  parentId?: TreeViewItemId | null;
+  /**
+   * The position in the parent's children at which the items are inserted.
+   * If not defined, the items are appended after the existing children.
+   */
+  index?: number;
 }

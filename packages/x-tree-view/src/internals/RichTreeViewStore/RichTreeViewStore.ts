@@ -1,7 +1,7 @@
 import type { TreeViewValidItem } from '../../models';
-import { TreeViewLabelEditingPlugin } from '../plugins/labelEditing';
 import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
-import type { RichTreeViewStoreParameters, RichTreeViewState } from './RichTreeViewStore.types';
+import { TreeViewLabelEditingPlugin } from '../plugins/labelEditing';
+import type { RichTreeViewState, RichTreeViewStoreParameters } from './RichTreeViewStore.types';
 import { parametersToStateMapper } from './RichTreeViewStore.utils';
 
 export class ExtendableRichTreeViewStore<
@@ -25,6 +25,8 @@ export class ExtendableRichTreeViewStore<
     return {
       ...super.buildPublicAPI(),
       ...this.labelEditing.buildPublicAPI(),
+      // `addItems` is not exposed on the Simple Tree View, where the items are defined with JSX.
+      addItems: this.items.addItems,
     };
   }
 }
