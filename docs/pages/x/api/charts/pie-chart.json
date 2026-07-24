@@ -11,7 +11,9 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "desc": { "type": { "name": "string" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {

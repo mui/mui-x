@@ -44,7 +44,10 @@
       "deprecationInfo": "Use <code>disableHitArea</code> instead."
     },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ progressiveRendering?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ keyboardActivation?: bool, progressiveRendering?: bool }"
+      }
     },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }

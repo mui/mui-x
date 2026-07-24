@@ -76,6 +76,36 @@ When focused, the chart highlights a value item that can be modified with arrow 
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
 |    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
 
+### Activating the focused item
+
+Charts can trigger their click callbacks from the keyboard, so mouse-only interactions such as drill-down or filtering stay available to keyboard users ([WCAG 2.1 SC 2.1.1](https://www.w3.org/WAI/WCAG21/Understanding/keyboard.html)).
+
+It is opt-in on every chart, so existing callbacks keep receiving pointer events only:
+
+```jsx
+<BarChart
+  experimentalFeatures={{ keyboardActivation: true }}
+  onItemClick={(event, item) => {}}
+  {...otherProps}
+/>
+```
+
+Pressing <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd> on the focused item then calls `onItemClick` with the same payload a click provides.
+
+The `event` argument is the `KeyboardEvent` that triggered the activation.
+The callback types keep describing the pointer event to avoid a breaking change, so opt into the wider type with a module augmentation:
+
+```ts
+import type {} from '@mui/x-charts/moduleAugmentation/keyboardActivation';
+```
+
+The click callbacks then receive `MouseEvent | KeyboardEvent`, and you can narrow with `event instanceof KeyboardEvent` before reading pointer-only properties such as `clientX`.
+Both become the default in v10.
+
+{{"demo": "KeyboardActivation.js"}}
+
+When a chart exposes several item callbacks, activation fires the one a pointer would reach first on the focused data point: line charts try `onMarkClick`, then `onLineClick`, then `onAreaClick`; radar charts try `onMarkClick`, then `onAreaClick`; and Sankey charts call `onNodeClick` or `onLinkClick` depending on the focused element. Only one of them fires.
+
 ## Screen reader compatibility
 
 Charts use a proxy strategy to support screen reader when user navigate with keyboard navigation.

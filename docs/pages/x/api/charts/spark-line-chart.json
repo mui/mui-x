@@ -38,7 +38,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ enablePositionBasedPointerInteraction?: bool, progressiveRendering?: bool }"
+        "description": "{ enablePositionBasedPointerInteraction?: bool, keyboardActivation?: bool, progressiveRendering?: bool }"
       }
     },
     "height": { "type": { "name": "number" } },
@@ -107,7 +107,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
