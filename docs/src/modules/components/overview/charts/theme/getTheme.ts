@@ -1,11 +1,19 @@
 import { alpha, ThemeOptions } from '@mui/material/styles';
 import '@mui/x-charts/themeAugmentation';
 import '@mui/x-charts-pro/themeAugmentation';
+import { overviewChartPalette } from './colors';
 
 export const getTheme = (mode: 'light' | 'dark'): ThemeOptions => {
+  const chartColorDefaults = {
+    colors: overviewChartPalette,
+  };
+
   return {
     palette: {
       mode,
+      primary: {
+        main: mode === 'dark' ? '#8EADDB' : '#406AA8',
+      },
     },
     typography: {
       fontFamily: ['"Inter", "sans-serif"'].join(','),
@@ -49,6 +57,36 @@ export const getTheme = (mode: 'light' | 'dark'): ThemeOptions => {
         styleOverrides: {
           root: { fontWeight: 400 },
         },
+      },
+      MuiChartsDataProvider: {
+        defaultProps: chartColorDefaults,
+      },
+      MuiBarChart: {
+        defaultProps: chartColorDefaults,
+      },
+      MuiLineChart: {
+        defaultProps: chartColorDefaults,
+      },
+      MuiScatterChart: {
+        defaultProps: chartColorDefaults,
+      },
+      MuiBarChartPro: {
+        defaultProps: chartColorDefaults,
+      },
+      MuiLineChartPro: {
+        defaultProps: chartColorDefaults,
+      },
+      MuiScatterChartPro: {
+        defaultProps: chartColorDefaults,
+      },
+      MuiHeatmap: {
+        defaultProps: chartColorDefaults,
+      },
+      MuiFunnelChart: {
+        defaultProps: chartColorDefaults,
+      },
+      MuiSankeyChart: {
+        defaultProps: chartColorDefaults,
       },
       MuiChartsXAxis: { defaultProps: { tickLabelStyle: { fontWeight: 400 } } },
       MuiChartsYAxis: { defaultProps: { tickLabelStyle: { fontWeight: 400 } } },

@@ -8,6 +8,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useTheme } from '@mui/material/styles';
+import { overviewEmissionsRadarPalette } from '../../theme/colors';
 
 // Data about ALphabet
 
@@ -155,15 +156,11 @@ function radarValueFormatter(v: number | null) {
 }
 
 export function Radar() {
+  const theme = useTheme();
+
   return (
     <RadarChart
-      colors={[
-        'var(--palette-color-0)',
-        'var(--palette-color-1)',
-        'var(--palette-color-2)',
-        'var(--palette-color-3)',
-        'var(--palette-color-4)',
-      ]}
+      colors={overviewEmissionsRadarPalette(theme.palette.mode)}
       series={[
         {
           hideMark: true,

@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import { overviewChartPalette } from '../theme/colors';
 
 // Data derived from https://gs.statcounter.com/os-market-share/desktop/worldwide/2023
 // And https://gs.statcounter.com/os-market-share/mobile/worldwide/2023
@@ -57,6 +58,7 @@ function Pie() {
     <Stack sx={{ height: '100%' }}>
       <Typography align="center">Desktop OS market share</Typography>
       <PieChart
+        colors={overviewChartPalette}
         series={[
           {
             data: desktopOS,
