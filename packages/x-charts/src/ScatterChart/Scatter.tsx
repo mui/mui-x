@@ -46,7 +46,7 @@ export interface ScatterProps {
   sizeGetter: ScatterSizeGetter;
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event Event recorded on the `<svg/>` element.
+   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?: (
@@ -187,7 +187,7 @@ Scatter.propTypes /* remove-proptypes */ = {
   colorGetter: PropTypes.func.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event Event recorded on the `<svg/>` element.
+   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
