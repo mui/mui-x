@@ -78,10 +78,10 @@ export type PresetHeaderLevelConfig = PresetHeaderLevelConfigBase &
   );
 
 /**
- * Full configuration of a preset. Bundles header definitions with grid-sizing,
+ * Full definition of a preset. Bundles header definitions with grid-sizing,
  * range computation, and navigation behavior.
  */
-export interface PresetConfig {
+export interface PresetDefinition {
   /**
    * Header rows to render, ordered top → bottom. At least one row is required.
    * The last row's `unit` does not need to match the preset's `timeResolution`:
@@ -124,6 +124,7 @@ export interface PresetConfig {
     adapter: TemporalAdapter,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
+    hourRange: { startTime: number; endTime: number },
   ) => number;
   /**
    * Adds `amount` units (of the preset's navigation unit) to `date`. Called by
@@ -134,4 +135,32 @@ export interface PresetConfig {
     date: TemporalSupportedObject,
     amount: number,
   ) => TemporalSupportedObject;
+}
+
+/**
+ * Per-preset user configuration for the hour-resolution presets.
+ */
+export interface EventTimelinePremiumHourRangePresetConfig {
+  /**
+   * The first hour displayed in the preset.
+   * Must be a whole number between 0 and 24 (minutes are not supported).
+   * @default 0
+   */
+  startTime?: number;
+  /**
+   * The last hour displayed in the preset.
+   * Must be a whole number between 0 and 24 (minutes are not supported).
+   * @default 24
+   */
+  endTime?: number;
+}
+
+/**
+ * User configuration applied to each preset, keyed by the preset name.
+ */
+export interface EventTimelinePremiumPresetConfig {
+  /**
+   * Configuration applied to the `dayAndHour` preset.
+   */
+  dayAndHour?: EventTimelinePremiumHourRangePresetConfig;
 }

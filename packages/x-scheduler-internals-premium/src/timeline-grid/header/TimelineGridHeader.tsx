@@ -28,15 +28,25 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { start, end, headers, timeResolution } = useStore(
+  const { start, end, headers, timeResolution, dayStartMinute, dayEndMinute } = useStore(
     store,
     eventTimelinePremiumPresetSelectors.config,
   );
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
+  const hourRange = { startTime: dayStartMinute / 60, endTime: dayEndMinute / 60 };
+
   const children = headers.map((level, levelIndex) => {
-    const allCells = iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn);
+    const allCells = iterate(
+      adapter,
+      level.unit,
+      timeResolution,
+      start,
+      end,
+      weekStartsOn,
+      hourRange,
+    );
 
     let cells: ReturnType<typeof iterate>;
     let offsetInTicks = 0;

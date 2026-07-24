@@ -1,0 +1,9 @@
+<EventTimelinePremium
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  defaultPreset="dayAndHour"
+  presets={['dayAndHour']}
+  presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}
+/>

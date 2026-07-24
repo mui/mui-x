@@ -10,7 +10,7 @@ const DEFAULT_END_TIME = 24;
  * invalid (non-integer, out of bounds, or inverted), it falls back to the full day (`0`–`24`) and
  * warns in development.
  */
-export function getTimeGridHourRange(startTime?: number, endTime?: number) {
+export function getDisplayedHourRange(startTime?: number, endTime?: number) {
   const resolvedStartTime = startTime ?? DEFAULT_START_TIME;
   const resolvedEndTime = endTime ?? DEFAULT_END_TIME;
 
@@ -24,7 +24,7 @@ export function getTimeGridHourRange(startTime?: number, endTime?: number) {
   if (!isValid) {
     if (process.env.NODE_ENV !== 'production') {
       warnOnce([
-        `MUI X Scheduler: The time-grid view received an invalid hour range (startTime: ${resolvedStartTime}, endTime: ${resolvedEndTime}).`,
+        `MUI X Scheduler: Received an invalid hour range (startTime: ${resolvedStartTime}, endTime: ${resolvedEndTime}).`,
         '`startTime` and `endTime` must be whole hours between 0 and 24 with `startTime` lower than `endTime`.',
         'Falling back to the full day (0–24).',
       ]);

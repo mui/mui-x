@@ -16,6 +16,10 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
+import {
+  isRangeVisibleOnTimelineAxis,
+  timelineAxisOffsetToDate,
+} from '../../internals/utils/timeline-axis';
 
 const stateAttributesMapping = {
   resourceId: (value: SchedulerResourceId) => ({
@@ -52,12 +56,27 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
 
   // Selector hooks
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const occurrences = useStore(
+  const allOccurrences = useStore(
     store,
     schedulerOccurrenceSelectors.resourceOccurrences,
     presetConfig.start,
     presetConfig.end,
     resourceId,
+  );
+
+  // Occurrences fully inside the hidden hours would render as zero-width slivers and
+  // inflate the lane count, so they are excluded before positioning.
+  const occurrences = React.useMemo(
+    () =>
+      allOccurrences.filter((occurrence) =>
+        isRangeVisibleOnTimelineAxis(
+          adapter,
+          presetConfig,
+          occurrence.displayTimezone.start.value,
+          occurrence.displayTimezone.end.value,
+        ),
+      ),
+    [allOccurrences, adapter, presetConfig],
   );
 
   // Feature hooks
@@ -71,7 +90,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       input: { clientX: event.clientX },
       elementRef: dropTargetRef,
     });
-    const anchor = adapter.addMilliseconds(presetConfig.start, offsetMs);
+    const anchor = timelineAxisOffsetToDate(adapter, presetConfig, offsetMs);
     const startDate = adapter.addMinutes(
       anchor,
       -(adapter.getMinutes(anchor) % EVENT_CREATION_PRECISION_MINUTE),
@@ -85,13 +104,18 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     };
   });
 
-  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => ({
-    surfaceType: 'timeline' as const,
-    start: presetConfig.start,
-    end: adapter.addMinutes(presetConfig.start, creationConfig.duration),
-    resourceId,
-    lockSurfaceType: true,
-  }));
+  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => {
+    // Start at the first visible hour: with a trimmed window an event created at
+    // midnight would be hidden.
+    const creationStart = adapter.addMinutes(presetConfig.start, presetConfig.dayStartMinute);
+    return {
+      surfaceType: 'timeline' as const,
+      start: creationStart,
+      end: adapter.addMinutes(creationStart, creationConfig.duration),
+      resourceId,
+      lockSurfaceType: true,
+    };
+  });
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (handleKeyDown(event)) {

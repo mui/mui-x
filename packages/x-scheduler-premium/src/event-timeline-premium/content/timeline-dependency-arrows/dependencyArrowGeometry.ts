@@ -84,6 +84,16 @@ export interface ComputeDependencyArrowsParameters {
   collectionStart: TemporalSupportedObject;
   collectionEnd: TemporalSupportedObject;
   /**
+   * First displayed minute of each day, as an offset from midnight.
+   * @default 0
+   */
+  dayStartMinute?: number;
+  /**
+   * Last displayed minute of each day, as an offset from midnight.
+   * @default 1440
+   */
+  dayEndMinute?: number;
+  /**
    * The width of the events area in pixels (tick count × tick width).
    */
   eventsWidth: number;
@@ -111,6 +121,8 @@ export function computeDependencyArrows(
     rowPositions,
     collectionStart,
     collectionEnd,
+    dayStartMinute = 0,
+    dayEndMinute = 24 * 60,
     eventsWidth,
     laneMetrics,
   } = parameters;
@@ -164,6 +176,8 @@ export function computeDependencyArrows(
         end: occurrence.displayTimezone.end,
         collectionStart,
         collectionEnd,
+        dayStartMinute,
+        dayEndMinute,
       });
       positionByOccurrenceKey.set(occurrence.key, position);
     }

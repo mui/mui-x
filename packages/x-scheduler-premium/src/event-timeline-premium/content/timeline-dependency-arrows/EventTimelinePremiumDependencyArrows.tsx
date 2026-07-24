@@ -11,6 +11,7 @@ import {
   eventTimelinePremiumPresetSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import { isRangeVisibleOnTimelineAxis } from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { getEventsCellLaneMetrics } from '../rowGeometry';
@@ -77,6 +78,24 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
+  // Keep the lane assignment consistent with the rendered rows, which exclude the
+  // occurrences hidden by the preset's hour window.
+  const visibleResources = React.useMemo(
+    () =>
+      resources.map((entry) => ({
+        ...entry,
+        occurrences: entry.occurrences.filter((occurrence) =>
+          isRangeVisibleOnTimelineAxis(
+            adapter,
+            presetConfig,
+            occurrence.displayTimezone.start.value,
+            occurrence.displayTimezone.end.value,
+          ),
+        ),
+      })),
+    [resources, adapter, presetConfig],
+  );
+
   const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
 
   const arrows = React.useMemo(
@@ -84,20 +103,24 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
       computeDependencyArrows({
         adapter,
         dependencies,
-        resources,
+        resources: visibleResources,
         rowPositions: rowsMeta.positions,
         collectionStart: presetConfig.start,
         collectionEnd: presetConfig.end,
+        dayStartMinute: presetConfig.dayStartMinute,
+        dayEndMinute: presetConfig.dayEndMinute,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
       }),
     [
       adapter,
       dependencies,
-      resources,
+      visibleResources,
       rowsMeta.positions,
       presetConfig.start,
       presetConfig.end,
+      presetConfig.dayStartMinute,
+      presetConfig.dayEndMinute,
       eventsWidth,
       theme,
     ],

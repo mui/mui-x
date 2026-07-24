@@ -13,6 +13,7 @@ export function iterate(
   rangeStart: TemporalSupportedObject,
   rangeEnd: TemporalSupportedObject,
   weekStartsOn?: WeekStartsOn,
+  hourRange?: { startTime: number; endTime: number },
 ): IteratedCell[] {
   if (adapter.isBefore(rangeEnd, rangeStart)) {
     throw new Error(
@@ -32,6 +33,13 @@ export function iterate(
     1,
   );
 
+  // The hour range only trims hour ticks: hidden hour cells are skipped and the
+  // spans of coarser cells count visible hours only.
+  const appliedHourRange =
+    tickUnit === 'hour' && hourRange && !(hourRange.startTime === 0 && hourRange.endTime === 24)
+      ? hourRange
+      : undefined;
+
   const cells: IteratedCell[] = [];
   let cursor = startOf(adapter, rangeStart, unit, weekStartsOn);
   let index = 0;
@@ -48,6 +56,15 @@ export function iterate(
       );
     }
     const nextCursor = addUnit(adapter, cursor, unit, 1);
+
+    if (appliedHourRange && unit === 'hour') {
+      const hour = adapter.getHours(cursor);
+      if (hour < appliedHourRange.startTime || hour >= appliedHourRange.endTime) {
+        cursor = nextCursor;
+        continue;
+      }
+    }
+
     // First and last cells can extend past the visible range (e.g. a year cell
     // aligned to Jan 1 when the range starts mid-year). Clamp them so
     // `spanInTicks` reflects only the portion within `[rangeStart, rangeEndExclusive)`.
@@ -59,7 +76,9 @@ export function iterate(
       date: cursor,
       start: clampedStart,
       end: clampedEnd,
-      spanInTicks: differenceInUnits(adapter, clampedEnd, clampedStart, tickUnit),
+      spanInTicks: appliedHourRange
+        ? countVisibleHours(adapter, clampedEnd, clampedStart, appliedHourRange)
+        : differenceInUnits(adapter, clampedEnd, clampedStart, tickUnit),
       key: String(adapter.getTime(cursor)),
       index,
     });
@@ -120,6 +139,27 @@ function addUnit(
           `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
       );
   }
+}
+
+/**
+ * Counts the hour ticks within `[earlier, later)` that fall inside the visible hour range.
+ */
+function countVisibleHours(
+  adapter: TemporalAdapter,
+  later: TemporalSupportedObject,
+  earlier: TemporalSupportedObject,
+  hourRange: { startTime: number; endTime: number },
+): number {
+  let count = 0;
+  let cursor = earlier;
+  while (adapter.isBefore(cursor, later)) {
+    const hour = adapter.getHours(cursor);
+    if (hour >= hourRange.startTime && hour < hourRange.endTime) {
+      count += 1;
+    }
+    cursor = adapter.addHours(cursor, 1);
+  }
+  return count;
 }
 
 function differenceInUnits(

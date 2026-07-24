@@ -347,6 +347,18 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   preset: PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']),
   /**
+   * Configuration applied to each preset, keyed by the preset name.
+   * For the `dayAndHour` preset, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the timeline.
+   * @example { dayAndHour: { startTime: 8, endTime: 20 } }
+   */
+  presetConfig: PropTypes.shape({
+    dayAndHour: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
+  /**
    * The presets available in the timeline.
    * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,
    * so a future zoom API (`zoomIn()` / `zoomOut()`) behaves consistently regardless of the order

@@ -17,11 +17,11 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getDisplayedHourRange } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
-import { getTimeGridHourRange } from '../../utils/getTimeGridHourRange';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
@@ -333,7 +333,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 ) {
   const { days, className, startTime: startTimeProp, endTime: endTimeProp, ...other } = props;
 
-  const { startTime, endTime } = getTimeGridHourRange(startTimeProp, endTimeProp);
+  const { startTime, endTime } = getDisplayedHourRange(startTimeProp, endTimeProp);
   const hoursCount = endTime - startTime;
 
   // Context hooks
