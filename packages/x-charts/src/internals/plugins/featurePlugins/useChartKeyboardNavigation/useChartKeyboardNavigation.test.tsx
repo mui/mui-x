@@ -343,6 +343,280 @@ describe('useChartKeyboardNavigation', () => {
   });
 
   it.skipIf(isJSDOM)(
+    'should move focus to the first and last item of the series with Home and End',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={100}
+          width={100}
+          skipAnimation
+          margin={0}
+          series={[{ id: 'A', data: [10, 20, 30], highlightScope: { highlight: 'item' } }]}
+        />,
+      );
+
+      const bars = container.querySelectorAll(`[data-series="A"] .${barClasses.element}`);
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+
+      expect(bars[0].getAttribute('data-highlighted')).to.equal('true');
+
+      await user.keyboard('[End]');
+
+      expect(bars[2].getAttribute('data-highlighted')).to.equal('true');
+      expect(bars[0].getAttribute('data-highlighted')).to.equal(null);
+
+      await user.keyboard('[Home]');
+
+      expect(bars[0].getAttribute('data-highlighted')).to.equal('true');
+      expect(bars[2].getAttribute('data-highlighted')).to.equal(null);
+    },
+  );
+
+  it.skipIf(isJSDOM)('should keep focus in the current series with Home and End', async () => {
+    const { container, user } = render(
+      <BarChart
+        height={200}
+        width={400}
+        skipAnimation
+        margin={0}
+        series={[
+          { id: 'A', data: [10, 20, 30], highlightScope: { highlight: 'item' } },
+          { id: 'B', data: [40, 50, 60], highlightScope: { highlight: 'item' } },
+        ]}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    // Move focus to series "B".
+    await user.keyboard('[ArrowUp]');
+    await user.keyboard('[End]');
+
+    // The focus must stay on series "B" and jump to its last item.
+    expect(
+      container
+        .querySelector(`[data-series="B"] .${barClasses.element}:nth-child(3)`)!
+        .getAttribute('data-highlighted'),
+    ).to.equal('true');
+    expect(
+      container.querySelectorAll(`[data-series="A"] [data-highlighted="true"]`),
+    ).to.have.length(0);
+  });
+
+  it.skipIf(isJSDOM)('should skip hidden items when jumping with Home and End', async () => {
+    const { container, user } = render(
+      <PieChart
+        height={200}
+        width={200}
+        hideLegend
+        hiddenItems={[
+          { type: 'pie', seriesId: 'pie', dataIndex: 0 },
+          { type: 'pie', seriesId: 'pie', dataIndex: 3 },
+        ]}
+        series={[
+          {
+            id: 'pie',
+            data: [
+              { id: 0, value: 10 },
+              { id: 1, value: 20 },
+              { id: 2, value: 30 },
+              { id: 3, value: 40 },
+            ],
+          },
+        ]}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[End]');
+
+    // End must skip the hidden arc at dataIndex 3 and focus the last visible arc.
+    expect(container.querySelector(`.${pieClasses.focusIndicator}[data-index="3"]`)).to.equal(null);
+    expect(container.querySelector(`.${pieClasses.focusIndicator}[data-index="2"]`)).not.to.equal(
+      null,
+    );
+
+    await user.keyboard('[Home]');
+
+    // Home must skip the hidden arc at dataIndex 0 and focus the first visible arc.
+    expect(container.querySelector(`.${pieClasses.focusIndicator}[data-index="0"]`)).to.equal(null);
+    expect(container.querySelector(`.${pieClasses.focusIndicator}[data-index="1"]`)).not.to.equal(
+      null,
+    );
+  });
+
+  it.skipIf(isJSDOM)(
+    'should move focus to the first item of the first series with Ctrl+Home and to the last item of the last series with Ctrl+End',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={200}
+          width={400}
+          skipAnimation
+          margin={0}
+          series={[
+            { id: 'A', data: [10, 20, 30], highlightScope: { highlight: 'item' } },
+            { id: 'B', data: [40, 50, 60], highlightScope: { highlight: 'item' } },
+          ]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      // Focus the second item of series "A".
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+
+      await user.keyboard('{Control>}[End]{/Control}');
+
+      // The focus must jump to the last item of the last series ("B").
+      expect(
+        container
+          .querySelector(`[data-series="B"] .${barClasses.element}:nth-child(3)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="A"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+
+      await user.keyboard('{Control>}[Home]{/Control}');
+
+      // The focus must jump to the first item of the first series ("A").
+      expect(
+        container
+          .querySelector(`[data-series="A"] .${barClasses.element}:nth-child(1)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="B"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'should move focus to the first/last series keeping the item index with PageUp and PageDown',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={200}
+          width={400}
+          skipAnimation
+          margin={0}
+          series={[
+            { id: 'A', data: [10, 20, 30], highlightScope: { highlight: 'item' } },
+            { id: 'B', data: [40, 50, 60], highlightScope: { highlight: 'item' } },
+            { id: 'C', data: [70, 80, 90], highlightScope: { highlight: 'item' } },
+          ]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      // Focus the second item of series "A".
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+
+      await user.keyboard('[PageDown]');
+
+      // The focus must move to the last series ("C") and keep the item index.
+      expect(
+        container
+          .querySelector(`[data-series="C"] .${barClasses.element}:nth-child(2)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="A"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+
+      await user.keyboard('[PageUp]');
+
+      // The focus must move to the first series ("A") and keep the item index.
+      expect(
+        container
+          .querySelector(`[data-series="A"] .${barClasses.element}:nth-child(2)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="C"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+    },
+  );
+
+  it.skipIf(isJSDOM)(
+    'should skip hidden edge series with Ctrl+Home, Ctrl+End, PageUp, and PageDown',
+    async () => {
+      const { container, user } = render(
+        <BarChart
+          height={200}
+          width={400}
+          skipAnimation
+          margin={0}
+          hiddenItems={[
+            { type: 'bar', seriesId: 'A' },
+            { type: 'bar', seriesId: 'C' },
+          ]}
+          series={[
+            { id: 'A', data: [10, 20, 30], highlightScope: { highlight: 'item' } },
+            { id: 'B', data: [40, 50, 60], highlightScope: { highlight: 'item' } },
+            { id: 'C', data: [70, 80, 90], highlightScope: { highlight: 'item' } },
+          ]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      // Focus the second item of the only visible series ("B").
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+
+      await user.keyboard('[PageDown]');
+
+      // The last series ("C") is hidden: the focus must land on the last visible one ("B").
+      expect(
+        container
+          .querySelector(`[data-series="B"] .${barClasses.element}:nth-child(2)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="C"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+
+      await user.keyboard('{Control>}[Home]{/Control}');
+
+      // The first series ("A") is hidden: the focus must land on the first item of "B".
+      expect(
+        container
+          .querySelector(`[data-series="B"] .${barClasses.element}:nth-child(1)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="A"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+
+      await user.keyboard('{Control>}[End]{/Control}');
+
+      // The last series ("C") is hidden: the focus must land on the last item of "B".
+      expect(
+        container
+          .querySelector(`[data-series="B"] .${barClasses.element}:nth-child(3)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+
+      await user.keyboard('[PageUp]');
+
+      // The first series ("A") is hidden: PageUp must land on "B" keeping the item index.
+      expect(
+        container
+          .querySelector(`[data-series="B"] .${barClasses.element}:nth-child(3)`)!
+          .getAttribute('data-highlighted'),
+      ).to.equal('true');
+      expect(
+        container.querySelectorAll(`[data-series="A"] [data-highlighted="true"]`),
+      ).to.have.length(0);
+    },
+  );
+
+  it.skipIf(isJSDOM)(
     'should restore focus indicator on the last focused item when refocusing',
     async () => {
       const { container, user } = render(

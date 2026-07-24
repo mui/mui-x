@@ -17,7 +17,10 @@ import type {
  * boundaries: it translates the focused `name` to a `dataIndex` on the way in (through the
  * series `lookupByName` map), and the resulting `dataIndex` back to a `name` on the way out.
  *
- * `ArrowRight`/`ArrowLeft` step within the focused series, `ArrowUp`/`ArrowDown` move between series.
+ * `ArrowRight`/`ArrowLeft` step within the focused series, `ArrowUp`/`ArrowDown` move between series,
+ * `Home`/`End` jump to the first/last item of the focused series, `Ctrl+Home`/`Ctrl+End` jump to the
+ * first item of the first series / last item of the last series, and `PageUp`/`PageDown` move to the
+ * first/last series keeping the item position.
  */
 
 const mapShapeSeriesTypes = new Set(['mapShape'] as const);
