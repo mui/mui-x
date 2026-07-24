@@ -29,6 +29,12 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
 
   private initStarted = false;
 
+  // Per-item counter for tagging each fetch with an increasing request id.
+  private requestIdByItem = new Map<TreeViewItemId, number>();
+
+  // Highest request id already applied per item, used to discard out-of-order responses.
+  private lastAppliedRequestId = new Map<TreeViewItemId, number>();
+
   constructor(store: RichTreeViewProStore<R, any>) {
     this.store = store;
     this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault<R>({});
@@ -303,6 +309,10 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       this.setItemError(itemId, null);
     }
 
+    // tag this request with an increasing id so out-of-order responses can be detected
+    const requestId = (this.requestIdByItem.get(cacheKey) ?? 0) + 1;
+    this.requestIdByItem.set(cacheKey, requestId);
+
     try {
       let response: R[];
       if (itemId == null) {
@@ -311,6 +321,13 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
         response = await getTreeItems(itemId);
         this.nestedDataManager.setRequestSettled(itemId);
       }
+      // a newer response was already applied for this item, so discard this older one
+      if (requestId < (this.lastAppliedRequestId.get(cacheKey) ?? 0)) {
+        return;
+      }
+      this.lastAppliedRequestId.set(cacheKey, requestId);
+      // clear any error left by an out-of-order older request
+      this.setItemError(itemId, null);
       // save the response in the cache
       this.cache.set(cacheKey, response);
       // update the items in the state
@@ -320,6 +337,11 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       // notify the user that new items have been loaded
       this.callOnItemsLazyLoaded(response, itemId, false);
     } catch (error) {
+      // a newer response was already applied for this item, so ignore this older error
+      if (requestId < (this.lastAppliedRequestId.get(cacheKey) ?? 0)) {
+        return;
+      }
+      this.lastAppliedRequestId.set(cacheKey, requestId);
       const childrenFetchError = error as Error;
       // set the item error in the state
       this.setItemError(itemId, childrenFetchError);
