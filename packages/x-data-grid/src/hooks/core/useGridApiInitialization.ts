@@ -121,11 +121,13 @@ export function useGridApiInitialization<
         return;
       }
 
-      const details =
-        props.signature === GridSignature.DataGridPro ||
+      const details = {
+        apiRef: publicApiRef,
+        ...(props.signature === GridSignature.DataGridPro ||
         props.signature === GridSignature.DataGridPremium
           ? { api: privateApiRef.current.getPublicApi() }
-          : {};
+          : {}),
+      };
       privateApiRef.current.eventManager.emit(name, params, event, details);
     },
     [privateApiRef, props.signature],

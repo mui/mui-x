@@ -59,6 +59,13 @@ Otherwise, you will get an error saying that the state is not initialized during
 
 {{"demo": "UseGridSelector.js", "bg": "inline"}}
 
+### In event handlers
+
+The `GridCallbackDetails` object passed as the second argument to callbacks like `onRowSelectionModelChange` or `onFilterModelChange` exposes an `apiRef` property.
+Pass it directly to any selector to read state inside the callback without needing a separate `useGridApiRef`:
+
+{{"demo": "SelectorInEventHandler.js", "bg": "inline", "disableAd": true}}
+
 ### Catalog of selectors
 
 Some selectors have not yet been documented.
