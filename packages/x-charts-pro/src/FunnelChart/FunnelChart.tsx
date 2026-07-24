@@ -259,7 +259,9 @@ FunnelChart.propTypes /* remove-proptypes */ = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
   /**
    * The gap, in pixels, between funnel sections.
    * @default 0
@@ -407,7 +409,7 @@ FunnelChart.propTypes /* remove-proptypes */ = {
   onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a funnel item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {ChartsActivationEvent<SVGElement>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
    */
   onItemClick: PropTypes.func,

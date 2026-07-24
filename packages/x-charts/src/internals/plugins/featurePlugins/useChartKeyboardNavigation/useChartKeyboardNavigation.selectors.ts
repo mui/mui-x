@@ -1,6 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
+import type { ChartState } from '../../models/chart';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import type { ProcessedSeries } from '../../corePlugins/useChartSeries';
@@ -50,6 +51,17 @@ export const selectorChartsFocusedOrToFocusedItem = createSelector(
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState) => !!keyboardNavigationState?.enabled,
+);
+
+const selectKeyboardActivationFeature = (
+  state: ChartState<[], [UseChartKeyboardNavigationSignature]>,
+) => state.experimentalFeatures?.keyboardActivation;
+
+export const selectorChartsIsKeyboardActivationEnabled = createSelector(
+  selectKeyboardNavigation,
+  selectKeyboardActivationFeature,
+  (keyboardNavigationState, keyboardActivation) =>
+    keyboardActivation === true && !!keyboardNavigationState?.enabled,
 );
 
 /**
