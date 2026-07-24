@@ -52,7 +52,7 @@ describe('GRID_MULTI_SELECT_COL_DEF', () => {
     } as GridMultiSelectColDef;
 
     const parse = (value: string, column = stringOptionsColumn) =>
-      pastedValueParser(value, {} as any, column as any, {} as any);
+      pastedValueParser(value, {} as any, column as any);
 
     it('splits on default ", " separator', () => {
       expect(parse('React, TypeScript')).to.deep.equal(['React', 'TypeScript']);

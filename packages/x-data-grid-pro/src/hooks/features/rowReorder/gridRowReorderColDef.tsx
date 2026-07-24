@@ -2,7 +2,7 @@ import { gridRowIdSelector, GRID_STRING_COL_DEF } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import { renderRowReorderCell } from '../../../components/GridRowReorderCell';
 
-export const GRID_REORDER_COL_DEF: GridColDef = {
+export const GRID_REORDER_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   type: 'custom',
   field: '__reorder__',
@@ -21,4 +21,4 @@ export const GRID_REORDER_COL_DEF: GridColDef = {
   renderHeader: () => ' ',
   renderCell: renderRowReorderCell,
   rowSpanValueGetter: (_, row, __, apiRef) => gridRowIdSelector(apiRef, row),
-};
+} as const satisfies GridColDef;

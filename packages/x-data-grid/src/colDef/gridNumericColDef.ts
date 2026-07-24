@@ -4,7 +4,7 @@ import { getGridNumericOperators, getGridNumericQuickFilterFn } from './gridNume
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
 import type { GridColTypeDef } from '../models/colDef/gridColDef';
 
-export const GRID_NUMERIC_COL_DEF: GridColTypeDef<number | string | null, string> = {
+export const GRID_NUMERIC_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   type: 'number',
   align: 'right',
@@ -14,4 +14,4 @@ export const GRID_NUMERIC_COL_DEF: GridColTypeDef<number | string | null, string
   valueFormatter: (value?: number) => (isNumber(value) ? value.toLocaleString() : value || ''),
   filterOperators: getGridNumericOperators(),
   getApplyQuickFilterFn: getGridNumericQuickFilterFn,
-};
+} as const satisfies GridColTypeDef<number | string | null, string>;

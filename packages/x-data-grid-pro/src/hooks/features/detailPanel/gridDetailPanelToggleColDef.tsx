@@ -10,7 +10,7 @@ import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector
 
 export { GRID_DETAIL_PANEL_TOGGLE_FIELD };
 
-export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
+export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF = {
   ...GRID_STRING_COL_DEF,
   type: 'custom',
   field: GRID_DETAIL_PANEL_TOGGLE_FIELD,
@@ -34,4 +34,4 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   rowSpanValueGetter: (_, row, __, apiRef) => gridRowIdSelector(apiRef, row),
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
   renderHeader: ({ colDef }) => <span style={visuallyHidden}>{colDef.headerName}</span>,
-};
+} as const satisfies GridColDef;
