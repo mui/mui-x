@@ -6,6 +6,7 @@ import type {
   CollapsibleResourcesParameterKeys,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import type { EventCalendarLocaleText } from '@mui/x-scheduler/models';
 import type { AgendaViewProps } from '@mui/x-scheduler/agenda-view';
 
 export interface StandaloneAgendaViewPremiumProps<TEvent extends object, TResource extends object>
@@ -23,6 +24,12 @@ export interface StandaloneAgendaViewPremiumProps<TEvent extends object, TResour
    * The `agenda` view does not support any configuration keys yet.
    */
   viewConfig?: Omit<EventCalendarViewConfig, 'day' | 'week'>;
+  /**
+   * Set the locale text of the view.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
+   * in the GitHub repository.
+   */
+  localeText?: Partial<EventCalendarLocaleText>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

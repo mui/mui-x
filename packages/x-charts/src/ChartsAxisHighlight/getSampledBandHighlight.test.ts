@@ -40,6 +40,46 @@ describe('getSampledBandHighlight', () => {
       expect(bandSize).to.equal(4 * scale.step());
     });
   });
+
+  it('clamps the last bucket to the end of the data', () => {
+    const oddData = [0, 1, 2];
+    const scale = scaleBand(oddData, [0, 800]) as unknown as D3OrdinalScale;
+
+    // bucketSize 2 leaves a trailing bucket holding index 2 alone.
+    const { bandStart, bandSize } = getSampledBandHighlight({
+      scale,
+      value: 2,
+      dataIndex: 2,
+      data: oddData,
+      bucketSize: 2,
+    });
+
+    expect(bandStart).to.equal(scale(2)! - halfPaddingOf(scale));
+    expect(bandSize).to.equal(scale.step());
+  });
+
+  // Date axes build a new Date on each pointer event, so reference-based `indexOf` returned -1 and
+  // collapsed the highlight to a single band (#23024).
+  it('resolves the bucket of a Date value held in a different reference', () => {
+    const dates = [
+      new Date('2024-01-01'),
+      new Date('2024-02-01'),
+      new Date('2024-03-01'),
+      new Date('2024-04-01'),
+    ];
+    const scale = scaleBand(dates, [0, 800]) as unknown as D3OrdinalScale;
+
+    const { bandStart, bandSize } = getSampledBandHighlight({
+      scale,
+      value: new Date('2024-02-01'),
+      dataIndex: undefined,
+      data: dates,
+      bucketSize: 2,
+    });
+
+    expect(bandStart).to.equal(scale(dates[0])! - halfPaddingOf(scale));
+    expect(bandSize).to.equal(2 * scale.step());
+  });
 });
 
 // The bar and its highlight come from two functions; they must stay centered on each other (#22997).
