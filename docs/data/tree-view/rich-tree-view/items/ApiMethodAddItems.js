@@ -1,9 +1,9 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import * as React from 'react';
 import { MUI_X_PRODUCTS } from './products';
 
 export default function ApiMethodAddItems() {
@@ -26,6 +26,7 @@ export default function ApiMethodAddItems() {
 
     // Let the user name the new item right away
     apiRef.current.setEditedItem(id);
+    apiRef.current.setItemSelection({ itemId: id, shouldBeSelected: true });
   };
 
   return (
