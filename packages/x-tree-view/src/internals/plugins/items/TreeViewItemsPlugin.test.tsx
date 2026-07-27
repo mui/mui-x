@@ -667,6 +667,28 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
           ]);
         });
 
+        it('should only toggle the new items, not the whole parent subtree', () => {
+          const onItemSelectionToggle = spy();
+
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            multiSelect: true,
+            selectionPropagation: { descendants: true },
+            defaultSelectedItems: ['1', '1.1'],
+            onItemSelectionToggle,
+          });
+
+          act(() => {
+            view.apiRef.current.addItems({
+              items: [{ id: '1.2', children: [{ id: '1.2.1' }] }],
+              parentId: '1',
+            });
+          });
+
+          const toggled = onItemSelectionToggle.getCalls().map((call) => call.args[1]);
+          expect(toggled).to.deep.equal(['1.2', '1.2.1']);
+        });
+
         it('should not select the new items when their parent is not selected', () => {
           const onSelectedItemsChange = spy();
 

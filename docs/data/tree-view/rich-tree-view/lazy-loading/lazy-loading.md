@@ -81,7 +81,7 @@ Items added with the [`addItems()`](/x/react-tree-view/rich-tree-view/items/#imp
 Collapsing and expanding their parent again replaces them with the response of the server.
 
 The demo below shows you how to update the cache once an item is added so the changes are reflected in the tree.
-Items can only be added to a parent whose children are already loaded, because the fetch triggered when expanding a parent overrides the items added to it.
+Items can only be added to an item whose children are already known—one that has been expanded, or a leaf that has none—because the fetch triggered when expanding overrides the items added to it.
 
 {{"demo": "LazyLoadingAndAddingItems.js"}}
 

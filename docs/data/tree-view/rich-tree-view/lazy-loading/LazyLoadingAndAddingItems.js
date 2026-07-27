@@ -34,9 +34,13 @@ export default function LazyLoadingAndAddingItems() {
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [loadedItems, setLoadedItems] = React.useState([]);
 
-  // The children of an item are only loaded once it has been expanded,
-  // adding an item before that would be overridden by the fetch triggered on expansion.
-  const canAddItem = selectedItem != null && loadedItems.includes(selectedItem);
+  // Only add items to a parent whose children are known: an item that was already expanded (loaded),
+  // or a leaf that has none. Adding to a not-yet-loaded item would be overridden by the fetch on expansion.
+  const isLeaf =
+    selectedItem != null &&
+    apiRef.current?.getItem(selectedItem)?.childrenCount === 0;
+  const canAddItem =
+    selectedItem != null && (isLeaf || loadedItems.includes(selectedItem));
 
   const addItem = (parentId) => {
     const newItem = { id: randomId(), label: 'New item', childrenCount: 0 };
@@ -45,9 +49,13 @@ export default function LazyLoadingAndAddingItems() {
     // The new item is only stored in the internal state of the component,
     // add it to the cache so that it survives a collapse / expand of its parent.
     const cachedChildren = customCache.get(parentId);
-    if (Array.isArray(cachedChildren)) {
-      customCache.set(parentId, [...cachedChildren, newItem]);
-    }
+    customCache.set(parentId, [
+      ...(Array.isArray(cachedChildren) ? cachedChildren : []),
+      newItem,
+    ]);
+
+    // Reveal the new item, the cache entry above prevents the expansion from fetching over it.
+    apiRef.current.setItemExpansion({ itemId: parentId, shouldBeExpanded: true });
   };
 
   return (

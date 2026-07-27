@@ -206,8 +206,9 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       );
     }
 
+    const newChildrenIds = orderedChildrenIdsLookup[parentIdWithDefault];
     const mergedChildrenIds = [...existingChildrenIds];
-    mergedChildrenIds.splice(insertionIndex, 0, ...orderedChildrenIdsLookup[parentIdWithDefault]);
+    mergedChildrenIds.splice(insertionIndex, 0, ...newChildrenIds);
     orderedChildrenIdsLookup[parentIdWithDefault] = mergedChildrenIds;
     childrenIndexesLookup[parentIdWithDefault] = buildSiblingIndexes(mergedChildrenIds);
 
@@ -229,7 +230,7 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       },
     });
 
-    this.store.selection.propagateSelectionToNewItems(parentId);
+    this.store.selection.propagateSelectionToNewItems(parentId, newChildrenIds);
   };
 
   public buildPublicAPI = () => {
