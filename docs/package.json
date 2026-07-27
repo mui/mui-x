@@ -77,7 +77,7 @@
     "prop-types": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hook-form": "^7.81.0",
+    "react-hook-form": "^7.82.0",
     "react-runner": "^1.0.5",
     "react-simple-code-editor": "^0.14.1",
     "rifm": "0.12.1",
