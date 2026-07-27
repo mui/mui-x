@@ -56,6 +56,7 @@ export default function LazyLoadingAndAddingItems() {
 
     // Reveal the new item, the cache entry above prevents the expansion from fetching over it.
     apiRef.current.setItemExpansion({ itemId: parentId, shouldBeExpanded: true });
+    setSelectedItem(newItem.id);
   };
 
   return (
