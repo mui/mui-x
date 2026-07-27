@@ -12,8 +12,8 @@ import { LineItemIdentifier } from '@mui/x-charts/models';
 
 const lineChartsParams = {
   series: [
-    { id: 'series-1', data: [3, 4, 1, 6, 5], label: 'A' },
-    { id: 'series-2', data: [4, 3, 1, 5, 8], label: 'B' },
+    { id: 'series-1', data: [3, 4, 1, 6, 5], label: 'A', showMark: true },
+    { id: 'series-2', data: [4, 3, 1, 5, 8], label: 'B', showMark: true },
   ],
   xAxis: [{ data: [0, 3, 6, 9, 12], scaleType: 'linear' }],
   height: 400,
