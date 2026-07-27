@@ -37,7 +37,7 @@ const dataSource = {
 };
 
 export default function LazyLoadingAndAddingItems() {
-  const apiRef = useRichTreeViewProApiRef();
+  const apiRef = useRichTreeViewProApiRef<ItemType>();
   const [selectedItem, setSelectedItem] = React.useState<TreeViewItemId | null>(
     null,
   );
