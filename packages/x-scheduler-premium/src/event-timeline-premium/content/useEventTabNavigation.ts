@@ -43,7 +43,7 @@ export function useEventTabNavigation(params: {
     titleColumnWidth,
   } = params;
 
-  const pendingFocusKeyRef = React.useRef<string | null>(null);
+  const pendingFocusRef = React.useRef<{ key: string; resourceId: string } | null>(null);
 
   // Map (timestamp - collectionStart) into [0, 1]
   const collectionStartTs = React.useMemo(
@@ -65,12 +65,17 @@ export function useEventTabNavigation(params: {
     };
   });
 
-  const focusEventInDom = (key: string): boolean => {
+  // Scoped by `data-resource-id`: occurrence keys are event-scoped, not unique
+  // across rows, so an unscoped lookup could match a same-key copy rendered in
+  // a different row instead of the one being navigated to.
+  const focusEventInDom = (key: string, resourceId: string): boolean => {
     const scroller = scrollerRef.current;
     if (!scroller) {
       return false;
     }
-    const el = scroller.querySelector<HTMLElement>(`[data-occurrence-key="${CSS.escape(key)}"]`);
+    const el = scroller.querySelector<HTMLElement>(
+      `[data-resource-id="${CSS.escape(resourceId)}"] [data-occurrence-key="${CSS.escape(key)}"]`,
+    );
     if (el) {
       el.focus({ preventScroll: true });
       return true;
@@ -125,9 +130,24 @@ export function useEventTabNavigation(params: {
     if (!resource) {
       return false;
     }
-    const currentIndex = resource.occurrences.findIndex((o) => o.key === currentKey);
-    if (currentIndex === -1) {
+    const currentOccurrence = active.closest<HTMLElement>(
+      `[data-occurrence-key="${CSS.escape(currentKey)}"]`,
+    );
+    const occurrencesWithKey = resource.occurrences
+      .map((occurrence, index) => ({ occurrence, index }))
+      .filter(({ occurrence }) => occurrence.key === currentKey);
+    if (occurrencesWithKey.length === 0) {
       return false;
+    }
+    let currentIndex = occurrencesWithKey[0].index;
+    if (occurrencesWithKey.length > 1 && currentOccurrence && row) {
+      const duplicateOccurrences = Array.from(
+        row.querySelectorAll<HTMLElement>(`[data-occurrence-key="${CSS.escape(currentKey)}"]`),
+      );
+      const duplicateIndex = duplicateOccurrences.indexOf(currentOccurrence);
+      if (duplicateIndex >= 0 && duplicateIndex < occurrencesWithKey.length) {
+        currentIndex = occurrencesWithKey[duplicateIndex].index;
+      }
     }
     const nextIndex = currentIndex + direction;
     if (nextIndex < 0 || nextIndex >= resource.occurrences.length) {
@@ -139,11 +159,13 @@ export function useEventTabNavigation(params: {
     // Scroll first so the target is in/near the viewport. If it's already mounted,
     // we focus directly; otherwise we queue the focus and the layout effect picks
     // it up once the virtualizer re-renders with the new column range.
+    // `next` comes from this same row's occurrence list, so it always belongs to
+    // `resourceId`.
     scrollEventIntoView(next);
-    if (focusEventInDom(next.key)) {
-      pendingFocusKeyRef.current = null;
+    if (focusEventInDom(next.key, resourceId)) {
+      pendingFocusRef.current = null;
     } else {
-      pendingFocusKeyRef.current = next.key;
+      pendingFocusRef.current = { key: next.key, resourceId };
     }
     return true;
   };
@@ -152,9 +174,9 @@ export function useEventTabNavigation(params: {
   // how virtualized-out events get focused once the scroll-driven re-render mounts
   // them. Stays a no-op when no focus is queued.
   React.useLayoutEffect(() => {
-    const key = pendingFocusKeyRef.current;
-    if (key && focusEventInDom(key)) {
-      pendingFocusKeyRef.current = null;
+    const pending = pendingFocusRef.current;
+    if (pending && focusEventInDom(pending.key, pending.resourceId)) {
+      pendingFocusRef.current = null;
     }
   });
 
