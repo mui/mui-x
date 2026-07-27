@@ -1,12 +1,12 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { randomName, randomId } from '@mui/x-data-grid-generator';
+import Stack from '@mui/material/Stack';
+import { randomId, randomName } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
+import * as React from 'react';
 
 const fetchData = async () => {
   const items = Array.from({ length: 5 }, (_, index) => ({
@@ -38,7 +38,7 @@ export default function LazyLoadingAndAddingItems() {
   // or a leaf that has none. Adding to a not-yet-loaded item would be overridden by the fetch on expansion.
   const isLeaf =
     selectedItem != null &&
-    apiRef.current?.getItem(selectedItem)?.childrenCount === 0;
+    apiRef.current?.getItem(selectedItem)?.children?.length === 0;
   const canAddItem =
     selectedItem != null && (isLeaf || loadedItems.includes(selectedItem));
 
@@ -56,7 +56,7 @@ export default function LazyLoadingAndAddingItems() {
 
     // Reveal the new item, the cache entry above prevents the expansion from fetching over it.
     apiRef.current.setItemExpansion({ itemId: parentId, shouldBeExpanded: true });
-    setSelectedItem(newItem.id);
+    apiRef.current.setItemSelection({ itemId: newItem.id, shouldBeSelected: true });
   };
 
   return (
