@@ -281,7 +281,7 @@ export const useGridCellSelection = (
       }
 
       const column = apiRef.current.getColumn(params.field);
-      if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+      if (column?.type === GRID_ACTIONS_COLUMN_TYPE) {
         return false;
       }
 

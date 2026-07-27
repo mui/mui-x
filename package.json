@@ -1,5 +1,5 @@
 {
-  "version": "9.10.0",
+  "version": "9.10.1",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -78,8 +78,8 @@
     "@inquirer/prompts": "8.5.2",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.23",
     "@mui/internal-babel-plugin-minify-errors": "2.0.8-canary.30",
-    "@mui/internal-bundle-size-checker": "1.0.9-canary.85",
-    "@mui/internal-code-infra": "0.0.4-canary.95",
+    "@mui/internal-bundle-size-checker": "1.0.9-canary.86",
+    "@mui/internal-code-infra": "0.0.4-canary.98",
     "@mui/internal-api-docs-builder": "1.0.4-canary.2",
     "@mui/internal-markdown": "3.0.11-canary.2",
     "@mui/internal-netlify-cache": "0.0.3-canary.5",
@@ -88,7 +88,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
-    "@next/eslint-plugin-next": "16.2.10",
+    "@next/eslint-plugin-next": "16.2.11",
     "@octokit/plugin-retry": "8.1.0",
     "@octokit/rest": "22.0.1",
     "@playwright/test": "catalog:",
@@ -126,7 +126,7 @@
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.5",
-    "pkg-pr-new": "0.0.78",
+    "pkg-pr-new": "0.0.79",
     "playwright": "catalog:",
     "prettier": "3.9.5",
     "pretty-quick": "4.2.2",
@@ -135,7 +135,7 @@
     "remark": "15.0.1",
     "rimraf": "catalog:",
     "serve": "catalog:",
-    "sinon": "22.0.0",
+    "sinon": "22.1.0",
     "string-replace-loader": "3.3.0",
     "stylelint": "17.14.0",
     "tsx": "catalog:",
@@ -148,7 +148,7 @@
     "zod": "4.4.3"
   },
   "config": {
-    "valeVersion": "3.15.1"
+    "valeVersion": "3.15.2"
   },
   "packageManager": "pnpm@11.14.0",
   "engines": {

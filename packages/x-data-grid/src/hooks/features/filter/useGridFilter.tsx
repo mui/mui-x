@@ -196,7 +196,7 @@ export const useGridFilter = (
           }
 
           const column = apiRef.current.getColumn(item.field);
-          const filterOperator = column.filterOperators?.find(
+          const filterOperator = column?.filterOperators?.find(
             (operator) => operator.value === item.operator,
           );
           const requiresFilterValue =
