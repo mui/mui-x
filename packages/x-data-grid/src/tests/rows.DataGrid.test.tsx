@@ -1582,7 +1582,11 @@ describe('<DataGrid /> - Rows', () => {
           }
         }
 
-        const classRows = [new BrandRow(0, 'Nike'), new BrandRow(1, 'Adidas'), new BrandRow(2, 'Puma')];
+        const classRows = [
+          new BrandRow(0, 'Nike'),
+          new BrandRow(1, 'Adidas'),
+          new BrandRow(2, 'Puma'),
+        ];
         const { rerender } = render(<TestCase rows={classRows} />);
         // Plain-object partial update — oldRow is a class instance, partialRow is plain
         await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
@@ -1607,7 +1611,11 @@ describe('<DataGrid /> - Rows', () => {
           }
         }
 
-        const plainRows = [{ id: 0, brand: 'Nike' }, { id: 1, brand: 'Adidas' }, { id: 2, brand: 'Puma' }];
+        const plainRows = [
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+          { id: 2, brand: 'Puma' },
+        ];
         const { rerender } = render(<TestCase rows={plainRows} />);
         // Class-instance partial update — oldRow is plain, partialRow is a class instance
         await act(async () => apiRef.current?.updateRows([new BrandRow(1, 'Fila')]));
