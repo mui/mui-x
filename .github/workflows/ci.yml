@@ -32,7 +32,7 @@ jobs:
       - run: pnpm install
       - run: pnpm release:build
       - name: Publish packages to pkg.pr.new
-        uses: mui/mui-public/.github/actions/ci-publish@5a40e5ed0fc8d5ff358463279c75f69b33062d9f # master
+        uses: mui/mui-public/.github/actions/ci-publish@2543f4364e265ee3ed091cb080536009835ec614 # master
 
   # Mirrors the real publish workflow environment (`publish.yml`) so an env
   # mismatch — e.g. the Node version pinned by `publish-prepare` violating our
