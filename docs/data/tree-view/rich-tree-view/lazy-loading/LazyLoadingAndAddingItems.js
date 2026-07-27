@@ -25,24 +25,28 @@ const customCache = new DataSourceCacheDefault({});
 const EMPTY_ITEMS = [];
 
 const dataSource = {
-  getChildrenCount: (item) => item?.childrenCount,
+  getChildrenCount: (item) => item?.childrenCount || 0,
   getTreeItems: fetchData,
 };
 
 export default function LazyLoadingAndAddingItems() {
   const apiRef = useRichTreeViewProApiRef();
   const [selectedItem, setSelectedItem] = React.useState(null);
-  const [loadedItems, setLoadedItems] = React.useState([]);
 
-  // Only add items to a parent whose children are known: an item that was already expanded (loaded),
-  // or a leaf that has none. Adding to a not-yet-loaded item would be overridden by the fetch on expansion.
-  const isLeaf =
-    selectedItem != null &&
-    apiRef.current?.getItem(selectedItem)?.children?.length === 0;
-  const canAddItem =
-    selectedItem != null && (isLeaf || loadedItems.includes(selectedItem));
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const addItem = (parentId) => {
+  const canAddItem = selectedItem != null && !isLoading;
+
+  const addItem = async (parentId) => {
+    // Load the children before adding, otherwise the fetch triggered when the parent is later
+    // expanded would override the item we are about to add and conflict on its id.
+    const parent = apiRef.current.getItem(parentId);
+    if (parent?.childrenCount && customCache.get(parentId) === undefined) {
+      setIsLoading(true);
+      await apiRef.current.updateItemChildren(parentId);
+      setIsLoading(false);
+    }
+
     const newItem = { id: randomId(), label: 'New item', childrenCount: 0 };
     apiRef.current.addItems({ items: [newItem], parentId });
 
@@ -71,9 +75,6 @@ export default function LazyLoadingAndAddingItems() {
           expansionTrigger="iconContainer"
           selectedItems={selectedItem}
           onSelectedItemsChange={(event, itemId) => setSelectedItem(itemId)}
-          onItemsLazyLoaded={({ parentId }) =>
-            setLoadedItems((prev) => (parentId == null ? prev : [...prev, parentId]))
-          }
           dataSource={dataSource}
           dataSourceCache={customCache}
         />
