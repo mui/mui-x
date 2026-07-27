@@ -28,7 +28,6 @@
     "@types/moment-jalaali": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/react": "catalog:",
-    "@types/react-router": "catalog:",
     "@types/react-transition-group": "catalog:",
     "@types/semver": "catalog:",
     "date-fns": "catalog:",

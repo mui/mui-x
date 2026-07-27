@@ -23,18 +23,21 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function removeFocus(event: FocusEvent) {
-      const root = event.currentTarget as HTMLElement;
-      const next = event.relatedTarget as HTMLElement | null;
+      const root = event.currentTarget as HTMLElement | null;
+      const next = event.relatedTarget as Node | null;
 
       // Avoid removing focus if we know it is moving to another children in the chart.
       // This avoid extra computation ot remove/add focus at each keyboard pressed when navigating in the chart.
-      if (root && next instanceof Node && !root.contains(next)) {
-        if (store.state.keyboardNavigation.isFocused) {
-          store.set('keyboardNavigation', {
-            ...store.state.keyboardNavigation,
-            isFocused: false,
-          });
-        }
+      // A null relatedTarget means focus left to a non-focusable element (clicking outside), so focus is removed.
+      if (root && next !== null && root.contains(next)) {
+        return;
+      }
+
+      if (store.state.keyboardNavigation.isFocused) {
+        store.set('keyboardNavigation', {
+          ...store.state.keyboardNavigation,
+          isFocused: false,
+        });
       }
     }
 

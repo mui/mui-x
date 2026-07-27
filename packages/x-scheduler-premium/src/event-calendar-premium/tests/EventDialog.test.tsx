@@ -218,6 +218,7 @@ describe('<EventDialogContent open />', () => {
         events={[DEFAULT_EVENT]}
         resources={resources}
         storeClass={PremiumTestStore}
+        onEventsChange={() => {}}
       >
         <StoreSpy
           Context={SchedulerStoreContext}
@@ -994,6 +995,7 @@ describe('<EventDialogContent open />', () => {
               events={[originalRecurringEvent]}
               resources={resources}
               storeClass={PremiumTestStore}
+              onEventsChange={() => {}}
             >
               <StoreSpy
                 Context={SchedulerStoreContext}
@@ -1061,6 +1063,7 @@ describe('<EventDialogContent open />', () => {
               events={[originalRecurringEvent]}
               resources={resources}
               storeClass={PremiumTestStore}
+              onEventsChange={() => {}}
             >
               <StoreSpy
                 Context={SchedulerStoreContext}
@@ -1126,6 +1129,7 @@ describe('<EventDialogContent open />', () => {
               events={[originalRecurringEvent]}
               resources={resources}
               storeClass={PremiumTestStore}
+              onEventsChange={() => {}}
             >
               <StoreSpy
                 Context={SchedulerStoreContext}
@@ -1950,6 +1954,7 @@ describe('<EventDialogContent open />', () => {
             events={[nonRecurringEvent]}
             resources={resources}
             storeClass={PremiumTestStore}
+            onEventsChange={() => {}}
           >
             <StoreSpy
               Context={SchedulerStoreContext}
@@ -1994,6 +1999,7 @@ describe('<EventDialogContent open />', () => {
             events={[nonRecurringEvent]}
             resources={resources}
             storeClass={PremiumTestStore}
+            onEventsChange={() => {}}
           >
             <StoreSpy
               Context={SchedulerStoreContext}
