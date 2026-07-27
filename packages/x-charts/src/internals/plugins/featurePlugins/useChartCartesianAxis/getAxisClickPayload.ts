@@ -51,7 +51,7 @@ export function getAxisClickPayload({
           // @ts-ignore This is safe because users need to opt in to use range bar series.
           // In that case, they should import the module augmentation from `x-charts-pro/moduleAugmentation/rangeBarOnClick`
           // Which adds the proper type to the series data.
-          // TODO(v9): Remove this ts-ignore when we can make the breaking change to ChartsAxisData.
+          // TODO(v10): Remove this ts-ignore when we can make the breaking change to ChartsAxisData.
           seriesValues[seriesId] = seriesItem.data[dataIndex];
         }
       });
