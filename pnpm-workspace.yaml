@@ -71,7 +71,7 @@ catalog:
   rasterizehtml: ^1.4.1
   react: 19.2.7
   react-dom: 19.2.7
-  react-router: ^8.2.0
+  react-router: ^8.3.0
   react-transition-group: ^4.4.5
   reselect: ^5.2.0
   rimraf: ^6.1.3
@@ -90,8 +90,6 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
   - '@base-ui/*'
-  # Renovate security update: react-router@8.3.0
-  - react-router@8.3.0
 trustPolicy: no-downgrade
 # Skip trust-policy checks for packages published more than 365 days ago.
 # Some widely-used legacy packages (notably semver@6.x — pulled in by @babel/core@7.x — plus
