@@ -32,6 +32,8 @@ export default function KeyboardActivation() {
         <LineChart
           {...lineChartsParams}
           experimentalFeatures={{ keyboardActivation: true }}
+          onAreaClick={(event, d) => setItemData(d)}
+          onLineClick={(event, d) => setItemData(d)}
           onMarkClick={(event, d) => setItemData(d)}
         />
       </Box>

@@ -84,7 +84,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function activationHandler(event: KeyboardEvent) {
-      if (!isItemActivationKey(event) || !selectorChartsIsKeyboardActivationEnabled(store.state)) {
+      // Ignore the auto-repeat while the key is held: a pointer click does not repeat either.
+      if (
+        event.repeat ||
+        !isItemActivationKey(event) ||
+        !selectorChartsIsKeyboardActivationEnabled(store.state)
+      ) {
         return;
       }
 

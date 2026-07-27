@@ -1,4 +1,4 @@
-import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, fireEvent } from '@mui/internal-test-utils/createRenderer';
 import { vi } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
@@ -27,6 +27,29 @@ describe('keyboard item activation', () => {
     await user.keyboard('[Enter]');
 
     expect(onItemClick.mock.calls.length).to.equal(0);
+  });
+
+  it('should ignore the auto-repeat keydown while the key is held down', async () => {
+    const onItemClick = vi.fn();
+    const { user } = render(
+      <BarChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100] }]}
+        onItemClick={onItemClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+
+    const target = document.activeElement!;
+    // The browser marks every keydown after the first as a repeat while the key is held.
+    fireEvent.keyDown(target, { key: 'Enter', repeat: true });
+    expect(onItemClick.mock.calls.length).to.equal(0);
+
+    fireEvent.keyDown(target, { key: 'Enter' });
+    expect(onItemClick.mock.calls.length).to.equal(1);
   });
 
   it('should fire onItemClick with the focused bar on Enter and Space', async () => {
