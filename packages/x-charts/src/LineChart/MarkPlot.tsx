@@ -100,7 +100,6 @@ function MarkPlot(props: MarkPlotProps) {
     return rep;
   }, [xAxisHighlightIndexes]);
 
-
   const completedData = useMarkPlotData(xAxis, yAxis);
 
   // A mark is activatable only where it is actually rendered, so a hidden mark falls through to the
