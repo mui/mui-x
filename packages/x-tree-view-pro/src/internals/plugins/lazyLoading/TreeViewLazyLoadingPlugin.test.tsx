@@ -99,6 +99,62 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
 
+      it('should not update the selection when expanding a selected item in single selection', async () => {
+        const onSelectedItemsChange = spy();
+        const onItemSelectionToggle = spy();
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          defaultSelectedItems: '1',
+          onSelectedItemsChange,
+          onItemSelectionToggle,
+        });
+
+        act(() => {
+          view.apiRef.current.setItemExpansion({
+            event: {} as any,
+            itemId: '1',
+            shouldBeExpanded: true,
+          });
+        });
+        await awaitMockFetch();
+
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.isItemSelected('1')).to.equal(true);
+        expect(onSelectedItemsChange.callCount).to.equal(0);
+        expect(onItemSelectionToggle.callCount).to.equal(0);
+      });
+
+      it('should propagate the selection to the lazy loaded children when expanding a selected item', async () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          multiSelect: true,
+          defaultSelectedItems: ['1'],
+          selectionPropagation: { descendants: true, parents: false },
+        });
+
+        act(() => {
+          view.apiRef.current.setItemExpansion({
+            event: {} as any,
+            itemId: '1',
+            shouldBeExpanded: true,
+          });
+        });
+        await awaitMockFetch();
+
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.isItemSelected('1')).to.equal(true);
+        expect(view.isItemSelected('1-1')).to.equal(true);
+      });
+
       it('should not load children if item has no children', async () => {
         const view = render({
           items: [{ id: '1', childrenCount: 0 }],
