@@ -91,6 +91,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
           controlState.propOnChange(model, {
             reason,
             api: apiRef.current,
+            apiRef: { current: apiRef.current.getPublicApi() },
           });
         }
 

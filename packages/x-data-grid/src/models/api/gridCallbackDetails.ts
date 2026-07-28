@@ -23,5 +23,5 @@ export interface GridCallbackDetails<K extends keyof GridControlledStateReasonLo
    *   const rows = gridRowSelectionIdsSelector(details.apiRef);
    * }}
    */
-  apiRef?: RefObject<GridApiCommon>;
+  apiRef: RefObject<GridApiCommon>;
 }
