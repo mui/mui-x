@@ -1,10 +1,15 @@
 import { spy } from 'sinon';
 import { act, fireEvent, reactMajor, waitFor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
+import type { DescribeTreeViewRenderer } from 'test/utils/tree-view/describeTreeView';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
 import type { ExtendableRichTreeViewStore } from '@mui/x-tree-view/internals';
+import type { TreeViewAnyStore } from '../../models';
 
-describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
+// `addItems` is a Rich Tree View only API, so the addItems tests use this Rich-typed renderer.
+type RichRenderer = DescribeTreeViewRenderer<ExtendableRichTreeViewStore<any, any, any, any>>;
+
+describeTreeView<TreeViewAnyStore>(
   'TreeViewItemsPlugin',
   ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {
     const isRichTreeView = treeViewComponentName.startsWith('RichTreeView');
@@ -533,8 +538,10 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
       });
 
       describe.skipIf(treeViewComponentName === 'SimpleTreeView')('addItems API method', () => {
+        const richRender = render as unknown as RichRenderer;
+
         it('should add items at the root level', () => {
-          const view = render({
+          const view = richRender({
             items: [{ id: '1' }],
           });
 
@@ -546,7 +553,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         });
 
         it('should add items at the given index', () => {
-          const view = render({
+          const view = richRender({
             items: [{ id: '1' }, { id: '3' }],
           });
 
@@ -558,7 +565,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         });
 
         it('should add items under a parent item and mark it as expandable', () => {
-          const view = render({
+          const view = richRender({
             items: [{ id: '1' }],
             defaultExpandedItems: ['1'],
           });
@@ -574,7 +581,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         });
 
         it('should add nested items', () => {
-          const view = render({
+          const view = richRender({
             items: [{ id: '1' }],
             defaultExpandedItems: ['2'],
           });
@@ -593,7 +600,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         it('should update the indexes of the following siblings', () => {
           const onSelectedItemsChange = spy();
 
-          const view = render({
+          const view = richRender({
             items: [{ id: '1' }, { id: '3' }],
             multiSelect: true,
             onSelectedItemsChange,
@@ -610,7 +617,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         });
 
         it('should support editing a newly added item', () => {
-          const view = render({
+          const view = richRender({
             items: [{ id: '1' }],
             isItemEditable: () => true,
           });
@@ -624,7 +631,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         });
 
         it('should throw an error when the parent item is not present in the tree', () => {
-          const view = render({
+          const view = richRender({
             items: [{ id: '1' }],
           });
 
@@ -634,7 +641,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         });
 
         it('should throw an error when an item with the same id is already present in the tree', () => {
-          const view = render({
+          const view = richRender({
             items: [{ id: '1' }],
           });
 
@@ -646,7 +653,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         it('should select the new items when their parent is selected and the selection propagates to the descendants', () => {
           const onSelectedItemsChange = spy();
 
-          const view = render({
+          const view = richRender({
             items: [{ id: '1', children: [{ id: '1.1' }] }],
             multiSelect: true,
             selectionPropagation: { descendants: true },
@@ -672,7 +679,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         it('should only toggle the new items, not the whole parent subtree', () => {
           const onItemSelectionToggle = spy();
 
-          const view = render({
+          const view = richRender({
             items: [{ id: '1', children: [{ id: '1.1' }] }],
             multiSelect: true,
             selectionPropagation: { descendants: true },
@@ -694,7 +701,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         it('should not select the new items when their parent is not selected', () => {
           const onSelectedItemsChange = spy();
 
-          const view = render({
+          const view = richRender({
             items: [{ id: '1', children: [{ id: '1.1' }] }],
             multiSelect: true,
             selectionPropagation: { descendants: true },
@@ -711,7 +718,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         it('should not select the new items when the selection does not propagate to the descendants', () => {
           const onSelectedItemsChange = spy();
 
-          const view = render({
+          const view = richRender({
             items: [{ id: '1', children: [{ id: '1.1' }] }],
             multiSelect: true,
             defaultSelectedItems: ['1'],
@@ -726,7 +733,7 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         });
 
         it('should throw an error when the index is out of range', () => {
-          const view = render({
+          const view = richRender({
             items: [{ id: '1' }],
           });
 
