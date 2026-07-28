@@ -129,6 +129,34 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(onItemSelectionToggle.callCount).to.equal(0);
       });
 
+      it('should not update the selection when expanding a selected item without descendants propagation', async () => {
+        const onSelectedItemsChange = spy();
+
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          multiSelect: true,
+          defaultSelectedItems: ['1'],
+          onSelectedItemsChange,
+        });
+
+        act(() => {
+          view.apiRef.current.setItemExpansion({
+            event: {} as any,
+            itemId: '1',
+            shouldBeExpanded: true,
+          });
+        });
+        await awaitMockFetch();
+
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
+        expect(onSelectedItemsChange.callCount).to.equal(0);
+      });
+
       it('should propagate the selection to the lazy loaded children when expanding a selected item', async () => {
         const view = render({
           items: [{ id: '1', childrenCount: 1 }],
