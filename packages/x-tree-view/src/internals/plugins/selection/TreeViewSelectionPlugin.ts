@@ -126,6 +126,33 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
   };
 
   /**
+   * Select the items added below a selected parent when the selection propagates to the descendants.
+   * @param {TreeViewItemId | null} parentId The id of the item the new items were added to.
+   * @param {TreeViewItemId[]} newItemIds The ids of the items that were just added.
+   */
+  public propagateSelectionToNewItems = (
+    parentId: TreeViewItemId | null,
+    newItemIds: TreeViewItemId[],
+  ) => {
+    const { selectionPropagation = EMPTY_OBJECT as TreeViewSelectionPropagation } =
+      this.store.parameters;
+
+    if (
+      parentId == null ||
+      newItemIds.length === 0 ||
+      !selectionPropagation.descendants ||
+      !selectionSelectors.isMultiSelectEnabled(this.store.state) ||
+      !selectionSelectors.isItemSelected(this.store.state, parentId)
+    ) {
+      return;
+    }
+
+    // Only propagate to the new items, the rest of the parent's subtree is already up to date.
+    const newModel = selectionSelectors.selectedItems(this.store.state).concat(newItemIds);
+    this.setSelectedItems(null, newModel, newItemIds);
+  };
+
+  /**
    * Select or deselect an item.
    * @param {object} parameters The parameters of the method.
    * @param {TreeViewItemId} parameters.itemId The id of the item to select or deselect.

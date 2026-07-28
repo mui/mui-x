@@ -640,5 +640,39 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
     });
+
+    describe('addItems', () => {
+      it('should mark an added item as expandable when the data source reports children', () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: 0 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+        });
+
+        act(() => {
+          view.apiRef.current.addItems({ items: [{ id: '2', childrenCount: 1 }] });
+        });
+
+        expect(view.getItemRoot('2')).to.have.attribute('aria-expanded', 'false');
+      });
+
+      it('should not mark an added item as expandable when the data source reports no children', () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: 0 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+        });
+
+        act(() => {
+          view.apiRef.current.addItems({ items: [{ id: '2', childrenCount: 0 }] });
+        });
+
+        expect(view.getItemRoot('2')).not.to.have.attribute('aria-expanded');
+      });
+    });
   },
 );
