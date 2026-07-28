@@ -1,6 +1,6 @@
-import { BaseUIChangeEventDetails } from '@base-ui/react';
-import { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
-import {
+import type { BaseUIChangeEventDetails } from '@base-ui/react';
+import type { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
+import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
@@ -16,8 +16,8 @@ import {
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
-import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 export interface StoredError {
   /**
@@ -87,9 +87,19 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   visibleResources: Record<SchedulerResourceId, boolean>;
   /**
+   * Collapse status for each resource.
+   * A resource is expanded unless it is registered here with a `true` value.
+   * Collapsing a resource hides its descendants.
+   */
+  collapsedResources: Record<SchedulerResourceId, boolean>;
+  /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
   areEventsDraggable: boolean;
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   */
+  shouldEventRequireResource: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.
@@ -130,9 +140,9 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   readOnly: boolean;
   /**
-   * Pending parameters to use when the user selects the scope of a recurring event update.
+   * Pending operation to apply when the user selects the scope in the recurring scope dialog.
    */
-  pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
+  pendingRecurringEventOperation: PendingRecurringEventOperation | null;
   /**
    * Preferences for the scheduler.
    */
@@ -158,10 +168,10 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The ID of the event currently active (e.g. open in the event dialog).
-   * `null` when no event is active.
+   * The key of the occurrence currently active (e.g. open in the event dialog).
+   * `null` when no occurrence is active.
    */
-  editedEventId: SchedulerEventId | null;
+  editedOccurrenceKey: string | null;
   /**
    * The event that has been copied or cut, if any.
    */
@@ -182,13 +192,26 @@ export interface SchedulerState<TEvent extends object = any> {
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }
 
+/**
+ * Result of `dataSource.persistEvents`.
+ */
+export interface SchedulerPersistEventsResult {
+  success: boolean;
+}
+
 export interface SchedulerDataSource<TEvent extends object> {
   getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
-  updateEvents: (parameters: {
+  /**
+   * Called when events are created, updated or deleted so the consumer can persist them.
+   *
+   * Throw to surface a custom error in `state.errors`. Return `{ success: false }`
+   * to abort the cache/state update with a generic error.
+   */
+  persistEvents: (parameters: {
     deleted: SchedulerEventId[];
-    updated: SchedulerEventId[];
-    created: SchedulerEventId[];
-  }) => Promise<{ success: boolean }>;
+    updated: TEvent[];
+    created: TEvent[];
+  }) => Promise<SchedulerPersistEventsResult>;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -236,6 +259,23 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
     eventDetails: SchedulerChangeEventDetails,
   ) => void;
   /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   */
+  collapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange?: (
+    collapsedResources: Record<SchedulerResourceId, boolean>,
+    eventDetails: SchedulerChangeEventDetails,
+  ) => void;
+  /**
    * The date currently used to determine the visible date range.
    */
   visibleDate?: TemporalSupportedObject;
@@ -257,6 +297,10 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default true
    */
   areEventsDraggable?: boolean;
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   */
+  shouldEventRequireResource?: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.
@@ -300,7 +344,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * When provided, events are fetched through the data source instead of the `events` prop.
    */
   dataSource?: SchedulerDataSource<TEvent>;
-  /*
+  /**
    * Configures how events are created.
    * If `false`, event creation is disabled.
    * If `true`, event creation is enabled with default configuration.
@@ -340,7 +384,6 @@ export type UpdateRecurringEventParameters = {
   occurrenceStart: TemporalSupportedObject;
   /**
    * The changes to apply.
-   * Requires `start` and `end`, all other properties are optional.
    */
   changes: SchedulerEventUpdatedProperties;
   /**
@@ -348,6 +391,31 @@ export type UpdateRecurringEventParameters = {
    */
   onSubmit?: () => void;
 };
+
+/**
+ * Parameters for deleting a recurring event.
+ */
+export type DeleteRecurringEventParameters = {
+  /**
+   * The start date of the occurrence affected by the deletion.
+   */
+  occurrenceStart: TemporalSupportedObject;
+  /**
+   * The id of the recurring event to delete.
+   */
+  eventId: SchedulerEventId;
+  /**
+   * Callback fired when the user submits the recurring scope dialog.
+   */
+  onSubmit?: () => void;
+};
+
+/**
+ * A recurring event operation waiting for the user to pick a scope in the recurring scope dialog.
+ */
+export type PendingRecurringEventOperation =
+  | ({ kind: 'update' } & UpdateRecurringEventParameters)
+  | ({ kind: 'delete' } & DeleteRecurringEventParameters);
 
 /**
  * Mapper between a Scheduler instance's state and parameters.
@@ -359,9 +427,11 @@ export interface SchedulerParametersToStateMapper<
 > {
   /**
    * Gets the initial state of the store based on the initial parameters.
+   * `shouldEventRequireResource` is left for the mapper to set, because its default depends on the component
+   * (`false` on the Event Calendar, `true` on the Event Timeline).
    */
   getInitialState: (
-    schedulerInitialState: SchedulerState,
+    schedulerInitialState: Omit<SchedulerState, 'shouldEventRequireResource'>,
     parameters: Parameters,
     adapter: Adapter,
   ) => State;
@@ -397,6 +467,4 @@ export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
  * Used by context hooks to assert the store type at runtime.
  */
 export type SchedulerInstanceName =
-  | 'EventCalendarStore'
-  | 'EventCalendarPremiumStore'
-  | 'EventTimelinePremiumStore';
+  'EventCalendarStore' | 'EventCalendarPremiumStore' | 'EventTimelinePremiumStore';

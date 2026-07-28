@@ -1,11 +1,12 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import useForkRef from '@mui/utils/useForkRef';
 import { useRegisterToolbarButton } from '@mui/x-internals/ToolbarContext';
 import { useChartsSlots } from '../context/ChartsSlotsContext';
-import { type ChartsSlotProps } from '../internals/material';
+import type { ChartsSlotProps } from '../internals/material';
 
 export type ToolbarButtonProps = ChartsSlotProps['baseIconButton'] & {
   /**
@@ -35,7 +36,7 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   },
 );
 
-ToolbarButton.propTypes = {
+ToolbarButton.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

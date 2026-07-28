@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import {
-  type ComputedPieRadius,
-  type DefaultizedPieSeriesType,
-  type DefaultizedPieValueType,
+import type {
+  ComputedPieRadius,
+  DefaultizedPieSeriesType,
+  DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { SxProps, Theme } from '@mui/system';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConfirmationUtilityClasses,
@@ -32,6 +33,7 @@ export interface ChatConfirmationProps {
    */
   onCancel?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  sx?: SxProps<Theme>;
   classes?: Partial<ChatConfirmationClasses>;
 }
 
@@ -153,16 +155,30 @@ const ChatConfirmation = React.forwardRef<HTMLDivElement, ChatConfirmationProps>
       onCancel,
       className,
       classes: classesProp,
+      sx,
       ...other
     } = props;
     const classes = useChatConfirmationUtilityClasses(classesProp);
+    const messageId = React.useId();
 
     return (
-      <ChatConfirmationRoot ref={ref} className={clsx(classes.root, className)} {...other}>
+      <ChatConfirmationRoot
+        ref={ref}
+        className={clsx(classes.root, className)}
+        sx={sx}
+        // Inline, non-modal confirmation card: a labelled `group` (named by its
+        // message) rather than `alertdialog`, which would promise modal focus
+        // management this card neither provides nor needs.
+        role="group"
+        aria-labelledby={messageId}
+        {...other}
+      >
         <ChatConfirmationIcon className={classes.icon}>
           <WarningIcon />
         </ChatConfirmationIcon>
-        <ChatConfirmationMessage className={classes.message}>{message}</ChatConfirmationMessage>
+        <ChatConfirmationMessage id={messageId} className={classes.message}>
+          {message}
+        </ChatConfirmationMessage>
         <ChatConfirmationActions className={classes.actions}>
           <ChatConfirmationCancelButton
             type="button"
@@ -184,7 +200,7 @@ const ChatConfirmation = React.forwardRef<HTMLDivElement, ChatConfirmationProps>
   },
 );
 
-ChatConfirmation.propTypes = {
+ChatConfirmation.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -213,6 +229,11 @@ ChatConfirmation.propTypes = {
    * Called when the user clicks the confirm button.
    */
   onConfirm: PropTypes.func,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatConfirmation };

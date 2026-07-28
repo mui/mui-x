@@ -177,6 +177,7 @@ describe('selector hooks', () => {
     expect(initialStatus).toEqual({
       isStreaming: false,
       hasMoreHistory: false,
+      isLoadingHistory: false,
       error: null,
       typingUserIds: [],
     });
@@ -200,6 +201,7 @@ describe('selector hooks', () => {
     expect(statusAfterHistory).toEqual({
       isStreaming: false,
       hasMoreHistory: true,
+      isLoadingHistory: false,
       error: null,
       typingUserIds: [],
     });
@@ -215,6 +217,7 @@ describe('selector hooks', () => {
     expect(statusHook.result.current.value).toEqual({
       isStreaming: true,
       hasMoreHistory: true,
+      isLoadingHistory: false,
       error: streamError,
       typingUserIds: [],
     });

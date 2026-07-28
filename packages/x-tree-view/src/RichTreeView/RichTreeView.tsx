@@ -8,12 +8,12 @@ import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
-import { RichTreeViewProps } from './RichTreeView.types';
+import type { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
-import { TreeViewValidItem } from '../models';
+import type { TreeViewValidItem } from '../models';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
 import { itemsSelectors } from '../internals/plugins/items';
@@ -109,7 +109,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
 
   if (isLoading) {
-    return <Typography>Loading...</Typography>;
+    return <Typography>Loading…</Typography>;
   }
 
   if (error) {
@@ -138,7 +138,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   );
 }) as RichTreeViewComponent;
 
-RichTreeView.propTypes = {
+RichTreeView.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -195,9 +195,9 @@ RichTreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
-   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
-   * Nested DOM structure is not compatible with collapse / expansion animations.
+   * When `'flat'`, the tree is rendered as a flat list (children are rendered as siblings of their parent).
+   * When `'nested'`, children are rendered inside their parent's groupTransition slot.
+   * Collapse/expansion animations that rely on the groupTransition slot only work with the nested DOM structure.
    * @default 'nested'
    */
   domStructure: PropTypes.oneOf(['flat', 'nested']),

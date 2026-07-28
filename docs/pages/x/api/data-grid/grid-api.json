@@ -93,7 +93,7 @@
       "required": true
     },
     "getColumn": {
-      "type": { "description": "(field: string) =&gt; GridStateColDef" },
+      "type": { "description": "(field: string) =&gt; GridStateColDef | undefined" },
       "required": true
     },
     "getColumnGroupPath": {

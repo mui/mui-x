@@ -21,7 +21,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }&gt;"
       }
     },
     "highlightedAxis": {
@@ -41,7 +41,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'bar'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'pie'<br>&#124;&nbsp;'radar'<br>&#124;&nbsp;'scatter' }&gt;"
       }
     },
     "localeText": { "type": { "name": "object" } },
@@ -125,7 +125,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number, valueGetter?: func }&gt;"
+        "description": "Array&lt;{ colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise', unknownColor?: string }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }, data?: array, dataKey?: string, id?: string, max?: number, min?: number, sizeMap?: { interpolator?: 'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'sqrt', max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, size: Array&lt;number&gt;, type: 'continuous' }<br>&#124;&nbsp;{ max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, size: func, type: 'continuous' }<br>&#124;&nbsp;{ sizes: Array&lt;number&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ sizes: Array&lt;number&gt;, type: 'ordinal', unknownSize?: number, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }, valueGetter?: func }&gt;"
       }
     }
   },
@@ -141,7 +141,7 @@
     { "name": "baseIconButton", "description": "", "class": null },
     {
       "name": "baseToggleButton",
-      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
       "class": null
     },
     { "name": "baseToggleButtonGroup", "description": "", "class": null }
@@ -150,6 +150,5 @@
   "muiName": "MuiChartsContainer",
   "filename": "/packages/x-charts/src/ChartsContainer/ChartsContainer.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li>\n<li><a href=\"/x/react-charts/localization/\">Charts - Localization</a></li>\n<li><a href=\"/x/react-charts/plugins/\">Charts - Plugins</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li>\n<li><a href=\"/x/react-charts/localization/\">Charts - Localization</a></li>\n<li><a href=\"/x/react-charts/plugins/\">Charts - Plugins</a></li></ul>"
 }

@@ -1,11 +1,7 @@
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
-import {
-  DataGrid,
-  type GridColumnsManagementProps,
-  Toolbar,
-  ToolbarButton,
-} from '@mui/x-data-grid';
+import { DataGrid, Toolbar, ToolbarButton } from '@mui/x-data-grid';
+import type { GridColumnsManagementProps } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
 
 declare module '@mui/x-data-grid' {

@@ -5,7 +5,7 @@ import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { configurationOptions } from './configuration';
 import { colorPaletteLookup } from './colors';
-import { type BarSeries } from '../BarChart';
+import type { BarSeries } from '../BarChart';
 
 const getLegendPosition = (position: string) => {
   let horizontal: 'start' | 'center' | 'end' | undefined = 'center';
@@ -339,7 +339,7 @@ function ChartsRenderer({
   return null;
 }
 
-ChartsRenderer.propTypes = {
+ChartsRenderer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

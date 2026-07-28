@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -11,7 +11,7 @@ interface TestEvent {
   title: string;
 }
 
-const noopUpdateEvents = async () => ({ success: true });
+const noopPersistEvents = async () => ({ success: true });
 
 // Navigation APIs (`goToNextVisibleDate` takes `React.UIEvent`, `setPreset` takes a
 // DOM `Event`) require an event object, but the store doesn't read anything load-bearing
@@ -37,6 +37,7 @@ const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],
   defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE,
+  resources: [ResourceBuilder.new().build()],
 };
 
 describe('Lazy loading - EventTimelinePremiumStore', () => {
@@ -51,7 +52,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
   it('should fetch the visible range on the first mount notification', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -67,7 +68,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
   it('should NOT fetch before updateStateFromParameters is called', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -87,7 +88,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
   it('should fetch a new range when visibleDate moves outside of the cached range', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -136,7 +137,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
             }
           }),
       ),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -194,7 +195,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
             }
           }),
       ),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = {
       ...DEFAULT_PARAMS,
@@ -225,7 +226,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
   it('should NOT fetch again when visibleDate changes but the range stays the same', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -248,7 +249,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
   it('should fetch a new range when the preset changes', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, defaultPreset: 'dayAndHour' as const, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -269,7 +270,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
   it('should coalesce multiple range-changing updates within the same tick into a single fetch', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -318,7 +319,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
   it('should reuse cached events when navigating back to a previously fetched range', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -343,7 +344,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
   it('should fire the initial fetch without waiting for the debounce window', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -366,7 +367,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
         }
         return Promise.resolve(buildEvents());
       }),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -383,10 +384,10 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     expect(store.state.errors).to.have.length(0);
   });
 
-  it('should call dataSource.updateEvents and sync cache when eventsUpdated is published', async () => {
+  it('should call dataSource.persistEvents and sync cache when eventsUpdated is published', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: spy(async () => ({ success: true })),
+      persistEvents: spy(async () => ({ success: true })),
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -403,7 +404,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     };
     store.publishEvent('eventsUpdated', {
       deleted: [],
-      updated: new Map([['1', { id: '1' }]]),
+      updated: [updatedEvent],
       created: [],
       newEvents: [updatedEvent],
     });
@@ -411,11 +412,11 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.updateEvents.calledOnce).to.equal(true);
-    const arg = dataSource.updateEvents.firstCall.firstArg;
+    expect(dataSource.persistEvents.calledOnce).to.equal(true);
+    const arg = dataSource.persistEvents.firstCall.firstArg;
     expect(arg.deleted).to.deep.equal([]);
     expect(arg.created).to.deep.equal([]);
-    expect(arg.updated).to.deep.equal(['1']);
+    expect(arg.updated).to.deep.equal([updatedEvent]);
 
     // The store state is rebuilt with `newEvents` and the cache is upserted, so the
     // updated event becomes visible without an extra fetch.

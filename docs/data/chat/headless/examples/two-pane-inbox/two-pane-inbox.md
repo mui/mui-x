@@ -7,17 +7,13 @@ githubLabel: 'scope: chat'
 
 # Chat - Two-pane inbox
 
-<p class="description">Build the default desktop chat application layout with a conversation rail and active thread pane.</p>
+<p class="description">Compose a two-pane chat inbox with a persistent conversation rail and an active thread pane.</p>
 
-This demo takes the minimal shell and turns it into the most common product layout: a persistent conversation rail on the left and an active thread on the right.
+The two-pane inbox layers a persistent conversation rail on the left and an active thread on the right, on top of the minimal headless shell.
 
-For most teams, this is the first production-ready composition pattern rather than the minimal shell.
+It's the most common production layout for support inboxes, internal copilots, and team communication surfaces.
 
-- `Chat.Layout` pane composition
-- `ConversationList.Root` selection behavior
-- `Conversation.Header`, `Conversation.Title`, and `Conversation.Subtitle`
-- `MessageList.Root`
-- `Composer.Root`
+The demo below shows the full two-pane inbox assembled from the headless primitives:
 
 {{"demo": "TwoPaneInbox.js"}}
 
@@ -32,28 +28,28 @@ For most teams, this is the first production-ready composition pattern rather th
 
 Use this layout for:
 
-- support inboxes
-- internal copilots with conversation history
-- team communication surfaces with a stable rail of threads
+- Support inboxes.
+- Internal copilots with conversation history.
+- Team communication surfaces with a stable rail of threads.
 
-It is especially applicable when users need to switch threads frequently without losing context in the active conversation pane.
+Use it when users need to switch threads frequently without losing context in the active conversation pane.
 
 ## Implementation notes
 
-- Use the default pane order so this page teaches the intended mental model before custom layouts.
-- Show a real thread header rather than jumping straight from the list to the message log.
-- Keep this demo focused on structural composition, not styling experiments.
-- Include enough preview metadata in the conversation list that the value of a persistent rail is obvious.
+- Keep the default pane order so users learn the layout's mental model before you customize it.
+- Render a real thread header instead of jumping straight from the list to the message log.
+- Focus on structural composition before layering styling on top.
+- Include enough preview metadata in the conversation list to make the persistent rail valuable at a glance.
 
-## What to pay attention to
+## Composition details
 
-- `ConversationList.Root` and `Conversation.Root` already coordinate through active conversation state, so the page-level layout code can stay small.
-- `Chat.Layout` should stay the structural owner of the two-pane arrangement even when the visual layout is heavily customized.
+- `ConversationList.Root` and `Conversation.Root` coordinate through active conversation state, so the page-level layout code stays small.
+- Keep `Chat.Layout` as the structural owner of the two-pane arrangement even when you customize the visual layout.
 
 ## See also
 
-- Continue with [Conversation list](/x/react-chat/headless/conversation-list/) for list semantics and keyboard behavior.
+- See [Conversation list](/x/react-chat/headless/conversation-list/) for details.
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

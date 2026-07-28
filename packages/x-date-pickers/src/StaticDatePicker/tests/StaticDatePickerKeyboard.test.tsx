@@ -1,6 +1,6 @@
 import { act, screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { DateView } from '@mui/x-date-pickers/models';
+import type { DateView } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 describe('<StaticDatePicker /> - Keyboard interactions', () => {

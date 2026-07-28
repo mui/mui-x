@@ -4,6 +4,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  ResourceBuilder,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
@@ -177,6 +178,51 @@ describe('<WeekView />', () => {
     });
   });
 
+  describe('multi-resource events', () => {
+    const resourceA = ResourceBuilder.new().title('Room A').build();
+    const resourceB = ResourceBuilder.new().title('Room B').build();
+
+    it('should render the event once when at least one of its assigned resources is visible', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="week"
+        />,
+      );
+
+      expect(screen.getAllByText('Team Sync')).toHaveLength(1);
+    });
+
+    it('should not render the event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new()
+        .title('Team Sync')
+        .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+        .resources([resourceA, resourceB])
+        .build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceA.id]: false, [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="week"
+        />,
+      );
+
+      expect(screen.queryByText('Team Sync')).to.equal(null);
+    });
+  });
+
   describe('time navigation', () => {
     it('should go to start of previous week when clicking on the Previous Week button', async () => {
       const onVisibleDateChange = spy();
@@ -316,6 +362,75 @@ describe('<WeekView />', () => {
 
       const indicators = document.querySelectorAll('[data-current-time]');
       expect(indicators.length).to.equal(0);
+    });
+  });
+
+  describe('weekStartsOn preference', () => {
+    const visibleDate = adapter.date('2025-01-08T00:00:00Z', 'default');
+
+    function getFirstDayColumnHeader() {
+      const grids = screen.getAllByRole('grid');
+      const dayTimeGrid = grids.find(
+        (grid) => grid.getAttribute('aria-rowcount') === '3',
+      ) as HTMLElement;
+      return within(dayTimeGrid).getAllByRole('columnheader')[0];
+    }
+
+    it('shows Sunday as the first column when weekStartsOn is 0', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="week"
+          defaultPreferences={{ weekStartsOn: 0 }}
+        />,
+      );
+
+      expect(getFirstDayColumnHeader().getAttribute('aria-label')).to.match(/sunday/i);
+    });
+
+    it('shows Monday as the first column when weekStartsOn is 1', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="week"
+          defaultPreferences={{ weekStartsOn: 1 }}
+        />,
+      );
+
+      expect(getFirstDayColumnHeader().getAttribute('aria-label')).to.match(/monday/i);
+    });
+
+    it('shows Saturday as the first column when weekStartsOn is 6', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="week"
+          defaultPreferences={{ weekStartsOn: 6 }}
+        />,
+      );
+
+      expect(getFirstDayColumnHeader().getAttribute('aria-label')).to.match(/saturday/i);
+    });
+
+    it('renders exactly 7 day columns regardless of weekStartsOn', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="week"
+          defaultPreferences={{ weekStartsOn: 1 }}
+        />,
+      );
+
+      const grids = screen.getAllByRole('grid');
+      const dayTimeGrid = grids.find(
+        (grid) => grid.getAttribute('aria-rowcount') === '3',
+      ) as HTMLElement;
+      const headerCells = within(dayTimeGrid).getAllByRole('columnheader');
+      expect(headerCells.length).to.equal(7);
     });
   });
 });

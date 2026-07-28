@@ -4,10 +4,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-
-import { Unstable_RadialBarChart as RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
-
+import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
+
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 const highlightScope = { highlight: 'item' };
 
@@ -34,16 +35,33 @@ const series = [
   },
 ];
 
-const radialChartParams = {
-  series,
-  rotationAxis: [
-    { data: ['0', '3', '6', '9', '12'], id: 'axis1', scaleType: 'band' },
-  ],
-  height: 400,
+const bandAxis = {
+  data: ['0', '3', '6', '9', '12'],
+  id: 'axis1',
+  scaleType: 'band',
+  disableLine: true,
+  disableTicks: true,
 };
+
+const valueAxis = {
+  tickLabelPosition: 'center',
+  disableLine: true,
+  disableTicks: true,
+};
+
+const getRadialChartParams = (layout) => ({
+  series: series.map((s) => ({ ...s, layout })),
+  rotationAxis: [
+    layout === 'vertical' ? bandAxis : { ...valueAxis, tickLabelPosition: 'after' },
+  ],
+  radiusAxis: [layout === 'vertical' ? valueAxis : bandAxis],
+  grid: { rotation: true, radius: true },
+  height: 400,
+});
 
 export default function RadialBarClick() {
   const [axisData, setAxisData] = React.useState();
+  const [layout, setLayout] = React.useState('vertical');
 
   return (
     <Stack
@@ -52,10 +70,29 @@ export default function RadialBarClick() {
       sx={{ width: '100%' }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <RadialBarChart
-          {...radialChartParams}
-          onAxisClick={(event, d) => setAxisData(d)}
-        />
+        <ToggleButtonGroup
+          value={layout}
+          exclusive
+          onChange={(event, newLayout) => {
+            if (newLayout !== null) {
+              setLayout(newLayout);
+            }
+          }}
+          aria-label="chart layout"
+        >
+          <ToggleButton key="vertical" value="vertical">
+            vertical
+          </ToggleButton>
+          <ToggleButton key="horizontal" value="horizontal">
+            horizontal
+          </ToggleButton>
+        </ToggleButtonGroup>
+        <Box sx={{ flexGrow: 1 }}>
+          <RadialBarChart
+            {...getRadialChartParams(layout)}
+            onAxisClick={(event, d) => setAxisData(d)}
+          />
+        </Box>
       </Box>
 
       <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>

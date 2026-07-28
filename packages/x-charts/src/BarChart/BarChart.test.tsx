@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
+import { useYAxis } from '@mui/x-charts/hooks';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -254,5 +255,56 @@ describe('<BarChart />', () => {
 
     const labelY = await screen.findByText('600');
     expect(labelY).toBeVisible();
+  });
+
+  it('should handle hidden series', async () => {
+    const dataset = [
+      {
+        version: 'data-0',
+        a1: 500,
+        a2: 600,
+        unusedProp: 'test',
+      },
+      {
+        version: 'data-1',
+        a1: 100,
+        a2: 200,
+        unusedProp: ['test'],
+      },
+    ];
+
+    const yAxisDomainRef: { current: any[] } = { current: [] };
+    function DomainSpy() {
+      const yAxis = useYAxis();
+      React.useEffect(() => {
+        yAxisDomainRef.current = yAxis.scale.domain();
+      });
+      return null;
+    }
+
+    const series = [
+      { id: 'a1', dataKey: 'a1', label: 'Series A', stack: 'stack-1' },
+      { id: 'a2', dataKey: 'a2', label: 'Series B', stack: 'stack-1' },
+    ];
+
+    const { setProps } = render(
+      <BarChart
+        dataset={dataset}
+        xAxis={[{ dataKey: 'version' }]}
+        yAxis={[{ domainSeries: 'visible' }]}
+        series={series}
+        hiddenItems={[]}
+        width={500}
+        height={300}
+      >
+        <DomainSpy />
+      </BarChart>,
+    );
+
+    expect(yAxisDomainRef.current).to.deep.equal([0, 1200]);
+
+    setProps({ hiddenItems: [{ type: 'bar', seriesId: 'a2' }] });
+
+    expect(yAxisDomainRef.current).to.deep.equal([0, 500]);
   });
 });

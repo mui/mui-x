@@ -7,16 +7,16 @@ githubLabel: 'scope: chat'
 
 # Chat - Minimal core chat
 
-<p class="description">Start with the smallest working <code>ChatProvider</code> and <code>useChat()</code> setup.</p>
+<p class="description">Wire up a minimal headless chat using <code>ChatProvider</code> and the <code>useChat()</code> hook.</p>
 
-This demo keeps the UI intentionally small to demonstrate the core pattern:
+The minimal example demonstrates the core pattern:
 
-- `ChatProvider` owns the runtime and wraps your component tree
+- `ChatProvider` owns the runtime and wraps the component tree.
 - `useChat()` reads messages and streaming state in one call
-- a plain input and button trigger `sendMessage()`
+- A plain input and button trigger `sendMessage()`.
 - the assistant response streams back through the adapter
 
-Everything else — layout, styling, message rendering — is plain React with no framework opinions.
+Everything else—layout, styling, message rendering—is plain React with no framework opinions.
 
 ## Key concepts
 
@@ -39,9 +39,9 @@ const adapter: ChatAdapter = {
 };
 ```
 
-### Wiring `ChatProvider`
+### Wiring the provider
 
-Wrap your component tree with `ChatProvider` and pass the adapter:
+Wrap the component tree with `ChatProvider` and pass the adapter:
 
 ```tsx
 <ChatProvider adapter={adapter} initialActiveConversationId="support">
@@ -51,7 +51,7 @@ Wrap your component tree with `ChatProvider` and pass the adapter:
 
 `initialActiveConversationId` sets the initial conversation without requiring controlled state.
 
-### Reading state with `useChat()`
+### Reading state from the runtime
 
 Inside `ChatProvider`, call `useChat()` to get messages, streaming state, and actions:
 
@@ -63,16 +63,16 @@ const { messages, sendMessage, isStreaming } = useChat();
 
 ## Key takeaways
 
-- The adapter is the only backend integration point — the runtime handles everything else
+- The adapter is the only backend integration point—the runtime handles everything else.
 - `useChat()` provides both state and actions in a single hook
-- No CSS, no components, no design system required — core is pure runtime
+- No CSS, no components, no design system required—core is pure runtime.
 
 ## See also
 
-- [Hooks](/x/react-chat/core/hooks/) for the full hook API reference
-- [Adapters](/x/react-chat/core/adapters/) for writing real adapters
-- [Controlled state](/x/react-chat/core/examples/controlled-state/) for owning state externally
-- [Selector-driven thread](/x/react-chat/core/examples/selector-driven-thread/) for efficient large threads
+- [Hooks](/x/react-chat/core/hooks/) for details on the full hook API.
+- [Adapters](/x/react-chat/core/adapters/) for details on writing real adapters.
+- [Controlled state](/x/react-chat/core/examples/controlled-state/) for details on owning state externally.
+- [Selector-driven thread](/x/react-chat/core/examples/selector-driven-thread/) for details on efficient large threads.
 
 ## API
 

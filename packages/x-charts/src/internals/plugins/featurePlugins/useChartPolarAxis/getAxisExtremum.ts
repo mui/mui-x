@@ -1,11 +1,11 @@
 import type { ChartsRadialAxisProps, ScaleName, PolarAxisConfig } from '../../../../models/axis';
-import { type PolarChartSeriesType } from '../../../../models/seriesType/config';
-import {
-  type PolarExtremumGetter,
-  type ChartSeriesConfig,
-  type PolarExtremumGetterResult,
+import type { PolarChartSeriesType } from '../../../../models/seriesType/config';
+import type {
+  PolarExtremumGetter,
+  ChartSeriesConfig,
+  PolarExtremumGetterResult,
 } from '../../corePlugins/useChartSeriesConfig';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { isPolarSeriesType } from '../../../isPolar';
 
 const axisExtremumCallback = <SeriesType extends PolarChartSeriesType>(

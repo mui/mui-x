@@ -1,4 +1,5 @@
-import { type GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-premium';
+import { gridStringOrNumberComparator } from '@mui/x-data-grid-premium';
+import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   randomCommodity,
   randomDesk,
@@ -27,6 +28,8 @@ import {
   randomRateType,
   randomContractType,
   randomTaxCode,
+  randomTradeTags,
+  randomCertifications,
 } from '../services';
 import {
   renderCountry,
@@ -46,13 +49,15 @@ import {
 import {
   CONTRACT_TYPE_OPTIONS,
   COUNTRY_ISO_OPTIONS_SORTED,
-  type CountryIsoOption,
   CURRENCY_OPTIONS,
   INCOTERM_OPTIONS,
   RATE_TYPE_OPTIONS,
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
+  TRADE_TAG_OPTIONS,
+  CERTIFICATION_OPTIONS,
 } from '../services/static-data';
+import type { CountryIsoOption } from '../services/static-data';
 import type { GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getCommodityColumns = (editable = false): GridColDefGenerator[] => [
@@ -72,6 +77,15 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     headerName: 'Commodity',
     generateData: randomCommodity,
     width: 180,
+    editable,
+  },
+  {
+    field: 'tags',
+    headerName: 'Tags',
+    generateData: randomTradeTags,
+    type: 'multiSelect',
+    valueOptions: TRADE_TAG_OPTIONS,
+    width: 220,
     editable,
   },
   {
@@ -324,6 +338,15 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     generateData: randomCreatedDate,
     type: 'date',
     width: 150,
+    editable,
+  },
+  {
+    field: 'certifications',
+    headerName: 'Certifications',
+    generateData: randomCertifications,
+    type: 'multiSelect',
+    valueOptions: CERTIFICATION_OPTIONS,
+    width: 200,
     editable,
   },
 ];

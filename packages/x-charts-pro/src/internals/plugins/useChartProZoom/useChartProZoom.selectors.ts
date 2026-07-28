@@ -1,11 +1,7 @@
 import { createSelector } from '@mui/x-internals/store';
-import {
-  type AxisId,
-  type ChartRootSelector,
-  selectorChartZoomMap,
-  selectorChartZoomOptionsLookup,
-} from '@mui/x-charts/internals';
-import { type UseChartProZoomSignature } from './useChartProZoom.types';
+import { selectorChartZoomMap, selectorChartZoomOptionsLookup } from '@mui/x-charts/internals';
+import type { AxisId, ChartRootSelector } from '@mui/x-charts/internals';
+import type { UseChartProZoomSignature } from './useChartProZoom.types';
 
 export const selectorChartZoomState: ChartRootSelector<UseChartProZoomSignature, 'zoom'> = (
   state,
@@ -39,11 +35,6 @@ export const selectorChartCanZoomOut = createSelector(
       );
     });
   },
-);
-
-export const selectorChartActiveRangeButtonKey = createSelector(
-  selectorChartZoomState,
-  (zoom) => zoom.activeRangeButtonKey,
 );
 
 export const selectorChartCanZoomIn = createSelector(

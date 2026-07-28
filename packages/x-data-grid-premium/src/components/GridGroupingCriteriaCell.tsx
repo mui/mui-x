@@ -5,10 +5,9 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  type GridRenderCellParams,
-  type GridGroupNode,
   gridRowMaximumTreeDepthSelector,
 } from '@mui/x-data-grid-pro';
+import type { GridRenderCellParams, GridGroupNode } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -70,7 +69,7 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   let cellContent: React.ReactNode;
 
   const colDef = apiRef.current.getColumn(rowNode.groupingField!);
-  if (typeof colDef.renderCell === 'function') {
+  if (colDef && typeof colDef.renderCell === 'function') {
     cellContent = colDef.renderCell(props);
   } else if (typeof formattedValue !== 'undefined') {
     cellContent = <span>{formattedValue}</span>;

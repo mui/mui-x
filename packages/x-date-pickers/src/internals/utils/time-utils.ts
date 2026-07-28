@@ -1,5 +1,5 @@
-import { MuiPickersAdapter, PickerValidDate } from '../../models';
-import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../models';
+import type { MuiPickersAdapter, PickerValidDate } from '../../models';
+import type { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
 export const EXPORTED_TIME_VIEWS = ['hours', 'minutes', 'seconds'] as const;

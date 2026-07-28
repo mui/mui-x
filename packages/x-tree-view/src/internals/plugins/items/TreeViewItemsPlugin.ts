@@ -1,9 +1,9 @@
-import { TreeViewItemId, TreeViewValidItem } from '../../../models';
+import type { TreeViewItemId, TreeViewValidItem } from '../../../models';
 import { idSelectors } from '../id';
 import { itemsSelectors } from './selectors';
 import { buildItemsLookups, TREE_VIEW_ROOT_PARENT_ID } from './utils';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';
-import {
+import type {
   MinimalTreeViewParameters,
   MinimalTreeViewState,
 } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';

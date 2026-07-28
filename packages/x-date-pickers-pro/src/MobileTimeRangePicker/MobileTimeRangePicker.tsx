@@ -3,15 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import refType from '@mui/utils/refType';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import {
-  DIALOG_WIDTH,
+import type {
   PickerRangeValue,
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
-  resolveTimeFormat,
   TimeViewWithMeridiem,
-  VIEW_HEIGHT,
 } from '@mui/x-date-pickers/internals';
+import { DIALOG_WIDTH, resolveTimeFormat, VIEW_HEIGHT } from '@mui/x-date-pickers/internals';
 import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
@@ -22,17 +20,17 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '@mui/x-date-pickers/timeViewRenderers';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
-import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
+import type { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
 import { SingleInputTimeRangeField } from '../SingleInputTimeRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
-import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
 const STEPS: PickerRangeStep[] = [
   { views: null, rangePosition: 'start' },
@@ -146,7 +144,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker(
   return renderPicker();
 }) as MobileTimeRangePickerComponent;
 
-MobileTimeRangePicker.propTypes = {
+MobileTimeRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

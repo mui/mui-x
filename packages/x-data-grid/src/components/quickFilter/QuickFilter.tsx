@@ -5,8 +5,10 @@ import debounce from '@mui/utils/debounce';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useId from '@mui/utils/useId';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
-import { QuickFilterContext, type QuickFilterState } from './QuickFilterContext';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { QuickFilterContext } from './QuickFilterContext';
+import type { QuickFilterState } from './QuickFilterContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
@@ -216,7 +218,7 @@ function QuickFilter(props: QuickFilterProps) {
   return <QuickFilterContext.Provider value={contextValue}>{element}</QuickFilterContext.Provider>;
 }
 
-QuickFilter.propTypes = {
+QuickFilter.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_RadialBarChart as RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
+import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 
 const months = [
   'Jan',
@@ -42,7 +42,7 @@ export default function BasicRadialBarChart() {
         },
       ]}
       rotationAxis={[{ scaleType: 'band', data: months }]}
-      radiusAxis={[{ scaleType: 'linear', minRadius: 20 }]}
+      radiusAxis={[{ scaleType: 'linear', minRadius: 20, position: 'none' }]}
       grid={{ rotation: true, radius: true }}
     />
   );

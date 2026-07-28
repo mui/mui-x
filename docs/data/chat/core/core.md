@@ -7,14 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - Core
 
-<p class="description">Runtime, adapter contract, hooks, selectors, and stream processing for building fully custom chat UIs.</p>
+<p class="description">Build fully custom chat UIs with the Chat runtime, adapter contract, hooks, selectors, and stream processing.</p>
 
-`@mui/x-chat/headless` is the runtime-focused layer in the chat package family.
-It gives you chat state, streaming, adapters, selectors, and composer logic without imposing any rendered UI.
+`@mui/x-chat/headless` is the runtime-focused layer in the Chat package family.
+It gives you Chat state, streaming, adapters, selectors, and composer logic without imposing any rendered UI.
 
-## Where core fits
+## Where Core fits
 
-Use the core layer when you want chat behavior but you want to own the markup, layout, styling, and interaction model yourself.
+Use the core layer when you want Chat behavior but want to own the markup, layout, styling, and interaction model yourself.
 
 Core owns:
 
@@ -38,11 +38,11 @@ Those concerns belong to [Headless](/x/react-chat/headless/).
 
 ## Mental model
 
-The following demo shows the core runtime with a minimal custom UI:
+The demo below shows the core runtime with a minimal custom UI:
 
 {{"demo": "examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
-The runtime is easiest to understand as a pipeline:
+The runtime works as a pipeline:
 
 1. `ChatProvider` creates the store and runtime actions.
 2. Your `ChatAdapter` talks to the backend and returns streams.
@@ -83,7 +83,7 @@ See [State and store](/x/react-chat/core/state/) for the full `ChatProvider` pro
 
 ## Hooks
 
-Nine public hooks cover the full spectrum from all-in-one orchestration (`useChat()`) to row-level subscriptions (`useMessageIds()` + `useMessage(id)`).
+Nine public hooks span all-in-one orchestration (`useChat()`) through row-level subscriptions (`useMessageIds()` + `useMessage(id)`).
 
 Narrower hooks like `useChatComposer()`, `useChatStatus()`, and `useChatPartRenderer()` handle specific concerns without subscribing to unrelated state.
 
@@ -99,7 +99,7 @@ See [Selectors](/x/react-chat/core/selectors/) for the full selector table and u
 ## Adapter contract
 
 `ChatAdapter` is the transport boundary between the runtime and your backend.
-Only `sendMessage()` is required — everything else is optional and incrementally adopted.
+Only `sendMessage()` is required—everything else is optional and incrementally adopted.
 The adapter works with HTTP, SSE, WebSocket, or AI SDK-style streaming backends.
 
 See [Adapters](/x/react-chat/core/adapters/) for the full interface reference, a step-by-step writing guide, and backend pattern guidance.
@@ -122,7 +122,7 @@ See [Realtime](/x/react-chat/core/realtime/) for event types, store effects, and
 ## Type augmentation
 
 Module augmentation lets you add app-specific metadata, typed tool definitions, typed `data-*` payloads, and custom message parts.
-Types flow through the entire stack at compile time — no provider props needed.
+Types flow through the entire stack at compile time—no provider props needed.
 
 See [Type augmentation](/x/react-chat/core/types/) for the six registry interfaces, a step-by-step guide, and an end-to-end example.
 

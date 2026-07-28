@@ -1,27 +1,33 @@
 // This file should be removed after creating all plugins in favor of a file per chart type.
 
 import {
-  type ChartSeriesType,
-  type ConvertSignaturesIntoPlugins,
   useChartCartesianAxis,
-  type UseChartCartesianAxisSignature,
   useChartTooltip,
-  type UseChartTooltipSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
   useChartZAxis,
-  type UseChartZAxisSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
   useChartPolarAxis,
-  type UseChartPolarAxisSignature,
   useChartBrush,
-  type UseChartBrushSignature,
   useChartVisibilityManager,
-  type UseChartVisibilityManagerSignature,
+  useProgressiveRendering,
 } from '@mui/x-charts/internals';
-import { useChartProExport, type UseChartProExportSignature } from './useChartProExport';
-import { useChartProZoom, type UseChartProZoomSignature } from './useChartProZoom';
+import type {
+  ChartSeriesType,
+  ConvertSignaturesIntoPlugins,
+  UseChartCartesianAxisSignature,
+  UseChartTooltipSignature,
+  UseChartInteractionSignature,
+  UseChartZAxisSignature,
+  UseChartHighlightSignature,
+  UseChartPolarAxisSignature,
+  UseChartBrushSignature,
+  UseChartVisibilityManagerSignature,
+  UseProgressiveRenderingSignature,
+} from '@mui/x-charts/internals';
+import { useChartProExport } from './useChartProExport';
+import type { UseChartProExportSignature } from './useChartProExport';
+import { useChartProZoom } from './useChartProZoom';
+import type { UseChartProZoomSignature } from './useChartProZoom';
 
 export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
@@ -35,6 +41,7 @@ export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeries
   UseChartProZoomSignature,
   UseChartProExportSignature,
   UseChartVisibilityManagerSignature<SeriesType>,
+  UseProgressiveRenderingSignature,
 ];
 
 export type AllPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
@@ -52,6 +59,7 @@ export const ALL_PLUGINS = [
   useChartProZoom,
   useChartProExport,
   useChartVisibilityManager,
+  useProgressiveRendering,
 ];
 
 export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
@@ -66,6 +74,7 @@ export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSe
   UseChartProZoomSignature,
   UseChartProExportSignature,
   UseChartVisibilityManagerSignature<SeriesType>,
+  UseProgressiveRenderingSignature,
 ];
 
 export type DefaultPluginsType<SeriesType extends ChartSeriesType = ChartSeriesType> =
@@ -82,4 +91,5 @@ export const DEFAULT_PLUGINS = [
   useChartProZoom,
   useChartProExport,
   useChartVisibilityManager,
+  useProgressiveRendering,
 ];

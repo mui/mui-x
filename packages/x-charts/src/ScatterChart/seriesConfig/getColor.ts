@@ -1,4 +1,4 @@
-import { type ColorProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ColorProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
@@ -20,8 +20,8 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
         }
       }
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor({ value, dataIndex }) : zColorScale(value.z);
-      if (color === null) {
+      const color = zColorScale(value.colorValue ?? value.z);
+      if (typeof color !== 'string') {
         return getSeriesColor({ value, dataIndex });
       }
       return color;
@@ -34,8 +34,8 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
         return series.color;
       }
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor({ value, dataIndex }) : yColorScale(value.y);
-      if (color === null) {
+      const color = yColorScale(value.y);
+      if (typeof color !== 'string') {
         return getSeriesColor({ value, dataIndex });
       }
       return color;
@@ -48,8 +48,8 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
         return series.color;
       }
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor({ value, dataIndex }) : xColorScale(value.x);
-      if (color === null) {
+      const color = xColorScale(value.x);
+      if (typeof color !== 'string') {
         return getSeriesColor({ value, dataIndex });
       }
       return color;

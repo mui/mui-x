@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, type GridValueFormatter, renderLongTextCell } from '@mui/x-data-grid';
+import { DataGrid, renderLongTextCell } from '@mui/x-data-grid';
+import type { GridApi, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -130,6 +131,21 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
     expect(getCell(0, 0)).to.have.text('');
+  });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', () => {
+    const apiRef = React.createRef<GridApi>();
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid {...baselineProps} apiRef={apiRef} columns={[{ field: 'brand' }]} />
+      </div>,
+    );
+
+    // `getColumn('unknown')` returns `undefined`, which used to crash `getRowValue`
+    // with "Cannot read properties of undefined (reading 'field')".
+    expect(() => apiRef.current!.getCellParams(0, 'unknown')).not.to.throw();
+    expect(apiRef.current!.getCellParams(0, 'unknown').value).to.equal(undefined);
   });
 
   it('should call the valueFormatter with the correct params', () => {
@@ -317,6 +333,57 @@ describe('<DataGrid /> - Cells', () => {
           fireEvent.click(collapseButton);
 
           expect(expandButton).to.have.attribute('aria-expanded', 'false');
+        });
+
+        // Regression test for https://github.com/mui/mui-x/issues/22382
+        it('should not submit a surrounding form when clicking the expand button', async () => {
+          const handleSubmit = spy((event: React.FormEvent) => {
+            event.preventDefault();
+          });
+
+          const { user } = render(
+            <form onSubmit={handleSubmit}>
+              <div style={{ width: 300, height: 300 }}>
+                <DataGrid {...longTextBaselineProps} />
+              </div>
+            </form>,
+          );
+
+          const cell = getCell(0, 0);
+          await user.click(cell);
+
+          const expandButton = cell.querySelector<HTMLButtonElement>(
+            'button[aria-haspopup="dialog"]',
+          );
+          expect(expandButton).not.to.equal(null);
+          await user.click(expandButton!);
+
+          expect(handleSubmit.callCount).to.equal(0);
+        });
+
+        it('should not submit a surrounding form when clicking the collapse button', async () => {
+          const handleSubmit = spy((event: React.FormEvent) => {
+            event.preventDefault();
+          });
+
+          const { user } = render(
+            <form onSubmit={handleSubmit}>
+              <div style={{ width: 300, height: 300 }}>
+                <DataGrid {...longTextBaselineProps} />
+              </div>
+            </form>,
+          );
+
+          const cell = getCell(0, 0);
+          await openLongTextViewPopup(cell, user, 'spacebar');
+
+          const popup = document.querySelector('.MuiDataGrid-longTextCellPopup')!;
+          const collapseButton = popup.querySelector('button')!;
+          // `fireEvent` (not `user.click`) because the popup keeps `pointer-events: none`
+          // until its open transition settles, which never happens under jsdom.
+          fireEvent.click(collapseButton);
+
+          expect(handleSubmit.callCount).to.equal(0);
         });
 
         it('should render custom content via renderContent prop', async () => {

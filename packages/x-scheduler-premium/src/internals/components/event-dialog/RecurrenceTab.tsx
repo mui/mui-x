@@ -14,7 +14,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
-import {
+import type {
   RecurringEventFrequency,
   RecurringEventPresetKey,
   RecurringEventByDayValue,
@@ -26,16 +26,17 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
+import type { ControlledValue, EndsSelection } from '@mui/x-scheduler/internals';
 import {
   useEventDialogStyledContext,
-  ControlledValue,
-  EndsSelection,
   getEndsSelectionFromRRule,
   formatDayOfMonthAndMonthFullLetter,
   EventDialogTabPanel,
   EventDialogTabContent,
+  getWeekdayToken,
 } from '@mui/x-scheduler/internals';
 
 const SectionHeaderTitle = styled('legend', {
@@ -200,13 +201,14 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   );
   const inputsDisabled = controlled.recurrenceSelection === null || isPropertyReadOnly('rrule');
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
   const monthlyRef = React.useMemo(
     () => getMonthlyReference(adapter, occurrence.displayTimezone.start),
     [adapter, occurrence.displayTimezone.start],
   );
   const weeklyDays = React.useMemo(
-    () => getWeeklyDays(adapter, visibleDate),
-    [adapter, visibleDate],
+    () => getWeeklyDays(adapter, visibleDate, weekStartsOn),
+    [adapter, visibleDate, weekStartsOn],
   );
 
   // Form-state drafts: every preset carries both `byDay` and `byMonthDay` (empty when
@@ -366,7 +368,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     controlled.rruleDraft,
   );
 
-  const weekday = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
+  const weekday = getWeekdayToken(adapter, occurrence.displayTimezone.start.value);
+  const weekdayName = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
   const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(
     occurrence.displayTimezone.start.value,
     adapter,
@@ -379,7 +382,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     { label: `${localeText.recurrenceNoRepeat}`, value: null },
     { label: `${localeText.recurrenceDailyPresetLabel}`, value: 'DAILY' },
     {
-      label: `${localeText.recurrenceWeeklyPresetLabel(weekday)}`,
+      label: `${localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName })}`,
       value: 'WEEKLY',
     },
     {

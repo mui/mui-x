@@ -1,8 +1,10 @@
 export { MessageRoot } from './MessageRoot';
+export { MessageContextProvider, useMessageContext } from './internals/MessageContext';
 export { MessageAvatar } from './MessageAvatar';
 export { MessageAuthorLabel } from './MessageAuthorLabel';
 export { MessageContent } from './MessageContent';
 export { MessageMeta } from './MessageMeta';
+export { MessageError } from './MessageError';
 export { MessageActions } from './MessageActions';
 export {
   MessageActionsMenu,
@@ -34,6 +36,7 @@ export type {
   TextPartExternalProps,
 } from './MessageContent';
 export type { MessageMetaProps, MessageMetaSlotProps, MessageMetaSlots } from './MessageMeta';
+export type { MessageErrorProps, MessageErrorSlotProps, MessageErrorSlots } from './MessageError';
 export type {
   MessageActionsProps,
   MessageActionsSlotProps,
@@ -55,6 +58,7 @@ export type {
   MessageContentOwnerState,
   MessageOwnerState,
   MessageMetaOwnerState,
+  MessageErrorOwnerState,
   MessageRootOwnerState,
 } from './message.types';
 
@@ -99,6 +103,8 @@ export type {
   ToolPartSectionOwnerState,
   ToolPartSlotProps,
   ToolPartSlots,
+  ChatToolExpand,
+  ChatToolGetExpanded,
 } from './parts';
 
 // Part utilities

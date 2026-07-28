@@ -1,0 +1,26 @@
+{
+  "props": {
+    "href": { "type": { "name": "string" } },
+    "imageBounds": {
+      "type": { "name": "arrayOf", "description": "Array&lt;Array&lt;number&gt;&gt;" },
+      "default": "[[-180, -90], [180, 90]]"
+    },
+    "onReady": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(dataUrl: string | null) => void",
+        "describedArgs": ["dataUrl"]
+      }
+    }
+  },
+  "name": "MapImagePlot",
+  "imports": [
+    "import { MapImagePlot } from '@mui/x-charts-premium/Map';",
+    "import { MapImagePlot } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiMapImagePlot",
+  "filename": "/packages/x-charts-premium/src/Map/MapImagePlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/map/\">Charts - Map <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>"
+}

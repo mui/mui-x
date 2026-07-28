@@ -10,7 +10,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import TextField from '@mui/material/TextField';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import {
+import type {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
   RecurringEventFrequency,
@@ -25,9 +25,11 @@ import {
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { useEventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
-import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
+import type { ControlledValue } from './utils';
+import { computeRange, hasProp, validateRange } from './utils';
 import EventDialogHeader from './EventDialogHeader';
 import { GeneralTab } from './GeneralTab';
 
@@ -113,6 +115,10 @@ export function FormContent(props: FormContentProps) {
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
 
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventDialogOptionalRenderers();
@@ -145,7 +151,7 @@ export function FormContent(props: FormContentProps) {
       endDate: fmtDate(occurrence.displayTimezone.end),
       startTime: fmtTime(occurrence.displayTimezone.start),
       endTime: fmtTime(occurrence.displayTimezone.end),
-      resourceId: occurrence.resource ?? null,
+      resourceId: getPrimaryResourceId(occurrence.resource),
       allDay: !!occurrence.allDay,
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,
@@ -170,6 +176,11 @@ export function FormContent(props: FormContentProps) {
     const err = validateRange(adapter, start, end, controlled.allDay);
     if (err) {
       setErrors({ [err.field]: localeText.startDateAfterEndDateError });
+      return;
+    }
+
+    if (shouldEventRequireResource && controlled.resourceId === null) {
+      setErrors({ resource: localeText.requiredResourceError });
       return;
     }
 
@@ -230,6 +241,17 @@ export function FormContent(props: FormContentProps) {
   };
 
   const handleDelete = () => {
+    if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+      store.deleteRecurringEvent({
+        occurrenceStart: occurrence.displayTimezone.start.value,
+        eventId: occurrence.id,
+        onSubmit: onClose,
+      });
+
+      // don't close the dialog
+      return;
+    }
+
     store.deleteEvent(occurrence.id);
     onClose();
   };
@@ -258,6 +280,7 @@ export function FormContent(props: FormContentProps) {
                 readOnly: isPropertyReadOnly('title'),
                 'aria-label': localeText.eventTitleAriaLabel,
               },
+              formHelperText: { role: 'alert' },
             }}
             error={!!errors.title}
             helperText={errors.title}

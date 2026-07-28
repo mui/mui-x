@@ -2,12 +2,8 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { styled } from '@mui/material/styles';
-import {
-  getDataGridUtilityClass,
-  GridMenu,
-  type GridSlotProps,
-  useGridSelector,
-} from '@mui/x-data-grid-pro';
+import { getDataGridUtilityClass, GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
+import type { GridSlotProps } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { gridPivotActiveSelector, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
@@ -167,17 +163,20 @@ export function AggregationSelect({
     [apiRef, getActualFieldName],
   );
 
-  const availableAggregationFunctions = React.useMemo(
-    () => [
+  const availableAggregationFunctions = React.useMemo(() => {
+    const column = colDef(field);
+
+    return [
       ...(pivotActive ? [] : [AGGREGATION_FUNCTION_NONE]),
-      ...getAvailableAggregationFunctions({
-        aggregationFunctions: rootProps.aggregationFunctions,
-        colDef: colDef(field),
-        isDataSource: !!rootProps.dataSource,
-      }),
-    ],
-    [colDef, field, pivotActive, rootProps.aggregationFunctions, rootProps.dataSource],
-  );
+      ...(column
+        ? getAvailableAggregationFunctions({
+            aggregationFunctions: rootProps.aggregationFunctions,
+            colDef: column,
+            isDataSource: !!rootProps.dataSource,
+          })
+        : []),
+    ];
+  }, [colDef, field, pivotActive, rootProps.aggregationFunctions, rootProps.dataSource]);
 
   const handleClick = React.useCallback(
     (func: string) => {

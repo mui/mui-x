@@ -2,13 +2,12 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
-import {
-  useButton,
-  useRenderElement,
+import type {
   BaseUIComponentProps,
   NonNativeButtonProps,
 } from '@mui/x-scheduler-internals/base-ui-copy';
-import {
+import { useButton, useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
+import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   TemporalSupportedObject,
@@ -153,6 +152,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
           [TimelineGridEventCssVars.width]: `${duration * 100}%`,
         } as React.CSSProperties,
       },
+      { [TimelineGridEventDataAttributes.occurrenceKey]: occurrenceKey } as Record<string, string>,
       getButtonProps,
     ],
     stateAttributesMapping: overflowStateAttributesMapping,
