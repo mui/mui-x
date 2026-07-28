@@ -3,18 +3,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
-import Skeleton from '@mui/material/Skeleton';
 import Alert from '@mui/material/Alert';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import {
   TreeViewProvider,
   RichTreeViewItems,
+  RichTreeViewSkeleton,
   TreeViewItemDepthContext,
   itemsSelectors,
   useTreeViewStore,
   lazyLoadingSelectors,
-  useTreeViewRootProps,
 } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -88,8 +87,6 @@ const RichTreeViewProSkeletonContent = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const SKELETON_LABEL_WIDTHS = ['40%', '70%', '55%', '50%', '65%'];
-
 type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
@@ -162,7 +159,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   // Feature hooks
   const classes = useUtilityClasses(props);
   const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
-  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
 
   const isLoading = loading || lazyLoadingRootIsLoading;
 
@@ -171,44 +167,22 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   }
 
   if (isLoading) {
-    if (process.env.NODE_ENV !== 'production') {
-      if (
-        loadingItemsCount != null &&
-        (!Number.isFinite(loadingItemsCount) || loadingItemsCount < 0)
-      ) {
-        warnOnce([
-          `MUI X: The \`loadingItemsCount\` prop received an invalid value (${loadingItemsCount}).`,
-          'It must be a non-negative finite number.',
-        ]);
-      }
-    }
-    const rawCount = loadingItemsCount ?? 5;
-    const skeletonCount = Number.isFinite(rawCount)
-      ? Math.max(0, Math.min(100, Math.floor(rawCount)))
-      : 5;
-    const { className: forwardedClassName, ...rootProps } = getRootProps({});
-    const mergedClassName = [classes.root, forwardedClassName].filter(Boolean).join(' ');
     return (
-      <RichTreeViewProRoot
-        ownerState={props}
-        {...rootProps}
-        aria-busy="true"
-        className={mergedClassName}
-      >
-        {Array.from({ length: skeletonCount }, (_, index) => (
-          <RichTreeViewProSkeletonItem
-            key={index}
-            role="treeitem"
-            aria-disabled
-            className={classes.skeletonItem}
-          >
-            <RichTreeViewProSkeletonContent className={classes.skeletonContent}>
-              <div style={{ width: 16, flexShrink: 0 }} />
-              <Skeleton width={SKELETON_LABEL_WIDTHS[index % SKELETON_LABEL_WIDTHS.length]} />
-            </RichTreeViewProSkeletonContent>
-          </RichTreeViewProSkeletonItem>
-        ))}
-      </RichTreeViewProRoot>
+      <React.Fragment>
+        <RichTreeViewSkeleton
+          store={store}
+          slots={slots}
+          slotProps={slotProps}
+          ownerState={props}
+          forwardedProps={forwardedProps}
+          rootRef={handleRef}
+          classes={classes}
+          loadingItemsCount={loadingItemsCount}
+          SkeletonItemComponent={RichTreeViewProSkeletonItem}
+          SkeletonContentComponent={RichTreeViewProSkeletonContent}
+        />
+        <Watermark packageInfo={packageInfo} />
+      </React.Fragment>
     );
   }
 

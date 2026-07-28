@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
-import Skeleton from '@mui/material/Skeleton';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
@@ -12,13 +11,13 @@ import { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
+import { RichTreeViewSkeleton } from '../internals/components/RichTreeViewSkeleton';
 import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
 import { TreeViewValidItem } from '../models';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
 import { itemsSelectors } from '../internals/plugins/items';
 import { useTreeViewStore } from '../internals/hooks/useTreeViewStore';
-import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
 import { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
@@ -80,8 +79,6 @@ const RichTreeViewSkeletonContent = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const SKELETON_LABEL_WIDTHS = ['40%', '70%', '55%', '50%', '65%'];
-
 type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
@@ -135,7 +132,6 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   // Feature hooks
   const classes = useUtilityClasses(props);
   const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
-  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
 
   const isLoading = loading || lazyLoadingRootIsLoading;
 
@@ -144,39 +140,19 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   if (isLoading) {
-    if (process.env.NODE_ENV !== 'production') {
-      if (
-        loadingItemsCount != null &&
-        (!Number.isFinite(loadingItemsCount) || loadingItemsCount < 0)
-      ) {
-        warnOnce([
-          `MUI X: The \`loadingItemsCount\` prop received an invalid value (${loadingItemsCount}).`,
-          'It must be a non-negative finite number.',
-        ]);
-      }
-    }
-    const rawCount = loadingItemsCount ?? 5;
-    const skeletonCount = Number.isFinite(rawCount)
-      ? Math.max(0, Math.min(100, Math.floor(rawCount)))
-      : 5;
-    const { className: forwardedClassName, ...rootProps } = getRootProps({});
-    const mergedClassName = [classes.root, forwardedClassName].filter(Boolean).join(' ');
     return (
-      <RichTreeViewRoot {...rootProps} aria-busy="true" className={mergedClassName}>
-        {Array.from({ length: skeletonCount }, (_, index) => (
-          <RichTreeViewSkeletonItem
-            key={index}
-            role="treeitem"
-            aria-disabled
-            className={classes.skeletonItem}
-          >
-            <RichTreeViewSkeletonContent className={classes.skeletonContent}>
-              <div style={{ width: 16, flexShrink: 0 }} />
-              <Skeleton width={SKELETON_LABEL_WIDTHS[index % SKELETON_LABEL_WIDTHS.length]} />
-            </RichTreeViewSkeletonContent>
-          </RichTreeViewSkeletonItem>
-        ))}
-      </RichTreeViewRoot>
+      <RichTreeViewSkeleton
+        store={store}
+        slots={slots}
+        slotProps={slotProps}
+        ownerState={props}
+        forwardedProps={forwardedProps}
+        rootRef={handleRef}
+        classes={classes}
+        loadingItemsCount={loadingItemsCount}
+        SkeletonItemComponent={RichTreeViewSkeletonItem}
+        SkeletonContentComponent={RichTreeViewSkeletonContent}
+      />
     );
   }
 

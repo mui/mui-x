@@ -76,5 +76,40 @@ describe('<RichTreeView />', () => {
 
       expect(screen.getByRole('tree')).to.have.attribute('id', 'my-tree');
     });
+
+    it('should preserve the className prop on the skeleton root', () => {
+      render(<RichTreeView items={[]} loading className="my-tree" />);
+
+      expect(screen.getByRole('tree')).to.have.class('my-tree');
+      expect(screen.getByRole('tree')).to.have.class(classes.root);
+    });
+
+    it('should render tree items when loading changes from false to true', () => {
+      const { setProps } = render(<RichTreeView items={ITEMS} loading={false} />);
+
+      expect(screen.getAllByRole('treeitem')).to.have.length(ITEMS.length);
+
+      act(() => {
+        setProps({ loading: true });
+      });
+
+      expect(screen.getByRole('tree')).to.have.attribute('aria-busy', 'true');
+      expect(screen.queryByRole('treeitem', { name: 'Item 1' })).to.equal(null);
+    });
+
+    it('should render an empty tree when loading is false and items is empty', () => {
+      render(<RichTreeView items={[]} loading={false} />);
+
+      expect(screen.getByRole('tree')).not.to.have.attribute('aria-busy');
+      expect(screen.queryAllByRole('treeitem')).to.have.length(0);
+    });
+
+    it('should not forward `loading` and `loadingItemsCount` to the DOM', () => {
+      render(<RichTreeView items={ITEMS} loading={false} loadingItemsCount={3} />);
+
+      const tree = screen.getByRole('tree');
+      expect(tree).not.to.have.attribute('loading');
+      expect(tree).not.to.have.attribute('loadingitemscount');
+    });
   });
 });
