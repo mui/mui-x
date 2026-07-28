@@ -1,15 +1,68 @@
 ---
 title: React Treemap chart
 productId: x-charts
+components: Treemap, TreemapPlot, TreemapDataProvider
 ---
 
-# Charts - Treemap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
+# Charts - Treemap [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
 
-<p class="description">Treemap lets you display data with a hierarchical structure.</p>
+<p class="description">Treemaps display hierarchical data as nested rectangles, sizing each tile in proportion to its value.</p>
 
 :::warning
-The Treemap component isn't available yet, but you can upvote [**this GitHub issue**](https://github.com/mui/mui-x/issues/7924) to see it arrive sooner.
-
-Don't hesitate to leave a comment there to influence what gets built.
-Especially if you already have a use case for this component, or if you're facing a pain point with your current solution.
+This feature is in preview. It is not yet ready for production use, and its API, visuals and behavior may change in future minor or patch releases.
 :::
+
+## Overview
+
+A treemap subdivides a rectangle into tiles, one per data node.
+Each tile's area is proportional to the node's value, which makes it easy to compare parts of a whole across a hierarchy.
+
+{{"demo": "TreemapBasic.js"}}
+
+## Data structure
+
+The `series.data` prop accepts a single root node, or an array of root nodes that are wrapped in a synthetic root.
+Each node can define:
+
+- `label`: the text shown on the tile and in the tooltip. Required.
+- `id`: a unique identifier. When omitted, it's derived from the parent id and the `label`.
+- `value`: the size of a leaf node. Parent nodes use their own `value` when set, otherwise the sum of their descendants.
+- `children`: the nested nodes.
+- `color`: an explicit color override that cascades to descendants.
+
+### Nested hierarchy
+
+Nodes nest to any depth through their `children`.
+Parent tiles are drawn behind their children, and leaf tiles are drawn on top.
+
+{{"demo": "TreemapNested.js"}}
+
+## Values
+
+The `value` sets the area of a tile.
+Leaf tiles are sized in proportion to their value, and a parent tile derives its value from the sum of its children.
+
+A parent can override that sum by setting its own `value`.
+When the value is larger than the children's total, the children fill the matching fraction of the parent and the rest is left empty—handy to show a total against its breakdown, such as a budget against what was spent.
+
+{{"demo": "TreemapValue.js"}}
+
+## Tiling
+
+The `tiling` option controls how a node is subdivided into its children.
+The default `'squarify'` method keeps tiles close to a square aspect ratio.
+Use `paddingInner`, `paddingOuter`, and `paddingTop` to control the spacing between tiles.
+
+{{"demo": "TreemapTiling.js"}}
+
+## Labels
+
+Every tile is labeled with its `label`.
+
+{{"demo": "TreemapLabels.js"}}
+
+## Click event
+
+The `onItemClick` callback fires when a tile is clicked, with the clicked item's identifier.
+
+{{"demo": "TreemapClick.js"}}

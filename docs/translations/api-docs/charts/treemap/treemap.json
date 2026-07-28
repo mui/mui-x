@@ -1,0 +1,96 @@
+{
+  "componentDescription": "Treemap Chart component.\n\nDisplays hierarchical data as a set of nested rectangles whose area is\nproportional to each node's value.",
+  "propDescriptions": {
+    "classes": { "description": "Classes applied to the various elements." },
+    "colors": { "description": "Color palette used to colorize multiple series." },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
+    },
+    "experimentalFeatures": {
+      "description": "Options to enable features planned for the next major."
+    },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "highlightedItem": {
+      "description": "The highlighted item. Used when the highlight is controlled."
+    },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
+    "localeText": { "description": "Localized text for chart components." },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": {
+        "highlightedItem": {
+          "name": "highlightedItem",
+          "description": "The newly highlighted item."
+        }
+      }
+    },
+    "onItemClick": {
+      "description": "Callback fired when a treemap tile is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event source of the callback." },
+        "item": { "name": "item", "description": "The treemap item identifier." }
+      }
+    },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
+    "series": {
+      "description": "The series to display in the treemap. A single object is expected."
+    },
+    "seriesConfig": {
+      "description": "The configuration for the series types. This is used to define how each series type should be processed, colored, and displayed."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    }
+  },
+  "classDescriptions": {
+    "cell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual cell (tile) element"
+    },
+    "cells": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the cells container"
+    },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual cell label element"
+    },
+    "labels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the labels container"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  },
+  "slotDescriptions": {
+    "baseButton": "",
+    "baseIconButton": "",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
+    "baseToggleButtonGroup": "",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
+    "tooltip": "Custom component for the tooltip popper."
+  }
+}

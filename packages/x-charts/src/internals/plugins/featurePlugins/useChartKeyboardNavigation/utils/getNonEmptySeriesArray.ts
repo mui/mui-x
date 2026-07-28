@@ -2,7 +2,9 @@ import type { SeriesId } from '../../../../../models/seriesType/common';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import type { ProcessedSeries } from '../../../corePlugins/useChartSeries/useChartSeries.types';
 
-export function getNonEmptySeriesArray<OutSeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
+export function getNonEmptySeriesArray<
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'treemap'>,
+>(
   series: ProcessedSeries<ChartSeriesType>,
   availableSeriesTypes: Set<OutSeriesType>,
 ): { seriesId: SeriesId; type: OutSeriesType }[] {

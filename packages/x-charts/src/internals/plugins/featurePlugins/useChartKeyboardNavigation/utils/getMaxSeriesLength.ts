@@ -2,10 +2,9 @@ import type { SeriesId } from '../../../../../models/seriesType/common';
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import type { ProcessedSeries } from '../../../corePlugins/useChartSeries/useChartSeries.types';
 
-export function getMaxSeriesLength<OutSeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
-  series: ProcessedSeries<ChartSeriesType>,
-  availableSeriesTypes: Set<OutSeriesType>,
-): number {
+export function getMaxSeriesLength<
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'treemap'>,
+>(series: ProcessedSeries<ChartSeriesType>, availableSeriesTypes: Set<OutSeriesType>): number {
   return Object.keys(series)
     .filter((type): type is OutSeriesType => availableSeriesTypes.has(type as OutSeriesType))
     .flatMap((type) => {

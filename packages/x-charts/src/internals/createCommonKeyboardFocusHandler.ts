@@ -10,8 +10,8 @@ import {
  * Create a keyboard focus handler for common use cases where focused item are defined by the series is and data index.
  */
 export function createCommonKeyboardFocusHandler<
-  SeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
-  TInputSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = SeriesType,
+  SeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'>,
+  TInputSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap' | 'treemap'> = SeriesType,
 >(outSeriesTypes: Set<SeriesType>, allowCycles?: boolean, useCurrentSeriesMaxLength?: boolean) {
   const keyboardFocusHandler = (event: KeyboardEvent) => {
     switch (event.key) {
