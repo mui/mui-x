@@ -88,6 +88,9 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Închide panoul lateral',
   openSidePanel: 'Deschide panoul lateral',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12 ore (1:00PM)',
   hour24h: '24 de ore (13:00)',

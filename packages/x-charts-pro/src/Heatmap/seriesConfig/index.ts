@@ -5,7 +5,7 @@ import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
-import tooltipItemPositionGetter from './tooltipPosition';
+import { selectorTooltipItemPosition } from './tooltipPosition';
 import getItemAtPosition from './getItemAtPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { createIsFaded, createIsHighlighted } from './highlight';
@@ -20,7 +20,7 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   colorProcessor: getColor,
   legendGetter: () => [],
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   xExtremumGetter: getBaseExtremum,
   yExtremumGetter: getBaseExtremum,
   getSeriesWithDefaultValues,

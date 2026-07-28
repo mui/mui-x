@@ -12,7 +12,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     processDate(adapter.date('2024-01-17Z', 'default'), adapter),
   ];
 
-  function testHook(events: SchedulerProcessedEvent[]) {
+  function testHook(events: SchedulerProcessedEvent[], maxEvents?: number) {
     const { result } = renderHook(() => {
       const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
@@ -22,7 +22,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         displayTimezone: 'default',
         recurringEventsPlugin: null,
       });
-      return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
+      return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap, maxEvents });
     });
 
     return result.current;
@@ -62,11 +62,97 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     expect(result.days[1].withPosition[1].id).to.equal('B');
     expect(result.days[1].withPosition[1].position).to.deep.equal({ index: 2, daySpan: 2 });
     expect(result.days[2].withPosition[0].id).to.equal('B');
+    // Event B was visible on day 2, so it stays in row 2 — no compaction to row 1
     expect(result.days[2].withPosition[0].position).to.deep.equal({
       index: 2,
       daySpan: 1,
       isInvisible: true,
     });
+  });
+
+  it('should resurface a hidden event into a visible row when one opens up', () => {
+    // A (row 1) spans days 1–3, B (row 2) spans days 1–2 only.
+    // C first appears on day 2 as a new event and gets hidden (row 3 > maxEvents=2).
+    // On day 3 B is absent → row 2 is free → C resurfaces at a visible index.
+    const result = testHook(
+      [
+        // endAt('2024-01-17Z') → endOfDay(Jan 17) → event IS visible on Jan 17 (day 3)
+        EventBuilder.new().id('A').startAt('2024-01-15Z').endAt('2024-01-17Z').toProcessed(),
+        // endAt('2024-01-16Z') → endOfDay(Jan 16) → event ends before Jan 17, so absent on day 3
+        EventBuilder.new().id('B').startAt('2024-01-15Z').endAt('2024-01-16Z').toProcessed(),
+        // C starts on day 2, endAt('2024-01-17Z') → also visible on day 3
+        EventBuilder.new().id('C').startAt('2024-01-16Z').endAt('2024-01-17Z').toProcessed(),
+      ],
+      2,
+    );
+
+    // C first appears on day 2 hidden (index > maxEvents=2)
+    expect(result.days[1].withPosition.find((o) => o.id === 'C')!.position.index).to.be.greaterThan(
+      2,
+    );
+
+    // C resurfaces on day 3 into a visible row
+    const cDay3 = result.days[2].withPosition.find((o) => o.id === 'C')!;
+    expect(cDay3.position.index).to.be.lessThanOrEqual(2);
+  });
+
+  it('should not collide with visible events when a large-span hidden event could resurface', () => {
+    // C starts on day 2 with a larger total span (6 days) than A and B (3 days each).
+    // Because C has the largest span, it is sorted first among active events on day 3.
+    // Without the pre-reservation fix, C would steal row 1 from A. With the fix it
+    // correctly finds that rows 1 and 2 are already reserved and stays hidden (row 3).
+    const result = testHook(
+      [
+        EventBuilder.new().id('A').startAt('2024-01-15Z').endAt('2024-01-18Z').toProcessed(),
+        EventBuilder.new().id('B').startAt('2024-01-15Z').endAt('2024-01-18Z').toProcessed(),
+        EventBuilder.new().id('C').startAt('2024-01-16Z').endAt('2024-01-22Z').toProcessed(),
+      ],
+      2,
+    );
+
+    for (const day of result.days.slice(1)) {
+      const a = day.withPosition.find((o) => o.id === 'A')!;
+      const b = day.withPosition.find((o) => o.id === 'B')!;
+      const c = day.withPosition.find((o) => o.id === 'C')!;
+
+      // A must remain at row 1 and B at row 2 — the pre-reservation prevents C from
+      // bumping A off its row.
+      expect(a.position.index).to.equal(1);
+      expect(b.position.index).to.equal(2);
+      // C must stay beyond the visible threshold, never colliding with A or B.
+      expect(c.position.index).to.be.greaterThan(2);
+    }
+  });
+
+  it('should split a bumped multi-day event and resurface it after the overflow day', () => {
+    // A and B fill rows 1-2 across all days. C appears on day 2 only, so that day
+    // overflows and the "+N more" button takes row 2 — B is bumped into the overflow
+    // there, then must resurface as a visible bar on day 3 instead of vanishing.
+    const result = testHook(
+      [
+        EventBuilder.new().id('A').startAt('2024-01-15Z').endAt('2024-01-17Z').toProcessed(),
+        EventBuilder.new().id('B').startAt('2024-01-15Z').endAt('2024-01-17Z').toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-16Z').toProcessed(),
+      ],
+      2,
+    );
+
+    const bDay1 = result.days[0].withPosition.find((o) => o.id === 'B')!;
+    const bDay2 = result.days[1].withPosition.find((o) => o.id === 'B')!;
+    const bDay3 = result.days[2].withPosition.find((o) => o.id === 'B')!;
+
+    // Day 1: B shows as a visible bar on row 2, truncated so it does not run over the
+    // "+N more" button that appears on day 2.
+    expect(bDay1.position.index).to.equal(2);
+    expect(bDay1.position.isInvisible).to.not.equal(true);
+    expect(bDay1.position.daySpan).to.equal(1);
+
+    // Day 2 overflows: B is bumped into the "+N more" overflow, not rendered as a bar.
+    expect(bDay2.position.isInvisible).to.equal(true);
+
+    // Day 3: B resurfaces as a visible bar again instead of staying hidden.
+    expect(bDay3.position.index).to.equal(2);
+    expect(bDay3.position.isInvisible).to.not.equal(true);
   });
 
   it('should find gaps in the indexes and use the lower available', () => {
@@ -80,5 +166,11 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     expect(result.maxIndex).to.equal(2);
     expect(result.days[2].withPosition[0].id).to.equal('C');
     expect(result.days[2].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 1 });
+    expect(result.days[2].withPosition[1].id).to.equal('B');
+    expect(result.days[2].withPosition[1].position).to.deep.equal({
+      index: 2,
+      daySpan: 1,
+      isInvisible: true,
+    });
   });
 });

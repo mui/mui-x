@@ -126,6 +126,33 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
   };
 
   /**
+   * Select the items added below a selected parent when the selection propagates to the descendants.
+   * @param {TreeViewItemId | null} parentId The id of the item the new items were added to.
+   * @param {TreeViewItemId[]} newItemIds The ids of the items that were just added.
+   */
+  public propagateSelectionToNewItems = (
+    parentId: TreeViewItemId | null,
+    newItemIds: TreeViewItemId[],
+  ) => {
+    const { selectionPropagation = EMPTY_OBJECT as TreeViewSelectionPropagation } =
+      this.store.parameters;
+
+    if (
+      parentId == null ||
+      newItemIds.length === 0 ||
+      !selectionPropagation.descendants ||
+      !selectionSelectors.isMultiSelectEnabled(this.store.state) ||
+      !selectionSelectors.isItemSelected(this.store.state, parentId)
+    ) {
+      return;
+    }
+
+    // Only propagate to the new items, the rest of the parent's subtree is already up to date.
+    const newModel = selectionSelectors.selectedItems(this.store.state).concat(newItemIds);
+    this.setSelectedItems(null, newModel, newItemIds);
+  };
+
+  /**
    * Select or deselect an item.
    * @param {object} parameters The parameters of the method.
    * @param {TreeViewItemId} parameters.itemId The id of the item to select or deselect.
@@ -248,7 +275,9 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     let newSelectedItems = selectionSelectors.selectedItems(this.store.state).slice();
 
     if (Object.keys(this.lastSelectedRange).length === 0) {
-      newSelectedItems.push(nextItem);
+      if (!selectionSelectors.isItemSelected(this.store.state, nextItem)) {
+        newSelectedItems.push(nextItem);
+      }
       this.lastSelectedRange = { [currentItem]: true, [nextItem]: true };
     } else {
       if (!this.lastSelectedRange[currentItem]) {
@@ -259,7 +288,9 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
         newSelectedItems = newSelectedItems.filter((id) => id !== currentItem);
         delete this.lastSelectedRange[currentItem];
       } else {
-        newSelectedItems.push(nextItem);
+        if (!selectionSelectors.isItemSelected(this.store.state, nextItem)) {
+          newSelectedItems.push(nextItem);
+        }
         this.lastSelectedRange[nextItem] = true;
       }
     }
@@ -308,8 +339,10 @@ function propagateSelection({
     if (selectionPropagation.descendants) {
       const selectDescendants = (itemId: TreeViewItemId) => {
         if (itemId !== addedItemId) {
-          shouldRegenerateModel = true;
-          newModelLookup[itemId] = true;
+          if (selectionSelectors.canItemBeSelected(store.state, itemId)) {
+            shouldRegenerateModel = true;
+            newModelLookup[itemId] = true;
+          }
         }
 
         itemsSelectors.itemOrderedChildrenIds(store.state, itemId).forEach(selectDescendants);
@@ -319,13 +352,19 @@ function propagateSelection({
     }
 
     if (selectionPropagation.parents) {
-      const checkAllDescendantsSelected = (itemId: TreeViewItemId): boolean => {
+      const checkAllSelectableDescendantsSelected = (itemId: TreeViewItemId): boolean => {
+        if (!selectionSelectors.canItemBeSelected(store.state, itemId)) {
+          // Non-selectable items don't count; still recurse for isItemSelectionDisabled case
+          const children = itemsSelectors.itemOrderedChildrenIds(store.state, itemId);
+          return children.every(checkAllSelectableDescendantsSelected);
+        }
+
         if (!newModelLookup[itemId]) {
           return false;
         }
 
         const children = itemsSelectors.itemOrderedChildrenIds(store.state, itemId);
-        return children.every(checkAllDescendantsSelected);
+        return children.every(checkAllSelectableDescendantsSelected);
       };
 
       const selectParents = (itemId: TreeViewItemId) => {
@@ -335,9 +374,11 @@ function propagateSelection({
         }
 
         const siblings = itemsSelectors.itemOrderedChildrenIds(store.state, parentId);
-        if (siblings.every(checkAllDescendantsSelected)) {
-          shouldRegenerateModel = true;
-          newModelLookup[parentId] = true;
+        if (siblings.every(checkAllSelectableDescendantsSelected)) {
+          if (selectionSelectors.canItemBeSelected(store.state, parentId)) {
+            shouldRegenerateModel = true;
+            newModelLookup[parentId] = true;
+          }
           selectParents(parentId);
         }
       };

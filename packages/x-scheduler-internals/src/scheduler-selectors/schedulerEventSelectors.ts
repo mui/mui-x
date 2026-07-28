@@ -8,6 +8,7 @@ import type {
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { resolveResourceProperty } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
+import { getPrimaryResourceId } from '../internals/utils/event-utils';
 
 const processedEventSelector = createSelector(
   (state: State) => state.processedEventLookup,
@@ -23,7 +24,7 @@ const isEventReadOnlySelector = createSelector((state: State, eventId: Scheduler
 
   return resolveEventProperty({
     state,
-    resourceId: processedEvent.resource,
+    resourceId: getPrimaryResourceId(processedEvent.resource),
     valueInEvent: processedEvent.modelInBuiltInFormat?.readOnly,
     getValueInResource: (r) => r.areEventsReadOnly,
     valueInState: state.readOnly ?? false,
@@ -88,7 +89,7 @@ export const schedulerEventSelectors = {
 
     return resolveEventProperty({
       state,
-      resourceId: event.resource,
+      resourceId: getPrimaryResourceId(event.resource),
       valueInEvent: event.color,
       getValueInResource: (r) => r.eventColor,
       valueInState: state.eventColor,
@@ -146,7 +147,7 @@ export const schedulerEventSelectors = {
 
     return resolveEventProperty({
       state,
-      resourceId: processedEvent.resource,
+      resourceId: getPrimaryResourceId(processedEvent.resource),
       valueInEvent: processedEvent.draggable,
       getValueInResource: (r) => r.areEventsDraggable,
       valueInState: state.areEventsDraggable,
@@ -174,7 +175,7 @@ export const schedulerEventSelectors = {
 
       return resolveEventProperty({
         state,
-        resourceId: processedEvent.resource,
+        resourceId: getPrimaryResourceId(processedEvent.resource),
         valueInEvent: getIsResizableFromProperty(processedEvent.resizable, side) ?? undefined,
         getValueInResource: (r) =>
           getIsResizableFromProperty(r.areEventsResizable, side) ?? undefined,

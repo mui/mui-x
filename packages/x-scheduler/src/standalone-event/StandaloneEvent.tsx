@@ -60,7 +60,7 @@ StandaloneEvent.propTypes /* remove-proptypes */ = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     readOnly: PropTypes.bool,
     resizable: PropTypes.oneOfType([PropTypes.oneOf(['end', 'start']), PropTypes.bool]),
-    resource: PropTypes.string,
+    resource: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
     rrule: PropTypes.oneOfType([
       PropTypes.shape({
         byDay: PropTypes.arrayOf(

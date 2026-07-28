@@ -1,5 +1,341 @@
 # Changelog
 
+## 9.10.1
+
+_Jul 23, 2026_
+
+We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🦮 Improve accessibility of the Charts and Pickers components.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@kevincorizi-sbt, @mustafajw07, @SamanPandey-in
+
+The following team members contributed to this release:
+@brijeshb42, @hasdfa, @JCQuintas, @LukasTy, @michelengelen, @noraleonte, @rita-codes, @silviuaavram
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.10.1`
+
+- [data grid] Fix `getColumn` return type not reflecting that it can return undefined (#23165) @JCQuintas
+
+#### `@mui/x-data-grid-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.10.1`.
+
+#### `@mui/x-data-grid-premium@9.10.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.10.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.10.1`
+
+- [pickers] Fix format placeholder brightness with a start adornment (#23189) @LukasTy
+
+#### `@mui/x-date-pickers-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.10.1`, plus:
+
+- [DateRangePicker] Fix broken active range position underline in single input range fields (#23166) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@9.10.1`
+
+- [charts] Fix pie chart disappearing when an arc spans almost the full circle (#23145) @JCQuintas
+- [charts] Set `aria-hidden` on accessibility proxy divs at initialization (#23186) @kevincorizi-sbt
+- [charts] Fix keyboard navigation on series with different lengths (#23182) @JCQuintas
+- [charts] Fix out of bounds keyboard navigation (#23180) @silviuaavram
+
+#### `@mui/x-charts-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.10.1`, plus:
+
+- [charts-pro] Fix highlight shifting on sampled bar charts (#23190) @noraleonte
+- [charts-pro] Sampled band highlight falls back to single-band width for Date/object values (#23024) @SamanPandey-in
+
+#### `@mui/x-charts-premium@9.10.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.10.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.10.1`
+
+- [TreeView] Fix selection propagation to exclude disabled items (#23012) @michelengelen
+
+#### `@mui/x-tree-view-pro@9.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.10.1`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.7`
+
+- [scheduler] Polish `EventCalendar` rendering for multi-resource events (#23161) @mustafajw07
+- [scheduler] Responsive header (#22954) @noraleonte
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.7`, plus:
+
+- [scheduler-premium] Add the dependencies data model (#23117) @rita-codes
+- [scheduler-premium] Dependencies - Render the FS arrow (#23162) @rita-codes
+
+### Codemod
+
+#### `@mui/x-codemod@9.10.1`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix clearing, layout shift, and prop leak in Pickers demos (#23191) @LukasTy
+
+### Core
+
+- [code-infra] Validate working of specific code-infra canary (#23207) @brijeshb42
+
+### Miscellaneous
+
+- [chat] Normalize message part link URLs (#23187) @hasdfa
+- [x-chat] Fix object URL leaks for submitted attachments (#23198) @hasdfa
+- [internals] Make disposable types self-contained without `esnext.disposable` lib (#23164) @JCQuintas
+
+## 9.10.0
+
+_Jul 17, 2026_
+
+We'd like to extend a big thank you to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Provide `dataIndex` in `LinePlot` and `AreaPlot` `onItemClick` for Charts
+- ⚙️ Allow opt-in `data-*` attributes on `slotProps`. [Read more](https://mui.com/x/common-concepts/custom-components/#passing-data-attributes-to-slots)
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @mustafajw07
+
+The following team members contributed to this release:
+@brijeshb42, @Janpot, @JCQuintas, @LukasTy, @noraleonte
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.10.0`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@9.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.10.0`.
+
+#### `@mui/x-data-grid-premium@9.10.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.10.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.10.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.10.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.10.0`
+
+- [charts] Provide `dataIndex` in `LinePlot` and `AreaPlot` `onItemClick` (#23144) @JCQuintas
+
+#### `@mui/x-charts-pro@9.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.10.0`.
+
+#### `@mui/x-charts-premium@9.10.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.10.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@9.10.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.10.0`, plus:
+
+- [tree-view] Fix pre-loaded items not caching (#23155) @noraleonte
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.6`
+
+- [scheduler] Carry custom event data through the edit dialog submit (#22874) @Anexus5919
+- [scheduler] Support array values for `CalendarEvent.resource` (#23109) @mustafajw07
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.6`.
+
+### Chat
+
+#### `@mui/x-chat@9.0.0-alpha.14`
+
+- [chat] Reuse `resolveComponentProps` from `@mui/utils` (#23095) @LukasTy
+
+#### `@mui/x-chat-headless@9.0.0-alpha.14`
+
+Internal changes.
+
+### Codemod
+
+#### `@mui/x-codemod@9.10.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix bugs on Scheduler overview page (#23147) @noraleonte
+
+### Core
+
+- [code-infra] Fix changelog dependency exclusion and l10n routing (#23112) @LukasTy
+- [code-infra] Port codebase to use `tsgo` (#22826) @brijeshb42
+- [code-infra] Reduce `release:build` concurrency to mitigate `tsgo` OOM kills (#23139) @LukasTy
+- [core] Allow opt-in `data-*` attributes on `slotProps` (#22128) @LukasTy
+
+### Miscellaneous
+
+- [core] Ignore `code-infra-renovate[bot]` commits in changelog (#23153) @Janpot
+- [website] Fix broken `ChatBox` API link (#23149) @brijeshb42
+- [test] Fix WebGL benchmark timeout on CI (#23142) @JCQuintas
+
+## 9.9.0
+
+_Jul 9, 2026_
+
+We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 [Data sampling](https://mui.com/x/react-charts/performance/#sampling) for better performance with large bar and line charts
+- 🗺️ [Maps zoom support](https://mui.com/x/react-charts/map/#zoom)
+- ☑️ Support [applying filters on demand](https://mui.com/x/react-data-grid/filtering/customization/#apply-filters-on-demand) in the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@mustafajw07, @sebastianfrey
+
+The following team members contributed to this release:
+@aemartos, @alexfauquette, @brijeshb42, @hasdfa, @Janpot, @JCQuintas, @LukasTy, @rita-codes, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.9.0`
+
+- [DataGrid] Add `dataSourceKeepPreviousData` prop (#22554) @LukasTy
+- [DataGrid] Add controlled filter panel for applying filters on demand (#23023) @sebastianfrey
+
+#### `@mui/x-data-grid-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.9.0`.
+
+#### `@mui/x-data-grid-premium@9.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.9.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.9.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.9.0`, plus:
+
+- [DateRangeCalendar] Avoid unnecessary month switch when the value is already visible (#22996) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@9.9.0`
+
+- [charts] Optimize and de-duplicate sampled axis-highlight band lookup (#23052) @JCQuintas
+- [charts] Unify tooltip item position getter and selector into a single selector API (#23041) @alexfauquette
+- [charts] Fix impossible condition in axis text angle warning (#23102) @sai6855
+
+#### `@mui/x-charts-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.9.0`, plus:
+
+- [charts-pro] Add data sampling for large bar and line charts (#22830) @JCQuintas
+- [charts-pro] Allow sampling on non-zoomable charts (#23051) @JCQuintas
+
+#### `@mui/x-charts-premium@9.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+#### Breaking changes
+
+The API of the `Unstable_ChartsGeoDataProviderPremium` got modified.
+Props `scale`, `rotation`, and `translation` are replaced by props `view` and `initialView`.
+Same behavior can be obtained with `view.zoomLevel`, `view.center`, and `view.translation`.
+See the [zoom view section](https://mui.com/x/react-charts/map/#control) for detailed information
+
+Same changes as in `@mui/x-charts-pro@9.9.0`, plus:
+
+- [charts-premium] Maps zoom support (#22709) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@9.9.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.9.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-beta.5`
+
+- [scheduler] Introduce event resource helper utilities (#23022) @mustafajw07
+- [scheduler] Preserve multi-day event continuity across overflow (#22797) @mustafajw07
+
+#### `@mui/x-scheduler-premium@9.0.0-beta.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.5`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.9.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix broken social preview image on shared docs links (#23055) @sai6855
+- [docs] Review and clean up react-chat docs demos & gallery; fix actions-bar layout (#22993) @hasdfa
+- [docs] Update the Pickers recommended date library bundle sizes (#23087) @LukasTy
+
+### Core
+
+- [mcp] Add `@mui/mcp` server and `@mui/x-agent-tools`. See the [README](https://github.com/mui/mui-x/blob/master/packages/mcp/README.md) for setup (#22947) @aemartos
+- [code-infra] Avoid OOM in the Netlify docs build and CircleCI lint step (#23086) @LukasTy
+- [code-infra] Group `@atlaskit/pragmatic-drag-and-drop` renovate updates (#23105) @LukasTy
+- [code-infra] Validate npm publishing through dry run (#23038) @brijeshb42
+- [docs-infra] Enable `webpackBuildWorker` to bound docs build memory (#23100) @Janpot
+
+### Miscellaneous
+
+- [test] Fix flaky "should render only the pageSize" Data Grid virtualization test (#23090) @LukasTy
+- [test] Track `@mui/x-chat` bundle size via native expand (#23049) @Janpot
+
 ## 9.8.0
 
 _Jul 2, 2026_

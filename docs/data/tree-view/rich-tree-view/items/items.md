@@ -325,3 +325,34 @@ publicAPI.setIsItemDisabled({
 ```
 
 {{"demo": "DisableTreeItemPublicAPI.js", "defaultCodeOpen": false}}
+
+### Imperatively add items
+
+Use the `addItems()` API method to add items to the tree.
+
+```ts
+apiRef.current.addItems({
+  // The items to add
+  items: [{ id: 'new-item', label: 'New item' }],
+  // The id of the parent item, or `null` to add the items at the root level
+  parentId,
+  // The position in the parent's children at which the items are inserted
+  // If not defined, the items are appended after the existing children
+  index,
+});
+```
+
+You can combine it with the [`setEditedItem()`](/x/react-tree-view/rich-tree-view/editing/#imperative-api) API method to let users name the new item right away, similar to creating files and folders in a file explorer:
+
+{{"demo": "ApiMethodAddItems.js", "defaultCodeOpen": false}}
+
+:::info
+Items added with `addItems()` are only stored in the internal state of the component.
+They are discarded when the `items` prop changes.
+You can use the `getItemTree()` API method to retrieve the current item tree and sync it with your data source.
+
+The same applies to the other updates made from inside the component—for example, the labels updated with [label editing](/x/react-tree-view/rich-tree-view/editing/) are only stored in the internal state.
+Use the `onItemLabelChange()` callback to persist them alongside the items you added.
+
+When using [lazy loading](/x/react-tree-view/rich-tree-view/lazy-loading/), the added items must also be [written to the data source cache](/x/react-tree-view/rich-tree-view/lazy-loading/#lazy-loading-and-adding-items).
+:::

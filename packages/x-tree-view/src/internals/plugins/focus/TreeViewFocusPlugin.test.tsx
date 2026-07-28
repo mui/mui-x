@@ -190,13 +190,13 @@ describeTreeView<TreeViewAnyStore>(
 
     describe('disabledItemsFocusable prop', () => {
       describe('disabledItemFocusable={false}', () => {
-        it('should prevent focus by mouse', () => {
+        it('should prevent focus by mouse', async () => {
           const view = render({
             items: [{ id: '1', disabled: true }],
             disabledItemsFocusable: false,
           });
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.getFocusedItemId()).to.equal(null);
         });
 
@@ -213,13 +213,13 @@ describeTreeView<TreeViewAnyStore>(
       });
 
       describe('disabledItemFocusable={true}', () => {
-        it('should prevent focus by mouse', () => {
+        it('should prevent focus by mouse', async () => {
           const view = render({
             items: [{ id: '1', disabled: true }],
             disabledItemsFocusable: true,
           });
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.getFocusedItemId()).to.equal(null);
         });
 
