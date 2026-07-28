@@ -5,11 +5,12 @@ import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { LineElement } from './LineElement';
 import type { LineElementProps, LineElementSlotProps, LineElementSlots } from './LineElement';
-import type { LineItemIdentifier } from '../models/seriesType/line';
+import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useLinePlotData } from './useLinePlotData';
+import { useLineItemClickHandler } from './useLineItemClickHandler';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { lineClasses, useUtilityClasses } from './lineClasses';
 
@@ -24,11 +25,11 @@ export interface LinePlotProps
   /**
    * Callback fired when a line item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
+   * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    lineItemIdentifier: LineItemIdentifier,
+    lineItemIdentifier: LineItemClickIdentifier,
   ) => void;
 }
 
@@ -74,6 +75,7 @@ function LinePlot(props: LinePlotProps) {
 
   const completedData = useAggregatedData();
   const classes = useUtilityClasses();
+  const onLineItemClick = useLineItemClickHandler(onItemClick);
 
   return (
     <LinePlotRoot className={clsx(classes.linePlot, className)} {...other}>
@@ -89,7 +91,7 @@ function LinePlot(props: LinePlotProps) {
             skipAnimation={skipAnimation || isSampled}
             slots={slots}
             slotProps={slotProps}
-            onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
+            onClick={onLineItemClick && ((event) => onLineItemClick(event, seriesId))}
           />
         );
       })}
@@ -105,7 +107,7 @@ LinePlot.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when a line item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
+   * @param {LineItemClickIdentifier} lineItemIdentifier The line item identifier.
    */
   onItemClick: PropTypes.func,
   /**

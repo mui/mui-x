@@ -8,9 +8,10 @@ import {
   ChatDensityProvider,
   type ChatVariant,
 } from '@mui/x-chat-headless';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { ChatSlotsProvider } from '../internals/ChatSlotsContext';
-import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatBoxUtilityClasses } from './chatBoxClasses';
 import { ChatBoxContent } from './ChatBoxContent';
 import type { ChatBoxProps } from './ChatBox.types';
@@ -123,7 +124,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   );
   const ownerState = React.useMemo(() => ({ variant }), [variant]);
   const RootComponent = (slots?.root ?? ChatBoxStyled) as React.ElementType;
-  const rootSlotProps = resolveSlotProps(
+  const rootSlotProps = resolveComponentProps(
     mergeSlotProps(
       {
         ref: handleRef,

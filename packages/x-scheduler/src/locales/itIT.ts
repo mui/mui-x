@@ -88,6 +88,9 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Chiudi pannello laterale',
   openSidePanel: 'Apri pannello laterale',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12 ore (1:00 PM)',
   hour24h: '24 ore (13:00)',
