@@ -85,6 +85,54 @@ describe('keyboard item activation', () => {
     });
   });
 
+  it('should skip onMarkClick and fall back to onLineClick when marks are hidden', async () => {
+    const onMarkClick = vi.fn();
+    const onLineClick = vi.fn();
+    const { user } = render(
+      <LineChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100], showMark: false }]}
+        onMarkClick={onMarkClick}
+        onLineClick={onLineClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[Enter]');
+
+    // The mark is not rendered, so a pointer could not click it; activation falls through to the line.
+    expect(onMarkClick.mock.calls.length).to.equal(0);
+    expect(onLineClick.mock.calls.length).to.equal(1);
+    expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
+      type: 'line',
+      seriesId: 'A',
+      dataIndex: 0,
+    });
+  });
+
+  it('should fire onMarkClick when marks are shown', async () => {
+    const onMarkClick = vi.fn();
+    const onLineClick = vi.fn();
+    const { user } = render(
+      <LineChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100], showMark: true }]}
+        onMarkClick={onMarkClick}
+        onLineClick={onLineClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[Enter]');
+
+    expect(onMarkClick.mock.calls.length).to.equal(1);
+    expect(onLineClick.mock.calls.length).to.equal(0);
+  });
+
   it('should fall back to onAreaClick when it is the only line callback', async () => {
     const onAreaClick = vi.fn();
     const { user } = render(

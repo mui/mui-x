@@ -47,6 +47,7 @@ export function findItemActivationHandler(
 
     if (
       specificity !== null &&
+      (registration.scope.canActivate === undefined || registration.scope.canActivate(item)) &&
       (specificity > bestSpecificity ||
         (specificity === bestSpecificity && priority > bestPriority))
     ) {

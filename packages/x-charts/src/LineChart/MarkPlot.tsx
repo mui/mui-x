@@ -1,26 +1,26 @@
 'use client';
+import { styled } from '@mui/material/styles';
+import type { WithDataAttributes } from '@mui/utils/types';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import clsx from 'clsx';
-import type { WithDataAttributes } from '@mui/utils/types';
-import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import type { LineItemClickIdentifier } from '../models/seriesType/line';
-import type { ChartsActivationEvent } from '../models/events';
-import { LINE_ACTIVATION_PRIORITY, useRegisterLineItemActivation } from './useLineItemClickHandler';
-import { CircleMarkElement } from './CircleMarkElement';
-import { MarkElement } from './MarkElement';
-import type { MarkElementProps } from './MarkElement';
-import { useItemHighlightStateGetter, useXAxes, useYAxes } from '../hooks';
-import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
-import { selectorChartsHighlightXAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import type { AxisId } from '../models/axis';
-import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useChartsContext } from '../context/ChartsProvider';
-import { useMarkPlotData } from './useMarkPlotData';
-import { useUtilityClasses } from './lineClasses';
+import { useItemHighlightStateGetter, useXAxes, useYAxes } from '../hooks';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { selectorChartsHighlightXAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import type { AxisId } from '../models/axis';
 import type { MarkPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import type { ChartsActivationEvent } from '../models/events';
+import type { LineItemClickIdentifier } from '../models/seriesType/line';
+import { CircleMarkElement } from './CircleMarkElement';
+import { useUtilityClasses } from './lineClasses';
+import type { MarkElementProps } from './MarkElement';
+import { MarkElement } from './MarkElement';
+import { LINE_ACTIVATION_PRIORITY, useRegisterLineItemActivation } from './useLineItemClickHandler';
+import { useMarkPlotData } from './useMarkPlotData';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps & MarkPropsOverrides>;
@@ -80,8 +80,6 @@ function MarkPlot(props: MarkPlotProps) {
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
-  useRegisterLineItemActivation(onItemClick, LINE_ACTIVATION_PRIORITY.mark);
-
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
 
@@ -102,7 +100,20 @@ function MarkPlot(props: MarkPlotProps) {
     return rep;
   }, [xAxisHighlightIndexes]);
 
+
   const completedData = useMarkPlotData(xAxis, yAxis);
+
+  // A mark is activatable only where it is actually rendered, so a hidden mark falls through to the
+  // line, then the area, matching what a pointer would hit.
+  const isMarkRendered = ({ seriesId, dataIndex }: LineItemClickIdentifier) =>
+    completedData.some(
+      (series) =>
+        series.seriesId === seriesId &&
+        !series.hidden &&
+        series.marks.some((mark) => mark.index === dataIndex),
+    );
+  useRegisterLineItemActivation(onItemClick, LINE_ACTIVATION_PRIORITY.mark, isMarkRendered);
+
   const classes = useUtilityClasses();
 
   return (

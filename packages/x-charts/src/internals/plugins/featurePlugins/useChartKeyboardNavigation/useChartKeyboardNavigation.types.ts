@@ -27,6 +27,14 @@ export interface ItemActivationScope {
    * @default 0
    */
   priority?: number;
+  /**
+   * When set, the handler is a candidate only for items it returns `true` for. Lets a plot decline
+   * an item a pointer could not reach — e.g. a line mark that is not rendered — so activation falls
+   * through to the next handler.
+   * @param {FocusedItemIdentifier<ChartSeriesType>} item The focused item.
+   * @returns {boolean} Whether the handler can activate this item.
+   */
+  canActivate?: (item: FocusedItemIdentifier<ChartSeriesType>) => boolean;
 }
 
 export interface UseChartKeyboardNavigationInstance {

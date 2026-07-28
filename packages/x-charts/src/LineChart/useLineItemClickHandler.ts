@@ -27,9 +27,28 @@ export function useRegisterLineItemActivation(
       ) => void)
     | undefined,
   priority: number,
+  /**
+   * Declines items the caller does not render, so activation falls through to the next handler.
+   * Used by the mark plot: a mark that is not shown should defer to the line, then the area.
+   */
+  canActivate?: (item: LineItemClickIdentifier) => boolean,
 ) {
-  useRegisterItemActivation(
-    { type: 'line', priority },
+  useRegisterItemActivation<'line'>(
+    {
+      type: 'line',
+      priority,
+      canActivate:
+        canActivate &&
+        ((item) => {
+          // The dispatcher matches the `line` type before calling this, so the item is a line item.
+          const lineItem = item as LineItemClickIdentifier;
+          return canActivate({
+            type: 'line',
+            seriesId: lineItem.seriesId,
+            dataIndex: lineItem.dataIndex,
+          });
+        }),
+    },
     onItemClick &&
       ((event, item) =>
         onItemClick(event, {
