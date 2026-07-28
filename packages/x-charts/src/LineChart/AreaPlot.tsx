@@ -77,7 +77,16 @@ function AreaPlot(props: AreaPlotProps) {
 
   const completedData = useAggregatedData();
   const classes = useUtilityClasses();
-  const onAreaItemClick = useLineItemClickHandler(onItemClick, LINE_ACTIVATION_PRIORITY.area);
+
+  // The area is drawn only for series that enable it, so a series without an area declines and
+  // activation falls through to the line.
+  const isAreaRendered = ({ seriesId }: LineItemClickIdentifier) =>
+    completedData.some((series) => series.seriesId === seriesId && !!series.area);
+  const onAreaItemClick = useLineItemClickHandler(
+    onItemClick,
+    LINE_ACTIVATION_PRIORITY.area,
+    isAreaRendered,
+  );
 
   return (
     <AreaPlotRoot className={clsx(classes.areaPlot, className)} {...other}>

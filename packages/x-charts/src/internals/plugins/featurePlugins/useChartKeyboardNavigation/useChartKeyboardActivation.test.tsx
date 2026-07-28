@@ -112,6 +112,43 @@ describe('keyboard item activation', () => {
     });
   });
 
+  it('should not fire onAreaClick when the area is disabled', async () => {
+    const onAreaClick = vi.fn();
+    const { user } = render(
+      <LineChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100], area: false, showMark: false }]}
+        onAreaClick={onAreaClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[Enter]');
+
+    // No area is drawn, so a pointer could not click it and neither can the keyboard.
+    expect(onAreaClick.mock.calls.length).to.equal(0);
+  });
+
+  it('should fire onAreaClick when the area is enabled', async () => {
+    const onAreaClick = vi.fn();
+    const { user } = render(
+      <LineChart
+        {...barConfig}
+        series={[{ id: 'A', data: [50, 100], area: true, showMark: false }]}
+        onAreaClick={onAreaClick}
+        experimentalFeatures={{ keyboardActivation: true }}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+    await user.keyboard('[ArrowRight]');
+    await user.keyboard('[Enter]');
+
+    expect(onAreaClick.mock.calls.length).to.equal(1);
+  });
+
   it('should fire onMarkClick when marks are shown', async () => {
     const onMarkClick = vi.fn();
     const onLineClick = vi.fn();

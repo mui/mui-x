@@ -75,8 +75,13 @@ export function useLineItemClickHandler(
       ) => void)
     | undefined,
   priority: number,
+  /**
+   * Declines items the caller does not render, so activation falls through to the next handler.
+   * The area plot uses it to defer when the series has no area drawn.
+   */
+  canActivate?: (item: LineItemClickIdentifier) => boolean,
 ): ((event: React.MouseEvent<SVGElement, MouseEvent>, seriesId: SeriesId) => void) | undefined {
-  useRegisterLineItemActivation(onItemClick, priority);
+  useRegisterLineItemActivation(onItemClick, priority, canActivate);
 
   const chartsLayerContainerRef = useChartsLayerContainerRef();
   const { xAxis: xAxes, xAxisIds } = useXAxes();
