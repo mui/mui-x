@@ -177,7 +177,7 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
 
     let newSelected: TreeViewSelectionValue<boolean>;
     const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(this.store.state);
-    if (keepExistingSelection) {
+    if (keepExistingSelection && isMultiSelectEnabled) {
       const oldSelected = selectionSelectors.selectedItems(this.store.state);
       const isSelectedBefore = selectionSelectors.isItemSelected(this.store.state, itemId);
       if (isSelectedBefore && (shouldBeSelected === false || shouldBeSelected == null)) {
