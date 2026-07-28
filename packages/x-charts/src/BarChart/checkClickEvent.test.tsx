@@ -85,44 +85,47 @@ describe('BarChart - click event', () => {
 
     // Regression test for https://github.com/mui/mui-x/issues/20364
     // A click with a small pointer drift should still be handled and not discarded as a pan.
-    it.skipIf(isJSDOM)('should fire when the pointer drifts slightly between press and release', async () => {
-      const onAxisClick = vi.fn();
-      const { user, container } = render(
-        <div
-          style={{
-            width: 400,
-            height: 400,
-          }}
-        >
-          <BarChart
-            {...config}
-            series={[
-              { dataKey: 'v1', id: 's1' },
-              { dataKey: 'v2', id: 's2' },
-            ]}
-            xAxis={[{ dataKey: 'x' }]}
-            onAxisClick={onAxisClick}
-          />
-        </div>,
-      );
-      const layerContainer = container.querySelector<HTMLElement>(
-        `.${chartsSvgLayerClasses.root}`,
-      )!.parentElement!;
+    it.skipIf(isJSDOM)(
+      'should fire when the pointer drifts slightly between press and release',
+      async () => {
+        const onAxisClick = vi.fn();
+        const { user, container } = render(
+          <div
+            style={{
+              width: 400,
+              height: 400,
+            }}
+          >
+            <BarChart
+              {...config}
+              series={[
+                { dataKey: 'v1', id: 's1' },
+                { dataKey: 'v2', id: 's2' },
+              ]}
+              xAxis={[{ dataKey: 'x' }]}
+              onAxisClick={onAxisClick}
+            />
+          </div>,
+        );
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
 
-      // Press, drift a few pixels (within the tap's maxDistance), then release.
-      await user.pointer([
-        { keys: '[MouseLeft>]', target: layerContainer, coords: { clientX: 150, clientY: 60 } },
-        { target: layerContainer, coords: { clientX: 154, clientY: 62 } },
-        { keys: '[/MouseLeft]', target: layerContainer, coords: { clientX: 154, clientY: 62 } },
-      ]);
+        // Press, drift a few pixels (within the tap's maxDistance), then release.
+        await user.pointer([
+          { keys: '[MouseLeft>]', target: layerContainer, coords: { clientX: 150, clientY: 60 } },
+          { target: layerContainer, coords: { clientX: 154, clientY: 62 } },
+          { keys: '[/MouseLeft]', target: layerContainer, coords: { clientX: 154, clientY: 62 } },
+        ]);
 
-      expect(onAxisClick).toHaveBeenCalledTimes(1);
-      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
-        dataIndex: 0,
-        axisValue: 'A',
-        seriesValues: { s1: 4, s2: 2 },
-      });
-    });
+        expect(onAxisClick).toHaveBeenCalledTimes(1);
+        expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
+          dataIndex: 0,
+          axisValue: 'A',
+          seriesValues: { s1: 4, s2: 2 },
+        });
+      },
+    );
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)(
