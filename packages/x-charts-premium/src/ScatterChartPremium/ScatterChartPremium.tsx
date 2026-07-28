@@ -2,40 +2,39 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  HighlightedScatterMark,
-  type ScatterChartProps,
-  type ScatterChartSlots,
-  type ScatterChartSlotProps,
-  FocusedScatterMark,
+import { HighlightedScatterMark, FocusedScatterMark } from '@mui/x-charts/ScatterChart';
+import type {
+  ScatterChartProps,
+  ScatterChartSlots,
+  ScatterChartSlotProps,
 } from '@mui/x-charts/ScatterChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import type { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { TooltipPropsOverrides } from '@mui/x-charts/models';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { useScatterChartProps } from '@mui/x-charts/internals';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '@mui/x-charts-pro/internals';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '@mui/x-charts-pro/internals';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
-import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
+import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ScatterPlotPremium } from './ScatterPlotPremium';
-import {
-  SCATTER_CHART_PREMIUM_PLUGINS,
-  type ScatterChartPremiumPluginSignatures,
-} from './ScatterChartPremium.plugins';
+import { SCATTER_CHART_PREMIUM_PLUGINS } from './ScatterChartPremium.plugins';
+import type { ScatterChartPremiumPluginSignatures } from './ScatterChartPremium.plugins';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 
 export interface ScatterChartPremiumSlots
@@ -46,7 +45,9 @@ export interface ScatterChartPremiumSlotProps
     Omit<ScatterChartSlotProps, 'toolbar' | 'tooltip'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides;
+  tooltip?: WithDataAttributes<
+    Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides
+  >;
 }
 
 export interface ScatterChartPremiumProps
@@ -167,7 +168,7 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
   );
 });
 
-ScatterChartPremium.propTypes = {
+ScatterChartPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -558,6 +559,7 @@ ScatterChartPremium.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -565,6 +567,7 @@ ScatterChartPremium.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

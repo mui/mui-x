@@ -5,6 +5,7 @@ import { SlotComponentProps } from '@mui/utils/types';
 import { useChatComposer } from '../hooks/useChatComposer';
 import { useChatStatus } from '../hooks/useChatStatus';
 import { useChatStore } from '../hooks/useChatStore';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import type { ChatAttachmentsConfig } from '../types/chat-entities';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { ComposerContextProvider } from './internals/ComposerContext';
@@ -53,6 +54,7 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
   const composer = useChatComposer();
   const status = useChatStatus();
   const store = useChatStore();
+  const localeText = useChatLocaleText();
   const ownerState = React.useMemo<ComposerRootOwnerState>(
     () => ({
       isSubmitting: composer.isSubmitting,
@@ -103,6 +105,9 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
     ownerState,
     additionalProps: {
       ref,
+      // A named accessible form is exposed as a landmark, letting assistive
+      // technology jump straight to the composer.
+      'aria-label': localeText.composerLandmarkLabel,
       ...getDataAttributes({
         isSubmitting: ownerState.isSubmitting,
         hasValue: ownerState.hasValue,

@@ -3,7 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } from './Scatter';
+import { Scatter } from './Scatter';
+import type { ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
@@ -14,11 +15,9 @@ import { ScatterAsync } from './async/ScatterAsync';
 import { useUtilityClasses } from './scatterClasses';
 import { useChartsContext } from '../context/ChartsProvider';
 import { useStore } from '../internals/store/useStore';
-import {
-  selectorShouldUseProgressiveRenderer,
-  type UseProgressiveRenderingSignature,
-} from '../internals/plugins/featurePlugins/useProgressiveRendering';
-import { type SeriesId } from '../models/seriesType/common';
+import { selectorShouldUseProgressiveRenderer } from '../internals/plugins/featurePlugins/useProgressiveRendering';
+import type { UseProgressiveRenderingSignature } from '../internals/plugins/featurePlugins/useProgressiveRendering';
+import type { SeriesId } from '../models/seriesType/common';
 import type { ScatterPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 const EMPTY_SERIES_IDS: readonly SeriesId[] = [];
@@ -28,13 +27,23 @@ export interface ScatterPlotSlots extends ScatterSlots {
 }
 
 export interface ScatterPlotSlotProps extends ScatterSlotProps {
+  // Not widened with `data-*`: none of the default renderers (svg-single
+  // `Scatter`, svg-batch `BatchScatter`, progressive `ScatterAsync`) spread
+  // unknown props onto an element, so `data-*` here never reaches the DOM.
   scatter?: Partial<ScatterProps> & ScatterPropsOverrides;
 }
 
 export type RendererType = 'svg-single' | 'svg-batch';
 
-export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'classes'> {
+export interface ScatterPlotProps extends Pick<ScatterProps, 'classes'> {
   className?: string;
+  /**
+   * Callback fired when a marker is clicked directly.
+   * For closest-point clicks (the `ScatterChart` default), pass `onItemClick` to the chart container instead.
+   * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
+   * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
+   */
+  onItemClick?: ScatterProps['onItemClick'];
   /**
    * Overridable component slots.
    * @default {}
@@ -149,13 +158,16 @@ function ScatterPlot(props: ScatterPlotProps) {
   );
 }
 
-ScatterPlot.propTypes = {
+ScatterPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
   /**
-   * Callback fired when clicking on a scatter item.
+   * Callback fired when a marker is clicked directly.
+   * For closest-point clicks (the `ScatterChart` default), pass `onItemClick` to the chart container instead.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */

@@ -54,6 +54,11 @@ export default function AssistantWithDataSampling() {
         aiAssistant
         onPrompt={processPrompt}
         showToolbar
+        sx={{
+          '& [aria-label="AI Assistant"] .MuiSvgIcon-root': {
+            color: 'primary.main',
+          },
+        }}
         slots={{
           aiAssistantPanel: GridAiAssistantPanel,
         }}

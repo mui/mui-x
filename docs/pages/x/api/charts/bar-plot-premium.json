@@ -47,6 +47,5 @@
   "muiName": "MuiBarPlotPremium",
   "filename": "/packages/x-charts-premium/src/BarChartPremium/BarPlotPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>"
 }

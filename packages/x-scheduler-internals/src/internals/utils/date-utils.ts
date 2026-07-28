@@ -1,6 +1,6 @@
-import { TemporalTimezone, TemporalSupportedObject } from '../../base-ui-copy/types';
-import { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
-import { Adapter } from '../../use-adapter/useAdapter.types';
+import type { TemporalTimezone, TemporalSupportedObject } from '../../base-ui-copy/types';
+import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
+import type { Adapter } from '../../use-adapter/useAdapter.types';
 
 /**
  * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
@@ -66,6 +66,21 @@ export function mergeDateAndTime(
   mergedDate = adapter.setMilliseconds(mergedDate, adapter.getMilliseconds(timeParam));
 
   return mergedDate;
+}
+
+/**
+ * Snaps an all-day event's bounds to span the whole day; non-all-day bounds are returned unchanged.
+ */
+export function normalizeAllDayBounds(
+  adapter: Adapter,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
+  allDay: boolean | undefined,
+): { start: TemporalSupportedObject; end: TemporalSupportedObject } {
+  if (!allDay) {
+    return { start, end };
+  }
+  return { start: adapter.startOfDay(start), end: adapter.endOfDay(end) };
 }
 
 /**

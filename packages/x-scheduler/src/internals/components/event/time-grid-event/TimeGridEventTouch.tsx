@@ -1,13 +1,14 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { CSSObject, styled } from '@mui/material/styles';
+import type { CSSObject } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
-import { PaletteName } from '../../../utils/tokens';
-import { TimeGridEventProps } from './TimeGridEvent.types';
+import type { PaletteName } from '../../../utils/tokens';
+import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { useTimeGridEvent } from './useTimeGridEvent';
 import {
   getTimeGridEventRootStyles,

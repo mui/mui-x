@@ -1,5 +1,6 @@
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
-import { DataGrid, gridClasses, type GridColDef } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 

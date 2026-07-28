@@ -14,6 +14,7 @@ export default function RotationAxisPlayground() {
         {
           disableLine: { knob: 'switch', defaultValue: false },
           disableTicks: { knob: 'switch', defaultValue: false },
+          disableTickLabel: { knob: 'switch', defaultValue: false },
           tickPosition: {
             knob: 'select',
             options: ['after', 'before'],
@@ -82,6 +83,7 @@ export default function RotationAxisPlayground() {
                 <ChartsRotationAxis
                   disableLine={props.disableLine}
                   disableTicks={props.disableTicks}
+                  disableTickLabel={props.disableTickLabel}
                   position={props.position}
                   tickSize={props.tickSize}
                   tickLabelPosition={props.tickLabelPosition}
@@ -101,6 +103,7 @@ ${[
   `tickSize: ${props.tickSize},`,
   props.disableLine && 'disableLine: true,',
   props.disableTicks && 'disableTicks: true,',
+  props.disableTickLabel && 'disableTickLabel: true,',
   props.position && `position: "${props.position}",`,
   props.tickPosition && `tickPosition: "${props.tickPosition}",`,
   props.tickLabelPosition && `tickLabelPosition: "${props.tickLabelPosition}",`,

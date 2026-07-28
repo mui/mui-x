@@ -2,6 +2,7 @@ import * as React from 'react';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay } from '@mui/x-date-pickers/PickerDay';
+import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
@@ -269,6 +270,70 @@ describe('<DateCalendar />', () => {
         />,
       );
       expect(screen.getAllByRole('gridcell', { name: '31' }).length).to.equal(2);
+    });
+
+    it('should flag the first visible cell when it falls in the previous year', () => {
+      // January grid whose first visible cell overflows into the previous December (previous year).
+      const referenceDate = adapterToUse.date('2025-01-15');
+      const expectedFirstCell = adapterToUse.startOfWeek(adapterToUse.startOfMonth(referenceDate));
+      // the scenario must genuinely cross a year boundary, otherwise it does not exercise the bug
+      expect(adapterToUse.getYear(expectedFirstCell)).not.to.equal(
+        adapterToUse.getYear(referenceDate),
+      );
+      const firstVisibleDays: PickerDayProps['day'][] = [];
+
+      function CustomDay(props: PickerDayProps) {
+        if (props.isFirstVisibleCell) {
+          firstVisibleDays.push(props.day);
+        }
+        return <PickerDay {...props} />;
+      }
+
+      render(
+        <DateCalendar
+          referenceDate={referenceDate}
+          view="day"
+          showDaysOutsideCurrentMonth
+          slots={{ day: CustomDay }}
+        />,
+      );
+
+      expect(firstVisibleDays.length).not.to.equal(0);
+      expect(
+        firstVisibleDays.every((day) => adapterToUse.isSameDay(day, expectedFirstCell)),
+      ).to.equal(true);
+    });
+
+    it('should flag the last visible cell when it falls in the next year', () => {
+      // December grid whose last visible cell overflows into the next January (next year).
+      const referenceDate = adapterToUse.date('2024-12-15');
+      const expectedLastCell = adapterToUse.endOfWeek(adapterToUse.endOfMonth(referenceDate));
+      // the scenario must genuinely cross a year boundary, otherwise it does not exercise the bug
+      expect(adapterToUse.getYear(expectedLastCell)).not.to.equal(
+        adapterToUse.getYear(referenceDate),
+      );
+      const lastVisibleDays: PickerDayProps['day'][] = [];
+
+      function CustomDay(props: PickerDayProps) {
+        if (props.isLastVisibleCell) {
+          lastVisibleDays.push(props.day);
+        }
+        return <PickerDay {...props} />;
+      }
+
+      render(
+        <DateCalendar
+          referenceDate={referenceDate}
+          view="day"
+          showDaysOutsideCurrentMonth
+          slots={{ day: CustomDay }}
+        />,
+      );
+
+      expect(lastVisibleDays.length).not.to.equal(0);
+      expect(
+        lastVisibleDays.every((day) => adapterToUse.isSameDay(day, expectedLastCell)),
+      ).to.equal(true);
     });
 
     it('should complete weeks up to match `fixedWeekNumber`', () => {

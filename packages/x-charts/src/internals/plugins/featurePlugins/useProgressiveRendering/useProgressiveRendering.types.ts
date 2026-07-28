@@ -1,6 +1,6 @@
-import { type SeriesId } from '../../../../models/seriesType/common';
+import type { SeriesId } from '../../../../models/seriesType/common';
 import type { RendererType } from '../../../../ScatterChart';
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models';
 
 export interface UseProgressiveRenderingState {
   progressiveRendering: {

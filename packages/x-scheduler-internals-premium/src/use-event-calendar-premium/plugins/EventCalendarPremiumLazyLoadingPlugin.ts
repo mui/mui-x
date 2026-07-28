@@ -1,6 +1,6 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
-import {
+import type {
   EventCalendarPremiumState,
   EventCalendarPremiumParameters,
 } from '../EventCalendarPremiumStore.types';
@@ -20,38 +20,31 @@ export class EventCalendarPremiumLazyLoadingPlugin<
       store.registerStoreEffect(
         (state) => {
           const visibleDays =
-            state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
+            state.viewDefinition?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
 
-          const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
-
-          return {
-            viewConfig: state.viewConfig,
-            visibleDaysKey,
-            isLoading: state.isLoading,
-          };
-        },
-
-        (previous, next) => {
-          if (previous.visibleDaysKey === next.visibleDaysKey) {
-            return;
+          if (visibleDays.length === 0) {
+            return null;
           }
 
-          const visibleDays =
-            next.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ?? [];
+          return visibleDays.map((day) => day.key).join('|');
+        },
 
-          if (!store.parameters.dataSource || visibleDays.length === 0) {
+        (previousKey, nextKey) => {
+          // `null` means no view is registered, so there is no range to fetch.
+          if (previousKey === nextKey || nextKey === null || !store.parameters.dataSource) {
             return;
           }
 
           this.scheduleFetch(() => {
             const days =
-              store.state.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ??
-              [];
+              store.state.viewDefinition?.visibleDaysSelector?.(
+                store.state as EventCalendarState,
+              ) ?? [];
             return {
               start: days[0].value,
               end: days[days.length - 1].value,
             };
-          }, previous.viewConfig == null);
+          }, previousKey === null);
         },
       ),
     );

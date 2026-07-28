@@ -60,6 +60,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     clearButton,
     headerFilterMenu,
     slotProps,
+    disableDebounce,
     ...other
   } = props;
   const filterValue = item.value ?? '';
@@ -137,7 +138,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   );
 }
 
-GridFilterInputSingleSelect.propTypes = {
+GridFilterInputSingleSelect.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -149,6 +150,11 @@ GridFilterInputSingleSelect.propTypes = {
   className: PropTypes.string,
   clearButton: PropTypes.node,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default false
+   */
+  disableDebounce: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,

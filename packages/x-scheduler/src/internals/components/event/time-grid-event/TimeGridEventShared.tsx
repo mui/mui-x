@@ -1,9 +1,11 @@
 'use client';
-import * as React from 'react';
-import { CSSObject, styled, Theme } from '@mui/material/styles';
+import type * as React from 'react';
+import type { CSSObject, Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { EVENT_CALENDAR_CONTAINER_NAME } from '../../../constants';
-import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import { eventCalendarContentCompactQuery } from '../../../constants';
+import type { PaletteName } from '../../../utils/tokens';
+import { getPaletteVariants } from '../../../utils/tokens';
 
 export const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   display: '-webkit-box',
@@ -45,7 +47,7 @@ export const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
     outlineOffset: 2,
   },
   variants: getPaletteVariants(theme),
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
+  [eventCalendarContentCompactQuery]: {
     '--time-grid-event-column-gap': '0px',
   },
 });
@@ -77,7 +79,7 @@ export const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder
     content: '""',
     position: 'absolute',
   },
-  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
+  [eventCalendarContentCompactQuery]: {
     '--time-grid-event-column-gap': '0px',
   },
 }));

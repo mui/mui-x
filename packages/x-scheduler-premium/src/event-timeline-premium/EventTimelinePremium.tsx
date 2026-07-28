@@ -19,12 +19,10 @@ import {
   EventDialogStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
-import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
+import type { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
-import {
-  EventTimelinePremiumClasses,
-  getEventTimelinePremiumUtilityClass,
-} from './eventTimelinePremiumClasses';
+import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
+import { getEventTimelinePremiumUtilityClass } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 
 const packageInfo = {
@@ -150,7 +148,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   );
 }) as EventTimelinePremiumComponent;
 
-EventTimelinePremium.propTypes = {
+EventTimelinePremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -197,6 +195,10 @@ EventTimelinePremium.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   */
+  collapsedResources: PropTypes.object,
+  /**
    * Data source for fetching events asynchronously.
    * When provided, events are fetched through the data source instead of the `events` prop.
    */
@@ -211,6 +213,12 @@ EventTimelinePremium.propTypes = {
    * @default enUS (English)
    */
   dateLocale: PropTypes.object,
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources: PropTypes.object,
   /**
    * The default preferences for the timeline.
    * To use controlled preferences, use the `preferences` prop.
@@ -307,6 +315,10 @@ EventTimelinePremium.propTypes = {
    * in the GitHub repository.
    */
   localeText: PropTypes.object,
+  /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange: PropTypes.func,
   /**
    * Callback fired when some event of the calendar change.
    */

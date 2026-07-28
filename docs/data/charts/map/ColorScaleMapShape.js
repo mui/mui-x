@@ -31,20 +31,39 @@ const data = Object.keys(countryData).map((code) => ({
 
 export default function ColorScaleMapShape() {
   const [colorMap, setColorMap] = React.useState('continuous');
+  const [unknownShape, setUnknownShape] = React.useState('color');
 
   return (
     <Stack spacing={2} sx={{ width: '100%', maxWidth: 800 }}>
-      <ToggleButtonGroup
-        color="primary"
-        size="small"
-        exclusive
-        value={colorMap}
-        onChange={(_, value) => value && setColorMap(value)}
-        aria-label="color map"
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={{ xs: 1, md: 0 }}
+        sx={{ alignItems: 'center', justifyContent: 'space-between' }}
       >
-        <ToggleButton value="continuous">continuous</ToggleButton>
-        <ToggleButton value="piecewise">piecewise</ToggleButton>
-      </ToggleButtonGroup>
+        <ToggleButtonGroup
+          color="primary"
+          size="small"
+          exclusive
+          value={colorMap}
+          onChange={(_, value) => value && setColorMap(value)}
+          aria-label="color map"
+        >
+          <ToggleButton value="continuous">continuous</ToggleButton>
+          <ToggleButton value="piecewise">piecewise</ToggleButton>
+        </ToggleButtonGroup>
+        <ToggleButtonGroup
+          color="primary"
+          size="small"
+          exclusive
+          value={unknownShape}
+          onChange={(_, value) => value && setUnknownShape(value)}
+          aria-label="unknown shape"
+        >
+          <ToggleButton value="color">unknown Color</ToggleButton>
+          <ToggleButton value="geoData">Geo Data</ToggleButton>
+          <ToggleButton value="none">none</ToggleButton>
+        </ToggleButtonGroup>
+      </Stack>
       <Typography variant="body2" component="h6" sx={{ textAlign: 'end' }}>
         Share of the population using the Internet in 2020
       </Typography>
@@ -74,17 +93,21 @@ export default function ColorScaleMapShape() {
                       min: 0,
                       max: 100,
                       color: ['#e3f2fd', '#0d47a1'],
+                      unknownColor: unknownShape === 'color' ? 'gray' : undefined,
                     }
                   : {
                       type: 'piecewise',
                       thresholds: [25, 50, 75],
                       colors: [0.25, 0.5, 0.75, 1].map(interpolateBlues),
+                      unknownColor: unknownShape === 'color' ? 'gray' : undefined,
                     },
             },
           ]}
         >
           <ChartsSurface>
-            <GeoDataPlot fill="#f5f5f5" stroke="#bdbdbd" />
+            {unknownShape === 'geoData' && (
+              <GeoDataPlot fill="#f5f5f5" stroke="#bdbdbd" />
+            )}
             <MapShapePlot stroke="#fff" strokeWidth={0.3} />
           </ChartsSurface>
           <ChartsTooltip trigger="item" />

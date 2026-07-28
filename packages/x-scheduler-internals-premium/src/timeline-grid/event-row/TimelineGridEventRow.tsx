@@ -1,13 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
+import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCreation, useKeyboardEventCreation } from '@mui/x-scheduler-internals/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-internals/constants';
-import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventRowDropTarget } from './useEventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';

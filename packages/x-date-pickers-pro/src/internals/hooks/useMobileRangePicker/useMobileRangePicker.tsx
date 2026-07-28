@@ -3,18 +3,16 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
+import type { DateOrTimeViewWithMeridiem, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   usePicker,
   PickersModalDialog,
-  ExportedBaseToolbarProps,
-  DateOrTimeViewWithMeridiem,
   PickerProvider,
-  PickerRangeValue,
   extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import {
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type {
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';
@@ -113,7 +111,7 @@ export const useMobileRangePicker = <
     toolbar: {
       ...innerSlotProps?.toolbar,
       titleId: labelId,
-    } as ExportedBaseToolbarProps,
+    },
     mobilePaper: {
       'aria-labelledby': labelledById,
       ...innerSlotProps?.mobilePaper,

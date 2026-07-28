@@ -5,13 +5,15 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import {
   ComposerAttachmentList,
-  useComposerContext,
+  useChatComposer,
+  useChatLocaleText,
   type ComposerAttachmentListProps,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 import DefaultCloseIcon from '../icons/DefaultCloseIcon';
 import DefaultFileIcon from '../icons/DefaultFileIcon';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerAttachmentList');
 
@@ -122,29 +124,35 @@ const AttachmentFileIconWrapper = styled('span', {
 }));
 
 function DefaultAttachmentListContent() {
-  const composer = useComposerContext();
+  // Read directly from the store so the list renders even outside a `ChatComposer` —
+  // useful for custom layouts and isolated previews. `ChatProvider` is still required.
+  const composer = useChatComposer();
+  const localeText = useChatLocaleText();
 
   return (
     <React.Fragment>
-      {composer.attachments.map((attachment) => (
-        <AttachmentChip key={attachment.localId}>
-          {attachment.previewUrl ? (
-            <AttachmentThumbnail src={attachment.previewUrl} alt={attachment.file.name} />
-          ) : (
-            <AttachmentFileIconWrapper>
-              <DefaultFileIcon />
-            </AttachmentFileIconWrapper>
-          )}
-          <AttachmentFileName>{attachment.file.name}</AttachmentFileName>
-          <AttachmentRemoveButton
-            type="button"
-            aria-label={`Remove ${attachment.file.name}`}
-            onClick={() => composer.removeAttachment(attachment.localId)}
-          >
-            <DefaultCloseIcon />
-          </AttachmentRemoveButton>
-        </AttachmentChip>
-      ))}
+      {composer.attachments.map((attachment) => {
+        const fileName = attachment.file.name || localeText.composerAttachmentFallbackLabel;
+        return (
+          <AttachmentChip key={attachment.localId}>
+            {attachment.previewUrl ? (
+              <AttachmentThumbnail src={attachment.previewUrl} alt={fileName} />
+            ) : (
+              <AttachmentFileIconWrapper>
+                <DefaultFileIcon />
+              </AttachmentFileIconWrapper>
+            )}
+            <AttachmentFileName>{fileName}</AttachmentFileName>
+            <AttachmentRemoveButton
+              type="button"
+              aria-label={localeText.composerRemoveAttachmentLabel(fileName)}
+              onClick={() => composer.removeAttachment(attachment.localId)}
+            >
+              <DefaultCloseIcon />
+            </AttachmentRemoveButton>
+          </AttachmentChip>
+        );
+      })}
     </React.Fragment>
   );
 }
@@ -162,16 +170,18 @@ const ChatComposerAttachmentList = React.forwardRef<
       ref={ref}
       {...other}
       slots={{
-        attachmentList: slots?.attachmentList ?? ChatComposerAttachmentListStyled,
         ...slots,
+        attachmentList: slots?.attachmentList ?? ChatComposerAttachmentListStyled,
       }}
       slotProps={{
         ...slotProps,
-        attachmentList: {
-          className: clsx(classes.attachmentList, className),
-          sx,
-          ...(slotProps?.attachmentList as object),
-        } as any,
+        attachmentList: mergeSlotProps(
+          {
+            className: clsx(classes.attachmentList, className),
+            sx,
+          },
+          slotProps?.attachmentList,
+        ) as any,
       }}
     >
       {children ?? <DefaultAttachmentListContent />}
@@ -179,7 +189,7 @@ const ChatComposerAttachmentList = React.forwardRef<
   );
 });
 
-ChatComposerAttachmentList.propTypes = {
+ChatComposerAttachmentList.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

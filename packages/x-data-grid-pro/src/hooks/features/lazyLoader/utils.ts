@@ -1,5 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
+import { gridRowNodeSelector } from '@mui/x-data-grid';
+import type { GridRowEntry } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 interface GridRowRenderContext {
@@ -29,8 +30,14 @@ export const adjustRowParams = <T extends { start: number | string; end: number 
 
   const adjustedStart = params.start - (params.start % pageSize);
   const pageAlignedEnd = params.end + pageSize - (params.end % pageSize) - 1;
-  // rowCount of -1 means "unknown/infinite", treat same as undefined (no capping)
-  const maxEnd = rowCount !== undefined && rowCount !== -1 ? Math.max(0, rowCount - 1) : Infinity;
+  // rowCount of -1 means "unknown/infinite", treat same as undefined (no capping).
+  // The first page is never capped: it's always fetched as `{start: 0, end: pageSize - 1}`
+  // (rowCount is typically unknown at that point), so capping it here once rowCount
+  // becomes known would produce a different range and bust the cache for the
+  // post-render revalidation request, causing a spurious second `getRows` call.
+  const shouldCapByRowCount =
+    rowCount !== undefined && rowCount !== -1 && (rowCount === 0 || adjustedStart > 0);
+  const maxEnd = shouldCapByRowCount ? Math.max(0, rowCount! - 1) : Infinity;
 
   return {
     ...params,

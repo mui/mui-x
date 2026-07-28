@@ -4,5 +4,18 @@
     "classes": { "description": "Override or extend the styles applied to the component." },
     "className": { "description": "A CSS class name applied to the root element." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "axisHighlightDot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every axis highlight dot element"
+    },
+    "axisHighlightLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the axis highlight line element"
+    },
+    "axisHighlightRoot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the axis highlight root element"
+    }
+  }
 }

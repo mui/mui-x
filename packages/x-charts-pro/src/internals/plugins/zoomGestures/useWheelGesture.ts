@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { getChartPoint } from '@mui/x-charts/internals';
-import { type KeyboardKey } from '@mui/x-internal-gestures/core';
-import { type ChartPoint, type GestureInstance } from './zoomGestures.types';
+import type { KeyboardKey } from '@mui/x-internal-gestures/core';
+import type { ChartPoint, GestureInstance } from './zoomGestures.types';
 
 export interface UseWheelGestureOptions {
   /** Whether the gesture is active. */
@@ -47,7 +47,9 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
       return () => {};
     }
 
-    const rafThrottledOnWheel = rafThrottle(onWheelRef.current);
+    const rafThrottledOnWheel = rafThrottle((point: ChartPoint, event: WheelEvent) =>
+      onWheelRef.current(point, event),
+    );
 
     const handler = instance.addInteractionListener('zoomTurnWheel', (event) => {
       const point = getChartPoint(element, {

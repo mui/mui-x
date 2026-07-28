@@ -8,16 +8,14 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
-import {
+import type {
   PickersArrowSwitcherOwnerState,
   PickersArrowSwitcherProps,
 } from './PickersArrowSwitcher.types';
-import {
-  getPickersArrowSwitcherUtilityClass,
-  PickersArrowSwitcherClasses,
-} from './pickersArrowSwitcherClasses';
+import type { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
+import { getPickersArrowSwitcherUtilityClass } from './pickersArrowSwitcherClasses';
 import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
-import { PickerOwnerState } from '../../../models';
+import type { PickerOwnerState } from '../../../models';
 
 const PickersArrowSwitcherRoot = styled('div', {
   name: 'MuiPickersArrowSwitcher',

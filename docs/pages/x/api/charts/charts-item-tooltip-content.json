@@ -72,6 +72,5 @@
   "muiName": "MuiChartsItemTooltipContent",
   "filename": "/packages/x-charts/src/ChartsTooltip/ChartsItemTooltipContent.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>"
 }

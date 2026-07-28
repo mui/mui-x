@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { DialogProps } from '@mui/material/Dialog';
+import type * as React from 'react';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { DialogProps } from '@mui/material/Dialog';
 import type { EventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
 
 export interface EventDialogProps extends DialogProps {

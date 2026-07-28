@@ -2,6 +2,12 @@
   "componentDescription": "Orchestrates the data providers for radial chart components and hooks.\n\nSimilar to `ChartsDataProviderPremium`, but uses the radial axis plugin instead of the cartesian one,\nand only supports polar series types.",
   "propDescriptions": {
     "colors": { "description": "Color palette used to colorize multiple series." },
+    "dataset": {
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
+    },
+    "experimentalFeatures": {
+      "description": "Options to enable features planned for the next major."
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },

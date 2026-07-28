@@ -193,6 +193,11 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     target: sourceContent,
     options: {
       disablePropTypesTypeChecking: true,
+      // Annotate the generated propTypes with `/* remove-proptypes */` so
+      // babel-plugin-transform-react-remove-prop-types wraps them in a
+      // production guard even for components it cannot detect on its own
+      // (components returning portals, arrays, or a render callback result).
+      ensureBabelPluginTransformReactRemovePropTypesIntegration: true,
       comment: [
         '----------------------------- Warning --------------------------------',
         '| These PropTypes are generated from the TypeScript type definitions |',

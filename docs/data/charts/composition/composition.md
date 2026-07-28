@@ -10,6 +10,16 @@ packageName: '@mui/x-charts'
 
 <p class="description">Learn how to use composition to build advanced custom Charts.</p>
 
+## Overview
+
+Composition lets you assemble charts from individual building blocks instead of a single preconfigured component.
+You can mix series types, stack custom SVG and WebGL layers, and reuse the chart's scales through hooks to render your own elements aligned with the plotted data.
+This unlocks visualizations that go beyond the standard chart components, while keeping a shared coordinate system, axes, tooltip, and interactions.
+
+The forecast below combines bars, lines, axes, a synced tooltip, and custom SVG layers in a single composed chart.
+
+{{"demo": "WeatherComposition.js"}}
+
 The MUI X Charts components follow an architecture based on context providers: you can pass your series and axes definitions to specialized components that transform the data and make it available to its descendants.
 These descendants can then be composed.
 

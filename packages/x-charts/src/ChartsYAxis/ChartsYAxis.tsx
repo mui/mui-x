@@ -1,11 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import { warnOnce } from '@mui/x-internals/warning';
-import {
-  type ChartsYAxisProps,
-  type ChartsAxisSlots,
-  type ChartsAxisSlotProps,
-} from '../models/axis';
+import type { ChartsYAxisProps, ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import { useYAxes } from '../hooks';
 import { ChartsYAxisImpl } from './ChartsYAxisImpl';
 
@@ -36,7 +32,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   return <ChartsYAxisImpl {...inProps} axis={axis} />;
 }
 
-ChartsYAxis.propTypes = {
+ChartsYAxis.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -51,6 +47,10 @@ ChartsYAxis.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * If true, the axis line is disabled.
    * @default false
@@ -139,6 +139,11 @@ ChartsYAxis.propTypes = {
    * @default 6
    */
   tickSize: PropTypes.number,
+  /**
+   * The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
+   * @default 0
+   */
+  tickSpacing: PropTypes.number,
 } as any;
 
 export { ChartsYAxis };

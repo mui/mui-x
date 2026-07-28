@@ -8,12 +8,12 @@ import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
-import { RichTreeViewProps } from './RichTreeView.types';
+import type { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
-import { TreeViewValidItem } from '../models';
+import type { TreeViewValidItem } from '../models';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
 import { itemsSelectors } from '../internals/plugins/items';
@@ -138,7 +138,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   );
 }) as RichTreeViewComponent;
 
-RichTreeView.propTypes = {
+RichTreeView.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

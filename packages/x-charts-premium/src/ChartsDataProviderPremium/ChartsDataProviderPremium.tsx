@@ -1,24 +1,24 @@
 'use client';
 import PropTypes from 'prop-types';
-import {
-  ChartsProvider,
-  type ChartSeriesType,
-  type ChartAnyPluginSignature,
-  type ChartsProviderProps,
-  ChartsSlotsProvider,
-  type ChartSeriesConfig,
+import { ChartsProvider, ChartsSlotsProvider } from '@mui/x-charts/internals';
+import type {
+  ChartSeriesType,
+  ChartAnyPluginSignature,
+  ChartsProviderProps,
+  ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
-import { ChartsWatermark, defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
-import { useLicenseVerifier } from '@mui/x-license/internals';
 import {
-  type ChartsSlotPropsPro,
-  type ChartsSlotsPro,
+  ChartsWatermark,
+  defaultSlotsMaterial,
   defaultSeriesConfigPro,
 } from '@mui/x-charts-pro/internals';
-import { type ChartsDataProviderProProps } from '@mui/x-charts-pro/ChartsDataProviderPro';
+import { useLicenseVerifier } from '@mui/x-license/internals';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '@mui/x-charts-pro/internals';
+import type { ChartsDataProviderProProps } from '@mui/x-charts-pro/ChartsDataProviderPro';
 import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
-import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderPremiumProps } from './useChartsDataProviderPremiumProps';
 import { ohlcSeriesConfig } from '../CandlestickChart/seriesConfig';
 
@@ -111,7 +111,7 @@ function ChartsDataProviderPremium<
   );
 }
 
-ChartsDataProviderPremium.propTypes = {
+ChartsDataProviderPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -128,6 +128,10 @@ ChartsDataProviderPremium.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.any,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

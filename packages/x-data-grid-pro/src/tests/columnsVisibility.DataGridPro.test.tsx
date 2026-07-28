@@ -1,17 +1,14 @@
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act, screen } from '@mui/internal-test-utils';
 import {
   DataGridPro,
-  type DataGridProProps,
-  type GridApi,
   gridClasses,
-  type GridColDef,
   gridColumnVisibilityModelSelector,
   GridPreferencePanelsValue,
-  type GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
+import type { DataGridProProps, GridApi, GridColDef, GridRowsProp } from '@mui/x-data-grid-pro';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

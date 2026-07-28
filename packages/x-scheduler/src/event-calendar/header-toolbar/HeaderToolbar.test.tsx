@@ -21,7 +21,7 @@ describe('<ViewSwitcher />', () => {
     );
 
     // ViewSwitcher renders a button showing the current view
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     expect(viewSwitcherButton).to.have.text('Week');
 
     // Open the menu
@@ -48,7 +48,7 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     expect(viewSwitcherButton).to.have.text('Week');
 
     // Open the menu
@@ -75,7 +75,7 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Day' });
     expect(viewSwitcherButton).to.have.text('Day');
 
     // Open the menu
@@ -95,7 +95,7 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     fireEvent.click(viewSwitcherButton);
 
     const menu = screen.getByRole('listbox');
@@ -114,7 +114,7 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const viewSwitcherButton = screen.getByRole('button', { name: 'Switch View' });
+    const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     fireEvent.click(viewSwitcherButton);
 
     const menu = screen.getByRole('listbox');

@@ -73,6 +73,10 @@ describe('chatSelectors', () => {
     expect(chatSelectors.conversationCount(store.state)).toBe(2);
     expect(chatSelectors.isStreaming(store.state)).toBe(true);
     expect(chatSelectors.hasMoreHistory(store.state)).toBe(false);
+    expect(chatSelectors.isLoadingHistory(store.state)).toBe(false);
+
+    store.setHistoryLoading(true);
+    expect(chatSelectors.isLoadingHistory(store.state)).toBe(true);
     expect(chatSelectors.error(store.state)?.message).toBe('Oops');
     expect(chatSelectors.composerValue(store.state)).toBe('');
     expect(chatSelectors.composerAttachments(store.state)).toEqual([]);

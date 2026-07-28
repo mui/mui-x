@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { useRadarGridData } from './useRadarGridData';
 import { SharpRadarGrid } from './SharpRadarGrid';
-import { type RadarGridProps } from './RadarGrid.types';
+import type { RadarGridProps } from './RadarGrid.types';
 import { CircularRadarGrid } from './CircularRadarGrid';
 import { SharpRadarStripes } from './SharpRadarStripes';
 import { CircularRadarStripes } from './CircularRadarStripes';
@@ -72,15 +72,11 @@ function RadarGrid(props: RadarGridProps) {
   );
 }
 
-RadarGrid.propTypes = {
+RadarGrid.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: PropTypes.object,
   /**
    * The number of divisions in the radar grid.
    * @default 5

@@ -1,7 +1,9 @@
 'use client';
+import PropTypes from 'prop-types';
 import { SankeyLinkLabel } from './SankeyLinkLabel';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
+import { useUtilityClasses } from './sankeyClasses';
+import type { SankeyClasses } from './sankeyClasses';
 
 export interface SankeyLinkLabelPlotProps {
   /**
@@ -41,5 +43,16 @@ function SankeyLinkLabelPlot(props: SankeyLinkLabelPlotProps) {
     </g>
   );
 }
+
+SankeyLinkLabelPlot.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Classes applied to the various elements.
+   */
+  classes: PropTypes.object,
+} as any;
 
 export { SankeyLinkLabelPlot };

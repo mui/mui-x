@@ -1,6 +1,6 @@
-import { TreeViewDOMStructure, TreeViewItemId, TreeViewValidItem } from '../../models';
-import { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
-import { RichTreeViewLazyLoadedItemsStatus } from '../plugins/lazyLoading';
+import type { TreeViewDOMStructure, TreeViewItemId, TreeViewValidItem } from '../../models';
+import type { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
+import type { RichTreeViewLazyLoadedItemsStatus } from '../plugins/lazyLoading';
 
 export interface RichTreeViewState<
   R extends TreeViewValidItem<R>,

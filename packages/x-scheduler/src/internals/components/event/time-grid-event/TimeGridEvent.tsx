@@ -5,10 +5,10 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { TimeGridEventProps } from './TimeGridEvent.types';
+import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { PaletteName } from '../../../utils/tokens';
+import type { PaletteName } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { useTimeGridEvent } from './useTimeGridEvent';
 import {

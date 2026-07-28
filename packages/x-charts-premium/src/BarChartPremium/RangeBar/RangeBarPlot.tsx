@@ -3,13 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useSkipAnimation } from '@mui/x-charts/internals';
-import {
-  BarElement,
-  type BarElementSlotProps,
-  type BarElementSlots,
-  barClasses,
-  type BarLabelSlots,
-  type BarLabelSlotProps,
+import { BarElement, barClasses } from '@mui/x-charts/BarChart';
+import type {
+  BarElementSlotProps,
+  BarElementSlots,
+  BarLabelSlots,
+  BarLabelSlotProps,
 } from '@mui/x-charts/BarChart';
 import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useIsZoomInteracting } from '@mui/x-charts-pro/hooks';
@@ -17,7 +16,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
 import { AnimatedRangeBarElement } from './AnimatedRangeBarElement';
 import { RangeBarWebGLPlot } from './RangeBarWebGLPlot';
-import { type RangeBarItemIdentifier } from '../../models';
+import type { RangeBarItemIdentifier } from '../../models';
 
 export type RangeBarPlotRenderer = 'svg-single' | 'webgl';
 
@@ -146,7 +145,7 @@ function RangeBarSvgPlot(props: Omit<RangeBarPlotProps, 'renderer'>): React.JSX.
   );
 }
 
-RangeBarSvgPlot.propTypes = {
+RangeBarSvgPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -178,7 +177,7 @@ RangeBarSvgPlot.propTypes = {
   slots: PropTypes.object,
 } as any;
 
-RangeBarPlot.propTypes = {
+RangeBarPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

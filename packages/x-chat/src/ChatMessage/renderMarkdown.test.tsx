@@ -51,11 +51,89 @@ describe('renderMarkdown', () => {
       expect(anchor!.textContent).toBe('label');
     });
 
-    it('renders [^1] footnote as <sup>', () => {
-      render(<React.Fragment>{renderMarkdown('See here[^1]')}</React.Fragment>);
+    it('renders links with balanced parentheses in the URL', () => {
+      render(
+        <React.Fragment>{renderMarkdown('[label](https://example.com/a_(b))')}</React.Fragment>,
+      );
+      const anchor = document.querySelector('a');
+      expect(anchor).not.toBeNull();
+      expect(anchor!.getAttribute('href')).toBe('https://example.com/a_(b)');
+      expect(anchor!.textContent).toBe('label');
+    });
+
+    it('parses inline formatting in link labels', () => {
+      render(
+        <React.Fragment>{renderMarkdown('[**bold** label](https://example.com)')}</React.Fragment>,
+      );
+      const anchor = document.querySelector('a');
+      expect(anchor).not.toBeNull();
+      const strong = anchor!.querySelector('strong');
+      expect(strong).not.toBeNull();
+      expect(strong!.textContent).toBe('bold');
+      expect(anchor!.textContent).toBe('bold label');
+    });
+
+    it('renders image syntax as an image', () => {
+      render(
+        <React.Fragment>
+          {renderMarkdown('![Preview](https://example.com/image_(1).png)')}
+        </React.Fragment>,
+      );
+      const image = document.querySelector('img');
+      expect(image).not.toBeNull();
+      expect(image!.getAttribute('alt')).toBe('Preview');
+      expect(image!.getAttribute('src')).toBe('https://example.com/image_(1).png');
+      expect(document.querySelector('a')).toBeNull();
+    });
+
+    it('neutralizes a javascript: URL in a link', () => {
+      render(<React.Fragment>{renderMarkdown('[x](javascript:alert(1))')}</React.Fragment>);
+      // The sanitizer drops the unsafe href entirely, so the anchor is inert.
+      expect(document.querySelector('a')!.getAttribute('href')).toBe(null);
+    });
+
+    it('neutralizes javascript: and data: URLs in images', () => {
+      render(<React.Fragment>{renderMarkdown('![x](javascript:alert(1))')}</React.Fragment>);
+      // The sanitizer drops the unsafe src entirely.
+      expect(document.querySelector('img')!.getAttribute('src')).toBe(null);
+    });
+
+    it('neutralizes a data: URL in an image', () => {
+      render(<React.Fragment>{renderMarkdown('![x](data:text/html,hi)')}</React.Fragment>);
+      // The sanitizer drops the unsafe src entirely.
+      expect(document.querySelector('img')!.getAttribute('src')).toBe(null);
+    });
+
+    it('rejects protocol-relative // URLs (treated as external)', () => {
+      render(<React.Fragment>{renderMarkdown('[x](//evil.example.com)')}</React.Fragment>);
+      // The sanitizer drops the unsafe href entirely, so the anchor is inert.
+      expect(document.querySelector('a')!.getAttribute('href')).toBe(null);
+    });
+
+    it('strips an optional CommonMark title from an image src', () => {
+      render(
+        <React.Fragment>
+          {renderMarkdown('![alt](https://example.com/x.png "a title")')}
+        </React.Fragment>,
+      );
+      expect(document.querySelector('img')!.getAttribute('src')).toBe('https://example.com/x.png');
+    });
+
+    it('strips an optional CommonMark title from a link href', () => {
+      render(<React.Fragment>{renderMarkdown('[label](https://example.com "t")')}</React.Fragment>);
+      const anchor = document.querySelector('a')!;
+      expect(anchor.getAttribute('href')).toBe('https://example.com');
+      expect(anchor.textContent).toBe('label');
+    });
+
+    it('renders a footnote reference with a superscript marker', () => {
+      const { container } = render(
+        <React.Fragment>{renderMarkdown('See here[^1]')}</React.Fragment>,
+      );
+      expect(container.textContent).toContain('See here');
       const sup = document.querySelector('sup');
       expect(sup).not.toBeNull();
-      expect(sup!.textContent).toBe('[1]');
+      expect(sup!.textContent).toBe('1');
     });
 
     it('renders nested **bold *italic* bold** as <strong> containing <em>', () => {
@@ -217,6 +295,38 @@ describe('renderMarkdown', () => {
     });
   });
 
+  describe('partial / streaming input renders safely', () => {
+    // Mid-stream a heading marker arrives before its title (`"## "`). The renderer
+    // must not throw or hang on such partial input (the previous hand-rolled parser
+    // could spin forever; markdown-to-jsx cannot).
+    it('renders a bare heading marker without throwing', () => {
+      expect(() => render(<React.Fragment>{renderMarkdown('## ')}</React.Fragment>)).not.toThrow();
+    });
+
+    it('renders a single bare hash marker without throwing', () => {
+      expect(() => render(<React.Fragment>{renderMarkdown('# ')}</React.Fragment>)).not.toThrow();
+    });
+
+    it('handles an empty heading marker between paragraphs', () => {
+      const { container } = render(
+        <React.Fragment>{renderMarkdown('foo\n## \nbar')}</React.Fragment>,
+      );
+      expect(container.textContent).toContain('foo');
+      expect(container.textContent).toContain('bar');
+    });
+
+    it('renders every prefix of a streamed heading without hanging', () => {
+      // Mirrors how `part.text` accumulates while a heading streams in.
+      for (const partial of ['#', '##', '## ', '## O', '## Overview']) {
+        const { unmount } = render(<React.Fragment>{renderMarkdown(partial)}</React.Fragment>);
+        unmount();
+      }
+      // The final, complete heading still renders as a heading.
+      render(<React.Fragment>{renderMarkdown('## Overview')}</React.Fragment>);
+      expect(document.querySelector('h2')!.textContent).toBe('Overview');
+    });
+  });
+
   describe('normalizeMarkdownForRender', () => {
     it('auto-closes an unclosed code fence', () => {
       const input = '```ts\nconst x = 1;';
@@ -227,6 +337,28 @@ describe('renderMarkdown', () => {
       const code = document.querySelector('.MuiChatCodeBlock-code');
       expect(code).not.toBeNull();
       expect(code!.textContent).toBe('const x = 1;');
+    });
+  });
+
+  describe('security and streaming wiring', () => {
+    it('does not parse raw HTML from model output (escapes it as text)', () => {
+      const { container } = render(
+        <React.Fragment>{renderMarkdown('<img src=x onerror="alert(1)">hi')}</React.Fragment>,
+      );
+      // disableParsingRawHTML: the tag is escaped to text, never a live element.
+      expect(document.querySelector('img')).toBeNull();
+      expect(container.textContent).toContain('<img');
+      expect(container.textContent).toContain('hi');
+    });
+
+    it('renders a remend incomplete-link placeholder as inert text (no href)', () => {
+      render(
+        <React.Fragment>{renderMarkdown('[label](streamdown:incomplete-link)')}</React.Fragment>,
+      );
+      const anchor = document.querySelector('a')!;
+      expect(anchor).not.toBeNull();
+      expect(anchor.getAttribute('href')).toBe(null);
+      expect(anchor.textContent).toContain('label');
     });
   });
 });

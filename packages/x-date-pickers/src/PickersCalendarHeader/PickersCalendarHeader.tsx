@@ -15,15 +15,15 @@ import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
 } from '../internals/hooks/date-helpers-hooks';
+import type { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 import {
   getPickersCalendarHeaderUtilityClass,
-  PickersCalendarHeaderClasses,
   pickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
-import { PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
-import { PickerOwnerState } from '../models/pickers';
+import type { PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
+import type { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { DateView } from '../models/views';
+import type { DateView } from '../models/views';
 
 const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | undefined) => {
   const slots = {
@@ -263,7 +263,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
   );
 }) as PickersCalendarHeaderComponent;
 
-PickersCalendarHeader.propTypes = {
+PickersCalendarHeader.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

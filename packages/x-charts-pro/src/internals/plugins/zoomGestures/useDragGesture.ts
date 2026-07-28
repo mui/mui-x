@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type PanEvent } from '@mui/x-internal-gestures/core';
-import { type ChartPoint, type GestureInstance, type PanGestureConfig } from './zoomGestures.types';
+import type { PanEvent } from '@mui/x-internal-gestures/core';
+import type { ChartPoint, GestureInstance, PanGestureConfig } from './zoomGestures.types';
 
 export interface UseDragGestureOptions {
   /** Whether the gesture is active. */

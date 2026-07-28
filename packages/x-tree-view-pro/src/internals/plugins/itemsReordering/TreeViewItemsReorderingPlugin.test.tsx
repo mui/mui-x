@@ -1,11 +1,12 @@
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { spy } from 'sinon';
 import { fireEvent, createEvent } from '@mui/internal-test-utils';
-import { DragEventTypes, MockedDataTransfer } from 'test/utils/dragAndDrop';
+import type { DragEventTypes } from 'test/utils/dragAndDrop';
+import { MockedDataTransfer } from 'test/utils/dragAndDrop';
 import {} from '@mui/x-tree-view/internals';
 import { chooseActionToApply } from './utils';
-import { TreeViewItemItemReorderingValidActions } from './types';
-import { RichTreeViewProStore } from '../../RichTreeViewProStore';
+import type { TreeViewItemItemReorderingValidActions } from './types';
+import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 interface DragEventOptions {
   /**

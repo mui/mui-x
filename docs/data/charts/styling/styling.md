@@ -50,6 +50,7 @@ See the dedicated documentation sections for each chart component to learn more 
 - [Bar charts](/x/react-charts/bars/#color-scale)
 - [Line charts](/x/react-charts/lines/#color-scale)
 - [Bubble charts](/x/react-charts/bubble/#mapping-data-to-color)
+- [Maps](/x/react-charts/map/#mapping-values-to-colors)[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The `colorMap` property accepts three kinds of objects for color maps: piecewise, continuous, and ordinal.
 
@@ -62,6 +63,7 @@ You can configure a piecewise color map with an array of _n_ `thresholds` values
   type: 'piecewise';
   thresholds: Value[];
   colors: string[];
+  unknownColor?: string;
 }
 ```
 
@@ -82,6 +84,7 @@ By default, the `min`-`max` range is 0-100.
   min?: Value;
   max?: Value;
   color: [string, string] | ((t: number) => string);
+  unknownColor?: string;
 }
 ```
 

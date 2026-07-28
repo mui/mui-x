@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
-import { TreeViewPublicAPI, TreeViewAnyStore } from '../internals/models';
+import type * as React from 'react';
+import type { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
+import type { TreeViewPublicAPI, TreeViewAnyStore } from '../internals/models';
 
 export interface UseTreeItemParameters {
   /**

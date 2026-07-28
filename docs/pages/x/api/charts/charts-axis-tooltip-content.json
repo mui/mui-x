@@ -4,7 +4,7 @@
     "sort": {
       "type": {
         "name": "enum",
-        "description": "'none'<br>&#124;&nbsp;'asc'<br>&#124;&nbsp;'desc'"
+        "description": "'asc'<br>&#124;&nbsp;'desc'<br>&#124;&nbsp;'none'"
       },
       "default": "'none'"
     }
@@ -81,6 +81,5 @@
   "muiName": "MuiChartsAxisTooltipContent",
   "filename": "/packages/x-charts/src/ChartsTooltip/ChartsAxisTooltipContent.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>"
 }

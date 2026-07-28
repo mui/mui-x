@@ -97,15 +97,47 @@ export namespace Dimensions {
 }
 
 function initializeState(params: ParamsWithDefaults): Dimensions.State {
-  const { rowCount, dimensions: dimensionsParams } = params;
-  const { columnsTotalWidth, rowHeight, autoHeight, minimalContentHeight } = dimensionsParams;
-  const currentPageTotalHeight = rowCount * rowHeight;
+  const { rowCount, rows, getRowHeight, dimensions: dimensionsParams } = params;
+  const {
+    columnsTotalWidth,
+    rowHeight,
+    autoHeight,
+    minimalContentHeight,
+    topPinnedHeight,
+    bottomPinnedHeight,
+  } = dimensionsParams;
+
+  // Calculate the initial content height and row positions so the
+  // initial render gets the correct size.
+  const positions: number[] = [];
+  let currentPageTotalHeight = 0;
+  if (getRowHeight && rows.length > 0) {
+    for (let i = 0; i < rows.length; i += 1) {
+      positions.push(currentPageTotalHeight);
+      const height = getRowHeight(rows[i]);
+      currentPageTotalHeight += typeof height === 'number' ? height : rowHeight;
+    }
+  } else {
+    for (let i = 0; i < rowCount; i += 1) {
+      positions.push(i * rowHeight);
+    }
+    currentPageTotalHeight = rowCount * rowHeight;
+  }
+
+  // Reflect the pinned zone sizes in the container heights at initialization, mirroring
+  // `updateDimensions`. The pinned rows' measured height is still 0 in `rowsMeta`
+  // below (pinned rows are measured later), so each container height is just its static
+  // pinned size.
+  const topContainerHeight = topPinnedHeight;
+  const bottomContainerHeight = bottomPinnedHeight;
 
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...dimensionsParams,
     autoHeight,
     minimalContentHeight,
+    topContainerHeight,
+    bottomContainerHeight,
     contentSize: {
       width: columnsTotalWidth,
       height: roundToDecimalPlaces(currentPageTotalHeight, 1),
@@ -114,7 +146,7 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 
   const rowsMeta = {
     currentPageTotalHeight,
-    positions: Array.from({ length: rowCount }, (_, i) => i * rowHeight),
+    positions,
     pinnedTopRowsTotalHeight: 0,
     pinnedBottomRowsTotalHeight: 0,
   };
@@ -659,7 +691,10 @@ export function observeRootNode(
   };
 }
 
-const scrollbarSizeCache = new WeakMap<Element, number>();
+const scrollbarSizeCache = new WeakMap<
+  Element,
+  { size: number; devicePixelRatio: number; measuredDirectly: boolean }
+>();
 function measureScrollbarSize(element: Element | null, scrollbarSize: number | undefined) {
   if (scrollbarSize !== undefined) {
     return scrollbarSize;
@@ -669,52 +704,92 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
     return 0;
   }
 
-  const cachedSize = scrollbarSizeCache.get(element);
-  if (cachedSize !== undefined) {
-    return cachedSize;
+  const htmlElement = element as HTMLElement;
+  const doc = ownerDocument(element);
+  const view = doc.defaultView;
+
+  // We don't expect the scrollbar size styles to change, so we can cache the size and reuse it on every dimensions update.
+  // The scrollbar size is expected to change when the browser zoom or display scale changes while the element stays mounted, which `devicePixelRatio` reflects.
+  // Other layout changes (container resize, row/column updates) keep the same `devicePixelRatio`,
+  // so we can reuse the cached size and skip re-measuring the DOM (`getComputedStyle` + forced reflow) on every dimensions update.
+  //
+  // Only a value measured directly from the element is authoritative: it reflects the real scrollbar, including
+  // `::-webkit-scrollbar` pseudo styling that the probe-div fallback can't replicate. A cached probe estimate must
+  // not short-circuit here, otherwise it would mask the real size once the element becomes scrollable.
+  const devicePixelRatio = view?.devicePixelRatio ?? 1;
+  const cached = scrollbarSizeCache.get(element);
+  if (
+    cached !== undefined &&
+    cached.devicePixelRatio === devicePixelRatio &&
+    cached.measuredDirectly
+  ) {
+    return cached.size;
   }
 
-  const htmlElement = element as HTMLElement;
+  const computed = view?.getComputedStyle(htmlElement);
 
   // First, try measuring `element` directly. When `element` is a scroll widget
   // that already has overflowing content (the typical case for the timeline's
   // virtual scrollbars), its rendered scrollbar reflects whatever
   // `scrollbar-width` / `::-webkit-scrollbar` styling is applied to *this*
   // element, which is exactly what we need.
+  const canScrollY = computed?.overflowY === 'auto' || computed?.overflowY === 'scroll';
+  const canScrollX = computed?.overflowX === 'auto' || computed?.overflowX === 'scroll';
+  const hasScrollY = canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight;
+  const hasScrollX = canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth;
+
+  // `offsetWidth` / `offsetHeight` include borders, while `clientWidth` /
+  // `clientHeight` do not. Subtract borders so direct measurement only returns
+  // the scrollbar size.
+  const borderWidth =
+    parseCSSPixelValue(computed?.borderLeftWidth) + parseCSSPixelValue(computed?.borderRightWidth);
+  const borderHeight =
+    parseCSSPixelValue(computed?.borderTopWidth) + parseCSSPixelValue(computed?.borderBottomWidth);
   const directSize = Math.max(
-    htmlElement.offsetWidth - htmlElement.clientWidth,
-    htmlElement.offsetHeight - htmlElement.clientHeight,
+    hasScrollY ? htmlElement.offsetWidth - htmlElement.clientWidth - borderWidth : 0,
+    hasScrollX ? htmlElement.offsetHeight - htmlElement.clientHeight - borderHeight : 0,
   );
-  if (directSize > 0) {
-    scrollbarSizeCache.set(element, directSize);
-    return directSize;
+
+  if (hasScrollY || hasScrollX) {
+    const size = Math.max(0, directSize);
+    scrollbarSizeCache.set(element, { size, devicePixelRatio, measuredDirectly: true });
+    return size;
+  }
+
+  // The element isn't scrollable yet, so it can't be measured directly. Reuse a
+  // probe estimate cached at the same `devicePixelRatio` to avoid re-running the
+  // (expensive) probe on every dimensions update while the element stays
+  // non-scrollable. Once it becomes scrollable, the direct measurement above
+  // takes over and replaces this estimate.
+  if (cached !== undefined && cached.devicePixelRatio === devicePixelRatio) {
+    return cached.size;
   }
 
   // Fall back to a probe div appended to `element`. `scrollbar-width` is not
   // inherited, so copy it from the target element's computed style; otherwise
   // a parent that opts into `scrollbar-width: thin` would still be measured
   // with default scrollbar size.
-  const doc = ownerDocument(element);
-  const view = doc.defaultView;
   const scrollDiv = doc.createElement('div');
   scrollDiv.style.width = '99px';
   scrollDiv.style.height = '99px';
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.overflow = 'scroll';
-  if (view) {
-    const computed = view.getComputedStyle(htmlElement);
-    if (computed.scrollbarWidth) {
-      scrollDiv.style.scrollbarWidth = computed.scrollbarWidth;
-    }
+  if (computed?.scrollbarWidth) {
+    scrollDiv.style.scrollbarWidth = computed.scrollbarWidth;
   }
   scrollDiv.className = 'scrollDiv';
   element.appendChild(scrollDiv);
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
   element.removeChild(scrollDiv);
 
-  scrollbarSizeCache.set(element, size);
+  scrollbarSizeCache.set(element, { size, devicePixelRatio, measuredDirectly: false });
 
   return size;
+}
+
+function parseCSSPixelValue(value: string | undefined) {
+  const parsedValue = Number.parseFloat(value ?? '0');
+  return Number.isNaN(parsedValue) ? 0 : parsedValue;
 }
 
 function eslintUseValue(_: any) {}

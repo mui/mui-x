@@ -2,7 +2,7 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { warnOnce } from '@mui/x-internals/warning';
 import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
-import { type ChartImageExportOptions } from './useChartProExport.types';
+import type { ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
 export const getDrawDocument = async () => {

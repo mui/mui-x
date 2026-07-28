@@ -1,6 +1,10 @@
 import { ChartsRotationAxis } from './ChartsRotationAxis';
 
-export { ChartsRotationAxis } from './ChartsRotationAxis';
+export {
+  ChartsRotationAxis,
+  type ChartsRotationAxisSlots,
+  type ChartsRotationAxisSlotProps,
+} from './ChartsRotationAxis';
 /**
  * @deprecated rotation axis is now stable, import `ChartsRotationAxis` instead
  */

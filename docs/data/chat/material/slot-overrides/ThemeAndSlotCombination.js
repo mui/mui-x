@@ -3,12 +3,12 @@ import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ChatBox } from '@mui/x-chat';
 
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 const adapter = createEchoAdapter();
 
@@ -54,7 +54,9 @@ export default function ThemeAndSlotCombination() {
         initialActiveConversationId={minimalConversation.id}
         initialConversations={[minimalConversation]}
         initialMessages={minimalMessages}
-        slots={{ messageAvatar: BotAvatar }}
+        slots={{
+          messageAvatar: BotAvatar,
+        }}
         sx={{
           height: 500,
           border: '1px solid',

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
-import { PickerOwnerState } from '../../models';
+import type { PickerOwnerState } from '../../models';
 import { usePickerPrivateContext } from './usePickerPrivateContext';
 
 export function useToolbarOwnerState() {

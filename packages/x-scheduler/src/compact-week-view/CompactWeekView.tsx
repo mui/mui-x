@@ -1,16 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
-import { CompactWeekViewProps } from './CompactWeekView.types';
+import type { CompactWeekViewProps } from './CompactWeekView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import {
-  DayTimeGridInternalRenderers,
-  DayTimeGridInternalRenderersContext,
-} from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
-import { createDayTimeGridViewConfig } from '../internals/utils/day-time-grid-view-config';
+import type { DayTimeGridInternalRenderers } from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
+import { DayTimeGridInternalRenderersContext } from '../internals/components/day-time-grid/DayTimeGridInternalRenderersContext';
+import { createDayTimeGridViewDefinition } from '../internals/utils/day-time-grid-view-definition';
 import { TimeGridEventTouch } from '../internals/components/event/time-grid-event/TimeGridEventTouch';
 
-const COMPACT_WEEK_VIEW_CONFIG = createDayTimeGridViewConfig(7);
+const COMPACT_WEEK_VIEW_DEFINITION = createDayTimeGridViewDefinition(7);
 
 const COMPACT_WEEK_VIEW_RENDERERS: DayTimeGridInternalRenderers = {
   timeGridEvent: TimeGridEventTouch,
@@ -25,7 +23,7 @@ export const CompactWeekView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     // Feature hooks
-    const { days } = useEventCalendarView(COMPACT_WEEK_VIEW_CONFIG);
+    const { days } = useEventCalendarView(COMPACT_WEEK_VIEW_DEFINITION);
 
     return (
       <DayTimeGridInternalRenderersContext.Provider value={COMPACT_WEEK_VIEW_RENDERERS}>

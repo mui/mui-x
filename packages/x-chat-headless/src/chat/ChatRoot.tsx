@@ -88,6 +88,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     streamFlushInterval,
     partRenderers,
     storeClass,
+    features,
     ...other
   } = props;
 
@@ -130,6 +131,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       partRenderers={partRenderers}
       storeClass={storeClass}
       roleDisplayNames={roleDisplayNames}
+      features={features}
     >
       <ChatLocaleProvider localeText={localeText}>
         {(() => {
