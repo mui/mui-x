@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { ErrorContainerClasses } from './error-container/errorContainerClasses';
-import { EventSkeletonClasses } from './event-skeleton/eventSkeletonClasses';
+import type { ErrorContainerClasses } from './error-container/errorContainerClasses';
+import type { EventSkeletonClasses } from './event-skeleton/eventSkeletonClasses';
 
 /**
  * Styling injected by the consuming product into the shared internal components

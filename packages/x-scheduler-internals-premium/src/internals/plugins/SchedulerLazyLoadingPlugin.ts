@@ -1,13 +1,13 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
-import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import {
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type {
   SchedulerState,
   SchedulerParameters,
   SchedulerStore,
-  buildEventsState,
   SchedulerEventParameters,
   SchedulerPersistEventsResult,
 } from '@mui/x-scheduler-internals/internals';
+import { buildEventsState } from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
 
@@ -24,8 +24,7 @@ export class SchedulerLazyLoadingPlugin<
   private isFetchScheduled = false;
   private pendingIsInstantLoad = false;
   private pendingComputeRange:
-    | (() => { start: TemporalSupportedObject; end: TemporalSupportedObject })
-    | null = null;
+    (() => { start: TemporalSupportedObject; end: TemporalSupportedObject }) | null = null;
 
   /**
    * Range key of the most recently requested fetch. Used to skip stale fetches:

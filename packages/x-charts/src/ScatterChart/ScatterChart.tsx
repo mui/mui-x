@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import type { MakeOptional } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import type { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 import type { ChartsSlots, ChartsSlotProps } from '../internals/material';
 import { ScatterPlot } from './ScatterPlot';
@@ -61,7 +62,9 @@ export interface ScatterChartSlotProps
    * Slot props for the tooltip component.
    * @default {}
    */
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides;
+  tooltip?: WithDataAttributes<
+    Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides
+  >;
 }
 
 export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
@@ -130,8 +133,7 @@ export interface ScatterChartProps
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?:
-    | ScatterPlotProps['onItemClick']
-    | UseChartClosestPointSignature['params']['onItemClick'];
+    ScatterPlotProps['onItemClick'] | UseChartClosestPointSignature['params']['onItemClick'];
 }
 
 /**

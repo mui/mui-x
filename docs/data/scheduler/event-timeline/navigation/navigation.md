@@ -8,7 +8,7 @@ components: EventTimelinePremium
 
 # Event Timeline - Navigation
 
-<p class="description">Navigate in time to find the events you are looking for.</p>
+<p class="description">Control the visible date and navigate programmatically with the imperative API.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -42,7 +42,7 @@ return (
 
 ## Imperative API
 
-To use the `apiRef` object, you need to initialize it using `useEventTimelinePremiumApiRef()` hook as follows:
+To use the `apiRef` object, initialize it with the `useEventTimelinePremiumApiRef()` hook:
 
 ```tsx
 const apiRef = useEventTimelinePremiumApiRef();
@@ -68,7 +68,7 @@ apiRef.current.setVisibleDate({
 
 {{"demo": "ApiMethodSetVisibleDate.js", "defaultCodeOpen": false}}
 
-### Navigate to the next/previous range
+### Navigate to the next and previous range
 
 Use the `goToNextVisibleDate()` and `goToPreviousVisibleDate()` API methods to navigate forward and backward in time.
 The step size is automatically determined by the current view:

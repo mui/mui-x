@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import {
+import type {
   SchedulerEventOccurrence,
   SchedulerResource,
   TemporalSupportedObject,

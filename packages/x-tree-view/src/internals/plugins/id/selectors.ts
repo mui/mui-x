@@ -1,6 +1,6 @@
 import { createSelector } from '@mui/x-internals/store';
-import { MinimalTreeViewState } from '../../MinimalTreeViewStore';
-import { TreeViewItemId } from '../../../models';
+import type { MinimalTreeViewState } from '../../MinimalTreeViewStore';
+import type { TreeViewItemId } from '../../../models';
 
 const treeIdSelector = createSelector(
   (state: MinimalTreeViewState<any, any>) => state.providedTreeId ?? state.treeId,

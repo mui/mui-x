@@ -1,4 +1,4 @@
-import { TreeViewItemId } from '../../../models';
+import type { TreeViewItemId } from '../../../models';
 
 export interface RichTreeViewLazyLoadedItemsStatus {
   loading: Record<TreeViewItemId, boolean>;

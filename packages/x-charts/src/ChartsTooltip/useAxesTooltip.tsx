@@ -41,8 +41,7 @@ import type { MarkShape } from '../models/seriesType';
 
 export interface UseAxesTooltipReturnValue<
   SeriesType extends CartesianChartSeriesType | PolarChartSeriesType =
-    | Exclude<CartesianChartSeriesType, 'ohlc'>
-    | PolarChartSeriesType,
+    Exclude<CartesianChartSeriesType, 'ohlc'> | PolarChartSeriesType,
   AxisValueT extends string | number | Date = string | number | Date,
 > {
   axisDirection: SeriesType extends CartesianChartSeriesType ? 'x' | 'y' : 'rotation' | 'radius';
@@ -120,8 +119,7 @@ function getSeriesMark<SeriesType extends CartesianChartSeriesType | PolarChartS
  */
 export function useAxesTooltip<
   SeriesType extends CartesianChartSeriesType | PolarChartSeriesType =
-    | Exclude<CartesianChartSeriesType, 'ohlc'>
-    | PolarChartSeriesType,
+    Exclude<CartesianChartSeriesType, 'ohlc'> | PolarChartSeriesType,
 >(params?: UseAxesTooltipParams): UseAxesTooltipReturnValue<SeriesType>[] | null {
   const { directions } = params ?? {};
 

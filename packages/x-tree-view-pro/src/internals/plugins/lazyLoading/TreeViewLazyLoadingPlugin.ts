@@ -1,17 +1,17 @@
+import type { TreeViewEventParameters, TreeViewEventEvent } from '@mui/x-tree-view/internals';
 import {
   itemsSelectors,
   lazyLoadingSelectors,
   TREE_VIEW_ROOT_PARENT_ID,
   expansionSelectors,
   selectionSelectors,
-  TreeViewEventParameters,
-  TreeViewEventEvent,
 } from '@mui/x-tree-view/internals';
-import { TreeViewItemId, TreeViewValidItem } from '@mui/x-tree-view/models';
-import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
-import { RichTreeViewProStore } from '../../RichTreeViewProStore/RichTreeViewProStore';
+import type { TreeViewItemId, TreeViewValidItem } from '@mui/x-tree-view/models';
+import type { DataSourceCache } from '@mui/x-tree-view/utils';
+import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
+import type { RichTreeViewProStore } from '../../RichTreeViewProStore/RichTreeViewProStore';
 import { NestedDataManager } from './utils';
-import { DataSource } from './types';
+import type { DataSource } from './types';
 
 export const TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE = {
   loading: {},
@@ -76,6 +76,9 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       }
 
       if (store.parameters.items.length) {
+        // Seed the cache so re-expanding a preloaded branch does not refetch it.
+        plugin.cacheInlineChildren(store.parameters.items);
+
         const newlyExpandableItems = getExpandableItemsFromDataSource(
           store,
           store.parameters.dataSource!,
@@ -219,19 +222,35 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       ? this.store.parameters.getItemChildren(item)
       : item.children) ?? [];
 
-  private processNestedItemChildren = (items: R[]) => {
-    const { getChildrenCount } = this.store.parameters.dataSource!;
-
+  private forEachInlineChildren = (
+    items: readonly R[],
+    visit: (itemId: TreeViewItemId, children: R[]) => void,
+  ) => {
     for (const item of items) {
       const children = this.getInlineChildren(item);
       if (children.length === 0) {
         continue;
       }
       const itemId = this.getItemId(item);
+      visit(itemId, children);
+      this.forEachInlineChildren(children, visit);
+    }
+  };
+
+  private cacheInlineChildren = (items: readonly R[]) => {
+    // Only the cache is seeded; these items already live in the tree state on mount.
+    this.forEachInlineChildren(items, (itemId, children) => {
+      this.cache.set(itemId, children);
+    });
+  };
+
+  private processNestedItemChildren = (items: R[]) => {
+    const { getChildrenCount } = this.store.parameters.dataSource!;
+
+    this.forEachInlineChildren(items, (itemId, children) => {
       this.cache.set(itemId, children);
       this.store.items.setItemChildren({ items: children, parentId: itemId, getChildrenCount });
-      this.processNestedItemChildren(children);
-    }
+    });
   };
 
   public fetchItemChildren = async ({

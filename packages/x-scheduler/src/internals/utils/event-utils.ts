@@ -1,5 +1,5 @@
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 
 export function isOccurrenceAllDayOrMultipleDay(
   occurrence: SchedulerRenderableEventOccurrence,

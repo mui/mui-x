@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { RichTreeViewClasses } from './richTreeViewClasses';
-import {
+import type * as React from 'react';
+import type { Theme } from '@mui/material/styles';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { RichTreeViewClasses } from './richTreeViewClasses';
+import type {
   RichTreeViewItemsSlotProps,
   RichTreeViewItemsSlots,
 } from '../internals/components/RichTreeViewItems';
-import {
+import type {
   TreeViewSlotProps,
   TreeViewSlots,
 } from '../internals/TreeViewProvider/TreeViewStyleContext';
-import { RichTreeViewStore } from '../internals/RichTreeViewStore';
-import { TreeViewValidItem } from '../models/items';
-import { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
-import { TreeViewPublicAPI } from '../internals/models';
+import type { RichTreeViewStore } from '../internals/RichTreeViewStore';
+import type { TreeViewValidItem } from '../models/items';
+import type { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
+import type { TreeViewPublicAPI } from '../internals/models';
 
 export interface RichTreeViewSlots extends TreeViewSlots, Omit<RichTreeViewItemsSlots, 'root'> {
   /**

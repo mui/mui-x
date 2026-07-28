@@ -1,12 +1,12 @@
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { Theme } from '@mui/material/styles';
-import {
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import type {
   EventCalendarParameters,
   EventCalendarSchedulerParametersOverrides,
   EventCalendarStore,
 } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
-import { EventCalendarLocaleText } from '../models/translations';
+import type { EventCalendarLocaleText } from '../models/translations';
 import type { EventCalendarClasses } from './eventCalendarClasses';
 
 export type EventCalendarApiRef<

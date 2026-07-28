@@ -2,14 +2,14 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import { GridRowType } from '@mui/x-scheduler-internals/models';
+import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
   describeConformance,
   SchedulerStoreRunner,
-  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 
 describe('<CalendarGrid.DayCell />', () => {

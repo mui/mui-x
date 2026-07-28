@@ -232,6 +232,10 @@ export function useGridColumns(
 
   const setColumnIndex = React.useCallback<GridColumnReorderApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
+      const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return;
+      }
       const allColumns = gridColumnFieldsSelector(apiRef);
       const oldIndexPosition = getColumnIndexRelativeToVisibleColumns(field);
       if (oldIndexPosition === targetIndexPosition) {
@@ -249,7 +253,7 @@ export function useGridColumns(
       });
 
       const params: GridColumnOrderChangeParams = {
-        column: apiRef.current.getColumn(field),
+        column,
         targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(field),
         oldIndex: oldIndexPosition,
       };

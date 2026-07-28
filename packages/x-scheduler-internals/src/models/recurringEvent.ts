@@ -35,8 +35,7 @@ type RecurringEventByDayOrdinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
  * When used with a monthly frequency, it needs to be an ordinal and a weekday (e.g: "2TU", "-1FR").
  */
 export type RecurringEventByDayValue =
-  | RecurringEventWeekDayCode
-  | `${RecurringEventByDayOrdinal}${RecurringEventWeekDayCode}`;
+  RecurringEventWeekDayCode | `${RecurringEventByDayOrdinal}${RecurringEventWeekDayCode}`;
 
 /**
  * The recurrence rule to convert a single event into a series of occurrences.

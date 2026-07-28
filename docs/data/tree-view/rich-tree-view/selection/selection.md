@@ -113,6 +113,19 @@ The example below demonstrates the usage of the `selectionPropagation` prop.
 This feature only works when multi-selection is enabled using `props.multiSelect`.
 :::
 
+### Propagation with disabled items
+
+When `selectionPropagation` is enabled, items that cannot be selected — whether disabled via `isItemDisabled`, the item's `disabled` property, or non-selectable via `isItemSelectionDisabled` — are excluded from the selection count.
+This means:
+
+- **Selecting a parent** propagates only to its selectable descendants — non-selectable items are skipped.
+- **Selecting all selectable children** auto-selects the parent, even if some siblings are non-selectable.
+
+In the example below, some items are marked as out of stock (disabled).
+Try selecting a parent to see that only available items are selected, or select all available children to see the parent become checked automatically.
+
+{{"demo": "SelectionPropagationDisabled.js"}}
+
 ### Apply propagation on mount
 
 You can use the `useApplyPropagationToSelectedItemsOnMount()` to apply the selection propagation to your `defaultSelectedItems` or `selectedItems` prop.

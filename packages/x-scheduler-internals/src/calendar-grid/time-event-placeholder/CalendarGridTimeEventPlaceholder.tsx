@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { CalendarGridTimeEventPlaceholderCssVars } from './CalendarGridTimeEventPlaceholderCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useEvent } from '../../internals/utils/useEvent';
@@ -24,13 +24,20 @@ export const CalendarGridTimeEventPlaceholder = React.forwardRef(
       ...elementProps
     } = componentProps;
 
-    const { start: columnStart, end: columnEnd } = useCalendarGridTimeColumnContext();
+    const {
+      start: columnStart,
+      end: columnEnd,
+      dayStartMinute,
+      dayEndMinute,
+    } = useCalendarGridTimeColumnContext();
 
     const { position, duration } = useElementPositionInCollection({
       start,
       end,
       collectionStart: columnStart,
       collectionEnd: columnEnd,
+      dayStartMinute,
+      dayEndMinute,
     });
 
     const { state } = useEvent({ start, end });

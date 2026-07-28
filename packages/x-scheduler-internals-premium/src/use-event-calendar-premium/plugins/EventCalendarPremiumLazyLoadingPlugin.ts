@@ -1,6 +1,6 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
-import {
+import type {
   EventCalendarPremiumState,
   EventCalendarPremiumParameters,
 } from '../EventCalendarPremiumStore.types';
@@ -20,7 +20,7 @@ export class EventCalendarPremiumLazyLoadingPlugin<
       store.registerStoreEffect(
         (state) => {
           const visibleDays =
-            state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
+            state.viewDefinition?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
 
           if (visibleDays.length === 0) {
             return null;
@@ -37,8 +37,9 @@ export class EventCalendarPremiumLazyLoadingPlugin<
 
           this.scheduleFetch(() => {
             const days =
-              store.state.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ??
-              [];
+              store.state.viewDefinition?.visibleDaysSelector?.(
+                store.state as EventCalendarState,
+              ) ?? [];
             return {
               start: days[0].value,
               end: days[days.length - 1].value,

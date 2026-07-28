@@ -2,7 +2,7 @@ import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { RichTreeViewProStore } from '../../RichTreeViewProStore';
+import type { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 interface ItemType {
   id: string;
@@ -334,6 +334,56 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.isItemExpanded('2')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2', '2-1']);
       });
+
+      it('should not refetch children from props.items when re-expanding a preloaded item', async () => {
+        const getTreeItems = spy(mockFetchData);
+        const view = render({
+          items: [{ id: '1', childrenCount: 1, children: [{ id: '1-1' }] }],
+          defaultExpandedItems: ['1'],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+
+        fireEvent.click(view.getItemContent('1'));
+        expect(view.isItemExpanded('1')).to.equal(false);
+
+        // Seeded cache means re-expanding refetches nothing.
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+
+        expect(getTreeItems.callCount).to.equal(0);
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+      });
+
+      it('should still fetch a genuinely lazy sibling that ships no inline children', async () => {
+        const getTreeItems = spy(mockFetchData);
+        const view = render({
+          items: [
+            { id: '1', childrenCount: 1, children: [{ id: '1-1' }] },
+            { id: '2', childrenCount: 1 },
+          ],
+          defaultExpandedItems: ['1'],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2']);
+
+        // Item 2 declares children but ships none inline, so expanding must fetch.
+        fireEvent.click(view.getItemContent('2'));
+        await awaitMockFetch();
+
+        expect(getTreeItems.callCount).to.equal(1);
+        expect(getTreeItems.lastCall.firstArg).to.equal('2');
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2', '2-1']);
+      });
     });
     describe('onItemsLazyLoaded', () => {
       it('should call onItemsLazyLoaded with (items, null) when root items are fetched', async () => {
@@ -401,6 +451,31 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         fireEvent.click(view.getItemContent('1'));
         await awaitMockFetch();
         expect(onItemsLazyLoaded.callCount).to.equal(2);
+        expect(onItemsLazyLoaded.lastCall.args[0].parentId).to.equal('1');
+        expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(true);
+      });
+
+      it('should call onItemsLazyLoaded with isCacheHit=true when re-expanding a preloaded item', async () => {
+        const onItemsLazyLoaded = spy();
+        const view = render({
+          items: [{ id: '1', childrenCount: 1, children: [{ id: '1-1' }] }],
+          defaultExpandedItems: ['1'],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+          onItemsLazyLoaded,
+        });
+
+        // Children come from props.items, so nothing loads on mount.
+        expect(onItemsLazyLoaded.callCount).to.equal(0);
+
+        // Seeded cache makes re-expanding a cache hit, not a fetch.
+        fireEvent.click(view.getItemContent('1'));
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+
+        expect(onItemsLazyLoaded.callCount).to.equal(1);
         expect(onItemsLazyLoaded.lastCall.args[0].parentId).to.equal('1');
         expect(onItemsLazyLoaded.lastCall.args[0].isCacheHit).to.equal(true);
       });

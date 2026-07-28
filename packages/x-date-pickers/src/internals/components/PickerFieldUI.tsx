@@ -472,8 +472,7 @@ export function useFieldTextFieldProps<TProps extends UseFieldOwnerStateParamete
   ) {
     const prevOnFocus = (textFieldProps as any).onFocus as React.FocusEventHandler | undefined;
     const prevOnMouseDown = (textFieldProps as any).onMouseDown as
-      | React.MouseEventHandler
-      | undefined;
+      React.MouseEventHandler | undefined;
 
     const isFromOpenButton = (event: React.SyntheticEvent) => {
       const nativeEvent: any = (event as any).nativeEvent ?? event;

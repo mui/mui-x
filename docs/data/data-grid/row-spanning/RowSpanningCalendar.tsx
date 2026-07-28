@@ -15,13 +15,7 @@ const slotTimesLookup = {
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 type Subject =
-  | 'Maths'
-  | 'English'
-  | 'Lab'
-  | 'Chemistry'
-  | 'Physics'
-  | 'Music'
-  | 'Dance';
+  'Maths' | 'English' | 'Lab' | 'Chemistry' | 'Physics' | 'Music' | 'Dance';
 
 type Row = { id: number; time: string; slots: Array<Subject | ''> };
 

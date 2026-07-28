@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { getNavigationTarget, DEFAULT_ROW_TYPES, NavigationOptions } from './getNavigationTarget';
+import type { NavigationOptions } from './getNavigationTarget';
+import { getNavigationTarget, DEFAULT_ROW_TYPES } from './getNavigationTarget';
 
 /**
  * Default options for week/day views: 3 row types, 7 columns, 1 row per type.

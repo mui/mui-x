@@ -79,6 +79,7 @@
 /x/api/charts/scatter-series-type/ /x/api/charts/scatter-series/ 301
 # 2026
 /x/react-chat/customization/ /x/react-chat/customization/overview/ 301
+/x/api/x-chat/* /x/api/chat/:splat 301
 /x/api/charts/chart-container/ /x/api/charts/charts-container/ 301
 /x/api/charts/chart-container-pro/ /x/api/charts/charts-container-pro/ 301
 /x/api/charts/chart-container-premium/ /x/api/charts/charts-container-premium/ 301

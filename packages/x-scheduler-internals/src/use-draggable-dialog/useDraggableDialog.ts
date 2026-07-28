@@ -3,7 +3,7 @@ import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/prevent-unhandled';
-import { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/types';
+import type { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/types';
 
 const getDeltas = (location: DragLocationHistory) => {
   const deltaX = location.current.input.clientX - location.initial.input.clientX;

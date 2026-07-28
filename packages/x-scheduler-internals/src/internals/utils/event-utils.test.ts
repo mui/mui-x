@@ -1,5 +1,10 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
-import { getDaysTheOccurrenceIsVisibleOn } from './event-utils';
+import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  getDaysTheOccurrenceIsVisibleOn,
+  getEventResourceIds,
+  getOccurrencesFromEvents,
+  getPrimaryResourceId,
+} from './event-utils';
 import { processDate } from '../../process-date';
 
 describe('event-utils', () => {
@@ -62,6 +67,114 @@ describe('event-utils', () => {
 
       const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
       expect(result).toEqual([formattedDays[2], formattedDays[3], formattedDays[4]]);
+    });
+  });
+
+  describe('getEventResourceIds', () => {
+    it('should return an empty array when the resource is null', () => {
+      expect(getEventResourceIds(null)).toEqual([]);
+    });
+
+    it('should return an empty array when the resource is undefined', () => {
+      expect(getEventResourceIds(undefined)).toEqual([]);
+    });
+
+    it('should wrap a single resource ID in an array', () => {
+      expect(getEventResourceIds('resource-1')).toEqual(['resource-1']);
+    });
+
+    it('should return the array as-is when the resource is already an array', () => {
+      expect(getEventResourceIds(['resource-1', 'resource-2'])).toEqual([
+        'resource-1',
+        'resource-2',
+      ]);
+    });
+
+    it('should return an empty array when the resource is an empty array', () => {
+      expect(getEventResourceIds([])).toEqual([]);
+    });
+  });
+
+  describe('getPrimaryResourceId', () => {
+    it('should return null when the resource is null', () => {
+      expect(getPrimaryResourceId(null)).toBeNull();
+    });
+
+    it('should return null when the resource is undefined', () => {
+      expect(getPrimaryResourceId(undefined)).toBeNull();
+    });
+
+    it('should return the resource ID when it is a single value', () => {
+      expect(getPrimaryResourceId('resource-1')).toBe('resource-1');
+    });
+
+    it('should return the first resource ID when the resource is an array', () => {
+      expect(getPrimaryResourceId(['resource-1', 'resource-2'])).toBe('resource-1');
+    });
+
+    it('should return null when the resource is an empty array', () => {
+      expect(getPrimaryResourceId([])).toBeNull();
+    });
+  });
+
+  describe('getOccurrencesFromEvents', () => {
+    const start = adapter.date('2024-01-14', 'default');
+    const end = adapter.date('2024-01-18', 'default');
+    const resourceA = ResourceBuilder.new().build();
+    const resourceB = ResourceBuilder.new().build();
+
+    it('should include an event assigned to multiple resources when at least one is visible', () => {
+      const event = EventBuilder.new(adapter)
+        .resources([resourceA, resourceB])
+        .singleDay('2024-01-15T10:00:00Z')
+        .toProcessed();
+
+      const result = getOccurrencesFromEvents({
+        adapter,
+        start,
+        end,
+        events: [event],
+        visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
+        displayTimezone: 'default',
+        recurringEventsPlugin: null,
+      });
+
+      expect(result.map((o) => o.id)).toEqual([event.id]);
+    });
+
+    it('should exclude an event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new(adapter)
+        .resources([resourceA, resourceB])
+        .singleDay('2024-01-15T10:00:00Z')
+        .toProcessed();
+
+      const result = getOccurrencesFromEvents({
+        adapter,
+        start,
+        end,
+        events: [event],
+        visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
+        displayTimezone: 'default',
+        recurringEventsPlugin: null,
+      });
+
+      expect(result).toHaveLength(0);
+    });
+
+    it('should include an event with no resource regardless of the visibleResources map', () => {
+      const event = EventBuilder.new(adapter).singleDay('2024-01-15T10:00:00Z').toProcessed();
+
+      const result = getOccurrencesFromEvents({
+        adapter,
+        start,
+        end,
+        events: [event],
+        visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
+        displayTimezone: 'default',
+        recurringEventsPlugin: null,
+      });
+
+      expect(result.map((o) => o.id)).toEqual([event.id]);
     });
   });
 });

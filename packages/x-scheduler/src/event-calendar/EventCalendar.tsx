@@ -9,7 +9,7 @@ import {
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
-import { EventCalendarProps } from './EventCalendar.types';
+import type { EventCalendarProps } from './EventCalendar.types';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
@@ -116,6 +116,10 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   */
+  collapsedResources: PropTypes.object,
+  /**
    * Data source for fetching events asynchronously.
    * When provided, events are fetched through the data source instead of the `events` prop.
    */
@@ -130,6 +134,12 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    * @default enUS (English)
    */
   dateLocale: PropTypes.object,
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources: PropTypes.object,
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
@@ -225,6 +235,10 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    */
   localeText: PropTypes.object,
   /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange: PropTypes.func,
+  /**
    * Callback fired when some event of the calendar change.
    */
   onEventsChange: PropTypes.func,
@@ -308,6 +322,22 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    * The view currently displayed in the calendar.
    */
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
+  /**
+   * Configuration applied to each view, keyed by the view name.
+   * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { week: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig: PropTypes.shape({
+    day: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+    week: PropTypes.shape({
+      endTime: PropTypes.number,
+      startTime: PropTypes.number,
+    }),
+  }),
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

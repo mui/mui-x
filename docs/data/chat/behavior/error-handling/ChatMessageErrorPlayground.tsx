@@ -30,10 +30,13 @@ const conversation: ChatConversation = {
 };
 
 const message: ChatMessageEntity = {
+  // A user message: the built-in retry button only renders for user messages
+  // (retrying re-sends the original prompt), so the `retryable` toggle below is
+  // only meaningful here.
   id: 'error-msg',
   conversationId: conversation.id,
-  role: 'assistant',
-  author: users.assistant,
+  role: 'user',
+  author: users.me,
   createdAt: '2026-05-03T10:00:00.000Z',
   status: 'error',
   parts: [{ type: 'text', text: 'This message failed to send.' }],
@@ -62,22 +65,7 @@ export default function ChatMessageErrorPlayground() {
   const [code, setCode] = React.useState<ErrorCode>('SEND_ERROR');
   const [retryable, setRetryable] = React.useState(true);
   const [text, setText] = React.useState('Could not reach the chat server.');
-  const [lastRetryAt, setLastRetryAt] = React.useState<string | null>(null);
   const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
-
-  // The user can't pass onRetry directly through the headless adapter slot,
-  // but we can subscribe to the retry button click via the global event bus on
-  // the store. For the demo we attach a global listener that ticks the
-  // "last retry" indicator below.
-  // In a real app, call useChat().retry(messageId) instead — this event bus
-  // exists only so the demo caption can observe the click.
-  React.useEffect(() => {
-    function onRetry() {
-      setLastRetryAt(new Date().toLocaleTimeString());
-    }
-    document.addEventListener('mui-x-chat-demo-retry', onRetry);
-    return () => document.removeEventListener('mui-x-chat-demo-retry', onRetry);
-  }, []);
 
   const errorRowSx = classesCustomizations.toClassesSx();
 
@@ -145,25 +133,19 @@ export default function ChatMessageErrorPlayground() {
               display: 'flex',
               flexDirection: 'column',
               gap: 1,
-              ...(errorRowSx as object),
-            }}
-            onClickCapture={(event) => {
-              const target = event.target as HTMLElement;
-              if (target.closest('.MuiChatMessageError-retryButton')) {
-                document.dispatchEvent(new CustomEvent('mui-x-chat-demo-retry'));
-              }
+              ...errorRowSx,
             }}
           >
+            {/*
+              The retry button rendered inside ChatMessageError already calls the
+              public useChat().retry(messageId) action for you — no extra wiring
+              is needed here.
+            */}
             <ChatMessage messageId={message.id} />
             <Typography variant="caption" color="text.secondary" sx={{ pl: 1 }}>
               {enabled
-                ? `ChatError — code: ${code} · source: send · retryable: ${retryable}`
+                ? `ChatError — code: ${code} · retryable: ${retryable}`
                 : 'Error disabled'}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ pl: 1 }}>
-              {lastRetryAt
-                ? `Last retry click: ${lastRetryAt}`
-                : 'Click "Retry" to fire onRetry — observed here.'}
             </Typography>
           </Box>
         </ScopedChat>
