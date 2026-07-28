@@ -30,6 +30,7 @@ import type {
   SchedulerInstanceName,
 } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
 import type {
   SchedulerEvents,
   SchedulerEventListener,
@@ -41,6 +42,7 @@ import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
+  getCustomEventProperties,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
@@ -88,6 +90,11 @@ export class SchedulerStore<
   protected timeoutManager = this.disposables.use(new TimeoutManager());
 
   private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
+
+  /**
+   * Plugin that provides event-scheduling support (dependencies). `null` when not attached.
+   */
+  protected schedulingPlugin: SchedulerSchedulingPluginInterface | null = null;
 
   public constructor(
     parameters: Parameters,
@@ -423,14 +430,31 @@ export class SchedulerStore<
     const createdIds: SchedulerEventId[] = [];
     const createdEvents: TEvent[] = [];
     for (const createdEvent of created) {
+      // Events created from an existing one (split, duplicate, paste) inherit its custom fields.
+      const source =
+        createdEvent.extractedFromId == null
+          ? undefined
+          : originalEventModelLookup.get(createdEvent.extractedFromId);
       const response = createEventModel(
-        createdEvent,
+        source ? { ...getCustomEventProperties(source), ...createdEvent } : createdEvent,
         this.state.eventModelStructure,
         this.state.adapter,
       );
       newEvents.push(response.model);
       createdEvents.push(response.model);
       createdIds.push(response.id);
+    }
+
+    this.schedulingPlugin?.handleEventsUpdate(parameters);
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (!this.parameters.onEventsChange && !this.parameters.dataSource) {
+        warnOnce([
+          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+          'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+          'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+        ]);
+      }
     }
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
@@ -608,6 +632,7 @@ export class SchedulerStore<
         scope,
       );
     }
+
     this.updateEvents(updatedEvents);
 
     if (onSubmit) {

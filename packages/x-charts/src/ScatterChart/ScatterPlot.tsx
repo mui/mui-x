@@ -27,6 +27,9 @@ export interface ScatterPlotSlots extends ScatterSlots {
 }
 
 export interface ScatterPlotSlotProps extends ScatterSlotProps {
+  // Not widened with `data-*`: none of the default renderers (svg-single
+  // `Scatter`, svg-batch `BatchScatter`, progressive `ScatterAsync`) spread
+  // unknown props onto an element, so `data-*` here never reaches the DOM.
   scatter?: Partial<ScatterProps> & ScatterPropsOverrides;
 }
 

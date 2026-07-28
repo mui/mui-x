@@ -547,6 +547,110 @@ describe('useChatComposer', () => {
     }
   });
 
+  it('revokes a non-image attachment URL when its sent message is removed', async () => {
+    const objectUrls = mockObjectUrlApis();
+
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter: createAdapter(),
+        initialActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(
+        () => ({ composer: useChatComposer(), store: useChatStore() }),
+        { wrapper: Wrapper },
+      );
+
+      act(() => {
+        result.current.composer.addAttachment(
+          new File(['pdf-content'], 'doc.pdf', { type: 'application/pdf' }),
+        );
+      });
+
+      expect(result.current.composer.attachments[0].previewUrl).toBeUndefined();
+
+      await act(async () => {
+        await result.current.composer.submit();
+      });
+
+      expect(objectUrls.createObjectURL).toHaveBeenCalledTimes(1);
+      expect(objectUrls.revokeObjectURL).not.toHaveBeenCalledWith('blob:doc.pdf-1');
+
+      const userMessage = Object.values(result.current.store.state.messagesById).find(
+        (message) => message.role === 'user',
+      );
+      expect(userMessage).toBeDefined();
+
+      act(() => {
+        result.current.store.removeMessage(userMessage!.id);
+      });
+
+      await waitFor(() => {
+        expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:doc.pdf-1');
+      });
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
+  it('revokes a submitted non-image attachment URL on unmount', async () => {
+    const objectUrls = mockObjectUrlApis();
+
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter: createAdapter(),
+        initialActiveConversationId: 'c1',
+      });
+      const { result, unmount } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.addAttachment(
+          new File(['pdf-content'], 'doc.pdf', { type: 'application/pdf' }),
+        );
+      });
+
+      await act(async () => {
+        await result.current.submit();
+      });
+
+      unmount();
+
+      expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:doc.pdf-1');
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
+  it('revokes submission-created URLs when constructing file parts fails', async () => {
+    const objectUrls = mockObjectUrlApis();
+    objectUrls.createObjectURL
+      .mockReturnValueOnce('blob:first.pdf-1')
+      .mockImplementationOnce(() => {
+        throw new Error('Object URL creation failed');
+      });
+
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter: createAdapter(),
+        initialActiveConversationId: 'c1',
+      });
+      const { result } = renderHook(() => useChatComposer(), { wrapper: Wrapper });
+
+      act(() => {
+        result.current.addAttachment(new File(['first'], 'first.pdf', { type: 'application/pdf' }));
+        result.current.addAttachment(
+          new File(['second'], 'second.pdf', { type: 'application/pdf' }),
+        );
+      });
+
+      await expect(result.current.submit()).rejects.toThrow('Object URL creation failed');
+
+      expect(objectUrls.revokeObjectURL).toHaveBeenCalledWith('blob:first.pdf-1');
+      expect(result.current.attachments).toHaveLength(2);
+    } finally {
+      objectUrls.restore();
+    }
+  });
+
   it('keeps the original preview URL when the user types and adds a new attachment mid-flight on a successful send (#7)', async () => {
     const objectUrls = mockObjectUrlApis();
     let resolveSend!: (stream: ReadableStream<any>) => void;

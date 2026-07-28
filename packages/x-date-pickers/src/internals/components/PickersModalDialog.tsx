@@ -6,6 +6,7 @@ import MuiDialog, { dialogClasses } from '@mui/material/Dialog';
 import type { PaperProps as MuiPaperProps } from '@mui/material/Paper';
 import type { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { styled } from '@mui/material/styles';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { usePickerContext } from '../../hooks';
 import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
@@ -32,15 +33,15 @@ export interface PickersModalDialogSlotProps {
   /**
    * Props passed down to the [`Dialog`](https://mui.com/material-ui/api/dialog/) component.
    */
-  dialog?: Partial<MuiDialogProps>;
+  dialog?: WithDataAttributes<Partial<MuiDialogProps>>;
   /**
    * Props passed down to the mobile [Paper](https://mui.com/material-ui/api/paper/) component.
    */
-  mobilePaper?: Partial<MuiPaperProps>;
+  mobilePaper?: WithDataAttributes<Partial<MuiPaperProps>>;
   /**
    * Props passed down to the mobile [Transition](https://mui.com/material-ui/transitions/) component.
    */
-  mobileTransition?: Partial<MuiTransitionProps>;
+  mobileTransition?: WithDataAttributes<Partial<MuiTransitionProps>>;
 }
 
 export interface PickersModalDialogProps {

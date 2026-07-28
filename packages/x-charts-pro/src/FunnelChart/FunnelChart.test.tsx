@@ -160,6 +160,29 @@ describe('FunnelChart', () => {
     });
   });
 
+  describe.skipIf(isJSDOM)('keyboard navigation', () => {
+    it('should remove the focus indicator when the focused section is removed', async () => {
+      const { container, user, setProps } = render(
+        <FunnelChart
+          {...config}
+          series={[{ id: 'A', data: [{ value: 200 }, { value: 100 }, { value: 50 }] }]}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowRight]');
+
+      expect(container.querySelector('path[fill="none"]')).not.to.equal(null);
+
+      // Shrinking the data leaves the focus on a section that no longer exists.
+      setProps({ series: [{ id: 'A', data: [{ value: 200 }, { value: 100 }] }] });
+
+      expect(container.querySelector('path[fill="none"]')).to.equal(null);
+    });
+  });
+
   describe.skipIf(isJSDOM)('gap', () => {
     it('should properly distance sections based on gap', async () => {
       render(<FunnelChart {...config} gap={13} />);
