@@ -2,11 +2,11 @@
 import * as React from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
-import { TreeViewAnyStore } from '../models';
-import { TreeViewStoreInContext } from '../TreeViewProvider';
+import type { TreeViewAnyStore } from '../models';
+import type { TreeViewStoreInContext } from '../TreeViewProvider';
 
 const SKELETON_LABEL_WIDTHS = ['40%', '70%', '55%', '50%', '65%'];
 const DEFAULT_SKELETON_ITEMS_COUNT = 5;
