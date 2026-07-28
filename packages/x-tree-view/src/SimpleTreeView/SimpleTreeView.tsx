@@ -7,7 +7,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
-import { SimpleTreeViewProps } from './SimpleTreeView.types';
+import type { SimpleTreeViewProps } from './SimpleTreeView.types';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { useExtractSimpleTreeViewParameters } from './useExtractSimpleTreeViewParameters';
 import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
@@ -116,7 +116,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   );
 }) as SimpleTreeViewComponent;
 
-SimpleTreeView.propTypes = {
+SimpleTreeView.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -1,18 +1,17 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { type ChartsClipPathProps } from '../ChartsClipPath';
-import { type ChartsRadialGridProps } from '../ChartsRadialGrid';
-import { type ChartsLegendSlotExtension } from '../ChartsLegend';
-import { type ChartsOverlayProps } from '../ChartsOverlay';
+import type { ChartsClipPathProps } from '../ChartsClipPath';
+import type { ChartsRadialGridProps } from '../ChartsRadialGrid';
+import type { ChartsLegendSlotExtension } from '../ChartsLegend';
+import type { ChartsOverlayProps } from '../ChartsOverlay';
 
-import { type ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
+import type { ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
 import type { RadialBarChartProps } from './RadialBarChart';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import {
-  RADIAL_BAR_CHART_PLUGINS,
-  type RadialBarChartPluginSignatures,
-} from './RadialBarChart.plugins';
+import type { ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
+import { RADIAL_BAR_CHART_PLUGINS } from './RadialBarChart.plugins';
+import type { RadialBarChartPluginSignatures } from './RadialBarChart.plugins';
 import { DEFAULT_ROTATION_AXIS_KEY } from '../constants';
 
 /**
@@ -40,6 +39,7 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
     skipAnimation,
     loading,
     showToolbar,
+    axisHighlight,
     ...other
   } = props;
 
@@ -85,6 +85,12 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
     plugins: RADIAL_BAR_CHART_PLUGINS,
   };
 
+  const isHorizontal = series.some((s) => s.layout === 'horizontal');
+  const axisHighlightProps: ChartsRadialAxisHighlightProps = {
+    ...(isHorizontal ? { radius: 'band' as const } : { rotation: 'band' as const }),
+    ...axisHighlight,
+  };
+
   const gridProps: ChartsRadialGridProps | undefined = grid;
 
   const clipPathGroupProps = {
@@ -120,6 +126,7 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
     clipPathGroupProps,
     overlayProps,
     legendProps,
+    axisHighlightProps,
     children,
   };
 };

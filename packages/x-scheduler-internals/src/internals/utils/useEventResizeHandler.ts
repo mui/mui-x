@@ -3,7 +3,7 @@ import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import type { useDraggableEvent } from './useDraggableEvent';
-import { SchedulerEventSide } from '../../models';
+import type { SchedulerEventSide } from '../../models';
 
 export function useEventResizeHandler(
   parameters: useEventResizeHandler.Parameters,

@@ -518,6 +518,54 @@ export interface GridClasses {
    */
   editLongTextCellTextarea: string;
   /**
+   * Styles applied to the multi-select cell root element.
+   */
+  multiSelectCell: string;
+  /**
+   * Styles applied to each chip in the multi-select cell.
+   */
+  multiSelectCellChip: string;
+  /**
+   * @ignore - do not document.
+   */
+  'multiSelectCellChip--hidden': string;
+  /**
+   * Styles applied to the overflow "+N" chip in the multi-select cell.
+   */
+  multiSelectCellOverflow: string;
+  /**
+   * Styles applied to the multi-select cell expand popup.
+   */
+  multiSelectCellPopup: string;
+  /**
+   * Styles applied to the multi-select cell popper content.
+   */
+  multiSelectCellPopperContent: string;
+  /**
+   * Styles applied to the edit multi-select cell root element.
+   */
+  editMultiSelectCell: string;
+  /**
+   * Styles applied to each chip in the edit multi-select cell.
+   */
+  editMultiSelectCellChip: string;
+  /**
+   * @ignore - do not document.
+   */
+  'editMultiSelectCellChip--hidden': string;
+  /**
+   * Styles applied to the overflow "+N" chip in the edit multi-select cell.
+   */
+  editMultiSelectCellOverflow: string;
+  /**
+   * Styles applied to the edit multi-select cell popup.
+   */
+  editMultiSelectCellPopup: string;
+  /**
+   * Styles applied to the edit multi-select cell popper content.
+   */
+  editMultiSelectCellPopperContent: string;
+  /**
    * Styles applied to the filter icon element.
    */
   filterIcon: string;
@@ -1200,6 +1248,18 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'editLongTextCellPopup',
   'editLongTextCellPopperContent',
   'editLongTextCellTextarea',
+  'multiSelectCell',
+  'multiSelectCellChip',
+  'multiSelectCellChip--hidden',
+  'multiSelectCellOverflow',
+  'multiSelectCellPopup',
+  'multiSelectCellPopperContent',
+  'editMultiSelectCell',
+  'editMultiSelectCellChip',
+  'editMultiSelectCellChip--hidden',
+  'editMultiSelectCellOverflow',
+  'editMultiSelectCellPopup',
+  'editMultiSelectCellPopperContent',
   'filler',
   'filterForm',
   'filterFormDeleteIcon',

@@ -1,24 +1,24 @@
 ---
 productId: x-chat
-title: Chat - Core realtime
+title: Chat - Core real-time
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core realtime
+# Chat - Core real-time
 
-<p class="description">Push typing, presence, read state, and collection changes into the runtime through the adapter's <code>subscribe()</code> method.</p>
+<p class="description">Push typing indicators, presence updates, read receipts, and conversation changes from your backend into the chat runtime in real time.</p>
 
-The adapter's `subscribe()` method enables push-based updates from the backend.
+Implement `subscribe()` on the adapter to push backend updates into the runtime.
 The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
 
-The following demo shows realtime events in action:
+The demo below shows real-time events flowing into the runtime:
 
 {{"demo": "../examples/realtime/RealtimeHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
 ## Subscription lifecycle
 
-When `ChatProvider` mounts and the adapter implements `subscribe()`, the runtime:
+When `ChatProvider` mounts and the adapter implements `subscribe()`, the runtime does the following:
 
 1. Calls `subscribe({ onEvent })` with a callback.
 2. Stores the returned cleanup function.
@@ -38,12 +38,11 @@ const adapter: ChatAdapter = {
 };
 ```
 
-The cleanup function can be returned directly or from a resolved promise, supporting both synchronous and asynchronous setup.
+Return the cleanup function directly or from a resolved promise to support synchronous or asynchronous setup.
 
 ## Event types
 
-The `onEvent` callback receives `ChatRealtimeEvent` objects.
-There are eight event variants:
+The `onEvent` callback receives `ChatRealtimeEvent` objects, grouped into the following variants:
 
 ### Conversation events
 
@@ -79,7 +78,7 @@ There are eight event variants:
 | :--------- | :---------------------------------------- | :------------------------------------ |
 | `read`     | `{ conversationId, messageId?, userId? }` | Updates the conversation's read state |
 
-## Consuming realtime state
+## Consuming real-time state
 
 ### Typing indicators
 
@@ -91,7 +90,7 @@ function TypingIndicator() {
 
   if (typingUserIds.length === 0) return null;
 
-  return <span>{typingUserIds.length} user(s) typing...</span>;
+  return <span>{typingUserIds.length} user(s) typing…</span>;
 }
 ```
 
@@ -100,8 +99,8 @@ For a specific conversation, use `chatSelectors.typingUserIds` with a conversati
 
 ### Presence
 
-Presence events update the `isOnline` field on `ChatUser` objects inside conversation participants.
-Use `useConversation(id)` or `useConversations()` to see participant presence.
+Presence events update the `isOnline` field on the `ChatUser` objects inside each conversation's participants.
+Call `useConversation(id)` or `useConversations()` to read participant presence.
 
 ### Read state
 
@@ -136,10 +135,10 @@ Here are the full shapes:
 
 ## See also
 
-- [Adapters](/x/react-chat/core/adapters/) for the full adapter interface including `subscribe()`.
-- [Hooks](/x/react-chat/core/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.
-- [Realtime](/x/react-chat/core/examples/realtime/) for a demo covering subscriptions, typing, and presence.
-- [Realtime thread sync](/x/react-chat/core/examples/realtime-thread-sync/) for add, update, and remove events.
+- See [Adapters](/x/react-chat/core/adapters/) for the full adapter interface, including `subscribe()`.
+- See [Hooks](/x/react-chat/core/hooks/) for `useChatStatus()` and the typing and presence consumption pattern.
+- See [Real-time example](/x/react-chat/core/examples/realtime/) for a demo covering subscriptions, typing, and presence.
+- See [Real-time thread sync](/x/react-chat/core/examples/realtime-thread-sync/) for add, update, and remove events.
 
 ## API
 

@@ -56,6 +56,7 @@ export function ChartsAccessibilityProxy() {
           div.setAttribute('tabindex', '0');
         }
         div.setAttribute('role', 'img');
+        div.setAttribute('aria-hidden', 'true');
         div.setAttribute(
           'aria-labelledby',
           i === 0 ? `voiceover-${chartId}-1` : `voiceover-${chartId}-2`,
@@ -108,7 +109,7 @@ export function ChartsAccessibilityProxy() {
 
   return (
     <div
-      role="presentation"
+      role="none"
       tabIndex={message ? undefined : 0}
       ref={containerRef}
       style={fullSizeLayerStyle}

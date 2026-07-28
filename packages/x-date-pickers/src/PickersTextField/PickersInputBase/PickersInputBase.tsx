@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
@@ -8,24 +9,39 @@ import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
+import type { PickersInputBaseClasses } from './pickersInputBaseClasses';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
-  PickersInputBaseClasses,
 } from './pickersInputBaseClasses';
-import { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersInputBaseProps } from './PickersInputBase.types';
+import type { PickersSectionElement, PickersSectionListSlotProps } from '../../PickersSectionList';
 import {
   Unstable_PickersSectionList as PickersSectionList,
   Unstable_PickersSectionListRoot as PickersSectionListRoot,
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
-  PickersSectionElement,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerTextFieldOwnerState } from '../../models/fields';
+import type { PickerOwnerState } from '../../models/pickers';
+
+function mergePickersInputBaseSectionContentSlotProps(
+  consumerSlotProps: PickersSectionListSlotProps['sectionContent'],
+  baseClassName: string,
+): PickersSectionListSlotProps['sectionContent'] {
+  return (ownerState: PickerOwnerState) => {
+    const resolved = resolveComponentProps(consumerSlotProps, ownerState) ?? {};
+    return {
+      ...resolved,
+      className: clsx(baseClassName, resolved.className),
+    };
+  };
+}
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
@@ -43,6 +59,10 @@ export const PickersInputBaseRoot = styled('div', {
   position: 'relative',
   boxSizing: 'border-box', // Prevent padding issue with fullWidth.
   letterSpacing: `${round(0.15 / 16)}em`,
+  [`&.${pickersInputBaseClasses.disabled}`]: {
+    color: (theme.vars || theme).palette.action.disabled,
+    cursor: 'default',
+  },
   variants: [
     {
       props: { isInputInFullWidth: true },
@@ -81,42 +101,29 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
       },
     },
     {
-      props: { hasStartAdornment: false, isFieldFocused: false, isFieldValueEmpty: true },
+      // While the field is empty and blurred, the format is shown as a placeholder.
+      props: { isFieldFocused: false, isFieldValueEmpty: true },
+      style: theme.vars
+        ? {
+            opacity: theme.vars.opacity.inputPlaceholder,
+          }
+        : {
+            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
+          },
+    },
+    {
+      // ...except when a non-shrunk label sits in the notch, where the format would overlap it.
+      // A start adornment always shrinks the label, so it never triggers this case.
+      props: {
+        isFieldFocused: false,
+        isFieldValueEmpty: true,
+        hasStartAdornment: false,
+        inputHasLabel: true,
+        isLabelShrunk: false,
+      },
       style: {
-        color: 'currentColor',
         opacity: 0,
       },
-    },
-    {
-      props: {
-        hasStartAdornment: false,
-        isFieldFocused: false,
-        isFieldValueEmpty: true,
-        inputHasLabel: false,
-      },
-      style: theme.vars
-        ? {
-            opacity: theme.vars.opacity.inputPlaceholder,
-          }
-        : {
-            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
-          },
-    },
-    {
-      props: {
-        hasStartAdornment: false,
-        isFieldFocused: false,
-        isFieldValueEmpty: true,
-        inputHasLabel: true,
-        isLabelShrunk: true,
-      },
-      style: theme.vars
-        ? {
-            opacity: theme.vars.opacity.inputPlaceholder,
-          }
-        : {
-            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
-          },
     },
   ],
 }));
@@ -143,6 +150,20 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
   letterSpacing: 'inherit',
   width: 'fit-content',
   outline: 'none',
+  // Disables Chromium's focus-delegation onto contenteditable descendants
+  // while the field is not focused. The bug is Chromium-only, and applying
+  // `WebkitUserModify` on WebKit breaks Playwright's `fill()` editability
+  // check, so we gate on a Chromium-only CSS property (`-webkit-app-region`,
+  // a Blink/Electron extension WebKit never adopted) via `@supports`.
+  // The WebKit exclusion is empirical, not guaranteed across versions: the
+  // regression guard is the WebKit `fill()` cases in the browser e2e suite,
+  // which would fail if a future WebKit started matching this `@supports`.
+  '@supports (-webkit-app-region: drag)': {
+    [`.${pickersInputBaseClasses.root}:not(:focus-within) &`]: {
+      WebkitUserModify: 'read-only',
+      userSelect: 'none',
+    },
+  },
 }));
 
 const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparator, {
@@ -233,7 +254,8 @@ function resolveSectionElementWidth(
   index: number,
   dateRangePosition: 'start' | 'end',
 ) {
-  if (sectionElement.content.id) {
+  // Only measure sections that belong to a range date.
+  if (sectionElement.content['data-range-position'] !== undefined) {
     const activeSectionElements = rootRef.current?.querySelectorAll<HTMLSpanElement>(
       `[data-sectionindex="${index}"] [data-range-position="${dateRangePosition}"]`,
     );
@@ -444,7 +466,10 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
             ...slotProps?.input,
             ownerState,
           } as any,
-          sectionContent: { className: pickersInputBaseClasses.sectionContent },
+          sectionContent: mergePickersInputBaseSectionContentSlotProps(
+            slotProps?.sectionContent,
+            pickersInputBaseClasses.sectionContent,
+          ),
           sectionSeparator: ({ separatorPosition }) => ({
             className:
               separatorPosition === 'before'
@@ -487,7 +512,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   );
 });
 
-PickersInputBase.propTypes = {
+PickersInputBase.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -548,6 +573,7 @@ PickersInputBase.propTypes = {
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,

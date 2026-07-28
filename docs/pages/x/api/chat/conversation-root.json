@@ -1,10 +1,7 @@
 {
   "props": {},
   "name": "ConversationRoot",
-  "imports": [
-    "import { ConversationRoot } from '@mui/x-chat/headless';",
-    "import { ConversationRoot } from '@mui/x-chat/headless';"
-  ],
+  "imports": ["import { ConversationRoot } from '@mui/x-chat/headless';"],
   "slots": [{ "name": "root", "description": "", "class": null }],
   "classes": [],
   "spread": true,
@@ -12,6 +9,5 @@
   "muiName": "MuiConversationRoot",
   "filename": "/packages/x-chat-headless/src/conversation/ConversationRoot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/thread/\">Chat - Headless thread</a></li>\n<li><a href=\"/x/react-chat/material/thread/\">Chat - Thread</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/thread/\">Chat - Headless thread</a></li></ul>"
 }

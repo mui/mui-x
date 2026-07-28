@@ -1,12 +1,16 @@
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   SchedulerChangeEventDetails,
 } from '@mui/x-scheduler-internals/internals';
-import { EventTimelinePremiumPreset } from '../models/preset';
-import { EventTimelinePremiumPreferences } from '../models/preferences';
+import type { EventTimelinePremiumPreset } from '../models/preset';
+import type { EventTimelinePremiumPreferences } from '../models/preferences';
+import type {
+  SchedulerDependenciesParameters,
+  SchedulerDependenciesState,
+} from '../models/dependency';
 
-export interface EventTimelinePremiumState extends SchedulerState {
+export interface EventTimelinePremiumState extends SchedulerState, SchedulerDependenciesState {
   /**
    * The preset displayed in the timeline.
    */
@@ -19,6 +23,13 @@ export interface EventTimelinePremiumState extends SchedulerState {
    * Preferences for the timeline.
    */
   preferences: Partial<EventTimelinePremiumPreferences>;
+  /**
+   * `false` until the first parameters→state mapping has applied, then `true`.
+   * Gates the lazy-loading plugin's first fetch so it doesn't run against the
+   * constructor-only initial state.
+   * @internal
+   */
+  hasInitialized: boolean;
 }
 
 export interface EventTimelinePremiumParameters<
@@ -60,11 +71,17 @@ export interface EventTimelinePremiumParameters<
    * Preferences currently displayed in the timeline.
    */
   preferences?: Partial<EventTimelinePremiumPreferences>;
-  /**
-   * Event handler called when the preferences change.
-   */
-  onPreferencesChange?: (
-    preferences: Partial<EventTimelinePremiumPreferences>,
-    event: React.UIEvent | Event,
-  ) => void;
 }
+
+/**
+ * Parameters accepted by the timeline store, including the dependencies parameters
+ * that are not publicly exposed yet.
+ * `dependencies` / `onDependenciesChange` move to `EventTimelinePremiumParameters`
+ * when the dependencies feature becomes public.
+ * @internal
+ */
+export interface EventTimelinePremiumStoreParameters<
+  TEvent extends object,
+  TResource extends object,
+>
+  extends EventTimelinePremiumParameters<TEvent, TResource>, SchedulerDependenciesParameters {}

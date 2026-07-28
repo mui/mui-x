@@ -1,11 +1,7 @@
 'use client';
 import * as React from 'react';
-import {
-  GridEditModes,
-  type GridRowId,
-  useGridApiContext,
-  useGridRootProps,
-} from '@mui/x-data-grid-premium';
+import { GridEditModes, useGridApiContext, useGridRootProps } from '@mui/x-data-grid-premium';
+import type { GridRowId } from '@mui/x-data-grid-premium';
 
 interface UseRowEditHandlersParams {
   id: GridRowId;

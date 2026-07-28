@@ -6,7 +6,7 @@ import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { DesktopDatePicker } from '../DesktopDatePicker';
 import { MobileDatePicker } from '../MobileDatePicker';
-import { DatePickerProps } from './DatePicker.types';
+import type { DatePickerProps } from './DatePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type DatePickerComponent = ((
@@ -41,7 +41,7 @@ const DatePicker = React.forwardRef(function DatePicker(
   return <MobileDatePicker ref={ref} {...other} />;
 }) as DatePickerComponent;
 
-DatePicker.propTypes = {
+DatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -266,7 +266,7 @@ DatePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

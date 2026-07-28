@@ -62,7 +62,7 @@ const GridColumnMenuContainer = forwardRef<HTMLUListElement, GridColumnMenuConta
   },
 );
 
-GridColumnMenuContainer.propTypes = {
+GridColumnMenuContainer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

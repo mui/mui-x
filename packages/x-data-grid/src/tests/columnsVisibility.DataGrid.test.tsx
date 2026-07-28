@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
-import {
-  DataGrid,
-  type DataGridProps,
-  type GridRowsProp,
-  type GridColDef,
-  type GridColumnVisibilityModel,
+import { DataGrid } from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridRowsProp,
+  GridColDef,
+  GridColumnVisibilityModel,
 } from '@mui/x-data-grid';
 import { getColumnHeadersTextContent, grid } from 'test/utils/helperFn';
 

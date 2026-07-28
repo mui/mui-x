@@ -1,7 +1,8 @@
-import moment, { Moment } from 'moment-hijri';
+import type { Moment } from 'moment-hijri';
+import moment from 'moment-hijri';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import type { AdapterFormats } from '@mui/x-date-pickers/models';
 import {
   createPickerRenderer,
   expectFieldValue,
@@ -47,8 +48,9 @@ describe('<AdapterMomentHijri />', () => {
       };
 
       expectDate('keyboardDate', '١٤٤١/٠٥/٠٦');
-      expectDate('fullDate', '١٤٤١، جمادى الأولى ١');
+      expectDate('fullDate', '١٤٤١، جمادى الأولى ٦');
       expectDate('normalDate', 'الأربعاء، ٦ جمادى ١');
+      expectDate('normalDateWithWeekday', 'أربعاء، ٦ جمادى الأولى');
       expectDate('shortDate', '٦ جمادى ١');
       expectDate('year', '١٤٤١');
       expectDate('month', 'جمادى الأولى');
@@ -79,6 +81,7 @@ describe('<AdapterMomentHijri />', () => {
       describe(`test with the locale "${localeKey}"`, () => {
         const { render, adapter } = createPickerRenderer({
           adapterName: 'moment-hijri',
+          Adapter: AdapterMomentHijri,
           locale: localeObject,
         });
 
@@ -99,6 +102,21 @@ describe('<AdapterMomentHijri />', () => {
           });
 
           expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].value);
+        });
+
+        // The day value is rendered with localized (Arabic-Indic) digits.
+        // `Number('٢٩')` returns `NaN`, so the digits must be converted back to
+        // Latin digits before computing the `aria-*` attributes.
+        // Regression test for https://github.com/mui/mui-x/issues/20355.
+        it('should expose valid aria attributes with localized digits', () => {
+          const view = renderWithProps({
+            value: adapter.date(testDate),
+          });
+
+          // The day section ("٢٩").
+          const daySection = view.getSection(2);
+          expect(daySection.getAttribute('aria-valuenow')).to.equal('29');
+          expect(daySection.getAttribute('aria-valuetext')).to.equal('٢٩');
         });
       });
     });

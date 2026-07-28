@@ -35,6 +35,12 @@ export interface GridGetRowsOptions {
    * @default true
    */
   keepChildrenExpanded?: boolean;
+  /**
+   * If `false`, the loading indicator for children will not be shown during the fetch.
+   * Useful for background revalidation where loading indicators should be suppressed.
+   * @default true
+   */
+  showChildrenLoading?: boolean;
 }
 
 export interface GridUpdateRowParams {

@@ -4,6 +4,7 @@ export enum DataSourceRowsUpdateStrategy {
   Default = 'set-flat-rows',
   LazyLoading = 'replace-row-range',
   GroupedData = 'set-grouped-rows',
+  LazyLoadedGroupedData = 'replace-grouped-row-range',
 }
 
 /**

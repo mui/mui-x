@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { createSelector, useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useCompositeListContext } from '../../base-ui-copy/composite/list/CompositeListContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
+import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
@@ -111,13 +111,14 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     state,
     ref: [forwardedRef, listItemRef, cellRef],
     props: [
-      elementProps,
       {
         role: 'columnheader',
         id,
         'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
+        'aria-colindex': index + 1,
       },
       keyboardProps,
+      elementProps,
     ],
   });
 });

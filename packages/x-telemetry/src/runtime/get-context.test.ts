@@ -1,6 +1,6 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { createHash } from 'crypto';
-import { isJSDOM } from '@mui/x-internals/platform';
+import { isJSDOM } from 'test/utils/skipIf';
 import telemetryContext from '../context';
 
 vi.mock('../context', () => ({

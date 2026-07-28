@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 
 export interface DayGridEventProps extends React.HTMLAttributes<HTMLDivElement> {

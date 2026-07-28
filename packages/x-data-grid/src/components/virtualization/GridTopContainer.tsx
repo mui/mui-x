@@ -24,10 +24,6 @@ export function GridTopContainer(props: React.PropsWithChildren) {
   const classes = useUtilityClasses();
 
   return (
-    <Element
-      {...props}
-      className={clsx(classes.root, gridClasses['container--top'])}
-      role="presentation"
-    />
+    <Element {...props} className={clsx(classes.root, gridClasses['container--top'])} role="none" />
   );
 }

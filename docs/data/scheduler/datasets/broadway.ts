@@ -220,7 +220,7 @@ export const initialEvents: SchedulerEvent[] = [
     id: 'booth-for-colored-girls',
     start: '2022-04-20T00:00:00',
     end: '2022-06-05T00:00:00',
-    title: 'for colored girls...',
+    title: 'for colored girls…',
     resource: 'booth',
     allDay: true,
   },

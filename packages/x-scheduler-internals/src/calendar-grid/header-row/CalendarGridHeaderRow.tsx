@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
 
 export const CalendarGridHeaderRow = React.forwardRef(function CalendarGridHeaderRow(
@@ -21,7 +21,7 @@ export const CalendarGridHeaderRow = React.forwardRef(function CalendarGridHeade
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [elementProps, { role: 'row' }],
+    props: [{ role: 'row', 'aria-rowindex': 1 }, elementProps],
   });
 
   return <CompositeList elementsRef={cellsRefs}>{element}</CompositeList>;

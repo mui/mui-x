@@ -15,6 +15,7 @@ export function createConversationActions<Cursor = string>(params: {
   stopStreaming: () => void;
   conversationNavigationRequestIdRef: React.MutableRefObject<number>;
   conversationLoadRequestIdRef: React.MutableRefObject<number>;
+  historyLoadRequestIdRef: React.MutableRefObject<number>;
 }) {
   const {
     store,
@@ -23,6 +24,7 @@ export function createConversationActions<Cursor = string>(params: {
     stopStreaming,
     conversationNavigationRequestIdRef,
     conversationLoadRequestIdRef,
+    historyLoadRequestIdRef,
   } = params;
 
   async function loadConversationMessages(
@@ -34,19 +36,29 @@ export function createConversationActions<Cursor = string>(params: {
     conversationLoadRequestIdRef.current += 1;
     const requestId = conversationLoadRequestIdRef.current;
     const { resetWhenUndefined = true } = options;
+    const shouldResetMessages = resetWhenUndefined && store.parameters.messages === undefined;
 
     if (conversationId == null) {
-      if (resetWhenUndefined) {
+      if (shouldResetMessages) {
         store.resetMessages();
       }
       return;
     }
 
     if (!runtimeRef.current.adapter.listMessages) {
+      if (shouldResetMessages) {
+        store.resetMessages();
+      }
       return;
     }
 
-    store.resetMessages();
+    if (shouldResetMessages) {
+      store.resetMessages();
+    }
+
+    historyLoadRequestIdRef.current += 1;
+    const historyRequestId = historyLoadRequestIdRef.current;
+    store.setHistoryLoading(true);
 
     try {
       const result = await runtimeRef.current.adapter.listMessages({
@@ -87,6 +99,10 @@ export function createConversationActions<Cursor = string>(params: {
           },
         ),
       );
+    } finally {
+      if (historyRequestId === historyLoadRequestIdRef.current) {
+        store.setHistoryLoading(false);
+      }
     }
   }
 
@@ -96,6 +112,14 @@ export function createConversationActions<Cursor = string>(params: {
     if (!conversationId) {
       return;
     }
+
+    if (!runtimeRef.current.adapter.listMessages && !runtimeRef.current.adapter.loadMore) {
+      return;
+    }
+
+    historyLoadRequestIdRef.current += 1;
+    const historyRequestId = historyLoadRequestIdRef.current;
+    store.setHistoryLoading(true);
 
     try {
       let result: ChatListMessagesResult<Cursor> | undefined;
@@ -142,6 +166,10 @@ export function createConversationActions<Cursor = string>(params: {
           },
         ),
       );
+    } finally {
+      if (historyRequestId === historyLoadRequestIdRef.current) {
+        store.setHistoryLoading(false);
+      }
     }
   }
 

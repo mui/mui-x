@@ -1,5 +1,5 @@
 import { createSelector } from '@base-ui/utils/store';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { isInternalDragOrResizePlaceholder } from '../internals/utils/drag-utils';
 
 export const schedulerOccurrencePlaceholderSelectors = {

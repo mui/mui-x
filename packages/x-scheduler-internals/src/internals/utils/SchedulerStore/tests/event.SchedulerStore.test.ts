@@ -1,8 +1,13 @@
 import { spy } from 'sinon';
 import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
-import { SchedulerEventModelStructure } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEvent,
+  SchedulerEventModelStructure,
+} from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
+
+const TEST_RESOURCES = [ResourceBuilder.new().build()];
 
 storeClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
@@ -13,6 +18,7 @@ storeClasses.forEach((storeClass) => {
         myStart: string;
         myEnd: string;
         allDay?: boolean;
+        priority?: string;
       }
 
       const eventModelStructure: SchedulerEventModelStructure<MyEvent> = {
@@ -57,7 +63,10 @@ storeClasses.forEach((storeClass) => {
           },
         ];
 
-        const store = new storeClass.Value({ events, eventModelStructure }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events, eventModelStructure },
+          adapter,
+        );
         const event = schedulerEventSelectors.processedEvent(store.state, '1');
 
         expect(event).to.deep.contain({
@@ -88,7 +97,7 @@ storeClasses.forEach((storeClass) => {
         ];
 
         const store = new storeClass.Value(
-          { events, eventModelStructure, onEventsChange },
+          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
           adapter,
         );
         store.updateEvent({
@@ -118,7 +127,7 @@ storeClasses.forEach((storeClass) => {
         const events: MyEvent[] = [];
 
         const store = new storeClass.Value(
-          { events, eventModelStructure, onEventsChange },
+          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
           adapter,
         );
         const createdId = store.createEvent({
@@ -139,6 +148,36 @@ storeClasses.forEach((storeClass) => {
             allDay: false,
           },
         ]);
+      });
+
+      it('should carry custom fields without resurrecting stale mapped keys on a duplicate', () => {
+        const onEventsChange = spy();
+        const events: MyEvent[] = [
+          {
+            myId: '1',
+            myTitle: 'Event 1',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
+            allDay: false,
+            priority: 'high',
+          },
+        ];
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events, eventModelStructure, onEventsChange },
+          adapter,
+        );
+
+        const start = adapter.date('2025-07-01T11:00:00.000Z', 'default');
+        const end = adapter.date('2025-07-01T12:00:00.000Z', 'default');
+        const duplicatedId = store.duplicateEventOccurrence('1', start, end);
+
+        const duplicated = onEventsChange.lastCall.firstArg.find(
+          (event) => event.myId === duplicatedId,
+        );
+        // The mapped start comes from the setter, not the stale key carried by the custom-data merge.
+        expect(duplicated.myStart).to.equal('2025-07-01T11:00:00.000Z');
+        expect(duplicated.priority).to.equal('high');
       });
 
       it('should only re-compute the processed events when updating events or eventModelStructure parameters', () => {
@@ -171,7 +210,12 @@ storeClasses.forEach((storeClass) => {
         ];
 
         const store = new storeClass.Value(
-          { events, eventModelStructure: eventModelStructure2, showCurrentTimeIndicator: false },
+          {
+            resources: TEST_RESOURCES,
+            events,
+            eventModelStructure: eventModelStructure2,
+            showCurrentTimeIndicator: false,
+          },
           adapter,
         );
 
@@ -180,6 +224,7 @@ storeClasses.forEach((storeClass) => {
 
         store.updateStateFromParameters(
           {
+            resources: TEST_RESOURCES,
             events,
             eventModelStructure: eventModelStructure2,
             showCurrentTimeIndicator: true,
@@ -207,6 +252,7 @@ storeClasses.forEach((storeClass) => {
 
         store.updateStateFromParameters(
           {
+            resources: TEST_RESOURCES,
             events: events2,
             eventModelStructure: eventModelStructure2,
             showCurrentTimeIndicator: true,
@@ -219,6 +265,7 @@ storeClasses.forEach((storeClass) => {
 
         store.updateStateFromParameters(
           {
+            resources: TEST_RESOURCES,
             events: events2,
             eventModelStructure: { ...eventModelStructure2 },
             showCurrentTimeIndicator: true,
@@ -231,13 +278,52 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('Event id validation', () => {
+      it('should throw when an event has no id', () => {
+        const validEvent = EventBuilder.new().id('1').build();
+        const eventWithoutId = {
+          ...EventBuilder.new().build(),
+          id: undefined,
+        } as unknown as SchedulerEvent;
+
+        expect(() => {
+          // eslint-disable-next-line no-new
+          new storeClass.Value(
+            { resources: TEST_RESOURCES, events: [validEvent, eventWithoutId] },
+            adapter,
+          );
+        }).to.throw(/All events must have a unique `id`/);
+      });
+
+      it('should keep the last event and warn in dev when two events share the same id', () => {
+        const first = EventBuilder.new().id('1').title('First').build();
+        const second = EventBuilder.new().id('1').title('Second').build();
+
+        const createStore = () =>
+          new storeClass.Value({ resources: TEST_RESOURCES, events: [first, second] }, adapter);
+
+        let store!: ReturnType<typeof createStore>;
+        expect(() => {
+          store = createStore();
+        }).toWarnDev(['MUI X Scheduler: Two or more events share the same id "1".']);
+
+        expect(schedulerEventSelectors.idList(store.state)).to.deep.equal([second.id]);
+        expect(schedulerEventSelectors.processedEvent(store.state, second.id)!.title).to.equal(
+          second.title,
+        );
+      });
+    });
+
     describe('Method: updateEvent', () => {
       it('should replace matching id and emit onEventsChange with the updated events', () => {
         const onEventsChange = spy();
         const event1 = EventBuilder.new().build();
         const event2 = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events: [event1, event2], onEventsChange }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event1, event2], onEventsChange },
+          adapter,
+        );
 
         store.updateEvent({
           id: event2.id,
@@ -273,7 +359,7 @@ storeClasses.forEach((storeClass) => {
           .build();
 
         const store = new storeClass.Value(
-          { events: [event], onEventsChange, displayTimezone },
+          { resources: TEST_RESOURCES, events: [event], onEventsChange, displayTimezone },
           adapter,
         );
 
@@ -299,6 +385,63 @@ storeClasses.forEach((storeClass) => {
         expect(updated.start).to.equal(newStart.toISOString());
         expect(updated.end).to.equal(newEnd.toISOString());
       });
+
+      it('should preserve unknown custom properties on the event model', () => {
+        const onEventsChange = spy();
+        const event = {
+          ...EventBuilder.new().title('Original title').build(),
+          priority: 'high',
+        } as SchedulerEvent;
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.updateEvent({ id: event.id, title: 'Updated title' });
+
+        const updated = onEventsChange.lastCall.firstArg[0];
+        expect(updated.title).to.equal('Updated title');
+        expect(updated.priority).to.equal('high');
+      });
+
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should not throw when updating an event that had rrule on input',
+        () => {
+          const event = EventBuilder.new().recurrent('DAILY').build();
+
+          let store: any;
+          expect(() => {
+            store = new storeClass.Value(
+              { resources: TEST_RESOURCES, events: [event], onEventsChange: () => {} },
+              adapter,
+            );
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          ]);
+
+          expect(() => {
+            store.updateEvent({ id: event.id, title: 'updated' });
+          }).not.to.throw();
+        },
+      );
+
+      it('should warn in dev when the same id is in both `deleted` and `updated`', () => {
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange: () => {} },
+          adapter,
+        );
+
+        expect(() => {
+          (store as any).updateEvents({
+            deleted: [event.id],
+            updated: [{ id: event.id, title: 'will be ignored' }],
+          });
+        }).toWarnDev([
+          `MUI X Scheduler: id "${event.id}" appears in both \`deleted\` and \`updated\`.`,
+        ]);
+      });
     });
 
     describe('Method: deleteEvent', () => {
@@ -310,6 +453,7 @@ storeClasses.forEach((storeClass) => {
 
         const store = new storeClass.Value(
           {
+            resources: TEST_RESOURCES,
             events: [event1, event2, event3],
             onEventsChange,
           },
@@ -328,7 +472,10 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = spy();
         const event1 = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events: [event1], onEventsChange }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event1], onEventsChange },
+          adapter,
+        );
 
         const newEvent = EventBuilder.new().toCreationProperties();
 
@@ -346,6 +493,7 @@ storeClasses.forEach((storeClass) => {
 
         const store = new storeClass.Value(
           {
+            resources: TEST_RESOURCES,
             events: [],
             displayTimezone: 'Europe/Paris',
             onEventsChange,
@@ -366,7 +514,10 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = spy();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
 
         const start = adapter.date('2025-07-01T09:00:00Z', 'default');
         const end = adapter.date('2025-07-01T10:00:00Z', 'default');
@@ -385,38 +536,66 @@ storeClasses.forEach((storeClass) => {
         ]);
       });
 
-      it('should remove rrule and exDates from the original event', () => {
-        const onEventsChange = spy();
-        const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14Z']).build();
+      it.skipIf(storeClass.name === 'EventCalendarStore')(
+        'should remove rrule and exDates from the original event',
+        () => {
+          const onEventsChange = spy();
+          const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14Z']).build();
 
-        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+          const store = new storeClass.Value(
+            { resources: TEST_RESOURCES, events: [event], onEventsChange },
+            adapter,
+          );
+
+          const start = adapter.date('2025-07-01T09:00:00Z', 'default');
+          const end = adapter.date('2025-07-01T10:00:00Z', 'default');
+          const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
+
+          const originalEventWithoutRecurrence = { ...event };
+          delete originalEventWithoutRecurrence.rrule;
+          delete originalEventWithoutRecurrence.exDates;
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+            event,
+            {
+              ...originalEventWithoutRecurrence,
+              id: duplicatedId,
+              extractedFromId: event.id,
+              start: start.toISOString(),
+              end: end.toISOString(),
+            },
+          ]);
+        },
+      );
+
+      it('should carry unknown custom properties onto the duplicated event', () => {
+        const onEventsChange = spy();
+        const event = {
+          ...EventBuilder.new().build(),
+          priority: 'high',
+        } as SchedulerEvent;
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
 
         const start = adapter.date('2025-07-01T09:00:00Z', 'default');
         const end = adapter.date('2025-07-01T10:00:00Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
-        const originalEventWithoutRecurrence = { ...event };
-        delete originalEventWithoutRecurrence.rrule;
-        delete originalEventWithoutRecurrence.exDates;
-
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
-          event,
-          {
-            ...originalEventWithoutRecurrence,
-            id: duplicatedId,
-            extractedFromId: event.id,
-            start: start.toISOString(),
-            end: end.toISOString(),
-          },
-        ]);
+        const duplicated = onEventsChange.lastCall.firstArg.find(
+          (event) => event.id === duplicatedId,
+        );
+        expect(duplicated.priority).to.equal('high');
       });
     });
 
     describe('Method: copyEvent', () => {
       it('should set the copiedEvent state with the event and action', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ events: [event] }, adapter);
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
         store.copyEvent(event.id);
 
         expect(store.state.copiedEvent).to.deep.equal({
@@ -429,7 +608,7 @@ storeClasses.forEach((storeClass) => {
     describe('Method: cutEvent', () => {
       it('should set the copiedEvent state with the event and action', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ events: [event] }, adapter);
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
         store.cutEvent(event.id);
 
         expect(store.state.copiedEvent).to.deep.equal({
@@ -442,7 +621,7 @@ storeClasses.forEach((storeClass) => {
     describe('Method: pasteEvent', () => {
       it('should do nothing if there is no copiedEvent', () => {
         const event = EventBuilder.new().build();
-        const store = new storeClass.Value({ events: [event] }, adapter);
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
         const oldState = store.state;
         store.pasteEvent({ start: adapter.date('2025-07-01T09:00:00Z', 'default') });
         expect(store.state).to.deep.equal(oldState);
@@ -452,7 +631,10 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = spy();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -472,13 +654,39 @@ storeClasses.forEach((storeClass) => {
         ]);
       });
 
+      it('should carry unknown custom properties onto the pasted event (copy)', () => {
+        const onEventsChange = spy();
+        const event = {
+          ...EventBuilder.new().build(),
+          priority: 'high',
+        } as SchedulerEvent;
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+        store.copyEvent(event.id);
+
+        const createdEventId = store.pasteEvent({
+          start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+        });
+
+        const pasted = onEventsChange.lastCall.firstArg.find(
+          (event) => event.id === createdEventId,
+        );
+        expect(pasted.priority).to.equal('high');
+      });
+
       it('should paste a copied event and emit onEventsChange with the updated list (only changes resource)', () => {
         const onEventsChange = spy();
         const resource1 = ResourceBuilder.new().build();
         const resource2 = ResourceBuilder.new().build();
         const event = EventBuilder.new().resource(resource1).build();
 
-        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -501,7 +709,10 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = spy();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
         store.copyEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -524,7 +735,10 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = spy();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -548,7 +762,10 @@ storeClasses.forEach((storeClass) => {
         const resource2 = ResourceBuilder.new().build();
         const event = EventBuilder.new().resource(resource1).build();
 
-        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -569,7 +786,10 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = spy();
         const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
         store.cutEvent(event.id);
 
         const createdEventId = store.pasteEvent({
@@ -584,6 +804,82 @@ storeClasses.forEach((storeClass) => {
             allDay: true,
           },
         ]);
+      });
+
+      it('should clear the clipboard after pasting a cut event so a second paste is a no-op', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+        store.cutEvent(event.id);
+
+        store.pasteEvent({ start: adapter.date('2025-07-01T09:00:00Z', 'default') });
+
+        expect(store.state.copiedEvent).to.equal(null);
+        expect(onEventsChange.calledOnce).to.equal(true);
+
+        const result = store.pasteEvent({
+          start: adapter.date('2025-07-02T09:00:00Z', 'default'),
+        });
+
+        expect(result).to.equal(null);
+        expect(onEventsChange.calledOnce).to.equal(true);
+      });
+
+      it('should keep the clipboard after pasting a copied event so it can be pasted again', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+        store.copyEvent(event.id);
+
+        const firstPastedId = store.pasteEvent({
+          start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+        });
+        const secondPastedId = store.pasteEvent({
+          start: adapter.date('2025-07-02T09:00:00Z', 'default'),
+        });
+
+        expect(store.state.copiedEvent).to.deep.equal({ id: event.id, action: 'copy' });
+        expect(firstPastedId).not.to.equal(null);
+        expect(secondPastedId).not.to.equal(null);
+        expect(firstPastedId).not.to.equal(secondPastedId);
+        expect(onEventsChange.calledTwice).to.equal(true);
+      });
+    });
+
+    describe('dev warnings', () => {
+      it('should warn in dev when events are updated without onEventsChange nor dataSource', () => {
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({ resources: TEST_RESOURCES, events: [event] }, adapter);
+
+        expect(() => {
+          store.updateEvent({ id: event.id, title: 'updated' });
+        }).toWarnDev([
+          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+        ]);
+      });
+
+      it('should not warn about a missing onEventsChange when a dataSource is provided', () => {
+        const event = EventBuilder.new().build();
+        const dataSource = {
+          getEvents: async () => [event],
+          persistEvents: async () => ({ success: true }),
+        };
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [], dataSource },
+          adapter,
+        );
+
+        expect(() => {
+          store.createEvent(EventBuilder.new().toCreationProperties());
+        }).not.toWarnDev();
       });
     });
   });

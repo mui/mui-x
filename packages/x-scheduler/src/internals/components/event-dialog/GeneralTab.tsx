@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
-import {
+import type {
   SchedulerEventColor,
   SchedulerResourceId,
   SchedulerRenderableEventOccurrence,
@@ -19,7 +19,8 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import { computeRange, ControlledValue, hasProp } from './utils';
+import type { ControlledValue } from './utils';
+import { computeRange, hasProp } from './utils';
 import ResourceAndColorSection from './ResourceAndColorSection';
 import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
@@ -100,6 +101,10 @@ export function GeneralTab(props: GeneralTabProps) {
 
   // Selector hooks
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
   const isPropertyReadOnly = useStore(
     store,
     schedulerEventSelectors.isPropertyReadOnly,
@@ -143,6 +148,9 @@ export function GeneralTab(props: GeneralTabProps) {
   };
 
   const handleResourceChange = (newResource: SchedulerResourceId | null) => {
+    const nextErrors = { ...errors };
+    delete nextErrors.resource;
+    setErrors(nextErrors);
     const newState = { ...controlled, resourceId: newResource };
     pushPlaceholder(newState);
     setControlled(newState);
@@ -179,6 +187,7 @@ export function GeneralTab(props: GeneralTabProps) {
                 slotProps={{
                   inputLabel: { shrink: true },
                   input: { readOnly: isPropertyReadOnly('start') },
+                  formHelperText: { role: 'alert' },
                 }}
                 error={!!errors.startDate}
                 helperText={errors.startDate}
@@ -255,6 +264,11 @@ export function GeneralTab(props: GeneralTabProps) {
             onResourceChange={handleResourceChange}
             onColorChange={handleColorChange}
             color={controlled.color}
+            error={
+              shouldEventRequireResource && typeof errors.resource === 'string'
+                ? errors.resource
+                : undefined
+            }
           />
         </SectionFieldset>
         <Divider />

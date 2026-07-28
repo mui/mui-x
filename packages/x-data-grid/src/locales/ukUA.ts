@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization, formatNumber } from '../utils/getGridLocalization';
+import { getGridLocalization, formatNumber } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;

@@ -3,11 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
+import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
-import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
+import { SankeyPlot } from './SankeyPlot';
+import type { SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
 import type { SankeySeriesType } from './sankey.types';
 import { SankeyTooltip } from './SankeyTooltip';
@@ -81,7 +83,7 @@ const SankeyChart = React.forwardRef(function SankeyChart(
   );
 });
 
-SankeyChart.propTypes = {
+SankeyChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -133,19 +135,6 @@ SankeyChart.propTypes = {
          */
         'node',
       ]).isRequired,
-      type: PropTypes.oneOf(['sankey']).isRequired,
-    }),
-    PropTypes.shape({
-      seriesId: PropTypes.string.isRequired,
-      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      subType: PropTypes.oneOf([
-        /**
-         * Subtype to differentiate between node and link
-         */
-        'link',
-      ]).isRequired,
-      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
       nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -156,6 +145,7 @@ SankeyChart.propTypes = {
          */
         'node',
       ]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
       seriesId: PropTypes.string.isRequired,
@@ -167,6 +157,18 @@ SankeyChart.propTypes = {
         'link',
       ]).isRequired,
       targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
     }),
   ]),
   /**
@@ -262,19 +264,6 @@ SankeyChart.propTypes = {
          */
         'node',
       ]).isRequired,
-      type: PropTypes.oneOf(['sankey']).isRequired,
-    }),
-    PropTypes.shape({
-      seriesId: PropTypes.string.isRequired,
-      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      subType: PropTypes.oneOf([
-        /**
-         * Subtype to differentiate between node and link
-         */
-        'link',
-      ]).isRequired,
-      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
       nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -285,6 +274,7 @@ SankeyChart.propTypes = {
          */
         'node',
       ]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
       seriesId: PropTypes.string.isRequired,
@@ -296,6 +286,18 @@ SankeyChart.propTypes = {
         'link',
       ]).isRequired,
       targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.string.isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
     }),
   ]),
   /**

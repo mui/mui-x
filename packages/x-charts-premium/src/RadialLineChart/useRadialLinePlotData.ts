@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { getValueToPositionMapper, useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
-import { useChartsContext, type UseChartPolarAxisSignature } from '@mui/x-charts/internals';
-import { type CurveType, type MarkShape, type SeriesId } from '@mui/x-charts/models';
+import { useChartsContext } from '@mui/x-charts/internals';
+import type { UseChartPolarAxisSignature } from '@mui/x-charts/internals';
+import type { CurveType, MarkShape, SeriesId } from '@mui/x-charts/models';
 import { useRadialLineSeriesContext } from '../hooks/useRadialLineSeries';
 
 export interface RadialLinePoint {
@@ -22,6 +23,7 @@ interface RadialLinePlotDataPoint {
   shape: MarkShape;
   area?: boolean;
   curve?: CurveType;
+  closePath?: boolean;
 }
 
 export function useRadialLinePlotData() {
@@ -45,6 +47,7 @@ export function useRadialLinePlotData() {
           data,
           hidden,
           area = false,
+          closePath,
           curve,
           shape,
           rotationAxisId = rotationAxisIds[0],
@@ -80,6 +83,7 @@ export function useRadialLinePlotData() {
           shape: shape ?? 'circle',
           area,
           curve,
+          closePath,
         });
       }
     }

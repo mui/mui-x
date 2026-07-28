@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { EventManager } from '@mui/x-internals/EventManager';
-import {
+import type {
   ContextValue,
   CreateModalConfig,
   ModalState,
@@ -17,7 +17,7 @@ export function createModal<TData>(config: CreateModalConfig) {
     const context = React.useContext(Context);
     if (!context) {
       throw new Error(
-        `MUI: \`${config.contextName}\` is missing. Hook must be placed within its Provider.`,
+        `MUI X Scheduler: \`${config.contextName}\` is missing. Hook must be placed within its Provider.`,
       );
     }
     return context;

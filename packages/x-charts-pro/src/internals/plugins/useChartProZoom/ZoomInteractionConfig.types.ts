@@ -36,17 +36,17 @@ export type DefaultizedZoomInteractionConfig = {
   pan: Entry<PanInteraction>;
 };
 
-export type ZoomInteraction =
+type ZoomInteraction =
   | WheelInteraction
   | PinchInteraction
   | TapAndDragInteraction
   | DoubleTapResetInteraction
   | BrushInteraction;
-export type PanInteraction = DragInteraction | PressAndDragInteraction | WheelPanInteraction;
+type PanInteraction = DragInteraction | PressAndDragInteraction | WheelPanInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
 export type PanInteractionName = PanInteraction['type'];
-export type InteractionMode = Exclude<PointerMode, 'pen'>;
+type InteractionMode = Exclude<PointerMode, 'pen'>;
 
 type AllKeysProp = {
   /**
@@ -83,42 +83,42 @@ type Unpack<T> = {
   [K in keyof T]: T[K] extends object ? Unpack<T[K]> : T[K];
 };
 
-export type WheelInteraction = Unpack<
+type WheelInteraction = Unpack<
   {
     type: 'wheel';
   } & NoModeProp &
     AllKeysProp
 >;
 
-export type PinchInteraction = Unpack<
+type PinchInteraction = Unpack<
   {
     type: 'pinch';
   } & NoModeProp &
     NoKeysProp
 >;
 
-export type DragInteraction = Unpack<
+type DragInteraction = Unpack<
   {
     type: 'drag';
   } & AllModeProp &
     AllKeysProp
 >;
 
-export type TapAndDragInteraction = Unpack<
+type TapAndDragInteraction = Unpack<
   {
     type: 'tapAndDrag';
   } & AllModeProp &
     AllKeysProp
 >;
 
-export type PressAndDragInteraction = Unpack<
+type PressAndDragInteraction = Unpack<
   {
     type: 'pressAndDrag';
   } & AllModeProp &
     AllKeysProp
 >;
 
-export type WheelPanInteraction = Unpack<
+type WheelPanInteraction = Unpack<
   {
     type: 'wheel';
     /**
@@ -133,14 +133,14 @@ export type WheelPanInteraction = Unpack<
     AllKeysProp
 >;
 
-export type DoubleTapResetInteraction = Unpack<
+type DoubleTapResetInteraction = Unpack<
   {
     type: 'doubleTapReset';
   } & AllModeProp &
     AllKeysProp
 >;
 
-export type BrushInteraction = Unpack<
+type BrushInteraction = Unpack<
   {
     type: 'brush';
   } & AllModeProp &

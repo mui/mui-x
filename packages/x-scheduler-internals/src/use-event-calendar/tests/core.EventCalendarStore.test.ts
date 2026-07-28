@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
@@ -7,7 +7,7 @@ import {
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
-import { CalendarView } from '../../models';
+import type { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -32,30 +32,62 @@ describe('Core - EventCalendarStore', () => {
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
-        editedEventId: null,
+        editedOccurrenceKey: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        pendingUpdateRecurringEventParameters: null,
-        plan: 'community',
+        pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
+        recurringEventsPlugin: null,
+        shouldEventRequireResource: false,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         view: DEFAULT_VIEW,
-        viewConfig: null,
+        viewConfig: {},
+        viewDefinition: null,
         views: DEFAULT_VIEWS,
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
+        collapsedResources: {},
         isLoading: false,
         errors: [],
       };
 
       expect(store.state).to.deep.equal(expectedState);
+    });
+
+    it('should default `shouldEventRequireResource` to `false`', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(false);
+    });
+
+    it('should respect an explicit `shouldEventRequireResource={true}`', () => {
+      const store = new EventCalendarStore(
+        {
+          ...DEFAULT_PARAMS,
+          shouldEventRequireResource: true,
+          resources: [ResourceBuilder.new().build()],
+        },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(true);
+    });
+
+    it('should warn in dev when `shouldEventRequireResource` is `true` but no resources are configured', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventCalendarStore(
+          { ...DEFAULT_PARAMS, shouldEventRequireResource: true, resources: [] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+      ]);
     });
   });
 
@@ -70,6 +102,21 @@ describe('Core - EventCalendarStore', () => {
 
       store.updateStateFromParameters(newParams, adapter);
       expect(store.state.views).to.deep.equal(['day', 'week']);
+    });
+
+    it('should sync `shouldEventRequireResource` when parameters update', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(false);
+
+      store.updateStateFromParameters(
+        {
+          ...DEFAULT_PARAMS,
+          shouldEventRequireResource: true,
+          resources: [ResourceBuilder.new().build()],
+        },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(true);
     });
 
     it('should respect controlled `view` (updates to new value)', () => {
@@ -108,7 +155,7 @@ describe('Core - EventCalendarStore', () => {
           },
           adapter,
         );
-      }).toWarnDev(['MUI: A component is changing the default view state']);
+      }).toWarnDev(['MUI X Scheduler: A component is changing the default view state']);
 
       expect(store.state.view).to.equal(defaultView);
     });
@@ -118,7 +165,7 @@ describe('Core - EventCalendarStore', () => {
 
       expect(() => {
         store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
-      }).toWarnDev('MUI: A component is changing the uncontrolled view state');
+      }).toWarnDev('MUI X Scheduler: A component is changing the uncontrolled view state');
 
       expect(store.state.view).to.equal('day');
     });
@@ -134,7 +181,7 @@ describe('Core - EventCalendarStore', () => {
           },
           adapter,
         );
-      }).toWarnDev('MUI: A component is changing the controlled view state');
+      }).toWarnDev('MUI X Scheduler: A component is changing the controlled view state');
 
       expect(store.state.view).to.equal('day');
     });

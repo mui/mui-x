@@ -64,6 +64,7 @@ export function useMessageListBehavior(parameters: {
   itemIds: string[];
   estimatedItemSize: number;
   onReachTop?: () => void;
+  onReachBottom?: () => void;
   messages: ChatMessage[];
   hasMoreHistory: boolean;
   loadMoreHistory(): Promise<void>;
@@ -75,6 +76,7 @@ export function useMessageListBehavior(parameters: {
     itemIds,
     estimatedItemSize,
     onReachTop,
+    onReachBottom,
     messages,
     hasMoreHistory,
     loadMoreHistory,
@@ -91,6 +93,7 @@ export function useMessageListBehavior(parameters: {
   const topReachedRef = React.useRef(false);
   const topLoadInFlightRef = React.useRef(false);
   const resizeFrameRef = React.useRef(0);
+  const isMountedRef = React.useRef(true);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
@@ -110,14 +113,33 @@ export function useMessageListBehavior(parameters: {
     return nextMap;
   }, [messages]);
 
-  const updateIsAtBottom = React.useCallback(() => {
-    const nextIsAtBottom = isScrollableToBottom(rootRef.current, autoScrollBuffer);
+  // Latest-ref so `updateIsAtBottom` (which sits in many dependency arrays)
+  // stays stable across inline-callback renders.
+  const onReachBottomRef = React.useRef(onReachBottom);
+  onReachBottomRef.current = onReachBottom;
 
-    isAtBottomRef.current = nextIsAtBottom;
-    setIsAtBottom((previous) => (previous === nextIsAtBottom ? previous : nextIsAtBottom));
+  const updateIsAtBottom = React.useCallback(
+    (options?: { silent?: boolean }) => {
+      const nextIsAtBottom = isScrollableToBottom(rootRef.current, autoScrollBuffer);
+      const previousIsAtBottom = isAtBottomRef.current;
 
-    return nextIsAtBottom;
-  }, [autoScrollBuffer]);
+      isAtBottomRef.current = nextIsAtBottom;
+      setIsAtBottom((previous) => (previous === nextIsAtBottom ? previous : nextIsAtBottom));
+
+      // `onReachBottom` fires only on a `false → true` transition (strict
+      // "reach" semantics): once per entry into the bottom zone, never while
+      // pinned (streaming growth and appends-while-pinned are `true → true`).
+      // The `silent` mode re-seeds the latch without firing — used for
+      // item-set replacement (conversation switch) so switch-induced layout
+      // can never fire the callback.
+      if (!options?.silent && !previousIsAtBottom && nextIsAtBottom) {
+        onReachBottomRef.current?.();
+      }
+
+      return nextIsAtBottom;
+    },
+    [autoScrollBuffer],
+  );
 
   const updateUnseenMessageCount = React.useCallback((nextCount: number) => {
     unseenMessageCountRef.current = nextCount;
@@ -209,8 +231,17 @@ export function useMessageListBehavior(parameters: {
   }, []);
 
   const scheduleResizeRestore = React.useCallback(() => {
+    if (typeof requestAnimationFrame !== 'function') {
+      // SSR / non-browser environments don't have rAF — bail rather than throw.
+      return;
+    }
     cancelAnimationFrame(resizeFrameRef.current);
     resizeFrameRef.current = requestAnimationFrame(() => {
+      // Guard against the frame firing after unmount: once the cleanup runs
+      // we shouldn't touch DOM refs or call state setters (#10).
+      if (!isMountedRef.current) {
+        return;
+      }
       if (isAtBottomRef.current && autoScrollEnabled && isStreamingRef.current) {
         // Follow streaming content: the row grew (new tokens), scroll to stay at bottom.
         // Only auto-scroll during streaming so that user-initiated resizes (e.g.
@@ -306,7 +337,7 @@ export function useMessageListBehavior(parameters: {
       }
     }
 
-    const nextIsAtBottom = updateIsAtBottom();
+    const nextIsAtBottom = updateIsAtBottom({ silent: changeKind === 'other' });
 
     if (nextIsAtBottom) {
       updateUnseenMessageCount(0);
@@ -327,8 +358,15 @@ export function useMessageListBehavior(parameters: {
   ]);
 
   React.useEffect(() => {
+    // Restore on (re)mount so the resize-driven auto-scroll keeps working after
+    // a StrictMode mount → cleanup → mount cycle, which would otherwise leave
+    // `isMountedRef.current` stuck at `false` from the dev-only first cleanup.
+    isMountedRef.current = true;
     return () => {
-      cancelAnimationFrame(resizeFrameRef.current);
+      isMountedRef.current = false;
+      if (typeof cancelAnimationFrame === 'function') {
+        cancelAnimationFrame(resizeFrameRef.current);
+      }
     };
   }, []);
 

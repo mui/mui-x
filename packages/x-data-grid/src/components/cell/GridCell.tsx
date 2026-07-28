@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx, { type ClassValue } from 'clsx';
+import clsx from 'clsx';
+import type { ClassValue } from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -12,15 +13,10 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useStore } from '@mui/x-internals/store';
 import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
+import { focusElement } from '../../utils/focusElement';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
-import {
-  type GridCellEventLookup,
-  type GridEvents,
-  GridCellModes,
-  type GridRowId,
-  type GridEditCellProps,
-} from '../../models';
+import { GridCellModes } from '../../models';
+import type { GridCellEventLookup, GridEvents, GridRowId, GridEditCellProps } from '../../models';
 import type { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
 import type { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
@@ -363,24 +359,12 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
 
-      if (doesSupportPreventScroll()) {
-        elementToFocus.focus({ preventScroll: true });
-      } else {
-        const scrollPosition = apiRef.current.getScrollPosition();
-        elementToFocus.focus();
-        apiRef.current.scroll(scrollPosition);
-      }
+      focusElement(elementToFocus, apiRef);
     }
   }, [hasFocus, cellMode, apiRef]);
 
   if (isCellRowSpanned) {
-    return (
-      <div
-        data-colindex={colIndex}
-        role="presentation"
-        style={{ width: 'var(--width)', ...style }}
-      />
-    );
+    return <div data-colindex={colIndex} role="none" style={{ width: 'var(--width)', ...style }} />;
   }
 
   let handleFocus = other.onFocus;
@@ -484,7 +468,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   );
 });
 
-GridCell.propTypes = {
+GridCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

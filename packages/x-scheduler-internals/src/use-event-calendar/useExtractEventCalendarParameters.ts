@@ -1,5 +1,6 @@
+/* eslint-disable react-compiler/react-compiler -- intentional `react-hooks/exhaustive-deps` disable below */
 import * as React from 'react';
-import { EventCalendarParameters } from './EventCalendarStore.types';
+import type { EventCalendarParameters } from './EventCalendarStore.types';
 
 export function useExtractEventCalendarParameters<
   TEvent extends object,
@@ -11,7 +12,9 @@ export function useExtractEventCalendarParameters<
     areEventsResizable,
     canDragEventsFromTheOutside,
     canDropEventsToTheOutside,
+    collapsedResources,
     dateLocale,
+    defaultCollapsedResources,
     defaultPreferences,
     defaultView,
     defaultVisibleDate,
@@ -21,6 +24,7 @@ export function useExtractEventCalendarParameters<
     eventCreation,
     eventModelStructure,
     events,
+    onCollapsedResourcesChange,
     onEventsChange,
     onViewChange,
     onVisibleDateChange,
@@ -29,10 +33,12 @@ export function useExtractEventCalendarParameters<
     preferencesMenuConfig,
     readOnly,
     dataSource,
+    shouldEventRequireResource,
     resourceModelStructure,
     resources,
     showCurrentTimeIndicator,
     view,
+    viewConfig,
     views,
     visibleDate,
     visibleResources,
@@ -45,7 +51,9 @@ export function useExtractEventCalendarParameters<
       areEventsResizable,
       canDragEventsFromTheOutside,
       canDropEventsToTheOutside,
+      collapsedResources,
       dateLocale,
+      defaultCollapsedResources,
       defaultPreferences,
       defaultView,
       defaultVisibleDate,
@@ -55,6 +63,7 @@ export function useExtractEventCalendarParameters<
       eventCreation,
       eventModelStructure,
       events,
+      onCollapsedResourcesChange,
       onEventsChange,
       onViewChange,
       onVisibleDateChange,
@@ -63,20 +72,29 @@ export function useExtractEventCalendarParameters<
       preferencesMenuConfig,
       readOnly,
       dataSource,
+      shouldEventRequireResource,
       resourceModelStructure,
       resources,
       showCurrentTimeIndicator,
       view,
+      viewConfig,
       views,
       visibleDate,
       visibleResources,
     }),
+    // `dataSource` is intentionally excluded. It's re-read on every fetch, but the
+    // cache + dataManager are pinned to the original instance, so runtime swaps are
+    // only partially reactive — consumers should remount to swap. Including it in
+    // deps would invalidate the memo every render for inline `{ getEvents, persistEvents }`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       areEventsDraggable,
       areEventsResizable,
       canDragEventsFromTheOutside,
       canDropEventsToTheOutside,
+      collapsedResources,
       dateLocale,
+      defaultCollapsedResources,
       defaultPreferences,
       defaultView,
       defaultVisibleDate,
@@ -86,6 +104,7 @@ export function useExtractEventCalendarParameters<
       eventCreation,
       eventModelStructure,
       events,
+      onCollapsedResourcesChange,
       onEventsChange,
       onViewChange,
       onVisibleDateChange,
@@ -93,11 +112,12 @@ export function useExtractEventCalendarParameters<
       preferences,
       preferencesMenuConfig,
       readOnly,
-      dataSource,
+      shouldEventRequireResource,
       resourceModelStructure,
       resources,
       showCurrentTimeIndicator,
       view,
+      viewConfig,
       views,
       visibleDate,
       visibleResources,

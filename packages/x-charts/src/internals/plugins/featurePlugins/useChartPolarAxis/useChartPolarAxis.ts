@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
-import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { type ChartPlugin } from '../../models';
-import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
+import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import type { ChartPlugin } from '../../models';
+import type { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
@@ -16,11 +16,13 @@ import { getChartPoint } from '../../../getChartPoint';
 import {
   generatePolar2svg,
   generateSvg2polar,
+  generateSvg2radius,
   generateSvg2rotation,
 } from './coordinateTransformation';
-import { getAxisIndex } from './getAxisIndex';
+import { getRadiusAxisIndex, getRotationAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
+import { getPolarAxisClickPayload } from './getPolarAxisClickPayload';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -216,39 +218,36 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     }
 
     const axisClickHandler = instance.addInteractionListener('tap', (event) => {
-      let dataIndex: number | null = null;
-      let isRotationAxis: boolean = false;
-
       const svgPoint = getChartPoint(element, event.detail.srcEvent);
 
       const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
-      const rotationIndex = getAxisIndex(rotationAxisWithScale[usedRotationAxisId], rotation);
-      isRotationAxis = rotationIndex !== -1;
+      const rotationIndex = getRotationAxisIndex(
+        rotationAxisWithScale[usedRotationAxisId],
+        rotation,
+      );
+      const radius = generateSvg2radius(center)(svgPoint.x, svgPoint.y);
+      const radiusIndex = getRadiusAxisIndex(radiusAxisWithScale[usedRadiusAxisId], radius);
+      const isRotationAxis = rotationIndex !== -1;
 
-      dataIndex = isRotationAxis ? rotationIndex : null; // radius index is not yet implemented.
+      const dataIndex = isRotationAxis ? rotationIndex : radiusIndex;
 
-      const USED_AXIS_ID = isRotationAxis ? usedRotationAxisId : usedRadiusAxisId;
-      if (dataIndex == null || dataIndex === -1) {
+      if (dataIndex === -1) {
         return;
       }
 
-      // The .data exist because otherwise the dataIndex would be null or -1.
-      const axisValue = (isRotationAxis ? rotationAxisWithScale : radiusAxisWithScale)[USED_AXIS_ID]
-        .data![dataIndex];
+      const payload = getPolarAxisClickPayload({
+        dataIndex,
+        isRotationAxis,
+        rotationAxes: { axis: rotationAxisWithScale, axisIds: [usedRotationAxisId] },
+        radiusAxes: { axis: radiusAxisWithScale, axisIds: [usedRadiusAxisId] },
+        processedSeries,
+      });
 
-      const seriesValues: Record<string, number | null | undefined> = {};
+      if (payload === null) {
+        return;
+      }
 
-      Object.keys(processedSeries)
-        .filter((seriesType): seriesType is 'radar' => seriesType === 'radar')
-        .forEach((seriesType) => {
-          processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
-            const seriesItem = processedSeries[seriesType]!.series[seriesId];
-
-            seriesValues[seriesId] = seriesItem.data[dataIndex];
-          });
-        });
-
-      onAxisClick(event.detail.srcEvent, { dataIndex, axisValue, seriesValues });
+      onAxisClick(event.detail.srcEvent, payload);
     });
 
     return () => {

@@ -1,24 +1,24 @@
 ---
-title: Chat - Realtime
+title: Chat - Real-time
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Realtime
+# Chat - Real-time
 
-<p class="description">Feed typing, presence, and read-state changes through the provider-owned realtime subscription.</p>
+<p class="description">Push typing indicators, presence updates, and read receipts from your backend into the chat runtime in real time.</p>
 
-This demo demonstrates the runtime behavior behind realtime push updates:
+The example below shows how the runtime handles real-time push updates through the adapter's `subscribe()` method:
 
-- the adapter's `subscribe()` method and its cleanup lifecycle
-- typing events that update `useChatStatus().typingUserIds`
-- presence events that update participant `isOnline` state
-- read events that update conversation read state
+- The adapter's `subscribe()` method and its cleanup lifecycle.
+- Typing events that update `useChatStatus().typingUserIds`.
+- Presence events that update participant `isOnline` state.
+- Read events that update conversation read state.
 
 ## Key concepts
 
-### The `subscribe()` adapter method
+### Receiving real-time events
 
 When `ChatProvider` mounts and the adapter implements `subscribe()`, the runtime calls it with an `onEvent` callback.
 The adapter pushes events through this callback and returns a cleanup function:
@@ -87,20 +87,22 @@ onEvent({
 });
 ```
 
+The demo below wires all three event types into a single adapter:
+
 {{"demo": "RealtimeHeadlessChat.js"}}
 
 ## Key takeaways
 
-- The runtime fully manages the subscription lifecycle — `subscribe()` on mount, cleanup on unmount
-- Typing, presence, and read events update the store automatically
-- `useChatStatus().typingUserIds` is the primary hook for typing indicators
-- Presence and read updates surface through conversation-level selectors
+- The runtime fully manages the subscription lifecycle—`subscribe()` on mount, cleanup on unmount.
+- Typing, presence, and read events update the store automatically.
+- `useChatStatus().typingUserIds` is the primary hook for typing indicators.
+- Presence and read updates surface through conversation-level selectors.
 
 ## See also
 
-- [Realtime](/x/react-chat/core/realtime/) for the full event type reference and store effects
-- [Adapters](/x/react-chat/core/adapters/) for the `subscribe()` method reference
-- [Realtime thread sync](/x/react-chat/core/examples/realtime-thread-sync/) for message and conversation add/update/remove events
+- See [Real-time](/x/react-chat/core/realtime/) for the full event-type reference and store effects.
+- See [Adapters](/x/react-chat/core/adapters/) for the `subscribe()` method reference.
+- See [Real-time thread sync](/x/react-chat/core/examples/realtime-thread-sync/) for message and conversation add/update/remove events.
 
 ## API
 

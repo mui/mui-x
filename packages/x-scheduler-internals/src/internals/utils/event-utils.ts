@@ -1,14 +1,14 @@
-import { TemporalTimezone } from '../../base-ui-copy/types/temporal';
-import {
+import type { TemporalTimezone } from '../../base-ui-copy/types/temporal';
+import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
   SchedulerEventOccurrence,
   SchedulerEventId,
+  SchedulerResourceId,
 } from '../../models';
-import { SchedulerPlan } from './SchedulerStore/SchedulerStore.types';
-import { Adapter } from '../../use-adapter/useAdapter.types';
-import { getRecurringEventOccurrencesForVisibleDays } from './recurring-events';
+import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
+import type { Adapter } from '../../use-adapter/useAdapter.types';
 
 export function generateOccurrenceFromEvent({
   event,
@@ -71,20 +71,24 @@ export function getDaysTheOccurrenceIsVisibleOn(
  * Returns the occurrences to render in the given date range, expanding recurring events.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources, displayTimezone, plan } = parameters;
+  const { adapter, start, end, events, visibleResources, displayTimezone, recurringEventsPlugin } =
+    parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
 
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
-    if (event.resource && visibleResources[event.resource] === false) {
+    const eventResourceIds = getEventResourceIds(event.resource);
+    const allHidden =
+      eventResourceIds.length > 0 && eventResourceIds.every((id) => visibleResources[id] === false);
+    if (allHidden) {
       continue;
     }
 
     // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
     if (event.displayTimezone.rrule) {
-      // In community, recurring events are not expanded into occurrences.
-      // They are treated as single non-recurring events.
-      if (plan !== 'premium') {
+      // Without the premium recurring-events plugin attached, recurring events
+      // are not expanded into occurrences — they are treated as single non-recurring events.
+      if (recurringEventsPlugin == null) {
         if (
           adapter.isAfter(event.displayTimezone.start.value, end) ||
           adapter.isBefore(event.displayTimezone.end.value, start)
@@ -97,7 +101,13 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
       // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
-        ...getRecurringEventOccurrencesForVisibleDays(event, start, end, adapter, displayTimezone),
+        ...recurringEventsPlugin.getOccurrencesForVisibleDays(
+          event,
+          start,
+          end,
+          adapter,
+          displayTimezone,
+        ),
       );
       continue;
     }
@@ -116,6 +126,36 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
   return occurrences;
 }
 
+/**
+ * Returns the resource IDs for the given resource, or an empty array if the resource is null or undefined.
+ */
+export function getEventResourceIds(
+  resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
+): SchedulerResourceId[] {
+  if (resource == null) {
+    return [];
+  }
+
+  return Array.isArray(resource) ? resource : [resource];
+}
+
+/**
+ * Returns the primary resource ID for the given resource, or null if the resource is null or undefined.
+ */
+export function getPrimaryResourceId(
+  resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
+): SchedulerResourceId | null {
+  if (resource == null) {
+    return null;
+  }
+
+  if (Array.isArray(resource)) {
+    return resource[0] ?? null;
+  }
+
+  return resource;
+}
+
 export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: TemporalSupportedObject;
@@ -123,5 +163,5 @@ export interface GetOccurrencesFromEventsParameters {
   events: SchedulerProcessedEvent[];
   visibleResources: Record<string, boolean>;
   displayTimezone: TemporalTimezone;
-  plan: SchedulerPlan;
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }

@@ -72,6 +72,7 @@ export default function ServerSidePivotingDerivedColumns() {
       dataSet: 'Commodity',
       maxColumns: 20,
       derivedColumns: true,
+      multiSelect: true,
     },
     { useCursorPagination: false },
   );

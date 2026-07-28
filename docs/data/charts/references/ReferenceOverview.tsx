@@ -10,7 +10,7 @@ import { ChartsXAxis } from '@mui/x-charts-pro/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts-pro/ChartsYAxis';
 import { ChartsTooltip } from '@mui/x-charts-pro/ChartsTooltip';
 import { ChartsGrid } from '@mui/x-charts-pro/ChartsGrid';
-import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
+import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import { ChartsClipPath } from '@mui/x-charts-pro/ChartsClipPath';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLegend } from '@mui/x-charts-pro/ChartsLegend';
@@ -201,7 +201,7 @@ export default function ReferenceOverview() {
           <ChartsXAxis />
           <ChartsYAxis axisId="unemployment-axis" label="Unemployment Rate" />
           <ChartsYAxis axisId="gdp-axis" label="GDP per capita in US$" />
-          <ChartZoomSlider />
+          <ChartsZoomSlider />
         </ChartsSurface>
         <ChartsTooltip />
       </ChartsDataProviderPro>

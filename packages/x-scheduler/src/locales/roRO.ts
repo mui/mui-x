@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const roRODialog: Partial<EventDialogLocaleText> = {
   // EventDialog
@@ -39,7 +37,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Recurență',
   recurrenceMainSelectCustomLabel: 'Recurență',
   recurrenceWeeklyFrequencyLabel: 'săptămâni',
-  recurrenceWeeklyPresetLabel: (weekday) => `Se repetă săptămânal în ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repetă săptămânal în ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'luni',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Ziua ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} din ultima săptămână a lunii`,
@@ -51,13 +49,15 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'ani',
   recurrenceYearlyPresetLabel: (date) => `Se repetă anual pe ${date}`,
   noResourceAriaLabel: 'Fără resursă',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Resursă',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvează',
   startDateAfterEndDateError: 'Data/ora de început trebuie să fie înainte de data/ora de sfârșit.',
   startDateLabel: 'Data de început',
   startTimeLabel: 'Ora de început',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Toate evenimentele',
   cancel: 'Anulează',
   confirm: 'Confirmă',
@@ -88,6 +88,9 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Închide panoul lateral',
   openSidePanel: 'Deschide panoul lateral',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12 ore (1:00PM)',
   hour24h: '24 de ore (13:00)',
@@ -97,11 +100,13 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Afișează numărul săptămânii',
   timeFormat: 'Formatul orei',
   viewSpecificOptions: (view) => `Opțiuni pentru vizualizarea ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Toată ziua',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `Încă ${hiddenEventsCount}..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} următoare`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterioară`,
@@ -116,6 +121,9 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendar',
   miniCalendarGoToPreviousMonth: 'Afișează luna anterioară în calendar',
   miniCalendarGoToNextMonth: 'Afișează luna următoare în calendar',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titlul resursei',

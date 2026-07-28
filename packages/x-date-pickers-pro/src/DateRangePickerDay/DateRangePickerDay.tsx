@@ -3,19 +3,25 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
-import { styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
+import type { CSSInterpolation, Theme } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { DateRangePickerDayOwnerState, DateRangePickerDayProps } from './DateRangePickerDay.types';
-import {
+import type {
+  DateRangePickerDayOwnerState,
+  DateRangePickerDayProps,
+} from './DateRangePickerDay.types';
+import type {
   DateRangePickerDayClasses,
-  dateRangePickerDayClasses,
   DateRangePickerDayClassKey,
+} from './dateRangePickerDayClasses';
+import {
+  dateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
 } from './dateRangePickerDayClasses';
 
@@ -222,7 +228,13 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       props: { isDayDraggable: true },
       style: {
         cursor: 'grab',
+        // Stop the browser from scrolling the page when the user drags a finger
+        // across the cell — the drag is driven by our own Pointer Events handler.
         touchAction: 'none',
+        // Prevent the iOS text-selection callout from racing the drag gesture.
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
       },
     },
     {
@@ -524,7 +536,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-      draggable={draggable}
       {...other}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
@@ -534,7 +545,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
   );
 });
 
-DateRangePickerDayRaw.propTypes = {
+DateRangePickerDayRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -768,6 +779,13 @@ DateRangePickerDayRaw.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The HTML [`type`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#type)
+   * attribute applied to `button` and `a` elements.
+   * Ignored when rendering non-native buttons.
+   * @default 'button'
+   */
+  type: PropTypes.string,
 } as any;
 
 /**

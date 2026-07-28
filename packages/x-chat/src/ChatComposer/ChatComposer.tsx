@@ -11,6 +11,7 @@ import {
   type ChatVariant,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   chatComposerClasses,
   useChatComposerUtilityClasses,
@@ -70,7 +71,6 @@ const ChatComposerStyled = styled('form', {
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
-  zIndex: 1,
   gap: theme.spacing(0.5),
   padding: theme.spacing(1, 1.5),
   border: '1px solid',
@@ -164,7 +164,7 @@ const DefaultComposerContent = React.memo(function DefaultComposerContent({
 
 // @ts-expect-error React.memo typing doesn't include propTypes
 
-DefaultComposerContent.propTypes = {
+DefaultComposerContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -207,7 +207,7 @@ const CompactComposerContent = React.memo(function CompactComposerContent({
 
 // @ts-expect-error React.memo typing doesn't include propTypes
 
-CompactComposerContent.propTypes = {
+CompactComposerContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -260,21 +260,23 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
         {...other}
         attachmentConfig={attachmentConfig}
         slots={{
-          root: slots?.root ?? ChatComposerStyled,
           ...slots,
+          root: slots?.root ?? ChatComposerStyled,
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(
-              classes.root,
-              isCompact && classes.variantCompact,
-              disabled && classes.disabled,
-              className,
-            ),
-            sx,
-            ...slotProps?.root,
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(
+                classes.root,
+                isCompact && classes.variantCompact,
+                disabled && classes.disabled,
+                className,
+              ),
+              sx,
+            },
+            slotProps?.root,
+          ) as any,
         }}
       >
         {children ?? defaultContent}
@@ -283,7 +285,7 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
   },
 );
 
-ChatComposer.propTypes = {
+ChatComposer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -315,6 +317,15 @@ ChatComposer.propTypes = {
       PropTypes.bool,
     ]),
   }),
+  /**
+   * Handler invoked when the form is submitted.
+   *
+   * Native form submission is always prevented before this handler runs.
+   * Call `event.preventDefault()` from inside the handler to also suppress the
+   * composer's own `submit()` action; otherwise the composer submits as usual
+   * after the handler returns.
+   */
+  onSubmit: PropTypes.func,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
   sx: PropTypes.oneOfType([

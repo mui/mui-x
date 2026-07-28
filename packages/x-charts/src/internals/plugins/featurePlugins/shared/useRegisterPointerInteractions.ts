@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useChartsLayerContainerRef } from '../../../../hooks';
-import { type UseChartTooltipSignature } from '../../featurePlugins/useChartTooltip';
-import { type SeriesItemIdentifierWithType } from '../../../../models/seriesType';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type UseChartInteractionSignature } from '../useChartInteraction';
-import { type UseChartHighlightSignature } from '../useChartHighlight';
+import type { UseChartTooltipSignature } from '../../featurePlugins/useChartTooltip';
+import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import type { UseChartInteractionSignature } from '../useChartInteraction';
+import type { UseChartHighlightSignature } from '../useChartHighlight';
 import { useStore } from '../../../store/useStore';
 import { useChartsContext } from '../../../../context/ChartsProvider';
 import { getChartPoint } from '../../../getChartPoint';

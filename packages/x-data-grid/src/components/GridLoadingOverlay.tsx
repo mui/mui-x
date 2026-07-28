@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridOverlay, type GridOverlayProps } from './containers/GridOverlay';
+import { GridOverlay } from './containers/GridOverlay';
+import type { GridOverlayProps } from './containers/GridOverlay';
 import { GridSkeletonLoadingOverlay } from './GridSkeletonLoadingOverlay';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowCountSelector, useGridSelector } from '../hooks';
@@ -61,7 +62,7 @@ const GridLoadingOverlay = forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
   },
 );
 
-GridLoadingOverlay.propTypes = {
+GridLoadingOverlay.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

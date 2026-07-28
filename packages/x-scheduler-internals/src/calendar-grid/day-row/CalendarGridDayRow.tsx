@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import type { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { CalendarGridDayRowContext } from './CalendarGridDayRowContext';
-import { TemporalSupportedObject } from '../../models';
+import type { TemporalSupportedObject } from '../../models';
 
 export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
   componentProps: CalendarGridDayRow.Props,
@@ -36,7 +36,7 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [elementProps, { role: 'row' }],
+    props: [{ role: 'row', 'aria-rowindex': rowIndex + 2 }, elementProps],
   });
 
   return (

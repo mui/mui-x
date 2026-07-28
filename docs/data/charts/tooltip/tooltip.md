@@ -130,6 +130,22 @@ You can pass these props to the tooltip using `slotProps.tooltip`, or directly t
 
 {{"demo": "TooltipPosition.js", "hideToolbar": true, "bg": "playground"}}
 
+## Portaling the tooltip
+
+By default, the tooltip is rendered inside the chart container with a fixed position.
+
+To render the tooltip outside, use the `container` prop to provide the element that receives the tooltip.
+You can pass it through `slotProps.tooltip`, or directly to `ChartsTooltip`/`ChartsTooltipContainer` when composing a custom component.
+
+```jsx
+<BarChart
+  // ...
+  slotProps={{ tooltip: { container: document.body } }}
+/>
+```
+
+Alternatively, set `disablePortal` to render the tooltip inline, in the DOM hierarchy of its parent.
+
 ## Style modification
 
 Similar to other chart elements, you can style the tooltip using CSS classes.

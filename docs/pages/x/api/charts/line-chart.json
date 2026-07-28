@@ -54,7 +54,7 @@
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }"
       }
     },
     "id": { "type": { "name": "string" } },
@@ -135,7 +135,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'line' }"
       }
     },
     "width": { "type": { "name": "number" } },
@@ -184,7 +184,7 @@
     { "name": "baseIconButton", "description": "", "class": null },
     {
       "name": "baseToggleButton",
-      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
       "class": null
     },
     { "name": "baseToggleButtonGroup", "description": "", "class": null },
@@ -246,6 +246,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/LineChart/LineChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>"
 }

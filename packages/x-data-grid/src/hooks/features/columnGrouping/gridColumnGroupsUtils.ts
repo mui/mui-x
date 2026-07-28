@@ -1,8 +1,8 @@
-import {
-  type GridColumnGroupingModel,
-  type GridColumnNode,
-  type GridColumnGroup,
-  isLeaf,
+import { isLeaf } from '../../../models/gridColumnGrouping';
+import type {
+  GridColumnGroupingModel,
+  GridColumnNode,
+  GridColumnGroup,
 } from '../../../models/gridColumnGrouping';
 import type { GridColDef } from '../../../models/colDef';
 import type { GridColumnGroupLookup, GridGroupingStructure } from './gridColumnGroupsInterfaces';
