@@ -8,7 +8,7 @@ import { chartsSvgLayerClasses } from '@mui/x-charts/ChartsSvgLayer';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { RadarChart } from '@mui/x-charts/RadarChart';
+import { RadarChart, radarClasses } from '@mui/x-charts/RadarChart';
 
 describe('useChartKeyboardNavigation - click to focus', () => {
   const { render } = createRenderer();
@@ -369,22 +369,53 @@ describe('useChartKeyboardNavigation - click to focus', () => {
   });
 
   describe.skipIf(isJSDOM)('radar chart', () => {
-    it('focuses a clicked mark', async () => {
-      const { container, user } = render(
-        <RadarChart
-          height={200}
-          width={200}
-          radar={{ metrics: ['A', 'B', 'C'] }}
-          series={[{ id: 'radar', data: [10, 20, 30] }]}
-          onMarkClick={() => {}}
-        />,
-      );
+    const radarProps = {
+      height: 300,
+      width: 300,
+      radar: { metrics: ['A', 'B', 'C', 'D'] },
+      series: [{ id: 'radar', data: [10, 20, 30, 40] }],
+    };
 
-      const marks = container.querySelectorAll<SVGElement>('circle');
-      await user.click(marks[1]);
+    /** The focus indicator is a rect centered on the focused point. */
+    function getFocusedMarkIndex(container: HTMLElement) {
+      const indicator = getFocusIndicator(container);
+      if (!indicator) {
+        return null;
+      }
+
+      const center = getCenter(indicator);
+      return Array.from(container.querySelectorAll<SVGElement>('circle')).findIndex((mark) => {
+        const markCenter = getCenter(mark);
+        return (
+          Math.abs(markCenter.clientX - center.clientX) < 2 &&
+          Math.abs(markCenter.clientY - center.clientY) < 2
+        );
+      });
+    }
+
+    it('focuses the clicked mark', async () => {
+      const { container, user } = render(<RadarChart {...radarProps} onMarkClick={() => {}} />);
+
+      await user.click(container.querySelectorAll<SVGElement>('circle')[2]);
+
+      // Hidden, but stored: the next key moves on from the clicked mark.
+      expect(getFocusIndicator(container)).to.equal(null);
       await user.keyboard('[ArrowRight]');
 
-      expect(getFocusIndicator(container)).not.to.equal(null);
+      expect(getFocusedMarkIndex(container)).to.equal(3);
+    });
+
+    it('focuses the mark through the area when no click callback is set', async () => {
+      // Marks are pointer transparent without `onMarkClick`, so the click lands on the area,
+      // which resolves the index from the click angle.
+      const { container, user } = render(<RadarChart {...radarProps} />);
+
+      const marks = container.querySelectorAll<SVGElement>('circle');
+      const area = container.querySelector<SVGElement>(`.${radarClasses.seriesArea}`)!;
+      await user.pointer([{ keys: '[MouseLeft]', target: area, coords: getCenter(marks[2]) }]);
+      await user.keyboard('[ArrowRight]');
+
+      expect(getFocusedMarkIndex(container)).to.equal(3);
     });
   });
 });

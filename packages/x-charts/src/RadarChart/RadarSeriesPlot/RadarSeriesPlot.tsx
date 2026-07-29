@@ -8,6 +8,8 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
+import type { UseChartKeyboardNavigationSignature } from '../../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const { seriesId: inSeriesId, className, classes: inClasses, onAreaClick, onMarkClick } = props;
@@ -16,6 +18,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const getHighlightState = useItemHighlightStateGetter();
+  const { instance } = useChartsContext<[UseChartKeyboardNavigationSignature]>();
 
   const classes = useUtilityClasses(inClasses);
 
@@ -40,15 +43,18 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                     getHighlightState,
                     classes,
                   })}
-                  onClick={(event) =>
-                    onAreaClick?.(event, {
+                  {...interactionProps[seriesIndex]}
+                  // The area only knows its series, the data index comes from the click angle.
+                  onClick={(event) => {
+                    const identifier = {
                       type: 'radar',
                       seriesId,
                       dataIndex: getRotationIndex(event),
-                    })
-                  }
+                    } as const;
+                    instance.focusItem?.(identifier);
+                    onAreaClick?.(event, identifier);
+                  }}
                   cursor={onAreaClick ? 'pointer' : 'unset'}
-                  {...interactionProps[seriesIndex]}
                 />
               }
               {!hideMark &&
@@ -63,9 +69,11 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       getHighlightState,
                       classes,
                     })}
-                    onClick={(event) =>
-                      onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
-                    }
+                    onClick={(event) => {
+                      const identifier = { type: 'radar', seriesId, dataIndex: index } as const;
+                      instance.focusItem?.(identifier);
+                      onMarkClick?.(event, identifier);
+                    }}
                     cursor={onMarkClick ? 'pointer' : 'unset'}
                   />
                 ))}
