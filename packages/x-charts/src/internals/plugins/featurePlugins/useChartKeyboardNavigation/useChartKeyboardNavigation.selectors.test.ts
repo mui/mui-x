@@ -21,7 +21,7 @@ const createState = (
       enabled: true,
       ...keyboardNavigation,
     },
-  }) as UseChartKeyboardNavigationState;
+  }) as any;
 
 describe('useChartKeyboardNavigation selectors', () => {
   describe('when the focus is visible', () => {

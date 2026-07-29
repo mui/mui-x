@@ -1,7 +1,29 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useChartId } from '../../../hooks/useChartId';
+import { useChartsContext } from '../../../context/ChartsProvider';
 import { useDescription } from './useDescription';
+
+/**
+ * Moves the DOM focus to the chart tab stop.
+ * The root is only tabbable while there is no description, otherwise one of the announcer
+ * children holds the tab stop.
+ * @returns `true` when an element was focused.
+ */
+export function focusAccessibilityProxy(root: HTMLDivElement | null): boolean {
+  if (!root) {
+    return false;
+  }
+
+  const target =
+    root.querySelector<HTMLElement>('[tabindex="0"]') ?? (root.tabIndex >= 0 ? root : null);
+
+  // The proxy covers the whole chart, focusing it would scroll long pages.
+  target?.focus({ preventScroll: true });
+
+  return target !== null;
+}
 
 /**
  * Make the proxy looks like a layer.
@@ -30,12 +52,15 @@ export function ChartsAccessibilityProxy() {
   const message = useDescription();
   const chartId = useChartId();
 
+  const { instance } = useChartsContext();
+
   const currentFormatRef = React.useRef<string | null>(null);
   const currentIndexRef = React.useRef<number>(0);
-  const containerRef = React.useRef(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(containerRef, instance.chartsAccessibilityProxyRef);
 
   React.useEffect(() => {
-    const container = containerRef.current as HTMLDivElement | null;
+    const container = containerRef.current;
     if (!container) {
       return;
     }
@@ -111,7 +136,7 @@ export function ChartsAccessibilityProxy() {
     <div
       role="none"
       tabIndex={message ? undefined : 0}
-      ref={containerRef}
+      ref={handleRef}
       style={fullSizeLayerStyle}
     />
   );
