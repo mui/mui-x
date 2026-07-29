@@ -17,10 +17,25 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
   state,
 ) => state.keyboardNavigation;
 
+/**
+ * The chart owns the DOM focus AND the focus should be rendered.
+ * A pointer-driven focus is `isFocused` without being visible.
+ */
+const isFocusVisible = (
+  keyboardNavigationState:
+    | UseChartKeyboardNavigationSignature['state']['keyboardNavigation']
+    | undefined,
+) => keyboardNavigationState?.isFocused === true && keyboardNavigationState.isFocusVisible === true;
+
+export const selectorChartsIsFocusVisible = createSelector(
+  selectKeyboardNavigation,
+  isFocusVisible,
+);
+
 export const selectorChartsItemIsFocused = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState, item: FocusedItemIdentifier<ChartSeriesType>) =>
-    keyboardNavigationState?.isFocused === true &&
+    isFocusVisible(keyboardNavigationState) &&
     keyboardNavigationState?.item != null &&
     fastObjectShallowCompare(keyboardNavigationState.item, item),
 );
@@ -28,13 +43,13 @@ export const selectorChartsItemIsFocused = createSelector(
 export const selectorChartsHasFocusedItem = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState) =>
-    keyboardNavigationState?.isFocused === true && keyboardNavigationState?.item != null,
+    isFocusVisible(keyboardNavigationState) && keyboardNavigationState?.item != null,
 );
 
 export const selectorChartsFocusedItem = createSelector(
   selectKeyboardNavigation,
   (keyboardNavigationState) =>
-    keyboardNavigationState?.isFocused === true ? (keyboardNavigationState?.item ?? null) : null,
+    isFocusVisible(keyboardNavigationState) ? (keyboardNavigationState?.item ?? null) : null,
 );
 
 /**
@@ -101,7 +116,7 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
 export const selectorChartsKeyboardItem = createSelectorMemoized(
   selectKeyboardNavigation,
   function selectorChartsKeyboardItem(keyboardState) {
-    if (keyboardState?.isFocused !== true || keyboardState?.item == null) {
+    if (!isFocusVisible(keyboardState) || keyboardState?.item == null) {
       return null;
     }
     const { type, seriesId } = keyboardState.item;

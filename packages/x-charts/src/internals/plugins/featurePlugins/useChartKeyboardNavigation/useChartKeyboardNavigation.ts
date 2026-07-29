@@ -37,6 +37,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         store.set('keyboardNavigation', {
           ...store.state.keyboardNavigation,
           isFocused: false,
+          isFocusVisible: false,
         });
       }
     }
@@ -53,6 +54,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           keyboardNavigation: {
             ...store.state.keyboardNavigation,
             isFocused: true,
+            isFocusVisible: true,
           },
         });
       }
@@ -125,6 +127,7 @@ useChartKeyboardNavigation.getInitialState = (params) => ({
   keyboardNavigation: {
     item: null,
     isFocused: false,
+    isFocusVisible: false,
     enabled: !params.disableKeyboardNavigation,
   },
 });

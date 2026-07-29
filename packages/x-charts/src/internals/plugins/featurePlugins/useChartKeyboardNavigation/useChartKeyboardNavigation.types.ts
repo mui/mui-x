@@ -18,6 +18,11 @@ export interface UseChartKeyboardNavigationState {
      */
     isFocused: boolean;
     /**
+     * If `false` the focused item is not rendered as focused, and does not drive the highlight and tooltip.
+     * Set when the focus was moved by a pointer instead of the keyboard. Implies `isFocused`.
+     */
+    isFocusVisible: boolean;
+    /**
      * Indicates whether keyboard navigation is enabled or not.
      */
     enabled: boolean;
