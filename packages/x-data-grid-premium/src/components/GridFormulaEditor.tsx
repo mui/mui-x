@@ -73,6 +73,9 @@ const GridFormulaEditorSurface = styled('div', {
 })(({ theme }) => ({
   position: 'absolute',
   display: 'flex',
+  // Centres the single line in the row box. Once the formula wraps, `applyWrapStyles`
+  // switches this to `stretch` and moves the centring into the editable's block
+  // padding, so the first line keeps the exact position it had here.
   alignItems: 'center',
   boxSizing: 'border-box',
   zIndex: 30,
@@ -109,6 +112,18 @@ export interface GridFormulaEditorProps extends GridRenderEditCellParams {
    */
   suggestionsEnabled: boolean;
 }
+
+/**
+ * How many visual lines a wrapped formula may occupy before the editor stops
+ * growing and scrolls internally. Five lines hold roughly 400–600 characters at
+ * the widths the surface reaches, which covers any realistic formula, while the
+ * box stays around two rows taller than the one it started from — past that an
+ * editor stops reading as a cell and starts hiding the data it references.
+ */
+const FORMULA_EDITOR_MAX_WRAPPED_LINES = 5;
+
+/** Fallback line height for environments without layout (jsdom). */
+const FORMULA_EDITOR_FALLBACK_LINE_HEIGHT = 20;
 
 /**
  * The smallest surface width that fits `needed` pixels, preferring widths whose
@@ -210,8 +225,15 @@ interface GridFormulaEditorFloatingProps extends GridFormulaEditorProps {
  * the seeded formula's width), steps to the next column gridline whenever the
  * content overflows, and never shrinks during the edit — deletions leave the box
  * in place, so its edges never wobble. Growth is clamped at the viewport's visible
- * inline-end edge (measured once at open); past the clamp the single line scrolls
- * internally, with the browser keeping the caret in view.
+ * inline-end edge (measured once at open).
+ *
+ * At that clamp the editor switches to wrapping and the same ratchet takes over
+ * the block axis: the formula wraps and the box grows by whole lines, up to
+ * `FORMULA_EDITOR_MAX_WRAPPED_LINES` or the room the row has, whichever is
+ * smaller (also measured once). The first line never moves — growth is strictly
+ * away from it — and past the vertical bound the wrapped text scrolls internally,
+ * with the caret kept in view. A row with no room below grows upward instead,
+ * decided at the same single measurement point.
  */
 function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   const { id, field, hasFocus, colDef, a1Notation, suggestionsEnabled, surfaceId, inScroller } =
@@ -225,6 +247,25 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   // measured growth bound. `null` until first measured/grown.
   const ratchetRef = React.useRef<number | null>(null);
   const clampRef = React.useRef<number | null>(null);
+  // The block axis, engaged only once the width ratchet reaches its clamp and the
+  // formula still does not fit on one line. `wrappedRef` is monotonic for the life
+  // of the session; `flippedRef` (grow upward instead of downward) and
+  // `heightClampRef` are decided at that same single moment; `heightRatchetRef` is
+  // the grow-only height, `null` while the surface is still welded to the row box.
+  const wrappedRef = React.useRef(false);
+  const flippedRef = React.useRef(false);
+  const heightRatchetRef = React.useRef<number | null>(null);
+  const heightClampRef = React.useRef<number | null>(null);
+  // The content-policy ceiling, kept separate from the available-space clamp so
+  // increasing the grid height can never expand the editor beyond five lines.
+  const heightMaxRef = React.useRef<number | null>(null);
+  // The largest box the content ever asked for, before clamping. A grid resized
+  // smaller pulls the box in (below), and this is what lets a grid resized larger
+  // again put it back exactly where it was, without waiting for the next keystroke.
+  const widthHighWaterRef = React.useRef<number | null>(null);
+  const heightHighWaterRef = React.useRef<number | null>(null);
+  // The viewport size the clamps above were last valid for.
+  const clampBasisRef = React.useRef<{ width: number; height: number } | null>(null);
 
   const editState = useGridSelector(apiRef, gridEditCellStateSelector, { rowId: id, field });
   const text = valueToText(editState?.value);
@@ -270,21 +311,73 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   // mode (pinned rows) the block edges weld to the row box instead.
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  let surfaceBlockStyles: React.CSSProperties = { top: 0, bottom: 0 };
+  // The size of the box both growth bounds are bounds ON. It changes when the grid
+  // is resized (and when a scrollbar or a pinned section appears), never when the
+  // grid is scrolled — which is what makes it safe to follow: see the resize effect
+  // below.
+  const viewportWidth = dimensions.viewportInnerSize.width;
+  const viewportHeight = dimensions.viewportInnerSize.height;
+  const rowIndexInPage = apiRef.current.getRowIndexRelativeToVisibleRows(id) as number | undefined;
+  const rowPosition = rowsMeta.positions[rowIndexInPage ?? 0] ?? 0;
+  const nextRowPosition = rowsMeta.positions[(rowIndexInPage ?? 0) + 1];
+  const rowTop = (dimensions.topContainerHeight ?? 0) + rowPosition;
+  // The row box including the 1px border seam, i.e. the surface's height before it
+  // ever wraps (and its permanent minimum).
+  const rowBoxHeight =
+    (nextRowPosition !== undefined ? nextRowPosition : rowsMeta.currentPageTotalHeight) -
+    rowPosition +
+    1;
+
+  // The ratcheted height, floored at the row box. Reading the refs here mirrors
+  // `appliedWidth`: the imperative growth below writes the same values to the DOM,
+  // so a later re-render (a sort, a row-height change) re-derives an identical box
+  // instead of resetting it.
+  const appliedHeight = React.useCallback(
+    () => Math.max(heightRatchetRef.current ?? 0, inScroller ? rowBoxHeight : 0),
+    [inScroller, rowBoxHeight],
+  );
+
+  let surfaceBlockStyles: React.CSSProperties;
   if (inScroller) {
-    const rowIndexInPage = apiRef.current.getRowIndexRelativeToVisibleRows(id) as
-      | number
-      | undefined;
-    const rowPosition = rowsMeta.positions[rowIndexInPage ?? 0] ?? 0;
-    const nextRowPosition = rowsMeta.positions[(rowIndexInPage ?? 0) + 1];
-    const rowHeight =
-      (nextRowPosition !== undefined ? nextRowPosition : rowsMeta.currentPageTotalHeight) -
-      rowPosition;
+    const height = appliedHeight();
+    // Flipped: the block-END is welded to the row, so the box extends upward as it
+    // grows; unflipped (the normal case) the block-START is, and it extends down.
+    // At one line the two are pixel-identical, which is what makes the choice safe
+    // to make once and never revisit.
     surfaceBlockStyles = {
-      top: (dimensions.topContainerHeight ?? 0) + rowPosition,
-      height: rowHeight + 1,
+      top: flippedRef.current ? rowTop + rowBoxHeight - height : rowTop,
+      height,
     };
+  } else if (heightRatchetRef.current === null) {
+    // Pinned rows: welded to the row box until the editor wraps.
+    surfaceBlockStyles = { top: 0, bottom: 0 };
+  } else {
+    surfaceBlockStyles = flippedRef.current
+      ? { bottom: 0, height: heightRatchetRef.current }
+      : { top: 0, height: heightRatchetRef.current };
   }
+
+  // Writes the block box imperatively, alongside the height ratchet, for the same
+  // reason the width is written imperatively: it happens inside a layout effect,
+  // pre-paint, so the growth and the text that caused it land in the same frame.
+  const applyBlockGeometry = React.useCallback(
+    (surface: HTMLDivElement) => {
+      const height = appliedHeight();
+      if (inScroller) {
+        surface.style.height = `${height}px`;
+        surface.style.top = `${flippedRef.current ? rowTop + rowBoxHeight - height : rowTop}px`;
+        return;
+      }
+      surface.style.height = `${height}px`;
+      if (flippedRef.current) {
+        surface.style.top = 'auto';
+        surface.style.bottom = '0px';
+      } else {
+        surface.style.bottom = 'auto';
+      }
+    },
+    [appliedHeight, inScroller, rowBoxHeight, rowTop],
+  );
 
   // Candidate widths whose inline-end border lands on a column gridline, ascending,
   // ending at the grid's content edge.
@@ -341,36 +434,128 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
         : scrollerRect.right - surfaceRect.left - dim.rightPinnedWidth - scrollbar;
     }
     clampRef.current = Math.max(minWidth, Math.floor(available));
+    clampBasisRef.current = { width: viewportWidth, height: viewportHeight };
     return clampRef.current;
-  }, [apiRef, field, id, isRtl, minWidth]);
+  }, [apiRef, field, id, isRtl, minWidth, viewportHeight, viewportWidth]);
+
+  // Turns the single scrolling line into wrapped, multi-line text. Idempotent, and
+  // deliberately free of any measurement that decides geometry — a remount replays
+  // it to restore the session's look without re-deciding anything.
+  // Returns the metrics measured BEFORE the switch: at one line the editable's
+  // scroll height is exactly the line height, and the surface is exactly the row
+  // box.
+  const applyWrapStyles = React.useCallback((surface: HTMLDivElement, editable: HTMLDivElement) => {
+    const lineHeight = editable.scrollHeight || FORMULA_EDITOR_FALLBACK_LINE_HEIGHT;
+    const boxHeight = surface.offsetHeight;
+    const chrome = boxHeight - surface.clientHeight;
+
+    wrappedRef.current = true;
+    // Stretch the editable over the whole surface and reproduce, as block padding,
+    // the centring `align-items: center` gave it at one line. The first line then
+    // stays exactly where it was — every new line extends the box away from it and
+    // never nudges the text already on screen.
+    surface.style.alignItems = 'stretch';
+    editable.style.whiteSpace = 'pre-wrap';
+    // Formulas carry no spaces to break at, so wrapping has to be allowed
+    // mid-token; reference tokens opt back out of it (see `GridFormulaEditable`).
+    editable.style.overflowWrap = 'anywhere';
+    // Vertical scrolling takes over past the bound. Horizontal stays reachable for
+    // the one thing that still cannot wrap: a reference token wider than the box.
+    editable.style.overflowY = 'auto';
+    editable.style.paddingBlock = `${Math.max(0, (boxHeight - chrome - lineHeight) / 2)}px`;
+
+    return { boxHeight, lineHeight };
+  }, []);
+
+  // The block-axis counterpart of `ensureClamp`, and it runs at the same kind of
+  // single, natural moment: the first time the formula needs a second line. Both
+  // the growth direction and the bound are decided here and never revisited — the
+  // surface lives in content space, so any later measurement is skewed by the
+  // scroll position and could shrink the box, the wobble the ratchets forbid.
+  const enterWrapMode = React.useCallback(
+    (surface: HTMLDivElement, editable: HTMLDivElement) => {
+      const { boxHeight, lineHeight } = applyWrapStyles(surface, editable);
+      const maxWanted = boxHeight + (FORMULA_EDITOR_MAX_WRAPPED_LINES - 1) * lineHeight;
+      heightMaxRef.current = maxWanted;
+
+      const scroller = apiRef.current.virtualScrollerRef?.current;
+      let available = maxWanted;
+      if (scroller) {
+        const dim = gridDimensionsSelector(apiRef);
+        const scrollerRect = scroller.getBoundingClientRect();
+        const surfaceRect = surface.getBoundingClientRect();
+        const scrollbar = dim.hasScrollX ? dim.scrollbarSize : 0;
+        // The sticky containers (z 40) cover the surface (z 30), so the band the
+        // box may occupy stops at their inner edges.
+        const below = scrollerRect.bottom - dim.bottomContainerHeight - scrollbar - surfaceRect.top;
+        const above = surfaceRect.bottom - (scrollerRect.top + dim.topContainerHeight);
+        // Grow upward only for a row that genuinely cannot gain a second line
+        // below it — the last rows of the grid, where growing down would put the
+        // text under the clipped edge of the scroller and show nothing.
+        flippedRef.current = below < boxHeight + 2 * lineHeight && above > below;
+        available = flippedRef.current ? above : below;
+      }
+      heightClampRef.current = Math.max(boxHeight, Math.floor(Math.min(maxWanted, available)));
+      clampBasisRef.current = { width: viewportWidth, height: viewportHeight };
+    },
+    [apiRef, applyWrapStyles, viewportHeight, viewportWidth],
+  );
+
+  // Grow-only on the block axis, by whole lines, bounded by `heightClampRef`.
+  const growHeightToFit = React.useCallback(
+    (surface: HTMLDivElement, editable: HTMLDivElement) => {
+      const chrome = surface.offsetHeight - surface.clientHeight;
+      const wanted = editable.scrollHeight + chrome;
+      heightHighWaterRef.current = Math.max(heightHighWaterRef.current ?? 0, wanted);
+      const needed = Math.min(wanted, heightClampRef.current ?? 0);
+      if (needed > appliedHeight()) {
+        heightRatchetRef.current = needed;
+        applyBlockGeometry(surface);
+      }
+    },
+    [appliedHeight, applyBlockGeometry],
+  );
 
   // Grow-only: widen the surface when the single-line content overflows the
-  // editable, snapping the inline-end border to the next column gridline. Never
-  // shrinks — deletions leave the box as is, so its edges never move backwards.
-  // Runs from the editable's rebuild layout effect (the single funnel all text
-  // changes flow through: typing, paste, suggestion accept, seeding), pre-paint,
-  // so the growth and the new text land together.
+  // editable, snapping the inline-end border to the next column gridline; once
+  // there is no width left to take, wrap and grow by lines instead. Never shrinks
+  // on either axis — deletions leave the box as is, so its edges never move
+  // backwards. Runs from the editable's rebuild layout effect (the single funnel
+  // all text changes flow through: typing, paste, suggestion accept, seeding),
+  // pre-paint, so the growth and the new text land together.
   const growToFit = React.useCallback(
     (editable: HTMLDivElement) => {
       const surface = surfaceRef.current;
       if (!surface) {
         return;
       }
-      // +2: a small gutter so the caret at the end of the line is not glued to the
-      // border when the growth lands past the last gridline (exact-fit tail).
-      const overflow = editable.scrollWidth - editable.clientWidth + 2;
-      if (overflow <= 2) {
-        return;
+      if (!wrappedRef.current) {
+        // +2: a small gutter so the caret at the end of the line is not glued to the
+        // border when the growth lands past the last gridline (exact-fit tail).
+        const overflow = editable.scrollWidth - editable.clientWidth + 2;
+        if (overflow <= 2) {
+          return;
+        }
+        const clamp = ensureClamp();
+        const needed = surface.offsetWidth + overflow;
+        const next = computeSnappedWidth(needed, snapWidths, clamp);
+        if (next > appliedWidth()) {
+          ratchetRef.current = next;
+          widthHighWaterRef.current = Math.max(widthHighWaterRef.current ?? 0, next);
+          surface.style.width = `${next}px`;
+        }
+        // Re-measured against the width just applied (reading it back forces the
+        // pending layout): still overflowing at the clamp means there is no
+        // horizontal room left, so from here the formula wraps rather than
+        // scrolling out of sight.
+        if (appliedWidth() < clamp || editable.scrollWidth <= editable.clientWidth) {
+          return;
+        }
+        enterWrapMode(surface, editable);
       }
-      const clamp = ensureClamp();
-      const needed = surface.offsetWidth + overflow;
-      const next = computeSnappedWidth(needed, snapWidths, clamp);
-      if (next > appliedWidth()) {
-        ratchetRef.current = next;
-        surface.style.width = `${next}px`;
-      }
+      growHeightToFit(surface, editable);
     },
-    [appliedWidth, ensureClamp, snapWidths],
+    [appliedWidth, enterWrapMode, ensureClamp, growHeightToFit, snapWidths],
   );
 
   // The edit-state adapter: run the column's value parser exactly like the plain
@@ -418,10 +603,142 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
         caret: caretOverride !== undefined ? caretOverride : core.getCaret(),
         surfaceWidth: ratchetRef.current,
         surfaceClamp: clampRef.current,
+        surfaceWrapped: wrappedRef.current,
+        surfaceHeight: heightRatchetRef.current,
+        surfaceHeightClamp: heightClampRef.current,
+        surfaceFlipped: flippedRef.current,
+        surfaceWidthHighWater: widthHighWaterRef.current,
+        surfaceHeightHighWater: heightHighWaterRef.current,
+        surfaceClampBasis: clampBasisRef.current,
       };
     },
     [apiRef, field, id],
   );
+
+  // Reproduces the grown box after a virtualization remount. Everything is
+  // restored verbatim from the mirror — the values were already bounded by the
+  // session's own clamps, and re-measuring at the current scroll position could
+  // shrink the box mid-edit. `applyWrapStyles` is replayed rather than
+  // `enterWrapMode`, so the direction and the bound are not decided a second time.
+  const restoreSessionGeometry = React.useCallback(() => {
+    const surface = surfaceRef.current;
+    const editable = coreRef.current?.getRoot();
+    const session = apiRef.current.caches.formula.editorSession;
+    if (!surface || session === null || session.id !== id || session.field !== field) {
+      return;
+    }
+    clampRef.current = session.surfaceClamp;
+    widthHighWaterRef.current = session.surfaceWidthHighWater;
+    heightHighWaterRef.current = session.surfaceHeightHighWater;
+    // Restored, not reset to the current viewport: a resize that happened across
+    // the remount then still registers as a delta on the next render.
+    clampBasisRef.current = session.surfaceClampBasis;
+    if (session.surfaceWidth !== null && session.surfaceWidth > appliedWidth()) {
+      ratchetRef.current = session.surfaceWidth;
+      surface.style.width = `${session.surfaceWidth}px`;
+    }
+    if (!session.surfaceWrapped || !editable) {
+      return;
+    }
+    const { boxHeight, lineHeight } = applyWrapStyles(surface, editable);
+    heightMaxRef.current = boxHeight + (FORMULA_EDITOR_MAX_WRAPPED_LINES - 1) * lineHeight;
+    flippedRef.current = session.surfaceFlipped;
+    heightClampRef.current = session.surfaceHeightClamp;
+    heightRatchetRef.current = session.surfaceHeight;
+    applyBlockGeometry(surface);
+  }, [apiRef, appliedWidth, applyBlockGeometry, applyWrapStyles, field, id]);
+
+  // Follow the grid when it is RESIZED. Both growth bounds are bounds on the
+  // grid's visible box, so a grid that shrinks has to pull the box back in with
+  // it: otherwise a grown editor stays wider than the grid it lives in, spills
+  // past its edge, and inflates the scroller's scrollable width — the grid itself
+  // looks like it got wider.
+  //
+  // What must NOT happen here is a re-measure. The surface sits in content space,
+  // so measuring the available room again would fold in however far the user has
+  // scrolled since the box was measured, and could move the bound for a reason
+  // that has nothing to do with the resize — the shrink-wobble that had the
+  // original re-clamp effect removed. So the bounds are shifted by the DELTA of
+  // the viewport's own size instead, which no amount of scrolling changes (the
+  // same technique the live column-resize sync uses for positions).
+  //
+  // Shrinking here is not a violation of the grow-only ratchets: those keep the
+  // box from wobbling as the CONTENT changes. The container is a different matter
+  // — and it is symmetric, so a grid widened back to its old size puts the box
+  // back at the high-water mark it had reached, rather than leaving it cramped
+  // until the next keystroke.
+  useEnhancedEffect(() => {
+    const basis = clampBasisRef.current;
+    const surface = surfaceRef.current;
+    if (basis === null || surface === null) {
+      // Nothing measured yet: `ensureClamp` will read live values when it runs.
+      return;
+    }
+    const widthDelta = viewportWidth - basis.width;
+    const heightDelta = viewportHeight - basis.height;
+    if (widthDelta === 0 && heightDelta === 0) {
+      return;
+    }
+    clampBasisRef.current = { width: viewportWidth, height: viewportHeight };
+
+    let widthChanged = false;
+    if (clampRef.current !== null && widthDelta !== 0) {
+      clampRef.current = Math.max(minWidth, clampRef.current + widthDelta);
+      const target = Math.min(widthHighWaterRef.current ?? 0, clampRef.current);
+      if (target >= minWidth && target !== ratchetRef.current) {
+        ratchetRef.current = target;
+        surface.style.width = `${target}px`;
+        widthChanged = true;
+      }
+    }
+    // Pinned rows sit in the sticky containers, whose block box does not follow
+    // the viewport the way a scrolling row's does — leave their height alone.
+    if (inScroller && heightClampRef.current !== null) {
+      if (heightDelta !== 0) {
+        heightClampRef.current = Math.max(
+          rowBoxHeight,
+          Math.min(
+            heightMaxRef.current ?? Number.POSITIVE_INFINITY,
+            heightClampRef.current + heightDelta,
+          ),
+        );
+      }
+      if (widthChanged) {
+        // How many lines a formula needs is a function of how wide the box is, so
+        // a box that just changed width re-derives its height from scratch instead
+        // of holding the ratchet it reached at the old width — otherwise a grid
+        // widened back to its old size would keep the extra lines it needed while
+        // it was narrow. Collapsing it first is what makes the measurement in
+        // `growToFit` below read the content's height rather than the box's own.
+        heightRatchetRef.current = null;
+        heightHighWaterRef.current = null;
+        applyBlockGeometry(surface);
+      } else if (heightDelta !== 0) {
+        const target = Math.min(heightHighWaterRef.current ?? 0, heightClampRef.current);
+        if (target >= rowBoxHeight && target !== heightRatchetRef.current) {
+          heightRatchetRef.current = target;
+          applyBlockGeometry(surface);
+        }
+      }
+    }
+
+    // The box changed shape, so the formula has to be re-fitted to it: a narrower
+    // single line may now need to wrap, and a re-wrap may need more lines.
+    const editable = coreRef.current?.getRoot();
+    if (editable) {
+      growToFit(editable);
+    }
+    updateEditorSession();
+  }, [
+    applyBlockGeometry,
+    growToFit,
+    inScroller,
+    minWidth,
+    rowBoxHeight,
+    updateEditorSession,
+    viewportHeight,
+    viewportWidth,
+  ]);
 
   // A pinned column's cell is `position: sticky` — its visual position is
   // viewport-anchored and diverges from its content-space layout slot once the
@@ -515,9 +832,12 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   // before this component's own refs are attached (child effects run before the
   // parent's host refs) — on mount, a formula seeded before this render misses
   // its `onAfterRebuild` growth because `surfaceRef` is still null. Re-run the
-  // growth once on mount, with the surface in place; it is grow-only and
-  // idempotent, so a remount that later restores a session width is unaffected.
+  // growth once on mount, with the surface in place.
   useEnhancedEffect(() => {
+    // Restore first: a remount must reproduce the session's box before any fresh
+    // growth is measured against it. Both ratchets are grow-only, so the growth
+    // that follows can only confirm the restored box, never change it.
+    restoreSessionGeometry();
     const root = coreRef.current?.getRoot();
     if (root) {
       growToFit(root);
@@ -564,17 +884,10 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
     const session = apiRef.current.caches.formula.editorSession;
     if (session !== null && session.id === id && session.field === field) {
       // The editing cell remounted mid-edit: resume the live session — restore
-      // the engaged flag, the grown surface box, and put the caret back where
-      // it was, not at the end. The mirror stays in place for any further
-      // remount. The width is restored verbatim (it was already bounded by the
-      // session's own clamp, which `ensureClamp` also resumes): re-clamping with
-      // a freshly measured, scroll-skewed bound could shrink the box mid-edit.
+      // the engaged flag and put the caret back where it was, not at the end. The
+      // mirror stays in place for any further remount. (The surface box itself was
+      // already restored by `restoreSessionGeometry`, in the effect above.)
       core.setEngaged(session.engaged);
-      const surface = surfaceRef.current;
-      if (surface && session.surfaceWidth !== null && session.surfaceWidth > appliedWidth()) {
-        ratchetRef.current = session.surfaceWidth;
-        surface.style.width = `${session.surfaceWidth}px`;
-      }
       if (!barOwnsFocus) {
         core.placeCaret(session.caret ?? null);
       }
@@ -586,7 +899,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
     if (!barOwnsFocus && !core.isEngaged()) {
       core.placeCaret(null);
     }
-  }, [apiRef, appliedWidth, field, hasFocus, id]);
+  }, [apiRef, field, hasFocus, id]);
 
   // Clicking the surface's own chrome (border/padding, not the editable) must not
   // move DOM focus out of the editable — the caret would be lost mid-edit.

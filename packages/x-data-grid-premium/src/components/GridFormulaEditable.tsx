@@ -20,6 +20,7 @@ import {
   unregisterFormulaFocusSafeElement,
 } from '../hooks/features/formula/gridFormulaBarElements';
 import {
+  FORMULA_REFERENCE_TOKEN_CLASS,
   getCaretOffset,
   getSelectionOffsets,
   normalizeSingleLine,
@@ -33,8 +34,11 @@ import {
 // plain text nodes, managed imperatively (`renderSegments`) — never by React — so
 // the caret is never clobbered by reconciliation. `white-space: pre` keeps the
 // single line intact; the browser auto-scrolls it to the caret, so there is no
-// scroll-sync to maintain. It must NOT be `display: flex` (that would turn the
-// inline text/spans into anonymous flex items and break `white-space: pre`).
+// scroll-sync to maintain. (The in-cell floating editor overrides `white-space`
+// inline once its width ratchet reaches the clamp — see `enterWrapMode` in
+// `GridFormulaEditor` — so the formula wraps instead of scrolling out of sight.
+// The formula bar stays single-line.) It must NOT be `display: flex` (that would
+// turn the inline text/spans into anonymous flex items and break `white-space`).
 // The reference palette CSS variables live directly on the editable so the
 // colored token `<span>`s resolve wherever the editable is mounted (the in-cell
 // floating surface or the formula bar).
@@ -52,6 +56,14 @@ const GridFormulaEditableRoot = styled('div')(({ theme }) => ({
   textAlign: 'start',
   scrollbarWidth: 'none',
   '&::-webkit-scrollbar': { display: 'none' },
+  // A reference token must never be split across two lines when the editor wraps:
+  // half of `SUM(A1:A10)` in one color on each line reads as two references and
+  // contradicts the highlighting. `normal` opts the token out of the wrapped
+  // editor's `overflow-wrap: anywhere`, leaving it atomic (formula tokens carry no
+  // break opportunities of their own). A token wider than the whole box is left to
+  // overflow — the editable keeps `overflow-x: auto` in wrapped mode for exactly
+  // that case, so the caret can still reach it.
+  [`& .${FORMULA_REFERENCE_TOKEN_CLASS}`]: { overflowWrap: 'normal' },
   ...getFormulaReferencePaletteStyles(theme),
 }));
 
@@ -287,6 +299,15 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
     // caret placement.
     const renderedSegmentsRef = React.useRef<FormulaTextSegment[]>([]);
     const renderedTextRef = React.useRef('');
+    // The popper.js instance behind the suggestion popup, captured through MUI
+    // Popper's `popperRef`. popper.js listens to scroll-parent scroll and window
+    // resize only — it never observes the anchor's own size — so a popup anchored
+    // to the editable stays put when the editor wraps and grows taller. We nudge
+    // it from the rebuild effect instead.
+    const popperInstanceRef = React.useRef<{ forceUpdate: () => void } | null>(null);
+    const setPopperInstance = React.useCallback((instance: any) => {
+      popperInstanceRef.current = instance;
+    }, []);
 
     const model = useGridFormulaReferenceModel(apiRef, ownerCell, a1Notation, value);
     const segments = React.useMemo(
@@ -369,6 +390,8 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
       // (typing, paste, an accepted suggestion, and the source seeding all pass
       // through here). Pre-paint, so any growth and the new text land together.
       onAfterRebuild?.(root);
+      // Growth may have moved the editable's bottom edge (the popup's anchor).
+      popperInstanceRef.current?.forceUpdate();
 
       if (!isActive) {
         pendingCaretRef.current = null;
@@ -685,6 +708,7 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
             target={anchorEl}
             placement="bottom-start"
             flip
+            material={{ popperRef: setPopperInstance }}
           >
             <GridFormulaEditorPanel
               ref={handlePanelRef}

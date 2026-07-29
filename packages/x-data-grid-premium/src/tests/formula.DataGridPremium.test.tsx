@@ -2592,6 +2592,13 @@ describe('<DataGridPremium /> - Formulas', () => {
         caret: 2,
         surfaceWidth: null,
         surfaceClamp: null,
+        surfaceWrapped: false,
+        surfaceHeight: null,
+        surfaceHeightClamp: null,
+        surfaceFlipped: false,
+        surfaceWidthHighWater: null,
+        surfaceHeightHighWater: null,
+        surfaceClampBasis: null,
       };
       fireEvent.keyDown(getCellEditable(0, 3), { key: 'Enter' });
       await microtasks();
@@ -2662,6 +2669,22 @@ describe('<DataGridPremium /> - Formulas', () => {
 
     function getSurface() {
       return document.querySelector<HTMLElement>(SURFACE_SELECTOR);
+    }
+
+    // Wrapped (multi-line) mode: the editor reached its width clamp and switched
+    // from one scrolling line to wrapping + block-axis growth.
+    function isWrapped() {
+      const editable = document.querySelector<HTMLElement>(`${SURFACE_SELECTOR} [contenteditable]`);
+      return editable !== null && getComputedStyle(editable).whiteSpace === 'pre-wrap';
+    }
+
+    // The top of the editor's first visual line, measured through a range over its
+    // first character (the editable has no per-line elements to measure).
+    function firstLineTop(editable: HTMLElement) {
+      const range = editable.ownerDocument.createRange();
+      range.setStart(editable.firstChild!, 0);
+      range.setEnd(editable.firstChild!, 1);
+      return range.getBoundingClientRect().top;
     }
 
     // The formula column is NOT last here, so the surface's growth has column
@@ -2860,27 +2883,34 @@ describe('<DataGridPremium /> - Formulas', () => {
     });
 
     it.skipIf(isJSDOM)(
-      'clamps the growth at the viewport edge and scrolls internally',
+      'clamps the growth at the viewport edge and wraps instead of scrolling',
       async () => {
         const { user } = await render(<Test />);
         await user.dblClick(getCell(0, 3));
         await waitFor(() => {
           expect(getCellEditable(0, 3)).not.to.equal(null);
         });
+        const rowHeight = getCell(0, 3).getBoundingClientRect().height;
+        // A formula that still fits the horizontal room stays on one line: the
+        // wrap is the fallback, not the first move.
+        setEditableValue(0, 3, '=11111');
+        expect(isWrapped()).to.equal(false);
+        expect(getSurface()!.getBoundingClientRect().height).to.be.lessThan(rowHeight + 2);
+
         setEditableValue(0, 3, `=${'1'.repeat(60)}`);
-        // The single line scrolls inside the clamped surface, keeping the caret
-        // visible without scrolling the grid.
+        // Out of horizontal room, the formula wraps and the box grows by whole
+        // lines rather than scrolling the text out of sight.
         await waitFor(() => {
-          const editable = getCellEditable(0, 3);
-          expect(editable.scrollWidth).to.be.greaterThan(editable.clientWidth);
+          expect(isWrapped()).to.equal(true);
         });
         const scroller = document
           .querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!
           .getBoundingClientRect();
         const surface = getSurface()!.getBoundingClientRect();
         expect(surface.right).to.be.lessThan(scroller.right + 1);
-        // It still grew as far as the viewport allows.
+        // It still grew as far as the viewport allows, on both axes.
         expect(surface.right).to.be.greaterThan(getCell(0, 3).getBoundingClientRect().right + 50);
+        expect(surface.height).to.be.greaterThan(rowHeight + 10);
       },
     );
 
@@ -2922,13 +2952,13 @@ describe('<DataGridPremium /> - Formulas', () => {
     );
 
     it.skipIf(isJSDOM)(
-      'reveals the caret at the end of a formula longer than the maximum width on entry',
+      'reveals the caret at the end of a formula that overflows the box on entry',
       async () => {
-        // Longer than the whole grid viewport: the surface opens at its clamp and
-        // the line scrolls internally. The entry caret goes to the END — and must
-        // be scrolled into view (programmatic caret placement gets no native
-        // reveal from the browser).
-        const longFormula = `=${'1'.repeat(160)}`;
+        // Far longer than the grid viewport: the surface opens at its clamp,
+        // already wrapped. The entry caret goes to the END — and must be revealed
+        // (programmatic caret placement gets no native reveal from the browser),
+        // which past the line cap means scrolling the wrapped text vertically.
+        const longFormula = `=${'1'.repeat(400)}`;
         const { user } = await render(
           <Test rows={[{ id: 0, item: 'Apple', price: 2, quantity: 3, total: longFormula }]} />,
         );
@@ -2937,13 +2967,15 @@ describe('<DataGridPremium /> - Formulas', () => {
           expect(getCellEditable(0, 3).textContent).to.equal(longFormula);
         });
         const editable = getCellEditable(0, 3);
-        expect(editable.scrollWidth).to.be.greaterThan(editable.clientWidth);
+        expect(isWrapped()).to.equal(true);
+        expect(editable.scrollHeight).to.be.greaterThan(editable.clientHeight);
         expect(getCaretOffset(editable)).to.equal(longFormula.length);
-        // The view shows the end of the formula, not the start.
+        // The caret sits inside the visible box, not past its scrolled-out edge.
         await waitFor(() => {
-          expect(editable.scrollLeft).to.be.greaterThan(
-            editable.scrollWidth - editable.clientWidth - 10,
-          );
+          const caret = document.getSelection()!.getRangeAt(0).getBoundingClientRect();
+          const box = editable.getBoundingClientRect();
+          expect(caret.top).to.be.greaterThan(box.top - 2);
+          expect(caret.bottom).to.be.lessThan(box.bottom + 2);
         });
       },
     );
@@ -3096,12 +3128,11 @@ describe('<DataGridPremium /> - Formulas', () => {
           1.5,
         );
       });
-      // The RTL clamp: growth stops at the viewport's LEFT edge and the line
-      // scrolls internally beyond it.
-      setEditableValue(0, 1, `=${'1'.repeat(60)}`);
+      // The RTL clamp: growth stops at the viewport's LEFT edge, and the formula
+      // wraps beyond it.
+      setEditableValue(0, 1, `=${'1'.repeat(120)}`);
       await waitFor(() => {
-        const editable = getCellEditable(0, 1);
-        expect(editable.scrollWidth).to.be.greaterThan(editable.clientWidth);
+        expect(isWrapped()).to.equal(true);
       });
       const scroller = document
         .querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!
@@ -3164,17 +3195,297 @@ describe('<DataGridPremium /> - Formulas', () => {
       await waitFor(() => {
         expect(getCellEditable(0, 1)).not.to.equal(null);
       });
-      setEditableValue(0, 1, `=${'1'.repeat(60)}`);
+      setEditableValue(0, 1, `=${'1'.repeat(120)}`);
       // The clamp subtracts the pinned section: the surface stops at the seam
-      // instead of covering the frozen column.
+      // instead of covering the frozen column, and wraps from there.
       await waitFor(() => {
-        const editable = getCellEditable(0, 1);
-        expect(editable.scrollWidth).to.be.greaterThan(editable.clientWidth);
+        expect(isWrapped()).to.equal(true);
       });
       const pinned = getCell(0, 3).getBoundingClientRect();
       const surface = getSurface()!.getBoundingClientRect();
       expect(surface.right).to.be.lessThan(pinned.left + 2);
       expect(surface.right).to.be.greaterThan(getCell(0, 1).getBoundingClientRect().right);
+    });
+
+    it.skipIf(isJSDOM)(
+      'keeps the first line in place as the box grows, and never shrinks it back',
+      async () => {
+        const { user } = await render(<Test />);
+        await user.dblClick(getCell(0, 3));
+        await waitFor(() => {
+          expect(getCellEditable(0, 3)).not.to.equal(null);
+        });
+        setEditableValue(0, 3, '=11');
+        await microtasks();
+        const singleLineTop = firstLineTop(getCellEditable(0, 3));
+        const surfaceTop = getSurface()!.getBoundingClientRect().top;
+
+        setEditableValue(0, 3, `=${'1'.repeat(60)}`);
+        await waitFor(() => {
+          expect(isWrapped()).to.equal(true);
+        });
+        // Growth is strictly away from the first line: neither the text already on
+        // screen nor the box's block-start moves when a line is added.
+        expect(Math.abs(firstLineTop(getCellEditable(0, 3)) - singleLineTop)).to.be.lessThan(1.5);
+        expect(Math.abs(getSurface()!.getBoundingClientRect().top - surfaceTop)).to.be.lessThan(
+          1.5,
+        );
+        const grownHeight = getSurface()!.getBoundingClientRect().height;
+        expect(grownHeight).to.be.greaterThan(getCell(0, 3).getBoundingClientRect().height + 10);
+
+        // Deleting back to a short formula leaves the box exactly as it is — the
+        // block axis ratchets like the inline one, so a keystroke at a wrap
+        // boundary can never toggle the box between two heights.
+        setEditableValue(0, 3, '=11');
+        await microtasks();
+        expect(Math.abs(getSurface()!.getBoundingClientRect().height - grownHeight)).to.be.lessThan(
+          1.5,
+        );
+      },
+    );
+
+    it.skipIf(isJSDOM)('stops growing at the line cap and scrolls the wrapped text', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      const rowHeight = getCell(0, 3).getBoundingClientRect().height;
+      setEditableValue(0, 3, `=${'1'.repeat(400)}`);
+      await waitFor(() => {
+        expect(isWrapped()).to.equal(true);
+      });
+      const editable = getCellEditable(0, 3);
+      const lineHeight = parseFloat(getComputedStyle(editable).lineHeight);
+      const surface = getSurface()!.getBoundingClientRect();
+      // Five visual lines: the row box plus four more line heights, and no more —
+      // past that the wrapped text scrolls inside instead of hiding further rows.
+      expect(Math.abs(surface.height - (rowHeight + 1 + 4 * lineHeight))).to.be.lessThan(2);
+      expect(editable.scrollHeight).to.be.greaterThan(editable.clientHeight);
+      const scroller = document
+        .querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!
+        .getBoundingClientRect();
+      expect(surface.bottom).to.be.lessThan(scroller.bottom + 1);
+    });
+
+    it.skipIf(isJSDOM)('keeps the line cap when the grid becomes taller mid-edit', async () => {
+      function ResizableHeightTest({ height }: { height: number }) {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 600, height }}>
+            <DataGridPremium {...baselineProps} apiRef={apiRef} />
+          </div>
+        );
+      }
+
+      const { user, setProps } = await render(<ResizableHeightTest height={300} />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      setEditableValue(0, 3, `=${'1'.repeat(400)}`);
+      await waitFor(() => {
+        expect(isWrapped()).to.equal(true);
+      });
+
+      const editable = getCellEditable(0, 3);
+      const lineHeight = parseFloat(getComputedStyle(editable).lineHeight);
+      const rowHeight = getCell(0, 3).getBoundingClientRect().height;
+      const cappedHeight = rowHeight + 1 + 4 * lineHeight;
+      expect(Math.abs(getSurface()!.getBoundingClientRect().height - cappedHeight)).to.be.lessThan(
+        2,
+      );
+
+      const initialViewportHeight = apiRef.current!.state.dimensions.viewportInnerSize.height;
+      setProps({ height: 600 });
+      await waitFor(() => {
+        expect(apiRef.current!.state.dimensions.viewportInnerSize.height).to.be.greaterThan(
+          initialViewportHeight + 250,
+        );
+      });
+      await waitFor(() => {
+        expect(
+          Math.abs(getSurface()!.getBoundingClientRect().height - cappedHeight),
+        ).to.be.lessThan(2);
+      });
+      expect(editable.scrollHeight).to.be.greaterThan(editable.clientHeight);
+    });
+
+    it.skipIf(isJSDOM)('grows upward for a row with no room below it', async () => {
+      const manyRows = Array.from({ length: 30 }, (_, index) => ({
+        id: index,
+        item: `Item ${index}`,
+        price: index + 1,
+        quantity: 2,
+        total: '=1',
+      }));
+      await render(<Test rows={manyRows} />);
+      const scrollerEl = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+      await act(async () => {
+        scrollerEl.scrollTop = scrollerEl.scrollHeight;
+      });
+      await waitFor(() => {
+        expect(getCell(29, 3)).not.to.equal(null);
+      });
+      fireEvent.doubleClick(getCell(29, 3));
+      await waitFor(() => {
+        expect(getSurface()).not.to.equal(null);
+      });
+      const cell = getCell(29, 3).getBoundingClientRect();
+      setEditableValue(29, 3, `=${'1'.repeat(60)}`);
+      await waitFor(() => {
+        expect(isWrapped()).to.equal(true);
+      });
+      const surface = getSurface()!.getBoundingClientRect();
+      // The last row has nothing below it to grow into, so the box's block-END is
+      // welded to the row and it extends upward instead — the only way the whole
+      // formula stays visible there.
+      expect(Math.abs(surface.bottom - (cell.bottom + 1))).to.be.lessThan(2);
+      expect(surface.top).to.be.lessThan(cell.top - 10);
+      const scroller = scrollerEl.getBoundingClientRect();
+      // +2: the surface's bottom border sits ON the row's gridline, which for the
+      // last row is the scroller's own edge (the same 1px seam as the inline axis).
+      expect(surface.bottom).to.be.lessThan(scroller.bottom + 2);
+      expect(surface.top).to.be.greaterThan(scroller.top - 1);
+    });
+
+    it.skipIf(isJSDOM)('never splits a reference token across two lines', async () => {
+      // A long-named column makes a long reference token, and sweeping the padding
+      // length walks that token across every possible wrap boundary: if the
+      // wrapped editor's `overflow-wrap: anywhere` could break a token, one of
+      // these offsets would split it into two client rects (and two colored
+      // fragments, which read as two different references).
+      const longFieldColumns: GridColDef[] = [
+        { field: 'item' },
+        { field: 'total', type: 'number', allowFormulas: true, editable: true },
+        { field: 'unitPriceInLocalCurrency', type: 'number' },
+      ];
+      const { user } = await render(
+        <Test
+          rows={[{ id: 0, item: 'Apple', total: '=1', unitPriceInLocalCurrency: 7 }]}
+          columns={longFieldColumns}
+        />,
+      );
+      await user.dblClick(getCell(0, 1));
+      await waitFor(() => {
+        expect(getCellEditable(0, 1)).not.to.equal(null);
+      });
+      for (let padding = 40; padding < 56; padding += 1) {
+        setEditableValue(0, 1, `=${'1'.repeat(padding)}+unitPriceInLocalCurrency`);
+        // eslint-disable-next-line no-await-in-loop
+        await microtasks();
+        const token = document.querySelector<HTMLElement>(
+          `${SURFACE_SELECTOR} .MuiDataGrid-formulaReferenceToken`,
+        );
+        expect(token, `padding ${padding}`).not.to.equal(null);
+        expect(token!.getClientRects().length, `padding ${padding}`).to.equal(1);
+      }
+      expect(isWrapped()).to.equal(true);
+    });
+
+    it.skipIf(isJSDOM)('moves the suggestion popup below the grown editor', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      const editable = getCellEditable(0, 3);
+      const value = `=${'1'.repeat(60)}+SU`;
+      editable.textContent = value;
+      setCaretOffset(editable, value.length);
+      fireEvent.input(editable);
+      await waitFor(() => {
+        expect(isWrapped()).to.equal(true);
+        expect(document.querySelector('[role="listbox"]')).not.to.equal(null);
+      });
+      // popper.js listens to scroll and window resize only — it never observes the
+      // anchor's own size — so without an explicit nudge the popup would stay at
+      // the height the editor had before it wrapped.
+      const panel = document.querySelector<HTMLElement>('[role="listbox"]')!.parentElement!;
+      expect(
+        Math.abs(panel.getBoundingClientRect().top - editable.getBoundingClientRect().bottom),
+      ).to.be.lessThan(12);
+    });
+
+    it.skipIf(isJSDOM)('restores the wrapped box when the editing cell remounts', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      setEditableValue(0, 3, `=${'1'.repeat(60)}`);
+      await waitFor(() => {
+        expect(isWrapped()).to.equal(true);
+      });
+      const heightBefore = getSurface()!.getBoundingClientRect().height;
+      // Pinning the column mid-edit remounts the editing cell, the same class of
+      // remount virtualization causes: the fresh surface must come back wrapped
+      // and the same size, without re-deciding anything at the current scroll.
+      await act(async () => {
+        apiRef.current!.setPinnedColumns({ left: ['total'] });
+      });
+      await waitFor(() => {
+        expect(getSurface()).not.to.equal(null);
+      });
+      expect(isWrapped()).to.equal(true);
+      expect(Math.abs(getSurface()!.getBoundingClientRect().height - heightBefore)).to.be.lessThan(
+        2,
+      );
+    });
+
+    it.skipIf(isJSDOM)('follows the grid when it is resized mid-edit', async () => {
+      function ResizableTest({ width }: { width: number }) {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width, height: 400 }}>
+            <DataGridPremium {...baselineProps} apiRef={apiRef} />
+          </div>
+        );
+      }
+      const { user, setProps } = await render(<ResizableTest width={600} />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3)).not.to.equal(null);
+      });
+      setEditableValue(0, 3, `=${'1'.repeat(60)}`);
+      await waitFor(() => {
+        expect(isWrapped()).to.equal(true);
+      });
+      const scrollerEl = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+      const grown = getSurface()!.getBoundingClientRect();
+      expect(scrollerEl.scrollWidth).to.equal(scrollerEl.clientWidth);
+
+      // Narrowing the grid must pull the box in with it. Left alone, the box keeps
+      // a width that no longer exists: it spills past the grid's edge and stretches
+      // the scroller's scrollable width, so the grid itself looks like it grew.
+      setProps({ width: 380 });
+      await waitFor(() => {
+        expect(apiRef.current!.state.dimensions.viewportInnerSize.width).to.be.lessThan(400);
+      });
+      await waitFor(() => {
+        // The columns alone still overflow 380px; what must not happen is the
+        // surface adding to that.
+        expect(scrollerEl.scrollWidth).to.be.lessThan(
+          apiRef.current!.state.dimensions.columnsTotalWidth + 3,
+        );
+      });
+      const narrowed = getSurface()!.getBoundingClientRect();
+      expect(narrowed.width).to.be.lessThan(grown.width);
+      // Narrower box, same formula: it needs more lines.
+      expect(narrowed.height).to.be.greaterThan(grown.height);
+
+      // ...and widening it back restores the box exactly, rather than leaving it
+      // cramped until the next keystroke.
+      setProps({ width: 700 });
+      await waitFor(() => {
+        expect(apiRef.current!.state.dimensions.viewportInnerSize.width).to.be.greaterThan(600);
+      });
+      await waitFor(() => {
+        const restored = getSurface()!.getBoundingClientRect();
+        expect(Math.abs(restored.width - grown.width)).to.be.lessThan(2);
+        expect(Math.abs(restored.height - grown.height)).to.be.lessThan(2);
+      });
+      expect(scrollerEl.scrollWidth).to.equal(scrollerEl.clientWidth);
     });
   });
 

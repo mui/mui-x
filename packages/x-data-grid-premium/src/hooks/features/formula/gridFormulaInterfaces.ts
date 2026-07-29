@@ -244,11 +244,11 @@ export interface GridFormulaInternalCache {
   focusSafeElements: Set<Element>;
   /**
    * Live mirror of the formula-editor session (engaged flag + caret offset +
-   * the grown floating-surface width), written by the focused editor on every
+   * the grown floating-surface box), written by the focused editor on every
    * user interaction. When virtualization remounts the editing cell (the
    * edited row left the render window), the fresh editor instance resumes from
    * it instead of snapping the caret to the end — reproducing the identical
-   * surface box, since the width ratchet never shrinks mid-edit. Cleared on
+   * surface box, since neither growth ratchet shrinks mid-edit. Cleared on
    * `cellEditStop`.
    */
   editorSession: {
@@ -264,6 +264,38 @@ export interface GridFormulaInternalCache {
      * exact wobble the grow-only ratchet forbids.
      */
     surfaceClamp: number | null;
+    /**
+     * Whether the editor has switched to wrapped (multi-line) mode — the width
+     * ratchet reached its clamp and the formula still did not fit on one line.
+     * Monotonic for the life of the session.
+     */
+    surfaceWrapped: boolean;
+    /** The ratcheted surface height once wrapped. */
+    surfaceHeight: number | null;
+    /**
+     * The vertical growth bound captured when the surface first wrapped. Same
+     * measure-once rule as `surfaceClamp`.
+     */
+    surfaceHeightClamp: number | null;
+    /**
+     * Whether the surface grows upward (its block-end welded to the row) because
+     * the row had no room below. Decided once, when the surface first wrapped.
+     */
+    surfaceFlipped: boolean;
+    /**
+     * The largest box the content asked for before clamping, on each axis. A grid
+     * resized smaller pulls the box in; these put it back when the grid is resized
+     * larger again.
+     */
+    surfaceWidthHighWater: number | null;
+    surfaceHeightHighWater: number | null;
+    /**
+     * The viewport size the two clamps were last valid for. The clamps follow a
+     * grid resize by the DELTA against this, never by re-measuring — a re-measure
+     * would fold in the scroll position and could shrink the box for a reason
+     * unrelated to the resize.
+     */
+    surfaceClampBasis: { width: number; height: number } | null;
   } | null;
 }
 

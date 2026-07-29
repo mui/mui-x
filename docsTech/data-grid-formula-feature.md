@@ -31,6 +31,8 @@ The feature ships in 6 independently mergeable iterations:
 - **I9** — grow-with-content floating editor: the formula editor floats over the cell in a
   statically-positioned row-portaled surface and grows inline-end with the formula (D24).
 - **I10** — live column-resize sync: the reference rectangles and the floating surface track a column's drag-resize per `columnResize` event, and the edit survives the gesture (D25).
+- **I11** — vertical growth: once the width ratchet reaches its clamp the formula wraps and the
+  surface grows by whole lines, bounded, so the whole formula stays visible (D27).
 
 ## Locked design decisions
 
@@ -619,14 +621,8 @@ row-child `role="dialog"` + attribute-carrying role-less anchor mirrors `GridEdi
 shipped structure (longText parity, pinned by core a11y tests) — not diverged from premium-side; the
 `rowIndex === lastRowIndex` one-row band where the virtualizer renders neither the real row nor the
 zero-size keep-alive unmounts ANY editor (pre-existing core gap, same bucket as the render-context
-tear; the session mirror recovers the formula editor on remount). _A2 (wrap-and-grow-down at the
-clamp) analysis:_ under this static architecture the upgrade is almost pure CSS — flip the editable
-to `pre-wrap`/`overflow-wrap: anywhere` and the surface to `top: -1px; min-height: calc(100% + 1px);
-height: auto` when the ratchet hits the clamp (top/start edges stay pinned; the bottom edge steps by
-line-height, the vertical analog of column snapping; z/opaque painting already correct). Real costs:
-a visible-bottom height cap measured once (then inner vertical scroll — growing up would move the
-pinned top edge) and a popup-reposition nudge (ResizeObserver → popper `update()`; popup-only, the
-editor stays static). String-based caret offsets are wrap-agnostic. Nothing in A1 is throwaway.
+tear; the session mirror recovers the formula editor on remount). _At-the-clamp behavior (A1, single line + inner horizontal scroll) was superseded by the wrap-down
+upgrade — see D27._
 
 **D25. Live column drag-resize sync (overlay rects + editor surface) and edit survival.** During a
 column drag-resize the grid bypasses React per mousemove — `useGridColumnResize.updateWidth` mutates
@@ -679,9 +675,9 @@ release AND an off-separator release; plain edit still stops).
 
 **D26. Built-in formula bar (`FormulaBar`) and docs restructure (2026-07-19).** The formula bar was
 originally planned as a userland docs recipe (D18), but a faithful Excel/Sheets bar would have
-required ~5 public API additions (promoting the formula api, a canonical→A1 option, a draft
+required ~5 public API additions (promoting the formula API, a canonical→A1 option, a draft
 evaluation API, exporting the editor core, overlay plumbing) just to reassemble what the product
-can do internally — so it shipped built-in (Bilal's decision, along with keeping the formula api
+can do internally — so it shipped built-in (Bilal's decision, along with keeping the formula API
 private). Architecture: **the bar is a permanently open formula editor for the focused cell**, not
 an auto-started cell edit. Active cell tracked via `cellFocusIn` (fires on click and keyboard nav)
 and retained across `cellFocusOut`. Three modes: display (canonical source, A1 display via
@@ -732,6 +728,71 @@ in `scripts/buildApiDocs/gridSettings`. **Docs restructure:** `formulas.md` spli
 operators/refs/ranges/functions/errors + A1), and Formula engine (`/formula-engine`: How it works +
 custom functions + selectors) under a `formulas-group` nav (pivoting-group pattern), plus a
 `components/formula-bar` page. A planned Recipes page is deferred until a real recipe exists.
+
+**D27. Vertical growth: wrap and grow by lines at the width clamp (I11).** Review ask (#22807 comment
+5022417224, @noraleonte): let the editor grow both horizontally _and_ vertically, so the whole formula
+stays visible instead of overflowing. Supersedes D24's "A1" at-the-clamp behavior (one line + inner
+horizontal scroll). **Two-phase growth:** the width ratchet is unchanged (snapped to gridlines,
+clamped at the viewport's visible inline-end edge, no readability soft-cap — wrapping earlier would
+only make the box taller and hide more rows); when it reaches that clamp and the line still overflows,
+`enterWrapMode` flips the editable to `white-space: pre-wrap; overflow-wrap: anywhere; overflow-y:
+auto` and the same grow-only discipline takes over the block axis. This matches the convention:
+OnlyOffice, Handsontable, Univer, Luckysheet and Sheets all grow horizontally first and wrap at the
+viewport; a horizontal clamp that then scrolls horizontally (A1) had no precedent in an 11-product
+survey. **The first line never moves:** the surface switches to `align-items: stretch` and the
+editable takes `padding-block: (rowBox − borders − lineHeight) / 2`, reproducing the centring
+`align-items: center` gave it at one line — so a one-line box is pixel-identical to before and every
+new line extends the box away from the text already on screen. **Bounded at 5 lines**
+(`FORMULA_EDITOR_MAX_WRAPPED_LINES`; ~400–600 characters, about two extra rows occluded), then the
+wrapped text scrolls internally — unbounded growth is the one thing Sheets is actively criticized for,
+and Microsoft's own patent (US20060224947A1) caps at 3–5 lines for the same reason. **Height is
+grow-only**, like the width: at a wrap boundary a single keystroke would otherwise toggle the box
+between N and N+1 lines. **Flip for a row with no room below:** the bound and the growth direction are
+decided together, once, at the moment the surface first wraps — the same measure-once rule as
+`ensureClamp`, and for the same reason (the surface lives in content space, so any later measurement
+is scroll-skewed). A row that cannot gain a second line below it (`below < rowBox + 2 × lineHeight`,
+that is, the last rows of the grid) welds its block-END to the row and grows upward instead; the choice is
+invisible until the box is actually taller than the row, so nothing flips mid-edit. The band stops at
+the sticky containers' inner edges (they are z 40, the surface z 30). _Growing up is a deliberate
+divergence:_ no spreadsheet does it — but none has a finite last row, and capping-and-scrolling there
+would leave exactly the case the review named unfixed. **Escaping the grid's bounds was rejected:**
+`.MuiDataGrid-main` and `.MuiDataGrid-root` are both `overflow: hidden`, so it needs a portal outside
+the root — viewport-fixed coordinates and scroll-synced repositioning, the architecture D24 was
+built to avoid. **Reference tokens stay atomic** (`overflow-wrap: normal` on
+`.MuiDataGrid-formulaReferenceToken`): half of a colored reference on each line reads as two
+references. A token wider than the whole box is left to overflow, which is why the wrapped editable
+keeps `overflow-x: auto`. **The bounds follow a grid resize** (Bilal's find): both clamps bound the grid's visible box, so a grid
+resized smaller has to pull the editor in with it — left alone, a grown box keeps a width that no
+longer exists, spills past the grid's edge and inflates the scroller's scrollable width, which reads
+as the grid itself getting wider (measured: narrowing a 600px grid to 380px left `scrollWidth` at 598
+against a `clientWidth` of 378). The bounds are shifted by the **delta of `viewportInnerSize`**, never
+re-measured: the surface sits in content space, so re-measuring the available room would fold in
+however far the user has scrolled since, and could shrink the box for a reason unrelated to the resize
+— the wobble that had D24's original re-clamp effect deleted. Delta-shifting is the same technique the
+live column-resize sync (D25) uses for positions. This is not a violation of the grow-only ratchets:
+those keep the box steady as the _content_ changes; the container is a different matter, and it is
+symmetric — `surfaceWidthHighWater`/`surfaceHeightHighWater` record the largest box the content ever
+asked for, so a grid widened back to its old size restores the box exactly instead of leaving it
+cramped until the next keystroke. A width change additionally **re-derives** the height from scratch
+(collapsing the box first, so the measurement reads the content and not the box): how many lines a
+formula needs is a function of how wide the box is. Pinned rows sit in the sticky containers, whose
+block box does not follow the viewport, so their height is left alone.
+**Supporting changes:** `scrollCaretIntoView` gained a block-axis branch (no
+margin — the visible box can be one line tall); the suggestion popup gets an explicit
+`popperRef.forceUpdate()` after every rebuild, since popper.js observes scroll and window resize only,
+never the anchor's own size; `editorSession` carries `surfaceWrapped`/`surfaceHeight`/
+`surfaceHeightClamp`/`surfaceFlipped`/`surfaceWidthHighWater`/`surfaceHeightHighWater`/
+`surfaceClampBasis`, and a remount replays `applyWrapStyles` (never `enterWrapMode`)
+so the direction and bound are not re-decided. Caret offsets are string-based, so wrapping needed no
+change to the caret/IME/paste machinery, and the value stays single-line (Enter still commits,
+`aria-multiline` stays `false`). No public API change. _Two claims in D24's superseded A2 analysis were
+wrong and are corrected here:_ a taller surface does **not** disturb the grid's scrollbar (the native
+scroller's bars are hidden and `GridVirtualScrollbar`'s range comes from `dimensions.minimumSize`, not
+`scrollHeight`), and `GridEditLongTextCell` is **not** a flip precedent — measured in Chromium, its
+Popper `flip` never fires against the grid (its clipping boundary resolves against the window) and its
+uncapped popup is simply clipped at the scroller's bottom edge, so a long value edited in the last row
+shows about one row of text. That is the same gap this decision closes for the formula editor; worth a
+separate core issue.
 
 **Invariant (all iterations): formula source lives only in row data; every cache and state slice is
 derived.** This is what keeps undo/redo, `processRowUpdate`, and controlled-rows scenarios working

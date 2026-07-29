@@ -151,13 +151,14 @@ export function normalizeSingleLine(text: string): string {
 }
 
 /**
- * Scrolls the editable horizontally so the current caret is visible. The browser
+ * Scrolls the editable so the current caret is visible, on both axes. The browser
  * reveals the caret on its own only for native typing — a caret placed
  * programmatically (edit entry, a session resume after a remount, an accepted
- * suggestion) can land outside the visible box of a long, internally-scrolling
- * formula, leaving the view stuck at the start. Delta-based on client rects, so
- * it is direction-agnostic (works in RTL). A zero rect (no layout — jsdom — or an
- * empty editable) is left alone.
+ * suggestion) can land outside the visible box of a long formula that scrolls
+ * internally: horizontally while the editor is single-line, and vertically once it
+ * wraps and hits its line cap. Delta-based on client rects, so it is
+ * direction-agnostic (works in RTL). A zero rect (no layout — jsdom — or an empty
+ * editable) is left alone.
  */
 export function scrollCaretIntoView(root: HTMLElement): void {
   const selection = root.ownerDocument.getSelection();
@@ -181,6 +182,13 @@ export function scrollCaretIntoView(root: HTMLElement): void {
     root.scrollLeft += rect.right - (rootRect.right - margin);
   } else if (rect.left < rootRect.left + margin) {
     root.scrollLeft -= rootRect.left + margin - rect.left;
+  }
+  // No block margin: once wrapped, the visible box can be as short as a single
+  // line, and a margin on both edges would make the two branches fight.
+  if (rect.bottom > rootRect.bottom) {
+    root.scrollTop += rect.bottom - rootRect.bottom;
+  } else if (rect.top < rootRect.top) {
+    root.scrollTop -= rootRect.top - rect.top;
   }
 }
 

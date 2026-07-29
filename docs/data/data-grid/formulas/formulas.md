@@ -44,10 +44,12 @@ Double-clicking a plain cell opens the column type's default editor, and a colum
 
 - Committing an edit without changes keeps the formula intact, including in row edit mode.
 - To remove a formula, commit a plain value in its place, or clear the cell content.
-- The editor is single-line—line breaks in typed or pasted content are removed.
+- A formula is a single line of text—line breaks in typed or pasted content are removed, and <kbd class="key">Enter</kbd> commits the edit. A long formula wraps visually in the editor, but never contains a line break.
 
-The formula editor floats over the cell and grows with the formula: when the content no longer fits the column, the editor extends over the neighboring cells—up to the visible edge of the grid—so the formula stays readable while you type.
-Deleting content never shrinks the editor mid-edit, and a formula longer than the available width scrolls horizontally inside it.
+The formula editor floats over the cell and grows with the formula, so the whole formula stays visible while you type.
+It first extends over the neighboring cells, up to the visible edge of the grid.
+Out of horizontal room, the formula wraps and the editor grows by whole lines instead—over the rows below, or over the rows above when the cell is at the bottom of the grid—up to five lines, after which the text scrolls inside the editor.
+Deleting content never shrinks the editor mid-edit.
 In row edit mode, only the focused cell shows the floating editor; the row's other formula cells display their current draft in place.
 
 `processRowUpdate` and undo/redo operate on the formula source, so persisting and restoring rows keeps formulas working for free:
@@ -183,7 +185,7 @@ Setting it to `false` exports grid formulas as live formulas, but also lets such
 - Formulas are not supported with the [server-side data source](/x/react-data-grid/server-side-data/) or while [pivoting](/x/react-data-grid/pivoting/) is active.
 - The formula syntax is en-US only, and the built-in function metadata is not localized.
 - Pinned rows are excluded from the position context, so they cannot be referenced positionally or included in ranges.
-- The formula editor is single-line and does not support in-editor undo—the grid-level undo and redo of committed values work as usual.
+- The formula editor does not support in-editor undo—the grid-level undo and redo of committed values work as usual.
 - A formula column's own `valueGetter` is ignored for its formula cells (a development-mode warning points this out); it applies normally to plain cells in the column.
 - Clipboard copy places evaluated values on the clipboard—use the [fill handle](#fill-handle) to replicate formulas inside the grid.
 
