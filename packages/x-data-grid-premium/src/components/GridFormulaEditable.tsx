@@ -56,13 +56,12 @@ const GridFormulaEditableRoot = styled('div')(({ theme }) => ({
   textAlign: 'start',
   scrollbarWidth: 'none',
   '&::-webkit-scrollbar': { display: 'none' },
-  // A reference token must never be split across two lines when the editor wraps:
-  // half of `SUM(A1:A10)` in one color on each line reads as two references and
-  // contradicts the highlighting. `normal` opts the token out of the wrapped
-  // editor's `overflow-wrap: anywhere`, leaving it atomic (formula tokens carry no
-  // break opportunities of their own). A token wider than the whole box is left to
-  // overflow — the editable keeps `overflow-x: auto` in wrapped mode for exactly
-  // that case, so the caret can still reach it.
+  // Reference tokens opt out of the wrapped editor's `overflow-wrap: anywhere`,
+  // so an identifier is never split arbitrarily in the middle of a word. Canonical
+  // references can still wrap at their natural spaces (for example after the comma
+  // in `REF(COLUMN("price"), ROW(1))`); the shared color keeps the reference's
+  // identity clear across lines. A token with no natural break opportunity can
+  // overflow horizontally, so the caret must remain reachable through scrolling.
   [`& .${FORMULA_REFERENCE_TOKEN_CLASS}`]: { overflowWrap: 'normal' },
   ...getFormulaReferencePaletteStyles(theme),
 }));

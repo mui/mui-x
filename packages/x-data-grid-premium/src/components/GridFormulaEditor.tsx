@@ -456,11 +456,12 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
     // never nudges the text already on screen.
     surface.style.alignItems = 'stretch';
     editable.style.whiteSpace = 'pre-wrap';
-    // Formulas carry no spaces to break at, so wrapping has to be allowed
-    // mid-token; reference tokens opt back out of it (see `GridFormulaEditable`).
+    // Most formula text carries no spaces to break at, so wrapping has to be
+    // allowed mid-token. Reference tokens restrict this to natural break
+    // opportunities (see `GridFormulaEditable`).
     editable.style.overflowWrap = 'anywhere';
     // Vertical scrolling takes over past the bound. Horizontal stays reachable for
-    // the one thing that still cannot wrap: a reference token wider than the box.
+    // content with no natural break opportunity that is wider than the box.
     editable.style.overflowY = 'auto';
     editable.style.paddingBlock = `${Math.max(0, (boxHeight - chrome - lineHeight) / 2)}px`;
 

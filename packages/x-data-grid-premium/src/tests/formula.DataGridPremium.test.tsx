@@ -3349,12 +3349,11 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(surface.top).to.be.greaterThan(scroller.top - 1);
     });
 
-    it.skipIf(isJSDOM)('never splits a reference token across two lines', async () => {
-      // A long-named column makes a long reference token, and sweeping the padding
-      // length walks that token across every possible wrap boundary: if the
-      // wrapped editor's `overflow-wrap: anywhere` could break a token, one of
-      // these offsets would split it into two client rects (and two colored
-      // fragments, which read as two different references).
+    it.skipIf(isJSDOM)('does not split a reference identifier mid-word', async () => {
+      // A long-named column makes a reference token with no natural break
+      // opportunity. Sweeping the padding length walks it across every possible
+      // wrap boundary: the editor may wrap canonical references at spaces, but it
+      // must not apply its `overflow-wrap: anywhere` rule inside this identifier.
       const longFieldColumns: GridColDef[] = [
         { field: 'item' },
         { field: 'total', type: 'number', allowFormulas: true, editable: true },

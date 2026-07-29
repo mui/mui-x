@@ -758,10 +758,12 @@ divergence:_ no spreadsheet does it — but none has a finite last row, and capp
 would leave exactly the case the review named unfixed. **Escaping the grid's bounds was rejected:**
 `.MuiDataGrid-main` and `.MuiDataGrid-root` are both `overflow: hidden`, so it needs a portal outside
 the root — viewport-fixed coordinates and scroll-synced repositioning, the architecture D24 was
-built to avoid. **Reference tokens stay atomic** (`overflow-wrap: normal` on
-`.MuiDataGrid-formulaReferenceToken`): half of a colored reference on each line reads as two
-references. A token wider than the whole box is left to overflow, which is why the wrapped editable
-keeps `overflow-x: auto`. **The bounds follow a grid resize** (Bilal's find): both clamps bound the grid's visible box, so a grid
+built to avoid. **Reference tokens wrap only at natural break opportunities** (`overflow-wrap:
+normal` on `.MuiDataGrid-formulaReferenceToken`): a canonical `REF(...)` may wrap at its internal
+space, while its shared color keeps the reference's identity clear across lines; identifiers are
+never split arbitrarily mid-word. A token with no natural break opportunity that is wider than the
+whole box is left to overflow, which is why the wrapped editable keeps `overflow-x: auto`. **The
+bounds follow a grid resize** (Bilal's find): both clamps bound the grid's visible box, so a grid
 resized smaller has to pull the editor in with it — left alone, a grown box keeps a width that no
 longer exists, spills past the grid's edge and inflates the scroller's scrollable width, which reads
 as the grid itself getting wider (measured: narrowing a 600px grid to 380px left `scrollWidth` at 598
