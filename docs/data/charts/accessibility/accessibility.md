@@ -66,7 +66,7 @@ components: {
 
 {{"demo": "KeyboardNavigation.js"}}
 
-This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, sankey, and range bar.
+This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, sankey, map, radial bar, radial line, and range bar.
 
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
 When focused, the chart highlights a value item that can be modified with arrow navigation.
@@ -75,6 +75,34 @@ When focused, the chart highlights a value item that can be modified with arrow 
 | --------------------------------------------------------------------: | :---------------------------- |
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
 |    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
+
+### Start from a clicked item
+
+Clicking an item makes it the item keyboard navigation resumes from, so users can jump straight to a distant data point instead of tabbing into the chart and pressing an arrow key repeatedly.
+Screen readers announce the clicked item right away.
+
+How the focus indicator behaves depends on how the user got there:
+
+- If the chart was not being navigated with the keyboard, the click gives the chart focus but the indicator stays hidden. It appears on the next key press, on the item next to the one clicked.
+- If the focus indicator is already visible, the click moves it to the clicked item and keeps it visible.
+
+Set `focusItemOnClick` to show the indicator immediately on every click:
+
+```jsx
+<BarChart focusItemOnClick series={series} />
+```
+
+It can also be set globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props):
+
+```js
+components: {
+  MuiChartDataProvider: {
+    defaultProps: {
+      focusItemOnClick: true
+    },
+  },
+}
+```
 
 ## Screen reader compatibility
 
