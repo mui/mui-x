@@ -55,6 +55,50 @@ describe('getItemAtAxisPosition', () => {
     });
   });
 
+  it('reads the index off the axis the target series is bound to', () => {
+    // Two x axes with different band counts over the same range.
+    const multiAxis = {
+      axisIds: ['default', 'secondary'],
+      axis: {
+        default: {
+          id: 'default',
+          data: ['A', 'B', 'C'],
+          scale: scaleBand(['A', 'B', 'C'], [0, 90]),
+        },
+        secondary: {
+          id: 'secondary',
+          data: ['A', 'B', 'C', 'D', 'E', 'F'],
+          scale: scaleBand(['A', 'B', 'C', 'D', 'E', 'F'], [0, 90]),
+        },
+      },
+    } as any;
+
+    const series = {
+      bar: {
+        seriesOrder: ['onSecondary'],
+        series: {
+          onSecondary: {
+            id: 'onSecondary',
+            type: 'bar',
+            xAxisId: 'secondary',
+            data: [1, 2, 3, 4, 5, 6],
+          },
+        },
+      },
+    } as any;
+
+    // x=45 is band 1 of 3 on the default axis, but band 3 of 6 on the secondary one.
+    expect(
+      getItemAtAxisPosition({
+        point: { x: 45, y: 0 },
+        xAxis: multiAxis,
+        yAxis: undefined,
+        processedSeries: series,
+        focusedItem: null,
+      }),
+    ).to.deep.equal({ type: 'bar', seriesId: 'onSecondary', dataIndex: 3 });
+  });
+
   it('returns null outside of the axis', () => {
     expect(resolve(500)).to.equal(null);
   });

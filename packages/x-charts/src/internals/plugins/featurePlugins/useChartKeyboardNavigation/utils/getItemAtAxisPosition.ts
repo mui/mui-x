@@ -4,7 +4,7 @@ import type { FocusedItemIdentifier } from '../../../../../models/seriesType';
 import { composableCartesianSeriesTypes } from '../../../../../models/seriesType/composition';
 import type { ProcessedSeries } from '../../../corePlugins/useChartSeries/useChartSeries.types';
 import type { ComputeResult } from '../../useChartCartesianAxis/computeAxisValue';
-import type { ChartsXAxisProps, ChartsYAxisProps } from '../../../../../models/axis';
+import type { AxisId, ChartsXAxisProps, ChartsYAxisProps } from '../../../../../models/axis';
 import { getAxisIndex } from '../../useChartCartesianAxis/getAxisValue';
 import { getNonEmptySeriesArray } from './getNonEmptySeriesArray';
 import { findVisibleDataIndex } from './findVisibleDataIndex';
@@ -29,8 +29,25 @@ export function getItemAtAxisPosition({
   processedSeries: ProcessedSeries<ChartSeriesType>;
   focusedItem: FocusedItemIdentifier<ChartSeriesType> | null;
 }): FocusedItemIdentifier<ChartSeriesType> | null {
-  const xAxisId = xAxis?.axisIds[0];
-  const yAxisId = yAxis?.axisIds[0];
+  const target = getTargetSeries(processedSeries, focusedItem);
+  if (target === null) {
+    return null;
+  }
+
+  const series = processedSeries[target.type]?.series[target.seriesId];
+  const data = series?.data as ReadonlyArray<unknown> | undefined;
+  if (!data || data.length === 0) {
+    return null;
+  }
+
+  // Read the index off the axis the target series is bound to, which is not necessarily the
+  // default one on a chart with several axes.
+  const xAxisId =
+    (series && 'xAxisId' in series ? (series.xAxisId as AxisId | undefined) : undefined) ??
+    xAxis?.axisIds[0];
+  const yAxisId =
+    (series && 'yAxisId' in series ? (series.yAxisId as AxisId | undefined) : undefined) ??
+    yAxis?.axisIds[0];
   const xAxisConfig = xAxisId === undefined ? undefined : xAxis?.axis[xAxisId];
   const yAxisConfig = yAxisId === undefined ? undefined : yAxis?.axis[yAxisId];
 
@@ -43,17 +60,6 @@ export function getItemAtAxisPosition({
   const dataIndex = xIndex !== -1 ? xIndex : yIndex;
 
   if (dataIndex === -1) {
-    return null;
-  }
-
-  const target = getTargetSeries(processedSeries, focusedItem);
-  if (target === null) {
-    return null;
-  }
-
-  const data = processedSeries[target.type]?.series[target.seriesId]?.data as
-    ReadonlyArray<unknown> | undefined;
-  if (!data || data.length === 0) {
     return null;
   }
 

@@ -17,6 +17,7 @@ import type { UseChartInteractionSignature } from '../../internals/plugins/featu
 import type { UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import type { UseChartKeyboardNavigationSignature } from '../../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import type { ScatterProps } from '../Scatter';
+import type { SeriesId } from '../../models/seriesType/common';
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 export interface ScatterAsyncBatchProps extends Pick<
@@ -40,6 +41,39 @@ export interface ScatterAsyncBatchProps extends Pick<
    * the dominant per-frame cost.
    */
   isInteracting?: boolean;
+}
+
+/**
+ * Pointer handlers are dropped mid zoom, where per-marker highlight is useless and the dominant
+ * per-frame cost. The click is kept: it drives `onItemClick` and the keyboard focus, and neither
+ * is on the drag path. Both are dropped when the closest point plugin handles the series instead.
+ */
+export function getMarkerInteractionProps({
+  instance,
+  dataPoint,
+  seriesId,
+  dataIndex,
+  onItemClick,
+  skipInteractionHandlers,
+  isInteracting,
+}: {
+  instance: Parameters<typeof getInteractionItemProps<'scatter'>>[0];
+  dataPoint: Parameters<typeof getInteractionItemProps<'scatter'>>[1];
+  seriesId: SeriesId;
+  dataIndex: number;
+  onItemClick: ScatterProps['onItemClick'];
+  skipInteractionHandlers: boolean | undefined;
+  isInteracting?: boolean;
+}) {
+  if (skipInteractionHandlers) {
+    return undefined;
+  }
+
+  const { onClick, ...pointerProps } = getInteractionItemProps(instance, dataPoint, {
+    onClick: (event) => onItemClick?.(event, { type: 'scatter', seriesId, dataIndex }),
+  });
+
+  return isInteracting ? { onClick } : { onClick, ...pointerProps };
 }
 
 /**
@@ -121,16 +155,15 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
         y={y}
         data-highlighted={isItemHighlighted || undefined}
         data-faded={isItemFaded || undefined}
-        {...(skipInteractionHandlers || isInteracting
-          ? undefined
-          : getInteractionItemProps(instance, dataPoint, {
-              onClick: (event) =>
-                onItemClick?.(event, {
-                  type: 'scatter',
-                  seriesId: series.id,
-                  dataIndex,
-                }),
-            }))}
+        {...getMarkerInteractionProps({
+          instance,
+          dataPoint,
+          seriesId: series.id,
+          dataIndex,
+          onItemClick,
+          skipInteractionHandlers,
+          isInteracting,
+        })}
         {...markerProps}
       />,
     );
