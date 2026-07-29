@@ -132,12 +132,8 @@ describe('useChartKeyboardNavigation - click to focus', () => {
       expect(bars[0].getAttribute('data-highlighted')).to.equal(null);
     });
 
-    it('focuses the chart without changing the item when the click resolves nothing', async () => {
+    it('falls back to the axis when the click hits no item', async () => {
       const { container, user } = render(<BarChart {...barProps} />);
-
-      await clickAt(user, container, getCenter(getBars(container)[1]));
-      await user.keyboard('[ArrowRight]');
-      expect(getFocusedDataIndex(container)).to.equal(2);
 
       // Above the shortest bar, so inside the drawing area but on no item.
       const firstBar = getBars(container)[0].getBoundingClientRect();
@@ -145,9 +141,45 @@ describe('useChartKeyboardNavigation - click to focus', () => {
         clientX: firstBar.left + firstBar.width / 2,
         clientY: firstBar.top - 10,
       });
+      await user.keyboard('[ArrowRight]');
 
-      expect(getFocusedDataIndex(container)).to.equal(2);
+      // The axis under the pointer resolved index 0, so the arrow moved to 1.
+      expect(getFocusedDataIndex(container)).to.equal(1);
       expect(container.contains(document.activeElement)).to.equal(true);
+    });
+
+    it('keeps the focused series when falling back to the axis', async () => {
+      const { container, user } = render(
+        <BarChart
+          {...barProps}
+          series={[
+            { id: 'A', data: [10, 20, 30, 40] },
+            { id: 'B', data: [40, 30, 20, 10] },
+          ]}
+        />,
+      );
+
+      // Focus an item of the second series.
+      await user.keyboard('{Tab}');
+      await user.keyboard('[ArrowRight]');
+      await user.keyboard('[ArrowUp]');
+
+      const lastBarOfB = container
+        .querySelectorAll<SVGElement>(`[data-series="B"] rect`)[3]
+        .getBoundingClientRect();
+      await clickAt(user, container, {
+        clientX: lastBarOfB.left + lastBarOfB.width / 2,
+        clientY: lastBarOfB.top - 5,
+      });
+
+      // Still on series B, moved to the clicked column.
+      const indicator = getFocusIndicator(container)!;
+      const indicatorCenter = getCenter(indicator);
+      const barsOfB = container.querySelectorAll<SVGElement>(`[data-series="B"] rect`);
+      const matched = Array.from(barsOfB).findIndex(
+        (bar) => Math.abs(getCenter(bar).clientX - indicatorCenter.clientX) < 1,
+      );
+      expect(matched).to.equal(3);
     });
 
     it('keeps the focus hidden when a background click follows a hidden click focus', async () => {
@@ -163,9 +195,9 @@ describe('useChartKeyboardNavigation - click to focus', () => {
 
       expect(getFocusIndicator(container)).to.equal(null);
 
-      // The clicked item is still the one navigation resumes from.
+      // The axis fallback moved the item to the clicked column, still hidden.
       await user.keyboard('[ArrowRight]');
-      expect(getFocusedDataIndex(container)).to.equal(2);
+      expect(getFocusedDataIndex(container)).to.equal(1);
     });
 
     it('shows the focus again when tabbing back in after a hidden click focus', async () => {

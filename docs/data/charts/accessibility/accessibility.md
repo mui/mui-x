@@ -81,6 +81,10 @@ When focused, the chart highlights a value item that can be modified with arrow 
 Clicking an item makes it the item keyboard navigation resumes from, so users can jump straight to a distant data point instead of tabbing into the chart and pressing an arrow key repeatedly.
 Screen readers announce the clicked item right away.
 
+A click that lands on no item is resolved from the axis under the pointer, so clicking the empty space above a bar still focuses that bar's column.
+The item is taken from the series being navigated, or from the first series when none is focused yet.
+Clicks outside of any axis only give the chart focus, keeping the item that was focused before.
+
 How the focus indicator behaves depends on how the user got there:
 
 - If the chart was not being navigated with the keyboard, the click gives the chart focus but the indicator stays hidden. It appears on the next key press, on the item next to the one clicked.

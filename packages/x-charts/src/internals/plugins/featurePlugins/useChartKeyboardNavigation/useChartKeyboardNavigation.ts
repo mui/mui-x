@@ -7,6 +7,13 @@ import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { cleanIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/cleanIdentifier';
 import { focusAccessibilityProxy } from '../../../components/ChartsAccessibilityProxy/focusAccessibilityProxy';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
+import {
+  selectorChartXAxis,
+  selectorChartYAxis,
+} from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import { getChartPoint } from '../../../getChartPoint';
+import { getItemAtAxisPosition } from './utils/getItemAtAxisPosition';
 import type { ChartPlugin } from '../../models';
 import type {
   FocusItemOptions,
@@ -38,6 +45,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
    * navigation resumes from, without revealing the focus indicator.
    */
   const focusVisibleIntentRef = React.useRef(true);
+
+  /**
+   * Whether an item took the focus during the current pointer interaction, so the axis fallback
+   * does not overwrite it. Reset on `pointerdown`.
+   */
+  const itemFocusedByPointerRef = React.useRef(false);
 
   const getDefaultFocusVisible = useEventCallback(
     () => params.focusItemOnClick === true || store.state.keyboardNavigation.isFocusVisible,
@@ -112,6 +125,8 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return false;
       }
 
+      itemFocusedByPointerRef.current = true;
+
       const isFocusVisible = options?.visible ?? focusVisibleIntentRef.current;
       focusVisibleIntentRef.current = isFocusVisible;
 
@@ -135,6 +150,40 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       return true;
     },
   );
+
+  /**
+   * Fallback for a click that hit no item: resolve the axis under the pointer and focus the item
+   * it points at. Focuses the chart alone when the chart has no axis, or the click is off it.
+   */
+  const focusItemAtAxisPosition = useEventCallback((event: MouseEvent) => {
+    const element = chartsLayerContainerRef.current;
+
+    if (element === null || !store.state.keyboardNavigation.enabled) {
+      focusChart();
+      return;
+    }
+
+    const point = getChartPoint(element, event);
+    if (!instance.isPointInside?.(point.x, point.y)) {
+      focusChart();
+      return;
+    }
+
+    const item = getItemAtAxisPosition({
+      point,
+      xAxis: selectorChartXAxis(store.state),
+      yAxis: selectorChartYAxis(store.state),
+      processedSeries: selectorChartSeriesProcessed(store.state),
+      focusedItem: store.state.keyboardNavigation.item,
+    });
+
+    if (item === null) {
+      focusChart();
+      return;
+    }
+
+    focusItem(item);
+  });
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
@@ -178,6 +227,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     // is set. Read on `pointerdown`, before the click can blur the proxy.
     function trackPointerIntent() {
       focusVisibleIntentRef.current = getDefaultFocusVisible();
+      itemFocusedByPointerRef.current = false;
     }
 
     // Any key press means the user switched to the keyboard, wherever the focus currently is.
@@ -186,9 +236,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       focusVisibleIntentRef.current = true;
     }
 
-    function focusChartOnClick() {
-      // Runs after the per-item click handlers. It is a no-op when one of them focused an item.
-      focusChart();
+    function focusChartOnClick(event: MouseEvent) {
+      if (itemFocusedByPointerRef.current) {
+        // A series already resolved the click to one of its items.
+        return;
+      }
+
+      focusItemAtAxisPosition(event);
     }
 
     function keyboardHandler(event: KeyboardEvent) {
@@ -248,7 +302,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     store,
     updateFocus,
     getDefaultFocusVisible,
-    focusChart,
+    focusItemAtAxisPosition,
   ]);
 
   useEnhancedEffect(() => {
