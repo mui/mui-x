@@ -1196,15 +1196,9 @@ importers:
 
   packages/x-codemod:
     dependencies:
-      '@babel/core':
-        specifier: 'catalog:'
-        version: 7.29.7(supports-color@10.2.2)
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.7
-      '@babel/traverse':
-        specifier: 'catalog:'
-        version: 7.29.7(supports-color@10.2.2)
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
