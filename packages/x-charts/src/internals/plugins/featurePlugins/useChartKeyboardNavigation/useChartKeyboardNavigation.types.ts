@@ -5,7 +5,34 @@ import type { UseChartHighlightSignature } from '../useChartHighlight';
 import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
-export interface UseChartKeyboardNavigationInstance {}
+export interface FocusItemOptions {
+  /**
+   * Whether the focus indicator should be rendered.
+   * Defaults to `focusItemOnClick || <the focus is already visible>`.
+   */
+  visible?: boolean;
+}
+
+export interface UseChartKeyboardNavigationInstance {
+  /**
+   * Makes an item the one keyboard navigation starts from, moving the DOM focus into the chart
+   * when it is not already there.
+   * Does nothing when keyboard navigation is disabled, when the series type does not support it,
+   * or when the identifier is not complete enough to be focused.
+   * @param {FocusedItemIdentifier} item The item to focus.
+   * @param {FocusItemOptions} options Options to override the focus visibility.
+   * @returns {boolean} `true` when the focus state was updated.
+   */
+  focusItem: (
+    item: FocusedItemIdentifier<ChartSeriesType>,
+    options?: FocusItemOptions,
+  ) => boolean;
+  /**
+   * Moves the DOM focus into the chart without changing the focused item.
+   * @param {FocusItemOptions} options Options to override the focus visibility.
+   */
+  focusChart: (options?: FocusItemOptions) => void;
+}
 
 export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {
@@ -34,6 +61,13 @@ type UseChartKeyboardNavigationParameters = {
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation?: boolean;
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick?: boolean;
 };
 
 export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{
