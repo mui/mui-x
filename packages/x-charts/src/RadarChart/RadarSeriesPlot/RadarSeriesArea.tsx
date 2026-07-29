@@ -10,6 +10,8 @@ import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
+import type { UseChartKeyboardNavigationSignature } from '../../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
@@ -46,6 +48,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const getHighlightState = useItemHighlightStateGetter<'radar'>();
+  const { instance } = useChartsContext<[UseChartKeyboardNavigationSignature]>();
 
   const classes = useUtilityClasses(inClasses);
   return (
@@ -67,15 +70,18 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               getHighlightState,
               classes,
             })}
-            onClick={(event) =>
-              onItemClick?.(event, {
+            cursor={onItemClick ? 'pointer' : 'unset'}
+            {...interactionProps[seriesIndex]}
+            // The area only knows its series, the data index comes from the click angle.
+            onClick={(event) => {
+              const identifier = {
                 type: 'radar',
                 seriesId: id,
                 dataIndex: getRotationIndex(event),
-              })
-            }
-            cursor={onItemClick ? 'pointer' : 'unset'}
-            {...interactionProps[seriesIndex]}
+              } as const;
+              instance.focusItem?.(identifier);
+              onItemClick?.(event, identifier);
+            }}
             {...other}
           />
         );

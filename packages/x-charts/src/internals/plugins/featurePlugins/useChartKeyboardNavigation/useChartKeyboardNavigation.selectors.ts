@@ -23,8 +23,7 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
  */
 const isFocusVisible = (
   keyboardNavigationState:
-    | UseChartKeyboardNavigationSignature['state']['keyboardNavigation']
-    | undefined,
+    UseChartKeyboardNavigationSignature['state']['keyboardNavigation'] | undefined,
 ) => keyboardNavigationState?.isFocused === true && keyboardNavigationState.isFocusVisible === true;
 
 export const selectorChartsIsFocusVisible = createSelector(

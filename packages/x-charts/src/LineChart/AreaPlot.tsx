@@ -91,7 +91,8 @@ function AreaPlot(props: AreaPlotProps) {
               gradientId={gradientId}
               slots={slots}
               slotProps={slotProps}
-              onClick={onAreaItemClick && ((event) => onAreaItemClick(event, seriesId))}
+              onClick={(event) => onAreaItemClick(event, seriesId)}
+              cursor={onItemClick ? 'pointer' : 'unset'}
               skipAnimation={skipAnimation}
             />
           ),

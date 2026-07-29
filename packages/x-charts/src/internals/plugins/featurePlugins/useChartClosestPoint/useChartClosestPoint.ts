@@ -224,9 +224,13 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     const tapHandler = instance.addInteractionListener('tap', (event) => {
       const closestPoint = getClosestPoint(event.detail.srcEvent);
 
-      if (typeof closestPoint !== 'string' && onItemClick) {
+      if (typeof closestPoint !== 'string') {
         const { seriesId, dataIndex } = closestPoint;
-        onItemClick(event.detail.srcEvent, { type: 'scatter', seriesId, dataIndex });
+        const identifier = { type: 'scatter', seriesId, dataIndex } as const;
+
+        // Clicking the empty space next to a point focuses that point.
+        instance.focusItem?.(identifier);
+        onItemClick?.(event.detail.srcEvent, identifier);
       }
     });
 

@@ -24,6 +24,7 @@ import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartKeyboardNavigationSignature } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
 /**
  * @deprecated The `Scatter` component is an internal implementation detail of `ScatterPlot` and will be removed from the public API in v10. Use `ScatterPlot` instead.
@@ -98,6 +99,7 @@ function Scatter(props: ScatterProps) {
         UseChartInteractionSignature,
         UseChartHighlightSignature<'scatter'>,
         UseChartTooltipSignature,
+        UseChartKeyboardNavigationSignature,
       ]
     >();
   const store = useStore<[UseChartClosestPointSignature]>();
@@ -138,20 +140,18 @@ function Scatter(props: ScatterProps) {
             isFaded={isItemFaded}
             x={dataPoint.x}
             y={dataPoint.y}
-            onClick={
-              onItemClick &&
-              ((event) =>
-                onItemClick(event, {
-                  type: 'scatter',
-                  seriesId: series.id,
-                  dataIndex: dataPoint.dataIndex,
-                }))
-            }
             data-highlighted={isItemHighlighted || undefined}
             data-faded={isItemFaded || undefined}
             {...(skipInteractionHandlers
               ? undefined
-              : getInteractionItemProps(instance, dataPoint))}
+              : getInteractionItemProps(instance, dataPoint, {
+                  onClick: (event) =>
+                    onItemClick?.(event, {
+                      type: 'scatter',
+                      seriesId: series.id,
+                      dataIndex: dataPoint.dataIndex,
+                    }),
+                }))}
             {...markerProps}
           />
         );

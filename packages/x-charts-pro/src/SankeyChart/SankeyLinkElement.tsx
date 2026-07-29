@@ -51,14 +51,14 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     const isFaded = highlightState === 'faded';
     const isHighlighted = highlightState === 'highlighted';
 
-    // Add interaction props for tooltips
-    const interactionProps = useInteractionItemProps(identifier);
-
     const classes = useUtilityClasses();
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGPathElement>) => {
       onClick?.(event, identifier);
     });
+
+    // Add interaction props for tooltips and keyboard focus
+    const interactionProps = useInteractionItemProps(identifier, { onClick: handleClick });
 
     if (!link.path) {
       return null;
@@ -82,7 +82,6 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
         data-link-target={link.target.id}
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
-        onClick={onClick ? handleClick : undefined}
         cursor={onClick ? 'pointer' : 'default'}
         {...interactionProps}
       />

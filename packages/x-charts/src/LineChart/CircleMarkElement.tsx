@@ -83,7 +83,11 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     selectorChartExperimentalFeaturesState,
     'enablePositionBasedPointerInteraction',
   );
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
+  // The click keeps focusing the item even when the pointer interactions are position based.
+  const { onClick: handleClick, ...pointerProps } = useInteractionItemProps(
+    { type: 'line', seriesId, dataIndex },
+    { onClick },
+  );
   const theme = useTheme();
 
   const classes = useLineUtilityClasses({ skipAnimation, classes: innerClasses });
@@ -91,7 +95,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   return (
     <Circle
       {...other}
-      {...(enablePositionBasedPointerInteraction ? {} : interactionProps)}
+      {...(enablePositionBasedPointerInteraction ? {} : pointerProps)}
       cx={x}
       cy={y}
       r={5}
@@ -99,7 +103,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       stroke={color}
       strokeWidth={2}
       className={classes.mark}
-      onClick={onClick}
+      onClick={handleClick}
       cursor={onClick ? 'pointer' : 'unset'}
       pointerEvents={hidden ? 'none' : undefined}
       data-highlighted={isHighlighted || undefined}

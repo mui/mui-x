@@ -15,6 +15,7 @@ import { useChartsContext } from '../../context/ChartsProvider';
 import type { UseChartTooltipSignature } from '../../internals/plugins/featurePlugins/useChartTooltip';
 import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import type { UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartKeyboardNavigationSignature } from '../../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import type { ScatterProps } from '../Scatter';
 import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
@@ -66,6 +67,7 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
         UseChartInteractionSignature,
         UseChartHighlightSignature<'scatter'>,
         UseChartTooltipSignature,
+        UseChartKeyboardNavigationSignature,
       ]
     >();
   const store = useStore<[UseChartClosestPointSignature]>();
@@ -117,20 +119,18 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
         isFaded={isItemFaded}
         x={x}
         y={y}
-        onClick={
-          onItemClick &&
-          ((event: React.MouseEvent<SVGElement, MouseEvent>) =>
-            onItemClick(event, {
-              type: 'scatter',
-              seriesId: series.id,
-              dataIndex,
-            }))
-        }
         data-highlighted={isItemHighlighted || undefined}
         data-faded={isItemFaded || undefined}
         {...(skipInteractionHandlers || isInteracting
           ? undefined
-          : getInteractionItemProps(instance, dataPoint))}
+          : getInteractionItemProps(instance, dataPoint, {
+              onClick: (event) =>
+                onItemClick?.(event, {
+                  type: 'scatter',
+                  seriesId: series.id,
+                  dataIndex,
+                }),
+            }))}
         {...markerProps}
       />,
     );

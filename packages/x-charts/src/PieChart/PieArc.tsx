@@ -75,7 +75,10 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
   };
   const classes = usePieUtilityClasses(ownerState);
 
-  const interactionProps = useInteractionItemProps({ type: 'pie', seriesId, dataIndex });
+  const interactionProps = useInteractionItemProps(
+    { type: 'pie', seriesId, dataIndex },
+    { onClick },
+  );
   const animatedProps = useAnimatePieArc({
     cornerRadius,
     startAngle,
@@ -89,7 +92,6 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
 
   return (
     <PieArcRoot
-      onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={clsx(classes.arc, className)}

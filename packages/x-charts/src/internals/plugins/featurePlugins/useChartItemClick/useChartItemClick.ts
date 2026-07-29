@@ -2,7 +2,10 @@
 import type { ChartPlugin } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartItemClickSignature } from './useChartItemClick.types';
-import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import type {
+  FocusedItemIdentifier,
+  SeriesItemIdentifierWithType,
+} from '../../../../models/seriesType';
 import { getChartPoint } from '../../../getChartPoint';
 
 export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = ({
@@ -11,10 +14,6 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = (
   instance,
 }) => {
   const { onItemClick } = params;
-
-  if (!onItemClick) {
-    return { instance: {} };
-  }
 
   const getItemPosition = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const svgPoint = getChartPoint(event?.currentTarget, event);
@@ -44,7 +43,8 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = (
       handleClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const item = getItemPosition(event);
         if (item !== undefined) {
-          onItemClick(event, item);
+          instance.focusItem?.(item as FocusedItemIdentifier<ChartSeriesType>);
+          onItemClick?.(event, item);
         }
       },
     },

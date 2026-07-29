@@ -23,10 +23,7 @@ export interface UseChartKeyboardNavigationInstance {
    * @param {FocusItemOptions} options Options to override the focus visibility.
    * @returns {boolean} `true` when the focus state was updated.
    */
-  focusItem: (
-    item: FocusedItemIdentifier<ChartSeriesType>,
-    options?: FocusItemOptions,
-  ) => boolean;
+  focusItem: (item: FocusedItemIdentifier<ChartSeriesType>, options?: FocusItemOptions) => boolean;
   /**
    * Moves the DOM focus into the chart without changing the focused item.
    * @param {FocusItemOptions} options Options to override the focus visibility.

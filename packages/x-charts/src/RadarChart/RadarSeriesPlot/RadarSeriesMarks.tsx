@@ -8,6 +8,8 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import type { SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
+import type { UseChartKeyboardNavigationSignature } from '../../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -43,6 +45,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
+  const { instance } = useChartsContext<[UseChartKeyboardNavigationSignature]>();
 
   return (
     <React.Fragment>
@@ -65,9 +68,11 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   classes,
                 })}
                 pointerEvents={onItemClick ? undefined : 'none'}
-                onClick={(event) =>
-                  onItemClick?.(event, { type: 'radar', seriesId: id, dataIndex: index })
-                }
+                onClick={(event) => {
+                  const identifier = { type: 'radar', seriesId: id, dataIndex: index } as const;
+                  instance.focusItem?.(identifier);
+                  onItemClick?.(event, identifier);
+                }}
                 cursor={onItemClick ? 'pointer' : 'unset'}
                 {...other}
               />

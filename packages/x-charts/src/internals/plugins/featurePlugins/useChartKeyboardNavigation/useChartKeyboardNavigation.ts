@@ -2,10 +2,11 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { cleanIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/cleanIdentifier';
-import { focusAccessibilityProxy } from '../../../components/ChartsAccessibilityProxy';
+import { focusAccessibilityProxy } from '../../../components/ChartsAccessibilityProxy/focusAccessibilityProxy';
 import type { ChartPlugin } from '../../models';
 import type {
   FocusItemOptions,
@@ -117,6 +118,17 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       const container = chartsLayerContainerRef.current;
       if (!container?.contains(document.activeElement)) {
         focusAccessibilityProxy(chartsAccessibilityProxyRef.current);
+      }
+
+      // Read after focusing, `restoreFocus` already ran.
+      const keyboardNavigation = store.state.keyboardNavigation;
+      if (
+        keyboardNavigation.isFocusVisible === isFocusVisible &&
+        keyboardNavigation.item != null &&
+        fastObjectShallowCompare(keyboardNavigation.item, cleanedItem)
+      ) {
+        // Two click paths can resolve the same item, for instance a line mark over its line.
+        return false;
       }
 
       updateFocus(cleanedItem, isFocusVisible);

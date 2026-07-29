@@ -2,7 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { useSkipAnimation } from '@mui/x-charts/internals';
+import { useSkipAnimation, useChartsContext } from '@mui/x-charts/internals';
+import type { UseChartKeyboardNavigationSignature } from '@mui/x-charts/internals';
 import { BarElement, barClasses } from '@mui/x-charts/BarChart';
 import type {
   BarElementSlotProps,
@@ -99,6 +100,7 @@ function RangeBarSvgPlot(props: Omit<RangeBarPlotProps, 'renderer'>): React.JSX.
   const completedData = useRangeBarPlotData(useDrawingArea(), xAxes, yAxes);
 
   const classes = useUtilityClasses();
+  const { instance } = useChartsContext<[UseChartKeyboardNavigationSignature]>();
   const slots: BarElementSlots = {
     ...props.slots,
     bar: props.slots?.bar ?? AnimatedRangeBarElement,
@@ -129,12 +131,11 @@ function RangeBarSvgPlot(props: Omit<RangeBarPlotProps, 'renderer'>): React.JSX.
                   ry={borderRadius}
                   {...other}
                   slots={slots}
-                  onClick={
-                    onItemClick &&
-                    ((event) => {
-                      onItemClick(event, { type: 'rangeBar', seriesId, dataIndex });
-                    })
-                  }
+                  onClick={(event) => {
+                    const identifier = { type: 'rangeBar', seriesId, dataIndex } as const;
+                    instance.focusItem?.(identifier);
+                    onItemClick?.(event, identifier);
+                  }}
                 />
               );
             })}

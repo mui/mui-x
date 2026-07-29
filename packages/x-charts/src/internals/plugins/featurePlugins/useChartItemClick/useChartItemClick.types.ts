@@ -2,6 +2,7 @@ import type { ChartPluginSignature } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesTypeRequiredPlugins } from '../../corePlugins/useChartSeriesConfig';
+import type { UseChartKeyboardNavigationSignature } from '../useChartKeyboardNavigation';
 
 export interface UseChartItemClickParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -28,4 +29,5 @@ export type UseChartItemClickSignature<SeriesType extends ChartSeriesType = Char
     defaultizedParams: UseChartItemClickParameters<SeriesType>;
     instance: UseChartItemClickInstance;
     dependencies: ChartSeriesTypeRequiredPlugins<SeriesType>;
+    optionalDependencies: [UseChartKeyboardNavigationSignature];
   }>;

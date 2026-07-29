@@ -72,6 +72,7 @@ function AreaElement(props: AreaElementProps) {
     slots,
     slotProps,
     onClick,
+    cursor,
     ...other
   } = props;
 
@@ -103,7 +104,7 @@ function AreaElement(props: AreaElementProps) {
     additionalProps: {
       ...(enablePositionBasedPointerInteraction ? {} : interactionProps),
       onClick,
-      cursor: onClick ? 'pointer' : 'unset',
+      cursor: cursor ?? (onClick ? 'pointer' : 'unset'),
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
       'data-series-id': seriesId,
