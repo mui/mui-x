@@ -1,5 +1,6 @@
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { vi } from 'vitest';
 import { getCenter } from 'test/utils/charts/getCenter';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
@@ -99,6 +100,24 @@ describe('useChartKeyboardNavigation - click to focus', () => {
 
     it('shows the focus right away with focusItemOnClick', async () => {
       const { container, user } = render(<BarChart {...barProps} focusItemOnClick />);
+
+      await clickAt(user, container, getCenter(getBars(container)[2]));
+
+      expect(getFocusedDataIndex(container)).to.equal(2);
+    });
+
+    it('reads focusItemOnClick from the theme default props', async () => {
+      const theme = createTheme({
+        components: {
+          MuiChartsDataProvider: { defaultProps: { focusItemOnClick: true } },
+        },
+      });
+
+      const { container, user } = render(
+        <ThemeProvider theme={theme}>
+          <BarChart {...barProps} />
+        </ThemeProvider>,
+      );
 
       await clickAt(user, container, getCenter(getBars(container)[2]));
 

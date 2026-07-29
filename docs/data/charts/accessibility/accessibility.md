@@ -56,7 +56,7 @@ You can also disable it globally using [theme default props](/material-ui/custom
 
 ```js
 components: {
-  MuiChartDataProvider: {
+  MuiChartsDataProvider: {
     defaultProps: {
       disableKeyboardNavigation: true
     },
@@ -100,7 +100,7 @@ It can also be set globally using [theme default props](/material-ui/customizati
 
 ```js
 components: {
-  MuiChartDataProvider: {
+  MuiChartsDataProvider: {
     defaultProps: {
       focusItemOnClick: true
     },
