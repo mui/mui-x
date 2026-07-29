@@ -205,6 +205,13 @@ RadialBarChart.propTypes /* remove-proptypes */ = {
    */
   experimentalFeatures: PropTypes.object,
   /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
+  /**
    * Option to display a radial grid in the background.
    */
   grid: PropTypes.shape({

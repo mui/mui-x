@@ -17,6 +17,7 @@
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": { "type": { "name": "any" } },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {

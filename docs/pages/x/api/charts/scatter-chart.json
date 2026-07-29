@@ -46,6 +46,7 @@
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ progressiveRendering?: bool }" }
     },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },

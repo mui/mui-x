@@ -24,6 +24,7 @@
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
     "experimentalFeatures": { "type": { "name": "object" } },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "grid": { "type": { "name": "shape", "description": "{ radius?: bool, rotation?: bool }" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {

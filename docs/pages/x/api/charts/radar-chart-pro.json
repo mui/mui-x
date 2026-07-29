@@ -21,6 +21,7 @@
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "experimentalFeatures": { "type": { "name": "object" } },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
