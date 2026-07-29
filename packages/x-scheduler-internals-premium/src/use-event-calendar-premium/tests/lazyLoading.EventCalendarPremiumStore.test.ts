@@ -40,7 +40,7 @@ const DEFAULT_PARAMS = {
 // Build a minimal `visibleDaysSelector` returning a 7-day window starting at the
 // store's current `visibleDate`. The plugin only reads `value` and `key`; `timestamp`
 // and `minutesInDay` are filled in to satisfy `SchedulerProcessedDate`.
-const buildViewConfig = (): any => ({
+const buildViewDefinition = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
   visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
     const days: SchedulerProcessedDate[] = [];
@@ -73,8 +73,8 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
-    // View mounts and registers its config. Mirrors `<View>`'s setViewConfig call.
-    store.setViewConfig(buildViewConfig());
+    // View mounts and registers its config. Mirrors `<View>`'s setViewDefinition call.
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -89,7 +89,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     // Only flush microtasks + a short advance well below the debounce window.
     await flushEffect();
@@ -105,7 +105,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
-    // No setViewConfig call. visibleDaysSelector returns [] → effect must bail.
+    // No setViewDefinition call. visibleDaysSelector returns [] → effect must bail.
     store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
 
     await flushEffect();
@@ -120,7 +120,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -139,7 +139,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
 
     await flushEffect();
     await flushDebounce();
@@ -200,7 +200,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
       persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
+    store.setViewDefinition(buildViewDefinition());
     await flushEffect();
     await flushDebounce();
 

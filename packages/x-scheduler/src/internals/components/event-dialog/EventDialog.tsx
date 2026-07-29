@@ -2,18 +2,20 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import Paper, { PaperProps } from '@mui/material/Paper';
-import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
+import type { PaperProps } from '@mui/material/Paper';
+import Paper from '@mui/material/Paper';
+import type { DialogProps } from '@mui/material/Dialog';
+import Dialog, { dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
-import {
+import type {
   EventDialogProps,
   EventDialogProviderProps,
   EventDialogTriggerProps,
@@ -23,10 +25,8 @@ import { FormContent } from './FormContent';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import {
-  EventDialogOptionalRenderers,
-  EventDialogOptionalRenderersContext,
-} from './EventDialogOptionalRenderersContext';
+import type { EventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
+import { EventDialogOptionalRenderersContext } from './EventDialogOptionalRenderersContext';
 
 const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',

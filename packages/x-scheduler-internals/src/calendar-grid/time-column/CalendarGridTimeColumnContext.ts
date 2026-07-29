@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { TemporalSupportedObject } from '../../models';
+import type { TemporalSupportedObject } from '../../models';
 
 export interface CalendarGridTimeColumnContext {
   /**
@@ -11,6 +11,16 @@ export interface CalendarGridTimeColumnContext {
    * The end date and time of the column.
    */
   end: TemporalSupportedObject;
+  /**
+   * First displayed minute of the day, as an offset from midnight.
+   * Equal to `0` unless the view limits its visible hour range.
+   */
+  dayStartMinute: number;
+  /**
+   * Last displayed minute of the day, as an offset from midnight.
+   * Equal to `1440` unless the view limits its visible hour range.
+   */
+  dayEndMinute: number;
   /**
    * The index of the column in the grid.
    */

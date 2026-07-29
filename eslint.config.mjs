@@ -264,6 +264,14 @@ export default defineConfig(
       `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
+    ],
+    ignores: [
+      // Vendored copy of Base UI internals — keep in sync with upstream, don't edit.
+      // Base UI will be brought under this rule separately, after which this ignore
+      // can be lifted.
+      'packages/x-scheduler-internals/src/base-ui-copy/**',
     ],
     rules: {
       '@typescript-eslint/consistent-type-imports': [

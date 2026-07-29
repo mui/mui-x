@@ -1,12 +1,12 @@
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { Theme } from '@mui/material/styles';
-import {
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import type {
   EventTimelinePremiumParameters,
   EventTimelinePremiumStore,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
-import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
-import { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
+import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 
 export type EventTimelinePremiumApiRef<
   TEvent extends object = any,

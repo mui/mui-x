@@ -8,7 +8,7 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
-import {
+import type {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
@@ -19,7 +19,7 @@ import {
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
 } from '../../../models';
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   UpdateRecurringEventParameters,
@@ -29,18 +29,20 @@ import {
   UpdateEventsParameters,
   SchedulerInstanceName,
 } from './SchedulerStore.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import {
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
+import type {
   SchedulerEvents,
   SchedulerEventListener,
   SchedulerEventParameters,
 } from '../../models/events';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
+  getCustomEventProperties,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
@@ -89,6 +91,11 @@ export class SchedulerStore<
 
   private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
 
+  /**
+   * Plugin that provides event-scheduling support (dependencies). `null` when not attached.
+   */
+  protected schedulingPlugin: SchedulerSchedulingPluginInterface | null = null;
+
   public constructor(
     parameters: Parameters,
     adapter: Adapter,
@@ -118,6 +125,8 @@ export class SchedulerStore<
       pendingRecurringEventOperation: null,
       visibleResources:
         parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
+      collapsedResources:
+        parameters.collapsedResources ?? parameters.defaultCollapsedResources ?? EMPTY_OBJECT,
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
@@ -246,6 +255,7 @@ export class SchedulerStore<
 
     updateModel(newSchedulerState, 'visibleDate', 'defaultVisibleDate');
     updateModel(newSchedulerState, 'visibleResources', 'defaultVisibleResources');
+    updateModel(newSchedulerState, 'collapsedResources', 'defaultCollapsedResources');
 
     const newState = this.mapper.updateStateFromParameters(
       newSchedulerState,
@@ -420,14 +430,31 @@ export class SchedulerStore<
     const createdIds: SchedulerEventId[] = [];
     const createdEvents: TEvent[] = [];
     for (const createdEvent of created) {
+      // Events created from an existing one (split, duplicate, paste) inherit its custom fields.
+      const source =
+        createdEvent.extractedFromId == null
+          ? undefined
+          : originalEventModelLookup.get(createdEvent.extractedFromId);
       const response = createEventModel(
-        createdEvent,
+        source ? { ...getCustomEventProperties(source), ...createdEvent } : createdEvent,
         this.state.eventModelStructure,
         this.state.adapter,
       );
       newEvents.push(response.model);
       createdEvents.push(response.model);
       createdIds.push(response.id);
+    }
+
+    this.schedulingPlugin?.handleEventsUpdate(parameters);
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (!this.parameters.onEventsChange && !this.parameters.dataSource) {
+        warnOnce([
+          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+          'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+          'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+        ]);
+      }
     }
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
@@ -605,6 +632,7 @@ export class SchedulerStore<
         scope,
       );
     }
+
     this.updateEvents(updatedEvents);
 
     if (onSubmit) {
@@ -729,6 +757,39 @@ export class SchedulerStore<
         this.set('visibleResources', visibleResources);
       }
     }
+  };
+
+  /**
+   * Updates the collapsed resources.
+   */
+  public setCollapsedResources = (
+    collapsedResources: Record<SchedulerResourceId, boolean>,
+    event: Event | undefined,
+  ) => {
+    const { collapsedResources: collapsedResourcesProp, onCollapsedResourcesChange } =
+      this.parameters;
+    const hasChange = this.state.collapsedResources !== collapsedResources;
+    if (hasChange) {
+      const eventDetails = createChangeEventDetails('none', event);
+      onCollapsedResourcesChange?.(collapsedResources, eventDetails);
+      if (!eventDetails.isCanceled && collapsedResourcesProp === undefined) {
+        this.set('collapsedResources', collapsedResources);
+      }
+    }
+  };
+
+  /**
+   * Toggles the collapsed state of a single resource.
+   */
+  public toggleResourceCollapse = (resourceId: SchedulerResourceId, event: Event | undefined) => {
+    const isCollapsed = this.state.collapsedResources[resourceId] === true;
+    const nextCollapsedResources = { ...this.state.collapsedResources };
+    if (isCollapsed) {
+      delete nextCollapsedResources[resourceId];
+    } else {
+      nextCollapsedResources[resourceId] = true;
+    }
+    this.setCollapsedResources(nextCollapsedResources, event);
   };
 
   /**

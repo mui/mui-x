@@ -1,6 +1,6 @@
-import { SimpleTreeViewProps } from '../SimpleTreeView';
-import { RichTreeViewProps } from '../RichTreeView';
-import { TreeItemProps } from '../TreeItem';
+import type { SimpleTreeViewProps } from '../SimpleTreeView';
+import type { RichTreeViewProps } from '../RichTreeView';
+import type { TreeItemProps } from '../TreeItem';
 
 export interface TreeViewComponentsPropsList {
   MuiSimpleTreeView: SimpleTreeViewProps<any>;

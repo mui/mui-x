@@ -5,7 +5,6 @@
 <SingleInputDateRangeField
   sx={{ minWidth: 300 }}
   fieldRef={fieldRef}
-  inputRef={inputRef}
   selectedSections={selectedSections}
   onSelectedSectionsChange={setSelectedSections}
 />

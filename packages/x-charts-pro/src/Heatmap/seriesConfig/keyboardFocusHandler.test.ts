@@ -86,14 +86,14 @@ describe('<Heatmap /> - keyboard navigation', () => {
     expect(test('ArrowDown', null)).to.deep.equal(cell_00);
   });
 
-  describe('move to different cell', () => {
+  it('should move to different cell', () => {
     expect(test('ArrowRight', cell_00)).to.deep.equal(cell_01);
     expect(test('ArrowLeft', cell_11)).to.deep.equal(cell_10);
     expect(test('ArrowUp', cell_10)).to.deep.equal(cell_00);
     expect(test('ArrowDown', cell_01)).to.deep.equal(cell_11);
   });
 
-  describe('try to go outside of the range', () => {
+  it('should try to go outside of the range', () => {
     expect(test('ArrowRight', cell_01)).to.deep.equal(cell_01);
     expect(test('ArrowLeft', cell_10)).to.deep.equal(cell_10);
     expect(test('ArrowUp', cell_00)).to.deep.equal(cell_00);

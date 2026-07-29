@@ -37,7 +37,7 @@ export abstract class Layout<E extends AnyElements = AnyElements> {
 
   refSetter(name: keyof E) {
     return (node: HTMLDivElement | null) => {
-      if (node && this.refs[name].current !== node) {
+      if (this.refs[name].current !== node) {
         this.refs[name].current = node;
       }
     };
@@ -62,7 +62,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
   use(
     store: Store<BaseState>,
     _params: ParamsWithDefaults,
-    _api: RequiredAPI,
+    api: RequiredAPI,
     layoutParams: VirtualizationLayoutParams,
   ) {
     const { scrollerRef, containerRef } = layoutParams;
@@ -71,11 +71,13 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       this.refs.scroller,
       this.refSetter('scrollbarVertical'),
       'scrollTop',
+      api.updateDimensions,
     );
     const scrollbarHorizontalRef = useScrollbarRefCallback(
       this.refs.scroller,
       this.refSetter('scrollbarHorizontal'),
       'scrollLeft',
+      api.updateDimensions,
     );
 
     store.state.virtualization.context = {
@@ -300,6 +302,7 @@ function useScrollbarRefCallback(
   scrollerRef: React.RefObject<HTMLElement | null>,
   refSetter: (node: HTMLDivElement | null) => void,
   scrollProperty: ScrollProperty,
+  updateDimensions: () => void,
 ) {
   const isLocked = React.useRef(false);
   const lastPosition = React.useRef(0);
@@ -342,10 +345,13 @@ function useScrollbarRefCallback(
 
   return useRefCallback((scrollbar) => {
     refSetter(scrollbar);
+    updateDimensions();
 
     const scroller = scrollerRef.current;
     if (!scroller) {
-      return undefined;
+      return () => {
+        refSetter(null);
+      };
     }
 
     const onScrollerScroll = () => handleScrollerScroll(scrollbar);
@@ -358,6 +364,7 @@ function useScrollbarRefCallback(
     return () => {
       scroller.removeEventListener('scroll', onScrollerScroll);
       scrollbar.removeEventListener('scroll', onScrollbarScroll);
+      refSetter(null);
     };
   });
 }

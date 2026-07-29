@@ -9,28 +9,7 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartYAxisAutoSizeResults } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartAxisAutoSize.selectors';
 import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-
-const DEFAULT_GROUPING_CONFIG = {
-  tickSize: 6,
-};
-
-const getGroupingConfig = (
-  groups: AxisGroup[],
-  groupIndex: number,
-  tickSize: number | undefined,
-  computedGroupTickSizes?: number[],
-) => {
-  const config = groups[groupIndex] ?? ({} as AxisGroup);
-
-  const defaultTickSize = tickSize ?? DEFAULT_GROUPING_CONFIG.tickSize;
-  const calculatedTickSize = defaultTickSize * groupIndex * 2 + defaultTickSize;
-
-  return {
-    ...DEFAULT_GROUPING_CONFIG,
-    ...config,
-    tickSize: computedGroupTickSizes?.[groupIndex] ?? config.tickSize ?? calculatedTickSize,
-  };
-};
+import { getGroupingConfig } from '../internals/getGroupingConfig';
 
 /**
  * @ignore - internal component.

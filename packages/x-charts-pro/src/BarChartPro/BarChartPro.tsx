@@ -12,6 +12,7 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
+import type { BarSamplingMethod } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
@@ -41,8 +42,15 @@ export interface BarChartProProps
     Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins'>,
     Omit<
       ChartsContainerProProps<'bar', BarChartProPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'sampling'
     > {
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every bar (no sampling).
+   * - `'minmax'`: keep the min and max per bucket and draw one merged bar.
+   * @default 'none'
+   */
+  sampling?: BarSamplingMethod;
   /**
    * Overridable component slots.
    * @default {}
@@ -71,7 +79,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, sampling, ...other } = props;
   const {
     chartsWrapperProps,
     chartsContainerProps,
@@ -89,14 +97,17 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'bar',
     BarChartProPluginSignatures
-  >({
-    ...chartsContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: BAR_CHART_PRO_PLUGINS,
-  });
+  >(
+    {
+      ...chartsContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: BAR_CHART_PRO_PLUGINS,
+    },
+    { seriesType: 'bar', method: sampling },
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -438,6 +449,13 @@ BarChartPro.propTypes /* remove-proptypes */ = {
    * @default 'svg-single'
    */
   renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every bar (no sampling).
+   * - `'minmax'`: keep the min and max per bucket and draw one merged bar.
+   * @default 'none'
+   */
+  sampling: PropTypes.oneOf(['minmax', 'none']),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.

@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const nbNODialog: Partial<EventDialogLocaleText> = {
   // EventDialog
@@ -89,6 +87,9 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // DateNavigator
   closeSidePanel: 'Lukk sidepanel',
   openSidePanel: 'Åpne sidepanel',
+
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
 
   // Preferences menu
   amPm12h: '12-timer (1:00PM)',

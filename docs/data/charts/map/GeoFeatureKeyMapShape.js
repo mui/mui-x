@@ -19,11 +19,13 @@ const mergeSomaliland = (feature) =>
     ? 'Somalia'
     : (feature.properties?.name ?? null);
 
-const data = Object.entries(countryData).map(([code, country]) => ({
-  name: country.worldAtlasName,
-  label: country.country,
-  colorValue: internetUsageByCountry[code],
-}));
+const data = Object.entries(countryData)
+  .filter(([, country]) => country.worldAtlasName)
+  .map(([code, country]) => ({
+    name: country.worldAtlasName,
+    label: country.country,
+    colorValue: internetUsageByCountry[code],
+  }));
 
 export default function GeoFeatureKeyMapShape() {
   return (
@@ -33,8 +35,7 @@ export default function GeoFeatureKeyMapShape() {
           geoData={countries}
           geoFeatureKey={mergeSomaliland}
           projection="naturalEarth1"
-          rotate={[-46, -6]}
-          scale={900}
+          initialView={{ zoomLevel: 5, center: [46, 6], translation: [0, 0] }}
           height={360}
           series={[
             {

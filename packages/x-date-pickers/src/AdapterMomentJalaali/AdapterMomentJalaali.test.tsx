@@ -40,7 +40,8 @@ describe('<AdapterMomentJalaali />', () => {
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
 
-      expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
+      expectDate('fullDate', '۱۳۹۸، بهمن ۱۲');
+      expectDate('normalDateWithWeekday', 'شنبه، ۱۲ بهمن');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ ب.ظ');
       expectDate('keyboardDateTime24h', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');

@@ -241,6 +241,7 @@ function WrappedDay({
   currentMonthNumber: number;
 }) {
   const {
+    currentMonth,
     disabled,
     disableHighlightToday,
     isMonthSwitchingAnimating,
@@ -294,20 +295,20 @@ function WrappedDay({
   });
 
   const isFirstVisibleCell = React.useMemo(() => {
-    const startOfMonth = adapter.startOfMonth(adapter.setMonth(day, currentMonthNumber));
+    const startOfMonth = adapter.startOfMonth(currentMonth);
     if (!showDaysOutsideCurrentMonth) {
       return adapter.isSameDay(day, startOfMonth);
     }
     return adapter.isSameDay(day, adapter.startOfWeek(startOfMonth));
-  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, adapter]);
+  }, [currentMonth, day, showDaysOutsideCurrentMonth, adapter]);
 
   const isLastVisibleCell = React.useMemo(() => {
-    const endOfMonth = adapter.endOfMonth(adapter.setMonth(day, currentMonthNumber));
+    const endOfMonth = adapter.endOfMonth(currentMonth);
     if (!showDaysOutsideCurrentMonth) {
       return adapter.isSameDay(day, endOfMonth);
     }
     return adapter.isSameDay(day, adapter.endOfWeek(endOfMonth));
-  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, adapter]);
+  }, [currentMonth, day, showDaysOutsideCurrentMonth, adapter]);
 
   return (
     <Day
