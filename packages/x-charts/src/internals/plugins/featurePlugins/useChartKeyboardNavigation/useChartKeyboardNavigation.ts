@@ -75,7 +75,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       return;
     }
 
-    const isFocusVisible = options?.visible ?? getDefaultFocusVisible();
+    const isFocusVisible = options?.visible ?? focusVisibleIntentRef.current;
     focusVisibleIntentRef.current = isFocusVisible;
 
     const container = chartsLayerContainerRef.current;
@@ -112,7 +112,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return false;
       }
 
-      const isFocusVisible = options?.visible ?? getDefaultFocusVisible();
+      const isFocusVisible = options?.visible ?? focusVisibleIntentRef.current;
       focusVisibleIntentRef.current = isFocusVisible;
 
       const container = chartsLayerContainerRef.current;
@@ -154,9 +154,6 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         return;
       }
 
-      // Focus left the chart, so a later tab back in is keyboard driven again.
-      focusVisibleIntentRef.current = true;
-
       if (store.state.keyboardNavigation.isFocused) {
         store.set('keyboardNavigation', {
           ...store.state.keyboardNavigation,
@@ -177,8 +174,16 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       updateFocus(undefined, isFocusVisible);
     }
 
+    // A pointer interaction hides the focus, unless it is already visible or `focusItemOnClick`
+    // is set. Read on `pointerdown`, before the click can blur the proxy.
     function trackPointerIntent() {
       focusVisibleIntentRef.current = getDefaultFocusVisible();
+    }
+
+    // Any key press means the user switched to the keyboard, wherever the focus currently is.
+    // Listening on the document also covers tabbing in from outside the chart.
+    function trackKeyboardIntent() {
+      focusVisibleIntentRef.current = true;
     }
 
     function focusChartOnClick() {
@@ -187,8 +192,6 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function keyboardHandler(event: KeyboardEvent) {
-      focusVisibleIntentRef.current = true;
-
       let newFocusedItem = store.state.keyboardNavigation.item;
 
       const seriesConfig = selectorChartSeriesConfig(store.state);
@@ -230,12 +233,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     element.addEventListener('focusin', restoreFocus);
     element.addEventListener('pointerdown', trackPointerIntent, true);
     element.addEventListener('click', focusChartOnClick);
+    document.addEventListener('keydown', trackKeyboardIntent, true);
     return () => {
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
       element.removeEventListener('pointerdown', trackPointerIntent, true);
       element.removeEventListener('click', focusChartOnClick);
+      document.removeEventListener('keydown', trackKeyboardIntent, true);
     };
   }, [
     chartsLayerContainerRef,

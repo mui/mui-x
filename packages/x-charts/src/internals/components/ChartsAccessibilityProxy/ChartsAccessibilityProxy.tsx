@@ -115,7 +115,9 @@ export function ChartsAccessibilityProxy() {
   return (
     <div
       role="none"
-      tabIndex={message ? undefined : 0}
+      // Stays focusable once an announcer child owns the tab stop, otherwise the browser would
+      // blur the root mid hand-off and the chart would look like it lost the focus.
+      tabIndex={message ? -1 : 0}
       ref={handleRef}
       style={fullSizeLayerStyle}
     />
