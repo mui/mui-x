@@ -120,7 +120,11 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
         shouldBeExpanded: true,
         event,
       });
-      if (selectionSelectors.isItemSelected(this.store.state, eventParameters.itemId)) {
+      if (
+        selectionSelectors.isMultiSelectEnabled(this.store.state) &&
+        selectionSelectors.propagationRules(this.store.state).descendants &&
+        selectionSelectors.isItemSelected(this.store.state, eventParameters.itemId)
+      ) {
         // make sure selection propagation works correctly
         this.store.selection.setItemSelection({
           event,

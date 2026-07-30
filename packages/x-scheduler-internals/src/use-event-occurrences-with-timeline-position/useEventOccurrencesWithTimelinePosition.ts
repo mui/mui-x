@@ -47,6 +47,20 @@ export function computeOccurrencesMaxIndex(
   return buildFirstIndexLookup(conflicts).maxIndex;
 }
 
+/**
+ * Pure helper that returns the 1-based lane (`firstIndex`) of each occurrence, keyed by
+ * occurrence key. Matches the `position.firstIndex` the hook returns, so it can be used
+ * to locate occurrences in rows that are not mounted.
+ */
+export function computeOccurrencesFirstIndexLookup(
+  adapter: Adapter,
+  occurrences: readonly SchedulerEventOccurrence[],
+): { [occurrenceKey: string]: number } {
+  const sortedOccurrences = sortEventOccurrences(occurrences);
+  const conflicts = buildOccurrenceConflicts(adapter, sortedOccurrences);
+  return buildFirstIndexLookup(conflicts).firstIndexLookup;
+}
+
 export namespace useEventOccurrencesWithTimelinePosition {
   export interface Parameters {
     /**
