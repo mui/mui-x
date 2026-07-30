@@ -59,25 +59,32 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   /**
    * Writes the focus state, only switching the highlight and tooltip to keyboard when visible.
    * An `undefined` item leaves the focused item untouched, `null` clears it.
+   *
+   * `isFocused` is read from the DOM rather than assumed: a composition may not render the
+   * accessibility proxy, and claiming a focus the chart does not hold would render an indicator
+   * that no blur can ever clear. The item is still stored, so it is restored on the next focus.
    */
   const updateFocus = useEventCallback(
     (item: FocusedItemIdentifier<ChartSeriesType> | null | undefined, isFocusVisible: boolean) => {
       const keyboardNavigation = store.state.keyboardNavigation;
+      const isFocused = chartsLayerContainerRef.current?.contains(document.activeElement) ?? false;
 
       store.update({
-        ...(isFocusVisible &&
+        ...(isFocused &&
+          isFocusVisible &&
           store.state.highlight && {
             highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
           }),
-        ...(isFocusVisible &&
+        ...(isFocused &&
+          isFocusVisible &&
           store.state.interaction && {
             interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
           }),
         keyboardNavigation: {
           ...keyboardNavigation,
           ...(item !== undefined && { item }),
-          isFocused: true,
-          isFocusVisible,
+          isFocused,
+          isFocusVisible: isFocused && isFocusVisible,
         },
       });
     },

@@ -41,6 +41,14 @@ function onPointerDown(event: React.PointerEvent) {
   }
 }
 
+/**
+ * Props to make a series item interactive: pointer handlers driving the highlight and the
+ * tooltip, and a click that makes the item the one keyboard navigation resumes from.
+ *
+ * The returned `onClick` merges `options.onClick`, so pass the consumer callback through the
+ * options rather than setting `onClick` on the element. Spreading these props next to a separate
+ * `onClick` makes the two clobber each other depending on the spread order.
+ */
 export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
   data: SeriesItemIdentifierWithType<SeriesType>,
   options?: InteractionItemOptions,
@@ -85,6 +93,10 @@ export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
   );
 };
 
+/**
+ * Loop friendly variant of `useInteractionItemProps`, for series rendering many items.
+ * The same merge rule applies to `options.onClick`.
+ */
 export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
   instance: ChartInstance<InteractionItemSignatures<SeriesType>>,
   item: SeriesItemIdentifierWithType<SeriesType>,
