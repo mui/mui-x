@@ -4,6 +4,8 @@ import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
 import type { TreeViewAnyStore } from '../../models';
 
+// This suite covers the items API shared by every Tree View variant.
+// The Rich Tree View only `addItems` API is tested in `TreeViewItemsPlugin.addItems.test.tsx`.
 describeTreeView<TreeViewAnyStore>(
   'TreeViewItemsPlugin',
   ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {

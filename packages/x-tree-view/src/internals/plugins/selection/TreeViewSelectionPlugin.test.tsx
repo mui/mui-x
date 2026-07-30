@@ -1247,6 +1247,53 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(true);
         });
+
+        it('should ignore keepExistingSelection and only select the new item', () => {
+          const onSelectedItemsChange = spy();
+
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }],
+            defaultSelectedItems: '1',
+            onSelectedItemsChange,
+          });
+
+          act(() => {
+            view.apiRef.current.setItemSelection({
+              itemId: '2',
+              event: {} as any,
+              keepExistingSelection: true,
+            });
+          });
+
+          expect(view.isItemSelected('1')).to.equal(false);
+          expect(view.isItemSelected('2')).to.equal(true);
+          expect(onSelectedItemsChange.lastCall.args[1]).to.equal('2');
+        });
+
+        it('should keep the model as an item id when re-selecting a selected item with keepExistingSelection', () => {
+          const onSelectedItemsChange = spy();
+          const onItemSelectionToggle = spy();
+
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }],
+            defaultSelectedItems: '1',
+            onSelectedItemsChange,
+            onItemSelectionToggle,
+          });
+
+          act(() => {
+            view.apiRef.current.setItemSelection({
+              itemId: '1',
+              event: {} as any,
+              keepExistingSelection: true,
+              shouldBeSelected: true,
+            });
+          });
+
+          expect(view.isItemSelected('1')).to.equal(true);
+          expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
+          expect(onItemSelectionToggle.callCount).to.equal(0);
+        });
       });
 
       describe('multi selection', () => {
