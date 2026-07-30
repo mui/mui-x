@@ -153,6 +153,7 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
         isFaded={isItemFaded}
         x={x}
         y={y}
+        cursor={onItemClick ? 'pointer' : 'unset'}
         data-highlighted={isItemHighlighted || undefined}
         data-faded={isItemFaded || undefined}
         {...getMarkerInteractionProps({

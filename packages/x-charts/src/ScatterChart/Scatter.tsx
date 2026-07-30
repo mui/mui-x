@@ -140,6 +140,7 @@ function Scatter(props: ScatterProps) {
             isFaded={isItemFaded}
             x={dataPoint.x}
             y={dataPoint.y}
+            cursor={onItemClick ? 'pointer' : 'unset'}
             data-highlighted={isItemHighlighted || undefined}
             data-faded={isItemFaded || undefined}
             {...(skipInteractionHandlers

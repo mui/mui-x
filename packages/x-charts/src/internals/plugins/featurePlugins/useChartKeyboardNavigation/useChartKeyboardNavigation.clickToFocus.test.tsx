@@ -289,6 +289,55 @@ describe('useChartKeyboardNavigation - click to focus', () => {
     });
   });
 
+  // The click handlers are now always attached, so the pointer cursor must keep coming from
+  // `onItemClick` rather than from the presence of a handler.
+  describe('cursor', () => {
+    it('leaves the scatter markers alone without onItemClick', () => {
+      const { container } = render(
+        <ScatterChart
+          height={200}
+          width={200}
+          disableHitArea
+          series={[{ id: 'A', data: [{ x: 1, y: 1, id: 0 }] }]}
+        />,
+      );
+
+      expect(container.querySelector('circle')?.getAttribute('cursor')).to.equal('unset');
+    });
+
+    it('marks the scatter markers as clickable with onItemClick', () => {
+      const { container } = render(
+        <ScatterChart
+          height={200}
+          width={200}
+          disableHitArea
+          onItemClick={() => {}}
+          series={[{ id: 'A', data: [{ x: 1, y: 1, id: 0 }] }]}
+        />,
+      );
+
+      expect(container.querySelector('circle')?.getAttribute('cursor')).to.equal('pointer');
+    });
+
+    it('leaves the line and area paths alone without onItemClick', () => {
+      const { container } = render(
+        <LineChart
+          height={100}
+          width={200}
+          series={[{ id: 'A', data: [1, 2], area: true }]}
+          xAxis={[{ data: [0, 1] }]}
+        />,
+      );
+
+      expect(container.querySelector(`.${lineClasses.line}`)?.getAttribute('cursor')).to.equal(
+        'unset',
+      );
+      expect(container.querySelector(`.${lineClasses.area}`)?.getAttribute('cursor')).to.equal(
+        'unset',
+      );
+    });
+  });
+
   describe.skipIf(isJSDOM)('line chart', () => {
     const lineProps = {
       height: 100,

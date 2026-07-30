@@ -131,6 +131,7 @@ function RangeBarSvgPlot(props: Omit<RangeBarPlotProps, 'renderer'>): React.JSX.
                   ry={borderRadius}
                   {...other}
                   slots={slots}
+                  cursor={onItemClick ? 'pointer' : undefined}
                   onClick={(event) => {
                     const identifier = { type: 'rangeBar', seriesId, dataIndex } as const;
                     instance.focusItem?.(identifier);

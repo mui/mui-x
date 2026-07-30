@@ -37,13 +37,21 @@ export interface ScatterMarkerProps {
   isFaded: boolean;
   /**
    * Callback fired when clicking on a scatter item.
+   * It is always defined: besides `onItemClick`, it makes the item the one keyboard navigation
+   * resumes from. Use `cursor` to tell whether the chart is interactive.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
    */
   onClick?: (event: React.MouseEvent<SVGElement, MouseEvent>) => void;
+  /**
+   * The cursor to display over the marker.
+   * @default 'unset'
+   */
+  cursor?: React.SVGAttributes<SVGElement>['cursor'];
 }
 
 function ScatterMarker(props: ScatterMarkerProps) {
-  const { seriesId, isFaded, isHighlighted, x, y, color, size, dataIndex, ...other } = props;
+  const { seriesId, isFaded, isHighlighted, x, y, color, size, dataIndex, cursor, ...other } =
+    props;
 
   return (
     <circle
@@ -53,7 +61,7 @@ function ScatterMarker(props: ScatterMarkerProps) {
       transform={`translate(${x}, ${y})`}
       fill={color}
       opacity={isFaded ? 0.3 : 1}
-      cursor={other.onClick ? 'pointer' : 'unset'}
+      cursor={cursor ?? 'unset'}
       {...other}
     />
   );
@@ -69,6 +77,11 @@ ScatterMarker.propTypes /* remove-proptypes */ = {
    */
   color: PropTypes.string.isRequired,
   /**
+   * The cursor to display over the marker.
+   * @default 'unset'
+   */
+  cursor: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
    * The index of the data point.
    */
   dataIndex: PropTypes.number.isRequired,
@@ -82,6 +95,8 @@ ScatterMarker.propTypes /* remove-proptypes */ = {
   isHighlighted: PropTypes.bool.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
+   * It is always defined: besides `onItemClick`, it makes the item the one keyboard navigation
+   * resumes from. Use `cursor` to tell whether the chart is interactive.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
    */
   onClick: PropTypes.func,

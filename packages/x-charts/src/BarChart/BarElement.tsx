@@ -68,6 +68,7 @@ function BarElement(props: BarElementProps) {
     width,
     height,
     hidden,
+    cursor,
     ...other
   } = props;
   const itemIdentifier = React.useMemo(
@@ -109,7 +110,8 @@ function BarElement(props: BarElementProps) {
       height,
       style,
       onClick,
-      cursor: onClick ? 'pointer' : undefined,
+      // `onClick` is always defined, it also drives the keyboard focus.
+      cursor: cursor ?? (onClick ? 'pointer' : undefined),
       stroke: 'none',
       fill: color,
       skipAnimation,
