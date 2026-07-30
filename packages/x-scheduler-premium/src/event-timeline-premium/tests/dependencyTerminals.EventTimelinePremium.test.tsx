@@ -333,23 +333,100 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.selectedDependencyId).to.equal(null);
     });
 
-    it('should not delete the arrow when typing Backspace in an editable element', () => {
+    function setupSelectedArrow() {
       const handleDependenciesChange = spy();
       renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
         onDependenciesChange: handleDependenciesChange,
       });
-
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      return handleDependenciesChange;
+    }
 
-      const input = document.createElement('input');
-      document.body.appendChild(input);
-      act(() => input.focus());
-      fireEvent.keyDown(input, { key: 'Backspace' });
-      input.remove();
+    function pressBackspaceIn(element: HTMLElement) {
+      document.body.appendChild(element);
+      act(() => element.focus());
+      fireEvent.keyDown(element, { key: 'Backspace' });
+      element.remove();
+    }
+
+    it('should not delete the arrow when typing Backspace in an editable element', () => {
+      const handleDependenciesChange = setupSelectedArrow();
+
+      pressBackspaceIn(document.createElement('input'));
 
       expect(handleDependenciesChange.callCount).to.equal(0);
+    });
+
+    it('should not delete the arrow when typing Backspace in a select', () => {
+      const handleDependenciesChange = setupSelectedArrow();
+
+      pressBackspaceIn(document.createElement('select'));
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+    });
+
+    it('should not delete the arrow when typing Backspace in a non-native combobox', () => {
+      const handleDependenciesChange = setupSelectedArrow();
+
+      // A MUI non-native Select: focus lands on a div with the combobox role, not on
+      // a hidden input.
+      const combobox = document.createElement('div');
+      combobox.setAttribute('role', 'combobox');
+      combobox.tabIndex = 0;
+      pressBackspaceIn(combobox);
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+    });
+
+    it('should not delete the arrow when typing Backspace in a contenteditable element', () => {
+      const handleDependenciesChange = setupSelectedArrow();
+
+      const editable = document.createElement('div');
+      editable.setAttribute('contenteditable', 'true');
+      editable.tabIndex = 0;
+      pressBackspaceIn(editable);
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+    });
+
+    it('should not delete the arrow when typing Backspace in an input inside a shadow root', () => {
+      const handleDependenciesChange = setupSelectedArrow();
+
+      // At the document level the event is retargeted to the host, which is not
+      // editable itself: the guard must look at the composed path.
+      const host = document.createElement('div');
+      const shadowInput = document.createElement('input');
+      host.attachShadow({ mode: 'open' }).appendChild(shadowInput);
+      document.body.appendChild(host);
+      act(() => shadowInput.focus());
+      shadowInput.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, composed: true }),
+      );
+      host.remove();
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+    });
+
+    it('should not deselect the arrow with Escape pressed inside a dialog', () => {
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // Escape aimed at a dialog closes the dialog; the selection underneath must
+      // survive so one keystroke does not do both.
+      const dialog = document.createElement('div');
+      dialog.setAttribute('role', 'dialog');
+      dialog.tabIndex = 0;
+      document.body.appendChild(dialog);
+      act(() => dialog.focus());
+      fireEvent.keyDown(dialog, { key: 'Escape' });
+      dialog.remove();
+
+      expect(store.state.selectedDependencyId).to.equal('dep-1');
     });
 
     it('should clear the visual selection when the selected dependency is removed externally', async () => {

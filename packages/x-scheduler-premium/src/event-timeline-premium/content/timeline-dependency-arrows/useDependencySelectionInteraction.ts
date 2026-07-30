@@ -4,11 +4,34 @@ import { useStore } from '@base-ui/utils/store';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 
-function isEditableTarget(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) {
+/**
+ * Targets whose keystrokes must never reach the arrows: form controls (native or
+ * ARIA), editable regions, and anything inside a dialog — the event dialog opens on
+ * top of the timeline while an arrow can still be selected underneath.
+ */
+const GUARDED_KEY_TARGETS = [
+  'input',
+  'textarea',
+  'select',
+  '[role="combobox"]',
+  '[role="listbox"]',
+  '[role="textbox"]',
+  '[contenteditable]:not([contenteditable="false"])',
+  'dialog',
+  '[role="dialog"]',
+].join(', ');
+
+function isGuardedKeyTarget(event: KeyboardEvent): boolean {
+  // At the document level `event.target` is retargeted to the shadow host, which
+  // would mask an editable living inside it: the composed path has the real target.
+  const target = event.composedPath()[0] ?? event.target;
+  if (!(target instanceof Element)) {
     return false;
   }
-  return target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+  if (target instanceof HTMLElement && target.isContentEditable) {
+    return true;
+  }
+  return target.closest(GUARDED_KEY_TARGETS) !== null;
 }
 
 /**
@@ -28,7 +51,7 @@ export function useDependencySelectionInteraction() {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       // Typing in the event dialog (or any editable) must not touch the arrows.
-      if (isEditableTarget(event.target)) {
+      if (isGuardedKeyTarget(event)) {
         return;
       }
       if (event.key === 'Delete' || event.key === 'Backspace') {
