@@ -57,6 +57,7 @@ import { getVisibleFractionRange } from './getVisibleFractionRange';
 import {
   EventTimelinePremiumDependencyArrows,
   EventTimelinePremiumDependencyInteractions,
+  EventTimelinePremiumDependencyTerminals,
 } from './timeline-dependency-arrows';
 
 const EventTimelinePremiumContentRoot = styled('section', {
@@ -219,13 +220,6 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   alignContent: 'start',
   zIndex: 1,
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  // Ties with the arrows overlay (which sits earlier in the DOM) so the hovered
-  // event's dependency terminal paints above the arrows, while staying below the
-  // pinned title cells (z-index 3). Scoped to an event hover — a row-wide lift
-  // would also cover the arrows' click hit-areas and break their selection.
-  '&:has([data-occurrence-key]:hover), &:has([data-dependency-drag-source])': {
-    zIndex: 2,
-  },
   '&:focus-visible': {
     outline: 'none',
     backgroundColor: getCellFocusBackground(theme),
@@ -877,10 +871,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                     showCurrentTimeIndicator={showCurrentTimeIndicator}
                   />
                   <RowContainer role="rowgroup" {...positionerProps}>
-                    {/* Before the rows so a hovered events cell (lifted to the same
-                        z-index) paints its dependency terminal above the arrows. */}
                     <EventTimelinePremiumDependencyArrows />
                     {virtualizer.api.getters.getRows()}
+                    {/* After the rows and the arrows so the terminals win their z-index
+                        ties and paint above both. */}
+                    <EventTimelinePremiumDependencyTerminals />
                     {showCurrentTimeIndicator && (
                       <EventTimelinePremiumCurrentTimeIndicator
                         className={classes.currentTimeIndicator}

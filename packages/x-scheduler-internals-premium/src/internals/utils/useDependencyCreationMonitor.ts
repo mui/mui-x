@@ -47,6 +47,8 @@ function getRejectionMessage(
       return 'This dependency already exists between these two events.';
     case 'recurringEvent':
       return 'Dependencies cannot involve recurring events.';
+    case 'readOnlyEvent':
+      return 'Dependencies cannot involve read-only events.';
     case 'unknownEvent':
       return 'This dependency cannot be created because one of its events no longer exists.';
     default:

@@ -47,6 +47,10 @@ const DEPENDENCY_ARROW_HIT_TRIM_START = 12;
  * Trim at the target end, freeing the start-edge resize handle under the arrowhead.
  */
 const DEPENDENCY_ARROW_HIT_TRIM_END = 8;
+/**
+ * Minimum clickable stretch a trimmed single-segment route keeps in its middle.
+ */
+const DEPENDENCY_ARROW_HIT_MIN_LENGTH = 6;
 
 export interface DependencyArrowPoint {
   x: number;
@@ -437,12 +441,26 @@ function trimRouteEnds(
   if (points.length < 2) {
     return [...points];
   }
+  let start = trimStart;
+  let end = trimEnd;
+  if (points.length === 2) {
+    // Both trims eat the same segment: scale them jointly (keeping their ratio) so a
+    // clickable middle stretch always survives. Capping each independently makes them
+    // meet at the midpoint of the short adjacent-events route, collapsing the path.
+    const length = Math.hypot(points[1].x - points[0].x, points[1].y - points[0].y);
+    const available = Math.max(0, length - DEPENDENCY_ARROW_HIT_MIN_LENGTH);
+    if (trimStart + trimEnd > available) {
+      const scale = available / (trimStart + trimEnd);
+      start = trimStart * scale;
+      end = trimEnd * scale;
+    }
+  }
   const trimmed = [...points];
-  trimmed[0] = movePointAlongSegment(points[0], points[1], trimStart);
+  trimmed[0] = movePointAlongSegment(points[0], points[1], start);
   trimmed[trimmed.length - 1] = movePointAlongSegment(
     points[points.length - 1],
     points[points.length - 2],
-    trimEnd,
+    end,
   );
   return trimmed;
 }

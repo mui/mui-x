@@ -1,6 +1,13 @@
 // Polyfill DragEvent and DataTransfer for JSDOM
 import '@atlaskit/pragmatic-drag-and-drop-unit-testing/drag-event-polyfill';
 
+// JSDOM lacks `document.elementsFromPoint`, which pragmatic's auto-scroll reads on every
+// animation frame during a drag. The resulting TypeError aborts the frame's remaining
+// callbacks — including pragmatic's throttled `onDrag` flush.
+if (typeof document !== 'undefined' && document.elementsFromPoint === undefined) {
+  document.elementsFromPoint = () => [];
+}
+
 /**
  * Finds the nearest ancestor (or self) that is registered as a draggable element.
  * Pragmatic DnD sets `draggable="true"` on registered elements.

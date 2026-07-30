@@ -1,6 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerDependency, SchedulerDependencyId } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { classifyDependencyEvent } from '../internals/utils/dependency-utils';
@@ -120,5 +121,22 @@ export const eventTimelinePremiumDependencySelectors = {
   isSelected: createSelector(
     selectedIdSelector,
     (selectedId, dependencyId: SchedulerDependencyId) => selectedId === dependencyId,
+  ),
+  /**
+   * Whether the dependency cannot be deleted because one of its events is read-only.
+   * Unknown ids resolve to `false`.
+   */
+  isModelReadOnly: createSelector(
+    (state: State, dependencyId: SchedulerDependencyId | null) => {
+      const dependency =
+        dependencyId === null ? undefined : state.dependencyModelLookup.get(dependencyId);
+      if (!dependency) {
+        return false;
+      }
+      return (
+        schedulerEventSelectors.isReadOnly(state, dependency.source) ||
+        schedulerEventSelectors.isReadOnly(state, dependency.target)
+      );
+    },
   ),
 };

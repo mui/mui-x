@@ -50,9 +50,9 @@ const DependencyArrowsSvg = styled('svg', {
   top: 0,
   left: 'var(--title-column-width)',
   pointerEvents: 'none',
-  // Same layer as the current time indicator and as a hovered events cell — the cell,
-  // later in the DOM, wins the tie so its dependency terminal paints above the arrows.
-  // Below the pinned title column, which covers the arrows on horizontal scroll.
+  // Same layer as the current time indicator and as the terminals overlay — the
+  // terminals, later in the DOM, win the tie and paint above the arrows. Below the
+  // pinned title column, which covers the arrows on horizontal scroll.
   zIndex: 2,
   color: (theme.vars || theme).palette.grey[400],
   ...theme.applyStyles('dark', {
@@ -210,7 +210,9 @@ function DependencyArrowsLayer({
 
   const creationPath = getCreationPath(creation, resolver, svgRef, offsetTop);
 
-  if ((visibleArrows.length === 0 && creationPath === null) || eventsWidth <= 0 || height <= 0) {
+  // Mount on `creation` (not `creationPath`): the unsnapped branch needs the svg rect,
+  // so the svg must exist before the path can be computed.
+  if ((visibleArrows.length === 0 && creation === null) || eventsWidth <= 0 || height <= 0) {
     return null;
   }
 
@@ -322,6 +324,13 @@ function DependencyInteractionsLayer({
   const store = useEventTimelinePremiumStoreContext();
   const { visibleArrows, selectedId, eventsWidth, offsetTop, height } =
     useVisibleDependencyArrows(dependencies);
+  // `deleteDependency` ignores read-only dependencies: hide the button instead of
+  // rendering one that does nothing.
+  const isSelectedReadOnly = useStore(
+    store,
+    eventTimelinePremiumDependencySelectors.isModelReadOnly,
+    selectedId,
+  );
 
   if (visibleArrows.length === 0 || eventsWidth <= 0 || height <= 0) {
     return null;
@@ -361,7 +370,7 @@ function DependencyInteractionsLayer({
               strokeWidth={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
               onClick={() => handleSelect(arrow.id)}
             />
-            {arrow.id === selectedId && (
+            {arrow.id === selectedId && !isSelectedReadOnly && (
               <g
                 data-dependency-delete-button=""
                 role="button"

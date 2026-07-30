@@ -184,7 +184,9 @@ export namespace useDropTarget {
   }
 
   export type GetDataFromInside = (
-    data: Exclude<EventDropData, StandaloneEvent.DragData>,
+    // Only the drags carrying the occurrence being moved or resized produce a
+    // placeholder — e.g. dependency-terminal drags never reach this callback.
+    data: Extract<Exclude<EventDropData, StandaloneEvent.DragData>, { originalOccurrence: any }>,
     newStart: TemporalSupportedObject,
     newEnd: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderInternalDragOrResize;

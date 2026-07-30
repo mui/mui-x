@@ -38,6 +38,7 @@ interface TestTimelineProps {
   events: SchedulerEvent[];
   resources: SchedulerResource[];
   dependencies?: SchedulerDependency[];
+  readOnly?: boolean;
   /**
    * Observes the dependency changes on top of the controlled loop.
    */
@@ -52,6 +53,7 @@ function TestTimeline({
   events: initialEvents,
   resources,
   dependencies: initialDependencies,
+  readOnly,
   onDependenciesChange,
   onStoreReady,
 }: TestTimelineProps) {
@@ -66,6 +68,7 @@ function TestTimeline({
     events,
     resources,
     dependencies,
+    readOnly,
     onEventsChange: setEvents,
     onDependenciesChange: dependenciesEnabled
       ? (value) => {
@@ -102,6 +105,7 @@ interface RenderTimelineParameters {
   events: SchedulerEvent[];
   resources?: SchedulerResource[];
   dependencies?: SchedulerDependency[];
+  readOnly?: boolean;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
 }
 
@@ -114,6 +118,7 @@ export function createDependencyTimelineRenderer(render: (element: React.ReactEl
     events,
     resources = [resource1, resource2],
     dependencies,
+    readOnly,
     onDependenciesChange,
   }: RenderTimelineParameters) {
     let store!: EventTimelinePremiumStore<any, any>;
@@ -136,6 +141,7 @@ export function createDependencyTimelineRenderer(render: (element: React.ReactEl
           events={events}
           resources={resources}
           dependencies={dependencies}
+          readOnly={readOnly}
           onDependenciesChange={onDependenciesChange}
           onStoreReady={(mountedStore) => {
             store = mountedStore;

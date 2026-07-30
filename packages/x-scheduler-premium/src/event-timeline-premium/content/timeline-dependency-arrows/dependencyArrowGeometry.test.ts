@@ -328,6 +328,68 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].maxRowIndex).to.equal(0);
     });
 
+    it('should keep a clickable hit-area between two adjacent events', () => {
+      // event-adj starts exactly when event-a ends → the 16px adjacent-events route.
+      const eventAdjacent = EventBuilder.new()
+        .id('event-adj')
+        .singleDay('2024-01-15T12:00:00Z')
+        .toProcessed();
+
+      const arrows = computeDependencyArrows({
+        adapter,
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-adj')],
+        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventAdjacent]) }],
+        rowPositions: [0],
+        collectionStart,
+        collectionEnd,
+        eventsWidth: EVENTS_WIDTH,
+        laneMetrics: LANE_METRICS,
+      });
+
+      expect(arrows).to.have.length(1);
+      // Route 704 → 720; the 12/8 trims scale down to 6/4 to leave the middle stretch.
+      expect(arrows[0].hitD).to.equal(`M 710 ${LANE_1_CENTER} L 716 ${LANE_1_CENTER}`);
+    });
+
+    it('should scale the hit-area trims down on a short straight arrow', () => {
+      // 12:20 → start x = 740, a 20px gap: full trims would leave nothing clickable.
+      const eventNear = EventBuilder.new()
+        .id('event-near')
+        .singleDay('2024-01-15T12:20:00Z')
+        .toProcessed();
+
+      const arrows = computeDependencyArrows({
+        adapter,
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-near')],
+        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventNear]) }],
+        rowPositions: [0],
+        collectionStart,
+        collectionEnd,
+        eventsWidth: EVENTS_WIDTH,
+        laneMetrics: LANE_METRICS,
+      });
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].hitD).to.equal(`M 728.4 ${LANE_1_CENTER} L 734.4 ${LANE_1_CENTER}`);
+    });
+
+    it('should trim the hit-area at both ends of a long straight arrow', () => {
+      const arrows = computeDependencyArrows({
+        adapter,
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+        rowPositions: [0],
+        collectionStart,
+        collectionEnd,
+        eventsWidth: EVENTS_WIDTH,
+        laneMetrics: LANE_METRICS,
+      });
+
+      expect(arrows).to.have.length(1);
+      // The 60px route keeps the full 12px source and 8px target trims.
+      expect(arrows[0].hitD).to.equal(`M 732 ${LANE_1_CENTER} L 772 ${LANE_1_CENTER}`);
+    });
+
     it('should route an orthogonal elbow between two rows using the row positions', () => {
       const arrows = computeDependencyArrows({
         adapter,

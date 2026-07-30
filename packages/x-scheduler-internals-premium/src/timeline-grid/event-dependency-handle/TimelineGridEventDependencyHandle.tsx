@@ -1,21 +1,19 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { useStore } from '@base-ui/utils/store';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
-import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
-import { useTimelineGridEventContext } from '../event/TimelineGridEventContext';
-import type { TimelineGridEvent } from '../event/TimelineGridEvent';
 
 /**
  * The terminal on the end edge of an event: dragging it onto another event creates a
- * `FinishToStart` dependency. The drag lifecycle is handled by a monitor on the grid
- * root (not here) so the gesture survives this element being unmounted by
- * virtualization mid-drag.
+ * `FinishToStart` dependency. Positioned by the caller (it does not live inside the
+ * event element), which is also responsible for only rendering it when the
+ * dependencies feature applies to its event. The drag lifecycle is handled by a global
+ * monitor mounted by the grid root (not here) so the gesture survives this element
+ * being unmounted by virtualization mid-drag.
  */
 export const TimelineGridEventDependencyHandle = React.forwardRef(
   function TimelineGridEventDependencyHandle(
@@ -27,49 +25,42 @@ export const TimelineGridEventDependencyHandle = React.forwardRef(
       className,
       render,
       style,
+      // Parameters
+      eventId,
+      occurrenceKey,
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
 
-    // Context hooks
-    const store = useEventTimelinePremiumStoreContext();
-    const contextValue = useTimelineGridEventContext();
-
     // Ref hooks
     const ref = React.useRef<HTMLDivElement>(null);
 
-    // Selector hooks
-    const dependenciesEnabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
-
-    // The gesture starts from the end edge (the `FinishToStart` origin), which must be
-    // inside the collection to anchor the provisional arrow — same rule as the end
-    // resize handle.
-    const enabled = dependenciesEnabled && !contextValue.doesEventEndAfterCollectionEnd;
-
     // Feature hooks
-    const getDragData = useStableCallback((input: { clientX: number }) => ({
-      ...contextValue.getSharedDragData(input),
+    const getDragData = useStableCallback(() => ({
+      eventId,
+      occurrenceKey,
       source: 'TimelineGridEventDependencyHandle' as const,
     }));
 
     React.useEffect(() => {
-      if (!ref.current || !enabled) {
+      if (!ref.current) {
         return undefined;
       }
 
       return draggable({
         element: ref.current,
-        getInitialData: ({ input }) => getDragData(input),
+        getInitialData: () => getDragData(),
         onGenerateDragPreview: ({ nativeSetDragImage }) => {
           disableNativeDragPreview({ nativeSetDragImage });
         },
       });
-    }, [enabled, getDragData]);
+    }, [getDragData]);
 
     return useRenderElement('div', componentProps, {
-      enabled,
       ref: [forwardedRef, ref],
-      props: [elementProps, { 'data-dependency-handle': '' } as Record<string, string>],
+      // The occurrence key as the attribute value lets hover tracking recognize the
+      // terminal as part of its event.
+      props: [elementProps, { 'data-dependency-handle': occurrenceKey } as Record<string, string>],
     });
   },
 );
@@ -77,9 +68,20 @@ export const TimelineGridEventDependencyHandle = React.forwardRef(
 export namespace TimelineGridEventDependencyHandle {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {}
+  export interface Props extends BaseUIComponentProps<'div', State> {
+    /**
+     * The event the terminal belongs to.
+     */
+    eventId: SchedulerEventId;
+    /**
+     * The row appearance of the event the terminal is anchored on.
+     */
+    occurrenceKey: string;
+  }
 
-  export interface DragData extends TimelineGridEvent.SharedDragData {
+  export interface DragData {
+    eventId: SchedulerEventId;
+    occurrenceKey: string;
     source: 'TimelineGridEventDependencyHandle';
   }
 }

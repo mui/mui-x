@@ -65,7 +65,10 @@ export interface SchedulerDependencyCreation {
   cursor: { clientX: number; clientY: number };
 }
 
-export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknownEvent';
+export type SchedulerDependencyEventRejectionReason =
+  | 'recurringEvent'
+  | 'unknownEvent'
+  | 'readOnlyEvent';
 
 export type SchedulerDependencyRejectionReason =
   SchedulerDependencyEventRejectionReason | 'duplicateDependency';

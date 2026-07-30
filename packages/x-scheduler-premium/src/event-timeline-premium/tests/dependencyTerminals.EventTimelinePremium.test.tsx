@@ -4,6 +4,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  ResourceBuilder,
   simulateDragAndDrop,
 } from 'test/utils/scheduler';
 import {
@@ -35,7 +36,10 @@ const recurringEvent = EventBuilder.new()
   .build();
 
 function getTerminal(title: string) {
-  return getEventElement(title).querySelector<HTMLElement>('[data-dependency-handle]');
+  // The terminals render in an overlay outside the event elements, tied to their
+  // event by the occurrence key.
+  const occurrenceKey = getEventElement(title).getAttribute('data-occurrence-key');
+  return document.querySelector<HTMLElement>(`[data-dependency-handle="${occurrenceKey}"]`);
 }
 
 function simulateTerminalDrag(sourceTitle: string, targetTitle: string) {
@@ -72,6 +76,20 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(getTerminal('Event A')).not.to.equal(null);
       expect(getTerminal('Recurring event')).to.equal(null);
+    });
+
+    it('should reveal the terminal while its event is hovered', () => {
+      renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(false);
+
+      fireEvent.pointerOver(getEventElement('Event A'));
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
+      expect(getTerminal('Event B')!.hasAttribute('data-visible')).to.equal(false);
+
+      fireEvent.pointerOver(getEventElement('Event B'));
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(false);
+      expect(getTerminal('Event B')!.hasAttribute('data-visible')).to.equal(true);
     });
   });
 
@@ -172,6 +190,40 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await waitFor(() => {
         expect(document.querySelector('[data-dependency-drag-line]')).to.equal(null);
       });
+    });
+
+    it('should render the provisional line when dragging over empty space with no visible arrows', async () => {
+      const { store } = renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 120,
+        clientY: 40,
+      });
+
+      // Pragmatic publishes the drag start asynchronously; the svg must mount on it
+      // even though there is no line to draw yet — its rect is what the line needs.
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).not.to.equal(null);
+      });
+      expect(document.querySelector('[data-dependency-arrows]')).not.to.equal(null);
+
+      // The next cursor move renders the line, away from any drop target.
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 140,
+        clientY: 60,
+      });
+
+      await waitFor(() => {
+        expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+      });
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
 
     it('should surface an error and select the existing arrow when the drop duplicates a dependency', () => {
@@ -311,6 +363,121 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await waitFor(() => {
         expect(document.querySelector('[data-selected]')).to.equal(null);
       });
+    });
+  });
+
+  describe('read-only', () => {
+    const readOnlyEvent = EventBuilder.new()
+      .id('event-ro')
+      .title('Read-only event')
+      .singleDay('2025-07-03T13:00:00Z')
+      .readOnly()
+      .resource(resource1)
+      .build();
+
+    it('should not render any terminal when the component is read-only', () => {
+      renderTimeline({ events: [eventA, eventB], dependencies: [], readOnly: true });
+
+      expect(getTerminal('Event A')).to.equal(null);
+      expect(getTerminal('Event B')).to.equal(null);
+    });
+
+    it('should not render a terminal on a read-only event', () => {
+      renderTimeline({ events: [eventA, readOnlyEvent], dependencies: [] });
+
+      expect(getTerminal('Event A')).not.to.equal(null);
+      expect(getTerminal('Read-only event')).to.equal(null);
+    });
+
+    it('should not render terminals on the events of a resource with read-only events', () => {
+      const readOnlyResource = ResourceBuilder.new()
+        .id('r1')
+        .title('Resource 1')
+        .areEventsReadOnly()
+        .build();
+      renderTimeline({ events: [eventA, eventB], resources: [readOnlyResource], dependencies: [] });
+
+      expect(getTerminal('Event A')).to.equal(null);
+      expect(getTerminal('Event B')).to.equal(null);
+    });
+
+    it('should reject the drop on a read-only event and surface an error', () => {
+      const handleDependenciesChange = spy();
+      const { store } = renderTimeline({
+        events: [eventA, readOnlyEvent],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', 'Read-only event');
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].error.message).to.contain('read-only');
+    });
+
+    it('should reject addDependency when the component is read-only', () => {
+      const handleDependenciesChange = spy();
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        readOnly: true,
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      let result;
+      act(() => {
+        result = store.addDependency({
+          source: 'event-a',
+          target: 'event-b',
+          type: 'FinishToStart',
+        });
+      });
+
+      expect(result).to.deep.equal({
+        status: 'rejected',
+        reason: 'readOnlyEvent',
+        eventId: 'event-a',
+      });
+      expect(handleDependenciesChange.callCount).to.equal(0);
+    });
+
+    it('should ignore deleteDependency when an event of the dependency is read-only', () => {
+      const handleDependenciesChange = spy();
+      const { store } = renderTimeline({
+        events: [eventA, readOnlyEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-ro')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      act(() => {
+        store.deleteDependency('dep-1');
+      });
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(getArrowPaths()).to.have.length(1);
+    });
+
+    it('should select a read-only dependency without offering the delete button', () => {
+      const handleDependenciesChange = spy();
+      renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        readOnly: true,
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      expect(
+        document.querySelector('[data-dependency-id="dep-1"]')!.hasAttribute('data-selected'),
+      ).to.equal(true);
+      expect(document.querySelector('[data-dependency-delete-button]')).to.equal(null);
+
+      fireEvent.keyDown(document.body, { key: 'Delete' });
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(getArrowPaths()).to.have.length(1);
     });
   });
 });

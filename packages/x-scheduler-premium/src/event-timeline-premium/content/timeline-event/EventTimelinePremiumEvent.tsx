@@ -56,11 +56,6 @@ const EventTimelinePremiumEventRoot = styled('div', {
   [`&:hover .${eventTimelinePremiumClasses.eventResizeHandler}`]: {
     opacity: 1,
   },
-  // TODO(dependencies public flip): add an `eventDependencyHandle` utility class; the
-  // terminal only carries a data attribute while the feature has no public API.
-  '&:hover [data-dependency-handle], &[data-dependency-drag-source] [data-dependency-handle]': {
-    opacity: 1,
-  },
   '&[data-dependency-drop-target]': {
     outline: '2px solid var(--event-surface-accent)',
     outlineOffset: 1,
@@ -136,26 +131,6 @@ const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHa
     right: 0,
   },
 });
-
-const EventTimelinePremiumEventDependencyHandle = styled(TimelineGrid.EventDependencyHandle, {
-  name: 'MuiEventTimeline',
-  slot: 'EventDependencyHandle',
-})(({ theme }) => ({
-  position: 'absolute',
-  width: 10,
-  height: 10,
-  borderRadius: '50%',
-  // Centered on the end edge, above the width-4 end resize handle: in the overlap the
-  // terminal wins, the rest of the resize strip stays reachable.
-  right: -5,
-  top: '50%',
-  transform: 'translateY(-50%)',
-  zIndex: 4,
-  cursor: 'crosshair',
-  opacity: 0,
-  backgroundColor: 'var(--event-surface-accent)',
-  border: `1px solid ${(theme.vars || theme).palette.background.paper}`,
-}));
 
 export const EventTimelinePremiumEvent = React.forwardRef(function EventTimelinePremiumEvent(
   props: EventTimelinePremiumEventProps,
@@ -261,7 +236,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       {isEndResizable && (
         <EventTimelinePremiumEventResizeHandler side="end" className={classes.eventResizeHandler} />
       )}
-      {!isRecurring && <EventTimelinePremiumEventDependencyHandle />}
     </TimelineGrid.Event>
   );
 });
