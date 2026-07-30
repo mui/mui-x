@@ -64,6 +64,12 @@ function unreachableRejection(result: never): string {
 }
 
 /**
+ * How long a gesture-rejection toast stays up before dismissing itself: validation
+ * feedback is transient, unlike the data-source failures sharing the container.
+ */
+const REJECTION_TOAST_DURATION_MS = 5000;
+
+/**
  * Handles the whole create-dependency drag gesture, from any terminal to any event.
  * A global monitor mounted by the grid root (rather than callbacks on the terminal's
  * draggable) so the gesture survives the source element being unmounted by
@@ -77,6 +83,31 @@ export function useDependencyCreationMonitor() {
     if (!enabled) {
       return undefined;
     }
+
+    // Key of a pushed rejection toast → its auto-dismiss timeout.
+    const pendingToasts = new Map<string, ReturnType<typeof setTimeout>>();
+
+    const pushRejectionToast = (message: string) => {
+      // Replace an identical toast (among this monitor's own) instead of stacking:
+      // repeated rejected attempts refresh one alert and its timer rather than
+      // progressively covering the timeline.
+      const existing = store.state.errors.find(
+        (entry) => pendingToasts.has(entry.key) && entry.error.message === message,
+      );
+      if (existing !== undefined) {
+        clearTimeout(pendingToasts.get(existing.key));
+        pendingToasts.delete(existing.key);
+        store.dismissError(existing.key);
+      }
+      const key = store.pushError(/* minify-error-disabled */ new Error(message));
+      pendingToasts.set(
+        key,
+        setTimeout(() => {
+          pendingToasts.delete(key);
+          store.dismissError(key);
+        }, REJECTION_TOAST_DURATION_MS),
+      );
+    };
 
     const updateCreation = (
       source: { data: Record<string | symbol, unknown> },
@@ -102,7 +133,7 @@ export function useDependencyCreationMonitor() {
       });
     };
 
-    return monitorForElements({
+    const cleanupMonitor = monitorForElements({
       canMonitor: ({ source }) =>
         source.data.source === 'TimelineGridEventDependencyHandle' &&
         source.data.storeContext === store,
@@ -139,9 +170,18 @@ export function useDependencyCreationMonitor() {
           if (result.reason === 'duplicateDependency') {
             store.setSelectedDependency(result.dependencyId);
           }
-          store.pushError(/* minify-error-disabled */ new Error(getRejectionMessage(result)));
+          pushRejectionToast(getRejectionMessage(result));
         }
       },
     });
+
+    return () => {
+      cleanupMonitor();
+      // Transient feedback does not outlive its timeline.
+      pendingToasts.forEach((timeout, key) => {
+        clearTimeout(timeout);
+        store.dismissError(key);
+      });
+    };
   }, [store, enabled]);
 }

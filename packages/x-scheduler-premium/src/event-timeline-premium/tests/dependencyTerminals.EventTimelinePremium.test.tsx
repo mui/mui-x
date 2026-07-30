@@ -190,6 +190,33 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.errors[0].error.message).to.contain('recurring');
     });
 
+    it('should replace an identical rejection toast instead of stacking it', () => {
+      const { store } = renderTimeline({ events: [eventA, recurringEvent], dependencies: [] });
+
+      simulateTerminalDrag('Event A', 'Recurring event');
+      simulateTerminalDrag('Event A', 'Recurring event');
+
+      expect(store.state.errors).to.have.length(1);
+      expect(store.state.errors[0].error.message).to.contain('recurring');
+    });
+
+    it('should auto-dismiss a rejection toast', () => {
+      vi.useFakeTimers();
+      try {
+        const { store } = renderTimeline({ events: [eventA, recurringEvent], dependencies: [] });
+
+        simulateTerminalDrag('Event A', 'Recurring event');
+        expect(store.state.errors).to.have.length(1);
+
+        act(() => {
+          vi.advanceTimersByTime(5000);
+        });
+        expect(store.state.errors).to.have.length(0);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it('should highlight the hovered target event during a terminal drag', async () => {
       renderTimeline({ events: [eventA, eventB], dependencies: [] });
 

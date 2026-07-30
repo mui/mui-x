@@ -307,15 +307,18 @@ export class SchedulerStore<
    * is enforced in one place. Does not dedupe — pushing the same `Error` instance
    * twice produces two entries (intentional; e.g. a retried failure that should
    * re-display after the previous one was dismissed).
+   * Returns the entry's key, so the caller can `dismissError` it later.
    * @internal
    */
-  public pushError = (error: unknown) => {
+  public pushError = (error: unknown): string => {
     const wrapped =
       error instanceof Error
         ? error
         : /* minify-error-disabled */ new Error(String(error), { cause: error });
     this.nextErrorKey += 1;
-    this.set('errors', [...this.state.errors, { error: wrapped, key: String(this.nextErrorKey) }]);
+    const key = String(this.nextErrorKey);
+    this.set('errors', [...this.state.errors, { error: wrapped, key }]);
+    return key;
   };
 
   /**
