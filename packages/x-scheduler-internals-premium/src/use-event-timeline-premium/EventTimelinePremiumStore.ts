@@ -137,11 +137,15 @@ const mapper: SchedulerParametersToStateMapper<
     const shouldEventRequireResource =
       parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
     warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const areDependenciesEnabled = deriveAreDependenciesEnabled(parameters);
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
       ...buildDependenciesState(parameters.dependencies),
-      areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
+      areDependenciesEnabled,
+      // Disabling the feature discards its transient state: a gesture or selection
+      // kept in the raw state would come back on screen if it is re-enabled.
+      ...(areDependenciesEnabled ? null : { dependencyCreation: null, selectedDependencyId: null }),
       shouldEventRequireResource,
       hasInitialized: true,
     };
@@ -190,6 +194,21 @@ export class EventTimelinePremiumStore<
     this.scheduling = this.disposables.use(new SchedulerSchedulingPlugin(this));
     this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
+
+    // Clear (not just mask) the selection of a removed dependency: with masking
+    // alone, a consumer later re-adding the same id (server-assigned or
+    // content-derived) would resurrect the arrow already selected.
+    this.disposables.defer(
+      this.registerStoreEffect(
+        (state) => state.dependencyModelLookup,
+        () => {
+          const { selectedDependencyId, dependencyModelLookup } = this.state;
+          if (selectedDependencyId !== null && !dependencyModelLookup.has(selectedDependencyId)) {
+            this.setSelectedDependency(null);
+          }
+        },
+      ),
+    );
   }
 
   private assertPresetValidity(preset: EventTimelinePremiumPreset) {

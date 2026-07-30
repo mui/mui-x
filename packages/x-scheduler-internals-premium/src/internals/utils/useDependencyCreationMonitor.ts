@@ -177,7 +177,10 @@ export function useDependencyCreationMonitor() {
 
     return () => {
       cleanupMonitor();
-      // Transient feedback does not outlive its timeline.
+      // A teardown mid-gesture (feature disabled, grid unmounted on a view switch)
+      // would otherwise freeze the rubber band and the drag-source highlight.
+      store.setDependencyCreation(null);
+      // Transient feedback does not outlive its timeline either.
       pendingToasts.forEach((timeout, key) => {
         clearTimeout(timeout);
         store.dismissError(key);

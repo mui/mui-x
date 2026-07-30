@@ -460,6 +460,42 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
   });
 
+  describe('transient state resets', () => {
+    it('should discard the creation gesture and the selection when the feature is disabled', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.setDependencyCreation({
+        sourceEventId: 'event-a',
+        sourceOccurrenceKey: 'key-a',
+        targetEventId: null,
+        targetOccurrenceKey: null,
+        cursor: { clientX: 0, clientY: 0 },
+      });
+      store.setSelectedDependency('dep-1');
+
+      store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
+
+      expect(store.state.dependencyCreation).to.equal(null);
+      expect(store.state.selectedDependencyId).to.equal(null);
+    });
+
+    it('should clear the selection of a removed dependency so a re-added id does not resurrect it', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.setSelectedDependency('dep-1');
+
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+      expect(store.state.selectedDependencyId).to.equal(null);
+
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] }, adapter);
+      expect(eventTimelinePremiumDependencySelectors.selectedId(store.state)).to.equal(null);
+    });
+  });
+
   describe('dev warnings', () => {
     it('should warn and keep the feature disabled when onDependenciesChange is provided without dependencies', () => {
       let store!: EventTimelinePremiumStore<any, any>;

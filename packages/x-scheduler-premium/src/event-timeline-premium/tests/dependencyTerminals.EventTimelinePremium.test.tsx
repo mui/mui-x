@@ -487,7 +487,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.selectedDependencyId).to.equal('dep-1');
     });
 
-    it('should clear the visual selection when the selected dependency is removed externally', async () => {
+    it('should clear the selection when the selected dependency is removed externally, and only then', async () => {
       const { store } = renderTimeline({
         events: [eventA, eventB],
         dependencies: [
@@ -499,15 +499,51 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
       expect(store.state.selectedDependencyId).to.equal('dep-1');
 
-      // An external consumer removes the selected dependency: the selection selector
-      // resolves to null without any reconciliation.
+      // Removing an unrelated dependency leaves the selection alone.
+      act(() => {
+        store.deleteDependency('dep-2');
+      });
+      await waitFor(() => {
+        expect(getArrowPaths()).to.have.length(1);
+      });
+      expect(store.state.selectedDependencyId).to.equal('dep-1');
+      expect(document.querySelector('[data-dependency-delete-button]')).not.to.equal(null);
+
+      // Removing the selected one clears the raw selection — not just its rendering —
+      // so a consumer re-adding the same id cannot resurrect it selected.
       act(() => {
         store.deleteDependency('dep-1');
       });
-
       await waitFor(() => {
         expect(document.querySelector('[data-selected]')).to.equal(null);
       });
+      expect(document.querySelector('[data-dependency-delete-button]')).to.equal(null);
+      expect(store.state.selectedDependencyId).to.equal(null);
+    });
+
+    it('should discard the creation gesture when the timeline unmounts mid-drag', async () => {
+      const { store, unmount } = renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 120,
+        clientY: 40,
+      });
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).not.to.equal(null);
+      });
+
+      act(() => {
+        unmount();
+      });
+
+      expect(store.state.dependencyCreation).to.equal(null);
+
+      // Unmounting does not deliver a native dragend: end the gesture so pragmatic's
+      // global drag state does not leak into the next test.
+      fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
     });
   });
 
