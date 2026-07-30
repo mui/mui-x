@@ -64,7 +64,10 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           }),
           new TapGesture({
             name: 'tap',
-            preventIf: ['pan', 'zoomPinch', 'zoomPan'],
+            // `pan` is intentionally omitted: it has `threshold: 0`, so any pointer drift during a
+            // click activates it and would cancel the tap, discarding the click. The tap's own
+            // `maxDistance` already discriminates a click from a drag. See https://github.com/mui/mui-x/issues/20364
+            preventIf: ['zoomPinch', 'zoomPan'],
           }),
           new PressGesture({
             name: 'quickPress',
