@@ -173,11 +173,22 @@ describe('eventTimelinePremiumDependencySelectors', () => {
       resources: TEST_RESOURCES,
       events: [eventA, eventB],
     });
+    let stateWithHandlerOnly!: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    expect(() => {
+      stateWithHandlerOnly = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        onDependenciesChange: () => {},
+      });
+    }).toWarnDev([
+      'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
+    ]);
 
     expect(eventTimelinePremiumDependencySelectors.enabled(stateWithDependencies)).to.equal(true);
     expect(eventTimelinePremiumDependencySelectors.enabled(stateWithoutDependencies)).to.equal(
       false,
     );
+    expect(eventTimelinePremiumDependencySelectors.enabled(stateWithHandlerOnly)).to.equal(false);
   });
 
   it('should return the creation gesture source and target flags', () => {

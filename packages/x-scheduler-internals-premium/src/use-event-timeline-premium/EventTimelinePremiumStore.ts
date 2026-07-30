@@ -81,8 +81,21 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
 });
 
-const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) =>
-  parameters.dependencies !== undefined || parameters.onDependenciesChange !== undefined;
+// `dependencies` is fully controlled (there is no `defaultDependencies`), so a lone
+// `onDependenciesChange` could only enable a UI whose creations never display: the
+// feature requires the value, and the lone handler gets the symmetric dev warning to
+// the one `updateDependencies` emits for a value without a handler.
+const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) => {
+  const enabled = parameters.dependencies !== undefined;
+  if (!enabled && parameters.onDependenciesChange !== undefined) {
+    warnOnce([
+      'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
+      'The `dependencies` prop is fully controlled, so without it the handler could never display anything and the dependencies feature stays disabled.',
+      'Pass a `dependencies` array next to the handler — an empty one enables the feature.',
+    ]);
+  }
+  return enabled;
+};
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 

@@ -159,7 +159,12 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     it('should reject a dependency referencing a recurring event', () => {
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
-        { events: [eventA, recurringEvent], resources: TEST_RESOURCES, onDependenciesChange },
+        {
+          events: [eventA, recurringEvent],
+          resources: TEST_RESOURCES,
+          dependencies: [],
+          onDependenciesChange,
+        },
         adapter,
       );
 
@@ -237,7 +242,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // A self-loop is the degenerate cycle; rejection belongs to the cycle guard (#22858).
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, onDependenciesChange },
+        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
         adapter,
       );
 
@@ -256,7 +261,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // consumer round-trips the prop — same known limitation as consecutive adds.
       const onDependenciesChange = spy();
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, onDependenciesChange },
+        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
         adapter,
       );
 
@@ -456,6 +461,20 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
   });
 
   describe('dev warnings', () => {
+    it('should warn and keep the feature disabled when onDependenciesChange is provided without dependencies', () => {
+      let store!: EventTimelinePremiumStore<any, any>;
+      expect(() => {
+        store = new EventTimelinePremiumStore(
+          { ...DEFAULT_PARAMS, onDependenciesChange: () => {} },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
+      ]);
+
+      expect(store.state.areDependenciesEnabled).to.equal(false);
+    });
+
     it('should warn when a dependency from props references an unknown event and there is no dataSource', () => {
       expect(() => {
         // eslint-disable-next-line no-new
