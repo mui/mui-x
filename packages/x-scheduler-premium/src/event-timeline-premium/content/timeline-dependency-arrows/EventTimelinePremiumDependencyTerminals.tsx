@@ -1,14 +1,10 @@
 'use client';
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
-import {
-  schedulerEventSelectors,
-  schedulerOccurrenceSelectors,
-} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
@@ -16,10 +12,7 @@ import {
   eventTimelinePremiumPresetSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
-import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
-import { getEventsCellLaneMetrics } from '../rowGeometry';
-import { getVisibleFractionRange } from '../getVisibleFractionRange';
-import { createDependencyAnchorResolver } from './dependencyArrowGeometry';
+import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
 
 const DependencyTerminalsLayer = styled('div', {
   name: 'MuiEventTimeline',
@@ -82,30 +75,28 @@ export function EventTimelinePremiumDependencyTerminals() {
 
 function DependencyTerminalsLayerImpl() {
   const adapter = useAdapterContext();
-  const theme = useTheme();
   const store = useEventTimelinePremiumStoreContext();
-  const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
 
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const creation = useStore(store, eventTimelinePremiumDependencySelectors.creation);
   // Subscribed (not read inline like the per-event flags) because a global `readOnly`
   // flip changes no event or occurrence, so nothing else would re-render the layer.
   useStore(store, (state) => state.readOnly);
-  const resources = useStore(
-    store,
-    schedulerOccurrenceSelectors.groupedByResourceList,
-    presetConfig.start,
-    presetConfig.end,
-  );
-  const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
-  const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
+  const {
+    resolver,
+    resources,
+    eventsWidth,
+    offsetTop,
+    height,
+    visibleStartFraction,
+    visibleEndFraction,
+    firstRowIndex,
+    lastRowIndex: lastGeometryRowIndex,
+  } = useDependencyGeometry();
 
   const [hoveredOccurrenceKey, setHoveredOccurrenceKey] = React.useState<string | null>(null);
   const layerRef = React.useRef<HTMLDivElement>(null);
 
-  const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
-  const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
-  const height = rowsMeta.currentPageTotalHeight - offsetTop;
   const mounted = eventsWidth > 0 && height > 0;
 
   // Delegated hover tracking on the row container: the terminals live outside the
@@ -140,40 +131,13 @@ function DependencyTerminalsLayerImpl() {
     };
   }, [mounted]);
 
-  const resolver = React.useMemo(
-    () =>
-      createDependencyAnchorResolver({
-        adapter,
-        resources,
-        rowPositions: rowsMeta.positions,
-        collectionStart: presetConfig.start,
-        collectionEnd: presetConfig.end,
-        eventsWidth,
-        laneMetrics: getEventsCellLaneMetrics(theme),
-      }),
-    [
-      adapter,
-      resources,
-      rowsMeta.positions,
-      presetConfig.start,
-      presetConfig.end,
-      eventsWidth,
-      theme,
-    ],
-  );
-
   if (!mounted) {
     return null;
   }
 
-  const { start: visibleStartFraction, end: visibleEndFraction } = getVisibleFractionRange(
-    renderContext,
-    presetConfig.tickCount,
-  );
-
   const terminals: React.ReactElement[] = [];
-  const lastRowIndex = Math.min(renderContext.lastRowIndex, resources.length - 1);
-  for (let rowIndex = renderContext.firstRowIndex; rowIndex <= lastRowIndex; rowIndex += 1) {
+  const lastRowIndex = Math.min(lastGeometryRowIndex, resources.length - 1);
+  for (let rowIndex = firstRowIndex; rowIndex <= lastRowIndex; rowIndex += 1) {
     if (!resolver.hasRowPosition(rowIndex)) {
       continue;
     }
@@ -202,8 +166,7 @@ function DependencyTerminalsLayerImpl() {
       }
       const point = resolver.getEdgePoint({ rowIndex, occurrence }, 'end');
       const visible =
-        hoveredOccurrenceKey === occurrence.key ||
-        creation?.sourceOccurrenceKey === occurrence.key;
+        hoveredOccurrenceKey === occurrence.key || creation?.sourceOccurrenceKey === occurrence.key;
       terminals.push(
         <EventTimelinePremiumDependencyTerminal
           key={occurrence.key}

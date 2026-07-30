@@ -2,29 +2,16 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { Dimensions, Virtualization } from '@mui/x-virtualizer';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
-import {
-  eventTimelinePremiumDependencySelectors,
-  eventTimelinePremiumPresetSelectors,
-} from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type {
-  SchedulerDependency,
   SchedulerDependencyCreation,
   SchedulerDependencyId,
 } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
-import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
-import { getEventsCellLaneMetrics } from '../rowGeometry';
-import { getVisibleFractionRange } from '../getVisibleFractionRange';
-import {
-  computeDependencyArrows,
-  createDependencyAnchorResolver,
-  getEventEdgeAnchor,
-  DEPENDENCY_ARROWHEAD_SIZE,
-} from './dependencyArrowGeometry';
+import type { DependencyAnchorResolver } from './dependencyArrowGeometry';
+import { getEventEdgeAnchor, DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowGeometry';
+import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
 import { useDependencySelectionInteraction } from './useDependencySelectionInteraction';
 
 const DEPENDENCY_ARROW_STROKE_WIDTH = 1;
@@ -110,108 +97,20 @@ export function EventTimelinePremiumDependencyArrows() {
     return null;
   }
 
-  return <DependencyArrowsLayer dependencies={dependencies} creation={creation} />;
+  return <DependencyArrowsLayer creation={creation} />;
 }
 
-/**
- * The arrows and their geometry, shared by the visual and the interaction layers.
- * Arrow paths are computed from the data model — never from the DOM — so they can
- * anchor on events the virtualizer did not mount, and they only change when an event
- * or dependency changes, not on scroll.
- */
-function useVisibleDependencyArrows(dependencies: readonly SchedulerDependency[]) {
-  const adapter = useAdapterContext();
-  const theme = useTheme();
-  const store = useEventTimelinePremiumStoreContext();
-  const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
-
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
-  const resources = useStore(
-    store,
-    schedulerOccurrenceSelectors.groupedByResourceList,
-    presetConfig.start,
-    presetConfig.end,
-  );
-  const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
-  const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
-
-  const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
-
-  const resolverParameters = React.useMemo(
-    () => ({
-      adapter,
-      resources,
-      rowPositions: rowsMeta.positions,
-      collectionStart: presetConfig.start,
-      collectionEnd: presetConfig.end,
-      eventsWidth,
-      laneMetrics: getEventsCellLaneMetrics(theme),
-    }),
-    [
-      adapter,
-      resources,
-      rowsMeta.positions,
-      presetConfig.start,
-      presetConfig.end,
-      eventsWidth,
-      theme,
-    ],
-  );
-
-  const resolver = React.useMemo(
-    () => createDependencyAnchorResolver(resolverParameters),
-    [resolverParameters],
-  );
-
-  const arrows = React.useMemo(
-    () => computeDependencyArrows({ ...resolverParameters, dependencies, resolver }),
-    [resolverParameters, dependencies, resolver],
-  );
-
-  // Only render the arrows intersecting the visible range. Row-range overlap (rather
-  // than endpoint visibility) keeps an arrow whose vertical segment crosses the
-  // viewport even when both of its endpoints are scrolled out.
-  const { start: visibleStartFraction, end: visibleEndFraction } = getVisibleFractionRange(
-    renderContext,
-    presetConfig.tickCount,
-  );
-  const visibleArrows = arrows.filter(
-    (arrow) =>
-      arrow.maxXFraction > visibleStartFraction &&
-      arrow.minXFraction < visibleEndFraction &&
-      arrow.maxRowIndex >= renderContext.firstRowIndex &&
-      arrow.minRowIndex <= renderContext.lastRowIndex,
-  );
-
-  // The selected arrow paints last so its highlight is never covered by a sibling.
-  if (selectedId !== null) {
-    visibleArrows.sort((a, b) => Number(a.id === selectedId) - Number(b.id === selectedId));
-  }
-
-  // The overlay's y = 0 is the top of the first rendered row (the positioner offsets
-  // the row container), while the paths are in absolute row-space. The viewBox maps
-  // one to the other and clips the arrows reaching off-screen anchors.
-  const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
-  const height = rowsMeta.currentPageTotalHeight - offsetTop;
-
-  return { visibleArrows, selectedId, resolver, eventsWidth, offsetTop, height };
-}
-
-function DependencyArrowsLayer({
-  dependencies,
-  creation,
-}: {
-  dependencies: readonly SchedulerDependency[];
-  creation: SchedulerDependencyCreation | null;
-}) {
+function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCreation | null }) {
   const theme = useTheme();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
   const svgRef = React.useRef<SVGSVGElement>(null);
 
+  // The overlays' y = 0 is the top of the first rendered row (the positioner offsets
+  // the row container), while the paths are in absolute row-space. The viewBox maps
+  // one to the other and clips the arrows reaching off-screen anchors.
   const { visibleArrows, selectedId, resolver, eventsWidth, offsetTop, height } =
-    useVisibleDependencyArrows(dependencies);
+    useDependencyGeometry();
 
   const creationPath = getCreationPath(creation, resolver, svgRef, offsetTop);
 
@@ -317,18 +216,13 @@ export function EventTimelinePremiumDependencyInteractions() {
     return null;
   }
 
-  return <DependencyInteractionsLayer dependencies={dependencies} />;
+  return <DependencyInteractionsLayer />;
 }
 
-function DependencyInteractionsLayer({
-  dependencies,
-}: {
-  dependencies: readonly SchedulerDependency[];
-}) {
+function DependencyInteractionsLayer() {
   const theme = useTheme();
   const store = useEventTimelinePremiumStoreContext();
-  const { visibleArrows, selectedId, eventsWidth, offsetTop, height } =
-    useVisibleDependencyArrows(dependencies);
+  const { visibleArrows, selectedId, eventsWidth, offsetTop, height } = useDependencyGeometry();
   // `deleteDependency` ignores read-only dependencies: hide the button instead of
   // rendering one that does nothing.
   const isSelectedReadOnly = useStore(
@@ -419,7 +313,7 @@ function buildDeleteCrossPath(cx: number, cy: number): string {
  */
 function getCreationPath(
   creation: SchedulerDependencyCreation | null,
-  resolver: ReturnType<typeof createDependencyAnchorResolver>,
+  resolver: DependencyAnchorResolver,
   svgRef: React.RefObject<SVGSVGElement | null>,
   offsetTop: number,
 ): { d: string; snapped: boolean } | null {
@@ -442,7 +336,7 @@ function getCreationPath(
       resolver,
       creation.targetEventId,
       'start',
-      creation.targetOccurrenceKey ?? undefined,
+      creation.targetOccurrenceKey,
     );
     if (target !== null) {
       return {

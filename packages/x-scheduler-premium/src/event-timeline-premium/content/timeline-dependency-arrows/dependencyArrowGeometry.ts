@@ -122,18 +122,13 @@ export interface DependencyAnchorResolverParameters {
    */
   eventsWidth: number;
   laneMetrics: EventsCellLaneMetrics;
-}
-
-export interface ComputeDependencyArrowsParameters extends DependencyAnchorResolverParameters {
   /**
-   * The active dependencies (both events exist and are not recurring).
+   * When provided, the appearance lookup only indexes these events (the dependency
+   * endpoints) on its single build pass; any other id — the in-flight creation's
+   * events — falls back to a targeted scan cached per id. Without it every occurrence
+   * gets an entry, which is pure allocation waste on large collections.
    */
-  dependencies: readonly SchedulerDependency[];
-  /**
-   * An anchor resolver built from the same parameters, to share its caches with other
-   * consumers (the provisional arrow). Built internally when not provided.
-   */
-  resolver?: DependencyAnchorResolver;
+  endpointIds?: ReadonlySet<SchedulerEventId>;
 }
 
 export interface DependencyAnchorResolver {
@@ -180,15 +175,20 @@ export function createDependencyAnchorResolver(
     collectionEnd,
     eventsWidth,
     laneMetrics,
+    endpointIds,
   } = parameters;
 
-  // Built on first access with a single pass over the rendered occurrences.
+  // Built on first access with a single pass over the rendered occurrences, only
+  // indexing the endpoint events when the filter is provided.
   let appearancesLookup: Map<SchedulerEventId, DependencyArrowAnchor[]> | null = null;
   const getAppearances = (eventId: SchedulerEventId): readonly DependencyArrowAnchor[] => {
     if (appearancesLookup == null) {
       appearancesLookup = new Map();
       for (let rowIndex = 0; rowIndex < resources.length; rowIndex += 1) {
         for (const occurrence of resources[rowIndex].occurrences) {
+          if (endpointIds !== undefined && !endpointIds.has(occurrence.id)) {
+            continue;
+          }
           const appearances = appearancesLookup.get(occurrence.id);
           if (appearances) {
             appearances.push({ rowIndex, occurrence });
@@ -198,7 +198,21 @@ export function createDependencyAnchorResolver(
         }
       }
     }
-    return appearancesLookup.get(eventId) ?? [];
+    let appearances = appearancesLookup.get(eventId);
+    if (appearances == null && endpointIds !== undefined && !endpointIds.has(eventId)) {
+      // An id the build pass skipped (the in-flight creation's events): targeted
+      // scan, cached — including the empty result.
+      appearances = [];
+      for (let rowIndex = 0; rowIndex < resources.length; rowIndex += 1) {
+        for (const occurrence of resources[rowIndex].occurrences) {
+          if (occurrence.id === eventId) {
+            appearances.push({ rowIndex, occurrence });
+          }
+        }
+      }
+      appearancesLookup.set(eventId, appearances);
+    }
+    return appearances ?? [];
   };
 
   // Lane assignment of a row, computed on demand and only once per involved row.
@@ -282,21 +296,19 @@ export function createDependencyAnchorResolver(
 
 /**
  * The pixel point of an event edge, used to anchor the provisional (rubber-band)
- * arrow. With an occurrence key, anchors on that specific row appearance; otherwise on
- * the event's first appearance. `null` when the event has no laid-out appearance.
+ * arrow. Anchors on the appearance matching the occurrence key, silently falling back
+ * to the event's first appearance when the key is `null` or unknown. `null` when the
+ * anchoring appearance's row is not laid out.
  */
 export function getEventEdgeAnchor(
   resolver: DependencyAnchorResolver,
   eventId: SchedulerEventId,
   edge: 'start' | 'end',
-  occurrenceKey?: string,
+  occurrenceKey: string | null = null,
 ): DependencyArrowPoint | null {
   const appearances = resolver.getAppearances(eventId);
   const anchor =
-    (occurrenceKey == null
-      ? appearances[0]
-      : appearances.find((appearance) => appearance.occurrence.key === occurrenceKey)) ??
-    appearances[0];
+    appearances.find((appearance) => appearance.occurrence.key === occurrenceKey) ?? appearances[0];
   if (anchor == null || !resolver.hasRowPosition(anchor.rowIndex)) {
     return null;
   }
@@ -308,15 +320,14 @@ export function getEventEdgeAnchor(
  * source event to the start edge of the target event.
  */
 export function computeDependencyArrows(
-  parameters: ComputeDependencyArrowsParameters,
+  resolver: DependencyAnchorResolver,
+  dependencies: readonly SchedulerDependency[],
 ): DependencyArrow[] {
-  const { dependencies, eventsWidth } = parameters;
+  const { eventsWidth } = resolver;
 
   if (dependencies.length === 0 || eventsWidth <= 0) {
     return [];
   }
-
-  const resolver = parameters.resolver ?? createDependencyAnchorResolver(parameters);
 
   const buildArrow = (
     dependency: SchedulerDependency,

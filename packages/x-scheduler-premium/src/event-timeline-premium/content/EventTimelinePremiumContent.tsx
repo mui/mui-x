@@ -56,6 +56,7 @@ import { getRowHeightForLaneCount } from './rowGeometry';
 import { getVisibleFractionRange } from './getVisibleFractionRange';
 import {
   EventTimelinePremiumDependencyArrows,
+  EventTimelinePremiumDependencyGeometryProvider,
   EventTimelinePremiumDependencyInteractions,
   EventTimelinePremiumDependencyTerminals,
 } from './timeline-dependency-arrows';
@@ -871,18 +872,20 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                     showCurrentTimeIndicator={showCurrentTimeIndicator}
                   />
                   <RowContainer role="rowgroup" {...positionerProps}>
-                    <EventTimelinePremiumDependencyArrows />
-                    {virtualizer.api.getters.getRows()}
-                    {/* After the rows and the arrows so the terminals win their z-index
-                        ties and paint above both. */}
-                    <EventTimelinePremiumDependencyTerminals />
-                    {showCurrentTimeIndicator && (
-                      <EventTimelinePremiumCurrentTimeIndicator
-                        className={classes.currentTimeIndicator}
-                        aria-hidden
-                      />
-                    )}
-                    <EventTimelinePremiumDependencyInteractions />
+                    <EventTimelinePremiumDependencyGeometryProvider>
+                      <EventTimelinePremiumDependencyArrows />
+                      {virtualizer.api.getters.getRows()}
+                      {/* After the rows and the arrows so the terminals win their
+                          z-index ties and paint above both. */}
+                      <EventTimelinePremiumDependencyTerminals />
+                      {showCurrentTimeIndicator && (
+                        <EventTimelinePremiumCurrentTimeIndicator
+                          className={classes.currentTimeIndicator}
+                          aria-hidden
+                        />
+                      )}
+                      <EventTimelinePremiumDependencyInteractions />
+                    </EventTimelinePremiumDependencyGeometryProvider>
                   </RowContainer>
                   <FillerRow />
                 </EventTimelinePremiumViewport>
