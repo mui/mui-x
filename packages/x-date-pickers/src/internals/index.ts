@@ -68,6 +68,12 @@ export {
   DIALOG_WIDTH,
   VIEW_HEIGHT,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
+  DAY_SIZE_VAR,
+  DAY_MARGIN_VAR,
+  DAY_TRACK_SIZE_VAR,
+  WEEKS_CONTAINER_HEIGHT_VAR,
+  CALENDAR_WIDTH_VAR,
+  CALENDAR_HEIGHT_VAR,
 } from './constants/dimensions';
 
 export { useControlledValue } from './hooks/useControlledValue';
