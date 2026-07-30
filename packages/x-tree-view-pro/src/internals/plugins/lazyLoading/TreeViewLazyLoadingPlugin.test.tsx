@@ -306,27 +306,13 @@ describeTreeView<RichTreeViewProStore<any, any>>(
               resolvers.push(resolve);
             }),
         );
-        const apiRef = React.createRef<any>();
-
-        const view = renderFromJSX(
-          <TreeViewComponent
-            items={[{ id: '1', childrenCount: 1 }]}
-            apiRef={apiRef}
-            dataSource={{
-              getChildrenCount: (item) => item?.childrenCount as number,
-              getTreeItems,
-            }}
-            disableVirtualization
-            slots={{ item: TreeItemComponent }}
-            slotProps={{
-              item: (ownerState) =>
-                ({
-                  'data-testid': ownerState.itemId,
-                }) as any,
-            }}
-            getItemLabel={(item) => item.id}
-          />,
-        );
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
 
         // expanding item '1' starts the first (expand) fetch
         fireEvent.click(view.getItemContent('1'));
@@ -334,7 +320,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         // a forced refresh starts before the expand fetch resolves, starting a second fetch
         await act(async () => {
-          apiRef.current.updateItemChildren('1');
+          view.apiRef.current.updateItemChildren('1');
         });
         expect(getTreeItems.callCount).to.equal(2);
 
@@ -368,32 +354,19 @@ describeTreeView<RichTreeViewProStore<any, any>>(
               resolvers.push(resolve);
             }),
         );
-        const apiRef = React.createRef<any>();
         const onSelectedItemsChange = spy();
 
-        const view = renderFromJSX(
-          <TreeViewComponent
-            items={[{ id: '1', childrenCount: 1 }]}
-            apiRef={apiRef}
-            multiSelect
-            defaultSelectedItems={['1']}
-            selectionPropagation={{ descendants: true }}
-            onSelectedItemsChange={onSelectedItemsChange}
-            dataSource={{
-              getChildrenCount: (item) => item?.childrenCount as number,
-              getTreeItems,
-            }}
-            disableVirtualization
-            slots={{ item: TreeItemComponent }}
-            slotProps={{
-              item: (ownerState) =>
-                ({
-                  'data-testid': ownerState.itemId,
-                }) as any,
-            }}
-            getItemLabel={(item) => item.id}
-          />,
-        );
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          multiSelect: true,
+          defaultSelectedItems: ['1'],
+          selectionPropagation: { descendants: true },
+          onSelectedItemsChange,
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems,
+          },
+        });
 
         // expanding the already-selected item '1' starts the expand fetch
         fireEvent.click(view.getItemContent('1'));
@@ -401,7 +374,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
         // a forced refresh starts before the expand fetch resolves
         await act(async () => {
-          apiRef.current.updateItemChildren('1');
+          view.apiRef.current.updateItemChildren('1');
         });
         expect(getTreeItems.callCount).to.equal(2);
 

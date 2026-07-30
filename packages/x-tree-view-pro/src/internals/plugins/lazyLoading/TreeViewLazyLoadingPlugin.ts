@@ -327,7 +327,9 @@ export class TreeViewLazyLoadingPlugin<R extends TreeViewValidItem<R>> {
       }
       this.lastAppliedRequestId.set(cacheKey, requestId);
       // clear any error left by an out-of-order older request
-      this.setItemError(itemId, null);
+      if (lazyLoadingSelectors.itemError(this.store.state, itemId)) {
+        this.setItemError(itemId, null);
+      }
       // save the response in the cache
       this.cache.set(cacheKey, response);
       // update the items in the state
