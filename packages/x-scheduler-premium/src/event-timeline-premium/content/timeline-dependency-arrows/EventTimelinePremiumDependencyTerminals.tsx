@@ -45,8 +45,10 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
   width: 10,
   height: 10,
   borderRadius: '50%',
-  // Centered on the end-edge anchor — the same point the arrows use as their source.
-  transform: 'translate(-50%, -50%)',
+  // Ends exactly on the end-edge anchor (the arrows' source point), fully inside its
+  // event: any outward overhang would cover the start resize handle of a back-to-back
+  // neighbor, turning its resize grab into a dependency drag.
+  transform: 'translate(-100%, -50%)',
   cursor: 'crosshair',
   opacity: 0,
   // Only hit-testable while shown: an invisible terminal must not steal clicks from

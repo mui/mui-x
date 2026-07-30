@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -92,6 +93,36 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.pointerOver(getEventElement('Event B'));
       expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(false);
       expect(getTerminal('Event B')!.hasAttribute('data-visible')).to.equal(true);
+    });
+  });
+
+  describe.skipIf(isJSDOM)('terminal placement', () => {
+    const adjacentEvent = EventBuilder.new()
+      .id('event-adj')
+      .title('Adjacent event')
+      .singleDay('2025-07-03T10:00:00Z')
+      .resource(resource1)
+      .build();
+
+    it('should stay inside its event instead of covering the adjacent event edge', async () => {
+      renderTimeline({ events: [eventA, adjacentEvent], dependencies: [] });
+
+      fireEvent.pointerOver(getEventElement('Event A'));
+      await waitFor(() => {
+        expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
+      });
+
+      const adjacentRect = getEventElement('Adjacent event').getBoundingClientRect();
+      const centerY = adjacentRect.top + adjacentRect.height / 2;
+
+      // Just inside the back-to-back neighbor: its own surface, so a start-resize
+      // grab or a click stays a grab on the neighbor — not a dependency drag.
+      const onNeighbor = document.elementFromPoint(adjacentRect.left + 2, centerY)!;
+      expect(onNeighbor.closest('[data-dependency-handle]')).to.equal(null);
+
+      // Just inside the hovered event's tail: the terminal is reachable there.
+      const onTail = document.elementFromPoint(adjacentRect.left - 3, centerY)!;
+      expect(onTail.closest('[data-dependency-handle]')).not.to.equal(null);
     });
   });
 
