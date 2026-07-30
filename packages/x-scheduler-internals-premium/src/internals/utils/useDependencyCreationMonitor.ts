@@ -9,7 +9,7 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 import type { SchedulerDependencyRejectionReason } from '../../models';
 
-const isDependencyHandleDrag = buildIsValidDropTarget(['TimelineGridEventDependencyHandle']);
+const isDependencyHandleDrag = buildIsValidDropTarget(['TimelineGridEventDependencyHandler']);
 
 interface DependencyDropTargetData {
   targetEventId: SchedulerEventId;

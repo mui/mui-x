@@ -8,7 +8,7 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 
-const isDependencyHandleDrag = buildIsValidDropTarget(['TimelineGridEventDependencyHandle']);
+const isDependencyHandleDrag = buildIsValidDropTarget(['TimelineGridEventDependencyHandler']);
 
 /**
  * Registers the event element as a drop target for the create-dependency gesture.

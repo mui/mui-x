@@ -23,7 +23,7 @@ export function useDependencyDragCursor(
       // No typed guard: the callback only reads the pointer position, never the
       // payload, so the raw discriminator comparison is enough.
       canMonitor: ({ source }) =>
-        source.data.source === 'TimelineGridEventDependencyHandle' &&
+        source.data.source === 'TimelineGridEventDependencyHandler' &&
         source.data.storeContext === store,
       onDrag: ({ location }) => {
         onCursorMove(location.current.input.clientX, location.current.input.clientY);

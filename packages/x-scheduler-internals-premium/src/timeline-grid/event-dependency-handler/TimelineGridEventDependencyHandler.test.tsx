@@ -7,7 +7,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 
-describe('<TimelineGrid.EventDependencyHandle />', () => {
+describe('<TimelineGrid.EventDependencyHandler />', () => {
   const { render } = createSchedulerRenderer();
 
   // The terminal reads the store context to stamp the drag data with its timeline.
@@ -20,7 +20,7 @@ describe('<TimelineGrid.EventDependencyHandle />', () => {
   }
 
   describeConformance(
-    <TimelineGrid.EventDependencyHandle eventId="fake-id" occurrenceKey="fake-key" />,
+    <TimelineGrid.EventDependencyHandler eventId="fake-id" occurrenceKey="fake-key" />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {
@@ -32,7 +32,7 @@ describe('<TimelineGrid.EventDependencyHandle />', () => {
   it('should expose its occurrence key through the data-dependency-handle attribute', () => {
     render(
       <Wrapper>
-        <TimelineGrid.EventDependencyHandle eventId="fake-id" occurrenceKey="fake-key" />
+        <TimelineGrid.EventDependencyHandler eventId="fake-id" occurrenceKey="fake-key" />
       </Wrapper>,
     );
 
