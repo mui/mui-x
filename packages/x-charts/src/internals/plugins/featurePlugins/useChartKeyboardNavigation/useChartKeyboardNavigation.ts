@@ -52,10 +52,6 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
    */
   const itemFocusedByPointerRef = React.useRef(false);
 
-  const getDefaultFocusVisible = useEventCallback(
-    () => params.focusItemOnClick === true || store.state.keyboardNavigation.isFocusVisible,
-  );
-
   /**
    * Writes the focus state, only switching the highlight and tooltip to keyboard when visible.
    * An `undefined` item leaves the focused item untouched, `null` clears it.
@@ -131,10 +127,6 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     },
   );
 
-  const focusChart = useEventCallback((options?: FocusItemOptions) => {
-    applyFocus(undefined, options);
-  });
-
   const focusItem = useEventCallback(
     (item: FocusedItemIdentifier<ChartSeriesType>, options?: FocusItemOptions) => {
       const seriesConfig = selectorChartSeriesConfig(store.state);
@@ -177,7 +169,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         : null;
 
     if (item === null) {
-      focusChart();
+      applyFocus(undefined);
       return;
     }
 
@@ -211,21 +203,18 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       }
     }
 
+    // The focus already moved into the chart, so `applyFocus` only reconciles the state with the
+    // current intent: its own focusing step is a no-op here.
     function restoreFocus() {
-      const keyboardNavigation = store.state.keyboardNavigation;
-      const isFocusVisible = focusVisibleIntentRef.current;
-
-      if (keyboardNavigation.isFocused && keyboardNavigation.isFocusVisible === isFocusVisible) {
-        return;
-      }
-
-      updateFocus(undefined, isFocusVisible);
+      applyFocus(undefined);
     }
 
     // A pointer interaction hides the focus, unless it is already visible or `focusItemOnClick`
     // is set. Read on `pointerdown`, before the click can blur the proxy.
     function trackPointerIntent() {
-      focusVisibleIntentRef.current = getDefaultFocusVisible();
+      // A click keeps the focus visible only if it already was, or if the chart opts in.
+      focusVisibleIntentRef.current =
+        params.focusItemOnClick === true || store.state.keyboardNavigation.isFocusVisible;
       itemFocusedByPointerRef.current = false;
     }
 
@@ -235,9 +224,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       focusVisibleIntentRef.current = true;
     }
 
+    // Listens on the document so it runs after the React handlers, which are attached to the
+    // React root above this container. A listener here would run before them.
     function focusChartOnClick(event: MouseEvent) {
-      if (itemFocusedByPointerRef.current) {
-        // A series already resolved the click to one of its items.
+      if (itemFocusedByPointerRef.current || !element!.contains(event.target as Node)) {
+        // A series already resolved the click to one of its items, or the click is not ours.
         return;
       }
 
@@ -285,14 +276,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     element.addEventListener('focusout', removeFocus);
     element.addEventListener('focusin', restoreFocus);
     element.addEventListener('pointerdown', trackPointerIntent, true);
-    element.addEventListener('click', focusChartOnClick);
+    document.addEventListener('click', focusChartOnClick);
     document.addEventListener('keydown', trackKeyboardIntent, true);
     return () => {
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
       element.removeEventListener('pointerdown', trackPointerIntent, true);
-      element.removeEventListener('click', focusChartOnClick);
+      document.removeEventListener('click', focusChartOnClick);
       document.removeEventListener('keydown', trackKeyboardIntent, true);
     };
   }, [
@@ -300,8 +291,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     params.disableKeyboardNavigation,
     store,
     updateFocus,
-    getDefaultFocusVisible,
+    applyFocus,
     focusItemAtAxisPosition,
+    params.focusItemOnClick,
   ]);
 
   useEnhancedEffect(() => {
@@ -311,7 +303,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     });
   }, [store, params.disableKeyboardNavigation]);
 
-  return { instance: { focusItem, focusChart } };
+  return { instance: { focusItem } };
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({

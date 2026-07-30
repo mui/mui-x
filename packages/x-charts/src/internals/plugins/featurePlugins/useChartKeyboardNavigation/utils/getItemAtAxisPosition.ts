@@ -64,25 +64,18 @@ export function getItemAtAxisPosition({
   }
 
   // The axis can be longer than the series it is shared with, and the index may be hidden.
-  const visibleDataIndex =
+  const findVisible = (direction: 1 | -1) =>
     findVisibleDataIndex({
       processedSeries,
       type: target.type,
       seriesId: target.seriesId,
       startIndex: Math.min(dataIndex, data.length - 1),
       dataLength: data.length,
-      direction: 1,
-      allowCycles: false,
-    }) ??
-    findVisibleDataIndex({
-      processedSeries,
-      type: target.type,
-      seriesId: target.seriesId,
-      startIndex: Math.min(dataIndex, data.length - 1),
-      dataLength: data.length,
-      direction: -1,
+      direction,
       allowCycles: false,
     });
+
+  const visibleDataIndex = findVisible(1) ?? findVisible(-1);
 
   if (visibleDataIndex === null) {
     return null;
