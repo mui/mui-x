@@ -22,51 +22,9 @@
   ],
   "classes": [
     {
-      "key": "area",
-      "className": "MuiLineChart-area",
-      "description": "Styles applied to the area element.",
-      "isGlobal": false
-    },
-    {
-      "key": "areaPlot",
-      "className": "MuiLineChart-areaPlot",
-      "description": "Styles applied to the AreaPlot root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "highlight",
-      "className": "MuiLineChart-highlight",
-      "description": "Styles applied to the highlight element.",
-      "isGlobal": false
-    },
-    {
-      "key": "line",
-      "className": "MuiLineChart-line",
-      "description": "Styles applied to the line element.",
-      "isGlobal": false
-    },
-    {
-      "key": "linePlot",
-      "className": "MuiLineChart-linePlot",
-      "description": "Styles applied to the LinePlot root element.",
-      "isGlobal": false
-    },
-    {
       "key": "mark",
       "className": "MuiLineChart-mark",
       "description": "Styles applied to the mark element.",
-      "isGlobal": false
-    },
-    {
-      "key": "markAnimate",
-      "className": "MuiLineChart-markAnimate",
-      "description": "Styles applied to a mark element when it is animated.",
-      "isGlobal": false
-    },
-    {
-      "key": "markPlot",
-      "className": "MuiLineChart-markPlot",
-      "description": "Styles applied to the MarkPlot root element.",
       "isGlobal": false
     }
   ],

@@ -3,12 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import {
-  type SankeyLinkIdentifierWithData,
-  type SankeyNodeIdentifierWithData,
-} from './sankey.types';
+import type { SankeyLinkIdentifierWithData, SankeyNodeIdentifierWithData } from './sankey.types';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
+import { useUtilityClasses } from './sankeyClasses';
+import type { SankeyClasses } from './sankeyClasses';
 import { SankeyNodePlot } from './SankeyNodePlot';
 import { SankeyLinkPlot } from './SankeyLinkPlot';
 import { SankeyNodeLabelPlot } from './SankeyNodeLabelPlot';
@@ -83,7 +81,7 @@ function SankeyPlot(props: SankeyPlotProps) {
   );
 }
 
-SankeyPlot.propTypes = {
+SankeyPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

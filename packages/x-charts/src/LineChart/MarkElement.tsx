@@ -5,14 +5,20 @@ import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import type { SeriesId } from '../models/seriesType';
 import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
 import { useStore } from '../internals/store/useStore';
 import { getSymbol } from '../internals/getSymbol';
-import {
-  lineClasses,
-  type MarkElementOwnerState,
-  useUtilityClasses as useLineUtilityClasses,
-} from './lineClasses';
+import { lineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { LineClasses } from './lineClasses';
+
+export interface MarkElementOwnerState {
+  seriesId: SeriesId;
+  isFaded: boolean;
+  isHighlighted: boolean;
+  classes?: Partial<Pick<LineClasses, 'mark'>>;
+  skipAnimation?: boolean;
+}
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
@@ -129,7 +135,7 @@ function MarkElement(props: MarkElementProps) {
   );
 }
 
-MarkElement.propTypes = {
+MarkElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

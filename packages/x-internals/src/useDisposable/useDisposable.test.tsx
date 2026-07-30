@@ -25,6 +25,26 @@ describe('useDisposable', () => {
   // so the default render exercises the mount → unmount → mount replay.
   const { render } = createRenderer();
 
+  // React 18 StrictMode resets a render-mutated ref between the two double-render
+  // passes, so the factory runs an extra (throwaway) time; React 19 keeps it once.
+  // Every behavioral difference between the two majors in these tests stems from
+  // that one extra create, so the per-version expectations are grouped here.
+  const expected = React.version.startsWith('19')
+    ? {
+        // No throwaway create.
+        factoryCallCount: 1,
+        createdCount: 2,
+        // The committed instance is the first one created.
+        committedIndex: 0,
+      }
+    : {
+        // StrictMode adds one throwaway create up front.
+        factoryCallCount: 2,
+        createdCount: 3,
+        // The throwaway sits at index 0, shifting the committed instance to 1.
+        committedIndex: 1,
+      };
+
   function setup() {
     let instance: TestDisposable | undefined;
     let effectMounts = 0;
@@ -58,9 +78,9 @@ describe('useDisposable', () => {
     // Guard the test itself: StrictMode must have replayed the mount cycle,
     // otherwise the assertions below wouldn't actually cover the double mount.
     expect(getEffectMounts()).to.equal(2);
-    // A single instance survives the mount → unmount → mount cycle...
-    expect(factory.callCount).to.equal(1);
-    // ...and the simulated unmount does not dispose it.
+    // The committed instance survives the cycle (React 18 adds a throwaway create).
+    expect(factory.callCount).to.equal(expected.factoryCallCount);
+    // ...and the simulated unmount does not dispose the committed instance.
     expect(getInstance().dispose.callCount).to.equal(0);
 
     unmount();
@@ -144,15 +164,16 @@ describe('useDisposable', () => {
       'mount',
     ]);
 
-    // Consequence: two instances exist. The first is the one the component is
-    // committed against — and the cleanup already disposed it.
-    expect(created).to.have.length(2);
-    expect(committedInstance).to.equal(created[0]);
-    expect(created[0].dispose.callCount).to.equal(1);
-    // The live, non-disposed instance is the second one, rebuilt in the remount
-    // effect — but the component never re-rendered to pick it up. Split-brain:
-    // the rendered tree and the live instance are two different objects.
-    expect(created[1].dispose.callCount).to.equal(0);
+    // Consequence: the component is committed against an instance the cleanup
+    // disposed. React 18's throwaway create sits at index 0, shifting committed to 1.
+    expect(created).to.have.length(expected.createdCount);
+    expect(committedInstance).to.equal(created[expected.committedIndex]);
+    expect(created[expected.committedIndex].dispose.callCount).to.equal(1);
+    // The live, non-disposed instance is the last one, rebuilt in the remount
+    // effect — the component never re-rendered to pick it up (split-brain).
+    const live = created[created.length - 1];
+    expect(live).to.not.equal(committedInstance);
+    expect(live.dispose.callCount).to.equal(0);
 
     unmount();
   });

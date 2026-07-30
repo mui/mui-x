@@ -8,6 +8,8 @@ import { ChatMessage } from './ChatMessage';
 
 const { render } = createRenderer();
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   return {
     async sendMessage() {
@@ -334,6 +336,70 @@ describe('ChatMessage', () => {
 
     expect(document.querySelector('.object-form-actions')).not.toBe(null);
     expect(document.body.textContent).toContain('Custom');
+  });
+
+  it.skipIf(isJSDOM)('renders the actions bar as a chip hugging its buttons, not stretched', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slotProps={{
+          messageActions: { extraActions: [{ id: 'x', label: 'X', onClick: () => {} }] },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const actions = document.querySelector('.MuiChatMessage-actions') as HTMLElement;
+    const content = document.querySelector('.MuiChatMessage-content') as HTMLElement;
+    const actionsRect = actions.getBoundingClientRect();
+    const contentRect = content.getBoundingClientRect();
+    // The chip must not stretch across the content column (the grid-item
+    // default `justify-self: stretch` would turn the paper chip into a
+    // full-width bar) and stays anchored to the bubble's start edge.
+    expect(actionsRect.width).toBeLessThan(contentRect.width);
+    expect(actionsRect.left).toBe(contentRect.left);
+  });
+
+  it.skipIf(isJSDOM)('places the actions bar under the bubble in the compact variant', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        variant="compact"
+        members={[{ id: 'alice', displayName: 'Alice' }]}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            author: { id: 'alice' },
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slotProps={{
+          messageActions: { extraActions: [{ id: 'x', label: 'X', onClick: () => {} }] },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const actions = document.querySelector('.MuiChatMessage-actions') as HTMLElement;
+    const content = document.querySelector('.MuiChatMessage-content') as HTMLElement;
+    const actionsRect = actions.getBoundingClientRect();
+    const contentRect = content.getBoundingClientRect();
+    // The compact grid must define the `actions` area; without it the bar is
+    // auto-placed on implicit lines outside the explicit grid (far right).
+    expect(actionsRect.left).toBe(contentRect.left);
+    expect(actionsRect.top).toBeGreaterThanOrEqual(contentRect.bottom);
   });
 
   it('renders the group author label inside compact messages', () => {

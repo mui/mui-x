@@ -1,15 +1,13 @@
 'use client';
 import * as React from 'react';
 import {
-  type ChartPlugin,
-  type AxisId,
-  type ZoomData,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
   selectorChartAxisZoomOptionsLookup,
   selectorChartXAxisWithDomains,
   selectorChartYAxisWithDomains,
 } from '@mui/x-charts/internals';
+import type { ChartPlugin, AxisId, ZoomData } from '@mui/x-charts/internals';
 import debounce from '@mui/utils/debounce';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
@@ -20,10 +18,10 @@ import {
   rangeButtonValueToZoom,
 } from '../../../ChartsToolbarPro/rangeButtonValueToZoom';
 import { calculateZoom } from './calculateZoom';
-import {
-  type InitialZoom,
-  type InitialZoomRange,
-  type UseChartProZoomSignature,
+import type {
+  InitialZoom,
+  InitialZoomRange,
+  UseChartProZoomSignature,
 } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';

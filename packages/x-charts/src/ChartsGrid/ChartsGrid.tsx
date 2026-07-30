@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps } from '@mui/material/styles';
-import { type ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
+import { getChartsGridUtilityClass } from './chartsGridClasses';
+import type { ChartsGridClasses } from './chartsGridClasses';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { GridRoot } from './styledComponents';
 import { ChartsGridVertical } from './ChartsVerticalGrid';
@@ -84,7 +85,7 @@ function ChartsGrid(inProps: ChartsGridProps) {
   );
 }
 
-ChartsGrid.propTypes = {
+ChartsGrid.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

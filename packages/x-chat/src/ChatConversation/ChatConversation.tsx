@@ -85,6 +85,8 @@ ChatConversation.propTypes /* remove-proptypes */ = {
 // Mirror the headless `ConversationRoot` pane marker on the Material wrapper so
 // `ChatLayout` assigns it to the thread pane (the symbol lives on the headless
 // primitive, not this wrapper).
-markChatLayoutPane(ChatConversation, 'thread');
+// `markChatLayoutPane` mutates the component in place and returns it for the
+// `const X = markChatLayoutPane(...)` form; here the return is intentionally discarded.
+void markChatLayoutPane(ChatConversation, 'thread');
 
 export { ChatConversation };

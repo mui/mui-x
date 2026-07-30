@@ -1,13 +1,13 @@
-import { type ChartsLabelMarkProps } from '@mui/x-charts/ChartsLabel';
-import {
-  type CommonSeriesType,
-  type CartesianSeriesType,
-  type CommonDefaultizedProps,
-  type SeriesId,
+import type { ChartsLabelMarkProps } from '@mui/x-charts/ChartsLabel';
+import type {
+  CommonSeriesType,
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  SeriesId,
 } from '@mui/x-charts/internals';
-import { type Position } from '@mui/x-charts/models';
-import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
-import { type FunnelCurveType } from './curves';
+import type { Position } from '@mui/x-charts/models';
+import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
+import type { FunnelCurveType } from './curves';
 
 export type FunnelItemId = string | number;
 
@@ -163,13 +163,7 @@ export type FunnelLabelOptions = {
    * Default value depends on the position.
    */
   dominantBaseline?:
-    | 'auto'
-    | 'baseline'
-    | 'hanging'
-    | 'middle'
-    | 'central'
-    | 'text-after-edge'
-    | 'text-before-edge';
+    'auto' | 'baseline' | 'hanging' | 'middle' | 'central' | 'text-after-edge' | 'text-before-edge';
   /**
    * The offset of the label from the anchor point.
    * If a single number is provided, the offset will be applied in both directions.

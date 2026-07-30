@@ -1,8 +1,9 @@
 import { useThemeProps } from '@mui/material/styles';
-import { type ChartDrawingArea, useDrawingArea } from './useDrawingArea';
+import { useDrawingArea } from './useDrawingArea';
+import type { ChartDrawingArea } from './useDrawingArea';
 import { useXAxes, useYAxes } from './useAxis';
 import { defaultProps } from '../ChartsXAxis/utilities';
-import { type AxisId, type ComputedXAxis, type ComputedYAxis } from '../models/axis';
+import type { AxisId, ComputedXAxis, ComputedYAxis } from '../models/axis';
 
 export interface AxisCoordinates {
   left: number;

@@ -1,11 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import { warnOnce } from '@mui/x-internals/warning';
-import {
-  type ChartsYAxisProps,
-  type ChartsAxisSlots,
-  type ChartsAxisSlotProps,
-} from '../models/axis';
+import type { ChartsYAxisProps, ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import { useYAxes } from '../hooks';
 import { ChartsYAxisImpl } from './ChartsYAxisImpl';
 
@@ -36,7 +32,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   return <ChartsYAxisImpl {...inProps} axis={axis} />;
 }
 
-ChartsYAxis.propTypes = {
+ChartsYAxis.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

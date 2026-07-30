@@ -85,12 +85,10 @@ export const selectorChartsInteractionTooltipXAxes = createSelectorMemoizedWithO
 
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
-      .map(
-        (axisId): AxisItemIdentifier => ({
-          axisId,
-          dataIndex: getAxisIndex(axes.axis[axisId], value),
-        }),
-      )
+      .map((axisId): AxisItemIdentifier => ({
+        axisId,
+        dataIndex: getAxisIndex(axes.axis[axisId], value),
+      }))
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
 );
@@ -132,12 +130,10 @@ export const selectorChartsInteractionTooltipYAxes = createSelectorMemoizedWithO
 
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
-      .map(
-        (axisId): AxisItemIdentifier => ({
-          axisId,
-          dataIndex: getAxisIndex(axes.axis[axisId], value),
-        }),
-      )
+      .map((axisId): AxisItemIdentifier => ({
+        axisId,
+        dataIndex: getAxisIndex(axes.axis[axisId], value),
+      }))
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
 );

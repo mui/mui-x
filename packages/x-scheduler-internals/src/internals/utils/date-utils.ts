@@ -1,6 +1,6 @@
-import { TemporalTimezone, TemporalSupportedObject } from '../../base-ui-copy/types';
-import { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
-import { Adapter } from '../../use-adapter/useAdapter.types';
+import type { TemporalTimezone, TemporalSupportedObject } from '../../base-ui-copy/types';
+import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
+import type { Adapter } from '../../use-adapter/useAdapter.types';
 
 /**
  * Builds an adapter-agnostic format string that produces an ISO 8601 date-time

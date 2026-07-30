@@ -55,6 +55,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
+    "localeText": { "type": { "name": "object" } },
     "onEventsChange": { "type": { "name": "func" } },
     "onPreferencesChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
@@ -89,6 +90,12 @@
       "type": {
         "name": "enum",
         "description": "'agenda'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'week'"
+      }
+    },
+    "viewConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ week?: { endTime?: number, startTime?: number } }"
       }
     },
     "views": {

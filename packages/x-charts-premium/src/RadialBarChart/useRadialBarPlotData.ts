@@ -1,20 +1,19 @@
 import * as React from 'react';
 import { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
-import {
-  findMinMax,
-  getBandSize,
-  useAllSeriesOfType,
-  type AxisId,
-  type ChartSeriesDefaultized,
-  type ComputedAxis,
-  type ScaleName,
-  type SeriesProcessorResult,
-  type StackingGroupsType,
-  type ChartsRotationAxisProps,
-  type ChartsRadiusAxisProps,
-  type ChartsRadialAxisProps,
+import { findMinMax, getBandSize, useAllSeriesOfType } from '@mui/x-charts/internals';
+import type {
+  AxisId,
+  ChartSeriesDefaultized,
+  ComputedAxis,
+  ScaleName,
+  SeriesProcessorResult,
+  StackingGroupsType,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  ChartsRadialAxisProps,
 } from '@mui/x-charts/internals';
-import { type SeriesId } from '@mui/x-charts/models';
+import type { SeriesId } from '@mui/x-charts/models';
+import getColor from './seriesConfig/getColor';
 
 interface ProcessedRadialBarData {
   seriesId: SeriesId;
@@ -102,6 +101,8 @@ function processRadialBarDataForPlot(
         const rotationOrigin = rotationAxisConfig.scale(0) ?? 0;
         const radiusOrigin = radiusAxisConfig.scale(0) ?? 0;
 
+        const colorGetter = getColor(seriesItem, rotationAxisConfig, radiusAxisConfig);
+
         const { barWidth: bandSlice, offset } = getBandSize(
           baseScale.bandwidth(),
           stackingGroups.length,
@@ -138,7 +139,7 @@ function processRadialBarDataForPlot(
             seriesId,
             dataIndex,
             hidden: seriesItem.hidden,
-            color: seriesItem.color,
+            color: colorGetter(dataIndex),
             value: seriesValue,
             startAngle: verticalLayout ? baseStart : valueStart,
             endAngle: verticalLayout ? baseEnd : valueEnd,

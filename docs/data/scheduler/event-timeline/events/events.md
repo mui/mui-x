@@ -8,7 +8,7 @@ components: EventTimelinePremium
 
 # Event Timeline - Events
 
-<p class="description">Define events for your Event Timeline.</p>
+<p class="description">Configure event properties including color, timezone, recurrence, and custom data mapping.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -27,7 +27,7 @@ const event = {
 
 #### Dynamic resource
 
-Use the [eventModelStructure](#store-data-in-custom-properties) property to switch the resource between several fields:
+Use the [`eventModelStructure`](#store-data-in-custom-properties) property to switch the resource between several fields:
 
 {{"demo": "DynamicResourceProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -46,7 +46,7 @@ const event = {
 
 ### Timezone
 
-Use the `timezone` property to define in which timezone an event's dates are defined:
+Use the `timezone` property to specify the timezone for an event's dates:
 
 ```ts
 const event = {
@@ -73,7 +73,7 @@ The available color palettes are shown below:
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-Event colors can also be defined on the resources or at the component levels.
+Event colors can also be defined on the resources or at the component level.
 The effective color resolves in the following order:
 
 1. The `color` property assigned to the event
@@ -113,11 +113,11 @@ const event = {
 
 {{"demo": "ClassNameProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
-When defined, the class is applied to the event root DOM element across all views.
+When defined, it applies to the event root DOM element across all views.
 
 ### Drag interactions
 
-Use the `draggable` property on the event model to prevent an event from being dragged to another point in time:
+Use the `draggable` property on the event model to prevent an event from being dragged to a different time slot:
 
 ```ts
 const event = {
@@ -167,7 +167,7 @@ See [Recurring events](/x/react-scheduler/recurring-events/) for details.
 
 ## Store data in custom properties
 
-Use the `eventModelStructure` prop to define how to read and write properties of the event model when they don't match the model expected by the components:
+Use the `eventModelStructure` prop to define how to read and write event properties when your data doesn't match the expected model:
 
 ```tsx
 const eventModelStructure = {

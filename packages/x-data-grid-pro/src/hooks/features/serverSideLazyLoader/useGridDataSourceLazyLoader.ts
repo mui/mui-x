@@ -9,27 +9,28 @@ import {
   useGridEvent,
   gridSortModelSelector,
   gridFilterModelSelector,
-  type GridEventListener,
   GRID_ROOT_GROUP_ID,
-  type GridGroupNode,
-  type GridSkeletonRowNode,
   gridPaginationModelSelector,
   gridFilteredSortedRowIdsSelector,
   gridRowIdSelector,
-  type GridRowId,
   useGridSelector,
+} from '@mui/x-data-grid';
+import type {
+  GridEventListener,
+  GridGroupNode,
+  GridSkeletonRowNode,
+  GridRowId,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
   gridRenderContextSelector,
   GridStrategyGroup,
-  type GridStrategyProcessor,
-  type GridPipeProcessor,
   useGridRegisterStrategyProcessor,
   useGridRegisterPipeProcessor,
   runIf,
   DataSourceRowsUpdateStrategy,
 } from '@mui/x-data-grid/internals';
+import type { GridStrategyProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';

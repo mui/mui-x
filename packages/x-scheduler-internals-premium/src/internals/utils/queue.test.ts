@@ -1,8 +1,9 @@
 import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { adapter } from 'test/utils/scheduler';
-import { DateRange, SchedulerDataManager } from './queue';
+import type { DateRange } from './queue';
+import { SchedulerDataManager } from './queue';
 
 const DEBOUNCE_MS = 50;
 

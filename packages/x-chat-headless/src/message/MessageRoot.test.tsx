@@ -1326,7 +1326,12 @@ describe('MessageMeta', () => {
 describe('isOwnMessage derivation', () => {
   // Stamps ownerState.isOwnMessage onto a data attribute so we can assert
   // the resolved value across the matrix of currentUser / author / role inputs.
-  function OwnershipProbe(props: MessageRootProps & { ownerState?: { isOwnMessage?: boolean } }) {
+  // `forwardRef` because `MessageRoot` refs its root slot; a plain function
+  // component trips React 18's "cannot be given refs" warning (React 19 doesn't).
+  const OwnershipProbe = React.forwardRef(function OwnershipProbe(
+    props: MessageRootProps & { ownerState?: { isOwnMessage?: boolean } },
+    ref: React.Ref<HTMLDivElement>,
+  ) {
     const { children, messageId, isGrouped, ownerState, slotProps, slots, ...other } = props;
     void messageId;
     void isGrouped;
@@ -1335,6 +1340,7 @@ describe('isOwnMessage derivation', () => {
 
     return (
       <div
+        ref={ref}
         data-testid="ownership-probe"
         data-is-own={String(Boolean(ownerState?.isOwnMessage))}
         {...other}
@@ -1342,7 +1348,7 @@ describe('isOwnMessage derivation', () => {
         {children}
       </div>
     );
-  }
+  });
 
   function renderProbe(args: {
     message: ChatMessage;

@@ -9,14 +9,14 @@ import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDate
 
 export default function ControlledSelectedSectionsMultiInputRangeField() {
   const [selectedSections, setSelectedSections] = React.useState(null);
-  const startInputRef = React.useRef(null);
-  const endInputRef = React.useRef(null);
+  const startFieldRef = React.useRef(null);
+  const endFieldRef = React.useRef(null);
 
   const setSelectedSectionType = (selectedSectionType, position) => {
     if (position === 'start') {
-      startInputRef.current?.focus();
+      startFieldRef.current?.focusField();
     } else {
-      endInputRef.current?.focus();
+      endFieldRef.current?.focusField();
     }
     setSelectedSections(selectedSectionType);
   };
@@ -47,12 +47,8 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
         </Stack>
         <MultiInputDateRangeField
           sx={{ minWidth: 300 }}
-          slotProps={{
-            textField: (ownerState) => ({
-              inputRef:
-                ownerState.position === 'start' ? startInputRef : endInputRef,
-            }),
-          }}
+          startFieldRef={startFieldRef}
+          endFieldRef={endFieldRef}
           selectedSections={selectedSections}
           onSelectedSectionsChange={setSelectedSections}
         />

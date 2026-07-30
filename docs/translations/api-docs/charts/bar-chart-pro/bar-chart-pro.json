@@ -123,6 +123,9 @@
     "renderer": {
       "description": "The type of renderer to use for the bar plot. - <code>svg-single</code>: Renders every bar in a <code>&lt;rect /&gt;</code> element. - <code>svg-batch</code>: Batch renders bars in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/bars/#performance\">https://mui.com/x/react-charts/bars/#performance</a>"
     },
+    "sampling": {
+      "description": "Sampling method used to render large datasets when zoomed out. - <code>&#39;none&#39;</code>: render every bar (no sampling). - <code>&#39;minmax&#39;</code>: keep the min and max per bucket and draw one merged bar."
+    },
     "series": {
       "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series/'>BarSeries</a> objects."
     },

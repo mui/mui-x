@@ -5,7 +5,8 @@ import { styled } from '@mui/material/styles';
 import type { SankeyLinkIdentifierWithData } from './sankey.types';
 import { SankeyLinkElement } from './SankeyLinkElement';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
+import { useUtilityClasses } from './sankeyClasses';
+import type { SankeyClasses } from './sankeyClasses';
 
 export interface SankeyLinkPlotProps {
   /**
@@ -66,7 +67,7 @@ function SankeyLinkPlot(props: SankeyLinkPlotProps) {
   );
 }
 
-SankeyLinkPlot.propTypes = {
+SankeyLinkPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

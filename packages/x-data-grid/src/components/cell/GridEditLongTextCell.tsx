@@ -211,7 +211,7 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
   );
 }
 
-GridEditLongTextCell.propTypes = {
+GridEditLongTextCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -317,7 +317,7 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
       const column = apiRef.current.getColumn(field);
 
       let parsedValue = newValue;
-      if (column.valueParser) {
+      if (column?.valueParser) {
         parsedValue = column.valueParser(newValue, apiRef.current.getRow(id), column, apiRef);
       }
 
@@ -361,7 +361,7 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
   );
 }
 
-GridEditLongTextarea.propTypes = {
+GridEditLongTextarea.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

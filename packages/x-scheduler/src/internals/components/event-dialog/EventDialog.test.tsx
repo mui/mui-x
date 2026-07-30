@@ -1,15 +1,15 @@
 import * as React from 'react';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   createSchedulerRenderer,
   EventBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
-  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
-import { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 
@@ -88,7 +88,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   it('should warn and strip the rrule when createEvent is called with one', () => {
     expect(() => {
       render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          onEventsChange={() => {}}
+        >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) => {
@@ -110,7 +114,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   it('should warn and strip the rrule when updateEvent is called with one', () => {
     expect(() => {
       render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          onEventsChange={() => {}}
+        >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) => {

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useOnMount } from '@base-ui/utils/useOnMount';
+import { SafeReact } from '@base-ui/utils/safeReact';
 import { disposeSymbol } from '../disposable';
 
 interface Disposable {
@@ -24,19 +25,21 @@ interface ReactSharedInternalsLike {
   ReactCurrentOwner?: { current?: { mode?: number } | null } | null;
 }
 
+// Read the internals off Base UI's `SafeReact` — a plain clone of the React
+// namespace — rather than `React` directly. Bundlers rewrite a static
+// `React.__SECRET_INTERNALS_…` access into a named import of `react`, which
+// errors at build time when the key isn't exported (React 19 drops
+// `__SECRET_INTERNALS_…`, React 18 drops `__CLIENT_INTERNALS_…`). Reading off
+// the clone keeps it a plain property access the bundler leaves alone.
+const SafeReactInternals = SafeReact as unknown as Record<
+  string,
+  ReactSharedInternalsLike | undefined
+>;
 const ReactInternals: ReactSharedInternalsLike | undefined =
   // eslint-disable-next-line no-underscore-dangle
-  (
-    React as unknown as {
-      __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?: ReactSharedInternalsLike;
-    }
-  ).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE ??
+  SafeReactInternals.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE ??
   // eslint-disable-next-line no-underscore-dangle
-  (
-    React as unknown as {
-      __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?: ReactSharedInternalsLike;
-    }
-  ).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  SafeReactInternals.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
 function isInStrictMode(): boolean {
   try {

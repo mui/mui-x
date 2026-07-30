@@ -3,7 +3,8 @@ import type {
   GridChartsConfigurationOptions,
   GridChartsConfigurationSection,
 } from '@mui/x-internals/types';
-import { DEFAULT_LOCALE, type ChartsLocaleText } from '@mui/x-charts/locales';
+import { DEFAULT_LOCALE } from '@mui/x-charts/locales';
+import type { ChartsLocaleText } from '@mui/x-charts/locales';
 import { PaletteOption } from './components/PaletteOption';
 import { colorPaletteLookup } from './colors';
 import {

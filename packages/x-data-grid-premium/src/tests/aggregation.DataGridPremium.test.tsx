@@ -1,18 +1,21 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { type SinonSpy, spy } from 'sinon';
+import { spy } from 'sinon';
+import type { SinonSpy } from 'sinon';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
   GRID_AGGREGATION_FUNCTIONS,
-  type GridAggregationFunction,
-  type GridApi,
-  type GridRenderCellParams,
-  type GridGroupNode,
   useGridApiRef,
-  type GridColDef,
+} from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridAggregationFunction,
+  GridApi,
+  GridRenderCellParams,
+  GridGroupNode,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -1235,5 +1238,13 @@ describe('<DataGridPremium /> - Aggregation', () => {
       // Ensure aggregation footer is not present
       expect(getColumnValues(0)).to.deep.equal([]);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/22831
+  it('should not throw when getting params for a field without a matching column', async () => {
+    await render(<Test />);
+
+    expect(() => apiRef.current!.getCellParams(0, 'does-not-exist')).not.to.throw();
+    expect(apiRef.current!.getCellParams(0, 'does-not-exist').value).to.equal(undefined);
   });
 });

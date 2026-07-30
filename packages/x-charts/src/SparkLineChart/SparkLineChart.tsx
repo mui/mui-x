@@ -3,10 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { ChartsClipPath } from '../ChartsClipPath';
-import { type ChartsColor, type ChartsColorPalette } from '../colorPalettes';
+import type { ChartsColor, ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
-import { type ChartsContainerProps } from '../ChartsContainer';
+import type { ChartsContainerProps } from '../ChartsContainer';
 import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
@@ -15,7 +15,8 @@ import type {
   ChartsTooltipSlots,
   ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsAxisHighlight } from '../ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import type { XAxis, YAxis } from '../models/axis';
 import type { LineSeriesType, BarSeriesType } from '../models/seriesType';
 import type { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';

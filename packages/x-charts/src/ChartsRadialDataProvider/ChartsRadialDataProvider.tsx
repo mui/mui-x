@@ -1,21 +1,17 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  defaultSlotsMaterial,
-  type ChartsSlotProps,
-  type ChartsSlots,
-} from '../internals/material';
+import { defaultSlotsMaterial } from '../internals/material';
+import type { ChartsSlotProps, ChartsSlots } from '../internals/material';
 import { ChartsSlotsProvider } from '../context/ChartsSlotsContext';
-import { ChartsProvider, type ChartsProviderProps } from '../context/ChartsProvider';
-import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
-import {
-  ChartsLocalizationProvider,
-  type ChartsLocalizationProviderProps,
-} from '../ChartsLocalizationProvider';
+import { ChartsProvider } from '../context/ChartsProvider';
+import type { ChartsProviderProps } from '../context/ChartsProvider';
+import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { ChartsLocalizationProvider } from '../ChartsLocalizationProvider';
+import type { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 import { useChartsRadialDataProviderProps } from './useChartsRadialDataProviderProps';
-import { type RadialPluginSignatures } from './ChartsRadialDataProvider.plugins';
-import { type PolarChartSeriesType } from '../models/seriesType/config';
+import type { RadialPluginSignatures } from './ChartsRadialDataProvider.plugins';
+import type { PolarChartSeriesType } from '../models/seriesType/config';
 
 export interface ChartsRadialDataProviderSlots extends ChartsSlots {}
 
@@ -75,7 +71,7 @@ function ChartsRadialDataProvider<
   );
 }
 
-ChartsRadialDataProvider.propTypes = {
+ChartsRadialDataProvider.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

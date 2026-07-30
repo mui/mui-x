@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import { type LineItemIdentifier } from '../models/seriesType/line';
+import type { LineItemClickIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
-import { MarkElement, type MarkElementProps } from './MarkElement';
+import { MarkElement } from './MarkElement';
+import type { MarkElementProps } from './MarkElement';
 import { useItemHighlightStateGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
-import {
-  selectorChartsHighlightXAxisIndex,
-  type UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type AxisId } from '../models/axis';
+import { selectorChartsHighlightXAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useChartsContext } from '../context/ChartsProvider';
 import { useMarkPlotData } from './useMarkPlotData';
@@ -25,7 +25,7 @@ export interface MarkPlotSlots {
 }
 
 export interface MarkPlotSlotProps {
-  mark?: Partial<MarkElementProps> & MarkPropsOverrides;
+  mark?: WithDataAttributes<Partial<MarkElementProps> & MarkPropsOverrides>;
 }
 
 export interface MarkPlotProps
@@ -43,11 +43,11 @@ export interface MarkPlotProps
   /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
+   * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    lineItemIdentifier: LineItemIdentifier,
+    lineItemIdentifier: LineItemClickIdentifier,
   ) => void;
 }
 
@@ -143,7 +143,7 @@ function MarkPlot(props: MarkPlotProps) {
   );
 }
 
-MarkPlot.propTypes = {
+MarkPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -151,7 +151,7 @@ MarkPlot.propTypes = {
   /**
    * Callback fired when a line mark item is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
+   * @param {LineItemClickIdentifier} lineItemIdentifier The line mark item identifier.
    */
   onItemClick: PropTypes.func,
   /**

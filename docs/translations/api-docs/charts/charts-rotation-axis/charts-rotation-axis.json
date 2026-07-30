@@ -75,5 +75,13 @@
       "nodeName": "the group including the tick and its label"
     },
     "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tick label" }
+  },
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis."
   }
 }

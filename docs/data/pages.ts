@@ -106,6 +106,7 @@ const schedulerPages: MuiPage[] = [
 
 const pages: MuiPage[] = [
   {
+    // This is the full url because we want users (on the older version of the docs) to always go to the latest version's content.
     pathname: 'https://mui.com/x/whats-new/',
     title: "What's new in MUI X",
   },
@@ -825,6 +826,10 @@ const pages: MuiPage[] = [
                   { pathname: '/x/react-charts/hooks/use-scale', title: 'Scale' },
                   { pathname: '/x/react-charts/hooks/use-axes', title: 'Axis' },
                   { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
+                  {
+                    pathname: '/x/react-charts/hooks/use-polar-geometry',
+                    title: 'usePolarGeometry',
+                  },
                 ],
               },
               { pathname: '/x/react-charts/plugins', title: 'Plugins' },

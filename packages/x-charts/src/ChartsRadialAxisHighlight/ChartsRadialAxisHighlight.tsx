@@ -5,7 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { getRadialAxisHighlightUtilityClass } from './chartsRadialAxisHighlightClasses';
 import ChartsRotationAxisHighlight from './ChartsRotationAxisHighlight';
 import ChartsRadiusAxisHighlight from './ChartsRadiusAxisHighlight';
-import { type ChartsRadialAxisHighlightProps } from './ChartsRadialAxisHighlight.types';
+import type { ChartsRadialAxisHighlightProps } from './ChartsRadialAxisHighlight.types';
 
 const useUtilityClasses = () => {
   const slots = {
@@ -40,7 +40,7 @@ function ChartsRadialAxisHighlight(props: ChartsRadialAxisHighlightProps) {
   );
 }
 
-ChartsRadialAxisHighlight.propTypes = {
+ChartsRadialAxisHighlight.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

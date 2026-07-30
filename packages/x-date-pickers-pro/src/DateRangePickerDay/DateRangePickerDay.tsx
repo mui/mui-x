@@ -3,19 +3,25 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
-import { styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
+import type { CSSInterpolation, Theme } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { MuiEvent } from '@mui/x-internals/types';
+import type { MuiEvent } from '@mui/x-internals/types';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { DateRangePickerDayOwnerState, DateRangePickerDayProps } from './DateRangePickerDay.types';
-import {
+import type {
+  DateRangePickerDayOwnerState,
+  DateRangePickerDayProps,
+} from './DateRangePickerDay.types';
+import type {
   DateRangePickerDayClasses,
-  dateRangePickerDayClasses,
   DateRangePickerDayClassKey,
+} from './dateRangePickerDayClasses';
+import {
+  dateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
 } from './dateRangePickerDayClasses';
 

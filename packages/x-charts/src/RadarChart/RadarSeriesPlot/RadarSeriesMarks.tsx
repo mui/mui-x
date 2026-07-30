@@ -1,10 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
-import { useUtilityClasses, type RadarClasses } from '../radarClasses';
+import type { RadarSeriesMarksProps } from './RadarSeriesPlot.types';
+import { useUtilityClasses } from '../radarClasses';
+import type { RadarClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
-import { type SeriesId } from '../../models/seriesType/common';
+import type { SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
 
@@ -78,7 +79,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
   );
 }
 
-RadarSeriesMarks.propTypes = {
+RadarSeriesMarks.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

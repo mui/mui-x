@@ -2,8 +2,8 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
+import { useIsHydrated } from '@mui/x-internals/useIsHydrated';
 import { useMessage, useMessageIds } from '../hooks/useMessage';
-import { useIsHydrated } from '../chat/internals/useIsHydrated';
 import { type MessageListDateDividerOwnerState } from './messageList.types';
 import type { ChatMessage } from '../types/chat-entities';
 

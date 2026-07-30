@@ -3,7 +3,8 @@ import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
-import { PieArc, type PieArcProps } from './PieArc';
+import { PieArc } from './PieArc';
+import type { PieArcProps } from './PieArc';
 import { useUtilityClasses } from './pieClasses';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { getModifiedArcProperties } from './dataTransform/getModifiedArcProperties';
@@ -79,7 +80,7 @@ function FocusedPieArc(
   );
 }
 
-FocusedPieArc.propTypes = {
+FocusedPieArc.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

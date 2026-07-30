@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const faIRDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
@@ -88,10 +86,12 @@ const faIRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // DateNavigator
   // closeSidePanel: 'Close side panel',
   // openSidePanel: 'Open side panel',
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
   // Preferences menu
   // amPm12h: '12-hour (1:00PM)',
   // hour24h: '24-hour (13:00)',
-  // preferencesMenu: 'Settings',
+  // preferencesMenu: 'Preferences',
   // showWeekends: 'Show weekends',
   // showEmptyDaysInAgenda: 'Show empty days',
   // showWeekNumber: 'Show week number',

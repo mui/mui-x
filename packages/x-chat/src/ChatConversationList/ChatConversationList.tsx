@@ -27,12 +27,13 @@ import {
   type ConversationListItemOwnerState,
   type ConversationListVariant,
 } from '@mui/x-chat-headless';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatConversationListUtilityClasses,
   type ChatConversationListClasses,
 } from './chatConversationListClasses';
-import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationList');
 
@@ -336,7 +337,7 @@ const ChatConversationListItemSlot = React.forwardRef<HTMLDivElement, Conversati
   },
 );
 
-ChatConversationListItemSlot.propTypes = {
+ChatConversationListItemSlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -382,7 +383,7 @@ const ChatConversationListItemAvatarStyled = React.forwardRef<
   );
 });
 
-ChatConversationListItemAvatarStyled.propTypes = {
+ChatConversationListItemAvatarStyled.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -427,7 +428,7 @@ const ChatConversationListItemContentStyled = React.forwardRef<
   );
 });
 
-ChatConversationListItemContentStyled.propTypes = {
+ChatConversationListItemContentStyled.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -472,7 +473,7 @@ const ChatConversationListTitleStyled = React.forwardRef<
   );
 });
 
-ChatConversationListTitleStyled.propTypes = {
+ChatConversationListTitleStyled.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -517,7 +518,7 @@ const ChatConversationListPreviewStyled = React.forwardRef<
   );
 });
 
-ChatConversationListPreviewStyled.propTypes = {
+ChatConversationListPreviewStyled.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -562,7 +563,7 @@ const ChatConversationListTimestampStyled = React.forwardRef<
   );
 });
 
-ChatConversationListTimestampStyled.propTypes = {
+ChatConversationListTimestampStyled.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -609,7 +610,7 @@ const ChatConversationListUnreadBadgeStyled = React.forwardRef<
 
 // Default inline SVG for the 3-dot "more" icon (MoreHoriz style).
 
-ChatConversationListUnreadBadgeStyled.propTypes = {
+ChatConversationListUnreadBadgeStyled.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -666,7 +667,7 @@ const ChatConversationListItemActionsStyled = React.forwardRef<
   );
 });
 
-ChatConversationListItemActionsStyled.propTypes = {
+ChatConversationListItemActionsStyled.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -747,19 +748,23 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
       root: rootSlotProps,
       scroller: mergeSlotProps({ className: classes.scroller }, slotProps?.scroller) as any,
       item: (ownerState: ConversationListItemOwnerState) => {
-        return resolveSlotProps(
-          mergeSlotProps(
-            {
-              className: clsx(
-                classes.item,
-                ownerState.selected && classes.itemSelected,
-                ownerState.unread && classes.itemUnread,
-                ownerState.focused && classes.itemFocused,
-              ),
-            },
-            slotProps?.item,
-          ),
-          ownerState,
+        // `resolveComponentProps` types its return as `T | undefined`, but `mergeSlotProps`
+        // never returns `undefined` here, so `?? {}` only satisfies the type.
+        return (
+          resolveComponentProps(
+            mergeSlotProps(
+              {
+                className: clsx(
+                  classes.item,
+                  ownerState.selected && classes.itemSelected,
+                  ownerState.unread && classes.itemUnread,
+                  ownerState.focused && classes.itemFocused,
+                ),
+              },
+              slotProps?.item,
+            ),
+            ownerState,
+          ) ?? {}
         );
       },
       itemAvatar: mergeSlotProps({ className: classes.itemAvatar }, slotProps?.itemAvatar) as any,
@@ -820,6 +825,7 @@ ChatConversationList.propTypes /* remove-proptypes */ = {
 // primitive, not this wrapper). Without it, a split layout with the list visible and
 // no active conversation — a single unmarked child — falls back to the thread pane,
 // skipping the `conversationsPane` slot/styles.
-markChatLayoutPane(ChatConversationList, 'conversations');
+// `markChatLayoutPane` mutates the component in place and returns it; the return is discarded here.
+void markChatLayoutPane(ChatConversationList, 'conversations');
 
 export { ChatConversationList };

@@ -1,10 +1,7 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  type GridApi,
-  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
-  type GridEditCellValueParams,
   renderEditBooleanCell,
   renderEditDateCell,
   renderEditInputCell,
@@ -13,11 +10,13 @@ import {
   GridMultiSelectCell,
   GridEditMultiSelectCell,
 } from '@mui/x-data-grid-pro';
+import type { GridApi, DataGridProProps, GridEditCellValueParams } from '@mui/x-data-grid-pro';
 import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi, sleep } from 'test/utils/helperFn';
-import { spy, type SinonSpy } from 'sinon';
+import { spy } from 'sinon';
+import type { SinonSpy } from 'sinon';
 
 /**
  * Creates a date that is compatible with years before 1901

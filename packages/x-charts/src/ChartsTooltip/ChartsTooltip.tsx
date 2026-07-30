@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
-import { ChartsTooltipContainer, type ChartsTooltipContainerProps } from './ChartsTooltipContainer';
+import { ChartsTooltipContainer } from './ChartsTooltipContainer';
+import type { ChartsTooltipContainerProps } from './ChartsTooltipContainer';
 import { useUtilityClasses } from './chartsTooltipClasses';
-import { type TriggerOptions } from './utils';
+import type { TriggerOptions } from './utils';
 
 export type ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> = T extends TriggerOptions
   ? Omit<ChartsTooltipContainerProps<T>, 'children'> & {
@@ -44,7 +45,7 @@ function ChartsTooltip<T extends TriggerOptions>(props: ChartsTooltipProps<T>) {
   );
 }
 
-ChartsTooltip.propTypes = {
+ChartsTooltip.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

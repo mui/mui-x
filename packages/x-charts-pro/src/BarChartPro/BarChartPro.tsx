@@ -2,13 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  type BarChartProps,
-  type BarChartSlotProps,
-  type BarChartSlots,
-  BarPlot,
-  FocusedBar,
-} from '@mui/x-charts/BarChart';
+import { BarPlot, FocusedBar } from '@mui/x-charts/BarChart';
+import type { BarChartProps, BarChartSlotProps, BarChartSlots } from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -17,20 +12,22 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
+import type { BarSamplingMethod } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartsZoomSlider } from '../ChartsZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
-import { BAR_CHART_PRO_PLUGINS, type BarChartProPluginSignatures } from './BarChartPro.plugins';
+import { BAR_CHART_PRO_PLUGINS } from './BarChartPro.plugins';
+import type { BarChartProPluginSignatures } from './BarChartPro.plugins';
 
 export interface BarChartProSlots
   extends Omit<BarChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
@@ -45,8 +42,15 @@ export interface BarChartProProps
     Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins'>,
     Omit<
       ChartsContainerProProps<'bar', BarChartProPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'sampling'
     > {
+  /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every bar (no sampling).
+   * - `'minmax'`: keep the min and max per bucket and draw one merged bar.
+   * @default 'none'
+   */
+  sampling?: BarSamplingMethod;
   /**
    * Overridable component slots.
    * @default {}
@@ -75,7 +79,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, sampling, ...other } = props;
   const {
     chartsWrapperProps,
     chartsContainerProps,
@@ -93,14 +97,17 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const { chartsDataProviderProProps, chartsSurfaceProps } = useChartsContainerProProps<
     'bar',
     BarChartProPluginSignatures
-  >({
-    ...chartsContainerProps,
-    initialZoom,
-    zoomData,
-    onZoomChange,
-    apiRef,
-    plugins: BAR_CHART_PRO_PLUGINS,
-  });
+  >(
+    {
+      ...chartsContainerProps,
+      initialZoom,
+      zoomData,
+      onZoomChange,
+      apiRef,
+      plugins: BAR_CHART_PRO_PLUGINS,
+    },
+    { seriesType: 'bar', method: sampling },
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
@@ -443,6 +450,13 @@ BarChartPro.propTypes /* remove-proptypes */ = {
    */
   renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
   /**
+   * Sampling method used to render large datasets when zoomed out.
+   * - `'none'`: render every bar (no sampling).
+   * - `'minmax'`: keep the min and max per bucket and draw one merged bar.
+   * @default 'none'
+   */
+  sampling: PropTypes.oneOf(['minmax', 'none']),
+  /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.
    */
@@ -533,6 +547,7 @@ BarChartPro.propTypes /* remove-proptypes */ = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -540,6 +555,7 @@ BarChartPro.propTypes /* remove-proptypes */ = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,

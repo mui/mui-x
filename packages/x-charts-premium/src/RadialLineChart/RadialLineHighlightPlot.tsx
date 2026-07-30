@@ -1,18 +1,16 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   selectorChartsInteractionRotationAxisIndex,
   useChartsContext,
-  type UseChartPolarAxisSignature,
 } from '@mui/x-charts/internals';
+import type { UseChartPolarAxisSignature } from '@mui/x-charts/internals';
 import { getValueToPositionMapper, useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
 import { useRadialLineSeriesContext } from '../hooks/useRadialLineSeries';
-import {
-  RadialLineHighlightElement,
-  type RadialLineHighlightElementProps,
-} from './RadialLineHighlightElement';
+import { RadialLineHighlightElement } from './RadialLineHighlightElement';
+import type { RadialLineHighlightElementProps } from './RadialLineHighlightElement';
 import getColor from './seriesConfig/getColor';
 import type { RadialLineHighlightPropsOverrides } from '../models/chartsSlotsComponentsPropsPremium';
 
@@ -126,7 +124,7 @@ function RadialLineHighlightPlot(props: RadialLineHighlightPlotProps) {
   );
 }
 
-RadialLineHighlightPlot.propTypes = {
+RadialLineHighlightPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

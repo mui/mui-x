@@ -245,7 +245,7 @@ export default function ChatMessageListPlayground() {
                 autoScroll={autoScrollValue}
                 overlay={overlay}
                 features={{ dateDivider }}
-                sx={listSx as any}
+                sx={listSx}
               />
             </Box>
           </ChatChrome>

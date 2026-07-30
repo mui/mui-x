@@ -74,7 +74,7 @@ function GridToolbarDivider(props: GridSlotProps['baseDivider']) {
   );
 }
 
-GridToolbarDivider.propTypes = {
+GridToolbarDivider.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -217,7 +217,7 @@ function GridToolbar(props: GridToolbarProps) {
   );
 }
 
-GridToolbar.propTypes = {
+GridToolbar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

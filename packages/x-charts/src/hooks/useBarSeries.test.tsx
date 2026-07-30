@@ -1,7 +1,8 @@
-import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook } from '@mui/internal-test-utils';
+import type { RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useBarSeries, useBarSeriesContext } from './useBarSeries';
-import { type BarSeriesType, type DefaultizedBarSeriesType } from '../models';
+import type { BarSeriesType, DefaultizedBarSeriesType } from '../models';
 import { BarChart } from '../BarChart';
 
 const mockSeries: BarSeriesType[] = [

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { EventManager } from '@mui/x-internals/EventManager';
-import {
+import type {
   ContextValue,
   CreateModalConfig,
   ModalState,

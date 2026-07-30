@@ -2,13 +2,15 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   DataGrid,
-  type DataGridProps,
   GridFilterInputValue,
-  type GridFilterInputValueProps,
-  type GridFilterOperator,
   GridPreferencePanelsValue,
   getGridStringOperators,
   getGridSingleSelectOperators,
+} from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridFilterInputValueProps,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getSelectByName } from 'test/utils/helperFn';

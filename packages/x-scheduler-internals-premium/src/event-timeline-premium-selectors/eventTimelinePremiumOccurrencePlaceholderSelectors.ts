@@ -1,5 +1,5 @@
 import { createSelector } from '@base-ui/utils/store';
-import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 

@@ -1,7 +1,9 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { gridClasses, type GridColDef } from '@mui/x-data-grid';
-import { useGridRegisterPipeProcessor, type GridPipeProcessor } from '@mui/x-data-grid/internals';
+import { gridClasses } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
+import { useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
+import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,

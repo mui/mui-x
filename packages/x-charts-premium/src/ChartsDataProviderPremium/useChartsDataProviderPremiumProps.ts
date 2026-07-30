@@ -1,9 +1,6 @@
 'use client';
-import {
-  type ChartAnyPluginSignature,
-  type ChartSeriesType,
-  useChartsDataProviderProps,
-} from '@mui/x-charts/internals';
+import { useChartsDataProviderProps } from '@mui/x-charts/internals';
+import type { ChartAnyPluginSignature, ChartSeriesType } from '@mui/x-charts/internals';
 import type { ChartsDataProviderPremiumProps } from './ChartsDataProviderPremium';
 import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 

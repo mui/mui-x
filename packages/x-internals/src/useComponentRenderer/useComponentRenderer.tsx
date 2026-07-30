@@ -1,8 +1,7 @@
 import * as React from 'react';
 
 export type RenderProp<Props, State = {}> =
-  | ((props: Props, state: State) => React.ReactElement<unknown>)
-  | React.ReactElement<Props>;
+  ((props: Props, state: State) => React.ReactElement<unknown>) | React.ReactElement<Props>;
 
 /**
  * Resolves the rendering logic for a component.

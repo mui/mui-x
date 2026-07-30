@@ -1,5 +1,5 @@
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
   createPickerRenderer,

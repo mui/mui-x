@@ -1,18 +1,18 @@
 import {
-  type ConvertSignaturesIntoPlugins,
   useChartTooltip,
-  type UseChartTooltipSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
   useChartKeyboardNavigation,
-  type UseChartKeyboardNavigationSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  type UseChartProExportSignature,
-} from '../internals/plugins/useChartProExport';
+import type {
+  ConvertSignaturesIntoPlugins,
+  UseChartTooltipSignature,
+  UseChartInteractionSignature,
+  UseChartKeyboardNavigationSignature,
+  UseChartHighlightSignature,
+} from '@mui/x-charts/internals';
+import { useChartProExport } from '../internals/plugins/useChartProExport';
+import type { UseChartProExportSignature } from '../internals/plugins/useChartProExport';
 
 export type SankeyChartPluginSignatures = [
   UseChartTooltipSignature<'sankey'>,

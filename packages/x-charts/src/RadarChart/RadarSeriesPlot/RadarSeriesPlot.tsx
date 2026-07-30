@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
+import type { RadarSeriesPlotProps } from './RadarSeriesPlot.types';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import { useUtilityClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
@@ -77,7 +77,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   );
 }
 
-RadarSeriesPlot.propTypes = {
+RadarSeriesPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

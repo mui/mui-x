@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ScatterPlot,
-  type RendererType,
-  type ScatterPlotProps,
-  type ScatterPlotSlots,
-  type ScatterPlotSlotProps,
+import { ScatterPlot } from '@mui/x-charts/ScatterChart';
+import type {
+  RendererType,
+  ScatterPlotProps,
+  ScatterPlotSlots,
+  ScatterPlotSlotProps,
 } from '@mui/x-charts/ScatterChart';
 import { ScatterWebGLPlot } from './webgl/ScatterWebGLPlot';
 
@@ -42,7 +42,7 @@ function ScatterPlotPremium({ renderer, ...props }: ScatterPlotPremiumProps) {
   return <ScatterPlot renderer={renderer} {...props} />;
 }
 
-ScatterPlotPremium.propTypes = {
+ScatterPlotPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

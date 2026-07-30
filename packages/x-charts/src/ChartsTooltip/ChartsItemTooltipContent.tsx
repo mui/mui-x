@@ -3,8 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { type SxProps, type Theme } from '@mui/material/styles';
-import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import type { SxProps, Theme } from '@mui/material/styles';
+import { useUtilityClasses } from './chartsTooltipClasses';
+import type { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useInternalItemTooltip } from './useItemTooltip';
 import {
   ChartsTooltipCell,
@@ -14,13 +15,13 @@ import {
 } from './ChartsTooltipTable';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { useStore } from '../internals/store/useStore';
-import {
-  type ItemTooltip,
-  type ItemTooltipContentProps,
-  type ItemTooltipWithMultipleValues,
-  selectorChartSeriesConfig,
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type {
+  ItemTooltip,
+  ItemTooltipContentProps,
+  ItemTooltipWithMultipleValues,
 } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import { type ChartSeriesType } from '../models/seriesType/config';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 export interface ChartsItemTooltipContentClasses extends ChartsTooltipClasses {}
 
@@ -125,7 +126,7 @@ function DefaultMultipleValueContent({
   );
 }
 
-DefaultMultipleValueContent.propTypes = {
+DefaultMultipleValueContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -212,7 +213,7 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
   );
 }
 
-DefaultSingleValueContent.propTypes = {
+DefaultSingleValueContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -239,7 +240,7 @@ DefaultSingleValueContent.propTypes = {
   }).isRequired,
 } as any;
 
-ChartsItemTooltipContent.propTypes = {
+ChartsItemTooltipContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

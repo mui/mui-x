@@ -75,6 +75,11 @@ export default function AssistantWithCharts() {
               aiAssistantPanel: GridAiAssistantPanel,
               chartsPanel: GridChartsPanel,
             }}
+            sx={{
+              '& [aria-label="AI Assistant"] .MuiSvgIcon-root': {
+                color: 'primary.main',
+              },
+            }}
             chartsIntegration
             slotProps={{
               chartsPanel: {
