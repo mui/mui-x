@@ -90,34 +90,53 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     },
   );
 
-  const focusChart = useEventCallback((options?: FocusItemOptions) => {
-    if (!store.state.keyboardNavigation.enabled) {
-      return;
-    }
-
-    const isFocusVisible = options?.visible ?? focusVisibleIntentRef.current;
-    focusVisibleIntentRef.current = isFocusVisible;
-
-    const container = chartsLayerContainerRef.current;
-    if (!container?.contains(document.activeElement)) {
-      // Focusing fires `focusin` synchronously, which runs `restoreFocus` with the intent above.
-      focusAccessibilityProxy(chartsAccessibilityProxyRef.current);
-    }
-
-    const keyboardNavigation = store.state.keyboardNavigation;
-    if (keyboardNavigation.isFocused && keyboardNavigation.isFocusVisible === isFocusVisible) {
-      return;
-    }
-
-    updateFocus(undefined, isFocusVisible);
-  });
-
-  const focusItem = useEventCallback(
-    (item: FocusedItemIdentifier<ChartSeriesType>, options?: FocusItemOptions) => {
+  /**
+   * Moves the DOM focus into the chart and writes the focus state.
+   * An `undefined` item focuses the chart without changing the focused item.
+   * @returns `true` when the state changed.
+   */
+  const applyFocus = useEventCallback(
+    (item: FocusedItemIdentifier<ChartSeriesType> | undefined, options?: FocusItemOptions) => {
       if (!store.state.keyboardNavigation.enabled) {
         return false;
       }
 
+      const isFocusVisible = options?.visible ?? focusVisibleIntentRef.current;
+      focusVisibleIntentRef.current = isFocusVisible;
+
+      const container = chartsLayerContainerRef.current;
+      if (!container?.contains(document.activeElement)) {
+        // Focusing fires `focusin` synchronously, which runs `restoreFocus` with the intent above.
+        focusAccessibilityProxy(chartsAccessibilityProxyRef.current);
+      }
+
+      // Read after focusing, `restoreFocus` already ran.
+      const keyboardNavigation = store.state.keyboardNavigation;
+      const isSameItem =
+        item === undefined ||
+        (keyboardNavigation.item != null &&
+          fastObjectShallowCompare(keyboardNavigation.item, item));
+
+      if (
+        keyboardNavigation.isFocused &&
+        keyboardNavigation.isFocusVisible === isFocusVisible &&
+        isSameItem
+      ) {
+        // Nothing to do: two click paths can resolve the same item, a line mark over its line.
+        return false;
+      }
+
+      updateFocus(item, isFocusVisible);
+      return true;
+    },
+  );
+
+  const focusChart = useEventCallback((options?: FocusItemOptions) => {
+    applyFocus(undefined, options);
+  });
+
+  const focusItem = useEventCallback(
+    (item: FocusedItemIdentifier<ChartSeriesType>, options?: FocusItemOptions) => {
       const seriesConfig = selectorChartSeriesConfig(store.state);
       if (!seriesConfig[item.type]?.keyboardFocusHandler) {
         // The series type is not part of the keyboard navigation.
@@ -134,27 +153,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
       itemFocusedByPointerRef.current = true;
 
-      const isFocusVisible = options?.visible ?? focusVisibleIntentRef.current;
-      focusVisibleIntentRef.current = isFocusVisible;
-
-      const container = chartsLayerContainerRef.current;
-      if (!container?.contains(document.activeElement)) {
-        focusAccessibilityProxy(chartsAccessibilityProxyRef.current);
-      }
-
-      // Read after focusing, `restoreFocus` already ran.
-      const keyboardNavigation = store.state.keyboardNavigation;
-      if (
-        keyboardNavigation.isFocusVisible === isFocusVisible &&
-        keyboardNavigation.item != null &&
-        fastObjectShallowCompare(keyboardNavigation.item, cleanedItem)
-      ) {
-        // Two click paths can resolve the same item, for instance a line mark over its line.
-        return false;
-      }
-
-      updateFocus(cleanedItem, isFocusVisible);
-      return true;
+      return applyFocus(cleanedItem, options);
     },
   );
 
@@ -164,25 +163,18 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
    */
   const focusItemAtAxisPosition = useEventCallback((event: MouseEvent) => {
     const element = chartsLayerContainerRef.current;
+    const point = element === null ? null : getChartPoint(element, event);
 
-    if (element === null || !store.state.keyboardNavigation.enabled) {
-      focusChart();
-      return;
-    }
-
-    const point = getChartPoint(element, event);
-    if (!instance.isPointInside?.(point.x, point.y)) {
-      focusChart();
-      return;
-    }
-
-    const item = getItemAtAxisPosition({
-      point,
-      xAxis: selectorChartXAxis(store.state),
-      yAxis: selectorChartYAxis(store.state),
-      processedSeries: selectorChartSeriesProcessed(store.state),
-      focusedItem: store.state.keyboardNavigation.item,
-    });
+    const item =
+      point && instance.isPointInside?.(point.x, point.y)
+        ? getItemAtAxisPosition({
+            point,
+            xAxis: selectorChartXAxis(store.state),
+            yAxis: selectorChartYAxis(store.state),
+            processedSeries: selectorChartSeriesProcessed(store.state),
+            focusedItem: store.state.keyboardNavigation.item,
+          })
+        : null;
 
     if (item === null) {
       focusChart();
