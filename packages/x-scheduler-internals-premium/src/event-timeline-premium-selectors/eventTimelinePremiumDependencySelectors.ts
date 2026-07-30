@@ -120,10 +120,6 @@ export const eventTimelinePremiumDependencySelectors = {
    * removal clears the selection without any reconciliation.
    */
   selectedId: selectedIdSelector,
-  isSelected: createSelector(
-    selectedIdSelector,
-    (selectedId, dependencyId: SchedulerDependencyId) => selectedId === dependencyId,
-  ),
   /**
    * Whether the dependency cannot be deleted because one of its events is read-only.
    * Unknown ids resolve to `false`.

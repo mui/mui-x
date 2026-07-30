@@ -253,13 +253,6 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(eventTimelinePremiumDependencySelectors.selectedId(state)).to.equal(null);
   });
 
-  it('should report whether a dependency is selected', () => {
-    const state = { ...getState(), selectedDependencyId: 'dep-1' };
-
-    expect(eventTimelinePremiumDependencySelectors.isSelected(state, 'dep-1')).to.equal(true);
-    expect(eventTimelinePremiumDependencySelectors.isSelected(state, 'dep-2')).to.equal(false);
-  });
-
   it('should keep only the last dependency when two of them share the same id', () => {
     const firstDependency: SchedulerDependency = {
       id: 'dup-1',

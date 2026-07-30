@@ -38,9 +38,10 @@ function isGuardedKeyTarget(event: KeyboardEvent): boolean {
  * Keyboard and click-away interactions of the selected dependency: Delete/Backspace
  * deletes it, Escape deselects, clicking outside the arrow deselects.
  * Document-level listeners because the SVG arrows are not focusable — the keyboard
- * accessibility story of dependencies is deliberately deferred.
+ * accessibility story of dependencies is deliberately deferred. The document is the
+ * interaction layer's own, so a timeline rendered into another window keeps working.
  */
-export function useDependencySelectionInteraction() {
+export function useDependencySelectionInteraction(elementRef: React.RefObject<Element | null>) {
   const store = useEventTimelinePremiumStoreContext();
   const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
 
@@ -56,10 +57,9 @@ export function useDependencySelectionInteraction() {
       }
       if (event.key === 'Delete' || event.key === 'Backspace') {
         event.preventDefault();
-        store.deleteDependency(selectedId);
-        store.setSelectedDependency(null);
+        store.deleteSelectedDependency();
       } else if (event.key === 'Escape') {
-        store.setSelectedDependency(null);
+        store.setSelectedDependencyId(null);
       }
     };
 
@@ -71,14 +71,15 @@ export function useDependencySelectionInteraction() {
       ) {
         return;
       }
-      store.setSelectedDependency(null);
+      store.setSelectedDependencyId(null);
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('pointerdown', handlePointerDown);
+    const doc = elementRef.current?.ownerDocument ?? document;
+    doc.addEventListener('keydown', handleKeyDown);
+    doc.addEventListener('pointerdown', handlePointerDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('pointerdown', handlePointerDown);
+      doc.removeEventListener('keydown', handleKeyDown);
+      doc.removeEventListener('pointerdown', handlePointerDown);
     };
-  }, [store, selectedId]);
+  }, [store, selectedId, elementRef]);
 }

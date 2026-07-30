@@ -482,19 +482,19 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
   });
 
-  describe('method: setSelectedDependency', () => {
+  describe('method: setSelectedDependencyId', () => {
     it('should not write to the state when the selection did not change', () => {
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
         adapter,
       );
-      store.setSelectedDependency('dep-1');
+      store.setSelectedDependencyId('dep-1');
       const stateBefore = store.state;
 
-      store.setSelectedDependency('dep-1');
+      store.setSelectedDependencyId('dep-1');
       expect(store.state).to.equal(stateBefore);
 
-      store.setSelectedDependency(null);
+      store.setSelectedDependencyId(null);
       expect(store.state).not.to.equal(stateBefore);
     });
   });
@@ -512,7 +512,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         targetOccurrenceKey: null,
         cursor: { clientX: 0, clientY: 0 },
       });
-      store.setSelectedDependency('dep-1');
+      store.setSelectedDependencyId('dep-1');
 
       store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
 
@@ -525,7 +525,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
         adapter,
       );
-      store.setSelectedDependency('dep-1');
+      store.setSelectedDependencyId('dep-1');
 
       store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
       expect(store.state.selectedDependencyId).to.equal(null);

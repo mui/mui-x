@@ -1,25 +1,29 @@
 'use client';
 import * as React from 'react';
-import { warn } from '@base-ui/utils/warn';
 import { useStore } from '@base-ui/utils/store';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import type { DragLocationHistory, ElementDragType } from '@atlaskit/pragmatic-drag-and-drop/types';
+import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
-import type { SchedulerAddDependencyResult } from '../../models';
+import type { SchedulerDependencyRejectionReason } from '../../models';
+
+const isDependencyHandleDrag = buildIsValidDropTarget(['TimelineGridEventDependencyHandle']);
 
 interface DependencyDropTargetData {
   targetEventId: SchedulerEventId;
   targetOccurrenceKey: string | null;
   /**
-   * `false` for a recurring event: hovering it gives no highlight or snap, but a drop
-   * still goes through `addDependency` so its rejection reaches the user.
+   * `false` for a recurring or read-only event: hovering it gives no highlight or
+   * snap, but a drop still goes through `addDependency` so its rejection reaches the
+   * user.
    */
   isValid: boolean;
 }
 
 function getDependencyDropTarget(
-  dropTargets: readonly { data: Record<string | symbol, unknown> }[],
+  dropTargets: DragLocationHistory['current']['dropTargets'],
 ): DependencyDropTargetData | null {
   for (const dropTarget of dropTargets) {
     const eventId = dropTarget.data.dependencyTargetEventId;
@@ -37,31 +41,14 @@ function getDependencyDropTarget(
 
 // TODO(dependencies public flip): source these messages from the locale text so the
 // feedback is translatable.
-// Exhaustive on purpose: every rejection must tell the user why it happened, so a new
-// reason (e.g. the cycle guard of #22858) fails to compile until it brings a message.
-function getRejectionMessage(
-  result: Extract<SchedulerAddDependencyResult, { status: 'rejected' }>,
-): string {
-  switch (result.reason) {
-    case 'duplicateDependency':
-      return 'This dependency already exists between these two events.';
-    case 'recurringEvent':
-      return 'Dependencies cannot involve recurring events.';
-    case 'readOnlyEvent':
-      return 'Dependencies cannot involve read-only events.';
-    case 'unknownEvent':
-      return 'This dependency cannot be created because one of its events no longer exists.';
-    default:
-      return unreachableRejection(result);
-  }
-}
-
-function unreachableRejection(result: never): string {
-  if (process.env.NODE_ENV !== 'production') {
-    warn(`MUI X Scheduler: Unhandled dependency rejection ${JSON.stringify(result)}.`);
-  }
-  return 'This dependency cannot be created.';
-}
+// The `Record` is exhaustive on the rejection union: a new reason (e.g. the cycle
+// guard of #22858) fails to compile until it brings a message.
+const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
+  duplicateDependency: 'This dependency already exists between these two events.',
+  recurringEvent: 'Dependencies cannot involve recurring events.',
+  readOnlyEvent: 'Dependencies cannot involve read-only events.',
+  unknownEvent: 'This dependency cannot be created because one of its events no longer exists.',
+};
 
 /**
  * Handles the whole create-dependency drag gesture, from any terminal to any event.
@@ -78,21 +65,23 @@ export function useDependencyCreationMonitor() {
       return undefined;
     }
 
-    const updateCreation = (
-      source: { data: Record<string | symbol, unknown> },
-      location: {
-        current: {
-          input: { clientX: number; clientY: number };
-          dropTargets: readonly { data: Record<string | symbol, unknown> }[];
-        };
-      },
-    ) => {
-      // Invalid targets (recurring events) never highlight or snap the rubber band.
+    const updateCreation = ({
+      source,
+      location,
+    }: {
+      source: ElementDragType['payload'];
+      location: DragLocationHistory;
+    }) => {
+      if (!isDependencyHandleDrag(source.data)) {
+        return;
+      }
+      // Invalid targets (recurring or read-only events) never highlight or snap the
+      // rubber band.
       const target = getDependencyDropTarget(location.current.dropTargets);
       const validTarget = target?.isValid ? target : null;
       store.setDependencyCreation({
-        sourceEventId: source.data.eventId as SchedulerEventId,
-        sourceOccurrenceKey: source.data.occurrenceKey as string,
+        sourceEventId: source.data.eventId,
+        sourceOccurrenceKey: source.data.occurrenceKey,
         targetEventId: validTarget?.targetEventId ?? null,
         targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
         cursor: {
@@ -104,31 +93,27 @@ export function useDependencyCreationMonitor() {
 
     const cleanupMonitor = monitorForElements({
       canMonitor: ({ source }) =>
-        source.data.source === 'TimelineGridEventDependencyHandle' &&
-        source.data.storeContext === store,
-      onDragStart: ({ source, location }) => {
-        updateCreation(source, location);
-      },
+        isDependencyHandleDrag(source.data) && source.data.storeContext === store,
+      onDragStart: updateCreation,
       // `onDropTargetChange` reacts to entering/leaving a target immediately;
       // `onDrag` keeps the cursor up to date between target changes.
-      onDropTargetChange: ({ source, location }) => {
-        updateCreation(source, location);
-      },
-      onDrag: ({ source, location }) => {
-        updateCreation(source, location);
-      },
+      onDropTargetChange: updateCreation,
+      onDrag: updateCreation,
       onDrop: ({ source, location }) => {
         // Canceling the drag (e.g. with Escape) fires `onDrop` with no drop target,
         // so the gesture is discarded on the same path.
         store.setDependencyCreation(null);
 
+        if (!isDependencyHandleDrag(source.data)) {
+          return;
+        }
         const target = getDependencyDropTarget(location.current.dropTargets);
         if (target === null) {
           return;
         }
 
         const result = store.addDependency({
-          source: source.data.eventId as SchedulerEventId,
+          source: source.data.eventId,
           target: target.targetEventId,
           type: 'FinishToStart',
         });
@@ -137,9 +122,9 @@ export function useDependencyCreationMonitor() {
           // A duplicate selects the existing arrow: the feedback points at the link
           // that already covers the attempted connection.
           if (result.reason === 'duplicateDependency') {
-            store.setSelectedDependency(result.dependencyId);
+            store.setSelectedDependencyId(result.dependencyId);
           }
-          store.pushError(/* minify-error-disabled */ new Error(getRejectionMessage(result)), {
+          store.pushError(/* minify-error-disabled */ new Error(REJECTION_MESSAGES[result.reason]), {
             transient: true,
           });
         }

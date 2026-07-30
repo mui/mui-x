@@ -7,6 +7,7 @@ import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
+import { TimelineGridEventDependencyHandleDataAttributes } from './TimelineGridEventDependencyHandleDataAttributes';
 
 /**
  * The terminal on the end edge of an event: dragging it onto another event creates a
@@ -65,9 +66,12 @@ export const TimelineGridEventDependencyHandle = React.forwardRef(
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef, ref],
-      // The occurrence key as the attribute value lets hover tracking recognize the
-      // terminal as part of its event.
-      props: [elementProps, { 'data-dependency-handle': occurrenceKey } as Record<string, string>],
+      props: [
+        elementProps,
+        {
+          [TimelineGridEventDependencyHandleDataAttributes.dependencyHandle]: occurrenceKey,
+        } as Record<string, string>,
+      ],
     });
   },
 );

@@ -2,10 +2,13 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
+
+const isDependencyHandleDrag = buildIsValidDropTarget(['TimelineGridEventDependencyHandle']);
 
 /**
  * Registers the event element as a drop target for the create-dependency gesture.
@@ -40,7 +43,7 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
       // another timeline on the page carry a different store), and an event cannot
       // depend on itself.
       canDrop: ({ source }) =>
-        source.data.source === 'TimelineGridEventDependencyHandle' &&
+        isDependencyHandleDrag(source.data) &&
         source.data.storeContext === store &&
         source.data.eventId !== eventId,
     });

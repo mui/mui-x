@@ -204,7 +204,7 @@ export class EventTimelinePremiumStore<
         () => {
           const { selectedDependencyId, dependencyModelLookup } = this.state;
           if (selectedDependencyId !== null && !dependencyModelLookup.has(selectedDependencyId)) {
-            this.setSelectedDependency(null);
+            this.setSelectedDependencyId(null);
           }
         },
       ),
@@ -316,9 +316,22 @@ export class EventTimelinePremiumStore<
   /**
    * Selects a dependency, or clears the selection when called with `null`.
    */
-  public setSelectedDependency = (dependencyId: SchedulerDependencyId | null) => {
+  public setSelectedDependencyId = (dependencyId: SchedulerDependencyId | null) => {
     if (this.state.selectedDependencyId !== dependencyId) {
       this.set('selectedDependencyId', dependencyId);
     }
+  };
+
+  /**
+   * Deletes the selected dependency and clears the selection, so the pairing cannot
+   * drift apart across the affordances triggering it (delete button, keyboard).
+   */
+  public deleteSelectedDependency = () => {
+    const { selectedDependencyId } = this.state;
+    if (selectedDependencyId === null) {
+      return;
+    }
+    this.deleteDependency(selectedDependencyId);
+    this.setSelectedDependencyId(null);
   };
 }
