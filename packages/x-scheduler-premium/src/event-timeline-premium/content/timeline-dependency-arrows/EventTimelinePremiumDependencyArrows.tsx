@@ -177,7 +177,7 @@ function getCreationPath(
   const source = getEventEdgeAnchor(
     resolver,
     creation.sourceEventId,
-    'end',
+    creation.sourceSide,
     creation.sourceOccurrenceKey,
   );
   if (source === null) {

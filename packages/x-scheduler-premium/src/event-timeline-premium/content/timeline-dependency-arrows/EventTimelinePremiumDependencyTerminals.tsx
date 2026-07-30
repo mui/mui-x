@@ -172,6 +172,7 @@ function DependencyTerminalsLayerImpl() {
           key={occurrence.key}
           eventId={occurrence.id}
           occurrenceKey={occurrence.key}
+          side="end"
           data-palette={schedulerEventSelectors.color(store.state, occurrence.id)}
           data-visible={visible ? '' : undefined}
           style={{ left: point.x, top: point.y - offsetTop }}

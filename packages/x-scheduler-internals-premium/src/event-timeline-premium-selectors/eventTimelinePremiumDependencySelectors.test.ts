@@ -197,6 +197,7 @@ describe('eventTimelinePremiumDependencySelectors', () => {
       dependencyCreation: {
         sourceEventId: 'event-a',
         sourceOccurrenceKey: 'event-a-0',
+        sourceSide: 'end' as const,
         targetEventId: 'event-b',
         targetOccurrenceKey: 'event-b-0',
       },

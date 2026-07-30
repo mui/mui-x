@@ -1,4 +1,4 @@
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventId, SchedulerEventSide } from '@mui/x-scheduler-internals/models';
 import type { SchedulerChangeEventDetails } from '@mui/x-scheduler-internals/internals';
 
 export type SchedulerDependencyId = string | number;
@@ -59,6 +59,10 @@ export interface SchedulerDependencyCreation {
    * Anchors the provisional arrow on the row appearance the user grabbed.
    */
   sourceOccurrenceKey: string;
+  /**
+   * The edge of the source event the gesture started from.
+   */
+  sourceSide: SchedulerEventSide;
   /**
    * The id of the event currently hovered as a valid drop target, if any.
    */

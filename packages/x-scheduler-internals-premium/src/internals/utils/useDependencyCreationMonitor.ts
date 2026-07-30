@@ -82,6 +82,7 @@ export function useDependencyCreationMonitor() {
       store.setDependencyCreation({
         sourceEventId: source.data.eventId,
         sourceOccurrenceKey: source.data.occurrenceKey,
+        sourceSide: source.data.sourceSide,
         targetEventId: validTarget?.targetEventId ?? null,
         targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
       });

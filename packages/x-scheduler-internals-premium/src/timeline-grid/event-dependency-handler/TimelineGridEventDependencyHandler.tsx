@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventId, SchedulerEventSide } from '@mui/x-scheduler-internals/models';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -30,6 +30,7 @@ export const TimelineGridEventDependencyHandler = React.forwardRef(
       // Parameters
       eventId,
       occurrenceKey,
+      side = 'end',
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
@@ -44,6 +45,7 @@ export const TimelineGridEventDependencyHandler = React.forwardRef(
     const getDragData = useStableCallback(() => ({
       eventId,
       occurrenceKey,
+      sourceSide: side,
       source: 'TimelineGridEventDependencyHandler' as const,
       // Identity discriminator: pragmatic monitors are page-global, so the monitor
       // and the drop targets only react to gestures born in their own timeline.
@@ -88,11 +90,23 @@ export namespace TimelineGridEventDependencyHandler {
      * The row appearance of the event the terminal is anchored on.
      */
     occurrenceKey: string;
+    /**
+     * The event edge the terminal sits on — the edge of the predecessor the created
+     * dependency starts from. Only `'end'` is exercised while `FinishToStart` is the
+     * only dependency type; the start-edge terminals arrive with the other types.
+     * @default 'end'
+     */
+    side?: SchedulerEventSide;
   }
 
   export interface DragData {
     eventId: SchedulerEventId;
     occurrenceKey: string;
+    /**
+     * The edge of the source event the gesture started from. Combined with the drop
+     * edge, it determines the created dependency's type.
+     */
+    sourceSide: SchedulerEventSide;
     source: 'TimelineGridEventDependencyHandler';
     /**
      * The store of the timeline the gesture started in, compared by identity so

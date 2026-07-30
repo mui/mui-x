@@ -317,6 +317,7 @@ export class EventTimelinePremiumStore<
         creation !== null &&
         previous.sourceEventId === creation.sourceEventId &&
         previous.sourceOccurrenceKey === creation.sourceOccurrenceKey &&
+        previous.sourceSide === creation.sourceSide &&
         previous.targetEventId === creation.targetEventId &&
         previous.targetOccurrenceKey === creation.targetOccurrenceKey)
     ) {

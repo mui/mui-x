@@ -466,6 +466,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       const creation = {
         sourceEventId: 'event-a',
         sourceOccurrenceKey: 'key-a',
+        sourceSide: 'end' as const,
         targetEventId: null,
         targetOccurrenceKey: null,
       };
@@ -507,6 +508,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       store.setDependencyCreation({
         sourceEventId: 'event-a',
         sourceOccurrenceKey: 'key-a',
+        sourceSide: 'end',
         targetEventId: null,
         targetOccurrenceKey: null,
       });
