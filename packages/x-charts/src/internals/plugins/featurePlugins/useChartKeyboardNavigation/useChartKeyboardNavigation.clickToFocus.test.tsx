@@ -426,6 +426,24 @@ describe('useChartKeyboardNavigation - click to focus', () => {
       expect(container.querySelector(`.${pieClasses.focusIndicator}`)).not.to.equal(null);
     });
 
+    // The pie does not fill its drawing area, so a click next to it is not a click on the chart.
+    it.skipIf(isJSDOM)('ignores a click outside the pie', async () => {
+      const { container, user } = render(<PieChart {...pieProps} />);
+      const layerContainer = getLayerContainer(container);
+      const rect = layerContainer.getBoundingClientRect();
+
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: layerContainer,
+          coords: { clientX: rect.left + 2, clientY: rect.top + 2 },
+        },
+      ]);
+
+      expect(container.contains(document.activeElement)).to.equal(false);
+      expect(container.querySelector(`.${pieClasses.focusIndicator}`)).to.equal(null);
+    });
+
     it('fires onItemClick exactly once', async () => {
       const onItemClick = vi.fn();
       const { container, user } = render(<PieChart {...pieProps} onItemClick={onItemClick} />);

@@ -83,7 +83,7 @@ Screen readers announce the clicked item right away.
 
 A click that lands on no item is resolved from the axis under the pointer, so clicking the empty space above a bar still focuses that bar's column.
 The item is taken from the series being navigated, or from the first series when none is focused yet.
-Clicks outside of any axis only give the chart focus, keeping the item that was focused before.
+Clicks that resolve to no item at all are ignored, so clicking next to a pie leaves the focus where it was.
 
 How the focus indicator behaves depends on how the user got there:
 

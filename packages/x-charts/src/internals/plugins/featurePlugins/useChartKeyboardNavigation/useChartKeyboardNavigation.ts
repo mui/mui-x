@@ -151,7 +151,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
   /**
    * Fallback for a click that hit no item: resolve the axis under the pointer and focus the item
-   * it points at. Focuses the chart alone when the chart has no axis, or the click is off it.
+   * it points at.
+   *
+   * A click that resolves nothing is left alone rather than focusing the chart. The drawing area
+   * is a rectangle, but the data rarely fills it: taking the focus from a click next to a pie,
+   * outside its circle, reads as the chart grabbing clicks that were not meant for it.
    */
   const focusItemAtAxisPosition = useEventCallback((event: MouseEvent) => {
     const element = chartsLayerContainerRef.current;
@@ -168,12 +172,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           })
         : null;
 
-    if (item === null) {
-      applyFocus(undefined);
-      return;
+    if (item !== null) {
+      focusItem(item);
     }
-
-    focusItem(item);
   });
 
   React.useEffect(() => {
