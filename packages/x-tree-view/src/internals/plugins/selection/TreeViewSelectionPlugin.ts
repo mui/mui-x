@@ -1,5 +1,9 @@
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import type { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
+import type {
+  TreeViewItemId,
+  TreeViewItemSelectionStatus,
+  TreeViewSelectionPropagation,
+} from '../../../models';
 import type { TreeViewAnyStore } from '../../models';
 import { itemsSelectors } from '../items';
 import { selectionSelectors } from './selectors';
@@ -119,8 +123,18 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     this.lastSelectedRange = getLookupFromArray(range);
   };
 
+  /**
+   * Get the selection status of an item.
+   * An item that is not selected is `indeterminate` when some of its selectable descendants are selected.
+   * @param {TreeViewItemId} itemId The id of the item to get the selection status of.
+   * @returns {TreeViewItemSelectionStatus} The selection status of the item.
+   */
+  private getItemSelection = (itemId: TreeViewItemId): TreeViewItemSelectionStatus =>
+    selectionSelectors.itemSelectionStatus(this.store.state, itemId);
+
   public buildPublicAPI = () => {
     return {
+      getItemSelection: this.getItemSelection,
       setItemSelection: this.setItemSelection,
     };
   };

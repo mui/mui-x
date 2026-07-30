@@ -121,3 +121,24 @@ apiRef.current.setItemSelection({
 You can use the `keepExistingSelection` property to avoid losing the items that have already been selected when using `multiSelect`:
 
 {{"demo": "ApiMethodSetItemSelectionKeepExistingSelection.js"}}
+
+### Get the selection status of an item
+
+Use the `getItemSelection()` API method to get the selection status of an item:
+
+```ts
+apiRef.current.getItemSelection(
+  // The id of the item to check
+  itemId,
+);
+// Returns 'selected', 'indeterminate' or 'unselected'
+```
+
+{{"demo": "ApiMethodGetItemSelection.js"}}
+
+:::info
+An item is `indeterminate` when it isn't selected but some of its selectable descendants are.
+
+When `selectionPropagation.parents` is enabled, an item whose selectable descendants are all selected is `selected`.
+Otherwise, it remains `indeterminate`.
+:::
