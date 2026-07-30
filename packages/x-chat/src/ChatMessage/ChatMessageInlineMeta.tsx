@@ -3,8 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
 import { styled } from '../internals/zero-styled';
-import DefaultDoneIcon from '../icons/DefaultDoneIcon';
-import DefaultDoneAllIcon from '../icons/DefaultDoneAllIcon';
+import { DefaultDoneIcon, DefaultDoneAllIcon } from '../icons/icons';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { chatMessageClasses } from './chatMessageClasses';
 
@@ -86,8 +85,8 @@ const InlineStatusSlot = React.forwardRef<HTMLSpanElement, any>(function InlineS
 
   return (
     <InlineStatusStyled ref={ref} {...other}>
-      {isSent && <DefaultDoneIcon />}
-      {isRead && <DefaultDoneAllIcon />}
+      {isSent && <DefaultDoneIcon fontSize="inherit" />}
+      {isRead && <DefaultDoneAllIcon fontSize="inherit" />}
       {!isSent && !isRead && children}
     </InlineStatusStyled>
   );

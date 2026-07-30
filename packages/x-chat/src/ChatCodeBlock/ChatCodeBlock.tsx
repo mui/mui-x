@@ -6,7 +6,7 @@ import { SxProps, Theme } from '@mui/system';
 import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
-import DefaultDoneIcon from '../icons/DefaultDoneIcon';
+import { DefaultDoneIcon } from '../icons/icons';
 import { useChatCodeBlockUtilityClasses, type ChatCodeBlockClasses } from './chatCodeBlockClasses';
 
 export interface ChatCodeBlockProps {
@@ -172,7 +172,7 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
             title={copyButtonLabel}
             tabIndex={contentTabIndex}
           >
-            {copyState === 'copied' ? <DefaultDoneIcon /> : <CopyIcon />}
+            {copyState === 'copied' ? <DefaultDoneIcon fontSize="inherit" /> : <CopyIcon />}
           </ChatCodeBlockCopyButton>
         </ChatCodeBlockHeader>
         <ChatCodeBlockPre className={classes.pre}>

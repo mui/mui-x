@@ -5,8 +5,7 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import DefaultDoneIcon from '../icons/DefaultDoneIcon';
-import DefaultDoneAllIcon from '../icons/DefaultDoneAllIcon';
+import { DefaultDoneIcon, DefaultDoneAllIcon } from '../icons/icons';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
@@ -73,9 +72,9 @@ const ChatMessageStatusSlot = React.forwardRef<HTMLSpanElement, any>(function Ch
 
   let content = children;
   if (isCompact && isSent) {
-    content = <DefaultDoneIcon />;
+    content = <DefaultDoneIcon fontSize="inherit" />;
   } else if (isCompact && isRead) {
-    content = <DefaultDoneAllIcon />;
+    content = <DefaultDoneAllIcon fontSize="inherit" />;
   }
 
   return (
