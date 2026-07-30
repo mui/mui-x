@@ -6,6 +6,7 @@ import { SxProps, Theme } from '@mui/system';
 import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
+import { DoneIcon } from '../internals/icons';
 import { useChatCodeBlockUtilityClasses, type ChatCodeBlockClasses } from './chatCodeBlockClasses';
 
 export interface ChatCodeBlockProps {
@@ -32,19 +33,11 @@ export interface ChatCodeBlockProps {
 
 const useThemeProps = createUseThemeProps('MuiChatCodeBlock');
 
-// Inline SVGs — avoids @mui/icons-material dependency
+// Inline SVG — avoids @mui/icons-material dependency
 function CopyIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em" aria-hidden="true">
       <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em" aria-hidden="true">
-      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
     </svg>
   );
 }
@@ -179,7 +172,7 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
             title={copyButtonLabel}
             tabIndex={contentTabIndex}
           >
-            {copyState === 'copied' ? <CheckIcon /> : <CopyIcon />}
+            {copyState === 'copied' ? <DoneIcon /> : <CopyIcon />}
           </ChatCodeBlockCopyButton>
         </ChatCodeBlockHeader>
         <ChatCodeBlockPre className={classes.pre}>
