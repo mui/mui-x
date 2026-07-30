@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -234,6 +235,29 @@ describe('useChartKeyboardNavigation - click to focus', () => {
       await user.keyboard('{Shift>}{Tab}{/Shift}');
 
       expect(getFocusedDataIndex(container)).to.equal(1);
+    });
+
+    // The clicked item is resolved by the series, not read from the highlight. Controlling the
+    // highlight freezes `highlight.item`, so a focus derived from it would follow the consumer
+    // rather than the pointer.
+    it('resolves the clicked item independently of a controlled highlight', async () => {
+      function Controlled() {
+        const [highlightedItem, setHighlightedItem] = React.useState<any>(null);
+        return (
+          <BarChart
+            {...barProps}
+            highlightedItem={highlightedItem}
+            onHighlightChange={setHighlightedItem}
+          />
+        );
+      }
+
+      const { container, user } = render(<Controlled />);
+
+      await clickAt(user, container, getCenter(getBars(container)[1]));
+      await user.keyboard('[ArrowRight]');
+
+      expect(getFocusedDataIndex(container)).to.equal(2);
     });
 
     it('fires onItemClick exactly once', async () => {
