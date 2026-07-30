@@ -6,6 +6,7 @@ import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/elem
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
+import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 
 /**
  * The terminal on the end edge of an event: dragging it onto another event creates a
@@ -32,6 +33,9 @@ export const TimelineGridEventDependencyHandle = React.forwardRef(
       ...elementProps
     } = componentProps;
 
+    // Context hooks
+    const store = useEventTimelinePremiumStoreContext();
+
     // Ref hooks
     const ref = React.useRef<HTMLDivElement>(null);
 
@@ -40,6 +44,9 @@ export const TimelineGridEventDependencyHandle = React.forwardRef(
       eventId,
       occurrenceKey,
       source: 'TimelineGridEventDependencyHandle' as const,
+      // Identity discriminator: pragmatic monitors are page-global, so the monitor
+      // and the drop targets only react to gestures born in their own timeline.
+      storeContext: store as unknown,
     }));
 
     React.useEffect(() => {
@@ -83,5 +90,10 @@ export namespace TimelineGridEventDependencyHandle {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     source: 'TimelineGridEventDependencyHandle';
+    /**
+     * The store of the timeline the gesture started in, compared by identity so
+     * several timelines on one page don't react to each other's gestures.
+     */
+    storeContext: unknown;
   }
 }

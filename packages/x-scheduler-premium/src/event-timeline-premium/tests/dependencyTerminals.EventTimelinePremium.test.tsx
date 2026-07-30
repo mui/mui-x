@@ -13,6 +13,8 @@ import {
   getArrowPaths,
   getEventElement,
   resource1,
+  resource2,
+  TestTimeline,
 } from './dependencyTestUtils';
 
 const eventA = EventBuilder.new()
@@ -136,6 +138,10 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(validTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
       });
       expect(recurringTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
+
+      // End the gesture: a drag left in flight leaks into the next test's timeline.
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
 
     it('should surface an error when dropping a terminal on a recurring event', () => {
@@ -168,6 +174,10 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
       expect(getEventElement('Event A').hasAttribute('data-dependency-drag-source')).to.equal(true);
+
+      // End the gesture: a drag left in flight leaks into the next test's timeline.
+      fireEvent.drop(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
     });
 
     it('should render the provisional line during a terminal drag', async () => {
@@ -478,6 +488,105 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.callCount).to.equal(0);
       expect(getArrowPaths()).to.have.length(1);
+    });
+  });
+
+  describe('several timelines on one page', () => {
+    const eventC = EventBuilder.new()
+      .id('event-c')
+      .title('Event C')
+      .singleDay('2025-07-03T09:00:00Z')
+      .resource(resource1)
+      .build();
+
+    function renderTwoTimelines(handleDependenciesChangeB: () => void) {
+      let storeA!: any;
+      let storeB!: any;
+      render(
+        <div className="test-timeline-host" style={{ width: 1200, height: 1200 }}>
+          <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
+          <TestTimeline
+            events={[eventA, eventB]}
+            resources={[resource1, resource2]}
+            dependencies={[]}
+            onStoreReady={(mountedStore) => {
+              storeA = mountedStore;
+            }}
+          />
+          <TestTimeline
+            events={[eventC]}
+            resources={[resource1, resource2]}
+            dependencies={[]}
+            onDependenciesChange={handleDependenciesChangeB}
+            onStoreReady={(mountedStore) => {
+              storeB = mountedStore;
+            }}
+          />
+        </div>,
+      );
+      return { storeA, storeB };
+    }
+
+    it('should not react to a creation gesture started in another timeline', async () => {
+      const handleDependenciesChangeB = spy();
+      const { storeA, storeB } = renderTwoTimelines(handleDependenciesChangeB);
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const target = getEventElement('Event B');
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(storeA.state.dependencyCreation).not.to.equal(null);
+      });
+      expect(storeB.state.dependencyCreation).to.equal(null);
+
+      fireEvent.drop(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(storeA.state.dependencyCreation).to.equal(null);
+      });
+      expect(handleDependenciesChangeB.callCount).to.equal(0);
+      expect(storeB.state.errors).to.have.length(0);
+    });
+
+    it('should not accept a terminal dropped from another timeline', async () => {
+      const handleDependenciesChangeB = spy();
+      const { storeA, storeB } = renderTwoTimelines(handleDependenciesChangeB);
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const sameTimelineTarget = getEventElement('Event B');
+      const otherTimelineTarget = getEventElement('Event C');
+
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(sameTimelineTarget, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(sameTimelineTarget, { dataTransfer: new DataTransfer() });
+
+      // Hovering the same-timeline target proves the drag reached the highlight stage
+      // before asserting that the other timeline's event never gets it.
+      await waitFor(() => {
+        expect(sameTimelineTarget.hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+
+      fireEvent.dragEnter(otherTimelineTarget, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(otherTimelineTarget, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(sameTimelineTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
+      });
+      expect(otherTimelineTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
+
+      fireEvent.drop(otherTimelineTarget, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(storeA.state.dependencyCreation).to.equal(null);
+      });
+      expect(handleDependenciesChangeB.callCount).to.equal(0);
+      expect(storeA.state.errors).to.have.length(0);
+      expect(storeB.state.errors).to.have.length(0);
     });
   });
 });

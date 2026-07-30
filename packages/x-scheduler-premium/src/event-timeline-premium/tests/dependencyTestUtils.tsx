@@ -49,7 +49,8 @@ interface TestTimelineProps {
 // `dependencies` is not a public prop yet, so the harness feeds the internal store
 // parameters to the same hook the component uses, and closes the controlled loop
 // (`onEventsChange` / `onDependenciesChange` → new parameter values) like a consumer.
-function TestTimeline({
+// Exported for the tests rendering several timelines on one page.
+export function TestTimeline({
   events: initialEvents,
   resources,
   dependencies: initialDependencies,

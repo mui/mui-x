@@ -35,13 +35,16 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
         dependencyTargetOccurrenceKey: occurrenceKey,
         dependencyTargetIsValid: !isRecurring && !isReadOnly,
       }),
-      // Only the dependency gesture lands here (rows keep handling the event drags —
-      // their allowlist ignores this source), and an event cannot depend on itself.
+      // Only the dependency gesture of this timeline lands here (rows keep handling
+      // the event drags — their allowlist ignores this source, and gestures born in
+      // another timeline on the page carry a different store), and an event cannot
+      // depend on itself.
       canDrop: ({ source }) =>
         source.data.source === 'TimelineGridEventDependencyHandle' &&
+        source.data.storeContext === store &&
         source.data.eventId !== eventId,
     });
-  }, [ref, enabled, isRecurring, isReadOnly, eventId, occurrenceKey]);
+  }, [ref, store, enabled, isRecurring, isReadOnly, eventId, occurrenceKey]);
 }
 
 export namespace useEventDependencyDropTarget {

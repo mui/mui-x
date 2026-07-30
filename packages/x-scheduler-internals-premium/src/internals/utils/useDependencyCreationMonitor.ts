@@ -65,8 +65,9 @@ function unreachableRejection(result: never): string {
 
 /**
  * Handles the whole create-dependency drag gesture, from any terminal to any event.
- * A monitor (rather than callbacks on the terminal's draggable) so the gesture
- * survives the source element being unmounted by virtualization mid-drag.
+ * A global monitor mounted by the grid root (rather than callbacks on the terminal's
+ * draggable) so the gesture survives the source element being unmounted by
+ * virtualization mid-drag; `canMonitor` scopes it back to this timeline's gestures.
  */
 export function useDependencyCreationMonitor() {
   const store = useEventTimelinePremiumStoreContext();
@@ -102,7 +103,9 @@ export function useDependencyCreationMonitor() {
     };
 
     return monitorForElements({
-      canMonitor: ({ source }) => source.data.source === 'TimelineGridEventDependencyHandle',
+      canMonitor: ({ source }) =>
+        source.data.source === 'TimelineGridEventDependencyHandle' &&
+        source.data.storeContext === store,
       onDragStart: ({ source, location }) => {
         updateCreation(source, location);
       },
