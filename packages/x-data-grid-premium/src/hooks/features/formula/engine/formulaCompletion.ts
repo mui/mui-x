@@ -12,12 +12,7 @@ import type { FormulaToken } from './formulaTokenizer';
  * ranker can tier them consistently with the static vocabulary.
  */
 export type FormulaCompletionKind =
-  | 'function'
-  | 'specialForm'
-  | 'constant'
-  | 'operator'
-  | 'field'
-  | 'columnLetter';
+  'function' | 'specialForm' | 'constant' | 'operator' | 'field' | 'columnLetter';
 
 export interface FormulaCompletionToken {
   /**

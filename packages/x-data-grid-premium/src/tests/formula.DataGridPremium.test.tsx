@@ -735,7 +735,7 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(getColumnValues(2)).to.deep.equal(['7']);
     });
 
-    it('should exclude pinned rows from the position context', async () => {
+    it('should address pinned rows in the position context, ahead of and after the data band', async () => {
       await render(
         <Test
           rows={[{ id: 0, price: 5, top: '=REF(COLUMN("price"), ROW_POSITION(1))' }]}
@@ -746,9 +746,36 @@ describe('<DataGridPremium /> - Formulas', () => {
           ]}
         />,
       );
+      // Position 1 is the top-pinned row — the number the row-number column
+      // shows next to it, so `$1`/`ROW_POSITION(1)` must resolve to it.
       expect(formulaApi().getCellFormulaResult(0, 'top')).to.deep.equal({
         type: 'value',
-        value: 5,
+        value: 1000,
+      });
+    });
+
+    it('should never cover pinned rows with a range or COLUMN_VALUES', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 5 },
+            { id: 1, price: 7 },
+          ]}
+          pinnedRows={{
+            top: [{ id: 98, price: 1000 }],
+            bottom: [{ id: 99, price: 2000, summary: '=SUM(COLUMN_VALUES("price"))' }],
+          }}
+          columns={[
+            { field: 'price', type: 'number' },
+            { field: 'summary', type: 'number', allowFormulas: true },
+          ]}
+        />,
+      );
+      // The data band only: neither pinned row contributes, and the summary
+      // does not aggregate itself.
+      expect(formulaApi().getCellFormulaResult(99, 'summary')).to.deep.equal({
+        type: 'value',
+        value: 12,
       });
     });
 

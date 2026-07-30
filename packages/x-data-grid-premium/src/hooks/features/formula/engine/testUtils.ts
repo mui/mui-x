@@ -33,6 +33,14 @@ export function createTestPositionContext(
   rowIds: FormulaRowId[],
   fields: string[],
   version = 0,
+  /**
+   * Data band, defaulting to every row. Pass a narrower band to model pinned
+   * rows sitting before/after the sortable body.
+   */
+  band: { dataFromIndex: number; dataToIndex: number } = {
+    dataFromIndex: 1,
+    dataToIndex: rowIds.length,
+  },
 ): FormulaPositionContext {
   // Ids are matched under string coercion, like the real grid's row lookup
   // and the engine's cell-key format.
@@ -44,6 +52,8 @@ export function createTestPositionContext(
     version,
     rowCount: rowIds.length,
     columnCount: fields.length,
+    dataFromIndex: band.dataFromIndex,
+    dataToIndex: band.dataToIndex,
     getRowIdAtPosition: (index) => rowIds[index - 1],
     getPositionOfRowId: (id) => rowIdToPosition.get(String(id)),
     getFieldAtPosition: (index) => fields[index - 1],

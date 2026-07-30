@@ -22,12 +22,7 @@ import { gridFormulaA1PositionContextSelector } from './gridFormulaPositionConte
  * compatible with the exceljs fork's formula-cell value (`{ formula, result }`).
  */
 export type ExcelFormulaResult =
-  | number
-  | string
-  | boolean
-  | Date
-  | null
-  | { error: ExcelFormulaErrorCode };
+  number | string | boolean | Date | null | { error: ExcelFormulaErrorCode };
 
 /**
  * One exported formula cell: the A1 formula string (without a leading `=` —

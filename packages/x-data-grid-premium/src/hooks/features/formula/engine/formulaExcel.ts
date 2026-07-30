@@ -8,13 +8,7 @@ import type { FormulaErrorCode } from './formulaErrors';
  * onto these by `mapFormulaErrorCodeToExcel`.
  */
 export type ExcelFormulaErrorCode =
-  | '#N/A'
-  | '#REF!'
-  | '#NAME?'
-  | '#DIV/0!'
-  | '#NULL!'
-  | '#VALUE!'
-  | '#NUM!';
+  '#N/A' | '#REF!' | '#NAME?' | '#DIV/0!' | '#NULL!' | '#VALUE!' | '#NUM!';
 
 /**
  * Resolves a canonical reference axis to a coordinate in the *exported* sheet.

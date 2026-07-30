@@ -53,6 +53,8 @@ const EMPTY_POSITION_CONTEXT: FormulaPositionContext = {
   version: 0,
   rowCount: 0,
   columnCount: 0,
+  dataFromIndex: 1,
+  dataToIndex: 0,
   getRowIdAtPosition: () => undefined,
   getPositionOfRowId: () => undefined,
   getFieldAtPosition: () => undefined,
@@ -386,7 +388,8 @@ function warnOnLargeRangeDependencies(
   for (const interval of dependencies.columnIntervals) {
     materializedCells += interval.toIndex - interval.fromIndex + 1;
   }
-  materializedCells += dependencies.wholeColumns.length * context.rowCount;
+  materializedCells +=
+    dependencies.wholeColumns.length * Math.max(0, context.dataToIndex - context.dataFromIndex + 1);
   if (materializedCells > RANGE_CELLS_WARNING_THRESHOLD) {
     warnOnce([
       `MUI X Data Grid: A formula materializes over ${RANGE_CELLS_WARNING_THRESHOLD.toLocaleString('en-US')} range cells per evaluation.`,
@@ -648,7 +651,15 @@ function getGraphDependencies(
       continue;
     }
     for (const dependency of fieldRecords) {
-      if (positionContext.getPositionOfRowId(parseFormulaCellKey(dependency).id) !== undefined) {
+      // Data band only — matching `evaluateColumnValues`. A pinned row is not
+      // covered by the column, so it must not become a graph edge either
+      // (otherwise a pinned `SUM(COLUMN_VALUES(ownField))` is a self-edge).
+      const position = positionContext.getPositionOfRowId(parseFormulaCellKey(dependency).id);
+      if (
+        position !== undefined &&
+        position >= positionContext.dataFromIndex &&
+        position <= positionContext.dataToIndex
+      ) {
         expanded.add(dependency);
       }
     }

@@ -25,10 +25,7 @@ import type { FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
  * is one colored chunk, never its inner anchors.
  */
 export type FormulaReferenceNode =
-  | FormulaFieldRefNode
-  | FormulaCellRefNode
-  | FormulaRangeNode
-  | FormulaColumnValuesNode;
+  FormulaFieldRefNode | FormulaCellRefNode | FormulaRangeNode | FormulaColumnValuesNode;
 
 /**
  * A reference scanned from formula source, dialect-agnostic. `spans` are

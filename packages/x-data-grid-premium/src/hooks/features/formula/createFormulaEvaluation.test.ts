@@ -47,7 +47,12 @@ describe('createFormulaEvaluation - ranges at scale', () => {
       },
       formulaFields: ['summary'],
       previousLookup,
-      getPositionSnapshot: () => ({ rowIds, fields: ['price', 'summary'] }),
+      getPositionSnapshot: () => ({
+        rowIds,
+        dataFromIndex: 1,
+        dataToIndex: rowIds.length,
+        fields: ['price', 'summary'],
+      }),
     });
 
     return { rowsLookup, createContext };

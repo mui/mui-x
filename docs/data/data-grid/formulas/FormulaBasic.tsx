@@ -104,13 +104,14 @@ const rows: GridRowsProp = [
     discount: 15,
     total: '=ROUND(quantity * unitPrice * (1 - discount / 100), 2)',
   },
-  // The summary rows reference the Amount cells of the line items above.
-  // Row data always stores the canonical syntax; with `formulaA1Notation`
-  // enabled, the editor displays the subtotal as `=SUM(E1:E8)`.
+];
+
+const bottomPinnedRows: GridRowsProp = [
   {
     id: 9,
     item: 'Subtotal',
-    total: '=SUM(RANGE(REF(COLUMN("total"), ROW(1)), REF(COLUMN("total"), ROW(8))))',
+    total:
+      '=SUM(COLUMN_VALUES("total"))',
   },
   {
     id: 10,
@@ -122,11 +123,11 @@ const rows: GridRowsProp = [
     item: 'Total due',
     total: '=REF(COLUMN("total"), ROW(9)) + REF(COLUMN("total"), ROW(10))',
   },
-];
+]
 
 export default function FormulaBasic() {
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}
@@ -136,6 +137,9 @@ export default function FormulaBasic() {
         showCellVerticalBorder
         showColumnVerticalBorder
         disablePivoting
+        pinnedRows={{
+          bottom: bottomPinnedRows,
+        }}
       />
     </div>
   );

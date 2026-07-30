@@ -92,18 +92,7 @@ export interface FormulaUnaryExpressionNode extends FormulaAstBase {
 }
 
 export type FormulaBinaryOperator =
-  | '+'
-  | '-'
-  | '*'
-  | '/'
-  | '^'
-  | '&'
-  | '='
-  | '<>'
-  | '<'
-  | '<='
-  | '>'
-  | '>=';
+  '+' | '-' | '*' | '/' | '^' | '&' | '=' | '<>' | '<' | '<=' | '>' | '>=';
 
 /**
  * Binary operator precedence, lowest first. All binary operators are

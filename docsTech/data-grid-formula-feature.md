@@ -262,7 +262,7 @@ tests reach the methods through `unwrapPrivateAPI`._ Methods: `setCellFormula`, 
 `getCellFormulaResult`, `validateCellFormula`, `reevaluateFormulas`, plus
 `applyFormulaEvaluation`. Event `formulaEvaluated: { changedCells: GridCellCoordinates[] }` in
 `GridEventLookupPremium` (no model → no `registerControlState`). Types: `GridFormulaResult` union,
-branded `GridFormulaCellKey` with the format `` `${id} ${field}` `` — **NUL separator**
+branded `GridFormulaCellKey` with the format `` `${id}�${field}` `` — **NUL separator**
 (amended during I1 from the originally drafted space separator: `FIELD("unit price")` legalizes
 space-containing field names, which makes a space-separated format ambiguous, while NUL cannot
 appear in field names; numeric ids are stringified — row ids must be unique under string coercion).

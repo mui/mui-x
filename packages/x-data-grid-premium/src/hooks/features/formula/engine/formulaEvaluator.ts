@@ -153,7 +153,12 @@ function evaluateColumnValues(
     return createFormulaError('#REF!', `The field "${node.field}" does not exist.`);
   }
   const values: FormulaScalar[] = [];
-  for (let rowIndex = 1; rowIndex <= context.position.rowCount; rowIndex += 1) {
+  // Data band only: pinned rows are addressable but never aggregated.
+  for (
+    let rowIndex = context.position.dataFromIndex;
+    rowIndex <= context.position.dataToIndex;
+    rowIndex += 1
+  ) {
     const id = context.position.getRowIdAtPosition(rowIndex);
     if (id === undefined) {
       continue;
