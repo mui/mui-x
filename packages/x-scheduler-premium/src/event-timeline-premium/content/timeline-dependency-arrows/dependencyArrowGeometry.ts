@@ -40,7 +40,9 @@ const DEPENDENCY_ARROW_DETOUR_CLEARANCE = 6;
 /**
  * How much the click hit-area is trimmed at the arrow's source end, so the pointer
  * near the anchor reaches the dependency terminal (the drag handle) instead of
- * selecting the arrow.
+ * selecting the arrow. A best-effort budget, not a guarantee: trims cap at half of
+ * their segment, so short first segments (the 8px stubs) keep less clearance, and on
+ * a single-segment route both trims scale down together.
  */
 const DEPENDENCY_ARROW_HIT_TRIM_START = 12;
 /**
@@ -143,8 +145,8 @@ export interface DependencyAnchorResolver {
    */
   getAppearances: (eventId: SchedulerEventId) => readonly DependencyArrowAnchor[];
   /**
-   * Whether the row is laid out. A row without a position is not laid out yet (see the
-   * transient resources / rowsMeta desync) and cannot anchor an arrow.
+   * Whether the row is laid out and can anchor an arrow. A row can briefly have no
+   * position when the resources change before the virtualizer re-measures them.
    */
   hasRowPosition: (rowIndex: number) => boolean;
   /**
