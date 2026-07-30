@@ -76,13 +76,6 @@
         "describedArgs": ["highlightedItem"]
       }
     },
-    "onItemClick": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(event: React.MouseEvent<HTMLDivElement, MouseEvent>, item: SeriesItemIdentifierWithType<SeriesType>) => void",
-        "describedArgs": ["event", "item"]
-      }
-    },
     "onTooltipItemChange": {
       "type": { "name": "func" },
       "signature": {

@@ -375,13 +375,6 @@ RadialLineChart.propTypes /* remove-proptypes */ = {
    */
   onHighlightChange: PropTypes.func,
   /**
-   * The callback fired when an item is clicked.
-   *
-   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
-   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
-   */
-  onItemClick: PropTypes.func,
-  /**
    * The callback fired when the tooltip item changes.
    *
    * @param {SeriesItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
