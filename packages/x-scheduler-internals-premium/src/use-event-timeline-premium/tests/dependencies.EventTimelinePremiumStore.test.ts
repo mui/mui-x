@@ -468,16 +468,15 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         sourceOccurrenceKey: 'key-a',
         targetEventId: null,
         targetOccurrenceKey: null,
-        cursor: { clientX: 5, clientY: 6 },
       };
       store.setDependencyCreation(creation);
       const stateBefore = store.state;
 
-      // A fresh but value-equal object: every drag frame produces one.
-      store.setDependencyCreation({ ...creation, cursor: { ...creation.cursor } });
+      // A fresh but value-equal object: entering and leaving targets produces them.
+      store.setDependencyCreation({ ...creation });
       expect(store.state).to.equal(stateBefore);
 
-      store.setDependencyCreation({ ...creation, cursor: { clientX: 7, clientY: 6 } });
+      store.setDependencyCreation({ ...creation, targetEventId: 'event-b' });
       expect(store.state).not.to.equal(stateBefore);
     });
   });
@@ -510,7 +509,6 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         sourceOccurrenceKey: 'key-a',
         targetEventId: null,
         targetOccurrenceKey: null,
-        cursor: { clientX: 0, clientY: 0 },
       });
       store.setSelectedDependencyId('dep-1');
 

@@ -305,8 +305,9 @@ export class EventTimelinePremiumStore<
     this.scheduling.deleteDependency(dependencyId);
 
   /**
-   * Sets the pending create-dependency drag gesture.
-   * Called on every drag move, so it bails out when nothing changed.
+   * Sets the pending create-dependency drag gesture. The gesture only holds ids —
+   * the cursor never enters the state, the provisional arrow follows it through the
+   * DOM — so it changes a handful of times per gesture, not per frame.
    */
   public setDependencyCreation = (creation: SchedulerDependencyCreation | null) => {
     const previous = this.state.dependencyCreation;
@@ -317,9 +318,7 @@ export class EventTimelinePremiumStore<
         previous.sourceEventId === creation.sourceEventId &&
         previous.sourceOccurrenceKey === creation.sourceOccurrenceKey &&
         previous.targetEventId === creation.targetEventId &&
-        previous.targetOccurrenceKey === creation.targetOccurrenceKey &&
-        previous.cursor.clientX === creation.cursor.clientX &&
-        previous.cursor.clientY === creation.cursor.clientY)
+        previous.targetOccurrenceKey === creation.targetOccurrenceKey)
     ) {
       return;
     }

@@ -68,10 +68,6 @@ export interface SchedulerDependencyCreation {
    * appearance under the pointer.
    */
   targetOccurrenceKey: string | null;
-  /**
-   * The pointer position, in client coordinates.
-   */
-  cursor: { clientX: number; clientY: number };
 }
 
 export type SchedulerDependencyEventRejectionReason =

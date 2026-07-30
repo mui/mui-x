@@ -84,10 +84,6 @@ export function useDependencyCreationMonitor() {
         sourceOccurrenceKey: source.data.occurrenceKey,
         targetEventId: validTarget?.targetEventId ?? null,
         targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
-        cursor: {
-          clientX: location.current.input.clientX,
-          clientY: location.current.input.clientY,
-        },
       });
     };
 
@@ -95,10 +91,9 @@ export function useDependencyCreationMonitor() {
       canMonitor: ({ source }) =>
         isDependencyHandleDrag(source.data) && source.data.storeContext === store,
       onDragStart: updateCreation,
-      // `onDropTargetChange` reacts to entering/leaving a target immediately;
-      // `onDrag` keeps the cursor up to date between target changes.
+      // Only target changes touch the state: the cursor never enters it, the arrows
+      // layer follows the pointer through the DOM.
       onDropTargetChange: updateCreation,
-      onDrag: updateCreation,
       onDrop: ({ source, location }) => {
         // Canceling the drag (e.g. with Escape) fires `onDrop` with no drop target,
         // so the gesture is discarded on the same path.

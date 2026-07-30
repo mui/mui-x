@@ -375,7 +375,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       });
       expect(document.querySelector('[data-dependency-arrows]')).not.to.equal(null);
 
-      // The next cursor move renders the line, away from any drop target.
+      // The next cursor move draws the line, away from any drop target: the
+      // cursor-following monitor writes the path attribute directly on the DOM.
       fireEvent.dragOver(document.body, {
         dataTransfer: new DataTransfer(),
         clientX: 140,
@@ -384,6 +385,11 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       await waitFor(() => {
         expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
+      });
+      await waitFor(() => {
+        expect(
+          document.querySelector('[data-dependency-drag-line]')!.getAttribute('d'),
+        ).to.match(/^M /);
       });
 
       fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });

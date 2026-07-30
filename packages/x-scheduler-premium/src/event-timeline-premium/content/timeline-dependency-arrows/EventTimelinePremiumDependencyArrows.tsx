@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { useDependencyDragCursor } from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
-import type { DependencyAnchorResolver } from './dependencyArrowGeometry';
+import type { DependencyAnchorResolver, DependencyArrowPoint } from './dependencyArrowGeometry';
 import { getEventEdgeAnchor, DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowGeometry';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
 
@@ -58,6 +59,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
   const svgRef = React.useRef<SVGSVGElement>(null);
+  const dragLineRef = React.useRef<SVGPathElement>(null);
 
   // The overlays' y = 0 is the top of the first rendered row (the positioner offsets
   // the row container), while the paths are in absolute row-space. The viewBox maps
@@ -65,10 +67,37 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   const { visibleArrows, selectedId, resolver, eventsWidth, offsetTop, height } =
     useDependencyGeometry();
 
-  const creationPath = getCreationPath(creation, resolver, svgRef, offsetTop);
+  const creationPath = getCreationPath(creation, resolver);
 
-  // Mount on `creation` (not `creationPath`): the unsnapped branch needs the svg rect,
-  // so the svg must exist before the path can be computed.
+  // While no target snaps the line, it follows the cursor without entering React:
+  // the path attribute is written directly on every drag frame, and the state only
+  // changes when the gesture starts, snaps or ends. The callback closes over
+  // `offsetTop`, whose layout-effect registration keeps it in sync with the
+  // committed viewBox across a virtualizer update mid-drag.
+  const followCursor = creationPath !== null && !creationPath.snapped;
+  const sourceX = creationPath?.source.x;
+  const sourceY = creationPath?.source.y;
+  const followCursorMove = React.useCallback(
+    (clientX: number, clientY: number) => {
+      const svg = svgRef.current;
+      const line = dragLineRef.current;
+      if (svg === null || line === null) {
+        return;
+      }
+      // The svg rect folds in both scroll offsets; `offsetTop` maps the client point
+      // into the viewBox's absolute row-space. Reading it here is a plain
+      // event-handler layout read, not a render-phase reflow.
+      const rect = svg.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top + offsetTop;
+      line.setAttribute('d', `M ${sourceX} ${sourceY} L ${x} ${y}`);
+    },
+    [sourceX, sourceY, offsetTop],
+  );
+  useDependencyDragCursor(followCursor, followCursorMove);
+
+  // Mount on `creation` (not `creationPath`): the cursor-following line needs the svg
+  // and its rect, so the svg must exist before the gesture can draw anything.
   if ((visibleArrows.length === 0 && creation === null) || eventsWidth <= 0 || height <= 0) {
     return null;
   }
@@ -113,9 +142,12 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
         );
       })}
       {creationPath !== null && (
+        // Unsnapped, the `d` attribute is owned by the cursor-following monitor —
+        // React never passes the prop, so re-renders cannot reset the line.
         <path
+          ref={dragLineRef}
           data-dependency-drag-line=""
-          d={creationPath.d}
+          {...(creationPath.snapped ? { d: creationPath.d } : null)}
           fill="none"
           stroke={creationColor}
           strokeWidth={DEPENDENCY_ARROW_STROKE_WIDTH}
@@ -131,14 +163,13 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
  * The path of the provisional arrow: a straight dashed line from the end edge of the
  * gesture's source occurrence to the cursor, turning solid (still straight) and
  * snapping to the start edge of the hovered target when there is one — the routed
- * arrow only appears once the dependency is actually created.
+ * arrow only appears once the dependency is actually created. Pure: the cursor
+ * position never enters the state, the unsnapped line is driven through the DOM.
  */
 function getCreationPath(
   creation: SchedulerDependencyCreation | null,
   resolver: DependencyAnchorResolver,
-  svgRef: React.RefObject<SVGSVGElement | null>,
-  offsetTop: number,
-): { d: string; snapped: boolean } | null {
+): { d?: string; snapped: boolean; source: DependencyArrowPoint } | null {
   if (creation === null) {
     return null;
   }
@@ -164,26 +195,12 @@ function getCreationPath(
       return {
         d: `M ${source.x} ${source.y} L ${target.x} ${target.y}`,
         snapped: true,
+        source,
       };
     }
   }
 
-  // The svg rect already folds in both scroll offsets; `offsetTop` maps the client
-  // point into the viewBox's absolute row-space. Read at render time, never cached —
-  // the layer re-renders on every cursor update. On the very first frame the ref is
-  // still null: skip the line, the next drag move fills it.
-  const rect = svgRef.current?.getBoundingClientRect();
-  if (rect === undefined) {
-    return null;
-  }
-  const cursorPoint = {
-    x: creation.cursor.clientX - rect.left,
-    y: creation.cursor.clientY - rect.top + offsetTop,
-  };
-  return {
-    d: `M ${source.x} ${source.y} L ${cursorPoint.x} ${cursorPoint.y}`,
-    snapped: false,
-  };
+  return { snapped: false, source };
 }
 
 function DependencyArrowheadMarker({ id, fill }: { id: string; fill: string }) {

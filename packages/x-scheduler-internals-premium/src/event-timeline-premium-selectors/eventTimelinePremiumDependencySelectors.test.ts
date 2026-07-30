@@ -199,7 +199,6 @@ describe('eventTimelinePremiumDependencySelectors', () => {
         sourceOccurrenceKey: 'event-a-0',
         targetEventId: 'event-b',
         targetOccurrenceKey: 'event-b-0',
-        cursor: { clientX: 10, clientY: 20 },
       },
     };
 
