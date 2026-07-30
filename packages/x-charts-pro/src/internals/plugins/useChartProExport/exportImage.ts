@@ -66,8 +66,8 @@ export async function exportImage(
   iframe.onload = async () => {
     const exportDoc = iframe.contentDocument!;
     const elementClone = element.cloneNode(true) as HTMLElement;
-    elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
     applyStyles(svg, previousStyles);
+    elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
     /* Charts without a `height` prop set `height: 100%` on the root, which resolves to 0 in the export document as the
      * body has no definite height. Size the root from its content, which is frozen to the rendered size above, so that
      * elements added by `onBeforeExport` can still grow it. */
