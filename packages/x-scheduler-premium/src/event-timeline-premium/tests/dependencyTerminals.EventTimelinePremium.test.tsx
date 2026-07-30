@@ -143,6 +143,102 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(dependencies[0].source).to.equal('event-a');
       expect(dependencies[0].target).to.equal('event-b');
       expect(dependencies[0].type).to.equal('FinishToStart');
+      // The harness closes the controlled loop, so the created arrow actually renders.
+      expect(getArrowPaths()).to.have.length(1);
+    });
+
+    it('should ignore dropping a terminal on its own event', async () => {
+      const handleDependenciesChange = spy();
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const ownEvent = getEventElement('Event A');
+      const validTarget = getEventElement('Event B');
+
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(validTarget, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(validTarget, { dataTransfer: new DataTransfer() });
+
+      // Hovering the valid target proves the drag reached the highlight stage before
+      // asserting that the source event never gets it.
+      await waitFor(() => {
+        expect(validTarget.hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+
+      fireEvent.dragEnter(ownEvent, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(ownEvent, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(validTarget.hasAttribute('data-dependency-drop-target')).to.equal(false);
+      });
+      expect(ownEvent.hasAttribute('data-dependency-drop-target')).to.equal(false);
+
+      fireEvent.drop(ownEvent, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+
+      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(store.state.errors).to.have.length(0);
+    });
+
+    it('should dissolve the gesture when dropping on empty space', async () => {
+      const handleDependenciesChange = spy();
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(document.body, {
+        dataTransfer: new DataTransfer(),
+        clientX: 120,
+        clientY: 40,
+      });
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).not.to.equal(null);
+      });
+
+      fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).to.equal(null);
+      });
+      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(store.state.errors).to.have.length(0);
+    });
+
+    it('should discard the gesture on a cancel without creating anything', async () => {
+      const handleDependenciesChange = spy();
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
+      const target = getEventElement('Event B');
+      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      fireEvent.dragEnter(target, { dataTransfer: new DataTransfer() });
+      fireEvent.dragOver(target, { dataTransfer: new DataTransfer() });
+      await waitFor(() => {
+        expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+
+      // Canceling (e.g. with Escape) ends the drag without a drop: pragmatic routes
+      // it through `onDrop` with no drop targets.
+      fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
+
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).to.equal(null);
+      });
+      expect(handleDependenciesChange.callCount).to.equal(0);
+      expect(target.hasAttribute('data-dependency-drop-target')).to.equal(false);
     });
 
     it('should not highlight a recurring event during a terminal drag', async () => {
@@ -336,7 +432,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
     it('should delete the selected arrow with the Delete key', () => {
       const handleDependenciesChange = spy();
-      renderTimeline({
+      const { store } = renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
         onDependenciesChange: handleDependenciesChange,
@@ -345,6 +441,28 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
       fireEvent.keyDown(document.body, { key: 'Delete' });
 
+      expect(handleDependenciesChange.callCount).to.equal(1);
+      expect(handleDependenciesChange.firstCall.firstArg).to.deep.equal([]);
+      expect(store.state.selectedDependencyId).to.equal(null);
+    });
+
+    it('should survive the pointerdown of a real click on the delete button', () => {
+      const handleDependenciesChange = spy();
+      renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      const deleteButton = document.querySelector('[data-dependency-delete-button]')!;
+
+      // A real click emits pointerdown first: the click-away guard must ignore it, or
+      // the selection clears and the button unmounts before its own click can land.
+      fireEvent.pointerDown(deleteButton);
+      expect(document.querySelector('[data-dependency-delete-button]')).not.to.equal(null);
+
+      fireEvent.click(deleteButton);
       expect(handleDependenciesChange.callCount).to.equal(1);
       expect(handleDependenciesChange.firstCall.firstArg).to.deep.equal([]);
     });

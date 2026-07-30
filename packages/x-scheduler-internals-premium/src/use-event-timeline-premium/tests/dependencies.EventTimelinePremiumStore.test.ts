@@ -460,6 +460,45 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
   });
 
+  describe('method: setDependencyCreation', () => {
+    it('should not write to the state when the gesture values did not change', () => {
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+      const creation = {
+        sourceEventId: 'event-a',
+        sourceOccurrenceKey: 'key-a',
+        targetEventId: null,
+        targetOccurrenceKey: null,
+        cursor: { clientX: 5, clientY: 6 },
+      };
+      store.setDependencyCreation(creation);
+      const stateBefore = store.state;
+
+      // A fresh but value-equal object: every drag frame produces one.
+      store.setDependencyCreation({ ...creation, cursor: { ...creation.cursor } });
+      expect(store.state).to.equal(stateBefore);
+
+      store.setDependencyCreation({ ...creation, cursor: { clientX: 7, clientY: 6 } });
+      expect(store.state).not.to.equal(stateBefore);
+    });
+  });
+
+  describe('method: setSelectedDependency', () => {
+    it('should not write to the state when the selection did not change', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.setSelectedDependency('dep-1');
+      const stateBefore = store.state;
+
+      store.setSelectedDependency('dep-1');
+      expect(store.state).to.equal(stateBefore);
+
+      store.setSelectedDependency(null);
+      expect(store.state).not.to.equal(stateBefore);
+    });
+  });
+
   describe('transient state resets', () => {
     it('should discard the creation gesture and the selection when the feature is disabled', () => {
       const store = new EventTimelinePremiumStore(
