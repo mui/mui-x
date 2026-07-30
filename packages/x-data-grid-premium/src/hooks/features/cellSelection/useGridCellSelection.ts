@@ -34,9 +34,10 @@ import type {
   GridCellCoordinates,
   GridRowId,
   GridCellParams,
+  GridCallbackDetails,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
-import type { GridCellSelectionApi } from './gridCellSelectionInterfaces';
+import type { GridCellSelectionApi, GridCellSelectionModel } from './gridCellSelectionInterfaces';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { CellValueUpdater } from '../clipboard/useGridClipboardImport';
@@ -145,7 +146,10 @@ export const useGridCellSelection = (
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
     propModel: props.cellSelectionModel,
-    propOnChange: props.onCellSelectionModelChange,
+    // The public prop type is narrowed to `GridApiPremium`, but the control state machinery is generic over `GridApiCommon`.
+    propOnChange: props.onCellSelectionModelChange as
+      | ((model: GridCellSelectionModel, details: GridCallbackDetails) => void)
+      | undefined,
     stateSelector: gridCellSelectionStateSelector,
     changeEvent: 'cellSelectionChange',
   });

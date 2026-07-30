@@ -66,6 +66,12 @@ Pass it directly to any selector to read state inside the callback without needi
 
 {{"demo": "SelectorInEventHandler.js", "bg": "inline", "disableAd": true}}
 
+:::warning
+If the corresponding model is controlled (for example passing a `filterModel` prop alongside `onFilterModelChange`), the Data Grid calls the callback before applying your controlled value.
+Selectors called with `details.apiRef` inside the callback will therefore return the previous, not-yet-updated state.
+Use the value received as the callback's first argument instead in that case.
+:::
+
 ### Catalog of selectors
 
 Some selectors have not yet been documented.

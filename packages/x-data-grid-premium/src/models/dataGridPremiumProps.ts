@@ -114,7 +114,8 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
    */
   aggregationFunctions:
-    Record<string, GridAggregationFunction> | Record<string, GridAggregationFunctionDataSource>;
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   /**
    * Rows used to generate the aggregated value.
    * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.
@@ -211,7 +212,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * @param {GridRowGroupingModel} model Columns used as grouping criteria.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
+  onRowGroupingModelChange?: (
+    model: GridRowGroupingModel,
+    details: GridCallbackDetails<any, GridApiPremium>,
+  ) => void;
   /**
    * Set the aggregation model of the grid.
    */
@@ -221,7 +225,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * @param {GridAggregationModel} model The aggregated columns.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
+  onAggregationModelChange?: (
+    model: GridAggregationModel,
+    details: GridCallbackDetails<any, GridApiPremium>,
+  ) => void;
   /**
    * Set the cell selection model of the grid.
    */
@@ -233,7 +240,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    */
   onCellSelectionModelChange?: (
     cellSelectionModel: GridCellSelectionModel,
-    details: GridCallbackDetails,
+    details: GridCallbackDetails<any, GridApiPremium>,
   ) => void;
   /**
    * Callback fired when the state of the Excel export changes.

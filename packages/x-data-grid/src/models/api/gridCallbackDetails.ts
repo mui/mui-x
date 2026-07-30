@@ -5,7 +5,10 @@ import type { GridApiCommon } from './gridApiCommon';
 /**
  * Additional details passed to the callbacks
  */
-export interface GridCallbackDetails<K extends keyof GridControlledStateReasonLookup = any> {
+export interface GridCallbackDetails<
+  K extends keyof GridControlledStateReasonLookup = any,
+  Api extends GridApiCommon = GridApiCommon,
+> {
   /**
    * The reason for this callback to have been called.
    */
@@ -23,5 +26,5 @@ export interface GridCallbackDetails<K extends keyof GridControlledStateReasonLo
    *   const rows = gridRowSelectionIdsSelector(details.apiRef);
    * }}
    */
-  apiRef: RefObject<GridApiCommon>;
+  apiRef: RefObject<Api>;
 }

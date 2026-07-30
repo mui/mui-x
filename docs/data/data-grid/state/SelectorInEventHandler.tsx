@@ -3,12 +3,12 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import {
-  DataGridPro,
+  DataGrid,
   GridCallbackDetails,
   GridFilterModel,
   GridRowSelectionModel,
   gridRowSelectionIdsSelector,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function SelectorInEventHandler() {
@@ -28,7 +28,7 @@ export default function SelectorInEventHandler() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         checkboxSelection
         onRowSelectionModelChange={(
           newRowSelectionModel: GridRowSelectionModel,

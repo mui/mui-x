@@ -6,6 +6,7 @@ import type { GridStateApi, GridStatePrivateApi } from '../../models/api/gridSta
 import type { GridControlStateItem } from '../../models/controlStateItem';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
+import { getPublicApiRef } from '../../utils/getPublicApiRef';
 
 export const useGridStateInitialization = <PrivateApi extends GridPrivateApiCommon>(
   apiRef: RefObject<PrivateApi>,
@@ -91,7 +92,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
           controlState.propOnChange(model, {
             reason,
             api: apiRef.current,
-            apiRef: { current: apiRef.current.getPublicApi() },
+            apiRef: getPublicApiRef(apiRef),
           });
         }
 
