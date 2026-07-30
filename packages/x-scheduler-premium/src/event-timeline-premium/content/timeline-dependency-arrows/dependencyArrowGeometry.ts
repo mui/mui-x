@@ -76,8 +76,8 @@ export interface DependencyArrow {
    */
   hitD: string;
   /**
-   * The point where the arrow enters the target event (the arrowhead position), in the
-   * same coordinate space as `d`.
+   * The point where the arrowhead is drawn, in the same coordinate space as `d`: the
+   * target's start-edge anchor, except when the route clamps at the timeline edge.
    */
   endPoint: DependencyArrowPoint;
   /**
@@ -378,7 +378,7 @@ export function computeDependencyArrows(
         trimRouteEnds(points, DEPENDENCY_ARROW_HIT_TRIM_START, DEPENDENCY_ARROW_HIT_TRIM_END),
         DEPENDENCY_ARROW_CORNER_RADIUS,
       ),
-      endPoint: target,
+      endPoint: points[points.length - 1],
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,
       minRowIndex,

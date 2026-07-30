@@ -79,12 +79,12 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const dependencyDragSource = useStore(
     store,
     eventTimelinePremiumDependencySelectors.isCreationSource,
-    eventId,
+    occurrenceKey,
   );
   const dependencyDropTarget = useStore(
     store,
     eventTimelinePremiumDependencySelectors.isCreationTarget,
-    eventId,
+    occurrenceKey,
   );
 
   // Feature hooks

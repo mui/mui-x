@@ -203,27 +203,34 @@ describe('eventTimelinePremiumDependencySelectors', () => {
       },
     };
 
-    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a')).to.equal(
+    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0')).to.equal(
       true,
     );
-    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-b')).to.equal(
+    // Another row appearance of the same event is not the gesture's appearance.
+    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-1')).to.equal(
       false,
     );
-    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b')).to.equal(
+    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-b-0')).to.equal(
+      false,
+    );
+    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0')).to.equal(
       true,
     );
-    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-a')).to.equal(
+    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-1')).to.equal(
+      false,
+    );
+    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-a-0')).to.equal(
       false,
     );
   });
 
-  it('should not flag any event when no creation gesture is in progress', () => {
+  it('should not flag any occurrence when no creation gesture is in progress', () => {
     const state = getState();
 
-    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a')).to.equal(
+    expect(eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0')).to.equal(
       false,
     );
-    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b')).to.equal(
+    expect(eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0')).to.equal(
       false,
     );
   });

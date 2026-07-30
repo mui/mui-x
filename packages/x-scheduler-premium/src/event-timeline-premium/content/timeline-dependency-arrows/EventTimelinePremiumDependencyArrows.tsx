@@ -31,6 +31,9 @@ const DEPENDENCY_ARROW_STROKE_WIDTH = 1;
 const DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH = 2;
 /**
  * Stroke width of the invisible path capturing the pointer around each arrow.
+ * Accepted trade-off: mid-route the band rides over the events it crosses, so a click
+ * within its half-width of the line selects the arrow instead of the event. The end
+ * trims only protect the terminals and the resize handles at the route's extremities.
  */
 const DEPENDENCY_ARROW_HIT_STROKE_WIDTH = 10;
 /**
@@ -356,11 +359,17 @@ function DependencyInteractionsLayer({
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}
     >
       {visibleArrows.map((arrow) => {
-        // Clamped inside the events area: at the timeline's left edge the anchor sits
-        // at x = 0 and an unclamped button would be clipped by the viewBox.
+        // Clamped inside the viewBox on both axes: at the timeline's left edge the
+        // anchor sits at x = 0, and an arrow into a scrolled-out row has its tip above
+        // or below the rendered range — an unclamped button would be unreachable there
+        // even though the arrow is selected.
         const buttonX = Math.max(
           arrow.endPoint.x - DEPENDENCY_DELETE_BUTTON_RADIUS,
           DEPENDENCY_DELETE_BUTTON_RADIUS,
+        );
+        const buttonY = Math.min(
+          Math.max(arrow.endPoint.y, offsetTop + DEPENDENCY_DELETE_BUTTON_RADIUS),
+          offsetTop + height - DEPENDENCY_DELETE_BUTTON_RADIUS,
         );
         return (
           <g key={arrow.key}>
@@ -373,20 +382,16 @@ function DependencyInteractionsLayer({
               onClick={() => handleSelect(arrow.id)}
             />
             {arrow.id === selectedId && !isSelectedReadOnly && (
-              <g
-                data-dependency-delete-button=""
-                role="button"
-                onClick={() => handleDelete(arrow.id)}
-              >
+              <g data-dependency-delete-button="" onClick={() => handleDelete(arrow.id)}>
                 <circle
                   cx={buttonX}
-                  cy={arrow.endPoint.y}
+                  cy={buttonY}
                   r={DEPENDENCY_DELETE_BUTTON_RADIUS}
                   fill="currentColor"
                   stroke="none"
                 />
                 <path
-                  d={buildDeleteCrossPath(buttonX, arrow.endPoint.y)}
+                  d={buildDeleteCrossPath(buttonX, buttonY)}
                   stroke={(theme.vars || theme).palette.error.contrastText}
                   strokeWidth={1.5}
                   strokeLinecap="round"

@@ -390,6 +390,32 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].hitD).to.equal(`M 732 ${LANE_1_CENTER} L 772 ${LANE_1_CENTER}`);
     });
 
+    it('should place the arrowhead endpoint on the drawn tip when the route clamps at the left edge', () => {
+      // The target starts at x = 0: the S route's entry vertical clamps at the
+      // timeline edge and the tip lands at the entry clearance, not on the anchor.
+      const earlyEvent = EventBuilder.new()
+        .id('event-early')
+        .singleDay('2024-01-15T00:00:00Z')
+        .toProcessed();
+
+      const arrows = computeDependencyArrows({
+        adapter,
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-early')],
+        resources: [
+          { resource: RESOURCE_1, occurrences: getOccurrences([eventA]) },
+          { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
+        ],
+        rowPositions: [0, 62],
+        collectionStart,
+        collectionEnd,
+        eventsWidth: EVENTS_WIDTH,
+        laneMetrics: LANE_METRICS,
+      });
+
+      expect(arrows).to.have.length(1);
+      expect(arrows[0].endPoint).to.deep.equal({ x: 12, y: 62 + LANE_1_CENTER });
+    });
+
     it('should route an orthogonal elbow between two rows using the row positions', () => {
       const arrows = computeDependencyArrows({
         adapter,

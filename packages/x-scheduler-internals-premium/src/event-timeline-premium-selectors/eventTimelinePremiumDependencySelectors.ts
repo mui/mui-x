@@ -103,14 +103,16 @@ export const eventTimelinePremiumDependencySelectors = {
    * The pending create-dependency drag gesture, or `null`.
    */
   creation: creationSelector,
+  // Keyed by occurrence (not event id): an event appearing on several resources must
+  // only highlight the row appearance the gesture actually involves.
   isCreationSource: createSelector(
     creationSelector,
-    (creation, eventId: SchedulerEventId) => creation?.sourceEventId === eventId,
+    (creation, occurrenceKey: string) => creation?.sourceOccurrenceKey === occurrenceKey,
   ),
   isCreationTarget: createSelector(
     creationSelector,
-    (creation, eventId: SchedulerEventId) =>
-      creation !== null && creation.targetEventId === eventId,
+    (creation, occurrenceKey: string) =>
+      creation !== null && creation.targetOccurrenceKey === occurrenceKey,
   ),
   /**
    * The id of the selected dependency, or `null`.
