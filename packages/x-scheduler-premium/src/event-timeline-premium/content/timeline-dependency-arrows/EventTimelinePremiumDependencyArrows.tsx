@@ -66,8 +66,10 @@ const DependencyArrowsSvg = styled('svg', {
 /**
  * The interaction layer: the arrows' invisible click hit-areas and the selected
  * arrow's delete button. Separate from the visual overlay so it can sit above the
- * events cells even when a hovered cell is lifted — an arrow riding over an event
- * stays clickable. Below the pinned title cells (z-index 3, later in the DOM).
+ * events cells — an arrow riding over an event stays clickable. Same z-index as the
+ * arrows and the terminals overlays and last in the DOM, so it wins those ties while
+ * staying below the pinned title cells (z-index 3), which cover it on horizontal
+ * scroll instead of leaking their clicks to the arrows underneath.
  */
 const DependencyInteractionsSvg = styled('svg', {
   name: 'MuiEventTimeline',
@@ -77,7 +79,7 @@ const DependencyInteractionsSvg = styled('svg', {
   top: 0,
   left: 'var(--title-column-width)',
   pointerEvents: 'none',
-  zIndex: 3,
+  zIndex: 2,
   '[data-dependency-hit]': {
     pointerEvents: 'stroke',
     cursor: 'pointer',

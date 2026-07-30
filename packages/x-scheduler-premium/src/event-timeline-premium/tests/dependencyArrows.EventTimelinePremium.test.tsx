@@ -375,4 +375,53 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       ).to.equal('none');
     });
   });
+
+  describe.skipIf(isJSDOM)('layering', () => {
+    function getGrid() {
+      return document.querySelector<HTMLElement>(`.${eventTimelinePremiumClasses.grid}`)!;
+    }
+
+    it('should keep the pinned title column above the arrow hit-areas on horizontal scroll', async () => {
+      renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      const getHitPath = () => document.querySelector<SVGPathElement>('[data-dependency-hit]')!;
+      await waitFor(() => {
+        expect(getHitPath()).not.to.equal(null);
+      });
+
+      const getTitleRect = () =>
+        document
+          .querySelector(`.${eventTimelinePremiumClasses.titleCell}`)!
+          .getBoundingClientRect();
+
+      // Scroll right so the hit stroke slides under the pinned title column. Rects are
+      // re-measured after the scroll settles: the pinned column and the overlays both
+      // shift on screen when the virtualizer processes the scroll.
+      const initialHitRect = getHitPath().getBoundingClientRect();
+      act(() => {
+        getGrid().scrollLeft =
+          initialHitRect.left + initialHitRect.width / 2 - getTitleRect().right + 20;
+      });
+      await waitFor(() => {
+        const hitRect = getHitPath().getBoundingClientRect();
+        const titleRect = getTitleRect();
+        expect(hitRect.left).to.be.lessThan(titleRect.right - 4);
+        expect(hitRect.right).to.be.greaterThan(titleRect.left + 4);
+      });
+
+      // A point on the hit stroke inside the pinned column must reach the title cell,
+      // not the arrow's hit-area riding underneath it.
+      const hitRect = getHitPath().getBoundingClientRect();
+      const titleRect = getTitleRect();
+      const probeX =
+        (Math.max(hitRect.left, titleRect.left) + Math.min(hitRect.right, titleRect.right)) / 2;
+      const probed = document.elementFromPoint(probeX, hitRect.top + hitRect.height / 2)!;
+
+      expect(probed.closest('[data-dependency-interactions]')).to.equal(null);
+      expect(probed.closest(`.${eventTimelinePremiumClasses.titleCell}`)).not.to.equal(null);
+    });
+  });
 });
