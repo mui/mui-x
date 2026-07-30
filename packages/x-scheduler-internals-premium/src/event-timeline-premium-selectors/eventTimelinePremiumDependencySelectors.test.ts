@@ -241,13 +241,13 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(
       eventTimelinePremiumDependencySelectors.selectedId({
         ...state,
-        selectedDependencyId: 'dep-1',
+        selection: { type: 'dependency' as const, id: 'dep-1' },
       }),
     ).to.equal('dep-1');
     expect(
       eventTimelinePremiumDependencySelectors.selectedId({
         ...state,
-        selectedDependencyId: 'removed-dep',
+        selection: { type: 'dependency' as const, id: 'removed-dep' },
       }),
     ).to.equal(null);
     expect(eventTimelinePremiumDependencySelectors.selectedId(state)).to.equal(null);

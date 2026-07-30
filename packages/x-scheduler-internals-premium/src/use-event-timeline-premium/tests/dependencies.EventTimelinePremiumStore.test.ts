@@ -517,7 +517,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
 
       expect(store.state.dependencyCreation).to.equal(null);
-      expect(store.state.selectedDependencyId).to.equal(null);
+      expect(store.state.selection).to.equal(null);
     });
 
     it('should clear the selection of a removed dependency so a re-added id does not resurrect it', () => {
@@ -528,7 +528,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       store.setSelectedDependencyId('dep-1');
 
       store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
-      expect(store.state.selectedDependencyId).to.equal(null);
+      expect(store.state.selection).to.equal(null);
 
       store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] }, adapter);
       expect(eventTimelinePremiumDependencySelectors.selectedId(store.state)).to.equal(null);

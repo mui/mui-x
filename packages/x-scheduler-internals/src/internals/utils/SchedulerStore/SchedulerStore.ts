@@ -18,6 +18,7 @@ import type {
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
+  SchedulerSelection,
 } from '../../../models';
 import type {
   SchedulerState,
@@ -126,6 +127,7 @@ export class SchedulerStore<
       occurrencePlaceholder: null,
       editedOccurrenceKey: null,
       copiedEvent: null,
+      selection: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingRecurringEventOperation: null,
       visibleResources:
@@ -292,6 +294,24 @@ export class SchedulerStore<
       }
     }
   }
+
+  /**
+   * Selects an entity, or clears the selection when called with `null`. One slice for
+   * every selectable type keeps the selection mutually exclusive across features.
+   */
+  public setSelection = (selection: SchedulerSelection | null) => {
+    const previous = this.state.selection;
+    if (
+      previous === selection ||
+      (previous !== null &&
+        selection !== null &&
+        previous.type === selection.type &&
+        previous.id === selection.id)
+    ) {
+      return;
+    }
+    this.set('selection', selection);
+  };
 
   /**
    * Removes the error with the given key from `state.errors`, canceling its

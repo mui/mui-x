@@ -3,6 +3,15 @@ import type { SchedulerChangeEventDetails } from '@mui/x-scheduler-internals/int
 
 export type SchedulerDependencyId = string | number;
 
+// Registers the dependencies as a selectable entity of the shared selection slice.
+// Declared here (not in `typeOverloads`) so any program compiling the store also
+// loads the augmentation.
+declare module '@mui/x-scheduler-internals/models' {
+  interface SchedulerSelectionTypeLookup {
+    dependency: SchedulerDependencyId;
+  }
+}
+
 /**
  * The other PDM types (`StartToStart`, `FinishToFinish`, `StartToFinish`) will widen this union when implemented.
  */

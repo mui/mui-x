@@ -126,7 +126,6 @@ const mapper: SchedulerParametersToStateMapper<
       ...buildDependenciesState(parameters.dependencies),
       areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
       dependencyCreation: null,
-      selectedDependencyId: null,
       preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
       preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
       shouldEventRequireResource,
@@ -143,9 +142,10 @@ const mapper: SchedulerParametersToStateMapper<
       ...deriveStateFromParameters(parameters),
       ...buildDependenciesState(parameters.dependencies),
       areDependenciesEnabled,
-      // Disabling the feature discards its transient state: a gesture or selection
-      // kept in the raw state would come back on screen if it is re-enabled.
-      ...(areDependenciesEnabled ? null : { dependencyCreation: null, selectedDependencyId: null }),
+      // Disabling the feature discards its in-flight gesture: kept in the raw state
+      // it would come back on screen if the feature is re-enabled. The selection is
+      // cleared by the store effect, which can check the selected type.
+      ...(areDependenciesEnabled ? null : { dependencyCreation: null }),
       shouldEventRequireResource,
       hasInitialized: true,
     };
@@ -202,9 +202,22 @@ export class EventTimelinePremiumStore<
       this.registerStoreEffect(
         (state) => state.dependencyModelLookup,
         () => {
-          const { selectedDependencyId, dependencyModelLookup } = this.state;
-          if (selectedDependencyId !== null && !dependencyModelLookup.has(selectedDependencyId)) {
-            this.setSelectedDependencyId(null);
+          const { selection, dependencyModelLookup } = this.state;
+          if (selection?.type === 'dependency' && !dependencyModelLookup.has(selection.id)) {
+            this.setSelection(null);
+          }
+        },
+      ),
+    );
+
+    // Disabling the feature also discards its selection — only its own: the slice is
+    // shared with the other selectable types.
+    this.disposables.defer(
+      this.registerStoreEffect(
+        (state) => state.areDependenciesEnabled,
+        (previous, next) => {
+          if (previous && !next && this.state.selection?.type === 'dependency') {
+            this.setSelection(null);
           }
         },
       ),
@@ -317,9 +330,7 @@ export class EventTimelinePremiumStore<
    * Selects a dependency, or clears the selection when called with `null`.
    */
   public setSelectedDependencyId = (dependencyId: SchedulerDependencyId | null) => {
-    if (this.state.selectedDependencyId !== dependencyId) {
-      this.set('selectedDependencyId', dependencyId);
-    }
+    this.setSelection(dependencyId === null ? null : { type: 'dependency', id: dependencyId });
   };
 
   /**
@@ -327,11 +338,11 @@ export class EventTimelinePremiumStore<
    * drift apart across the affordances triggering it (delete button, keyboard).
    */
   public deleteSelectedDependency = () => {
-    const { selectedDependencyId } = this.state;
-    if (selectedDependencyId === null) {
+    const { selection } = this.state;
+    if (selection?.type !== 'dependency') {
       return;
     }
-    this.deleteDependency(selectedDependencyId);
-    this.setSelectedDependencyId(null);
+    this.deleteDependency(selection.id);
+    this.setSelection(null);
   };
 }

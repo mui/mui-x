@@ -401,7 +401,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       simulateTerminalDrag('Event A', 'Event B');
 
       expect(handleDependenciesChange.callCount).to.equal(0);
-      expect(store.state.selectedDependencyId).to.equal('dep-1');
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
       expect(store.state.errors).to.have.length(1);
       expect(
         document.querySelector('[data-dependency-id="dep-1"]')!.hasAttribute('data-selected'),
@@ -443,7 +443,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.callCount).to.equal(1);
       expect(handleDependenciesChange.firstCall.firstArg).to.deep.equal([]);
-      expect(store.state.selectedDependencyId).to.equal(null);
+      expect(store.state.selection).to.equal(null);
     });
 
     it('should survive the pointerdown of a real click on the delete button', () => {
@@ -488,11 +488,11 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       });
 
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
-      expect(store.state.selectedDependencyId).to.equal('dep-1');
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
 
       fireEvent.keyDown(document.body, { key: 'Escape' });
 
-      expect(store.state.selectedDependencyId).to.equal(null);
+      expect(store.state.selection).to.equal(null);
     });
 
     it('should deselect when clicking away from the arrow', () => {
@@ -502,11 +502,11 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       });
 
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
-      expect(store.state.selectedDependencyId).to.equal('dep-1');
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
 
       fireEvent.pointerDown(document.body);
 
-      expect(store.state.selectedDependencyId).to.equal(null);
+      expect(store.state.selection).to.equal(null);
     });
 
     function setupSelectedArrow() {
@@ -602,7 +602,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.keyDown(dialog, { key: 'Escape' });
       dialog.remove();
 
-      expect(store.state.selectedDependencyId).to.equal('dep-1');
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
     });
 
     it('should clear the selection when the selected dependency is removed externally, and only then', async () => {
@@ -615,7 +615,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       });
 
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
-      expect(store.state.selectedDependencyId).to.equal('dep-1');
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
 
       // Removing an unrelated dependency leaves the selection alone.
       act(() => {
@@ -624,7 +624,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await waitFor(() => {
         expect(getArrowPaths()).to.have.length(1);
       });
-      expect(store.state.selectedDependencyId).to.equal('dep-1');
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
       expect(document.querySelector('[data-dependency-delete-button]')).not.to.equal(null);
 
       // Removing the selected one clears the raw selection — not just its rendering —
@@ -636,7 +636,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(document.querySelector('[data-selected]')).to.equal(null);
       });
       expect(document.querySelector('[data-dependency-delete-button]')).to.equal(null);
-      expect(store.state.selectedDependencyId).to.equal(null);
+      expect(store.state.selection).to.equal(null);
     });
 
     it('should discard the creation gesture when the timeline unmounts mid-drag', async () => {

@@ -56,11 +56,11 @@ const activeSourceTitlesByTargetSelector = createSelectorMemoized(
 );
 
 const selectedIdSelector = createSelector(
-  (state: State) => state.selectedDependencyId,
+  (state: State) => state.selection,
   (state: State) => state.dependencyModelLookup,
-  (selectedDependencyId, dependencyModelLookup) =>
-    selectedDependencyId !== null && dependencyModelLookup.has(selectedDependencyId)
-      ? selectedDependencyId
+  (selection, dependencyModelLookup) =>
+    selection?.type === 'dependency' && dependencyModelLookup.has(selection.id)
+      ? selection.id
       : null,
 );
 
