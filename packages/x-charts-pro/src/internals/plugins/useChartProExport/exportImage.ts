@@ -48,15 +48,6 @@ export async function exportImage(
 
   const ratio = pixelRatio ?? Math.max(window.devicePixelRatio || 1, 1);
   const iframe = createExportIframe(fileName);
-  /* The layer container has no intrinsic size, so it collapses in the export document when sized by
-   * the parent element instead of the `width`/`height` props. Freeze its rendered size.
-   * We apply to the original element so that the cloned tree contains the styles, and revert these
-   * styles changes after the chart is cloned. */
-  const svgRect = svg.getBoundingClientRect();
-  const previousStyles = applyStyles(svg, {
-    width: `${svgRect.width}px`,
-    height: `${svgRect.height}px`,
-  });
 
   let resolve: (value: void) => void;
   const iframeLoadPromise = new Promise((res) => {
@@ -65,6 +56,15 @@ export async function exportImage(
 
   iframe.onload = async () => {
     const exportDoc = iframe.contentDocument!;
+    /* The layer container has no intrinsic size, so it collapses in the export document when sized by
+     * the parent element instead of the `width`/`height` props. Freeze its rendered size.
+     * We apply to the original element so that the cloned tree contains the styles, and revert these
+     * styles changes right after the chart is cloned. */
+    const svgRect = svg.getBoundingClientRect();
+    const previousStyles = applyStyles(svg, {
+      width: `${svgRect.width}px`,
+      height: `${svgRect.height}px`,
+    });
     const elementClone = element.cloneNode(true) as HTMLElement;
     applyStyles(svg, previousStyles);
     elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
