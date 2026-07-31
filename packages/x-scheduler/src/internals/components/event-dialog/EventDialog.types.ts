@@ -2,6 +2,7 @@ import type * as React from 'react';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { DialogProps } from '@mui/material/Dialog';
 import type { EventEditingOptionalRenderers } from '../event-editing';
+import type { ControlledValue } from './utils';
 
 export interface EventDialogProps extends DialogProps {
   /**
@@ -24,4 +25,16 @@ export interface EventDialogProviderProps {
    * Optional components rendered during editing (recurrence tab, recurring scope confirmation).
    */
   optionalRenderers?: EventEditingOptionalRenderers;
+}
+
+/**
+ * Props shared by the General tab section components.
+ * Temporary contract until the form context replaces the prop plumbing (#22868).
+ */
+export interface EventDialogSectionProps {
+  occurrence: SchedulerRenderableEventOccurrence;
+  controlled: ControlledValue;
+  setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
+  errors: Record<string, string | string[]>;
+  setErrors: (errors: Record<string, string | string[]>) => void;
 }
