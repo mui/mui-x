@@ -120,6 +120,22 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(false);
       expect(getTerminal('Event B')!.hasAttribute('data-visible')).to.equal(true);
     });
+
+    it('should keep the terminal revealed when the pointer crosses an arrow hit-area', () => {
+      renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.pointerOver(getEventElement('Event A'));
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
+
+      // The invisible hit band of an arrow rides over the events it crosses: pointing
+      // at it must not hide the terminal, or the pointer could never reach a terminal
+      // that a band covers.
+      fireEvent.pointerOver(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
+    });
   });
 
   describe.skipIf(isJSDOM)('terminal placement', () => {
@@ -130,7 +146,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       .resource(resource1)
       .build();
 
-    it('should stay inside its event instead of covering the adjacent event edge', async () => {
+    it('should sit outside the end edge, leaving the end resize strip free', async () => {
       renderTimeline({ events: [eventA, adjacentEvent], dependencies: [] });
 
       fireEvent.pointerOver(getEventElement('Event A'));
@@ -141,14 +157,47 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       const adjacentRect = getEventElement('Adjacent event').getBoundingClientRect();
       const centerY = adjacentRect.top + adjacentRect.height / 2;
 
-      // Just inside the back-to-back neighbor: its own surface, so a start-resize
-      // grab or a click stays a grab on the neighbor — not a dependency drag.
-      const onNeighbor = document.elementFromPoint(adjacentRect.left + 2, centerY)!;
-      expect(onNeighbor.closest('[data-dependency-handle]')).to.equal(null);
-
-      // Just inside the hovered event's tail: the terminal is reachable there.
+      // Just inside the hovered event's tail: its own surface, so the end resize
+      // strip stays a resize grab — not a dependency drag.
       const onTail = document.elementFromPoint(adjacentRect.left - 3, centerY)!;
-      expect(onTail.closest('[data-dependency-handle]')).not.to.equal(null);
+      expect(onTail.closest('[data-dependency-handle]')).to.equal(null);
+
+      // Just outside the end edge: the terminal. Accepted trade-off: while revealed
+      // it covers the first pixels of the back-to-back neighbor, whose start-resize
+      // grab must aim above or below the circle.
+      const outside = document.elementFromPoint(adjacentRect.left + 2, centerY)!;
+      expect(outside.closest('[data-dependency-handle]')).not.to.equal(null);
+    });
+
+    it('should keep the revealed terminal reachable under a crossing arrow', async () => {
+      // The straight A → C arrow rides over the middle event; the middle event's
+      // revealed terminal must still win the pointer over the arrow's hit band.
+      const middleEvent = EventBuilder.new()
+        .id('event-m')
+        .title('Middle event')
+        .singleDay('2025-07-03T10:30:00Z')
+        .resource(resource1)
+        .build();
+      const eventC = EventBuilder.new()
+        .id('event-c')
+        .title('Event C')
+        .singleDay('2025-07-03T13:00:00Z')
+        .resource(resource1)
+        .build();
+      renderTimeline({
+        events: [eventA, middleEvent, eventC],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-c')],
+      });
+
+      fireEvent.pointerOver(getEventElement('Middle event'));
+      await waitFor(() => {
+        expect(getTerminal('Middle event')!.hasAttribute('data-visible')).to.equal(true);
+      });
+
+      const middleRect = getEventElement('Middle event').getBoundingClientRect();
+      const centerY = middleRect.top + middleRect.height / 2;
+      const atTerminal = document.elementFromPoint(middleRect.right + 4, centerY)!;
+      expect(atTerminal.closest('[data-dependency-handle]')).not.to.equal(null);
     });
   });
 

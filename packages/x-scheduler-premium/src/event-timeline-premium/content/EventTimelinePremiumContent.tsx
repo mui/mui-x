@@ -875,9 +875,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                     <EventTimelinePremiumDependencyGeometryProvider>
                       <EventTimelinePremiumDependencyArrows />
                       {virtualizer.api.getters.getRows()}
-                      {/* After the rows and the arrows so the terminals win their
-                          z-index ties and paint above both. */}
-                      <EventTimelinePremiumDependencyTerminals />
                       {showCurrentTimeIndicator && (
                         <EventTimelinePremiumCurrentTimeIndicator
                           className={classes.currentTimeIndicator}
@@ -885,6 +882,9 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                         />
                       )}
                       <EventTimelinePremiumDependencyInteractions />
+                      {/* Last so the revealed terminals win their z-index ties and
+                          paint above the arrows and their click hit-areas. */}
+                      <EventTimelinePremiumDependencyTerminals />
                     </EventTimelinePremiumDependencyGeometryProvider>
                   </RowContainer>
                   <FillerRow />

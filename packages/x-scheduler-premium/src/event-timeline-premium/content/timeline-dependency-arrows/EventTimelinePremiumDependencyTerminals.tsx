@@ -9,6 +9,12 @@ import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-intern
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
 
+/**
+ * Diameter of the terminal circle, also used to keep it inside the events area at the
+ * collection end.
+ */
+const DEPENDENCY_TERMINAL_SIZE = 10;
+
 const DependencyTerminalsLayer = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'DependencyTerminals',
@@ -17,9 +23,9 @@ const DependencyTerminalsLayer = styled('div', {
   top: 0,
   left: 'var(--title-column-width)',
   pointerEvents: 'none',
-  // Same layer as the arrows overlay; later in the DOM, so the terminals win the tie
-  // and paint above the arrows without lifting anything else with them. Below the
-  // pinned title cells (z-index 3).
+  // Same layer as the arrows and interactions overlays; last in the DOM, so the
+  // terminals win the ties and paint above the arrows and their click hit-areas
+  // without lifting anything else with them. Below the pinned title cells (z-index 3).
   zIndex: 2,
 });
 
@@ -30,13 +36,16 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
   slot: 'EventDependencyHandler',
 })(({ theme }) => ({
   position: 'absolute',
-  width: 10,
-  height: 10,
+  width: DEPENDENCY_TERMINAL_SIZE,
+  height: DEPENDENCY_TERMINAL_SIZE,
   borderRadius: '50%',
-  // Ends exactly on the end-edge anchor (the arrows' source point), fully inside its
-  // event: any outward overhang would cover the start resize handle of a back-to-back
-  // neighbor, turning its resize grab into a dependency drag.
-  transform: 'translate(-100%, -50%)',
+  // Starts exactly on the end-edge anchor (the arrows' source point), fully outside
+  // its event, so the event's own end resize strip stays free. Flush against the edge
+  // (no gap): a gap would let the pointer land between event and terminal on its way
+  // out, dropping the hover and hiding the terminal mid-approach. Trade-off: while
+  // revealed it covers the first pixels of a back-to-back neighbor, whose
+  // start-resize grab must aim above or below the circle.
+  transform: 'translate(0, -50%)',
   cursor: 'crosshair',
   opacity: 0,
   // Only hit-testable while shown: an invisible terminal must not steal clicks from
@@ -52,10 +61,11 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
 }));
 
 /**
- * The dependency terminals of the visible events, in an overlay above the arrows.
- * A layer of its own (rather than a child of each event) so the terminal can paint
- * above the arrows without lifting the whole events cell over them, and so it escapes
- * the cell's `overflow: clip` and the edge-chevron `clip-path` of its event.
+ * The dependency terminals of the visible events, in an overlay above the arrows and
+ * their click hit-areas. A layer of its own (rather than a child of each event) so the
+ * terminal can paint above the arrows without lifting the whole events cell over them,
+ * and so it escapes the cell's `overflow: clip` and the edge-chevron `clip-path` of
+ * its event.
  */
 export function EventTimelinePremiumDependencyTerminals() {
   const store = useEventTimelinePremiumStoreContext();
@@ -120,6 +130,15 @@ function DependencyTerminalsLayerImpl() {
       return target.closest('[data-occurrence-key]')?.getAttribute('data-occurrence-key') ?? null;
     };
     const handlePointerOver = (event: PointerEvent) => {
+      // The arrows' invisible hit bands ride over the events: crossing one must not
+      // hide the terminal the hover already revealed, or the pointer can never reach
+      // a terminal a band covers.
+      if (
+        event.target instanceof Element &&
+        event.target.closest('[data-dependency-interactions]')
+      ) {
+        return;
+      }
       setHoveredOccurrenceKey(getOccurrenceKey(event.target));
     };
     const handlePointerLeave = () => {
@@ -172,7 +191,13 @@ function DependencyTerminalsLayerImpl() {
           side="end"
           data-palette={schedulerEventSelectors.color(store.state, occurrence.id)}
           data-visible={visible ? '' : undefined}
-          style={{ left: point.x, top: point.y - offsetTop }}
+          // Clamped at the collection end: the outside circle would overflow the
+          // events area and be clipped by the viewport, so it slides back over the
+          // event's tail to stay reachable.
+          style={{
+            left: Math.min(point.x, eventsWidth - DEPENDENCY_TERMINAL_SIZE),
+            top: point.y - offsetTop,
+          }}
         />,
       );
     }
