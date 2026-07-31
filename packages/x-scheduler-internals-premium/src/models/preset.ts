@@ -142,14 +142,17 @@ export interface PresetDefinition {
  */
 export interface EventTimelinePremiumHourRangePresetConfig {
   /**
-   * The first hour displayed in the preset.
-   * Must be a whole number between 0 and 24 (minutes are not supported).
+   * Inclusive start of the displayed hour range.
+   * Must be a whole number between 0 and 23 and lower than `endTime`; otherwise the
+   * full day is displayed and a warning is logged in development.
    * @default 0
    */
   startTime?: number;
   /**
-   * The last hour displayed in the preset.
-   * Must be a whole number between 0 and 24 (minutes are not supported).
+   * Exclusive end of the displayed hour range: the last rendered hour cell is
+   * `endTime - 1`, so `{ startTime: 8, endTime: 20 }` displays 08:00 → 19:59.
+   * Must be a whole number between 1 and 24 and greater than `startTime`; otherwise
+   * the full day is displayed and a warning is logged in development.
    * @default 24
    */
   endTime?: number;

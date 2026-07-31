@@ -18,13 +18,17 @@ The `dayAndHour` preset displays a few days with hourly granularity—ideal for 
 
 {{"demo": "DayAndHourPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `presetConfig` prop to limit the hours displayed for each day with `startTime` and `endTime`:
+Use the `presetConfig` prop to limit the hours displayed for each day. The prop is keyed by preset name, and only the `dayAndHour` preset supports an hour range: `presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}` displays 8:00 AM through 7:59 PM (`startTime` is inclusive, `endTime` exclusive).
 
 {{"demo": "DayAndHourStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
+Events that fall entirely within the hidden hours are not rendered at all. An event that only partially overlaps the hidden hours is clipped to the visible window and flagged with the `data-starting-before-edge` / `data-ending-after-edge` attributes, like an event overflowing the visible date range.
+
 :::warning
-`startTime` and `endTime` must be whole hours (integers between `0` and `24`). Minute-level precision isn't supported yet.
+`startTime` and `endTime` must be whole hours (integers between `0` and `24`) with `startTime` lower than `endTime`. Minute-level precision isn't supported yet. An invalid range falls back to the full day and logs a warning in development.
 :::
+
+The [Event Calendar's day and week views](/x/react-scheduler/event-calendar/views/) support the same hour range through their `viewConfig` prop.
 
 ## Day and month preset
 

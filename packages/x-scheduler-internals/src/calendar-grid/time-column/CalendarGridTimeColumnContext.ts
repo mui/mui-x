@@ -17,7 +17,7 @@ export interface CalendarGridTimeColumnContext {
    */
   dayStartMinute: number;
   /**
-   * Last displayed minute of the day, as an offset from midnight.
+   * End of the displayed window of the day, as an exclusive offset from midnight (1440 for the full day).
    * Equal to `1440` unless the view limits its visible hour range.
    */
   dayEndMinute: number;
