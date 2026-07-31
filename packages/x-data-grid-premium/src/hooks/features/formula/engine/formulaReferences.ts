@@ -5,17 +5,16 @@ import type {
   FormulaFieldRefNode,
   FormulaRangeNode,
 } from './formulaAst';
+import { buildCellRefNode, buildColumnValuesNode } from './formulaA1';
 import {
   CELL_REF_REGEX,
   IDENTIFIER_REGEX,
   WHITESPACE_REGEX,
-  buildCellRefNode,
-  buildColumnValuesNode,
   matchColumnRange,
   matchRangeTail,
   readParsedRef,
   scanStringLiteral,
-} from './formulaA1';
+} from './formulaA1Tokens';
 import { parseFormula } from './formulaParser';
 import type { FormulaPositionContext, FormulaSourceSpan } from './formulaTypes';
 

@@ -33,6 +33,8 @@ The feature ships in 6 independently mergeable iterations:
 - **I10** — live column-resize sync: the reference rectangles and the floating surface track a column's drag-resize per `columnResize` event, and the edit survives the gesture (D25).
 - **I11** — vertical growth: once the width ratchet reaches its clamp the formula wraps and the
   surface grows by whole lines, bounded, so the whole formula stays visible (D27).
+- **I12** — dialect-aware completion analysis: the autocomplete reads the caret in the dialect the
+  editor is actually showing, so a formula built from A1 ranges completes and helps correctly (D28).
 
 ## Locked design decisions
 
@@ -795,6 +797,36 @@ Popper `flip` never fires against the grid (its clipping boundary resolves again
 uncapped popup is simply clipped at the scroller's bottom edge, so a long value edited in the last row
 shows about one row of text. That is the same gap this decision closes for the formula editor; worth a
 separate core issue.
+
+**D28. The completion analysis reads the dialect the editor is showing (I12).** Reported by Bilal on
+#22807: with the caret at the end of a finished `=ROUND(AVERAGE(B5:D5))`, the popup still offered
+`AVERAGE(value1, value2, …)` — signature help for a call that was closed two characters earlier.
+**Root cause:** `getFormulaCompletionContext` tokenized A1 editor text with the canonical
+tokenizer, which knows neither `:` nor `$` and stopped at the first one. The two closing
+parentheses were never tokenized, so the enclosing-call stack never popped and reported `AVERAGE`
+for every caret from the colon to the end of the line. The reported symptom was the mild half:
+the same truncation left `expectOperator` reading a stale token, which suppressed the dropdown
+entirely for the second half of every range being typed (`=SUM(A1:D` offered nothing), got
+`argIndex` wrong across range arguments, and masked the unterminated-string guard behind the
+colon's error. It is the mistake D26's syntax mask had already named — _do not reuse
+`tokenizeFormula` on editor text_ — left unfixed one module over.
+**Fix:** two opt-in `TokenizeFormulaOptions`, both off by default so the parser's tokenization is
+unchanged byte for byte. `a1Notation` recognizes `$A$1`, `A1:B2` and `A:A` as single `reference`
+tokens, and `:` as punctuation; `tolerant` never aborts — an unexpected character becomes an
+`unknown` token and an unterminated string a flagged `string` token, so a stray character can no
+longer blind everything after it. Completion passes both; nothing else passes either. The A1 scan
+primitives moved to a leaf `engine/formulaA1Tokens.ts` (`formulaA1.ts` imports the parser, which
+imports the tokenizer — a cycle otherwise), which also makes the sharing explicit: the commit
+transform, the reference highlighter and now the completion tokenizer all read a reference the
+same way, so what is colored, what is rewritten and what completion counts as one operand cannot
+drift apart. **Signature help for a complete call is kept** while the caret is inside it
+(`AVERAGE(B5:D5|)` → AVERAGE, `AVERAGE(B5:D5)|` → ROUND, past the last `)` → nothing): editing an
+argument of a finished call is ordinary, and both Excel and Sheets help there. **Two refinements**
+the correct token stream makes cheap: after a dangling range operator only column letters are
+offered (`expectReference` — nothing else can close a range; Excel and Sheets offer nothing at all
+there), and a caret parked strictly inside a complete reference offers nothing (`insideReference`
+— the reference is whole, and the full function list was pure noise). Neither can fire while
+typing left to right; both need a deliberate caret placement. No public API change.
 
 **Invariant (all iterations): formula source lives only in row data; every cache and state slice is
 derived.** This is what keeps undo/redo, `processRowUpdate`, and controlled-rows scenarios working

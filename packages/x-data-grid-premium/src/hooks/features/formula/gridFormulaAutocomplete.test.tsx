@@ -189,4 +189,36 @@ describe('getFormulaSuggestions', () => {
       state.options.some((option) => option.label === 'price' && option.kind === 'field'),
     ).toEqual(true);
   });
+
+  it('drops the signature help of a call closed over a range argument', async () => {
+    render(<Test formulaA1Notation />);
+    await microtasks();
+    const value = '=ROUND(AVERAGE(B5:D5))';
+    const state = getFormulaSuggestions(privateApiRef(), value, value.length, true)!;
+    expect(state.signatureHelp).toEqual(null);
+    expect(state.options).toEqual([]);
+  });
+
+  it('keeps the signature help of the call the caret is inside of', async () => {
+    render(<Test formulaA1Notation />);
+    await microtasks();
+    const value = '=ROUND(AVERAGE(B5:D5))';
+    // ...(B5:D5|)) is inside AVERAGE; ...(B5:D5)|) is inside ROUND.
+    expect(getFormulaSuggestions(privateApiRef(), value, 20, true)!.signatureHelp).toMatchObject({
+      name: 'AVERAGE',
+    });
+    expect(getFormulaSuggestions(privateApiRef(), value, 21, true)!.signatureHelp).toMatchObject({
+      name: 'ROUND',
+    });
+  });
+
+  it('suggests column letters for the end of a range being typed', async () => {
+    render(<Test formulaA1Notation />);
+    await microtasks();
+    const state = getFormulaSuggestions(privateApiRef(), '=SUM(A1:D', 9, true)!;
+    expect(state.options.map((option) => option.label)).toEqual(['D']);
+    expect(state.options[0].kind).toEqual('columnLetter');
+    expect(state.replaceStart).toEqual(8);
+    expect(state.replaceEnd).toEqual(9);
+  });
 });

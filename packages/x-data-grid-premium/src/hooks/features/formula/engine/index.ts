@@ -63,6 +63,7 @@ export type {
   FormulaTokenType,
   FormulaTokenizeError,
   FormulaTokenizeResult,
+  TokenizeFormulaOptions,
 } from './formulaTokenizer';
 export { tokenizeFormula } from './formulaTokenizer';
 
@@ -121,6 +122,7 @@ export { collectAffectedCells, orderForRecompute } from './formulaGraph';
 
 export type {
   FormulaCompletionContext,
+  FormulaCompletionContextOptions,
   FormulaCompletionKind,
   FormulaCompletionToken,
   RankFormulaCompletionsOptions,
@@ -135,7 +137,8 @@ export type { A1TransformContext, A1TransformResult, ToCanonicalOptions } from '
 export {
   columnIndexToLetters,
   columnLettersToIndex,
-  scanStringLiteral,
   toCanonicalFormula,
   toDisplayFormula,
 } from './formulaA1';
+
+export { scanStringLiteral } from './formulaA1Tokens';

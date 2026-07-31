@@ -95,7 +95,9 @@ export function getFormulaSuggestions(
     return null;
   }
 
-  const context = getFormulaCompletionContext(expression, expressionCaret);
+  const context = getFormulaCompletionContext(expression, expressionCaret, {
+    a1Notation: a1NotationEnabled,
+  });
 
   const staticTokens = getFormulaCompletionTokens(apiRef.current.caches.formula.registry);
   const columnLookup = gridColumnLookupSelector(apiRef);

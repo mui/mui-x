@@ -178,6 +178,88 @@ describe('getFormulaCompletionContext', () => {
     expect(() => getFormulaCompletionContext('SUM', 99)).not.toThrow();
     expect(getFormulaCompletionContext('SUM', 99).token).toEqual('SUM');
   });
+
+  describe('a1 notation', () => {
+    const a1 = { a1Notation: true };
+
+    it('closes the enclosing calls of a formula whose arguments are ranges', () => {
+      // The canonical tokenizer stops at the `:`, never sees the two closing
+      // parentheses and reports `AVERAGE` for every caret after the colon.
+      const expression = 'ROUND(AVERAGE(B5:D5))';
+      expect(
+        getFormulaCompletionContext(expression, expression.length, a1).functionContext,
+      ).toEqual(null);
+    });
+
+    it('reports the call the caret is actually in, at every depth', () => {
+      const expression = 'ROUND(AVERAGE(B5:D5))';
+      // ...(B5:D5|)) — still inside AVERAGE's argument list.
+      expect(getFormulaCompletionContext(expression, 19, a1).functionContext).toEqual({
+        name: 'AVERAGE',
+        argIndex: 0,
+      });
+      // ...(B5:D5)|) — AVERAGE is closed, ROUND is not.
+      expect(getFormulaCompletionContext(expression, 20, a1).functionContext).toEqual({
+        name: 'ROUND',
+        argIndex: 0,
+      });
+    });
+
+    it('counts the argument index across range arguments', () => {
+      const expression = 'SUM(A1:A5, B1:B5, C1:C5)';
+      expect(getFormulaCompletionContext(expression, 18, a1).functionContext).toEqual({
+        name: 'SUM',
+        argIndex: 2,
+      });
+    });
+
+    it('treats a complete range as one operand', () => {
+      const context = getFormulaCompletionContext('SUM(A1:A5) ', 11, a1);
+      expect(context.expectOperator).toEqual(true);
+      expect(context.expectValue).toEqual(false);
+    });
+
+    it('reports a value position after an absolute reference and an operator', () => {
+      const expression = 'SUM($A$1:$A$5)+';
+      const context = getFormulaCompletionContext(expression, expression.length, a1);
+      expect(context.expectValue).toEqual(true);
+      expect(context.functionContext).toEqual(null);
+    });
+
+    it('expects a reference after a dangling range operator', () => {
+      const bare = getFormulaCompletionContext('SUM(A1:', 7, a1);
+      expect(bare.expectReference).toEqual(true);
+      expect(bare.token).toEqual('');
+      const partial = getFormulaCompletionContext('SUM(A1:D', 8, a1);
+      expect(partial.expectReference).toEqual(true);
+      expect(partial.token).toEqual('D');
+      expect(partial.replaceStart).toEqual(7);
+      expect(partial.replaceEnd).toEqual(8);
+    });
+
+    it('reports the caret strictly inside a reference, but not at its edges', () => {
+      const expression = 'SUM(A1:D5)';
+      expect(getFormulaCompletionContext(expression, 4, a1).insideReference).toEqual(false);
+      expect(getFormulaCompletionContext(expression, 7, a1).insideReference).toEqual(true);
+      expect(getFormulaCompletionContext(expression, 9, a1).insideReference).toEqual(false);
+    });
+
+    it('still detects an unterminated string that follows a range', () => {
+      const expression = 'IF(A1:A5,"x';
+      expect(getFormulaCompletionContext(expression, expression.length, a1).insideString).toEqual(
+        true,
+      );
+    });
+
+    it('leaves the canonical dialect analysis unchanged', () => {
+      const expression = 'SUM(RANGE(REF(COLUMN("a"), ROW(1)), REF(COLUMN("a"), ROW(5))))';
+      for (let caret = 0; caret <= expression.length; caret += 1) {
+        expect(getFormulaCompletionContext(expression, caret, a1)).toEqual(
+          getFormulaCompletionContext(expression, caret),
+        );
+      }
+    });
+  });
 });
 
 describe('rankFormulaCompletions', () => {
@@ -239,5 +321,42 @@ describe('rankFormulaCompletions', () => {
     const ranked = rankFormulaCompletions(all, context);
     // "sum" matches SUM case-insensitively; nothing matches case-sensitively, so SUM still wins.
     expect(ranked[0].label).toEqual('SUM');
+  });
+
+  describe('a1 notation', () => {
+    const a1 = { a1Notation: true };
+    const columnTokens: FormulaCompletionToken[] = [
+      { label: 'A', insertText: 'A', kind: 'columnLetter' },
+      { label: 'D', insertText: 'D', kind: 'columnLetter' },
+    ];
+    const withColumns = [...all, ...columnTokens];
+
+    it('offers only column letters after a dangling range operator', () => {
+      const ranked = rankFormulaCompletions(
+        withColumns,
+        getFormulaCompletionContext('SUM(A1:', 7, a1),
+      );
+      expect(ranked.length).toBeGreaterThan(0);
+      expect(ranked.every((token) => token.kind === 'columnLetter')).toEqual(true);
+    });
+
+    it('filters those column letters by the typed prefix', () => {
+      const ranked = rankFormulaCompletions(
+        withColumns,
+        getFormulaCompletionContext('SUM(A1:D', 8, a1),
+      );
+      expect(ranked.map((token) => token.label)).toEqual(['D']);
+    });
+
+    it('returns nothing once the range is complete', () => {
+      const expression = 'ROUND(AVERAGE(B5:D5))';
+      const context = getFormulaCompletionContext(expression, expression.length, a1);
+      expect(rankFormulaCompletions(withColumns, context)).toEqual([]);
+    });
+
+    it('returns nothing with the caret parked inside a complete reference', () => {
+      const context = getFormulaCompletionContext('SUM(A1:D5)', 7, a1);
+      expect(rankFormulaCompletions(withColumns, context)).toEqual([]);
+    });
   });
 });

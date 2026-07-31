@@ -72,6 +72,18 @@ export interface FormulaCompletionContext {
    */
   insideString: boolean;
   /**
+   * The caret follows the A1 range operator (`A1:|`, `A1:D|`): a cell reference
+   * is the only thing that can come next, so only column letters are offered.
+   * Always `false` outside A1 notation, which has no range operator.
+   */
+  expectReference: boolean;
+  /**
+   * The caret sits strictly inside a complete reference token (`A1:D|5`) rather
+   * than at either end of it. There is nothing to complete — the reference is
+   * whole — so suggestions are suppressed.
+   */
+  insideReference: boolean;
+  /**
    * The innermost enclosing function/special-form call, for signature help.
    * `argIndex` is the zero-based argument the caret is in.
    */
@@ -185,7 +197,12 @@ export function getFormulaCompletionTokens(
   return tokens;
 }
 
-const VALUE_ENDING_TOKEN_TYPES = new Set<FormulaToken['type']>(['number', 'string', 'identifier']);
+const VALUE_ENDING_TOKEN_TYPES = new Set<FormulaToken['type']>([
+  'number',
+  'string',
+  'identifier',
+  'reference',
+]);
 
 function isValueEndingToken(token: FormulaToken | null): boolean {
   if (token === null) {
@@ -197,36 +214,55 @@ function isValueEndingToken(token: FormulaToken | null): boolean {
   return VALUE_ENDING_TOKEN_TYPES.has(token.type);
 }
 
+export interface FormulaCompletionContextOptions {
+  /**
+   * `true` when the expression is written in the A1 editor dialect, so that
+   * `$A$1`, `A1:B2` and `A:A` are read as single references. The editor shows
+   * whichever dialect the grid is configured for and completion must analyze
+   * the same one — a canonical tokenization of A1 text stops dead at the first
+   * `:` or `$` and reports a stale enclosing call for everything after it.
+   * @default false
+   */
+  a1Notation?: boolean;
+}
+
 /**
  * Analyzes the caret in a formula expression (the source WITHOUT its leading
  * `=`) and returns the partial token, replace span, coarse value/operator
  * context, string-literal guard and enclosing call for signature help. Built on
- * the never-throwing tokenizer, so partial and malformed input is safe.
+ * a tolerant tokenization, so partial and malformed input is safe.
  */
 export function getFormulaCompletionContext(
   expression: string,
   caret: number,
+  options: FormulaCompletionContextOptions = {},
 ): FormulaCompletionContext {
   const clampedCaret = Math.max(0, Math.min(caret, expression.length));
-  const { tokens, error } = tokenizeFormula(expression);
+  const { tokens } = tokenizeFormula(expression, {
+    a1Notation: options.a1Notation,
+    tolerant: true,
+  });
 
-  // String-literal guard: the caret is inside an unterminated string (the
-  // tokenizer reports it as an error spanning to the end) or strictly inside a
-  // terminated string token (between the quotes).
-  let insideString =
-    error !== null &&
-    error.message.startsWith('Unterminated string') &&
-    clampedCaret > error.span.start;
-  if (!insideString) {
-    for (const token of tokens) {
-      if (
-        token.type === 'string' &&
-        clampedCaret > token.span.start &&
-        clampedCaret < token.span.end
-      ) {
+  // String-literal guard: the caret is strictly inside a terminated string
+  // (between the quotes), or anywhere past the opening quote of an unterminated
+  // one — whose token runs to the end of the input, so its end counts as inside.
+  let insideString = false;
+  let insideReference = false;
+  for (const token of tokens) {
+    if (clampedCaret <= token.span.start) {
+      // Tokens come in source order: nothing further back can contain the caret.
+      break;
+    }
+    if (token.type === 'string') {
+      // An unterminated literal spans to the end of the input, so every caret
+      // past its opening quote — its span end included — is inside it.
+      if (clampedCaret < token.span.end || token.unterminated === true) {
         insideString = true;
         break;
       }
+    } else if (token.type === 'reference' && clampedCaret < token.span.end) {
+      insideReference = true;
+      break;
     }
   }
 
@@ -262,6 +298,13 @@ export function getFormulaCompletionContext(
 
   const expectOperator = !insideString && !hasPartialToken && isValueEndingToken(previousToken);
   const expectValue = !insideString && !expectOperator;
+  // A `:` survives as its own token only when it did not join two references,
+  // i.e. the range's end is still being typed (`A1:` or `A1:D`).
+  const expectReference =
+    expectValue &&
+    previousToken !== null &&
+    previousToken.type === 'punctuation' &&
+    previousToken.value === ':';
 
   // Enclosing-call stack for signature help: walk tokens that start before the
   // caret, tracking parenthesis depth. An identifier immediately before a `(`
@@ -301,6 +344,8 @@ export function getFormulaCompletionContext(
     expectValue,
     expectOperator,
     insideString,
+    expectReference,
+    insideReference,
     functionContext,
   };
 }
@@ -346,15 +391,16 @@ function prefixStrength(label: string, query: string, queryLower: string): numbe
 /**
  * Pure ranking: filters the token list by the caret context's partial token and
  * orders by `prefix-match strength × category tier`. Suppresses operators in a
- * value position, value tokens in an operator position, and everything inside a
- * string literal or in an operator position with no typed prefix.
+ * value position, value tokens in an operator position, everything but column
+ * letters after the range operator, and everything inside a string literal,
+ * inside a complete reference, or in an operator position with no typed prefix.
  */
 export function rankFormulaCompletions(
   tokens: readonly FormulaCompletionToken[],
   context: FormulaCompletionContext,
   options: RankFormulaCompletionsOptions = {},
 ): FormulaCompletionToken[] {
-  if (context.insideString) {
+  if (context.insideString || context.insideReference) {
     return [];
   }
   const query = context.token;
@@ -370,6 +416,11 @@ export function rankFormulaCompletions(
     const isOperator = token.kind === 'operator';
     if (isOperator !== context.expectOperator) {
       // Operators only in operator position; value tokens only in value position.
+      continue;
+    }
+    if (context.expectReference && token.kind !== 'columnLetter') {
+      // Only a cell reference can close a range, and a column letter is the
+      // only completion that starts one.
       continue;
     }
     const strength = prefixStrength(token.label, query, queryLower);
