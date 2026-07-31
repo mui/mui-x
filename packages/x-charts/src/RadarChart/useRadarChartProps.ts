@@ -80,6 +80,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
     hideLegend: props.hideLegend ?? false,
     className,
   };
