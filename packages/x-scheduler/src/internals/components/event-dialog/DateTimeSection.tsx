@@ -8,7 +8,8 @@ import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormCon
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import type { ControlledValue, EventDialogSectionProps } from './utils';
+import type { ControlledValue } from './utils';
+import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 import { usePushPlaceholder } from './usePushPlaceholder';
 

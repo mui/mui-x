@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import type { EventDialogSectionProps } from './utils';
+import type { EventDialogSectionProps } from './EventDialog.types';
 import DateTimeSection from './DateTimeSection';
 import ResourceAndColorSection from './ResourceAndColorSection';
 import DescriptionSection from './DescriptionSection';

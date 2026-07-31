@@ -28,7 +28,7 @@ import { useStore } from '@base-ui/utils/store';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import type { EventDialogSectionProps } from './utils';
+import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
 import { usePushPlaceholder } from './usePushPlaceholder';
 
