@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { CSSObject, Theme } from '@mui/material/styles';
 import type { RefObject } from '@mui/x-internals/types';
-import { gridEditCellStateSelector, useGridSelector } from '@mui/x-data-grid-pro';
+import { gridEditRowsStateSelector, useGridSelector } from '@mui/x-data-grid-pro';
 import type { GridRowId } from '@mui/x-data-grid-pro';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -296,10 +296,6 @@ export function buildFormulaReferenceModel(
   return { references, paletteSize: FORMULA_REFERENCE_PALETTE_SIZE };
 }
 
-// A stable dummy cell so the edit-state subscription has constant args when no
-// cell is active (the selector simply returns `null` for it).
-const NO_CELL = { rowId: '__formula_no_cell__', field: '__formula_no_cell__' };
-
 /**
  * Rebuilds the shared reference model on every change of the highlighted text.
  * The text is resolved in order:
@@ -321,11 +317,14 @@ export function useGridFormulaReferenceModel(
   a1Notation: boolean,
   valueOverride?: unknown,
 ): FormulaReferenceModel {
-  const editCellState = useGridSelector(
-    apiRef,
-    gridEditCellStateSelector,
-    ownerCell ? { rowId: ownerCell.id, field: ownerCell.field } : NO_CELL,
-  );
+  // Selects the whole `editRows` slice and indexes into it here, rather than
+  // passing the cell as selector args: `useGridSelector` handles changing args
+  // with a render-phase `setState`, which React 18 drops (its StrictMode
+  // re-invokes the component body, and the hook's own ref bookkeeping makes that
+  // second pass skip the update), pinning the hook to the previous value until
+  // the next store write.
+  const editRows = useGridSelector(apiRef, gridEditRowsStateSelector);
+  const editCellState = ownerCell ? (editRows[ownerCell.id]?.[ownerCell.field] ?? null) : null;
   const activeEdit = useGridSelector(apiRef, gridFormulaActiveEditSelector);
   const positionContext = useGridSelector(apiRef, gridFormulaA1PositionContextSelector);
   const ownerId = ownerCell?.id;

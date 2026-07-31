@@ -8,7 +8,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import {
   gridClasses,
   gridColumnLookupSelector,
-  gridEditCellStateSelector,
+  gridEditRowsStateSelector,
   gridExpandedSortedRowIdsSelector,
   gridFocusCellSelector,
   gridRowsLookupSelector,
@@ -79,10 +79,6 @@ const FormulaBarPreview = styled('div')({
   maxWidth: '30%',
   paddingInline: vars.spacing(1),
 });
-
-// A stable dummy cell so the edit-state subscription has constant args when no
-// cell is active (the selector simply returns `null` for it).
-const NO_CELL = { rowId: '__formula_bar_no_cell__', field: '__formula_bar_no_cell__' };
 
 const PREVIEW_DEBOUNCE_MS = 150;
 
@@ -172,11 +168,14 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
 
   // ----- Edit-state mirror (cell in edit mode) -----
 
-  const editCellState = useGridSelector(
-    apiRef,
-    gridEditCellStateSelector,
-    cell ? { rowId: cell.id, field: cell.field } : NO_CELL,
-  );
+  // Selects the whole `editRows` slice and indexes into it here, rather than
+  // passing the cell as selector args: `useGridSelector` handles changing args
+  // with a render-phase `setState`, which React 18 drops (its StrictMode
+  // re-invokes the component body, and the hook's own ref bookkeeping makes that
+  // second pass skip the update), pinning the hook to the previous value until
+  // the next store write.
+  const editRows = useGridSelector(apiRef, gridEditRowsStateSelector);
+  const editCellState = cell ? (editRows[cell.id]?.[cell.field] ?? null) : null;
   const isMirror = cell !== null && editCellState !== null;
 
   // ----- Local draft (cell in view mode) -----
