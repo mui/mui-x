@@ -163,6 +163,42 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       expect(screen.getByTestId('event-nightly')).not.to.equal(null);
     });
 
+    it('should position the placeholder relative to the trimmed axis', () => {
+      let store: AnyEventCalendarStore | null = null;
+      render(
+        <Grid
+          events={[]}
+          presetConfig={PRESET_CONFIG}
+          onStoreMount={(s) => {
+            store = s;
+          }}
+        />,
+      );
+
+      act(() => {
+        store!.set('occurrencePlaceholder', {
+          type: 'creation',
+          surfaceType: 'timeline',
+          start: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 10),
+          end: adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 12),
+          resourceId: resource.id,
+          lockSurfaceType: true,
+        });
+      });
+
+      const placeholder = screen.getByTestId('placeholder');
+      // 10:00 sits 120 axis minutes into the 2880-minute axis, not 600 of 5760
+      // (the full-day mapping).
+      expect(parseFloat(placeholder.style.getPropertyValue('--x-position'))).to.be.closeTo(
+        (120 / AXIS_MINUTES) * 100,
+        0.001,
+      );
+      expect(parseFloat(placeholder.style.getPropertyValue('--width'))).to.be.closeTo(
+        (120 / AXIS_MINUTES) * 100,
+        0.001,
+      );
+    });
+
     it('should not render the placeholder while its range is fully inside the hidden hours', () => {
       let store: AnyEventCalendarStore | null = null;
       render(
@@ -220,13 +256,45 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
     });
   });
 
+  describe('header', () => {
+    const { render } = createSchedulerRenderer({
+      clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
+    });
+
+    it('should emit only the visible hour cells and span the day cells over them', () => {
+      const { container } = render(
+        <EventTimelinePremiumProvider
+          events={[]}
+          resources={[resource]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          presetConfig={PRESET_CONFIG}
+        >
+          <TimelineGrid.Root>
+            <TimelineGrid.Header data-testid="header" />
+          </TimelineGrid.Root>
+        </EventTimelinePremiumProvider>,
+      );
+
+      const hourCells = container.querySelectorAll<HTMLElement>('[data-unit="hour"]');
+      expect(hourCells.length).to.equal(4 * 12);
+      expect(hourCells[0].textContent).to.equal('8:00 AM');
+      expect(hourCells[11].textContent).to.equal('7:00 PM');
+
+      const dayCells = container.querySelectorAll<HTMLElement>('[data-unit="day"]');
+      expect(dayCells.length).to.equal(4);
+      for (const dayCell of dayCells) {
+        expect(dayCell.style.getPropertyValue('--span')).to.equal('12');
+      }
+    });
+  });
+
   describe('current time indicator', () => {
     describe('when the current time is inside the visible hours', () => {
       const { render } = createSchedulerRenderer({
         clockConfig: new Date('2025-07-03T10:00:00Z'),
       });
 
-      it('should render the indicator', () => {
+      it('should render the indicator at the trimmed-axis position', () => {
         render(
           <EventTimelinePremiumProvider
             events={[]}
@@ -240,7 +308,37 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
           </EventTimelinePremiumProvider>,
         );
 
-        expect(screen.getByTestId('indicator')).not.to.equal(null);
+        const indicator = screen.getByTestId('indicator');
+        // 10:00 sits 120 axis minutes into the 2880-minute axis, not 600 of 5760
+        // (the full-day mapping).
+        expect(parseFloat(indicator.style.getPropertyValue('--x-position'))).to.be.closeTo(
+          120 / AXIS_MINUTES,
+          0.0001,
+        );
+      });
+    });
+
+    describe('when the current time is before the visible hours', () => {
+      const { render } = createSchedulerRenderer({
+        clockConfig: new Date('2025-07-03T06:00:00Z'),
+      });
+
+      it('should not render the indicator', () => {
+        // Without the lower bound the indicator would sit pinned at x = 0 all morning.
+        render(
+          <EventTimelinePremiumProvider
+            events={[]}
+            resources={[resource]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            presetConfig={PRESET_CONFIG}
+          >
+            <TimelineGrid.Root>
+              <TimelineGrid.CurrentTimeIndicator data-testid="indicator" />
+            </TimelineGrid.Root>
+          </EventTimelinePremiumProvider>,
+        );
+
+        expect(screen.queryByTestId('indicator')).to.equal(null);
       });
     });
 

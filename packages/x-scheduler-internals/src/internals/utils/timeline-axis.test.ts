@@ -42,6 +42,11 @@ describe('timeline-axis', () => {
       const date = timelineAxisOffsetToDate(adapter, trimmedAxis, 720 * MINUTE);
       expect(date).toEqualDateTime(adapter.date('2025-01-06T08:00:00.000Z', 'UTC'));
     });
+
+    it('should extend the piecewise axis into the previous day for a negative offset', () => {
+      const date = timelineAxisOffsetToDate(adapter, trimmedAxis, -60 * MINUTE);
+      expect(date).toEqualDateTime(adapter.date('2025-01-04T19:00:00.000Z', 'UTC'));
+    });
   });
 
   describe('dateToTimelineAxisOffsetMs', () => {

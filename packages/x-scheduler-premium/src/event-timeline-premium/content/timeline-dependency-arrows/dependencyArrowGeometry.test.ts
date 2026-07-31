@@ -1,6 +1,9 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
-import { getOccurrencesFromEvents } from '@mui/x-scheduler-internals/internals';
+import {
+  getOccurrencesFromEvents,
+  filterOccurrencesVisibleOnTimelineAxis,
+} from '@mui/x-scheduler-internals/internals';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import {
   buildDependencyArrowRoutes,
@@ -572,6 +575,117 @@ describe('dependencyArrowGeometry', () => {
       });
 
       expect(arrows).to.deep.equal([]);
+    });
+
+    describe('trimmed hour window', () => {
+      // Window 8:00 → 20:00 on a single day: 720 axis minutes, eventsWidth 720 → 1px
+      // per axis minute.
+      const TRIMMED_AXIS = {
+        start: collectionStart,
+        end: collectionEnd,
+        dayStartMinute: 480,
+        dayEndMinute: 1200,
+      };
+      const TRIMMED_WIDTH = 720;
+
+      it('should anchor the arrows on the trimmed axis', () => {
+        // event-a 10:00–12:00 → end x = 240; event-b starts 13:00 → start x = 300
+        // (the full-day mapping would give 720 and 780).
+        const arrows = computeDependencyArrows({
+          adapter,
+          dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+          resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+          rowPositions: [0],
+          axis: TRIMMED_AXIS,
+          eventsWidth: TRIMMED_WIDTH,
+          laneMetrics: LANE_METRICS,
+        });
+
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].d).to.equal(`M 240 ${LANE_1_CENTER} L 300 ${LANE_1_CENTER}`);
+      });
+
+      it('should produce no arrow when the source occurrence is hidden', () => {
+        // 21:00–23:00 collapses to a zero-width sliver: the visible list excludes it,
+        // so the dependency has no source anchor.
+        const hiddenSource = EventBuilder.new()
+          .id('event-hidden')
+          .singleDay('2024-01-15T21:00:00Z', 120)
+          .toProcessed();
+        const occurrences = filterOccurrencesVisibleOnTimelineAxis(
+          adapter,
+          TRIMMED_AXIS,
+          getOccurrences([hiddenSource, eventB]),
+        );
+
+        const arrows = computeDependencyArrows({
+          adapter,
+          dependencies: [buildDependency('dep-1', 'event-hidden', 'event-b')],
+          resources: [{ resource: RESOURCE_1, occurrences }],
+          rowPositions: [0],
+          axis: TRIMMED_AXIS,
+          eventsWidth: TRIMMED_WIDTH,
+          laneMetrics: LANE_METRICS,
+        });
+
+        expect(arrows).to.deep.equal([]);
+      });
+
+      it('should assign lanes from the filtered occurrences so arrows match the rendered rows', () => {
+        // Two-day axis (1440 axis minutes). The hidden occurrence (21:00–23:00) is the
+        // earliest of its row and overlaps the visible one in real time: unfiltered it
+        // would claim lane 1 and push the visible occurrence (and its arrow) one lane
+        // below the rendered event.
+        const twoDayAxis = {
+          ...TRIMMED_AXIS,
+          end: adapter.endOfDay(adapter.addDays(collectionStart, 1)),
+        };
+        const getTwoDayOccurrences = (events: SchedulerProcessedEvent[]) =>
+          getOccurrencesFromEvents({
+            adapter,
+            start: collectionStart,
+            end: twoDayAxis.end,
+            events,
+            displayTimezone: 'default',
+            visibleResources: {},
+            recurringEventsPlugin: null,
+          });
+        const hidden = EventBuilder.new()
+          .id('event-hidden')
+          .singleDay('2024-01-15T21:00:00Z', 120)
+          .toProcessed();
+        const visibleSource = EventBuilder.new()
+          .id('event-source')
+          .span('2024-01-15T22:00:00Z', '2024-01-16T10:00:00Z')
+          .toProcessed();
+        const target = EventBuilder.new()
+          .id('event-target')
+          .singleDay('2024-01-16T11:00:00Z', 60)
+          .toProcessed();
+
+        const sourceRowOccurrences = filterOccurrencesVisibleOnTimelineAxis(
+          adapter,
+          twoDayAxis,
+          getTwoDayOccurrences([hidden, visibleSource]),
+        );
+
+        const arrows = computeDependencyArrows({
+          adapter,
+          dependencies: [buildDependency('dep-1', 'event-source', 'event-target')],
+          resources: [
+            { resource: RESOURCE_1, occurrences: sourceRowOccurrences },
+            { resource: RESOURCE_2, occurrences: getTwoDayOccurrences([target]) },
+          ],
+          rowPositions: [0, 62],
+          axis: twoDayAxis,
+          eventsWidth: 1440,
+          laneMetrics: LANE_METRICS,
+        });
+
+        expect(arrows).to.have.length(1);
+        // The source anchor leaves from lane 1 of the first row (end x = 840).
+        expect(arrows[0].d.startsWith(`M 840 ${LANE_1_CENTER} `)).to.equal(true);
+      });
     });
   });
 });
