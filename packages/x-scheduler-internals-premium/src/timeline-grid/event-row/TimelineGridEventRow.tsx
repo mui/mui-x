@@ -8,6 +8,7 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   useEventCreation,
   useKeyboardEventCreation,
+  getTimelineAxisDurationMs,
   timelineAxisOffsetToDate,
 } from '@mui/x-scheduler-internals/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-internals/constants';
@@ -77,7 +78,16 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       input: { clientX: event.clientX },
       elementRef: dropTargetRef,
     });
-    const anchor = timelineAxisOffsetToDate(adapter, presetConfig, offsetMs);
+    // The new event starts at the cursor: cap the offset to the last slot of the axis
+    // so a click on the exact right edge does not create the event on the day after
+    // the collection, where it would not be rendered at all.
+    const lastStartOffsetMs =
+      getTimelineAxisDurationMs(adapter, presetConfig) - EVENT_CREATION_PRECISION_MINUTE * 60_000;
+    const anchor = timelineAxisOffsetToDate(
+      adapter,
+      presetConfig,
+      Math.min(offsetMs, lastStartOffsetMs),
+    );
     const startDate = adapter.addMinutes(
       anchor,
       -(adapter.getMinutes(anchor) % EVENT_CREATION_PRECISION_MINUTE),

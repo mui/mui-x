@@ -582,5 +582,50 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       expect(newStart.getUTCHours()).to.equal(10);
       expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
     });
+
+    it('should keep a drop on the exact right edge of the axis inside the collection', async () => {
+      const handleEventsChange = spy();
+      render(
+        <div>
+          <StandaloneEvent
+            data={{ id: 'external-1', title: 'External Job', duration: 60 }}
+            renderDragPreview={() => null}
+          >
+            External Job
+          </StandaloneEvent>
+          <EventTimelinePremium
+            resources={resources}
+            events={[]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndHour"
+            presets={['dayAndHour']}
+            presetConfig={{ dayAndHour: { startTime: 8, endTime: 20 } }}
+            canDragEventsFromTheOutside
+            onEventsChange={handleEventsChange}
+          />
+        </div>,
+      );
+      mockAllEventRowBounds(AXIS_WIDTH);
+
+      const standaloneElement = screen.getByText('External Job');
+      const row = getEventRow(engineering.id);
+
+      // Axis minute 2880 is the seam after the last visible day: unclamped it maps
+      // to July 7 (outside the collection) and the created event would vanish.
+      await act(async () => {
+        simulateDragAndDrop({
+          source: standaloneElement,
+          target: row,
+          targetClientX: AXIS_WIDTH,
+        });
+      });
+
+      expect(handleEventsChange.callCount).to.equal(1);
+      const updatedEvents = handleEventsChange.firstCall.args[0];
+      const newStart = new Date(updatedEvents[0].start);
+      expect(newStart.getUTCDate()).to.equal(6);
+      expect(newStart.getUTCHours()).to.equal(19);
+      expect(newStart.getUTCMinutes()).to.equal(45);
+    });
   });
 });

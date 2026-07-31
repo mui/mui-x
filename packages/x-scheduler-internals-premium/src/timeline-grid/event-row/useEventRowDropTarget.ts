@@ -52,7 +52,9 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       const elementPosition = elementRef.current.getBoundingClientRect();
       const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
 
-      return Math.round(collectionDurationMs * positionX);
+      // A cursor exactly on (or past) the right edge must not map beyond the axis:
+      // the offset would resolve into the day after the collection.
+      return Math.min(Math.round(collectionDurationMs * positionX), collectionDurationMs);
     });
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
@@ -133,7 +135,11 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
       // Move a Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        return getDataFromOutside(data, axisOffsetToDate(cursorOffsetMs));
+        // The new event starts at the cursor: cap the offset to the last slot of the
+        // axis so a drop on the exact right edge does not create the event on the day
+        // after the collection, where it would not be rendered at all.
+        const lastStartOffsetMs = collectionDurationMs - EVENT_DRAG_PRECISION_MS;
+        return getDataFromOutside(data, axisOffsetToDate(Math.min(cursorOffsetMs, lastStartOffsetMs)));
       }
 
       return undefined;

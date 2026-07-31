@@ -44,11 +44,13 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       collection: presetConfig,
     });
 
+    // `dayEndMinute` is exclusive: at the end minute itself the indicator would
+    // render pinned to the day seam, i.e. on the left edge of the next day.
     const isOutOfRange =
       adapter.isBefore(now, presetConfig.start) ||
       adapter.isAfter(now, presetConfig.end) ||
       processedNow.minutesInDay < presetConfig.dayStartMinute ||
-      processedNow.minutesInDay > presetConfig.dayEndMinute;
+      processedNow.minutesInDay >= presetConfig.dayEndMinute;
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

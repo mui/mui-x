@@ -244,6 +244,31 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       });
     });
 
+    describe('when the current time is exactly at the exclusive end of the window', () => {
+      const { render } = createSchedulerRenderer({
+        clockConfig: new Date('2025-07-03T20:00:30Z'),
+      });
+
+      it('should not render the indicator', () => {
+        // At 20:00 the indicator would render pinned to the day seam, i.e. on the
+        // left edge of the next day.
+        render(
+          <EventTimelinePremiumProvider
+            events={[]}
+            resources={[resource]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            presetConfig={PRESET_CONFIG}
+          >
+            <TimelineGrid.Root>
+              <TimelineGrid.CurrentTimeIndicator data-testid="indicator" />
+            </TimelineGrid.Root>
+          </EventTimelinePremiumProvider>,
+        );
+
+        expect(screen.queryByTestId('indicator')).to.equal(null);
+      });
+    });
+
     describe('when the current time is inside the hidden hours', () => {
       const { render } = createSchedulerRenderer({
         clockConfig: new Date('2025-07-03T22:00:00Z'),
