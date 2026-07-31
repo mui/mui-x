@@ -112,8 +112,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     isDraggable,
     renderDragPreview,
     getDragData,
-    collectionStart: columnStart,
-    collectionEnd: columnEnd,
+    collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
   });
 
   const { getButtonProps, buttonRef } = useButton({

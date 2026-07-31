@@ -29,6 +29,14 @@ export function isFullDayAxisWindow(axis: TimelineAxis) {
 }
 
 /**
+ * Whether a wall-clock minute of the day falls outside the displayed window (the
+ * exclusive end minute itself is the window edge, not outside).
+ */
+export function isMinuteOutsideAxisWindow(axis: TimelineAxis, minutesInDay: number): boolean {
+  return minutesInDay < axis.dayStartMinute || minutesInDay > axis.dayEndMinute;
+}
+
+/**
  * Visible duration of one day in axis milliseconds. Days are measured in wall-clock
  * minutes (a full day is always 1440 minutes) so the axis matches the rendered grid,
  * whose tick count is pinned per day and does not stretch on DST transitions.

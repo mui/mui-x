@@ -8,7 +8,8 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
-import type { SchedulerEventId, TemporalSupportedObject } from '../../models';
+import type { SchedulerEventId } from '../../models';
+import { isMinuteOutsideAxisWindow, type TimelineAxis } from './timeline-axis';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
 import { useAdapterContext } from '../../use-adapter-context';
@@ -24,10 +25,11 @@ export function useDraggableEvent(
     eventId,
     renderDragPreview,
     getDragData,
-    collectionStart,
-    collectionEnd,
+    collection,
     isDraggable = false,
   } = parameters;
+  // Deconstructed so an inline collection object stays memoization-friendly.
+  const { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute } = collection;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -82,13 +84,20 @@ export function useDraggableEvent(
     });
   }, [ref, getDragData, isDraggable, store, preview.actions]);
 
-  const contextValue: useDraggableEvent.ContextValue = React.useMemo(
-    () => ({
-      doesEventStartBeforeCollectionStart: adapter.isBefore(start.value, collectionStart),
-      doesEventEndAfterCollectionEnd: adapter.isAfter(end.value, collectionEnd),
-    }),
-    [adapter, start, end, collectionStart, collectionEnd],
-  );
+  // A bound clipped by the collection range or hidden by the daily hour window does not
+  // render at its real position, so it must not expose a resize handle: the drop math
+  // reconstructs positions from the rendered edges.
+  const contextValue: useDraggableEvent.ContextValue = React.useMemo(() => {
+    const axis = { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute };
+    return {
+      isEventStartClipped:
+        adapter.isBefore(start.value, collectionStart) ||
+        isMinuteOutsideAxisWindow(axis, start.minutesInDay),
+      isEventEndClipped:
+        adapter.isAfter(end.value, collectionEnd) ||
+        isMinuteOutsideAxisWindow(axis, end.minutesInDay),
+    };
+  }, [adapter, start, end, collectionStart, collectionEnd, dayStartMinute, dayEndMinute]);
 
   return { state, preview, contextValue };
 }
@@ -134,13 +143,9 @@ export namespace useDraggableEvent {
      */
     ref: React.RefObject<HTMLDivElement | null>;
     /**
-     * The start date of the collection the event belongs to.
+     * The displayed range and daily hour window of the collection the event belongs to.
      */
-    collectionStart: TemporalSupportedObject;
-    /**
-     * The end date of the collection the event belongs to.
-     */
-    collectionEnd: TemporalSupportedObject;
+    collection: TimelineAxis;
   }
 
   export interface ReturnValue {
@@ -160,12 +165,14 @@ export namespace useDraggableEvent {
 
   export interface ContextValue {
     /**
-     * Whether the event starts before the collection starts.
+     * Whether the event's start does not render at its real position: it is before the
+     * collection start or hidden by the daily hour window.
      */
-    doesEventStartBeforeCollectionStart: boolean;
+    isEventStartClipped: boolean;
     /**
-     * Whether the event ends after the collection ends.
+     * Whether the event's end does not render at its real position: it is after the
+     * collection end or hidden by the daily hour window.
      */
-    doesEventEndAfterCollectionEnd: boolean;
+    isEventEndClipped: boolean;
   }
 }

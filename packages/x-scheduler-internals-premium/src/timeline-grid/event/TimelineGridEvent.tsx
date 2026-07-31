@@ -119,8 +119,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     isDraggable,
     renderDragPreview,
     getDragData,
-    collectionStart: presetConfig.start,
-    collectionEnd: presetConfig.end,
+    collection: presetConfig,
   });
 
   const { getButtonProps, buttonRef } = useButton({

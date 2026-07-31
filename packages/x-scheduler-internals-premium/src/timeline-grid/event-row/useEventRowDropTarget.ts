@@ -74,9 +74,25 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       if (data.source === 'TimelineGridEvent') {
         const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
-        const newStartDate = axisOffsetToDate(cursorOffsetMs - data.initialCursorPositionInEventMs);
+        // `cursorOffsetMs - initialCursorPositionInEventMs` reconstructs the *rendered*
+        // start edge plus the drag delta. When the real start hides inside the hidden
+        // hours, the rendered edge is its window-clamped anchor: carry the hidden
+        // remainder over to the new anchor so an unmoved drag maps back to the exact
+        // original dates instead of silently snapping the start to the window edge.
+        const startAnchor = timelineAxisOffsetToDate(
+          adapter,
+          presetConfig,
+          dateToTimelineAxisOffsetMs(adapter, presetConfig, data.start),
+        );
+        const hiddenRemainderMs = adapter.getTime(data.start) - adapter.getTime(startAnchor);
 
-        // The event keeps its real duration even when it spans hidden hours.
+        const newAnchorDate = axisOffsetToDate(
+          cursorOffsetMs - data.initialCursorPositionInEventMs,
+        );
+        const newStartDate = adapter.addMilliseconds(newAnchorDate, hiddenRemainderMs);
+
+        // The event keeps its real duration even when it spans hidden hours, so the
+        // real start and end both shift by the same amount as their rendered anchors.
         const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
 
         return getDataFromInside(data, newStartDate, newEndDate);

@@ -12,12 +12,11 @@ export function useEventResizeHandler(
     ref,
     side,
     getDragData,
-    contextValue: { doesEventStartBeforeCollectionStart, doesEventEndAfterCollectionEnd },
+    contextValue: { isEventStartClipped, isEventEndClipped },
   } = parameters;
 
   const enabled =
-    (side === 'start' && !doesEventStartBeforeCollectionStart) ||
-    (side === 'end' && !doesEventEndAfterCollectionEnd);
+    (side === 'start' && !isEventStartClipped) || (side === 'end' && !isEventEndClipped);
 
   const state: useEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
