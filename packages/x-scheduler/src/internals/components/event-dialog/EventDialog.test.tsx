@@ -51,8 +51,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       </EventCalendarProvider>,
     );
 
+    const tabContent = document.querySelector(`.${eventCalendarClasses.eventDialogTabContent}`)!;
     const legends = Array.from(
-      document.body.getElementsByClassName(eventCalendarClasses.eventDialogSectionHeaderTitle),
+      tabContent.getElementsByClassName(eventCalendarClasses.eventDialogSectionHeaderTitle),
     );
     expect(legends.map((legend) => legend.textContent)).to.deep.equal([
       'Date & time',
