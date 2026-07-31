@@ -99,8 +99,9 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => {
     // Start at the first visible hour: with a trimmed window an event created at
-    // midnight would be hidden.
-    const creationStart = adapter.addMinutes(presetConfig.start, presetConfig.dayStartMinute);
+    // midnight would be hidden. Offset 0 resolves it as a wall-clock hour, which
+    // `addMinutes` from midnight would miss on a DST day.
+    const creationStart = timelineAxisOffsetToDate(adapter, presetConfig, 0);
     return {
       surfaceType: 'timeline' as const,
       start: creationStart,

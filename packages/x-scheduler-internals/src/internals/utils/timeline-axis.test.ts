@@ -72,6 +72,44 @@ describe('timeline-axis', () => {
     });
   });
 
+  describe('DST transitions', () => {
+    // Nov 2 2025 in America/New_York: clocks fall back at 02:00, the day lasts 25 hours.
+    const dstStart = adapter.date('2025-11-02T00:00:00', 'America/New_York');
+    const dstEnd = adapter.endOfDay(adapter.addDays(dstStart, 1));
+
+    it('should map an offset to the wall-clock hour even after a fall-back transition', () => {
+      const axis = { start: dstStart, end: dstEnd, dayStartMinute: 0, dayEndMinute: 720 };
+      // 480 axis minutes = the "08:00" column: wall-clock 08:00, not midnight + 480 real
+      // minutes (which is 07:00 after the extra hour).
+      const date = timelineAxisOffsetToDate(adapter, axis, 480 * MINUTE);
+      expect(adapter.getHours(date)).to.equal(8);
+      expect(adapter.getDate(date)).to.equal(2);
+    });
+
+    it('should round-trip px↔date across a fall-back transition', () => {
+      const axis = { start: dstStart, end: dstEnd, dayStartMinute: 480, dayEndMinute: 1200 };
+      const date = adapter.date('2025-11-02T10:00:00', 'America/New_York');
+      const offset = dateToTimelineAxisOffsetMs(adapter, axis, date);
+      expect(offset).to.equal(120 * MINUTE);
+      expect(timelineAxisOffsetToDate(adapter, axis, offset)).toEqualDateTime(date);
+    });
+
+    it('should round-trip px↔date across a spring-forward transition', () => {
+      // Mar 8 2026: clocks spring forward at 02:00, the day lasts 23 hours.
+      const springStart = adapter.date('2026-03-08T00:00:00', 'America/New_York');
+      const axis = {
+        start: springStart,
+        end: adapter.endOfDay(adapter.addDays(springStart, 1)),
+        dayStartMinute: 480,
+        dayEndMinute: 1200,
+      };
+      const date = adapter.date('2026-03-08T10:00:00', 'America/New_York');
+      const offset = dateToTimelineAxisOffsetMs(adapter, axis, date);
+      expect(offset).to.equal(120 * MINUTE);
+      expect(timelineAxisOffsetToDate(adapter, axis, offset)).toEqualDateTime(date);
+    });
+  });
+
   describe('isRangeVisibleOnTimelineAxis', () => {
     it('should always be visible on the full-day window', () => {
       const rangeStart = adapter.date('2025-01-05T21:00:00.000Z', 'UTC');
@@ -100,6 +138,14 @@ describe('timeline-axis', () => {
       const rangeEnd = adapter.date('2025-01-06T07:00:00.000Z', 'UTC');
       expect(isRangeVisibleOnTimelineAxis(adapter, trimmedAxis, rangeStart, rangeEnd)).to.equal(
         false,
+      );
+    });
+
+    it('should keep a sub-minute range inside the window visible', () => {
+      const rangeStart = adapter.date('2025-01-05T10:00:00.000Z', 'UTC');
+      const rangeEnd = adapter.date('2025-01-05T10:00:30.000Z', 'UTC');
+      expect(isRangeVisibleOnTimelineAxis(adapter, trimmedAxis, rangeStart, rangeEnd)).to.equal(
+        true,
       );
     });
   });
