@@ -63,6 +63,8 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       }
     };
 
+    const doc = elementRef.current?.ownerDocument ?? document;
+
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target;
       if (
@@ -72,9 +74,23 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         return;
       }
       store.setSelectedDependencyId(null);
+      // Dismissing the selection is this press's whole meaning: the click it produces
+      // must not also create an event or open a dialog — the same first-click-dismisses
+      // behavior the event dialog gets from its backdrop. The one-shot listeners
+      // outlive this effect on purpose (deselecting tears it down before the click
+      // arrives) and disarm themselves on the click, or on the next press.
+      function swallowClick(clickEvent: MouseEvent) {
+        clickEvent.stopPropagation();
+        disarm();
+      }
+      function disarm() {
+        doc.removeEventListener('click', swallowClick, { capture: true });
+        doc.removeEventListener('pointerdown', disarm, { capture: true });
+      }
+      doc.addEventListener('click', swallowClick, { capture: true });
+      doc.addEventListener('pointerdown', disarm, { capture: true });
     };
 
-    const doc = elementRef.current?.ownerDocument ?? document;
     doc.addEventListener('keydown', handleKeyDown);
     doc.addEventListener('pointerdown', handlePointerDown);
     return () => {

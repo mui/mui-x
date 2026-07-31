@@ -5,6 +5,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  mockElementBounds,
   ResourceBuilder,
   simulateDragAndDrop,
 } from 'test/utils/scheduler';
@@ -17,6 +18,7 @@ import {
   resource2,
   TestTimeline,
 } from './dependencyTestUtils';
+import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 
 const eventA = EventBuilder.new()
   .id('event-a')
@@ -511,6 +513,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
 
       fireEvent.pointerDown(document.body);
+      // A press always produces a click: complete the gesture so the deselection's
+      // one-shot click swallow does not stay armed into the next test.
+      fireEvent.click(document.body);
 
       expect(store.state.selection).to.equal(null);
     });
@@ -532,6 +537,33 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.keyDown(element, { key: 'Backspace' });
       element.remove();
     }
+
+    it('should not create an event with the click that deselects the arrow', () => {
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      expect(store.state.selection).not.to.equal(null);
+
+      // A real click-away emits pointerdown (deselecting) then click: the click must
+      // be swallowed, like the event dialog's backdrop swallows its closing click.
+      const cell = document.querySelector<HTMLElement>(
+        `.${eventTimelinePremiumClasses.eventsCell}`,
+      )!;
+      mockElementBounds(cell, { left: 0, top: 0, width: 6144, height: 60 });
+      fireEvent.pointerDown(cell, { clientX: 100, clientY: 10 });
+      fireEvent.click(cell, { clientX: 100, clientY: 10 });
+
+      expect(store.state.selection).to.equal(null);
+      expect(store.state.occurrencePlaceholder).to.equal(null);
+
+      // The next press acts normally again.
+      fireEvent.pointerDown(cell, { clientX: 100, clientY: 10 });
+      fireEvent.click(cell, { clientX: 100, clientY: 10 });
+      expect(store.state.occurrencePlaceholder).not.to.equal(null);
+    });
 
     it('should not delete the arrow when typing Backspace in an editable element', () => {
       const handleDependenciesChange = setupSelectedArrow();
