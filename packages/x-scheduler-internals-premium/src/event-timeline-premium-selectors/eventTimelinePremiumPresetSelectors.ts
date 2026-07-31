@@ -47,13 +47,22 @@ export const eventTimelinePremiumPresetSelectors = {
           ? getDisplayedHourRange(presetStartTime, presetEndTime, `presetConfig.${preset}`)
           : { startTime: 0, endTime: 24 };
 
+      // Preset callbacks size the grid for the full day; the hour window scales the
+      // tick count once here instead of threading it through every preset.
+      const fullDayTickCount = getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount;
+      const tickCount =
+        timeResolution === 'hour'
+          ? (fullDayTickCount * (hourRange.endTime - hourRange.startTime)) / 24
+          : fullDayTickCount;
+
       return {
-        tickCount: getCssUnitCount ? getCssUnitCount(adapter, start, end, hourRange) : unitCount,
+        tickCount,
         start,
         end,
         tickWidth,
         headers,
         timeResolution,
+        hourRange,
         dayStartMinute: hourRange.startTime * 60,
         dayEndMinute: hourRange.endTime * 60,
       };

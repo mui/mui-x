@@ -3,8 +3,14 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/base-ui-copy';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
+import {
+  getStartOfWeek,
+  dateToTimelineAxisOffsetMs,
+  type DisplayedHourRange,
+} from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
+
+const HOUR_MS = 3_600_000;
 
 export function iterate(
   adapter: TemporalAdapter,
@@ -13,7 +19,7 @@ export function iterate(
   rangeStart: TemporalSupportedObject,
   rangeEnd: TemporalSupportedObject,
   weekStartsOn?: WeekStartsOn,
-  hourRange?: { startTime: number; endTime: number },
+  hourRange?: DisplayedHourRange,
 ): IteratedCell[] {
   if (adapter.isBefore(rangeEnd, rangeStart)) {
     throw new Error(
@@ -77,7 +83,7 @@ export function iterate(
       start: clampedStart,
       end: clampedEnd,
       spanInTicks: appliedHourRange
-        ? countVisibleHours(adapter, clampedEnd, clampedStart, appliedHourRange)
+        ? countVisibleHours(adapter, clampedEnd, clampedStart, rangeStart, appliedHourRange)
         : differenceInUnits(adapter, clampedEnd, clampedStart, tickUnit),
       key: String(adapter.getTime(cursor)),
       index,
@@ -142,24 +148,28 @@ function addUnit(
 }
 
 /**
- * Counts the hour ticks within `[earlier, later)` that fall inside the visible hour range.
+ * Counts the hour ticks within `[earlier, later)` that fall inside the visible hour
+ * range: the axis distance between the two bounds, in hours. Closed form (no
+ * hour-by-hour walk), consistent with the pinned tick count of the grid.
  */
 function countVisibleHours(
   adapter: TemporalAdapter,
   later: TemporalSupportedObject,
   earlier: TemporalSupportedObject,
-  hourRange: { startTime: number; endTime: number },
+  rangeStart: TemporalSupportedObject,
+  hourRange: DisplayedHourRange,
 ): number {
-  let count = 0;
-  let cursor = earlier;
-  while (adapter.isBefore(cursor, later)) {
-    const hour = adapter.getHours(cursor);
-    if (hour >= hourRange.startTime && hour < hourRange.endTime) {
-      count += 1;
-    }
-    cursor = adapter.addHours(cursor, 1);
-  }
-  return count;
+  const axis = {
+    start: rangeStart,
+    end: later,
+    dayStartMinute: hourRange.startTime * 60,
+    dayEndMinute: hourRange.endTime * 60,
+  };
+  return Math.round(
+    (dateToTimelineAxisOffsetMs(adapter, axis, later) -
+      dateToTimelineAxisOffsetMs(adapter, axis, earlier)) /
+      HOUR_MS,
+  );
 }
 
 function differenceInUnits(

@@ -57,10 +57,11 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
     getEndDate: (adapter, start, unitCount) =>
       adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
     // `unitCount` is in days (the navigation step), but the grid ticks in hours. Pin
-    // the CSS tick count to `days × visible hours` so the grid width stays stable
-    // across DST and matches the hour cells `iterate()` emits per day.
-    getCssUnitCount: (adapter, start, end, hourRange) =>
-      DAY_AND_HOUR_DAYS * (hourRange.endTime - hourRange.startTime),
+    // the CSS tick count to `days × 24` so the grid width stays stable across DST
+    // and matches the hour cells `iterate()` emits per day — except when a DST
+    // transition falls inside the visible window, where `iterate()` emits one cell
+    // more or fewer for that day (known limitation).
+    getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
     navigate: (adapter, date, amount) => adapter.addDays(date, amount),
   },
   dayAndMonth: {

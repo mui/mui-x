@@ -113,19 +113,18 @@ export interface PresetDefinition {
     weekStartsOn: WeekStartsOn | undefined,
   ) => TemporalSupportedObject;
   /**
-   * Returns the exact number of CSS ticks for the visible range. Override
-   * `unitCount` whenever the grid width must differ from the navigation step:
-   * either because the count varies (e.g. `monthAndYear`, where days per
-   * month differ) or because it has to stay stable against runtime drift
-   * (e.g. `dayAndHour` pins it to `4 × visible hours` so the grid width does
-   * not shrink on DST days). `hourRange` carries the preset's displayed hour
-   * window, resolved from the user's `presetConfig`.
+   * Returns the exact number of CSS ticks for the visible range, sized for the
+   * full day. Override `unitCount` whenever the grid width must differ from the
+   * navigation step: either because the count varies (e.g. `monthAndYear`, where
+   * days per month differ) or because it has to stay stable against runtime
+   * drift (e.g. `dayAndHour` pins it to `4 × 24` so the grid width does not
+   * shrink on DST days). The displayed hour window scales the result in the
+   * preset selector, so presets never see it.
    */
   getCssUnitCount?: (
     adapter: TemporalAdapter,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
-    hourRange: { startTime: number; endTime: number },
   ) => number;
   /**
    * Adds `amount` units (of the preset's navigation unit) to `date`. Called by

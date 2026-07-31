@@ -7,24 +7,15 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS', () => {
     const start = adapter.date('2025-07-03T00:00:00Z', 'default');
     const end = adapter.endOfDay(adapter.addDays(start, 3));
 
-    it('should pin the tick count to 4 days × 24 hours for the full-day window', () => {
+    it('should pin the tick count to 4 days × 24 hours', () => {
+      // The displayed hour window scales this in the preset selector, so the preset
+      // always sizes the full day.
       const count = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS.dayAndHour.getCssUnitCount!(
         adapter,
         start,
         end,
-        { startTime: 0, endTime: 24 },
       );
       expect(count).to.equal(4 * 24);
-    });
-
-    it('should pin the tick count to 4 days × visible hours for a trimmed window', () => {
-      const count = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS.dayAndHour.getCssUnitCount!(
-        adapter,
-        start,
-        end,
-        { startTime: 8, endTime: 20 },
-      );
-      expect(count).to.equal(4 * 12);
     });
   });
 });

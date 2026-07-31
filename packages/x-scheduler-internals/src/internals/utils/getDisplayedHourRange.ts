@@ -4,6 +4,15 @@ const DEFAULT_START_TIME = 0;
 const DEFAULT_END_TIME = 24;
 
 /**
+ * A resolved daily hour window: `startTime` inclusive, `endTime` exclusive, both whole
+ * hours between 0 and 24.
+ */
+export interface DisplayedHourRange {
+  startTime: number;
+  endTime: number;
+}
+
+/**
  * Resolves and validates a `startTime` / `endTime` hour range, shared by the time-grid
  * views (`viewConfig`) and the timeline's hour-resolution presets (`presetConfig`).
  *
@@ -17,7 +26,7 @@ export function getDisplayedHourRange(
   startTime: number | undefined,
   endTime: number | undefined,
   source: string,
-) {
+): DisplayedHourRange {
   const resolvedStartTime = startTime ?? DEFAULT_START_TIME;
   const resolvedEndTime = endTime ?? DEFAULT_END_TIME;
 
