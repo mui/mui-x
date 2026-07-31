@@ -4,10 +4,8 @@ import type {
   SchedulerEventOccurrence,
   SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
-import {
-  computeElementPositionInCollection,
-  type TimelineAxis,
-} from '@mui/x-scheduler-internals/internals';
+import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type {
   SchedulerDependency,

@@ -4,7 +4,10 @@ import {
   filterOccurrencesVisibleOnTimelineAxis,
   isFullDayAxisWindow,
 } from '@mui/x-scheduler-internals/internals';
-import type { SchedulerEventOccurrence, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventOccurrence,
+  SchedulerResourceId,
+} from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 

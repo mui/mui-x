@@ -145,7 +145,11 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
         .resource(resource)
         .span(at(18), at(22))
         .build();
-      const hidden = EventBuilder.new().id('hidden').resource(resource).span(at(21), at(22)).build();
+      const hidden = EventBuilder.new()
+        .id('hidden')
+        .resource(resource)
+        .span(at(21), at(22))
+        .build();
       render(<Grid events={[visible, hidden]} presetConfig={PRESET_CONFIG} />);
 
       const row = screen.getByTestId('events-row');
@@ -262,7 +266,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
     });
 
     it('should emit only the visible hour cells and span the day cells over them', () => {
-      const { container } = render(
+      render(
         <EventTimelinePremiumProvider
           events={[]}
           resources={[resource]}
@@ -275,12 +279,13 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
         </EventTimelinePremiumProvider>,
       );
 
-      const hourCells = container.querySelectorAll<HTMLElement>('[data-unit="hour"]');
+      const header = screen.getByTestId('header');
+      const hourCells = header.querySelectorAll<HTMLElement>('[data-unit="hour"]');
       expect(hourCells.length).to.equal(4 * 12);
       expect(hourCells[0].textContent).to.equal('8:00 AM');
       expect(hourCells[11].textContent).to.equal('7:00 PM');
 
-      const dayCells = container.querySelectorAll<HTMLElement>('[data-unit="day"]');
+      const dayCells = header.querySelectorAll<HTMLElement>('[data-unit="day"]');
       expect(dayCells.length).to.equal(4);
       for (const dayCell of dayCells) {
         expect(dayCell.style.getPropertyValue('--span')).to.equal('12');

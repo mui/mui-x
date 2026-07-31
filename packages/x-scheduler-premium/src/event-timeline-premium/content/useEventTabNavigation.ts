@@ -1,13 +1,16 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import type { SchedulerEventOccurrence, SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventOccurrence,
+  SchedulerResource,
+} from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   dateToTimelineAxisOffsetMs,
   getTimelineAxisDurationMs,
-  type TimelineAxis,
 } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 
 type ResourceWithOccurrences = {
   resource: SchedulerResource;

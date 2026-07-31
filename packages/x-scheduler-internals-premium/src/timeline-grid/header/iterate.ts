@@ -3,11 +3,8 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/base-ui-copy';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import {
-  getStartOfWeek,
-  dateToTimelineAxisOffsetMs,
-  type DisplayedHourRange,
-} from '@mui/x-scheduler-internals/internals';
+import { getStartOfWeek, dateToTimelineAxisOffsetMs } from '@mui/x-scheduler-internals/internals';
+import type { DisplayedHourRange } from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
 
 const HOUR_MS = 3_600_000;

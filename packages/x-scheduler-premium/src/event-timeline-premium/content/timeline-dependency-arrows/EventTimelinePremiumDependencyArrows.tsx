@@ -90,18 +90,8 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
       }),
-    [
-      adapter,
-      dependencies,
-      visibleResources,
-      rowsMeta.positions,
-      presetConfig.start,
-      presetConfig.end,
-      presetConfig.dayStartMinute,
-      presetConfig.dayEndMinute,
-      eventsWidth,
-      theme,
-    ],
+    // The config selector is memoized, so the object identity only changes with its content.
+    [adapter, dependencies, visibleResources, rowsMeta.positions, presetConfig, eventsWidth, theme],
   );
 
   // Only render the arrows intersecting the visible range. Row-range overlap (rather

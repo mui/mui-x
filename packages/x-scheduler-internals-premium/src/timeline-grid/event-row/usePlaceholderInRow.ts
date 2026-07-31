@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { isInternalDragOrResizePlaceholder } from '@mui/x-scheduler-internals/internals';
+import {
+  isInternalDragOrResizePlaceholder,
+  isRangeVisibleOnTimelineAxis,
+} from '@mui/x-scheduler-internals/internals';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
@@ -10,7 +13,6 @@ import {
   eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '../../event-timeline-premium-selectors';
-import { isRangeVisibleOnTimelineAxis } from '@mui/x-scheduler-internals/internals';
 
 export function usePlaceholderInRow(
   parameters: usePlaceholderInRow.Parameters,

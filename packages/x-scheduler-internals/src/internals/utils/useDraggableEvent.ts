@@ -9,7 +9,8 @@ import {
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
 import type { SchedulerEventId } from '../../models';
-import { isMinuteOutsideAxisWindow, type TimelineAxis } from './timeline-axis';
+import { isMinuteOutsideAxisWindow } from './timeline-axis';
+import type { TimelineAxis } from './timeline-axis';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
 import { useAdapterContext } from '../../use-adapter-context';

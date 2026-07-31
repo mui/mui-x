@@ -4,7 +4,12 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-internals/models';
-import { useDropTarget } from '@mui/x-scheduler-internals/internals';
+import {
+  useDropTarget,
+  dateToTimelineAxisOffsetMs,
+  getTimelineAxisDurationMs,
+  timelineAxisOffsetToDate,
+} from '@mui/x-scheduler-internals/internals';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
@@ -13,11 +18,6 @@ import {
 import type { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
-import {
-  dateToTimelineAxisOffsetMs,
-  getTimelineAxisDurationMs,
-  timelineAxisOffsetToDate,
-} from '@mui/x-scheduler-internals/internals';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'TimelineGridEvent',
@@ -139,7 +139,10 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         // axis so a drop on the exact right edge does not create the event on the day
         // after the collection, where it would not be rendered at all.
         const lastStartOffsetMs = collectionDurationMs - EVENT_DRAG_PRECISION_MS;
-        return getDataFromOutside(data, axisOffsetToDate(Math.min(cursorOffsetMs, lastStartOffsetMs)));
+        return getDataFromOutside(
+          data,
+          axisOffsetToDate(Math.min(cursorOffsetMs, lastStartOffsetMs)),
+        );
       }
 
       return undefined;

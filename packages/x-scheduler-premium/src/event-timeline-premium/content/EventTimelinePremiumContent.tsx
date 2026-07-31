@@ -507,14 +507,8 @@ function EventList({
           fractionEnd: position + duration,
         };
       }),
-    [
-      adapter,
-      occurrences,
-      presetConfig.start,
-      presetConfig.end,
-      presetConfig.dayStartMinute,
-      presetConfig.dayEndMinute,
-    ],
+    // The config selector is memoized, so the object identity only changes with its content.
+    [adapter, occurrences, presetConfig],
   );
 
   // Convert virtualizer column range to fraction range

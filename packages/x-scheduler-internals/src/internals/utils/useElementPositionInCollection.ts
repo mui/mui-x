@@ -7,8 +7,8 @@ import {
   getTimelineAxisDayMs,
   getTimelineAxisDurationMs,
   isMinuteOutsideAxisWindow,
-  type TimelineAxis,
 } from './timeline-axis';
+import type { TimelineAxis } from './timeline-axis';
 
 const MINUTE_MS = 60_000;
 
