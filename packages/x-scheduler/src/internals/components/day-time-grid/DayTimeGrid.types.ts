@@ -15,6 +15,11 @@ export interface DayTimeGridProps extends ExportedDayTimeGridProps {
    * @default 24
    */
   endTime?: number;
+  /**
+   * Name of the prop the hour range came from, interpolated in the invalid-range warning.
+   * @default 'viewConfig'
+   */
+  hourRangeSource?: string;
 }
 
 export interface ExportedDayTimeGridProps extends React.HTMLAttributes<HTMLDivElement> {}

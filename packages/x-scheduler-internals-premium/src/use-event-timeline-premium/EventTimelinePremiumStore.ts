@@ -6,12 +6,14 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
   DEFAULT_SCHEDULER_PREFERENCES,
+  getDisplayedHourRange,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@mui/x-scheduler-internals/base-ui-copy';
 import type {
   EventTimelinePremiumPreferences,
   EventTimelinePremiumPreset,
+  EventTimelinePremiumPresetConfig,
   SchedulerAddDependencyResult,
   SchedulerDependencyCreationProperties,
   SchedulerDependencyId,
@@ -73,12 +75,33 @@ function sortPresetsByZoomOrder(
   return PRESET_ZOOM_ORDER.filter((preset) => presets.includes(preset));
 }
 
+/**
+ * Validates every entry of `presetConfig`, not just the active preset's: the selector
+ * only resolves the rendered preset, so a typo in another preset's range would stay
+ * silent until an end user switches to it.
+ */
+function validatePresetConfig(presetConfig: EventTimelinePremiumPresetConfig) {
+  if (process.env.NODE_ENV !== 'production') {
+    for (const preset of Object.keys(presetConfig) as (keyof EventTimelinePremiumPresetConfig)[]) {
+      const hourConfig = presetConfig[preset];
+      if (hourConfig) {
+        getDisplayedHourRange(hourConfig.startTime, hourConfig.endTime, `presetConfig.${preset}`);
+      }
+    }
+  }
+}
+
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: EventTimelinePremiumParameters<TEvent, TResource>,
-) => ({
-  presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
-  presetConfig: parameters.presetConfig ?? EMPTY_OBJECT,
-});
+) => {
+  if (parameters.presetConfig) {
+    validatePresetConfig(parameters.presetConfig);
+  }
+  return {
+    presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
+    presetConfig: parameters.presetConfig ?? EMPTY_OBJECT,
+  };
+};
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 

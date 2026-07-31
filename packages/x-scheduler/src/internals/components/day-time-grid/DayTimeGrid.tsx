@@ -331,9 +331,16 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days, className, startTime: startTimeProp, endTime: endTimeProp, ...other } = props;
+  const {
+    days,
+    className,
+    startTime: startTimeProp,
+    endTime: endTimeProp,
+    hourRangeSource = 'viewConfig',
+    ...other
+  } = props;
 
-  const { startTime, endTime } = getDisplayedHourRange(startTimeProp, endTimeProp);
+  const { startTime, endTime } = getDisplayedHourRange(startTimeProp, endTimeProp, hourRangeSource);
   const hoursCount = endTime - startTime;
 
   // Context hooks

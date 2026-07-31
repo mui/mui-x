@@ -191,22 +191,24 @@ describe('eventTimelinePremiumPresetSelectors', () => {
     });
 
     it('should warn and fall back to the full day when the hour range is invalid', () => {
-      const state = getEventTimelinePremiumStateFromParameters({
-        resources: TEST_RESOURCES,
-        events: [],
-        preset: 'dayAndHour',
-        visibleDate: VISIBLE_DATE,
-        presetConfig: { dayAndHour: { startTime: 20, endTime: 8 } },
-      });
-
-      let config: ReturnType<typeof eventTimelinePremiumPresetSelectors.config>;
+      // The warning fires eagerly when the state is derived from the parameters,
+      // independent of the preset being rendered.
+      let state: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
       expect(() => {
-        config = eventTimelinePremiumPresetSelectors.config(state);
-      }).toWarnDev(['MUI X Scheduler: Received an invalid hour range']);
+        state = getEventTimelinePremiumStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [],
+          preset: 'dayAndHour',
+          visibleDate: VISIBLE_DATE,
+          presetConfig: { dayAndHour: { startTime: 20, endTime: 8 } },
+        });
+      }).toWarnDev(['MUI X Scheduler: `presetConfig.dayAndHour` received an invalid hour range']);
 
-      expect(config!.tickCount).to.equal(4 * 24);
-      expect(config!.dayStartMinute).to.equal(0);
-      expect(config!.dayEndMinute).to.equal(24 * 60);
+      const config = eventTimelinePremiumPresetSelectors.config(state!);
+
+      expect(config.tickCount).to.equal(4 * 24);
+      expect(config.dayStartMinute).to.equal(0);
+      expect(config.dayEndMinute).to.equal(24 * 60);
     });
 
     it('should ignore the hour range on presets whose timeResolution is not hour', () => {

@@ -44,7 +44,7 @@ export const eventTimelinePremiumPresetSelectors = {
       // midnight-based: the hour window is applied through `dayStartMinute` / `dayEndMinute`.
       const hourRange =
         timeResolution === 'hour'
-          ? getDisplayedHourRange(presetStartTime, presetEndTime)
+          ? getDisplayedHourRange(presetStartTime, presetEndTime, `presetConfig.${preset}`)
           : { startTime: 0, endTime: 24 };
 
       return {
