@@ -9,10 +9,10 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
 import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
-import { filterOccurrencesVisibleOnTimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumPresetSelectors,
+  eventTimelinePremiumOccurrenceSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
@@ -727,18 +727,17 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const theme = useTheme();
   // Occurrences hidden by the preset's hour window are excluded from the lane count so
   // the virtualized row heights match the rendered lanes.
+  const visibleResources = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
+  );
   const laneCountByResource = React.useMemo(() => {
     const map = new Map<SchedulerResourceId, number>();
-    for (const { resource, occurrences } of resources) {
-      const visibleOccurrences = filterOccurrencesVisibleOnTimelineAxis(
-        adapter,
-        presetConfig,
-        occurrences,
-      );
-      map.set(resource.id, computeOccurrencesMaxIndex(adapter, visibleOccurrences));
+    for (const { resource, occurrences } of visibleResources) {
+      map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
     }
     return map;
-  }, [resources, adapter, presetConfig]);
+  }, [visibleResources, adapter]);
 
   const getRowHeight = React.useCallback(
     (row: { id: SchedulerResourceId }) =>
@@ -828,10 +827,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   const { handleKeyDown: handleEventTabKeyDown } = useEventTabNavigation({
     adapter,
-    resources,
+    // The axis-filtered list: a hidden occurrence never mounts, so navigating to it
+    // would swallow Tab in an unfocusable retry loop.
+    resources: visibleResources,
     scrollerRef: gridRef,
-    collectionStart: presetConfig.start,
-    collectionEnd: presetConfig.end,
+    axis: presetConfig,
     tickCount: presetConfig.tickCount,
     tickWidth: presetConfig.tickWidth,
     titleColumnWidth,

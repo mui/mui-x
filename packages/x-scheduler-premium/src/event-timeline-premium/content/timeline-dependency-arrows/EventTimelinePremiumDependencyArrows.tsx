@@ -4,14 +4,13 @@ import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumDependencySelectors,
   eventTimelinePremiumPresetSelectors,
+  eventTimelinePremiumOccurrenceSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import { filterOccurrencesVisibleOnTimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { getEventsCellLaneMetrics } from '../rowGeometry';
@@ -69,29 +68,14 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const resources = useStore(
+  // Keep the lane assignment consistent with the rendered rows, which exclude the
+  // occurrences hidden by the preset's hour window.
+  const visibleResources = useStore(
     store,
-    schedulerOccurrenceSelectors.groupedByResourceList,
-    presetConfig.start,
-    presetConfig.end,
+    eventTimelinePremiumOccurrenceSelectors.visibleGroupedByResourceList,
   );
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
-
-  // Keep the lane assignment consistent with the rendered rows, which exclude the
-  // occurrences hidden by the preset's hour window.
-  const visibleResources = React.useMemo(
-    () =>
-      resources.map((entry) => ({
-        ...entry,
-        occurrences: filterOccurrencesVisibleOnTimelineAxis(
-          adapter,
-          presetConfig,
-          entry.occurrences,
-        ),
-      })),
-    [resources, adapter, presetConfig],
-  );
 
   const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
 

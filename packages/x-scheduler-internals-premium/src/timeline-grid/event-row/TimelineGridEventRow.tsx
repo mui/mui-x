@@ -3,13 +3,11 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
-import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   useEventCreation,
   useKeyboardEventCreation,
-  filterOccurrencesVisibleOnTimelineAxis,
   timelineAxisOffsetToDate,
 } from '@mui/x-scheduler-internals/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-internals/constants';
@@ -18,7 +16,10 @@ import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventRowDropTarget } from './useEventRowDropTarget';
 import { usePlaceholderInRow } from './usePlaceholderInRow';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import {
+  eventTimelinePremiumPresetSelectors,
+  eventTimelinePremiumOccurrenceSelectors,
+} from '../../event-timeline-premium-selectors';
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
 
@@ -57,19 +58,12 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
 
   // Selector hooks
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const allOccurrences = useStore(
-    store,
-    schedulerOccurrenceSelectors.resourceOccurrences,
-    presetConfig.start,
-    presetConfig.end,
-    resourceId,
-  );
-
   // Occurrences fully inside the hidden hours would render as zero-width slivers and
-  // inflate the lane count, so they are excluded before positioning.
-  const occurrences = React.useMemo(
-    () => filterOccurrencesVisibleOnTimelineAxis(adapter, presetConfig, allOccurrences),
-    [allOccurrences, adapter, presetConfig],
+  // inflate the lane count, so the selector excludes them before positioning.
+  const occurrences = useStore(
+    store,
+    eventTimelinePremiumOccurrenceSelectors.visibleResourceOccurrences,
+    resourceId,
   );
 
   // Feature hooks

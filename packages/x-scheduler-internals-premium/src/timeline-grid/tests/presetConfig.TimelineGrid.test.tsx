@@ -137,6 +137,21 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       expect(screen.queryByTestId('event-hidden')).to.equal(null);
     });
 
+    it('should not reserve a lane for a hidden occurrence overlapping a visible one', () => {
+      // The two events overlap in real time (18→22 and 21→22), but the second one is
+      // fully inside the hidden hours: only one lane must be reserved.
+      const visible = EventBuilder.new()
+        .id('visible')
+        .resource(resource)
+        .span(at(18), at(22))
+        .build();
+      const hidden = EventBuilder.new().id('hidden').resource(resource).span(at(21), at(22)).build();
+      render(<Grid events={[visible, hidden]} presetConfig={PRESET_CONFIG} />);
+
+      const row = screen.getByTestId('events-row');
+      expect(row.style.getPropertyValue('--lane-count')).to.equal('1');
+    });
+
     it('should render all the occurrences when no presetConfig is provided', () => {
       const nightly = EventBuilder.new()
         .id('nightly')
