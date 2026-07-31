@@ -116,8 +116,8 @@ export const eventTimelinePremiumDependencySelectors = {
   ),
   /**
    * The id of the selected dependency, or `null`.
-   * Ids that no longer exist in the collection resolve to `null`, so an external
-   * removal clears the selection without any reconciliation.
+   * Ids without an active dependency (removed, or with a recurring/unknown endpoint)
+   * mask to `null` for the same render; the store effect then clears the raw value.
    */
   selectedId: selectedIdSelector,
   /**

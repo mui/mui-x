@@ -1,13 +1,21 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import type { SchedulerEventId, SchedulerEventSide } from '@mui/x-scheduler-internals/models';
+import { useDragHandle } from '@mui/x-scheduler-internals/internals';
+import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import type { BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { TimelineGridEventDependencyHandlerDataAttributes } from './TimelineGridEventDependencyHandlerDataAttributes';
+
+/**
+ * Narrows a drag payload to this handle's drag data — the one definition shared by
+ * the creation monitor and the event drop targets.
+ */
+export const isDependencyHandleDrag = buildIsValidDropTarget([
+  'TimelineGridEventDependencyHandler',
+]);
 
 /**
  * The terminal on the end edge of an event: dragging it onto another event creates a
@@ -52,19 +60,7 @@ export const TimelineGridEventDependencyHandler = React.forwardRef(
       storeContext: store as unknown,
     }));
 
-    React.useEffect(() => {
-      if (!ref.current) {
-        return undefined;
-      }
-
-      return draggable({
-        element: ref.current,
-        getInitialData: () => getDragData(),
-        onGenerateDragPreview: ({ nativeSetDragImage }) => {
-          disableNativeDragPreview({ nativeSetDragImage });
-        },
-      });
-    }, [getDragData]);
+    useDragHandle({ ref, enabled: true, getDragData });
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef, ref],

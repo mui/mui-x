@@ -154,6 +154,13 @@ export interface DependencyAnchorResolver {
    */
   getEdgePoint: (anchor: DependencyArrowAnchor, edge: 'start' | 'end') => DependencyArrowPoint;
   /**
+   * The cached position of an occurrence in the collection (fractions and edge
+   * overflow flags), shared with the terminals overlay.
+   */
+  getPosition: (
+    occurrence: SchedulerEventOccurrence,
+  ) => ReturnType<typeof computeElementPositionInCollection>;
+  /**
    * The event boxes of a row, used to pick the elbow candidate crossing the fewest
    * events.
    */
@@ -290,6 +297,7 @@ export function createDependencyAnchorResolver(
     eventsWidth,
     detourOffset: laneMetrics.laneMinHeight / 2 + DEPENDENCY_ARROW_DETOUR_CLEARANCE,
     getAppearances,
+    getPosition,
     hasRowPosition: (rowIndex: number) => rowPositions[rowIndex] != null,
     getEdgePoint,
     getRowObstacles,

@@ -40,7 +40,8 @@ const DependencyArrowsSvg = styled('svg', {
 /**
  * Renders the arrows of the active dependencies over the timeline rows, the
  * provisional (rubber-band) arrow of the pending create-dependency gesture, and the
- * selection interactions of the existing arrows.
+ * selected arrow's highlight. The selection interactions (hit-areas, delete button,
+ * keyboard) live in `EventTimelinePremiumDependencyInteractions`.
  */
 export function EventTimelinePremiumDependencyArrows() {
   const store = useEventTimelinePremiumStoreContext();
@@ -56,6 +57,7 @@ export function EventTimelinePremiumDependencyArrows() {
 
 function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCreation | null }) {
   const theme = useTheme();
+  const store = useEventTimelinePremiumStoreContext();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
 
   const svgRef = React.useRef<SVGSVGElement>(null);
@@ -66,22 +68,38 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   // one to the other and clips the arrows reaching off-screen anchors.
   const { visibleArrows, selectedId, resolver, eventsWidth, offsetTop, height } =
     useDependencyGeometry();
+  // A selected read-only arrow keeps its arrowhead: the delete button that normally
+  // replaces it is not rendered by the interactions layer.
+  const isSelectedReadOnly = useStore(
+    store,
+    eventTimelinePremiumDependencySelectors.isModelReadOnly,
+    selectedId,
+  );
 
   const creationPath = getCreationPath(creation, resolver);
 
   // While no target snaps the line, it follows the cursor without entering React:
   // the path attribute is written directly on every drag frame, and the state only
-  // changes when the gesture starts, snaps or ends. The callback closes over
-  // `offsetTop`, whose layout-effect registration keeps it in sync with the
-  // committed viewBox across a virtualizer update mid-drag.
+  // changes when the gesture starts, snaps or ends. The cursor is tracked for the
+  // whole gesture (also while snapped) so un-snapping can redraw immediately instead
+  // of waiting for the next drag frame. The callback closes over `offsetTop`, whose
+  // layout-effect registration keeps it in sync with the committed viewBox across a
+  // virtualizer update mid-drag.
   const followCursor = creationPath !== null && !creationPath.snapped;
+  const followCursorRef = React.useRef(followCursor);
+  followCursorRef.current = followCursor;
+  const lastCursorRef = React.useRef<{ clientX: number; clientY: number } | null>(null);
+  if (creation === null) {
+    lastCursorRef.current = null;
+  }
   const sourceX = creationPath?.source.x;
   const sourceY = creationPath?.source.y;
   const followCursorMove = React.useCallback(
     (clientX: number, clientY: number) => {
+      lastCursorRef.current = { clientX, clientY };
       const svg = svgRef.current;
       const line = dragLineRef.current;
-      if (svg === null || line === null) {
+      if (!followCursorRef.current || svg === null || line === null) {
         return;
       }
       // The svg rect folds in both scroll offsets; `offsetTop` maps the client point
@@ -94,7 +112,15 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
     },
     [sourceX, sourceY, offsetTop],
   );
-  useDependencyDragCursor(followCursor, followCursorMove);
+  useDependencyDragCursor(creation !== null, followCursorMove);
+  // Redraw from the last tracked cursor when the line just un-snapped (or the
+  // geometry shifted): the drag frame of the same dragover was already canceled by
+  // pragmatic's drop-target update, so waiting for the next one leaves a blink.
+  React.useLayoutEffect(() => {
+    if (followCursor && lastCursorRef.current !== null) {
+      followCursorMove(lastCursorRef.current.clientX, lastCursorRef.current.clientY);
+    }
+  }, [followCursor, followCursorMove]);
 
   // Mount on `creation` (not `creationPath`): the cursor-following line needs the svg
   // and its rect, so the svg must exist before the gesture can draw anything.
@@ -125,6 +151,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
       </defs>
       {visibleArrows.map((arrow) => {
         const selected = arrow.id === selectedId;
+        const replacedByDeleteButton = selected && !isSelectedReadOnly;
         return (
           <path
             key={arrow.key}
@@ -137,7 +164,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
               selected ? DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH : DEPENDENCY_ARROW_STROKE_WIDTH
             }
             // The selected arrow ends on the delete button instead of the arrowhead.
-            markerEnd={selected ? undefined : `url(#${arrowheadId})`}
+            markerEnd={replacedByDeleteButton ? undefined : `url(#${arrowheadId})`}
           />
         );
       })}

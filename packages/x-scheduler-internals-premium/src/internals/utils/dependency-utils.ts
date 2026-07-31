@@ -1,5 +1,6 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerDependency,
@@ -49,6 +50,21 @@ export function buildDependenciesState(
  * Classifies an event id for use as a dependency endpoint: known and non-recurring
  * (`'ok'`), missing from the lookup (`'unknownEvent'`), or recurring (`'recurringEvent'`).
  */
+/**
+ * Whether the dependency cannot be created or deleted because one of its endpoint
+ * events is read-only. The single definition shared by the store guard and the
+ * `isModelReadOnly` selector.
+ */
+export function isDependencyReadOnly(
+  state: Parameters<typeof schedulerEventSelectors.isReadOnly>[0],
+  dependency: { source: SchedulerEventId; target: SchedulerEventId },
+): boolean {
+  return (
+    schedulerEventSelectors.isReadOnly(state, dependency.source) ||
+    schedulerEventSelectors.isReadOnly(state, dependency.target)
+  );
+}
+
 export function classifyDependencyEvent(
   processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
   eventId: SchedulerEventId,

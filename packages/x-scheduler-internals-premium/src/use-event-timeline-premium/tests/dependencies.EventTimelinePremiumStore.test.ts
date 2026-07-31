@@ -535,6 +535,28 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
   });
 
+  it('should clear the selection when an endpoint event of the selected dependency becomes recurring', () => {
+    const store = new EventTimelinePremiumStore(
+      { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+      adapter,
+    );
+    store.setSelectedDependencyId('dep-1');
+
+    // The dependency deactivates (recurring endpoint) without being removed: the
+    // raw selection must clear, or the arrow would come back already selected.
+    const recurringB = EventBuilder.new().id('event-b').recurrent('DAILY').build();
+    expect(() => {
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, events: [eventA, recurringB], dependencies: [DEP_AB] },
+        adapter,
+      );
+    }).toWarnDev([
+      'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-b".',
+    ]);
+
+    expect(store.state.selection).to.equal(null);
+  });
+
   describe('dev warnings', () => {
     it('should warn and keep the feature disabled when onDependenciesChange is provided without dependencies', () => {
       let store!: EventTimelinePremiumStore<any, any>;

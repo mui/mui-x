@@ -23,9 +23,9 @@ const DEPENDENCY_DELETE_BUTTON_CROSS_RADIUS = 2.5;
 
 /**
  * The interaction layer: the arrows' invisible click hit-areas and the selected
- * arrow's delete button. Separate from the visual overlay so it can sit above the
- * events cells — an arrow riding over an event stays clickable. Same z-index as the
- * arrows and the terminals overlays and last in the DOM, so it wins those ties while
+ * arrow's delete button. Separate from the visual overlay so the pointer-enabled
+ * surface stays out of the `pointerEvents: 'none'` svg. Same z-index as the arrows
+ * and the terminals overlays and last in the DOM, so it wins those ties while
  * staying below the pinned title cells (z-index 3), which cover it on horizontal
  * scroll instead of leaking their clicks to the arrows underneath.
  */
@@ -50,8 +50,7 @@ const DependencyInteractionsSvg = styled('svg', {
 }));
 
 /**
- * The click hit-areas and the selected arrow's delete button, rendered after the rows
- * so they stay above the events cells.
+ * The click hit-areas and the selected arrow's delete button.
  */
 export function EventTimelinePremiumDependencyInteractions() {
   const store = useEventTimelinePremiumStoreContext();

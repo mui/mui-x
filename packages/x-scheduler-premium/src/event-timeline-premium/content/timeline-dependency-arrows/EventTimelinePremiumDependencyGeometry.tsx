@@ -60,8 +60,8 @@ export function useDependencyGeometry(): EventTimelinePremiumDependencyGeometryV
  * Computes the dependency geometry once and shares it with the three overlays (visual
  * arrows, terminals, interactions), which would otherwise each run the resolver and
  * the routing on every render of their own. Renders no DOM. Deliberately not
- * subscribed to the creation gesture: only the layers following the cursor pay for
- * its per-frame updates.
+ * subscribed to the creation gesture: only the layers drawing it pay for its
+ * start/snap/end updates.
  */
 export function EventTimelinePremiumDependencyGeometryProvider({
   children,

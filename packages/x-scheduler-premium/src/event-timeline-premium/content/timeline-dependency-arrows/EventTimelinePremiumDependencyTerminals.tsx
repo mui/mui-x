@@ -2,15 +2,10 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
-import {
-  eventTimelinePremiumDependencySelectors,
-  eventTimelinePremiumPresetSelectors,
-} from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
 
@@ -74,10 +69,8 @@ export function EventTimelinePremiumDependencyTerminals() {
 }
 
 function DependencyTerminalsLayerImpl() {
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const creation = useStore(store, eventTimelinePremiumDependencySelectors.creation);
   // Subscribed (not read inline like the per-event flags) because a global `readOnly`
   // flip changes no event or occurrence, so nothing else would re-render the layer.
@@ -96,6 +89,15 @@ function DependencyTerminalsLayerImpl() {
 
   const [hoveredOccurrenceKey, setHoveredOccurrenceKey] = React.useState<string | null>(null);
   const layerRef = React.useRef<HTMLDivElement>(null);
+
+  // A native drag suppresses pointer events, so the hover tracked before the gesture
+  // goes stale by its end (the pointer may have dropped far away): reset it when the
+  // gesture ends and let the next pointerover rebuild it.
+  React.useEffect(() => {
+    if (creation === null) {
+      setHoveredOccurrenceKey(null);
+    }
+  }, [creation]);
 
   const mounted = eventsWidth > 0 && height > 0;
 
@@ -148,12 +150,7 @@ function DependencyTerminalsLayerImpl() {
       ) {
         continue;
       }
-      const position = computeElementPositionInCollection(adapter, {
-        start: occurrence.displayTimezone.start,
-        end: occurrence.displayTimezone.end,
-        collectionStart: presetConfig.start,
-        collectionEnd: presetConfig.end,
-      });
+      const position = resolver.getPosition(occurrence);
       // The gesture starts from the end edge (the `FinishToStart` origin), which must
       // be inside the collection to anchor the provisional arrow — same rule as the
       // end resize handle.

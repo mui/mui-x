@@ -62,6 +62,14 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
   });
   const { renderTimeline } = createDependencyTimelineRenderer(render);
 
+  afterEach(() => {
+    // A failed assertion mid-gesture must not leak pragmatic's global drag state or
+    // an armed click swallow into the next test.
+    fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });
+    fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+    fireEvent.click(document.body);
+  });
+
   describe('terminal rendering', () => {
     it('should render a terminal on the end edge when the dependencies feature is enabled', () => {
       renderTimeline({ events: [eventA, eventB], dependencies: [] });
@@ -81,6 +89,22 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(getTerminal('Event A')).not.to.equal(null);
       expect(getTerminal('Recurring event')).to.equal(null);
+    });
+
+    it('should not render a terminal on an event ending after the collection end', () => {
+      // ~20 days: overflows the dayAndHour preset range, so the end edge (the
+      // gesture's anchor) is outside the collection — same rule as the end resize
+      // handle.
+      const overflowingEvent = EventBuilder.new()
+        .id('event-overflow')
+        .title('Overflowing event')
+        .singleDay('2025-07-03T09:00:00Z', 20 * 24 * 60)
+        .resource(resource1)
+        .build();
+      renderTimeline({ events: [eventA, overflowingEvent], dependencies: [] });
+
+      expect(getTerminal('Event A')).not.to.equal(null);
+      expect(getTerminal('Overflowing event')).to.equal(null);
     });
 
     it('should reveal the terminal while its event is hovered', () => {
@@ -316,7 +340,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should highlight the hovered target event during a terminal drag', async () => {
-      renderTimeline({ events: [eventA, eventB], dependencies: [] });
+      const { store } = renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
       const source = getTerminal('Event A')!.closest('[draggable="true"]')!;
       const target = getEventElement('Event B');
@@ -330,6 +354,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
       expect(getEventElement('Event A').hasAttribute('data-dependency-drag-source')).to.equal(true);
+      expect(store.state.dependencyCreation?.sourceSide).to.equal('end');
 
       // End the gesture: a drag left in flight leaks into the next test's timeline.
       fireEvent.drop(target, { dataTransfer: new DataTransfer() });
@@ -349,6 +374,12 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await waitFor(() => {
         expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
       });
+
+      // Snapped on the hovered target: solid straight line into an arrowhead.
+      const snappedLine = document.querySelector('[data-dependency-drag-line]')!;
+      expect(snappedLine.getAttribute('d')).to.match(/^M [\d.-]+ [\d.-]+ L [\d.-]+ [\d.-]+$/);
+      expect(snappedLine.getAttribute('stroke-dasharray')).to.equal(null);
+      expect(snappedLine.getAttribute('marker-end')).to.contain('dependency-arrowhead-creation');
 
       fireEvent.drop(target, { dataTransfer: new DataTransfer() });
       fireEvent.dragEnd(source, { dataTransfer: new DataTransfer() });
@@ -537,6 +568,60 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.keyDown(element, { key: 'Backspace' });
       element.remove();
     }
+
+    it('should not deselect the arrow on an auxiliary button press', () => {
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      fireEvent.pointerDown(document.body, { button: 2 });
+
+      expect(store.state.selection).not.to.equal(null);
+    });
+
+    it('should not deselect the arrow when pressing inside a dialog', () => {
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      const dialog = document.createElement('div');
+      dialog.setAttribute('role', 'dialog');
+      const button = document.createElement('button');
+      dialog.appendChild(button);
+      document.body.appendChild(dialog);
+      fireEvent.pointerDown(button);
+      fireEvent.click(button);
+      dialog.remove();
+
+      expect(store.state.selection).not.to.equal(null);
+    });
+
+    it('should not swallow a keyboard-activated click after a deselecting press without a click', () => {
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // A press whose click never arrives (drag, canceled pointer) leaves the
+      // swallow armed; a keystroke disarms it so a keyboard-activated click passes.
+      fireEvent.pointerDown(document.body);
+      expect(store.state.selection).to.equal(null);
+      fireEvent.keyDown(document.body, { key: 'Tab' });
+
+      const cell = document.querySelector<HTMLElement>(
+        `.${eventTimelinePremiumClasses.eventsCell}`,
+      )!;
+      mockElementBounds(cell, { left: 0, top: 0, width: 6144, height: 60 });
+      fireEvent.click(cell, { clientX: 100, clientY: 10 });
+      expect(store.state.occurrencePlaceholder).not.to.equal(null);
+    });
 
     it('should not create an event with the click that deselects the arrow', () => {
       const { store } = renderTimeline({
@@ -793,6 +878,24 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.callCount).to.equal(0);
       expect(getArrowPaths()).to.have.length(1);
+    });
+
+    it('should keep the arrowhead and the selection on a selected read-only dependency', () => {
+      const { store } = renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        readOnly: true,
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // No delete button replaces the arrowhead, so the arrow keeps its tip...
+      expect(
+        document.querySelector('[data-dependency-id="dep-1"]')!.getAttribute('marker-end'),
+      ).to.contain('dependency-arrowhead');
+      // ...and a refused deletion keeps the selection instead of silently clearing it.
+      fireEvent.keyDown(document.body, { key: 'Delete' });
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
     });
 
     it('should select a read-only dependency without offering the delete button', () => {

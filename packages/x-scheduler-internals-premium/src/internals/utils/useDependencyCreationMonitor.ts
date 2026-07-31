@@ -3,13 +3,11 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import type { DragLocationHistory, ElementDragType } from '@atlaskit/pragmatic-drag-and-drop/types';
-import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
+import { isDependencyHandleDrag } from '../../timeline-grid/event-dependency-handler/TimelineGridEventDependencyHandler';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 import type { SchedulerDependencyRejectionReason } from '../../models';
-
-const isDependencyHandleDrag = buildIsValidDropTarget(['TimelineGridEventDependencyHandler']);
 
 interface DependencyDropTargetData {
   targetEventId: SchedulerEventId;

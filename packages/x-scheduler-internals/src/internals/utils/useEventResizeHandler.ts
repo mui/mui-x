@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import { useDragHandle } from './useDragHandle';
 import type { useDraggableEvent } from './useDraggableEvent';
 import type { SchedulerEventSide } from '../../models';
 
@@ -24,19 +23,7 @@ export function useEventResizeHandler(
     [side],
   );
 
-  React.useEffect(() => {
-    if (!ref.current || !enabled) {
-      return undefined;
-    }
-
-    return draggable({
-      element: ref.current,
-      getInitialData: ({ input }) => getDragData(input),
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-    });
-  }, [ref, enabled, side, getDragData]);
+  useDragHandle({ ref, enabled, getDragData });
 
   return { state, enabled };
 }

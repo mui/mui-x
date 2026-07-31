@@ -30,7 +30,10 @@ import {
   EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
-import { buildDependenciesState } from '../internals/utils/dependency-utils';
+import {
+  buildDependenciesState,
+  classifyDependencyEvent,
+} from '../internals/utils/dependency-utils';
 
 // Sorted by descending px/day (most zoomed-in first). Each preset's `(timeResolution,
 // tickWidth)` must produce a unique px/day — otherwise the order is decided by
@@ -195,18 +198,33 @@ export class EventTimelinePremiumStore<
     this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
 
-    // Clear (not just mask) the selection of a removed dependency: with masking
-    // alone, a consumer later re-adding the same id (server-assigned or
-    // content-derived) would resurrect the arrow already selected.
+    // Clear (not just mask) the selection of a removed or deactivated dependency:
+    // with masking alone, a dependency coming back (a re-added id, an endpoint event
+    // re-fetched or no longer recurring) would resurrect the arrow already selected.
+    const clearInactiveDependencySelection = () => {
+      const { selection, dependencyModelLookup, processedEventLookup } = this.state;
+      if (selection?.type !== 'dependency') {
+        return;
+      }
+      const dependency = dependencyModelLookup.get(selection.id);
+      if (
+        dependency === undefined ||
+        classifyDependencyEvent(processedEventLookup, dependency.source) !== 'ok' ||
+        classifyDependencyEvent(processedEventLookup, dependency.target) !== 'ok'
+      ) {
+        this.setSelection(null);
+      }
+    };
     this.disposables.defer(
       this.registerStoreEffect(
         (state) => state.dependencyModelLookup,
-        () => {
-          const { selection, dependencyModelLookup } = this.state;
-          if (selection?.type === 'dependency' && !dependencyModelLookup.has(selection.id)) {
-            this.setSelection(null);
-          }
-        },
+        clearInactiveDependencySelection,
+      ),
+    );
+    this.disposables.defer(
+      this.registerStoreEffect(
+        (state) => state.processedEventLookup,
+        clearInactiveDependencySelection,
       ),
     );
 
@@ -299,9 +317,10 @@ export class EventTimelinePremiumStore<
   ): SchedulerAddDependencyResult => this.scheduling.addDependency(properties);
 
   /**
-   * Deletes a dependency.
+   * Deletes a dependency. Returns `false` when the deletion was refused because an
+   * endpoint event is read-only.
    */
-  public deleteDependency = (dependencyId: SchedulerDependencyId) =>
+  public deleteDependency = (dependencyId: SchedulerDependencyId): boolean =>
     this.scheduling.deleteDependency(dependencyId);
 
   /**
@@ -342,7 +361,11 @@ export class EventTimelinePremiumStore<
     if (selection?.type !== 'dependency') {
       return;
     }
-    this.deleteDependency(selection.id);
+    // A refused deletion (read-only endpoint) keeps the selection: silently
+    // deselecting would read as a broken delete.
+    if (!this.deleteDependency(selection.id)) {
+      return;
+    }
     this.setSelection(null);
   };
 }

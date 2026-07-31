@@ -646,6 +646,28 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows).to.deep.equal([]);
     });
 
+    it('should resolve an event outside the endpoint filter through the targeted scan', () => {
+      const resolver = createDependencyAnchorResolver({
+        adapter,
+        resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
+        rowPositions: [0],
+        collectionStart,
+        collectionEnd,
+        eventsWidth: EVENTS_WIDTH,
+        laneMetrics: LANE_METRICS,
+        endpointIds: new Set(['event-a']),
+      });
+
+      // Filtered id: indexed by the build pass.
+      expect(resolver.getAppearances('event-a')).to.have.length(1);
+      // Off-filter id (the in-flight creation's event): targeted scan, cached.
+      const first = resolver.getAppearances('event-b');
+      expect(first).to.have.length(1);
+      expect(resolver.getAppearances('event-b')).to.equal(first);
+      // Unknown off-filter id caches its empty result too.
+      expect(resolver.getAppearances('nope')).to.have.length(0);
+    });
+
     it('should anchor the rubber band on the appearance matching the occurrence key', () => {
       // The same event appearing in two rows, with distinct keys per appearance.
       const [firstAppearance] = getOccurrences([eventA]);

@@ -18,7 +18,7 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
 } from '../../models';
-import { classifyDependencyEvent } from '../utils/dependency-utils';
+import { classifyDependencyEvent, isDependencyReadOnly } from '../utils/dependency-utils';
 
 /**
  * Plugin that provides event-scheduling support (dependencies).
@@ -143,22 +143,19 @@ export class SchedulerSchedulingPlugin<
   };
 
   /**
-   * Deletes a dependency. Ignored when either endpoint event is read-only, so the
-   * store stays safe regardless of which affordance calls it.
+   * Deletes a dependency. Refused (returning `false`) when either endpoint event is
+   * read-only, so the store stays safe regardless of which affordance calls it.
    * Implementation of the store's `deleteDependency()` — call it through the store.
    */
-  public deleteDependency = (dependencyId: SchedulerDependencyId) => {
+  public deleteDependency = (dependencyId: SchedulerDependencyId): boolean => {
     const dependency = this.store.state.dependencyModelLookup.get(dependencyId);
-    if (
-      dependency &&
-      (schedulerEventSelectors.isReadOnly(this.store.state, dependency.source) ||
-        schedulerEventSelectors.isReadOnly(this.store.state, dependency.target))
-    ) {
-      return;
+    if (dependency && isDependencyReadOnly(this.store.state, dependency)) {
+      return false;
     }
     const current = this.store.state.dependencyModelList;
     const remaining = current.filter((entry) => entry.id !== dependencyId);
     this.updateDependenciesIfChanged(current, remaining);
+    return true;
   };
 
   private warnOnInvalidDependencies() {

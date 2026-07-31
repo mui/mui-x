@@ -21,6 +21,13 @@ const GUARDED_KEY_TARGETS = [
   '[role="dialog"]',
 ].join(', ');
 
+/**
+ * The dialog subset of the guard also applies to presses: a press inside the open
+ * event dialog belongs to the dialog, it must neither deselect the arrow underneath
+ * nor swallow the control's click.
+ */
+const GUARDED_PRESS_TARGETS = 'dialog, [role="dialog"]';
+
 function isGuardedKeyTarget(event: KeyboardEvent): boolean {
   // At the document level `event.target` is retargeted to the shadow host, which
   // would mask an editable living inside it: the composed path has the real target.
@@ -38,8 +45,9 @@ function isGuardedKeyTarget(event: KeyboardEvent): boolean {
  * Keyboard and click-away interactions of the selected dependency: Delete/Backspace
  * deletes it, Escape deselects, clicking outside the arrow deselects.
  * Document-level listeners because the SVG arrows are not focusable — the keyboard
- * accessibility story of dependencies is deliberately deferred. The document is the
- * interaction layer's own, so a timeline rendered into another window keeps working.
+ * accessibility story of dependencies is deliberately deferred, and so is arbitration
+ * between several timelines on one page (each instance holding a selection reacts to
+ * the same document-level keystroke until a focus story scopes it).
  */
 export function useDependencySelectionInteraction(elementRef: React.RefObject<Element | null>) {
   const store = useEventTimelinePremiumStoreContext();
@@ -59,17 +67,29 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         event.preventDefault();
         store.deleteSelectedDependency();
       } else if (event.key === 'Escape') {
-        store.setSelectedDependencyId(null);
+        // Escape during an in-flight creation drag cancels the drag (pragmatic
+        // handles it); one keystroke must not also drop the selection.
+        if (store.state.dependencyCreation === null) {
+          store.setSelectedDependencyId(null);
+        }
       }
     };
 
     const doc = elementRef.current?.ownerDocument ?? document;
 
     const handlePointerDown = (event: PointerEvent) => {
+      // Only a primary-button press is a click-away: auxiliary presses (context
+      // menu, middle click) produce `auxclick`, not `click`, so they would leave
+      // the swallow armed for an unrelated later click.
+      if (event.button !== 0) {
+        return;
+      }
       const target = event.target;
       if (
         target instanceof Element &&
-        target.closest('[data-dependency-hit], [data-dependency-delete-button]')
+        target.closest(
+          `[data-dependency-hit], [data-dependency-delete-button], ${GUARDED_PRESS_TARGETS}`,
+        )
       ) {
         return;
       }
@@ -78,7 +98,8 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       // must not also create an event or open a dialog — the same first-click-dismisses
       // behavior the event dialog gets from its backdrop. The one-shot listeners
       // outlive this effect on purpose (deselecting tears it down before the click
-      // arrives) and disarm themselves on the click, or on the next press.
+      // arrives) and disarm themselves on the click, or on any signal that the press
+      // will not produce one (a drag, a canceled pointer, a keystroke).
       function swallowClick(clickEvent: MouseEvent) {
         clickEvent.stopPropagation();
         disarm();
@@ -86,9 +107,15 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       function disarm() {
         doc.removeEventListener('click', swallowClick, { capture: true });
         doc.removeEventListener('pointerdown', disarm, { capture: true });
+        doc.removeEventListener('dragstart', disarm, { capture: true });
+        doc.removeEventListener('pointercancel', disarm, { capture: true });
+        doc.removeEventListener('keydown', disarm, { capture: true });
       }
       doc.addEventListener('click', swallowClick, { capture: true });
       doc.addEventListener('pointerdown', disarm, { capture: true });
+      doc.addEventListener('dragstart', disarm, { capture: true });
+      doc.addEventListener('pointercancel', disarm, { capture: true });
+      doc.addEventListener('keydown', disarm, { capture: true });
     };
 
     doc.addEventListener('keydown', handleKeyDown);
