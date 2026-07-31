@@ -136,6 +136,26 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       fireEvent.pointerOver(document.querySelector('[data-dependency-hit="dep-1"]')!);
       expect(getTerminal('Event A')!.hasAttribute('data-visible')).to.equal(true);
     });
+
+    // jsdom only: in browser mode the virtualizer does not mount an event that far
+    // right without scrolling, and the clamp is a pure style computation anyway.
+    it.skipIf(!isJSDOM)(
+      'should keep the terminal inside the events area for an event ending at the collection end',
+      () => {
+        // Ends one minute before the dayAndHour collection end: the outside circle
+        // would overflow the events area (96 ticks × 64px) and be clipped by the
+        // viewport, so it slides back over the event's tail.
+        const edgeEvent = EventBuilder.new()
+          .id('event-edge')
+          .title('Edge event')
+          .singleDay('2025-07-06T23:00:00Z', 59)
+          .resource(resource1)
+          .build();
+        renderTimeline({ events: [eventA, edgeEvent], dependencies: [] });
+
+        expect(getTerminal('Edge event')!.style.left).to.equal('6134px');
+      },
+    );
   });
 
   describe.skipIf(isJSDOM)('terminal placement', () => {
