@@ -17,10 +17,8 @@ describe('timeline-axis', () => {
   const trimmedAxis = { start, end, dayStartMinute: 480, dayEndMinute: 1200 };
 
   describe('getTimelineAxisDurationMs', () => {
-    it('should return the real duration for the full-day window', () => {
-      expect(getTimelineAxisDurationMs(adapter, fullAxis)).to.equal(
-        adapter.getTime(end) - adapter.getTime(start),
-      );
+    it('should return days × 1440 minutes for the full-day window', () => {
+      expect(getTimelineAxisDurationMs(adapter, fullAxis)).to.equal(4 * 1440 * MINUTE);
     });
 
     it('should return days × visible minutes for a trimmed window', () => {
@@ -59,10 +57,7 @@ describe('timeline-axis', () => {
 
     it('should clamp a date outside the visible window to the day edge', () => {
       const hidden = adapter.date('2025-01-05T22:00:00.000Z', 'UTC');
-      const edge = adapter.date('2025-01-05T20:00:00.000Z', 'UTC');
-      expect(dateToTimelineAxisOffsetMs(adapter, trimmedAxis, hidden)).to.equal(
-        dateToTimelineAxisOffsetMs(adapter, trimmedAxis, edge),
-      );
+      expect(dateToTimelineAxisOffsetMs(adapter, trimmedAxis, hidden)).to.equal(720 * MINUTE);
     });
 
     it('should return a negative offset for a date before the collection start', () => {

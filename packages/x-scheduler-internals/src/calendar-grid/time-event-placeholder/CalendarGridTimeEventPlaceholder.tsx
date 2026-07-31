@@ -34,10 +34,7 @@ export const CalendarGridTimeEventPlaceholder = React.forwardRef(
     const { position, duration } = useElementPositionInCollection({
       start,
       end,
-      collectionStart: columnStart,
-      collectionEnd: columnEnd,
-      dayStartMinute,
-      dayEndMinute,
+      collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
     });
 
     const { state } = useEvent({ start, end });

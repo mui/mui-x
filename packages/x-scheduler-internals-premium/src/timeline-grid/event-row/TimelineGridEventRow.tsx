@@ -6,7 +6,12 @@ import { useRenderElement } from '@mui/x-scheduler-internals/base-ui-copy';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useEventCreation, useKeyboardEventCreation } from '@mui/x-scheduler-internals/internals';
+import {
+  useEventCreation,
+  useKeyboardEventCreation,
+  filterOccurrencesVisibleOnTimelineAxis,
+  timelineAxisOffsetToDate,
+} from '@mui/x-scheduler-internals/internals';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-internals/constants';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
@@ -16,10 +21,6 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventRowDataAttributes } from './TimelineGridEventRowDataAttributes';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
-import {
-  filterOccurrencesVisibleOnTimelineAxis,
-  timelineAxisOffsetToDate,
-} from '../../internals/utils/timeline-axis';
 
 const stateAttributesMapping = {
   resourceId: (value: SchedulerResourceId) => ({

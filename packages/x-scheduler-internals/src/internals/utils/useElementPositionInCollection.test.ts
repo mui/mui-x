@@ -9,14 +9,19 @@ describe('computeElementPositionInCollection', () => {
   // 4-day collection: Jan 5 → Jan 8, like the `dayAndHour` timeline preset.
   const collectionStart = date('2025-01-05T00:00:00.000Z');
   const collectionEnd = adapter.endOfDay(date('2025-01-08T00:00:00.000Z'));
+  const fullCollection = {
+    start: collectionStart,
+    end: collectionEnd,
+    dayStartMinute: 0,
+    dayEndMinute: 1440,
+  };
 
   describe('full-day window (default)', () => {
     it('should position an event relative to the whole collection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T12:00:00.000Z'),
         end: processed('2025-01-05T18:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
+        collection: fullCollection,
       });
 
       expect(result.position).to.equal(720 / 5760);
@@ -29,8 +34,7 @@ describe('computeElementPositionInCollection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-04T12:00:00.000Z'),
         end: processed('2025-01-09T12:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
+        collection: fullCollection,
       });
 
       expect(result.position).to.equal(0);
@@ -43,14 +47,13 @@ describe('computeElementPositionInCollection', () => {
   describe('trimmed window (dayStartMinute / dayEndMinute)', () => {
     // Window 8:00 → 20:00 (480 → 1200): 720 visible minutes per day, 2880 in total.
     const window = { dayStartMinute: 480, dayEndMinute: 1200 };
+    const trimmedCollection = { start: collectionStart, end: collectionEnd, ...window };
 
     it('should position an event fully inside the window of a later day', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-06T10:00:00.000Z'),
         end: processed('2025-01-06T12:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
-        ...window,
+        collection: trimmedCollection,
       });
 
       expect(result.position).to.equal(840 / 2880);
@@ -63,9 +66,7 @@ describe('computeElementPositionInCollection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T18:00:00.000Z'),
         end: processed('2025-01-05T22:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
-        ...window,
+        collection: trimmedCollection,
       });
 
       expect(result.position).to.equal(600 / 2880);
@@ -77,9 +78,7 @@ describe('computeElementPositionInCollection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-06T06:00:00.000Z'),
         end: processed('2025-01-06T10:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
-        ...window,
+        collection: trimmedCollection,
       });
 
       expect(result.position).to.equal(720 / 2880);
@@ -92,9 +91,7 @@ describe('computeElementPositionInCollection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T18:00:00.000Z'),
         end: processed('2025-01-06T10:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
-        ...window,
+        collection: trimmedCollection,
       });
 
       expect(result.position).to.equal(600 / 2880);
@@ -107,9 +104,7 @@ describe('computeElementPositionInCollection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T18:00:00.000Z'),
         end: processed('2025-01-06T00:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
-        ...window,
+        collection: trimmedCollection,
       });
 
       expect(result.position).to.equal(600 / 2880);
@@ -121,9 +116,7 @@ describe('computeElementPositionInCollection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T22:00:00.000Z'),
         end: processed('2025-01-06T10:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
-        ...window,
+        collection: trimmedCollection,
       });
 
       expect(result.position).to.equal(720 / 2880);
@@ -135,9 +128,7 @@ describe('computeElementPositionInCollection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T21:00:00.000Z'),
         end: processed('2025-01-05T23:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
-        ...window,
+        collection: trimmedCollection,
       });
 
       expect(result.duration).to.equal(0);
@@ -149,9 +140,7 @@ describe('computeElementPositionInCollection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T21:00:00.000Z'),
         end: processed('2025-01-06T07:00:00.000Z'),
-        collectionStart,
-        collectionEnd,
-        ...window,
+        collection: trimmedCollection,
       });
 
       expect(result.duration).to.equal(0);
@@ -162,9 +151,7 @@ describe('computeElementPositionInCollection', () => {
       const result = computeElementPositionInCollection(adapter, {
         start: processed('2025-01-05T06:00:00.000Z'),
         end: processed('2025-01-05T10:00:00.000Z'),
-        collectionStart,
-        collectionEnd: singleDayEnd,
-        ...window,
+        collection: { start: collectionStart, end: singleDayEnd, ...window },
       });
 
       expect(result.position).to.equal(0);

@@ -10,6 +10,12 @@ import {
 
 const collectionStart = adapter.date('2024-01-15', 'default');
 const collectionEnd = adapter.endOfDay(collectionStart);
+const FULL_DAY_AXIS = {
+  start: collectionStart,
+  end: collectionEnd,
+  dayStartMinute: 0,
+  dayEndMinute: 1440,
+};
 
 // 1440 minutes in the collection and eventsWidth = 1440 → 1px per minute.
 const EVENTS_WIDTH = 1440;
@@ -314,8 +320,7 @@ describe('dependencyArrowGeometry', () => {
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
         resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
         rowPositions: [0],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });
@@ -337,8 +342,7 @@ describe('dependencyArrowGeometry', () => {
           { resource: RESOURCE_2, occurrences: getOccurrences([eventC]) },
         ],
         rowPositions: [0, 62],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });
@@ -364,8 +368,7 @@ describe('dependencyArrowGeometry', () => {
         dependencies: [buildDependency('dep-1', 'event-a', 'event-d')],
         resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventD]) }],
         rowPositions: [0],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });
@@ -401,8 +404,7 @@ describe('dependencyArrowGeometry', () => {
           { resource: RESOURCE_2, occurrences: getOccurrences([obstacle, eventT]) },
         ],
         rowPositions: [0, 62],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });
@@ -434,8 +436,7 @@ describe('dependencyArrowGeometry', () => {
           { resource: resource3, occurrences: getOccurrences([eventT]) },
         ],
         rowPositions: [0, 62, 124],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });
@@ -455,8 +456,7 @@ describe('dependencyArrowGeometry', () => {
         ],
         resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
         rowPositions: [0],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });
@@ -475,8 +475,7 @@ describe('dependencyArrowGeometry', () => {
           { resource: RESOURCE_2, occurrences: occurrencesB },
         ],
         rowPositions: [0, 62],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });
@@ -498,8 +497,7 @@ describe('dependencyArrowGeometry', () => {
           { resource: RESOURCE_2, occurrences: [...occurrencesA, ...occurrencesB] },
         ],
         rowPositions: [0, 62],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });
@@ -533,8 +531,7 @@ describe('dependencyArrowGeometry', () => {
           { resource: RESOURCE_2, occurrences: getOccurrences([earlyEvent]) },
         ],
         rowPositions: [0, 62],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });
@@ -555,8 +552,7 @@ describe('dependencyArrowGeometry', () => {
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
         resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA, eventB]) }],
         rowPositions: [0],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: 0,
         laneMetrics: LANE_METRICS,
       });
@@ -570,8 +566,7 @@ describe('dependencyArrowGeometry', () => {
         dependencies: [],
         resources: [{ resource: RESOURCE_1, occurrences: getOccurrences([eventA]) }],
         rowPositions: [0],
-        collectionStart,
-        collectionEnd,
+        axis: FULL_DAY_AXIS,
         eventsWidth: EVENTS_WIDTH,
         laneMetrics: LANE_METRICS,
       });

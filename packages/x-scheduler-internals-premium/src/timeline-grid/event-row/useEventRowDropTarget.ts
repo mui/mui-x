@@ -17,7 +17,7 @@ import {
   dateToTimelineAxisOffsetMs,
   getTimelineAxisDurationMs,
   timelineAxisOffsetToDate,
-} from '../../internals/utils/timeline-axis';
+} from '@mui/x-scheduler-internals/internals';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'TimelineGridEvent',

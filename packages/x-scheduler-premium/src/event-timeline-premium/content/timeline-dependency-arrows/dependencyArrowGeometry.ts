@@ -3,9 +3,11 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerResource,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
+import {
+  computeElementPositionInCollection,
+  type TimelineAxis,
+} from '@mui/x-scheduler-internals/internals';
 import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type {
   SchedulerDependency,
@@ -81,18 +83,10 @@ export interface ComputeDependencyArrowsParameters {
    * The y offset of each row in pixels, in the same order as `resources`.
    */
   rowPositions: readonly number[];
-  collectionStart: TemporalSupportedObject;
-  collectionEnd: TemporalSupportedObject;
   /**
-   * First displayed minute of each day, as an offset from midnight.
-   * @default 0
+   * The visible date range and daily hour window the arrows are positioned in.
    */
-  dayStartMinute?: number;
-  /**
-   * Last displayed minute of each day, as an offset from midnight.
-   * @default 1440
-   */
-  dayEndMinute?: number;
+  axis: TimelineAxis;
   /**
    * The width of the events area in pixels (tick count × tick width).
    */
@@ -114,18 +108,8 @@ interface DependencyArrowAnchor {
 export function computeDependencyArrows(
   parameters: ComputeDependencyArrowsParameters,
 ): DependencyArrow[] {
-  const {
-    adapter,
-    dependencies,
-    resources,
-    rowPositions,
-    collectionStart,
-    collectionEnd,
-    dayStartMinute = 0,
-    dayEndMinute = 24 * 60,
-    eventsWidth,
-    laneMetrics,
-  } = parameters;
+  const { adapter, dependencies, resources, rowPositions, axis, eventsWidth, laneMetrics } =
+    parameters;
 
   if (dependencies.length === 0 || eventsWidth <= 0) {
     return [];
@@ -174,10 +158,7 @@ export function computeDependencyArrows(
       position = computeElementPositionInCollection(adapter, {
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
-        collectionStart,
-        collectionEnd,
-        dayStartMinute,
-        dayEndMinute,
+        collection: axis,
       });
       positionByOccurrenceKey.set(occurrence.key, position);
     }

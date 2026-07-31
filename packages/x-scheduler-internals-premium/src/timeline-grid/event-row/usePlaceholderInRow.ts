@@ -10,7 +10,7 @@ import {
   eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '../../event-timeline-premium-selectors';
-import { isRangeVisibleOnTimelineAxis } from '../../internals/utils/timeline-axis';
+import { isRangeVisibleOnTimelineAxis } from '@mui/x-scheduler-internals/internals';
 
 export function usePlaceholderInRow(
   parameters: usePlaceholderInRow.Parameters,

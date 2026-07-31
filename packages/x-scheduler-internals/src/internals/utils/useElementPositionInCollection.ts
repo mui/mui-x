@@ -1,22 +1,22 @@
 import * as React from 'react';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
+import type { SchedulerProcessedDate } from '../../models';
+import {
+  dateToTimelineAxisOffsetMs,
+  getTimelineAxisDayMs,
+  getTimelineAxisDurationMs,
+  type TimelineAxis,
+} from './timeline-axis';
 
-// Default visual window: the full 24h day (visual time, not real-time duration)
-const FIXED_24H_GRID_MINUTES = 24 * 60;
+const MINUTE_MS = 60_000;
 
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
 ): useElementPositionInCollection.ReturnValue {
-  const {
-    start,
-    end,
-    collectionStart,
-    collectionEnd,
-    dayStartMinute = 0,
-    dayEndMinute = FIXED_24H_GRID_MINUTES,
-  } = parameters;
+  const { start, end, collection } = parameters;
+  // Deconstructed so an inline collection object stays memoization-friendly.
+  const { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute } = collection;
 
   const adapter = useAdapterContext();
 
@@ -25,10 +25,7 @@ export function useElementPositionInCollection(
       computeElementPositionInCollection(adapter, {
         start,
         end,
-        collectionStart,
-        collectionEnd,
-        dayStartMinute,
-        dayEndMinute,
+        collection: { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute },
       }),
     [adapter, start, end, collectionStart, collectionEnd, dayStartMinute, dayEndMinute],
   );
@@ -41,66 +38,46 @@ export function computeElementPositionInCollection(
   adapter: Adapter,
   parameters: useElementPositionInCollection.Parameters,
 ): useElementPositionInCollection.ReturnValue {
-  const {
-    start,
-    end,
-    collectionStart,
-    collectionEnd,
-    dayStartMinute = 0,
-    dayEndMinute = FIXED_24H_GRID_MINUTES,
-  } = parameters;
+  const { start, end, collection } = parameters;
+  const { dayStartMinute, dayEndMinute } = collection;
 
-  // Number of minutes displayed per day. With the default window this is the full day (1440).
-  const dayMinutes = Math.max(1, dayEndMinute - dayStartMinute);
+  const dayMs = getTimelineAxisDayMs(collection);
 
-  const startDayIndex = adapter.differenceInDays(
-    adapter.startOfDay(start.value),
-    adapter.startOfDay(collectionStart),
+  // The processed bounds already carry their wall-clock time of day.
+  const startOffsetMs = dateToTimelineAxisOffsetMs(
+    adapter,
+    collection,
+    start.value,
+    start.minutesInDay * MINUTE_MS,
   );
-
-  const endDayIndex = adapter.differenceInDays(
-    adapter.startOfDay(end.value),
-    adapter.startOfDay(collectionStart),
+  let endOffsetMs = dateToTimelineAxisOffsetMs(
+    adapter,
+    collection,
+    end.value,
+    end.minutesInDay * MINUTE_MS,
   );
-
-  // Clamp each bound into its own day's visible window so out-of-window minutes
-  // don't leak into the adjacent day's visible region.
-  const clampMinuteInWindow = (minute: number) =>
-    Math.min(Math.max(minute, dayStartMinute), dayEndMinute);
-
-  const startIndexMinutes =
-    startDayIndex * dayMinutes + (clampMinuteInWindow(start.minutesInDay) - dayStartMinute);
-
-  let endIndexMinutes =
-    endDayIndex * dayMinutes + (clampMinuteInWindow(end.minutesInDay) - dayStartMinute);
 
   // If the event ends before it starts, it means it spans over midnight(s)
-  if (endIndexMinutes < startIndexMinutes) {
-    endIndexMinutes += dayMinutes;
+  if (endOffsetMs < startOffsetMs) {
+    endOffsetMs += dayMs;
   }
 
-  const totalDays =
-    adapter.differenceInDays(
-      adapter.startOfDay(collectionEnd),
-      adapter.startOfDay(collectionStart),
-    ) + 1;
+  const totalMs = getTimelineAxisDurationMs(adapter, collection);
 
-  const totalMinutes = Math.max(1, totalDays * dayMinutes);
+  const clampToTimeline = (value: number) => Math.min(Math.max(value, 0), totalMs);
 
-  const clampToTimeline = (value: number) => Math.min(Math.max(value, 0), totalMinutes);
-
-  const clampedStartMinutes = clampToTimeline(startIndexMinutes);
-  const clampedEndMinutes = clampToTimeline(endIndexMinutes);
+  const clampedStartMs = clampToTimeline(startOffsetMs);
+  const clampedEndMs = clampToTimeline(endOffsetMs);
 
   // A bound clamped in either direction means part of the element is hidden.
   const isMinuteOutOfWindow = (minute: number) => minute < dayStartMinute || minute > dayEndMinute;
 
-  const startingBeforeEdge = startIndexMinutes < 0 || isMinuteOutOfWindow(start.minutesInDay);
-  const endingAfterEdge = endIndexMinutes > totalMinutes || isMinuteOutOfWindow(end.minutesInDay);
+  const startingBeforeEdge = startOffsetMs < 0 || isMinuteOutOfWindow(start.minutesInDay);
+  const endingAfterEdge = endOffsetMs > totalMs || isMinuteOutOfWindow(end.minutesInDay);
 
   return {
-    position: clampedStartMinutes / totalMinutes,
-    duration: Math.max(0, clampedEndMinutes - clampedStartMinutes) / totalMinutes,
+    position: clampedStartMs / totalMs,
+    duration: Math.max(0, clampedEndMs - clampedStartMs) / totalMs,
     startingBeforeEdge,
     endingAfterEdge,
   };
@@ -110,20 +87,11 @@ namespace useElementPositionInCollection {
   export interface Parameters {
     start: SchedulerProcessedDate;
     end: SchedulerProcessedDate;
-    collectionStart: TemporalSupportedObject;
-    collectionEnd: TemporalSupportedObject;
     /**
-     * First displayed minute of the day, as an offset from midnight.
-     * Used by the time-grid views to limit the visible hour range.
-     * @default 0
+     * The displayed range and daily hour window the element is positioned in: a
+     * time-grid column (`viewConfig`) or the timeline's axis (`presetConfig`).
      */
-    dayStartMinute?: number;
-    /**
-     * Last displayed minute of the day, as an offset from midnight.
-     * Used by the time-grid views to limit the visible hour range.
-     * @default 1440
-     */
-    dayEndMinute?: number;
+    collection: TimelineAxis;
   }
 
   export interface ReturnValue {

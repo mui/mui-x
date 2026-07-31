@@ -11,7 +11,7 @@ import {
   eventTimelinePremiumPresetSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
-import { filterOccurrencesVisibleOnTimelineAxis } from '@mui/x-scheduler-internals-premium/internals';
+import { filterOccurrencesVisibleOnTimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { getEventsCellLaneMetrics } from '../rowGeometry';
@@ -102,10 +102,7 @@ function DependencyArrowsLayer({ dependencies }: { dependencies: readonly Schedu
         dependencies,
         resources: visibleResources,
         rowPositions: rowsMeta.positions,
-        collectionStart: presetConfig.start,
-        collectionEnd: presetConfig.end,
-        dayStartMinute: presetConfig.dayStartMinute,
-        dayEndMinute: presetConfig.dayEndMinute,
+        axis: presetConfig,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
       }),

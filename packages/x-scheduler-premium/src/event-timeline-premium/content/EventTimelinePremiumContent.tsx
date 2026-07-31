@@ -9,7 +9,7 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
 import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
-import { filterOccurrencesVisibleOnTimelineAxis } from '@mui/x-scheduler-internals-premium/internals';
+import { filterOccurrencesVisibleOnTimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumPresetSelectors,
@@ -498,10 +498,7 @@ function EventList({
         const { position, duration } = computeElementPositionInCollection(adapter, {
           start: occurrence.displayTimezone.start,
           end: occurrence.displayTimezone.end,
-          collectionStart: presetConfig.start,
-          collectionEnd: presetConfig.end,
-          dayStartMinute: presetConfig.dayStartMinute,
-          dayEndMinute: presetConfig.dayEndMinute,
+          collection: presetConfig,
         });
 
         return {

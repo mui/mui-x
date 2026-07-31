@@ -16,6 +16,7 @@ import {
   useDraggableEvent,
   generateOccurrenceFromEvent,
   useElementPositionInCollection,
+  dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -25,7 +26,6 @@ import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
-import { dateToTimelineAxisOffsetMs } from '../../internals/utils/timeline-axis';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
@@ -133,10 +133,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     useElementPositionInCollection({
       start,
       end,
-      collectionStart: presetConfig.start,
-      collectionEnd: presetConfig.end,
-      dayStartMinute: presetConfig.dayStartMinute,
-      dayEndMinute: presetConfig.dayEndMinute,
+      collection: presetConfig,
     });
 
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
