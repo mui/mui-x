@@ -300,13 +300,13 @@ export class SchedulerStore<
    * every selectable type keeps the selection mutually exclusive across features.
    */
   public setSelection = (selection: SchedulerSelection | null) => {
-    const previous = this.state.selection;
+    // Widened through a cast: in this package no selectable type is registered yet,
+    // so the union is empty and the members of `never` cannot be accessed.
+    const previous = this.state.selection as { type: string; id: unknown } | null;
+    const next = selection as { type: string; id: unknown } | null;
     if (
-      previous === selection ||
-      (previous !== null &&
-        selection !== null &&
-        previous.type === selection.type &&
-        previous.id === selection.id)
+      previous === next ||
+      (previous !== null && next !== null && previous.type === next.type && previous.id === next.id)
     ) {
       return;
     }
