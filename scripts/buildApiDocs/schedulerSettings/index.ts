@@ -112,6 +112,9 @@ export default schedulerApiPages;
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-title-cell/EventTimelinePremiumTitleCell.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/EventTimelinePremiumHeader.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyArrows.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyGeometry.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyInteractions.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyTerminals.tsx',
       'x-scheduler-premium/src/event-timeline-premium/error-container/EventTimelinePremiumErrorContainer.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
