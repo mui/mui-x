@@ -6,6 +6,7 @@ import type { GridRowId, GridSlotProps } from '@mui/x-data-grid-pro';
 import { NotRendered, vars } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { isFormulaSource } from '../hooks/features/formula/engine';
 import type { FormulaCompletionToken } from '../hooks/features/formula/engine';
 import { useGridFormulaAutocomplete } from '../hooks/features/formula/gridFormulaAutocomplete';
 import type { GridFormulaSuggestionState } from '../hooks/features/formula/gridFormulaAutocomplete';
@@ -21,6 +22,7 @@ import {
 } from '../hooks/features/formula/gridFormulaBarElements';
 import {
   FORMULA_REFERENCE_TOKEN_CLASS,
+  FORMULA_SYNTAX_TOKEN_CLASS,
   getCaretOffset,
   getSelectionOffsets,
   normalizeSingleLine,
@@ -29,6 +31,20 @@ import {
   setCaretOffset,
   setSelectionOffsets,
 } from './formulaEditorCaret';
+
+/**
+ * The font formula text is rendered in — monospace, so a formula reads as the
+ * code it is and cannot be mistaken for a plain cell value (the formula bar
+ * shows both). Override the `--DataGrid-formulaFontFamily` CSS variable in a
+ * theme to change it, the same escape hatch the reference palette uses.
+ *
+ * Applied as `font-family` alone, never through the `font` shorthand: the
+ * hosting surfaces set `font: vars.typography.font.body`, and keeping their font
+ * size and unitless line height is what makes the line box — and with it the
+ * floating editor's wrap measurements — identical to the proportional font's.
+ */
+export const FORMULA_FONT_FAMILY =
+  'var(--DataGrid-formulaFontFamily, ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace)';
 
 // The `contenteditable` itself. Its children are the colored token `<span>`s and
 // plain text nodes, managed imperatively (`renderSegments`) — never by React — so
@@ -63,6 +79,17 @@ const GridFormulaEditableRoot = styled('div')(({ theme }) => ({
   // identity clear across lines. A token with no natural break opportunity can
   // overflow horizontally, so the caret must remain reachable through scrolling.
   [`& .${FORMULA_REFERENCE_TOKEN_CLASS}`]: { overflowWrap: 'normal' },
+  // Operators, punctuation and the leading `=` step back so the function names,
+  // identifiers and literals lead the line.
+  [`& .${FORMULA_SYNTAX_TOKEN_CLASS}`]: { color: (theme.vars || theme).palette.text.secondary },
+  // Only formula text is monospace — the formula bar renders plain cell values
+  // through this same editable, and the contrast between the two fonts is what
+  // makes a formula recognizable at a glance.
+  '&[data-formula="true"]': {
+    fontFamily: FORMULA_FONT_FAMILY,
+    // A user-supplied programming font must not weld `<=`/`<>` into one glyph.
+    fontVariantLigatures: 'none',
+  },
   ...getFormulaReferencePaletteStyles(theme),
 }));
 
@@ -86,6 +113,9 @@ const GridFormulaEditorPanel = styled('div')(({ theme }) => ({
 
 const GridFormulaEditorSignature = styled('div')(({ theme }) => ({
   ...theme.typography.caption,
+  // After the typography spread, which carries its own `fontFamily`: the
+  // signature is formula syntax and matches the editor's font.
+  fontFamily: FORMULA_FONT_FAMILY,
   padding: '6px 10px',
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   color: (theme.vars || theme).palette.text.secondary,
@@ -116,7 +146,11 @@ const GridFormulaEditorOption = styled('li')(({ theme }) => ({
   },
 }));
 
+// The token itself — a function or field name that will be spliced into the
+// formula — so it matches the editor's font. The detail beside it is prose (a
+// category, a column's header name) and stays in the UI font.
 const GridFormulaEditorOptionLabel = styled('span')({
+  fontFamily: FORMULA_FONT_FAMILY,
   fontVariantLigatures: 'none',
   whiteSpace: 'nowrap',
 });
@@ -151,7 +185,11 @@ function segmentsEqual(a: FormulaTextSegment[], b: FormulaTextSegment[]): boolea
     return false;
   }
   for (let index = 0; index < a.length; index += 1) {
-    if (a[index].text !== b[index].text || a[index].colorIndex !== b[index].colorIndex) {
+    if (
+      a[index].text !== b[index].text ||
+      a[index].colorIndex !== b[index].colorIndex ||
+      Boolean(a[index].syntax) !== Boolean(b[index].syntax)
+    ) {
       return false;
     }
   }
@@ -676,6 +714,11 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         <GridFormulaEditableRoot
           ref={handleEditableRef}
           className={className}
+          // Drives the monospace rule above. React only writes the attribute —
+          // the imperatively-managed children are untouched — and it lands in the
+          // DOM before the rebuild layout effect, so the floating editor's
+          // grow-to-fit always measures with the font already applied.
+          data-formula={isFormulaSource(value) ? 'true' : undefined}
           contentEditable={!readOnly}
           aria-readonly={readOnly || undefined}
           suppressContentEditableWarning

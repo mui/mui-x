@@ -8,6 +8,13 @@ import type { FormulaTextSegment } from '../hooks/features/formula/gridFormulaRe
 export const FORMULA_REFERENCE_TOKEN_CLASS = 'MuiDataGrid-formulaReferenceToken';
 
 /**
+ * The class on each muted syntax `<span>` (operators, punctuation, the leading
+ * `=`) inside the formula editor. Colored through CSS rather than an inline
+ * style — unlike a reference token, there is exactly one color.
+ */
+export const FORMULA_SYNTAX_TOKEN_CLASS = 'MuiDataGrid-formulaSyntaxToken';
+
+/**
  * A character range within `root.textContent`. Collapsed (`start === end`) when it
  * is a plain caret.
  */
@@ -194,24 +201,29 @@ export function scrollCaretIntoView(root: HTMLElement): void {
 
 /**
  * Imperatively rebuilds the editable's children from `segments`: a flat run of
- * text nodes (plain gaps) and colored `<span>`s (reference tokens), no block
- * elements. The editable has no React-controlled children, so this never fights
- * React reconciliation (the React-contenteditable pattern). An empty `segments`
- * leaves the editable empty — the caret then goes into the root via
- * `setCaretOffset`.
+ * text nodes (plain gaps), colored `<span>`s (reference tokens) and muted
+ * `<span>`s (syntax runs), no block elements. The editable has no
+ * React-controlled children, so this never fights React reconciliation (the
+ * React-contenteditable pattern). An empty `segments` leaves the editable
+ * empty — the caret then goes into the root via `setCaretOffset`.
  */
 export function renderSegments(root: HTMLElement, segments: FormulaTextSegment[]): void {
   const doc = root.ownerDocument;
   root.textContent = '';
   for (const segment of segments) {
-    if (segment.colorIndex === null) {
-      root.appendChild(doc.createTextNode(segment.text));
-    } else {
+    if (segment.colorIndex !== null) {
       const span = doc.createElement('span');
       span.className = FORMULA_REFERENCE_TOKEN_CLASS;
       span.style.color = getFormulaReferenceColorVar(segment.colorIndex);
       span.textContent = segment.text;
       root.appendChild(span);
+    } else if (segment.syntax) {
+      const span = doc.createElement('span');
+      span.className = FORMULA_SYNTAX_TOKEN_CLASS;
+      span.textContent = segment.text;
+      root.appendChild(span);
+    } else {
+      root.appendChild(doc.createTextNode(segment.text));
     }
   }
 }

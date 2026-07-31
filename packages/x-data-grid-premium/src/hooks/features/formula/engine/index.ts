@@ -135,6 +135,7 @@ export type { A1TransformContext, A1TransformResult, ToCanonicalOptions } from '
 export {
   columnIndexToLetters,
   columnLettersToIndex,
+  scanStringLiteral,
   toCanonicalFormula,
   toDisplayFormula,
 } from './formulaA1';

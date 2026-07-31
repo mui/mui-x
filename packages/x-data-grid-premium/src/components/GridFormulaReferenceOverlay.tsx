@@ -55,7 +55,6 @@ const GridFormulaReferenceOverlayRect = styled('div')({
   left: 0,
   boxSizing: 'border-box',
   border: '1px dashed',
-  borderRadius: 2,
 });
 
 interface OverlayRect {

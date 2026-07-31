@@ -110,8 +110,7 @@ const bottomPinnedRows: GridRowsProp = [
   {
     id: 9,
     item: 'Subtotal',
-    total:
-      '=SUM(COLUMN_VALUES("total"))',
+    total: '=SUM(COLUMN_VALUES("total"))',
   },
   {
     id: 10,
@@ -123,7 +122,7 @@ const bottomPinnedRows: GridRowsProp = [
     item: 'Total due',
     total: '=REF(COLUMN("total"), ROW(9)) + REF(COLUMN("total"), ROW(10))',
   },
-]
+];
 
 export default function FormulaBasic() {
   return (

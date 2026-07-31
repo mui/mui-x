@@ -211,6 +211,24 @@ describe('<DataGridPremium /> - Formula bar', () => {
       expect(tokens[0].textContent).to.equal('price');
     });
 
+    it('marks formula text for the monospace font and mutes its syntax', async () => {
+      render(<Test />);
+      await microtasks();
+      // A plain cell value goes through the same editable and must stay in the UI
+      // font, with its punctuation untouched.
+      focusCell(0, 'item');
+      expect(getBarEditable().dataset.formula).to.equal(undefined);
+      expect(getBar()!.querySelectorAll('.MuiDataGrid-formulaSyntaxToken')).to.have.length(0);
+
+      focusCell(2, 'total');
+      typeInBar('=price * 2');
+      expect(getBarEditable().dataset.formula).to.equal('true');
+      const syntax = getBar()!.querySelectorAll('.MuiDataGrid-formulaSyntaxToken');
+      expect(Array.from(syntax).map((span) => span.textContent)).to.deep.equal(['=', '*']);
+      // The muting never changes the text the caret offsets are measured against.
+      expect(getBarEditable().textContent).to.equal('=price * 2');
+    });
+
     it('previews the draft result on the fly', async () => {
       render(<Test />);
       await microtasks();

@@ -52,6 +52,10 @@ Out of horizontal room, the formula wraps and the editor grows by whole lines in
 Deleting content never shrinks the editor mid-edit.
 In row edit mode, only the focused cell shows the floating editor; the row's other formula cells display their current draft in place.
 
+Formula text is set in a monospace font—so it reads as the code it is, and so a formula is distinguishable at a glance from a plain value in the [formula bar](#formula-bar), which renders both.
+Operators, parentheses, commas, and the leading `=` use the secondary text color, leaving the function names, identifiers, and literals to lead the line.
+Override the `--DataGrid-formulaFontFamily` CSS variable in a theme to change the font.
+
 `processRowUpdate` and undo/redo operate on the formula source, so persisting and restoring rows keeps formulas working for free:
 
 ```tsx

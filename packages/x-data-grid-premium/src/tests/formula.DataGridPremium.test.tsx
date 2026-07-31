@@ -1917,6 +1917,21 @@ describe('<DataGridPremium /> - Formulas', () => {
       expect(tokens()[1].style.color).to.equal('var(--DataGrid-formulaRefColor-1)');
     });
 
+    it('mutes the formula syntax and marks the editor for the monospace font', async () => {
+      const { user } = await render(<Test />);
+      await user.dblClick(getCell(0, 3));
+      await waitFor(() => {
+        expect(getCellEditable(0, 3).textContent).to.equal('=price * quantity');
+      });
+      const editable = getCellEditable(0, 3);
+      expect(editable.dataset.formula).to.equal('true');
+      const syntax = editable.querySelectorAll<HTMLElement>('.MuiDataGrid-formulaSyntaxToken');
+      expect(Array.from(syntax).map((span) => span.textContent)).to.deep.equal(['=', '*']);
+      // The extra spans never change the text the caret offsets are measured
+      // against.
+      expect(editable.textContent).to.equal('=price * quantity');
+    });
+
     it('outlines each referenced cell in the grid', async () => {
       const { user } = await render(<Test />);
       await user.dblClick(getCell(0, 3));

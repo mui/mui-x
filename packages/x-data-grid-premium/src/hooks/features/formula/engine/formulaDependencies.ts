@@ -228,10 +228,7 @@ export function resolveFormulaRangeRectangle(
   // Clamp the row span to the data band: pinned rows are addressable but never
   // aggregated, so a pinned summary row can hold `SUM(E1:E8)` without covering
   // itself however the body is sorted, filtered or paginated.
-  const fromIndex = Math.max(
-    Math.min(start.rowIndex, end.rowIndex),
-    context.dataFromIndex,
-  );
+  const fromIndex = Math.max(Math.min(start.rowIndex, end.rowIndex), context.dataFromIndex);
   const toIndex = Math.min(Math.max(start.rowIndex, end.rowIndex), context.dataToIndex);
   return {
     fromColumn: Math.min(start.columnIndex, end.columnIndex),

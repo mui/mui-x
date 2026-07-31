@@ -13,6 +13,7 @@ import {
   isFormulaErrorValue,
   isFormulaSource,
   resolveFormulaRangeRectangle,
+  scanStringLiteral,
 } from './engine';
 import type {
   FormulaPositionContext,
@@ -63,6 +64,13 @@ export interface FormulaReferenceModel {
 export interface FormulaTextSegment {
   text: string;
   colorIndex: number | null;
+  /**
+   * A run of operators/punctuation OUTSIDE any reference, rendered in the muted
+   * foreground so the function names, identifiers and literals lead the line.
+   * Never set on a reference token — a reference keeps its identity color across
+   * its own inner parentheses and colons.
+   */
+  syntax?: boolean;
 }
 
 /**
@@ -352,15 +360,100 @@ export function useGridFormulaReferenceModel(
 }
 
 /**
- * Splits the editor text into colored reference runs and plain gaps. References
- * are non-overlapping distinct tokens; an out-of-order or overlapping span is
- * skipped defensively so the segment text always reconstructs the value exactly.
+ * The characters that read as pure syntax in both dialects: the canonical
+ * operators and punctuation, plus A1's range `:` and the leading `=`. They are
+ * muted only OUTSIDE a reference token — a reference owns its own inner
+ * characters — and outside a string literal.
+ */
+const FORMULA_SYNTAX_CHARS = new Set([
+  '=',
+  '(',
+  ')',
+  ',',
+  ':',
+  '+',
+  '-',
+  '*',
+  '/',
+  '^',
+  '&',
+  '<',
+  '>',
+]);
+
+/**
+ * A per-character mask of the editor text: `true` where the character is pure
+ * syntax. Deliberately a character scan rather than `tokenizeFormula`, which
+ * only knows the canonical dialect (it has neither `:` nor `$`) and stops at the
+ * first error — while the editor shows A1 text that is half-typed most of the
+ * time. String literals are skipped whole, so the comma in `"a, b"` stays text.
+ */
+function buildFormulaSyntaxMask(value: string): boolean[] {
+  const mask = new Array<boolean>(value.length).fill(false);
+  let index = 0;
+  while (index < value.length) {
+    const char = value[index];
+    if (char === '"') {
+      index = scanStringLiteral(value, index);
+      continue;
+    }
+    if (FORMULA_SYNTAX_CHARS.has(char)) {
+      mask[index] = true;
+    }
+    index += 1;
+  }
+  return mask;
+}
+
+/**
+ * Appends `value.slice(start, end)` — the text between two reference tokens —
+ * split into alternating syntax and plain runs. A `null` mask (a non-formula
+ * value, e.g. a plain cell value shown in the formula bar) appends the gap whole.
+ */
+function pushGapSegments(
+  segments: FormulaTextSegment[],
+  value: string,
+  mask: boolean[] | null,
+  start: number,
+  end: number,
+): void {
+  if (start >= end) {
+    return;
+  }
+  if (mask === null) {
+    segments.push({ text: value.slice(start, end), colorIndex: null });
+    return;
+  }
+  let runStart = start;
+  for (let index = start + 1; index <= end; index += 1) {
+    if (index < end && mask[index] === mask[runStart]) {
+      continue;
+    }
+    const segment: FormulaTextSegment = { text: value.slice(runStart, index), colorIndex: null };
+    if (mask[runStart]) {
+      segment.syntax = true;
+    }
+    segments.push(segment);
+    runStart = index;
+  }
+}
+
+/**
+ * Splits the editor text into colored reference runs and plain gaps, each gap
+ * further split into muted syntax runs (operators, punctuation) and everything
+ * else. References are non-overlapping distinct tokens; an out-of-order or
+ * overlapping span is skipped defensively so the segment text always
+ * reconstructs the value exactly — the invariant every caret offset depends on.
  * Shared by the editor's imperative DOM rebuild (`renderSegments`).
  */
 export function buildFormulaTextSegments(
   value: string,
   references: FormulaReference[],
 ): FormulaTextSegment[] {
+  // Only formula text carries syntax: the formula bar renders plain cell values
+  // through the same editable, and the comma in `Hello, world` is not an
+  // operator. Escaped literals (`'=…`) are not formula source either.
+  const syntaxMask = isFormulaSource(value) ? buildFormulaSyntaxMask(value) : null;
   const colored = references
     .filter((reference) => reference.colorIndex !== null)
     .flatMap((reference) =>
@@ -378,14 +471,10 @@ export function buildFormulaTextSegments(
     if (span.start < cursor || span.end > value.length) {
       continue;
     }
-    if (span.start > cursor) {
-      segments.push({ text: value.slice(cursor, span.start), colorIndex: null });
-    }
+    pushGapSegments(segments, value, syntaxMask, cursor, span.start);
     segments.push({ text: value.slice(span.start, span.end), colorIndex: span.colorIndex });
     cursor = span.end;
   }
-  if (cursor < value.length) {
-    segments.push({ text: value.slice(cursor), colorIndex: null });
-  }
+  pushGapSegments(segments, value, syntaxMask, cursor, value.length);
   return segments;
 }

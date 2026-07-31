@@ -2,6 +2,7 @@ import {
   FORMULA_REFERENCE_PALETTE,
   FORMULA_REFERENCE_PALETTE_SIZE,
   buildFormulaReferenceModel,
+  buildFormulaTextSegments,
   getFormulaReferenceColor,
 } from './gridFormulaReferenceHighlights';
 import { createTestPositionContext } from './engine/testUtils';
@@ -142,6 +143,69 @@ describe('gridFormulaReferenceHighlights', () => {
     it('always reports the palette size', () => {
       expect(build('hello').paletteSize).to.equal(FORMULA_REFERENCE_PALETTE_SIZE);
       expect(build('=price').paletteSize).to.equal(FORMULA_REFERENCE_PALETTE_SIZE);
+    });
+  });
+
+  describe('buildFormulaTextSegments', () => {
+    const segments = (value: string, a1Notation = false, ownerCell = owner) =>
+      buildFormulaTextSegments(value, build(value, a1Notation, ownerCell).references);
+
+    // The invariant every caret offset depends on: the segment texts, in order,
+    // reconstruct the value exactly.
+    const assertReconstructs = (value: string, a1Notation = false) => {
+      expect(
+        segments(value, a1Notation)
+          .map((segment) => segment.text)
+          .join(''),
+      ).to.equal(value);
+    };
+
+    it('mutes operators, punctuation and the leading `=` around colored references', () => {
+      const value = '=SUM(price, 2)';
+      expect(segments(value)).to.deep.equal([
+        { text: '=', colorIndex: null, syntax: true },
+        { text: 'SUM', colorIndex: null },
+        { text: '(', colorIndex: null, syntax: true },
+        { text: 'price', colorIndex: 0 },
+        { text: ',', colorIndex: null, syntax: true },
+        { text: ' 2', colorIndex: null },
+        { text: ')', colorIndex: null, syntax: true },
+      ]);
+      assertReconstructs(value);
+    });
+
+    it('leaves special characters inside a string literal alone', () => {
+      const value = '="a, b" & price';
+      expect(segments(value)).to.deep.equal([
+        { text: '=', colorIndex: null, syntax: true },
+        { text: '"a, b" ', colorIndex: null },
+        { text: '&', colorIndex: null, syntax: true },
+        { text: ' ', colorIndex: null },
+        { text: 'price', colorIndex: 0 },
+      ]);
+      assertReconstructs(value);
+    });
+
+    it('keeps a reference token whole, including its inner characters', () => {
+      // The range `:` belongs to the reference and keeps its identity color.
+      expect(segments('=SUM(A1:B2)', true)).to.deep.equal([
+        { text: '=', colorIndex: null, syntax: true },
+        { text: 'SUM', colorIndex: null },
+        { text: '(', colorIndex: null, syntax: true },
+        { text: 'A1:B2', colorIndex: 0 },
+        { text: ')', colorIndex: null, syntax: true },
+      ]);
+      assertReconstructs('=SUM(A1:B2)', true);
+    });
+
+    it('never mutes a non-formula value', () => {
+      // The formula bar renders plain cell values through the same editable.
+      expect(segments('Hello, world')).to.deep.equal([{ text: 'Hello, world', colorIndex: null }]);
+      expect(segments("'=1+1")).to.deep.equal([{ text: "'=1+1", colorIndex: null }]);
+    });
+
+    it('returns no segments for an empty value', () => {
+      expect(segments('')).to.deep.equal([]);
     });
   });
 

@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import type { FormulaTextSegment } from '../hooks/features/formula/gridFormulaReferenceHighlights';
 import {
   FORMULA_REFERENCE_TOKEN_CLASS,
+  FORMULA_SYNTAX_TOKEN_CLASS,
   getCaretOffset,
   getSelectionOffsets,
   normalizeSingleLine,
@@ -16,6 +17,18 @@ const FORMULA_SEGMENTS: FormulaTextSegment[] = [
   { text: 'price', colorIndex: 0 },
   { text: ' * ', colorIndex: null },
   { text: 'quantity', colorIndex: 1 },
+];
+
+// `=SUM(price, 2)`: muted syntax spans and a colored token interleaved with plain
+// text nodes — the densest arrangement of node boundaries the caret has to cross.
+const SYNTAX_SEGMENTS: FormulaTextSegment[] = [
+  { text: '=', colorIndex: null, syntax: true },
+  { text: 'SUM', colorIndex: null },
+  { text: '(', colorIndex: null, syntax: true },
+  { text: 'price', colorIndex: 0 },
+  { text: ',', colorIndex: null, syntax: true },
+  { text: ' 2', colorIndex: null },
+  { text: ')', colorIndex: null, syntax: true },
 ];
 
 describe('formulaEditorCaret', () => {
@@ -55,6 +68,37 @@ describe('formulaEditorCaret', () => {
       expect(spans[1].style.color).to.equal('var(--DataGrid-formulaRefColor-1)');
     });
 
+    it('tags syntax runs with the syntax class and leaves them uncolored inline', () => {
+      makeEditable(SYNTAX_SEGMENTS);
+      expect(root.textContent).to.equal('=SUM(price, 2)');
+      const nodes = Array.from(root.childNodes);
+      expect(nodes.map((node) => node.nodeType)).to.deep.equal([
+        Node.ELEMENT_NODE,
+        Node.TEXT_NODE,
+        Node.ELEMENT_NODE,
+        Node.ELEMENT_NODE,
+        Node.ELEMENT_NODE,
+        Node.TEXT_NODE,
+        Node.ELEMENT_NODE,
+      ]);
+      const syntaxSpans = root.querySelectorAll<HTMLElement>(`.${FORMULA_SYNTAX_TOKEN_CLASS}`);
+      expect(Array.from(syntaxSpans).map((span) => span.textContent)).to.deep.equal([
+        '=',
+        '(',
+        ',',
+        ')',
+      ]);
+      // The one syntax color comes from CSS, not an inline style.
+      expect(syntaxSpans[0].style.color).to.equal('');
+      // The reference token keeps its own class and inline palette color.
+      const referenceSpans = root.querySelectorAll<HTMLElement>(
+        `.${FORMULA_REFERENCE_TOKEN_CLASS}`,
+      );
+      expect(referenceSpans).to.have.length(1);
+      expect(referenceSpans[0].textContent).to.equal('price');
+      expect(referenceSpans[0].style.color).to.equal('var(--DataGrid-formulaRefColor-0)');
+    });
+
     it('never produces block elements or line breaks', () => {
       makeEditable(FORMULA_SEGMENTS);
       expect(root.querySelector('br, div, p')).to.equal(null);
@@ -80,6 +124,16 @@ describe('formulaEditorCaret', () => {
     [0, 1, 3, 6, 9, 17].forEach((offset) => {
       it(`round-trips the caret at offset ${offset}`, () => {
         makeEditable(FORMULA_SEGMENTS);
+        setCaretOffset(root, offset);
+        expect(getCaretOffset(root)).to.equal(offset);
+      });
+    });
+
+    // Muting the special characters multiplies the node boundaries the caret has
+    // to land on — every offset of a formula full of them must still round-trip.
+    Array.from({ length: 15 }, (_, offset) => offset).forEach((offset) => {
+      it(`round-trips the caret at offset ${offset} across syntax spans`, () => {
+        makeEditable(SYNTAX_SEGMENTS);
         setCaretOffset(root, offset);
         expect(getCaretOffset(root)).to.equal(offset);
       });
@@ -138,6 +192,15 @@ describe('formulaEditorCaret', () => {
       // From inside `price` (3) to inside `quantity` (12), across the ` * ` gap.
       setSelectionOffsets(root, { start: 3, end: 12 });
       expect(getSelectionOffsets(root)).to.deep.equal({ start: 3, end: 12 });
+    });
+
+    it('round-trips a selection spanning syntax spans', () => {
+      makeEditable(SYNTAX_SEGMENTS);
+      // From inside `SUM` (2) to just before the `2` (12), across `(`, `price`
+      // and `,` — four node boundaries.
+      setSelectionOffsets(root, { start: 2, end: 12 });
+      expect(getSelectionOffsets(root)).to.deep.equal({ start: 2, end: 12 });
+      expect(document.getSelection()!.toString()).to.equal('UM(price, ');
     });
 
     it('round-trips a selection that starts and ends inside the same token', () => {
