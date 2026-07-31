@@ -20,10 +20,7 @@ import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremium
 import { getEventsCellLaneMetrics } from '../rowGeometry';
 import { getVisibleFractionRange } from '../getVisibleFractionRange';
 import type { DependencyAnchorResolver, DependencyArrow } from './dependencyArrowGeometry';
-import {
-  computeDependencyArrows,
-  createDependencyAnchorResolver,
-} from './dependencyArrowGeometry';
+import { computeDependencyArrows, createDependencyAnchorResolver } from './dependencyArrowGeometry';
 
 export interface EventTimelinePremiumDependencyGeometryValue {
   resolver: DependencyAnchorResolver;

@@ -120,9 +120,12 @@ export function useDependencyCreationMonitor() {
           if (result.reason === 'duplicateDependency') {
             store.setSelectedDependencyId(result.dependencyId);
           }
-          store.pushError(/* minify-error-disabled */ new Error(REJECTION_MESSAGES[result.reason]), {
-            transient: true,
-          });
+          store.pushError(
+            /* minify-error-disabled */ new Error(REJECTION_MESSAGES[result.reason]),
+            {
+              transient: true,
+            },
+          );
         }
       },
     });

@@ -75,9 +75,7 @@ export interface SchedulerDependencyCreation {
 }
 
 export type SchedulerDependencyEventRejectionReason =
-  | 'recurringEvent'
-  | 'unknownEvent'
-  | 'readOnlyEvent';
+  'recurringEvent' | 'unknownEvent' | 'readOnlyEvent';
 
 export type SchedulerDependencyRejectionReason =
   SchedulerDependencyEventRejectionReason | 'duplicateDependency';

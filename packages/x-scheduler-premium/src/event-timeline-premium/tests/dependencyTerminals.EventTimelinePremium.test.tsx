@@ -387,9 +387,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(document.querySelector('[data-dependency-drag-line]')).not.to.equal(null);
       });
       await waitFor(() => {
-        expect(
-          document.querySelector('[data-dependency-drag-line]')!.getAttribute('d'),
-        ).to.match(/^M /);
+        expect(document.querySelector('[data-dependency-drag-line]')!.getAttribute('d')).to.match(
+          /^M /,
+        );
       });
 
       fireEvent.drop(document.body, { dataTransfer: new DataTransfer() });

@@ -124,17 +124,15 @@ export const eventTimelinePremiumDependencySelectors = {
    * Whether the dependency cannot be deleted because one of its events is read-only.
    * Unknown ids resolve to `false`.
    */
-  isModelReadOnly: createSelector(
-    (state: State, dependencyId: SchedulerDependencyId | null) => {
-      const dependency =
-        dependencyId === null ? undefined : state.dependencyModelLookup.get(dependencyId);
-      if (!dependency) {
-        return false;
-      }
-      return (
-        schedulerEventSelectors.isReadOnly(state, dependency.source) ||
-        schedulerEventSelectors.isReadOnly(state, dependency.target)
-      );
-    },
-  ),
+  isModelReadOnly: createSelector((state: State, dependencyId: SchedulerDependencyId | null) => {
+    const dependency =
+      dependencyId === null ? undefined : state.dependencyModelLookup.get(dependencyId);
+    if (!dependency) {
+      return false;
+    }
+    return (
+      schedulerEventSelectors.isReadOnly(state, dependency.source) ||
+      schedulerEventSelectors.isReadOnly(state, dependency.target)
+    );
+  }),
 };
