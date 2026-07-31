@@ -6,14 +6,24 @@ export const VIEW_HEIGHT = 336;
 export const DIGITAL_CLOCK_VIEW_HEIGHT = 232;
 export const MULTI_SECTION_CLOCK_SECTION_WIDTH = 48;
 
+export const DAYS_IN_WEEK = 7;
+export const MAX_WEEKS_IN_MONTH = 6;
+export const WEEK_DAY_LABELS_ROW_COUNT = 1;
+export const CALENDAR_ROW_COUNT = MAX_WEEKS_IN_MONTH + WEEK_DAY_LABELS_ROW_COUNT;
+
+export const DAY_TRACK_SIZE = DAY_SIZE + DAY_MARGIN * 2;
+
+export const CALENDAR_HORIZONTAL_PADDING = DIALOG_WIDTH - DAY_TRACK_SIZE * DAYS_IN_WEEK;
+export const CALENDAR_HEADER_HEIGHT = VIEW_HEIGHT - DAY_TRACK_SIZE * CALENDAR_ROW_COUNT;
+
 export const DAY_SIZE_VAR = `var(--PickerDay-size, ${DAY_SIZE}px)`;
 
 export const DAY_MARGIN_VAR = `var(--PickerDay-horizontalMargin, ${DAY_MARGIN}px)`;
 
 export const DAY_TRACK_SIZE_VAR = `calc(${DAY_SIZE_VAR} + ${DAY_MARGIN_VAR} * 2)`;
 
-export const WEEKS_CONTAINER_HEIGHT_VAR = `calc(${DAY_TRACK_SIZE_VAR} * 6)`;
+export const WEEKS_CONTAINER_HEIGHT_VAR = `calc(${DAY_TRACK_SIZE_VAR} * ${MAX_WEEKS_IN_MONTH})`;
 
-export const CALENDAR_WIDTH_VAR = `calc(${DIALOG_WIDTH - 7 * (DAY_SIZE + DAY_MARGIN * 2)}px + ${DAY_TRACK_SIZE_VAR} * 7)`;
+export const CALENDAR_WIDTH_VAR = `calc(${CALENDAR_HORIZONTAL_PADDING}px + ${DAY_TRACK_SIZE_VAR} * ${DAYS_IN_WEEK})`;
 
-export const CALENDAR_HEIGHT_VAR = `calc(${VIEW_HEIGHT - 7 * (DAY_SIZE + DAY_MARGIN * 2)}px + ${DAY_TRACK_SIZE_VAR} * 7)`;
+export const CALENDAR_HEIGHT_VAR = `calc(${CALENDAR_HEADER_HEIGHT}px + ${DAY_TRACK_SIZE_VAR} * ${CALENDAR_ROW_COUNT})`;

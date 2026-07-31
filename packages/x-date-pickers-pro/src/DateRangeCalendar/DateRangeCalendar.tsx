@@ -58,9 +58,7 @@ import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
 import { useRangePosition } from '../internals/hooks/useRangePosition';
 import {
-  DAY_RANGE_SIZE,
-  DAY_MARGIN,
-  DAY_TRACK_SIZE_VAR,
+  DAY_RANGE_CALENDAR_WIDTH_VAR,
   WEEKS_CONTAINER_HEIGHT_VAR,
 } from '../internals/constants/dimensions';
 import type { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
@@ -91,12 +89,10 @@ const DateRangeCalendarMonthContainer = styled('div', {
   },
 }));
 
-const DAY_CALENDAR_CHROME_WIDTH = 312 - 7 * (DAY_RANGE_SIZE + DAY_MARGIN * 2);
-
 const InnerDayCalendarForRange = styled(DayCalendar, {
   slot: 'internal',
 })(() => ({
-  minWidth: `calc(${DAY_CALENDAR_CHROME_WIDTH}px + ${DAY_TRACK_SIZE_VAR} * 7)`,
+  minWidth: DAY_RANGE_CALENDAR_WIDTH_VAR,
   minHeight: WEEKS_CONTAINER_HEIGHT_VAR,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
     [`& .${dayClasses.root}`]: {
