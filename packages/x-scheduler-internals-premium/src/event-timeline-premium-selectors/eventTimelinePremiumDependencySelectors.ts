@@ -1,4 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -40,6 +41,25 @@ const activeModelListSelector = createSelectorMemoized(
     ),
 );
 
+const activeSourceTitlesByTargetSelector = createSelectorMemoized(
+  activeModelListSelector,
+  (state: State) => state.processedEventLookup,
+  (dependencies, processedEventLookup) => {
+    const titlesByTarget = new Map<SchedulerEventId, string[]>();
+    for (const dependency of dependencies) {
+      // Active dependencies always resolve: their events exist in the lookup.
+      const title = processedEventLookup.get(dependency.source)!.title;
+      const titles = titlesByTarget.get(dependency.target);
+      if (titles) {
+        titles.push(title);
+      } else {
+        titlesByTarget.set(dependency.target, [title]);
+      }
+    }
+    return titlesByTarget;
+  },
+);
+
 export const eventTimelinePremiumDependencySelectors = {
   modelList: createSelector((state: State) => state.dependencyModelList),
   modelLookup: createSelector((state: State) => state.dependencyModelLookup),
@@ -58,5 +78,15 @@ export const eventTimelinePremiumDependencySelectors = {
   ),
   activeModelListByTarget: createSelectorMemoized(activeModelListSelector, (dependencies) =>
     groupByEventId(dependencies, 'target'),
+  ),
+  /**
+   * Titles of the source events of the active dependencies, grouped by target event id.
+   * Used to describe an event with the events it depends on.
+   */
+  activeSourceTitlesByTarget: activeSourceTitlesByTargetSelector,
+  activeSourceTitlesForTarget: createSelector(
+    activeSourceTitlesByTargetSelector,
+    (titlesByTarget, eventId: SchedulerEventId): readonly string[] =>
+      titlesByTarget.get(eventId) ?? EMPTY_ARRAY,
   ),
 };

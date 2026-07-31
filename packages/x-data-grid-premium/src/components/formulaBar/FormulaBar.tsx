@@ -373,7 +373,7 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
         // The same write path as the in-cell editor: parse plain values through
         // the column parser, let formula text pass through.
         const column = apiRef.current.getColumn(targetCell.field);
-        const parsedValue = column.valueParser
+        const parsedValue = column?.valueParser
           ? column.valueParser(nextText, apiRef.current.getRow(targetCell.id), column, apiRef)
           : nextText;
         apiRef.current.setEditCellValue(

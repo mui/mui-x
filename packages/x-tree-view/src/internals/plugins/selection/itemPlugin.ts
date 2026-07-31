@@ -22,10 +22,12 @@ const selectorCheckboxSelectionStatus = createSelector(
 
     const traverseDescendants = (itemToTraverseId: TreeViewItemId) => {
       if (itemToTraverseId !== itemId) {
-        if (selectionSelectors.isItemSelected(state, itemToTraverseId)) {
-          hasSelectedDescendant = true;
-        } else {
-          hasUnSelectedDescendant = true;
+        if (selectionSelectors.canItemBeSelected(state, itemToTraverseId)) {
+          if (selectionSelectors.isItemSelected(state, itemToTraverseId)) {
+            hasSelectedDescendant = true;
+          } else {
+            hasUnSelectedDescendant = true;
+          }
         }
       }
 
@@ -65,20 +67,29 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
     itemId,
   );
   const canItemBeSelected = useStore(store, selectionSelectors.canItemBeSelected, itemId);
+  const isItemDisabled = useStore(store, itemsSelectors.isItemDisabled, itemId);
+  const isItemSelectable = useStore(store, selectionSelectors.isItemSelectable, itemId);
   const selectionStatus = useStore(store, selectorCheckboxSelectionStatus, itemId);
+
+  // An item is "inherently not selectable" when disabled or excluded via isItemSelectionDisabled,
+  // regardless of the global disableSelection flag. Such items must not have aria-checked.
+  const isItemInherentlyNotSelectable = isItemDisabled || !isItemSelectable;
 
   return {
     propsEnhancers: {
       root: (): UseTreeItemRootSlotPropsFromSelection => {
         // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
         let ariaChecked: React.AriaAttributes['aria-checked'];
-        if (selectionStatus === 'checked') {
+        if (isItemInherentlyNotSelectable) {
+          // - if the tree contains nodes that are not selectable, aria-checked is not present on those nodes.
+          ariaChecked = undefined;
+        } else if (selectionStatus === 'checked') {
           // - each selected node has aria-checked set to true.
           ariaChecked = true;
         } else if (selectionStatus === 'indeterminate') {
           ariaChecked = 'mixed';
         } else if (!canItemBeSelected) {
-          // - if the tree contains nodes that are not selectable, aria-checked is not present on those nodes.
+          // disableSelection=true with an unselected item: aria-checked is not present.
           ariaChecked = undefined;
         } else {
           // - all nodes that are selectable but not selected have aria-checked set to false.

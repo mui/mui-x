@@ -97,9 +97,11 @@ export default schedulerApiPages;
       'x-scheduler/src/event-calendar/EventCalendarRoot.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/HeaderToolbar.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/preferences-menu/PreferencesMenu.tsx',
+      'x-scheduler/src/event-calendar/header-toolbar/preferences-menu/PreferencesMenuItems.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/view-switcher/ViewSwitcher.tsx',
       'x-scheduler/src/event-calendar/mini-calendar/MiniCalendar.tsx',
       'x-scheduler/src/event-calendar/resources-tree/ResourcesTree.tsx',
+      'x-scheduler/src/event-calendar/side-panel-drawer/SidePanelDrawer.tsx',
       // Internal sub-components of MonthView
       'x-scheduler/src/month-view/month-view-row/MonthViewCell.tsx',
       'x-scheduler/src/month-view/month-view-row/MonthViewWeekRow.tsx',
@@ -109,6 +111,7 @@ export default schedulerApiPages;
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-event/EventTimelinePremiumEvent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-title-cell/EventTimelinePremiumTitleCell.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/EventTimelinePremiumHeader.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependency-arrows/EventTimelinePremiumDependencyArrows.tsx',
       'x-scheduler-premium/src/event-timeline-premium/error-container/EventTimelinePremiumErrorContainer.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },

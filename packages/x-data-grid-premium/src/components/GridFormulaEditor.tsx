@@ -569,7 +569,7 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   const handleValueChange = React.useCallback(
     (nextText: string, caret: number | null, event: React.SyntheticEvent) => {
       const column = apiRef.current.getColumn(field);
-      const parsedValue = column.valueParser
+      const parsedValue = column?.valueParser
         ? column.valueParser(nextText, apiRef.current.getRow(id), column, apiRef)
         : nextText;
       apiRef.current.setEditCellValue(
