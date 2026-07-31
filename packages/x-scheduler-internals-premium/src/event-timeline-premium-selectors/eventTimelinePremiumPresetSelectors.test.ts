@@ -245,6 +245,27 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       );
     });
 
+    it('should keep the config identity when a fresh but equal presetConfig object is passed', () => {
+      const base = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [],
+        preset: 'dayAndHour',
+        visibleDate: VISIBLE_DATE,
+        presetConfig: { dayAndHour: { startTime: 8, endTime: 20 } },
+      });
+
+      const first = eventTimelinePremiumPresetSelectors.config(base);
+      // An inline literal produces a fresh object with equal values on every parent
+      // render; the memoization must survive it or every render re-expands the
+      // occurrence pipeline downstream.
+      const second = eventTimelinePremiumPresetSelectors.config({
+        ...base,
+        presetConfig: { dayAndHour: { startTime: 8, endTime: 20 } },
+      });
+
+      expect(second).to.equal(first);
+    });
+
     it('should return the same reference when the dependencies are unchanged', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         resources: TEST_RESOURCES,

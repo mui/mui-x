@@ -12,9 +12,14 @@ export const eventTimelinePremiumPresetSelectors = {
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
     (state: State) => state.preset,
-    (state: State) => state.presetConfig,
+    // Primitive inputs so an inline `presetConfig` literal cannot defeat the
+    // memoization (the object identity changes on every parent render).
+    (state: State) =>
+      state.presetConfig[state.preset as keyof EventTimelinePremiumPresetConfig]?.startTime,
+    (state: State) =>
+      state.presetConfig[state.preset as keyof EventTimelinePremiumPresetConfig]?.endTime,
     schedulerPreferenceSelectors.weekStartsOn,
-    (adapter, visibleDate, preset, presetConfig, weekStartsOn) => {
+    (adapter, visibleDate, preset, presetStartTime, presetEndTime, weekStartsOn) => {
       const config = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
       if (!config) {
         throw new Error(
@@ -37,10 +42,9 @@ export const eventTimelinePremiumPresetSelectors = {
 
       // Only hour-resolution presets can trim their visible hours. The range itself stays
       // midnight-based: the hour window is applied through `dayStartMinute` / `dayEndMinute`.
-      const presetHourConfig = presetConfig[preset as keyof EventTimelinePremiumPresetConfig];
       const hourRange =
         timeResolution === 'hour'
-          ? getDisplayedHourRange(presetHourConfig?.startTime, presetHourConfig?.endTime)
+          ? getDisplayedHourRange(presetStartTime, presetEndTime)
           : { startTime: 0, endTime: 24 };
 
       return {
