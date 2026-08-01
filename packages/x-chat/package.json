@@ -88,6 +88,10 @@
     "node": ">=14.0.0"
   },
   "imports": {
-    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage",
+    "#remend": {
+      "import": "remend",
+      "default": "./src/internals/remendUnavailable.ts"
+    }
   }
 }
