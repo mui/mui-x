@@ -1,10 +1,5 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { fallbackRepair, loadRemend, resetRemendCache } from './streamingMarkdownRepair';
-
-const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
 describe('streamingMarkdownRepair', () => {
   beforeEach(() => {
@@ -96,32 +91,8 @@ describe('streamingMarkdownRepair', () => {
       expect(repair).to.equal(fallbackRepair);
     });
 
-    it('imports a statically analyzable specifier', () => {
-      const source = fs.readFileSync(
-        path.join(packageRoot, 'src/internals/streamingMarkdownRepair.ts'),
-        'utf8',
-      );
-
-      expect(source).to.contain("import('#remend')");
-      // A specifier read from a variable, or hidden behind an ignore hint, is
-      // unanalyzable: bundlers leave a bare specifier that can never resolve in a
-      // browser instead of bundling the dependency.
-      expect(source).not.to.match(/import\(\s*(\/\*[^*]*\*\/\s*)*[A-Za-z_$]/);
-    });
-
-    it('maps `#remend` per module format in package.json', () => {
-      const packageJson = JSON.parse(
-        fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'),
-      );
-      const remendImport = packageJson.imports['#remend'];
-
-      // ESM gets the real package, so bundlers resolve and bundle it.
-      expect(remendImport.import).to.equal('remend');
-      // Every other condition (CJS) resolves to a file inside this package rather than
-      // to `remend`, which declares no `require` export — a bundler resolving that in
-      // the CJS output fails the build outright.
-      expect(remendImport.default).to.match(/^\.\//);
-      expect(packageJson.dependencies.remend).to.be.a('string');
-    });
+    // The packaging side of this — that the specifier stays statically analyzable and
+    // that `#remend` maps per module format — reads the source tree off disk, so it
+    // lives in `src/tests/packagingGuard/remendSpecifier.test.ts` (Node-only).
   });
 });

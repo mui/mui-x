@@ -17,6 +17,8 @@ export default mergeConfig(
         '**/dist/**',
         // Docs-correctness guard uses Node-only modules (fs, typescript)
         '**/docsCorrectnessGuard/**',
+        // Packaging guard reads the source tree and package.json with Node-only fs
+        '**/packagingGuard/**',
       ],
     },
   }),
