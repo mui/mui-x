@@ -203,6 +203,9 @@ describe('<DataGrid /> - Quick filter', () => {
         'true',
       );
 
+      // Expanding moves focus to the input in a `requestAnimationFrame`
+      await waitFor(() => expect(screen.getByRole('searchbox')).toHaveFocus());
+
       await user.keyboard('[Escape]');
 
       expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
