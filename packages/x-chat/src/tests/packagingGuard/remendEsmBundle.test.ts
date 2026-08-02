@@ -21,7 +21,18 @@ const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const workDir = path.join(packageRoot, 'node_modules', '.tmp-esm-bundle-test');
 const outDir = path.join(workDir, 'out');
 
-let bundleSource: string;
+/** The subset of Rollup's chunk record this test asserts on. */
+interface EmittedChunk {
+  type: string;
+  fileName: string;
+  isEntry: boolean;
+  /** Static imports, as resolved by the bundler: emitted file names, or bare if external. */
+  imports: string[];
+  /** Dynamic imports, same resolution rules. */
+  dynamicImports: string[];
+}
+
+let chunks: EmittedChunk[];
 let loadRemend: () => Promise<(text: string) => string>;
 let fallbackRepair: (text: string) => string;
 
@@ -37,7 +48,7 @@ describe('remend in an ESM bundle', () => {
       `export { loadRemend, fallbackRepair } from ${JSON.stringify(loader)};\n`,
     );
 
-    await build({
+    const result = await build({
       root: packageRoot,
       logLevel: 'silent',
       build: {
@@ -55,10 +66,14 @@ describe('remend in an ESM bundle', () => {
       },
     });
 
-    const emitted = fs.readdirSync(outDir).filter((file) => file.endsWith('.mjs'));
-    bundleSource = emitted
-      .map((file) => fs.readFileSync(path.join(outDir, file), 'utf8'))
-      .join('\n');
+    // Assert on the bundler's own parsed import records rather than on the emitted text.
+    // Scanning the output with a regex is unsound: it bundles third-party source, and a
+    // plain string literal in there (React 18's warning templates, for one) reads exactly
+    // like an import specifier.
+    const output = (Array.isArray(result) ? result[0] : result) as unknown as {
+      output: EmittedChunk[];
+    };
+    chunks = output.output.filter((item) => item.type === 'chunk');
 
     const mod = await import(pathToFileURL(path.join(outDir, 'bundle.mjs')).href);
     loadRemend = mod.loadRemend;
@@ -79,32 +94,35 @@ describe('remend in an ESM bundle', () => {
     expect(fallbackRepair('a **bold')).to.equal('a **bold');
   });
 
-  // Note: this assertion alone would not have caught #23160, because Node resolves a
-  // bare `import('remend')` from `node_modules` even when the bundler left one behind.
-  // A browser cannot, which is why the bug shipped. The runtime catch lives in the
-  // Chromium run of `streamingMarkdownRepair.test.ts`; the structural check below is
-  // what makes this file a regression guard.
+  // Note: the assertion above would not on its own have caught #23160, because Node
+  // resolves a bare `import('remend')` from `node_modules` even when the bundler left one
+  // behind. A browser cannot, which is why the bug shipped. The runtime catch lives in
+  // the Chromium run of `streamingMarkdownRepair.test.ts`; the checks below are what make
+  // this file a regression guard.
 
-  it('emits remend into the bundle instead of leaving a bare specifier', () => {
-    // What shipped before the fix: a specifier no bundler could resolve, left verbatim
-    // in the output for the browser to choke on at runtime.
-    expect(bundleSource).not.to.match(/import\(\s*['"]remend['"]\s*\)/);
-    expect(bundleSource).not.to.match(/from\s*['"]remend['"]/);
-    // What ships now: the dynamic import points at a chunk the bundler emitted itself.
-    expect(bundleSource).to.match(/import\(\s*['"]\.\/[^'"]+\.mjs['"]\s*\)/);
+  it('emits remend as a chunk instead of leaving a bare specifier', () => {
+    const emittedNames = chunks.map((chunk) => chunk.fileName);
+    const entryChunk = chunks.find((chunk) => chunk.isEntry);
+    const dynamicImports = entryChunk?.dynamicImports ?? [];
+
+    // Before the fix the specifier was unanalyzable, so the bundler recorded no dynamic
+    // import at all and emitted nothing for it — the browser was left to resolve `remend`
+    // on its own, which it cannot do.
+    expect(dynamicImports).not.to.deep.equal([]);
+    // Every dynamic import resolves to something the bundler emitted itself.
+    dynamicImports.forEach((id) => expect(emittedNames).to.contain(id));
+    // remend lands in its own chunk alongside the entry.
+    expect(chunks.length).to.be.greaterThan(1);
   });
 
   it('emits a self-contained bundle', () => {
-    // Guards the test itself. Every specifier must be relative, so importing the output
-    // above proves the bundler resolved things rather than Node papering over a leftover
-    // bare specifier from a nearby `node_modules`.
-    const specifiers = [...bundleSource.matchAll(/\bfrom\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
-    const sideEffectImports = [...bundleSource.matchAll(/\bimport\s*['"]([^'"]+)['"]/g)].map(
-      (m) => m[1],
-    );
+    // Guards the test itself: if anything were left external, importing the output above
+    // would prove nothing, because Node could paper over it from a nearby `node_modules`.
+    const emittedNames = chunks.map((chunk) => chunk.fileName);
+    const external = chunks
+      .flatMap((chunk) => [...chunk.imports, ...chunk.dynamicImports])
+      .filter((id) => !emittedNames.includes(id));
 
-    expect([...specifiers, ...sideEffectImports].filter((id) => !id.startsWith('.'))).to.deep.equal(
-      [],
-    );
+    expect(external).to.deep.equal([]);
   });
 });
