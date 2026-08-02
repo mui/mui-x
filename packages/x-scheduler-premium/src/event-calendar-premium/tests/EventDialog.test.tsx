@@ -774,6 +774,50 @@ describe('<EventDialogContent open />', () => {
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
     });
 
+    it('should write the selected resource into the creation placeholder', async () => {
+      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
+      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+      const handleResourceIdChange = spy();
+
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('tmp')
+        .span(start.toISOString(), end.toISOString())
+        .toOccurrence();
+
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={resources} storeClass={PremiumTestStore}>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'time-grid',
+                start,
+                end,
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+
+          <StateWatcher
+            Context={SchedulerStoreContext}
+            selector={(s) => s.occurrencePlaceholder?.resourceId}
+            onValueChange={handleResourceIdChange}
+          />
+        </EventCalendarProvider>,
+      );
+
+      expect(handleResourceIdChange.lastCall?.firstArg).to.equal(null);
+
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+
+      expect(handleResourceIdChange.lastCall?.firstArg).to.equal(workResource.id);
+    });
+
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
       const start = adapter.date('2025-06-10T09:00:00Z', 'default');
       const end = adapter.date('2025-06-10T09:30:00Z', 'default');
