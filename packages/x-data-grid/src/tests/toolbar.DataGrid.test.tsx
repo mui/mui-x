@@ -197,6 +197,49 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(screen.getByRole('button', { name: 'Item 1' })).toHaveFocus();
     });
 
+    describe('initial tab stop', () => {
+      it('should skip items that mount disabled when assigning the initial tab stop', async () => {
+        render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: DisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: ['Item 1'] } }}
+            showToolbar
+          />,
+        );
+
+        expect(screen.getByRole('button', { name: 'Item 2' })).to.have.attribute('tabindex', '0');
+      });
+
+      it('should skip items that mount aria-disabled when assigning the initial tab stop', async () => {
+        render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: AriaDisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: ['Item 1'] } }}
+            showToolbar
+          />,
+        );
+
+        expect(screen.getByRole('button', { name: 'Item 2' })).to.have.attribute('tabindex', '0');
+      });
+
+      it('should fall back to the first item when every item mounts disabled', async () => {
+        // `aria-disabled` keeps the rendered `tabIndex`, unlike `disabled` which
+        // the underlying button always renders as `-1`
+        render(
+          <DataGrid
+            {...baselineProps}
+            slots={{ toolbar: AriaDisableableToolbar }}
+            slotProps={{ toolbar: { disabledItems: ['Item 1', 'Item 2', 'Item 3'] } }}
+            showToolbar
+          />,
+        );
+
+        expect(screen.getByRole('button', { name: 'Item 1' })).to.have.attribute('tabindex', '0');
+      });
+    });
+
     // https://github.com/mui/mui-x/issues/23035
     describe('focus management when items become disabled', () => {
       it('should not move focus when an item becomes disabled and focus is outside the toolbar', async () => {

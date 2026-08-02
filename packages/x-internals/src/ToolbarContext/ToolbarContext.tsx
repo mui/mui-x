@@ -193,9 +193,12 @@ export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
       return;
     }
 
-    // Set initial focusable item
+    // Set initial focusable item. A disabled item can't receive focus, so the
+    // toolbar would be unreachable with `Tab` if it became the tab stop.
+    // Fall back to the first item when every item is disabled.
     if (!focusableItemIdRef.current) {
-      updateFocusableItemId(sortedItems[0].id);
+      const firstEnabledIndex = findEnabledItem(-1, 1, false);
+      updateFocusableItemId(sortedItems[firstEnabledIndex === -1 ? 0 : firstEnabledIndex].id);
       return;
     }
 
@@ -215,7 +218,7 @@ export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
         fallbackItem.ref.current?.focus();
       }
     }
-  }, [getSortedItems, updateFocusableItemId]);
+  }, [getSortedItems, findEnabledItem, updateFocusableItemId]);
 
   const contextValue = React.useMemo(
     () => ({
