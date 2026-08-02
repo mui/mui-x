@@ -16,9 +16,10 @@ import { build } from 'vite';
 // So bundle the loader the way a consumer's bundler does, then run the bundle and check
 // the markdown actually comes back repaired.
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-// Inside `node_modules` so the externals below still resolve from the output, and so the
-// artifacts are git-ignored.
-const outDir = path.join(packageRoot, 'node_modules', '.tmp-esm-bundle-test');
+// Under `node_modules` so the scratch artifacts are git-ignored. The generated entry is
+// kept out of `outDir` so that reading the build output back never picks it up.
+const workDir = path.join(packageRoot, 'node_modules', '.tmp-esm-bundle-test');
+const outDir = path.join(workDir, 'out');
 
 let bundleSource: string;
 let loadRemend: () => Promise<(text: string) => string>;
@@ -26,12 +27,15 @@ let fallbackRepair: (text: string) => string;
 
 describe('remend in an ESM bundle', () => {
   beforeAll(async () => {
-    fs.rmSync(outDir, { recursive: true, force: true });
+    fs.rmSync(workDir, { recursive: true, force: true });
     fs.mkdirSync(outDir, { recursive: true });
 
-    const entry = path.join(outDir, 'entry.mjs');
+    const entry = path.join(workDir, 'entry.mjs');
     const loader = path.join(packageRoot, 'src/internals/streamingMarkdownRepair.ts');
-    fs.writeFileSync(entry, `export { loadRemend, fallbackRepair } from ${JSON.stringify(loader)};\n`);
+    fs.writeFileSync(
+      entry,
+      `export { loadRemend, fallbackRepair } from ${JSON.stringify(loader)};\n`,
+    );
 
     await build({
       root: packageRoot,
@@ -42,9 +46,12 @@ describe('remend in an ESM bundle', () => {
         minify: false,
         target: 'esnext',
         lib: { entry, formats: ['es'], fileName: 'bundle' },
-        // Everything except `remend` is irrelevant here, and leaving them external keeps
-        // the build to a few dozen milliseconds.
-        rollupOptions: { external: [/^react/, /^@mui\//] },
+        // Bundle everything. Leaving anything external means the emitted module has to
+        // resolve bare specifiers from a temp directory at import time, which is exactly
+        // the fragility being tested for — and it does not survive CI's install layout.
+        // Nothing here is slow: the hook (and with it React) tree-shakes away, since the
+        // entry only re-exports the loader.
+        rollupOptions: { external: [] },
       },
     });
 
@@ -59,7 +66,7 @@ describe('remend in an ESM bundle', () => {
   }, 120_000);
 
   afterAll(() => {
-    fs.rmSync(outDir, { recursive: true, force: true });
+    fs.rmSync(workDir, { recursive: true, force: true });
   });
 
   it('repairs markdown with the real remend, not the fallback', async () => {
@@ -85,5 +92,19 @@ describe('remend in an ESM bundle', () => {
     expect(bundleSource).not.to.match(/from\s*['"]remend['"]/);
     // What ships now: the dynamic import points at a chunk the bundler emitted itself.
     expect(bundleSource).to.match(/import\(\s*['"]\.\/[^'"]+\.mjs['"]\s*\)/);
+  });
+
+  it('emits a self-contained bundle', () => {
+    // Guards the test itself. Every specifier must be relative, so importing the output
+    // above proves the bundler resolved things rather than Node papering over a leftover
+    // bare specifier from a nearby `node_modules`.
+    const specifiers = [...bundleSource.matchAll(/\bfrom\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
+    const sideEffectImports = [...bundleSource.matchAll(/\bimport\s*['"]([^'"]+)['"]/g)].map(
+      (m) => m[1],
+    );
+
+    expect([...specifiers, ...sideEffectImports].filter((id) => !id.startsWith('.'))).to.deep.equal(
+      [],
+    );
   });
 });
