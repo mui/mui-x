@@ -133,6 +133,49 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     expect(updatedEvents[0].resource).to.deep.equal([marketing.id, design.id]);
   });
 
+  it('should dedupe instead of duplicating the resource id when dropping onto a row the event already occupies', async () => {
+    const handleEventsChange = spy();
+    const event = EventBuilder.new()
+      .title('All Hands')
+      .singleDay('2025-07-03T09:00:00Z', 60)
+      .resources([engineering, design])
+      .draggable(true)
+      .build();
+
+    render(
+      <EventTimelinePremium
+        resources={[engineering, design]}
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllEventRowBounds();
+
+    const engineeringRow = getEventRow(engineering.id);
+    const eventElement = within(engineeringRow).getByText('All Hands');
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    const designRow = getEventRow(design.id);
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: designRow,
+        sourceClientX: 160,
+        targetClientX: 160,
+      });
+    });
+
+    expect(handleEventsChange.callCount).to.equal(1);
+    const updatedEvents = handleEventsChange.firstCall.args[0];
+    // Engineering is dropped and design was already present: no duplicate entry.
+    expect(updatedEvents[0].resource).to.deep.equal([design.id]);
+  });
+
   it('should move an event to a different position on the same resource', async () => {
     const handleEventsChange = spy();
     const event = EventBuilder.new()

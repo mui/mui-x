@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, screen, waitFor } from '@mui/internal-test-utils';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   createSchedulerRenderer,
@@ -196,5 +196,79 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
     // the events cell is outside the events row (or outside the grid entirely).
     await user.keyboard('{Tab}');
     expect(document.activeElement).to.not.equal(getEvent('evt-d6-h20'));
+  });
+
+  describe('multi-resource occurrences', () => {
+    // Occurrence keys aren't unique across rows: a multi-resource event renders
+    // one copy per assigned resource, all sharing the same `data-occurrence-key`.
+    // Resolving the "next" DOM node for such a key must be scoped by row, or an
+    // unscoped lookup can resolve to a same-key copy mounted in a different row.
+    const resourceB = ResourceBuilder.new().title('B').build();
+    const resourceA = ResourceBuilder.new().title('A').build();
+
+    function getEventRow(resourceId: string): HTMLElement {
+      const row = document.querySelector<HTMLElement>(
+        `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
+      );
+      if (!row) {
+        throw new Error(`Could not find event row for resource "${resourceId}"`);
+      }
+      return row;
+    }
+
+    // `getByText` resolves to the innermost element with that text (a `<span>`
+    // clamp, not focusable); walk up to the event root that actually carries
+    // `data-occurrence-key`/`tabindex`.
+    function getEventInRow(resourceId: string, title: string): HTMLElement {
+      const textNode = within(getEventRow(resourceId)).getByText(title);
+      const eventRoot = textNode.closest<HTMLElement>('[data-occurrence-key]');
+      if (!eventRoot) {
+        throw new Error(`Could not find the event root for "${title}" in row "${resourceId}"`);
+      }
+      return eventRoot;
+    }
+
+    it('scopes focus restoration by row when the target occurrence key is duplicated in another row', async () => {
+      const soloInA = EventBuilder.new()
+        .title('Solo A')
+        .singleDay('2025-07-03T09:00:00Z', 30)
+        .resource(resourceA)
+        .build();
+      const shared = EventBuilder.new()
+        .title('Shared')
+        .singleDay('2025-07-03T10:00:00Z', 30)
+        .resources([resourceA, resourceB])
+        .build();
+
+      const { user } = render(
+        <div style={{ width: 1200, height: 600 }}>
+          <EventTimelinePremium
+            // B listed before A so its (duplicate-keyed) copy of `shared` sits
+            // earlier in DOM order than A's copy — an unscoped lookup for the
+            // shared key would wrongly resolve to B's copy instead of A's.
+            resources={[resourceB, resourceA]}
+            events={[soloInA, shared]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            preset="dayAndHour"
+            presets={['dayAndHour']}
+          />
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(within(getEventRow(resourceA.id)).queryByText('Solo A')).not.to.equal(null);
+        expect(within(getEventRow(resourceA.id)).queryByText('Shared')).not.to.equal(null);
+        expect(within(getEventRow(resourceB.id)).queryByText('Shared')).not.to.equal(null);
+      });
+
+      act(() => {
+        getEventInRow(resourceA.id, 'Solo A').focus();
+      });
+      expect(document.activeElement).to.equal(getEventInRow(resourceA.id, 'Solo A'));
+
+      await user.keyboard('{Tab}');
+
+      expect(document.activeElement).to.equal(getEventInRow(resourceA.id, 'Shared'));
+    });
   });
 });

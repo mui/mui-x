@@ -27,12 +27,13 @@ import { useAdapterContext } from '../../use-adapter-context';
 import { getPrimaryResourceId } from './event-utils';
 
 // Not every drag source exposes `sourceResourceId` (only rows that know which
-// resource they represent, e.g. the Event Timeline Premium, can report it).
+// resource they represent, e.g. the Event Timeline Premium, can report it) —
+// it's declared as optional on each drag data contract, so this normalizes
+// `undefined` to `null` rather than narrowing anything.
 function getSourceResourceId(
   data: Exclude<EventDropData, StandaloneEvent.DragData>,
 ): SchedulerResourceId | null {
-  const sourceResourceId = (data as { sourceResourceId?: SchedulerResourceId }).sourceResourceId;
-  return sourceResourceId ?? null;
+  return data.sourceResourceId ?? null;
 }
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
@@ -242,9 +243,15 @@ function applyInternalDragOrResizeOccurrencePlaceholder(
       placeholder.sourceResourceId !== destinationResourceId
     ) {
       // Multi-resource event: replace only the row it was dragged from, keep the rest
-      // (never collapse the array down to the single destination resource).
-      changes.resource = originalResource.map((id) =>
-        id === placeholder.sourceResourceId ? destinationResourceId : id,
+      // (never collapse the array down to the single destination resource). Deduped
+      // in case the destination row already held the event (e.g. [A, B] dragged from
+      // A onto B must become [B], not [B, B]).
+      changes.resource = Array.from(
+        new Set(
+          originalResource.map((id) =>
+            id === placeholder.sourceResourceId ? destinationResourceId : id,
+          ),
+        ),
       );
     }
   }

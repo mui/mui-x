@@ -121,8 +121,9 @@ export function useEventTabNavigation(params: {
       // Focus isn't on an event; let the default Tab behavior handle row/cell moves.
       return false;
     }
-    const row = active.closest<HTMLElement>('[data-resource-id]');
-    const resourceId = row?.getAttribute('data-resource-id');
+    const resourceId = active
+      .closest<HTMLElement>('[data-resource-id]')
+      ?.getAttribute('data-resource-id');
     if (!resourceId) {
       return false;
     }
@@ -130,24 +131,9 @@ export function useEventTabNavigation(params: {
     if (!resource) {
       return false;
     }
-    const currentOccurrence = active.closest<HTMLElement>(
-      `[data-occurrence-key="${CSS.escape(currentKey)}"]`,
-    );
-    const occurrencesWithKey = resource.occurrences
-      .map((occurrence, index) => ({ occurrence, index }))
-      .filter(({ occurrence }) => occurrence.key === currentKey);
-    if (occurrencesWithKey.length === 0) {
+    const currentIndex = resource.occurrences.findIndex((o) => o.key === currentKey);
+    if (currentIndex === -1) {
       return false;
-    }
-    let currentIndex = occurrencesWithKey[0].index;
-    if (occurrencesWithKey.length > 1 && currentOccurrence && row) {
-      const duplicateOccurrences = Array.from(
-        row.querySelectorAll<HTMLElement>(`[data-occurrence-key="${CSS.escape(currentKey)}"]`),
-      );
-      const duplicateIndex = duplicateOccurrences.indexOf(currentOccurrence);
-      if (duplicateIndex >= 0 && duplicateIndex < occurrencesWithKey.length) {
-        currentIndex = occurrencesWithKey[duplicateIndex].index;
-      }
     }
     const nextIndex = currentIndex + direction;
     if (nextIndex < 0 || nextIndex >= resource.occurrences.length) {
