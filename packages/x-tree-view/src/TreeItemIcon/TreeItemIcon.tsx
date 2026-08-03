@@ -97,6 +97,7 @@ TreeItemIcon.propTypes /* remove-proptypes */ = {
     expandable: PropTypes.bool.isRequired,
     expanded: PropTypes.bool.isRequired,
     focused: PropTypes.bool.isRequired,
+    indeterminate: PropTypes.bool,
     loading: PropTypes.bool.isRequired,
     selected: PropTypes.bool.isRequired,
   }).isRequired,

@@ -1372,6 +1372,138 @@ describeTreeView<TreeViewAnyStore>(
       });
     });
 
+    describe('getItemSelection() api method', () => {
+      it('should return "selected" for a selected item and "unselected" for the other items', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }],
+          defaultSelectedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
+        expect(view.apiRef.current.getItemSelection('2')).to.equal('unselected');
+      });
+
+      it('should return "selected" for every selected item when multiSelect is true', () => {
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+          defaultSelectedItems: ['1', '2'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
+        expect(view.apiRef.current.getItemSelection('2')).to.equal('selected');
+        expect(view.apiRef.current.getItemSelection('3')).to.equal('unselected');
+      });
+
+      it('should return "unselected" for an item that is not in the tree', () => {
+        const view = render({
+          items: [{ id: '1' }],
+        });
+
+        expect(view.apiRef.current.getItemSelection('not-in-the-tree')).to.equal('unselected');
+      });
+
+      it('should return "indeterminate" when only some of the descendants are selected', () => {
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+          defaultSelectedItems: ['1.1'],
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+        expect(view.apiRef.current.getItemSelection('2')).to.equal('unselected');
+      });
+
+      it('should return "indeterminate" when all the descendants are selected and selectionPropagation.parents is false', () => {
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+          defaultSelectedItems: ['1.1', '1.2'],
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+      });
+
+      it('should return "selected" when all the descendants are selected and selectionPropagation.parents is true', () => {
+        const view = render({
+          multiSelect: true,
+          selectionPropagation: { parents: true },
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+          defaultSelectedItems: ['1.1', '1.2'],
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
+      });
+
+      it('should return "indeterminate" when only some of the descendants are selected in single selection', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+          defaultSelectedItems: '1.1',
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+        expect(view.apiRef.current.getItemSelection('2')).to.equal('unselected');
+      });
+
+      it('should return the updated status after the selection changed', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('unselected');
+
+        act(() => {
+          view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
+      });
+
+      it('should return the updated status when called from the onItemSelectionToggle callback', async () => {
+        const statuses: string[] = [];
+        const viewRef: { current: ReturnType<typeof render> | null } = { current: null };
+
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          onItemSelectionToggle: (event, itemId) => {
+            statuses.push(viewRef.current!.apiRef.current.getItemSelection(itemId));
+          },
+        });
+        viewRef.current = view;
+
+        await view.user.click(view.getItemContent('1.1'));
+
+        expect(statuses).to.deep.equal(['selected']);
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+      });
+
+      it('should return the updated status when called from the onSelectedItemsChange callback', async () => {
+        const statuses: string[] = [];
+        const viewRef: { current: ReturnType<typeof render> | null } = { current: null };
+
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          onSelectedItemsChange: () => {
+            statuses.push(viewRef.current!.apiRef.current.getItemSelection('1.1'));
+            statuses.push(viewRef.current!.apiRef.current.getItemSelection('1'));
+          },
+        });
+        viewRef.current = view;
+
+        await view.user.click(view.getItemContent('1.1'));
+
+        expect(statuses).to.deep.equal(['selected', 'indeterminate']);
+      });
+    });
+
     describe('disableSelection item property', () => {
       it('should not select an item when clicking if disableSelection is true', async () => {
         const view = render({
