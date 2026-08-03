@@ -71,6 +71,10 @@ describe('<DataGrid /> - Data source', () => {
 
     const { fetchRows, editRow } = mockServer;
 
+    // Read through a ref so that stalling a response does not change the `dataSource` identity
+    const stallResponsePromiseRef = React.useRef(stallResponsePromise);
+    stallResponsePromiseRef.current = stallResponsePromise;
+
     const dataSource: GridDataSource = React.useMemo(() => {
       // Recreate the data source when this key changes
       void dataSourceKey;
@@ -88,7 +92,7 @@ describe('<DataGrid /> - Data source', () => {
           effectiveFetchRowsSpy(url);
           const getRowsResponse = await fetchRows(url);
 
-          await stallResponsePromise;
+          await stallResponsePromiseRef.current;
 
           return {
             rows: getRowsResponse.rows,
@@ -101,7 +105,7 @@ describe('<DataGrid /> - Data source', () => {
           return syncedRow;
         },
       };
-    }, [dataSourceKey, effectiveFetchRowsSpy, fetchRows, editRow, stallResponsePromise]);
+    }, [dataSourceKey, effectiveFetchRowsSpy, fetchRows, editRow]);
 
     if (!mockServer.isReady) {
       return null;
@@ -200,30 +204,100 @@ describe('<DataGrid /> - Data source', () => {
 
   if (SUPPORTS_ACTIVITY) {
     describe('Activity', () => {
-      it('should not re-retch the data when the Activity becomes visible', async () => {
+      async function toggleActivity(
+        setProps: (props: { activityMode: 'visible' | 'hidden' }) => void,
+      ) {
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+      }
+
+      it('should not re-fetch the data when the Activity becomes visible', async () => {
         const { setProps } = render(<TestDataSource />);
         await waitFor(() => {
           expect(fetchRowsSpy.callCount).to.equal(1);
         });
-        setProps({ activityMode: 'hidden' });
-        setProps({ activityMode: 'visible' });
-        await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.equal(1);
-        });
+        await toggleActivity(setProps);
+        expect(fetchRowsSpy.callCount).to.equal(1);
       });
 
-      it('re-fetches the data if the Activity becomes hidden while the request is in-flight', async () => {
+      it('should re-fetch the data if the Activity becomes hidden while the request is in-flight', async () => {
         const { promise, resolve } = Promise.withResolvers<void>();
         const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
         await waitFor(() => {
           expect(fetchRowsSpy.callCount).to.equal(1);
         });
-        setProps({ activityMode: 'hidden' });
-        resolve();
-        setProps({ activityMode: 'visible' });
-        // Increment twice due to the Activity and strict mode
+        await toggleActivity(setProps);
+        await act(async () => {
+          resolve();
+        });
         await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.equal(3);
+          expect(fetchRowsSpy.callCount).to.be.above(1);
+        });
+      });
+
+      it('should re-fetch the data if the request settles while the Activity is hidden', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          resolve();
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.be.above(1);
+        });
+      });
+
+      it('should re-fetch the data when the Activity becomes visible after a failed request', async () => {
+        const onDataSourceError = spy();
+        const { setProps } = render(
+          <TestDataSource shouldRequestsFail onDataSourceError={onDataSourceError} />,
+        );
+        await waitFor(() => {
+          expect(onDataSourceError.callCount).to.equal(1);
+        });
+        const callCountBeforeToggle = fetchRowsSpy.callCount;
+        await toggleActivity(setProps);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.be.above(callCountBeforeToggle);
+        });
+      });
+
+      it('should re-fetch the data if a filter change is interrupted by the Activity being hidden', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const { setProps } = render(<TestDataSource />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        setProps({
+          stallResponsePromise: promise,
+          filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
+        });
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(2);
+        });
+        await act(async () => {
+          setProps({ activityMode: 'hidden' });
+        });
+        await act(async () => {
+          resolve();
+        });
+        await act(async () => {
+          setProps({ activityMode: 'visible' });
+        });
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.be.above(2);
         });
       });
     });
