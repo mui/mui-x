@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { useChartsContext } from '@mui/x-charts/internals';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { vi } from 'vitest';
 import { getCenter } from 'test/utils/charts/getCenter';
@@ -12,6 +13,21 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
 describe('useChartKeyboardNavigation - click to focus', () => {
   const { render } = createRenderer();
+
+  const storeRef: { current: { state: { interaction: { lastUpdate: string } } } | null } = {
+    current: null,
+  };
+
+  /** Reads the state that decides whether the tooltip follows the pointer or the focused item. */
+  function StoreProbe() {
+    const { store } = useChartsContext();
+    React.useEffect(() => {
+      storeRef.current = store as any;
+    }, [store]);
+    return null;
+  }
+
+  const getLastUpdate = () => storeRef.current?.state.interaction.lastUpdate;
 
   const FOCUS_INDICATOR_SELECTOR = '[fill="none"][stroke-width="2"]';
 
@@ -149,6 +165,40 @@ describe('useChartKeyboardNavigation - click to focus', () => {
       // The click must not have switched the highlight to keyboard mode.
       expect(bars[2].getAttribute('data-highlighted')).to.equal('true');
       expect(bars[0].getAttribute('data-highlighted')).to.equal(null);
+    });
+
+    // A click moves the focus, but the pointer is still on the chart, so the highlight and the
+    // tooltip have to keep following it. They switch to the focused item only for the keyboard,
+    // which is what `interaction.lastUpdate` selects.
+    it('leaves the tooltip on the pointer when clicking, whatever the focus mode', async () => {
+      const { container, user } = render(
+        <BarChart {...barProps}>
+          <StoreProbe />
+        </BarChart>,
+      );
+
+      await clickAt(user, container, getCenter(getBars(container)[1]));
+      expect(getLastUpdate()).to.equal('pointer');
+
+      // Same once the focus is visible: the click must not hand the tooltip over.
+      await user.keyboard('[ArrowRight]');
+      expect(getLastUpdate()).to.equal('keyboard');
+
+      await clickAt(user, container, getCenter(getBars(container)[2]));
+      expect(getLastUpdate()).to.equal('pointer');
+    });
+
+    it('leaves the tooltip on the pointer with focusItemOnClick', async () => {
+      const { container, user } = render(
+        <BarChart {...barProps} focusItemOnClick>
+          <StoreProbe />
+        </BarChart>,
+      );
+
+      await clickAt(user, container, getCenter(getBars(container)[1]));
+
+      expect(getFocusedDataIndex(container)).to.equal(1);
+      expect(getLastUpdate()).to.equal('pointer');
     });
 
     it('falls back to the axis when the click hits no item', async () => {

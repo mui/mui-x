@@ -47,6 +47,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   const focusVisibleIntentRef = React.useRef(true);
 
   /**
+   * Whether the last interaction came from the keyboard.
+   * Only then do the highlight and the tooltip follow the focused item: after a click the pointer
+   * is still on the chart, and they must keep following it.
+   */
+  const isKeyboardModalityRef = React.useRef(true);
+
+  /**
    * Writes the focus state, only switching the highlight and tooltip to keyboard when visible.
    * An `undefined` item leaves the focused item untouched, `null` clears it.
    *
@@ -58,15 +65,16 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     (item: FocusedItemIdentifier<ChartSeriesType> | null | undefined, isFocusVisible: boolean) => {
       const keyboardNavigation = store.state.keyboardNavigation;
       const isFocused = chartsLayerContainerRef.current?.contains(document.activeElement) ?? false;
+      // Only the keyboard hands the highlight and the tooltip over to the focused item. A click
+      // moves the focus, but the pointer is still there and they must keep following it.
+      const followsFocus = isFocused && isFocusVisible && isKeyboardModalityRef.current;
 
       store.update({
-        ...(isFocused &&
-          isFocusVisible &&
+        ...(followsFocus &&
           store.state.highlight && {
             highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
           }),
-        ...(isFocused &&
-          isFocusVisible &&
+        ...(followsFocus &&
           store.state.interaction && {
             interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
           }),
@@ -215,12 +223,14 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       // A click keeps the focus visible only if it already was, or if the chart opts in.
       focusVisibleIntentRef.current =
         params.focusItemOnClick === true || store.state.keyboardNavigation.isFocusVisible;
+      isKeyboardModalityRef.current = false;
     }
 
     // Any key press means the user switched to the keyboard, wherever the focus currently is.
     // Listening on the document also covers tabbing in from outside the chart.
     function trackKeyboardIntent() {
       focusVisibleIntentRef.current = true;
+      isKeyboardModalityRef.current = true;
     }
 
     function keyboardHandler(event: KeyboardEvent) {
