@@ -163,14 +163,6 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
       ? resourceField.error
       : undefined;
 
-  const handleResourceChange = (newResource: SchedulerResourceId | null) => {
-    resourceField.setValue(newResource);
-  };
-
-  const handleColorChange = (newColor: SchedulerEventColor | null) => {
-    colorField.setValue(newColor);
-  };
-
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     const hasNesting = resources.some(
       (resource) => (childrenIdLookup.get(resource.id)?.length ?? 0) > 0,
@@ -231,7 +223,7 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     const value = event.target.value;
-    handleResourceChange(value === NO_RESOURCE_VALUE ? null : (value as SchedulerResourceId));
+    resourceField.setValue(value === NO_RESOURCE_VALUE ? null : (value as SchedulerResourceId));
   };
 
   const errorId = `${schedulerId}-resource-error`;
@@ -324,7 +316,7 @@ export default function ResourceAndColorSection(props: EventDialogSectionProps) 
         value={color ? [color] : []}
         onValueChange={(values) => {
           const next = values[values.length - 1] as SchedulerEventColor | undefined;
-          handleColorChange(next ?? null);
+          colorField.setValue(next ?? null);
         }}
         aria-label={localeText.colorPickerLabel}
         disabled={readOnly}
