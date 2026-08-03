@@ -165,19 +165,6 @@ describe('EventDialogFormStore', () => {
     });
   });
 
-  describe('reset', () => {
-    it('should restore the initial values and clear the errors', () => {
-      const store = new EventDialogFormStore({ title: 'Meeting' });
-      store.registerValidator('title', () => 'Required');
-      store.setValue('title', 'Updated');
-      store.validateAll();
-
-      store.reset();
-      expect(store.state.values).to.deep.equal({ title: 'Meeting' });
-      expect(store.state.errors).to.deep.equal({});
-    });
-  });
-
   describe('selectors', () => {
     it('should read a value and an error by key', () => {
       const store = new EventDialogFormStore({ title: '' });

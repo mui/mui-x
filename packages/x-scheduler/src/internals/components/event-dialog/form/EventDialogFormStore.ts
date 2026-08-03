@@ -120,10 +120,6 @@ export class EventDialogFormStore extends Store<EventDialogFormState> {
     }
     return dirty;
   };
-
-  public reset = () => {
-    this.update({ values: this.state.initialValues, errors: {} });
-  };
 }
 
 export const eventDialogFormSelectors = {
