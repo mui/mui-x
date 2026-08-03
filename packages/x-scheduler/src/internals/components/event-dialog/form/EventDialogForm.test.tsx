@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventDialogFormProvider, useEventDialogFormContext } from './EventDialogFormContext';
 import { useField } from './useField';
@@ -128,11 +128,28 @@ describe('EventDialogForm', () => {
 
   describe('useEventDialogFormContext', () => {
     it('should throw when used outside of the provider', () => {
+      const errorRef = React.createRef<any>();
+
+      const errorMessage1 =
+        'MUI X Scheduler: useEventDialogFormContext must be used within an <EventDialogFormProvider />';
+      const errorMessage2 = 'The above error occurred in the <Consumer> component';
+      const expectedError = reactMajor < 19 ? [errorMessage2] : [errorMessage1];
+
       function Consumer() {
         useEventDialogFormContext();
         return null;
       }
-      expect(() => render(<Consumer />)).to.throw(/MUI X Scheduler/);
+
+      expect(() =>
+        render(
+          <ErrorBoundary ref={errorRef}>
+            <Consumer />
+          </ErrorBoundary>,
+        ),
+      ).toErrorDev(expectedError);
+
+      expect((errorRef.current as any).errors).to.have.length(1);
+      expect((errorRef.current as any).errors[0].toString()).to.include(errorMessage1);
     });
   });
 
