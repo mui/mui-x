@@ -425,4 +425,48 @@ describe('ChatMessage', () => {
     // the slot-driven message tree.
     expect(document.body.textContent).toContain('Alice');
   });
+
+  // The status ticks are module-local inline SVGs, so the package stays free of an
+  // `@mui/icons-material` dependency. https://github.com/mui/mui-x/issues/23248
+  it('renders distinct inline SVG status ticks for sent and read messages', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          { id: 'm1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'S' }] },
+          { id: 'm2', role: 'user', status: 'read', parts: [{ type: 'text', text: 'R' }] },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const paths = Array.from(document.querySelectorAll('.MuiChatMessage-inlineMeta svg path')).map(
+      (path) => path.getAttribute('d'),
+    );
+    expect(paths).toHaveLength(2);
+    // "read" is a double tick, "sent" a single one.
+    expect(new Set(paths).size).toBe(2);
+  });
+
+  it('renders distinct inline SVG status ticks in the compact variant', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        variant="compact"
+        initialMessages={[
+          { id: 'm1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'S' }] },
+          { id: 'm2', role: 'user', status: 'read', parts: [{ type: 'text', text: 'R' }] },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const paths = Array.from(document.querySelectorAll('.MuiChatMessage-meta svg path')).map(
+      (path) => path.getAttribute('d'),
+    );
+    expect(paths).toHaveLength(2);
+    expect(new Set(paths).size).toBe(2);
+  });
 });
