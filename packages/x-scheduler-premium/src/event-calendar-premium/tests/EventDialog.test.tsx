@@ -603,6 +603,38 @@ describe('<EventDialogContent open />', () => {
       expect(onEventsChange.firstCall.firstArg[0].resource).to.equal(workResource.id);
     });
 
+    it('should show the range error and the resource error at the same time', async () => {
+      const onEventsChange = spy();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[eventWithoutResource]}
+          onEventsChange={onEventsChange}
+          resources={resources}
+          shouldEventRequireResource
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent
+            open
+            {...defaultProps}
+            occurrence={eventWithoutResourceOccurrence}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.clear(screen.getByLabelText(/start date/i));
+      await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
+      await user.clear(screen.getByLabelText(/end date/i));
+      await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
+        /start.*before.*end/i,
+      );
+      expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+    });
+
     it('should block submit on a Calendar creation placeholder when `shouldEventRequireResource={true}` and no resource is selected', async () => {
       const onEventsChange = spy();
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
