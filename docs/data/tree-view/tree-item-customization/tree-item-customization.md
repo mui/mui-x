@@ -128,11 +128,24 @@ The `useTreeItem()` hook also returns a `status` object that holds boolean value
 
 ```jsx
 const {
-  status: { expanded, expandable, focused, selected, disabled, editable, editing },
+  status: {
+    expanded,
+    expandable,
+    focused,
+    selected,
+    indeterminate,
+    disabled,
+    editable,
+    editing,
+  },
 } = useTreeItem(props);
 ```
 
 You can use these statuses to apply custom styling to the item or conditionally render subcomponents.
+
+:::info
+`indeterminate` is `true` when the item isn't selected but some of its selectable descendants are.
+:::
 
 {{"demo": "useTreeItemHookStatus.js"}}
 

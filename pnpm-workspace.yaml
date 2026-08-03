@@ -22,7 +22,7 @@ catalog:
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.2.0
   '@mui/internal-test-utils': 2.0.18-canary.31
-  '@mui/internal-core-docs': 9.1.2-canary.2
+  '@mui/internal-core-docs': 9.1.2-canary.3
   '@mui/material': 9.2.0
   '@mui/stylis-plugin-rtl': 9.1.1
   '@mui/system': 9.2.0
@@ -41,7 +41,7 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.7.1
   '@types/use-sync-external-store': ^1.5.0
-  '@typescript-eslint/parser': ^8.64.0
+  '@typescript-eslint/parser': ^8.65.0
   '@vitejs/plugin-react': ^6.0.4
   '@vitejs/plugin-react-swc': ^4.3.2
   '@vitest/browser': ^4.1.10
@@ -69,8 +69,8 @@ catalog:
   playwright: 1.61.1
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
-  react: 19.2.7
-  react-dom: 19.2.7
+  react: 19.2.8
+  react-dom: 19.2.8
   react-router: ^8.3.0
   react-transition-group: ^4.4.5
   reselect: ^5.2.0
