@@ -49,6 +49,7 @@ describe('<DataGrid /> - Data source', () => {
       onFetchRows?: typeof fetchRowsSpy;
       dataSourceKey?: number;
       activityMode?: 'visible' | 'hidden';
+      stallResponsePromise?: Promise<void>;
     },
   ) {
     apiRef = useGridApiRef();
@@ -58,6 +59,7 @@ describe('<DataGrid /> - Data source', () => {
       dataSourceKey = 1,
       onFetchRows,
       activityMode = 'visible',
+      stallResponsePromise,
       ...other
     } = props;
     const effectiveFetchRowsSpy = onFetchRows ?? fetchRowsSpy;
@@ -86,6 +88,8 @@ describe('<DataGrid /> - Data source', () => {
           effectiveFetchRowsSpy(url);
           const getRowsResponse = await fetchRows(url);
 
+          await stallResponsePromise;
+
           return {
             rows: getRowsResponse.rows,
             rowCount: getRowsResponse.rowCount,
@@ -97,7 +101,7 @@ describe('<DataGrid /> - Data source', () => {
           return syncedRow;
         },
       };
-    }, [dataSourceKey, effectiveFetchRowsSpy, fetchRows, editRow]);
+    }, [dataSourceKey, effectiveFetchRowsSpy, fetchRows, editRow, stallResponsePromise]);
 
     if (!mockServer.isReady) {
       return null;
@@ -205,6 +209,21 @@ describe('<DataGrid /> - Data source', () => {
         setProps({ activityMode: 'visible' });
         await waitFor(() => {
           expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+      });
+
+      it('re-fetches the data if the Activity becomes hidden while the request is in-flight', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        setProps({ activityMode: 'hidden' });
+        resolve();
+        setProps({ activityMode: 'visible' });
+        // Increment twice due to the Activity and strict mode
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(3);
         });
       });
     });
@@ -865,7 +884,7 @@ describe('<DataGrid /> - Data source', () => {
       const dataSourceCache = {
         get: (key: GridGetRowsParams) => cache.get(getKeyDefault(key)),
         set: (key: GridGetRowsParams, value: GridGetRowsResponse) =>
-        cache.set(getKeyDefault(key), value),
+          cache.set(getKeyDefault(key), value),
         clear: () => {
           cache.clear();
           clearSpy();
@@ -912,16 +931,16 @@ describe('<DataGrid /> - Data source', () => {
           columns={[
             {
               field: 'commodity',
-          },
-          {
-            field: 'computed',
-            editable: true,
-            valueGetter: (value, row) => `${row.commodity}-computed`,
-            valueSetter: (value, row) => {
-              const [commodity] = value!.toString().split('-');
-              return { ...row, commodity: `${commodity}-edited` };
-          },
-          },
+            },
+            {
+              field: 'computed',
+              editable: true,
+              valueGetter: (value, row) => `${row.commodity}-computed`,
+              valueSetter: (value, row) => {
+                const [commodity] = value!.toString().split('-');
+                return { ...row, commodity: `${commodity}-edited` };
+              },
+            },
           ]}
           dataSourceCache={null}
         />,

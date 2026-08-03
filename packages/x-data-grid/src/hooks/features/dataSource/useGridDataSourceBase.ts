@@ -461,7 +461,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       return undefined;
     }
 
-    fetchedInitialDataSourceRows.current = true;
     lastApiRef.current = apiRef;
     lastStrategy.current = currentStrategy;
     lastDataSource.current = props.dataSource;
@@ -480,7 +479,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         apiRef.current.setRows([]);
       }
       apiRef.current.dataSource.cache.clear();
-      apiRef.current.dataSource.fetchRows();
+      apiRef.current.dataSource.fetchRows().then(() => {
+        fetchedInitialDataSourceRows.current = true;
+      });
     }
 
     return () => {
