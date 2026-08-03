@@ -1,74 +1,61 @@
 import * as React from 'react';
+import { onTestFinished } from 'vitest';
 import { createRenderer } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-// Attached by the internal PointerManager / KeyboardManager that GestureManager owns.
-const DOCUMENT_EVENTS = [
-  'pointerdown',
-  'pointermove',
-  'pointerup',
-  'pointercancel',
-  'forceCancel',
-  'blur',
-  'contextmenu',
-];
-const WINDOW_EVENTS = ['keydown', 'keyup', 'blur'];
-
-type ListenerCall = { type: string; callback: unknown };
+type Listener = { type: string; callback: unknown };
 
 /**
- * Records `addEventListener` / `removeEventListener` traffic on a target.
- *
- * Not `sinon.spy`: in jsdom `window === globalThis`, where `addEventListener` is an accessor
- * property that sinon refuses to wrap. Patching the descriptor directly works both for that
- * accessor and for the inherited method on `document`.
+ * Listeners currently registered on `target`, to assert a mount/unmount cycle leaves none behind.
+ * Patches the descriptor rather than using `sinon.spy`: in jsdom `window === globalThis`, where
+ * `addEventListener` is an accessor property that sinon refuses to wrap.
  */
-function trackListeners(target: EventTarget, types: string[]) {
-  const added: ListenerCall[] = [];
-  const removed: ListenerCall[] = [];
+function trackListeners(target: EventTarget) {
+  const active: Listener[] = [];
 
-  const patch = (name: 'addEventListener' | 'removeEventListener', log: ListenerCall[]) => {
-    const original = Object.getOwnPropertyDescriptor(target, name);
+  const patch = (
+    name: 'addEventListener' | 'removeEventListener',
+    onCall: (listener: Listener) => void,
+  ) => {
+    const descriptor = Object.getOwnPropertyDescriptor(target, name);
     const originalFn = (target as any)[name] as Function;
 
     Object.defineProperty(target, name, {
       configurable: true,
-      writable: true,
-      value: function trackedListener(
-        this: EventTarget,
-        type: string,
-        callback: unknown,
-        options: unknown,
-      ) {
-        if (types.includes(type)) {
-          log.push({ type, callback });
-        }
-        return originalFn.call(this, type, callback, options);
+      value: (type: string, callback: unknown, options: unknown) => {
+        onCall({ type, callback });
+        return originalFn.call(target, type, callback, options);
       },
     });
 
     return () => {
-      if (original) {
-        Object.defineProperty(target, name, original);
+      if (descriptor) {
+        Object.defineProperty(target, name, descriptor);
       } else {
         delete (target as any)[name];
       }
     };
   };
 
-  const restoreAdd = patch('addEventListener', added);
-  const restoreRemove = patch('removeEventListener', removed);
+  const restores = [
+    patch('addEventListener', (listener) => active.push(listener)),
+    patch('removeEventListener', ({ type, callback }) => {
+      const index = active.findIndex(
+        (listener) => listener.type === type && listener.callback === callback,
+      );
+      if (index !== -1) {
+        active.splice(index, 1);
+      }
+    }),
+  ];
 
   return {
     restore() {
-      restoreAdd();
-      restoreRemove();
+      restores.forEach((restore) => restore());
     },
-    /** Event types added but never removed with a matching (type, callback) pair. */
+    /** Types added without a matching `removeEventListener(type, callback)`. */
     leakedTypes() {
-      return added
-        .filter((a) => !removed.some((r) => r.type === a.type && r.callback === a.callback))
-        .map(({ type }) => type);
+      return active.map(({ type }) => type);
     },
   };
 }
@@ -87,24 +74,22 @@ describe('useChartInteractionListener', () => {
       />
     );
 
-    // The first mount also performs one-time global setup unrelated to charts (MUI's
-    // focus-visible handlers, React's `selectionchange`), which is intentionally never torn
-    // down. Warm that up first so the measured cycle only sees chart-owned listeners.
+    // Warm-up: the first mount installs one-time globals (focus-visible, `selectionchange`)
+    // that are intentionally never torn down.
     render(chart).unmount();
 
-    const documentListeners = trackListeners(document, DOCUMENT_EVENTS);
-    const windowListeners = trackListeners(window, WINDOW_EVENTS);
-
-    try {
-      render(chart).unmount();
-
-      expect({
-        document: documentListeners.leakedTypes(),
-        window: windowListeners.leakedTypes(),
-      }).to.deep.equal({ document: [], window: [] });
-    } finally {
+    const documentListeners = trackListeners(document);
+    const windowListeners = trackListeners(window);
+    onTestFinished(() => {
       documentListeners.restore();
       windowListeners.restore();
-    }
+    });
+
+    render(chart).unmount();
+
+    expect({
+      document: documentListeners.leakedTypes(),
+      window: windowListeners.leakedTypes(),
+    }).to.deep.equal({ document: [], window: [] });
   });
 });
