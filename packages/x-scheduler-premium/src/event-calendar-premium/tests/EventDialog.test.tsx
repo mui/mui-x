@@ -2244,7 +2244,10 @@ describe('<EventDialogContent open />', () => {
             />
           );
         }
-        function RecurrenceTabWithCustomField(
+        // The recurrence-tab renderer is only used here as a seam to mount the probe
+        // inside the form until the General-tab slot (#22871) lands — it renders the
+        // real tab untouched and is not a customization surface.
+        function FormProbeInjector(
           props: React.ComponentProps<
             NonNullable<typeof PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS.recurrenceTab>
           >,
@@ -2269,7 +2272,7 @@ describe('<EventDialogContent open />', () => {
             <EventDialogOptionalRenderersContext.Provider
               value={{
                 ...PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS,
-                recurrenceTab: RecurrenceTabWithCustomField,
+                recurrenceTab: FormProbeInjector,
               }}
             >
               <EventDialogContent
