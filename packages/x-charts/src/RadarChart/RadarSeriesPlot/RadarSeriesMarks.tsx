@@ -8,6 +8,8 @@ import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGe
 import type { SeriesId } from '../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../models';
 import type { HighlightState } from '../../hooks/useItemHighlightState';
+import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
+import type { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -43,6 +45,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   const classes = useUtilityClasses(inClasses);
   const getHighlightState = useItemHighlightStateGetter();
+  const { instance } = useChartsContext<[UseChartInteractionSignature]>();
 
   return (
     <React.Fragment>
@@ -65,6 +68,14 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   classes,
                 })}
                 pointerEvents={onItemClick ? undefined : 'none'}
+                // Marks only take pointer events when clickable, and then they hide the area
+                // underneath, so they have to report the pointer item themselves.
+                onPointerMove={() =>
+                  instance.setHoveredItem?.({ type: 'radar', seriesId: id, dataIndex: index })
+                }
+                onPointerDown={() =>
+                  instance.setHoveredItem?.({ type: 'radar', seriesId: id, dataIndex: index })
+                }
                 onClick={(event) =>
                   onItemClick?.(event, { type: 'radar', seriesId: id, dataIndex: index })
                 }
