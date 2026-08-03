@@ -23,6 +23,42 @@ export interface ControlledValue {
   rruleDraft: SchedulerProcessedEventRecurrenceRule;
 }
 
+/**
+ * Typed view of the form values bag. Custom fields from the user's event model
+ * live alongside these built-in keys.
+ */
+export interface EventDialogFormValues extends Record<string, unknown> {
+  title: string;
+  description: string;
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
+  resourceId: SchedulerResourceId | null;
+  allDay: boolean;
+  color: SchedulerEventColor | null;
+  recurrenceSelection: RecurringEventPresetKey | null | 'custom';
+  rruleDraft: SchedulerProcessedEventRecurrenceRule;
+}
+
+/**
+ * Form keys handled by the built-in submit logic. Every other key in the values
+ * bag is a custom field and is spread onto the event as-is.
+ */
+export const BUILT_IN_FORM_KEYS: ReadonlySet<string> = new Set([
+  'title',
+  'description',
+  'startDate',
+  'startTime',
+  'endDate',
+  'endTime',
+  'resourceId',
+  'allDay',
+  'color',
+  'recurrenceSelection',
+  'rruleDraft',
+]);
+
 const WEEKDAYS: SchedulerWeekday[] = [
   'sunday',
   'monday',
