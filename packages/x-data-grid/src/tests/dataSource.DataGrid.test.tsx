@@ -19,6 +19,8 @@ const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
+const SUPPORTS_ACTIVITY = 'Activity' in React;
+
 describe('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
@@ -33,6 +35,12 @@ describe('<DataGrid /> - Data source', () => {
     }, []);
     return null;
   }
+
+  function ActivityFallback({ children }: React.ActivityProps) {
+    return children;
+  }
+
+  const Activity = SUPPORTS_ACTIVITY ? React.Activity : ActivityFallback;
 
   function TestDataSource(
     props: Partial<DataGridProps> & {
@@ -98,7 +106,7 @@ describe('<DataGrid /> - Data source', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <Reset />
-        <React.Activity mode={activityMode}>
+        <Activity mode={activityMode}>
           <DataGrid
             apiRef={apiRef}
             columns={mockServer.columns}
@@ -111,7 +119,7 @@ describe('<DataGrid /> - Data source', () => {
             disableVirtualization
             {...other}
           />
-        </React.Activity>
+        </Activity>
       </div>
     );
   }
@@ -186,17 +194,21 @@ describe('<DataGrid /> - Data source', () => {
     });
   });
 
-  it('should not re-retch the data when the Activity becomes visible', async () => {
-    const { setProps } = render(<TestDataSource />);
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+  if (SUPPORTS_ACTIVITY) {
+    describe('Activity', () => {
+      it('should not re-retch the data when the Activity becomes visible', async () => {
+        const { setProps } = render(<TestDataSource />);
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+        setProps({ activityMode: 'hidden' });
+        setProps({ activityMode: 'visible' });
+        await waitFor(() => {
+          expect(fetchRowsSpy.callCount).to.equal(1);
+        });
+      });
     });
-    setProps({ activityMode: 'hidden' });
-    setProps({ activityMode: 'visible' });
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
-    });
-  });
+  }
 
   describe('Cache', () => {
     it('should cache the data using the default cache', async () => {
@@ -853,7 +865,7 @@ describe('<DataGrid /> - Data source', () => {
       const dataSourceCache = {
         get: (key: GridGetRowsParams) => cache.get(getKeyDefault(key)),
         set: (key: GridGetRowsParams, value: GridGetRowsResponse) =>
-          cache.set(getKeyDefault(key), value),
+        cache.set(getKeyDefault(key), value),
         clear: () => {
           cache.clear();
           clearSpy();
@@ -900,16 +912,16 @@ describe('<DataGrid /> - Data source', () => {
           columns={[
             {
               field: 'commodity',
-            },
-            {
-              field: 'computed',
-              editable: true,
-              valueGetter: (value, row) => `${row.commodity}-computed`,
-              valueSetter: (value, row) => {
-                const [commodity] = value!.toString().split('-');
-                return { ...row, commodity: `${commodity}-edited` };
-              },
-            },
+          },
+          {
+            field: 'computed',
+            editable: true,
+            valueGetter: (value, row) => `${row.commodity}-computed`,
+            valueSetter: (value, row) => {
+              const [commodity] = value!.toString().split('-');
+              return { ...row, commodity: `${commodity}-edited` };
+          },
+          },
           ]}
           dataSourceCache={null}
         />,
