@@ -6,7 +6,7 @@ export {
 } from './EventDialog';
 export * from './eventDialogClasses';
 export * from './EventDialogStyledContext';
-export type { ControlledValue, EndsSelection, EventDialogFormValues } from './utils';
+export type { EndsSelection, EventDialogFormValues } from './utils';
 export { getEndsSelectionFromRRule, getWeekdayToken, BUILT_IN_FORM_KEYS } from './utils';
 export { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 export { EventDialogOptionalRenderersContext } from './EventDialogOptionalRenderersContext';

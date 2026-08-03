@@ -6,12 +6,18 @@ import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import type { ControlledValue } from './utils';
+import type { EventDialogFormValues } from './utils';
+import { computeRange, validateRange } from './utils';
 import type { EventDialogSectionProps } from './EventDialog.types';
 import { SectionFieldset, SectionHeaderTitle } from './SectionFieldset';
-import { usePushPlaceholder } from './usePushPlaceholder';
+import { useEventDialogFormContext } from './form/EventDialogFormContext';
+import { useField } from './form/useField';
 
 const DateTimeFieldsContainer = styled('div', {
   name: 'MuiEventDialog',
@@ -48,11 +54,13 @@ const AllDayFormControlLabel = styled(FormControlLabel, {
 });
 
 export default function DateTimeSection(props: EventDialogSectionProps) {
-  const { occurrence, controlled, setControlled, errors, setErrors } = props;
+  const { occurrence } = props;
 
   // Context hooks
+  const adapter = useAdapterContext();
   const { schedulerId, classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
+  const formStore = useEventDialogFormContext();
 
   // Selector hooks
   const isPropertyReadOnly = useStore(
@@ -60,24 +68,31 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
     schedulerEventSelectors.isPropertyReadOnly,
     occurrence.id,
   );
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
-  const pushPlaceholder = usePushPlaceholder();
-
-  const createHandleChangeDateOrTimeField =
-    (field: keyof ControlledValue) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const inputValue = event.currentTarget.value;
-      setErrors({});
-      const newState = { ...controlled, [field]: inputValue };
-      pushPlaceholder(newState);
-      setControlled(newState);
+  const createRangeValidator =
+    (field: 'startDate' | 'startTime') =>
+    (value: string, allValues: Record<string, unknown>): string | null => {
+      const values = allValues as EventDialogFormValues;
+      const { start, end } = computeRange(adapter, values, displayTimezone);
+      return validateRange(adapter, start, end, values.allDay)?.field === field
+        ? localeText.startDateAfterEndDateError
+        : null;
     };
 
-  const handleToggleAllDay = (checked: boolean) => {
-    const newState = { ...controlled, allDay: checked };
-    pushPlaceholder(newState);
-    setControlled(newState);
-  };
+  const startDate = useField<string>('startDate', { validate: createRangeValidator('startDate') });
+  const startTime = useField<string>('startTime', { validate: createRangeValidator('startTime') });
+  const endDate = useField<string>('endDate');
+  const endTime = useField<string>('endTime');
+  const allDay = useField<boolean>('allDay');
+
+  const createHandleChangeDateOrTimeField =
+    (field: { setValue: (value: string) => void }) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      // Editing any date or time field invalidates the range errors as a whole.
+      formStore.clearErrors();
+      field.setValue(event.currentTarget.value);
+    };
 
   return (
     <SectionFieldset className={classes.eventDialogSectionFieldset}>
@@ -90,25 +105,25 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
             name="startDate"
             label={localeText.startDateLabel}
             type="date"
-            value={controlled.startDate}
-            onChange={createHandleChangeDateOrTimeField('startDate')}
+            value={startDate.value}
+            onChange={createHandleChangeDateOrTimeField(startDate)}
             required
             slotProps={{
               inputLabel: { shrink: true },
               input: { readOnly: isPropertyReadOnly('start') },
               formHelperText: { role: 'alert' },
             }}
-            error={!!errors.startDate}
-            helperText={errors.startDate}
+            error={!!startDate.error}
+            helperText={startDate.error}
             size="small"
           />
-          {!controlled.allDay && (
+          {!allDay.value && (
             <TextField
               name="startTime"
               label={localeText.startTimeLabel}
               type="time"
-              value={controlled.startTime}
-              onChange={createHandleChangeDateOrTimeField('startTime')}
+              value={startTime.value}
+              onChange={createHandleChangeDateOrTimeField(startTime)}
               required
               slotProps={{
                 inputLabel: { shrink: true },
@@ -123,8 +138,8 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
             name="endDate"
             label={localeText.endDateLabel}
             type="date"
-            value={controlled.endDate}
-            onChange={createHandleChangeDateOrTimeField('endDate')}
+            value={endDate.value}
+            onChange={createHandleChangeDateOrTimeField(endDate)}
             required
             slotProps={{
               inputLabel: { shrink: true },
@@ -132,13 +147,13 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
             }}
             size="small"
           />
-          {!controlled.allDay && (
+          {!allDay.value && (
             <TextField
               name="endTime"
               label={localeText.endTimeLabel}
               type="time"
-              value={controlled.endTime}
-              onChange={createHandleChangeDateOrTimeField('endTime')}
+              value={endTime.value}
+              onChange={createHandleChangeDateOrTimeField(endTime)}
               required
               slotProps={{
                 inputLabel: { shrink: true },
@@ -152,8 +167,8 @@ export default function DateTimeSection(props: EventDialogSectionProps) {
           control={
             <Switch
               id={`${schedulerId}-enable-all-day-switch`}
-              checked={controlled.allDay}
-              onChange={(event) => handleToggleAllDay(event.target.checked)}
+              checked={allDay.value}
+              onChange={(event) => allDay.setValue(event.target.checked)}
               disabled={isPropertyReadOnly('allDay')}
             />
           }

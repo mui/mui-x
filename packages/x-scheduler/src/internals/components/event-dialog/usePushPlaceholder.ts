@@ -6,12 +6,22 @@ import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import type { ControlledValue } from './utils';
+import type { EventDialogFormValues } from './utils';
 import { computeRange } from './utils';
+
+const PLACEHOLDER_KEYS = new Set([
+  'startDate',
+  'startTime',
+  'endDate',
+  'endTime',
+  'allDay',
+  'resourceId',
+]);
 
 /**
  * Returns a function that live-updates the creation placeholder in the store
- * from the next form values. No-op when the dialog is not creating an event.
+ * from the form values. No-op when the dialog is not creating an event or when
+ * none of the written keys affects the placeholder.
  */
 export function usePushPlaceholder() {
   const adapter = useAdapterContext();
@@ -19,11 +29,15 @@ export function usePushPlaceholder() {
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
 
-  return function pushPlaceholder(next: ControlledValue) {
+  return function pushPlaceholder(values: Record<string, unknown>, changedKeys: string[]) {
     if (rawPlaceholder?.type !== 'creation') {
       return;
     }
+    if (!changedKeys.some((key) => PLACEHOLDER_KEYS.has(key))) {
+      return;
+    }
 
+    const next = values as EventDialogFormValues;
     const { start, end, surfaceType } = computeRange(adapter, next, displayTimezone);
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType

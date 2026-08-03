@@ -11,18 +11,6 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { EventDialogLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
-export interface ControlledValue {
-  startDate: string;
-  startTime: string;
-  endDate: string;
-  endTime: string;
-  resourceId: SchedulerResourceId | null;
-  allDay: boolean;
-  color: SchedulerEventColor | null;
-  recurrenceSelection: RecurringEventPresetKey | null | 'custom';
-  rruleDraft: SchedulerProcessedEventRecurrenceRule;
-}
-
 /**
  * Typed view of the form values bag. Custom fields from the user's event model
  * live alongside these built-in keys.
@@ -77,7 +65,7 @@ export type EndsSelection = 'never' | 'after' | 'until';
 
 export function computeRange(
   adapter: Adapter,
-  next: ControlledValue,
+  next: Pick<EventDialogFormValues, 'startDate' | 'startTime' | 'endDate' | 'endTime' | 'allDay'>,
   displayTimezone: TemporalTimezone,
 ) {
   if (next.allDay) {

@@ -6,12 +6,9 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-schedul
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import type { EventDialogSectionProps } from './EventDialog.types';
-import { hasProp } from './utils';
+import { useField } from './form/useField';
 
-// The description is uncontrolled, so the section only needs the occurrence for now (#22868).
-type DescriptionSectionProps = Pick<EventDialogSectionProps, 'occurrence'>;
-
-export default function DescriptionSection(props: DescriptionSectionProps) {
+export default function DescriptionSection(props: EventDialogSectionProps) {
   const { occurrence } = props;
 
   // Context hooks
@@ -25,11 +22,14 @@ export default function DescriptionSection(props: DescriptionSectionProps) {
     occurrence.id,
   );
 
+  const description = useField<string>('description');
+
   return (
     <TextField
       name="description"
       label={localeText.descriptionLabel}
-      defaultValue={hasProp(occurrence, 'description') ? occurrence.description : ''}
+      value={description.value}
+      onChange={(event) => description.setValue(event.target.value)}
       multiline
       rows={5}
       fullWidth
