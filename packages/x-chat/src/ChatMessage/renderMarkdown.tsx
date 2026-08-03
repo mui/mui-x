@@ -2,30 +2,26 @@
 import * as React from 'react';
 import Markdown, { RuleType, type MarkdownToJSX } from 'markdown-to-jsx';
 import { useMessageContentTabIndex } from '@mui/x-chat-headless';
-import { normalizeMarkdownForRender } from '@mui/x-chat-headless/internals';
+import { normalizeMarkdownForRender, safeUri } from '@mui/x-chat-headless/internals';
 import { ChatCodeBlock } from '../ChatCodeBlock';
 import { useStreamingMarkdownRepair } from '../internals/streamingMarkdownRepair';
-
-// Kept in sync with the headless `safeUri` allow-list so links behave the same
-// across markdown and source/file parts.
-const SAFE_URL_PROTOCOLS = ['http:', 'https:', 'mailto:', 'tel:'];
 
 // Applied by markdown-to-jsx to every link `href` / image `src`. Returns the value
 // when safe, or `null` to drop the attribute — so a `javascript:`/`data:`/
 // protocol-relative URL (or remend's `streamdown:incomplete-link` placeholder for a
 // half-streamed link) renders as inert text rather than a navigable target.
 const sanitizer: NonNullable<MarkdownToJSX.Options['sanitizer']> = (value) => {
-  try {
-    const parsed = new URL(value);
-    return SAFE_URL_PROTOCOLS.includes(parsed.protocol) ? value : null;
-  } catch {
-    // Relative URLs (no scheme) are allowed; reject protocol-relative `//host`,
-    // which resolves to an external origin despite carrying no explicit scheme.
-    if (!value.includes(':') && !/^[/\\]{2}/.test(value)) {
-      return value;
-    }
+  // Markdown additionally rejects protocol-relative `//host` (and its `\` variants,
+  // which browsers resolve identically), which reach an external origin while
+  // carrying no explicit scheme. `safeUri` accepts them as same-origin-looking
+  // paths, so this guard stays local rather than moving into the shared helper.
+  if (/^[/\\]{2}/.test(value)) {
     return null;
   }
+
+  // The scheme allow-list itself is shared with the source/file part renderers so
+  // links behave the same across markdown and parts.
+  return safeUri(value) || null;
 };
 
 // Markdown links open in a new tab (the sanitizer above already neutralised the

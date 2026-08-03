@@ -110,6 +110,15 @@ describe('renderMarkdown', () => {
       expect(document.querySelector('a')!.getAttribute('href')).toBe(null);
     });
 
+    it('rejects the /\\host protocol-relative variant, which browsers resolve as //', () => {
+      // Browsers resolve `/\host` to `https://host`, so it is external despite the
+      // leading single slash. The `\/host` and `\\host` variants never reach the
+      // sanitizer in that shape: CommonMark unescapes them first, leaving a
+      // harmless same-origin path.
+      render(<React.Fragment>{renderMarkdown('[x](/\\evil.example.com)')}</React.Fragment>);
+      expect(document.querySelector('a')!.getAttribute('href')).toBe(null);
+    });
+
     it('strips an optional CommonMark title from an image src', () => {
       render(
         <React.Fragment>

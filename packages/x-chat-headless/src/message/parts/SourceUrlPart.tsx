@@ -100,14 +100,17 @@ export const SourceUrlPart = React.forwardRef(function SourceUrlPart(
     },
   });
 
-  const href = safeUri(part.url);
-
   return (
     <Root {...rootProps}>
       <Icon {...iconProps}>
         <ExternalLinkIcon />
       </Icon>
-      <LinkSlot href={href || undefined} rel="noreferrer noopener" target="_blank" {...linkProps}>
+      <LinkSlot
+        href={safeUri(part.url) || undefined}
+        rel="noreferrer noopener"
+        target="_blank"
+        {...linkProps}
+      >
         {part.title ?? part.url}
       </LinkSlot>
     </Root>
