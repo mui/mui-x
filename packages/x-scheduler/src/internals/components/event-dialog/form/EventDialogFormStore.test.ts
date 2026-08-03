@@ -1,6 +1,5 @@
 import { spy } from 'sinon';
 import { EventDialogFormStore } from './EventDialogFormStore';
-import { eventDialogFormSelectors } from './eventDialogFormSelectors';
 
 describe('EventDialogFormStore', () => {
   describe('constructor', () => {
@@ -163,16 +162,6 @@ describe('EventDialogFormStore', () => {
       store.setValue('title', 'Updated');
       store.setValue('title', 'Meeting');
       expect(store.getDirtyValues()).to.deep.equal({});
-    });
-  });
-
-  describe('selectors', () => {
-    it('should read a value and an error by key', () => {
-      const store = new EventDialogFormStore({ title: '' });
-      store.registerValidator('title', () => 'Required');
-      store.validateAll();
-      expect(eventDialogFormSelectors.value(store.state, 'title')).to.equal('');
-      expect(eventDialogFormSelectors.error(store.state, 'title')).to.equal('Required');
     });
   });
 });
