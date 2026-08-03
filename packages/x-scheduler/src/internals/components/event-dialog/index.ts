@@ -15,10 +15,7 @@ export {
   EventDialogFormProvider,
   useEventDialogFormContext,
 } from './form/EventDialogFormContext';
-export {
-  EventDialogFormStore,
-  eventDialogFormSelectors,
-} from './form/EventDialogFormStore';
+export { EventDialogFormStore, eventDialogFormSelectors } from './form/EventDialogFormStore';
 export type {
   EventDialogFormState,
   EventDialogFormValidator,

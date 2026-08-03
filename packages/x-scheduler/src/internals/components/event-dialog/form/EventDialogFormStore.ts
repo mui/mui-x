@@ -37,10 +37,7 @@ export class EventDialogFormStore extends Store<EventDialogFormState> {
 
   private options: EventDialogFormStoreOptions;
 
-  constructor(
-    initialValues: Record<string, unknown>,
-    options: EventDialogFormStoreOptions = {},
-  ) {
+  constructor(initialValues: Record<string, unknown>, options: EventDialogFormStoreOptions = {}) {
     super({ values: initialValues, initialValues, errors: {} });
     this.options = options;
   }

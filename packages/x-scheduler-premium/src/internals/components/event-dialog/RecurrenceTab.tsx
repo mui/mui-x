@@ -448,9 +448,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     ];
   }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, localeText, weekday]);
 
-  const monthlyMode: 'byMonthDay' | 'byDay' = rruleDraft.byDay?.length
-    ? 'byDay'
-    : 'byMonthDay';
+  const monthlyMode: 'byMonthDay' | 'byDay' = rruleDraft.byDay?.length ? 'byDay' : 'byMonthDay';
 
   return (
     <EventDialogTabPanel
@@ -650,8 +648,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               <TextField
                 type="date"
                 value={
-                  customEndsValue === 'until' &&
-                  adapter.isValid(rruleDraft.until ?? null)
+                  customEndsValue === 'until' && adapter.isValid(rruleDraft.until ?? null)
                     ? adapter.formatByString(rruleDraft.until!, 'yyyy-MM-dd')
                     : ''
                 }

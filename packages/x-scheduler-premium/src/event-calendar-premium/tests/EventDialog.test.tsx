@@ -24,6 +24,7 @@ import {
   EventCalendarProvider,
   EventDialogContent,
   EventDialogOptionalRenderersContext,
+  useField,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
@@ -2230,6 +2231,68 @@ describe('<EventDialogContent open />', () => {
         );
         expect(created).to.not.equal(undefined);
         expect(created.customField).to.equal('preserve-me');
+      });
+
+      it('should save a custom field edited through useField', async () => {
+        function CustomFieldSection() {
+          const { value, setValue } = useField<string>('customField');
+          return (
+            <input
+              aria-label="custom field"
+              value={value ?? ''}
+              onChange={(event) => setValue(event.target.value)}
+            />
+          );
+        }
+        function RecurrenceTabWithCustomField(
+          props: React.ComponentProps<
+            NonNullable<typeof PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS.recurrenceTab>
+          >,
+        ) {
+          const RecurrenceTabRenderer = PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS.recurrenceTab!;
+          return (
+            <React.Fragment>
+              <RecurrenceTabRenderer {...props} />
+              <CustomFieldSection />
+            </React.Fragment>
+          );
+        }
+
+        const onEventsChange = spy();
+        const { user } = render(
+          <EventCalendarProvider
+            events={[nonRecurringEventWithCustomData]}
+            onEventsChange={onEventsChange}
+            resources={resources}
+            storeClass={PremiumTestStore}
+          >
+            <EventDialogOptionalRenderersContext.Provider
+              value={{
+                ...PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS,
+                recurrenceTab: RecurrenceTabWithCustomField,
+              }}
+            >
+              <EventDialogContent
+                open
+                {...defaultProps}
+                occurrence={nonRecurringEventWithCustomDataOccurrence}
+              />
+            </EventDialogOptionalRenderersContext.Provider>
+          </EventCalendarProvider>,
+        );
+
+        // The custom field is seeded from the event model.
+        expect(screen.getByLabelText('custom field')).to.have.value('preserve-me');
+
+        await user.clear(screen.getByLabelText('custom field'));
+        await user.type(screen.getByLabelText('custom field'), 'edited');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        const updated = onEventsChange.lastCall.firstArg.find(
+          (event) => event.id === nonRecurringEventWithCustomData.id,
+        );
+        expect(updated.customField).to.equal('edited');
       });
 
       it('should use the latest custom data when it changes while the scope dialog is open', async () => {
