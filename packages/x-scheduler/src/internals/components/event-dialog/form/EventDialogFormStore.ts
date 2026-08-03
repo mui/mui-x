@@ -1,4 +1,4 @@
-import { Store, createSelector } from '@base-ui/utils/store';
+import { Store } from '@base-ui/utils/store';
 
 export interface EventDialogFormState {
   /**
@@ -121,8 +121,3 @@ export class EventDialogFormStore extends Store<EventDialogFormState> {
     return dirty;
   };
 }
-
-export const eventDialogFormSelectors = {
-  value: createSelector((state: EventDialogFormState, key: string) => state.values[key]),
-  error: createSelector((state: EventDialogFormState, key: string) => state.errors[key]),
-};

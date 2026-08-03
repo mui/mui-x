@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
-import { EventDialogFormStore, eventDialogFormSelectors } from './EventDialogFormStore';
+import { EventDialogFormStore } from './EventDialogFormStore';
+import { eventDialogFormSelectors } from './eventDialogFormSelectors';
 
 describe('EventDialogFormStore', () => {
   describe('constructor', () => {

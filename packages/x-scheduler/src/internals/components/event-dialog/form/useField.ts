@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { eventDialogFormSelectors } from './EventDialogFormStore';
+import { eventDialogFormSelectors } from './eventDialogFormSelectors';
 import type { EventDialogFormValidator } from './EventDialogFormStore';
 import { useEventDialogFormContext } from './EventDialogFormContext';
 
