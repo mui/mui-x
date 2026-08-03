@@ -687,6 +687,66 @@ describe('<DateRangeCalendar />', () => {
           expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
         });
       });
+
+      it('should not switch the visible months when the requested month is already visible in an earlier calendar', async () => {
+        const { setProps } = render(
+          <DateRangeCalendar
+            calendars={2}
+            currentMonthCalendarPosition={2}
+            value={[adapterToUse.date('2024-02-10'), adapterToUse.date('2024-02-10')]}
+          />,
+        );
+
+        // With the current month in the second calendar, the window is January 2024 + February 2024.
+        expect(screen.getByRole('grid', { name: 'January 2024' })).not.to.equal(null);
+        expect(screen.getByRole('grid', { name: 'February 2024' })).not.to.equal(null);
+
+        // Move the start to a day already visible in the first calendar (January 2024).
+        setProps({
+          value: [adapterToUse.date('2024-01-15'), adapterToUse.date('2024-01-15')],
+        });
+
+        await screen.findByRole('gridcell', { name: '15', selected: true });
+
+        // The window must not scroll back: December 2023 must not appear.
+        expect(screen.queryByRole('grid', { name: 'December 2023' })).to.equal(null);
+        expect(screen.getByRole('grid', { name: 'January 2024' })).not.to.equal(null);
+        expect(screen.getByRole('grid', { name: 'February 2024' })).not.to.equal(null);
+      });
+
+      it('should not switch the visible months when the value is on the first visible day but earlier in the day than the reference time', async () => {
+        // The value carries a time, so `currentMonth` keeps it (March 1 at 12:34).
+        const { setProps } = render(
+          <DateRangeCalendar
+            reduceAnimations
+            calendars={2}
+            currentMonthCalendarPosition={2}
+            value={[
+              adapterToUse.date('2024-03-15T12:34:00'),
+              adapterToUse.date('2024-03-15T12:34:00'),
+            ]}
+          />,
+        );
+
+        // With the current month in the second calendar, the window is February 2024 + March 2024.
+        expect(screen.getByRole('grid', { name: 'February 2024' })).not.to.equal(null);
+        expect(screen.getByRole('grid', { name: 'March 2024' })).not.to.equal(null);
+
+        // Move the value to the first visible day at midnight, i.e. earlier in the day than 12:34.
+        setProps({
+          value: [
+            adapterToUse.date('2024-02-01T00:00:00'),
+            adapterToUse.date('2024-02-01T00:00:00'),
+          ],
+        });
+
+        await screen.findByRole('gridcell', { name: '1', selected: true });
+
+        // The window must stay month-based and not scroll: January 2024 must not appear.
+        expect(screen.queryByRole('grid', { name: 'January 2024' })).to.equal(null);
+        expect(screen.getByRole('grid', { name: 'February 2024' })).not.to.equal(null);
+        expect(screen.getByRole('grid', { name: 'March 2024' })).not.to.equal(null);
+      });
     });
   });
 

@@ -509,6 +509,8 @@ export default defineConfig(
     'x-charts',
     'x-charts-pro',
     'x-charts-premium',
+    'x-chat',
+    'x-chat-headless',
     'x-codemod',
     'x-data-grid',
     'x-data-grid-pro',
@@ -522,6 +524,8 @@ export default defineConfig(
     'x-scheduler-internals-premium',
     'x-tree-view',
     'x-tree-view-pro',
+    'x-internal-gestures',
+    'x-internals',
     'x-license',
     'x-telemetry',
   ].map((pkgName) => ({

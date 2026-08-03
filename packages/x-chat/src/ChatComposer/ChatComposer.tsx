@@ -22,8 +22,7 @@ import { ChatComposerToolbar } from './ChatComposerToolbar';
 import { ChatComposerSendButton } from './ChatComposerSendButton';
 import { ChatComposerAttachButton } from './ChatComposerAttachButton';
 import { ChatComposerAttachmentList } from './ChatComposerAttachmentList';
-import DefaultSendIcon from '../icons/DefaultSendIcon';
-import DefaultAttachIcon from '../icons/DefaultAttachIcon';
+import { DefaultSendIcon, DefaultAttachIcon } from '../icons/icons';
 
 const useThemeProps = createUseThemeProps('MuiChatComposer');
 
@@ -151,11 +150,11 @@ const DefaultComposerContent = React.memo(function DefaultComposerContent({
       <ChatComposerToolbar>
         {showAttachments && (
           <ChatComposerAttachButton>
-            <DefaultAttachIcon />
+            <DefaultAttachIcon fontSize="inherit" />
           </ChatComposerAttachButton>
         )}
         <ChatComposerSendButton>
-          <DefaultSendIcon />
+          <DefaultSendIcon fontSize="inherit" />
         </ChatComposerSendButton>
       </ChatComposerToolbar>
     </React.Fragment>
@@ -194,12 +193,12 @@ const CompactComposerContent = React.memo(function CompactComposerContent({
       {showAttachments && <ChatComposerAttachmentList />}
       {showAttachments && (
         <ChatComposerAttachButton>
-          <DefaultAttachIcon />
+          <DefaultAttachIcon fontSize="inherit" />
         </ChatComposerAttachButton>
       )}
       <ChatComposerTextArea maxRows={5} />
       <ChatComposerSendButton>
-        <DefaultSendIcon />
+        <DefaultSendIcon fontSize="inherit" />
       </ChatComposerSendButton>
     </React.Fragment>
   );

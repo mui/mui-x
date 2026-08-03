@@ -41,7 +41,7 @@ export default function SchedulerFeedbackBanner() {
           ...theme.applyDarkStyles({ color: 'primary.100' }),
         })}
       >
-        💬 Got feedback on the Scheduler? We&apos;d love to hear it.{' '}
+        🚀 The Scheduler is in beta — we&apos;d love your input.{' '}
         <Link
           href={FEEDBACK_FORM_URL}
           target="_blank"

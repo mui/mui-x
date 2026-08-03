@@ -5,7 +5,7 @@ export * from './seriesConfig.types';
 export * from './seriesProcessor.types';
 export * from './seriesLayout.types';
 export * from './tooltipGetter.types';
-export * from './tooltipItemPositionGetter.types';
+export * from './tooltipItemPositionSelector.types';
 export * from './legendGetter.types';
 export * from './getSeriesWithDefaultValues.types';
 export * from './identifierSerializer.types';

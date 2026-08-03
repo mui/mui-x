@@ -142,7 +142,7 @@ export default function ChatConversationPlayground() {
                 display: 'flex',
               }}
             >
-              <ChatConversation sx={conversationSx as any}>
+              <ChatConversation sx={conversationSx}>
                 {showHeader ? (
                   <ChatConversationHeader>
                     <ChatConversationHeaderInfo>

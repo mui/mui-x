@@ -6,7 +6,7 @@ import type { ChatFileMessagePart } from '../../types/chat-message-parts';
 import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/chatPartRenderer';
 import type { ChatRole } from '../../types/chat-entities';
 import { useMessageContentTabIndex } from '../../message-list/internals/MessageRovingContext';
-import { safeUri } from './partUtils';
+import { safeFileUri } from './partUtils';
 
 export interface FilePartOwnerState {
   image: boolean;
@@ -112,7 +112,7 @@ export const FilePart = React.forwardRef(function FilePart(
     ownerState,
   });
 
-  const href = safeUri(part.url);
+  const href = safeFileUri(part.url);
 
   return (
     <Root {...rootProps}>

@@ -7,6 +7,7 @@ import type { AxisId } from '../../../../models/axis';
 import type { ChartRootSelector } from '../../utils/selectors';
 import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import type { SampledSeriesLookup } from './sampling.types';
+import type { ZoomData } from './zoom.types';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -16,6 +17,15 @@ import {
 
 const EMPTY_PYRAMIDS: SampledSeriesLookup = {};
 const EMPTY_BUCKET_SIZES: Map<AxisId, number> = new Map();
+
+/**
+ * Full-range zoom (span 100%) for a non-zoomable axis. Sampling gates on a zoom entry; a static axis
+ * has none, so we sample it at full range — the `MAX_RENDERED_POINTS` cap still applies. Mirrors the
+ * full-range zoom the zoom-slider preview uses to keep its density stable.
+ */
+export function getFullRangeZoom(axisId: AxisId): ZoomData {
+  return { axisId, start: 0, end: 100 };
+}
 
 export const selectorChartSamplingState: ChartRootSelector<
   UseChartCartesianAxisSignature,
@@ -103,9 +113,9 @@ export const selectorChartHighlightBucketSize = createSelectorMemoized(
     ).forEach(([axes, availableSize]) => {
       axes.axisIds.forEach((axisId) => {
         const data = axes.axis[axisId].data;
-        const zoom = zoomMap?.get(axisId);
-        const minSpan = zoomOptions[axisId]?.minSpan;
-        if (data && zoom && minSpan != null) {
+        const zoom = zoomMap?.get(axisId) ?? getFullRangeZoom(axisId);
+        const minSpan = zoomOptions[axisId]?.minSpan ?? 0;
+        if (data) {
           bucketSizes.set(
             axisId,
             bucketSizeAt(zoom.end - zoom.start, {

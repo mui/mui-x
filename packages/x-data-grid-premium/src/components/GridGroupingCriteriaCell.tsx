@@ -69,7 +69,7 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   let cellContent: React.ReactNode;
 
   const colDef = apiRef.current.getColumn(rowNode.groupingField!);
-  if (typeof colDef.renderCell === 'function') {
+  if (colDef && typeof colDef.renderCell === 'function') {
     cellContent = colDef.renderCell(props);
   } else if (typeof formattedValue !== 'undefined') {
     cellContent = <span>{formattedValue}</span>;

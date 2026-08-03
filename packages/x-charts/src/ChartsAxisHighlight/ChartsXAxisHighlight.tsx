@@ -13,6 +13,7 @@ import { useDrawingArea } from '../hooks';
 import type { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import type { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 import { ChartsAxisHighlightPath } from './ChartsAxisHighlightPath';
+import { getSampledBandHighlight } from './getSampledBandHighlight';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 /**
@@ -35,7 +36,8 @@ export default function ChartsXHighlight(props: {
     return null;
   }
 
-  return axisXValues.map(({ axisId, value }) => {
+  return axisXValues.map((axisValue) => {
+    const { axisId, value } = axisValue;
     const xAxis = xAxes.axis[axisId];
 
     const xScale = xAxis.scale;
@@ -57,25 +59,16 @@ export default function ChartsXHighlight(props: {
       }
     }
 
-    // When the bars are sampled, widen the band highlight to cover the whole merged bucket.
     let bandStart = 0;
     let bandSize = 0;
     if (isXScaleOrdinal) {
-      const step = xScale.step();
-      bandStart = xScale(value)! - (step - xScale.bandwidth()) / 2;
-      bandSize = step;
-
-      const data = xAxis.data;
-      const bucketSize = bucketSizeByAxis.get(axisId) ?? 1;
-      if (bucketSize > 1 && data) {
-        const index = data.indexOf(value);
-        if (index >= 0) {
-          const bucketStart = Math.floor(index / bucketSize) * bucketSize;
-          const bucketEnd = Math.min(bucketStart + bucketSize - 1, data.length - 1);
-          bandStart = xScale(data[bucketStart])! - (step - xScale.bandwidth()) / 2;
-          bandSize = (bucketEnd - bucketStart + 1) * step;
-        }
-      }
+      ({ bandStart, bandSize } = getSampledBandHighlight({
+        scale: xScale,
+        value,
+        dataIndex: axisValue.dataIndex,
+        data: xAxis.data,
+        bucketSize: bucketSizeByAxis.get(axisId) ?? 1,
+      }));
     }
 
     return (

@@ -97,9 +97,14 @@ export default function MarsMap() {
         <ToggleButton value="equirectangular">equirectangular</ToggleButton>
       </ToggleButtonGroup>
       <ChartsGeoDataProviderPremium
+        key={projection} // Reset zoom when projection change.
         geoData={marsRegions}
         projection={projection}
-        rotate={projection === 'orthographic' ? [160, -10] : [0, 0]}
+        initialView={{
+          zoomLevel: 1,
+          center: projection === 'orthographic' ? [160, -10] : [0, 0],
+        }}
+        zoom
         height={360}
         series={[
           {
