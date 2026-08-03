@@ -6,23 +6,13 @@ import { normalizeMarkdownForRender, safeUri } from '@mui/x-chat-headless/intern
 import { ChatCodeBlock } from '../ChatCodeBlock';
 import { useStreamingMarkdownRepair } from '../internals/streamingMarkdownRepair';
 
-// Applied by markdown-to-jsx to every link `href` / image `src`. Returns the value
-// when safe, or `null` to drop the attribute — so a `javascript:`/`data:`/
-// protocol-relative URL (or remend's `streamdown:incomplete-link` placeholder for a
-// half-streamed link) renders as inert text rather than a navigable target.
-const sanitizer: NonNullable<MarkdownToJSX.Options['sanitizer']> = (value) => {
-  // Markdown additionally rejects protocol-relative `//host` (and its `\` variants,
-  // which browsers resolve identically), which reach an external origin while
-  // carrying no explicit scheme. `safeUri` accepts them as same-origin-looking
-  // paths, so this guard stays local rather than moving into the shared helper.
-  if (/^[/\\]{2}/.test(value)) {
-    return null;
-  }
-
-  // The scheme allow-list itself is shared with the source/file part renderers so
-  // links behave the same across markdown and parts.
-  return safeUri(value) || null;
-};
+// Applied by markdown-to-jsx to every link `href` / image `src`. Shares `safeUri`
+// with the source/file part renderers so links behave the same across markdown and
+// parts: the value is returned when safe, or `null` to drop the attribute — so a
+// `javascript:`/`data:` URL (or remend's `streamdown:incomplete-link` placeholder
+// for a half-streamed link) renders as inert text rather than a navigable target.
+const sanitizer: NonNullable<MarkdownToJSX.Options['sanitizer']> = (value) =>
+  safeUri(value) || null;
 
 // Markdown links open in a new tab (the sanitizer above already neutralised the
 // href) and participate in the message list's drill-in model: inside a roving
