@@ -224,7 +224,7 @@ describe('<DataGrid /> - Data source', () => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });
 
-      it('should re-fetch the data if the Activity becomes hidden while the request is in-flight', async () => {
+      it('should keep a request in flight when the Activity is hidden', async () => {
         const { promise, resolve } = Promise.withResolvers<void>();
         const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
         await waitFor(() => {
@@ -235,11 +235,12 @@ describe('<DataGrid /> - Data source', () => {
           resolve();
         });
         await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.be.above(1);
+          expect(apiRef.current?.getRowsCount()).to.be.above(0);
         });
+        expect(fetchRowsSpy.callCount).to.equal(1);
       });
 
-      it('should re-fetch the data if the request settles while the Activity is hidden', async () => {
+      it('should apply a response that settles while the Activity is hidden', async () => {
         const { promise, resolve } = Promise.withResolvers<void>();
         const { setProps } = render(<TestDataSource stallResponsePromise={promise} />);
         await waitFor(() => {
@@ -251,12 +252,13 @@ describe('<DataGrid /> - Data source', () => {
         await act(async () => {
           resolve();
         });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowsCount()).to.be.above(0);
+        });
         await act(async () => {
           setProps({ activityMode: 'visible' });
         });
-        await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.be.above(1);
-        });
+        expect(fetchRowsSpy.callCount).to.equal(1);
       });
 
       it('should re-fetch the data when the Activity becomes visible after a failed request', async () => {
@@ -274,7 +276,7 @@ describe('<DataGrid /> - Data source', () => {
         });
       });
 
-      it('should re-fetch the data if a filter change is interrupted by the Activity being hidden', async () => {
+      it('should apply a filter change response that settles while the Activity is hidden', async () => {
         const { promise, resolve } = Promise.withResolvers<void>();
         const { setProps } = render(<TestDataSource />);
         await waitFor(() => {
@@ -293,12 +295,13 @@ describe('<DataGrid /> - Data source', () => {
         await act(async () => {
           resolve();
         });
+        await waitFor(() => {
+          expect(apiRef.current?.getRowsCount()).to.be.above(0);
+        });
         await act(async () => {
           setProps({ activityMode: 'visible' });
         });
-        await waitFor(() => {
-          expect(fetchRowsSpy.callCount).to.be.above(2);
-        });
+        expect(fetchRowsSpy.callCount).to.equal(2);
       });
     });
   }

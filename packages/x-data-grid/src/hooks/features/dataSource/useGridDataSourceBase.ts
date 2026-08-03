@@ -84,6 +84,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   // `false` while a request is in flight, and for any request that errors or is discarded as
   // stale. Lets the mount effect tell "rows are already displayed" from "the fetch never landed".
   const rowsAreUpToDate = React.useRef(false);
+  // Requests that are still running and will apply their response when they settle.
+  const pendingRequestCount = React.useRef(0);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   const onDataSourceErrorProp = props.onDataSourceError;
@@ -155,6 +157,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       const requestId = lastRequestId.current + 1;
       lastRequestId.current = requestId;
       rowsAreUpToDate.current = false;
+      pendingRequestCount.current += 1;
 
       try {
         const getRowsResponse = await getRows(fetchParams);
@@ -197,6 +200,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           }
         }
       } finally {
+        pendingRequestCount.current -= 1;
         if (standardRowsUpdateStrategyActive && lastRequestId.current === requestId) {
           apiRef.current.setLoading(false);
         }
@@ -445,9 +449,13 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const lastDataSource = React.useRef(props.dataSource);
 
   React.useEffect(() => {
-    // ignore the current request on unmount
+    // `<Activity mode="hidden">` leaves the root element in the document, a real unmount does not.
+    // Only discard the in-flight response in the latter case, so hiding lets the request land.
+    const rootElement = apiRef.current?.rootElementRef?.current ?? null;
     const ignoreInFlightRequest = () => {
-      lastRequestId.current += 1;
+      if (!rootElement?.isConnected) {
+        lastRequestId.current += 1;
+      }
     };
 
     // Return early if the proper strategy isn't set yet
@@ -472,7 +480,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
     // Re-mounting the effect (`<Activity />` becoming visible again, for instance) must not
     // re-fetch data that is already displayed.
-    if (!dependenciesChanged && rowsAreUpToDate.current) {
+    if (!dependenciesChanged && (rowsAreUpToDate.current || pendingRequestCount.current > 0)) {
       return ignoreInFlightRequest;
     }
 
