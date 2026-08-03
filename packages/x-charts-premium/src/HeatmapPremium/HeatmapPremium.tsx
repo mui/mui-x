@@ -4,13 +4,8 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import {
-  FocusedHeatmapCell,
-  HeatmapTooltip,
-  type HeatmapProps,
-  type HeatmapSlots,
-  type HeatmapSlotProps,
-} from '@mui/x-charts-pro/Heatmap';
+import { FocusedHeatmapCell, HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';
+import type { HeatmapProps, HeatmapSlots, HeatmapSlotProps } from '@mui/x-charts-pro/Heatmap';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -21,7 +16,7 @@ import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
-import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
+import type { HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 
 export interface HeatmapPremiumSlots extends HeatmapSlots {}
@@ -91,7 +86,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   );
 });
 
-HeatmapPremium.propTypes = {
+HeatmapPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -178,13 +173,40 @@ HeatmapPremium.propTypes = {
   /**
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.
+   *
+   * Each entry is either explicit zoom percentages (`{ axisId, start, end }`) or a
+   * range value (`{ axisId, value }`) resolved against the axis domain.
    */
   initialZoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        end: PropTypes.number.isRequired,
+        start: PropTypes.number.isRequired,
+      }),
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        value: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+          PropTypes.arrayOf(PropTypes.string.isRequired),
+          PropTypes.func,
+          PropTypes.shape({
+            step: PropTypes.number,
+            unit: PropTypes.oneOf([
+              'day',
+              'hour',
+              'microsecond',
+              'millisecond',
+              'minute',
+              'month',
+              'second',
+              'week',
+              'year',
+            ]).isRequired,
+          }),
+        ]),
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, a loading overlay is displayed.
@@ -343,6 +365,7 @@ HeatmapPremium.propTypes = {
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           type: PropTypes.oneOf(['continuous']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -350,6 +373,7 @@ HeatmapPremium.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+          unknownColor: PropTypes.string,
         }),
         PropTypes.shape({
           colors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -368,12 +392,16 @@ HeatmapPremium.propTypes = {
       min: PropTypes.number,
       sizeMap: PropTypes.oneOfType([
         PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          size: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.number.isRequired),
-            PropTypes.func,
-          ]).isRequired,
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({

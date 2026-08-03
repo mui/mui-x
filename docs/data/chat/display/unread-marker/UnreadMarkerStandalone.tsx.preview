@@ -1,0 +1,14 @@
+<ScopedChat
+  conversations={[conversation]}
+  messages={messages}
+  activeConversationId={CONVERSATION_ID}
+>
+  <Box sx={{ width: '100%' }}>
+    {messages.map((message) => (
+      <React.Fragment key={message.id}>
+        <ChatUnreadMarker messageId={message.id} />
+        <MessageBubble messageId={message.id} />
+      </React.Fragment>
+    ))}
+  </Box>
+</ScopedChat>

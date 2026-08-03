@@ -5,7 +5,7 @@ import { Globals } from '@react-spring/web';
 // eslint-disable-next-line import/no-relative-packages
 import '../utils/setupFakeClock';
 import { LicenseInfo } from '@mui/x-license';
-import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/test-keys';
+import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import { resetRandomGenerators } from '@mui/x-data-grid-generator';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';

@@ -5,8 +5,9 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
-import { type SeriesId } from '../models';
-import { type PieClasses, pieClasses, useUtilityClasses } from './pieClasses';
+import type { SeriesId } from '../models';
+import { pieClasses, useUtilityClasses } from './pieClasses';
+import type { PieClasses } from './pieClasses';
 
 interface PieArcLabelOwnerState {
   seriesId: SeriesId;
@@ -106,7 +107,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
   },
 );
 
-PieArcLabel.propTypes = {
+PieArcLabel.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -1,7 +1,8 @@
 /* v8 ignore next */
-import defaultHMoment, { Moment } from 'moment-hijri';
+import type { Moment } from 'moment-hijri';
+import defaultHMoment from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
-import {
+import type {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,
@@ -61,10 +62,10 @@ const defaultFormats: AdapterFormats = {
   minutes: 'mm',
   seconds: 'ss',
 
-  fullDate: 'iYYYY, iMMMM Do',
+  fullDate: 'iYYYY, iMMMM iD',
   shortDate: 'iD iMMM',
   normalDate: 'dddd, iD iMMM',
-  normalDateWithWeekday: 'DD iMMMM',
+  normalDateWithWeekday: 'ddd, iD iMMMM',
 
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
@@ -206,6 +207,10 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
 
   public getDate = (value: Moment) => {
     return value.iDate();
+  };
+
+  public getDaysInMonth = (value: Moment) => {
+    return this.moment.iDaysInMonth(value.iYear(), value.iMonth());
   };
 
   public setYear = (value: Moment, year: number) => {

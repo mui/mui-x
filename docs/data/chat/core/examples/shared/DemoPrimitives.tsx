@@ -328,7 +328,7 @@ function renderDefaultPart(part: ChatMessagePart) {
 
   if (part.type === 'file') {
     return (
-      <a href={part.url} target="_blank" rel="noreferrer">
+      <a href={part.url} target="_blank">
         {part.filename ?? part.url}
       </a>
     );
@@ -336,7 +336,7 @@ function renderDefaultPart(part: ChatMessagePart) {
 
   if (part.type === 'source-url') {
     return (
-      <a href={part.url} target="_blank" rel="noreferrer">
+      <a href={part.url} target="_blank">
         {part.title ?? part.url}
       </a>
     );

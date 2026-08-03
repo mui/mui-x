@@ -9,14 +9,8 @@ import {
   getRow,
   openLongTextViewPopup,
 } from 'test/utils/helperFn';
-import {
-  DataGrid,
-  type DataGridProps,
-  GridActionsCellItem,
-  type GridColDef,
-  type GridColType,
-  type GridValueSetter,
-} from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import type { DataGridProps, GridColDef, GridColType, GridValueSetter } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -783,8 +777,20 @@ describe('<DataGrid /> - Keyboard', () => {
         field: 'actions',
         type: 'actions',
         getActions: () => [
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_1'} disabled />,
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_2'} disabled />,
+          <GridActionsCellItem
+            key={1}
+            label="Test"
+            icon={<RestoreIcon />}
+            id={'action_1'}
+            disabled
+          />,
+          <GridActionsCellItem
+            key={2}
+            label="Test"
+            icon={<RestoreIcon />}
+            id={'action_2'}
+            disabled
+          />,
         ],
       },
       { field: 'id', width: 400 },
@@ -814,11 +820,29 @@ describe('<DataGrid /> - Keyboard', () => {
         field: 'actions',
         type: 'actions',
         getActions: () => [
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_1'} disabled />,
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_2'} />,
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_3'} disabled />,
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_4'} disabled />,
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_5'} />,
+          <GridActionsCellItem
+            key={1}
+            label="Test"
+            icon={<RestoreIcon />}
+            id={'action_1'}
+            disabled
+          />,
+          <GridActionsCellItem key={2} label="Test" icon={<RestoreIcon />} id={'action_2'} />,
+          <GridActionsCellItem
+            key={3}
+            label="Test"
+            icon={<RestoreIcon />}
+            id={'action_3'}
+            disabled
+          />,
+          <GridActionsCellItem
+            key={4}
+            label="Test"
+            icon={<RestoreIcon />}
+            id={'action_4'}
+            disabled
+          />,
+          <GridActionsCellItem key={5} label="Test" icon={<RestoreIcon />} id={'action_5'} />,
         ],
       },
       { field: 'id', width: 400 },
@@ -994,7 +1018,7 @@ describe('<DataGrid /> - Keyboard', () => {
             value: 'active',
           });
           expect(cell).to.equal('');
-          expect(deletedValue).to.equal(null);
+          expect(deletedValue).to.equal('');
         });
       });
     };

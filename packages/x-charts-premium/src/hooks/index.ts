@@ -7,3 +7,6 @@ export * from './animation';
 export * from './useChartPremiumApiRef';
 export * from './useRangeBarSeries';
 export * from './useOHLCSeries';
+export * from './useGeoPath';
+export * from './useGeoData';
+export * from './useGeoFeatureIndexesByName';

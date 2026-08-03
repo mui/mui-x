@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { type BarItemIdentifier } from '../models/seriesType';
+import type { BarItemIdentifier } from '../models/seriesType';
 import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
-import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
-import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useChartsContext } from '../context/ChartsProvider';
 import { getChartPoint } from '../internals/getChartPoint';
 import { useStore } from '../internals/store/useStore';

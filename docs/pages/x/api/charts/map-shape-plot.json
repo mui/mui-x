@@ -1,0 +1,24 @@
+{
+  "props": {
+    "fill": { "type": { "name": "string" } },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, mapShapeItemIdentifier: MapShapeItemIdentifier) => void",
+        "describedArgs": ["event", "mapShapeItemIdentifier"]
+      }
+    },
+    "stroke": { "type": { "name": "string" }, "default": "'none'" },
+    "strokeWidth": { "type": { "name": "number" }, "default": "1" }
+  },
+  "name": "MapShapePlot",
+  "imports": [
+    "import { MapShapePlot } from '@mui/x-charts-premium/Map';",
+    "import { MapShapePlot } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiMapShapePlot",
+  "filename": "/packages/x-charts-premium/src/Map/MapShapePlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/map/\">Charts - Map <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>"
+}

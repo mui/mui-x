@@ -27,12 +27,7 @@ type ExportedElements = keyof typeof exportedElements;
 
 interface State {
   valueType:
-    | 'date'
-    | 'time'
-    | 'dateTime'
-    | 'dateRange'
-    | 'timeRange'
-    | 'dateTimeRange';
+    'date' | 'time' | 'dateTime' | 'dateRange' | 'timeRange' | 'dateTimeRange';
   family: 'field' | 'view' | 'picker';
 }
 
@@ -212,7 +207,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
           <div>
             {docPages.map((docPage) => (
               <div key={docPage.path}>
-                <Link href={docPage.path} rel="noopener" target="_blank">
+                <Link href={docPage.path} target="_blank">
                   {docPage.name} documentation
                 </Link>
               </div>

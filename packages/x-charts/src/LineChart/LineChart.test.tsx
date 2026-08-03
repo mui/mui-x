@@ -168,6 +168,34 @@ describe('<LineChart />', () => {
     });
   });
 
+  describe('showMark', () => {
+    it('should not render highlight in stead of regular marks when set to "start"', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', showMark: 'start' }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+
+      expect(document.querySelectorAll(`.${lineClasses.mark}`)).to.have.length(0);
+      expect(document.querySelectorAll(`.${lineClasses.highlight}`)).to.have.length(1);
+    });
+
+    it('should not render highlight in stead of regular marks when set to "end"', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', showMark: 'end' }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+
+      expect(document.querySelectorAll(`.${lineClasses.mark}`)).to.have.length(0);
+      expect(document.querySelectorAll(`.${lineClasses.highlight}`)).to.have.length(1);
+    });
+  });
+
   describe('classes', () => {
     it('should apply MuiLineChart classes to area elements', () => {
       render(

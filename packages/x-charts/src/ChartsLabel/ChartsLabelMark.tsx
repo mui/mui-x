@@ -1,14 +1,11 @@
 'use client';
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useTheme, type SxProps, type Theme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import {
-  type ChartsLabelMarkClasses,
-  labelMarkClasses,
-  useUtilityClasses,
-} from './labelMarkClasses';
+import { labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
+import type { ChartsLabelMarkClasses } from './labelMarkClasses';
 import type { MarkShape } from '../models/seriesType/line';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import { getSymbol } from '../internals/getSymbol';
@@ -20,11 +17,7 @@ export interface ChartsLabelCustomMarkProps {
 }
 
 export type ChartsLabelMarkType =
-  | 'square'
-  | 'circle'
-  | 'line'
-  | 'line+mark'
-  | React.ComponentType<ChartsLabelCustomMarkProps>;
+  'square' | 'circle' | 'line' | 'line+mark' | React.ComponentType<ChartsLabelCustomMarkProps>;
 
 export interface ChartsLabelMarkProps {
   /**
@@ -163,25 +156,5 @@ const ChartsLabelMark = consumeThemeProps(
     );
   },
 );
-
-ChartsLabelMark.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: PropTypes.object,
-  /**
-   * The color of the mark.
-   */
-  color: PropTypes.string,
-  /**
-   * The type of the mark.
-   * @default 'square'
-   */
-  type: PropTypes.oneOf(['circle', 'line', 'square']),
-} as any;
 
 export { ChartsLabelMark };

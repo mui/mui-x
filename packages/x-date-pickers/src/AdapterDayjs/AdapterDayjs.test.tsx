@@ -1,8 +1,9 @@
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { stub } from 'sinon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
+import type { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   expectFieldValue,
   createPickerRenderer,

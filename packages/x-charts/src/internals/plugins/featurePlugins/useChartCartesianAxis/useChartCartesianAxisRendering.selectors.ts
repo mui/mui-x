@@ -1,29 +1,25 @@
-import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import type { NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
-import {
-  type ExtremumFilter,
-  type UseChartCartesianAxisSignature,
-} from './useChartCartesianAxis.types';
-import { type ChartState } from '../../models/chart';
+import type { ExtremumFilter, UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import type { ChartState } from '../../models/chart';
 import {
   createContinuousScaleGetAxisFilter,
   createDiscreteScaleGetAxisFilter,
   createGetAxisFilters,
 } from './createAxisFilterMapper';
-import { type ZoomData } from './zoom.types';
+import type { ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
-import {
-  type AxisId,
-  type ChartsAxisProps,
-  type ContinuousScaleName,
-  type D3Scale,
-  type DefaultedAxis,
-  isBandScaleConfig,
-  isPointScaleConfig,
-  type ScaleName,
+import { isBandScaleConfig, isPointScaleConfig } from '../../../../models/axis';
+import type {
+  AxisId,
+  ChartsAxisProps,
+  ContinuousScaleName,
+  D3Scale,
+  DefaultedAxis,
+  ScaleName,
 } from '../../../../models/axis';
 import {
   selectorChartRawXAxis,
@@ -39,18 +35,19 @@ import { getNormalizedAxisScale, getRange } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtrema } from './getAxisExtrema';
-import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
+import type { CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import { calculateFinalDomain, computeAxisDomainsMap } from './domain';
-import { type SeriesId } from '../../../../models/seriesType/common';
+import type { SeriesId } from '../../../../models/seriesType/common';
 import { Flatbush } from '../../../Flatbush';
-import {
-  selectorChartSeriesConfig,
-  type ChartSeriesConfig,
-} from '../../corePlugins/useChartSeriesConfig';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import {
   selectorChartXAxisExtrema,
   selectorChartYAxisExtrema,
 } from './useChartAxisExtrema.selectors';
+import { selectorChartZAxis } from '../useChartZAxis';
+import getMarkerSize from '../../../../ScatterChart/seriesConfig/getMarkerSize';
+import type { ScatterSizeGetter } from '../../../../ScatterChart/seriesConfig/getMarkerSize';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -524,7 +521,15 @@ export const selectorChartDefaultYAxisId = createSelector(
   (yAxes) => yAxes![0].id,
 );
 
-const EMPTY_MAP = new Map<SeriesId, Flatbush>();
+export type ScatterFlatbushEntry = {
+  flatbush: Flatbush;
+  /** Per-point marker radius, in pixels. */
+  getItemRadius: number | ((dataIndex: number) => number);
+  /** Largest radius across all points in this series, in pixels. */
+  maxItemRadius: number;
+};
+
+const EMPTY_MAP = new Map<SeriesId, ScatterFlatbushEntry>();
 export const selectorChartSeriesEmptyFlatbushMap = () => EMPTY_MAP;
 
 export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
@@ -533,42 +538,59 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
   selectorChartNormalizedYScales,
   selectorChartDefaultXAxisId,
   selectorChartDefaultYAxisId,
-
+  selectorChartZAxis,
   function selectChartSeriesFlatbushMap(
     allSeries,
     xAxesScaleMap,
     yAxesScaleMap,
     defaultXAxisId,
     defaultYAxisId,
+    zAxisState,
   ) {
     // FIXME: Do we want to support non-scatter series here?
     const validSeries = allSeries.scatter;
-    const flatbushMap = new Map<SeriesId, Flatbush>();
+    const flatbushMap = new Map<SeriesId, ScatterFlatbushEntry>();
 
     if (!validSeries) {
       return flatbushMap;
     }
 
+    const zAxes = zAxisState?.axis ?? {};
+    const zAxisIds = zAxisState?.axisIds ?? [];
+
     validSeries.seriesOrder.forEach((seriesId) => {
-      const {
-        data,
-        xAxisId = defaultXAxisId,
-        yAxisId = defaultYAxisId,
-      } = validSeries.series[seriesId];
+      const series = validSeries.series[seriesId];
+      const { data, xAxisId = defaultXAxisId, yAxisId = defaultYAxisId } = series;
+
+      if (data.length === 0) {
+        return;
+      }
 
       const flatbush = new Flatbush(data.length);
+
+      const sizeAxis = zAxes[series.sizeAxisId ?? zAxisIds[0]];
+
+      const isFixedSize = !sizeAxis || !sizeAxis.sizeScale;
+      const getItemRadius = isFixedSize
+        ? (series.markerSize ?? 0)
+        : getMarkerSize(series, sizeAxis);
+
+      let maxItemRadius = isFixedSize ? (getItemRadius as number) : 0;
 
       const originalXScale = xAxesScaleMap[xAxisId];
       const originalYScale = yAxesScaleMap[yAxisId];
 
-      for (const datum of data) {
+      for (let i = 0; i < data.length; i += 1) {
+        if (!isFixedSize) {
+          maxItemRadius = Math.max(maxItemRadius, (getItemRadius as ScatterSizeGetter)(i));
+        }
         // Add the points using a [0, 1] range so that we don't need to recreate the Flatbush structure when zooming.
         // This doesn't happen in practice, though, because currently the scales depend on the drawing area.
-        flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
+        flatbush.add(originalXScale(data[i].x)!, originalYScale(data[i].y)!);
       }
 
       flatbush.finish();
-      flatbushMap.set(seriesId, flatbush);
+      flatbushMap.set(seriesId, { flatbush, getItemRadius, maxItemRadius });
     });
 
     return flatbushMap;

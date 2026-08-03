@@ -5,6 +5,8 @@ import type { SlotComponentProps } from '@mui/utils/types';
 import type { ChatFileMessagePart } from '../../types/chat-message-parts';
 import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/chatPartRenderer';
 import type { ChatRole } from '../../types/chat-entities';
+import { useMessageContentTabIndex } from '../../message-list/internals/MessageRovingContext';
+import { safeFileUri } from './partUtils';
 
 export interface FilePartOwnerState {
   image: boolean;
@@ -93,10 +95,16 @@ export const FilePart = React.forwardRef(function FilePart(
     externalSlotProps: slotProps?.preview,
     ownerState,
   });
+  // Inside a roving message list the link leaves the tab order until the
+  // user drills into the message (Enter); it stays mouse-clickable.
+  const contentTabIndex = useMessageContentTabIndex();
   const linkProps = useSlotProps({
     elementType: LinkSlot,
     externalSlotProps: slotProps?.link,
     ownerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const filenameProps = useSlotProps({
     elementType: Filename,
@@ -106,7 +114,12 @@ export const FilePart = React.forwardRef(function FilePart(
 
   return (
     <Root {...rootProps}>
-      <LinkSlot href={part.url} rel="noreferrer noopener" target="_blank" {...linkProps}>
+      <LinkSlot
+        href={safeFileUri(part.url) || undefined}
+        rel="noreferrer noopener"
+        target="_blank"
+        {...linkProps}
+      >
         {ownerState.image ? (
           <Preview alt={part.filename ?? ''} src={part.url} {...previewProps} />
         ) : (

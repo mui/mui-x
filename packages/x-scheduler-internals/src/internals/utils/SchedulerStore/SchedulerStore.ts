@@ -1,40 +1,48 @@
+import {
+  DisposableStack,
+  disposeSymbol,
+  unwrapSuppressedErrors,
+} from '@mui/x-internals/disposable';
 import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
-import {
+import type {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
   TemporalSupportedObject,
   SchedulerEventUpdatedProperties,
-  RecurringEventUpdateScope,
+  RecurringEventScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
 } from '../../../models';
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   UpdateRecurringEventParameters,
+  DeleteRecurringEventParameters,
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   UpdateEventsParameters,
   SchedulerInstanceName,
 } from './SchedulerStore.types';
-import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import {
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { SchedulerSchedulingPluginInterface } from '../../plugins/SchedulerSchedulingPlugin.types';
+import type {
   SchedulerEvents,
   SchedulerEventListener,
   SchedulerEventParameters,
 } from '../../models/events';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
+  getCustomEventProperties,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
@@ -74,9 +82,19 @@ export class SchedulerStore<
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
-  protected timeoutManager = new TimeoutManager();
+  protected readonly disposables = new DisposableStack();
 
-  private eventManager = new EventManager();
+  // Registered first via field init so they're disposed last (LIFO): plugins
+  // added by subclasses in their constructors dispose first, then the store's
+  // own resources.
+  protected timeoutManager = this.disposables.use(new TimeoutManager());
+
+  private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
+
+  /**
+   * Plugin that provides event-scheduling support (dependencies). `null` when not attached.
+   */
+  protected schedulingPlugin: SchedulerSchedulingPluginInterface | null = null;
 
   public constructor(
     parameters: Parameters,
@@ -87,7 +105,7 @@ export class SchedulerStore<
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
-    const schedulerInitialState: SchedulerState<TEvent> = {
+    const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
@@ -101,12 +119,14 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      editedEventId: null,
+      editedOccurrenceKey: null,
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
-      pendingUpdateRecurringEventParameters: null,
+      pendingRecurringEventOperation: null,
       visibleResources:
         parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
+      collapsedResources:
+        parameters.collapsedResources ?? parameters.defaultCollapsedResources ?? EMPTY_OBJECT,
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
@@ -221,7 +241,10 @@ export class SchedulerStore<
         ),
       );
     }
-    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
+    // Recompute "now" only when the display timezone changes; the minute timer maintains it otherwise.
+    if (newSchedulerState.displayTimezone !== this.state.displayTimezone) {
+      newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
+    }
 
     if (
       parameters.resources !== this.parameters.resources ||
@@ -232,6 +255,7 @@ export class SchedulerStore<
 
     updateModel(newSchedulerState, 'visibleDate', 'defaultVisibleDate');
     updateModel(newSchedulerState, 'visibleResources', 'defaultVisibleResources');
+    updateModel(newSchedulerState, 'collapsedResources', 'defaultCollapsedResources');
 
     const newState = this.mapper.updateStateFromParameters(
       newSchedulerState,
@@ -244,11 +268,25 @@ export class SchedulerStore<
   };
 
   /**
-   * Returns a cleanup function that need to be called when the store is destroyed.
+   * Disposes the store synchronously. The React consumer (`useDisposable`)
+   * handles the StrictMode double-invocation by suppressing the simulated
+   * unmount, so this method does not need to defer the teardown itself.
    */
-  public disposeEffect = () => {
-    return this.timeoutManager.clearAll;
-  };
+  [disposeSymbol](): void {
+    if (this.disposables.disposed) {
+      return;
+    }
+    try {
+      this.disposables.dispose();
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          'MUI X Scheduler: error while disposing the store.',
+          ...unwrapSuppressedErrors(error),
+        );
+      }
+    }
+  }
 
   /**
    * Removes the error with the given key from `state.errors`.
@@ -309,13 +347,14 @@ export class SchedulerStore<
   };
 
   /**
-   * Subscribe to an event emitted by the store.
+   * Subscribe to an event emitted by the store. Returns an unsubscribe function.
    */
   public subscribeEvent = <E extends SchedulerEvents>(
     eventName: E,
     handler: SchedulerEventListener<TEvent, E>,
-  ) => {
+  ): (() => void) => {
     this.eventManager.on(eventName, handler);
+    return () => this.eventManager.removeListener(eventName, handler);
   };
 
   protected setVisibleDate = ({
@@ -391,14 +430,31 @@ export class SchedulerStore<
     const createdIds: SchedulerEventId[] = [];
     const createdEvents: TEvent[] = [];
     for (const createdEvent of created) {
+      // Events created from an existing one (split, duplicate, paste) inherit its custom fields.
+      const source =
+        createdEvent.extractedFromId == null
+          ? undefined
+          : originalEventModelLookup.get(createdEvent.extractedFromId);
       const response = createEventModel(
-        createdEvent,
+        source ? { ...getCustomEventProperties(source), ...createdEvent } : createdEvent,
         this.state.eventModelStructure,
         this.state.adapter,
       );
       newEvents.push(response.model);
       createdEvents.push(response.model);
       createdIds.push(response.id);
+    }
+
+    this.schedulingPlugin?.handleEventsUpdate(parameters);
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (!this.parameters.onEventsChange && !this.parameters.dataSource) {
+        warnOnce([
+          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+          'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+          'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+        ]);
+      }
     }
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
@@ -496,63 +552,91 @@ export class SchedulerStore<
       }
       return;
     }
-    this.set('pendingUpdateRecurringEventParameters', params);
+    this.set('pendingRecurringEventOperation', { kind: 'update', ...params });
   };
 
   /**
-   * Applies the update to a recurring event after the user selects a scope.
-   * @param scope The selected update scope, or null if canceled.
+   * Opens the recurring scope dialog to delete a recurring event.
    */
-  public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
-    const { recurringEventsPlugin, pendingUpdateRecurringEventParameters, adapter } = this.state;
-    if (recurringEventsPlugin == null || pendingUpdateRecurringEventParameters == null) {
+  public deleteRecurringEvent = (params: DeleteRecurringEventParameters) => {
+    if (this.state.recurringEventsPlugin == null) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X Scheduler: Recurring event deletions are a premium feature.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
+      return;
+    }
+    this.set('pendingRecurringEventOperation', { kind: 'delete', ...params });
+  };
+
+  /**
+   * Applies the pending recurring event operation after the user selects a scope.
+   * @param scope The selected scope, or null if canceled.
+   */
+  public selectRecurringEventScope = (scope: RecurringEventScope | null) => {
+    const { recurringEventsPlugin, pendingRecurringEventOperation, adapter } = this.state;
+    if (recurringEventsPlugin == null || pendingRecurringEventOperation == null) {
       return;
     }
 
-    this.set('pendingUpdateRecurringEventParameters', null);
+    this.set('pendingRecurringEventOperation', null);
     if (scope == null) {
       return;
     }
 
-    const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
-    const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
+    const { occurrenceStart, onSubmit } = pendingRecurringEventOperation;
+    const eventId =
+      pendingRecurringEventOperation.kind === 'update'
+        ? pendingRecurringEventOperation.changes.id
+        : pendingRecurringEventOperation.eventId;
+    const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     if (!original.dataTimezone.rrule) {
       throw new Error(
-        'MUI X Scheduler: The original event is not recurring and cannot be updated with updateRecurringEvent(). ' +
-          'This method is designed for recurring events with recurrence rules. ' +
-          'Use updateEvent() instead to update non-recurring events.',
+        'MUI X Scheduler: The event targeted by the recurring scope dialog is not recurring. ' +
+          'Recurring scope changes require an event with a recurrence rule. ' +
+          'Use updateEvent() or deleteEvent() for non-recurring events.',
       );
     }
 
     // IMPORTANT:
-    // Recurring updates are pattern-based, not instant-based.
+    // Recurring changes are pattern-based, not instant-based.
     // Using the raw instant here would incorrectly shift the recurring rule
     // depending on the user's display timezone. We therefore convert the
-    // occurrence to the event's dataTimezone before applying the update.
-
-    const changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
-      adapter,
-      originalEvent: original,
-      changes,
-    });
-
+    // occurrence to the event's dataTimezone before applying the change.
     const occurrenceStartInDataTimezone = adapter.setTimezone(
       occurrenceStart,
       original.dataTimezone.timezone,
     );
 
-    const updatedEvents = recurringEventsPlugin.updateRecurringEvent(
-      adapter,
-      original,
-      occurrenceStartInDataTimezone,
-      changesInDataTimezone,
-      scope,
-    );
+    let updatedEvents: UpdateEventsParameters;
+    if (pendingRecurringEventOperation.kind === 'delete') {
+      updatedEvents = recurringEventsPlugin.deleteRecurringEvent(
+        adapter,
+        original,
+        occurrenceStartInDataTimezone,
+        scope,
+      );
+    } else {
+      const changesInDataTimezone = recurringEventsPlugin.applyDataTimezoneToEventUpdate({
+        adapter,
+        originalEvent: original,
+        changes: pendingRecurringEventOperation.changes,
+      });
+      updatedEvents = recurringEventsPlugin.updateRecurringEvent(
+        adapter,
+        original,
+        occurrenceStartInDataTimezone,
+        changesInDataTimezone,
+        scope,
+      );
+    }
+
     this.updateEvents(updatedEvents);
 
-    const submit = onSubmit;
-    if (submit) {
-      queueMicrotask(() => submit());
+    if (onSubmit) {
+      queueMicrotask(() => onSubmit());
     }
   };
 
@@ -625,7 +709,9 @@ export class SchedulerStore<
 
     if (copiedEvent.action === 'cut') {
       const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
-      return this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      const result = this.updateEvents({ updated: [updatedEvent] }).updated[0];
+      this.set('copiedEvent', null);
+      return result;
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
@@ -674,6 +760,39 @@ export class SchedulerStore<
   };
 
   /**
+   * Updates the collapsed resources.
+   */
+  public setCollapsedResources = (
+    collapsedResources: Record<SchedulerResourceId, boolean>,
+    event: Event | undefined,
+  ) => {
+    const { collapsedResources: collapsedResourcesProp, onCollapsedResourcesChange } =
+      this.parameters;
+    const hasChange = this.state.collapsedResources !== collapsedResources;
+    if (hasChange) {
+      const eventDetails = createChangeEventDetails('none', event);
+      onCollapsedResourcesChange?.(collapsedResources, eventDetails);
+      if (!eventDetails.isCanceled && collapsedResourcesProp === undefined) {
+        this.set('collapsedResources', collapsedResources);
+      }
+    }
+  };
+
+  /**
+   * Toggles the collapsed state of a single resource.
+   */
+  public toggleResourceCollapse = (resourceId: SchedulerResourceId, event: Event | undefined) => {
+    const isCollapsed = this.state.collapsedResources[resourceId] === true;
+    const nextCollapsedResources = { ...this.state.collapsedResources };
+    if (isCollapsed) {
+      delete nextCollapsedResources[resourceId];
+    } else {
+      nextCollapsedResources[resourceId] = true;
+    }
+    this.setCollapsedResources(nextCollapsedResources, event);
+  };
+
+  /**
    * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
   public setOccurrencePlaceholder = (newPlaceholder: SchedulerOccurrencePlaceholder | null) => {
@@ -684,11 +803,11 @@ export class SchedulerStore<
   };
 
   /**
-   * Sets the ID of the currently active event (e.g. open in the event dialog).
-   * Pass `null` to clear the active event.
+   * Sets the key of the currently active occurrence (e.g. open in the event dialog).
+   * Pass `null` to clear the active occurrence.
    */
-  public setEditedEventId = (eventId: SchedulerEventId | null) => {
-    this.set('editedEventId', eventId);
+  public setEditedOccurrenceKey = (occurrenceKey: string | null) => {
+    this.set('editedOccurrenceKey', occurrenceKey);
   };
 
   /**

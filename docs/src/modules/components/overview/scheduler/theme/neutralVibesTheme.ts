@@ -96,7 +96,7 @@ export const getNeutralVibesTheme = (mode: 'light' | 'dark'): Theme => {
               },
             },
           }),
-          eventsSubGrid: ({ theme }) => ({
+          eventsCell: ({ theme }) => ({
             background: theme.palette.background.default,
           }),
         },

@@ -1,5 +1,6 @@
-import { type CartesianExtremumGetter, findMinMax } from '@mui/x-charts/internals';
-import { type RangeBarValueType } from '../../../models';
+import { findMinMax } from '@mui/x-charts/internals';
+import type { CartesianExtremumGetter } from '@mui/x-charts/internals';
+import type { RangeBarValueType } from '../../../models';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
   if (direction === 'x') {
@@ -28,6 +29,9 @@ const getValueExtremum =
 
     return Object.keys(series)
       .filter((seriesId) => {
+        if (axis.domainSeries === 'visible' && series[seriesId].hidden) {
+          return false;
+        }
         const axisId = direction === 'x' ? series[seriesId].xAxisId : series[seriesId].yAxisId;
         return axisId === axis.id || (isDefaultAxis && axisId === undefined);
       })

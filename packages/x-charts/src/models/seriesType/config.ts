@@ -5,14 +5,18 @@ import type {
   ScatterItemIdentifier,
   ScatterValueType,
 } from './scatter';
-import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
+import type {
+  LineSeriesType,
+  DefaultizedLineSeriesType,
+  LineItemIdentifier,
+  LineItemClickIdentifier,
+} from './line';
 import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import type {
   PieSeriesType,
   DefaultizedPieSeriesType,
   PieItemIdentifier,
   PieValueType,
-  DefaultizedPieValueType,
   PieSeriesLayout,
 } from './pie';
 import type { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
@@ -25,6 +29,12 @@ import type {
   PolarAxisDefaultized,
 } from '../axis';
 import type { CommonHighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
+
+/** Bar series-config extension point. Empty in community; pro augments it. */
+export interface BarSeriesExtension {}
+
+/** Line series-config extension point. Empty in community; pro augments it. */
+export interface LineSeriesExtension {}
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -69,7 +79,7 @@ export interface ChartsSeriesConfig {
       seriesId: SeriesId;
       dataIndex?: number | undefined;
     };
-  };
+  } & BarSeriesExtension;
   line: {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
       MakeRequired<SeriesColor<number | null>, 'color'>;
@@ -77,7 +87,7 @@ export interface ChartsSeriesConfig {
     seriesLayout: {};
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
-    itemIdentifierWithData: LineItemIdentifier;
+    itemIdentifierWithData: LineItemClickIdentifier;
     valueType: number | null;
     canBeStacked: true;
     axisType: 'cartesian';
@@ -93,10 +103,10 @@ export interface ChartsSeriesConfig {
       seriesId: SeriesId;
       dataIndex?: number;
     };
-  };
+  } & LineSeriesExtension;
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
-      MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
+      MakeRequired<SeriesColor<ScatterValueType>, 'color'>;
     series: DefaultizedScatterSeriesType;
     seriesLayout: {};
     seriesProp: ScatterSeriesType;
@@ -128,7 +138,9 @@ export interface ChartsSeriesConfig {
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
     itemIdentifierWithData: PieItemIdentifier;
-    valueType: DefaultizedPieValueType;
+    // `formattedValue` is the output of `valueFormatter`, so it cannot be part of the
+    // value the formatter receives (the formatter is called to compute it).
+    valueType: PieValueType;
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: PieItemIdentifier;

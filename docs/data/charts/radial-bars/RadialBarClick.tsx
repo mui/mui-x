@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import {
-  Unstable_RadialBarChart as RadialBarChart,
+  RadialBarChart,
   RadialBarSeries,
 } from '@mui/x-charts-premium/RadialBarChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';

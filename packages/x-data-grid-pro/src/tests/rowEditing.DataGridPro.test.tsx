@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  type GridApi,
-  type DataGridProProps,
-  useGridApiRef,
-  DataGridPro,
-  type GridRenderEditCellParams,
-  type GridValueSetter,
-  type GridPreProcessEditCellProps,
-  GridRowModes,
+import type { RefObject } from '@mui/x-internals/types';
+import { useGridApiRef, DataGridPro, GridRowModes } from '@mui/x-data-grid-pro';
+import type {
+  GridApi,
+  DataGridProProps,
+  GridRenderEditCellParams,
+  GridValueSetter,
+  GridPreProcessEditCellProps,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';

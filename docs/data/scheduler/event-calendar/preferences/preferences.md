@@ -8,7 +8,7 @@ components: EventCalendar, EventCalendarPremium
 
 # Event Calendar - Preferences
 
-<p class="description">Let your user customize the component to their needs.</p>
+<p class="description">Customize calendar preferences including time format, weekend visibility, and side panel state.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -28,12 +28,11 @@ const defaultPreferences = {
 
 Available properties:
 
-- `ampm`: Whether the component should display the time in 12-hour format with AM/PM meridiem.
-- `weekStartsOn`: The day the week starts on (`0` = Sunday, `1` = Monday, ..., `6` = Saturday).
-- `showWeekends`: Whether weekends are shown in the calendar.
-- `showWeekNumber`: Whether the week number is shown in the calendar.
+- `ampm`: Whether the component displays time in 12-hour format with AM/PM.
+- `showWeekends`: Whether the calendar shows weekends.
+- `showWeekNumber`: Whether the calendar shows the week number.
 - `isSidePanelOpen`: Whether the side panel is open.
-- `showEmptyDaysInAgenda`: Whether days with no event are shown in the agenda view.
+- `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events.
 
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 

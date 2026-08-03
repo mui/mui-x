@@ -143,3 +143,29 @@ series={[
   },
 ]}
 ```
+
+### Map shape series
+
+The `mapShape` series requires a `name` to match each entry with a GeoJSON feature, and optionally `label`, `value`, and `colorValue` values.
+You can provide these values with `datasetKeys` or with `valueGetter`.
+
+```tsx
+series={[
+  {
+    type: 'mapShape',
+    datasetKeys: {
+      name: 'code',
+      label: 'country',
+      value: 'population',
+      colorValue: 'internetUsage',
+    },
+    // Or with valueGetter
+    valueGetter: (item) => ({
+      name: item.code,
+      label: item.country,
+      value: item.population,
+      colorValue: item.internetUsage,
+    }),
+  },
+]}
+```

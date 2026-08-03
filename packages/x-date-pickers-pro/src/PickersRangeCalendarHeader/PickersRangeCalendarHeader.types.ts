@@ -1,5 +1,5 @@
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import {
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import type {
   ExportedPickersCalendarHeaderProps,
   PickersCalendarHeaderProps,
   PickersCalendarHeaderSlots,

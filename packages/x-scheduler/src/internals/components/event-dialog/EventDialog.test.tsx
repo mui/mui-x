@@ -1,17 +1,18 @@
 import * as React from 'react';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   createSchedulerRenderer,
   EventBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
-  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
-import { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
+import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const personalResource = ResourceBuilder.new().title('Personal').eventColor('teal').build();
 
@@ -42,6 +43,29 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   };
 
   const { render } = createSchedulerRenderer();
+
+  it('should render the general tab sections in the default order', () => {
+    render(
+      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventDialogContent open {...defaultProps} />
+      </EventCalendarProvider>,
+    );
+
+    const tabContent = document.querySelector(`.${eventCalendarClasses.eventDialogTabContent}`)!;
+    const legends = Array.from(
+      tabContent.getElementsByClassName(eventCalendarClasses.eventDialogSectionHeaderTitle),
+    );
+    expect(legends.map((legend) => legend.textContent)).to.deep.equal([
+      'Date & time',
+      'Resource & color',
+    ]);
+
+    // The description section has no legend, so check it renders after the other sections.
+    const description = screen.getByRole('textbox', { name: 'Description' });
+    expect(legends[1].compareDocumentPosition(description)).to.equal(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
 
   it('should not render the recurrence tab when no slot is provided', () => {
     render(
@@ -88,7 +112,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   it('should warn and strip the rrule when createEvent is called with one', () => {
     expect(() => {
       render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          onEventsChange={() => {}}
+        >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) => {
@@ -110,7 +138,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   it('should warn and strip the rrule when updateEvent is called with one', () => {
     expect(() => {
       render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          onEventsChange={() => {}}
+        >
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
             onMount={(store) => {

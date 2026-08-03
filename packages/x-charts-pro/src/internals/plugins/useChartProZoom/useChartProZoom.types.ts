@@ -1,23 +1,52 @@
-import {
-  type UseChartSeriesSignature,
-  type ChartPluginSignature,
-  type UseChartCartesianAxisSignature,
-  type UseChartCartesianAxisDefaultizedParameters,
-  type ZoomData,
-  type AxisId,
-  type UseChartBrushSignature,
+import type {
+  UseChartSeriesSignature,
+  ChartPluginSignature,
+  UseChartCartesianAxisSignature,
+  UseChartCartesianAxisDefaultizedParameters,
+  ZoomData,
+  AxisId,
+  UseChartBrushSignature,
 } from '@mui/x-charts/internals';
-import {
-  type ZoomInteractionConfig,
-  type DefaultizedZoomInteractionConfig,
+import type {
+  ZoomInteractionConfig,
+  DefaultizedZoomInteractionConfig,
 } from './ZoomInteractionConfig.types';
+import type { RangeButtonValue } from '../../../ChartsToolbarPro/rangeButtonValueToZoom';
+
+/**
+ * Initializes the zoom of an axis with a range value instead of zoom percentages.
+ */
+export interface InitialZoomRange {
+  /**
+   * The id of the axis to apply the zoom to.
+   */
+  axisId: AxisId;
+  /**
+   * The range to zoom to. Accepts the same values as a range button:
+   *
+   * - `{ unit, step }` — A calendar interval from the end of the data.
+   * - `[start, end]` — An absolute date range, or a range between two ordinal axis values.
+   * - `(params) => { start, end }` — A function returning zoom percentages (0-100).
+   * - `null` — Shows all data.
+   */
+  value: RangeButtonValue;
+}
+
+/**
+ * An entry of the `initialZoom` prop. Either explicit zoom percentages ({@link ZoomData})
+ * or a range value resolved against the axis ({@link InitialZoomRange}).
+ */
+export type InitialZoom = ZoomData | InitialZoomRange;
 
 export interface UseChartProZoomParameters {
   /**
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.
+   *
+   * Each entry is either explicit zoom percentages (`{ axisId, start, end }`) or a
+   * range value (`{ axisId, value }`) resolved against the axis domain.
    */
-  initialZoom?: readonly ZoomData[];
+  initialZoom?: readonly InitialZoom[];
   /**
    * Callback fired when the zoom has changed.
    *

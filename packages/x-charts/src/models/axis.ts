@@ -12,11 +12,12 @@ import type {
   ScaleSymLog,
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
-import { type SxProps } from '@mui/system/styleFunctionSx';
-import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
-import { type DatasetElementType } from './seriesType/config';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { HasProperty, MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
+import type { DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
+import type { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import type {
   AxisLinePropsOverrides,
@@ -33,8 +34,8 @@ import type {
   PiecewiseColorConfig,
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
-import { type ChartsTypeFeatureFlags } from './featureFlags';
-import { type ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
+import type { ChartsTypeFeatureFlags } from './featureFlags';
+import type { ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
 export type AxisId = string | number;
 
@@ -59,8 +60,7 @@ export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleLinear<Range, Output>;
 
 export type D3OrdinalScale<Domain extends { toString(): string } = { toString(): string }> =
-  | ScaleBand<Domain>
-  | ScalePoint<Domain>;
+  ScaleBand<Domain> | ScalePoint<Domain>;
 
 export interface ChartsAxisSlots {
   /**
@@ -100,10 +100,17 @@ export interface ChartsAxisSlots {
 }
 
 export interface ChartsAxisSlotProps {
-  axisLine?: Partial<React.SVGAttributes<SVGPathElement>> & AxisLinePropsOverrides;
-  axisTick?: Partial<React.SVGAttributes<SVGPathElement>> & AxisTickPropsOverrides;
-  axisTickLabel?: Partial<ChartsTextProps> & AxisTickLabelPropsOverrides;
-  axisLabel?: Partial<ChartsTextProps> & AxisLabelPropsOverrides;
+  axisLine?: WithDataAttributes<
+    Partial<React.SVGAttributes<SVGPathElement>> & AxisLinePropsOverrides
+  >;
+  axisTick?: WithDataAttributes<
+    Partial<React.SVGAttributes<SVGPathElement>> & AxisTickPropsOverrides
+  >;
+  axisTickLabel?: WithDataAttributes<Partial<ChartsTextProps> & AxisTickLabelPropsOverrides>;
+  axisLabel?: WithDataAttributes<Partial<ChartsTextProps> & AxisLabelPropsOverrides>;
+  // `xAxis`/`yAxis` are whole-axis-component replacement slots whose props are
+  // never spread onto a DOM element (ChartsAxis passes them nowhere), so they
+  // are intentionally not widened with `data-*` -- forwarding is a follow-up.
   xAxis?: Partial<ChartsXAxisProps> & XAxisPropsOverrides;
   yAxis?: Partial<ChartsYAxisProps> & YAxisPropsOverrides;
 }
@@ -220,8 +227,13 @@ type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
   width?: AxisProps extends ChartsYAxisProps ? number | 'auto' : never;
 };
 
-export interface ChartsRotationAxisProps extends ChartsAxisProps {
+export interface ChartsRotationAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'rotation';
+  /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
   /**
    * The start angle (in deg).
    */
@@ -258,16 +270,27 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
   classes?: Partial<ChartsRadialAxisClasses>;
 }
 
-export interface ChartsRadiusAxisProps extends ChartsAxisProps {
+export interface ChartsRadiusAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'radius';
   /**
-   * The minimal radius.
+   * If true, the tick labels are not rendered.
+   * @default false
    */
-  minRadius?: number;
+  disableTickLabel?: boolean;
+  /**
+   * The minimal radius.
+   * Can be a number (in pixels), a pixel string (for example `'20px'`), or a percentage string
+   * (for example `'20%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default 0
+   */
+  minRadius?: number | string;
   /**
    * The maximal radius.
+   * Can be a number (in pixels), a pixel string (for example `'80px'`), or a percentage string
+   * (for example `'80%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default '100%'
    */
-  maxRadius?: number;
+  maxRadius?: number | string;
   /**
    * The position of the axis in polar coordinates.
    * It can be 'start', 'end', or a specific angle in degrees.
@@ -449,13 +472,11 @@ export interface AxisScaleComputedConfig {
   };
   time: {
     colorScale?:
-      | ScaleSequential<string, string | null>
-      | ScaleThreshold<number | Date, string | null>;
+      ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   utc: {
     colorScale?:
-      | ScaleSequential<string, string | null>
-      | ScaleThreshold<number | Date, string | null>;
+      ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   linear: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
@@ -597,6 +618,11 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
     | 'nice'
     | 'strict'
     | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
+  /**
+   * Defines the series used to compute the axis domain.
+   * @default "all"
+   */
+  domainSeries?: 'all' | 'visible';
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
@@ -762,7 +788,7 @@ export interface ChartsAxisData {
    */
   seriesValues: Record<
     string,
-    HasProperty<ChartsTypeFeatureFlags, 'seriesValueOverride'> extends true
+    HasProperty<ChartsTypeFeatureFlags, 'seriesValuesOverride'> extends true
       ? // @ts-ignore this property is added through module augmentation
         ChartsTypeFeatureFlags['seriesValuesOverride']
       : number | null | undefined

@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const ruRUDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
@@ -39,7 +37,9 @@ const ruRUDialog: Partial<EventDialogLocaleText> = {
   // recurrenceTabLabel: 'Recurrence',
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
-  // recurrenceWeeklyPresetLabel: weekday => `Repeats weekly on ${weekday}`,
+  // recurrenceWeeklyPresetLabel: ({
+  //   weekdayName
+  // }) => `Repeats weekly on ${weekdayName}`,
   // recurrenceMonthlyFrequencyLabel: 'months',
   // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
   // recurrenceMonthlyLastWeekAriaLabel: weekDay => `${weekDay} of the last week of the month`,
@@ -51,7 +51,9 @@ const ruRUDialog: Partial<EventDialogLocaleText> = {
   // recurrenceYearlyFrequencyLabel: 'years',
   // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
   // noResourceAriaLabel: 'No specific resource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   // resourceLabel: 'Resource',
+  // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
   // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   // startDateLabel: 'Start date',
@@ -84,10 +86,12 @@ const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // DateNavigator
   // closeSidePanel: 'Close side panel',
   // openSidePanel: 'Open side panel',
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
   // Preferences menu
   // amPm12h: '12-hour (1:00PM)',
   // hour24h: '24-hour (13:00)',
-  // preferencesMenu: 'Settings',
+  // preferencesMenu: 'Preferences',
   // showWeekends: 'Show weekends',
   // showEmptyDaysInAgenda: 'Show empty days',
   // showWeekNumber: 'Show week number',
@@ -99,7 +103,6 @@ const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // weekdaySaturday: 'Saturday',
   // WeekView
   // allDay: 'All day',
-  // MonthView
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
@@ -112,6 +115,8 @@ const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // miniCalendarLabel: 'Calendar',
   // miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
   // miniCalendarGoToNextMonth: 'Show next month in calendar',
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

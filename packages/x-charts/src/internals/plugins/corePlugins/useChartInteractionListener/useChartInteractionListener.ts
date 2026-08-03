@@ -4,18 +4,21 @@ import {
   GestureManager,
   MoveGesture,
   PanGesture,
+  PressGesture,
+  TapGesture,
+} from '@mui/x-internal-gestures/core';
+import type {
   PinchGesture,
   PressAndDragGesture,
-  PressGesture,
   TapAndDragGesture,
-  TapGesture,
   TurnWheelGesture,
 } from '@mui/x-internal-gestures/core';
-import { type ChartPlugin } from '../../models';
-import {
-  type UseChartInteractionListenerSignature,
-  type AddInteractionListener,
-  type UpdateZoomInteractionListeners,
+import type { ChartPlugin } from '../../models';
+import type {
+  RegisterGestures,
+  UseChartInteractionListenerSignature,
+  AddInteractionListener,
+  UpdateZoomInteractionListeners,
 } from './useChartInteractionListener.types';
 
 const preventDefault = (event: Event) => event.preventDefault();
@@ -61,7 +64,10 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           }),
           new TapGesture({
             name: 'tap',
-            preventIf: ['pan', 'zoomPinch', 'zoomPan'],
+            // `pan` is intentionally omitted: it has `threshold: 0`, so any pointer drift during a
+            // click activates it and would cancel the tap, discarding the click. The tap's own
+            // `maxDistance` already discriminates a click from a drag. See https://github.com/mui/mui-x/issues/20364
+            preventIf: ['zoomPinch', 'zoomPan'],
           }),
           new PressGesture({
             name: 'quickPress',
@@ -71,40 +77,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             name: 'brush',
             threshold: 0,
             maxPointers: 1,
-          }),
-          // Zoom gestures
-          new PanGesture({
-            name: 'zoomPan',
-            threshold: 0,
-            preventIf: ['zoomTapAndDrag', 'zoomPressAndDrag'],
-          }),
-          new PinchGesture({
-            name: 'zoomPinch',
-            threshold: 5,
-          }),
-          new TurnWheelGesture({
-            name: 'zoomTurnWheel',
-            sensitivity: 0.01,
-            initialDelta: 1,
-            passive: false,
-          }),
-          new TurnWheelGesture({
-            name: 'panTurnWheel',
-            sensitivity: 0.5,
-            passive: false,
-          }),
-          new TapAndDragGesture({
-            name: 'zoomTapAndDrag',
-            dragThreshold: 10,
-          }),
-          new PressAndDragGesture({
-            name: 'zoomPressAndDrag',
-            dragThreshold: 10,
-            preventIf: ['zoomPinch'],
-          }),
-          new TapGesture({
-            name: 'zoomDoubleTapReset',
-            taps: 2,
           }),
         ],
       });
@@ -117,23 +89,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       return undefined;
     }
 
-    gestureManager.registerElement(
-      [
-        'pan',
-        'move',
-        'zoomPinch',
-        'zoomPan',
-        'zoomTurnWheel',
-        'panTurnWheel',
-        'tap',
-        'quickPress',
-        'zoomTapAndDrag',
-        'zoomPressAndDrag',
-        'zoomDoubleTapReset',
-        'brush',
-      ],
-      svg,
-    );
+    gestureManager.registerElement(['pan', 'move', 'tap', 'quickPress', 'brush'], svg);
 
     return () => {
       // Cleanup gesture manager
@@ -184,10 +140,33 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     };
   }, [chartsLayerContainerRef]);
 
+  const registerGestures: RegisterGestures = React.useCallback(
+    (gestures) => {
+      const svg = chartsLayerContainerRef.current;
+      const gestureManager = gestureManagerRef.current;
+      if (!gestureManager || !svg) {
+        return () => {};
+      }
+
+      const gestureNames = gestures.map((gesture) => gesture.name);
+      gestureManager.addGestures(gestures);
+      gestureManager.registerElement(
+        gestureNames as Parameters<GestureManagerTyped['registerElement']>[0],
+        svg,
+      );
+
+      return () => {
+        gestureManager.removeGestures(gestureNames);
+      };
+    },
+    [chartsLayerContainerRef, gestureManagerRef],
+  );
+
   return {
     instance: {
       addInteractionListener,
       updateZoomInteractionListeners,
+      registerGestures,
     },
   };
 };

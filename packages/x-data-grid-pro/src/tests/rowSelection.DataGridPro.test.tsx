@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   getCell,
   getColumnValues,
@@ -9,16 +9,14 @@ import {
   excludeRowSelection,
 } from 'test/utils/helperFn';
 import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
-import {
-  type GridApi,
-  useGridApiRef,
-  DataGridPro,
-  type DataGridProProps,
-  type GridRowSelectionModel,
-  type GridRowsProp,
-  type GridColDef,
-  type GridFilterModel,
-  gridRowSelectionIdsSelector,
+import { useGridApiRef, DataGridPro, gridRowSelectionIdsSelector } from '@mui/x-data-grid-pro';
+import type {
+  GridApi,
+  DataGridProProps,
+  GridRowSelectionModel,
+  GridRowsProp,
+  GridColDef,
+  GridFilterModel,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 

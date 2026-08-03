@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { useTicks } from '../hooks/useTicks';
 import { GridCircle, GridPath } from './styledComponents';
-import { type ChartsRadialGridClasses } from './chartsRadialGridClasses';
+import type { ChartsRadialGridClasses } from './chartsRadialGridClasses';
 import { useChartsContext } from '../context/ChartsProvider';
-import {
-  selectorChartPolarCenter,
-  type UseChartPolarAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import { type PolarAxisDefaultized } from '../models/axis';
+import { selectorChartPolarCenter } from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { PolarAxisDefaultized } from '../models/axis';
 
 interface ChartsRadiusGridProps {
   axis: PolarAxisDefaultized<any, any, any>;

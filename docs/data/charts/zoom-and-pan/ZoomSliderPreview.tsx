@@ -18,7 +18,7 @@ import {
   BarChartPremium,
   BarChartPremiumProps,
 } from '@mui/x-charts-premium/BarChartPremium';
-import { Unstable_CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
+import { CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
 import { OHLCValueType } from '@mui/x-charts-premium/models';
 import {
   dateAxisFormatter,

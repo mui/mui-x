@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { TreeViewAnyStore } from '../../models';
+import type { TreeViewAnyStore } from '../../models';
 
 /**
  * All tests related to keyboard navigation (e.g.: type-ahead when using `props.disabledItemsFocusable`)
@@ -190,13 +190,13 @@ describeTreeView<TreeViewAnyStore>(
 
     describe('disabledItemsFocusable prop', () => {
       describe('disabledItemFocusable={false}', () => {
-        it('should prevent focus by mouse', () => {
+        it('should prevent focus by mouse', async () => {
           const view = render({
             items: [{ id: '1', disabled: true }],
             disabledItemsFocusable: false,
           });
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.getFocusedItemId()).to.equal(null);
         });
 
@@ -213,13 +213,13 @@ describeTreeView<TreeViewAnyStore>(
       });
 
       describe('disabledItemFocusable={true}', () => {
-        it('should prevent focus by mouse', () => {
+        it('should prevent focus by mouse', async () => {
           const view = render({
             items: [{ id: '1', disabled: true }],
             disabledItemsFocusable: true,
           });
 
-          fireEvent.click(view.getItemContent('1'));
+          await view.user.click(view.getItemContent('1'));
           expect(view.getFocusedItemId()).to.equal(null);
         });
 

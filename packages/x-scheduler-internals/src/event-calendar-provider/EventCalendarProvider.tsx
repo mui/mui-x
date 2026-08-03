@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  EventCalendarParameters,
-  EventCalendarStoreConstructor,
-  useEventCalendar,
-} from '../use-event-calendar';
+import type { EventCalendarParameters, EventCalendarStoreConstructor } from '../use-event-calendar';
+import { useEventCalendar } from '../use-event-calendar';
 import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(

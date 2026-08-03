@@ -1,22 +1,22 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
-import { type SeriesItemIdentifierWithType } from '../models/seriesType';
+import type { SeriesItemIdentifierWithType } from '../models/seriesType';
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { useStore } from '../internals/store/useStore';
 import { useRadiusAxes, useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
-import {
-  type ItemTooltip,
-  type ItemTooltipWithMultipleValues,
-  type TooltipGetter,
-  type TooltipGetterAxesConfig,
-  type ColorProcessor,
-  type ColorGetter,
-  selectorChartSeriesConfig,
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type {
+  ItemTooltip,
+  ItemTooltipWithMultipleValues,
+  TooltipGetter,
+  TooltipGetterAxesConfig,
+  ColorProcessor,
+  ColorGetter,
 } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { isCartesianSeries } from '../internals/isCartesian';
-import { type AxisId } from '../models/axis';
+import type { AxisId } from '../models/axis';
 import { isPolarSeries } from '../internals/isPolar';
 
 export type UseItemTooltipReturnValue<SeriesType extends ChartSeriesType> = ItemTooltip<SeriesType>;
@@ -47,8 +47,7 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
   }
 
   const itemSeries = series[identifier.type]?.series[identifier.seriesId] as
-    | ChartSeriesDefaultized<SeriesType>
-    | undefined;
+    ChartSeriesDefaultized<SeriesType> | undefined;
 
   if (!itemSeries) {
     return null;
@@ -70,9 +69,9 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
     : undefined;
 
   const colorAxisId: AxisId | undefined =
-    'colorAxisId' in itemSeries || 'zAxisId' in itemSeries
-      ? (itemSeries.colorAxisId ?? itemSeries.zAxisId ?? zAxisIds[0])
-      : zAxisIds[0];
+    ('colorAxisId' in itemSeries ? itemSeries.colorAxisId : undefined) ??
+    ('zAxisId' in itemSeries ? itemSeries.zAxisId : undefined) ??
+    zAxisIds[0];
 
   const mainAxis =
     // eslint-disable-next-line no-nested-ternary

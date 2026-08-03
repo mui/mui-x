@@ -1,10 +1,10 @@
 import type { MakeRequired } from '@mui/x-internals/types';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
-import { Validator } from './useValidation';
-import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
-import { TimeValidationError } from '../models';
+import type { Validator } from './useValidation';
+import type { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
+import type { TimeValidationError } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { PickerValue } from '../internals/models';
+import type { PickerValue } from '../internals/models';
 
 /**
  * Validation props used by the Time Picker, Time Field and Clock components.

@@ -3,10 +3,8 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
 } from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
-} from '../utils/getSchedulerLocalization';
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
 const frFRDialog: Partial<EventDialogLocaleText> = {
   // EventDialog
@@ -39,7 +37,7 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   recurrenceTabLabel: 'Récurrence',
   recurrenceMainSelectCustomLabel: 'Récurrence',
   recurrenceWeeklyFrequencyLabel: 'semaines',
-  recurrenceWeeklyPresetLabel: (weekday) => `Se répète chaque semaine le ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se répète chaque semaine le ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'mois',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Jour ${dayNumber}`,
   recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} de la dernière semaine du mois`,
@@ -51,7 +49,9 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyFrequencyLabel: 'années',
   recurrenceYearlyPresetLabel: (date) => `Se répète tous les ans le ${date}`,
   noResourceAriaLabel: 'Aucune ressource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressource',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Enregistrer',
   startDateAfterEndDateError: 'La date/heure de début doit être antérieure à la date/heure de fin.',
   startDateLabel: 'Date de début',
@@ -88,6 +88,9 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Fermer le panneau latéral',
   openSidePanel: 'Ouvrir le panneau latéral',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12 heures (1:00PM)',
   hour24h: '24 heures (13:00)',
@@ -104,8 +107,6 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
 
   // WeekView
   allDay: 'Toute la journée',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} de plus..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} suivant(e)`,
   previousTimeSpan: (timeSpan) => `${timeSpan} précédent(e)`,
@@ -120,6 +121,9 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarLabel: 'Calendrier',
   miniCalendarGoToPreviousMonth: 'Afficher le mois précédent dans le calendrier',
   miniCalendarGoToNextMonth: 'Afficher le mois suivant dans le calendrier',
+
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titre de la ressource',

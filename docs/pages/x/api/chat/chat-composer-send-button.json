@@ -72,6 +72,5 @@
   "muiName": "MuiChatComposerSendButton",
   "filename": "/packages/x-chat/src/ChatComposer/ChatComposerSendButton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li>\n<li><a href=\"/x/react-chat/material/composer/\">Chat - Composer</a></li></ul>"
 }

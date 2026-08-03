@@ -1,7 +1,7 @@
 import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui/utils/empty';
-import { TreeViewValidItem } from '../../models';
+import type { TreeViewValidItem } from '../../models';
 import { getExpansionTrigger } from '../plugins/expansion/utils';
-import {
+import type {
   MinimalTreeViewParameters,
   MinimalTreeViewState,
   TreeViewSelectionValue,

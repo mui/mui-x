@@ -2,7 +2,7 @@
   "name": "@mui-x-internal/test",
   "private": true,
   "scripts": {
-    "typescript": "tsc -p tsconfig.json"
+    "typescript": "tsgo -p tsconfig.json"
   },
   "devDependencies": {
     "@babel/runtime": "catalog:",
@@ -28,7 +28,6 @@
     "@types/moment-jalaali": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/react": "catalog:",
-    "@types/react-router": "catalog:",
     "@types/react-transition-group": "catalog:",
     "@types/semver": "catalog:",
     "date-fns": "catalog:",
@@ -41,7 +40,7 @@
     "react-dom": "catalog:",
     "react-router": "catalog:",
     "react-transition-group": "catalog:",
-    "semver": "7.8.1",
+    "semver": "7.8.5",
     "stylis": "catalog:"
   }
 }
