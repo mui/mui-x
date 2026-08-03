@@ -265,16 +265,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     element.addEventListener('focusin', restoreFocus);
     element.addEventListener('pointerdown', trackPointerIntent, true);
     document.addEventListener('keydown', trackKeyboardIntent, true);
-    const tapHandler = instance.addInteractionListener?.('tap', (event) => {
-      focusItemAtPointer(event.detail.srcEvent as PointerEvent);
-    });
     return () => {
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('focusout', removeFocus);
       element.removeEventListener('focusin', restoreFocus);
       element.removeEventListener('pointerdown', trackPointerIntent, true);
       document.removeEventListener('keydown', trackKeyboardIntent, true);
-      tapHandler?.cleanup();
     };
   }, [
     chartsLayerContainerRef,
@@ -282,10 +278,20 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     store,
     updateFocus,
     applyFocus,
-    focusItemAtPointer,
-    instance,
     params.focusItemOnClick,
   ]);
+
+  React.useEffect(() => {
+    if (params.disableKeyboardNavigation) {
+      return undefined;
+    }
+
+    const tapHandler = instance.addInteractionListener?.('tap', (event) => {
+      focusItemAtPointer(event.detail.srcEvent as PointerEvent);
+    });
+
+    return () => tapHandler?.cleanup();
+  }, [instance, params.disableKeyboardNavigation, focusItemAtPointer]);
 
   useEnhancedEffect(() => {
     store.set('keyboardNavigation', {
