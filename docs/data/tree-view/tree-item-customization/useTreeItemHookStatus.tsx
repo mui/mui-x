@@ -161,7 +161,7 @@ export default function useTreeItemHookStatus() {
         <RichTreeView
           items={MUI_X_PRODUCTS}
           defaultExpandedItems={['pickers']}
-          defaultSelectedItems={'pickers'}
+          defaultSelectedItems={'pickers-pro'}
           slots={{ item: CustomTreeItem }}
           isItemDisabled={(item) => Boolean(item?.disabled)}
           isItemEditable={(item) => Boolean(item?.editable)}

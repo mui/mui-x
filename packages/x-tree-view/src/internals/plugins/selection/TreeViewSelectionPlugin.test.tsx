@@ -1438,6 +1438,17 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
       });
 
+      it('should return "indeterminate" when only some of the descendants are selected in single selection', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+          defaultSelectedItems: '1.1',
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+        expect(view.apiRef.current.getItemSelection('2')).to.equal('unselected');
+      });
+
       it('should return the updated status after the selection changed', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
@@ -1450,6 +1461,46 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         expect(view.apiRef.current.getItemSelection('1')).to.equal('selected');
+      });
+
+      it('should return the updated status when called from the onItemSelectionToggle callback', async () => {
+        const statuses: string[] = [];
+        const viewRef: { current: ReturnType<typeof render> | null } = { current: null };
+
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          onItemSelectionToggle: (event, itemId) => {
+            statuses.push(viewRef.current!.apiRef.current.getItemSelection(itemId));
+          },
+        });
+        viewRef.current = view;
+
+        await view.user.click(view.getItemContent('1.1'));
+
+        expect(statuses).to.deep.equal(['selected']);
+        expect(view.apiRef.current.getItemSelection('1')).to.equal('indeterminate');
+      });
+
+      it('should return the updated status when called from the onSelectedItemsChange callback', async () => {
+        const statuses: string[] = [];
+        const viewRef: { current: ReturnType<typeof render> | null } = { current: null };
+
+        const view = render({
+          multiSelect: true,
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          onSelectedItemsChange: () => {
+            statuses.push(viewRef.current!.apiRef.current.getItemSelection('1.1'));
+            statuses.push(viewRef.current!.apiRef.current.getItemSelection('1'));
+          },
+        });
+        viewRef.current = view;
+
+        await view.user.click(view.getItemContent('1.1'));
+
+        expect(statuses).to.deep.equal(['selected', 'indeterminate']);
       });
     });
 

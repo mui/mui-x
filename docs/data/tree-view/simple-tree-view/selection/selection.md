@@ -138,6 +138,7 @@ apiRef.current.getItemSelection(
 
 :::info
 An item is `indeterminate` when it isn't selected but some of its selectable descendants are.
+This is derived from the descendants of the item, so it applies to every selection mode—including single selection and selection without checkboxes.
 
 When `selectionPropagation.parents` is enabled, an item whose selectable descendants are all selected is `selected`.
 Otherwise, it remains `indeterminate`.
