@@ -4,6 +4,8 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "experimentalFeatures": { "type": { "name": "any" } },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },
     "localeText": { "type": { "name": "object" } },
@@ -61,6 +63,5 @@
   "muiName": "MuiChartsRadialDataProviderPremium",
   "filename": "/packages/x-charts-premium/src/ChartsRadialDataProviderPremium/ChartsRadialDataProviderPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li>\n<li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li>\n<li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>"
 }

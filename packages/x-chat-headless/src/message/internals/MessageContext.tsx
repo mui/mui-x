@@ -12,7 +12,9 @@ const MessageContext = React.createContext<MessageOwnerState>({
   isGrouped: false,
   variant: 'default',
   density: 'standard',
+  resolvedAuthor: null,
   showAvatar: false,
+  isOwnMessage: false,
 });
 
 export function MessageContextProvider(props: {

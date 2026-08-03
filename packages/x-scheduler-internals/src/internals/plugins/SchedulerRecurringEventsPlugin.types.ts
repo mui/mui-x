@@ -1,7 +1,7 @@
 import type { TemporalSupportedObject, TemporalTimezone } from '../../base-ui-copy/types';
 import type {
   RecurringEventPresetKey,
-  RecurringEventUpdateScope,
+  RecurringEventScope,
   RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerEventRecurrenceRule,
@@ -58,7 +58,18 @@ export interface SchedulerRecurringEventsPluginInterface {
     originalEvent: SchedulerProcessedEvent,
     occurrenceStart: TemporalSupportedObject,
     changes: SchedulerEventUpdatedProperties,
-    scope: RecurringEventUpdateScope,
+    scope: RecurringEventScope,
+  ): UpdateEventsParameters;
+
+  /**
+   * Generates the update payload to apply when deleting a recurring event, scoped to
+   * a single occurrence, the occurrence and the following ones, or the entire series.
+   */
+  deleteRecurringEvent(
+    adapter: Adapter,
+    originalEvent: SchedulerProcessedEvent,
+    occurrenceStart: TemporalSupportedObject,
+    scope: RecurringEventScope,
   ): UpdateEventsParameters;
 
   /**

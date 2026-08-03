@@ -14,7 +14,7 @@ import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
-import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -182,9 +182,7 @@ function Chart({ apiRef, type }) {
       );
 
     case 'sankey':
-      return (
-        <Unstable_SankeyChart apiRef={apiRef} height={300} series={sankeySeries} />
-      );
+      return <SankeyChart apiRef={apiRef} height={300} series={sankeySeries} />;
 
     default:
       throw new Error(`Unknown chart type: ${type}`);

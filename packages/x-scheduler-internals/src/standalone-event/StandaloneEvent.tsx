@@ -5,8 +5,8 @@ import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/elem
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useButton } from '../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps, NonNativeButtonProps } from '../base-ui-copy/utils/types';
-import { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
+import type { BaseUIComponentProps, NonNativeButtonProps } from '../base-ui-copy/utils/types';
+import type { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../internals/utils/useDragPreview';
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
@@ -101,7 +101,8 @@ export namespace StandaloneEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      Pick<useDragPreview.Parameters, 'renderDragPreview' | 'data'> {
+      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
+    data: SchedulerOccurrencePlaceholderExternalDragData;
     /**
      * Callback fired when the event is dropped into the Event Calendar.
      */

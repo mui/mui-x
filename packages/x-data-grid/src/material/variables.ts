@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { type Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { hash } from '@mui/x-internals/hash';
-import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
+import { vars } from '../constants/cssVariables';
+import type { GridCSSVariablesInterface } from '../constants/cssVariables';
 import { colorMixIfSupported, supportsColorMix } from '../components/containers/GridRootStyles';
 
 export function useMaterialCSSVariables() {
@@ -97,6 +98,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
     [k.zIndex.panel]: (t.vars || t).zIndex.modal,
     [k.zIndex.menu]: (t.vars || t).zIndex.modal,
+    [k.zIndex.modal]: (t.vars || t).zIndex.modal,
   };
 }
 

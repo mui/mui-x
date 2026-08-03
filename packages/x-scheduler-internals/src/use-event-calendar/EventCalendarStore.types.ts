@@ -1,10 +1,11 @@
-import {
+import type {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarPreferencesMenuConfig,
   EventCalendarViewConfig,
+  EventCalendarViewDefinition,
 } from '../models';
-import {
+import type {
   SchedulerState,
   SchedulerParameters,
   SchedulerChangeEventDetails,
@@ -29,11 +30,38 @@ export interface EventCalendarState extends SchedulerState {
    */
   preferencesMenuConfig: EventCalendarPreferencesMenuConfig | false;
   /**
-   * Config of the current view.
+   * User configuration applied to each view, keyed by the view name.
+   */
+  viewConfig: EventCalendarViewConfig;
+  /**
+   * Definition of the current view.
    * Should not be used in selectors, only in event handlers.
    */
-  viewConfig: EventCalendarViewConfig | null;
+  viewDefinition: EventCalendarViewDefinition | null;
 }
+
+/**
+ * Subset of `SchedulerParameters` properties whose documented defaults differ in the
+ * EventCalendar surfaces (EventCalendar, EventCalendarPremium, and the standalone views).
+ * Surfaces in the EventCalendar family `Omit` these keys from `EventCalendarParameters`
+ * and intersect with this interface so the documented defaults reach the API docs and
+ * PropTypes generators.
+ */
+export interface EventCalendarSchedulerParametersOverrides {
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default false
+   */
+  shouldEventRequireResource?: boolean;
+}
+
+/**
+ * Parameter keys for collapsing resources. Only `EventTimelinePremium` (resource
+ * rows) and `EventCalendar` (resource tree) act on them, so the single-view
+ * components omit them.
+ */
+export type CollapsibleResourcesParameterKeys =
+  'collapsedResources' | 'defaultCollapsedResources' | 'onCollapsedResourcesChange';
 
 export interface EventCalendarParameters<
   TEvent extends object,
@@ -79,7 +107,14 @@ export interface EventCalendarParameters<
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true, toggleWeekStartsOn: false }
    */
   preferencesMenuConfig?: Partial<EventCalendarPreferencesMenuConfig> | false;
+  /**
+   * Configuration applied to each view, keyed by the view name.
+   * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
+   * limit the hours displayed in the time grid.
+   * @example { week: { startTime: 8, endTime: 20 } }
+   */
+  viewConfig?: EventCalendarViewConfig;
 }

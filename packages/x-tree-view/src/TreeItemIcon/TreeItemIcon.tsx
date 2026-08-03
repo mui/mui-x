@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { TreeItemIconProps } from './TreeItemIcon.types';
+import type { TreeItemIconProps } from './TreeItemIcon.types';
 import { useTreeViewStyleContext } from '../internals/TreeViewProvider';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
@@ -74,7 +74,7 @@ function TreeItemIcon(props: TreeItemIconProps) {
   return <Icon {...iconProps} />;
 }
 
-TreeItemIcon.propTypes = {
+TreeItemIcon.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -97,6 +97,7 @@ TreeItemIcon.propTypes = {
     expandable: PropTypes.bool.isRequired,
     expanded: PropTypes.bool.isRequired,
     focused: PropTypes.bool.isRequired,
+    indeterminate: PropTypes.bool,
     loading: PropTypes.bool.isRequired,
     selected: PropTypes.bool.isRequired,
   }).isRequired,

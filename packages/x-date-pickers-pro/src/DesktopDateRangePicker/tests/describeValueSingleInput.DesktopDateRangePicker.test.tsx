@@ -7,7 +7,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
-import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 
 describe('<DesktopDateRangePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();

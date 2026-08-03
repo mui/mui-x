@@ -29,6 +29,7 @@ export * from '@mui/x-charts/ChartsRadiusAxis';
 export {
   type ChartsRotationAxisProps,
   Unstable_ChartsRotationAxis,
+  ChartsRotationAxis,
 } from '@mui/x-charts/ChartsRotationAxis';
 
 // Pro components

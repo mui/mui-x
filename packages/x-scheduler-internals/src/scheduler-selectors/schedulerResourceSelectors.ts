@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
-import { SchedulerResource, SchedulerResourceId } from '../models';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerResource, SchedulerResourceId } from '../models';
 
 const resourceParentIdLookupSelector = createSelectorMemoized(
   (state: State) => state.resourceChildrenIdLookup,
@@ -70,6 +70,23 @@ const resourceDepthLookupSelector = createSelectorMemoized(
   },
 );
 
+// Memoized so the O(children) scan runs only when the structure or visibility
+// changes, not on every store notification. Read per resource in O(1) below.
+const resourceHasVisibleChildrenLookupSelector = createSelectorMemoized(
+  (state: State) => state.resourceChildrenIdLookup,
+  (state: State) => state.visibleResources,
+  (childrenIdLookup, visibleResources) => {
+    const result = new Map<SchedulerResourceId, boolean>();
+    for (const [resourceId, childrenIds] of childrenIdLookup) {
+      result.set(
+        resourceId,
+        childrenIds.some((childId) => visibleResources[childId] !== false),
+      );
+    }
+    return result;
+  },
+);
+
 export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
@@ -126,10 +143,28 @@ export const schedulerResourceSelectors = {
     },
   ),
   childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
+  // Single-function createSelector is unmemoized; keep the body returning a
+  // stable ref (a Map value or EMPTY_ARRAY), never a freshly-built array.
   resourceChildrenIds: createSelector(
     (state: State, resourceId: SchedulerResourceId) =>
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   ),
+  // O(1) read from the memoized lookup; a resource with no entry (a leaf) has no
+  // visible children.
+  resourceHasVisibleChildren: createSelector(
+    resourceHasVisibleChildrenLookupSelector,
+    (lookup, resourceId: SchedulerResourceId) => lookup.get(resourceId) ?? false,
+  ),
+  hasNestedResources: createSelector(
+    resourceParentIdLookupSelector,
+    (parentLookup) => parentLookup.size > 0,
+  ),
+  // Unmemoized (returns a primitive); don't change the body to build an object.
+  isResourceCollapsed: createSelector(
+    (state: State, resourceId: SchedulerResourceId) =>
+      state.collapsedResources[resourceId] === true,
+  ),
+  collapsedResources: (state: State) => state.collapsedResources,
   resourceParentIdLookup: resourceParentIdLookupSelector,
   resourceDepthLookup: resourceDepthLookupSelector,
   resourceDepth: createSelector(

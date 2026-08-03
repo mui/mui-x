@@ -1,10 +1,10 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type SeriesId } from '../../../../models/seriesType/common';
+import type { SeriesId } from '../../../../models/seriesType/common';
 import type { HighlightItemIdentifierWithType } from '../../../../models/seriesType';
 import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
 import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
-import { type ChartRootSelector } from '../../utils/selectors';
-import { type UseChartHighlightSignature } from './useChartHighlight.types';
+import type { ChartRootSelector } from '../../utils/selectors';
+import type { UseChartHighlightSignature } from './useChartHighlight.types';
 import {
   getSeriesHighlightedDataIndex,
   getSeriesUnfadedDataIndex,
@@ -13,11 +13,9 @@ import {
 } from './highlightStates';
 import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
-import {
-  type ChartSeriesConfig,
-  selectorChartSeriesConfig,
-} from '../../corePlugins/useChartSeriesConfig';
-import { type HighlightState } from '../../../../hooks/useItemHighlightState';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type { HighlightState } from '../../../../hooks/useItemHighlightState';
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature<ChartSeriesType>> = (state) =>
   state.highlight;

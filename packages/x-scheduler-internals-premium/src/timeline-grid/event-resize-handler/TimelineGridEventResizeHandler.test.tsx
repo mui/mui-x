@@ -20,7 +20,7 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
       return render(
         <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
           <TimelineGrid.Root>
-            <TimelineGrid.SubGrid>
+            <TimelineGrid.BodyRow index={0}>
               <TimelineGrid.EventRow resourceId="r1">
                 {() => (
                   <TimelineGrid.Event
@@ -34,7 +34,7 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
                   </TimelineGrid.Event>
                 )}
               </TimelineGrid.EventRow>
-            </TimelineGrid.SubGrid>
+            </TimelineGrid.BodyRow>
           </TimelineGrid.Root>
         </EventTimelinePremiumProvider>,
       );

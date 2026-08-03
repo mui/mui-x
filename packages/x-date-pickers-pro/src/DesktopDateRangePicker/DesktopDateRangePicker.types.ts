@@ -1,10 +1,10 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
   DesktopRangeOnlyPickerProps,
 } from '../internals/hooks/useDesktopRangePicker';
-import {
+import type {
   BaseDateRangePickerProps,
   BaseDateRangePickerSlots,
   BaseDateRangePickerSlotProps,

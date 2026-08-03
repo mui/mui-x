@@ -1,7 +1,7 @@
-import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
+import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 import { isWeekend } from '../use-adapter/useAdapter';
 import { processDate } from '../process-date';
-import { TemporalAdapter } from '../base-ui-copy/types';
+import type { TemporalAdapter } from '../base-ui-copy/types';
 
 export function getDayList(parameters: GetDaytListParameters): GetDaytListReturnValue {
   const { adapter, start: rawStart, end: rawEnd, excludeWeekends } = parameters;

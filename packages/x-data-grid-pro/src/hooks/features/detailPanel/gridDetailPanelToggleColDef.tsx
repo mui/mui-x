@@ -1,7 +1,8 @@
 import * as React from 'react';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import type { RefObject } from '@mui/x-internals/types';
-import { GRID_STRING_COL_DEF, type GridColDef, gridRowIdSelector } from '@mui/x-data-grid';
+import { GRID_STRING_COL_DEF, gridRowIdSelector } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '@mui/x-data-grid/internals';
 import type { GridApiPro } from '../../../models/gridApiPro';
 import { GridDetailPanelToggleCell } from '../../../components/GridDetailPanelToggleCell';

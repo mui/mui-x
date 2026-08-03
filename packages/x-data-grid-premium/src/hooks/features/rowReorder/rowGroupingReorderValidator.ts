@@ -1,8 +1,8 @@
 import {
   commonReorderConditions as conditions,
   RowReorderValidator,
-  type ValidationRule,
 } from '@mui/x-data-grid-pro/internals';
+import type { ValidationRule } from '@mui/x-data-grid-pro/internals';
 
 const validationRules: ValidationRule[] = [
   // ===== Basic invalid cases =====

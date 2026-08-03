@@ -1,3 +1,5 @@
+import { ROUNDED_BOX_SDF_GLSL } from '../../utils/webgl/glsl';
+
 // language=Glsl
 export const barVertexShaderSource = /* glsl */ `
     precision mediump float;
@@ -28,10 +30,6 @@ export const barVertexShaderSource = /* glsl */ `
   `;
 
 // language=Glsl
-// Per-corner radii ordering follows CSS: top-left, top-right, bottom-right, bottom-left.
-// Screen-space conventions after the y-flip in the vertex stage:
-//   v_pos.y < 0 -> top, v_pos.y > 0 -> bottom
-//   v_pos.x < 0 -> left, v_pos.x > 0 -> right
 export const barFragmentShaderSource = /* glsl */ `
     precision mediump float;
 
@@ -40,17 +38,7 @@ export const barFragmentShaderSource = /* glsl */ `
     varying vec2 v_halfSize;
     varying vec4 v_cornerRadii;
 
-    float roundedBoxSDF(vec2 pos, vec2 halfSize, vec4 r) {
-      float radius;
-      if (pos.x < 0.0) {
-        radius = pos.y < 0.0 ? r.x : r.w;
-      } else {
-        radius = pos.y < 0.0 ? r.y : r.z;
-      }
-
-      vec2 q = abs(pos) - halfSize + radius;
-      return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - radius;
-    }
+    ${ROUNDED_BOX_SDF_GLSL}
 
     void main() {
       float dist = roundedBoxSDF(v_pos, v_halfSize, v_cornerRadii);

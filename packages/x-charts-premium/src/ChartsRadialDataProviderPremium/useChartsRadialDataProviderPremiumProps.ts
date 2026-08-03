@@ -1,9 +1,6 @@
 'use client';
-import {
-  type ChartAnyPluginSignature,
-  type PolarChartSeriesType,
-  useChartsRadialDataProviderProps,
-} from '@mui/x-charts/internals';
+import { useChartsRadialDataProviderProps } from '@mui/x-charts/internals';
+import type { ChartAnyPluginSignature, PolarChartSeriesType } from '@mui/x-charts/internals';
 import type { ChartsRadialDataProviderPremiumProps } from './ChartsRadialDataProviderPremium';
 import type { RadialPremiumPluginSignatures } from './ChartsRadialDataProviderPremium.plugins';
 
@@ -15,7 +12,7 @@ export const useChartsRadialDataProviderPremiumProps = <
   props: ChartsRadialDataProviderPremiumProps<SeriesType, TSignatures>,
 ) => {
   const { chartProviderProps, localeText, slots, slotProps, children } =
-    useChartsRadialDataProviderProps(props);
+    useChartsRadialDataProviderProps<SeriesType, TSignatures>(props);
 
   return {
     children,

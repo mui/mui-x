@@ -1,20 +1,20 @@
 import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
-import {
-  type GridColDef,
-  type GridFilterItem,
-  type GridFilterModel,
-  GridLogicOperator,
-  type GridRowModel,
-  type GridValidRowModel,
+import { GridLogicOperator } from '../../../models';
+import type {
+  GridColDef,
+  GridFilterItem,
+  GridFilterModel,
+  GridRowModel,
+  GridValidRowModel,
 } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateCommunity } from '../../../models/gridStateCommunity';
-import {
-  getDefaultGridFilterModel,
-  type GridAggregatedFilterItemApplier,
-  type GridFilterItemResult,
-  type GridQuickFilterValueResult,
+import { getDefaultGridFilterModel } from './gridFilterState';
+import type {
+  GridAggregatedFilterItemApplier,
+  GridFilterItemResult,
+  GridQuickFilterValueResult,
 } from './gridFilterState';
 import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
@@ -22,6 +22,65 @@ import {
   gridColumnLookupSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns';
+
+/**
+ * Pure helpers computing a new filter model from an existing one.
+ * Shared by the imperative `apiRef` methods (`useGridFilter`) and the controlled
+ * filter panel (`GridFilterPanelBase`) so both paths produce identical models.
+ * Each helper returns the same model reference when nothing changes, so callers
+ * relying on referential equality can skip no-op updates.
+ */
+
+export const upsertFilterItemInModel = (
+  model: GridFilterModel,
+  item: GridFilterItem,
+): GridFilterModel => {
+  const items = [...model.items];
+  const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
+  if (itemIndex === -1) {
+    items.push(item);
+  } else {
+    items[itemIndex] = item;
+  }
+  return { ...model, items };
+};
+
+export const upsertFilterItemsInModel = (
+  model: GridFilterModel,
+  itemsToUpsert: GridFilterItem[],
+): GridFilterModel => {
+  const items = [...model.items];
+  itemsToUpsert.forEach((item) => {
+    const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
+    if (itemIndex === -1) {
+      items.push(item);
+    } else {
+      items[itemIndex] = item;
+    }
+  });
+  return { ...model, items };
+};
+
+export const deleteFilterItemFromModel = (
+  model: GridFilterModel,
+  itemToDelete: GridFilterItem,
+): GridFilterModel => {
+  const items = model.items.filter((item) => item.id !== itemToDelete.id);
+  if (items.length === model.items.length) {
+    return model;
+  }
+  return { ...model, items };
+};
+
+export const setFilterLogicOperatorInModel = (
+  model: GridFilterModel,
+  logicOperator: GridLogicOperator,
+): GridFilterModel => {
+  if (model.logicOperator === logicOperator) {
+    return model;
+  }
+  return { ...model, logicOperator };
+};
 
 let hasEval: boolean;
 
@@ -86,13 +145,15 @@ export const sanitizeFilterModel = (
 
   let items: GridFilterItem[];
   if (hasSeveralItems && disableMultipleColumnsFiltering) {
-    warnOnce(
-      [
-        'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
-        'If you are using the community version of the Data Grid, this prop is always `true`.',
-      ],
-      'error',
-    );
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce(
+        [
+          'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+          'If you are using the community version of the Data Grid, this prop is always `true`.',
+        ],
+        'error',
+      );
+    }
     items = [model.items[0]];
   } else {
     items = model.items;
@@ -101,14 +162,14 @@ export const sanitizeFilterModel = (
   const hasItemsWithoutIds = hasSeveralItems && items.some((item) => item.id == null);
   const hasItemWithoutOperator = items.some((item) => item.operator == null);
 
-  if (hasItemsWithoutIds) {
+  if (hasItemsWithoutIds && process.env.NODE_ENV !== 'production') {
     warnOnce(
       'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
       'error',
     );
   }
 
-  if (hasItemWithoutOperator) {
+  if (hasItemWithoutOperator && process.env.NODE_ENV !== 'production') {
     warnOnce(
       'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
       'error',

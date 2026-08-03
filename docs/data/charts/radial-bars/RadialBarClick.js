@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import { Unstable_RadialBarChart as RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
+import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 
 import ToggleButton from '@mui/material/ToggleButton';

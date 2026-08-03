@@ -1,5 +1,5 @@
 import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
-import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
@@ -151,6 +151,34 @@ storeClasses.forEach((storeClass) => {
         }).toWarnDev('MUI X Scheduler: A component is changing the controlled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(visibleDate);
+      });
+
+      it('should keep the same `nowUpdatedEveryMinute` reference when a non-timezone parameter changes', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const before = store.state.nowUpdatedEveryMinute;
+
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, showCurrentTimeIndicator: false },
+          adapter,
+        );
+
+        expect(store.state.nowUpdatedEveryMinute).to.equal(before);
+      });
+
+      it('should recompute `nowUpdatedEveryMinute` when the display timezone changes', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, displayTimezone: 'default' },
+          adapter,
+        );
+        const before = store.state.nowUpdatedEveryMinute;
+
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, displayTimezone: 'America/New_York' },
+          adapter,
+        );
+
+        expect(store.state.nowUpdatedEveryMinute).to.not.equal(before);
+        expect(adapter.getTimezone(store.state.nowUpdatedEveryMinute)).to.equal('America/New_York');
       });
     });
   });

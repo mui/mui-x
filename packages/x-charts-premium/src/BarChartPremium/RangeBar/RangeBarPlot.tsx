@@ -3,20 +3,22 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useSkipAnimation } from '@mui/x-charts/internals';
-import {
-  BarElement,
-  type BarElementSlotProps,
-  type BarElementSlots,
-  barClasses,
-  type BarLabelSlots,
-  type BarLabelSlotProps,
+import { BarElement, barClasses } from '@mui/x-charts/BarChart';
+import type {
+  BarElementSlotProps,
+  BarElementSlots,
+  BarLabelSlots,
+  BarLabelSlotProps,
 } from '@mui/x-charts/BarChart';
 import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useIsZoomInteracting } from '@mui/x-charts-pro/hooks';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
 import { AnimatedRangeBarElement } from './AnimatedRangeBarElement';
-import { type RangeBarItemIdentifier } from '../../models';
+import { RangeBarWebGLPlot } from './RangeBarWebGLPlot';
+import type { RangeBarItemIdentifier } from '../../models';
+
+export type RangeBarPlotRenderer = 'svg-single' | 'webgl';
 
 export interface RangeBarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -41,6 +43,15 @@ export interface RangeBarPlotProps {
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
+  /**
+   * The type of renderer to use for the range bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `webgl`: Renders bars using WebGL for better performance with very large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer?: RangeBarPlotRenderer;
   /**
    * The props used for each component slot.
    * @default {}
@@ -72,6 +83,14 @@ const RangeBarPlotRoot = styled('g', {
  * - [RangeBarPlot API](https://mui.com/x/api/charts/range-bar-plot/)
  */
 function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
+  const { renderer, borderRadius, ...other } = props;
+  if (renderer === 'webgl') {
+    return <RangeBarWebGLPlot borderRadius={borderRadius} />;
+  }
+  return <RangeBarSvgPlot borderRadius={borderRadius} {...other} />;
+}
+
+function RangeBarSvgPlot(props: Omit<RangeBarPlotProps, 'renderer'>): React.JSX.Element {
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, ...other } = props;
   const isZoomInteracting = useIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
@@ -126,7 +145,7 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
   );
 }
 
-RangeBarPlot.propTypes = {
+RangeBarSvgPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -141,6 +160,47 @@ RangeBarPlot.propTypes = {
    * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default undefined
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+RangeBarPlot.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Defines the border radius of the bar element.
+   */
+  borderRadius: PropTypes.number,
+  /**
+   * Callback fired when a bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * The type of renderer to use for the range bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `webgl`: Renders bars using WebGL for better performance with very large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-single', 'webgl']),
   /**
    * If `true`, animations are skipped.
    * @default undefined

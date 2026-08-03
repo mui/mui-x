@@ -1,18 +1,25 @@
 ---
 productId: x-chat
-title: Sources & Citations
+title: Sources and citations
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent, ChatMessageSource, ChatMessageSources
 ---
 
-# Chat - Sources & Citations
+# Chat - Sources and citations
 
 <p class="description">Display reference links and document excerpts for retrieval-augmented generation (RAG) applications using source parts.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Source parts allow AI assistants to cite their sources. Two part types cover the common citation patterns: URL references and document excerpts.
+Source parts let AI assistants cite their sources.
+Two part types cover the common citation patterns: URL references and document excerpts.
+
+## Rendering source parts
+
+The demo below seeds an assistant message containing a `source-url` and a `source-document` part. Both are rendered automatically by the built-in part renderers:
+
+{{"demo": "SourcePartsDemo.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Source URL parts
 
@@ -30,15 +37,15 @@ interface ChatSourceUrlMessagePart {
 | Field      | Type           | Description                                |
 | :--------- | :------------- | :----------------------------------------- |
 | `type`     | `'source-url'` | Discriminant for the part type union       |
-| `sourceId` | `string`       | Unique identifier for deduplication        |
+| `sourceId` | `string`       | Stable identifier for the source           |
 | `url`      | `string`       | URL of the source                          |
 | `title`    | `string`       | Optional display title (falls back to URL) |
 
-The default renderer displays an external link icon next to a clickable link that opens in a new tab. The link text shows the `title` when available, otherwise the raw `url`.
+Duplicate `sourceId` values are not merged automatically — deduplicate in your adapter if needed.
 
 ### Rendering
 
-Source URLs are rendered as inline links with an external-link icon.
+Source URLs are rendered as inline links with an external-link icon that open in a new tab. The link text shows the `title` when available, otherwise the raw `url`.
 
 ```tsx
 // How it appears in the parts array
@@ -57,9 +64,11 @@ const message: ChatMessage = {
 };
 ```
 
+The `[^1]` footnote marker is rendered as a superscript by the built-in markdown parser (see [Text and Markdown](/x/react-chat/display/message-parts/text-and-markdown/)). It's a visual convention only — it is not automatically linked to the source part that follows; keep markers and sources in matching order yourself.
+
 ### Slots
 
-The `SourceUrlPart` component exposes three slots:
+Source URL parts are rendered by the `SourceUrlPart` component (exported from `@mui/x-chat/headless`), which exposes three slots:
 
 | Slot   | Default element | Description                |
 | :----- | :-------------- | :------------------------- |
@@ -67,9 +76,13 @@ The `SourceUrlPart` component exposes three slots:
 | `icon` | `span`          | External link icon wrapper |
 | `link` | `a`             | Clickable source link      |
 
+:::info
+Source links open in a new tab with `rel="noreferrer noopener"` applied automatically. The accessible name is the `title` when provided, falling back to the raw `url` — provide titles so screen readers announce something meaningful. The external-link icon is `aria-hidden`, so it isn't announced.
+:::
+
 ## Source document parts
 
-`ChatSourceDocumentMessagePart` represents an inline document excerpt — useful when the AI assistant quotes from a retrieved document:
+`ChatSourceDocumentMessagePart` represents an inline document excerpt—useful when the AI assistant quotes from a retrieved document:
 
 ```ts
 interface ChatSourceDocumentMessagePart {
@@ -83,15 +96,34 @@ interface ChatSourceDocumentMessagePart {
 | Field      | Type                | Description                          |
 | :--------- | :------------------ | :----------------------------------- |
 | `type`     | `'source-document'` | Discriminant for the part type union |
-| `sourceId` | `string`            | Unique identifier for deduplication  |
+| `sourceId` | `string`            | Stable identifier for the source     |
 | `title`    | `string`            | Optional document or section title   |
 | `text`     | `string`            | Optional excerpt text                |
 
-The default renderer displays the title in a bold style with the excerpt text below, wrapped in a bordered card.
+### Rendering
+
+The default renderer shows the title in bold with the excerpt text below, wrapped in a bordered card.
+
+```tsx
+// How it appears in the parts array
+const message: ChatMessage = {
+  id: 'msg-2',
+  role: 'assistant',
+  parts: [
+    { type: 'text', text: 'The theming guide describes the override order:' },
+    {
+      type: 'source-document',
+      sourceId: 'src-2',
+      title: 'Theming guide — slot overrides',
+      text: 'Slots are resolved in order: theme defaults, then component props.',
+    },
+  ],
+};
+```
 
 ### Slots
 
-The `SourceDocumentPart` component exposes three slots:
+Document parts are rendered by the `SourceDocumentPart` component (exported from `@mui/x-chat/headless`), which exposes three slots:
 
 | Slot      | Default element | Description            |
 | :-------- | :-------------- | :--------------------- |
@@ -101,7 +133,7 @@ The `SourceDocumentPart` component exposes three slots:
 
 ## Streaming
 
-Source parts arrive as single chunks — they are not delivered incrementally:
+Source parts arrive as single chunks—they aren't delivered incrementally:
 
 ```ts
 // URL source chunk
@@ -112,6 +144,8 @@ Source parts arrive as single chunks — they are not delivered incrementally:
 ```
 
 ## Customizing source rendering
+
+The snippets below assume an `adapter` is already configured — see [Backend adapters](/x/react-chat/backend/adapters/) for setup.
 
 Override source part rendering through `slotProps.messageContent.partProps` on `ChatBox`:
 
@@ -133,10 +167,10 @@ Override source part rendering through `slotProps.messageContent.partProps` on `
 />
 ```
 
-For fully custom source rendering, register a custom renderer through `partRenderers` on `ChatProvider`:
+To fully customize source rendering, register a custom renderer through the `partRenderers` prop:
 
 ```tsx
-<ChatProvider
+<ChatBox
   adapter={adapter}
   partRenderers={{
     'source-url': ({ part }) => (
@@ -145,12 +179,20 @@ For fully custom source rendering, register a custom renderer through `partRende
       </a>
     ),
   }}
->
-  <ChatBox />
-</ChatProvider>
+/>
 ```
+
+When composing the headless primitives directly, pass the same `partRenderers` map to `ChatProvider` from `@mui/x-chat/headless` — see [Custom parts](/x/react-chat/display/message-parts/custom-parts/).
+
+## Standalone sources list
+
+Source parts render inline where they appear in the message. To present a consolidated citation list at the end of an answer — the pattern most RAG UIs use — compose the standalone `ChatMessageSources` and `ChatMessageSource` components yourself. They are presentational primitives: you map your collected sources to them; they are not driven by message parts.
+
+`ChatMessageSources` renders an ordered list (`ol`/`li`), so assistive technology announces the citation count and position.
+
+{{"demo": "ChatMessageSourcesPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## See also
 
-- [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text content that references sources
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building fully custom citation UI
+- [Text and Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for details on text content that references sources.
+- [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for details on building fully custom citation UI.

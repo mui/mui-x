@@ -1,9 +1,10 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
+import type { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
-import { Adapter } from '../use-adapter';
-import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
-import { TemporalTimezone } from '../base-ui-copy/types';
+import { normalizeAllDayBounds } from '../internals/utils/date-utils';
+import type { Adapter } from '../use-adapter';
+import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
+import type { TemporalTimezone } from '../base-ui-copy/types';
 import { resolveEventDate } from './resolveEventDate';
 
 export function processEvent(
@@ -14,14 +15,20 @@ export function processEvent(
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
 
-  const startInstant = resolveEventDate(model.start, dataTimezone, adapter);
-  const endInstant = resolveEventDate(model.end, dataTimezone, adapter);
+  const startInstant = resolveEventDate(model.start, dataTimezone, adapter, model.id);
+  const endInstant = resolveEventDate(model.end, dataTimezone, adapter, model.id);
   const resolvedExDates = model.exDates
-    ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, adapter))
+    ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, adapter, model.id))
     : undefined;
 
   const startInDisplayTz = adapter.setTimezone(startInstant, displayTimezone);
   const endInDisplayTz = adapter.setTimezone(endInstant, displayTimezone);
+  const displayBounds = normalizeAllDayBounds(
+    adapter,
+    startInDisplayTz,
+    endInDisplayTz,
+    model.allDay,
+  );
   const exDatesInDisplayTz = resolvedExDates
     ? resolvedExDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
     : undefined;
@@ -62,12 +69,8 @@ export function processEvent(
       exDates: resolvedExDates,
     },
     displayTimezone: {
-      start: model.allDay
-        ? processDate(adapter.startOfDay(startInDisplayTz), adapter)
-        : processDate(startInDisplayTz, adapter),
-      end: model.allDay
-        ? processDate(adapter.endOfDay(endInDisplayTz), adapter)
-        : processDate(endInDisplayTz, adapter),
+      start: processDate(displayBounds.start, adapter),
+      end: processDate(displayBounds.end, adapter),
       timezone: displayTimezone,
       rrule: displayTimezoneRRule,
       exDates: exDatesInDisplayTz,

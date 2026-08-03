@@ -10,11 +10,7 @@ import type { CurveType, StackOffsetType } from '@mui/x-charts/models';
 import type { DefaultizedProps } from '@mui/x-internals/types';
 
 export interface RadialLineSeriesType
-  extends
-    CommonSeriesType<number | null, 'line'>,
-    RadialSeriesType,
-    StackableSeriesType,
-    CommonLineSeriesType {
+  extends CommonSeriesType<'line'>, RadialSeriesType, StackableSeriesType, CommonLineSeriesType {
   type: 'radialLine';
   /**
    * Defines how stacked series handle negative values.

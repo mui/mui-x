@@ -1,12 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  BarPlot,
-  type BarPlotProps,
-  type BarPlotSlotProps,
-  type BarPlotSlots,
-} from '@mui/x-charts/BarChart';
+import { BarPlot } from '@mui/x-charts/BarChart';
+import type { BarPlotProps, BarPlotSlotProps, BarPlotSlots } from '@mui/x-charts/BarChart';
 import type { RendererType } from '@mui/x-charts/ScatterChart';
 import { BarWebGLPlot } from './webgl/BarWebGLPlot';
 
@@ -54,7 +50,7 @@ function BarPlotPremium({
   return <BarPlot renderer={renderer} borderRadius={borderRadius} {...other} />;
 }
 
-BarPlotPremium.propTypes = {
+BarPlotPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

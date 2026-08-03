@@ -5,7 +5,7 @@ import type {
   PiecewiseColorConfig,
 } from './colorMapping';
 import type { OrdinalSizeConfig, ContinuousSizeConfig, PiecewiseSizeConfig } from './sizeMapping';
-import { type DatasetElementType } from './seriesType/config';
+import type { DatasetElementType } from './seriesType/config';
 
 export interface ZAxisConfig<V = any> {
   id: string;

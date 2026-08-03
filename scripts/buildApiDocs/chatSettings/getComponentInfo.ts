@@ -47,7 +47,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         .map((page) => {
           const rawPathname = page.pathname.replace('/chat', '/x/react-chat');
           // The overview page is mapped to /x/react-chat (not /x/react-chat/overview)
-          const demoPathname = rawPathname.endsWith('/overview')
+          const demoPathname = rawPathname.endsWith('react-chat/overview')
             ? `${rawPathname.replace('/overview', '')}/`
             : `${rawPathname}/`;
           return {
@@ -92,8 +92,10 @@ export function getComponentImports(name: string, filename: string) {
     }
   }
 
-  return [
-    `import { ${name} } from '${subdirectoryImportPath}';`,
-    `import { ${name} } from '${rootImportPath}';`,
-  ];
+  return Array.from(
+    new Set([
+      `import { ${name} } from '${subdirectoryImportPath}';`,
+      `import { ${name} } from '${rootImportPath}';`,
+    ]),
+  );
 }

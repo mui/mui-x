@@ -4,7 +4,7 @@ import * as React from 'react';
 /**
  * Variant for the chat message display layout.
  * - `'default'`: Standard layout with avatar, content, and message meta
- * - `'compact'`: Condensed layout with reduced spacing
+ * - `'compact'`: Flat layout without bubble backgrounds—author name inline above the content, reduced spacing (Slack-style).
  */
 export type ChatVariant = 'default' | 'compact';
 

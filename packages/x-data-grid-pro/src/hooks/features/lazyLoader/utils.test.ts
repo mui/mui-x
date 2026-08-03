@@ -14,11 +14,18 @@ describe('adjustRowParams', () => {
     expect(result.end).to.equal(39);
   });
 
-  it('should cap end at rowCount - 1 when page-aligned end exceeds rowCount', () => {
+  it('should cap end at rowCount - 1 when page-aligned end exceeds rowCount on a page after the first', () => {
+    const params = { start: 27, end: 33 };
+    const result = adjustRowParams(params, { pageSize: 10, rowCount: 35 });
+    expect(result.start).to.equal(20);
+    expect(result.end).to.equal(34);
+  });
+
+  it('should not cap end on the first page even when page-aligned end exceeds rowCount', () => {
     const params = { start: 7, end: 33 };
     const result = adjustRowParams(params, { pageSize: 10, rowCount: 35 });
     expect(result.start).to.equal(0);
-    expect(result.end).to.equal(34);
+    expect(result.end).to.equal(39);
   });
 
   it('should not cap end when rowCount is undefined (infinite loading)', () => {

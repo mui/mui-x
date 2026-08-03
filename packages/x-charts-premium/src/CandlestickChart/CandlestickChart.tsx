@@ -1,52 +1,43 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  ChartsAxis,
-  type ChartsAxisSlotProps,
-  type ChartsAxisSlots,
-} from '@mui/x-charts/ChartsAxis';
+import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
+import type { ChartsAxisSlotProps, ChartsAxisSlots } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { ChartsGrid, type ChartsGridProps } from '@mui/x-charts/ChartsGrid';
-import {
-  ChartsTooltip,
-  type ChartsTooltipSlotProps,
-  type ChartsTooltipSlots,
-} from '@mui/x-charts/ChartsTooltip';
+import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
+import type { ChartsGridProps } from '@mui/x-charts/ChartsGrid';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import type { ChartsTooltipSlotProps, ChartsTooltipSlots } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
-import { type ChartsSlotProps, type ChartsSlots } from '@mui/x-charts/internals';
-import {
-  ChartsAxisHighlight,
-  type ChartsAxisHighlightProps,
-} from '@mui/x-charts/ChartsAxisHighlight';
+import type { ChartsSlotProps, ChartsSlots } from '@mui/x-charts/internals';
+import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+import type { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import {
-  ChartsToolbarPro,
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
+import type {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
-import {
-  ChartsLegend,
-  type ChartsLegendSlotProps,
-  type ChartsLegendSlots,
-} from '@mui/x-charts/ChartsLegend';
+import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import type { ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
-import { type OHLCSeriesType } from '../models';
-import { type CandlestickChartPluginSignatures } from './CandlestickChart.plugins';
-import { CandlestickPlot, type CandlestickPlotProps } from './CandlestickPlot';
+import type { OHLCSeriesType } from '../models';
+import type { CandlestickChartPluginSignatures } from './CandlestickChart.plugins';
+import { CandlestickPlot } from './CandlestickPlot';
+import type { CandlestickPlotProps } from './CandlestickPlot';
 import { useCandlestickChartProps } from './useCandlestickChartProps';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
-import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
+import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 
 export interface CandlestickChartSlots
   extends
@@ -182,7 +173,7 @@ const CandlestickChart = React.forwardRef(function CandlestickChart(
   );
 });
 
-CandlestickChart.propTypes = {
+CandlestickChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

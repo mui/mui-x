@@ -7,7 +7,7 @@ import {
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
-import { CalendarView } from '../../models';
+import type { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -32,10 +32,10 @@ describe('Core - EventCalendarStore', () => {
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
-        editedEventId: null,
+        editedOccurrenceKey: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        pendingUpdateRecurringEventParameters: null,
+        pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         processedEventLookup: new Map(),
@@ -48,10 +48,12 @@ describe('Core - EventCalendarStore', () => {
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         view: DEFAULT_VIEW,
-        viewConfig: null,
+        viewConfig: {},
+        viewDefinition: null,
         views: DEFAULT_VIEWS,
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
+        collapsedResources: {},
         isLoading: false,
         errors: [],
       };

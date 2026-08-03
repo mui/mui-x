@@ -13,8 +13,7 @@ import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-cale
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ErrorContainer } from '../internals/components/error-container';
-import { EventCalendarStyledContext } from './EventCalendarStyledContext';
-import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../internals/constants/defaultLocaleText';
+import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import {
   changeTo24HoursFormat,
   changeTo12HoursFormat,
@@ -172,7 +171,7 @@ describe('EventCalendar', () => {
 
       // Wait for component to fully render before opening preferences menu
       await waitFor(() =>
-        expect(screen.queryByRole('button', { name: /settings/i })).not.to.equal(null),
+        expect(screen.queryByRole('button', { name: /preferences/i })).not.to.equal(null),
       );
 
       // Hide the weekends
@@ -454,15 +453,9 @@ describe('EventCalendar', () => {
         store,
         ...render(
           <SchedulerStoreContext.Provider value={store as any}>
-            <EventCalendarStyledContext.Provider
-              value={{
-                schedulerId: 'test',
-                classes: eventCalendarClasses,
-                localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
-              }}
-            >
+            <SharedComponentsStyledContext.Provider value={{ classes: eventCalendarClasses }}>
               <ErrorContainer />
-            </EventCalendarStyledContext.Provider>
+            </SharedComponentsStyledContext.Provider>
           </SchedulerStoreContext.Provider>,
         ),
       };

@@ -1,9 +1,10 @@
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
-import { type RefObject } from '@mui/x-internals/types';
-import { DataGridPro, type GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { type GridApiPro } from '../models/gridApiPro';
+import type { GridApiPro } from '../models/gridApiPro';
 
 describe('<DataGridPro /> - Pagination', () => {
   const { render } = createRenderer();

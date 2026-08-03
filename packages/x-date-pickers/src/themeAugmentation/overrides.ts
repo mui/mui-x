@@ -1,42 +1,42 @@
-import {
+import type {
   DateCalendarClassKey,
   DayCalendarClassKey,
   PickersFadeTransitionGroupClassKey,
   PickersSlideTransitionClassKey,
 } from '../DateCalendar';
-import { PickersCalendarHeaderClassKey } from '../PickersCalendarHeader';
-import { DayCalendarSkeletonClassKey } from '../DayCalendarSkeleton';
-import {
+import type { PickersCalendarHeaderClassKey } from '../PickersCalendarHeader';
+import type { DayCalendarSkeletonClassKey } from '../DayCalendarSkeleton';
+import type {
   ClockClassKey,
   ClockNumberClassKey,
   TimeClockClassKey,
   ClockPointerClassKey,
 } from '../TimeClock';
-import { MonthCalendarClassKey } from '../MonthCalendar';
-import { PickerDayClassKey } from '../PickerDay';
-import { YearCalendarClassKey } from '../YearCalendar';
-import { PickersLayoutClassKey } from '../PickersLayout';
-import { DatePickerToolbarClassKey } from '../DatePicker';
-import { TimePickerToolbarClassKey } from '../TimePicker';
-import { DateTimePickerToolbarClassKey, DateTimePickerTabsClassKey } from '../DateTimePicker';
-import { PickersArrowSwitcherClassKey } from '../internals/components/PickersArrowSwitcher';
-import { PickersToolbarClassKey } from '../internals/components/pickersToolbarClasses';
-import { PickerPopperClassKey } from '../internals/components/PickerPopper';
-import { PickersToolbarButtonClassKey } from '../internals/components/pickersToolbarButtonClasses';
-import { PickersToolbarTextClassKey } from '../internals/components/pickersToolbarTextClasses';
-import { DigitalClockClassKey } from '../DigitalClock';
-import {
+import type { MonthCalendarClassKey } from '../MonthCalendar';
+import type { PickerDayClassKey } from '../PickerDay';
+import type { YearCalendarClassKey } from '../YearCalendar';
+import type { PickersLayoutClassKey } from '../PickersLayout';
+import type { DatePickerToolbarClassKey } from '../DatePicker';
+import type { TimePickerToolbarClassKey } from '../TimePicker';
+import type { DateTimePickerToolbarClassKey, DateTimePickerTabsClassKey } from '../DateTimePicker';
+import type { PickersArrowSwitcherClassKey } from '../internals/components/PickersArrowSwitcher';
+import type { PickersToolbarClassKey } from '../internals/components/pickersToolbarClasses';
+import type { PickerPopperClassKey } from '../internals/components/PickerPopper';
+import type { PickersToolbarButtonClassKey } from '../internals/components/pickersToolbarButtonClasses';
+import type { PickersToolbarTextClassKey } from '../internals/components/pickersToolbarTextClasses';
+import type { DigitalClockClassKey } from '../DigitalClock';
+import type {
   MultiSectionDigitalClockClassKey,
   MultiSectionDigitalClockSectionClassKey,
 } from '../MultiSectionDigitalClock';
-import {
+import type {
   PickersTextFieldClassKey,
   PickersInputClassKey,
   PickersOutlinedInputClassKey,
   PickersFilledInputClassKey,
   PickersInputBaseClassKey,
 } from '../PickersTextField';
-import { PickersSectionListClassKey } from '../PickersSectionList';
+import type { PickersSectionListClassKey } from '../PickersSectionList';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {

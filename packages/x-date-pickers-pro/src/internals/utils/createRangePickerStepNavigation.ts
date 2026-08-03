@@ -1,9 +1,6 @@
-import {
-  DateOrTimeViewWithMeridiem,
-  RangePosition,
-  createStepNavigation,
-} from '@mui/x-date-pickers/internals';
-import { UseRangePositionResponse } from '../hooks/useRangePosition';
+import type { DateOrTimeViewWithMeridiem, RangePosition } from '@mui/x-date-pickers/internals';
+import { createStepNavigation } from '@mui/x-date-pickers/internals';
+import type { UseRangePositionResponse } from '../hooks/useRangePosition';
 
 export function createRangePickerStepNavigation(
   parameters: CreateRangePickerStepNavigationParameters,

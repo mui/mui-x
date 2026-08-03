@@ -1,4 +1,4 @@
-import { type AllSeriesType } from '@mui/x-charts/models';
+import type { AllSeriesType } from '@mui/x-charts/models';
 import { defaultUpColor, defaultDownColor } from '../../colorPalettes/complementary/candlestick';
 
 export function getSeriesWithDefaultValues(

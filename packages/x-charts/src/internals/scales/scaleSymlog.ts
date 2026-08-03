@@ -1,10 +1,9 @@
 import {
-  type NumberValue,
-  type ScaleSymLog,
   scaleSymlog as originalScaleSymlog,
   scaleLog,
   scaleLinear,
 } from '@mui/x-charts-vendor/d3-scale';
+import type { NumberValue, ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
 
 /**
  * Constructs a new continuous scale with the specified range, the constant 1, the default interpolator and clamping disabled.

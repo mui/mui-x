@@ -36,10 +36,7 @@ export interface MapShapeValueType {
   color?: string;
 }
 
-export interface MapShapeSeriesType extends Omit<
-  CommonSeriesType<MapShapeValueType, 'mapShape'>,
-  'valueFormatter'
-> {
+export interface MapShapeSeriesType extends Omit<CommonSeriesType<'mapShape'>, 'valueFormatter'> {
   type: 'mapShape';
   /**
    * The data points to render. Each entry is joined to a feature in `geoData`
@@ -103,7 +100,7 @@ export interface MapShapeSeriesType extends Omit<
 export type MapShapeItemIdentifier = {
   type: 'mapShape';
   seriesId: SeriesId;
-  dataIndex: number;
+  name: string;
 };
 
 export type DefaultizedMapShapeValueType = MapShapeValueType & {
@@ -116,4 +113,5 @@ export interface DefaultizedMapShapeSeriesType extends Omit<
 > {
   hidden: boolean;
   data: ReadonlyArray<DefaultizedMapShapeValueType>;
+  lookupByName: ReadonlyMap<string, number>;
 }

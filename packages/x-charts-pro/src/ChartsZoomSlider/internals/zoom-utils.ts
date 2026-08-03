@@ -1,15 +1,17 @@
 import {
-  type AxisId,
-  type ChartState,
-  type DefaultedXAxis,
-  type DefaultedYAxis,
-  type DefaultizedZoomOptions,
   selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
   selectorChartRawAxis,
-  type ZoomData,
 } from '@mui/x-charts/internals';
-import { type ChartDrawingArea } from '@mui/x-charts/hooks';
+import type {
+  AxisId,
+  ChartState,
+  DefaultedXAxis,
+  DefaultedYAxis,
+  DefaultizedZoomOptions,
+  ZoomData,
+} from '@mui/x-charts/internals';
+import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 
 export function calculateZoomFromPoint(state: ChartState<any>, axisId: AxisId, point: DOMPoint) {
   const axis = selectorChartRawAxis(state, axisId);

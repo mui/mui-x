@@ -4,10 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import {
+import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
@@ -17,25 +18,27 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
-import { DayTimeGridProps } from './DayTimeGrid.types';
+import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
+import { getTimeGridHourRange } from '../../utils/getTimeGridHourRange';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
+import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
 
-const FIXED_CELL_WIDTH = 68;
 const HOUR_HEIGHT = 46;
-const HOURS_IN_DAY = 24;
+// Number of hours displayed in the grid. Defaults to a full day; overridden per render via the
+// `--hours-count` CSS variable when a view limits its visible hour range.
+const DEFAULT_HOURS_IN_DAY = 24;
 
 const DayTimeGridContainer = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridContainer',
 })(({ theme }) => ({
-  '--fixed-cell-width': `${FIXED_CELL_WIDTH}px`,
+  '--fixed-cell-width': 'var(--EventCalendar-size-fixedCellWidth)',
   '--hour-height': `${HOUR_HEIGHT}px`,
-  '--has-scroll': 1,
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -75,10 +78,6 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
   gridTemplateColumns: 'var(--fixed-cell-width) repeat(var(--column-count), 1fr) fit-content(100%)',
   width: '100%',
   borderBlockEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
-  /* Only show border on header cell when there's no scrollbar */
-  [`&:not[data-has-scroll] .${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`]: {
-    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
-  },
   [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}`]: {
     overflowY: 'scroll',
     scrollbarGutter: 'stable',
@@ -138,7 +137,7 @@ const DayTimeGridAllDayEventsHeaderCell = styled('div', {
 })(({ theme }) => ({
   gridColumn: '1',
   gridRow: '1',
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-timeText, 0.75rem)',
   fontStyle: 'italic',
   padding: theme.spacing(1),
   textAlign: 'end',
@@ -233,7 +232,7 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridHeaderDayNumber',
 })(({ theme }) => ({
-  fontSize: theme.typography.h5.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-dayNumber, 1.5rem)',
   lineHeight: 1,
   width: 46,
   height: 46,
@@ -251,6 +250,10 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   '[data-current] button:hover &': {
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
+  [eventCalendarContentCompactQuery]: {
+    width: 32,
+    height: 32,
+  },
 }));
 
 const DayTimeGridBody = styled('div', {
@@ -266,7 +269,7 @@ const DayTimeGridScrollableContent = styled(CalendarGrid.TimeScrollableContent, 
   slot: 'DayTimeGridScrollableContent',
 })({
   display: 'flex',
-  height: `calc(var(--hour-height) * 24)`,
+  height: `calc(var(--hour-height) * var(--hours-count, ${DEFAULT_HOURS_IN_DAY}))`,
   position: 'relative',
   overflowY: 'auto',
   overflowX: 'clip',
@@ -286,8 +289,8 @@ const DayTimeGridTimeAxisCell = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridTimeAxisCell',
 })(({ theme }) => ({
-  height: `calc(100% / ${HOURS_IN_DAY})`,
-  lineHeight: `calc(100% / ${HOURS_IN_DAY})`,
+  height: `calc(100% / var(--hours-count, ${DEFAULT_HOURS_IN_DAY}))`,
+  lineHeight: `calc(100% / var(--hours-count, ${DEFAULT_HOURS_IN_DAY}))`,
   paddingInline: theme.spacing(1),
   textAlign: 'end',
   '&:not(:first-of-type)::after': {
@@ -305,8 +308,8 @@ const DayTimeGridTimeAxisText = styled('time', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridTimeAxisText',
 })(({ theme }) => ({
-  fontSize: theme.typography.caption.fontSize,
-  lineHeight: 'calc(100% / 24)',
+  fontSize: 'var(--EventCalendar-fontSize-timeText, 0.75rem)',
+  lineHeight: `calc(100% / var(--hours-count, ${DEFAULT_HOURS_IN_DAY}))`,
   color: (theme.vars || theme).palette.text.secondary,
   whiteSpace: 'nowrap',
 }));
@@ -314,18 +317,24 @@ const DayTimeGridTimeAxisText = styled('time', {
 const DayTimeGridGrid = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridGrid',
-})({
+})(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
   position: 'relative',
-});
+  [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridColumn}:last-of-type`]: {
+    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+}));
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days, className, ...other } = props;
+  const { days, className, startTime: startTimeProp, endTime: endTimeProp, ...other } = props;
+
+  const { startTime, endTime } = getTimeGridHourRange(startTimeProp, endTimeProp);
+  const hoursCount = endTime - startTime;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -376,14 +385,18 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     [adapter, days, now],
   );
 
-  useIsoLayoutEffect(() => {
+  const updateHasScroll = React.useCallback(() => {
     const body = bodyRef.current;
     const allDayHeader = allDayHeaderWrapperRef.current;
     if (!body || !allDayHeader) {
       return;
     }
     setHasScroll(body.scrollHeight > body.clientHeight);
-  }, [occurrencesMap]);
+  }, []);
+
+  useIsoLayoutEffect(updateHasScroll, [occurrencesMap, updateHasScroll]);
+
+  useResizeObserver(bodyRef, updateHasScroll);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 
@@ -478,28 +491,39 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           <DayTimeGridScrollableContent
             className={classes.dayTimeGridScrollableContent}
             as={CalendarGrid.TimeScrollableContent}
+            style={{ '--hours-count': hoursCount } as React.CSSProperties}
           >
             <DayTimeGridTimeAxis className={classes.dayTimeGridTimeAxis} aria-hidden="true">
-              {Array.from({ length: 24 }, (_, hour) => (
-                <DayTimeGridTimeAxisCell
-                  className={classes.dayTimeGridTimeAxisCell}
-                  key={hour}
-                  style={{ '--hour': hour } as React.CSSProperties}
-                >
-                  <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
-                    {hour === 0 ? null : formatTime(adapter.setHours(template, hour))}
-                  </DayTimeGridTimeAxisText>
-                </DayTimeGridTimeAxisCell>
-              ))}
+              {Array.from({ length: hoursCount }, (_, index) => {
+                const hour = startTime + index;
+                return (
+                  <DayTimeGridTimeAxisCell
+                    className={classes.dayTimeGridTimeAxisCell}
+                    key={hour}
+                    style={{ '--hour': index } as React.CSSProperties}
+                  >
+                    <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
+                      {index === 0 ? null : formatTime(adapter.setHours(template, hour))}
+                    </DayTimeGridTimeAxisText>
+                  </DayTimeGridTimeAxisCell>
+                );
+              })}
             </DayTimeGridTimeAxis>
 
-            <DayTimeGridGrid className={classes.dayTimeGridGrid} role="row" aria-rowindex={3}>
+            <DayTimeGridGrid
+              className={classes.dayTimeGridGrid}
+              role="row"
+              aria-rowindex={3}
+              data-has-scroll={hasScroll || undefined}
+            >
               {occurrences.days.map((day, index) => (
                 <TimeGridColumn
                   key={day.key}
                   day={day}
                   index={index}
                   colIndex={index + 1}
+                  startTime={startTime}
+                  endTime={endTime}
                   showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
                 />
               ))}

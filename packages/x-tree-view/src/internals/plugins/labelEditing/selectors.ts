@@ -1,7 +1,7 @@
 import { createSelector } from '@mui/x-internals/store';
 import { itemsSelectors } from '../items/selectors';
-import { RichTreeViewState } from '../../RichTreeViewStore';
-import { TreeViewItemId } from '../../../models';
+import type { RichTreeViewState } from '../../RichTreeViewStore';
+import type { TreeViewItemId } from '../../../models';
 
 export const labelSelectors = {
   /**

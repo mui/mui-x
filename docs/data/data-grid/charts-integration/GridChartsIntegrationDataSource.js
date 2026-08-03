@@ -42,6 +42,7 @@ export default function GridChartsIntegrationDataSource() {
       rowLength: 1000,
       dataSet: 'Commodity',
       maxColumns: 20,
+      multiSelect: true,
     },
     { useCursorPagination: false },
   );

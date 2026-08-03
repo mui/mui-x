@@ -3,12 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import {
-  type SankeyLinkIdentifierWithData,
-  type SankeyNodeIdentifierWithData,
-} from './sankey.types';
+import type { SankeyLinkIdentifierWithData, SankeyNodeIdentifierWithData } from './sankey.types';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
+import { useUtilityClasses } from './sankeyClasses';
+import type { SankeyClasses } from './sankeyClasses';
 import { SankeyNodePlot } from './SankeyNodePlot';
 import { SankeyLinkPlot } from './SankeyLinkPlot';
 import { SankeyNodeLabelPlot } from './SankeyNodeLabelPlot';
@@ -77,14 +75,13 @@ function SankeyPlot(props: SankeyPlotProps) {
     <SankeyPlotRoot className={clsx(classes.root, className)}>
       <SankeyLinkPlot classes={classes} onClick={onLinkClick} />
       <SankeyNodePlot classes={classes} onClick={onNodeClick} />
-
       {linkOptions?.showValues && <SankeyLinkLabelPlot classes={classes} />}
       {showNodeLabels && <SankeyNodeLabelPlot classes={classes} />}
     </SankeyPlotRoot>
   );
 }
 
-SankeyPlot.propTypes = {
+SankeyPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -93,6 +90,10 @@ SankeyPlot.propTypes = {
    * Classes applied to the various elements.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

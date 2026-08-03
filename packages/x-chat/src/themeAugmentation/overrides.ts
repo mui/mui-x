@@ -2,10 +2,12 @@ import { type ChatCodeBlockClassKey } from '../ChatCodeBlock/chatCodeBlockClasse
 import { type ChatConfirmationClassKey } from '../ChatConfirmation/chatConfirmationClasses';
 import { type ChatBoxClassKey } from '../ChatBox/chatBoxClasses';
 import { type ChatMessageClassKey } from '../ChatMessage/chatMessageClasses';
+import { type ChatMessageErrorClassKey } from '../ChatMessageError/chatMessageErrorClasses';
 import { type ChatMessageListClassKey } from '../ChatMessageList/chatMessageListClasses';
 import { type ChatConversationClassKey } from '../ChatConversation/chatConversationClasses';
 import { type ChatComposerClassKey } from '../ChatComposer/chatComposerClasses';
 import { type ChatConversationListClassKey } from '../ChatConversationList/chatConversationListClasses';
+import { type ChatStreamingIndicatorClassKey } from '../ChatIndicators/chatStreamingIndicatorClasses';
 import { type ChatTypingIndicatorClassKey } from '../ChatIndicators/chatTypingIndicatorClasses';
 import { type ChatScrollToBottomAffordanceClassKey } from '../ChatIndicators/chatScrollToBottomAffordanceClasses';
 import { type ChatSuggestionsClassKey } from '../ChatSuggestions/chatSuggestionsClasses';
@@ -20,10 +22,12 @@ export interface ChatComponentNameToClassKey {
   MuiChatConfirmation: ChatConfirmationClassKey;
   MuiChatBox: ChatBoxClassKey;
   MuiChatMessage: ChatMessageClassKey;
+  MuiChatMessageError: ChatMessageErrorClassKey;
   MuiChatMessageList: ChatMessageListClassKey;
   MuiChatConversation: ChatConversationClassKey;
   MuiChatComposer: ChatComposerClassKey;
   MuiChatConversationList: ChatConversationListClassKey;
+  MuiChatStreamingIndicator: ChatStreamingIndicatorClassKey;
   MuiChatTypingIndicator: ChatTypingIndicatorClassKey;
   MuiChatScrollToBottomAffordance: ChatScrollToBottomAffordanceClassKey;
   MuiChatSuggestions: ChatSuggestionsClassKey;

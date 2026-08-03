@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
-import { TimeFieldProps } from './TimeField.types';
+import type { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import {
   PickerFieldUI,
@@ -52,7 +52,7 @@ const TimeField = React.forwardRef(function TimeField(
   );
 }) as TimeFieldComponent;
 
-TimeField.propTypes = {
+TimeField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -224,6 +224,7 @@ TimeField.propTypes = {
   onFocus: PropTypes.func,
   onInput: PropTypes.func,
   onKeyDown: PropTypes.func,
+  onMouseDown: PropTypes.func,
   onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
