@@ -69,13 +69,9 @@
     },
     "@emotion/styled": {
       "optional": true
-    },
-    "@mui/icons-material": {
-      "optional": true
     }
   },
   "devDependencies": {
-    "@mui/icons-material": "catalog:",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
