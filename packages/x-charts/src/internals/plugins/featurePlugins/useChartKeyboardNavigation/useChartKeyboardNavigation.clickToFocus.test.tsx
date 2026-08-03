@@ -201,6 +201,20 @@ describe('useChartKeyboardNavigation - click to focus', () => {
       expect(getLastUpdate()).to.equal('pointer');
     });
 
+    // Touch has no hover phase, and a stationary tap is not guaranteed to produce a
+    // `pointermove`. The item is resolved on `pointerdown` so the tap still lands on it.
+    it('focuses the tapped item on touch', async () => {
+      const { container, user } = render(<BarChart {...barProps} />);
+      const bar = getBars(container)[2];
+
+      await user.pointer([
+        { keys: '[TouchA]', target: getLayerContainer(container), coords: getCenter(bar) },
+      ]);
+      await user.keyboard('[ArrowRight]');
+
+      expect(getFocusedDataIndex(container)).to.equal(3);
+    });
+
     it('falls back to the axis when the click hits no item', async () => {
       const { container, user } = render(<BarChart {...barProps} />);
 

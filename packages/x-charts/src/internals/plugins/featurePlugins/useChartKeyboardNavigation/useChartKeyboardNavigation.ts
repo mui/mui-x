@@ -54,6 +54,16 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   const isKeyboardModalityRef = React.useRef(true);
 
   /**
+   * The item a tap resolved, waiting for the click to focus it.
+   *
+   * The two steps cannot be merged. Touch clears the pointer item on `pointerleave`, right after
+   * the tap, so the item has to be read early. But touch also emits its compatibility `mousedown`
+   * after that, which moves the focus to the body, so the focus has to be taken late, on the click
+   * that closes the sequence.
+   */
+  const pendingFocusItemRef = React.useRef<FocusedItemIdentifier<ChartSeriesType> | null>(null);
+
+  /**
    * Writes the focus state, only switching the highlight and tooltip to keyboard when visible.
    * An `undefined` item leaves the focused item untouched, `null` clears it.
    *
@@ -150,19 +160,19 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   );
 
   /**
-   * Focuses the item a click landed on, read from the item the pointer is over. Falls back to the
-   * axis under the pointer, which covers the line and area paths, whose hovered item only knows
-   * its series.
+   * The item a click landed on, read from the item the pointer is over. Falls back to the axis
+   * under the pointer, which covers the line and area paths, whose hovered item only knows its
+   * series.
    *
    * A click that resolves nothing is left alone rather than focusing the chart. The drawing area
    * is a rectangle, but the data rarely fills it: taking the focus from a click next to a pie,
    * outside its circle, reads as the chart grabbing clicks that were not meant for it.
    */
-  const focusItemAtPointer = useEventCallback((event: MouseEvent | PointerEvent) => {
+  const resolveItemAtPointer = useEventCallback((event: MouseEvent | PointerEvent) => {
     // Every series reports the item under the pointer, so the click itself needs no wiring.
     const hoveredItem = store.state.interaction?.hoveredItem;
-    if (hoveredItem != null && focusItem(hoveredItem as FocusedItemIdentifier<ChartSeriesType>)) {
-      return;
+    if (hoveredItem != null) {
+      return hoveredItem as FocusedItemIdentifier<ChartSeriesType>;
     }
 
     const element = chartsLayerContainerRef.current;
@@ -179,9 +189,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           })
         : null;
 
-    if (item !== null) {
-      focusItem(item);
-    }
+    return item;
   });
 
   React.useEffect(() => {
@@ -224,6 +232,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       focusVisibleIntentRef.current =
         params.focusItemOnClick === true || store.state.keyboardNavigation.isFocusVisible;
       isKeyboardModalityRef.current = false;
+      pendingFocusItemRef.current = null;
     }
 
     // Any key press means the user switched to the keyboard, wherever the focus currently is.
@@ -297,11 +306,27 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     const tapHandler = instance.addInteractionListener?.('tap', (event) => {
-      focusItemAtPointer(event.detail.srcEvent as PointerEvent);
+      pendingFocusItemRef.current = resolveItemAtPointer(event.detail.srcEvent as PointerEvent);
     });
 
-    return () => tapHandler?.cleanup();
-  }, [instance, params.disableKeyboardNavigation, focusItemAtPointer]);
+    function focusPendingItem() {
+      const item = pendingFocusItemRef.current;
+      pendingFocusItemRef.current = null;
+
+      if (item !== null) {
+        focusItem(item);
+      }
+    }
+
+    // Listens on the document so it runs after the React handlers, which are attached to the
+    // React root above the chart container.
+    document.addEventListener('click', focusPendingItem);
+
+    return () => {
+      tapHandler?.cleanup();
+      document.removeEventListener('click', focusPendingItem);
+    };
+  }, [instance, params.disableKeyboardNavigation, resolveItemAtPointer, focusItem]);
 
   useEnhancedEffect(() => {
     store.set('keyboardNavigation', {
